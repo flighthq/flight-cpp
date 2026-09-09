@@ -12,13 +12,23 @@ import { fileURLToPath } from 'node:url';
 // directly, not wrapped. This sweep covers what a reader cannot see by building.
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const gates = ['abiHealth', 'buildHealth', 'releaseHealth', 'exampleHealth', 'emittedSourceCompile'];
+const gates = [
+  { arguments: [], name: 'abiHealth' },
+  { arguments: [], name: 'buildHealth' },
+  { arguments: [], name: 'releaseHealth' },
+  { arguments: [], name: 'exampleHealth' },
+  { arguments: ['--check'], name: 'sdkGeneration' },
+  { arguments: [], name: 'emittedSourceCompile' },
+];
 const failed = [];
 
 for (const gate of gates) {
-  process.stdout.write(`\n### ${gate}\n`);
-  const result = spawnSync(process.execPath, [path.join(root, 'scripts', `${gate}.mjs`)], { cwd: root, stdio: 'inherit' });
-  if (result.status !== 0) failed.push(gate);
+  process.stdout.write(`\n### ${gate.name}\n`);
+  const result = spawnSync(process.execPath, [path.join(root, 'scripts', `${gate.name}.mjs`), ...gate.arguments], {
+    cwd: root,
+    stdio: 'inherit',
+  });
+  if (result.status !== 0) failed.push(gate.name);
 }
 
 if (failed.length > 0) {

@@ -122,6 +122,8 @@ jobs:
         run: npm run rehydrate
       - name: Install pinned compiler dependencies
         run: npm ci --prefix .dependencies/flight-compiler
+      - name: Verify generated SDK inventory
+        run: npm run sdk:check
       - name: Regenerate native examples
         run: npm run examples:check
       - name: Compile the pinned compiler's emitted C++

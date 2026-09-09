@@ -63,6 +63,11 @@ The installed `flight/` headers and `Flight::Cpp` target are the extraction boun
 
 The compiler emits semantic runtime types such as `flight::Array<T>` and `flight::Map<K, V>` when `runtimeProfile: "flight-cpp"` is elected. The separate `standard-library` profile preserves generic provisional output without claiming TypeScript-equivalent collection behavior. See [compiler integration](docs/compiler-integration.md) and [runtime semantics](docs/runtime-semantics.md).
 
+The first full-SDK inventory is committed under [`generated/`](generated/README.md). It contains every header the
+pinned compiler can currently emit from the package closure declared by `@flighthq/sdk`, plus a complete refusal
+ledger. It is intentionally visible before it forms a compilable library. The [SDL host bring-up](docs/host-sdl.md)
+defines the handwritten native lane that will inject GL or WGPU handles without duplicating upstream renderers.
+
 The supported input boundary is versioned as [`flight-portable-typescript/1`](conformance/portable-typescript-v1.json). [`known-exceptions.json`](conformance/known-exceptions.json) owns every checked-in C++ refusal. The compiler repository verifies it against its own fixture corpus, because a refusal changes when the compiler changes; this repository owns the file, and that gate reads it from a pinned checkout of this repository.
 
 ## Pinned siblings
@@ -86,6 +91,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run abi:check` | Do the C header, its implementation, and the committed ABI snapshot name the same symbols? |
 | `npm run build:check` | Do the CMake and Bazel graphs describe the same headers, sources, tests, and benchmarks? |
 | `npm run examples:check` | Does the pinned compiler reproduce the checked-in native example output? |
+| `npm run sdk:check` | Does the pinned compiler reproduce the committed SDK headers and refusal inventory? |
 | `npm run release:check` | Do the version, ABI, C++ standard, and conformance profile agree across every file that states them? |
 | `npm run compile:check` | Does the pinned compiler's emitted C++ still compile against this runtime? |
 

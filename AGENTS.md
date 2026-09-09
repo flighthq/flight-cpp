@@ -26,6 +26,7 @@ Do not claim a compiler capability or runtime ABI version in `contract.hpp` unti
 
 The runtime and the compiler evolve against each other, so each repository pins the other instead of sharing a tree. `dependencies.lock.json` names the exact commit of `flight` and `flight-compiler` this checkout is verified against, and `npm run rehydrate` materializes them under the gitignored `.dependencies/`.
 
-Nothing in `.dependencies/` is committed and no gate may treat it as a source of truth. It is a disposable build input; the lock is the only thing that decides which revision is read. A gate that needs a checkout reports and skips when it is absent rather than failing, so a fresh clone stays runnable.
+Nothing in `.dependencies/` is committed and no gate may treat it as a source of truth. It is a disposable build input; the lock is the only thing that decides which revision is read. A gate that needs a checkout reports and skips when it is absent rather than failing, so a fresh clone stays runnable. `flight` supplies the input for the committed SDK inventory; `npm run sdk:check` must reproduce both its emitted headers and refusal ledger.
 
-Move a pin deliberately, in its own commit, with the gate result that motivated it. `flight` is pinned for the SDK compilation lane and no gate consumes it yet; do not add one until it can pass.
+Move a pin deliberately, in its own commit, with the gate result that motivated it. Regenerate the SDK inventory when
+either the `flight` or `flight-compiler` pin moves and commit the changed output with that pin update.
