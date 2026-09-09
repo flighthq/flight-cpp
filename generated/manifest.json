@@ -2,7 +2,7 @@
   "schema": "flight-generated-sdk/1",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
-    "revision": "b5c9ee1bfa0e0d27ee7b821536f5dd94ee2e946b",
+    "revision": "a7596ab7ddefdf5b47117b1fef58fd0b087a9536",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },

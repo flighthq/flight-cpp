@@ -85,29 +85,33 @@ try {
 }
 
 async function generateSdk(outputRoot, flightDependency, compilerDependency, compilerModule) {
-  const { compileTypeScriptPackageGraph, createCppCompilerBackend, parseTypeScriptSource } = await import(
-    pathToFileURL(compilerModule)
-  );
+  const {
+    analyzeFlightWorkspace,
+    compileTypeScriptPackageGraph,
+    createCompilerModuleResolutionPlan,
+    createCppCompilerBackend,
+    parseTypeScriptSource,
+  } = await import(pathToFileURL(compilerModule));
   const sdkPackageFile = path.join(flightDependency.directory, 'packages', 'sdk', 'package.json');
   const sdkPackage = JSON.parse(readFileSync(sdkPackageFile, 'utf8'));
   const packageNames = Object.keys(sdkPackage.dependencies ?? {})
     .filter((name) => name.startsWith('@flighthq/'))
     .sort();
+  const inventory = analyzeFlightWorkspace({
+    targetPackageNames: packageNames,
+    upstreamDirectory: flightDependency.directory,
+  });
   const includedPackages = new Set(packageNames);
-  const packageDescriptors = packageNames.map((packageName) => {
-    const basename = packageName.slice('@flighthq/'.length);
-    const root = path.join(flightDependency.directory, 'packages', basename);
-    const manifest = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'));
+  const packageDescriptors = inventory.packages.map((package_) => {
+    const root = path.join(flightDependency.directory, package_.directory);
     return {
-      dependencies: Object.keys(manifest.dependencies ?? {})
-        .filter((dependency) => includedPackages.has(dependency))
-        .sort(compareText),
-      name: packageName,
+      dependencies: package_.dependencies.filter((dependency) => includedPackages.has(dependency)).sort(compareText),
+      name: package_.name,
       root,
       sources: listSourceFiles(path.join(root, 'src')),
       target: {
-        includePrefix: `flight/${cppPackageName(packageName)}`,
-        namespace: `flight::${cppPackageName(packageName)}`,
+        includePrefix: `flight/${cppPackageName(package_.name)}`,
+        namespace: `flight::${cppPackageName(package_.name)}`,
       },
     };
   });
@@ -136,7 +140,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       })),
       schema: 'flight-compiler-package-graph/1',
     },
-    moduleResolution: createModuleResolutionPlan(packageDescriptors, flightDependency.directory),
+    moduleResolution: createCompilerModuleResolutionPlan(inventory),
     sources,
   });
   for (const file of compilation.compilation.files) {
@@ -266,32 +270,6 @@ function listSourceFiles(directory) {
 
 function cppPackageName(packageName) {
   return packageName.slice('@flighthq/'.length).replaceAll('-', '_');
-}
-
-function createModuleResolutionPlan(packages, upstreamDirectory) {
-  const edges = packages
-    .flatMap((package_) => [
-      {
-        packageName: package_.name,
-        source: portable(path.relative(upstreamDirectory, path.join(package_.root, 'src', 'index.ts'))),
-        specifier: package_.name,
-      },
-      {
-        packageName: package_.name,
-        source: portable(path.relative(upstreamDirectory, path.join(package_.root, 'src', 'contract.ts'))),
-        specifier: `${package_.name}/contract`,
-      },
-    ])
-    .filter((lane) => existsSync(path.join(upstreamDirectory, lane.source)))
-    .map((lane) => ({
-      specifier: lane.specifier,
-      target: {
-        packageName: lane.packageName,
-        source: lane.source,
-      },
-    }))
-    .sort((left, right) => compareText(left.specifier, right.specifier));
-  return { edges, schema: 'flight-compiler-module-resolution/1' };
 }
 
 function compareTrees(expectedRoot, actualRoot) {

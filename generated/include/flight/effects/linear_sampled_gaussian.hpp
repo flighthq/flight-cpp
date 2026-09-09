@@ -10,7 +10,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::effects {
 
 inline flight::Array<double> compute_linear_sampled_gaussian(double sigma, flight::Array<double> out_weights, flight::Array<double> out_offsets) {
-  auto size = get_gaussian_kernel_size(sigma);
+  const double size = get_gaussian_kernel_size(sigma);
   const double radius = ((size - 1.0) / 2.0);
   compute_gaussian_kernel_weights(sigma, scratch_weights);
   const double tap_count = get_linear_sampled_gaussian_tap_count(sigma);

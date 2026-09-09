@@ -8,6 +8,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
+inline double halton(double index, double base) {
+  double result = 0.0;
+  double f = 1.0;
+  double i = index;
+  while ((i > 0.0)) {
+    f /= base;
+    result += (f * std::fmod(i, base));
+    i = std::floor((i / base));
+  }
+  return result;
+}
+
 inline double compute_depth_of_field_coc(double depth, double focus_distance, double aperture, double focal_length) {
   const double fd = flight::maximum(0.00001, focus_distance);
   const double fl = (flight::maximum(0.00001, focal_length) / 1000.0);
@@ -40,18 +52,6 @@ inline double compute_ssao_sample_kernel(double samples, flight::Float32Array ou
     }
   }
   return n;
-}
-
-inline double halton(double index, double base) {
-  double result = 0.0;
-  double f = 1.0;
-  double i = index;
-  while ((i > 0.0)) {
-    f /= base;
-    result += (f * std::fmod(i, base));
-    i = std::floor((i / base));
-  }
-  return result;
 }
 
 } // namespace flight::effects

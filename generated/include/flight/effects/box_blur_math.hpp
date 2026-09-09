@@ -8,6 +8,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
+inline double compute_box_blur_lower_width(double sigma, double passes) {
+  double width = std::floor(std::sqrt(((((12.0 * sigma) * sigma) / passes) + 1.0)));
+  if ((std::fmod(width, 2.0) == 0.0)) {
+    width -= 1.0;
+  }
+  return width;
+}
+
+inline double compute_box_blur_lower_pass_count(double sigma, double passes, double lower_width) {
+  return flight::round(((((12.0 * sigma) * sigma) - (passes * (((lower_width * lower_width) + (4.0 * lower_width)) + 3.0))) / ((-4.0 * lower_width) - 4.0)));
+}
+
 inline double compute_box_blur_pass_radius(double sigma, double passes, double pass) {
   if ((sigma <= 0.0)) {
     return 0.0;
@@ -31,18 +43,6 @@ inline double compute_gaussian_sigma_for_blur_radius(double radius, double passe
   }
   const double width = ((2.0 * radius) + 1.0);
   return std::sqrt((((passes * width) * width) / 12.0));
-}
-
-inline double compute_box_blur_lower_width(double sigma, double passes) {
-  double width = std::floor(std::sqrt(((((12.0 * sigma) * sigma) / passes) + 1.0)));
-  if ((std::fmod(width, 2.0) == 0.0)) {
-    width -= 1.0;
-  }
-  return width;
-}
-
-inline double compute_box_blur_lower_pass_count(double sigma, double passes, double lower_width) {
-  return flight::round(((((12.0 * sigma) * sigma) - (passes * (((lower_width * lower_width) + (4.0 * lower_width)) + 3.0))) / ((-4.0 * lower_width) - 4.0)));
 }
 
 } // namespace flight::effects

@@ -1,6 +1,6 @@
 # flight-compiler package graph review
 
-This review covers Flight `1274ec5` and flight-compiler `b5c9ee1`. The compiler revision is pinned in
+This review covers Flight `1274ec5` and flight-compiler `a7596ab`. The compiler revision is pinned in
 [`dependencies.lock.json`](../dependencies.lock.json), and the committed [SDK manifest](../generated/manifest.json),
 [initialization plan](../generated/initialization.json), and [refusal ledger](../generated/refusals.json) are generated
 from that pair.
@@ -17,17 +17,27 @@ The three integration blockers reported against `8a4b1a0` now have real public c
 - `b07db2c` adds `compileTypeScriptPackageGraph`. One request now carries all 2,851 SDK modules, 154 package roots,
   package dependencies, and public export resolution. It shares C++ reference analysis, records dependency-closed
   partial output, and returns a module-evaluation plan.
+- `21b206e` lets workspace analysis target an explicit package closure. The downstream generator now asks for the
+  154 packages in `@flighthq/sdk`, then consumes the inventory's 308 public export lanes through
+  `createCompilerModuleResolutionPlan`; it no longer reconstructs `index` and `contract` lanes itself. Whole-workspace
+  analysis still reports the unrelated `@flighthq/tool-registry` exclusion drift, which no longer blocks SDK work.
+- `ef8da01` analyzes interface heritage across the module graph, and `12a637b` orders non-exported C++ helpers before
+  callers and removes self-referential type re-exports.
 
-The full graph now completes in about 127 seconds on the current development machine. The previous isolated sweep
+The full graph completed in 76 seconds on the current development machine. The previous isolated sweep
 emitted 1,322 headers that did not form a dependency closure. The graph report emits 314 dependency-closed modules
 and refuses 2,537; that lower headline is more useful because no reported output depends on a refused module. It
-records 2,683 refusal causes: 2,352 propagated dependency failures, 235 lowering diagnostics, and 96 emission
-failures.
+now records 2,989 refusal causes: 2,190 propagated dependency failures, 703 lowering diagnostics, and 96 emission
+failures. Graph-wide semantic lowering exposes direct failures in modules that older revisions reached only as
+dependency refusals, so the direct diagnostic totals are not comparable to the old short-circuiting report.
 
 The `0d3416c` semantic fix removes all 77 prior `FirstTypeNode` diagnostics. The `cc8e210` and `b5c9ee1` interface
 changes reduce caught lowering-pass failures from 24 to 7 and allow nine inherited type modules to enter the emitted
 closure. The nine new headers still fail against flight-cpp because their generated classes inherit the missing
-`flight::ReferenceEnabled` runtime type.
+`flight::ReferenceEnabled` runtime type. The latest graph-aware heritage pass removes all 90 former "requires an
+interface reference" diagnostics. Eleven diagnostics in two source modules now reach the narrower unsupported case
+where a heritage target cannot be reduced to an object-shaped declaration; the three caught interface-inheritance
+failures remain.
 
 The old `assetLibrary.ts` duplicate-binding invariant no longer occurs. Imported identity is now resolved across the
 graph, apart from two remaining `indeterminateIdentity` cases and four `unsupportedReferenceForm` cases in
@@ -35,18 +45,7 @@ graph, apart from two remaining `indeterminateIdentity` cases and four `unsuppor
 remaining compiler/runtime blocker is unsupported dense-array length construction. Its other refusals are dependency
 propagation from that module or `@flighthq/types/contract`.
 
-`analyzeFlightWorkspace` cannot currently construct the input plan for this same checkout. It fails with
-`package-exclusion-drift` because `@flighthq/tool-registry` still partially matches the tooling exclusion heuristic.
-Commit `e055c55` fixed the former `@flighthq/tool-pipeline` failure. The downstream generator therefore still
-constructs the requested SDK package graph and its two public export lanes directly from package manifests.
-
 ## Remaining upstream requests
-
-### Let SDK compilation consume workspace analysis
-
-Please either update the tooling exclusion classifier for the current Flight workspace or let inventory/module
-resolution analysis target an explicit package closure without evaluating unrelated tooling packages. Package
-exclusion policy should not prevent compiling the 154-package `@flighthq/sdk` dependency closure.
 
 ### Keep the runtime contract executable
 
@@ -54,28 +53,30 @@ ABI alignment is fixed, but the C++ backend emits runtime APIs absent from the e
 Examples include `flight::ReferenceEnabled`, `flight::Ref<T>`, `flight::make_ref`, binding cells, bitwise/shift
 helpers, and `flight::power`, `minimum`, and `maximum`. This repository now supplies `flight::power` so its generated
 tween remains runnable. A compile probe over the 314 dependency-closed SDK headers passes 110 and fails 204. The
-compiler's golden C++ compile probe fails for the same runtime-surface mismatch.
+compiler's golden C++ compile probe reports 53 emitted files that do not compile against this runtime, led by the same
+runtime-surface mismatch.
 
 Please compile representative `runtimeProfile: "flight-cpp"` output against the pinned flight-cpp checkout as a
 compiler gate. ABI number equality cannot catch a missing API surface. Either advance the runtime pin with these
 semantics or keep the backend from claiming that runtime profile until its required capabilities exist.
 
-Some emitted constructs fail independently of missing runtime names, including source-order calls without a prior
-declaration, optional defaults that call `value_or` with the optional itself, invalid `cmath.log` member syntax, and
-out parameters emitted by value. These need target compile fixtures and, where observable, TypeScript/native behavior
-oracles.
+Some emitted constructs fail independently of missing runtime names, including optional defaults that call
+`value_or` with the optional itself, invalid `cmath.log` member syntax, and out parameters emitted by value. These
+need target compile fixtures and, where observable, TypeScript/native behavior oracles. Helper declaration ordering
+is fixed in `12a637b`, although the affected full-SDK headers still fail on other runtime gaps.
 
 ### Preserve package graph identity through the remaining type cases
 
-The direct refusal families are now clear enough to prioritize:
+The graph-wide direct refusal families are now clear enough to prioritize. Counts are diagnostic instances; repeated
+computed members can produce more than one diagnostic in a module.
 
-| Count | Direct lowering family |
-| ---: | --- |
-| 90 | interface heritage requires an interface reference |
-| 43 | computed property names |
-| 37 | `unique` type operators |
-| 28 | conditional types |
-| 11 | mapped types |
+| Diagnostics | Modules | Direct lowering family |
+| ---: | ---: | --- |
+| 585 | 212 | computed property names |
+| 40 | 25 | `unique` type operators |
+| 28 | 17 | conditional types |
+| 11 | 2 | interface heritage target is not object-shaped |
+| 10 | 5 | mapped types |
 
 There are seven caught lowering-pass failures, including three remaining interface-inheritance cases. Please retain
 graph identity through those cases and finish the two remaining `indeterminateIdentity` and four

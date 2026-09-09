@@ -19,9 +19,9 @@ inline double get_color_contrast_ratio(double a, double b) {
 }
 
 inline double get_color_luminance(double color) {
-  auto r = srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 24.0), 255.0) / 255.0));
-  auto g = srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 16.0), 255.0) / 255.0));
-  auto b = srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 8.0), 255.0) / 255.0));
+  const double r = srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 24.0), 255.0) / 255.0));
+  const double g = srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 16.0), 255.0) / 255.0));
+  const double b = srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 8.0), 255.0) / 255.0));
   return (((0.2126 * r) + (0.7152 * g)) + (0.0722 * b));
 }
 
