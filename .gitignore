@@ -5,3 +5,5 @@
 /bazel-*
 /.dependencies/
 /node_modules/
+
+.quimby
