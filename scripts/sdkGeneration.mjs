@@ -10,9 +10,10 @@ import {
   rmSync,
   writeFileSync,
 } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { availableParallelism, tmpdir } from 'node:os';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
+import { Worker } from 'node:worker_threads';
 
 import { resolveDependency } from './dependencyLock.mjs';
 
@@ -59,12 +60,11 @@ if (!existsSync(compilerEntry)) {
   process.exit(1);
 }
 
-const { compileCompilerCommandLineRequest } = await import(pathToFileURL(compilerEntry));
 const temporaryRoot = mkdtempSync(path.join(tmpdir(), 'flight-cpp-sdk-generation-'));
 const candidateRoot = path.join(temporaryRoot, 'generated');
 
 try {
-  const result = generateSdk(candidateRoot, flight, compiler, compileCompilerCommandLineRequest);
+  const result = await generateSdk(candidateRoot, flight, compiler, compilerEntry);
   if (check) {
     const drift = compareTrees(candidateRoot, generatedRoot);
     if (drift.length > 0) {
@@ -85,74 +85,37 @@ try {
   rmSync(temporaryRoot, { force: true, recursive: true });
 }
 
-function generateSdk(outputRoot, flightDependency, compilerDependency, compile) {
+async function generateSdk(outputRoot, flightDependency, compilerDependency, compilerModule) {
   const sdkPackageFile = path.join(flightDependency.directory, 'packages', 'sdk', 'package.json');
   const sdkPackage = JSON.parse(readFileSync(sdkPackageFile, 'utf8'));
   const packageNames = Object.keys(sdkPackage.dependencies ?? {})
     .filter((name) => name.startsWith('@flighthq/'))
     .sort();
-  const packageResults = [];
-  const refusals = [];
-
-  for (const packageName of packageNames) {
-    const packageBaseName = packageName.slice('@flighthq/'.length);
-    const packageDirectory = path.join(flightDependency.directory, 'packages', packageBaseName);
-    const sourceDirectory = path.join(packageDirectory, 'src');
-    const sources = existsSync(sourceDirectory) ? listSourceFiles(sourceDirectory) : [];
-    const cppPackage = packageBaseName.replaceAll('-', '_');
-    const outputDirectory = path.join(outputRoot, 'include', 'flight', cppPackage);
-    let compilation = { emitted: 0, refusals: [] };
-
-    if (sources.length > 0) {
-      compilation = compile(
-        {
-          argv: [
-            sourceDirectory,
-            '--target',
-            'cpp',
-            '--out',
-            outputDirectory,
-            '--package',
-            packageName,
-            '--report',
-          ],
-        },
-        {
-          listSourceFiles: () => sources,
-          write: () => {},
-          writeError: () => {},
-          writeOutputFile: (directory, relativePath, contents) => {
-            const target = path.join(directory, relativePath);
-            mkdirSync(path.dirname(target), { recursive: true });
-            writeFileSync(target, contents);
-          },
-        },
-      );
-    }
-
-    const packageRefusals = compilation.refusals.map((refusal) => ({
-      module: refusal.module,
-      package: packageName,
-      reason: refusal.reason,
-    }));
-    if (compilation.emitted + packageRefusals.length !== sources.length) {
-      throw new Error(`${packageName} did not report one outcome for each source module`);
-    }
-    const emittedFiles = existsSync(outputDirectory) ? filesUnder(outputDirectory).length : 0;
-    if (emittedFiles !== compilation.emitted) {
-      throw new Error(
-        `${packageName} emitted ${String(compilation.emitted)} modules into ${String(emittedFiles)} files`,
-      );
-    }
-    refusals.push(...packageRefusals);
-    packageResults.push({
-      cppIncludePrefix: `flight/${cppPackage}`,
-      emittedModules: compilation.emitted,
-      package: packageName,
-      refusedModules: packageRefusals.length,
-      sourceModules: sources.length,
-    });
-  }
+  const requestedJobs = Number.parseInt(process.env.FLIGHT_CPP_SDK_JOBS ?? '', 10);
+  const jobs = Number.isInteger(requestedJobs) && requestedJobs > 0
+    ? Math.min(requestedJobs, packageNames.length)
+    : Math.min(availableParallelism(), 8, packageNames.length);
+  const assignments = Array.from({ length: jobs }, () => []);
+  packageNames.forEach((packageName, index) => assignments[index % jobs].push(packageName));
+  const workerResults = await Promise.all(
+    assignments.map((assignedPackages) =>
+      runGenerationWorker({
+        compilerEntry: compilerModule,
+        flightDirectory: flightDependency.directory,
+        outputRoot,
+        packageNames: assignedPackages,
+      }),
+    ),
+  );
+  const packageResults = workerResults
+    .flatMap((result) => result.packageResults)
+    .sort((left, right) => (left.package < right.package ? -1 : 1));
+  const refusals = workerResults
+    .flatMap((result) => result.refusals)
+    .sort(
+      (left, right) =>
+        compareText(left.package, right.package) || compareText(left.module, right.module),
+    );
 
   const totals = packageResults.reduce(
     (result, item) => ({
@@ -200,6 +163,22 @@ function generateSdk(outputRoot, flightDependency, compilerDependency, compile) 
   return manifest.summary;
 }
 
+function runGenerationWorker(workerData) {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(new URL('./sdkGenerationWorker.mjs', import.meta.url), { workerData });
+    let result;
+    worker.once('message', (message) => {
+      result = message;
+    });
+    worker.once('error', reject);
+    worker.once('exit', (code) => {
+      if (code !== 0) reject(new Error(`SDK generation worker exited with code ${String(code)}`));
+      else if (result === undefined) reject(new Error('SDK generation worker returned no result'));
+      else resolve(result);
+    });
+  });
+}
+
 function generatedReadme(manifest) {
   return `# Generated Flight SDK inventory
 
@@ -224,16 +203,6 @@ npm run sdk:generate
 npm run sdk:check
 \`\`\`
 `;
-}
-
-function listSourceFiles(directory) {
-  return filesUnder(directory)
-    .filter((filename) => filename.endsWith('.ts') && !filename.endsWith('.d.ts') && !filename.endsWith('.test.ts'))
-    .map((sourcePath) => ({
-      contents: readFileSync(sourcePath, 'utf8'),
-      moduleName: portable(path.relative(directory, sourcePath)),
-      sourcePath,
-    }));
 }
 
 function filesUnder(directory) {
@@ -297,6 +266,10 @@ function runCompilerBuild(directory) {
 
 function portable(filename) {
   return filename.split(path.sep).join('/');
+}
+
+function compareText(left, right) {
+  return left < right ? -1 : left > right ? 1 : 0;
 }
 
 function summary(prefix, result) {
