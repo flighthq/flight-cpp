@@ -1,4 +1,13 @@
 @PACKAGE_INIT@
 
+include(CMakeFindDependencyMacro)
+
+if(@FLIGHT_CPP_BUILD_HOST_SDL@)
+  find_dependency(SDL3 3.2 CONFIG)
+endif()
+if(@FLIGHT_CPP_BUILD_HOST_SDL@ AND @FLIGHT_CPP_BUILD_HOST_SDL_VULKAN@)
+  find_dependency(Vulkan)
+endif()
+
 include("${CMAKE_CURRENT_LIST_DIR}/FlightCppTargets.cmake")
 check_required_components(FlightCpp)

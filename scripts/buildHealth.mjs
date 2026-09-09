@@ -50,22 +50,33 @@ for (const target of ['cpp', 'c', 'flight_cpp', 'flight_cpp_c', 'tests']) {
   requireText(bazelGraph, `name = "${target}"`, `Bazel //:${target} target`);
 }
 
-const publicHeaders = filesUnder(path.join(cppRoot, 'include', 'flight'), (name) => name.endsWith('.hpp')).map(
-  (filename) => path.basename(filename, '.hpp'),
-);
+const publicHeaderRoot = path.join(cppRoot, 'include', 'flight');
+const publicHeaders = filesUnder(publicHeaderRoot, (name) => name.endsWith('.hpp'))
+  .filter((filename) => path.dirname(filename) === publicHeaderRoot)
+  .map((filename) => path.basename(filename, '.hpp'));
 for (const header of publicHeaders) {
   requireText(cmakeGraph, `  ${header}\n`, `CMake public header ${header}.hpp`);
   requireText(bazelGraph, `include/flight/${header}.hpp`, `Bazel public header ${header}.hpp`);
   requireText(bazelGraph, `("${header}",`, `Bazel self-containment test for ${header}.hpp`);
 }
 
-const productionSources = filesUnder(path.join(cppRoot, 'src'), isNativeSource);
+const hostSdlSourceRoot = path.join(cppRoot, 'src', 'host_sdl');
+const productionSources = filesUnder(path.join(cppRoot, 'src'), isNativeSource).filter(
+  (filename) => !filename.startsWith(`${hostSdlSourceRoot}${path.sep}`),
+);
 for (const source of productionSources) requireSourceInBothBuilds(source, 'runtime source');
+const hostSdlSources = filesUnder(hostSdlSourceRoot, isNativeSource);
+for (const source of hostSdlSources) requireText(cmakeGraph, path.basename(source), `CMake SDL host source ${path.basename(source)}`);
+for (const target of ['Flight::HostSdl', 'Flight::HostSdlGl', 'Flight::HostSdlVulkan', 'Flight::HostSdlWgpu']) {
+  requireText(cmakeGraph, target, `CMake ${target} target`);
+}
 
 const executableTests = filesUnder(path.join(cppRoot, 'tests'), isNativeSource).filter(
-  (filename) => path.basename(filename) !== 'header_self_containment_test.cpp',
+  (filename) =>
+    path.basename(filename) !== 'header_self_containment_test.cpp' && path.basename(filename) !== 'host_sdl_test.cpp',
 );
 for (const source of executableTests) requireSourceInBothBuilds(source, 'test source');
+requireText(cmakeGraph, 'host_sdl_test.cpp', 'CMake SDL host test source');
 
 const benchmarkSources = filesUnder(path.join(cppRoot, 'benchmarks'), isNativeSource);
 for (const source of benchmarkSources) requireSourceInBothBuilds(source, 'benchmark source');
@@ -108,7 +119,7 @@ if (failures.length > 0) {
 }
 
 process.stdout.write(
-  `C++ build metadata agrees across CMake and Bazel ${bazelVersion}: ${String(publicHeaders.length)} public headers, ${String(productionSources.length)} runtime source(s), ${String(executableTests.length)} executable test source(s), ${String(benchmarkSources.length)} benchmark source(s), and ${String(exampleSources.length)} example source(s).\n`,
+  `C++ build metadata agrees across CMake and Bazel ${bazelVersion}: ${String(publicHeaders.length)} public headers, ${String(productionSources.length)} runtime source(s), ${String(executableTests.length)} executable test source(s), ${String(benchmarkSources.length)} benchmark source(s), and ${String(exampleSources.length)} example source(s); CMake additionally declares ${String(hostSdlSources.length)} optional SDL host source(s).\n`,
 );
 
 function filesUnder(directory, include) {

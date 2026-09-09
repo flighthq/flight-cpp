@@ -14,6 +14,8 @@ include(GNUInstallDirs)
 option(FLIGHT_CPP_ENABLE_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
 option(FLIGHT_CPP_BUILD_BENCHMARKS "Build deterministic runtime performance smoke gates" OFF)
 option(FLIGHT_CPP_BUILD_EXAMPLES "Build native Flight examples" OFF)
+option(FLIGHT_CPP_BUILD_HOST_SDL "Build the optional SDL 3 native host package" OFF)
+option(FLIGHT_CPP_BUILD_HOST_SDL_VULKAN "Build Vulkan support when the SDL host package is enabled" ON)
 option(FLIGHT_CPP_WARNINGS_AS_ERRORS "Treat warnings in flight-cpp's own targets as errors" OFF)
 set(FLIGHT_CPP_ABI_VERSION 1)
 
@@ -68,6 +70,99 @@ if(FLIGHT_CPP_ENABLE_SANITIZERS)
   target_link_options(flight_cpp INTERFACE -fsanitize=address,undefined)
 endif()
 
+set(flight_cpp_install_targets flight_cpp flight_cpp_c)
+
+if(FLIGHT_CPP_BUILD_HOST_SDL)
+  find_package(SDL3 3.2 CONFIG REQUIRED)
+
+  add_library(
+    flight_host_sdl
+    src/host_sdl/host.cpp
+    src/host_sdl/window.cpp
+  )
+  add_library(Flight::HostSdl ALIAS flight_host_sdl)
+  set_target_properties(
+    flight_host_sdl
+    PROPERTIES
+      EXPORT_NAME HostSdl
+      POSITION_INDEPENDENT_CODE ON
+      SOVERSION "${FLIGHT_CPP_ABI_VERSION}"
+      VERSION "${PROJECT_VERSION}"
+  )
+  target_link_libraries(flight_host_sdl PUBLIC Flight::Cpp SDL3::SDL3)
+  flight_cpp_set_project_warnings(flight_host_sdl)
+
+  add_library(flight_host_sdl_gl src/host_sdl/gl.cpp)
+  add_library(Flight::HostSdlGl ALIAS flight_host_sdl_gl)
+  set_target_properties(
+    flight_host_sdl_gl
+    PROPERTIES
+      EXPORT_NAME HostSdlGl
+      POSITION_INDEPENDENT_CODE ON
+      SOVERSION "${FLIGHT_CPP_ABI_VERSION}"
+      VERSION "${PROJECT_VERSION}"
+  )
+  target_link_libraries(flight_host_sdl_gl PUBLIC Flight::HostSdl)
+  flight_cpp_set_project_warnings(flight_host_sdl_gl)
+
+  add_library(flight_host_sdl_wgpu src/host_sdl/wgpu.cpp)
+  add_library(Flight::HostSdlWgpu ALIAS flight_host_sdl_wgpu)
+  set_target_properties(
+    flight_host_sdl_wgpu
+    PROPERTIES
+      EXPORT_NAME HostSdlWgpu
+      POSITION_INDEPENDENT_CODE ON
+      SOVERSION "${FLIGHT_CPP_ABI_VERSION}"
+      VERSION "${PROJECT_VERSION}"
+  )
+  target_link_libraries(flight_host_sdl_wgpu PUBLIC Flight::HostSdl)
+  flight_cpp_set_project_warnings(flight_host_sdl_wgpu)
+
+  list(APPEND flight_cpp_install_targets flight_host_sdl flight_host_sdl_gl flight_host_sdl_wgpu)
+
+  if(FLIGHT_CPP_BUILD_HOST_SDL_VULKAN)
+    find_package(Vulkan REQUIRED)
+    add_library(flight_host_sdl_vulkan src/host_sdl/vulkan.cpp)
+    add_library(Flight::HostSdlVulkan ALIAS flight_host_sdl_vulkan)
+    set_target_properties(
+      flight_host_sdl_vulkan
+      PROPERTIES
+        EXPORT_NAME HostSdlVulkan
+        POSITION_INDEPENDENT_CODE ON
+        SOVERSION "${FLIGHT_CPP_ABI_VERSION}"
+        VERSION "${PROJECT_VERSION}"
+    )
+    target_link_libraries(flight_host_sdl_vulkan PUBLIC Flight::HostSdl Vulkan::Vulkan)
+    flight_cpp_set_project_warnings(flight_host_sdl_vulkan)
+    list(APPEND flight_cpp_install_targets flight_host_sdl_vulkan)
+  endif()
+
+  if(BUILD_SHARED_LIBS)
+    target_compile_definitions(
+      flight_host_sdl
+      PRIVATE FLIGHT_HOST_SDL_EXPORTS
+      PUBLIC FLIGHT_HOST_SDL_SHARED
+    )
+    target_compile_definitions(
+      flight_host_sdl_gl
+      PRIVATE FLIGHT_HOST_SDL_GL_EXPORTS
+      PUBLIC FLIGHT_HOST_SDL_GL_SHARED
+    )
+    target_compile_definitions(
+      flight_host_sdl_wgpu
+      PRIVATE FLIGHT_HOST_SDL_WGPU_EXPORTS
+      PUBLIC FLIGHT_HOST_SDL_WGPU_SHARED
+    )
+    if(TARGET flight_host_sdl_vulkan)
+      target_compile_definitions(
+        flight_host_sdl_vulkan
+        PRIVATE FLIGHT_HOST_SDL_VULKAN_EXPORTS
+        PUBLIC FLIGHT_HOST_SDL_VULKAN_SHARED
+      )
+    endif()
+  endif()
+endif()
+
 if(BUILD_TESTING)
   add_subdirectory(tests)
 endif()
@@ -81,7 +176,7 @@ if(FLIGHT_CPP_BUILD_EXAMPLES)
 endif()
 
 install(
-  TARGETS flight_cpp flight_cpp_c
+  TARGETS ${flight_cpp_install_targets}
   EXPORT FlightCppTargets
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"

@@ -6,7 +6,7 @@ This is a working foundation, not yet a production-support claim. Version 0.1.0 
 
 ## Build
 
-The project has no third-party runtime or test dependencies. The presets require CMake 3.20 or newer, a C++20 compiler, and Ninja:
+The core runtime and its tests have no third-party dependencies. The presets require CMake 3.20 or newer, a C++20 compiler, and Ninja:
 
 ```sh
 cmake --preset development
@@ -25,6 +25,18 @@ bazel test --config=local-posix //:tests
 Use `--config=local-msvc` for the default Visual C++ toolchain, or select an arbitrary registered platform and C++ toolchain without changing the Flight graph. The [Bazel build contract](docs/bazel.md) covers local, cross, remote-execution, and reproducibility policy.
 
 GCC and Clang development builds can add `-DFLIGHT_CPP_ENABLE_SANITIZERS=ON` to run the same runtime and generated-program tests under AddressSanitizer and UndefinedBehaviorSanitizer.
+
+The handwritten SDL 3 host is an optional CMake package. Enabling it builds SDL lifecycle/window support plus
+separate GL, Vulkan, and WebGPU surface targets without adding dependencies to `Flight::Cpp`:
+
+```sh
+cmake --preset development -DFLIGHT_CPP_BUILD_HOST_SDL=ON
+cmake --build --preset development
+ctest --preset development
+```
+
+See the [SDL host package guide](docs/host-sdl.md) for dependencies, exported targets, ownership, and the generated
+SDK wiring lane.
 
 Release builds can add `-DFLIGHT_CPP_BUILD_BENCHMARKS=ON`. The resulting `flight_cpp.performance` CTest emits JSON-lines measurements and applies deliberately broad throughput floors for collection, ordered-map, and settled-task regressions. These are smoke gates, not cross-machine comparisons; release-candidate history should tighten them only after a stable runner baseline exists.
 

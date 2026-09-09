@@ -55,3 +55,14 @@ foreach(header IN LISTS flight_cpp_public_headers)
   target_link_libraries("flight_cpp_header_${header}_test" PRIVATE Flight::Cpp)
   flight_cpp_set_project_warnings("flight_cpp_header_${header}_test")
 endforeach()
+
+if(TARGET Flight::HostSdlWgpu)
+  add_executable(flight_cpp_host_sdl_tests host_sdl_test.cpp)
+  target_link_libraries(flight_cpp_host_sdl_tests PRIVATE Flight::HostSdlWgpu)
+  flight_cpp_set_project_warnings(flight_cpp_host_sdl_tests)
+  add_test(NAME flight_cpp.host_sdl COMMAND flight_cpp_host_sdl_tests)
+  set_tests_properties(
+    flight_cpp.host_sdl
+    PROPERTIES ENVIRONMENT "SDL_VIDEODRIVER=dummy;SDL_AUDIODRIVER=dummy"
+  )
+endif()
