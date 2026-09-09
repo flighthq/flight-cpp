@@ -7,6 +7,10 @@ namespace flight {
 inline constexpr double e = 2.718281828459045235360287471352662498;
 inline constexpr double pi = 3.141592653589793238462643383279502884;
 
+inline double power(double base, double exponent) noexcept {
+  return std::pow(base, exponent);
+}
+
 inline double round(double value) noexcept {
   if (!std::isfinite(value) || value == 0.0) return value;
   if (value < 0.0 && value >= -0.5) return -0.0;

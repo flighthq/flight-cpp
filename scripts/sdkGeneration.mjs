@@ -10,10 +10,9 @@ import {
   rmSync,
   writeFileSync,
 } from 'node:fs';
-import { availableParallelism, tmpdir } from 'node:os';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { Worker } from 'node:worker_threads';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolveDependency } from './dependencyLock.mjs';
 
@@ -86,36 +85,89 @@ try {
 }
 
 async function generateSdk(outputRoot, flightDependency, compilerDependency, compilerModule) {
+  const { compileTypeScriptPackageGraph, createCppCompilerBackend, parseTypeScriptSource } = await import(
+    pathToFileURL(compilerModule)
+  );
   const sdkPackageFile = path.join(flightDependency.directory, 'packages', 'sdk', 'package.json');
   const sdkPackage = JSON.parse(readFileSync(sdkPackageFile, 'utf8'));
   const packageNames = Object.keys(sdkPackage.dependencies ?? {})
     .filter((name) => name.startsWith('@flighthq/'))
     .sort();
-  const requestedJobs = Number.parseInt(process.env.FLIGHT_CPP_SDK_JOBS ?? '', 10);
-  const jobs = Number.isInteger(requestedJobs) && requestedJobs > 0
-    ? Math.min(requestedJobs, packageNames.length)
-    : Math.min(availableParallelism(), 8, packageNames.length);
-  const assignments = Array.from({ length: jobs }, () => []);
-  packageNames.forEach((packageName, index) => assignments[index % jobs].push(packageName));
-  const workerResults = await Promise.all(
-    assignments.map((assignedPackages) =>
-      runGenerationWorker({
-        compilerEntry: compilerModule,
-        flightDirectory: flightDependency.directory,
-        outputRoot,
-        packageNames: assignedPackages,
-      }),
-    ),
+  const includedPackages = new Set(packageNames);
+  const packageDescriptors = packageNames.map((packageName) => {
+    const basename = packageName.slice('@flighthq/'.length);
+    const root = path.join(flightDependency.directory, 'packages', basename);
+    const manifest = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'));
+    return {
+      dependencies: Object.keys(manifest.dependencies ?? {})
+        .filter((dependency) => includedPackages.has(dependency))
+        .sort(compareText),
+      name: packageName,
+      root,
+      sources: listSourceFiles(path.join(root, 'src')),
+      target: {
+        includePrefix: `flight/${cppPackageName(packageName)}`,
+        namespace: `flight::${cppPackageName(packageName)}`,
+      },
+    };
+  });
+  const sources = packageDescriptors.flatMap((package_) =>
+    package_.sources.map((source) => ({
+      packageName: package_.name,
+      packageRoot: package_.root,
+      sourceFile: parseTypeScriptSource(source.sourcePath, source.contents),
+      upstreamDirectory: flightDependency.directory,
+    })),
   );
-  const packageResults = workerResults
-    .flatMap((result) => result.packageResults)
-    .sort((left, right) => (left.package < right.package ? -1 : 1));
-  const refusals = workerResults
-    .flatMap((result) => result.refusals)
-    .sort(
-      (left, right) =>
-        compareText(left.package, right.package) || compareText(left.module, right.module),
-    );
+  const compilation = compileTypeScriptPackageGraph({
+    backend: createCppCompilerBackend(),
+    backendOptions: {
+      packageTargets: Object.fromEntries(packageDescriptors.map((package_) => [package_.name, package_.target])),
+      runtimeProfile: 'flight-cpp',
+      upstreamCommit: flightDependency.commit,
+    },
+    graph: {
+      entries: [],
+      moduleDependencies: [],
+      packages: packageDescriptors.map((package_) => ({
+        dependencies: package_.dependencies,
+        name: package_.name,
+        root: package_.root,
+      })),
+      schema: 'flight-compiler-package-graph/1',
+    },
+    moduleResolution: createModuleResolutionPlan(packageDescriptors, flightDependency.directory),
+    sources,
+  });
+  for (const file of compilation.compilation.files) {
+    const target = path.join(outputRoot, 'include', file.path);
+    mkdirSync(path.dirname(target), { recursive: true });
+    writeFileSync(target, file.contents);
+  }
+  const descriptorByName = new Map(packageDescriptors.map((package_) => [package_.name, package_]));
+  const packageResults = compilation.report.packages.map((package_) => {
+    const descriptor = descriptorByName.get(package_.name);
+    if (!descriptor) throw new Error(`Compiler reported unknown package ${package_.name}`);
+    return {
+      cppIncludePrefix: descriptor.target.includePrefix,
+      cppNamespace: descriptor.target.namespace,
+      emittedModules: package_.modules.filter((module) => module.status === 'emitted').length,
+      package: package_.name,
+      refusedModules: package_.modules.filter((module) => module.status === 'refused').length,
+      sourceModules: package_.modules.length,
+    };
+  });
+  const refusals = compilation.report.modules.flatMap((module) =>
+    module.refusals.map((refusal) => ({
+      code: refusal.code,
+      ...(refusal.column === undefined ? {} : { column: refusal.column }),
+      ...(refusal.line === undefined ? {} : { line: refusal.line }),
+      module: module.module.source,
+      package: module.module.packageName,
+      reason: refusal.message,
+      stage: refusal.stage,
+    })),
+  );
 
   const totals = packageResults.reduce(
     (result, item) => ({
@@ -135,7 +187,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
     },
     namespaceMapping: {
       desiredRoot: 'flight',
-      status: 'pending flight-compiler namespace remap support',
+      status: 'applied',
     },
     packages: packageResults,
     source: {
@@ -150,7 +202,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
     },
   };
   const refusalLedger = {
-    schema: 'flight-generated-sdk-refusals/1',
+    schema: 'flight-generated-sdk-refusals/2',
     compilerRevision: compilerDependency.commit,
     sourceRevision: flightDependency.commit,
     refusals,
@@ -159,24 +211,12 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   mkdirSync(outputRoot, { recursive: true });
   writeFileSync(path.join(outputRoot, 'manifest.json'), `${JSON.stringify(manifest, undefined, 2)}\n`);
   writeFileSync(path.join(outputRoot, 'refusals.json'), `${JSON.stringify(refusalLedger, undefined, 2)}\n`);
+  writeFileSync(
+    path.join(outputRoot, 'initialization.json'),
+    `${JSON.stringify(compilation.report.initialization, undefined, 2)}\n`,
+  );
   writeFileSync(path.join(outputRoot, 'README.md'), generatedReadme(manifest));
   return manifest.summary;
-}
-
-function runGenerationWorker(workerData) {
-  return new Promise((resolve, reject) => {
-    const worker = new Worker(new URL('./sdkGenerationWorker.mjs', import.meta.url), { workerData });
-    let result;
-    worker.once('message', (message) => {
-      result = message;
-    });
-    worker.once('error', reject);
-    worker.once('exit', (code) => {
-      if (code !== 0) reject(new Error(`SDK generation worker exited with code ${String(code)}`));
-      else if (result === undefined) reject(new Error('SDK generation worker returned no result'));
-      else resolve(result);
-    });
-  });
 }
 
 function generatedReadme(manifest) {
@@ -191,8 +231,8 @@ ${manifest.summary.packages} SDK packages and refused ${manifest.summary.refused
 \`include/flight/<package>/\`; every refusal and its owning module is recorded in \`refusals.json\`.
 
 This is a bring-up inventory. It is intentionally committed before it forms a compilable SDK closure, and CMake and
-Bazel do not publish it as \`Flight::Sdk\` yet. Current generated namespaces still reflect the npm publisher scope.
-The manifest records the pending remap to the public C++ \`flight\` namespace.
+Bazel do not publish it as \`Flight::Sdk\` yet. The package graph applies the public C++ \`flight\` namespaces and
+installed include prefixes. \`initialization.json\` records the compiler's dependency and module-evaluation plan.
 
 Regenerate and verify the tree from the repository root:
 
@@ -215,6 +255,43 @@ function filesUnder(directory) {
     else files.push(filename);
   }
   return files;
+}
+
+function listSourceFiles(directory) {
+  if (!existsSync(directory)) return [];
+  return filesUnder(directory)
+    .filter((filename) => filename.endsWith('.ts') && !filename.endsWith('.d.ts') && !filename.endsWith('.test.ts'))
+    .map((sourcePath) => ({ contents: readFileSync(sourcePath, 'utf8'), sourcePath }));
+}
+
+function cppPackageName(packageName) {
+  return packageName.slice('@flighthq/'.length).replaceAll('-', '_');
+}
+
+function createModuleResolutionPlan(packages, upstreamDirectory) {
+  const edges = packages
+    .flatMap((package_) => [
+      {
+        packageName: package_.name,
+        source: portable(path.relative(upstreamDirectory, path.join(package_.root, 'src', 'index.ts'))),
+        specifier: package_.name,
+      },
+      {
+        packageName: package_.name,
+        source: portable(path.relative(upstreamDirectory, path.join(package_.root, 'src', 'contract.ts'))),
+        specifier: `${package_.name}/contract`,
+      },
+    ])
+    .filter((lane) => existsSync(path.join(upstreamDirectory, lane.source)))
+    .map((lane) => ({
+      specifier: lane.specifier,
+      target: {
+        packageName: lane.packageName,
+        source: lane.source,
+      },
+    }))
+    .sort((left, right) => compareText(left.specifier, right.specifier));
+  return { edges, schema: 'flight-compiler-module-resolution/1' };
 }
 
 function compareTrees(expectedRoot, actualRoot) {

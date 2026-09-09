@@ -1,137 +1,94 @@
-# Request to flight-compiler: C++ package graphs and native bindings
+# flight-compiler package graph review
 
-This request is ready to send upstream. It was refreshed against Flight `1274ec5` and flight-compiler `8a4b1a0`.
-The committed [SDK manifest](../generated/manifest.json) and [refusal ledger](../generated/refusals.json) record the
-last complete sweep at compiler `4b44279`; the same Flight checkout is the current reproduction corpus. The runtime
-pin remains on `4b44279` because the current compiler emits an incompatible ABI assertion and a full current sweep
-does not complete in a practical gate window.
+This review covers Flight `1274ec5` and flight-compiler `2faa5a7`. The compiler revision is pinned in
+[`dependencies.lock.json`](../dependencies.lock.json), and the committed [SDK manifest](../generated/manifest.json),
+[initialization plan](../generated/initialization.json), and [refusal ledger](../generated/refusals.json) are generated
+from that pair.
 
-## Requested work
+## What the new compiler work unlocked
 
-Please add a public C++ package/workspace compilation request that compiles a module graph once, supports explicit
-target identity and native external bindings, and emits a deterministic buildable package report. We need this to
-compile the Flight SDK into one native package graph and connect it to a handwritten SDL host without teaching the
-compiler about SDL.
+The three integration blockers reported against `8a4b1a0` now have real public contracts:
 
-The work can land incrementally in this order.
+- `b53c171` aligns emitted C++ with the pinned ABI. Generated headers assert `cpp_abi == 1`, matching flight-cpp
+  `c437f20`.
+- `6f12141` accepts separate package namespace and installed-include mappings plus a versioned
+  `flight-cpp-external-bindings/1` manifest. The SDK now emits directly into `flight::<package>` namespaces and
+  `flight/<package>/` include paths without rewriting generated text.
+- `b07db2c` adds `compileTypeScriptPackageGraph`. One request now carries all 2,851 SDK modules, 154 package roots,
+  package dependencies, and public export resolution. It shares C++ reference analysis, records dependency-closed
+  partial output, and returns a module-evaluation plan.
 
-### 1. Align the emitted runtime ABI with the pinned runtime
+The full graph completes in about three minutes on the current development machine. The previous isolated sweep
+emitted 1,322 headers that did not form a dependency closure. The graph report emits 305 dependency-closed modules
+and refuses 2,546; that lower headline is more useful because no reported output depends on a refused module. It
+records 2,726 refusal causes: 2,310 propagated dependency failures, 312 lowering diagnostics, and 104 emission
+failures.
 
-The C++ backend at `8a4b1a0` emits:
+The old `assetLibrary.ts` duplicate-binding invariant no longer occurs. Imported identity is now resolved across the
+graph, apart from two remaining `indeterminateIdentity` cases and four `unsupportedReferenceForm` cases in
+`@flighthq/types`. The earlier `@flighthq/adjustments` probe now exposes three direct compiler/runtime blockers instead
+of isolated-import noise: two `FirstTypeNode` diagnostics and unsupported dense-array length construction. Its other
+refusals are dependency propagation from those modules or `@flighthq/types/contract`.
 
-```cpp
-static_assert(flight::runtime_contract.cpp_abi == 2, "Flight C++ runtime ABI mismatch");
-```
+## Remaining upstream requests
 
-The compiler pins flight-cpp `c437f20`, whose `flight::abi_version` is 1. A header emitted by the compiler therefore
-rejects the runtime revision the compiler declares as its dependency.
+### Keep the runtime contract executable
 
-Acceptance criteria:
+ABI alignment is fixed, but the C++ backend emits runtime APIs absent from the exact flight-cpp revision it pins.
+Examples include `flight::ReferenceEnabled`, `flight::Ref<T>`, `flight::make_ref`, binding cells, bitwise/shift
+helpers, and `flight::power`, `minimum`, and `maximum`. This repository now supplies `flight::power` so its generated
+tween remains runnable. A compile probe over the 305 dependency-closed SDK headers passes 110 and fails 195. The
+compiler's golden C++ compile probe fails for the same runtime-surface mismatch.
 
-- Derive the required ABI from a versioned backend/runtime contract input, or emit ABI 1 while `c437f20` remains the
-  compiler pin.
-- Move the compiler pin and runtime contract together when ABI 2 is intentional.
-- Add a gate that compiles one emitted C++ header against the compiler's pinned flight-cpp revision.
+Please compile representative `runtimeProfile: "flight-cpp"` output against the pinned flight-cpp checkout as a
+compiler gate. ABI number equality cannot catch a missing API surface. Either advance the runtime pin with these
+semantics or keep the backend from claiming that runtime profile until its required capabilities exist.
 
-### 2. Compile packages and workspaces as one module graph
+Some emitted constructs fail independently of missing runtime names, including source-order calls without a prior
+declaration, optional defaults that call `value_or` with the optional itself, invalid `cmath.log` member syntax, and
+out parameters emitted by value. These need target compile fixtures and, where observable, TypeScript/native behavior
+oracles.
 
-`compileCompilerCommandLineRequest` currently calls `compileTypeScriptModules` once for every source with a one-item
-`sources` array. That discards sibling type/value identity and makes the new cross-module reference planner
-unavailable to the directory command. For example, isolated `adjustment.ts` refuses imported
-`EntityConstruction` with `indeterminateIdentity`.
+### Preserve package graph identity through the remaining type cases
 
-The underlying graph API lowers all 22 modules in `@flighthq/adjustments` in about one second and reports the two
-actual `FirstTypeNode` diagnostics. C++ emission still rebuilds reference representation planning for each module,
-however, and multiple SDK modules consume minutes without completing. A serial full-SDK directory report made only
-four headers before it was stopped after 38 minutes; running packages concurrently saturated eleven cores but reached
-the same per-module stalls. The graph-context probe also found a current compiler invariant failure in
-`assetLibrary.ts`: the `lowering-plan` pass reports a duplicate type-binding identity.
+The direct refusal families are now clear enough to prioritize:
 
-Acceptance criteria:
+| Count | Direct lowering family |
+| ---: | --- |
+| 90 | interface heritage requires an interface reference |
+| 77 | `FirstTypeNode` |
+| 43 | computed property names |
+| 37 | `unique` type operators |
+| 28 | conditional types |
+| 11 | mapped types |
 
-- Accept many sources carrying their real `packageName`, `sourceFile`, and package root in one request.
-- Resolve sibling imports, reexports, interface/class heritage, type/value identity, and cross-package imports before
-  C++ emission.
-- Accept an explicit package dependency graph or workspace manifest rather than inferring npm layout in the backend.
-- Keep report mode useful: return a deterministic per-module refusal with a stable code and source span while
-  compiling unaffected modules where the graph permits it.
-- Emit all intra-package and cross-package include dependencies, plus a machine-readable package dependency/output
-  manifest.
-- Reuse graph analysis across modules. A full report over this 2,851-module corpus needs to be practical as a normal
-  regeneration/CI gate rather than performing a fresh compiler pipeline per file.
+There are also 24 caught lowering-pass failures, mostly interface inheritance unable to find local or imported base
+interfaces. Please retain graph identity through interface-inheritance lowering and finish the two remaining
+`indeterminateIdentity` and four `unsupportedReferenceForm` cases.
 
-A suitable API could be a new request beside the discovery-oriented directory command. The existing isolated command
-can remain available for breadth probes.
+### Separate runtime ambient gaps from native host bindings
 
-### 3. Make C++ namespace and include identity configurable
+The external-binding manifest is the correct boundary for actual host and graphics types such as WebGL objects,
+WebGPU objects, canvas image sources, and DOM-backed surfaces. flight-cpp or the compiler's standard-library plan
+should own JavaScript built-ins such as `Number`, `Record`, `ArrayBuffer`, `DataView`, `RangeError`, `TextEncoder`,
+and `TextDecoder`. TypeScript syntax such as `const` type parameters should be diagnosed as syntax/lowering rather
+than reported as a missing ambient `const[type]` binding.
 
-`convertPackageNameToCppNamespace` currently hardcodes the npm publisher into names such as `flighthq_render_wgpu`.
-The publisher is `@flighthq`; the project and public code identity are `flight`.
+The SDL host will provide a downstream manifest only for types it can implement truthfully. It will not map browser
+types to unrelated SDL handles merely to increase emission coverage.
 
-Acceptance criteria:
+### Emit the planned module initialization
 
-- Accept an explicit target mapping per source package, with separate C++ namespace and installed include prefix.
-- Apply the mapping consistently to declarations, imports, reexports, forward declarations, diagnostics, and emitted
-  file manifests.
-- Support this intended mapping without downstream text rewriting:
+`flight-compiler-module-evaluation/1` now gives downstream tooling deterministic dependency groups, live-binding
+facts, and declaration initialization steps. This is enough to inspect and commit the plan, but it does not yet emit
+the C++ translation units or initialization entry point needed to build executable top-level module behavior.
 
-```json
-{
-  "@flighthq/types": {
-    "namespace": "flight::types",
-    "includePrefix": "flight/types"
-  },
-  "@flighthq/render-wgpu": {
-    "namespace": "flight::render_wgpu",
-    "includePrefix": "flight/render_wgpu"
-  }
-}
-```
+Please add C++ source/translation-unit emission once executable top-level statements exist in neutral IR. The report
+should continue to own dependency order and one-definition-safe initialization.
 
-### 4. Accept target-native external symbol bindings
+## Ownership boundary
 
-The SDK intentionally refers to platform APIs such as `WebGL2RenderingContext`, `HTMLCanvasElement`, `GPUDevice`,
-`GPUCanvasContext`, WebGPU enums, and related values. Native C++ should inject those implementations. SDL only owns
-the window/context/surface mechanics; Dawn, wgpu-native, or native GL supplies the graphics API.
-
-Acceptance criteria:
-
-- Accept a versioned C++ external-binding manifest for ambient types and values.
-- Each binding can name required headers, the qualified C++ type/value, value versus type space, nullability,
-  ownership/borrowing, and any constructor or static-member mapping needed by lowering.
-- Diagnose every reachable ambient symbol without a binding; do not silently substitute an unrelated runtime type.
-- Permit downstream packages to provide binding manifests without importing their implementation into the compiler.
-- Prove the route with the Flight `GlContext`, `WgpuHostBackend`, `WgpuPresentationSurface`, and
-  `WgpuRenderSurfaceProvider` dependency closure.
-
-### 5. Emit executable module initialization
-
-Examples and SDK packages contain top-level values and statements whose evaluation order is observable. A native
-library needs one definition and deterministic dependency-ordered initialization; a collection of unrelated inline
-headers cannot represent the whole module contract.
-
-Acceptance criteria:
-
-- Lower supported top-level function/value declarations and executable statements with ECMAScript module dependency
-  and evaluation order.
-- Emit an explicit implementation/translation-unit plan, or an equivalent one-definition-safe initialization API,
-  so CMake can compile the result into a native library.
-- Include initialization units and order in the output manifest.
-
-### 6. Work down the refusal ledger after the graph boundary lands
-
-Once imports carry real identities, prioritize the remaining constructs by count in `generated/refusals.json` rather
-than adding host-specific compiler exceptions. The current recurring families include first-type-node resolution,
-interface heritage, `unique symbol`, conditional and mapped types, index/construct signatures, computed property
-names, and unsupported function statements. GL/WebGPU ambient failures then move to the external-binding lane above.
-
-For each new lowering, an emitted C++ compile test and a TypeScript-versus-native behavioral oracle should accompany
-the feature when it has runtime semantics. Type-only erasures still need structural tests proving that public identity
-and constraints survive.
-
-## Downstream division of responsibility
-
-flight-compiler owns module graph semantics, lowering, names, external-binding contracts, output layout, and refusal
-reports. flight-cpp owns the semantic runtime and CMake packaging. `Flight::HostSdl`, `Flight::HostSdlGl`,
-`Flight::HostSdlVulkan`, and `Flight::HostSdlWgpu` own SDL lifecycle and native handle acquisition. The generated Flight
-render packages continue to own rendering.
+flight-compiler owns module graph semantics, lowering, target names, external-binding contracts, output layout, and
+refusal reports. flight-cpp owns the semantic runtime and CMake packaging. `Flight::HostSdl`, `Flight::HostSdlGl`,
+`Flight::HostSdlVulkan`, and `Flight::HostSdlWgpu` own SDL lifecycle and native context/surface acquisition. Generated
+Flight renderer packages continue to own rendering.

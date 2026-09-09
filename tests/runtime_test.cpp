@@ -181,6 +181,8 @@ void test_presence_and_math() {
   check(std::signbit(flight::sign(-0.0)), "Math.sign preserves negative zero");
   check(std::isnan(flight::sign(std::numeric_limits<double>::quiet_NaN())),
         "Math.sign preserves NaN");
+  check(flight::power(2.0, 10.0) == 1024.0 && flight::power(4.0, -0.5) == 0.5,
+        "exponentiation uses the compiler runtime spelling");
   check(std::abs(flight::pi - std::acos(-1.0)) < 1.0e-15 &&
             std::abs(flight::e - std::exp(1.0)) < 1.0e-15,
         "Math constants are portable and retain double precision");
