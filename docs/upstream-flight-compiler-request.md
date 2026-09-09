@@ -30,7 +30,18 @@ graph, apart from two remaining `indeterminateIdentity` cases and four `unsuppor
 of isolated-import noise: two `FirstTypeNode` diagnostics and unsupported dense-array length construction. Its other
 refusals are dependency propagation from those modules or `@flighthq/types/contract`.
 
+`analyzeFlightWorkspace` cannot currently construct the input plan for this same checkout. It fails with
+`package-exclusion-drift` because `@flighthq/tool-pipeline` and `@flighthq/tool-registry` partially match the tooling
+exclusion heuristic. The downstream generator therefore constructs the requested SDK package graph and its two
+public export lanes directly from package manifests.
+
 ## Remaining upstream requests
+
+### Let SDK compilation consume workspace analysis
+
+Please either update the tooling exclusion classifier for the current Flight workspace or let inventory/module
+resolution analysis target an explicit package closure without evaluating unrelated tooling packages. Package
+exclusion policy should not prevent compiling the 154-package `@flighthq/sdk` dependency closure.
 
 ### Keep the runtime contract executable
 
