@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 // directly, not wrapped. This sweep covers what a reader cannot see by building.
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const gates = ['abiHealth', 'buildHealth', 'releaseHealth', 'emittedSourceCompile'];
+const gates = ['abiHealth', 'buildHealth', 'releaseHealth', 'exampleHealth', 'emittedSourceCompile'];
 const failed = [];
 
 for (const gate of gates) {

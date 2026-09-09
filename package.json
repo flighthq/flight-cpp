@@ -13,6 +13,7 @@
     "build:check": "node ./scripts/buildHealth.mjs",
     "check": "node ./scripts/check.mjs",
     "compile:check": "node ./scripts/emittedSourceCompile.mjs",
+    "examples:check": "node ./scripts/exampleHealth.mjs",
     "rehydrate": "node ./scripts/rehydrate.mjs",
     "rehydrate:check": "node ./scripts/rehydrate.mjs --check",
     "rehydrate:update": "node ./scripts/rehydrate.mjs --update",

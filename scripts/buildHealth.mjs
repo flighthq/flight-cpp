@@ -70,6 +70,9 @@ for (const source of executableTests) requireSourceInBothBuilds(source, 'test so
 const benchmarkSources = filesUnder(path.join(cppRoot, 'benchmarks'), isNativeSource);
 for (const source of benchmarkSources) requireSourceInBothBuilds(source, 'benchmark source');
 
+const exampleSources = filesUnder(path.join(cppRoot, 'examples'), isNativeSource);
+for (const source of exampleSources) requireSourceInBothBuilds(source, 'example source');
+
 if (presets.version !== 2 || presets.cmakeMinimumRequired?.major !== 3 || presets.cmakeMinimumRequired.minor !== 20) {
   failures.push('CMakePresets.json must remain usable with the declared CMake 3.20 floor');
 }
@@ -77,6 +80,9 @@ for (const name of ['development', 'release']) {
   const configuration = name === 'development' ? 'Debug' : 'Release';
   if (!presets.configurePresets?.some((preset) => preset.name === name && preset.binaryDir?.includes('/out/cmake/'))) {
     failures.push(`CMake configure preset ${name} is absent or writes outside out/cmake`);
+  }
+  if (!presets.configurePresets?.some((preset) => preset.name === name && preset.generator === 'Ninja')) {
+    failures.push(`CMake configure preset ${name} does not select Ninja`);
   }
   if (!presets.buildPresets?.some((preset) => preset.name === name && preset.configuration === configuration))
     failures.push(`CMake build preset ${name} does not select ${configuration}`);
@@ -88,8 +94,12 @@ for (const os of ['ubuntu-latest', 'macos-latest', 'windows-latest']) {
   requireText(ci, os, `Bazel CI platform ${os}`);
 }
 requireText(ci, 'bazel-contrib/setup-bazel@c5acdfb288317d0b5c0bbd7a396a3dc868bb0f86', 'pinned Bazel CI bootstrap');
-requireText(ci, '--config=${{ matrix.toolchain_config }} --config=ci test //...', 'Bazel platform toolchain CI run');
-requireText(ci, '--config=release test //benchmarks:runtime_benchmark', 'Bazel performance smoke CI run');
+requireText(ci, 'bazel test --config=${{ matrix.toolchain_config }} --config=ci //...', 'Bazel platform toolchain CI run');
+requireText(
+  ci,
+  'bazel test --config=${{ matrix.toolchain_config }} --config=release //benchmarks:runtime_benchmark',
+  'Bazel performance smoke CI run',
+);
 
 if (failures.length > 0) {
   process.stderr.write(`C++ build metadata failed with ${String(failures.length)} error(s):\n`);
@@ -98,7 +108,7 @@ if (failures.length > 0) {
 }
 
 process.stdout.write(
-  `C++ build metadata agrees across CMake and Bazel ${bazelVersion}: ${String(publicHeaders.length)} public headers, ${String(productionSources.length)} runtime source(s), ${String(executableTests.length)} executable test source(s), and ${String(benchmarkSources.length)} benchmark source(s).\n`,
+  `C++ build metadata agrees across CMake and Bazel ${bazelVersion}: ${String(publicHeaders.length)} public headers, ${String(productionSources.length)} runtime source(s), ${String(executableTests.length)} executable test source(s), ${String(benchmarkSources.length)} benchmark source(s), and ${String(exampleSources.length)} example source(s).\n`,
 );
 
 function filesUnder(directory, include) {

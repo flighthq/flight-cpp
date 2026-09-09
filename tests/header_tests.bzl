@@ -1,12 +1,14 @@
 """Public-header self-containment test targets."""
 
+load("@rules_cc//cc:defs.bzl", "cc_test")
+
 
 def flight_cpp_public_header_tests():
     """Declares one isolated compilation and execution test per C++ header."""
     tests = []
     for name, selector in _PUBLIC_HEADERS:
         target = "header_{}_test".format(name)
-        native.cc_test(
+        cc_test(
             name = target,
             srcs = ["header_self_containment_test.cpp"],
             local_defines = ["FLIGHT_CPP_HEADER_SELECTOR={}".format(selector)],

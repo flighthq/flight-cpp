@@ -1,3 +1,5 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
@@ -46,6 +48,7 @@ alias(
 test_suite(
     name = "tests",
     tests = [
+        "//examples:tween",
         "//tests:c_api_test",
         "//tests:c_api_thread_test",
         "//tests:generated_runtime_test",

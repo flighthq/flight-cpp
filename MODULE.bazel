@@ -5,4 +5,6 @@ module(
     bazel_compatibility = [">=9.2.0"],
 )
 
-# The runtime and its tests deliberately have no external Bazel dependencies.
+bazel_dep(name = "rules_cc", version = "0.2.22")
+
+# rules_cc supplies build rules; the runtime and its tests link no external libraries.

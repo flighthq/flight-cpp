@@ -1,6 +1,8 @@
 build --incompatible_strict_action_env
 build --nostamp
 
+common --lockfile_mode=error
+
 test --test_env=LC_ALL=C
 test --test_env=TZ=UTC
 test --test_output=errors

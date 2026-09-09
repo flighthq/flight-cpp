@@ -10,9 +10,11 @@
       "name": "development",
       "displayName": "Flight C++ development",
       "binaryDir": "${sourceDir}/out/cmake/${presetName}",
+      "generator": "Ninja",
       "cacheVariables": {
         "BUILD_TESTING": true,
         "CMAKE_BUILD_TYPE": "Debug",
+        "FLIGHT_CPP_BUILD_EXAMPLES": true,
         "FLIGHT_CPP_WARNINGS_AS_ERRORS": true
       }
     },
@@ -20,10 +22,12 @@
       "name": "release",
       "displayName": "Flight C++ release candidate",
       "binaryDir": "${sourceDir}/out/cmake/${presetName}",
+      "generator": "Ninja",
       "cacheVariables": {
         "BUILD_TESTING": true,
         "CMAKE_BUILD_TYPE": "Release",
         "FLIGHT_CPP_BUILD_BENCHMARKS": true,
+        "FLIGHT_CPP_BUILD_EXAMPLES": true,
         "FLIGHT_CPP_WARNINGS_AS_ERRORS": true
       }
     }

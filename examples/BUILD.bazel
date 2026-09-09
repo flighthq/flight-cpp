@@ -1,0 +1,10 @@
+load("@rules_cc//cc:defs.bzl", "cc_test")
+
+cc_test(
+    name = "tween",
+    srcs = [
+        "tween/generated/tween.hpp",
+        "tween/tween_example.cpp",
+    ],
+    deps = ["//:cpp"],
+)

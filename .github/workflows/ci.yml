@@ -45,10 +45,10 @@ jobs:
           disk-cache: bazel-runtime-${{ matrix.os }}
           repository-cache: true
       - name: Build and test runtime
-        run: bazel --config=${{ matrix.toolchain_config }} --config=ci test //...
+        run: bazel test --config=${{ matrix.toolchain_config }} --config=ci //...
       - name: Run Bazel performance smoke gate
         if: matrix.os == 'ubuntu-latest'
-        run: bazel --config=${{ matrix.toolchain_config }} --config=release test //benchmarks:runtime_benchmark
+        run: bazel test --config=${{ matrix.toolchain_config }} --config=release //benchmarks:runtime_benchmark
 
   cpp-runtime:
     name: C++ runtime (${{ matrix.compiler }})
@@ -120,5 +120,9 @@ jobs:
           node-version: 22
       - name: Rehydrate pinned checkouts
         run: npm run rehydrate
+      - name: Install pinned compiler dependencies
+        run: npm ci --prefix .dependencies/flight-compiler
+      - name: Regenerate native examples
+        run: npm run examples:check
       - name: Compile the pinned compiler's emitted C++
         run: npm run compile:check

@@ -1,3 +1,4 @@
+load("@rules_cc//cc:defs.bzl", "cc_test")
 load(":header_tests.bzl", "flight_cpp_public_header_tests")
 
 package(default_visibility = ["//visibility:public"])

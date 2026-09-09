@@ -1,6 +1,6 @@
 # Bazel build
 
-`flight-cpp` is a self-contained Bazel module as well as a CMake project. The Bazel graph builds only files below this directory and has no external module, runtime, or test dependencies. Bazelisk reads [`.bazelversion`](../.bazelversion) to select Bazel 9.2.0.
+`flight-cpp` is a Bazel module as well as a CMake project. The runtime and tests have no third-party dependencies; the build graph pins `rules_cc`, which supplies the C++ rules removed from Bazel's built-ins. Bazelisk reads [`.bazelversion`](../.bazelversion) to select Bazel 9.2.0.
 
 ## Local build and tests
 
@@ -18,6 +18,7 @@ For the Visual C++ toolchain, replace `local-posix` with `local-msvc`. Both name
 
 `//:tests` covers the runtime, compiler-generated source, C ABI, all public headers in isolation, and C and C++ public-surface consumers. The underlying labels are available for focused runs:
 
+- `//examples:tween`
 - `//tests:runtime_test`
 - `//tests:runtime_conformance_test`
 - `//tests:generated_runtime_test`
@@ -49,8 +50,8 @@ The target graph does not inspect the machine operating system or compiler and d
 
 ## Reproducibility policy
 
-The module pins its Bazel release, contains an explicit source graph, disables build stamping, and gives tests a fixed UTC/C process environment. Strict action environments keep undeclared machine state out of compile and link actions. Release builds use `--config=release`; CI can add `--config=ci` to retain all failures from a test sweep.
+The module pins its Bazel release and `rules_cc` version, contains an explicit source graph, disables build stamping, and gives tests a fixed UTC/C process environment. Strict action environments keep undeclared machine state out of compile and link actions. Release builds use `--config=release`; CI can add `--config=ci` to retain all failures from a test sweep.
 
-The current module declares no `bazel_dep`, module extension, archive, or Git repository, so there is no external dependency graph to lock or fetch. If an external build dependency is introduced, its version and integrity must be pinned in `MODULE.bazel`, the Bazel 9.2.0-generated `MODULE.bazel.lock` must be committed, and CI must resolve it with `--lockfile_mode=error` before the change is production-ready. A consuming repository owns its own module lock and may substitute its registered platforms and toolchains without changing `flight-cpp`.
+`MODULE.bazel.lock` records the complete external build dependency graph, and `.bazelrc` makes drift an error. If another external build dependency is introduced, its version and integrity must be pinned in `MODULE.bazel` and the lock must be deliberately regenerated with Bazel 9.2.0. A consuming repository owns its own module lock and may substitute its registered platforms and toolchains without changing `flight-cpp`.
 
 Bazel cache keys include the selected platform and toolchain. Reproducibility therefore means identical outputs for identical source, Bazel, flags, platform, and toolchain inputs; it does not assert byte equality between different C++ compilers or standard libraries.

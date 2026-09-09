@@ -13,6 +13,7 @@ include(GNUInstallDirs)
 
 option(FLIGHT_CPP_ENABLE_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
 option(FLIGHT_CPP_BUILD_BENCHMARKS "Build deterministic runtime performance smoke gates" OFF)
+option(FLIGHT_CPP_BUILD_EXAMPLES "Build native Flight examples" OFF)
 option(FLIGHT_CPP_WARNINGS_AS_ERRORS "Treat warnings in flight-cpp's own targets as errors" OFF)
 set(FLIGHT_CPP_ABI_VERSION 1)
 
@@ -73,6 +74,10 @@ endif()
 
 if(FLIGHT_CPP_BUILD_BENCHMARKS)
   add_subdirectory(benchmarks)
+endif()
+
+if(FLIGHT_CPP_BUILD_EXAMPLES)
+  add_subdirectory(examples)
 endif()
 
 install(

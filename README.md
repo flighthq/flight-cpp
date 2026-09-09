@@ -6,7 +6,7 @@ This is a working foundation, not yet a production-support claim. Version 0.1.0 
 
 ## Build
 
-The project has no third-party runtime or test dependencies:
+The project has no third-party runtime or test dependencies. The presets require CMake 3.20 or newer, a C++20 compiler, and Ninja:
 
 ```sh
 cmake --preset development
@@ -14,12 +14,12 @@ cmake --build --preset development
 ctest --preset development
 ```
 
-The presets leave generator and compiler selection to CMake. Pass `-DCMAKE_TOOLCHAIN_FILE=/path/to/toolchain.cmake` at configure time for a cross or pinned toolchain; `CMakeUserPresets.json` is ignored for machine-local settings.
+The presets use Ninja and leave compiler selection to CMake. Pass `-DCMAKE_TOOLCHAIN_FILE=/path/to/toolchain.cmake` at configure time for a cross or pinned toolchain; `CMakeUserPresets.json` is ignored for machine-local settings.
 
 The independent Bazel 9 module builds and runs the same public runtime, C ABI, generated-source, header, and consumer surfaces. Bazelisk selects the checked-in version:
 
 ```sh
-bazel --config=local-posix test //:tests
+bazel test --config=local-posix //:tests
 ```
 
 Use `--config=local-msvc` for the default Visual C++ toolchain, or select an arbitrary registered platform and C++ toolchain without changing the Flight graph. The [Bazel build contract](docs/bazel.md) covers local, cross, remote-execution, and reproducibility policy.
@@ -27,6 +27,16 @@ Use `--config=local-msvc` for the default Visual C++ toolchain, or select an arb
 GCC and Clang development builds can add `-DFLIGHT_CPP_ENABLE_SANITIZERS=ON` to run the same runtime and generated-program tests under AddressSanitizer and UndefinedBehaviorSanitizer.
 
 Release builds can add `-DFLIGHT_CPP_BUILD_BENCHMARKS=ON`. The resulting `flight_cpp.performance` CTest emits JSON-lines measurements and applies deliberately broad throughput floors for collection, ordered-map, and settled-task regressions. These are smoke gates, not cross-machine comparisons; release-candidate history should tighten them only after a stable runner baseline exists.
+
+## Examples
+
+The development and release presets build the native examples. Run the compiler-generated tween example after a development build:
+
+```sh
+./out/cmake/development/examples/flight_cpp_tween_example
+```
+
+The example preserves the fifteen easing tracks from Flight's TypeScript tween example and renders one deterministic frame in a terminal. Its portable calculation is TypeScript transpiled by the pinned `flight-compiler`; a small handwritten C++ host owns terminal output. See [`examples/README.md`](examples/README.md) for the source, generated output, regeneration command, and the current boundary around browser-backed examples.
 
 Consumers can build it in-tree with `add_subdirectory`, or install it and use:
 
@@ -75,6 +85,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | --- | --- |
 | `npm run abi:check` | Do the C header, its implementation, and the committed ABI snapshot name the same symbols? |
 | `npm run build:check` | Do the CMake and Bazel graphs describe the same headers, sources, tests, and benchmarks? |
+| `npm run examples:check` | Does the pinned compiler reproduce the checked-in native example output? |
 | `npm run release:check` | Do the version, ABI, C++ standard, and conformance profile agree across every file that states them? |
 | `npm run compile:check` | Does the pinned compiler's emitted C++ still compile against this runtime? |
 
