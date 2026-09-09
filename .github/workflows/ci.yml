@@ -1,0 +1,124 @@
+# Pull-request and main-branch gate.
+#
+# The sweep is split into independent jobs so a failure names its own lane and the slow native lanes
+# run in parallel with the fast metadata ones. Within a job every gate step carries `if: always()`,
+# preserving the property `npm run check` has locally: these gates are independent, so stopping at
+# the first failure would hide the rest.
+#
+# The runtime lanes need no Node. Only the metadata gates and the pinned-compiler integration lane
+# do, and only the latter rehydrates a sibling checkout.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bazel-runtime:
+    name: Bazel runtime (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            toolchain_config: local-posix
+          - os: macos-latest
+            toolchain_config: local-posix
+          - os: windows-latest
+            toolchain_config: local-msvc
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      # setup-bazel 0.19.0 is pinned so the build bootstrap is reproducible as well as the Bazel version.
+      - uses: bazel-contrib/setup-bazel@c5acdfb288317d0b5c0bbd7a396a3dc868bb0f86
+        with:
+          bazelisk-cache: true
+          cache-save: ${{ github.event_name != 'pull_request' }}
+          disk-cache: bazel-runtime-${{ matrix.os }}
+          repository-cache: true
+      - name: Build and test runtime
+        run: bazel --config=${{ matrix.toolchain_config }} --config=ci test //...
+      - name: Run Bazel performance smoke gate
+        if: matrix.os == 'ubuntu-latest'
+        run: bazel --config=${{ matrix.toolchain_config }} --config=release test //benchmarks:runtime_benchmark
+
+  cpp-runtime:
+    name: C++ runtime (${{ matrix.compiler }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - compiler: GCC
+            os: ubuntu-latest
+            cmake-args: -DCMAKE_CXX_COMPILER=g++ -DFLIGHT_CPP_BUILD_BENCHMARKS=ON
+          - compiler: GCC ASan+UBSan
+            os: ubuntu-latest
+            cmake-args: -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Debug -DFLIGHT_CPP_ENABLE_SANITIZERS=ON
+          - compiler: Clang
+            os: ubuntu-latest
+            cmake-args: -DCMAKE_CXX_COMPILER=clang++
+          - compiler: Clang shared ABI
+            os: ubuntu-latest
+            cmake-args: -DCMAKE_CXX_COMPILER=clang++ -DBUILD_SHARED_LIBS=ON
+          - compiler: AppleClang
+            os: macos-latest
+            cmake-args: -DCMAKE_CXX_COMPILER=clang++
+          - compiler: MSVC
+            os: windows-latest
+            cmake-args: ''
+          - compiler: MSVC shared ABI
+            os: windows-latest
+            cmake-args: -DBUILD_SHARED_LIBS=ON
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure runtime
+        run: cmake -S . -B build -DBUILD_TESTING=ON -DFLIGHT_CPP_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake-args }}
+      - name: Build runtime
+        run: cmake --build build --config Release
+      - name: Test runtime
+        run: ctest --test-dir build --build-config Release --output-on-failure
+      - name: Install runtime
+        run: cmake --install build --config Release --prefix out/install
+      - name: Configure installed consumer
+        run: cmake -S tests/consumer -B out/consumer -DCMAKE_PREFIX_PATH=${{ github.workspace }}/out/install -DCMAKE_BUILD_TYPE=Release
+      - name: Build installed consumer
+        run: cmake --build out/consumer --config Release
+      - name: Test installed consumer
+        run: ctest --test-dir out/consumer --build-config Release --output-on-failure
+
+  metadata:
+    name: Release metadata gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm run abi:check
+        if: always()
+      - run: npm run build:check
+        if: always()
+      - run: npm run release:check
+        if: always()
+
+  pinned-compiler:
+    name: Pinned compiler integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Rehydrate pinned checkouts
+        run: npm run rehydrate
+      - name: Compile the pinned compiler's emitted C++
+        run: npm run compile:check

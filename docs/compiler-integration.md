@@ -9,7 +9,7 @@ The packaged `flight-compile --target cpp` command elects `flight-cpp` by defaul
 
 `runtimeHeader` overrides the automatic header spelling without changing the selected bindings, which lets an embedding codebase vendor or wrap the runtime. Adding methods to namespace `std` remains undefined behavior and is not an acceptable bridge.
 
-The compiler owns `tests/generated/semantic_runtime.hpp`: a package test regenerates it from `semantic_runtime.ts` and refuses drift, while CMake compiles and executes it against this runtime. Run `npm run cpp:conformance:update` at the repository root after an intentional emitter change.
+The compiler owns `tests/generated/semantic_runtime.hpp`: a gate in the compiler repository regenerates it from `semantic_runtime.ts` against its pinned checkout of this repository and refuses drift, while CMake here compiles and executes it against this runtime. After an intentional emitter change, run `npm run cpp:conformance:update` in the compiler repository, then commit the rewritten header here.
 
 ## Current maturity boundary
 

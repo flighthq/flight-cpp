@@ -1,6 +1,6 @@
 # flight-cpp
 
-`flight-cpp` is the incubating C++20 runtime for TypeScript compiled by Flight Compiler. It lives in the compiler repository while the generated-code boundary is still changing quickly, but it is deliberately an independent CMake project so it can move to its own repository without a build-system migration.
+`flight-cpp` is the incubating C++20 runtime for TypeScript compiled by Flight Compiler. It was incubated inside the compiler repository while the generated-code boundary settled and now stands on its own, carrying that history with it. The runtime builds with CMake or Bazel and needs no Node.js.
 
 This is a working foundation, not yet a production-support claim. Version 0.1.0 provides tested representations for shared arrays, insertion-ordered maps and sets, typed-array views, explicit `undefined`/`null` presence, SameValueZero equality, UTF-16 strings, source-style errors and number formatting, UTC date instants, shared coroutine tasks, and closed multi-member unions with distinct C++ alternatives. Tasks use an explicit non-reentrant executor and implement first-settlement-wins construction, exact rejection values, queued continuation, recovery, cleanup, assimilation, and ordered aggregation. Full Unicode case conversion is supplied through a host service. Compiler-generated conformance exercises collections, strings, classes, typed arrays, optional access, coroutines, and checker-proven union narrowing; cancellation, time zones, captured mutation, duplicate union representations, and optional variants remain open.
 
@@ -53,6 +53,33 @@ The installed `flight/` headers and `Flight::Cpp` target are the extraction boun
 
 The compiler emits semantic runtime types such as `flight::Array<T>` and `flight::Map<K, V>` when `runtimeProfile: "flight-cpp"` is elected. The separate `standard-library` profile preserves generic provisional output without claiming TypeScript-equivalent collection behavior. See [compiler integration](docs/compiler-integration.md) and [runtime semantics](docs/runtime-semantics.md).
 
-The supported input boundary is versioned as [`flight-portable-typescript/1`](conformance/portable-typescript-v1.json). [`known-exceptions.json`](conformance/known-exceptions.json) owns every checked-in C++ refusal and is verified by `npm run cpp:exceptions:check`; an exception that starts emitting or changes its rule fails the gate until the ledger is deliberately updated. See [production readiness](docs/production-readiness.md) for proof and release policy.
+The supported input boundary is versioned as [`flight-portable-typescript/1`](conformance/portable-typescript-v1.json). [`known-exceptions.json`](conformance/known-exceptions.json) owns every checked-in C++ refusal. The compiler repository verifies it against its own fixture corpus, because a refusal changes when the compiler changes; this repository owns the file, and that gate reads it from a pinned checkout of this repository.
 
-The root repository license applies while this project is incubated here.
+## Pinned siblings
+
+The runtime and the compiler are separate repositories that must keep agreeing, so each pins the other rather than sharing a tree. [`dependencies.lock.json`](dependencies.lock.json) names the exact commit of `flight` and `flight-compiler` this checkout is verified against:
+
+```sh
+npm run rehydrate          # materialize the pinned checkouts under .dependencies/
+npm run rehydrate:check    # fail if a checkout is missing or off its pin
+npm run rehydrate:update   # re-pin each dependency to its tracking branch head
+```
+
+The checkouts are gitignored, disposable build inputs. Nothing in `.dependencies/` is committed, and the lock is the only thing that decides which revision a gate reads.
+
+## Repository gates
+
+The native build is the runtime's own gate and is run directly with CMake or Bazel. `npm run check` covers what building cannot show:
+
+| Gate | Question |
+| --- | --- |
+| `npm run abi:check` | Do the C header, its implementation, and the committed ABI snapshot name the same symbols? |
+| `npm run build:check` | Do the CMake and Bazel graphs describe the same headers, sources, tests, and benchmarks? |
+| `npm run release:check` | Do the version, ABI, C++ standard, and conformance profile agree across every file that states them? |
+| `npm run compile:check` | Does the pinned compiler's emitted C++ still compile against this runtime? |
+
+`compile:check` reports and skips when the checkout is absent or no C++ compiler is installed, so a fresh clone stays runnable. The compiler repository asks the same question from its side against the runtime revision it pins; both are wanted, because each side owns the pin it can move and a failure names which one changed.
+
+## License
+
+MIT. See [LICENSE.md](LICENSE.md).

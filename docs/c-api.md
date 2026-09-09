@@ -18,4 +18,4 @@ Reference-count changes are atomic and const operations on the same immutable ha
 
 The surface is deliberately additive. New opaque value types and calls may be introduced without changing ABI 1. Removing a function, changing a status value, changing ownership, or changing a structure layout requires a new ABI number. Callback APIs will not be added until executor, thread-affinity, and cancellation behavior can be stated in this document.
 
-`abi/c-api-v1.txt` snapshots normalized public signatures and numeric status values. `npm run cpp:abi:check` also requires a matching C-linkage definition for every declaration and selects the snapshot from `FLIGHT_CPP_ABI_VERSION`; changing the ABI number therefore requires committing a new contract snapshot.
+`abi/c-api-v1.txt` snapshots normalized public signatures and numeric status values. `npm run abi:check` also requires a matching C-linkage definition for every declaration and selects the snapshot from `FLIGHT_CPP_ABI_VERSION`; changing the ABI number therefore requires committing a new contract snapshot.

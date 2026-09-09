@@ -3,3 +3,5 @@
 /CMakeUserPresets.json
 /.bazelrc.local
 /bazel-*
+/.dependencies/
+/node_modules/
