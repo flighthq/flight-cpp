@@ -1,6 +1,6 @@
 {
   "schema": "flight-generated-sdk-refusals/2",
-  "compilerRevision": "2faa5a7e7a7101b7c3d5a38a95e6b06e5ef40ad5",
+  "compilerRevision": "b5c9ee1bfa0e0d27ee7b821536f5dd94ee2e946b",
   "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
   "refusals": [
     {
@@ -63,35 +63,35 @@
       "code": "dependency-refused",
       "module": "packages/adjustments/src/brightnessContrastAdjustment.ts",
       "package": "@flighthq/adjustments",
-      "reason": "dependency ./colorMatrixAdjustment was refused for @flighthq/adjustments/packages/adjustments/src/colorMatrixAdjustment.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/adjustments/src/channelMixerAdjustment.ts",
       "package": "@flighthq/adjustments",
-      "reason": "dependency ./colorMatrixAdjustment was refused for @flighthq/adjustments/packages/adjustments/src/colorMatrixAdjustment.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/adjustments/src/colorAdjustmentResolution.ts",
       "package": "@flighthq/adjustments",
-      "reason": "dependency ./colorMatrixAdjustment was refused for @flighthq/adjustments/packages/adjustments/src/colorMatrixAdjustment.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/adjustments/src/colorBlindSimulationAdjustment.ts",
       "package": "@flighthq/adjustments",
-      "reason": "dependency ./colorMatrixAdjustment was refused for @flighthq/adjustments/packages/adjustments/src/colorMatrixAdjustment.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/adjustments/src/colorGradeAdjustment.ts",
       "package": "@flighthq/adjustments",
-      "reason": "dependency ./colorLutAdjustment was refused for @flighthq/adjustments/packages/adjustments/src/colorLutAdjustment.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -102,29 +102,25 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 78,
-      "line": 35,
+      "code": "dependency-refused",
       "module": "packages/adjustments/src/colorLutAdjustment.ts",
       "package": "@flighthq/adjustments",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./adjustment was refused for @flighthq/adjustments/packages/adjustments/src/adjustment.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/adjustments/src/colorLutCache.ts",
       "package": "@flighthq/adjustments",
-      "reason": "dependency ./colorLutAdjustment was refused for @flighthq/adjustments/packages/adjustments/src/colorLutAdjustment.ts",
+      "reason": "dependency ./colorLut was refused for @flighthq/adjustments/packages/adjustments/src/colorLut.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 81,
-      "line": 35,
+      "code": "dependency-refused",
       "module": "packages/adjustments/src/colorMatrixAdjustment.ts",
       "package": "@flighthq/adjustments",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./adjustment was refused for @flighthq/adjustments/packages/adjustments/src/adjustment.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -144,7 +140,7 @@
       "code": "dependency-refused",
       "module": "packages/adjustments/src/contract.ts",
       "package": "@flighthq/adjustments",
-      "reason": "dependency ./brightnessContrastAdjustment was refused for @flighthq/adjustments/packages/adjustments/src/brightnessContrastAdjustment.ts",
+      "reason": "dependency ./adjustment was refused for @flighthq/adjustments/packages/adjustments/src/adjustment.ts",
       "stage": "dependency"
     },
     {
@@ -193,7 +189,7 @@
       "code": "dependency-refused",
       "module": "packages/adjustments/src/lookupTableGradeAdjustment.ts",
       "package": "@flighthq/adjustments",
-      "reason": "dependency ./colorLutAdjustment was refused for @flighthq/adjustments/packages/adjustments/src/colorLutAdjustment.ts",
+      "reason": "dependency ./colorLut was refused for @flighthq/adjustments/packages/adjustments/src/colorLut.ts",
       "stage": "dependency"
     },
     {
@@ -923,13 +919,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 36,
-      "line": 85,
+      "code": "dependency-refused",
       "module": "packages/bitmapfont-formats/src/bitmapFontJson.ts",
       "package": "@flighthq/bitmapfont-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -949,17 +943,15 @@
       "code": "dependency-refused",
       "module": "packages/bitmapfont-formats/src/contract.ts",
       "package": "@flighthq/bitmapfont-formats",
-      "reason": "dependency ./bitmapFontJson was refused for @flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontJson.ts",
+      "reason": "dependency ./bitmapFontBinary was refused for @flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontBinary.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 36,
-      "line": 68,
+      "code": "dependency-refused",
       "module": "packages/bitmapfont-formats/src/explainBitmapFontParse.ts",
       "package": "@flighthq/bitmapfont-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -972,7 +964,7 @@
       "code": "dependency-refused",
       "module": "packages/bitmaptext/src/bitmapText.ts",
       "package": "@flighthq/bitmaptext",
-      "reason": "dependency @flighthq/scene2d/contract was refused for @flighthq/scene2d/packages/scene2d/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -1021,7 +1013,7 @@
       "code": "dependency-refused",
       "module": "packages/camera/src/camera.ts",
       "package": "@flighthq/camera",
-      "reason": "dependency ./projection was refused for @flighthq/camera/packages/camera/src/projection.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -1035,7 +1027,7 @@
       "code": "dependency-refused",
       "module": "packages/camera/src/contract.ts",
       "package": "@flighthq/camera",
-      "reason": "dependency ./camera was refused for @flighthq/camera/packages/camera/src/camera.ts",
+      "reason": "dependency ./basis was refused for @flighthq/camera/packages/camera/src/basis.ts",
       "stage": "dependency"
     },
     {
@@ -1084,7 +1076,7 @@
       "code": "dependency-refused",
       "module": "packages/camera/src/intersection.ts",
       "package": "@flighthq/camera",
-      "reason": "dependency ./picking was refused for @flighthq/camera/packages/camera/src/picking.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -1102,22 +1094,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 77,
-      "line": 59,
+      "code": "dependency-refused",
       "module": "packages/camera/src/projection.ts",
       "package": "@flighthq/camera",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 76,
-      "line": 64,
-      "module": "packages/camera/src/projection.ts",
-      "package": "@flighthq/camera",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -1382,7 +1363,7 @@
       "code": "dependency-refused",
       "module": "packages/collision/src/contract.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./enableCollisionGuards was refused for @flighthq/collision/packages/collision/src/enableCollisionGuards.ts",
+      "reason": "dependency ./collideContactManifold2D was refused for @flighthq/collision/packages/collision/src/collideContactManifold2D.ts",
       "stage": "dependency"
     },
     {
@@ -1400,13 +1381,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 4,
-      "line": 80,
+      "code": "dependency-refused",
       "module": "packages/collision/src/enableCollisionGuards.ts",
       "package": "@flighthq/collision",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./collisionShapeValidation2D was refused for @flighthq/collision/packages/collision/src/collisionShapeValidation2D.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -1447,7 +1426,7 @@
       "code": "dependency-refused",
       "module": "packages/collision/src/index.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./contract was refused for @flighthq/collision/packages/collision/src/contract.ts",
+      "reason": "dependency ./collideContactManifold3D was refused for @flighthq/collision/packages/collision/src/collideContactManifold3D.ts",
       "stage": "dependency"
     },
     {
@@ -1615,14 +1594,14 @@
       "code": "dependency-refused",
       "module": "packages/command/src/command.ts",
       "package": "@flighthq/command",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/command/src/commandBinding.ts",
       "package": "@flighthq/command",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -1727,7 +1706,7 @@
       "code": "dependency-refused",
       "module": "packages/debug/src/debug.ts",
       "package": "@flighthq/debug",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -2308,7 +2287,7 @@
       "code": "dependency-refused",
       "module": "packages/effects/src/renderEffectCaptureGeometry.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -2336,7 +2315,7 @@
       "code": "dependency-refused",
       "module": "packages/effects/src/renderEffectPadding.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -2448,7 +2427,7 @@
       "code": "dependency-refused",
       "module": "packages/effects-canvas/src/canvasBevelEffect.ts",
       "package": "@flighthq/effects-canvas",
-      "reason": "dependency ./canvasRenderEffectPipeline was refused for @flighthq/effects-canvas/packages/effects-canvas/src/canvasRenderEffectPipeline.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -2462,7 +2441,7 @@
       "code": "dependency-refused",
       "module": "packages/effects-canvas/src/canvasBloomEffect.ts",
       "package": "@flighthq/effects-canvas",
-      "reason": "dependency ./canvasRenderEffectPipeline was refused for @flighthq/effects-canvas/packages/effects-canvas/src/canvasRenderEffectPipeline.ts",
+      "reason": "dependency @flighthq/effects/contract was refused for @flighthq/effects/packages/effects/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -2497,7 +2476,7 @@
       "code": "dependency-refused",
       "module": "packages/effects-canvas/src/canvasDropShadowEffect.ts",
       "package": "@flighthq/effects-canvas",
-      "reason": "dependency ./canvasRenderEffectPipeline was refused for @flighthq/effects-canvas/packages/effects-canvas/src/canvasRenderEffectPipeline.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -2581,7 +2560,7 @@
       "code": "dependency-refused",
       "module": "packages/effects-canvas/src/canvasPixelateEffect.ts",
       "package": "@flighthq/effects-canvas",
-      "reason": "dependency ./canvasRenderEffectPipeline was refused for @flighthq/effects-canvas/packages/effects-canvas/src/canvasRenderEffectPipeline.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -2644,7 +2623,7 @@
       "code": "dependency-refused",
       "module": "packages/effects-canvas/src/contract.ts",
       "package": "@flighthq/effects-canvas",
-      "reason": "dependency ./canvasColorLutPass was refused for @flighthq/effects-canvas/packages/effects-canvas/src/canvasColorLutPass.ts",
+      "reason": "dependency ./canvasBevelEffect was refused for @flighthq/effects-canvas/packages/effects-canvas/src/canvasBevelEffect.ts",
       "stage": "dependency"
     },
     {
@@ -2980,7 +2959,7 @@
       "code": "dependency-refused",
       "module": "packages/effects-gl/src/glRenderEffectPipeline.ts",
       "package": "@flighthq/effects-gl",
-      "reason": "dependency @flighthq/adjustments/contract was refused for @flighthq/adjustments/packages/adjustments/src/contract.ts",
+      "reason": "dependency ./glColorLutPass was refused for @flighthq/effects-gl/packages/effects-gl/src/glColorLutPass.ts",
       "stage": "dependency"
     },
     {
@@ -3087,14 +3066,14 @@
       "code": "dependency-refused",
       "module": "packages/effects-wgpu/src/contract.ts",
       "package": "@flighthq/effects-wgpu",
-      "reason": "dependency ./wgpuRenderEffectPipeline was refused for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuRenderEffectPipeline.ts",
+      "reason": "dependency ./enableWgpuRenderEffectGuards was refused for @flighthq/effects-wgpu/packages/effects-wgpu/src/enableWgpuRenderEffectGuards.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/effects-wgpu/src/enableWgpuRenderEffectGuards.ts",
       "package": "@flighthq/effects-wgpu",
-      "reason": "dependency ./wgpuRenderEffectPipeline was refused for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuRenderEffectPipeline.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -3416,7 +3395,7 @@
       "code": "dependency-refused",
       "module": "packages/effects-wgpu/src/wgpuRenderEffectPipeline.ts",
       "package": "@flighthq/effects-wgpu",
-      "reason": "dependency @flighthq/adjustments/contract was refused for @flighthq/adjustments/packages/adjustments/src/contract.ts",
+      "reason": "dependency ./wgpuColorLutPass was refused for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuColorLutPass.ts",
       "stage": "dependency"
     },
     {
@@ -4331,13 +4310,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 25,
-      "line": 37,
+      "code": "dependency-refused",
       "module": "packages/gui/src/tabBarController.ts",
       "package": "@flighthq/gui",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -4347,13 +4324,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 27,
-      "line": 43,
+      "code": "dependency-refused",
       "module": "packages/gui/src/toggleController.ts",
       "package": "@flighthq/gui",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -4616,24 +4591,6 @@
     },
     {
       "code": "unsupported-typescript",
-      "column": 56,
-      "line": 952,
-      "module": "packages/interaction/src/interactionManager.ts",
-      "package": "@flighthq/interaction",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 4,
-      "line": 959,
-      "module": "packages/interaction/src/interactionManager.ts",
-      "package": "@flighthq/interaction",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
       "column": 69,
       "line": 967,
       "module": "packages/interaction/src/interactionManager.ts",
@@ -4871,22 +4828,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 35,
-      "line": 73,
+      "code": "dependency-refused",
       "module": "packages/layout/src/anchorLayout.ts",
       "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 44,
-      "line": 87,
-      "module": "packages/layout/src/anchorLayout.ts",
-      "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -4903,112 +4849,18 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 39,
-      "line": 277,
+      "code": "dependency-refused",
       "module": "packages/layout/src/flexLayout.ts",
       "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 43,
-      "line": 281,
-      "module": "packages/layout/src/flexLayout.ts",
-      "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 41,
-      "line": 291,
-      "module": "packages/layout/src/flexLayout.ts",
-      "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 38,
-      "line": 303,
-      "module": "packages/layout/src/flexLayout.ts",
-      "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 55,
-      "line": 307,
-      "module": "packages/layout/src/flexLayout.ts",
-      "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 47,
-      "line": 311,
-      "module": "packages/layout/src/flexLayout.ts",
-      "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 39,
-      "line": 180,
+      "code": "dependency-refused",
       "module": "packages/layout/src/gridLayout.ts",
       "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 55,
-      "line": 207,
-      "module": "packages/layout/src/gridLayout.ts",
-      "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 47,
-      "line": 211,
-      "module": "packages/layout/src/gridLayout.ts",
-      "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 44,
-      "line": 215,
-      "module": "packages/layout/src/gridLayout.ts",
-      "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 56,
-      "line": 219,
-      "module": "packages/layout/src/gridLayout.ts",
-      "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 53,
-      "line": 223,
-      "module": "packages/layout/src/gridLayout.ts",
-      "package": "@flighthq/layout",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -5308,7 +5160,7 @@
       "code": "dependency-refused",
       "module": "packages/materials/src/anisotropyPbrExtension.ts",
       "package": "@flighthq/materials",
-      "reason": "dependency ./pbrExtension was refused for @flighthq/materials/packages/materials/src/pbrExtension.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -5322,7 +5174,7 @@
       "code": "dependency-refused",
       "module": "packages/materials/src/clearcoatPbrExtension.ts",
       "package": "@flighthq/materials",
-      "reason": "dependency ./pbrExtension was refused for @flighthq/materials/packages/materials/src/pbrExtension.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -5378,7 +5230,7 @@
       "code": "dependency-refused",
       "module": "packages/materials/src/iridescencePbrExtension.ts",
       "package": "@flighthq/materials",
-      "reason": "dependency ./pbrExtension was refused for @flighthq/materials/packages/materials/src/pbrExtension.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -5403,13 +5255,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 49,
-      "line": 4,
+      "code": "dependency-refused",
       "module": "packages/materials/src/pbrExtension.ts",
       "package": "@flighthq/materials",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -5429,14 +5279,14 @@
       "code": "dependency-refused",
       "module": "packages/materials/src/sheenPbrExtension.ts",
       "package": "@flighthq/materials",
-      "reason": "dependency ./pbrExtension was refused for @flighthq/materials/packages/materials/src/pbrExtension.ts",
+      "reason": "dependency ./materialValidation was refused for @flighthq/materials/packages/materials/src/materialValidation.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/materials/src/specularPbrExtension.ts",
       "package": "@flighthq/materials",
-      "reason": "dependency ./pbrExtension was refused for @flighthq/materials/packages/materials/src/pbrExtension.ts",
+      "reason": "dependency ./materialValidation was refused for @flighthq/materials/packages/materials/src/materialValidation.ts",
       "stage": "dependency"
     },
     {
@@ -5457,7 +5307,7 @@
       "code": "dependency-refused",
       "module": "packages/materials/src/transmissionVolumePbrExtension.ts",
       "package": "@flighthq/materials",
-      "reason": "dependency ./pbrExtension was refused for @flighthq/materials/packages/materials/src/pbrExtension.ts",
+      "reason": "dependency ./materialValidation was refused for @flighthq/materials/packages/materials/src/materialValidation.ts",
       "stage": "dependency"
     },
     {
@@ -5471,7 +5321,7 @@
       "code": "dependency-refused",
       "module": "packages/materials/src/wrappedDiffusePbrExtension.ts",
       "package": "@flighthq/materials",
-      "reason": "dependency ./pbrExtension was refused for @flighthq/materials/packages/materials/src/pbrExtension.ts",
+      "reason": "dependency ./materialValidation was refused for @flighthq/materials/packages/materials/src/materialValidation.ts",
       "stage": "dependency"
     },
     {
@@ -5551,15 +5401,6 @@
       "module": "packages/media/src/audioDeviceBackend.ts",
       "package": "@flighthq/media",
       "reason": "unsupported statement FunctionDeclaration",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 71,
-      "line": 229,
-      "module": "packages/media/src/audioDeviceBackend.ts",
-      "package": "@flighthq/media",
-      "reason": "unsupported type FirstTypeNode",
       "stage": "lowering"
     },
     {
@@ -5985,7 +5826,7 @@
       "code": "dependency-refused",
       "module": "packages/node/src/contract.ts",
       "package": "@flighthq/node",
-      "reason": "dependency ./traversal was refused for @flighthq/node/packages/node/src/traversal.ts",
+      "reason": "dependency ./boundsRectangle was refused for @flighthq/node/packages/node/src/boundsRectangle.ts",
       "stage": "dependency"
     },
     {
@@ -6069,7 +5910,7 @@
       "code": "dependency-refused",
       "module": "packages/node/src/nodeColorAdjustment.ts",
       "package": "@flighthq/node",
-      "reason": "dependency @flighthq/adjustments/contract was refused for @flighthq/adjustments/packages/adjustments/src/contract.ts",
+      "reason": "dependency ./node was refused for @flighthq/node/packages/node/src/node.ts",
       "stage": "dependency"
     },
     {
@@ -6108,13 +5949,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 38,
-      "line": 13,
+      "code": "dependency-refused",
       "module": "packages/node/src/traversal.ts",
       "package": "@flighthq/node",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./hierarchy was refused for @flighthq/node/packages/node/src/hierarchy.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -6148,21 +5987,21 @@
       "code": "dependency-refused",
       "module": "packages/particleemitter/src/contract.ts",
       "package": "@flighthq/particleemitter",
-      "reason": "dependency ./particleEmitter3D was refused for @flighthq/particleemitter/packages/particleemitter/src/particleEmitter3D.ts",
+      "reason": "dependency ./emitParticleBurst2D was refused for @flighthq/particleemitter/packages/particleemitter/src/emitParticleBurst2D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/particleemitter/src/emitParticleBurst2D.ts",
       "package": "@flighthq/particleemitter",
-      "reason": "dependency ./particleEmitter was refused for @flighthq/particleemitter/packages/particleemitter/src/particleEmitter.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/particleemitter/src/emitParticleBurst3D.ts",
       "package": "@flighthq/particleemitter",
-      "reason": "dependency ./particleEmitter3D was refused for @flighthq/particleemitter/packages/particleemitter/src/particleEmitter3D.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -6176,44 +6015,42 @@
       "code": "dependency-refused",
       "module": "packages/particleemitter/src/particleEmitter.ts",
       "package": "@flighthq/particleemitter",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 72,
-      "line": 204,
+      "code": "dependency-refused",
       "module": "packages/particleemitter/src/particleEmitter3D.ts",
       "package": "@flighthq/particleemitter",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./particleEmitter was refused for @flighthq/particleemitter/packages/particleemitter/src/particleEmitter.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/particleemitter/src/prewarmParticleEmitter2D.ts",
       "package": "@flighthq/particleemitter",
-      "reason": "dependency ./updateParticleEmitter2D was refused for @flighthq/particleemitter/packages/particleemitter/src/updateParticleEmitter2D.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/particleemitter/src/prewarmParticleEmitter3D.ts",
       "package": "@flighthq/particleemitter",
-      "reason": "dependency ./updateParticleEmitter3D was refused for @flighthq/particleemitter/packages/particleemitter/src/updateParticleEmitter3D.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/particleemitter/src/stepParticleEmitter2D.ts",
       "package": "@flighthq/particleemitter",
-      "reason": "dependency ./updateParticleEmitter2D was refused for @flighthq/particleemitter/packages/particleemitter/src/updateParticleEmitter2D.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/particleemitter/src/stepParticleEmitter3D.ts",
       "package": "@flighthq/particleemitter",
-      "reason": "dependency ./updateParticleEmitter3D was refused for @flighthq/particleemitter/packages/particleemitter/src/updateParticleEmitter3D.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -6248,7 +6085,7 @@
       "code": "dependency-refused",
       "module": "packages/particles/src/contract.ts",
       "package": "@flighthq/particles",
-      "reason": "dependency ./validateParticleEmitterConfig was refused for @flighthq/particles/packages/particles/src/validateParticleEmitterConfig.ts",
+      "reason": "dependency ./applyParticleCollisions was refused for @flighthq/particles/packages/particles/src/applyParticleCollisions.ts",
       "stage": "dependency"
     },
     {
@@ -6315,13 +6152,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 62,
-      "line": 182,
+      "code": "dependency-refused",
       "module": "packages/particles/src/validateParticleEmitterConfig.ts",
       "package": "@flighthq/particles",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./particleEmitterConfig was refused for @flighthq/particles/packages/particles/src/particleEmitterConfig.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -6334,7 +6169,7 @@
       "code": "dependency-refused",
       "module": "packages/particles-formats/src/detect.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "dependency ./formatRegistry was refused for @flighthq/particles-formats/packages/particles-formats/src/formatRegistry.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -6369,7 +6204,7 @@
       "code": "dependency-refused",
       "module": "packages/particles-formats/src/parseParticleConfig.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "dependency ./formatRegistry was refused for @flighthq/particles-formats/packages/particles-formats/src/formatRegistry.ts",
+      "reason": "dependency ./detect was refused for @flighthq/particles-formats/packages/particles-formats/src/detect.ts",
       "stage": "dependency"
     },
     {
@@ -6399,17 +6234,15 @@
       "code": "dependency-refused",
       "module": "packages/particles-formats/src/registerBuiltInParticleFormats.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "dependency ./formatRegistry was refused for @flighthq/particles-formats/packages/particles-formats/src/formatRegistry.ts",
+      "reason": "dependency ./particleDesignerSerialize was refused for @flighthq/particles-formats/packages/particles-formats/src/particleDesignerSerialize.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 43,
-      "line": 93,
+      "code": "dependency-refused",
       "module": "packages/particles-formats/src/spineParse.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/particles/contract was refused for @flighthq/particles/packages/particles/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -6778,13 +6611,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 45,
-      "line": 277,
+      "code": "dependency-refused",
       "module": "packages/permissions/src/permission.ts",
       "package": "@flighthq/permissions",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -6825,7 +6656,7 @@
       "code": "dependency-refused",
       "module": "packages/physics2d/src/enablePhysics2DGuards.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./step was refused for @flighthq/physics2d/packages/physics2d/src/step.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -6937,7 +6768,7 @@
       "code": "dependency-refused",
       "module": "packages/physics2d/src/step.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency @flighthq/collision/contract was refused for @flighthq/collision/packages/collision/src/contract.ts",
+      "reason": "dependency ./broadphase was refused for @flighthq/physics2d/packages/physics2d/src/broadphase.ts",
       "stage": "dependency"
     },
     {
@@ -6958,7 +6789,7 @@
       "code": "dependency-refused",
       "module": "packages/physics2d/src/worldQueries.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency @flighthq/collision/contract was refused for @flighthq/collision/packages/collision/src/contract.ts",
+      "reason": "dependency ./broadphase was refused for @flighthq/physics2d/packages/physics2d/src/broadphase.ts",
       "stage": "dependency"
     },
     {
@@ -7021,7 +6852,7 @@
       "code": "dependency-refused",
       "module": "packages/physics3d/src/broadphase.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./colliderTransform was refused for @flighthq/physics3d/packages/physics3d/src/colliderTransform.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7042,7 +6873,7 @@
       "code": "dependency-refused",
       "module": "packages/physics3d/src/contactIntake.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./colliderCollision was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
+      "reason": "dependency ./broadphase was refused for @flighthq/physics3d/packages/physics3d/src/broadphase.ts",
       "stage": "dependency"
     },
     {
@@ -7056,14 +6887,14 @@
       "code": "dependency-refused",
       "module": "packages/physics3d/src/continuous.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./colliderCollision was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
+      "reason": "dependency ./broadphase was refused for @flighthq/physics3d/packages/physics3d/src/broadphase.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/contract.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./colliderTransform was refused for @flighthq/physics3d/packages/physics3d/src/colliderTransform.ts",
+      "reason": "dependency ./broadphase was refused for @flighthq/physics3d/packages/physics3d/src/broadphase.ts",
       "stage": "dependency"
     },
     {
@@ -7091,21 +6922,21 @@
       "code": "dependency-refused",
       "module": "packages/physics3d/src/explainPhysics3DJoints.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./world was refused for @flighthq/physics3d/packages/physics3d/src/world.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/explainPhysics3DStep.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./stepValidation was refused for @flighthq/physics3d/packages/physics3d/src/stepValidation.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/index.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./continuous was refused for @flighthq/physics3d/packages/physics3d/src/continuous.ts",
+      "reason": "dependency ./contacts was refused for @flighthq/physics3d/packages/physics3d/src/contacts.ts",
       "stage": "dependency"
     },
     {
@@ -7119,7 +6950,7 @@
       "code": "dependency-refused",
       "module": "packages/physics3d/src/islands.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./world was refused for @flighthq/physics3d/packages/physics3d/src/world.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7252,21 +7083,21 @@
       "code": "dependency-refused",
       "module": "packages/physics3d/src/world.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./colliderTransform was refused for @flighthq/physics3d/packages/physics3d/src/colliderTransform.ts",
+      "reason": "dependency ./broadphase was refused for @flighthq/physics3d/packages/physics3d/src/broadphase.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/worldQueries.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./colliderCollision was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
+      "reason": "dependency ./broadphase was refused for @flighthq/physics3d/packages/physics3d/src/broadphase.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d-abi/src/contract.ts",
       "package": "@flighthq/physics3d-abi",
-      "reason": "dependency ./physics3DAbiCommand was refused for @flighthq/physics3d-abi/packages/physics3d-abi/src/physics3DAbiCommand.ts",
+      "reason": "dependency ./physics3DAbi was refused for @flighthq/physics3d-abi/packages/physics3d-abi/src/physics3DAbi.ts",
       "stage": "dependency"
     },
     {
@@ -7280,7 +7111,7 @@
       "code": "dependency-refused",
       "module": "packages/physics3d-abi/src/physics3DAbi.ts",
       "package": "@flighthq/physics3d-abi",
-      "reason": "dependency ./referencePhysics3DAbi was refused for @flighthq/physics3d-abi/packages/physics3d-abi/src/referencePhysics3DAbi.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7291,13 +7122,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 59,
-      "line": 508,
+      "code": "dependency-refused",
       "module": "packages/physics3d-abi/src/physics3DAbiCommand.ts",
       "package": "@flighthq/physics3d-abi",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/physics3d/contract was refused for @flighthq/physics3d/packages/physics3d/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -7338,7 +7167,7 @@
       "code": "dependency-refused",
       "module": "packages/picking/src/pickScene3D.ts",
       "package": "@flighthq/picking",
-      "reason": "dependency @flighthq/camera/contract was refused for @flighthq/camera/packages/camera/src/contract.ts",
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7537,7 +7366,7 @@
       "code": "dependency-refused",
       "module": "packages/render/src/contract.ts",
       "package": "@flighthq/render",
-      "reason": "dependency ./renderCache was refused for @flighthq/render/packages/render/src/renderCache.ts",
+      "reason": "dependency ./sceneRender was refused for @flighthq/render/packages/render/src/sceneRender.ts",
       "stage": "dependency"
     },
     {
@@ -7579,7 +7408,7 @@
       "code": "dependency-refused",
       "module": "packages/render/src/explainScene2DRender.ts",
       "package": "@flighthq/render",
-      "reason": "dependency ./renderProxy was refused for @flighthq/render/packages/render/src/renderProxy.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7604,22 +7433,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 49,
-      "line": 87,
+      "code": "dependency-refused",
       "module": "packages/render/src/renderCache.ts",
       "package": "@flighthq/render",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 55,
-      "line": 91,
-      "module": "packages/render/src/renderCache.ts",
-      "package": "@flighthq/render",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -7653,7 +7471,7 @@
       "code": "dependency-refused",
       "module": "packages/render/src/renderQueue.ts",
       "package": "@flighthq/render",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7681,24 +7499,22 @@
       "code": "dependency-refused",
       "module": "packages/render/src/renderTarget.ts",
       "package": "@flighthq/render",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/geometry/contract was refused for @flighthq/geometry/packages/geometry/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/render/src/renderTransform2d.ts",
       "package": "@flighthq/render",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency ./renderState was refused for @flighthq/render/packages/render/src/renderState.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 44,
-      "line": 74,
+      "code": "dependency-refused",
       "module": "packages/render/src/renderViewport.ts",
       "package": "@flighthq/render",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -7715,22 +7531,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 56,
-      "line": 495,
+      "code": "dependency-refused",
       "module": "packages/render/src/sceneRender.ts",
       "package": "@flighthq/render",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 47,
-      "line": 499,
-      "module": "packages/render/src/sceneRender.ts",
-      "package": "@flighthq/render",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -7764,21 +7569,21 @@
       "code": "dependency-refused",
       "module": "packages/render-gl/src/explainGlTextureResolution.ts",
       "package": "@flighthq/render-gl",
-      "reason": "dependency ./glRenderState was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+      "reason": "dependency @flighthq/texture/contract was refused for @flighthq/texture/packages/texture/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/render-gl/src/glBackground.ts",
       "package": "@flighthq/render-gl",
-      "reason": "dependency ./glRenderState was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/render-gl/src/glCompressedTexture.ts",
       "package": "@flighthq/render-gl",
-      "reason": "dependency ./glRenderState was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7829,7 +7634,7 @@
       "code": "dependency-refused",
       "module": "packages/render-gl/src/glMaterialRegistry.ts",
       "package": "@flighthq/render-gl",
-      "reason": "dependency ./glRenderState was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7857,7 +7662,7 @@
       "code": "dependency-refused",
       "module": "packages/render-gl/src/glReadback.ts",
       "package": "@flighthq/render-gl",
-      "reason": "dependency ./glRenderState was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7871,7 +7676,7 @@
       "code": "dependency-refused",
       "module": "packages/render-gl/src/glRenderState.ts",
       "package": "@flighthq/render-gl",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7933,7 +7738,7 @@
       "code": "dependency-refused",
       "module": "packages/render-gl/src/glShader.ts",
       "package": "@flighthq/render-gl",
-      "reason": "dependency ./glRenderState was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+      "reason": "dependency ./glProgram was refused for @flighthq/render-gl/packages/render-gl/src/glProgram.ts",
       "stage": "dependency"
     },
     {
@@ -7961,7 +7766,7 @@
       "code": "dependency-refused",
       "module": "packages/render-gl/src/glTestHelper.ts",
       "package": "@flighthq/render-gl",
-      "reason": "dependency ./glRenderState was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+      "reason": "dependency ./glPipeline was refused for @flighthq/render-gl/packages/render-gl/src/glPipeline.ts",
       "stage": "dependency"
     },
     {
@@ -8010,7 +7815,7 @@
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/explainWgpuTextureResolution.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency @flighthq/texture/contract was refused for @flighthq/texture/packages/texture/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8031,7 +7836,7 @@
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuAntialias.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8045,14 +7850,14 @@
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuCompressedTexture.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuDeviceLoss.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8080,14 +7885,14 @@
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuExternalTexture.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuFullscreenPass.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8101,14 +7906,14 @@
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuMaterialRegistry.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuMipmap.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8122,14 +7927,14 @@
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuRenderState.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency ./wgpuDeviceLoss was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuDeviceLoss.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuRenderTarget.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency ./wgpuAntialias was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuAntialias.ts",
       "stage": "dependency"
     },
     {
@@ -8157,14 +7962,14 @@
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuScissor.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency ./wgpuAntialias was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuAntialias.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuShader.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency ./wgpuAntialias was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuAntialias.ts",
       "stage": "dependency"
     },
     {
@@ -8192,14 +7997,14 @@
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuTestHelper.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency ./wgpuPipeline was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuPipeline.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuTextureResolver.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "reason": "dependency ./wgpuDraw was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuDraw.ts",
       "stage": "dependency"
     },
     {
@@ -8241,7 +8046,7 @@
       "code": "dependency-refused",
       "module": "packages/scene-document/src/contract.ts",
       "package": "@flighthq/scene-document",
-      "reason": "dependency ./flightDocumentText was refused for @flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts",
+      "reason": "dependency ./flightDocumentResourceDependencies was refused for @flighthq/scene-document/packages/scene-document/src/flightDocumentResourceDependencies.ts",
       "stage": "dependency"
     },
     {
@@ -8252,28 +8057,17 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 50,
-      "line": 468,
+      "code": "dependency-refused",
       "module": "packages/scene-document/src/flightDocumentText.ts",
       "package": "@flighthq/scene-document",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 37,
-      "line": 472,
-      "module": "packages/scene-document/src/flightDocumentText.ts",
-      "package": "@flighthq/scene-document",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/camera/contract was refused for @flighthq/camera/packages/camera/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene-document/src/index.ts",
       "package": "@flighthq/scene-document",
-      "reason": "dependency ./flightDocumentText was refused for @flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts",
+      "reason": "dependency ./flightDocumentResourceDependencies was refused for @flighthq/scene-document/packages/scene-document/src/flightDocumentResourceDependencies.ts",
       "stage": "dependency"
     },
     {
@@ -8284,40 +8078,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 69,
-      "line": 183,
+      "code": "dependency-refused",
       "module": "packages/scene-document/src/sceneDocumentLayoutBindings.ts",
       "package": "@flighthq/scene-document",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 35,
-      "line": 198,
-      "module": "packages/scene-document/src/sceneDocumentLayoutBindings.ts",
-      "package": "@flighthq/scene-document",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 73,
-      "line": 202,
-      "module": "packages/scene-document/src/sceneDocumentLayoutBindings.ts",
-      "package": "@flighthq/scene-document",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 36,
-      "line": 221,
-      "module": "packages/scene-document/src/sceneDocumentLayoutBindings.ts",
-      "package": "@flighthq/scene-document",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -8358,30 +8123,28 @@
       "code": "dependency-refused",
       "module": "packages/scene2d/src/contract.ts",
       "package": "@flighthq/scene2d",
-      "reason": "dependency ./displayObject was refused for @flighthq/scene2d/packages/scene2d/src/displayObject.ts",
+      "reason": "dependency ./displayContainer was refused for @flighthq/scene2d/packages/scene2d/src/displayContainer.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d/src/displayContainer.ts",
       "package": "@flighthq/scene2d",
-      "reason": "dependency ./displayObject was refused for @flighthq/scene2d/packages/scene2d/src/displayObject.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 42,
-      "line": 65,
+      "code": "dependency-refused",
       "module": "packages/scene2d/src/displayObject.ts",
       "package": "@flighthq/scene2d",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./displayContainer was refused for @flighthq/scene2d/packages/scene2d/src/displayContainer.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d/src/displayObjectAnimation.ts",
       "package": "@flighthq/scene2d",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/animation/contract was refused for @flighthq/animation/packages/animation/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8416,7 +8179,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d/src/sceneKindUsage.ts",
       "package": "@flighthq/scene2d",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8437,21 +8200,21 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasBackground.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasRenderState was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasBitmapText.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency ./canvasAtlasRegion was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasAtlasRegion.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasTextureResolver was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
+      "reason": "dependency @flighthq/texture/contract was refused for @flighthq/texture/packages/texture/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8465,7 +8228,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasCache.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/geometry/contract was refused for @flighthq/geometry/packages/geometry/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8493,7 +8256,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasFillPattern.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasTextureResolver was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
+      "reason": "dependency @flighthq/geometry/contract was refused for @flighthq/geometry/packages/geometry/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8507,21 +8270,21 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasImageTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasTextureResolver was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
+      "reason": "dependency @flighthq/texture/contract was refused for @flighthq/texture/packages/texture/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasMaterialRegistry.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasRenderState was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasMaterials.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasRenderState was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8535,7 +8298,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasParticleEmitter2D.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency ./canvasAtlasRegion was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasAtlasRegion.ts",
       "stage": "dependency"
     },
     {
@@ -8549,14 +8312,14 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasQuadBatch.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency ./canvasAtlasRegion was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasAtlasRegion.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasRenderState.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency @flighthq/geometry/contract was refused for @flighthq/geometry/packages/geometry/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8621,7 +8384,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasScale9Shape.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasNode2D was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts",
+      "reason": "dependency ./canvasScale9Mapper was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9Mapper.ts",
       "stage": "dependency"
     },
     {
@@ -8714,7 +8477,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency ./canvasRenderSurface was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderSurface.ts",
       "stage": "dependency"
     },
     {
@@ -8735,7 +8498,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasTilemap.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasRenderState was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
+      "reason": "dependency ./canvasAtlasRegion was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasAtlasRegion.ts",
       "stage": "dependency"
     },
     {
@@ -8749,7 +8512,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/contract.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasBitmapText was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapText.ts",
+      "reason": "dependency ./canvasScale9Mapper was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9Mapper.ts",
       "stage": "dependency"
     },
     {
@@ -8763,7 +8526,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/explainCanvasScene2DCoverage.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency ./canvasMaterialRegistry was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasMaterialRegistry.ts",
       "stage": "dependency"
     },
     {
@@ -8777,14 +8540,14 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/index.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasShapeRasterizer was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRasterizer.ts",
+      "reason": "dependency ./contract was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/scene2dCanvasPipeline.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasBitmapText was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapText.ts",
+      "reason": "dependency ./canvasScale9Shape was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9Shape.ts",
       "stage": "dependency"
     },
     {
@@ -8805,7 +8568,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/domBitmapTextureResolver.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "dependency ./domRenderState was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domRenderState.ts",
+      "reason": "dependency @flighthq/texture/contract was refused for @flighthq/texture/packages/texture/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8819,14 +8582,14 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/domCache.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency @flighthq/scene2d-canvas/contract was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/domClip.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "dependency ./domRenderState was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domRenderState.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8868,7 +8631,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/domImageTextureResolver.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "dependency ./domTextureResolver was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domTextureResolver.ts",
+      "reason": "dependency @flighthq/texture/contract was refused for @flighthq/texture/packages/texture/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8882,7 +8645,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/domNativeText.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "dependency ./domStyle was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domStyle.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8903,7 +8666,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/domRenderState.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency @flighthq/geometry/contract was refused for @flighthq/geometry/packages/geometry/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -9151,7 +8914,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/contract.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./lottieDocument was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+      "reason": "dependency ./svgDocument was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
       "stage": "dependency"
     },
     {
@@ -9162,55 +8925,17 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 16,
-      "line": 463,
+      "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/lottieDocument.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 4,
-      "line": 1544,
-      "module": "packages/scene2d-formats/src/lottieDocument.ts",
-      "package": "@flighthq/scene2d-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 87,
-      "line": 1556,
-      "module": "packages/scene2d-formats/src/lottieDocument.ts",
-      "package": "@flighthq/scene2d-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 54,
-      "line": 1609,
-      "module": "packages/scene2d-formats/src/lottieDocument.ts",
-      "package": "@flighthq/scene2d-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 63,
-      "line": 1613,
-      "module": "packages/scene2d-formats/src/lottieDocument.ts",
-      "package": "@flighthq/scene2d-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/animation/contract was refused for @flighthq/animation/packages/animation/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/riveAnimation.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency @flighthq/scene2d/contract was refused for @flighthq/scene2d/packages/scene2d/src/contract.ts",
+      "reason": "dependency @flighthq/animation/contract was refused for @flighthq/animation/packages/animation/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -9329,7 +9054,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/svgDocument.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/path-formats/contract was refused for @flighthq/path-formats/packages/path-formats/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -9343,7 +9068,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-gl/src/contract.ts",
       "package": "@flighthq/scene2d-gl",
-      "reason": "dependency ./glColorAdjustmentMaterialFeature was refused for @flighthq/scene2d-gl/packages/scene2d-gl/src/glColorAdjustmentMaterialFeature.ts",
+      "reason": "dependency ./glRichText was refused for @flighthq/scene2d-gl/packages/scene2d-gl/src/glRichText.ts",
       "stage": "dependency"
     },
     {
@@ -9378,7 +9103,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-gl/src/glCache.ts",
       "package": "@flighthq/scene2d-gl",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/render-gl/contract was refused for @flighthq/render-gl/packages/render-gl/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -9403,31 +9128,18 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 74,
-      "line": 840,
+      "code": "dependency-refused",
       "module": "packages/scene2d-gl/src/glColorAdjustmentMaterialFeature.ts",
       "package": "@flighthq/scene2d-gl",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/render-gl/contract was refused for @flighthq/render-gl/packages/render-gl/src/contract.ts",
+      "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 82,
-      "line": 851,
-      "module": "packages/scene2d-gl/src/glColorAdjustmentMaterialFeature.ts",
-      "package": "@flighthq/scene2d-gl",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 76,
-      "line": 103,
+      "code": "dependency-refused",
       "module": "packages/scene2d-gl/src/glMeshShapeRenderer.ts",
       "package": "@flighthq/scene2d-gl",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/render-gl/contract was refused for @flighthq/render-gl/packages/render-gl/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -9682,7 +9394,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-resources/src/resolveScene2DResources.ts",
       "package": "@flighthq/scene2d-resources",
-      "reason": "dependency ./scene2DSlotReference was refused for @flighthq/scene2d-resources/packages/scene2d-resources/src/scene2DSlotReference.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -9724,14 +9436,14 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/contract.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "dependency ./wgpuColorAdjustmentMaterialFeature was refused for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuColorAdjustmentMaterialFeature.ts",
+      "reason": "dependency ./wgpuRenderStats was refused for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuRenderStats.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/enableWgpuColorAdjustmentGuards.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "dependency @flighthq/render-wgpu/contract was refused for @flighthq/render-wgpu/packages/render-wgpu/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -9759,21 +9471,21 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/wgpuBitmapText.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency ./wgpuQuadBatchWriter was refused for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/wgpuCache.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency ./wgpuQuadBatchWriter was refused for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/wgpuClip.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "dependency @flighthq/render-wgpu/contract was refused for @flighthq/render-wgpu/packages/render-wgpu/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -9791,51 +9503,38 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 74,
-      "line": 505,
+      "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/wgpuColorAdjustmentMaterialFeature.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./wgpuQuadBatchWriter was refused for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts",
+      "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 82,
-      "line": 516,
-      "module": "packages/scene2d-wgpu/src/wgpuColorAdjustmentMaterialFeature.ts",
-      "package": "@flighthq/scene2d-wgpu",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 76,
-      "line": 106,
+      "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/wgpuMeshShapeRenderer.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./wgpuShapeMesh was refused for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuShapeMesh.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/wgpuNode2D.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency ./wgpuQuadBatchWriter was refused for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/wgpuParticleEmitter2D.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency ./wgpuQuadBatchWriter was refused for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/wgpuQuadBatch.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency ./wgpuQuadBatchWriter was refused for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts",
       "stage": "dependency"
     },
     {
@@ -9947,14 +9646,14 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/wgpuShape.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "dependency ./wgpuMeshShapeRenderer was refused for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuMeshShapeRenderer.ts",
+      "reason": "dependency ./wgpuRasterShapeRenderer was refused for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuRasterShapeRenderer.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/wgpuShapeData.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency ./wgpuRendererData was refused for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuRendererData.ts",
       "stage": "dependency"
     },
     {
@@ -9968,7 +9667,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-wgpu/src/wgpuShapeRasterizer.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "dependency @flighthq/render-wgpu/contract was refused for @flighthq/render-wgpu/packages/render-wgpu/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -10016,13 +9715,11 @@
       "stage": "lowering"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 56,
-      "line": 60,
+      "code": "dependency-refused",
       "module": "packages/scene3d/src/billboard.ts",
       "package": "@flighthq/scene3d",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -10060,22 +9757,18 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 51,
-      "line": 187,
+      "code": "dependency-refused",
       "module": "packages/scene3d/src/instancedMesh.ts",
       "package": "@flighthq/scene3d",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/contract.ts",
+      "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 42,
-      "line": 97,
+      "code": "dependency-refused",
       "module": "packages/scene3d/src/mesh.ts",
       "package": "@flighthq/scene3d",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -10088,24 +9781,22 @@
       "code": "dependency-refused",
       "module": "packages/scene3d/src/scene.ts",
       "package": "@flighthq/scene3d",
-      "reason": "dependency ./sceneNode was refused for @flighthq/scene3d/packages/scene3d/src/sceneNode.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d/src/sceneAnimation.ts",
       "package": "@flighthq/scene3d",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/animation/contract was refused for @flighthq/animation/packages/animation/src/contract.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 50,
-      "line": 198,
+      "code": "dependency-refused",
       "module": "packages/scene3d/src/sceneDocument.ts",
       "package": "@flighthq/scene3d",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./mesh was refused for @flighthq/scene3d/packages/scene3d/src/mesh.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -10167,14 +9858,14 @@
       "code": "dependency-refused",
       "module": "packages/scene3d/src/sceneNodeTransform.ts",
       "package": "@flighthq/scene3d",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/geometry/contract was refused for @flighthq/geometry/packages/geometry/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/awd2Parse.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./shared was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -10227,13 +9918,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 55,
-      "line": 240,
+      "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/gltfParse.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -10288,7 +9977,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/md2Parse.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./shared was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -10318,7 +10007,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/objParse.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./shared was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -10336,22 +10025,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 18,
-      "line": 82,
+      "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/shared.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 18,
-      "line": 105,
-      "module": "packages/scene3d-formats/src/shared.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -10559,7 +10237,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-gl/src/glMeshProgram.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "dependency @flighthq/camera/contract was refused for @flighthq/camera/packages/camera/src/contract.ts",
+      "reason": "dependency @flighthq/render-gl/contract was refused for @flighthq/render-gl/packages/render-gl/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -10573,7 +10251,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-gl/src/glParticleEmitter3D.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/render-gl/contract was refused for @flighthq/render-gl/packages/render-gl/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -10658,13 +10336,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 4,
-      "line": 513,
+      "code": "dependency-refused",
       "module": "packages/scene3d-gl/src/glShadedPrelude.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./glMeshProgram was refused for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -10754,7 +10430,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-gl/src/prepareGlScene3DForwardLights.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/geometry/contract was refused for @flighthq/geometry/packages/geometry/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -10964,7 +10640,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-resources/src/revealScene3DResourcesOnResolve.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency ./getScene3DResourceTextures was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/getScene3DResourceTextures.ts",
       "stage": "dependency"
     },
     {
@@ -11104,7 +10780,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/explainWgpuScene3DCoverage.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "dependency @flighthq/render-wgpu/contract was refused for @flighthq/render-wgpu/packages/render-wgpu/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -11153,7 +10829,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/prepareWgpuScene3DForwardLights.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/geometry/contract was refused for @flighthq/geometry/packages/geometry/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -11223,7 +10899,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/wgpuEnvironmentCube.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "dependency @flighthq/render-wgpu/contract was refused for @flighthq/render-wgpu/packages/render-wgpu/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -11237,7 +10913,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/wgpuEnvironmentSkybox.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "dependency @flighthq/camera/contract was refused for @flighthq/camera/packages/camera/src/contract.ts",
+      "reason": "dependency ./wgpuEnvironmentCube was refused for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuEnvironmentCube.ts",
       "stage": "dependency"
     },
     {
@@ -11251,7 +10927,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/wgpuMeshMaterialRegistry.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "dependency @flighthq/render-wgpu/contract was refused for @flighthq/render-wgpu/packages/render-wgpu/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -11311,7 +10987,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/wgpuScene3DTestHelper.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "dependency @flighthq/render/contract was refused for @flighthq/render/packages/render/src/contract.ts",
+      "reason": "dependency ./wgpuScene3DRuntime was refused for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuScene3DRuntime.ts",
       "stage": "dependency"
     },
     {
@@ -11325,17 +11001,15 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/wgpuShadedModifierSnippet.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "dependency @flighthq/render-wgpu/contract was refused for @flighthq/render-wgpu/packages/render-wgpu/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 4,
-      "line": 858,
+      "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/wgpuShadedPrelude.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./shadedWgpuMeshMaterialRenderer was refused for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/shadedWgpuMeshMaterialRenderer.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -11425,14 +11099,14 @@
       "code": "dependency-refused",
       "module": "packages/selection/src/lassoSelection.ts",
       "package": "@flighthq/selection",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/selection/src/marqueeSelection.ts",
       "package": "@flighthq/selection",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/geometry/contract was refused for @flighthq/geometry/packages/geometry/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -11669,7 +11343,7 @@
       "code": "dependency-refused",
       "module": "packages/shape/src/morphShape.ts",
       "package": "@flighthq/shape",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency ./shape was refused for @flighthq/shape/packages/shape/src/shape.ts",
       "stage": "dependency"
     },
     {
@@ -11697,7 +11371,7 @@
       "code": "dependency-refused",
       "module": "packages/shape/src/scale9Shape.ts",
       "package": "@flighthq/shape",
-      "reason": "dependency @flighthq/scene2d/contract was refused for @flighthq/scene2d/packages/scene2d/src/contract.ts",
+      "reason": "dependency ./shape was refused for @flighthq/shape/packages/shape/src/shape.ts",
       "stage": "dependency"
     },
     {
@@ -11789,31 +11463,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 4,
-      "line": 192,
+      "code": "dependency-refused",
       "module": "packages/shape-formats/src/shapeJson.ts",
       "package": "@flighthq/shape-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 40,
-      "line": 204,
-      "module": "packages/shape-formats/src/shapeJson.ts",
-      "package": "@flighthq/shape-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 41,
-      "line": 216,
-      "module": "packages/shape-formats/src/shapeJson.ts",
-      "package": "@flighthq/shape-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/shape/contract was refused for @flighthq/shape/packages/shape/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -12078,7 +11732,7 @@
       "code": "dependency-refused",
       "module": "packages/skeleton2d/src/skeleton2dDrawOrderTarget.ts",
       "package": "@flighthq/skeleton2d",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency ./skeleton2dAnimationTarget was refused for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts",
       "stage": "dependency"
     },
     {
@@ -12197,7 +11851,7 @@
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/enableSkeleton3DGuards.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./skeleton3d was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -12225,7 +11879,7 @@
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/skeleton3d.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -12253,7 +11907,7 @@
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/updateMeshSkin.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./skeleton3d was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
+      "reason": "dependency ./skinMeshGeometry was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skinMeshGeometry.ts",
       "stage": "dependency"
     },
     {
@@ -12463,7 +12117,7 @@
       "code": "dependency-refused",
       "module": "packages/spritesheet/src/contract.ts",
       "package": "@flighthq/spritesheet",
-      "reason": "dependency ./spritesheetFrom was refused for @flighthq/spritesheet/packages/spritesheet/src/spritesheetFrom.ts",
+      "reason": "dependency ./spritesheet was refused for @flighthq/spritesheet/packages/spritesheet/src/spritesheet.ts",
       "stage": "dependency"
     },
     {
@@ -12502,13 +12156,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 73,
-      "line": 46,
+      "code": "dependency-refused",
       "module": "packages/spritesheet/src/spritesheetFrom.ts",
       "package": "@flighthq/spritesheet",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./spritesheet was refused for @flighthq/spritesheet/packages/spritesheet/src/spritesheet.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -12528,7 +12180,7 @@
       "code": "dependency-refused",
       "module": "packages/spritesheet-formats/src/asepriteParse.ts",
       "package": "@flighthq/spritesheet-formats",
-      "reason": "dependency @flighthq/spritesheet/contract was refused for @flighthq/spritesheet/packages/spritesheet/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -12542,7 +12194,7 @@
       "code": "dependency-refused",
       "module": "packages/spritesheet-formats/src/cocosPlistParse.ts",
       "package": "@flighthq/spritesheet-formats",
-      "reason": "dependency @flighthq/spritesheet/contract was refused for @flighthq/spritesheet/packages/spritesheet/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -12577,7 +12229,7 @@
       "code": "dependency-refused",
       "module": "packages/spritesheet-formats/src/libgdxAtlasParse.ts",
       "package": "@flighthq/spritesheet-formats",
-      "reason": "dependency @flighthq/spritesheet/contract was refused for @flighthq/spritesheet/packages/spritesheet/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -12591,7 +12243,7 @@
       "code": "dependency-refused",
       "module": "packages/spritesheet-formats/src/starlingParse.ts",
       "package": "@flighthq/spritesheet-formats",
-      "reason": "dependency @flighthq/spritesheet/contract was refused for @flighthq/spritesheet/packages/spritesheet/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -12605,7 +12257,7 @@
       "code": "dependency-refused",
       "module": "packages/spritesheet-formats/src/texturePackerParse.ts",
       "package": "@flighthq/spritesheet-formats",
-      "reason": "dependency @flighthq/spritesheet/contract was refused for @flighthq/spritesheet/packages/spritesheet/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -12686,31 +12338,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 64,
-      "line": 456,
+      "code": "dependency-refused",
       "module": "packages/storage/src/storage.ts",
       "package": "@flighthq/storage",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 64,
-      "line": 456,
-      "module": "packages/storage/src/storage.ts",
-      "package": "@flighthq/storage",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 64,
-      "line": 456,
-      "module": "packages/storage/src/storage.ts",
-      "package": "@flighthq/storage",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -12730,7 +12362,7 @@
       "code": "dependency-refused",
       "module": "packages/swf/src/enableSwfGuards.ts",
       "package": "@flighthq/swf",
-      "reason": "dependency ./swfFilter was refused for @flighthq/swf/packages/swf/src/swfFilter.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -12839,14 +12471,14 @@
       "code": "dependency-refused",
       "module": "packages/text/src/contract.ts",
       "package": "@flighthq/text",
-      "reason": "dependency ./explainTextLabelContent was refused for @flighthq/text/packages/text/src/explainTextLabelContent.ts",
+      "reason": "dependency ./enableTextLabelGuards was refused for @flighthq/text/packages/text/src/enableTextLabelGuards.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/text/src/enableTextLabelGuards.ts",
       "package": "@flighthq/text",
-      "reason": "dependency ./textLabelLayout was refused for @flighthq/text/packages/text/src/textLabelLayout.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -12867,14 +12499,14 @@
       "code": "dependency-refused",
       "module": "packages/text/src/nativeText.ts",
       "package": "@flighthq/text",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/text/src/richText.ts",
       "package": "@flighthq/text",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -12888,7 +12520,7 @@
       "code": "dependency-refused",
       "module": "packages/text/src/textLabel.ts",
       "package": "@flighthq/text",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -13007,7 +12639,7 @@
       "code": "dependency-refused",
       "module": "packages/textinput/src/contract.ts",
       "package": "@flighthq/textinput",
-      "reason": "dependency ./textInputEditing was refused for @flighthq/textinput/packages/textinput/src/textInputEditing.ts",
+      "reason": "dependency ./selectableRichTextManager was refused for @flighthq/textinput/packages/textinput/src/selectableRichTextManager.ts",
       "stage": "dependency"
     },
     {
@@ -13028,21 +12660,21 @@
       "code": "dependency-refused",
       "module": "packages/textinput/src/textInput.ts",
       "package": "@flighthq/textinput",
-      "reason": "dependency @flighthq/text/contract was refused for @flighthq/text/packages/text/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/textinput/src/textInputEditing.ts",
       "package": "@flighthq/textinput",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency ./textInput was refused for @flighthq/textinput/packages/textinput/src/textInput.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/textinput/src/textInputManager.ts",
       "package": "@flighthq/textinput",
-      "reason": "dependency ./textInputEditing was refused for @flighthq/textinput/packages/textinput/src/textInputEditing.ts",
+      "reason": "dependency ./textInput was refused for @flighthq/textinput/packages/textinput/src/textInput.ts",
       "stage": "dependency"
     },
     {
@@ -13633,7 +13265,7 @@
       "code": "dependency-refused",
       "module": "packages/tilemap-formats/src/contract.ts",
       "package": "@flighthq/tilemap-formats",
-      "reason": "dependency ./tiledJsonParse was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledJsonParse.ts",
+      "reason": "dependency ./tiledProject was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledProject.ts",
       "stage": "dependency"
     },
     {
@@ -13665,31 +13297,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 24,
-      "line": 84,
+      "code": "dependency-refused",
       "module": "packages/tilemap-formats/src/tiledJsonParse.ts",
       "package": "@flighthq/tilemap-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 26,
-      "line": 266,
-      "module": "packages/tilemap-formats/src/tiledJsonParse.ts",
-      "package": "@flighthq/tilemap-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 40,
-      "line": 371,
-      "module": "packages/tilemap-formats/src/tiledJsonParse.ts",
-      "package": "@flighthq/tilemap-formats",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -13758,17 +13370,15 @@
       "code": "dependency-refused",
       "module": "packages/tokens/src/flightDocumentSceneTokens.ts",
       "package": "@flighthq/tokens",
-      "reason": "dependency ./flightDocumentTokenReference was refused for @flighthq/tokens/packages/tokens/src/flightDocumentTokenReference.ts",
+      "reason": "dependency @flighthq/entity/contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 77,
-      "line": 6,
+      "code": "dependency-refused",
       "module": "packages/tokens/src/flightDocumentTokenReference.ts",
       "package": "@flighthq/tokens",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -13897,7 +13507,7 @@
       "code": "dependency-refused",
       "module": "packages/tween/src/contract.ts",
       "package": "@flighthq/tween",
-      "reason": "dependency ./tween was refused for @flighthq/tween/packages/tween/src/tween.ts",
+      "reason": "dependency ./colorTween was refused for @flighthq/tween/packages/tween/src/colorTween.ts",
       "stage": "dependency"
     },
     {
@@ -13918,17 +13528,15 @@
       "code": "dependency-refused",
       "module": "packages/tween/src/timer.ts",
       "package": "@flighthq/tween",
-      "reason": "dependency ./tween was refused for @flighthq/tween/packages/tween/src/tween.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 42,
-      "line": 87,
+      "code": "dependency-refused",
       "module": "packages/tween/src/tween.ts",
       "package": "@flighthq/tween",
-      "reason": "unsupported type FirstTypeNode",
-      "stage": "lowering"
+      "reason": "dependency ./internal was refused for @flighthq/tween/packages/tween/src/internal.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -14297,13 +13905,6 @@
       "stage": "dependency"
     },
     {
-      "code": "internal-error",
-      "module": "packages/types/src/BitmapDropShadowOptions.ts",
-      "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/BitmapDropShadowOptions.ts: interface BitmapDropShadowOptions inherits unavailable interface BitmapShadowBlurOptions",
-      "stage": "emission"
-    },
-    {
       "code": "dependency-refused",
       "module": "packages/types/src/BitmapEncodeBackend.ts",
       "package": "@flighthq/types",
@@ -14330,27 +13931,6 @@
       "package": "@flighthq/types",
       "reason": "dependency ./BitmapFont was refused for @flighthq/types/packages/types/src/BitmapFont.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "internal-error",
-      "module": "packages/types/src/BitmapGlowOptions.ts",
-      "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/BitmapGlowOptions.ts: interface BitmapGlowOptions inherits unavailable interface BitmapShadowBlurOptions",
-      "stage": "emission"
-    },
-    {
-      "code": "internal-error",
-      "module": "packages/types/src/BitmapInnerGlowOptions.ts",
-      "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/BitmapInnerGlowOptions.ts: interface BitmapInnerGlowOptions inherits unavailable interface BitmapShadowBlurOptions",
-      "stage": "emission"
-    },
-    {
-      "code": "internal-error",
-      "module": "packages/types/src/BitmapInnerShadowOptions.ts",
-      "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/BitmapInnerShadowOptions.ts: interface BitmapInnerShadowOptions inherits unavailable interface BitmapShadowBlurOptions",
-      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -14658,13 +14238,6 @@
       "package": "@flighthq/types",
       "reason": "dependency ./RenderEffect was refused for @flighthq/types/packages/types/src/RenderEffect.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "internal-error",
-      "module": "packages/types/src/CircleCollider.ts",
-      "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/CircleCollider.ts: interface CircleCollider inherits unavailable interface CollisionResponse",
-      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -15460,10 +15033,10 @@
       "stage": "lowering"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/types/src/GlClassicProgram.ts",
       "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/GlClassicProgram.ts: interface GlClassicProgram inherits unavailable interface GlLitProgram",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/GlClassicProgram.ts: runtime external symbol binding plan is incomplete (missing: WebGLProgram[type], WebGLUniformLocation[type])",
       "stage": "emission"
     },
     {
@@ -15523,10 +15096,10 @@
       "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/types/src/GlDebugProgram.ts",
       "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/GlDebugProgram.ts: interface GlDebugProgram inherits unavailable interface GlMeshProgram",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/GlDebugProgram.ts: runtime external symbol binding plan is incomplete (missing: WebGLProgram[type], WebGLUniformLocation[type])",
       "stage": "emission"
     },
     {
@@ -15537,17 +15110,17 @@
       "stage": "emission"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/types/src/GlLitProgram.ts",
       "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/GlLitProgram.ts: interface GlLitProgram inherits unavailable interface GlMeshProgram",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/GlLitProgram.ts: runtime external symbol binding plan is incomplete (missing: WebGLProgram[type], WebGLUniformLocation[type])",
       "stage": "emission"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/types/src/GlMatcapProgram.ts",
       "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/GlMatcapProgram.ts: interface GlMatcapProgram inherits unavailable interface GlMeshProgram",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/GlMatcapProgram.ts: runtime external symbol binding plan is incomplete (missing: WebGLProgram[type], WebGLUniformLocation[type])",
       "stage": "emission"
     },
     {
@@ -15614,10 +15187,10 @@
       "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/types/src/GlPbrProgram.ts",
       "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/GlPbrProgram.ts: interface GlPbrProgram inherits unavailable interface GlLitProgram",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/GlPbrProgram.ts: runtime external symbol binding plan is incomplete (missing: WebGLProgram[type], WebGLUniformLocation[type])",
       "stage": "emission"
     },
     {
@@ -15705,10 +15278,10 @@
       "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/types/src/GlShadedProgram.ts",
       "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/GlShadedProgram.ts: interface GlShadedProgram inherits unavailable interface GlLitProgram",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/GlShadedProgram.ts: runtime external symbol binding plan is incomplete (missing: WebGLProgram[type], WebGLUniformLocation[type])",
       "stage": "emission"
     },
     {
@@ -15761,17 +15334,17 @@
       "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/types/src/GlToonProgram.ts",
       "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/GlToonProgram.ts: interface GlToonProgram inherits unavailable interface GlLitProgram",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/GlToonProgram.ts: runtime external symbol binding plan is incomplete (missing: WebGLProgram[type], WebGLUniformLocation[type])",
       "stage": "emission"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/types/src/GlUnlitProgram.ts",
       "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/GlUnlitProgram.ts: interface GlUnlitProgram inherits unavailable interface GlMeshProgram",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/GlUnlitProgram.ts: runtime external symbol binding plan is incomplete (missing: WebGLProgram[type], WebGLUniformLocation[type])",
       "stage": "emission"
     },
     {
@@ -15782,10 +15355,10 @@
       "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/types/src/GlWireframeProgram.ts",
       "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/GlWireframeProgram.ts: interface GlWireframeProgram inherits unavailable interface GlMeshProgram",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/GlWireframeProgram.ts: runtime external symbol binding plan is incomplete (missing: WebGLBuffer[type], WebGLProgram[type], WebGLUniformLocation[type], WebGLVertexArrayObject[type])",
       "stage": "emission"
     },
     {
@@ -16814,13 +16387,6 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/types/src/ParticleCollider.ts",
-      "package": "@flighthq/types",
-      "reason": "dependency ./CircleCollider was refused for @flighthq/types/packages/types/src/CircleCollider.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/types/src/ParticleConfigIssue.ts",
       "package": "@flighthq/types",
       "reason": "dependency ./ParticleEmitterConfig was refused for @flighthq/types/packages/types/src/ParticleEmitterConfig.ts",
@@ -17037,13 +16603,6 @@
       "stage": "dependency"
     },
     {
-      "code": "internal-error",
-      "module": "packages/types/src/PlaneCollider.ts",
-      "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/PlaneCollider.ts: interface PlaneCollider inherits unavailable interface CollisionResponse",
-      "stage": "emission"
-    },
-    {
       "code": "dependency-refused",
       "module": "packages/types/src/Platform.ts",
       "package": "@flighthq/types",
@@ -17197,13 +16756,6 @@
       "package": "@flighthq/types",
       "reason": "dependency ./Entity was refused for @flighthq/types/packages/types/src/Entity.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "internal-error",
-      "module": "packages/types/src/RectangleCollider.ts",
-      "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/RectangleCollider.ts: interface RectangleCollider inherits unavailable interface CollisionResponse",
-      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -18129,13 +17681,6 @@
       "package": "@flighthq/types",
       "reason": "dependency ./PbrExtension was refused for @flighthq/types/packages/types/src/PbrExtension.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "internal-error",
-      "module": "packages/types/src/SphereCollider.ts",
-      "package": "@flighthq/types",
-      "reason": "Compiler lowering pass interface-inheritance failed for @flighthq/types/packages/types/src/SphereCollider.ts: interface SphereCollider inherits unavailable interface CollisionResponse",
-      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -19629,7 +19174,7 @@
       "code": "dependency-refused",
       "module": "packages/velocity/src/transformVelocity.ts",
       "package": "@flighthq/velocity",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {

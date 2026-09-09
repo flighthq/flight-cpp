@@ -2,7 +2,7 @@
   "schema": "flight-generated-sdk/1",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
-    "revision": "2faa5a7e7a7101b7c3d5a38a95e6b06e5ef40ad5",
+    "revision": "b5c9ee1bfa0e0d27ee7b821536f5dd94ee2e946b",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
@@ -1190,9 +1190,9 @@
     {
       "cppIncludePrefix": "flight/types",
       "cppNamespace": "flight::types",
-      "emittedModules": 264,
+      "emittedModules": 273,
       "package": "@flighthq/types",
-      "refusedModules": 713,
+      "refusedModules": 704,
       "sourceModules": 977
     },
     {
@@ -1252,8 +1252,8 @@
   },
   "summary": {
     "packages": 154,
-    "emittedModules": 305,
-    "refusedModules": 2546,
+    "emittedModules": 314,
+    "refusedModules": 2537,
     "sourceModules": 2851
   }
 }

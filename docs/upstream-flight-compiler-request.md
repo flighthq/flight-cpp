@@ -1,6 +1,6 @@
 # flight-compiler package graph review
 
-This review covers Flight `1274ec5` and flight-compiler `2faa5a7`. The compiler revision is pinned in
+This review covers Flight `1274ec5` and flight-compiler `b5c9ee1`. The compiler revision is pinned in
 [`dependencies.lock.json`](../dependencies.lock.json), and the committed [SDK manifest](../generated/manifest.json),
 [initialization plan](../generated/initialization.json), and [refusal ledger](../generated/refusals.json) are generated
 from that pair.
@@ -18,22 +18,27 @@ The three integration blockers reported against `8a4b1a0` now have real public c
   package dependencies, and public export resolution. It shares C++ reference analysis, records dependency-closed
   partial output, and returns a module-evaluation plan.
 
-The full graph completes in about three minutes on the current development machine. The previous isolated sweep
-emitted 1,322 headers that did not form a dependency closure. The graph report emits 305 dependency-closed modules
-and refuses 2,546; that lower headline is more useful because no reported output depends on a refused module. It
-records 2,726 refusal causes: 2,310 propagated dependency failures, 312 lowering diagnostics, and 104 emission
+The full graph now completes in about 127 seconds on the current development machine. The previous isolated sweep
+emitted 1,322 headers that did not form a dependency closure. The graph report emits 314 dependency-closed modules
+and refuses 2,537; that lower headline is more useful because no reported output depends on a refused module. It
+records 2,683 refusal causes: 2,352 propagated dependency failures, 235 lowering diagnostics, and 96 emission
 failures.
+
+The `0d3416c` semantic fix removes all 77 prior `FirstTypeNode` diagnostics. The `cc8e210` and `b5c9ee1` interface
+changes reduce caught lowering-pass failures from 24 to 7 and allow nine inherited type modules to enter the emitted
+closure. The nine new headers still fail against flight-cpp because their generated classes inherit the missing
+`flight::ReferenceEnabled` runtime type.
 
 The old `assetLibrary.ts` duplicate-binding invariant no longer occurs. Imported identity is now resolved across the
 graph, apart from two remaining `indeterminateIdentity` cases and four `unsupportedReferenceForm` cases in
-`@flighthq/types`. The earlier `@flighthq/adjustments` probe now exposes three direct compiler/runtime blockers instead
-of isolated-import noise: two `FirstTypeNode` diagnostics and unsupported dense-array length construction. Its other
-refusals are dependency propagation from those modules or `@flighthq/types/contract`.
+`@flighthq/types`. The earlier `@flighthq/adjustments` probe no longer has its two `FirstTypeNode` blockers; its direct
+remaining compiler/runtime blocker is unsupported dense-array length construction. Its other refusals are dependency
+propagation from that module or `@flighthq/types/contract`.
 
 `analyzeFlightWorkspace` cannot currently construct the input plan for this same checkout. It fails with
-`package-exclusion-drift` because `@flighthq/tool-pipeline` and `@flighthq/tool-registry` partially match the tooling
-exclusion heuristic. The downstream generator therefore constructs the requested SDK package graph and its two
-public export lanes directly from package manifests.
+`package-exclusion-drift` because `@flighthq/tool-registry` still partially matches the tooling exclusion heuristic.
+Commit `e055c55` fixed the former `@flighthq/tool-pipeline` failure. The downstream generator therefore still
+constructs the requested SDK package graph and its two public export lanes directly from package manifests.
 
 ## Remaining upstream requests
 
@@ -48,7 +53,7 @@ exclusion policy should not prevent compiling the 154-package `@flighthq/sdk` de
 ABI alignment is fixed, but the C++ backend emits runtime APIs absent from the exact flight-cpp revision it pins.
 Examples include `flight::ReferenceEnabled`, `flight::Ref<T>`, `flight::make_ref`, binding cells, bitwise/shift
 helpers, and `flight::power`, `minimum`, and `maximum`. This repository now supplies `flight::power` so its generated
-tween remains runnable. A compile probe over the 305 dependency-closed SDK headers passes 110 and fails 195. The
+tween remains runnable. A compile probe over the 314 dependency-closed SDK headers passes 110 and fails 204. The
 compiler's golden C++ compile probe fails for the same runtime-surface mismatch.
 
 Please compile representative `runtimeProfile: "flight-cpp"` output against the pinned flight-cpp checkout as a
@@ -67,15 +72,14 @@ The direct refusal families are now clear enough to prioritize:
 | Count | Direct lowering family |
 | ---: | --- |
 | 90 | interface heritage requires an interface reference |
-| 77 | `FirstTypeNode` |
 | 43 | computed property names |
 | 37 | `unique` type operators |
 | 28 | conditional types |
 | 11 | mapped types |
 
-There are also 24 caught lowering-pass failures, mostly interface inheritance unable to find local or imported base
-interfaces. Please retain graph identity through interface-inheritance lowering and finish the two remaining
-`indeterminateIdentity` and four `unsupportedReferenceForm` cases.
+There are seven caught lowering-pass failures, including three remaining interface-inheritance cases. Please retain
+graph identity through those cases and finish the two remaining `indeterminateIdentity` and four
+`unsupportedReferenceForm` cases.
 
 ### Separate runtime ambient gaps from native host bindings
 
