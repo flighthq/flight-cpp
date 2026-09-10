@@ -34,6 +34,8 @@
 #include <flight/typed_array.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 17
 #include <flight/version.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 18
+#include <flight/reference.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

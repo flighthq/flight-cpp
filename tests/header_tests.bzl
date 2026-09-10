@@ -41,4 +41,5 @@ _PUBLIC_HEADERS = [
     ("task", 15),
     ("typed_array", 16),
     ("version", 17),
+    ("reference", 18),
 ]

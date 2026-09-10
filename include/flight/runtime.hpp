@@ -10,6 +10,7 @@
 #include <flight/map.hpp>
 #include <flight/math.hpp>
 #include <flight/presence.hpp>
+#include <flight/reference.hpp>
 #include <flight/rejection.hpp>
 #include <flight/set.hpp>
 #include <flight/string.hpp>

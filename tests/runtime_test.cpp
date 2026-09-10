@@ -24,6 +24,10 @@ class TestUnicodeService final : public flight::UnicodeService {
   }
 };
 
+struct TestReference : public flight::ReferenceEnabled {
+  int value;
+};
+
 void check(bool condition, const char* message) {
   if (condition) return;
   std::cerr << "FAIL: " << message << '\n';
@@ -214,6 +218,24 @@ void test_presence_and_math() {
         "Math constants are portable and retain double precision");
 }
 
+void test_reference() {
+  auto value = flight::make_ref<TestReference>(TestReference{.value = 3});
+  flight::Ref<flight::ReferenceEnabled> base = value;
+  auto alias = value;
+  alias->value = 7;
+  check(value->value == 7 && base == value, "references preserve shared object identity and support upcasts");
+
+  const auto cell = flight::make_binding_cell(2);
+  auto captured = cell;
+  captured.rebind(5);
+  const auto updated = cell.update_binding([](int& current) {
+    current *= 3;
+    return current;
+  });
+  check(updated == 15 && captured.read_binding() == 15,
+        "binding-cell copies share mutable closure storage");
+}
+
 void test_set() {
   const auto nan = std::numeric_limits<double>::quiet_NaN();
   flight::Set<double> values{nan, nan, -0.0};
@@ -277,6 +299,9 @@ void test_string() {
 
 void test_typed_array() {
   flight::Int16Array values{1, 2, 3};
+  auto alias = values;
+  check(alias == values && values.subarray(0) != values && values.slice(0) != values,
+        "typed-array copies preserve identity while views and slices create objects");
   auto view = values.subarray(1);
   view[0] = 7;
   check(values[1] == 7 && view.size() == 2, "typed-array subarray shares its backing storage");
@@ -409,6 +434,7 @@ int main() {
   test_host();
   test_map();
   test_presence_and_math();
+  test_reference();
   test_set();
   test_string();
   test_task();

@@ -39,6 +39,7 @@ set(
   map
   math
   presence
+  reference
   rejection
   set
   string

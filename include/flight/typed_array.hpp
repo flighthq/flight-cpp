@@ -48,6 +48,8 @@ class Uint8Clamped {
 template <typename Value>
   requires(std::is_arithmetic_v<Value> || std::same_as<Value, Uint8Clamped>)
 class TypedArray {
+  struct Identity {};
+
  public:
   using const_iterator = typename std::vector<Value>::const_iterator;
   using iterator = typename std::vector<Value>::iterator;
@@ -101,6 +103,10 @@ class TypedArray {
 
   [[nodiscard]] iterator end() noexcept { return begin() + static_cast<std::ptrdiff_t>(length_); }
   [[nodiscard]] bool empty() const noexcept { return length_ == 0; }
+
+  [[nodiscard]] friend bool operator==(const TypedArray& left, const TypedArray& right) noexcept {
+    return left.identity_ == right.identity_;
+  }
 
   TypedArray& fill(Value value) {
     std::fill(begin(), end(), std::move(value));
@@ -196,6 +202,7 @@ class TypedArray {
 
   size_type length_ = 0;
   size_type offset_ = 0;
+  std::shared_ptr<Identity> identity_ = std::make_shared<Identity>();
   std::shared_ptr<std::vector<Value>> storage_;
 };
 

@@ -65,17 +65,18 @@ propagation from that module or `@flighthq/types/contract`.
 
 ### Keep the runtime contract executable
 
-ABI alignment is fixed, but the C++ backend still emits some runtime APIs absent from the exact flight-cpp revision
-it pins. The remaining examples are `flight::ReferenceEnabled`, `flight::Ref<T>`, `flight::make_ref`, and binding
-cells. This repository now supplies `flight::power`, `minimum`, `maximum`, `is_integer`, and the JavaScript-compatible
-bitwise and shift helpers required by current generated output.
+ABI alignment is fixed, and flight-cpp now supplies the runtime surface used by the current emitted headers:
+`flight::ReferenceEnabled`, `flight::Ref<T>`, `flight::make_ref`, shared binding cells, `flight::power`, `minimum`,
+`maximum`, `is_integer`, and JavaScript-compatible bitwise and shift helpers. Typed arrays also preserve JavaScript
+object identity across C++ value copies while assigning distinct identity to `slice` and `subarray` results.
 
-A compile probe over the 319 dependency-closed SDK headers now passes 123 and fails 196, up from 110 passing at
+A compile probe over the 319 dependency-closed SDK headers now passes 297 and fails 22, up from 110 passing at
 `41f774c`. Both newly emitted math headers compile. The three encoding headers now get past integer checks, exception
 construction, declaration order, and element access, then stop at the distinct `Uint8Array.length` property mismatch:
 flight-cpp exposes `size()`, while the compiler preserves the TypeScript property spelling. The compiler's golden C++
-compile probe now passes 157 of 201 files and fails 44, improving from 149 passing before the compiler refresh and
-runtime additions.
+compile probe now passes 200 of 201 files, improving from 149 before the compiler refresh and runtime additions. Its
+sole remaining failure constructs `flight::String` directly from a narrowed number instead of calling
+`flight::to_string`.
 
 Please compile representative `runtimeProfile: "flight-cpp"` output against the pinned flight-cpp checkout as a
 compiler gate. ABI number equality cannot catch a missing API surface. Either advance the runtime pin with these
@@ -88,6 +89,13 @@ observable, TypeScript/native behavior oracles. Dependency-aware helper and cons
 `b1523e2`, although some affected full-SDK headers still fail on these later constructs.
 
 ### Preserve package graph identity through the remaining type cases
+
+Of the 2,532 refused modules, 2,189 have only a dependency refusal; 343 modules carry a direct lowering or emission
+failure. The largest immediate dependency hub is `@flighthq/types/contract`, which suppresses 428 consumers because
+the export barrel depends on every leaf it re-exports. A consumer importing one named type through a contract barrel
+should depend on that type's defining leaf module rather than the complete barrel. Please make re-export resolution
+symbol-granular and emit contract files as umbrella headers. This will expose independently usable package lanes while
+the remaining leaves are brought up, without weakening dependency closure.
 
 The graph-wide direct refusal families are now clear enough to prioritize. Counts are diagnostic instances; repeated
 computed members can produce more than one diagnostic in a module.
