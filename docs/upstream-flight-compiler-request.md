@@ -1,6 +1,6 @@
 # flight-compiler package graph review
 
-This review covers Flight `1274ec5` and flight-compiler `41f774c`. The compiler revision is pinned in
+This review covers Flight `1274ec5` and flight-compiler `14a9ff4`. The compiler revision is pinned in
 [`dependencies.lock.json`](../dependencies.lock.json), and the committed [SDK manifest](../generated/manifest.json),
 [initialization plan](../generated/initialization.json), and [refusal ledger](../generated/refusals.json) are generated
 from that pair.
@@ -31,15 +31,19 @@ The three integration blockers reported against `8a4b1a0` now have real public c
   this graph.
 - `41f774c` maps `Infinity`, `NaN`, `Number`, and `RangeError` to C++ standard-library constructs. This emits all three
   `@flighthq/encoding` modules and two additional `@flighthq/math` modules.
+- `b1523e2` closes the native emission defects found in those headers: dependency-aware declaration ordering,
+  readonly typed-array access through `element`, UTF-8 conversion for `RangeError`, `denorm_min()` for
+  `Number.MIN_VALUE`, `flight::is_integer` for `Number.isInteger`, and `flight::unsigned_right_shift` for unresolved
+  numeric flows.
 
-The full graph completed in 91 seconds on the current development machine. The previous isolated sweep
+The full graph completed in 82 seconds on the current development machine. The previous isolated sweep
 emitted 1,322 headers that did not form a dependency closure. The graph report emits 319 dependency-closed modules
 and refuses 2,532; that lower headline is more useful because no reported output depends on a refused module. It
 now records 2,984 refusal causes: 2,189 propagated dependency failures, 703 lowering diagnostics, and 92 emission
 failures. Graph-wide semantic lowering exposes direct failures in modules that older revisions reached only as
 dependency refusals, so the direct diagnostic totals are not comparable to the old short-circuiting report.
 
-At `41f774c`, the compiler's readiness report emits 199 of 200 curated C++ fixtures, while the real SDK graph emits
+At `14a9ff4`, the compiler's readiness report emits 199 of 200 curated C++ fixtures, while the real SDK graph emits
 319 of 2,851 modules. The difference shows that the remaining work is concentrated in recurring production patterns
 and dependency closure rather than broad absence of basic language constructs.
 
@@ -61,25 +65,27 @@ propagation from that module or `@flighthq/types/contract`.
 
 ### Keep the runtime contract executable
 
-ABI alignment is fixed, but the C++ backend emits runtime APIs absent from the exact flight-cpp revision it pins.
-Examples include `flight::ReferenceEnabled`, `flight::Ref<T>`, `flight::make_ref`, binding cells, bitwise/shift
-helpers, and `flight::power`, `minimum`, and `maximum`. This repository now supplies `flight::power` so its generated
-tween remains runnable. A compile probe over the 319 dependency-closed SDK headers passes 110 and fails 209. The five
-new headers still fail on generated `double.is_integer`, `RangeError` construction from `flight::String`, source-order
-constant references, dense typed-array access, or missing bitwise helpers. `Number.MIN_VALUE` is also mapped to
-`std::numeric_limits<double>::min()`, whose value is the smallest positive normal double; JavaScript requires the
-smallest positive subnormal value, represented by `denorm_min()`. The
-compiler's golden C++ compile probe reports 52 emitted files that do not compile against this runtime, led by the same
-runtime-surface mismatch.
+ABI alignment is fixed, but the C++ backend still emits some runtime APIs absent from the exact flight-cpp revision
+it pins. The remaining examples are `flight::ReferenceEnabled`, `flight::Ref<T>`, `flight::make_ref`, and binding
+cells. This repository now supplies `flight::power`, `minimum`, `maximum`, `is_integer`, and the JavaScript-compatible
+bitwise and shift helpers required by current generated output.
+
+A compile probe over the 319 dependency-closed SDK headers now passes 123 and fails 196, up from 110 passing at
+`41f774c`. Both newly emitted math headers compile. The three encoding headers now get past integer checks, exception
+construction, declaration order, and element access, then stop at the distinct `Uint8Array.length` property mismatch:
+flight-cpp exposes `size()`, while the compiler preserves the TypeScript property spelling. The compiler's golden C++
+compile probe now passes 157 of 201 files and fails 44, improving from 149 passing before the compiler refresh and
+runtime additions.
 
 Please compile representative `runtimeProfile: "flight-cpp"` output against the pinned flight-cpp checkout as a
 compiler gate. ABI number equality cannot catch a missing API surface. Either advance the runtime pin with these
 semantics or keep the backend from claiming that runtime profile until its required capabilities exist.
 
 Some emitted constructs fail independently of missing runtime names, including optional defaults that call
-`value_or` with the optional itself, invalid `cmath.log` member syntax, and out parameters emitted by value. These
-need target compile fixtures and, where observable, TypeScript/native behavior oracles. Helper declaration ordering
-is fixed in `12a637b`, although the affected full-SDK headers still fail on other runtime gaps.
+`value_or` with the optional itself, invalid `cmath.log` member syntax, array-length writes emitted as assignments to
+`static_cast<double>(out.size())`, and out parameters emitted by value. These need target compile fixtures and, where
+observable, TypeScript/native behavior oracles. Dependency-aware helper and constant ordering is fixed in
+`b1523e2`, although some affected full-SDK headers still fail on these later constructs.
 
 ### Preserve package graph identity through the remaining type cases
 

@@ -15,6 +15,8 @@ inline flight::Array<double> distance_base = flight::Array<double>{1.0, 2.0, 3.0
 
 inline flight::Array<double> distance_extra = flight::Array<double>{0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 2.0, 2.0, 3.0, 3.0, 4.0, 4.0, 5.0, 5.0, 6.0, 6.0, 7.0, 7.0, 8.0, 8.0, 9.0, 9.0, 10.0, 10.0, 11.0, 11.0, 12.0, 12.0, 13.0, 13.0};
 
+inline const double adler_modulus = 65521.0;
+
 inline double compute_adler32(flight::Uint8Array input) {
   double first = 1.0;
   double second = 0.0;
@@ -30,7 +32,5 @@ inline double compute_adler32(flight::Uint8Array input) {
   }
   return flight::unsigned_right_shift(flight::bitwise_or(flight::left_shift(second, 16.0), first), 0.0);
 }
-
-inline const double adler_modulus = 65521.0;
 
 } // namespace flight::compression

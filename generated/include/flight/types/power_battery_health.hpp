@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+using PowerBatteryHealthState = flight::String;
+
 struct PowerBatteryHealth : public flight::ReferenceEnabled {
   double capacity_wear_level;
   double cycle_count;
@@ -14,7 +16,5 @@ struct PowerBatteryHealth : public flight::ReferenceEnabled {
   double temperature_celsius;
   double voltage;
 };
-
-using PowerBatteryHealthState = flight::String;
 
 } // namespace flight::types

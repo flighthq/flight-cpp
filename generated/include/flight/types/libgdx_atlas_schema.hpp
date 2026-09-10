@@ -9,8 +9,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct LibgdxAtlasDocument : public flight::ReferenceEnabled {
-  flight::Array<flight::Ref<LibgdxAtlasPage>> pages;
+struct LibgdxAtlasRegion : public flight::ReferenceEnabled {
+  double index;
+  flight::String name;
+  std::tuple<double, double> offset;
+  std::tuple<double, double> orig;
+  std::tuple<double, double> orig_size;
+  bool rotate;
+  std::tuple<double, double> size;
+  std::tuple<double, double> xy;
 };
 
 struct LibgdxAtlasPage : public flight::ReferenceEnabled {
@@ -23,15 +30,8 @@ struct LibgdxAtlasPage : public flight::ReferenceEnabled {
   std::tuple<double, double> size;
 };
 
-struct LibgdxAtlasRegion : public flight::ReferenceEnabled {
-  double index;
-  flight::String name;
-  std::tuple<double, double> offset;
-  std::tuple<double, double> orig;
-  std::tuple<double, double> orig_size;
-  bool rotate;
-  std::tuple<double, double> size;
-  std::tuple<double, double> xy;
+struct LibgdxAtlasDocument : public flight::ReferenceEnabled {
+  flight::Array<flight::Ref<LibgdxAtlasPage>> pages;
 };
 
 struct LibgdxAtlasParseOptions : public flight::ReferenceEnabled {

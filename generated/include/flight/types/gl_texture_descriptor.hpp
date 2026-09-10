@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+using GlTextureInternalFormat = flight::String;
+
 struct GlTextureDescriptor : public flight::ReferenceEnabled {
   std::optional<GlTextureWrapKind> wrap_s;
   std::optional<GlTextureWrapKind> wrap_t;
@@ -21,7 +23,5 @@ struct GlTextureDescriptor : public flight::ReferenceEnabled {
   std::optional<bool> premultiply_alpha;
   std::optional<GlTextureInternalFormat> format;
 };
-
-using GlTextureInternalFormat = flight::String;
 
 } // namespace flight::types

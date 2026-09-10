@@ -8,14 +8,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct CffIndex : public flight::ReferenceEnabled {
-  double end_offset;
-  flight::Array<flight::Ref<CffIndexEntry>> entries;
-};
-
 struct CffIndexEntry : public flight::ReferenceEnabled {
   double end;
   double start;
+};
+
+struct CffIndex : public flight::ReferenceEnabled {
+  double end_offset;
+  flight::Array<flight::Ref<CffIndexEntry>> entries;
 };
 
 struct CffTable : public flight::ReferenceEnabled {

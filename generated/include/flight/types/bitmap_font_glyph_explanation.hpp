@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+using BitmapFontGlyphExplanationReason = flight::String;
+
 struct BitmapFontGlyphExplanation : public flight::ReferenceEnabled {
   bool renderable;
   BitmapFontGlyphExplanationReason reason;
@@ -15,7 +17,5 @@ struct BitmapFontGlyphExplanation : public flight::ReferenceEnabled {
   double glyph_width;
   double glyph_height;
 };
-
-using BitmapFontGlyphExplanationReason = flight::String;
 
 } // namespace flight::types

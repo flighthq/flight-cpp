@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+using ResourceLoadReportStatus = flight::String;
+
 struct ResourceLoadReport : public flight::ReferenceEnabled {
   double attempts;
   double bytes;
@@ -16,7 +18,5 @@ struct ResourceLoadReport : public flight::ReferenceEnabled {
   flight::String key;
   ResourceLoadReportStatus status;
 };
-
-using ResourceLoadReportStatus = flight::String;
 
 } // namespace flight::types

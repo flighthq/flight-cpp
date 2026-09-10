@@ -12,8 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::encoding {
 
 inline void assert_utf8_window(double byte_length, double offset, double length) {
-  if (((((!double.is_integer(offset) || !double.is_integer(length)) || (offset < 0.0)) || (length < 0.0)) || ((offset + length) > byte_length))) {
-    throw std::range_error(flight::String("decodeUTF8 window is outside the byte array"));
+  if (((((!flight::is_integer(offset) || !flight::is_integer(length)) || (offset < 0.0)) || (length < 0.0)) || ((offset + length) > byte_length))) {
+    throw std::range_error(flight::String("decodeUTF8 window is outside the byte array").to_utf8());
   }
 }
 
@@ -84,6 +84,8 @@ inline double write_utf8_code_point(flight::Uint8Array out, double offset, doubl
   return offset;
 }
 
+inline const flight::String utf8_replacement_character = flight::String("�");
+
 inline flight::String decode_utf8(flight::Uint8Array bytes, std::optional<double> offset = std::nullopt, std::optional<double> length = std::nullopt) {
   offset = offset.value_or(0.0);
   length = length.value_or((bytes.length - offset.value()));
@@ -92,14 +94,14 @@ inline flight::String decode_utf8(flight::Uint8Array bytes, std::optional<double
   flight::String result = flight::String("");
   double index = offset.value();
   while ((index < end)) {
-    auto first = bytes[static_cast<size_t>(index++)];
+    auto first = bytes.element(index++);
     if ((first <= 127.0)) {
       result += flight::String::from_char_code(first);
       continue;
     }
     if (((first >= 194.0) && (first <= 223.0))) {
       if ((index < end)) {
-        auto second_3 = bytes[static_cast<size_t>(index)];
+        auto second_3 = bytes.element(index);
         if (is_utf8_continuation(second_3)) {
           index++;
           result += flight::String::from_char_code(flight::bitwise_or(flight::left_shift(flight::bitwise_and(first, 31.0), 6.0), flight::bitwise_and(second_3, 63.0)));
@@ -112,37 +114,37 @@ inline flight::String decode_utf8(flight::Uint8Array bytes, std::optional<double
     if (((first >= 224.0) && (first <= 239.0))) {
       const double second_minimum_2 = ((first == 224.0) ? 160.0 : 128.0);
       const double second_maximum_2 = ((first == 237.0) ? 159.0 : 191.0);
-      if ((((index >= end) || (bytes[static_cast<size_t>(index)] < second_minimum_2)) || (bytes[static_cast<size_t>(index)] > second_maximum_2))) {
+      if ((((index >= end) || (bytes.element(index) < second_minimum_2)) || (bytes.element(index) > second_maximum_2))) {
         result += utf8_replacement_character;
         continue;
       }
-      auto second = bytes[static_cast<size_t>(index++)];
-      if (((index >= end) || !is_utf8_continuation(bytes[static_cast<size_t>(index)]))) {
+      auto second = bytes.element(index++);
+      if (((index >= end) || !is_utf8_continuation(bytes.element(index)))) {
         result += utf8_replacement_character;
         continue;
       }
-      auto third = bytes[static_cast<size_t>(index++)];
+      auto third = bytes.element(index++);
       result += flight::String::from_char_code(flight::bitwise_or(flight::bitwise_or(flight::left_shift(flight::bitwise_and(first, 15.0), 12.0), flight::left_shift(flight::bitwise_and(second, 63.0), 6.0)), flight::bitwise_and(third, 63.0)));
       continue;
     }
     if (((first >= 240.0) && (first <= 244.0))) {
       const double second_minimum = ((first == 240.0) ? 144.0 : 128.0);
       const double second_maximum = ((first == 244.0) ? 143.0 : 191.0);
-      if ((((index >= end) || (bytes[static_cast<size_t>(index)] < second_minimum)) || (bytes[static_cast<size_t>(index)] > second_maximum))) {
+      if ((((index >= end) || (bytes.element(index) < second_minimum)) || (bytes.element(index) > second_maximum))) {
         result += utf8_replacement_character;
         continue;
       }
-      auto second_2 = bytes[static_cast<size_t>(index++)];
-      if (((index >= end) || !is_utf8_continuation(bytes[static_cast<size_t>(index)]))) {
+      auto second_2 = bytes.element(index++);
+      if (((index >= end) || !is_utf8_continuation(bytes.element(index)))) {
         result += utf8_replacement_character;
         continue;
       }
-      auto third_2 = bytes[static_cast<size_t>(index++)];
-      if (((index >= end) || !is_utf8_continuation(bytes[static_cast<size_t>(index)]))) {
+      auto third_2 = bytes.element(index++);
+      if (((index >= end) || !is_utf8_continuation(bytes.element(index)))) {
         result += utf8_replacement_character;
         continue;
       }
-      auto fourth = bytes[static_cast<size_t>(index++)];
+      auto fourth = bytes.element(index++);
       const double code_point = flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::left_shift(flight::bitwise_and(first, 7.0), 18.0), flight::left_shift(flight::bitwise_and(second_2, 63.0), 12.0)), flight::left_shift(flight::bitwise_and(third_2, 63.0), 6.0)), flight::bitwise_and(fourth, 63.0));
       const double pair = (code_point - 65536.0);
       result += flight::String::from_char_code(flight::bitwise_or(55296.0, flight::signed_right_shift(pair, 10.0)), flight::bitwise_or(56320.0, flight::bitwise_and(pair, 1023.0)));
@@ -152,6 +154,8 @@ inline flight::String decode_utf8(flight::Uint8Array bytes, std::optional<double
   }
   return result;
 }
+
+inline const double utf8_replacement_code_point = 65533.0;
 
 inline flight::Uint8Array encode_utf8(flight::String text) {
   auto result = flight::Uint8Array(measure_utf8(text));
@@ -183,9 +187,5 @@ inline flight::Uint8Array encode_utf8(flight::String text) {
   }
   return result;
 }
-
-inline const flight::String utf8_replacement_character = flight::String("�");
-
-inline const double utf8_replacement_code_point = 65533.0;
 
 } // namespace flight::encoding

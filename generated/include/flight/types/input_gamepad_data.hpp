@@ -21,12 +21,12 @@ struct InputGamepadButtonData : public flight::ReferenceEnabled {
   double value;
 };
 
+using GamepadMapping = flight::String;
+
 struct InputGamepadConnectData : public flight::ReferenceEnabled {
   double gamepad;
   flight::String id;
   GamepadMapping mapping;
 };
-
-using GamepadMapping = flight::String;
 
 } // namespace flight::types

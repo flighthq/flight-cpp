@@ -18,7 +18,7 @@ inline double ceil_to(double value, double step) {
 
 inline double euclidean_mod(double value, double divisor) {
   if ((divisor == 0.0)) {
-    throw std::range_error(flight::String("euclideanMod: divisor must not be 0"));
+    throw std::range_error(flight::String("euclideanMod: divisor must not be 0").to_utf8());
   }
   return std::fmod((std::fmod(value, divisor) + divisor), divisor);
 }

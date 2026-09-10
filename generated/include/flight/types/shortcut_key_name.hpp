@@ -7,8 +7,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-using ShortcutKeyName = flight::String;
-
 using ShortcutDigitKeyName = flight::String;
 
 using ShortcutEditingKeyName = flight::String;
@@ -26,5 +24,7 @@ using ShortcutNavigationKeyName = flight::String;
 using ShortcutNumpadKeyName = flight::String;
 
 using ShortcutPunctuationKeyName = flight::String;
+
+using ShortcutKeyName = flight::String;
 
 } // namespace flight::types

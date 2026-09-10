@@ -7,6 +7,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
+inline double get_gaussian_kernel_size(double sigma) {
+  if ((sigma <= 0.0)) {
+    return 1.0;
+  }
+  const double radius = std::ceil((3.0 * sigma));
+  return ((radius * 2.0) + 1.0);
+}
+
 inline flight::Array<double> compute_gaussian_kernel_weights(double sigma, flight::Array<double> out) {
   const double size = get_gaussian_kernel_size(sigma);
   static_cast<double>(out.size()) = size;
@@ -40,14 +48,6 @@ inline flight::Array<double> compute_gaussian_kernel_weights(double sigma, fligh
     }
   }
   return out;
-}
-
-inline double get_gaussian_kernel_size(double sigma) {
-  if ((sigma <= 0.0)) {
-    return 1.0;
-  }
-  const double radius = std::ceil((3.0 * sigma));
-  return ((radius * 2.0) + 1.0);
 }
 
 } // namespace flight::effects

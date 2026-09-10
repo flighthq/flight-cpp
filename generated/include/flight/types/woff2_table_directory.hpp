@@ -7,18 +7,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct Woff2TableDirectory : public flight::ReferenceEnabled {
-  flight::Array<flight::Ref<Woff2TableEntry>> entries;
-  double stream_start;
-  double total_uncompressed_length;
-};
-
 struct Woff2TableEntry : public flight::ReferenceEnabled {
   double original_length;
   flight::String tag;
   double transform_length;
   double transform_version;
   bool transformed;
+};
+
+struct Woff2TableDirectory : public flight::ReferenceEnabled {
+  flight::Array<flight::Ref<Woff2TableEntry>> entries;
+  double stream_start;
+  double total_uncompressed_length;
 };
 
 } // namespace flight::types

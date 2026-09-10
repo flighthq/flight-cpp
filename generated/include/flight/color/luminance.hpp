@@ -10,19 +10,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::color {
 
+inline double get_color_luminance(double color) {
+  const double r = srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 24.0), 255.0) / 255.0));
+  const double g = srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 16.0), 255.0) / 255.0));
+  const double b = srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 8.0), 255.0) / 255.0));
+  return (((0.2126 * r) + (0.7152 * g)) + (0.0722 * b));
+}
+
 inline double get_color_contrast_ratio(double a, double b) {
   const double la = get_color_luminance(a);
   const double lb = get_color_luminance(b);
   const double lighter = flight::maximum(la, lb);
   const double darker = flight::minimum(la, lb);
   return ((lighter + 0.05) / (darker + 0.05));
-}
-
-inline double get_color_luminance(double color) {
-  const double r = srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 24.0), 255.0) / 255.0));
-  const double g = srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 16.0), 255.0) / 255.0));
-  const double b = srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 8.0), 255.0) / 255.0));
-  return (((0.2126 * r) + (0.7152 * g)) + (0.0722 * b));
 }
 
 inline void get_rec2020_luminance_weights(std::tuple<double, double, double> out) {

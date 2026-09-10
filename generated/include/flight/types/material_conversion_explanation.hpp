@@ -9,12 +9,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+using MaterialConversionDropReason = flight::String;
+
 struct MaterialConversionExplanation : public flight::ReferenceEnabled {
   flight::Array<flight::String> dropped_maps;
   std::optional<flight::String> reason;
 };
-
-using MaterialConversionDropReason = flight::String;
 
 using MaterialConversionGuard = std::function<void(flight::Ref<MaterialConversionExplanation>, flight::String)>;
 

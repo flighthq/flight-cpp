@@ -7,13 +7,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline double get_blur_downsample_level(double sigma) {
-  if ((sigma <= blur_downsample_max_sigma)) {
-    return 0.0;
-  }
-  return std::ceil(cmath.log2((sigma / blur_downsample_max_sigma)));
-}
-
 inline double get_blur_residual_sigma(double sigma, double level) {
   if ((sigma <= 0.0)) {
     return 0.0;
@@ -22,5 +15,12 @@ inline double get_blur_residual_sigma(double sigma, double level) {
 }
 
 inline const double blur_downsample_max_sigma = 4.0;
+
+inline double get_blur_downsample_level(double sigma) {
+  if ((sigma <= blur_downsample_max_sigma)) {
+    return 0.0;
+  }
+  return std::ceil(cmath.log2((sigma / blur_downsample_max_sigma)));
+}
 
 } // namespace flight::effects

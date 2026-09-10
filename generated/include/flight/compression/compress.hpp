@@ -16,6 +16,24 @@ struct length_slice_subarray : public flight::ReferenceEnabled {
   std::function<auto(auto, auto)> subarray;
 };
 
+inline const double end_of_block = 256.0;
+
+inline const double first_length_symbol = 257.0;
+
+inline const double fixed_huffman_block = 1.0;
+
+inline const double hash_bits = 15.0;
+
+inline const double hash_mask = (flight::left_shift(1.0, hash_bits) - 1.0);
+
+inline double hash_at(flight::Uint8Array input, double position) {
+  return flight::bitwise_and(flight::bitwise_xor(flight::bitwise_xor(flight::left_shift(input.element(position), 10.0), flight::left_shift(input.element((position + 1.0)), 5.0)), input.element((position + 2.0))), hash_mask);
+}
+
+inline const double hash_size = flight::left_shift(1.0, hash_bits);
+
+inline const double initial_output_bytes = 1024.0;
+
 struct DeflateBitWriter : public flight::ReferenceEnabled {
   double bit_count = 0.0;
   double bit_buffer = 0.0;
@@ -74,6 +92,60 @@ struct DeflateBitWriter : public flight::ReferenceEnabled {
     this->bytes.element(this->length++) = value;
   }
 };
+
+inline void write_literal_symbol(flight::Ref<DeflateBitWriter> writer, double symbol) {
+  if ((symbol <= 143.0)) {
+    writer->write_code((48.0 + symbol), 8.0);
+  }
+  else {
+    if ((symbol <= 255.0)) {
+      writer->write_code(((400.0 + symbol) - 144.0), 9.0);
+    }
+    else {
+      if ((symbol <= 279.0)) {
+        writer->write_code((symbol - 256.0), 7.0);
+      }
+      else {
+        writer->write_code(((192.0 + symbol) - 280.0), 8.0);
+      }
+    }
+  }
+}
+
+inline void write_length_symbol(flight::Ref<DeflateBitWriter> writer, double length) {
+  double index = (length_base.length - 1.0);
+  while (((index > 0.0) && (length_base.element(index) > length))) {
+    index--;
+  }
+  write_literal_symbol(writer, (first_length_symbol + index));
+  writer->write_bits((length - length_base.element(index)), length_extra.element(index));
+}
+
+inline void write_distance_symbol(flight::Ref<DeflateBitWriter> writer, double distance) {
+  double index = (distance_base.length - 1.0);
+  while (((index > 0.0) && (distance_base.element(index) > distance))) {
+    index--;
+  }
+  writer->write_code(index, 5.0);
+  writer->write_bits((distance - distance_base.element(index)), distance_extra.element(index));
+}
+
+inline const double max_chain = 32.0;
+
+inline const double max_distance = 32768.0;
+
+inline const double max_match = 258.0;
+
+inline double match_run_length(flight::Uint8Array input, double candidate, double position) {
+  const double limit = flight::minimum((input.length - position), max_match);
+  double length = 0.0;
+  while (((length < limit) && (input.element((candidate + length)) == input.element((position + length))))) {
+    length++;
+  }
+  return length;
+}
+
+inline const double min_match = 3.0;
 
 inline flight::Uint8Array encode_fixed_huffman_block(flight::Uint8Array input) {
   flight::Ref<DeflateBitWriter> writer = flight::make_ref<DeflateBitWriter>();
@@ -135,6 +207,10 @@ inline flight::Uint8Array encode_fixed_huffman_block(flight::Uint8Array input) {
   return writer->finish();
 }
 
+inline const double stored_block = 0.0;
+
+inline const double stored_block_max = 65535.0;
+
 inline flight::Uint8Array encode_stored_blocks(flight::Uint8Array input) {
   flight::Ref<DeflateBitWriter> writer = flight::make_ref<DeflateBitWriter>();
   double offset = 0.0;
@@ -160,59 +236,11 @@ inline flight::Uint8Array encode_stored_blocks(flight::Uint8Array input) {
   return writer->finish();
 }
 
+inline const double stored_block_overhead = 5.0;
+
 inline double stored_length(double input_length) {
   const double blocks = flight::maximum(1.0, std::ceil((input_length / stored_block_max)));
   return ((blocks * stored_block_overhead) + input_length);
-}
-
-inline void write_literal_symbol(flight::Ref<DeflateBitWriter> writer, double symbol) {
-  if ((symbol <= 143.0)) {
-    writer->write_code((48.0 + symbol), 8.0);
-  }
-  else {
-    if ((symbol <= 255.0)) {
-      writer->write_code(((400.0 + symbol) - 144.0), 9.0);
-    }
-    else {
-      if ((symbol <= 279.0)) {
-        writer->write_code((symbol - 256.0), 7.0);
-      }
-      else {
-        writer->write_code(((192.0 + symbol) - 280.0), 8.0);
-      }
-    }
-  }
-}
-
-inline void write_length_symbol(flight::Ref<DeflateBitWriter> writer, double length) {
-  double index = (length_base.length - 1.0);
-  while (((index > 0.0) && (length_base.element(index) > length))) {
-    index--;
-  }
-  write_literal_symbol(writer, (first_length_symbol + index));
-  writer->write_bits((length - length_base.element(index)), length_extra.element(index));
-}
-
-inline void write_distance_symbol(flight::Ref<DeflateBitWriter> writer, double distance) {
-  double index = (distance_base.length - 1.0);
-  while (((index > 0.0) && (distance_base.element(index) > distance))) {
-    index--;
-  }
-  writer->write_code(index, 5.0);
-  writer->write_bits((distance - distance_base.element(index)), distance_extra.element(index));
-}
-
-inline double match_run_length(flight::Uint8Array input, double candidate, double position) {
-  const double limit = flight::minimum((input.length - position), max_match);
-  double length = 0.0;
-  while (((length < limit) && (input.element((candidate + length)) == input.element((position + length))))) {
-    length++;
-  }
-  return length;
-}
-
-inline double hash_at(flight::Uint8Array input, double position) {
-  return flight::bitwise_and(flight::bitwise_xor(flight::bitwise_xor(flight::left_shift(input.element(position), 10.0), flight::left_shift(input.element((position + 1.0)), 5.0)), input.element((position + 2.0))), hash_mask);
 }
 
 inline flight::Uint8Array compress_deflate(flight::Uint8Array bytes) {
@@ -220,6 +248,14 @@ inline flight::Uint8Array compress_deflate(flight::Uint8Array bytes) {
   flight::Ref<length_slice_subarray> huffman = encode_fixed_huffman_block(input);
   return ((huffman->length <= stored_length(input->length)) ? huffman : encode_stored_blocks(input));
 }
+
+inline const double zlib_cmf = 120.0;
+
+inline const double zlib_flg = 1.0;
+
+inline const double zlib_header_bytes = 2.0;
+
+inline const double zlib_trailer_bytes = 4.0;
 
 inline flight::Uint8Array compress_deflate_zlib(flight::Uint8Array bytes) {
   flight::Ref<length_slice_subarray> deflated = compress_deflate(bytes);
@@ -235,41 +271,5 @@ inline flight::Uint8Array compress_deflate_zlib(flight::Uint8Array bytes) {
   out.element((trailer + 3.0)) = flight::bitwise_and(checksum, 255.0);
   return out;
 }
-
-inline const double end_of_block = 256.0;
-
-inline const double first_length_symbol = 257.0;
-
-inline const double fixed_huffman_block = 1.0;
-
-inline const double hash_bits = 15.0;
-
-inline const double hash_mask = (flight::left_shift(1.0, hash_bits) - 1.0);
-
-inline const double hash_size = flight::left_shift(1.0, hash_bits);
-
-inline const double initial_output_bytes = 1024.0;
-
-inline const double max_chain = 32.0;
-
-inline const double max_distance = 32768.0;
-
-inline const double max_match = 258.0;
-
-inline const double min_match = 3.0;
-
-inline const double stored_block = 0.0;
-
-inline const double stored_block_max = 65535.0;
-
-inline const double stored_block_overhead = 5.0;
-
-inline const double zlib_cmf = 120.0;
-
-inline const double zlib_flg = 1.0;
-
-inline const double zlib_header_bytes = 2.0;
-
-inline const double zlib_trailer_bytes = 4.0;
 
 } // namespace flight::compression

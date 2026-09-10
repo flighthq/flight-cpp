@@ -7,11 +7,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+using BitmapReadbackBlockReason = flight::String;
+
 struct BitmapReadbackExplanation : public flight::ReferenceEnabled {
   bool readable;
   BitmapReadbackBlockReason reason;
 };
-
-using BitmapReadbackBlockReason = flight::String;
 
 } // namespace flight::types

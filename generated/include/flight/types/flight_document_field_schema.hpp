@@ -12,10 +12,10 @@ namespace flight::types {
 
 using FlightDocumentScalar = std::optional<std::variant<bool, double, flight::String>>;
 
-using FlightDocumentValue = std::optional<std::variant<flight::Array<FlightDocumentValue>, flight::Ref<FlightDocumentFields>, bool, double, flight::String>>;
-
 struct FlightDocumentFields : public flight::ReferenceEnabled {
 };
+
+using FlightDocumentValue = std::optional<std::variant<flight::Array<FlightDocumentValue>, flight::Ref<FlightDocumentFields>, bool, double, flight::String>>;
 
 using FlightDocumentFieldValidator = std::function<bool(FlightDocumentValue)>;
 

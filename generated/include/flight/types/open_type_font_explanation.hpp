@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+using OpenTypeFontExplanationReason = flight::String;
+
 struct OpenTypeFontExplanation : public flight::ReferenceEnabled {
   bool accepted;
   OpenTypeFontExplanationReason reason;
@@ -15,7 +17,5 @@ struct OpenTypeFontExplanation : public flight::ReferenceEnabled {
   double table_count;
   double readable_table_count;
 };
-
-using OpenTypeFontExplanationReason = flight::String;
 
 } // namespace flight::types

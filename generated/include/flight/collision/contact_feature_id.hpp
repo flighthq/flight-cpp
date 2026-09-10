@@ -9,12 +9,12 @@ namespace flight::collision {
 
 inline const double feature_index_limit = flight::left_shift(1.0, 25.0);
 
-inline double pack_contact_feature_id(bool reference_is_a, double reference_edge, double incident_edge, bool second_point) {
-  return ((((reference_is_a ? feature_reference_scale : 0.0) + (reference_edge * feature_edge_scale)) + (incident_edge * 2.0)) + (second_point ? 1.0 : 0.0));
-}
-
 inline const double feature_edge_scale = (feature_index_limit * 2.0);
 
 inline const double feature_reference_scale = (feature_index_limit * feature_edge_scale);
+
+inline double pack_contact_feature_id(bool reference_is_a, double reference_edge, double incident_edge, bool second_point) {
+  return ((((reference_is_a ? feature_reference_scale : 0.0) + (reference_edge * feature_edge_scale)) + (incident_edge * 2.0)) + (second_point ? 1.0 : 0.0));
+}
 
 } // namespace flight::collision

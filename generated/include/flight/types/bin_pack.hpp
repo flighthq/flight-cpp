@@ -26,6 +26,15 @@ struct PackedRectangle : public flight::ReferenceEnabled {
   bool rotated;
 };
 
+struct PackResult : public flight::ReferenceEnabled {
+  flight::Array<flight::Ref<PackedRectangle>> placements;
+  double width;
+  double height;
+  flight::Array<RectangleId> unpacked;
+};
+
+using BinPackHeuristic = flight::String;
+
 struct BinPackOptions : public flight::ReferenceEnabled {
   std::optional<double> max_width;
   std::optional<double> max_height;
@@ -37,15 +46,6 @@ struct BinPackOptions : public flight::ReferenceEnabled {
   std::optional<BinPackHeuristic> heuristic;
   std::optional<bool> growable;
 };
-
-struct PackResult : public flight::ReferenceEnabled {
-  flight::Array<flight::Ref<PackedRectangle>> placements;
-  double width;
-  double height;
-  flight::Array<RectangleId> unpacked;
-};
-
-using BinPackHeuristic = flight::String;
 
 using UnpackedRectangleReason = flight::String;
 

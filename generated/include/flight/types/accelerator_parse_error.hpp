@@ -7,11 +7,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+using AcceleratorParseErrorReason = flight::String;
+
 struct AcceleratorParseError : public flight::ReferenceEnabled {
   flight::String token;
   AcceleratorParseErrorReason reason;
 };
-
-using AcceleratorParseErrorReason = flight::String;
 
 } // namespace flight::types
