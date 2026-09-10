@@ -183,6 +183,32 @@ void test_presence_and_math() {
         "Math.sign preserves NaN");
   check(flight::power(2.0, 10.0) == 1024.0 && flight::power(4.0, -0.5) == 0.5,
         "exponentiation uses the compiler runtime spelling");
+  check(flight::minimum(3.0, 2.0) == 2.0 && flight::maximum(3.0, 2.0) == 3.0 &&
+            std::signbit(flight::minimum(0.0, -0.0)) &&
+            !std::signbit(flight::maximum(0.0, -0.0)) &&
+            std::isnan(flight::minimum(std::numeric_limits<double>::quiet_NaN(), 1.0)),
+        "Math minimum and maximum preserve NaN and signed-zero semantics");
+  check(flight::minimum(flight::Array<double>{3.0, -2.0, 8.0}) == -2.0 &&
+            flight::maximum(flight::Array<double>{3.0, -2.0, 8.0}) == 8.0 &&
+            flight::minimum(flight::Array<double>{}) == std::numeric_limits<double>::infinity() &&
+            flight::maximum(flight::Array<double>{}) == -std::numeric_limits<double>::infinity(),
+        "spread minimum and maximum handle ranges and empty inputs");
+  check(flight::is_integer(-0.0) && flight::is_integer(42.0) && !flight::is_integer(0.5) &&
+            !flight::is_integer(std::numeric_limits<double>::infinity()) &&
+            !flight::is_integer(std::numeric_limits<double>::quiet_NaN()),
+        "Number.isInteger recognizes finite integral doubles");
+  check(flight::bitwise_and(-1.0, 255.0) == 255.0 &&
+            flight::bitwise_or(4294967301.0, 2.0) == 7.0 &&
+            flight::bitwise_xor(15.0, 5.0) == 10.0 && flight::bitwise_not(0.0) == -1.0,
+        "bitwise helpers apply JavaScript ToInt32 conversion");
+  check(flight::left_shift(1073741824.0, 1.0) == -2147483648.0 &&
+            flight::left_shift(1.0, 33.0) == 2.0 &&
+            flight::signed_right_shift(-2147483648.0, 31.0) == -1.0,
+        "signed shifts wrap results and mask their count to five bits");
+  check(flight::unsigned_right_shift(-1.0, 0.0) == 4294967295.0 &&
+            flight::unsigned_right_shift(-1.0, 1.0) == 2147483647.0 &&
+            flight::unsigned_right_shift(std::numeric_limits<double>::quiet_NaN(), 4.0) == 0.0,
+        "unsigned right shift returns the JavaScript uint32 number result");
   check(std::abs(flight::pi - std::acos(-1.0)) < 1.0e-15 &&
             std::abs(flight::e - std::exp(1.0)) < 1.0e-15,
         "Math constants are portable and retain double precision");
