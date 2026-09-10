@@ -1,7 +1,7 @@
 # Generated Flight SDK inventory
 
 This directory is generated from `@flighthq/sdk` 0.5.0 at
-`1274ec5c923947dc64d5ffedcbd8169fc758cd9f` by `flight-compiler` at `a7596ab7ddefdf5b47117b1fef58fd0b087a9536`.
+`1274ec5c923947dc64d5ffedcbd8169fc758cd9f` by `flight-compiler` at `3292a16d81d34e29a2906b27950a491cc0ac358e`.
 Do not edit it by hand.
 
 The current compiler emitted 314 of 2851 source modules from

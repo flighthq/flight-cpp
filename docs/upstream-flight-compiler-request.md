@@ -1,6 +1,6 @@
 # flight-compiler package graph review
 
-This review covers Flight `1274ec5` and flight-compiler `a7596ab`. The compiler revision is pinned in
+This review covers Flight `1274ec5` and flight-compiler `3292a16`. The compiler revision is pinned in
 [`dependencies.lock.json`](../dependencies.lock.json), and the committed [SDK manifest](../generated/manifest.json),
 [initialization plan](../generated/initialization.json), and [refusal ledger](../generated/refusals.json) are generated
 from that pair.
@@ -23,13 +23,20 @@ The three integration blockers reported against `8a4b1a0` now have real public c
   analysis still reports the unrelated `@flighthq/tool-registry` exclusion drift, which no longer blocks SDK work.
 - `ef8da01` analyzes interface heritage across the module graph, and `12a637b` orders non-exported C++ helpers before
   callers and removes self-referential type re-exports.
+- `3292a16` resolves dangling imported type bindings during cross-module compilation. On this Flight revision it
+  changes neither the emitted header set nor any refusal: the full refusal ledger is byte-for-byte identical apart
+  from its compiler revision. It is a graph-correctness improvement, but it does not expand the current SDK closure.
 
-The full graph completed in 76 seconds on the current development machine. The previous isolated sweep
+The full graph completed in 116 seconds on the current development machine. The previous isolated sweep
 emitted 1,322 headers that did not form a dependency closure. The graph report emits 314 dependency-closed modules
 and refuses 2,537; that lower headline is more useful because no reported output depends on a refused module. It
 now records 2,989 refusal causes: 2,190 propagated dependency failures, 703 lowering diagnostics, and 96 emission
 failures. Graph-wide semantic lowering exposes direct failures in modules that older revisions reached only as
 dependency refusals, so the direct diagnostic totals are not comparable to the old short-circuiting report.
+
+At `3292a16`, the compiler's readiness report emits 199 of 200 curated C++ fixtures, while the real SDK graph emits
+314 of 2,851 modules. The difference shows that the remaining work is concentrated in recurring production patterns
+and dependency closure rather than broad absence of basic language constructs.
 
 The `0d3416c` semantic fix removes all 77 prior `FirstTypeNode` diagnostics. The `cc8e210` and `b5c9ee1` interface
 changes reduce caught lowering-pass failures from 24 to 7 and allow nine inherited type modules to enter the emitted
@@ -53,7 +60,7 @@ ABI alignment is fixed, but the C++ backend emits runtime APIs absent from the e
 Examples include `flight::ReferenceEnabled`, `flight::Ref<T>`, `flight::make_ref`, binding cells, bitwise/shift
 helpers, and `flight::power`, `minimum`, and `maximum`. This repository now supplies `flight::power` so its generated
 tween remains runnable. A compile probe over the 314 dependency-closed SDK headers passes 110 and fails 204. The
-compiler's golden C++ compile probe reports 53 emitted files that do not compile against this runtime, led by the same
+compiler's golden C++ compile probe reports 52 emitted files that do not compile against this runtime, led by the same
 runtime-surface mismatch.
 
 Please compile representative `runtimeProfile: "flight-cpp"` output against the pinned flight-cpp checkout as a
