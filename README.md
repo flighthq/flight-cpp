@@ -50,6 +50,17 @@ The development and release presets build the native examples. Run the compiler-
 
 The example preserves the fifteen easing tracks from Flight's TypeScript tween example and renders one deterministic frame in a terminal. Its portable calculation is TypeScript transpiled by the pinned `flight-compiler`; a small handwritten C++ host owns terminal output. See [`examples/README.md`](examples/README.md) for the source, generated output, regeneration command, and the current boundary around browser-backed examples.
 
+The same generated curves also have an interactive SDL/OpenGL ES host. Enable the optional SDL package and disable the
+unused Vulkan adapter, then run the native window:
+
+```sh
+cmake --preset development \
+  -DFLIGHT_CPP_BUILD_HOST_SDL=ON \
+  -DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF
+cmake --build --preset development
+./out/cmake/development/examples/flight_cpp_tween_sdl_gl_example
+```
+
 Consumers can build it in-tree with `add_subdirectory`, or install it and use:
 
 ```cmake

@@ -31,6 +31,15 @@ cmake --build --preset development
 ctest --preset development
 ```
 
+With examples enabled by the preset, the native tween example exercises the GL path end to end:
+
+```sh
+./out/cmake/development/examples/flight_cpp_tween_sdl_gl_example
+```
+
+It animates the fifteen easing curves emitted from `examples/tween/source/tween.ts`. Rendering uses only the OpenGL ES
+context and procedure loader exposed by `Flight::HostSdlGl`; it does not introduce an SDL renderer abstraction.
+
 Set `-DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF` for an SDL and GL/WGPU build without Vulkan development files. Native
 dependency discovery and target selection belong to CMake, so an npm wrapper would only obscure the options and is
 not provided. Bazel continues to cover the dependency-free runtime; the optional SDL package currently has a CMake

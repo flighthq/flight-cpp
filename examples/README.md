@@ -14,6 +14,21 @@ cmake --build --preset development
 ./out/cmake/development/examples/flight_cpp_tween_example
 ```
 
+The SDL/OpenGL ES entry point renders all fifteen generated easing tracks in a native window. It uses the handwritten
+SDL host for the window, event loop, GL context, procedure loading, and presentation; the curve calculations still
+come from the transpiled TypeScript above. Configure the optional host without requiring Vulkan, then run it:
+
+```sh
+cmake --preset development \
+  -DFLIGHT_CPP_BUILD_HOST_SDL=ON \
+  -DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF
+cmake --build --preset development
+./out/cmake/development/examples/flight_cpp_tween_sdl_gl_example
+```
+
+Close the window or press Escape to exit. The executable also accepts `--smoke`, which creates a hidden GL window,
+renders three frames, and exits; this is useful with an offscreen SDL video driver in automated environments.
+
 To regenerate `tween/generated/tween.hpp` with the compiler revision pinned by this repository:
 
 ```sh
@@ -26,4 +41,9 @@ npm --prefix .dependencies/flight-compiler run compile -- \
   --package @flighthq/examples-tween
 ```
 
-The upstream browser entry point itself cannot currently be transpiled. It contains executable module-level statements and browser host calls; the pinned compiler refuses those statements rather than emitting invalid C++. The portable source also spells the elastic curve's phase shift as the equivalent `period / 4`, because the compiler currently emits `Math.asin` with an invalid C++ qualifier. Keeping the curve calculation in a separate source module makes both supported compiler boundaries visible and gives later compiler revisions a straightforward place to remove the adaptations.
+The upstream browser entry point itself cannot currently be transpiled. It contains executable module-level statements
+and browser host calls; the pinned compiler refuses those statements rather than emitting invalid C++. The portable
+source also spells the elastic curve's phase shift as the equivalent `period / 4`, because the compiler currently
+emits `Math.asin` with an invalid C++ qualifier. Keeping the curve calculation in a separate source module makes both
+supported compiler boundaries visible and gives later compiler revisions a straightforward place to remove the
+adaptations.

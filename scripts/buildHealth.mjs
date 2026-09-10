@@ -82,7 +82,14 @@ const benchmarkSources = filesUnder(path.join(cppRoot, 'benchmarks'), isNativeSo
 for (const source of benchmarkSources) requireSourceInBothBuilds(source, 'benchmark source');
 
 const exampleSources = filesUnder(path.join(cppRoot, 'examples'), isNativeSource);
-for (const source of exampleSources) requireSourceInBothBuilds(source, 'example source');
+const hostSdlExampleSources = exampleSources.filter(
+  (filename) => path.basename(filename) === 'tween_sdl_gl_example.cpp',
+);
+const portableExampleSources = exampleSources.filter((filename) => !hostSdlExampleSources.includes(filename));
+for (const source of portableExampleSources) requireSourceInBothBuilds(source, 'example source');
+for (const source of hostSdlExampleSources) {
+  requireText(cmakeGraph, path.basename(source), `CMake SDL example source ${path.basename(source)}`);
+}
 
 if (presets.version !== 2 || presets.cmakeMinimumRequired?.major !== 3 || presets.cmakeMinimumRequired.minor !== 20) {
   failures.push('CMakePresets.json must remain usable with the declared CMake 3.20 floor');
@@ -119,7 +126,7 @@ if (failures.length > 0) {
 }
 
 process.stdout.write(
-  `C++ build metadata agrees across CMake and Bazel ${bazelVersion}: ${String(publicHeaders.length)} public headers, ${String(productionSources.length)} runtime source(s), ${String(executableTests.length)} executable test source(s), ${String(benchmarkSources.length)} benchmark source(s), and ${String(exampleSources.length)} example source(s); CMake additionally declares ${String(hostSdlSources.length)} optional SDL host source(s).\n`,
+  `C++ build metadata agrees across CMake and Bazel ${bazelVersion}: ${String(publicHeaders.length)} public headers, ${String(productionSources.length)} runtime source(s), ${String(executableTests.length)} executable test source(s), ${String(benchmarkSources.length)} benchmark source(s), and ${String(portableExampleSources.length)} portable example source(s); CMake additionally declares ${String(hostSdlSources.length)} optional SDL host source(s) and ${String(hostSdlExampleSources.length)} SDL example source(s).\n`,
 );
 
 function filesUnder(directory, include) {
