@@ -2,7 +2,7 @@
   "schema": "flight-generated-sdk/1",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
-    "revision": "3292a16d81d34e29a2906b27950a491cc0ac358e",
+    "revision": "41f774c07bae07e035cb37e66dfacc0e75ad3562",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
@@ -278,9 +278,9 @@
     {
       "cppIncludePrefix": "flight/encoding",
       "cppNamespace": "flight::encoding",
-      "emittedModules": 0,
+      "emittedModules": 3,
       "package": "@flighthq/encoding",
-      "refusedModules": 3,
+      "refusedModules": 0,
       "sourceModules": 3
     },
     {
@@ -486,9 +486,9 @@
     {
       "cppIncludePrefix": "flight/math",
       "cppNamespace": "flight::math",
-      "emittedModules": 8,
+      "emittedModules": 10,
       "package": "@flighthq/math",
-      "refusedModules": 9,
+      "refusedModules": 7,
       "sourceModules": 17
     },
     {
@@ -1252,8 +1252,8 @@
   },
   "summary": {
     "packages": 154,
-    "emittedModules": 314,
-    "refusedModules": 2537,
+    "emittedModules": 319,
+    "refusedModules": 2532,
     "sourceModules": 2851
   }
 }

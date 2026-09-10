@@ -1,6 +1,6 @@
 {
   "schema": "flight-generated-sdk-refusals/2",
-  "compilerRevision": "3292a16d81d34e29a2906b27950a491cc0ac358e",
+  "compilerRevision": "41f774c07bae07e035cb37e66dfacc0e75ad3562",
   "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
   "refusals": [
     {
@@ -3309,7 +3309,7 @@
       "code": "unsupported-ir",
       "module": "packages/effects-gl/src/glShaderTestHelper.ts",
       "package": "@flighthq/effects-gl",
-      "reason": "cpp emission failed for @flighthq/effects-gl/packages/effects-gl/src/glShaderTestHelper.ts: runtime external symbol binding plan is incomplete (missing: Function[value], Number[value], Object[value], Record[type], RegExp[type])",
+      "reason": "cpp emission failed for @flighthq/effects-gl/packages/effects-gl/src/glShaderTestHelper.ts: runtime external symbol binding plan is incomplete (missing: Function[value], Object[value], Record[type], RegExp[type])",
       "stage": "emission"
     },
     {
@@ -3826,27 +3826,6 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/encoding/src/contract.ts",
-      "package": "@flighthq/encoding",
-      "reason": "dependency ./utf8 was refused for @flighthq/encoding/packages/encoding/src/utf8.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/encoding/src/index.ts",
-      "package": "@flighthq/encoding",
-      "reason": "dependency ./contract was refused for @flighthq/encoding/packages/encoding/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/encoding/src/utf8.ts",
-      "package": "@flighthq/encoding",
-      "reason": "cpp emission failed for @flighthq/encoding/packages/encoding/src/utf8.ts: runtime external symbol binding plan is incomplete (missing: Number[value], RangeError[value])",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/entity/src/binding.ts",
       "package": "@flighthq/entity",
       "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
@@ -4047,7 +4026,7 @@
       "code": "unsupported-ir",
       "module": "packages/font-formats/src/cffDict.ts",
       "package": "@flighthq/font-formats",
-      "reason": "cpp emission failed for @flighthq/font-formats/packages/font-formats/src/cffDict.ts: runtime external symbol binding plan is incomplete (missing: DataView[type], DataView[value], Number[value])",
+      "reason": "cpp emission failed for @flighthq/font-formats/packages/font-formats/src/cffDict.ts: runtime external symbol binding plan is incomplete (missing: DataView[type], DataView[value])",
       "stage": "emission"
     },
     {
@@ -5624,13 +5603,6 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "module": "packages/math/src/numberTheory.ts",
-      "package": "@flighthq/math",
-      "reason": "cpp emission failed for @flighthq/math/packages/math/src/numberTheory.ts: runtime external symbol binding plan is incomplete (missing: Number[value], RangeError[value])",
-      "stage": "emission"
-    },
-    {
       "code": "dependency-refused",
       "module": "packages/math/src/random.ts",
       "package": "@flighthq/math",
@@ -5653,16 +5625,9 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/math/src/rounding.ts",
-      "package": "@flighthq/math",
-      "reason": "cpp emission failed for @flighthq/math/packages/math/src/rounding.ts: runtime external symbol binding plan is incomplete (missing: RangeError[value])",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
       "module": "packages/math/src/statistics.ts",
       "package": "@flighthq/math",
-      "reason": "cpp emission failed for @flighthq/math/packages/math/src/statistics.ts: runtime external symbol binding plan is incomplete (missing: NaN[value], Number[value], Object[value], RangeError[value])",
+      "reason": "cpp emission failed for @flighthq/math/packages/math/src/statistics.ts: runtime external symbol binding plan is incomplete (missing: Object[value])",
       "stage": "emission"
     },
     {
@@ -8142,7 +8107,7 @@
       "code": "unsupported-ir",
       "module": "packages/physics3d/src/symmetricTensor.ts",
       "package": "@flighthq/physics3d",
-      "reason": "cpp emission failed for @flighthq/physics3d/packages/physics3d/src/symmetricTensor.ts: runtime external symbol binding plan is incomplete (missing: ArrayLike[type], Number[value])",
+      "reason": "cpp emission failed for @flighthq/physics3d/packages/physics3d/src/symmetricTensor.ts: runtime external symbol binding plan is incomplete (missing: ArrayLike[type])",
       "stage": "emission"
     },
     {
@@ -9384,7 +9349,7 @@
       "code": "unsupported-ir",
       "module": "packages/render-wgpu/src/wgpuExternalImageSource.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuExternalImageSource.ts: runtime external symbol binding plan is incomplete (missing: DOMException[value], GPUCopyExternalImageDestInfo[type], GPUCopyExternalImageSource[type], GPUCopyExternalImageSourceInfo[type], GPUQueue[type], HTMLCanvasElement[value], HTMLImageElement[value], HTMLVideoElement[value], ImageBitmap[value], Number[value], OffscreenCanvas[value], TypeError[value], VideoFrame[value])",
+      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuExternalImageSource.ts: runtime external symbol binding plan is incomplete (missing: DOMException[value], GPUCopyExternalImageDestInfo[type], GPUCopyExternalImageSource[type], GPUCopyExternalImageSourceInfo[type], GPUQueue[type], HTMLCanvasElement[value], HTMLImageElement[value], HTMLVideoElement[value], ImageBitmap[value], OffscreenCanvas[value], TypeError[value], VideoFrame[value])",
       "stage": "emission"
     },
     {
@@ -14148,7 +14113,7 @@
       "code": "unsupported-ir",
       "module": "packages/skeleton2d-formats/src/spineDrawOrder.ts",
       "package": "@flighthq/skeleton2d-formats",
-      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineDrawOrder.ts: runtime external symbol binding plan is incomplete (missing: Number[value])",
+      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineDrawOrder.ts: Array length construction is outside the dense flight-cpp array profile",
       "stage": "emission"
     },
     {
@@ -21791,11 +21756,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/types/src/VideoCapabilityBackend.ts",
       "package": "@flighthq/types",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/VideoCapabilityBackend.ts: imported type HostImageSource has indeterminateIdentity",
-      "stage": "emission"
+      "reason": "dependency ./HostImageSource was refused for @flighthq/types/packages/types/src/HostImageSource.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",

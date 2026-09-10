@@ -81,6 +81,21 @@
       "source": "packages/effects/src/stylizeMath.ts"
     },
     {
+      "name": "Contract",
+      "packageName": "@flighthq/encoding",
+      "source": "packages/encoding/src/contract.ts"
+    },
+    {
+      "name": "Index",
+      "packageName": "@flighthq/encoding",
+      "source": "packages/encoding/src/index.ts"
+    },
+    {
+      "name": "Utf8",
+      "packageName": "@flighthq/encoding",
+      "source": "packages/encoding/src/utf8.ts"
+    },
+    {
       "name": "GeometryPoolGuards",
       "packageName": "@flighthq/geometry",
       "source": "packages/geometry/src/geometryPoolGuards.ts"
@@ -124,6 +139,16 @@
       "name": "NextPowerOfTwo",
       "packageName": "@flighthq/math",
       "source": "packages/math/src/nextPowerOfTwo.ts"
+    },
+    {
+      "name": "NumberTheory",
+      "packageName": "@flighthq/math",
+      "source": "packages/math/src/numberTheory.ts"
+    },
+    {
+      "name": "Rounding",
+      "packageName": "@flighthq/math",
+      "source": "packages/math/src/rounding.ts"
     },
     {
       "name": "Scalar",
@@ -1736,6 +1761,36 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "Utf8",
+          "packageName": "@flighthq/encoding",
+          "source": "packages/encoding/src/utf8.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Contract",
+          "packageName": "@flighthq/encoding",
+          "source": "packages/encoding/src/contract.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Index",
+          "packageName": "@flighthq/encoding",
+          "source": "packages/encoding/src/index.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "GeometryPoolGuards",
           "packageName": "@flighthq/geometry",
           "source": "packages/geometry/src/geometryPoolGuards.ts"
@@ -1819,6 +1874,26 @@
           "name": "NextPowerOfTwo",
           "packageName": "@flighthq/math",
           "source": "packages/math/src/nextPowerOfTwo.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "NumberTheory",
+          "packageName": "@flighthq/math",
+          "source": "packages/math/src/numberTheory.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Rounding",
+          "packageName": "@flighthq/math",
+          "source": "packages/math/src/rounding.ts"
         }
       ]
     },
@@ -12101,6 +12176,31 @@
     },
     {
       "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/encoding",
+            "source": "packages/encoding/src/contract.ts"
+          },
+          "specifier": "./utf8",
+          "target": {
+            "name": "Utf8",
+            "packageName": "@flighthq/encoding",
+            "source": "packages/encoding/src/utf8.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Contract",
+        "packageName": "@flighthq/encoding",
+        "source": "packages/encoding/src/contract.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
       "dependencies": [],
       "module": {
         "name": "Contract",
@@ -13965,6 +14065,31 @@
         "name": "ImageFormat",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/ImageFormat.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/encoding",
+            "source": "packages/encoding/src/index.ts"
+          },
+          "specifier": "./contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/encoding",
+            "source": "packages/encoding/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Index",
+        "packageName": "@flighthq/encoding",
+        "source": "packages/encoding/src/index.ts"
       },
       "steps": []
     },
@@ -16760,6 +16885,143 @@
           "access": "available-after-instantiation",
           "binding": {
             "column": 17,
+            "fingerprint": "sha256:6ccdbc8748d993bfc11cc7edf792beb4c58a2f9c249b520d2cf29076333886f1",
+            "line": 7,
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/numberTheory.ts",
+            "id": "binding:[\"@flighthq/math\",\"packages/math/src/numberTheory.ts\",268]",
+            "kind": "function",
+            "name": "factorial",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1027cc8a4f5a75b3e043aa7c2977558f77b4c11af3b262358fc0bda10232aec8",
+            "line": 21,
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/numberTheory.ts",
+            "id": "binding:[\"@flighthq/math\",\"packages/math/src/numberTheory.ts\",841]",
+            "kind": "function",
+            "name": "gcd",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:61a9fe2fb11dae50640e920c4fc8d9acfda509a34f197d2337ac9b35c4b8b073",
+            "line": 42,
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/numberTheory.ts",
+            "id": "binding:[\"@flighthq/math\",\"packages/math/src/numberTheory.ts\",1489]",
+            "kind": "function",
+            "name": "hypot2",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:278d7d7537bdceac9b0d982b8409e4df2f6ca8355bb0b835344b801d9b4da791",
+            "line": 47,
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/numberTheory.ts",
+            "id": "binding:[\"@flighthq/math\",\"packages/math/src/numberTheory.ts\",1608]",
+            "kind": "function",
+            "name": "isEven",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:5f77e8931e719be33811989a73cdb9489a097f56a4d1235ebfdbc883bacbb18c",
+            "line": 52,
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/numberTheory.ts",
+            "id": "binding:[\"@flighthq/math\",\"packages/math/src/numberTheory.ts\",1716]",
+            "kind": "function",
+            "name": "isOdd",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:e8ced92370ccb8dfa2af507656e13c6dfffba99fe3b31ad42e881ff96e579268",
+            "line": 62,
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/numberTheory.ts",
+            "id": "binding:[\"@flighthq/math\",\"packages/math/src/numberTheory.ts\",2047]",
+            "kind": "function",
+            "name": "lcm",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [],
+      "module": {
+        "name": "NumberTheory",
+        "packageName": "@flighthq/math",
+        "source": "packages/math/src/numberTheory.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
             "fingerprint": "sha256:4ff721643cbf1d7a2ba49cc903845c06f2b278f1a43aacfccc3a403adc07c789",
             "line": 3,
             "packageName": "@flighthq/color",
@@ -17963,6 +18225,122 @@
           ]
         }
       ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1ce00fa135b7ddf6e138f014ec52e8d8f35e09fbc76cff06aa2448cdf1b1de4f",
+            "line": 5,
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/rounding.ts",
+            "id": "binding:[\"@flighthq/math\",\"packages/math/src/rounding.ts\",151]",
+            "kind": "function",
+            "name": "ceilTo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:cf9a039cb15f80184ff4741e2404e2ae9da7b24c0d9efbdee5c209527e6b16b6",
+            "line": 21,
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/rounding.ts",
+            "id": "binding:[\"@flighthq/math\",\"packages/math/src/rounding.ts\",663]",
+            "kind": "function",
+            "name": "euclideanMod",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ed62ca5be93614060623ff916eddc9156a7d11a246ae193a277e6bf602ab5677",
+            "line": 30,
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/rounding.ts",
+            "id": "binding:[\"@flighthq/math\",\"packages/math/src/rounding.ts\",1005]",
+            "kind": "function",
+            "name": "floorTo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:25a7905d14e4c409ea12e35d558f96af499f47dc2470ecdfc3259304e0b4aee0",
+            "line": 40,
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/rounding.ts",
+            "id": "binding:[\"@flighthq/math\",\"packages/math/src/rounding.ts\",1390]",
+            "kind": "function",
+            "name": "fract",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:38702841a8806c32cf47c5438556f5b65c44f2dd25f69bd4b221156618260fa7",
+            "line": 49,
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/rounding.ts",
+            "id": "binding:[\"@flighthq/math\",\"packages/math/src/rounding.ts\",1709]",
+            "kind": "function",
+            "name": "roundTo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [],
+      "module": {
+        "name": "Rounding",
+        "packageName": "@flighthq/math",
+        "source": "packages/math/src/rounding.ts"
+      },
+      "steps": []
     },
     {
       "bindings": [
@@ -23161,6 +23539,232 @@
         "source": "packages/geometry/src/typedarray.ts"
       },
       "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:b6d288509e5038cf021a5073cd90a8c0076ca426ce5ed78d55cde1274bb61f38",
+            "line": 1,
+            "packageName": "@flighthq/encoding",
+            "source": "packages/encoding/src/utf8.ts",
+            "id": "binding:[\"@flighthq/encoding\",\"packages/encoding/src/utf8.ts\",16]",
+            "kind": "function",
+            "name": "decodeUTF8",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:922b62ee06cd95e76846cd78f79f3babc411427ff5839d7138f302ef7414cd87",
+            "line": 76,
+            "packageName": "@flighthq/encoding",
+            "source": "packages/encoding/src/utf8.ts",
+            "id": "binding:[\"@flighthq/encoding\",\"packages/encoding/src/utf8.ts\",2459]",
+            "kind": "function",
+            "name": "encodeUTF8",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:40cd1e4aae14d051b3b05c31bd5b2c4f3e0d56e9fd7e6cef99c0ef8520009ed4",
+            "line": 97,
+            "packageName": "@flighthq/encoding",
+            "source": "packages/encoding/src/utf8.ts",
+            "id": "binding:[\"@flighthq/encoding\",\"packages/encoding/src/utf8.ts\",3240]",
+            "kind": "function",
+            "name": "assertUTF8Window",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:115774fceae683887af0abcd77da8f7d625c9630199fb8097cf05da9ebf8266c",
+            "line": 109,
+            "packageName": "@flighthq/encoding",
+            "source": "packages/encoding/src/utf8.ts",
+            "id": "binding:[\"@flighthq/encoding\",\"packages/encoding/src/utf8.ts\",3554]",
+            "kind": "function",
+            "name": "isUTF8Continuation",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:74f4977e843ea5ac0f38d30ad03329991723c8dafec23cbdf59c22661f9e177f",
+            "line": 113,
+            "packageName": "@flighthq/encoding",
+            "source": "packages/encoding/src/utf8.ts",
+            "id": "binding:[\"@flighthq/encoding\",\"packages/encoding/src/utf8.ts\",3649]",
+            "kind": "function",
+            "name": "measureUTF8",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:64d7c523cb96bbb031dd3d1e483c4fe28f562c9da089025a93ff8af0d40d6433",
+            "line": 132,
+            "packageName": "@flighthq/encoding",
+            "source": "packages/encoding/src/utf8.ts",
+            "id": "binding:[\"@flighthq/encoding\",\"packages/encoding/src/utf8.ts\",4236]",
+            "kind": "function",
+            "name": "writeUTF8CodePoint",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:f19c0079756fefb178cc37c36d7c9771848a96fa91237c8a5594850e52b096d0",
+            "line": 151,
+            "packageName": "@flighthq/encoding",
+            "source": "packages/encoding/src/utf8.ts",
+            "id": "binding:[\"@flighthq/encoding\",\"packages/encoding/src/utf8.ts\",4928]",
+            "kind": "variable",
+            "name": "UTF8_REPLACEMENT_CHARACTER",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:d9d344adf6e1bc2c0bc1c534c62f4e29d9cd1a6f930b8fee06990cfe2502f55c",
+            "line": 152,
+            "packageName": "@flighthq/encoding",
+            "source": "packages/encoding/src/utf8.ts",
+            "id": "binding:[\"@flighthq/encoding\",\"packages/encoding/src/utf8.ts\",4973]",
+            "kind": "variable",
+            "name": "UTF8_REPLACEMENT_CODE_POINT",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [],
+      "module": {
+        "name": "Utf8",
+        "packageName": "@flighthq/encoding",
+        "source": "packages/encoding/src/utf8.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:f19c0079756fefb178cc37c36d7c9771848a96fa91237c8a5594850e52b096d0",
+              "line": 151,
+              "packageName": "@flighthq/encoding",
+              "source": "packages/encoding/src/utf8.ts",
+              "id": "binding:[\"@flighthq/encoding\",\"packages/encoding/src/utf8.ts\",4928]",
+              "kind": "variable",
+              "name": "UTF8_REPLACEMENT_CHARACTER",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            6
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:d9d344adf6e1bc2c0bc1c534c62f4e29d9cd1a6f930b8fee06990cfe2502f55c",
+              "line": 152,
+              "packageName": "@flighthq/encoding",
+              "source": "packages/encoding/src/utf8.ts",
+              "id": "binding:[\"@flighthq/encoding\",\"packages/encoding/src/utf8.ts\",4973]",
+              "kind": "variable",
+              "name": "UTF8_REPLACEMENT_CODE_POINT",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            7
+          ]
+        }
+      ]
     },
     {
       "bindings": [],
