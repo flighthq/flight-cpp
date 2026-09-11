@@ -22,6 +22,9 @@
 
 namespace flight {
 
+class RegExp;
+class RegExpExecArray;
+
 class UnicodeService {
  public:
   UnicodeService() = default;
@@ -94,6 +97,30 @@ class String {
     std::u16string result;
     result.reserve(sizeof...(Codes));
     (result.push_back(to_uint16(static_cast<double>(codes))), ...);
+    return String(std::move(result));
+  }
+
+  template <typename... Codes>
+    requires(std::is_arithmetic_v<Codes> && ...)
+  [[nodiscard]] static String from_code_point(Codes... codes) {
+    std::u16string result;
+    const auto append = [&](double value) {
+      if (!std::isfinite(value) || std::trunc(value) != value || value < 0.0 || value > 0x10FFFF) {
+        throw std::range_error("flight::String code point is not a Unicode scalar value");
+      }
+      auto code_point = static_cast<std::uint32_t>(value);
+      if (code_point >= 0xD800 && code_point <= 0xDFFF) {
+        throw std::range_error("flight::String code point is not a Unicode scalar value");
+      }
+      if (code_point <= 0xFFFF) {
+        result.push_back(static_cast<char16_t>(code_point));
+        return;
+      }
+      code_point -= 0x10000;
+      result.push_back(static_cast<char16_t>(0xD800 + (code_point >> 10)));
+      result.push_back(static_cast<char16_t>(0xDC00 + (code_point & 0x3FF)));
+    };
+    (append(static_cast<double>(codes)), ...);
     return String(std::move(result));
   }
 
@@ -191,6 +218,13 @@ class String {
     if (found != std::u16string::npos) result.replace(found, searched.length(), replacement.value_);
     return String(std::move(result));
   }
+
+  [[nodiscard]] std::optional<RegExpExecArray> match(const RegExp& expression) const;
+  [[nodiscard]] String replace(const RegExp& expression, const String& replacement) const;
+
+  template <typename Function>
+    requires(!std::convertible_to<Function, String>)
+  [[nodiscard]] String replace(const RegExp& expression, Function&& replacement) const;
 
   [[nodiscard]] String slice(
       std::ptrdiff_t begin_index,

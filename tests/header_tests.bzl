@@ -42,4 +42,13 @@ _PUBLIC_HEADERS = [
     ("typed_array", 16),
     ("version", 17),
     ("reference", 18),
+    ("number", 19),
+    ("object", 20),
+    ("symbol", 21),
+    ("text_decoder", 22),
+    ("url", 23),
+    ("array_buffer", 24),
+    ("data_view", 25),
+    ("regexp", 26),
+    ("intl", 27),
 ]

@@ -87,6 +87,45 @@ void test_array() {
         "array join uses source numeric formatting");
 }
 
+void test_binary_data() {
+  flight::ArrayBuffer buffer(16.0);
+  flight::Uint8Array bytes(buffer);
+  auto alias = bytes;
+  auto tail = bytes.subarray(8);
+  bytes[8] = 42;
+  check(alias.buffer == buffer && tail.buffer == buffer && tail.byte_offset == 8 && tail.byte_length == 8 &&
+            tail[0] == 42,
+        "typed arrays retain shared ArrayBuffer storage and byte offsets");
+
+  const flight::Uint8Array little_endian{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0x3F};
+  const flight::Uint8Array big_endian{0x3F, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+  check(flight::DataView(little_endian.buffer).get_float64(0.0, true) == 1.5 &&
+            flight::DataView(big_endian.buffer).get_float64(0.0, false) == 1.5,
+        "DataView decodes unaligned-independent float64 values in both byte orders");
+
+  const flight::Uint8Array infinity_bytes{0x7F, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+  const flight::Uint8Array nan_bytes{0x7F, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+  check(std::isinf(flight::DataView(infinity_bytes.buffer).get_float64(0.0)) &&
+            std::isnan(flight::DataView(nan_bytes.buffer).get_float64(0.0)),
+        "DataView preserves IEEE infinity and NaN payload classes");
+
+  flight::DataView writable(buffer);
+  writable.set_uint32(0.0, 3735928559.0, true);
+  writable.set_int16(4.0, -2.0, false);
+  writable.set_float32(8.0, 1.25, true);
+  check(writable.get_uint32(0.0, true) == 3735928559.0 && writable.get_int16(4.0) == -2.0 &&
+            writable.get_float32(8.0, true) == 1.25,
+        "DataView numeric setters share storage and preserve integer and float bit patterns");
+
+  bool bounds_failed = false;
+  try {
+    static_cast<void>(flight::DataView(buffer, 9.0).get_float64(0.0));
+  } catch (const std::range_error&) {
+    bounds_failed = true;
+  }
+  check(bounds_failed, "DataView rejects reads beyond its declared view");
+}
+
 void test_contract() {
   check(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2",
         "runtime advertises the compiler contract it implements");
@@ -97,6 +136,9 @@ void test_contract() {
         "task capability ABI is explicit");
   check(flight::runtime_capability_status("array") == flight::RuntimeCapabilityStatus::initial,
         "implemented capabilities are queryable");
+  check(flight::runtime_capability_status("array-buffer") == flight::RuntimeCapabilityStatus::initial &&
+            flight::runtime_capability_status("data-view") == flight::RuntimeCapabilityStatus::initial,
+        "binary storage capabilities are advertised after their implementation lands");
   check(flight::runtime_capability_status("unicode-case-service") == flight::RuntimeCapabilityStatus::planned,
         "planned capabilities remain distinguishable");
   check(flight::runtime_capability_status("unknown") == flight::RuntimeCapabilityStatus::unavailable,
@@ -160,6 +202,65 @@ void test_map() {
     visited += value;
   });
   check(visited == "nanzero", "map for_each visits value then key in insertion order");
+}
+
+void test_new_runtime_services() {
+  check(flight::parse_int("  -0x10tail") == -16.0 && flight::parse_int("101", 2.9) == 5.0 &&
+            flight::parse_int("10", std::numeric_limits<double>::quiet_NaN()) == 10.0,
+        "parse_int applies TypeScript sign, prefix, partial-parse, and radix coercion rules");
+  check(flight::to_number(flight::String(" ")) == 0.0 &&
+            flight::to_number(flight::String("0b101")) == 5.0 &&
+            flight::to_number(flight::String("-1.25e2")) == -125.0 &&
+            std::isnan(flight::to_number(flight::String("-0x10"))),
+        "to_number handles empty, prefixed, decimal, and invalid signed-prefix inputs");
+
+  flight::Map<flight::String, double> record{{"first", 1.0}, {"second", 2.0}};
+  const auto keys = flight::object_keys(record);
+  check(keys.size() == 2 && keys[0] == flight::String("first") && keys[1] == flight::String("second"),
+        "object_keys preserves emitted key types and deterministic iteration order");
+
+  const auto first_symbol = flight::Symbol::for_key("entity");
+  const auto same_symbol = flight::Symbol::for_key("entity");
+  check(first_symbol == same_symbol && first_symbol != flight::Symbol::for_key("other") &&
+            flight::Symbol() != flight::Symbol(),
+        "Symbol.for interns keys while direct symbols retain distinct identity");
+
+  check(flight::Url("HTTP://example.test/path").protocol == flight::String("http:") &&
+            flight::Url("child", "https://example.test/base").protocol == flight::String("https:"),
+        "Url exposes normalized protocols for absolute and relative inputs");
+
+  const auto decoded = flight::TextDecoder().decode(flight::Uint8Array{0x66, 0xF0, 0x9F, 0x98, 0x80});
+  const auto malformed = flight::TextDecoder().decode(flight::Uint8Array{0xE0, 0x80, 0x80});
+  const auto after_bom = flight::TextDecoder().decode(flight::Uint8Array{0xEF, 0xBB, 0xBF, 0x78});
+  check(decoded == flight::String::from_utf8("f\xF0\x9F\x98\x80") &&
+            malformed == flight::String(u"\uFFFD\uFFFD\uFFFD") && after_bom == flight::String("x") &&
+            flight::TextDecoder().decode().empty(),
+        "TextDecoder follows UTF-8 scalar and malformed-sequence replacement behavior");
+
+  flight::RegExp expression("^flight$", "gi");
+  auto expression_alias = expression;
+  check(expression.test("FLIGHT") && !expression_alias.test("flight") && expression.test("flight"),
+        "global RegExp copies share match position and reset it after failure");
+  const auto captures = flight::RegExp("([a-z]+):(\\d+)").exec("id:42");
+  check(captures.has_value() && captures->size() == 3 && (*captures)[1] == flight::String("id") &&
+            (*captures)[2] == flight::String("42") && captures->index == 0.0,
+        "RegExp exec returns the complete match, captures, and source index");
+  check(flight::String("a1 b2").replace(flight::RegExp("([a-z])([0-9])", "g"),
+                                         flight::String("$2$1")) == flight::String("1a 2b") &&
+            flight::String("x=12").replace(
+                flight::RegExp("([a-z]+)=([0-9]+)"),
+                [](const flight::String&, const flight::String& name, const flight::String& value) {
+                  return name.concat(flight::String(":"), value);
+                }) == flight::String("x:12"),
+        "RegExp global replacement expands captures and invokes replacement callbacks");
+
+  check(flight::IntlCollator().compare("a", "b") < 0.0 &&
+            flight::IntlListFormat().format(flight::Array<flight::String>{"a", "b", "c"}) ==
+                flight::String("a, b, and c") &&
+            flight::IntlNumberFormat().format(1.25) == flight::String("1.25") &&
+            flight::IntlPluralRules().select(1.0) == flight::String("one") &&
+            flight::IntlRelativeTimeFormat().format(-2.0, "day") == flight::String("2 days ago"),
+        "internationalization types provide a deterministic locale-neutral baseline");
 }
 
 void test_presence_and_math() {
@@ -275,6 +376,15 @@ void test_string() {
         "string substring clamps and swaps its boundaries");
   check(flight::String::from_char_code(65, 0xD83D, 0xDE00).length() == 3,
         "from_char_code preserves exact UTF-16 code units");
+  check(flight::String::from_code_point(65, 0x1F600) == flight::String::from_utf8("A\xF0\x9F\x98\x80"),
+        "from_code_point encodes basic and astral Unicode scalars");
+  bool invalid_code_point = false;
+  try {
+    static_cast<void>(flight::String::from_code_point(0xD800));
+  } catch (const std::range_error&) {
+    invalid_code_point = true;
+  }
+  check(invalid_code_point, "from_code_point rejects surrogate values");
   check(flight::to_string(true) == flight::String("true") &&
             flight::String::from_number(-0.0) == flight::String("0") &&
             flight::String::from_number(1.0e-6) == flight::String("0.000001") &&
@@ -428,11 +538,13 @@ void test_task() {
 
 int main() {
   test_array();
+  test_binary_data();
   test_contract();
   test_date();
   test_error();
   test_host();
   test_map();
+  test_new_runtime_services();
   test_presence_and_math();
   test_reference();
   test_set();

@@ -36,6 +36,24 @@
 #include <flight/version.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 18
 #include <flight/reference.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 19
+#include <flight/number.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 20
+#include <flight/object.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 21
+#include <flight/symbol.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 22
+#include <flight/text_decoder.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 23
+#include <flight/url.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 24
+#include <flight/array_buffer.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 25
+#include <flight/data_view.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 26
+#include <flight/regexp.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 27
+#include <flight/intl.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

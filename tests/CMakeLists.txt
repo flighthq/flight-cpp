@@ -30,22 +30,31 @@ add_test(NAME flight_cpp.c_api_threads COMMAND flight_cpp_c_api_thread_tests)
 set(
   flight_cpp_public_headers
   array
+  array_buffer
   contract
+  data_view
   date
   equality
   error
   executor
   host
+  intl
   map
   math
+  number
+  object
   presence
   reference
+  regexp
   rejection
   set
   string
+  symbol
   runtime
   task
+  text_decoder
   typed_array
+  url
   version
 )
 

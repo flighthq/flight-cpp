@@ -17,6 +17,8 @@
 #include <utility>
 #include <vector>
 
+#include <flight/array_buffer.hpp>
+
 namespace flight {
 
 class Uint8Clamped {
@@ -48,32 +50,57 @@ class Uint8Clamped {
 template <typename Value>
   requires(std::is_arithmetic_v<Value> || std::same_as<Value, Uint8Clamped>)
 class TypedArray {
+  static_assert(std::is_trivially_copyable_v<Value>);
+  static_assert(alignof(Value) <= alignof(std::max_align_t));
+
   struct Identity {};
+  struct ViewTag {};
 
  public:
-  using const_iterator = typename std::vector<Value>::const_iterator;
-  using iterator = typename std::vector<Value>::iterator;
-  using size_type = typename std::vector<Value>::size_type;
+  using const_iterator = const Value*;
+  using iterator = Value*;
+  using size_type = std::size_t;
   using value_type = Value;
 
-  TypedArray() : storage_(std::make_shared<std::vector<Value>>()) {}
+  ArrayBuffer buffer;
+  size_type byte_offset = 0;
+  size_type byte_length = 0;
+
+  TypedArray() = default;
 
   explicit TypedArray(size_type length)
-      : length_(length), storage_(std::make_shared<std::vector<Value>>(length)) {}
+      : buffer(ArrayBuffer::allocate(required_bytes(length))),
+        byte_length(required_bytes(length)),
+        length_(length) {}
 
-  TypedArray(std::initializer_list<Value> values)
-      : length_(values.size()), storage_(std::make_shared<std::vector<Value>>(values)) {}
+  template <std::floating_point Number>
+  explicit TypedArray(Number length) : TypedArray(array_length(static_cast<double>(length))) {}
+
+  TypedArray(std::initializer_list<Value> values) : TypedArray(values.begin(), values.end()) {}
 
   template <typename Range>
     requires requires(const Range& range) {
       std::begin(range);
       std::end(range);
     }
-  explicit TypedArray(const Range& values)
-      : TypedArray(std::begin(values), std::end(values)) {}
+  explicit TypedArray(const Range& values) : TypedArray(std::begin(values), std::end(values)) {}
 
-  [[nodiscard]] const Value& operator[](size_type index) const noexcept { return (*storage_)[offset_ + index]; }
-  [[nodiscard]] Value& operator[](size_type index) noexcept { return (*storage_)[offset_ + index]; }
+  explicit TypedArray(const ArrayBuffer& source)
+      : TypedArray(source, size_type{0}, remaining_length(source, 0), ViewTag{}) {}
+
+  TypedArray(const ArrayBuffer& source, double offset)
+      : TypedArray(source,
+                   detail::buffer_index(offset, "flight::TypedArray byte offset is outside the buffer"),
+                   ViewTag{}) {}
+
+  TypedArray(const ArrayBuffer& source, double offset, double length)
+      : TypedArray(source,
+                   detail::buffer_index(offset, "flight::TypedArray byte offset is outside the buffer"),
+                   array_length(length),
+                   ViewTag{}) {}
+
+  [[nodiscard]] const Value& operator[](size_type index) const noexcept { return data()[index]; }
+  [[nodiscard]] Value& operator[](size_type index) noexcept { return data()[index]; }
 
   [[nodiscard]] std::optional<Value> at(std::ptrdiff_t index) const {
     const auto normalized = normalize_element_index(index);
@@ -89,19 +116,10 @@ class TypedArray {
     return normalized ? std::optional<Value>((*this)[*normalized]) : std::nullopt;
   }
 
-  [[nodiscard]] const_iterator begin() const noexcept {
-    return storage_->cbegin() + static_cast<std::ptrdiff_t>(offset_);
-  }
-
-  [[nodiscard]] iterator begin() noexcept {
-    return storage_->begin() + static_cast<std::ptrdiff_t>(offset_);
-  }
-
-  [[nodiscard]] const_iterator end() const noexcept {
-    return begin() + static_cast<std::ptrdiff_t>(length_);
-  }
-
-  [[nodiscard]] iterator end() noexcept { return begin() + static_cast<std::ptrdiff_t>(length_); }
+  [[nodiscard]] const_iterator begin() const noexcept { return data(); }
+  [[nodiscard]] iterator begin() noexcept { return data(); }
+  [[nodiscard]] const_iterator end() const noexcept { return data() + length_; }
+  [[nodiscard]] iterator end() noexcept { return data() + length_; }
   [[nodiscard]] bool empty() const noexcept { return length_ == 0; }
 
   [[nodiscard]] friend bool operator==(const TypedArray& left, const TypedArray& right) noexcept {
@@ -133,18 +151,12 @@ class TypedArray {
     std::move(snapshot.begin(), snapshot.end(), begin() + static_cast<std::ptrdiff_t>(target));
   }
 
-  [[nodiscard]] std::span<const Value> span() const noexcept {
-    const auto* data = storage_->data();
-    return std::span<const Value>(length_ == 0 ? data : data + offset_, length_);
-  }
+  [[nodiscard]] std::span<const Value> span() const noexcept { return {data(), length_}; }
+  [[nodiscard]] std::span<Value> span() noexcept { return {data(), length_}; }
 
-  [[nodiscard]] std::span<Value> span() noexcept {
-    auto* data = storage_->data();
-    return std::span<Value>(length_ == 0 ? data : data + offset_, length_);
-  }
-
-  [[nodiscard]] TypedArray slice(std::ptrdiff_t begin_index,
-                                 std::ptrdiff_t end_index = std::numeric_limits<std::ptrdiff_t>::max()) const {
+  [[nodiscard]] TypedArray slice(
+      std::ptrdiff_t begin_index,
+      std::ptrdiff_t end_index = std::numeric_limits<std::ptrdiff_t>::max()) const {
     const auto first = normalize_boundary(begin_index);
     const auto last = normalize_boundary(end_index);
     if (last <= first) return TypedArray();
@@ -154,13 +166,39 @@ class TypedArray {
 
   [[nodiscard]] TypedArray subarray(
       std::ptrdiff_t begin_index,
-      std::ptrdiff_t end_index = std::numeric_limits<std::ptrdiff_t>::max()) const noexcept {
+      std::ptrdiff_t end_index = std::numeric_limits<std::ptrdiff_t>::max()) const {
     const auto first = normalize_boundary(begin_index);
     const auto last = normalize_boundary(end_index);
-    return TypedArray(storage_, offset_ + first, last <= first ? 0 : last - first);
+    return TypedArray(buffer, byte_offset + first * sizeof(Value), last <= first ? 0 : last - first, ViewTag{});
   }
 
  private:
+  [[nodiscard]] static size_type array_length(double length) {
+    return detail::buffer_index(length, "flight::TypedArray length is outside the supported range");
+  }
+
+  [[nodiscard]] static size_type required_bytes(size_type length) {
+    if (length > std::numeric_limits<size_type>::max() / sizeof(Value)) {
+      throw std::length_error("flight::TypedArray length exceeds addressable storage");
+    }
+    return length * sizeof(Value);
+  }
+
+  static void validate_offset(const ArrayBuffer& source, size_type offset) {
+    if (offset % sizeof(Value) != 0 || offset > source.byte_length()) {
+      throw std::range_error("flight::TypedArray byte offset is invalid for the buffer");
+    }
+  }
+
+  [[nodiscard]] static size_type remaining_length(const ArrayBuffer& source, size_type offset) {
+    validate_offset(source, offset);
+    const auto remaining = source.byte_length() - offset;
+    if (remaining % sizeof(Value) != 0) {
+      throw std::range_error("flight::TypedArray buffer length is not aligned to its element size");
+    }
+    return remaining / sizeof(Value);
+  }
+
   [[nodiscard]] std::optional<size_type> property_index(double index) const noexcept {
     if (!std::isfinite(index) || index < 0.0 || std::trunc(index) != index) return std::nullopt;
     if (index >= static_cast<double>(length_)) return std::nullopt;
@@ -175,11 +213,26 @@ class TypedArray {
 
   template <typename Iterator>
   TypedArray(Iterator first, Iterator last)
-      : length_(static_cast<size_type>(std::distance(first, last))),
-        storage_(std::make_shared<std::vector<Value>>(first, last)) {}
+      : TypedArray(static_cast<size_type>(std::distance(first, last))) {
+    std::copy(first, last, begin());
+  }
 
-  TypedArray(std::shared_ptr<std::vector<Value>> storage, size_type offset, size_type length) noexcept
-      : length_(length), offset_(offset), storage_(std::move(storage)) {}
+  TypedArray(const ArrayBuffer& source, size_type offset, ViewTag)
+      : TypedArray(source, offset, remaining_length(source, offset), ViewTag{}) {}
+
+  TypedArray(const ArrayBuffer& source, size_type offset, size_type length, ViewTag)
+      : buffer(source), byte_offset(offset), byte_length(required_bytes(length)), length_(length) {
+    validate_offset(source, offset);
+    if (byte_length > source.byte_length() - offset) {
+      throw std::range_error("flight::TypedArray view exceeds its buffer");
+    }
+  }
+
+  [[nodiscard]] const Value* data() const noexcept {
+    return reinterpret_cast<const Value*>(buffer.data() + byte_offset);
+  }
+
+  [[nodiscard]] Value* data() noexcept { return reinterpret_cast<Value*>(buffer.data() + byte_offset); }
 
   [[nodiscard]] size_type normalize_boundary(std::ptrdiff_t index) const noexcept {
     if (index < 0) {
@@ -201,9 +254,7 @@ class TypedArray {
   }
 
   size_type length_ = 0;
-  size_type offset_ = 0;
   std::shared_ptr<Identity> identity_ = std::make_shared<Identity>();
-  std::shared_ptr<std::vector<Value>> storage_;
 };
 
 using Float32Array = TypedArray<float>;
