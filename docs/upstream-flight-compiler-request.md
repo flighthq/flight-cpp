@@ -1,141 +1,73 @@
 # flight-compiler package graph review
 
-This review covers Flight `1274ec5` and flight-compiler `14a9ff4`. The compiler revision is pinned in
-[`dependencies.lock.json`](../dependencies.lock.json), and the committed [SDK manifest](../generated/manifest.json),
-[initialization plan](../generated/initialization.json), and [refusal ledger](../generated/refusals.json) are generated
-from that pair.
+This review covers Flight `1274ec5` and flight-compiler `3f86fcb`. The compiler revision is pinned in
+[`dependencies.lock.json`](../dependencies.lock.json). The compiler reciprocally pins flight-cpp `70656d4`, the
+revision immediately before the runtime additions described here.
 
-## What the new compiler work unlocked
+## Downstream adoption
 
-The three integration blockers reported against `8a4b1a0` now have real public contracts:
+The runtime now implements the portable names introduced by flight-compiler's
+[`agents/flight-cpp-adoption.md`](https://github.com/flighthq/flight-compiler/blob/3f86fcb04df8425c5757eccc16560614cc9b5589/agents/flight-cpp-adoption.md):
 
-- `b53c171` aligns emitted C++ with the pinned ABI. Generated headers assert `cpp_abi == 1`, matching flight-cpp
-  `c437f20`.
-- `6f12141` accepts separate package namespace and installed-include mappings plus a versioned
-  `flight-cpp-external-bindings/1` manifest. The SDK now emits directly into `flight::<package>` namespaces and
-  `flight/<package>/` include paths without rewriting generated text.
-- `b07db2c` adds `compileTypeScriptPackageGraph`. One request now carries all 2,851 SDK modules, 154 package roots,
-  package dependencies, and public export resolution. It shares C++ reference analysis, records dependency-closed
-  partial output, and returns a module-evaluation plan.
-- `21b206e` lets workspace analysis target an explicit package closure. The downstream generator now asks for the
-  154 packages in `@flighthq/sdk`, then consumes the inventory's 308 public export lanes through
-  `createCompilerModuleResolutionPlan`; it no longer reconstructs `index` and `contract` lanes itself. Whole-workspace
-  analysis still reports the unrelated `@flighthq/tool-registry` exclusion drift, which no longer blocks SDK work.
-- `ef8da01` analyzes interface heritage across the module graph, and `12a637b` orders non-exported C++ helpers before
-  callers and removes self-referential type re-exports.
-- `3292a16` resolves dangling imported type bindings during cross-module compilation. On this Flight revision it
-  changes neither the emitted header set nor any refusal: the full refusal ledger is byte-for-byte identical apart
-  from its compiler revision. It is a graph-correctness improvement, but it does not expand the current SDK closure.
-- `48e4238` degrades unreachable external-package types to `unknown`, and `d974a60` gives unresolved cross-package
-  imports Flight reference semantics in C++. These improve failure classification but do not add an SDK module on
-  this graph.
-- `41f774c` maps `Infinity`, `NaN`, `Number`, and `RangeError` to C++ standard-library constructs. This emits all three
-  `@flighthq/encoding` modules and two additional `@flighthq/math` modules.
-- `b1523e2` closes the native emission defects found in those headers: dependency-aware declaration ordering,
-  readonly typed-array access through `element`, UTF-8 conversion for `RangeError`, `denorm_min()` for
-  `Number.MIN_VALUE`, `flight::is_integer` for `Number.isInteger`, and `flight::unsigned_right_shift` for unresolved
-  numeric flows.
+- `ArrayBuffer` owns stable, zero-initialized shared storage. Every typed array can view that storage and exposes its
+  `buffer`, `byte_offset`, and `byte_length`; aliases and differently positioned views observe the same writes.
+- `DataView` implements the currently mapped `get_float64` operation with view bounds and explicit byte order. The
+  remaining standard numeric get/set operations are present too, ready for the compiler's ambient member table to
+  expose them.
+- `TextDecoder` decodes UTF-8, strips an initial BOM, and applies replacement-character recovery to malformed input.
+  `String::from_code_point` handles BMP and astral scalars and rejects invalid values.
+- `parse_int`, `to_number`, `Object`/`object_keys`, interned `Symbol::for_key`, and `Url::protocol` provide the exact
+  spellings in the compiler binding table.
+- `RegExp`, captures, global match state, and string match/replacement have an initial ECMAScript-compatible lane.
+  It remains a planned capability while Unicode patterns and the full replacement contract are unfinished.
+- The compiler-named `Intl` types have a deterministic locale-neutral baseline. Locale-aware behavior and option
+  handling remain planned and will need an explicit native dependency or host policy.
 
-The full graph completed in 82 seconds on the current development machine. The previous isolated sweep
-emitted 1,322 headers that did not form a dependency closure. The graph report emits 319 dependency-closed modules
-and refuses 2,532; that lower headline is more useful because no reported output depends on a refused module. It
-now records 2,984 refusal causes: 2,189 propagated dependency failures, 703 lowering diagnostics, and 92 emission
-failures. Graph-wide semantic lowering exposes direct failures in modules that older revisions reached only as
-dependency refusals, so the direct diagnostic totals are not comparable to the old short-circuiting report.
+CMake and Bazel expose every new public header. The CMake development build compiles the runtime, native tween, SDL
+host path, and each public header independently. The runtime tests cover shared binary storage, endian and bounds
+behavior, malformed UTF-8, numeric conversion, symbols, URLs, regular expressions, and the locale-neutral baseline.
 
-At `14a9ff4`, the compiler's readiness report emits 199 of 200 curated C++ fixtures, while the real SDK graph emits
-319 of 2,851 modules. The difference shows that the remaining work is concentrated in recurring production patterns
-and dependency closure rather than broad absence of basic language constructs.
+`Json::parse` and `Json::stringify` remain deliberately absent. A JSON value model must retain null, booleans,
+numbers, strings, arrays, and objects and must interoperate with compiler-emitted structural types. A placeholder
+opaque value would make headers compile while losing the source behavior.
 
-The `0d3416c` semantic fix removes all 77 prior `FirstTypeNode` diagnostics. The `cc8e210` and `b5c9ee1` interface
-changes reduce caught lowering-pass failures from 24 to 7 and allow nine inherited type modules to enter the emitted
-closure. The nine new headers still fail against flight-cpp because their generated classes inherit the missing
-`flight::ReferenceEnabled` runtime type. The latest graph-aware heritage pass removes all 90 former "requires an
-interface reference" diagnostics. Eleven diagnostics in two source modules now reach the narrower unsupported case
-where a heritage target cannot be reduced to an object-shaped declaration; the three caught interface-inheritance
-failures remain.
+## Current upstream blocker
 
-The old `assetLibrary.ts` duplicate-binding invariant no longer occurs. Imported identity is now resolved across the
-graph, apart from two remaining `indeterminateIdentity` cases and four `unsupportedReferenceForm` cases in
-`@flighthq/types`. The earlier `@flighthq/adjustments` probe no longer has its two `FirstTypeNode` blockers; its direct
-remaining compiler/runtime blocker is unsupported dense-array length construction. Its other refusals are dependency
-propagation from that module or `@flighthq/types/contract`.
+The full SDK graph cannot be regenerated successfully at `3f86fcb`. `npm run sdk:generate` spent 57 minutes at one
+full CPU core with about 2.3 GiB resident memory and produced no candidate file before it was stopped. The same graph
+completed in 82 seconds at `14a9ff4`.
 
-## Remaining upstream requests
+The pinned compiler's own C++ backend test file also has six regressions at this revision: 569 tests pass, one is
+skipped, and six fail. Four failures report a missing synthetic `__type[type]` runtime binding; one fails structural
+type substitution for a generic class; and one no longer emits the expected intersection-type refusal. These are
+compiler-owned failures and correlate with the graph regression. The focused runtime binding tests pass.
 
-### Keep the runtime contract executable
+Because the compiler never returned a candidate tree, [`generated/manifest.json`](../generated/manifest.json) still
+truthfully records the last successful generation at `14a9ff4`. It must not be relabeled as `3f86fcb` without output
+from that compiler. After the upstream regression is fixed, run:
 
-ABI alignment is fixed, and flight-cpp now supplies the runtime surface used by the current emitted headers:
-`flight::ReferenceEnabled`, `flight::Ref<T>`, `flight::make_ref`, shared binding cells, `flight::power`, `minimum`,
-`maximum`, `is_integer`, and JavaScript-compatible bitwise and shift helpers. Typed arrays also preserve JavaScript
-object identity across C++ value copies while assigning distinct identity to `slice` and `subarray` results.
+```sh
+npm run rehydrate
+npm ci --prefix .dependencies/flight-compiler
+npm run sdk:generate
+npm run sdk:check
+```
 
-A compile probe over the 319 dependency-closed SDK headers now passes 297 and fails 22, up from 110 passing at
-`41f774c`. Both newly emitted math headers compile. The three encoding headers now get past integer checks, exception
-construction, declaration order, and element access, then stop at the distinct `Uint8Array.length` property mismatch:
-flight-cpp exposes `size()`, while the compiler preserves the TypeScript property spelling. The compiler's golden C++
-compile probe now passes 200 of 201 files, improving from 149 before the compiler refresh and runtime additions. Its
-sole remaining failure constructs `flight::String` directly from a narrowed number instead of calling
-`flight::to_string`.
+Then compile the dependency-closed headers, update the emitted/refused counts in this review, and advance the
+compiler's reciprocal flight-cpp pin so its compile gate sees the new runtime surface.
 
-Please compile representative `runtimeProfile: "flight-cpp"` output against the pinned flight-cpp checkout as a
-compiler gate. ABI number equality cannot catch a missing API surface. Either advance the runtime pin with these
-semantics or keep the backend from claiming that runtime profile until its required capabilities exist.
+## Next compiler/runtime edge
 
-Some emitted constructs fail independently of missing runtime names, including optional defaults that call
-`value_or` with the optional itself, invalid `cmath.log` member syntax, array-length writes emitted as assignments to
-`static_cast<double>(out.size())`, and out parameters emitted by value. These need target compile fixtures and, where
-observable, TypeScript/native behavior oracles. Dependency-aware helper and constant ordering is fixed in
-`b1523e2`, although some affected full-SDK headers still fail on these later constructs.
+flight-cpp already provides snake-case operations for `DataView.getInt8`, `getUint8`, `getInt16`, `getUint16`,
+`getInt32`, `getUint32`, `getFloat32`, and every corresponding setter. It also exposes typed-array `byte_length`.
+Adding these members to the compiler ambient and member tables should unlock binary parsers without another runtime
+round trip.
 
-### Preserve package graph identity through the remaining type cases
+The remaining compiler-owned work listed in the adoption register should stay upstream: package-graph type evidence
+for isolated probes, for-of destructuring with imported element types, unbounded iterable spread, imported anonymous
+object evidence, and executable top-level module initialization. flight-cpp should not compensate with permissive
+runtime types or generated-source rewriting.
 
-Of the 2,532 refused modules, 2,189 have only a dependency refusal; 343 modules carry a direct lowering or emission
-failure. The largest immediate dependency hub is `@flighthq/types/contract`, which suppresses 428 consumers because
-the export barrel depends on every leaf it re-exports. A consumer importing one named type through a contract barrel
-should depend on that type's defining leaf module rather than the complete barrel. Please make re-export resolution
-symbol-granular and emit contract files as umbrella headers. This will expose independently usable package lanes while
-the remaining leaves are brought up, without weakening dependency closure.
-
-The graph-wide direct refusal families are now clear enough to prioritize. Counts are diagnostic instances; repeated
-computed members can produce more than one diagnostic in a module.
-
-| Diagnostics | Modules | Direct lowering family |
-| ---: | ---: | --- |
-| 585 | 212 | computed property names |
-| 40 | 25 | `unique` type operators |
-| 28 | 17 | conditional types |
-| 11 | 2 | interface heritage target is not object-shaped |
-| 10 | 5 | mapped types |
-
-There are seven caught lowering-pass failures, including three remaining interface-inheritance cases. Please retain
-graph identity through those cases and finish the two remaining `indeterminateIdentity` and four
-`unsupportedReferenceForm` cases.
-
-### Separate runtime ambient gaps from native host bindings
-
-The external-binding manifest is the correct boundary for actual host and graphics types such as WebGL objects,
-WebGPU objects, canvas image sources, and DOM-backed surfaces. flight-cpp or the compiler's standard-library plan
-should own JavaScript built-ins such as `Object`, `Function`, `Record`, `ArrayBuffer`, `ArrayLike`, `DataView`,
-`TextEncoder`, and `TextDecoder`. `Number`, `NaN`, `Infinity`, and `RangeError` are now mapped by `41f774c`. TypeScript
-syntax such as `const` type parameters should be diagnosed as syntax/lowering rather than reported as a missing
-ambient `const[type]` binding.
-
-The SDL host will provide a downstream manifest only for types it can implement truthfully. It will not map browser
-types to unrelated SDL handles merely to increase emission coverage.
-
-### Emit the planned module initialization
-
-`flight-compiler-module-evaluation/1` now gives downstream tooling deterministic dependency groups, live-binding
-facts, and declaration initialization steps. This is enough to inspect and commit the plan, but it does not yet emit
-the C++ translation units or initialization entry point needed to build executable top-level module behavior.
-
-Please add C++ source/translation-unit emission once executable top-level statements exist in neutral IR. The report
-should continue to own dependency order and one-definition-safe initialization.
-
-## Ownership boundary
-
-flight-compiler owns module graph semantics, lowering, target names, external-binding contracts, output layout, and
-refusal reports. flight-cpp owns the semantic runtime and CMake packaging. `Flight::HostSdl`, `Flight::HostSdlGl`,
-`Flight::HostSdlVulkan`, and `Flight::HostSdlWgpu` own SDL lifecycle and native context/surface acquisition. Generated
-Flight renderer packages continue to own rendering.
+The host boundary is unchanged. SDL owns lifecycle and native GL, Vulkan, and wgpu surface acquisition. Generated
+Flight renderer packages own rendering. Browser, media, Node, and tooling globals require explicit host manifests;
+they do not belong in the portable runtime.
