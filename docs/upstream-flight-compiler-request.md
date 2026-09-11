@@ -31,6 +31,11 @@ behavior, malformed UTF-8, numeric conversion, symbols, URLs, regular expression
 numbers, strings, arrays, and objects and must interoperate with compiler-emitted structural types. A placeholder
 opaque value would make headers compile while losing the source behavior.
 
+The object capability also remains planned. `object_keys` preserves the source container's key type and iteration
+order, but the compiler currently lowers `Record` to `std::unordered_map`; that representation cannot provide
+JavaScript's observable property order. `flight::String` is hashable so the mapped type compiles, while the ordering
+contract remains visible instead of being claimed as complete.
+
 ## Current upstream blocker
 
 The full SDK graph cannot be regenerated successfully at `3f86fcb`. `npm run sdk:generate` spent 57 minutes at one

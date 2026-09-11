@@ -47,7 +47,7 @@ inline constexpr std::array runtime_capabilities{
     RuntimeCapability{"json", RuntimeCapabilityStatus::planned},
     RuntimeCapability{"map", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"number-parsing", RuntimeCapabilityStatus::initial},
-    RuntimeCapability{"object", RuntimeCapabilityStatus::initial},
+    RuntimeCapability{"object", RuntimeCapabilityStatus::planned},
     RuntimeCapability{"regexp", RuntimeCapabilityStatus::planned},
     RuntimeCapability{"set", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"string", RuntimeCapabilityStatus::initial},

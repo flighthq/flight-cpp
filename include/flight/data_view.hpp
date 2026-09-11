@@ -21,15 +21,23 @@ class DataView {
   explicit DataView(const ArrayBuffer& source)
       : buffer(source), byte_length(source.byte_length()) {}
 
-  DataView(const ArrayBuffer& source, double offset)
+  template <typename Offset>
+    requires std::is_arithmetic_v<Offset>
+  DataView(const ArrayBuffer& source, Offset offset)
       : DataView(source,
-                 detail::buffer_index(offset, "flight::DataView byte offset is outside the buffer"),
+                 detail::buffer_index(static_cast<double>(offset),
+                                      "flight::DataView byte offset is outside the buffer"),
                  RemainingTag{}) {}
 
-  DataView(const ArrayBuffer& source, double offset, double length)
+  template <typename Offset, typename Length>
+    requires(std::is_arithmetic_v<Offset> && std::is_arithmetic_v<Length>)
+  DataView(const ArrayBuffer& source, Offset offset, Length length)
       : DataView(source,
-                 detail::buffer_index(offset, "flight::DataView byte offset is outside the buffer"),
-                 detail::buffer_index(length, "flight::DataView byte length is outside the supported range")) {}
+                 detail::buffer_index(static_cast<double>(offset),
+                                      "flight::DataView byte offset is outside the buffer"),
+                 detail::buffer_index(static_cast<double>(length),
+                                      "flight::DataView byte length is outside the supported range"),
+                 ViewTag{}) {}
 
   [[nodiscard]] double get_float32(double offset, bool little_endian = false) const {
     return static_cast<double>(std::bit_cast<float>(read_unsigned<std::uint32_t>(offset, little_endian)));
@@ -97,15 +105,19 @@ class DataView {
 
  private:
   struct RemainingTag {};
+  struct ViewTag {};
 
   DataView(const ArrayBuffer& source, std::size_t offset, RemainingTag)
-      : DataView(source, offset, offset <= source.byte_length() ? source.byte_length() - offset : 0) {
+      : DataView(source,
+                 offset,
+                 offset <= source.byte_length() ? source.byte_length() - offset : 0,
+                 ViewTag{}) {
     if (offset > source.byte_length()) {
       throw std::range_error("flight::DataView byte offset is outside the buffer");
     }
   }
 
-  DataView(const ArrayBuffer& source, std::size_t offset, std::size_t length)
+  DataView(const ArrayBuffer& source, std::size_t offset, std::size_t length, ViewTag)
       : buffer(source), byte_offset(offset), byte_length(length) {
     if (offset > source.byte_length() || length > source.byte_length() - offset) {
       throw std::range_error("flight::DataView view exceeds its buffer");

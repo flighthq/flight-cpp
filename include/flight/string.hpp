@@ -8,6 +8,7 @@
 #include <compare>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <limits>
 #include <memory>
 #include <optional>
@@ -490,6 +491,17 @@ class String {
 };
 
 } // namespace flight
+
+namespace std {
+
+template <>
+struct hash<flight::String> {
+  [[nodiscard]] size_t operator()(const flight::String& value) const noexcept {
+    return hash<u16string_view>{}(u16string_view(value.native()));
+  }
+};
+
+} // namespace std
 
 namespace flight {
 
