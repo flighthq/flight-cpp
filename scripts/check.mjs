@@ -17,6 +17,7 @@ const gates = [
   { arguments: [], name: 'buildHealth' },
   { arguments: [], name: 'releaseHealth' },
   { arguments: [], name: 'exampleHealth' },
+  { arguments: [], name: 'runtimeOracle' },
   { arguments: ['--check'], name: 'sdkGeneration' },
   { arguments: [], name: 'emittedSourceCompile' },
 ];

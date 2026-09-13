@@ -18,6 +18,7 @@
     "rehydrate:check": "node ./scripts/rehydrate.mjs --check",
     "rehydrate:update": "node ./scripts/rehydrate.mjs --update",
     "release:check": "node ./scripts/releaseHealth.mjs",
+    "runtime:oracle": "node ./scripts/runtimeOracle.mjs",
     "sdk:check": "node ./scripts/sdkGeneration.mjs --check",
     "sdk:compile": "node ./scripts/sdkHeaderCompile.mjs",
     "sdk:generate": "node ./scripts/sdkGeneration.mjs"

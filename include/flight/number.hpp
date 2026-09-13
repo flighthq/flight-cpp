@@ -4,7 +4,6 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
-#include <cstdint>
 #include <limits>
 #include <string>
 #include <string_view>
@@ -127,6 +126,8 @@ inline double to_number(const String& input) {
              : std::numeric_limits<double>::quiet_NaN();
 }
 
+inline double to_number(const char* input) { return to_number(String(input)); }
+inline double to_number(std::string_view input) { return to_number(String(input)); }
 inline double to_number(double value) noexcept { return value; }
 inline double to_number(bool value) noexcept { return value ? 1.0 : 0.0; }
 
