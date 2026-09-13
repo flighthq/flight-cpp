@@ -37,8 +37,9 @@ With examples enabled by the preset, the native tween example exercises the GL p
 ./out/cmake/development/examples/flight_cpp_tween_sdl_gl_example
 ```
 
-It animates the fifteen easing curves emitted from `examples/tween/source/tween.ts`. Rendering uses only the OpenGL ES
-context and procedure loader exposed by `Flight::HostSdlGl`; it does not introduce an SDL renderer abstraction.
+It animates the fifteen easing curves emitted from `examples/tween/source/tween.ts`. Rendering uses the copyable
+`GlCanvas` and `WebGl2Context` host seam exposed by `Flight::HostSdlGl`; the context still resolves native OpenGL ES
+procedures and does not introduce an SDL renderer abstraction.
 
 Set `-DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF` for an SDL and GL/WGPU build without Vulkan development files. Native
 dependency discovery and target selection belong to CMake, so an npm wrapper would only obscure the options and is
@@ -50,7 +51,8 @@ The build exports four targets through the existing `FlightCpp` package:
 - `Flight::HostSdl` initializes ref-counted SDL subsystems, polls or waits for `SDL_Event`, exposes the monotonic SDL
   clock, and owns plain, OpenGL, or Vulkan windows.
 - `Flight::HostSdlGl` owns an `SDL_GLContext`, configures OpenGL or OpenGL ES attributes before window creation,
-  resolves procedure addresses, controls the swap interval, and swaps the window.
+  resolves procedure addresses, controls the swap interval, and swaps the window. Its `GlCanvas` and
+  `WebGl2Context` share that owner and supply the native types named by `bindings/sdl-gl.json`.
 - `Flight::HostSdlVulkan` copies the required instance extension names and owns the `VkSurfaceKHR` returned by SDL.
 - `Flight::HostSdlWgpu` owns a type-erased native WebGPU surface through create/destroy callbacks supplied by a Dawn
   or wgpu-native adapter. It intentionally adds no WebGPU implementation dependency.
@@ -103,10 +105,10 @@ thread; no background timer thread can race Flight state.
 
 The native mechanics are now present. Wiring them to generated Flight contracts remains a narrow adapter task:
 
-1. Generate a compilable `types` package with public C++ namespace and include remapping.
-2. Bind the TypeScript GL/WebGPU ambient surface to native external types. `GlContext` supplies SDL ownership and a
-   procedure loader; the adapter still has to present the narrowed WebGL-shaped method contract expected by
-   `render-gl`.
+1. Finish compiler emission of the narrowed Flight `GlContext` interface. The current compiler resolves the SDL/GL
+   ambient bindings but leaves its inherited `viewport` member as an unresolved C++ type.
+2. Populate that generated callable interface from `WebGl2Context`. The SDL/GL binding profile, shared object handle
+   identities, image-source weak-key policy, context ownership, procedure lookup, and presentation path are present.
 3. Implement generated `WgpuHostBackend` and `WgpuRenderSurfaceProvider` with a selected Dawn or wgpu-native adapter.
    `WgpuSurfaceCallbacks` is the stable point where that dependency enters.
 4. Translate SDL events into the generated Flight input and lifecycle types.

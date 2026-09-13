@@ -131,8 +131,11 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run sdk:check` | Does the pinned compiler reproduce the committed SDK headers and refusal inventory? |
 | `npm run sdk:compile` | Which dependency-closed SDK headers compile independently with the selected `CXX` toolchain? |
 | `npm run sdk:compile:headless` | Which headers compile after applying the runtime-carrier and headless binding profiles? |
+| `npm run sdk:generate:sdl-gl` | Generate the full SDK inventory with runtime, headless, and SDL/OpenGL host bindings? |
+| `npm run sdk:compile:sdl-gl` | Which headers compile under the SDL/OpenGL host profile? |
 | `npm run release:check` | Do the version, ABI, C++ standard, and conformance profile agree across every file that states them? |
 | `npm run runtime:oracle` | Do the native runtime services match the same TypeScript-valid operations under Node? |
+| `npm run sdl-gl:oracle` | Does the compiler emit the SDL/OpenGL surface, handle, and weak-cache types from the maintained profile? |
 | `npm run structural:oracle` | Does the pinned compiler's generic Entity proxy compile and preserve native write interception? |
 | `npm run compile:check` | Does the pinned compiler's emitted C++ still compile against this runtime? |
 

@@ -1,8 +1,7 @@
 #include "generated/tween.hpp"
 
-#include <flight/host_sdl/gl.hpp>
 #include <flight/host_sdl/host.hpp>
-#include <flight/host_sdl/window.hpp>
+#include <flight/host_sdl/webgl.hpp>
 
 #include <SDL3/SDL_keycode.h>
 #include <SDL3/SDL_opengles2.h>
@@ -28,14 +27,14 @@ struct Color {
 };
 
 template <typename Function>
-Function load_gl_function(const flight::host_sdl::GlContext& context, std::string_view name) {
+Function load_gl_function(const flight::host_sdl::WebGl2Context& context, std::string_view name) {
   static_assert(std::is_pointer_v<Function>);
   return reinterpret_cast<Function>(context.function_address(name));
 }
 
 class GlFunctions final {
  public:
-  explicit GlFunctions(const flight::host_sdl::GlContext& context)
+  explicit GlFunctions(const flight::host_sdl::WebGl2Context& context)
       : clear(load_gl_function<PFNGLCLEARPROC>(context, "glClear")),
         clear_color(load_gl_function<PFNGLCLEARCOLORPROC>(context, "glClearColor")),
         disable(load_gl_function<PFNGLDISABLEPROC>(context, "glDisable")),
@@ -152,19 +151,10 @@ int run(bool smoke) {
   using namespace std::chrono_literals;
 
   flight::host_sdl::Host host;
-  flight::host_sdl::WindowOptions options;
-  options.title = "Flight tween - SDL + OpenGL ES";
-  options.width = 960;
-  options.height = 720;
-  options.graphics_api = flight::host_sdl::GraphicsApi::open_gl;
-  options.hidden = smoke;
-  options.open_gl.major_version = 2;
-  options.open_gl.minor_version = 0;
-  options.open_gl.profile = flight::host_sdl::OpenGlProfile::es;
-
-  flight::host_sdl::Window window(options);
-  flight::host_sdl::GlContext context(window);
-  context.make_current(window);
+  auto canvas = flight::host_sdl::GlCanvas::create(
+      960, 720, 1.0, flight::String("Flight tween - SDL + OpenGL ES"), smoke);
+  auto context = canvas.get_context();
+  context.make_current();
   const GlFunctions gl(context);
 
   const std::uint64_t started = flight::host_sdl::Host::ticks_nanoseconds();
@@ -183,8 +173,8 @@ int run(bool smoke) {
     const double seconds = static_cast<double>(elapsed) / 1'000'000'000.0;
     const double cycle = std::fmod(seconds / 2.0, 2.0);
     const double progress = cycle <= 1.0 ? cycle : 2.0 - cycle;
-    draw_frame(gl, window.pixel_size(), progress);
-    context.swap(window);
+    draw_frame(gl, canvas.pixel_size(), progress);
+    context.present();
 
     ++frames;
     if (smoke && frames >= 3) running = false;

@@ -1,7 +1,9 @@
 #include <flight/host/timers.hpp>
 #include <flight/host_sdl/host.hpp>
+#include <flight/host_sdl/webgl.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/host_sdl/window.hpp>
+#include <flight/weak_map.hpp>
 
 #include <SDL3/SDL_events.h>
 
@@ -41,6 +43,27 @@ void destroy_surface(
 } // namespace
 
 int main() {
+  auto pixels = flight::Uint8ClampedArray{255, 0, 0, 255, 0, 255, 0, 255};
+  auto image = flight::host_sdl::GlImageSource::rgba8(2, 1, std::move(pixels));
+  const auto weak_image = image.weaken();
+  auto image_alias = image;
+  expect(image.width() == 2 && image.height() == 1, "GL image dimensions changed");
+  expect(image.rgba8_pixels().size() == 8, "GL image pixel storage changed");
+  expect(image.identity() == image_alias.identity(), "GL image copy changed host identity");
+  flight::WeakMap<
+      flight::host_sdl::GlImageSource,
+      int,
+      flight::host_sdl::GlImageSourceWeakPolicy>
+      image_cache;
+  image_cache.set(image, 7);
+  expect(image_cache.get(image) == 7, "GL image weak cache lost a live entry");
+  image = {};
+  expect(flight::host_sdl::GlImageSource::lock_weak(weak_image).has_value(),
+         "GL image alias did not retain host identity");
+  image_alias = {};
+  expect(!flight::host_sdl::GlImageSource::lock_weak(weak_image).has_value(),
+         "GL image weak identity retained expired storage");
+
   flight::host_sdl::Host host;
   expect((host.subsystems() & SDL_INIT_VIDEO) != 0, "SDL video subsystem was not recorded");
 

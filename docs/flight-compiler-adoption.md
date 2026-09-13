@@ -27,7 +27,8 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
 | Open structural rows and proxies | Partial | Structural views reuse one `RowOwner` per source object. The generated member table installs one typed, presence-bearing cell for each reachable named field, while computed symbols retain distinct canonical identities. Writable, readonly, partial, and compatible merged projections share those cells. `make_structural_write_proxy` provides distinct identity, forwarding, pre-write interception, exception ordering, nested composition, and projection identity; a live compiler-emitted generic Entity proxy compiles and runs. Construction still needs an all-required-fields check, casts need whole-schema compatibility constraints, and `RowMerge` must validate every collision at schema instantiation rather than when a field is accessed. |
 | Conditional capability facets | Implemented | `FacetRef`, lambda-based required `MemberPath`, `RequiredMemberFacet`, `ConditionalFacetRef`, and explicit `assume_conditional_facets` preserve one base reference and statically reject absent or optional paths. A live compiler-emitted generic Tray fixture proves capable, incapable, and optional host paths plus referent identity. |
 | WeakMap, WeakSet, and erased typed views | Implemented runtime ABI | Default Flight-reference, closed-variant, and weakly recoverable Flight value policies are weak and identity-based. External policies use the specified weaken/lock/identity/hash/equal contract. Tests cover expiry, shared views, wrong tags, overwrite, and deletion. Host weak-key policies remain host-profile work. |
-| SDL host mechanics | Implemented | SDL lifecycle, events, monotonic clock, windows, GL contexts, Vulkan surfaces, and callback-owned WebGPU surfaces are packaged by CMake. Generated renderer bindings remain open. |
+| SDL host mechanics | Implemented | SDL lifecycle, events, monotonic clock, windows, GL contexts, Vulkan surfaces, and callback-owned WebGPU surfaces are packaged by CMake. `GlCanvas` and `WebGl2Context` share context/window lifetime and supply native procedure lookup and presentation. |
+| SDL/OpenGL binding profile | Implemented host ABI | The versioned profile maps the canvas, WebGL2 context, GL objects, context options, and image sources to concrete `host_sdl` types. GL object and image carriers preserve shared identity; image sources supply the weak-key policy used by Flight texture caches. The live compiler fixture compiles every mapped category, and the SDL tween renders through the same canvas/context seam. Populating the generated Flight `GlContext` callable record remains blocked on compiler method-type emission. |
 
 ## Integration and release gates
 
@@ -41,6 +42,10 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
   current pin, the profile emits 1,063 modules: 31 more than the manifest-free floor. Of those additional headers,
   three compile and 28 advance to existing tuple, union, reference-conversion, aggregate-construction, and
   type-spelling defects. The complete expanded result is 707 passing and 356 failing headers.
+- `npm run sdk:generate:sdl-gl` adds the maintained SDL/OpenGL binding profile. It emits 1,085 modules, 22 more than
+  the runtime/headless inventory. Of the new headers, 21 compile independently. The remaining
+  `BitmapReadbackBackend` path reaches the existing compiler defect that spells concrete
+  `Uint8ClampedArray` as a template. The complete expanded result is 728 passing and 357 failing headers.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
   runtime. It currently covers 29 cross-runtime observations.
 - `npm run structural:oracle` generates the exact generic Entity write proxy through the pinned compiler, compiles
@@ -67,7 +72,9 @@ single-threaded host-pumped timeout/interval functions. Its selected profile, id
 each profile-specific generated manifest, and a live compiler fixture compiles and runs every binding. SDL's host
 loop exposes the same timer pump. Log now reaches the compiler-owned ordered-`Record` spread refusal, and Signals
 throttle reaches the dependent-callable-pack refusal; neither remains blocked on its headless ambient names. The
-headless values do not change the aggregate count independently at this pin. Maintained profiles for Node/tooling,
-browser/media, SDL/GL, SDL/Vulkan, and SDL/WebGPU are still required. A profile may name only native types and
-lifetimes its host package actually implements; opaque placeholders would make a larger report while leaving the SDK
-unusable.
+headless values do not change the aggregate count independently at this pin. The
+`flighthq/flight-cpp/sdl-gl/1` profile supplies the concrete SDL surface, WebGL2 context, GL handle, image source, and
+weak-cache policy types. It resolves 47 direct ambient-refusal instances and admits 22 additional modules. The Flight
+`GlContext` module then reaches a compiler fail-closed check because inherited `viewport` is emitted as unresolved
+`auto`; fixing that method typing is the next boundary before `render-gl` can call the native adapter. Maintained
+profiles for Node/tooling, browser/media, SDL/Vulkan, and SDL/WebGPU are still required.

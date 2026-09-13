@@ -65,6 +65,14 @@ binding profiles. SDL owns lifecycle and GL, Vulkan, or WebGPU surface acquisiti
 packages own rendering behavior. These host bindings will increase the emitted module set, while the portable
 1,032-header compile gate remains useful and independent of platform SDKs.
 
+The downstream `flighthq/flight-cpp/sdl-gl/1` profile now names concrete SDL-owned canvas/context types, shared GL
+object handles, context attributes, and a weakly recoverable image-source carrier. It emits 1,085 modules; 21 of its
+22 newly admitted headers compile. The next compiler blocker is exact: `packages/types/src/GlContext.ts` retains
+`auto viewport;` after its closed `Pick<WebGL2RenderingContext, GlContextMember>` is materialized. The fail-closed
+placeholder gate correctly refuses it. Once all picked constants and methods receive their concrete callable types,
+flight-cpp can populate the generated `flight::types::GlContext` record from its working `WebGl2Context` and proceed
+into `render-gl` without adding an SDL renderer.
+
 Regenerate and validate from the repository root:
 
 ```sh

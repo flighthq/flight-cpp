@@ -1,0 +1,22 @@
+{
+  "schema": "flight-cpp-external-bindings/1",
+  "identity": "flighthq/flight-cpp/sdl-gl/1",
+  "profile": "sdl-gl",
+  "bindings": [
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "HTMLCanvasElement", "space": "type", "targetName": "flight::host_sdl::GlCanvas" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGL2RenderingContext", "space": "type", "targetName": "flight::host_sdl::WebGl2Context" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLBuffer", "space": "type", "targetName": "flight::host_sdl::WebGlBuffer" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLFramebuffer", "space": "type", "targetName": "flight::host_sdl::WebGlFramebuffer" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLProgram", "space": "type", "targetName": "flight::host_sdl::WebGlProgram" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLRenderbuffer", "space": "type", "targetName": "flight::host_sdl::WebGlRenderbuffer" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLShader", "space": "type", "targetName": "flight::host_sdl::WebGlShader" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLTexture", "space": "type", "targetName": "flight::host_sdl::WebGlTexture" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLUniformLocation", "space": "type", "targetName": "flight::host_sdl::WebGlUniformLocation" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLVertexArrayObject", "space": "type", "targetName": "flight::host_sdl::WebGlVertexArrayObject" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "WebGLContextAttributes", "space": "type", "targetName": "flight::host_sdl::WebGlContextAttributes" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "WebGLPowerPreference", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GLenum", "space": "type", "targetName": "double" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "CanvasImageSource", "space": "type", "targetName": "flight::host_sdl::GlImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::GlImageSourceWeakPolicy" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "TexImageSource", "space": "type", "targetName": "flight::host_sdl::GlImageSource" }
+  ]
+}

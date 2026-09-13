@@ -25,9 +25,12 @@
     "sdk:check": "node ./scripts/sdkGeneration.mjs --check",
     "sdk:compile": "node ./scripts/sdkHeaderCompile.mjs",
     "sdk:compile:headless": "node ./scripts/sdkHeaderCompile.mjs --generated=out/sdk-headless --report=out/sdk-headless-header-compilation.json",
+    "sdk:compile:sdl-gl": "node ./scripts/sdkHeaderCompile.mjs --generated=out/sdk-sdl-gl --report=out/sdk-sdl-gl-header-compilation.json",
     "sdk:generate": "node ./scripts/sdkGeneration.mjs",
     "sdk:generate:headless": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --binding-profile=bindings/headless.json --output=out/sdk-headless",
+    "sdk:generate:sdl-gl": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --binding-profile=bindings/headless.json --binding-profile=bindings/sdl-gl.json --output=out/sdk-sdl-gl",
     "sdk:generate:runtime": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --output=out/sdk-runtime",
+    "sdl-gl:oracle": "node ./scripts/sdlGlProfileOracle.mjs",
     "structural:oracle": "node ./scripts/structuralProxyOracle.mjs"
   }
 }
