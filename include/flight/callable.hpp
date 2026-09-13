@@ -2,6 +2,7 @@
 
 #include <concepts>
 #include <functional>
+#include <tuple>
 #include <type_traits>
 #include <utility>
 
@@ -12,8 +13,22 @@ struct callable_signature_v1;
 
 template <typename Result, typename... Parameters>
 struct callable_signature_v1<std::function<Result(Parameters...)>> {
+  using parameter_types = std::tuple<Parameters...>;
+  using result_type = Result;
+  static constexpr std::size_t arity = sizeof...(Parameters);
+
   template <typename... Arguments>
-  static constexpr bool accepts = std::invocable<const std::function<Result(Parameters...)>&, Arguments...>;
+  static constexpr bool accepts = [] {
+    if constexpr (sizeof...(Arguments) != sizeof...(Parameters)) {
+      return false;
+    } else {
+      return []<std::size_t... Index>(std::index_sequence<Index...>) {
+        using ArgumentsTuple = std::tuple<std::remove_cvref_t<Arguments>...>;
+        return (std::same_as<std::tuple_element_t<Index, ArgumentsTuple>,
+                             std::tuple_element_t<Index, parameter_types>> && ...);
+      }(std::make_index_sequence<sizeof...(Parameters)>{});
+    }
+  }();
 
   template <typename Implementation>
   [[nodiscard]] static std::function<Result(Parameters...)> bind(Implementation&& implementation) {

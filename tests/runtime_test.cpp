@@ -314,6 +314,11 @@ void test_new_runtime_services() {
   ignored_arguments(3.0);
   check(flight::callable_signature_v1<std::function<void(double)>>::accepts<double>,
         "callable ABI binds source functions that ignore emitted arguments");
+  static_assert(!flight::callable_signature_v1<std::function<void(double)>>::accepts<int>);
+  static_assert(flight::callable_signature_v1<std::function<void(double)>>::arity == 1);
+  static_assert(std::same_as<
+                flight::callable_signature_v1<std::function<void(double)>>::parameter_types,
+                std::tuple<double>>);
 
   auto facet_source = flight::make_ref<TestReference>(TestReference{.value = 7});
   auto conditional = flight::assume_conditional_facets<TestImageCapabilities>(facet_source);
@@ -347,6 +352,14 @@ void test_new_runtime_services() {
   const auto keys = flight::object_keys(record);
   check(keys.size() == 2 && keys[0] == flight::String("first") && keys[1] == flight::String("second"),
         "object_keys preserves emitted key types and deterministic iteration order");
+  const auto entries = flight::object_entries(record);
+  flight::Map<flight::String, double> assigned{{"first", 0.0}, {"retained", 3.0}};
+  auto& assigned_identity = flight::object_assign(assigned, record);
+  check(entries.size() == 2 && std::get<0>(entries[1]) == flight::String("second") &&
+            std::get<1>(entries[1]) == 2.0 && &assigned_identity == &assigned &&
+            assigned.get("first") == std::optional<double>(1.0) &&
+            assigned.get("retained") == std::optional<double>(3.0),
+        "object entries preserve pairs and assign mutates and returns the original target");
 
   const auto first_symbol = flight::Symbol::for_key("entity");
   const auto same_symbol = flight::Symbol::for_key("entity");
