@@ -129,6 +129,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run sdk:compile` | Which dependency-closed SDK headers compile independently with the selected `CXX` toolchain? |
 | `npm run release:check` | Do the version, ABI, C++ standard, and conformance profile agree across every file that states them? |
 | `npm run runtime:oracle` | Do the native runtime services match the same TypeScript-valid operations under Node? |
+| `npm run structural:oracle` | Does the pinned compiler's generic Entity proxy compile and preserve native write interception? |
 | `npm run compile:check` | Does the pinned compiler's emitted C++ still compile against this runtime? |
 
 `compile:check` reports and skips when the checkout is absent or no C++ compiler is installed, so a fresh clone stays runnable. The compiler repository asks the same question from its side against the runtime revision it pins; both are wanted, because each side owns the pin it can move and a failure names which one changed.

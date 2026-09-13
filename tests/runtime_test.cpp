@@ -336,6 +336,9 @@ void test_new_runtime_services() {
   auto entity = flight::make_ref<TestEntity>();
   using EntityView = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestEntity>>>>;
   EntityView entity_view(entity);
+  EntityView second_entity_view(entity);
+  check(entity_view == second_entity_view,
+        "structural views over one source object reuse one row owner");
   auto entity_runtime = flight::make_ref<TestReference>(TestReference{.value = 9});
   const auto entity_runtime_symbol = flight::Symbol::for_key("EntityRuntime");
   flight::row_set(entity_view, entity_runtime_symbol, entity_runtime);
@@ -343,6 +346,50 @@ void test_new_runtime_services() {
                 .value()
                 ->value == 9,
         "computed structural symbols share the generated Entity runtime slot");
+  check(flight::row_has(entity_view, entity_runtime_symbol),
+        "computed structural slots expose presence without changing the value");
+
+  int guard_calls = 0;
+  auto guarded = flight::make_structural_write_proxy<EntityView::schema_type>(
+      entity_view, entity_runtime_symbol, [&] { ++guard_calls; });
+  check(guarded != entity_view, "a structural write proxy has distinct reference identity");
+  const auto arbitrary_field = flight::Symbol::for_key("caller-field");
+  flight::row_set(guarded, arbitrary_field, 12);
+  check(flight::row_get<int>(entity_view, arbitrary_field) == 12 && guard_calls == 0,
+        "a structural write proxy forwards arbitrary non-intercepted fields");
+  flight::row_set(entity_view, arbitrary_field, 13);
+  check(flight::row_get<int>(guarded, arbitrary_field) == 13,
+        "target writes are visible through the structural proxy");
+  auto guarded_runtime = flight::make_ref<TestReference>(TestReference{.value = 14});
+  flight::row_set(guarded, entity_runtime_symbol, guarded_runtime);
+  check(guard_calls == 1 && entity->entity_runtime_key.value() == guarded_runtime,
+        "the structural proxy invokes its hook before forwarding an intercepted write");
+
+  bool rejected_write = false;
+  auto rejecting = flight::make_structural_write_proxy<EntityView::schema_type>(
+      entity_view, entity_runtime_symbol, [&] {
+        rejected_write = true;
+        throw std::runtime_error("blocked structural write");
+      });
+  try {
+    flight::row_set(rejecting, entity_runtime_symbol, entity_runtime);
+  } catch (const std::runtime_error&) {
+  }
+  check(rejected_write && entity->entity_runtime_key.value() == guarded_runtime,
+        "a structural proxy propagates a hook exception before changing its target");
+
+  std::vector<int> proxy_order;
+  auto inner = flight::make_structural_write_proxy<EntityView::schema_type>(
+      entity_view, entity_runtime_symbol, [&] { proxy_order.push_back(1); });
+  auto outer = flight::make_structural_write_proxy<EntityView::schema_type>(
+      inner, entity_runtime_symbol, [&] { proxy_order.push_back(2); });
+  flight::row_set(outer, entity_runtime_symbol, entity_runtime);
+  using ReadonlyEntityView =
+      flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestEntity>>>>;
+  ReadonlyEntityView projected = outer;
+  check(proxy_order == std::vector<int>({2, 1}) && projected == outer &&
+            projected.shared_owner() == outer.shared_owner(),
+        "nested structural proxies run outer-to-inner and projections retain proxy identity");
 
   check(flight::parse_int("  -0x10tail") == -16.0 && flight::parse_int("101", 2.9) == 5.0 &&
             flight::parse_int("10", std::numeric_limits<double>::quiet_NaN()) == 10.0,

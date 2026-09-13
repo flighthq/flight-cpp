@@ -20,7 +20,7 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
 | Intl | Partial | The locale-neutral baseline and emitted names exist and are source-compared for deterministic English cases. Locale selection, option validation, and a pinned ICU-style provider remain open. |
 | Callable signature ABI | Partial | Exact argument packs, signature metadata, binding, and current emitted Signals headers compile. Optional/rest role metadata, callable wrappers, and their complete oracle matrix remain open. |
 | Symbol and closed Entity construction | Implemented for current output | Symbol interning, named structural access, the Entity runtime symbol slot, and emitted AmbientLight construction compile and run. |
-| Open structural rows and proxies | Partial | Current emitted `RowOf`, readonly/writable projection, construction, and generated member access work. A layout-independent shared `RowOwner`, `RowMerge` validation, presence cells, arbitrary open fields, and `make_structural_write_proxy` remain open and must not be inferred from native member offsets. |
+| Open structural rows and proxies | Partial | Structural views reuse one `RowOwner` per source object. Computed open fields share owner storage, and `make_structural_write_proxy` provides distinct identity, forwarding, pre-write interception, exception ordering, nested composition, and projection identity. A live compiler-emitted generic Entity proxy compiles and runs. Typed presence cells for every named field, schema-checked construction/projection, and `RowMerge` collision validation remain open; those rules must not be inferred from native member offsets. |
 | Conditional capability facets | Implemented runtime ABI | `FacetRef`, lambda-based required `MemberPath`, `RequiredMemberFacet`, `ConditionalFacetRef`, and explicit `assume_conditional_facets` preserve one base reference and statically reject absent or optional paths. An emitted/native differential fixture is still needed before release adoption. |
 | WeakMap and erased typed views | Implemented runtime ABI | Default Flight-reference and closed-variant policies are weak and identity-based. External policies use the specified weaken/lock/identity/hash/equal contract. Tests cover expiry, shared views, wrong tags, overwrite, and deletion. Host weak-key policies remain host-profile work. |
 | SDL host mechanics | Implemented | SDL lifecycle, events, monotonic clock, windows, GL contexts, Vulkan surfaces, and callback-owned WebGPU surfaces are packaged by CMake. Generated renderer bindings remain open. |
@@ -35,6 +35,8 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
   `out/sdk-header-compilation.json`.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
   runtime. It currently covers 18 cross-runtime observations.
+- `npm run structural:oracle` generates the exact generic Entity write proxy through the pinned compiler, compiles
+  the emitted headers, and executes an intercepted write against the working runtime.
 - `Flight::Sdk` remains blocked until every emitted header in the selected binding profile compiles. At that point it
   must be installed/exported through CMake and exposed through Bazel, then exercised as an installed consumer.
 - The reciprocal lock cannot be completed solely in this checkout: after these commits land, flight-compiler must pin

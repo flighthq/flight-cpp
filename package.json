@@ -22,6 +22,7 @@
     "sdk:check": "node ./scripts/sdkGeneration.mjs --check",
     "sdk:compile": "node ./scripts/sdkHeaderCompile.mjs",
     "sdk:generate": "node ./scripts/sdkGeneration.mjs",
-    "sdk:generate:headless": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/headless.json --output=out/sdk-headless"
+    "sdk:generate:headless": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/headless.json --output=out/sdk-headless",
+    "structural:oracle": "node ./scripts/structuralProxyOracle.mjs"
   }
 }
