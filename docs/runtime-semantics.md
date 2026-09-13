@@ -10,7 +10,7 @@ The runtime exists where C++ standard-library behavior is observably different f
 - Map iteration retains insertion order. Updating an existing key does not move it.
 - `Undefined`, `Null`, and `Presence<T>` keep the two TypeScript sentinels distinct from one another and from an ordinary value.
 - `String` stores UTF-16 code units, so length, indexing, slicing, splitting, and unpaired-surrogate behavior do not depend on the machine encoding. UTF-8 conversion is an explicit boundary.
-- `Set<T>` shares Map's SameValueZero and insertion-order rules. Typed-array copies and `subarray` share a fixed backing store, while `slice` copies; clamped bytes use saturating ties-to-even conversion.
+- `Set<T>` shares Map's SameValueZero and insertion-order rules. Typed-array copies and `subarray` share a fixed backing store, while `slice` copies; clamped bytes use saturating ties-to-even conversion. `ArrayBufferLike` retains ordinary, shared, or host-owned memory together with stable backing identity, lifetime, mutability, and concurrency policy. Typed arrays and `DataView` keep that backing without copying.
 - `Task<T>` is copyable and shares one settlement. Observers run through a non-reentrant executor, completed tasks can be awaited repeatedly, and exception or non-exception rejection values retain their identity and type.
 - `Date` applies ECMAScript-style finite millisecond clipping and stores an epoch instant. The initial calendar projection is UTC-only and is limited to the range represented by C++20 `std::chrono::year`; local-zone `getFullYear` behavior is not yet claimed.
 - `round` follows `Math.round`: nearest-integer ties move toward positive infinity, inputs from -0.5 through negative zero retain a negative-zero result, and NaN and infinities pass through unchanged.
@@ -23,6 +23,6 @@ The task runtime implements `flight-runtime-task-capability-abi/1`: synchronous 
 
 String case conversion is exact for ASCII and delegates non-ASCII input to the active `UnicodeService`. The core never consults the process locale. Production hosts must provide a Unicode implementation with a pinned Unicode-data version and conformance tests for expansion, supplementary characters, Turkish casing, normalization non-equivalence, and unpaired surrogates.
 
-Typed arrays currently model owned backing storage and overlapping views. A future `ArrayBuffer` capability must extend that storage without changing view identity, byte-offset, detachment, or endianness behavior.
+External `ArrayBufferLike` storage must remain valid through its shared owner and suitably aligned for each typed view. Read-only backing supports `DataView` reads and rejects writes; mutable typed arrays reject read-only backing at construction. Shared-memory policy is observable metadata, while callers remain responsible for synchronization. Atomic operations, detachment, resizable buffers, and JavaScript's full shared-memory access model remain outside the current runtime contract.
 
 Capability status in `flight/contract.hpp` is machine-readable but intentionally coarse during incubation. `initial` means an implementation and local semantic tests exist; it does not mean the backend as a whole is production-ready.

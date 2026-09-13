@@ -108,13 +108,20 @@ class SequenceView {
       { source.size() } -> std::convertible_to<size_type>;
       Value(source[index]);
     }
-  [[nodiscard]] static SequenceView from_shared(std::shared_ptr<Source> source) {
+  SequenceView(std::shared_ptr<Source> source) {
     if (!source) throw std::invalid_argument("Flight sequence view requires a shared source owner");
-    SequenceView result;
-    result.identity_ = source.get();
-    result.size_ = [source] { return static_cast<size_type>(source->size()); };
-    result.get_ = [source](size_type index) { return Value((*source)[index]); };
-    return result;
+    identity_ = source.get();
+    size_ = [source] { return static_cast<size_type>(source->size()); };
+    get_ = [source](size_type index) { return Value((*source)[index]); };
+  }
+
+  template <typename Source>
+    requires requires(const Source& source, size_type index) {
+      { source.size() } -> std::convertible_to<size_type>;
+      Value(source[index]);
+    }
+  [[nodiscard]] static SequenceView from_shared(std::shared_ptr<Source> source) {
+    return SequenceView(std::move(source));
   }
 
   [[nodiscard]] Value operator[](size_type index) const { return get_(index); }

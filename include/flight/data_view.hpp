@@ -15,18 +15,18 @@ namespace flight {
 
 class DataView {
  public:
-  ArrayBuffer buffer;
+  ArrayBufferLike buffer;
   std::size_t byte_offset = 0;
   std::size_t byte_length = 0;
 
   [[nodiscard]] const void* identity() const noexcept { return identity_.get(); }
 
-  explicit DataView(const ArrayBuffer& source)
+  explicit DataView(const ArrayBufferLike& source)
       : buffer(source), byte_length(source.byte_length()) {}
 
   template <typename Offset>
     requires std::is_arithmetic_v<Offset>
-  DataView(const ArrayBuffer& source, Offset offset)
+  DataView(const ArrayBufferLike& source, Offset offset)
       : DataView(source,
                  detail::buffer_index(static_cast<double>(offset),
                                       "flight::DataView byte offset is outside the buffer"),
@@ -34,7 +34,7 @@ class DataView {
 
   template <typename Offset, typename Length>
     requires(std::is_arithmetic_v<Offset> && std::is_arithmetic_v<Length>)
-  DataView(const ArrayBuffer& source, Offset offset, Length length)
+  DataView(const ArrayBufferLike& source, Offset offset, Length length)
       : DataView(source,
                  detail::buffer_index(static_cast<double>(offset),
                                       "flight::DataView byte offset is outside the buffer"),
@@ -111,7 +111,7 @@ class DataView {
   struct RemainingTag {};
   struct ViewTag {};
 
-  DataView(const ArrayBuffer& source, std::size_t offset, RemainingTag)
+  DataView(const ArrayBufferLike& source, std::size_t offset, RemainingTag)
       : DataView(source,
                  offset,
                  offset <= source.byte_length() ? source.byte_length() - offset : 0,
@@ -121,7 +121,7 @@ class DataView {
     }
   }
 
-  DataView(const ArrayBuffer& source, std::size_t offset, std::size_t length, ViewTag)
+  DataView(const ArrayBufferLike& source, std::size_t offset, std::size_t length, ViewTag)
       : buffer(source), byte_offset(offset), byte_length(length) {
     if (offset > source.byte_length() || length > source.byte_length() - offset) {
       throw std::range_error("flight::DataView view exceeds its buffer");
@@ -152,7 +152,7 @@ class DataView {
     requires std::is_unsigned_v<Unsigned>
   void write_unsigned(double offset, Unsigned value, bool little_endian) {
     const auto index = checked_access<Unsigned>(offset);
-    auto* bytes = buffer.data() + byte_offset + index;
+    auto* bytes = buffer.writable_data() + byte_offset + index;
     for (std::size_t position = 0; position < sizeof(Unsigned); ++position) {
       const auto shift = little_endian ? position * 8 : (sizeof(Unsigned) - position - 1) * 8;
       bytes[position] = static_cast<std::byte>((value >> shift) & static_cast<Unsigned>(0xFF));

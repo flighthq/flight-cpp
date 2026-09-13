@@ -96,7 +96,7 @@ class TypedArray {
     const TypedArray* owner_;
   };
 
-  ArrayBuffer buffer;
+  ArrayBufferLike buffer;
   size_type byte_offset = 0;
   size_type byte_length = 0;
   Length length{this};
@@ -154,22 +154,22 @@ class TypedArray {
     }
   explicit TypedArray(const Range& values) : TypedArray(std::begin(values), std::end(values)) {}
 
-  explicit TypedArray(const ArrayBuffer& source)
+  explicit TypedArray(const ArrayBufferLike& source)
       : TypedArray(source, size_type{0}, remaining_length(source, 0), ViewTag{}) {}
 
-  TypedArray(const ArrayBuffer& source, double offset)
+  TypedArray(const ArrayBufferLike& source, double offset)
       : TypedArray(source,
                    detail::buffer_index(offset, "flight::TypedArray byte offset is outside the buffer"),
                    ViewTag{}) {}
 
-  TypedArray(const ArrayBuffer& source, double offset, double length)
+  TypedArray(const ArrayBufferLike& source, double offset, double length)
       : TypedArray(source,
                    detail::buffer_index(offset, "flight::TypedArray byte offset is outside the buffer"),
                    array_length(length),
                    ViewTag{}) {}
 
   [[nodiscard]] const Value& operator[](size_type index) const noexcept { return data()[index]; }
-  [[nodiscard]] Value& operator[](size_type index) noexcept { return data()[index]; }
+  [[nodiscard]] Value& operator[](size_type index) { return data()[index]; }
 
   [[nodiscard]] std::optional<Value> at(std::ptrdiff_t index) const {
     const auto normalized = normalize_element_index(index);
@@ -186,9 +186,9 @@ class TypedArray {
   }
 
   [[nodiscard]] const_iterator begin() const noexcept { return data(); }
-  [[nodiscard]] iterator begin() noexcept { return data(); }
+  [[nodiscard]] iterator begin() { return data(); }
   [[nodiscard]] const_iterator end() const noexcept { return data() + length_; }
-  [[nodiscard]] iterator end() noexcept { return data() + length_; }
+  [[nodiscard]] iterator end() { return data() + length_; }
   [[nodiscard]] bool empty() const noexcept { return length_ == 0; }
 
   [[nodiscard]] friend bool operator==(const TypedArray& left, const TypedArray& right) noexcept {
@@ -223,7 +223,7 @@ class TypedArray {
   }
 
   [[nodiscard]] std::span<const Value> span() const noexcept { return {data(), length_}; }
-  [[nodiscard]] std::span<Value> span() noexcept { return {data(), length_}; }
+  [[nodiscard]] std::span<Value> span() { return {data(), length_}; }
 
   [[nodiscard]] TypedArray slice(
       std::ptrdiff_t begin_index,
@@ -255,13 +255,16 @@ class TypedArray {
     return length * sizeof(Value);
   }
 
-  static void validate_offset(const ArrayBuffer& source, size_type offset) {
+  static void validate_offset(const ArrayBufferLike& source, size_type offset) {
     if (offset % sizeof(Value) != 0 || offset > source.byte_length()) {
       throw std::range_error("flight::TypedArray byte offset is invalid for the buffer");
     }
+    if (reinterpret_cast<std::uintptr_t>(source.data() + offset) % alignof(Value) != 0) {
+      throw std::range_error("flight::TypedArray backing storage is not aligned for its element type");
+    }
   }
 
-  [[nodiscard]] static size_type remaining_length(const ArrayBuffer& source, size_type offset) {
+  [[nodiscard]] static size_type remaining_length(const ArrayBufferLike& source, size_type offset) {
     validate_offset(source, offset);
     const auto remaining = source.byte_length() - offset;
     if (remaining % sizeof(Value) != 0) {
@@ -288,11 +291,14 @@ class TypedArray {
     std::copy(first, last, begin());
   }
 
-  TypedArray(const ArrayBuffer& source, size_type offset, ViewTag)
+  TypedArray(const ArrayBufferLike& source, size_type offset, ViewTag)
       : TypedArray(source, offset, remaining_length(source, offset), ViewTag{}) {}
 
-  TypedArray(const ArrayBuffer& source, size_type offset, size_type length, ViewTag)
+  TypedArray(const ArrayBufferLike& source, size_type offset, size_type length, ViewTag)
       : buffer(source), byte_offset(offset), byte_length(required_bytes(length)), length_(length) {
+    if (!source.is_writable()) {
+      throw std::invalid_argument("flight::TypedArray requires writable backing storage");
+    }
     validate_offset(source, offset);
     if (byte_length > source.byte_length() - offset) {
       throw std::range_error("flight::TypedArray view exceeds its buffer");
@@ -303,7 +309,7 @@ class TypedArray {
     return reinterpret_cast<const Value*>(buffer.data() + byte_offset);
   }
 
-  [[nodiscard]] Value* data() noexcept { return reinterpret_cast<Value*>(buffer.data() + byte_offset); }
+  [[nodiscard]] Value* data() { return reinterpret_cast<Value*>(buffer.writable_data() + byte_offset); }
 
   [[nodiscard]] size_type normalize_boundary(std::ptrdiff_t index) const noexcept {
     if (index < 0) {

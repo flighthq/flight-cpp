@@ -92,13 +92,13 @@ class ArrayBufferView {
         identity_(source.identity()) {}
 
   [[nodiscard]] const std::byte* data() const noexcept { return buffer.data() + byte_offset; }
-  [[nodiscard]] std::byte* data() noexcept { return buffer.data() + byte_offset; }
+  [[nodiscard]] std::byte* data() { return buffer.writable_data() + byte_offset; }
   [[nodiscard]] const void* identity() const noexcept { return identity_; }
   [[nodiscard]] bool same_backing(const ArrayBufferView& other) const noexcept {
     return buffer == other.buffer;
   }
 
-  ArrayBuffer buffer;
+  ArrayBufferLike buffer;
   std::size_t byte_offset;
   std::size_t byte_length;
   ArrayBufferViewKind kind;

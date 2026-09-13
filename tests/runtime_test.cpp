@@ -3,6 +3,7 @@
 #include <flight/host/performance.hpp>
 #include <flight/host/timers.hpp>
 
+#include <array>
 #include <cmath>
 #include <exception>
 #include <iostream>
@@ -216,6 +217,65 @@ void test_array_like_views() {
         "ArrayBufferView exposes the original byte range without copying it");
 }
 
+void test_array_buffer_like() {
+  flight::ArrayBuffer ordinary(8.0);
+  const auto ordinary_alias = ordinary;
+  check(ordinary.kind() == flight::ArrayBufferKind::array_buffer && ordinary.is_writable() &&
+            ordinary.concurrency() == flight::ArrayBufferConcurrency::single_threaded &&
+            ordinary.identity() == ordinary_alias.identity(),
+        "ArrayBufferLike preserves ordinary backing identity and policy");
+
+  flight::SharedArrayBuffer shared(8.0);
+  flight::Uint8Array shared_bytes(shared);
+  shared_bytes[0] = 42;
+  check(shared_bytes.buffer.kind() == flight::ArrayBufferKind::shared_array_buffer &&
+            shared_bytes.buffer.concurrency() == flight::ArrayBufferConcurrency::shared &&
+            shared.data()[0] == std::byte{42},
+        "typed arrays retain shared-memory backing without copying");
+
+  std::weak_ptr<std::vector<std::uint16_t>> weak_external;
+  {
+    auto storage = std::make_shared<std::vector<std::uint16_t>>(std::initializer_list<std::uint16_t>{3, 4});
+    weak_external = storage;
+    auto external = flight::ArrayBufferLike::from_external(
+        storage, reinterpret_cast<std::byte*>(storage->data()), storage->size() * sizeof(std::uint16_t));
+    flight::Uint16Array words(external);
+    const auto backing_identity = external.identity();
+    storage.reset();
+    external = flight::ArrayBufferLike{};
+    words[1] = 9;
+    check(!weak_external.expired() && words[0] == 3 && words[1] == 9 &&
+              words.buffer.identity() == backing_identity &&
+              words.buffer.kind() == flight::ArrayBufferKind::external &&
+              words.buffer.concurrency() == flight::ArrayBufferConcurrency::caller_synchronized,
+          "typed arrays retain external backing lifetime, identity, and mutability policy");
+  }
+  check(weak_external.expired(), "external backing is released with the last buffer view");
+
+  const auto read_only_storage = std::make_shared<const std::array<std::byte, 2>>(
+      std::array<std::byte, 2>{std::byte{0x12}, std::byte{0x34}});
+  const auto read_only = flight::ArrayBufferLike::from_external(
+      read_only_storage, read_only_storage->data(), read_only_storage->size());
+  flight::DataView read_only_view(read_only);
+  check(read_only.mutability() == flight::ArrayBufferMutability::read_only &&
+            read_only_view.get_uint16(0.0) == 0x1234,
+        "DataView reads owner-retained read-only external backing");
+  bool data_view_write_failed = false;
+  try {
+    read_only_view.set_uint8(0.0, 1.0);
+  } catch (const std::logic_error&) {
+    data_view_write_failed = true;
+  }
+  bool typed_array_construction_failed = false;
+  try {
+    static_cast<void>(flight::Uint8Array(read_only));
+  } catch (const std::invalid_argument&) {
+    typed_array_construction_failed = true;
+  }
+  check(data_view_write_failed && typed_array_construction_failed,
+        "mutable binary views reject read-only external backing deterministically");
+}
+
 void test_contract() {
   check(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2",
         "runtime advertises the compiler contract it implements");
@@ -227,8 +287,12 @@ void test_contract() {
   check(flight::runtime_capability_status("array") == flight::RuntimeCapabilityStatus::initial,
         "implemented capabilities are queryable");
   check(flight::runtime_capability_status("array-buffer") == flight::RuntimeCapabilityStatus::initial &&
+            flight::runtime_capability_status("array-buffer-like") == flight::RuntimeCapabilityStatus::initial &&
+            flight::runtime_capability_status("array-buffer-view") == flight::RuntimeCapabilityStatus::initial &&
             flight::runtime_capability_status("data-view") == flight::RuntimeCapabilityStatus::initial,
         "binary storage capabilities are advertised after their implementation lands");
+  check(flight::runtime_capability_status("sequence-view") == flight::RuntimeCapabilityStatus::initial,
+        "owner-preserving sequence views are advertised after their implementation lands");
   check(flight::runtime_capability_status("unicode-case-service") == flight::RuntimeCapabilityStatus::planned,
         "planned capabilities remain distinguishable");
   check(flight::runtime_capability_status("unknown") == flight::RuntimeCapabilityStatus::unavailable,
@@ -793,6 +857,7 @@ void test_task() {
 
 int main() {
   test_array();
+  test_array_buffer_like();
   test_array_like_views();
   test_binary_data();
   test_contract();

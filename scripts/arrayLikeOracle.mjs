@@ -81,13 +81,18 @@ try {
     path.join(temporary, 'consumer.cpp'),
     `#include "array_like.hpp"
 
+#include <memory>
+#include <vector>
+
 int main() {
   flight::Array<double> values{1.0, 2.0, 3.0};
   const auto array_total = flighthq_runtime_test::total(values);
   flight::Uint16Array words(4);
   const auto typed_total = flighthq_runtime_test::total(words);
+  const auto custom = std::make_shared<std::vector<double>>(std::initializer_list<double>{4.0, 5.0});
+  const auto custom_total = flighthq_runtime_test::total(custom);
   const auto byte_end = flighthq_runtime_test::byte_end(flight::ArrayBufferView(words));
-  return array_total == 6.0 && typed_total == 0.0 && byte_end == 8.0 ? 0 : 1;
+  return array_total == 6.0 && typed_total == 0.0 && custom_total == 9.0 && byte_end == 8.0 ? 0 : 1;
 }
 `,
   );
