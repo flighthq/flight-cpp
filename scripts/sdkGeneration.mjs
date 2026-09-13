@@ -323,21 +323,30 @@ function writeStructuralMemberTable(outputRoot, files) {
       if (match.groups?.name !== undefined) names.add(JSON.parse(`"${match.groups.name}"`));
     }
   }
-  const cases = [...names]
-    .sort(compareText)
+  const sortedNames = [...names].sort(compareText);
+  const cases = sortedNames
     .map((name) => {
       const member = safeCppMemberName(name);
       return `  else if constexpr (Key::name.view() == std::string_view(${JSON.stringify(name)}) && requires { object.${member}; }) return (object.${member});`;
     });
+  const typeCases = sortedNames.map((name) => {
+    const member = safeCppMemberName(name);
+    return `  else if constexpr (Key::name.view() == std::string_view(${JSON.stringify(name)}) && requires(Object& object) { object.${member}; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().${member})>>{};`;
+  });
+  const bindings = sortedNames.map((name) => {
+    const member = safeCppMemberName(name);
+    return `  if constexpr (requires { object->${member}; }) owner.bind_named(${JSON.stringify(name)}, [object]() -> decltype(auto) { return (object->${member}); });`;
+  });
   if (cases.length === 0) {
     throw new Error('compiler output uses no structural row keys');
   }
   cases[0] = cases[0].replace('  else if', '  if');
+  typeCases[0] = typeCases[0].replace('  else if', '  if');
   const target = path.join(outputRoot, 'include', 'flight', 'sdk', 'structural_members.hpp');
   mkdirSync(path.dirname(target), { recursive: true });
   writeFileSync(
     target,
-    `// Generated from the structural keys used by the emitted Flight SDK. Do not edit.\n#pragma once\n\n#include <string_view>\n\nnamespace flight::detail {\n\ntemplate <typename Key, typename Object>\ndecltype(auto) generated_row_member(Object& object) {\n${cases.join('\n')}\n  else static_assert(dependent_false<Key>, "Flight SDK row key has no compatible generated C++ member");\n}\n\n} // namespace flight::detail\n`,
+    `// Generated from the structural keys used by the emitted Flight SDK. Do not edit.\n#pragma once\n\n#include <flight/structural_ref.hpp>\n\n#include <memory>\n#include <string_view>\n#include <type_traits>\n#include <utility>\n\nnamespace flight::detail {\n\ntemplate <typename Key, typename Object>\ndecltype(auto) generated_row_member(Object& object) {\n${cases.join('\n')}\n  else static_assert(dependent_false<Key>, "Flight SDK row key has no compatible generated C++ member");\n}\n\ntemplate <typename Key, typename Object>\nconsteval auto generated_row_member_type_identity() {\n${typeCases.join('\n')}\n  else return std::type_identity<void>{};\n}\n\ntemplate <typename Key, typename Object>\nusing generated_row_member_t = typename decltype(generated_row_member_type_identity<Key, Object>())::type;\n\ntemplate <typename Object>\nvoid bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& object) {\n${bindings.join('\n')}\n}\n\n} // namespace flight::detail\n`,
   );
 }
 

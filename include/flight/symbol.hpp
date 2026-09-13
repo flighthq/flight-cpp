@@ -28,6 +28,8 @@ class Symbol {
     return key_ ? *key_ : empty;
   }
 
+  [[nodiscard]] const void* identity() const noexcept { return key_.get(); }
+
   [[nodiscard]] friend bool operator==(const Symbol&, const Symbol&) noexcept = default;
 
  private:
