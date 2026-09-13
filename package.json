@@ -12,6 +12,7 @@
     "abort:oracle": "node ./scripts/abortOracle.mjs",
     "abi:check": "node ./scripts/abiHealth.mjs",
     "array-like:oracle": "node ./scripts/arrayLikeOracle.mjs",
+    "base64:oracle": "node ./scripts/base64Oracle.mjs",
     "blob:oracle": "node ./scripts/blobOracle.mjs",
     "build:check": "node ./scripts/buildHealth.mjs",
     "check": "node ./scripts/check.mjs",
@@ -33,6 +34,7 @@
     "sdk:generate:sdl-gl": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --binding-profile=bindings/headless.json --binding-profile=bindings/sdl-gl.json --output=out/sdk-sdl-gl",
     "sdk:generate:runtime": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --output=out/sdk-runtime",
     "sdl-gl:oracle": "node ./scripts/sdlGlProfileOracle.mjs",
-    "structural:oracle": "node ./scripts/structuralProxyOracle.mjs"
+    "structural:oracle": "node ./scripts/structuralProxyOracle.mjs",
+    "uri:oracle": "node ./scripts/uriOracle.mjs"
   }
 }

@@ -4,6 +4,7 @@
 #include <flight/array.hpp>
 #include <flight/array_buffer.hpp>
 #include <flight/array_buffer_view.hpp>
+#include <flight/base64.hpp>
 #include <flight/blob.hpp>
 #include <flight/callable.hpp>
 #include <flight/conditional_facet_ref.hpp>
@@ -33,6 +34,7 @@
 #include <flight/task.hpp>
 #include <flight/text_decoder.hpp>
 #include <flight/typed_array.hpp>
+#include <flight/uri.hpp>
 #include <flight/url.hpp>
 #include <flight/version.hpp>
 #include <flight/weak_map.hpp>

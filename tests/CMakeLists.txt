@@ -33,6 +33,7 @@ set(
   array
   array_buffer
   array_buffer_view
+  base64
   blob
   callable
   conditional_facet_ref
@@ -63,6 +64,7 @@ set(
   task
   text_decoder
   typed_array
+  uri
   url
   version
   weak_map

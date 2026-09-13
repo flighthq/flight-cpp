@@ -58,6 +58,28 @@
       "targetName": "flight::ArrayBufferLike"
     },
     {
+      "callResultType": "flight::String",
+      "headers": [
+        "flight/base64.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "atob",
+      "space": "value",
+      "targetName": "flight::atob"
+    },
+    {
+      "callResultType": "flight::String",
+      "headers": [
+        "flight/base64.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "btoa",
+      "space": "value",
+      "targetName": "flight::btoa"
+    },
+    {
       "headers": [
         "flight/blob.hpp"
       ],
@@ -90,6 +112,28 @@
       "sourceName": "ArrayLike",
       "space": "type",
       "targetName": "flight::SequenceView"
+    },
+    {
+      "callResultType": "flight::String",
+      "headers": [
+        "flight/uri.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "decodeURIComponent",
+      "space": "value",
+      "targetName": "flight::decode_uri_component"
+    },
+    {
+      "callResultType": "flight::String",
+      "headers": [
+        "flight/uri.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "encodeURIComponent",
+      "space": "value",
+      "targetName": "flight::encode_uri_component"
     },
     {
       "callResultType": "bool",

@@ -125,6 +125,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run abort:oracle` | Do compiler-emitted cancellation bindings match native `AbortController` behavior? |
 | `npm run abi:check` | Do the C header, its implementation, and the committed ABI snapshot name the same symbols? |
 | `npm run array-like:oracle` | Do compiler-emitted portable bindings for array-like views, weak sets, and numeric globals compile and preserve native behavior? |
+| `npm run base64:oracle` | Do compiler-emitted browser-compatible base64 operations match Node? |
 | `npm run blob:oracle` | Do compiler-emitted Blob construction, slicing, text, and binary operations match Node? |
 | `npm run build:check` | Do the CMake and Bazel graphs describe the same headers, sources, tests, and benchmarks? |
 | `npm run examples:check` | Does the pinned compiler reproduce the checked-in native example output? |
@@ -139,6 +140,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run runtime:oracle` | Do the native runtime services match the same TypeScript-valid operations under Node? |
 | `npm run sdl-gl:oracle` | Does the compiler emit the SDL/OpenGL surface, handle, and weak-cache types from the maintained profile? |
 | `npm run structural:oracle` | Does the pinned compiler's generic Entity proxy compile and preserve native write interception? |
+| `npm run uri:oracle` | Do compiler-emitted URI component operations match Node? |
 | `npm run compile:check` | Does the pinned compiler's emitted C++ still compile against this runtime? |
 
 `compile:check` reports and skips when the checkout is absent or no C++ compiler is installed, so a fresh clone stays runnable. The compiler repository asks the same question from its side against the runtime revision it pins; both are wanted, because each side owns the pin it can move and a failure names which one changed.

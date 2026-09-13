@@ -76,6 +76,10 @@
 #include <flight/abort.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 38
 #include <flight/blob.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 39
+#include <flight/uri.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 40
+#include <flight/base64.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

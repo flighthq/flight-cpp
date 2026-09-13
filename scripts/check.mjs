@@ -16,6 +16,7 @@ const gates = [
   { arguments: [], name: 'abortOracle' },
   { arguments: [], name: 'abiHealth' },
   { arguments: [], name: 'arrayLikeOracle' },
+  { arguments: [], name: 'base64Oracle' },
   { arguments: [], name: 'blobOracle' },
   { arguments: [], name: 'buildHealth' },
   { arguments: [], name: 'releaseHealth' },
@@ -25,6 +26,7 @@ const gates = [
   { arguments: [], name: 'runtimeOracle' },
   { arguments: [], name: 'sdlGlProfileOracle' },
   { arguments: [], name: 'structuralProxyOracle' },
+  { arguments: [], name: 'uriOracle' },
   { arguments: ['--check'], name: 'sdkGeneration' },
   { arguments: [], name: 'emittedSourceCompile' },
 ];

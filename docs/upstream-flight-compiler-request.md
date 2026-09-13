@@ -29,6 +29,8 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
   `throw_if_aborted`, covered by a live compiler-versus-Node oracle;
 - immutable shared `Blob` bytes with typed-array construction, slicing, MIME normalization, text decoding, and
   `ArrayBuffer` conversion, selected through the runtime profile and covered by a live compiler-versus-Node oracle;
+- URI component and browser base64 globals with UTF-8, binary-string, malformed-input, padding, and whitespace
+  semantics covered by live compiler-versus-Node oracles;
 - numeric conversion and prefix parsing, safe-integer checks, object keys/values, symbols, URL protocol parsing,
   regular expressions, and a deterministic Intl baseline;
 - idempotent `Ref<T>` projection, generated structural-row member access, writable entity construction, and

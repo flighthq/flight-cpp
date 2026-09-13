@@ -210,6 +210,31 @@ void test_blob() {
   check(invalid_type.type.empty(), "Blob rejects MIME types outside the printable ASCII range");
 }
 
+void test_base64() {
+  const flight::String binary(std::u16string{0x00, 0x66, 0x7F, 0x80, 0xFF});
+  const auto encoded = flight::btoa(binary);
+  check(encoded == flight::String("AGZ/gP8=") && flight::atob(encoded) == binary,
+        "base64 functions round-trip the browser binary-string byte domain");
+  check(flight::atob(" Z m 8 =\n") == flight::String("fo") &&
+            flight::atob("AB==").char_code_at(0) == 0.0,
+        "base64 decoding follows forgiving whitespace, padding, and trailing-bit behavior");
+
+  bool invalid_base64_failed = false;
+  try {
+    static_cast<void>(flight::atob("A==="));
+  } catch (const flight::InvalidCharacterError&) {
+    invalid_base64_failed = true;
+  }
+  bool non_byte_failed = false;
+  try {
+    static_cast<void>(flight::btoa(flight::String(u"\u0100")));
+  } catch (const flight::InvalidCharacterError&) {
+    non_byte_failed = true;
+  }
+  check(invalid_base64_failed && non_byte_failed,
+        "base64 functions reject invalid encodings and non-byte input strings");
+}
+
 void test_array_like_views() {
   flight::Array<double> array{1.0, 2.0, 3.0};
   const flight::SequenceView<double> array_view(array);
@@ -909,6 +934,33 @@ void test_typed_array() {
         "Uint8ClampedArray uses saturating ties-to-even conversion");
 }
 
+void test_uri_components() {
+  const auto source = flight::String::from_utf8("flight /?=&# \xF0\x9F\x98\x80");
+  const auto encoded = flight::encode_uri_component(source);
+  check(encoded == flight::String("flight%20%2F%3F%3D%26%23%20%F0%9F%98%80") &&
+            flight::decode_uri_component(encoded) == source,
+        "URI component encoding preserves its unescaped set and UTF-8 round trip");
+  check(flight::encode_uri_component("AZaz09-_.!~*'()") == flight::String("AZaz09-_.!~*'()") &&
+            flight::decode_uri_component("literal-%2f-%00") ==
+                flight::String(std::u16string{u'l', u'i', u't', u'e', u'r', u'a', u'l', u'-', u'/', u'-', 0}),
+        "URI component operations preserve safe characters and decode hexadecimal bytes");
+
+  bool invalid_encoding_failed = false;
+  try {
+    static_cast<void>(flight::decode_uri_component("%E0%A4%A"));
+  } catch (const flight::UriError&) {
+    invalid_encoding_failed = true;
+  }
+  bool unpaired_surrogate_failed = false;
+  try {
+    static_cast<void>(flight::encode_uri_component(flight::String(std::u16string{0xD800})));
+  } catch (const flight::UriError&) {
+    unpaired_surrogate_failed = true;
+  }
+  check(invalid_encoding_failed && unpaired_surrogate_failed,
+        "URI component operations reject malformed percent UTF-8 and unpaired surrogates");
+}
+
 void test_task() {
   const auto source = FlightTask<int>::ready(21);
   check(source.is_ready() && source.get() == 21, "ready task exposes its settled value");
@@ -1019,6 +1071,7 @@ int main() {
   test_array_buffer_like();
   test_array_like_views();
   test_binary_data();
+  test_base64();
   test_blob();
   test_contract();
   test_date();
@@ -1033,5 +1086,6 @@ int main() {
   test_string();
   test_task();
   test_typed_array();
+  test_uri_components();
   return failures == 0 ? 0 : 1;
 }

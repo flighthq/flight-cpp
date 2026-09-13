@@ -62,4 +62,6 @@ _PUBLIC_HEADERS = [
     ("weak_set", 36),
     ("abort", 37),
     ("blob", 38),
+    ("uri", 39),
+    ("base64", 40),
 ]
