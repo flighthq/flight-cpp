@@ -64,6 +64,7 @@ set(
   url
   version
   weak_map
+  weak_set
 )
 
 foreach(header IN LISTS flight_cpp_public_headers)

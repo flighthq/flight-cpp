@@ -21,6 +21,16 @@ template <typename Key, typename Value>
   return entries.enumerable_entries();
 }
 
+template <typename Key, typename Value>
+[[nodiscard]] Array<Value> object_values(const Record<Key, Value>& entries) {
+  Array<Value> result;
+  for (const auto& [key, value] : entries.enumerable_entries()) {
+    static_cast<void>(key);
+    result.push(value);
+  }
+  return result;
+}
+
 template <typename Entries>
 [[nodiscard]] auto object_keys(const Entries& entries) {
   using Key = std::remove_cvref_t<decltype(entries.begin()->first)>;
@@ -35,6 +45,14 @@ template <typename Entries>
   using Value = std::remove_cvref_t<decltype(entries.begin()->second)>;
   Array<std::tuple<Key, Value>> result;
   for (const auto& [key, value] : entries) result.push(std::tuple<Key, Value>(key, value));
+  return result;
+}
+
+template <typename Entries>
+[[nodiscard]] auto object_values(const Entries& entries) {
+  using Value = std::remove_cvref_t<decltype(entries.begin()->second)>;
+  Array<Value> result;
+  for (const auto& entry : entries) result.push(entry.second);
   return result;
 }
 

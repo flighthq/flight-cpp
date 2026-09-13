@@ -22,6 +22,52 @@
       "sourceName": "ArrayLike",
       "space": "type",
       "targetName": "flight::SequenceView"
+    },
+    {
+      "callResultType": "bool",
+      "headers": [
+        "cmath"
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "isFinite",
+      "space": "value",
+      "targetName": "std::isfinite"
+    },
+    {
+      "callResultType": "double",
+      "headers": [
+        "flight/number.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "parseFloat",
+      "space": "value",
+      "targetName": "flight::parse_float"
+    },
+    {
+      "headers": [
+        "flight/weak_set.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "WeakSet",
+      "space": "type",
+      "targetName": "flight::WeakSet"
+    },
+    {
+      "construction": {
+        "kind": "constructor",
+        "targetName": "flight::WeakSet"
+      },
+      "headers": [
+        "flight/weak_set.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "WeakSet",
+      "space": "value",
+      "targetName": "flight::WeakSet"
     }
   ]
 }

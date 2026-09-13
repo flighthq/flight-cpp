@@ -59,6 +59,10 @@ const record = {
   after: 8,
 };
 record['2'] = 22;
+const weakSetKey = {};
+const weakSet = new WeakSet();
+const weakSetAddIdentity = weakSet.add(weakSetKey) === weakSet && weakSet.has(weakSetKey);
+const weakSetDelete = weakSet.delete(weakSetKey) && !weakSet.has(weakSetKey);
 const expected = JSON.stringify([
   dataView.getUint32(1, true),
   new TextDecoder().decode(new Uint8Array([0xe0, 0x80, 0x80])),
@@ -70,12 +74,20 @@ const expected = JSON.stringify([
   expression.test('flight'),
   new URL('child', 'https://example.test/base').protocol,
   Number.parseInt('  -0x10tail'),
+  Number.parseFloat('  -1.25e2tail'),
+  Number.parseFloat('1e+'),
+  Number.isFinite(Number.parseFloat('Infinityrest')) === false,
+  Number.isSafeInteger(9007199254740991),
+  Number.isSafeInteger(9007199254740992),
   Number('0b101'),
   Number('-0x10'),
   Object.entries(Object.assign(target, source)),
   Object.keys(record),
   Object.entries(record),
+  Object.values(record),
   record.missing === undefined && Object.keys(record).length === 8,
+  weakSetAddIdentity,
+  weakSetDelete,
   JSON.stringify(JSON.parse('{"name":"Flight","values":[null,-1.5e2,"\\ud83d\\ude00"]}')),
   new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(['a', 'b', 'c']),
   new Intl.PluralRules('en').select(1),

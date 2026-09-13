@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <any>
+#include <concepts>
 #include <cstddef>
 #include <memory>
 #include <optional>
@@ -44,6 +45,28 @@ class ErasedValue {
 
 template <typename Key>
 struct DefaultWeakKeyPolicy;
+
+template <typename Key>
+  requires requires(const Key& key, const typename Key::weak_type& weak) {
+    { key.weaken() } -> std::same_as<typename Key::weak_type>;
+    { Key::lock_weak(weak) } -> std::same_as<std::optional<Key>>;
+    { key.identity() } -> std::convertible_to<const void*>;
+  }
+struct DefaultWeakKeyPolicy<Key> {
+  using key_type = Key;
+  using weak_type = typename Key::weak_type;
+  using identity_type = const void*;
+
+  [[nodiscard]] static weak_type weaken(const key_type& key) noexcept { return key.weaken(); }
+  [[nodiscard]] static std::optional<key_type> lock(const weak_type& key) {
+    return key_type::lock_weak(key);
+  }
+  [[nodiscard]] static identity_type identity(const key_type& key) noexcept { return key.identity(); }
+  [[nodiscard]] static std::size_t hash(identity_type identity) noexcept {
+    return std::hash<const void*>{}(identity);
+  }
+  [[nodiscard]] static bool equal(identity_type left, identity_type right) noexcept { return left == right; }
+};
 
 template <typename Type>
 struct DefaultWeakKeyPolicy<std::shared_ptr<Type>> {

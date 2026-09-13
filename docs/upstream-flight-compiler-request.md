@@ -23,12 +23,12 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
 
 - stable shared `ArrayBuffer`, typed-array views, complete numeric `DataView` access, UTF-8 `TextDecoder`, and
   `String::from_code_point`;
-- numeric conversion, object keys, symbols, URL protocol parsing, regular expressions, and a deterministic Intl
-  baseline;
+- numeric conversion and prefix parsing, safe-integer checks, object keys/values, symbols, URL protocol parsing,
+  regular expressions, and a deterministic Intl baseline;
 - idempotent `Ref<T>` projection, generated structural-row member access, writable entity construction, and
   structural reference casts;
-- weak identity maps for Flight references and closed reference variants, including erased values and checked typed
-  views;
+- weak identity maps and sets for Flight references, closed reference variants, and weakly recoverable Flight arrays,
+  including erased values and checked typed map views;
 - the versioned callable signature/binding ABI used by Signals;
 - an explicit JSON value model plus parsing and stringification for every JSON value domain;
 - conditional capability facet references with required nested-member checks;

@@ -19,13 +19,14 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
 | Number conversion, RegExp, URL | Implemented baseline | The emitted APIs compile and the source differential covers the Flight paths in the current SDK. RegExp remains a documented ECMAScript subset rather than a claim that `std::regex` implements every JavaScript expression. |
 | Object helpers | Implemented for represented map records | `object_keys`, `object_entries`, and identity-preserving `object_assign` cover the compiler's current represented map inputs. |
 | `Record<K,V>` storage | Prepared runtime ABI | `Record` shares object identity, uses non-inserting presence-bearing reads, canonicalizes numeric and string property identity, and enumerates integer, string, and symbol keys in JavaScript order. `Object.keys`, `Object.entries`, and `Object.assign` have Record-aware paths, and the Node/native oracle covers ordering, collisions, symbol exclusion, and missing reads. The compiler still maps `Record` to `std::unordered_map`; it must elect this spelling, lower reads/writes to the presence-aware API, and lower ordered spreads before adoption is complete. |
+| Portable ambient helpers and `WeakSet` | Implemented downstream ABI | `parse_float`, `is_safe_integer`, and `object_values` implement the remaining numeric and represented-record behavior requested by the current corpus. `WeakSet<K>` shares identity across copies, never enumerates or retains keys, supports Flight references and weakly recoverable `Array<T>` values, and accepts the same external policy contract as `WeakMap`. The runtime profile maps bare `parseFloat`, bare `isFinite`, and both `WeakSet` spaces; a live compiler fixture compiles and runs those mappings. Compiler built-ins still need to elect `Number.isSafeInteger` and `Object.values`. |
 | JSON | Partial | `JsonValue` preserves null, boolean, number, string, array, and object domains; `Json::parse` and `Json::stringify` round-trip them. Generated ordinary structs still need compiler-provided member reflection, and replacer semantics remain open. |
 | Intl | Partial | The locale-neutral baseline and emitted names exist and are source-compared for deterministic English cases. Locale selection, option validation, and a pinned ICU-style provider remain open. |
 | Callable signature ABI | Partial | Exact argument packs, signature metadata, binding, and current emitted Signals headers compile. Optional/rest role metadata, callable wrappers, and their complete oracle matrix remain open. |
 | Symbol and closed Entity construction | Implemented for current output | Symbol interning, named structural access, the Entity runtime symbol slot, and emitted AmbientLight construction compile and run. |
 | Open structural rows and proxies | Partial | Structural views reuse one `RowOwner` per source object. The generated member table installs one typed, presence-bearing cell for each reachable named field, while computed symbols retain distinct canonical identities. Writable, readonly, partial, and compatible merged projections share those cells. `make_structural_write_proxy` provides distinct identity, forwarding, pre-write interception, exception ordering, nested composition, and projection identity; a live compiler-emitted generic Entity proxy compiles and runs. Construction still needs an all-required-fields check, casts need whole-schema compatibility constraints, and `RowMerge` must validate every collision at schema instantiation rather than when a field is accessed. |
 | Conditional capability facets | Implemented | `FacetRef`, lambda-based required `MemberPath`, `RequiredMemberFacet`, `ConditionalFacetRef`, and explicit `assume_conditional_facets` preserve one base reference and statically reject absent or optional paths. A live compiler-emitted generic Tray fixture proves capable, incapable, and optional host paths plus referent identity. |
-| WeakMap and erased typed views | Implemented runtime ABI | Default Flight-reference and closed-variant policies are weak and identity-based. External policies use the specified weaken/lock/identity/hash/equal contract. Tests cover expiry, shared views, wrong tags, overwrite, and deletion. Host weak-key policies remain host-profile work. |
+| WeakMap, WeakSet, and erased typed views | Implemented runtime ABI | Default Flight-reference, closed-variant, and weakly recoverable Flight value policies are weak and identity-based. External policies use the specified weaken/lock/identity/hash/equal contract. Tests cover expiry, shared views, wrong tags, overwrite, and deletion. Host weak-key policies remain host-profile work. |
 | SDL host mechanics | Implemented | SDL lifecycle, events, monotonic clock, windows, GL contexts, Vulkan surfaces, and callback-owned WebGPU surfaces are packaged by CMake. Generated renderer bindings remain open. |
 
 ## Integration and release gates
@@ -36,11 +37,12 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
   The preview is intentionally not installed.
 - `npm run sdk:compile` compiles every emitted header independently and writes the compiler-facing report to
   `out/sdk-header-compilation.json`.
-- `npm run sdk:compile:headless` applies the same audit to the combined runtime-carrier/headless inventory. At the
-  current pin, 707 of 1,060 headers pass and 353 expose compiler-emitted C++ errors. Three of the 28 newly emitted
-  headers compile; the other 25 advance to existing tuple, union, reference-conversion, and type-spelling defects.
+- `npm run sdk:compile:headless` applies the same audit to the combined portable-runtime/headless inventory. At the
+  current pin, the profile emits 1,063 modules: 31 more than the manifest-free floor. Of those additional headers,
+  three compile and 28 advance to existing tuple, union, reference-conversion, aggregate-construction, and
+  type-spelling defects. The complete expanded result is 707 passing and 356 failing headers.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
-  runtime. It currently covers 21 cross-runtime observations.
+  runtime. It currently covers 29 cross-runtime observations.
 - `npm run structural:oracle` generates the exact generic Entity write proxy through the pinned compiler, compiles
   the emitted headers, and executes an intercepted write against the working runtime.
 - `Flight::Sdk` remains blocked until every emitted header in the selected binding profile compiles. At that point it
@@ -56,15 +58,16 @@ aliases used as templates, value spelling used where a type name is required, in
 non-convertible duplicate anonymous records, package-scope helper collisions, and malformed type queries. These must
 be corrected in flight-compiler rather than rewritten in the generated tree.
 
-The versioned `flighthq/flight-cpp/runtime-carriers/1` profile supplies the implemented `ArrayLike<T>` and
-`ArrayBufferView` type bindings. Combined with the headless profile, it removes every direct refusal for those two
-symbols and expands the dependency-closed inventory from 1,032 to 1,060 emitted modules. The versioned
+The versioned `flighthq/flight-cpp/runtime-carriers/1` profile supplies the implemented `ArrayLike<T>`,
+`ArrayBufferView`, `WeakSet`, bare `parseFloat`, and bare `isFinite` bindings. Combined with the headless profile, it
+removes every direct refusal for `ArrayLike`, `ArrayBufferView`, and Flight-owned `WeakSet` uses and expands the
+dependency-closed inventory from 1,032 to 1,063 emitted modules. The versioned
 `flighthq/flight-cpp/headless/1` profile supplies monotonic `performance.now`, `console.debug`, and
 single-threaded host-pumped timeout/interval functions. Its selected profile, identity, and digest are recorded in
 each profile-specific generated manifest, and a live compiler fixture compiles and runs every binding. SDL's host
 loop exposes the same timer pump. Log now reaches the compiler-owned ordered-`Record` spread refusal, and Signals
 throttle reaches the dependent-callable-pack refusal; neither remains blocked on its headless ambient names. The
-aggregate emitted count is still unchanged. More headless bindings and maintained profiles for Node/tooling,
+headless values do not change the aggregate count independently at this pin. Maintained profiles for Node/tooling,
 browser/media, SDL/GL, SDL/Vulkan, and SDL/WebGPU are still required. A profile may name only native types and
 lifetimes its host package actually implements; opaque placeholders would make a larger report while leaving the SDK
 unusable.

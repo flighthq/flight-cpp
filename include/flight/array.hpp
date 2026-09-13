@@ -46,6 +46,7 @@ class Array {
   using reference = typename std::vector<Value>::reference;
   using size_type = typename std::vector<Value>::size_type;
   using value_type = Value;
+  using weak_type = std::weak_ptr<std::vector<Value>>;
 
   class Length {
    public:
@@ -127,6 +128,13 @@ class Array {
   [[nodiscard]] bool empty() const noexcept { return values_->empty(); }
 
   [[nodiscard]] const void* identity() const noexcept { return values_.get(); }
+
+  [[nodiscard]] weak_type weaken() const noexcept { return values_; }
+
+  [[nodiscard]] static std::optional<Array> lock_weak(const weak_type& weak) {
+    auto values = weak.lock();
+    return values ? std::optional<Array>(Array(std::move(values), SharedStorage{})) : std::nullopt;
+  }
 
   template <typename Predicate>
   [[nodiscard]] bool every(Predicate predicate) const {
@@ -363,6 +371,11 @@ class Array {
   }
 
  private:
+  struct SharedStorage {};
+
+  explicit Array(std::shared_ptr<std::vector<Value>> values, SharedStorage)
+      : values_(std::move(values)) {}
+
   [[nodiscard]] std::optional<size_type> property_index(double index) const noexcept {
     if (!std::isfinite(index) || index < 0.0 || std::trunc(index) != index) return std::nullopt;
     if (index >= static_cast<double>(size())) return std::nullopt;

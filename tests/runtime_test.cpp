@@ -295,6 +295,8 @@ void test_contract() {
         "owner-preserving sequence views are advertised after their implementation lands");
   check(flight::runtime_capability_status("record") == flight::RuntimeCapabilityStatus::initial,
         "ordered Record storage is advertised after its runtime implementation lands");
+  check(flight::runtime_capability_status("weak-set") == flight::RuntimeCapabilityStatus::initial,
+        "weak identity sets are advertised after their runtime implementation lands");
   check(flight::runtime_capability_status("unicode-case-service") == flight::RuntimeCapabilityStatus::planned,
         "planned capabilities remain distinguishable");
   check(flight::runtime_capability_status("unknown") == flight::RuntimeCapabilityStatus::unavailable,
@@ -442,6 +444,31 @@ void test_new_runtime_services() {
   check(numeric_view.erase(erased_key) && !string_view.has(erased_key),
         "checked WeakMap deletion remains a shared key operation");
 
+  auto set_key = flight::make_ref<TestReference>(TestReference{.value = 6});
+  std::weak_ptr<TestReference> weak_set_key = set_key;
+  flight::WeakSet<flight::Ref<TestReference>> weak_set;
+  auto weak_set_alias = weak_set;
+  auto& add_identity = weak_set.add(set_key);
+  check(&add_identity == &weak_set && weak_set_alias.has(set_key),
+        "WeakSet add returns the set and copies share key storage");
+  check(weak_set_alias.delete_key(set_key) && !weak_set.has(set_key),
+        "WeakSet deletion is visible through every alias");
+  weak_set.add(set_key);
+  check(weak_set.delete_(set_key), "WeakSet exposes the compiler's escaped delete member spelling");
+  weak_set.add(set_key).add(set_key);
+  set_key.reset();
+  check(weak_set_key.expired(), "WeakSet does not retain its key");
+
+  flight::WeakSet<flight::Array<double>> weak_arrays;
+  std::weak_ptr<std::vector<double>> weak_array_storage;
+  {
+    flight::Array<double> weak_array{1.0, 2.0};
+    weak_array_storage = weak_array.weaken();
+    weak_arrays.add(weak_array);
+    check(weak_arrays.has(weak_array), "WeakSet accepts Flight reference-value wrappers by identity");
+  }
+  check(weak_array_storage.expired(), "WeakSet does not retain Flight array storage");
+
   const auto ignored_arguments = flight::bind_callable_v1<std::function<void(double)>>([] {});
   ignored_arguments(3.0);
   check(flight::callable_signature_v1<std::function<void(double)>>::accepts<double>,
@@ -521,6 +548,15 @@ void test_new_runtime_services() {
   check(flight::parse_int("  -0x10tail") == -16.0 && flight::parse_int("101", 2.9) == 5.0 &&
             flight::parse_int("10", std::numeric_limits<double>::quiet_NaN()) == 10.0,
         "parse_int applies TypeScript sign, prefix, partial-parse, and radix coercion rules");
+  check(flight::parse_float("  -1.25e2tail") == -125.0 && flight::parse_float("1e+") == 1.0 &&
+            std::isinf(flight::parse_float("+Infinityrest")) &&
+            std::isnan(flight::parse_float("not-a-number")),
+        "parse_float consumes the longest valid JavaScript numeric prefix");
+  check(flight::is_safe_integer(9007199254740991.0) &&
+            !flight::is_safe_integer(9007199254740992.0) &&
+            !flight::is_safe_integer(1.5) &&
+            !flight::is_safe_integer(std::numeric_limits<double>::infinity()),
+        "is_safe_integer enforces the finite integral safe-number range");
   check(flight::to_number(flight::String(" ")) == 0.0 &&
             flight::to_number(flight::String("0b101")) == 5.0 &&
             flight::to_number(flight::String("-1.25e2")) == -125.0 &&
@@ -681,6 +717,11 @@ void test_record() {
         "Record enumerates integer keys numerically before strings and excludes symbols");
 
   const auto entries = flight::object_entries(values);
+  const auto object_values = flight::object_values(values);
+  check(object_values.size() == expected_keys.size() &&
+            object_values[0] == flight::String("zero") &&
+            object_values[7] == flight::String("after"),
+        "Object.values follows Record string-key order and excludes symbols");
   check(entries.size() == expected_keys.size() && std::get<0>(entries[0]) == flight::String("0") &&
             std::get<1>(entries[0]) == flight::String("zero") &&
             std::get<0>(entries[7]) == flight::String("after"),

@@ -30,6 +30,11 @@ int main() {
 
   observations.push(flight::Url("child", "https://example.test/base").protocol);
   observations.push(flight::parse_int("  -0x10tail"));
+  observations.push(flight::parse_float("  -1.25e2tail"));
+  observations.push(flight::parse_float("1e+"));
+  observations.push(std::isinf(flight::parse_float("Infinityrest")));
+  observations.push(flight::is_safe_integer(9007199254740991.0));
+  observations.push(flight::is_safe_integer(9007199254740992.0));
   observations.push(flight::to_number("0b101"));
   observations.push(flight::to_number("-0x10"));
 
@@ -62,8 +67,17 @@ int main() {
     record_entries.push(flight::JsonArray{key, value});
   }
   observations.push(std::move(record_entries));
+  flight::JsonArray record_values;
+  for (const auto& value : flight::object_values(record)) record_values.push(value);
+  observations.push(std::move(record_values));
   observations.push(!record.get(flight::String("missing")).has_value() &&
                     flight::object_keys(record).size() == 8);
+
+  auto weak_set_key = flight::make_ref<flight::ReferenceEnabled>();
+  flight::WeakSet<flight::Ref<flight::ReferenceEnabled>> weak_set;
+  auto weak_set_alias = weak_set;
+  observations.push(&weak_set.add(weak_set_key) == &weak_set && weak_set_alias.has(weak_set_key));
+  observations.push(weak_set_alias.delete_key(weak_set_key) && !weak_set.has(weak_set_key));
 
   observations.push(flight::Json::stringify(flight::Json::parse(
       R"({"name":"Flight","values":[null,-1.5e2,"\ud83d\ude00"]})")));
