@@ -265,6 +265,31 @@ void test_new_runtime_services() {
   key.reset();
   check(weak_key.expired(), "WeakMap does not retain its key");
 
+  auto erased_key = flight::make_ref<TestReference>(TestReference{.value = 5});
+  flight::WeakMap<flight::Ref<void>, flight::ErasedValue> erased_map;
+  auto numeric_view =
+      flight::checked_weak_map_view<flight::Ref<TestReference>, double>(erased_map);
+  auto numeric_alias =
+      flight::checked_weak_map_view<flight::Ref<TestReference>, double>(erased_map);
+  auto string_view =
+      flight::checked_weak_map_view<flight::Ref<TestReference>, flight::String>(erased_map);
+  numeric_view.set(erased_key, 4.0);
+  check(numeric_alias.get(erased_key) == std::optional<double>(4.0) &&
+            string_view.has(erased_key),
+        "checked WeakMap views share storage and key operations across value types");
+  bool wrong_erased_type_failed = false;
+  try {
+    static_cast<void>(string_view.get(erased_key));
+  } catch (const flight::BadErasedValueCast&) {
+    wrong_erased_type_failed = true;
+  }
+  check(wrong_erased_type_failed, "checked WeakMap reads reject a different erased value tag");
+  string_view.set(erased_key, "updated");
+  check(string_view.get(erased_key) == std::optional<flight::String>("updated"),
+        "WeakMap overwrite updates the erased value tag");
+  check(numeric_view.erase(erased_key) && !string_view.has(erased_key),
+        "checked WeakMap deletion remains a shared key operation");
+
   const auto ignored_arguments = flight::bind_callable_v1<std::function<void(double)>>([] {});
   ignored_arguments(3.0);
   check(flight::callable_signature_v1<std::function<void(double)>>::accepts<double>,

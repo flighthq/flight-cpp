@@ -122,11 +122,12 @@ class WeakMap {
   WeakMap& set(const Key& key, Value value) {
     remove_expired();
     const auto identity = Policy::identity(key);
+    const auto hash = Policy::hash(identity);
     const auto found = std::find_if(entries_->begin(), entries_->end(), [&](const Entry& entry) {
-      return Policy::equal(entry.identity, identity);
+      return entry.hash == hash && Policy::equal(entry.identity, identity);
     });
     if (found == entries_->end()) {
-      entries_->push_back(Entry{Policy::weaken(key), std::move(identity), std::move(value)});
+      entries_->push_back(Entry{Policy::weaken(key), std::move(identity), hash, std::move(value)});
     } else {
       found->value = std::move(value);
     }
@@ -135,9 +136,10 @@ class WeakMap {
 
   [[nodiscard]] bool erase(const Key& key) {
     const auto identity = Policy::identity(key);
+    const auto hash = Policy::hash(identity);
     bool removed = false;
     std::erase_if(*entries_, [&](const Entry& entry) {
-      const bool matches = Policy::equal(entry.identity, identity);
+      const bool matches = entry.hash == hash && Policy::equal(entry.identity, identity);
       removed = removed || matches;
       return !Policy::lock(entry.key).has_value() || matches;
     });
@@ -150,6 +152,7 @@ class WeakMap {
   struct Entry {
     typename Policy::weak_type key;
     typename Policy::identity_type identity;
+    std::size_t hash;
     Value value;
   };
 
@@ -159,8 +162,9 @@ class WeakMap {
   [[nodiscard]] const_iterator find(const Key& key) const {
     remove_expired();
     const auto identity = Policy::identity(key);
+    const auto hash = Policy::hash(identity);
     return std::find_if(entries_->cbegin(), entries_->cend(), [&](const Entry& entry) {
-      return Policy::equal(entry.identity, identity);
+      return entry.hash == hash && Policy::equal(entry.identity, identity);
     });
   }
 
