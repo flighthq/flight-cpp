@@ -54,6 +54,14 @@
 #include <flight/regexp.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 27
 #include <flight/intl.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 28
+#include <flight/callable.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 29
+#include <flight/json.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 30
+#include <flight/structural_ref.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 31
+#include <flight/weak_map.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

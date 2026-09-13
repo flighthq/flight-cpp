@@ -47,6 +47,18 @@ class Array {
   using size_type = typename std::vector<Value>::size_type;
   using value_type = Value;
 
+  class Length {
+   public:
+    explicit Length(const Array* owner) : owner_(owner) {}
+    [[nodiscard]] operator size_type() const noexcept { return owner_->size(); }
+    [[nodiscard]] size_type operator()() const noexcept { return owner_->size(); }
+
+   private:
+    const Array* owner_;
+  };
+
+  Length length{this};
+
   Array() : values_(std::make_shared<std::vector<Value>>()) {}
 
   explicit Array(size_type length)
@@ -54,6 +66,19 @@ class Array {
 
   Array(std::initializer_list<Value> values)
       : values_(std::make_shared<std::vector<Value>>(values)) {}
+
+  Array(const Array& other) : length(this), values_(other.values_) {}
+  Array(Array&& other) noexcept : length(this), values_(std::move(other.values_)) {}
+
+  Array& operator=(const Array& other) {
+    values_ = other.values_;
+    return *this;
+  }
+
+  Array& operator=(Array&& other) noexcept {
+    values_ = std::move(other.values_);
+    return *this;
+  }
 
   template <std::input_iterator Iterator>
   Array(Iterator first, Iterator last)
@@ -237,6 +262,16 @@ class Array {
     return *this;
   }
 
+  void resize(size_type length) { values_->resize(length); }
+
+  void resize(double length) {
+    if (!std::isfinite(length) || length < 0.0 || std::trunc(length) != length ||
+        length > static_cast<double>(std::numeric_limits<size_type>::max())) {
+      throw std::range_error("flight::Array resize length is outside the supported range");
+    }
+    resize(static_cast<size_type>(length));
+  }
+
   [[nodiscard]] std::optional<Value> shift() {
     if (empty()) return std::nullopt;
     Value value = std::move(values_->front());
@@ -289,6 +324,26 @@ class Array {
                   values_->begin() + static_cast<std::ptrdiff_t>(first + removed_count));
     values_->erase(values_->begin() + static_cast<std::ptrdiff_t>(first),
                    values_->begin() + static_cast<std::ptrdiff_t>(first + removed_count));
+    return removed;
+  }
+
+  template <typename... Items>
+    requires(sizeof...(Items) > 0 && (std::constructible_from<Value, Items&&> && ...))
+  [[nodiscard]] Array splice(std::ptrdiff_t begin_index, std::ptrdiff_t count, Items&&... items) {
+    const auto first = normalize_boundary(begin_index);
+    const auto available = size() - first;
+    const auto removed_count = count <= 0
+                                   ? size_type{0}
+                                   : std::min(static_cast<size_type>(count), available);
+    Array removed(values_->begin() + static_cast<std::ptrdiff_t>(first),
+                  values_->begin() + static_cast<std::ptrdiff_t>(first + removed_count));
+    auto position = values_->erase(values_->begin() + static_cast<std::ptrdiff_t>(first),
+                                   values_->begin() + static_cast<std::ptrdiff_t>(first + removed_count));
+    std::vector<Value> inserted;
+    inserted.reserve(sizeof...(Items));
+    (inserted.emplace_back(std::forward<Items>(items)), ...);
+    values_->insert(position, std::make_move_iterator(inserted.begin()),
+                    std::make_move_iterator(inserted.end()));
     return removed;
   }
 

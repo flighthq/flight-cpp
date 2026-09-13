@@ -28,6 +28,10 @@ struct TestReference : public flight::ReferenceEnabled {
   int value;
 };
 
+struct TestEntity : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<TestReference>> entity_runtime_key;
+};
+
 void check(bool condition, const char* message) {
   if (condition) return;
   std::cerr << "FAIL: " << message << '\n';
@@ -60,6 +64,7 @@ void test_array() {
   auto alias = values;
   check(alias.push(4.0) == 3, "push returns the new array length");
   check(values.size() == 3, "array copies retain reference identity");
+  check(values.length == 3, "array length property follows shared storage");
   check(values.includes(nan), "array includes uses SameValueZero for NaN");
   check(values.index_of(-0.0) == 1, "array index_of finds signed zero");
 
@@ -85,6 +90,10 @@ void test_array() {
   check(flight::Array<double>{1.0e-6, 1.0e21}.join(flight::String(",")) ==
             flight::String("0.000001,1e+21"),
         "array join uses source numeric formatting");
+  flight::Array<double> spliced{1.0, 4.0};
+  const auto removed = spliced.splice(1, 0, 2.0, 3.0);
+  check(removed.empty() && spliced.size() == 4 && spliced[1] == 2.0 && spliced[2] == 3.0,
+        "array splice inserts forwarded values in source order");
 }
 
 void test_binary_data() {
@@ -205,6 +214,40 @@ void test_map() {
 }
 
 void test_new_runtime_services() {
+  static_assert(std::same_as<flight::Ref<flight::Ref<TestReference>>, flight::Ref<TestReference>>);
+  static_assert(std::same_as<flight::Ref<flight::String>, flight::String>);
+  check(flight::String("frame=") + 12.0 == flight::String("frame=12"),
+        "string concatenation converts emitted numeric operands");
+
+  const auto json = flight::Json::stringify(flight::Array<double>{1.0, 2.0}, nullptr, 2.0);
+  check(json == flight::String("[\n  1,\n  2\n]"),
+        "JSON stringification covers semantic arrays and bounded indentation");
+
+  auto key = flight::make_ref<TestReference>(TestReference{.value = 4});
+  std::weak_ptr<TestReference> weak_key = key;
+  flight::WeakMap<flight::Ref<TestReference>, flight::String> weak_map;
+  weak_map.set(key, "retained value");
+  check(weak_map.get(key) == std::optional<flight::String>("retained value") && weak_map.has(key),
+        "WeakMap retrieves values by reference identity");
+  key.reset();
+  check(weak_key.expired(), "WeakMap does not retain its key");
+
+  const auto ignored_arguments = flight::bind_callable_v1<std::function<void(double)>>([] {});
+  ignored_arguments(3.0);
+  check(flight::callable_signature_v1<std::function<void(double)>>::accepts<double>,
+        "callable ABI binds source functions that ignore emitted arguments");
+
+  auto entity = flight::make_ref<TestEntity>();
+  using EntityView = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestEntity>>>>;
+  EntityView entity_view(entity);
+  auto entity_runtime = flight::make_ref<TestReference>(TestReference{.value = 9});
+  const auto entity_runtime_symbol = flight::Symbol::for_key("EntityRuntime");
+  flight::row_set(entity_view, entity_runtime_symbol, entity_runtime);
+  check(flight::row_get<std::optional<flight::Ref<TestReference>>>(entity_view, entity_runtime_symbol)
+                .value()
+                ->value == 9,
+        "computed structural symbols share the generated Entity runtime slot");
+
   check(flight::parse_int("  -0x10tail") == -16.0 && flight::parse_int("101", 2.9) == 5.0 &&
             flight::parse_int("10", std::numeric_limits<double>::quiet_NaN()) == 10.0,
         "parse_int applies TypeScript sign, prefix, partial-parse, and radix coercion rules");

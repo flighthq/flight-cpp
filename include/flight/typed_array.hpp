@@ -32,6 +32,30 @@ class Uint8Clamped {
   [[nodiscard]] constexpr operator std::uint8_t() const noexcept { return value_; }
   [[nodiscard]] constexpr auto operator<=>(const Uint8Clamped&) const noexcept = default;
 
+  template <typename Number>
+    requires std::is_arithmetic_v<Number>
+  [[nodiscard]] friend constexpr bool operator==(const Uint8Clamped& left, Number right) noexcept {
+    return static_cast<double>(left.value_) == static_cast<double>(right);
+  }
+
+  template <typename Number>
+    requires std::is_arithmetic_v<Number>
+  [[nodiscard]] friend constexpr bool operator==(Number left, const Uint8Clamped& right) noexcept {
+    return right == left;
+  }
+
+  template <typename Number>
+    requires std::is_arithmetic_v<Number>
+  [[nodiscard]] friend constexpr bool operator<(const Uint8Clamped& left, Number right) noexcept {
+    return static_cast<double>(left.value_) < static_cast<double>(right);
+  }
+
+  template <typename Number>
+    requires std::is_arithmetic_v<Number>
+  [[nodiscard]] friend constexpr bool operator<(Number left, const Uint8Clamped& right) noexcept {
+    return static_cast<double>(left) < static_cast<double>(right.value_);
+  }
+
  private:
   [[nodiscard]] static std::uint8_t clamp(double value) noexcept {
     if (std::isnan(value) || value <= 0.0) return 0;
@@ -62,9 +86,20 @@ class TypedArray {
   using size_type = std::size_t;
   using value_type = Value;
 
+  class Length {
+   public:
+    explicit Length(const TypedArray* owner) : owner_(owner) {}
+    [[nodiscard]] operator size_type() const noexcept { return owner_->size(); }
+    [[nodiscard]] size_type operator()() const noexcept { return owner_->size(); }
+
+   private:
+    const TypedArray* owner_;
+  };
+
   ArrayBuffer buffer;
   size_type byte_offset = 0;
   size_type byte_length = 0;
+  Length length{this};
 
   TypedArray() = default;
 
@@ -77,6 +112,40 @@ class TypedArray {
   explicit TypedArray(Number length) : TypedArray(array_length(static_cast<double>(length))) {}
 
   TypedArray(std::initializer_list<Value> values) : TypedArray(values.begin(), values.end()) {}
+
+  TypedArray(const TypedArray& other)
+      : buffer(other.buffer),
+        byte_offset(other.byte_offset),
+        byte_length(other.byte_length),
+        length(this),
+        length_(other.length_),
+        identity_(other.identity_) {}
+
+  TypedArray(TypedArray&& other) noexcept
+      : buffer(std::move(other.buffer)),
+        byte_offset(other.byte_offset),
+        byte_length(other.byte_length),
+        length(this),
+        length_(other.length_),
+        identity_(std::move(other.identity_)) {}
+
+  TypedArray& operator=(const TypedArray& other) {
+    buffer = other.buffer;
+    byte_offset = other.byte_offset;
+    byte_length = other.byte_length;
+    length_ = other.length_;
+    identity_ = other.identity_;
+    return *this;
+  }
+
+  TypedArray& operator=(TypedArray&& other) noexcept {
+    buffer = std::move(other.buffer);
+    byte_offset = other.byte_offset;
+    byte_length = other.byte_length;
+    length_ = other.length_;
+    identity_ = std::move(other.identity_);
+    return *this;
+  }
 
   template <typename Range>
     requires requires(const Range& range) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <concepts>
 #include <cstdint>
 #include <iterator>
 #include <limits>
@@ -44,10 +45,26 @@ inline double minimum(double left, double right) noexcept {
   return left < right ? left : right;
 }
 
+template <typename... Values>
+  requires(sizeof...(Values) > 0 && (std::convertible_to<Values, double> && ...))
+inline double minimum(double first, double second, Values... remaining) noexcept {
+  double result = minimum(first, second);
+  ((result = minimum(result, static_cast<double>(remaining))), ...);
+  return result;
+}
+
 inline double maximum(double left, double right) noexcept {
   if (std::isnan(left) || std::isnan(right)) return std::numeric_limits<double>::quiet_NaN();
   if (left == 0.0 && right == 0.0) return std::signbit(left) && std::signbit(right) ? -0.0 : 0.0;
   return left > right ? left : right;
+}
+
+template <typename... Values>
+  requires(sizeof...(Values) > 0 && (std::convertible_to<Values, double> && ...))
+inline double maximum(double first, double second, Values... remaining) noexcept {
+  double result = maximum(first, second);
+  ((result = maximum(result, static_cast<double>(remaining))), ...);
+  return result;
 }
 
 template <typename Range>

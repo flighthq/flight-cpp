@@ -1,78 +1,76 @@
 # flight-compiler package graph review
 
-This review covers Flight `1274ec5` and flight-compiler `3f86fcb`. The compiler revision is pinned in
-[`dependencies.lock.json`](../dependencies.lock.json). The compiler reciprocally pins flight-cpp `70656d4`, the
-revision immediately before the runtime additions described here.
+This review covers Flight `1274ec5` and flight-compiler `5649642`. Both revisions are pinned in
+[`dependencies.lock.json`](../dependencies.lock.json).
 
-## Downstream adoption
+## Complete report sweep
 
-The runtime now implements the portable names introduced by flight-compiler's
-[`agents/flight-cpp-adoption.md`](https://github.com/flighthq/flight-compiler/blob/3f86fcb04df8425c5757eccc16560614cc9b5589/agents/flight-cpp-adoption.md):
+The full graph now finishes locally in about two and a half minutes. It processes all 154 SDK packages and 2,851
+source modules, emits 1,032 dependency-closed headers, and records 1,819 refused modules. The exact headers,
+initialization order, package totals, and refusal diagnostics are committed under [`generated/`](../generated/).
+`npm run sdk:check` reproduces the tree from the two pins.
 
-- `ArrayBuffer` owns stable, zero-initialized shared storage. Every typed array can view that storage and exposes its
-  `buffer`, `byte_offset`, and `byte_length`; aliases and differently positioned views observe the same writes.
-- `DataView` implements the currently mapped `get_float64` operation with view bounds and explicit byte order. The
-  remaining standard numeric get/set operations are present too, ready for the compiler's ambient member table to
-  expose them.
-- `TextDecoder` decodes UTF-8, strips an initial BOM, and applies replacement-character recovery to malformed input.
-  `String::from_code_point` handles BMP and astral scalars and rejects invalid values.
-- `parse_int`, `to_number`, `Object`/`object_keys`, interned `Symbol::for_key`, and `Url::protocol` provide the exact
-  spellings in the compiler binding table.
-- `RegExp`, captures, global match state, and string match/replacement have an initial ECMAScript-compatible lane.
-  It remains a planned capability while Unicode patterns and the full replacement contract are unfinished.
-- The compiler-named `Intl` types have a deterministic locale-neutral baseline. Locale-aware behavior and option
-  handling remain planned and will need an explicit native dependency or host policy.
+The emitted inventory is exposed in the build tree as `Flight::SdkPreview` and as Bazel `//:sdk_preview`. The preview
+contains every emitted header but deliberately is not installed as `Flight::Sdk`: independent native compilation is
+still red. Run `npm run sdk:compile` to compile every compiler-emitted header and write the full toolchain-specific
+diagnostic report to `out/sdk-header-compilation.json`.
 
-CMake and Bazel expose every new public header. The CMake development build compiles the runtime, native tween, SDL
-host path, and each public header independently. The runtime tests cover shared binary storage, endian and bounds
-behavior, malformed UTF-8, numeric conversion, symbols, URLs, regular expressions, and the locale-neutral baseline.
+## Runtime work adopted downstream
 
-`Json::parse` and `Json::stringify` remain deliberately absent. A JSON value model must retain null, booleans,
-numbers, strings, arrays, and objects and must interoperate with compiler-emitted structural types. A placeholder
-opaque value would make headers compile while losing the source behavior.
+flight-cpp now supplies all runtime headers referenced by the emitted inventory:
 
-The object capability also remains planned. `object_keys` preserves the source container's key type and iteration
-order, but the compiler currently lowers `Record` to `std::unordered_map`; that representation cannot provide
-JavaScript's observable property order. `flight::String` is hashable so the mapped type compiles, while the ordering
-contract remains visible instead of being claimed as complete.
+- stable shared `ArrayBuffer`, typed-array views, complete numeric `DataView` access, UTF-8 `TextDecoder`, and
+  `String::from_code_point`;
+- numeric conversion, object keys, symbols, URL protocol parsing, regular expressions, and a deterministic Intl
+  baseline;
+- idempotent `Ref<T>` projection, generated structural-row member access, writable entity construction, and
+  structural reference casts;
+- weak identity maps for Flight references and closed reference variants, including erased values and checked typed
+  views;
+- the versioned callable signature/binding ABI used by Signals;
+- JSON stringification for scalar, presence, variant, reference, and Flight array values;
+- source-compatible array `length`, resize, and insertion splice operations, plus variadic `Math.min`/`Math.max`.
 
-## Current upstream blocker
+The native suite covers the new ownership and observable behavior. A generated SDK executable links
+`Flight::SdkPreview`, calls the emitted interpolation and Entity construction functions, runs under CMake's
+development preset, and is declared in the Bazel graph.
 
-The full SDK graph cannot be regenerated successfully at `3f86fcb`. `npm run sdk:generate` spent 57 minutes at one
-full CPU core with about 2.3 GiB resident memory and produced no candidate file before it was stopped. The same graph
-completed in 82 seconds at `14a9ff4`.
+## Remaining compiler-owned native failures
 
-The pinned compiler's own C++ backend test file also has six regressions at this revision: 569 tests pass, one is
-skipped, and six fail. Four failures report a missing synthetic `__type[type]` runtime binding; one fails structural
-type substitution for a generic class; and one no longer emits the expected intersection-type refusal. These are
-compiler-owned failures and correlate with the graph regression. The focused runtime binding tests pass.
+The emitted set is dependency-closed in the TypeScript package graph, but dependency closure is not yet the same as
+C++ well-formedness. With GCC 15.2, 704 of the 1,032 headers compile independently and 328 fail. The current native
+report is dominated by emission defects that cannot be repaired by adding a runtime symbol:
 
-Because the compiler never returned a candidate tree, [`generated/manifest.json`](../generated/manifest.json) still
-truthfully records the last successful generation at `14a9ff4`. It must not be relabeled as `3f86fcb` without output
-from that compiler. After the upstream regression is fixed, run:
+- source module-private helpers are emitted into one package namespace, so package barrels encounter C++
+  redefinitions;
+- several ambient aliases are applied as templates even though their emitted C++ target is a concrete type;
+- some imported types are referenced by snake-case value spelling instead of their emitted PascalCase type name;
+- optional values are passed or assigned where their contained value is required;
+- discriminated unions represented by `std::variant` still receive direct member access;
+- several structurally equivalent anonymous records are emitted as distinct, non-convertible C++ structs;
+- a few emitted tokens and type queries remain malformed, including `typeidel`.
+
+These diagnostics arise after the runtime includes resolve, and many occur in a header before later errors in that
+header can be observed. The JSON report from `npm run sdk:compile` is the compact handoff surface for fixing them in
+flight-compiler. Downstream source rewriting would obscure compiler provenance and produce a second, unversioned
+transpiler, so the checked-in SDK remains the compiler's exact output plus its generated build/member inventories.
+
+## Host boundary
+
+The manifest-free generation remains the portable floor. Browser, media, Node, and graphics handles require explicit
+binding profiles. SDL owns lifecycle and GL, Vulkan, or WebGPU surface acquisition; generated Flight renderer
+packages own rendering behavior. These host bindings will increase the emitted module set, while the portable
+1,032-header compile gate remains useful and independent of platform SDKs.
+
+Regenerate and validate from the repository root:
 
 ```sh
 npm run rehydrate
 npm ci --prefix .dependencies/flight-compiler
 npm run sdk:generate
 npm run sdk:check
+npm run sdk:compile
+cmake --preset development
+cmake --build --preset development
+ctest --preset development
 ```
-
-Then compile the dependency-closed headers, update the emitted/refused counts in this review, and advance the
-compiler's reciprocal flight-cpp pin so its compile gate sees the new runtime surface.
-
-## Next compiler/runtime edge
-
-flight-cpp already provides snake-case operations for `DataView.getInt8`, `getUint8`, `getInt16`, `getUint16`,
-`getInt32`, `getUint32`, `getFloat32`, and every corresponding setter. It also exposes typed-array `byte_length`.
-Adding these members to the compiler ambient and member tables should unlock binary parsers without another runtime
-round trip.
-
-The remaining compiler-owned work listed in the adoption register should stay upstream: package-graph type evidence
-for isolated probes, for-of destructuring with imported element types, unbounded iterable spread, imported anonymous
-object evidence, and executable top-level module initialization. flight-cpp should not compensate with permissive
-runtime types or generated-source rewriting.
-
-The host boundary is unchanged. SDL owns lifecycle and native GL, Vulkan, and wgpu surface acquisition. Generated
-Flight renderer packages own rendering. Browser, media, Node, and tooling globals require explicit host manifests;
-they do not belong in the portable runtime.

@@ -50,6 +50,13 @@ The development and release presets build the native examples. Run the compiler-
 
 The example preserves the fifteen easing tracks from Flight's TypeScript tween example and renders one deterministic frame in a terminal. Its portable calculation is TypeScript transpiled by the pinned `flight-compiler`; a small handwritten C++ host owns terminal output. See [`examples/README.md`](examples/README.md) for the source, generated output, regeneration command, and the current boundary around browser-backed examples.
 
+The same build produces an example backed directly by the committed SDK inventory. It calls generated math functions
+and constructs a generated lighting Entity through the native structural-row ABI:
+
+```sh
+./out/cmake/development/examples/flight_cpp_sdk_math_example
+```
+
 The same generated curves also have an interactive SDL/OpenGL ES host. Enable the optional SDL package and disable the
 unused Vulkan adapter, then run the native window:
 
@@ -86,10 +93,12 @@ The installed `flight/` headers and `Flight::Cpp` target are the extraction boun
 
 The compiler emits semantic runtime types such as `flight::Array<T>` and `flight::Map<K, V>` when `runtimeProfile: "flight-cpp"` is elected. The separate `standard-library` profile preserves generic provisional output without claiming TypeScript-equivalent collection behavior. See [compiler integration](docs/compiler-integration.md) and [runtime semantics](docs/runtime-semantics.md).
 
-The first full-SDK inventory is committed under [`generated/`](generated/README.md). It contains every header the
-pinned compiler can currently emit from the package closure declared by `@flighthq/sdk`, plus a complete refusal
-ledger. It is intentionally visible before it forms a compilable library. The [SDL host bring-up](docs/host-sdl.md)
-defines the handwritten native lane that will inject GL or WGPU handles without duplicating upstream renderers.
+The full-SDK inventory is committed under [`generated/`](generated/README.md). It contains every header the pinned
+compiler can currently emit from the package closure declared by `@flighthq/sdk`, plus complete refusal and
+initialization ledgers. `Flight::SdkPreview` and Bazel `//:sdk_preview` expose that exact inventory while the
+independent-header gate is still red; `npm run sdk:compile` writes its detailed report under `out/`. The generated SDK
+math/Entity example proves working emitted package paths. The [SDL host bring-up](docs/host-sdl.md) defines the handwritten
+native lane that injects GL or WebGPU handles without duplicating upstream renderers.
 
 The supported input boundary is versioned as [`flight-portable-typescript/1`](conformance/portable-typescript-v1.json). [`known-exceptions.json`](conformance/known-exceptions.json) owns every checked-in C++ refusal. The compiler repository verifies it against its own fixture corpus, because a refusal changes when the compiler changes; this repository owns the file, and that gate reads it from a pinned checkout of this repository.
 
@@ -115,6 +124,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run build:check` | Do the CMake and Bazel graphs describe the same headers, sources, tests, and benchmarks? |
 | `npm run examples:check` | Does the pinned compiler reproduce the checked-in native example output? |
 | `npm run sdk:check` | Does the pinned compiler reproduce the committed SDK headers and refusal inventory? |
+| `npm run sdk:compile` | Which dependency-closed SDK headers compile independently with the selected `CXX` toolchain? |
 | `npm run release:check` | Do the version, ABI, C++ standard, and conformance profile agree across every file that states them? |
 | `npm run compile:check` | Does the pinned compiler's emitted C++ still compile against this runtime? |
 

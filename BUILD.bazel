@@ -7,6 +7,7 @@ cc_library(
     hdrs = [
         "include/flight/array.hpp",
         "include/flight/array_buffer.hpp",
+        "include/flight/callable.hpp",
         "include/flight/contract.hpp",
         "include/flight/data_view.hpp",
         "include/flight/date.hpp",
@@ -15,6 +16,7 @@ cc_library(
         "include/flight/executor.hpp",
         "include/flight/host.hpp",
         "include/flight/intl.hpp",
+        "include/flight/json.hpp",
         "include/flight/map.hpp",
         "include/flight/math.hpp",
         "include/flight/number.hpp",
@@ -26,12 +28,14 @@ cc_library(
         "include/flight/runtime.hpp",
         "include/flight/set.hpp",
         "include/flight/string.hpp",
+        "include/flight/structural_ref.hpp",
         "include/flight/symbol.hpp",
         "include/flight/task.hpp",
         "include/flight/text_decoder.hpp",
         "include/flight/typed_array.hpp",
         "include/flight/url.hpp",
         "include/flight/version.hpp",
+        "include/flight/weak_map.hpp",
     ],
     strip_include_prefix = "include",
 )
@@ -55,10 +59,16 @@ alias(
     actual = ":c",
 )
 
+alias(
+    name = "sdk_preview",
+    actual = "//generated:sdk_preview",
+)
+
 test_suite(
     name = "tests",
     tests = [
         "//examples:tween",
+        "//examples:sdk_math",
         "//tests:c_api_test",
         "//tests:c_api_thread_test",
         "//tests:generated_runtime_test",

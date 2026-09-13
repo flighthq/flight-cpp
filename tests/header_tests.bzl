@@ -51,4 +51,8 @@ _PUBLIC_HEADERS = [
     ("data_view", 25),
     ("regexp", 26),
     ("intl", 27),
+    ("callable", 28),
+    ("json", 29),
+    ("structural_ref", 30),
+    ("weak_map", 31),
 ]

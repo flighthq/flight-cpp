@@ -44,6 +44,16 @@ target_include_directories(
     "$<INSTALL_INTERFACE:include>"
 )
 
+include(generated/cmake/FlightSdkHeaders.cmake)
+add_library(flight_sdk_preview INTERFACE)
+add_library(Flight::SdkPreview ALIAS flight_sdk_preview)
+target_sources(flight_sdk_preview INTERFACE ${FLIGHT_SDK_GENERATED_HEADERS})
+target_include_directories(
+  flight_sdk_preview
+  INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/generated/include>"
+)
+target_link_libraries(flight_sdk_preview INTERFACE Flight::Cpp)
+
 add_library(flight_cpp_c src/c_runtime.cpp)
 add_library(Flight::C ALIAS flight_cpp_c)
 set_target_properties(

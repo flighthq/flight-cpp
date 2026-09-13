@@ -31,6 +31,7 @@ set(
   flight_cpp_public_headers
   array
   array_buffer
+  callable
   contract
   data_view
   date
@@ -39,6 +40,7 @@ set(
   executor
   host
   intl
+  json
   map
   math
   number
@@ -49,6 +51,7 @@ set(
   rejection
   set
   string
+  structural_ref
   symbol
   runtime
   task
@@ -56,6 +59,7 @@ set(
   typed_array
   url
   version
+  weak_map
 )
 
 foreach(header IN LISTS flight_cpp_public_headers)

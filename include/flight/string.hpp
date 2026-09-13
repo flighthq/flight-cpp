@@ -515,4 +515,16 @@ template <typename Value>
   return String::from_number(static_cast<double>(value));
 }
 
+template <typename Value>
+  requires std::is_arithmetic_v<Value>
+[[nodiscard]] inline String operator+(const String& left, Value right) {
+  return left + to_string(right);
+}
+
+template <typename Value>
+  requires std::is_arithmetic_v<Value>
+[[nodiscard]] inline String operator+(Value left, const String& right) {
+  return to_string(left) + right;
+}
+
 } // namespace flight

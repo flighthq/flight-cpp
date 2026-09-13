@@ -19,6 +19,7 @@ const cmakeGraph = filesUnder(cppRoot, (name) => name === 'CMakeLists.txt')
   .join('\n');
 const ci = readFileSync(path.join(root, '.github', 'workflows', 'ci.yml'), 'utf8');
 const presets = JSON.parse(readCpp('CMakePresets.json'));
+const sdkManifest = JSON.parse(readCpp('generated/manifest.json'));
 
 if (bazelVersion !== '9.2.0') failures.push(`.bazelversion selects ${bazelVersion || '<empty>'}, expected 9.2.0`);
 requireText(bazelModule, 'name = "flight_cpp"', 'Bazel module identity');
@@ -48,6 +49,15 @@ if (externalModuleGraph && !bazelConfiguration.includes('common --lockfile_mode=
 
 for (const target of ['cpp', 'c', 'flight_cpp', 'flight_cpp_c', 'tests']) {
   requireText(bazelGraph, `name = "${target}"`, `Bazel //:${target} target`);
+}
+requireText(cmakeGraph, 'Flight::SdkPreview', 'CMake generated SDK preview target');
+requireText(bazelGraph, 'name = "sdk_preview"', 'Bazel generated SDK preview target');
+const generatedSdkHeaders = filesUnder(path.join(cppRoot, 'generated', 'include'), (name) => name.endsWith('.hpp'))
+  .filter((filename) => !filename.includes(`${path.sep}sdk${path.sep}`));
+if (generatedSdkHeaders.length !== sdkManifest.summary.emittedModules) {
+  failures.push(
+    `generated SDK contains ${String(generatedSdkHeaders.length)} module headers, expected ${String(sdkManifest.summary.emittedModules)}`,
+  );
 }
 
 const publicHeaderRoot = path.join(cppRoot, 'include', 'flight');

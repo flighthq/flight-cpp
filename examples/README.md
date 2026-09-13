@@ -2,6 +2,18 @@
 
 These examples follow the examples in the pinned [`flighthq/flight`](https://github.com/flighthq/flight) checkout while keeping the source computation separate from the native host. Code supported by `flight-portable-typescript/1` lives under `source/` and is transpiled into `generated/`; handwritten C++ supplies the executable entry point and platform integration.
 
+## Generated SDK math
+
+`sdk_math_example.cpp` links the full generated inventory through `Flight::SdkPreview` and executes interpolation
+functions emitted from `@flighthq/math` plus Entity construction emitted from `@flighthq/lighting`. It is the small,
+host-independent proof that consumers can compile and run SDK modules through the normal CMake graph:
+
+```sh
+cmake --preset development
+cmake --build --preset development
+./out/cmake/development/examples/flight_cpp_sdk_math_example
+```
+
 ## Tween
 
 The tween example preserves the fifteen easing tracks and curve equations from Flight's `examples/packages/tween` example. The browser example draws moving circles through the TypeScript scene and renderer packages. The native example draws the same tracks as a deterministic terminal frame because those SDK and renderer packages do not have C++ implementations yet.

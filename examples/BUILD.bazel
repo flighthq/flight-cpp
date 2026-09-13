@@ -8,3 +8,9 @@ cc_test(
     ],
     deps = ["//:cpp"],
 )
+
+cc_test(
+    name = "sdk_math",
+    srcs = ["sdk_math_example.cpp"],
+    deps = ["//:sdk_preview"],
+)
