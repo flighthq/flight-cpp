@@ -29,6 +29,7 @@ cc_library(
         "include/flight/presence.hpp",
         "include/flight/reference.hpp",
         "include/flight/regexp.hpp",
+        "include/flight/record.hpp",
         "include/flight/rejection.hpp",
         "include/flight/runtime.hpp",
         "include/flight/set.hpp",

@@ -50,6 +50,7 @@ set(
   presence
   reference
   regexp
+  record
   rejection
   set
   sequence_view

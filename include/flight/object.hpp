@@ -5,10 +5,21 @@
 #include <utility>
 
 #include <flight/array.hpp>
+#include <flight/record.hpp>
 
 namespace flight {
 
 struct Object {};
+
+template <typename Key, typename Value>
+[[nodiscard]] Array<String> object_keys(const Record<Key, Value>& entries) {
+  return entries.enumerable_keys();
+}
+
+template <typename Key, typename Value>
+[[nodiscard]] Array<std::tuple<String, Value>> object_entries(const Record<Key, Value>& entries) {
+  return entries.enumerable_entries();
+}
 
 template <typename Entries>
 [[nodiscard]] auto object_keys(const Entries& entries) {

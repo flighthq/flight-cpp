@@ -46,6 +46,19 @@ const removed = values.splice(1, 0, 2, 3);
 const expression = /^flight$/gi;
 const target = { first: 0, retained: 3 };
 const source = { first: 1, second: 2 };
+const recordSymbol = Symbol.for('runtime-oracle-record');
+const record = {
+  later: 1,
+  10: 10,
+  2: 2,
+  '01': 1,
+  [-0]: 0,
+  4294967294: 4,
+  4294967295: 5,
+  [recordSymbol]: 7,
+  after: 8,
+};
+record['2'] = 22;
 const expected = JSON.stringify([
   dataView.getUint32(1, true),
   new TextDecoder().decode(new Uint8Array([0xe0, 0x80, 0x80])),
@@ -60,6 +73,9 @@ const expected = JSON.stringify([
   Number('0b101'),
   Number('-0x10'),
   Object.entries(Object.assign(target, source)),
+  Object.keys(record),
+  Object.entries(record),
+  record.missing === undefined && Object.keys(record).length === 8,
   JSON.stringify(JSON.parse('{"name":"Flight","values":[null,-1.5e2,"\\ud83d\\ude00"]}')),
   new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(['a', 'b', 'c']),
   new Intl.PluralRules('en').select(1),

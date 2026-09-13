@@ -21,6 +21,7 @@
 #include <flight/presence.hpp>
 #include <flight/reference.hpp>
 #include <flight/regexp.hpp>
+#include <flight/record.hpp>
 #include <flight/rejection.hpp>
 #include <flight/set.hpp>
 #include <flight/sequence_view.hpp>

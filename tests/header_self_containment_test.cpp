@@ -68,6 +68,8 @@
 #include <flight/array_buffer_view.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 34
 #include <flight/sequence_view.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 35
+#include <flight/record.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

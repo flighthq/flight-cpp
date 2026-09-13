@@ -42,6 +42,29 @@ int main() {
   }
   observations.push(std::move(assigned));
 
+  const auto record_symbol = flight::Symbol::for_key("runtime-oracle-record");
+  flight::Record<flight::PropertyKey, double> record;
+  record.set(flight::String("later"), 1.0)
+      .set(flight::String("10"), 10.0)
+      .set(2.0, 2.0)
+      .set(flight::String("01"), 1.0)
+      .set(-0.0, 0.0)
+      .set(4294967294.0, 4.0)
+      .set(4294967295.0, 5.0)
+      .set(record_symbol, 7.0)
+      .set(flight::String("after"), 8.0)
+      .set(flight::String("2"), 22.0);
+  flight::JsonArray record_keys;
+  for (const auto& key : flight::object_keys(record)) record_keys.push(key);
+  observations.push(std::move(record_keys));
+  flight::JsonArray record_entries;
+  for (const auto& [key, value] : flight::object_entries(record)) {
+    record_entries.push(flight::JsonArray{key, value});
+  }
+  observations.push(std::move(record_entries));
+  observations.push(!record.get(flight::String("missing")).has_value() &&
+                    flight::object_keys(record).size() == 8);
+
   observations.push(flight::Json::stringify(flight::Json::parse(
       R"({"name":"Flight","values":[null,-1.5e2,"\ud83d\ude00"]})")));
   observations.push(flight::IntlListFormat().format(flight::Array<flight::String>{"a", "b", "c"}));

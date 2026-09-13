@@ -51,6 +51,7 @@ inline constexpr std::array runtime_capabilities{
     RuntimeCapability{"number-parsing", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"object", RuntimeCapabilityStatus::planned},
     RuntimeCapability{"regexp", RuntimeCapabilityStatus::planned},
+    RuntimeCapability{"record", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"set", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"sequence-view", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"string", RuntimeCapabilityStatus::initial},

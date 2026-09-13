@@ -58,4 +58,5 @@ _PUBLIC_HEADERS = [
     ("weak_map", 32),
     ("array_buffer_view", 33),
     ("sequence_view", 34),
+    ("record", 35),
 ]

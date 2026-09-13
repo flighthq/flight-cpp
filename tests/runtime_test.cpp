@@ -293,6 +293,8 @@ void test_contract() {
         "binary storage capabilities are advertised after their implementation lands");
   check(flight::runtime_capability_status("sequence-view") == flight::RuntimeCapabilityStatus::initial,
         "owner-preserving sequence views are advertised after their implementation lands");
+  check(flight::runtime_capability_status("record") == flight::RuntimeCapabilityStatus::initial,
+        "ordered Record storage is advertised after its runtime implementation lands");
   check(flight::runtime_capability_status("unicode-case-service") == flight::RuntimeCapabilityStatus::planned,
         "planned capabilities remain distinguishable");
   check(flight::runtime_capability_status("unknown") == flight::RuntimeCapabilityStatus::unavailable,
@@ -656,6 +658,56 @@ void test_reference() {
         "binding-cell copies share mutable closure storage");
 }
 
+void test_record() {
+  const auto first_symbol = flight::Symbol::for_key("first-record-symbol");
+  const auto second_symbol = flight::Symbol::for_key("second-record-symbol");
+  flight::Record<flight::PropertyKey, flight::String> values;
+  values.set(flight::String("later"), "later")
+      .set(flight::String("10"), "ten")
+      .set(2.0, "two")
+      .set(flight::String("01"), "leading")
+      .set(-0.0, "zero")
+      .set(4294967294.0, "largest index")
+      .set(flight::String("4294967295"), "not an index")
+      .set(first_symbol, "first symbol")
+      .set(flight::String("after"), "after")
+      .set(second_symbol, "second symbol");
+
+  const auto keys = flight::object_keys(values);
+  const flight::Array<flight::String> expected_keys{
+      "0", "2", "10", "4294967294", "later", "01", "4294967295", "after"};
+  check(keys.size() == expected_keys.size() &&
+            std::equal(keys.begin(), keys.end(), expected_keys.begin()),
+        "Record enumerates integer keys numerically before strings and excludes symbols");
+
+  const auto entries = flight::object_entries(values);
+  check(entries.size() == expected_keys.size() && std::get<0>(entries[0]) == flight::String("0") &&
+            std::get<1>(entries[0]) == flight::String("zero") &&
+            std::get<0>(entries[7]) == flight::String("after"),
+        "Record entries follow Object.entries string-key order");
+
+  const auto original_size = values.size();
+  values.set(flight::String("2"), "updated through string key");
+  check(values.size() == original_size && values.get(2.0) == std::optional<flight::String>("updated through string key") &&
+            values.get(flight::String("2")) == std::optional<flight::String>("updated through string key"),
+        "Record canonicalizes numeric and numeric-string property identity");
+  check(!values.get(flight::String("missing")).has_value() && values.size() == original_size,
+        "Record missing-key reads preserve absence without insertion");
+
+  auto alias = values;
+  auto clone = values.clone();
+  alias.set(flight::String("shared"), "yes");
+  check(alias == values && values.has(flight::String("shared")) && clone != values &&
+            !clone.has(flight::String("shared")),
+        "Record copies preserve object identity while clone creates independent storage");
+
+  flight::Record<flight::PropertyKey, flight::String> assigned;
+  auto& assigned_identity = flight::object_assign(assigned, values);
+  check(&assigned_identity == &assigned && assigned.get(first_symbol) == std::optional<flight::String>("first symbol") &&
+            assigned.get(flight::String("later")) == std::optional<flight::String>("later"),
+        "Object.assign preserves Record target identity and copies string and symbol entries");
+}
+
 void test_set() {
   const auto nan = std::numeric_limits<double>::quiet_NaN();
   flight::Set<double> values{nan, nan, -0.0};
@@ -867,6 +919,7 @@ int main() {
   test_map();
   test_new_runtime_services();
   test_presence_and_math();
+  test_record();
   test_reference();
   test_set();
   test_string();
