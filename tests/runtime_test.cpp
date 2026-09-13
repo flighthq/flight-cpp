@@ -32,6 +32,39 @@ struct TestEntity : public flight::ReferenceEnabled {
   std::optional<flight::Ref<TestReference>> entity_runtime_key;
 };
 
+struct TestImageFacet final {};
+struct TestMenuFacet final {};
+struct TestTrayCapabilities {
+  bool image;
+  bool menu;
+};
+struct TestImageHost {
+  TestTrayCapabilities tray;
+};
+struct TestOptionalTrayHost {
+  std::optional<TestTrayCapabilities> tray;
+};
+
+using TestImagePath = flight::MemberPath<
+    []<typename Value>(Value& value) -> decltype((value.tray)) { return value.tray; },
+    []<typename Value>(Value& value) -> decltype((value.image)) { return value.image; }>;
+using TestMenuPath = flight::MemberPath<
+    []<typename Value>(Value& value) -> decltype((value.tray)) { return value.tray; },
+    []<typename Value>(Value& value) -> decltype((value.menu)) { return value.menu; }>;
+using TestImageRule = flight::RequiredMemberFacet<TestImageFacet, TestImagePath>;
+using TestMenuRule = flight::RequiredMemberFacet<TestMenuFacet, TestMenuPath>;
+using TestImageCapabilities =
+    flight::ConditionalFacetRef<TestReference, TestImageHost, TestImageRule, TestMenuRule>;
+using TestOptionalCapabilities =
+    flight::ConditionalFacetRef<TestReference, TestOptionalTrayHost, TestImageRule>;
+
+static_assert(std::convertible_to<TestImageCapabilities, flight::FacetRef<TestReference, TestImageFacet>>);
+static_assert(std::convertible_to<TestImageCapabilities, flight::FacetRef<TestReference, TestMenuFacet>>);
+static_assert(!std::convertible_to<TestOptionalCapabilities,
+                                   flight::FacetRef<TestReference, TestImageFacet>>);
+static_assert(sizeof(flight::FacetRef<TestReference, TestImageFacet>) ==
+              sizeof(flight::Ref<TestReference>));
+
 void check(bool condition, const char* message) {
   if (condition) return;
   std::cerr << "FAIL: " << message << '\n';
@@ -236,6 +269,14 @@ void test_new_runtime_services() {
   ignored_arguments(3.0);
   check(flight::callable_signature_v1<std::function<void(double)>>::accepts<double>,
         "callable ABI binds source functions that ignore emitted arguments");
+
+  auto facet_source = flight::make_ref<TestReference>(TestReference{.value = 7});
+  auto conditional = flight::assume_conditional_facets<TestImageCapabilities>(facet_source);
+  flight::FacetRef<TestReference, TestImageFacet> image_facet = conditional;
+  image_facet->value = 8;
+  check(facet_source->value == 8 && image_facet.shared_reference() == facet_source &&
+            conditional.shared_reference() == facet_source,
+        "conditional facets retain exactly one shared base referent");
 
   auto entity = flight::make_ref<TestEntity>();
   using EntityView = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestEntity>>>>;

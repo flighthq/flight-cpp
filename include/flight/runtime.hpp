@@ -3,6 +3,7 @@
 #include <flight/array.hpp>
 #include <flight/array_buffer.hpp>
 #include <flight/callable.hpp>
+#include <flight/conditional_facet_ref.hpp>
 #include <flight/contract.hpp>
 #include <flight/date.hpp>
 #include <flight/data_view.hpp>

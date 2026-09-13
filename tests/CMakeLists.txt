@@ -32,6 +32,7 @@ set(
   array
   array_buffer
   callable
+  conditional_facet_ref
   contract
   data_view
   date

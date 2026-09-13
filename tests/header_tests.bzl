@@ -52,7 +52,8 @@ _PUBLIC_HEADERS = [
     ("regexp", 26),
     ("intl", 27),
     ("callable", 28),
-    ("json", 29),
-    ("structural_ref", 30),
-    ("weak_map", 31),
+    ("conditional_facet_ref", 29),
+    ("json", 30),
+    ("structural_ref", 31),
+    ("weak_map", 32),
 ]

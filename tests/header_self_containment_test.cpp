@@ -57,10 +57,12 @@
 #elif FLIGHT_CPP_HEADER_SELECTOR == 28
 #include <flight/callable.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 29
-#include <flight/json.hpp>
+#include <flight/conditional_facet_ref.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 30
-#include <flight/structural_ref.hpp>
+#include <flight/json.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 31
+#include <flight/structural_ref.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 32
 #include <flight/weak_map.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
