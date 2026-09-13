@@ -66,6 +66,11 @@ int main() {
   observations.push(flight::is_array_buffer_view(converted_view));
   observations.push(flight::is_array_buffer_view(converted_view.buffer));
 
+  const flight::RangeError range_error("outside");
+  observations.push(flight::JsonArray{flight::RangeError::name(), range_error.message()});
+  const flight::TypeError type_error("wrong type");
+  observations.push(flight::JsonArray{flight::TypeError::name(), type_error.message()});
+
   flight::Map<flight::String, double> target{{"first", 0.0}, {"retained", 3.0}};
   const flight::Map<flight::String, double> source{{"first", 1.0}, {"second", 2.0}};
   flight::object_assign(target, source);

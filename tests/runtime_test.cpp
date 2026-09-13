@@ -398,6 +398,20 @@ void test_error() {
   check(error.message() == flight::String("expected") && std::string(error.what()) == "expected",
         "error preserves its semantic and native messages");
   check(flight::Error::name() == flight::String("Error"), "error exposes its source-language name");
+
+  bool caught_range_error = false;
+  try {
+    throw flight::RangeError("outside");
+  } catch (const flight::Error& caught) {
+    caught_range_error = caught.message() == flight::String("outside");
+  }
+  check(caught_range_error && flight::RangeError::name() == flight::String("RangeError"),
+        "RangeError accepts semantic strings and retains the Error exception base");
+
+  const flight::TypeError type_error("wrong type");
+  check(type_error.message() == flight::String("wrong type") &&
+            flight::TypeError::name() == flight::String("TypeError"),
+        "TypeError preserves its source-language name and message");
 }
 
 void test_host() {

@@ -52,7 +52,7 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
   compiler defects: concrete typed-array aliases spelled as templates, a `Record<..., void>` representation, or
   transitive `Bitmap` failures. The complete expanded result is 734 passing and 372 failing headers.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
-  runtime. It currently covers 34 cross-runtime observations.
+  runtime. It currently covers 36 cross-runtime observations.
 - `npm run structural:oracle` generates the exact generic Entity write proxy through the pinned compiler, compiles
   the emitted headers, and executes an intercepted write against the working runtime.
 - `Flight::Sdk` remains blocked until every emitted header in the selected binding profile compiles. At that point it
@@ -67,6 +67,13 @@ The current 328 native header failures begin with compiler-emitted optional/valu
 aliases used as templates, value spelling used where a type name is required, invalid union member access,
 non-convertible duplicate anonymous records, package-scope helper collisions, and malformed type queries. These must
 be corrected in flight-compiler rather than rewritten in the generated tree.
+
+The generated runtime-profile inventory also contains nine headers that currently construct `std::range_error`
+from `flight::String`. The downstream `flight::RangeError` and `flight::TypeError` now preserve semantic messages
+and their common `flight::Error` base. The compiler can map the corresponding type and value symbols to these
+runtime classes instead of the standard exceptions. An exact-pin mapping experiment removes that constructor error
+from all nine headers; each then reaches an existing optional-unwrapping or missing-symbol emission defect, so it
+does not change the current independently compiling total.
 
 The versioned `flighthq/flight-cpp/runtime-carriers/1` profile supplies the implemented `AbortController`,
 `AbortSignal`, `ArrayBufferLike`, `ArrayLike<T>`, `ArrayBufferView`, `Blob`, `WeakSet`, `atob`, `btoa`,

@@ -19,4 +19,18 @@ class Error : public std::runtime_error {
   String message_;
 };
 
+class RangeError final : public Error {
+ public:
+  explicit RangeError(String message = String()) : Error(std::move(message)) {}
+
+  [[nodiscard]] static String name() { return String("RangeError"); }
+};
+
+class TypeError final : public Error {
+ public:
+  explicit TypeError(String message = String()) : Error(std::move(message)) {}
+
+  [[nodiscard]] static String name() { return String("TypeError"); }
+};
+
 } // namespace flight

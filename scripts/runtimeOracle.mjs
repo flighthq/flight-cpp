@@ -86,6 +86,8 @@ const expected = JSON.stringify([
   Array.from(Int8Array.from([127, 128, 255, 256, -129])),
   ArrayBuffer.isView(Uint8Array.from([1, 2])),
   ArrayBuffer.isView(Uint8Array.from([1, 2]).buffer),
+  [new RangeError('outside').name, new RangeError('outside').message],
+  [new TypeError('wrong type').name, new TypeError('wrong type').message],
   Object.entries(Object.assign(target, source)),
   Object.keys(record),
   Object.entries(record),

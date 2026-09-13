@@ -47,7 +47,9 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
 - source-compatible array `length`, resize, insertion splice, and iterable `Array.from` operations, plus variadic
   `Math.min`/`Math.max`;
 - typed-array `from` with JavaScript integer conversion after mapping, and `ArrayBuffer.isView` for represented
-  buffers and views.
+  buffers and views;
+- `RangeError` and `TypeError` classes that accept `flight::String`, preserve the JavaScript name/message surface,
+  and share the existing `flight::Error` exception base.
 
 The native suite covers the new ownership and observable behavior. A generated SDK executable links
 `Flight::SdkPreview`, calls the emitted interpolation and Entity construction functions, runs under CMake's
@@ -88,6 +90,21 @@ Length-only `Array.from({ length }, mapper)` still requires dedicated compiler l
 `undefined` elements. Open `object` arguments to `ArrayBuffer.isView`, `Object.prototype.hasOwnProperty.call`,
 generic structured cloning, and `Promise.allSettled` results still need represented compiler contracts; the runtime
 does not provide a permissive erasure for them.
+
+A disposable exact-pin compiler diagnostic added only the seven member families above. It removed all 19 direct
+member refusals and expanded the runtime-profile inventory from 1,077 to 1,082 headers. The five added headers all
+reach existing compiler-owned representation defects: `bitmap_fingerprint.hpp`, `capture_comparison.hpp`, and
+`texture_atlas_page_meta.hpp` apply concrete typed-array aliases as templates, while the two physics ABI buffer
+headers refer to `flight::types::SpatialObjectId` with a type spelling the generated dependency does not provide.
+The resulting independent compile is 713 passing and 369 failing, so these mappings expose useful work but do not
+yet increase the buildable header count.
+
+The official runtime-profile compile has nine headers whose first error is construction of `std::range_error` from
+`flight::String`. Map both the type and value spaces for `RangeError` to `flight::RangeError` and `TypeError` to
+`flight::TypeError`, with `flight/error.hpp`; the native types now implement that contract. A disposable exact-pin
+mapping removes those nine constructor errors, after which the same headers reach existing optional-unwrapping or
+missing-symbol emission defects. This mapping is still the correct ABI fix, but it does not raise the present 713
+passing-header count by itself.
 
 ## Host boundary
 
