@@ -18,7 +18,7 @@ class WeakSet {
 
   WeakSet() : entries_(std::make_shared<std::vector<Entry>>()) {}
 
-  WeakSet& add(const Key& key) {
+  WeakSet& add(const Key& key) const {
     remove_expired();
     const auto identity = Policy::identity(key);
     const auto hash = Policy::hash(identity);
@@ -28,7 +28,7 @@ class WeakSet {
     if (found == entries_->end()) {
       entries_->push_back(Entry{Policy::weaken(key), std::move(identity), hash});
     }
-    return *this;
+    return const_cast<WeakSet&>(*this);
   }
 
   [[nodiscard]] bool has(const Key& key) const {
@@ -40,7 +40,7 @@ class WeakSet {
            }) != entries_->cend();
   }
 
-  [[nodiscard]] bool erase(const Key& key) {
+  [[nodiscard]] bool erase(const Key& key) const {
     const auto identity = Policy::identity(key);
     const auto hash = Policy::hash(identity);
     bool removed = false;
@@ -52,8 +52,8 @@ class WeakSet {
     return removed;
   }
 
-  [[nodiscard]] bool delete_key(const Key& key) { return erase(key); }
-  [[nodiscard]] bool delete_(const Key& key) { return erase(key); }
+  [[nodiscard]] bool delete_key(const Key& key) const { return erase(key); }
+  [[nodiscard]] bool delete_(const Key& key) const { return erase(key); }
 
  private:
   struct Entry {

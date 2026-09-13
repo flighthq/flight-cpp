@@ -64,6 +64,7 @@ inline constexpr std::array runtime_capabilities{
     RuntimeCapability{"task-coroutine", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"typed-array", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"text-decoder", RuntimeCapabilityStatus::initial},
+    RuntimeCapability{"text-encoder", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"uint8-array", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"uint8-clamped-array", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"uint16-array", RuntimeCapabilityStatus::initial},

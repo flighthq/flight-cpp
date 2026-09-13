@@ -179,24 +179,24 @@ class Record {
   }
 
   template <typename LookupKey>
-  bool erase(const LookupKey& key) {
-    const auto entry = find(detail::canonical_record_key(key));
+  bool erase(const LookupKey& key) const {
+    const auto entry = find_mutable(detail::canonical_record_key(key));
     if (entry == storage_->entries.end()) return false;
     storage_->entries.erase(entry);
     return true;
   }
 
-  Record& set(Key key, Value value) {
+  Record& set(Key key, Value value) const {
     auto canonical = detail::canonical_record_key(key);
-    const auto existing = find(canonical);
+    const auto existing = find_mutable(canonical);
     if (existing != storage_->entries.end()) {
       existing->entry.second = std::move(value);
-      return *this;
+      return const_cast<Record&>(*this);
     }
 
     const auto position = insertion_position(canonical);
     storage_->entries.insert(position, StoredEntry{Entry(std::move(key), std::move(value)), std::move(canonical)});
-    return *this;
+    return const_cast<Record&>(*this);
   }
 
   [[nodiscard]] Array<String> enumerable_keys() const {
@@ -222,7 +222,7 @@ class Record {
   }
 
  private:
-  [[nodiscard]] auto find(const detail::CanonicalRecordKey& key) {
+  [[nodiscard]] auto find_mutable(const detail::CanonicalRecordKey& key) const {
     return std::find_if(storage_->entries.begin(), storage_->entries.end(), [&](const StoredEntry& entry) {
       return detail::same_record_key(entry.canonical_key, key);
     });
@@ -234,7 +234,7 @@ class Record {
     });
   }
 
-  [[nodiscard]] auto insertion_position(const detail::CanonicalRecordKey& key) {
+  [[nodiscard]] auto insertion_position(const detail::CanonicalRecordKey& key) const {
     if (key.array_index) {
       return std::find_if(storage_->entries.begin(), storage_->entries.end(), [&](const StoredEntry& entry) {
         return !entry.canonical_key.array_index || *entry.canonical_key.array_index > *key.array_index;

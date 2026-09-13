@@ -36,6 +36,7 @@
     "sdl-gl:oracle": "node ./scripts/sdlGlProfileOracle.mjs",
     "structural:oracle": "node ./scripts/structuralProxyOracle.mjs",
     "stream:oracle": "node ./scripts/streamOracle.mjs",
+    "text-encoder:oracle": "node ./scripts/textEncoderOracle.mjs",
     "uri:oracle": "node ./scripts/uriOracle.mjs"
   }
 }

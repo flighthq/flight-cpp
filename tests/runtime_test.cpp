@@ -110,6 +110,13 @@ void test_array() {
   independent.push(8.0);
   check(values.size() == 3 && independent.size() == 4, "clone creates independent storage");
   check(!values.at(20).has_value(), "out-of-range array access is absent");
+  const auto captured_alias = values;
+  captured_alias[0] = 2.0;
+  captured_alias.push(6.0);
+  check(values[0] == 2.0 && values.size() == 4,
+        "const array handles retain mutable JavaScript referent semantics");
+  captured_alias[0] = nan;
+  static_cast<void>(values.pop());
 
   const auto mapped = values.map([](double value) { return std::isnan(value) ? 0.0 : value + 1.0; });
   check(mapped.size() == 3 && mapped[2] == 5.0, "array map creates transformed storage");
@@ -163,6 +170,12 @@ void test_binary_data() {
   check(writable.get_uint32(0.0, true) == 3735928559.0 && writable.get_int16(4.0) == -2.0 &&
             writable.get_float32(8.0, true) == 1.25,
         "DataView numeric setters share storage and preserve integer and float bit patterns");
+  const auto captured_view = writable;
+  captured_view.set_uint8(6.0, 0xA5);
+  const auto captured_bytes = bytes;
+  captured_bytes[7] = 0x5A;
+  check(writable.get_uint8(6.0) == 0xA5 && bytes[7] == 0x5A,
+        "const binary-view handles retain mutable JavaScript referent semantics");
 
   bool bounds_failed = false;
   try {
@@ -446,6 +459,11 @@ void test_map() {
     visited += value;
   });
   check(visited == "nanzero", "map for_each visits value then key in insertion order");
+
+  const flight::Map<flight::String, double> captured_map;
+  captured_map.set("value", 4.0);
+  check(captured_map.get("value") == std::optional<double>(4.0),
+        "const map handles retain mutable JavaScript referent semantics");
 }
 
 void test_new_runtime_services() {
@@ -538,6 +556,10 @@ void test_new_runtime_services() {
         "WeakMap overwrite updates the erased value tag");
   check(numeric_view.erase(erased_key) && !string_view.has(erased_key),
         "checked WeakMap deletion remains a shared key operation");
+  const auto captured_weak_view = string_view;
+  captured_weak_view.set(erased_key, "captured");
+  check(string_view.get(erased_key) == std::optional<flight::String>("captured"),
+        "const WeakMap view handles retain mutable JavaScript referent semantics");
 
   auto set_key = flight::make_ref<TestReference>(TestReference{.value = 6});
   std::weak_ptr<TestReference> weak_set_key = set_key;
@@ -551,6 +573,8 @@ void test_new_runtime_services() {
   weak_set.add(set_key);
   check(weak_set.delete_(set_key), "WeakSet exposes the compiler's escaped delete member spelling");
   weak_set.add(set_key).add(set_key);
+  const auto captured_weak_set = weak_set;
+  captured_weak_set.add(set_key);
   set_key.reset();
   check(weak_set_key.expired(), "WeakSet does not retain its key");
 
@@ -688,6 +712,12 @@ void test_new_runtime_services() {
             malformed == flight::String(u"\uFFFD\uFFFD\uFFFD") && after_bom == flight::String("x") &&
             flight::TextDecoder().decode().empty(),
         "TextDecoder follows UTF-8 scalar and malformed-sequence replacement behavior");
+  const auto encoded = flight::TextEncoder().encode(
+      flight::String(std::u16string{u'f', 0xD83D, 0xDE00, 0xD800}));
+  check(encoded.size() == 8 && encoded[0] == 0x66 && encoded[1] == 0xF0 && encoded[2] == 0x9F &&
+            encoded[3] == 0x98 && encoded[4] == 0x80 && encoded[5] == 0xEF && encoded[6] == 0xBF &&
+            encoded[7] == 0xBD && flight::TextEncoder().encoding == flight::String("utf-8"),
+        "TextEncoder emits UTF-8 and replaces unpaired UTF-16 surrogates");
 
   flight::RegExp expression("^flight$", "gi");
   auto expression_alias = expression;
@@ -842,6 +872,10 @@ void test_record() {
   check(&assigned_identity == &assigned && assigned.get(first_symbol) == std::optional<flight::String>("first symbol") &&
             assigned.get(flight::String("later")) == std::optional<flight::String>("later"),
         "Object.assign preserves Record target identity and copies string and symbol entries");
+  const auto captured_record = values;
+  captured_record.set(flight::String("captured"), "yes");
+  check(values.get(flight::String("captured")) == std::optional<flight::String>("yes"),
+        "const Record handles retain mutable JavaScript referent semantics");
 }
 
 void test_set() {
@@ -857,6 +891,9 @@ void test_set() {
   values.clear();
   check(independent.size() == 3 && values.empty() && visits == 3,
         "set clone and for_each preserve independent ordered storage");
+  const auto captured_set = independent;
+  captured_set.add(8.0);
+  check(independent.has(8.0), "const set handles retain mutable JavaScript referent semantics");
 }
 
 void test_string() {

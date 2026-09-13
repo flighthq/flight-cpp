@@ -65,4 +65,5 @@ _PUBLIC_HEADERS = [
     ("uri", 39),
     ("base64", 40),
     ("stream", 41),
+    ("text_encoder", 42),
 ]

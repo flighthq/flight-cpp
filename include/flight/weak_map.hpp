@@ -142,7 +142,7 @@ class WeakMap {
 
   [[nodiscard]] bool has(const Key& key) const { return find(key) != entries_->end(); }
 
-  WeakMap& set(const Key& key, Value value) {
+  WeakMap& set(const Key& key, Value value) const {
     remove_expired();
     const auto identity = Policy::identity(key);
     const auto hash = Policy::hash(identity);
@@ -154,10 +154,10 @@ class WeakMap {
     } else {
       found->value = std::move(value);
     }
-    return *this;
+    return const_cast<WeakMap&>(*this);
   }
 
-  [[nodiscard]] bool erase(const Key& key) {
+  [[nodiscard]] bool erase(const Key& key) const {
     const auto identity = Policy::identity(key);
     const auto hash = Policy::hash(identity);
     bool removed = false;
@@ -169,7 +169,7 @@ class WeakMap {
     return removed;
   }
 
-  [[nodiscard]] bool delete_key(const Key& key) { return erase(key); }
+  [[nodiscard]] bool delete_key(const Key& key) const { return erase(key); }
 
  private:
   struct Entry {
@@ -210,12 +210,14 @@ class WeakMapView {
 
   [[nodiscard]] bool has(const Key& key) const { return source_->has(std::static_pointer_cast<void>(key)); }
 
-  WeakMapView& set(const Key& key, Value value) {
+  WeakMapView& set(const Key& key, Value value) const {
     source_->set(std::static_pointer_cast<void>(key), ErasedValue(std::move(value)));
-    return *this;
+    return const_cast<WeakMapView&>(*this);
   }
 
-  [[nodiscard]] bool erase(const Key& key) { return source_->erase(std::static_pointer_cast<void>(key)); }
+  [[nodiscard]] bool erase(const Key& key) const {
+    return source_->erase(std::static_pointer_cast<void>(key));
+  }
 
  private:
   WeakMap<Ref<void>, ErasedValue>* source_;

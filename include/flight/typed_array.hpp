@@ -168,8 +168,7 @@ class TypedArray {
                    array_length(length),
                    ViewTag{}) {}
 
-  [[nodiscard]] const Value& operator[](size_type index) const noexcept { return data()[index]; }
-  [[nodiscard]] Value& operator[](size_type index) { return data()[index]; }
+  [[nodiscard]] Value& operator[](size_type index) const { return mutable_data()[index]; }
 
   [[nodiscard]] std::optional<Value> at(std::ptrdiff_t index) const {
     const auto normalized = normalize_element_index(index);
@@ -177,8 +176,7 @@ class TypedArray {
     return (*this)[*normalized];
   }
 
-  [[nodiscard]] Value& element(double index) { return (*this)[required_index(index)]; }
-  [[nodiscard]] const Value& element(double index) const { return (*this)[required_index(index)]; }
+  [[nodiscard]] Value& element(double index) const { return (*this)[required_index(index)]; }
 
   [[nodiscard]] std::optional<Value> get(double index) const {
     const auto normalized = property_index(index);
@@ -197,9 +195,9 @@ class TypedArray {
 
   [[nodiscard]] const void* identity() const noexcept { return identity_.get(); }
 
-  TypedArray& fill(Value value) {
-    std::fill(begin(), end(), std::move(value));
-    return *this;
+  TypedArray& fill(Value value) const {
+    std::fill(mutable_data(), mutable_data() + length_, std::move(value));
+    return const_cast<TypedArray&>(*this);
   }
 
   [[nodiscard]] size_type size() const noexcept { return length_; }
@@ -209,7 +207,7 @@ class TypedArray {
       std::begin(range);
       std::end(range);
     }
-  void set(const Range& source, std::ptrdiff_t offset = 0) {
+  void set(const Range& source, std::ptrdiff_t offset = 0) const {
     if (offset < 0 || static_cast<size_type>(offset) > length_) {
       throw std::range_error("flight::TypedArray set offset is outside the view");
     }
@@ -219,11 +217,10 @@ class TypedArray {
     if (snapshot.size() > length_ - target) {
       throw std::range_error("flight::TypedArray source does not fit the view");
     }
-    std::move(snapshot.begin(), snapshot.end(), begin() + static_cast<std::ptrdiff_t>(target));
+    std::move(snapshot.begin(), snapshot.end(), mutable_data() + static_cast<std::ptrdiff_t>(target));
   }
 
-  [[nodiscard]] std::span<const Value> span() const noexcept { return {data(), length_}; }
-  [[nodiscard]] std::span<Value> span() { return {data(), length_}; }
+  [[nodiscard]] std::span<Value> span() const { return {mutable_data(), length_}; }
 
   [[nodiscard]] TypedArray slice(
       std::ptrdiff_t begin_index,
@@ -310,6 +307,11 @@ class TypedArray {
   }
 
   [[nodiscard]] Value* data() { return reinterpret_cast<Value*>(buffer.writable_data() + byte_offset); }
+
+  [[nodiscard]] Value* mutable_data() const {
+    return reinterpret_cast<Value*>(
+        const_cast<ArrayBufferLike&>(buffer).writable_data() + byte_offset);
+  }
 
   [[nodiscard]] size_type normalize_boundary(std::ptrdiff_t index) const noexcept {
     if (index < 0) {

@@ -95,7 +95,7 @@ class Map {
     return const_iterator(storage_->records.cend());
   }
 
-  void clear() noexcept { storage_->records.clear(); }
+  void clear() const noexcept { storage_->records.clear(); }
 
   [[nodiscard]] Map clone() const {
     Map result;
@@ -123,8 +123,8 @@ class Map {
     }
   }
 
-  bool erase(const Key& key) {
-    const auto entry = find(key);
+  bool erase(const Key& key) const {
+    const auto entry = find_mutable(key);
     if (entry == storage_->records.end()) return false;
     storage_->records.erase(entry);
     return true;
@@ -138,8 +138,8 @@ class Map {
 
   [[nodiscard]] bool has(const Key& key) const { return find(key) != storage_->records.end(); }
 
-  Map& set(Key key, Value value) {
-    const auto entry = find(key);
+  Map& set(Key key, Value value) const {
+    const auto entry = find_mutable(key);
     if (entry == storage_->records.end()) {
       if (storage_->next_insertion_identity == std::numeric_limits<std::uint64_t>::max()) {
         throw std::length_error("flight::Map exhausted insertion identities");
@@ -153,13 +153,13 @@ class Map {
     } else {
       entry->entry.second = std::move(value);
     }
-    return *this;
+    return const_cast<Map&>(*this);
   }
 
   [[nodiscard]] size_type size() const noexcept { return storage_->records.size(); }
 
  private:
-  [[nodiscard]] auto find(const Key& key) {
+  [[nodiscard]] auto find_mutable(const Key& key) const {
     return std::find_if(storage_->records.begin(), storage_->records.end(), [&](const Record& record) {
       return equal_(record.entry.first, key);
     });

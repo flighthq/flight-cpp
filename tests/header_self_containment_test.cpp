@@ -82,6 +82,8 @@
 #include <flight/base64.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 41
 #include <flight/stream.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 42
+#include <flight/text_encoder.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

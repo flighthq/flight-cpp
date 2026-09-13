@@ -85,21 +85,14 @@ class Array {
   Array(Iterator first, Iterator last)
       : values_(std::make_shared<std::vector<Value>>(first, last)) {}
 
-  [[nodiscard]] const_reference operator[](size_type index) const noexcept { return (*values_)[index]; }
-  [[nodiscard]] reference operator[](size_type index) noexcept { return (*values_)[index]; }
+  [[nodiscard]] reference operator[](size_type index) const noexcept { return (*values_)[index]; }
 
   [[nodiscard]] std::optional<Value> at(size_type index) const {
     if (index >= size()) return std::nullopt;
     return (*values_)[index];
   }
 
-  [[nodiscard]] std::optional<Value> at(size_type index) {
-    if (index >= size()) return std::nullopt;
-    return (*values_)[index];
-  }
-
-  [[nodiscard]] reference element(double index) { return (*values_)[required_index(index)]; }
-  [[nodiscard]] const_reference element(double index) const { return (*values_)[required_index(index)]; }
+  [[nodiscard]] reference element(double index) const { return (*values_)[required_index(index)]; }
 
   [[nodiscard]] std::optional<Value> get(double index) const {
     const auto normalized = property_index(index);
@@ -111,7 +104,7 @@ class Array {
   [[nodiscard]] const_iterator cbegin() const noexcept { return values_->cbegin(); }
   [[nodiscard]] const_iterator cend() const noexcept { return values_->cend(); }
 
-  void clear() noexcept { values_->clear(); }
+  void clear() const noexcept { values_->clear(); }
 
   [[nodiscard]] Array clone() const { return Array(values_->begin(), values_->end()); }
 
@@ -145,14 +138,14 @@ class Array {
   }
 
   Array& fill(Value value, std::ptrdiff_t begin_index = 0,
-              std::ptrdiff_t end_index = std::numeric_limits<std::ptrdiff_t>::max()) {
+              std::ptrdiff_t end_index = std::numeric_limits<std::ptrdiff_t>::max()) const {
     const auto first = normalize_boundary(begin_index);
     const auto last = normalize_boundary(end_index);
     if (last > first) {
       std::fill(values_->begin() + static_cast<std::ptrdiff_t>(first),
                 values_->begin() + static_cast<std::ptrdiff_t>(last), value);
     }
-    return *this;
+    return const_cast<Array&>(*this);
   }
 
   template <typename Predicate>
@@ -236,21 +229,21 @@ class Array {
     return result;
   }
 
-  [[nodiscard]] std::optional<Value> pop() {
+  [[nodiscard]] std::optional<Value> pop() const {
     if (empty()) return std::nullopt;
     Value value = std::move(values_->back());
     values_->pop_back();
     return value;
   }
 
-  size_type push(Value value) {
+  size_type push(Value value) const {
     values_->push_back(std::move(value));
     return size();
   }
 
   template <typename... Items>
     requires(std::constructible_from<Value, Items&&> && ...)
-  size_type push(Items&&... items) requires(sizeof...(Items) != 1) {
+  size_type push(Items&&... items) const requires(sizeof...(Items) != 1) {
     (values_->emplace_back(std::forward<Items>(items)), ...);
     return size();
   }
@@ -267,14 +260,14 @@ class Array {
     return accumulated;
   }
 
-  Array& reverse() {
+  Array& reverse() const {
     std::ranges::reverse(*values_);
-    return *this;
+    return const_cast<Array&>(*this);
   }
 
-  void resize(size_type length) { values_->resize(length); }
+  void resize(size_type length) const { values_->resize(length); }
 
-  void resize(double length) {
+  void resize(double length) const {
     if (!std::isfinite(length) || length < 0.0 || std::trunc(length) != length ||
         length > static_cast<double>(std::numeric_limits<size_type>::max())) {
       throw std::range_error("flight::Array resize length is outside the supported range");
@@ -282,7 +275,7 @@ class Array {
     resize(static_cast<size_type>(length));
   }
 
-  [[nodiscard]] std::optional<Value> shift() {
+  [[nodiscard]] std::optional<Value> shift() const {
     if (empty()) return std::nullopt;
     Value value = std::move(values_->front());
     values_->erase(values_->begin());
@@ -307,24 +300,24 @@ class Array {
     return false;
   }
 
-  Array& sort()
+  Array& sort() const
     requires std::totally_ordered<Value>
   {
     std::ranges::sort(*values_);
-    return *this;
+    return const_cast<Array&>(*this);
   }
 
   template <typename Compare>
-  Array& sort(Compare compare) {
+  Array& sort(Compare compare) const {
     std::ranges::sort(*values_, [&](const Value& left, const Value& right) {
       return std::invoke(compare, left, right) < 0;
     });
-    return *this;
+    return const_cast<Array&>(*this);
   }
 
   [[nodiscard]] Array splice(
       std::ptrdiff_t begin_index,
-      std::ptrdiff_t count = std::numeric_limits<std::ptrdiff_t>::max()) {
+      std::ptrdiff_t count = std::numeric_limits<std::ptrdiff_t>::max()) const {
     const auto first = normalize_boundary(begin_index);
     const auto available = size() - first;
     const auto removed_count = count <= 0
@@ -339,7 +332,8 @@ class Array {
 
   template <typename... Items>
     requires(sizeof...(Items) > 0 && (std::constructible_from<Value, Items&&> && ...))
-  [[nodiscard]] Array splice(std::ptrdiff_t begin_index, std::ptrdiff_t count, Items&&... items) {
+  [[nodiscard]] Array splice(
+      std::ptrdiff_t begin_index, std::ptrdiff_t count, Items&&... items) const {
     const auto first = normalize_boundary(begin_index);
     const auto available = size() - first;
     const auto removed_count = count <= 0
@@ -361,7 +355,7 @@ class Array {
 
   template <typename... Items>
     requires(std::constructible_from<Value, Items&&> && ...)
-  size_type unshift(Items&&... items) {
+  size_type unshift(Items&&... items) const {
     std::vector<Value> prefix;
     prefix.reserve(sizeof...(Items));
     (prefix.emplace_back(std::forward<Items>(items)), ...);

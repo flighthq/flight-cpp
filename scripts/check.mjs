@@ -27,6 +27,7 @@ const gates = [
   { arguments: [], name: 'sdlGlProfileOracle' },
   { arguments: [], name: 'structuralProxyOracle' },
   { arguments: [], name: 'streamOracle' },
+  { arguments: [], name: 'textEncoderOracle' },
   { arguments: [], name: 'uriOracle' },
   { arguments: ['--check'], name: 'sdkGeneration' },
   { arguments: [], name: 'emittedSourceCompile' },

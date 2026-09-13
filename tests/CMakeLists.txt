@@ -64,6 +64,7 @@ set(
   runtime
   task
   text_decoder
+  text_encoder
   typed_array
   uri
   url

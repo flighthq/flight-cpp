@@ -141,6 +141,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run sdl-gl:oracle` | Does the compiler emit the SDL/OpenGL surface, handle, and weak-cache types from the maintained profile? |
 | `npm run structural:oracle` | Does the pinned compiler's generic Entity proxy compile and preserve native write interception? |
 | `npm run stream:oracle` | Do compiler-emitted readable, writable, and async-iterable carriers compile and preserve stream behavior? |
+| `npm run text-encoder:oracle` | Does compiler-emitted `TextEncoder` produce the same UTF-8 bytes as Node? |
 | `npm run uri:oracle` | Do compiler-emitted URI component operations match Node? |
 | `npm run compile:check` | Does the pinned compiler's emitted C++ still compile against this runtime? |
 

@@ -34,6 +34,7 @@
 #include <flight/symbol.hpp>
 #include <flight/task.hpp>
 #include <flight/text_decoder.hpp>
+#include <flight/text_encoder.hpp>
 #include <flight/typed_array.hpp>
 #include <flight/uri.hpp>
 #include <flight/url.hpp>

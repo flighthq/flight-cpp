@@ -189,6 +189,30 @@
     },
     {
       "headers": [
+        "flight/text_encoder.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "TextEncoder",
+      "space": "type",
+      "targetName": "flight::TextEncoder"
+    },
+    {
+      "construction": {
+        "kind": "constructor",
+        "targetName": "flight::TextEncoder"
+      },
+      "headers": [
+        "flight/text_encoder.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "TextEncoder",
+      "space": "value",
+      "targetName": "flight::TextEncoder"
+    },
+    {
+      "headers": [
         "flight/weak_set.hpp"
       ],
       "nullability": "non-null",

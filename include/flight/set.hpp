@@ -82,8 +82,8 @@ class Set {
     for (const auto& value : values) add(value);
   }
 
-  Set& add(Value value) {
-    if (has(value)) return *this;
+  Set& add(Value value) const {
+    if (has(value)) return const_cast<Set&>(*this);
     if (storage_->next_insertion_identity == std::numeric_limits<std::uint64_t>::max()) {
       throw std::length_error("flight::Set exhausted insertion identities");
     }
@@ -92,7 +92,7 @@ class Set {
     }
     storage_->records.push_back(Record{std::move(value), storage_->next_insertion_identity});
     ++storage_->next_insertion_identity;
-    return *this;
+    return const_cast<Set&>(*this);
   }
 
   [[nodiscard]] const_iterator begin() const noexcept {
@@ -103,7 +103,7 @@ class Set {
     return const_iterator(storage_->records.cend());
   }
 
-  void clear() noexcept { storage_->records.clear(); }
+  void clear() const noexcept { storage_->records.clear(); }
 
   [[nodiscard]] Set clone() const {
     Set result;
@@ -131,7 +131,7 @@ class Set {
     }
   }
 
-  bool erase(const Value& value) {
+  bool erase(const Value& value) const {
     const auto found = find(value);
     if (found == storage_->records.end()) return false;
     storage_->records.erase(found);

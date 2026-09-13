@@ -74,35 +74,35 @@ class DataView {
     return static_cast<double>(read_unsigned<std::uint32_t>(offset, little_endian));
   }
 
-  void set_float32(double offset, double value, bool little_endian = false) {
+  void set_float32(double offset, double value, bool little_endian = false) const {
     write_unsigned(offset, std::bit_cast<std::uint32_t>(static_cast<float>(value)), little_endian);
   }
 
-  void set_float64(double offset, double value, bool little_endian = false) {
+  void set_float64(double offset, double value, bool little_endian = false) const {
     write_unsigned(offset, std::bit_cast<std::uint64_t>(value), little_endian);
   }
 
-  void set_int8(double offset, double value) {
+  void set_int8(double offset, double value) const {
     write_unsigned(offset, integer_bits<std::uint8_t>(value), false);
   }
 
-  void set_int16(double offset, double value, bool little_endian = false) {
+  void set_int16(double offset, double value, bool little_endian = false) const {
     write_unsigned(offset, integer_bits<std::uint16_t>(value), little_endian);
   }
 
-  void set_int32(double offset, double value, bool little_endian = false) {
+  void set_int32(double offset, double value, bool little_endian = false) const {
     write_unsigned(offset, integer_bits<std::uint32_t>(value), little_endian);
   }
 
-  void set_uint8(double offset, double value) {
+  void set_uint8(double offset, double value) const {
     write_unsigned(offset, integer_bits<std::uint8_t>(value), false);
   }
 
-  void set_uint16(double offset, double value, bool little_endian = false) {
+  void set_uint16(double offset, double value, bool little_endian = false) const {
     write_unsigned(offset, integer_bits<std::uint16_t>(value), little_endian);
   }
 
-  void set_uint32(double offset, double value, bool little_endian = false) {
+  void set_uint32(double offset, double value, bool little_endian = false) const {
     write_unsigned(offset, integer_bits<std::uint32_t>(value), little_endian);
   }
 
@@ -150,9 +150,9 @@ class DataView {
 
   template <typename Unsigned>
     requires std::is_unsigned_v<Unsigned>
-  void write_unsigned(double offset, Unsigned value, bool little_endian) {
+  void write_unsigned(double offset, Unsigned value, bool little_endian) const {
     const auto index = checked_access<Unsigned>(offset);
-    auto* bytes = buffer.writable_data() + byte_offset + index;
+    auto* bytes = const_cast<ArrayBufferLike&>(buffer).writable_data() + byte_offset + index;
     for (std::size_t position = 0; position < sizeof(Unsigned); ++position) {
       const auto shift = little_endian ? position * 8 : (sizeof(Unsigned) - position - 1) * 8;
       bytes[position] = static_cast<std::byte>((value >> shift) & static_cast<Unsigned>(0xFF));
