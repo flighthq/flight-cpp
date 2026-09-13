@@ -255,6 +255,26 @@ void test_new_runtime_services() {
   const auto json = flight::Json::stringify(flight::Array<double>{1.0, 2.0}, nullptr, 2.0);
   check(json == flight::String("[\n  1,\n  2\n]"),
         "JSON stringification covers semantic arrays and bounded indentation");
+  const auto parsed_json = flight::Json::parse(
+      R"({"name":"Flight","enabled":true,"values":[null,-1.5e2,"\ud83d\ude00"]})");
+  const auto parsed_name = parsed_json.as_object().get("name");
+  const auto parsed_values = parsed_json.as_object().get("values");
+  check(parsed_name.has_value() && parsed_name->as_string() == flight::String("Flight") &&
+            parsed_values.has_value() && parsed_values->as_array().size() == 3 &&
+            parsed_values->as_array()[0].is_null() &&
+            parsed_values->as_array()[1].as_number() == -150.0 &&
+            parsed_values->as_array()[2].as_string() == flight::String::from_utf8("\xF0\x9F\x98\x80") &&
+            flight::Json::stringify(parsed_json) ==
+                flight::String::from_utf8(
+                    R"({"name":"Flight","enabled":true,"values":[null,-150,"😀"]})"),
+        "JSON parse and stringify preserve every JSON value domain and source object order");
+  bool invalid_json_failed = false;
+  try {
+    static_cast<void>(flight::Json::parse("[1,]"));
+  } catch (const flight::JsonSyntaxError&) {
+    invalid_json_failed = true;
+  }
+  check(invalid_json_failed, "JSON parse rejects invalid source text");
 
   auto key = flight::make_ref<TestReference>(TestReference{.value = 4});
   std::weak_ptr<TestReference> weak_key = key;
