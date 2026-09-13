@@ -21,6 +21,7 @@
     "runtime:oracle": "node ./scripts/runtimeOracle.mjs",
     "sdk:check": "node ./scripts/sdkGeneration.mjs --check",
     "sdk:compile": "node ./scripts/sdkHeaderCompile.mjs",
-    "sdk:generate": "node ./scripts/sdkGeneration.mjs"
+    "sdk:generate": "node ./scripts/sdkGeneration.mjs",
+    "sdk:generate:headless": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/headless.json --output=out/sdk-headless"
   }
 }

@@ -1,0 +1,23 @@
+{
+  "schema": "flight-cpp-external-bindings/1",
+  "identity": "flighthq/flight-cpp/headless/1",
+  "profile": "headless",
+  "bindings": [
+    {
+      "headers": [
+        "flight/host/performance.hpp"
+      ],
+      "members": [
+        {
+          "sourceMember": "now",
+          "targetName": "flight::host::performance_now"
+        }
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "performance",
+      "space": "value",
+      "targetName": "flight::host::performance"
+    }
+  ]
+}

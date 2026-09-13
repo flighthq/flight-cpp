@@ -99,6 +99,8 @@ initialization ledgers. `Flight::SdkPreview` and Bazel `//:sdk_preview` expose t
 independent-header gate is still red; `npm run sdk:compile` writes its detailed report under `out/`. The generated SDK
 math/Entity example proves working emitted package paths. The [SDL host bring-up](docs/host-sdl.md) defines the handwritten
 native lane that injects GL or WebGPU handles without duplicating upstream renderers.
+The [flight-compiler adoption status](docs/flight-compiler-adoption.md) tracks each downstream runtime, host, and
+release obligation without treating a present header as a completed semantic contract.
 
 The supported input boundary is versioned as [`flight-portable-typescript/1`](conformance/portable-typescript-v1.json). [`known-exceptions.json`](conformance/known-exceptions.json) owns every checked-in C++ refusal. The compiler repository verifies it against its own fixture corpus, because a refusal changes when the compiler changes; this repository owns the file, and that gate reads it from a pinned checkout of this repository.
 
@@ -126,6 +128,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run sdk:check` | Does the pinned compiler reproduce the committed SDK headers and refusal inventory? |
 | `npm run sdk:compile` | Which dependency-closed SDK headers compile independently with the selected `CXX` toolchain? |
 | `npm run release:check` | Do the version, ABI, C++ standard, and conformance profile agree across every file that states them? |
+| `npm run runtime:oracle` | Do the native runtime services match the same TypeScript-valid operations under Node? |
 | `npm run compile:check` | Does the pinned compiler's emitted C++ still compile against this runtime? |
 
 `compile:check` reports and skips when the checkout is absent or no C++ compiler is installed, so a fresh clone stays runnable. The compiler repository asks the same question from its side against the runtime revision it pins; both are wanted, because each side owns the pin it can move and a failure names which one changed.

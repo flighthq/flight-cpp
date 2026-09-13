@@ -4,6 +4,8 @@ This directory is generated from `@flighthq/sdk` 0.5.0 at
 `1274ec5c923947dc64d5ffedcbd8169fc758cd9f` by `flight-compiler` at `56496423fd865a51023e72966190d10d886eae40`.
 Do not edit it by hand.
 
+No external binding profile is applied; this is the portable floor. Exact profile paths and SHA-256 digests are recorded in `manifest.json`.
+
 The current compiler emitted 1032 of 2851 source modules from
 154 SDK packages and refused 1819. Emitted headers live under
 `include/flight/<package>/`; every refusal and its owning module is recorded in `refusals.json`.
@@ -20,4 +22,10 @@ npm run rehydrate
 npm ci --prefix .dependencies/flight-compiler
 npm run sdk:generate
 npm run sdk:check
+```
+
+Generate a profile-specific inventory outside the committed portable tree with:
+
+```sh
+node scripts/sdkGeneration.mjs --binding-profile=bindings/headless.json --output=out/sdk-headless
 ```

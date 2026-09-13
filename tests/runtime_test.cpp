@@ -1,4 +1,5 @@
 #include <flight/runtime.hpp>
+#include <flight/host/performance.hpp>
 
 #include <cmath>
 #include <exception>
@@ -205,6 +206,10 @@ void test_host() {
           "host scope installs its Unicode service");
   }
   check(flight::current_executor() == previous_executor, "host scope restores the previous executor");
+  const auto first_monotonic_time = flight::host::performance_now();
+  const auto second_monotonic_time = flight::host::performance_now();
+  check(first_monotonic_time >= 0.0 && second_monotonic_time >= first_monotonic_time,
+        "headless performance binding reports monotonic milliseconds from a stable origin");
 }
 
 void test_date() {

@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import {
   cpSync,
   existsSync,
@@ -23,7 +24,16 @@ import { resolveDependency } from './dependencyLock.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const options = process.argv.slice(2);
 const check = options.includes('--check');
-const unknown = options.filter((option) => option !== '--check');
+const bindingProfileOptions = options
+  .filter((option) => option.startsWith('--binding-profile='))
+  .map((option) => option.slice('--binding-profile='.length));
+const outputOption = options.find((option) => option.startsWith('--output='));
+const unknown = options.filter(
+  (option) =>
+    option !== '--check' &&
+    !option.startsWith('--binding-profile=') &&
+    !option.startsWith('--output='),
+);
 if (unknown.length > 0) {
   process.stderr.write(`Unknown SDK generation option(s): ${unknown.join(', ')}\n`);
   process.exit(1);
@@ -31,7 +41,10 @@ if (unknown.length > 0) {
 
 const flight = resolveDependency(root, 'flight');
 const compiler = resolveDependency(root, 'flight-compiler');
-const generatedRoot = path.join(root, 'generated');
+const generatedRoot = outputOption
+  ? path.resolve(root, outputOption.slice('--output='.length))
+  : path.join(root, 'generated');
+const bindingProfiles = loadBindingProfiles(bindingProfileOptions);
 const inputFailure = validateInput(flight, compiler);
 if (inputFailure !== undefined) {
   const message = `${inputFailure} Run \`npm run rehydrate\` and \`npm ci --prefix .dependencies/flight-compiler\`.\n`;
@@ -63,7 +76,7 @@ const temporaryRoot = mkdtempSync(path.join(tmpdir(), 'flight-cpp-sdk-generation
 const candidateRoot = path.join(temporaryRoot, 'generated');
 
 try {
-  const result = await generateSdk(candidateRoot, flight, compiler, compilerEntry);
+  const result = await generateSdk(candidateRoot, flight, compiler, compilerEntry, bindingProfiles);
   if (check) {
     const drift = compareTrees(candidateRoot, generatedRoot);
     if (drift.length > 0) {
@@ -84,7 +97,7 @@ try {
   rmSync(temporaryRoot, { force: true, recursive: true });
 }
 
-async function generateSdk(outputRoot, flightDependency, compilerDependency, compilerModule) {
+async function generateSdk(outputRoot, flightDependency, compilerDependency, compilerModule, profiles) {
   const {
     analyzeFlightWorkspace,
     compileTypeScriptPackageGraph,
@@ -126,6 +139,11 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   const compilation = compileTypeScriptPackageGraph({
     backend: createCppCompilerBackend(),
     backendOptions: {
+      ...(profiles.length > 0
+        ? {
+            externalBindings: mergeBindingProfiles(profiles),
+          }
+        : {}),
       packageTargets: Object.fromEntries(packageDescriptors.map((package_) => [package_.name, package_.target])),
       runtimeProfile: 'flight-cpp',
       upstreamCommit: flightDependency.commit,
@@ -191,6 +209,13 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       runtimeProfile: 'flight-cpp',
       target: 'cpp',
     },
+    bindingProfiles: profiles.map((profile) => ({
+      digest: profile.digest,
+      identity: profile.identity,
+      path: profile.path,
+      profile: profile.profile,
+      schema: profile.schema,
+    })),
     namespaceMapping: {
       desiredRoot: 'flight',
       status: 'applied',
@@ -223,6 +248,51 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   );
   writeFileSync(path.join(outputRoot, 'README.md'), generatedReadme(manifest));
   return manifest.summary;
+}
+
+function loadBindingProfiles(filenames) {
+  const profiles = filenames.map((filename) => {
+    const absolute = path.resolve(root, filename);
+    const contents = readFileSync(absolute, 'utf8');
+    const profile = JSON.parse(contents);
+    if (
+      profile?.schema !== 'flight-cpp-external-bindings/1' ||
+      typeof profile.identity !== 'string' ||
+      profile.identity.length === 0 ||
+      typeof profile.profile !== 'string' ||
+      profile.profile.length === 0 ||
+      !Array.isArray(profile.bindings)
+    ) {
+      throw new TypeError(`${filename} is not an identified flight-cpp-external-bindings/1 profile`);
+    }
+    return {
+      bindings: profile.bindings,
+      digest: `sha256:${createHash('sha256').update(contents).digest('hex')}`,
+      identity: profile.identity,
+      path: portable(path.relative(root, absolute)),
+      profile: profile.profile,
+      schema: profile.schema,
+    };
+  });
+  const identities = new Set();
+  const symbols = new Set();
+  for (const profile of profiles) {
+    if (identities.has(profile.identity)) throw new TypeError(`duplicate binding profile ${profile.identity}`);
+    identities.add(profile.identity);
+    for (const binding of profile.bindings) {
+      const symbol = `${String(binding.sourceName)}:${String(binding.space)}`;
+      if (symbols.has(symbol)) throw new TypeError(`binding profiles provide ${symbol} more than once`);
+      symbols.add(symbol);
+    }
+  }
+  return profiles;
+}
+
+function mergeBindingProfiles(profiles) {
+  return {
+    bindings: profiles.flatMap((profile) => profile.bindings),
+    schema: 'flight-cpp-external-bindings/1',
+  };
 }
 
 function writeSdkBuildMetadata(outputRoot, files) {
@@ -300,11 +370,16 @@ function isCppKeyword(value) {
 }
 
 function generatedReadme(manifest) {
+  const profiles = manifest.bindingProfiles.length === 0
+    ? 'No external binding profile is applied; this is the portable floor.'
+    : `Applied binding profiles: ${manifest.bindingProfiles.map((profile) => `\`${profile.identity}\``).join(', ')}.`;
   return `# Generated Flight SDK inventory
 
 This directory is generated from \`${manifest.source.package}\` ${manifest.source.version} at
 \`${manifest.source.revision}\` by \`flight-compiler\` at \`${manifest.compiler.revision}\`.
 Do not edit it by hand.
+
+${profiles} Exact profile paths and SHA-256 digests are recorded in \`manifest.json\`.
 
 The current compiler emitted ${manifest.summary.emittedModules} of ${manifest.summary.sourceModules} source modules from
 ${manifest.summary.packages} SDK packages and refused ${manifest.summary.refusedModules}. Emitted headers live under
@@ -322,6 +397,12 @@ npm run rehydrate
 npm ci --prefix .dependencies/flight-compiler
 npm run sdk:generate
 npm run sdk:check
+\`\`\`
+
+Generate a profile-specific inventory outside the committed portable tree with:
+
+\`\`\`sh
+node scripts/sdkGeneration.mjs --binding-profile=bindings/headless.json --output=out/sdk-headless
 \`\`\`
 `;
 }

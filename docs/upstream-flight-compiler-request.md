@@ -1,5 +1,7 @@
 # flight-compiler package graph review
 
+The maintained downstream checklist now lives in [flight-compiler adoption status](flight-compiler-adoption.md).
+
 This review covers Flight `1274ec5` and flight-compiler `5649642`. Both revisions are pinned in
 [`dependencies.lock.json`](../dependencies.lock.json).
 
@@ -28,7 +30,8 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
 - weak identity maps for Flight references and closed reference variants, including erased values and checked typed
   views;
 - the versioned callable signature/binding ABI used by Signals;
-- JSON stringification for scalar, presence, variant, reference, and Flight array values;
+- an explicit JSON value model plus parsing and stringification for every JSON value domain;
+- conditional capability facet references with required nested-member checks;
 - source-compatible array `length`, resize, and insertion splice operations, plus variadic `Math.min`/`Math.max`.
 
 The native suite covers the new ownership and observable behavior. A generated SDK executable links

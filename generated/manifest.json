@@ -6,6 +6,7 @@
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
+  "bindingProfiles": [],
   "namespaceMapping": {
     "desiredRoot": "flight",
     "status": "applied"
