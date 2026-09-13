@@ -13,6 +13,7 @@
     "build:check": "node ./scripts/buildHealth.mjs",
     "check": "node ./scripts/check.mjs",
     "compile:check": "node ./scripts/emittedSourceCompile.mjs",
+    "facets:oracle": "node ./scripts/conditionalFacetOracle.mjs",
     "examples:check": "node ./scripts/exampleHealth.mjs",
     "headless:oracle": "node ./scripts/headlessProfileOracle.mjs",
     "rehydrate": "node ./scripts/rehydrate.mjs",

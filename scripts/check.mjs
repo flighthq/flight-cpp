@@ -17,6 +17,7 @@ const gates = [
   { arguments: [], name: 'buildHealth' },
   { arguments: [], name: 'releaseHealth' },
   { arguments: [], name: 'exampleHealth' },
+  { arguments: [], name: 'conditionalFacetOracle' },
   { arguments: [], name: 'headlessProfileOracle' },
   { arguments: [], name: 'runtimeOracle' },
   { arguments: [], name: 'structuralProxyOracle' },
