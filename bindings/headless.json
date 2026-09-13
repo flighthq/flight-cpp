@@ -5,6 +5,42 @@
   "bindings": [
     {
       "headers": [
+        "flight/host/timers.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "clearInterval",
+      "space": "value",
+      "targetName": "flight::host::clear_interval"
+    },
+    {
+      "headers": [
+        "flight/host/timers.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "clearTimeout",
+      "space": "value",
+      "targetName": "flight::host::clear_timeout"
+    },
+    {
+      "headers": [
+        "flight/host/console.hpp"
+      ],
+      "members": [
+        {
+          "sourceMember": "debug",
+          "targetName": "flight::host::console_debug"
+        }
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "console",
+      "space": "value",
+      "targetName": "flight::host::console"
+    },
+    {
+      "headers": [
         "flight/host/performance.hpp"
       ],
       "members": [
@@ -18,6 +54,28 @@
       "sourceName": "performance",
       "space": "value",
       "targetName": "flight::host::performance"
+    },
+    {
+      "callResultType": "flight::host::TimerHandle",
+      "headers": [
+        "flight/host/timers.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "setInterval",
+      "space": "value",
+      "targetName": "flight::host::set_interval"
+    },
+    {
+      "callResultType": "flight::host::TimerHandle",
+      "headers": [
+        "flight/host/timers.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "setTimeout",
+      "space": "value",
+      "targetName": "flight::host::set_timeout"
     }
   ]
 }

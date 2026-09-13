@@ -1,5 +1,7 @@
 #include <flight/runtime.hpp>
+#include <flight/host/console.hpp>
 #include <flight/host/performance.hpp>
+#include <flight/host/timers.hpp>
 
 #include <cmath>
 #include <exception>
@@ -210,6 +212,20 @@ void test_host() {
   const auto second_monotonic_time = flight::host::performance_now();
   check(first_monotonic_time >= 0.0 && second_monotonic_time >= first_monotonic_time,
         "headless performance binding reports monotonic milliseconds from a stable origin");
+
+  flight::host::TimerQueue timers;
+  int timeout_calls = 0;
+  int interval_calls = 0;
+  const auto cancelled = timers.set_timeout([&] { ++timeout_calls; }, 0.0);
+  timers.clear(cancelled);
+  static_cast<void>(timers.set_timeout([&] { ++timeout_calls; }, 0.0));
+  const auto interval = timers.set_interval([&] { ++interval_calls; }, 0.0);
+  check(timers.pump() == 2 && timeout_calls == 1 && interval_calls == 1,
+        "headless timers run due callbacks once per serialized host turn");
+  check(timers.pump() == 1 && interval_calls == 2,
+        "zero-delay intervals wait for the next host turn before repeating");
+  timers.clear(interval);
+  check(timers.empty(), "headless timer cancellation removes the scheduled callback");
 }
 
 void test_date() {

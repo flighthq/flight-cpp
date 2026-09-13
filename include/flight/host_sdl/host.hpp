@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <cstddef>
 #include <cstdint>
 
 #include <SDL3/SDL_events.h>
@@ -22,6 +23,7 @@ class FLIGHT_HOST_SDL_API Host final {
 
   [[nodiscard]] SDL_InitFlags subsystems() const noexcept;
   [[nodiscard]] bool poll_event(SDL_Event& event) const noexcept;
+  [[nodiscard]] std::size_t pump_timers() const;
   void wait_event(SDL_Event& event) const;
   [[nodiscard]] bool wait_event_for(SDL_Event& event, std::chrono::milliseconds timeout) const;
 

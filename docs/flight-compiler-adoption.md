@@ -50,10 +50,12 @@ aliases used as templates, value spelling used where a type name is required, in
 non-convertible duplicate anonymous records, package-scope helper collisions, and malformed type queries. These must
 be corrected in flight-compiler rather than rewritten in the generated tree.
 
-The versioned `flighthq/flight-cpp/headless/1` binding profile currently supplies the monotonic `performance.now`
-ambient and records its selected profile, identity, and digest in each profile-specific generated manifest. It
-removes the direct performance refusal from input and log, but those modules remain refused on other headless or
-browser symbols and the emitted count therefore remains unchanged. More headless bindings and maintained profiles
-for Node/tooling, browser/media, SDL/GL, SDL/Vulkan, and SDL/WebGPU are still required. A profile may name only native
-types and lifetimes its host package actually implements; opaque placeholders would make a larger report while
-leaving the SDK unusable.
+The versioned `flighthq/flight-cpp/headless/1` profile supplies monotonic `performance.now`, `console.debug`, and
+single-threaded host-pumped timeout/interval functions. Its selected profile, identity, and digest are recorded in
+each profile-specific generated manifest, and a live compiler fixture compiles and runs every binding. SDL's host
+loop exposes the same timer pump. Log now reaches the compiler-owned ordered-`Record` spread refusal, and Signals
+throttle reaches the dependent-callable-pack refusal; neither remains blocked on its headless ambient names. The
+aggregate emitted count is still unchanged. More headless bindings and maintained profiles for Node/tooling,
+browser/media, SDL/GL, SDL/Vulkan, and SDL/WebGPU are still required. A profile may name only native types and
+lifetimes its host package actually implements; opaque placeholders would make a larger report while leaving the SDK
+unusable.

@@ -1,3 +1,4 @@
+#include <flight/host/timers.hpp>
 #include <flight/host_sdl/host.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/host_sdl/window.hpp>
@@ -71,6 +72,10 @@ int main() {
   }
   expect(received_user_event, "SDL user event timed out");
   expect(flight::host_sdl::Host::ticks_nanoseconds() > 0, "SDL monotonic clock did not advance");
+  int timer_calls = 0;
+  static_cast<void>(flight::host::set_timeout([&] { ++timer_calls; }, 0.0));
+  expect(host.pump_timers() == 1 && timer_calls == 1,
+         "SDL host loop did not pump the headless timer queue");
 
   SurfaceState surface_state;
   const flight::host_sdl::WgpuSurfaceCallbacks callbacks{

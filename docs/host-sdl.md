@@ -88,6 +88,7 @@ int main() {
     while (host.poll_event(event)) {
       if (event.type == SDL_EVENT_QUIT) running = false;
     }
+    host.pump_timers();
     // Update Flight, render through render-wgpu or render-gl, then present.
   }
 }
@@ -95,7 +96,8 @@ int main() {
 
 `Window::id()` lets a future Flight input adapter associate an SDL event with the correct application window.
 `Window::size()` reports logical units and `Window::pixel_size()` reports the renderable pixel extent for high-density
-displays.
+displays. `Host::pump_timers()` executes the headless binding profile's due timeout and interval callbacks on the SDL
+thread; no background timer thread can race Flight state.
 
 ## Generated SDK wiring lane
 

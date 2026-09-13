@@ -1,5 +1,7 @@
 #include <flight/host_sdl/host.hpp>
 
+#include <flight/host/timers.hpp>
+
 #include "detail.hpp"
 
 #include <algorithm>
@@ -33,6 +35,8 @@ Host& Host::operator=(Host&& other) noexcept {
 SDL_InitFlags Host::subsystems() const noexcept { return subsystems_; }
 
 bool Host::poll_event(SDL_Event& event) const noexcept { return SDL_PollEvent(&event); }
+
+std::size_t Host::pump_timers() const { return flight::host::pump_timers(); }
 
 void Host::wait_event(SDL_Event& event) const {
   detail::require_sdl(SDL_WaitEvent(&event), "SDL_WaitEvent");
