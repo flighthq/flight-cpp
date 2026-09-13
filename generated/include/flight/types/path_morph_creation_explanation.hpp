@@ -12,7 +12,7 @@ namespace flight::types {
 
 struct PathMorphCreationExplanation : public flight::ReferenceEnabled {
   std::optional<double> contour;
-  PathMorphCreationReason reason;
+  flight::types::PathMorphCreationReason reason;
   bool supported;
 };
 

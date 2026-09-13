@@ -11,7 +11,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types {
 
 struct StrokePathTessellationExplanation : public flight::ReferenceEnabled {
-  StrokePathTessellationReason reason;
+  flight::types::StrokePathTessellationReason reason;
   std::optional<double> subpath;
   bool supported;
 };

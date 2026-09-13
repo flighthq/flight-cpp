@@ -17,7 +17,7 @@ struct PointGravityWellForce : public flight::ReferenceEnabled {
   double strength;
   std::optional<double> radius;
   std::optional<double> min_radius;
-  std::optional<ForceFalloff> falloff;
+  std::optional<flight::types::ForceFalloff> falloff;
   std::optional<bool> repulse;
 };
 

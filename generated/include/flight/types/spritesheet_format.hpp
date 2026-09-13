@@ -7,8 +7,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-using SpritesheetFormatKind = flight::String;
-
 inline const flight::String spritesheet_format_kind_aseprite = flight::String("Aseprite");
 
 inline const flight::String spritesheet_format_kind_cocos_plist = flight::String("CocosPlist");
@@ -18,5 +16,7 @@ inline const flight::String spritesheet_format_kind_libgdx_atlas = flight::Strin
 inline const flight::String spritesheet_format_kind_starling = flight::String("Starling");
 
 inline const flight::String spritesheet_format_kind_texture_packer = flight::String("TexturePacker");
+
+using SpritesheetFormatKind = flight::String;
 
 } // namespace flight::types

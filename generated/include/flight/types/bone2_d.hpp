@@ -19,7 +19,7 @@ struct Bone2D : public flight::ReferenceEnabled {
   double scale_y;
   double shear_x;
   double shear_y;
-  flight::Ref<TransformInherit2D> transform_mode;
+  flight::Ref<flight::types::TransformInherit2D> transform_mode;
   double x;
   double y;
 };

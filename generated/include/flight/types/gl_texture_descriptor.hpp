@@ -14,10 +14,10 @@ namespace flight::types {
 using GlTextureInternalFormat = flight::String;
 
 struct GlTextureDescriptor : public flight::ReferenceEnabled {
-  std::optional<GlTextureWrapKind> wrap_s;
-  std::optional<GlTextureWrapKind> wrap_t;
-  std::optional<GlTextureFilterKind> min_filter;
-  std::optional<GlTextureFilterKind> mag_filter;
+  std::optional<flight::types::GlTextureWrapKind> wrap_s;
+  std::optional<flight::types::GlTextureWrapKind> wrap_t;
+  std::optional<flight::types::GlTextureFilterKind> min_filter;
+  std::optional<flight::types::GlTextureFilterKind> mag_filter;
   std::optional<bool> mipmaps;
   std::optional<double> anisotropy;
   std::optional<bool> premultiply_alpha;

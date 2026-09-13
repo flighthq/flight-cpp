@@ -14,8 +14,8 @@ struct CaptureColumnBaseline : public flight::ReferenceEnabled {
   std::optional<flight::String> fingerprint;
   std::optional<flight::String> source_hash;
   std::optional<flight::String> sha256;
-  std::optional<flight::Ref<CaptureBaselineProvenance>> fingerprint_provenance;
-  std::optional<flight::Ref<CaptureBaselineProvenance>> sha256_provenance;
+  std::optional<flight::Ref<flight::types::CaptureBaselineProvenance>> fingerprint_provenance;
+  std::optional<flight::Ref<flight::types::CaptureBaselineProvenance>> sha256_provenance;
 };
 
 } // namespace flight::types

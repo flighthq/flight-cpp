@@ -148,6 +148,8 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
     mkdirSync(path.dirname(target), { recursive: true });
     writeFileSync(target, file.contents);
   }
+  writeStructuralMemberTable(outputRoot, compilation.compilation.files);
+  writeSdkBuildMetadata(outputRoot, compilation.compilation.files);
   const descriptorByName = new Map(packageDescriptors.map((package_) => [package_.name, package_]));
   const packageResults = compilation.report.packages.map((package_) => {
     const descriptor = descriptorByName.get(package_.name);
@@ -223,6 +225,80 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   return manifest.summary;
 }
 
+function writeSdkBuildMetadata(outputRoot, files) {
+  const headers = files.map((file) => file.path).sort(compareText);
+  headers.push('flight/sdk/structural_members.hpp');
+  const cmakeHeaders = headers
+    .map((header) => `  "\${CMAKE_CURRENT_LIST_DIR}/../include/${header}"`)
+    .join('\n');
+  const cmakeTarget = path.join(outputRoot, 'cmake', 'FlightSdkHeaders.cmake');
+  mkdirSync(path.dirname(cmakeTarget), { recursive: true });
+  writeFileSync(
+    cmakeTarget,
+    `# Generated from the Flight SDK package graph. Do not edit.\nset(FLIGHT_SDK_GENERATED_HEADERS\n${cmakeHeaders}\n)\n`,
+  );
+
+  const bazelHeaders = headers.map((header) => `        "include/${header}",`).join('\n');
+  writeFileSync(
+    path.join(outputRoot, 'BUILD.bazel'),
+    `# Generated from the Flight SDK package graph. Do not edit.\nload("@rules_cc//cc:defs.bzl", "cc_library")\n\npackage(default_visibility = ["//visibility:public"])\n\ncc_library(\n    name = "sdk_preview",\n    hdrs = [\n${bazelHeaders}\n    ],\n    strip_include_prefix = "include",\n    deps = ["//:cpp"],\n)\n`,
+  );
+}
+
+function writeStructuralMemberTable(outputRoot, files) {
+  const names = new Set();
+  const rowKey = /flight::RowKey<"(?<name>(?:[^"\\]|\\.)*)">/gu;
+  for (const file of files) {
+    for (const match of file.contents.matchAll(rowKey)) {
+      if (match.groups?.name !== undefined) names.add(JSON.parse(`"${match.groups.name}"`));
+    }
+  }
+  const cases = [...names]
+    .sort(compareText)
+    .map((name) => {
+      const member = safeCppMemberName(name);
+      return `  else if constexpr (Key::name.view() == std::string_view(${JSON.stringify(name)}) && requires { object.${member}; }) return (object.${member});`;
+    });
+  if (cases.length === 0) {
+    throw new Error('compiler output uses no structural row keys');
+  }
+  cases[0] = cases[0].replace('  else if', '  if');
+  const target = path.join(outputRoot, 'include', 'flight', 'sdk', 'structural_members.hpp');
+  mkdirSync(path.dirname(target), { recursive: true });
+  writeFileSync(
+    target,
+    `// Generated from the structural keys used by the emitted Flight SDK. Do not edit.\n#pragma once\n\n#include <string_view>\n\nnamespace flight::detail {\n\ntemplate <typename Key, typename Object>\ndecltype(auto) generated_row_member(Object& object) {\n${cases.join('\n')}\n  else static_assert(dependent_false<Key>, "Flight SDK row key has no compatible generated C++ member");\n}\n\n} // namespace flight::detail\n`,
+  );
+}
+
+function safeCppMemberName(name) {
+  const snake = name
+    .replace(/([a-z0-9])([A-Z])/gu, '$1_$2')
+    .replace(/[^A-Za-z0-9]+/gu, '_')
+    .replace(/^_+|_+$/gu, '')
+    .toLowerCase();
+  return isCppKeyword(snake) ? `${snake}_` : snake;
+}
+
+function isCppKeyword(value) {
+  return new Set([
+  'alignas', 'alignof', 'and', 'and_eq', 'asm', 'atomic_cancel', 'atomic_commit',
+  'atomic_noexcept', 'auto', 'bitand', 'bitor', 'bool', 'break', 'case', 'catch',
+  'char', 'char8_t', 'char16_t', 'char32_t', 'class', 'compl', 'concept', 'const',
+  'consteval', 'constexpr', 'constinit', 'const_cast', 'continue', 'co_await',
+  'co_return', 'co_yield', 'decltype', 'default', 'delete', 'do', 'double',
+  'dynamic_cast', 'else', 'enum', 'explicit', 'export', 'extern', 'false', 'float',
+  'for', 'friend', 'goto', 'if', 'inline', 'int', 'long', 'mutable', 'namespace',
+  'new', 'noexcept', 'not', 'not_eq', 'nullptr', 'operator', 'or', 'or_eq',
+  'private', 'protected', 'public', 'reflexpr', 'register', 'reinterpret_cast',
+  'requires', 'return', 'short', 'signed', 'sizeof', 'static', 'static_assert',
+  'static_cast', 'struct', 'switch', 'synchronized', 'template', 'this',
+  'thread_local', 'throw', 'true', 'try', 'typedef', 'typeid', 'typename', 'union',
+  'unsigned', 'using', 'virtual', 'void', 'volatile', 'wchar_t', 'while', 'xor',
+  'xor_eq',
+  ]).has(value);
+}
+
 function generatedReadme(manifest) {
   return `# Generated Flight SDK inventory
 
@@ -234,9 +310,10 @@ The current compiler emitted ${manifest.summary.emittedModules} of ${manifest.su
 ${manifest.summary.packages} SDK packages and refused ${manifest.summary.refusedModules}. Emitted headers live under
 \`include/flight/<package>/\`; every refusal and its owning module is recorded in \`refusals.json\`.
 
-This is a bring-up inventory. It is intentionally committed before it forms a compilable SDK closure, and CMake and
-Bazel do not publish it as \`Flight::Sdk\` yet. The package graph applies the public C++ \`flight\` namespaces and
-installed include prefixes. \`initialization.json\` records the compiler's dependency and module-evaluation plan.
+This is a bring-up inventory. It is intentionally committed before it forms a completely compilable SDK closure.
+CMake exposes the full inventory as \`Flight::SdkPreview\`, and Bazel exposes \`//:sdk_preview\`; the preview name
+keeps the remaining native compile failures visible. The package graph applies the public C++ \`flight\` namespaces
+and installed include prefixes. \`initialization.json\` records the compiler's dependency and module-evaluation plan.
 
 Regenerate and verify the tree from the repository root:
 

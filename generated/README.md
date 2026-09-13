@@ -1,16 +1,17 @@
 # Generated Flight SDK inventory
 
 This directory is generated from `@flighthq/sdk` 0.5.0 at
-`1274ec5c923947dc64d5ffedcbd8169fc758cd9f` by `flight-compiler` at `14a9ff437a33f8d5480b7659d68bcb20d090cf42`.
+`1274ec5c923947dc64d5ffedcbd8169fc758cd9f` by `flight-compiler` at `56496423fd865a51023e72966190d10d886eae40`.
 Do not edit it by hand.
 
-The current compiler emitted 319 of 2851 source modules from
-154 SDK packages and refused 2532. Emitted headers live under
+The current compiler emitted 1032 of 2851 source modules from
+154 SDK packages and refused 1819. Emitted headers live under
 `include/flight/<package>/`; every refusal and its owning module is recorded in `refusals.json`.
 
-This is a bring-up inventory. It is intentionally committed before it forms a compilable SDK closure, and CMake and
-Bazel do not publish it as `Flight::Sdk` yet. The package graph applies the public C++ `flight` namespaces and
-installed include prefixes. `initialization.json` records the compiler's dependency and module-evaluation plan.
+This is a bring-up inventory. It is intentionally committed before it forms a completely compilable SDK closure.
+CMake exposes the full inventory as `Flight::SdkPreview`, and Bazel exposes `//:sdk_preview`; the preview name
+keeps the remaining native compile failures visible. The package graph applies the public C++ `flight` namespaces
+and installed include prefixes. `initialization.json` records the compiler's dependency and module-evaluation plan.
 
 Regenerate and verify the tree from the repository root:
 

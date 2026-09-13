@@ -13,7 +13,7 @@ namespace flight::types {
 using TextureResolutionStatus = flight::String;
 
 struct TextureResolutionExplanation : public flight::ReferenceEnabled {
-  std::optional<TextureSourceKind> kind;
+  std::optional<flight::String> kind;
   TextureResolutionStatus status;
 };
 

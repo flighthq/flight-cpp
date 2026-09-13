@@ -17,7 +17,7 @@ struct AttractorForce : public flight::ReferenceEnabled {
   std::optional<double> z;
   double strength;
   std::optional<double> radius;
-  std::optional<ForceFalloff> falloff;
+  std::optional<flight::types::ForceFalloff> falloff;
 };
 
 inline const flight::String attractor_force_kind = flight::String("AttractorForce");

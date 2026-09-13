@@ -13,6 +13,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-using ParticleCollider = std::variant<flight::Ref<RectangleCollider>, flight::Ref<PlaneCollider>, flight::Ref<SphereCollider>, flight::Ref<CircleCollider>>;
+using ParticleCollider = std::variant<flight::Ref<flight::types::RectangleCollider>, flight::Ref<flight::types::PlaneCollider>, flight::Ref<flight::types::SphereCollider>, flight::Ref<flight::types::CircleCollider>>;
 
 } // namespace flight::types

@@ -10,7 +10,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types {
 
 struct TextItem : public flight::ReferenceEnabled {
-  TextDirection direction;
+  flight::types::TextDirection direction;
   double end;
   flight::String script;
   double start;

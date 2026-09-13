@@ -12,15 +12,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types {
 
 struct TextureContainer : public flight::ReferenceEnabled {
-  TextureContainerFormat format;
+  flight::types::TextureContainerFormat format;
   double width;
   double height;
   double depth;
   double mip_levels;
   double layers;
   double faces;
-  TextureContainerSupercompression supercompression;
-  flight::Array<flight::Ref<TextureContainerLevel>> levels;
+  flight::types::TextureContainerSupercompression supercompression;
+  flight::Array<flight::Ref<flight::types::TextureContainerLevel>> levels;
 };
 
 } // namespace flight::types

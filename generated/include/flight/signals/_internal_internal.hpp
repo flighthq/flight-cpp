@@ -8,7 +8,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::signals {
 
-inline std::function<void()> null_signal_emit = [=]() {
+inline std::function<void()> null_signal_emit = []() {
 
 };
 

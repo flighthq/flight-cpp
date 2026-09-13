@@ -8,28 +8,28 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::geometry {
 
 inline flight::Float32Array reserve_float32_array(flight::Float32Array array, double capacity) {
-  if ((array.length >= capacity)) {
+  if ((static_cast<double>(array.size()) >= capacity)) {
     return array;
   }
-  auto out = flight::Float32Array(capacity);
+  flight::Float32Array out = flight::Float32Array(capacity);
   out.set(array);
   return out;
 }
 
 inline flight::Int16Array reserve_int16_array(flight::Int16Array array, double capacity) {
-  if ((array.length >= capacity)) {
+  if ((static_cast<double>(array.size()) >= capacity)) {
     return array;
   }
-  auto out = flight::Int16Array(capacity);
+  flight::Int16Array out = flight::Int16Array(capacity);
   out.set(array);
   return out;
 }
 
 inline flight::Uint16Array reserve_uint16_array(flight::Uint16Array array, double capacity) {
-  if ((array.length >= capacity)) {
+  if ((static_cast<double>(array.size()) >= capacity)) {
     return array;
   }
-  auto out = flight::Uint16Array(capacity);
+  flight::Uint16Array out = flight::Uint16Array(capacity);
   out.set(array);
   return out;
 }

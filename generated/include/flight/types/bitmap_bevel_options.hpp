@@ -19,7 +19,7 @@ struct BitmapBevelOptions : public flight::ReferenceEnabled {
   std::optional<double> highlight_color;
   std::optional<double> shadow_color;
   std::optional<double> intensity;
-  std::optional<BitmapBevelType> type;
+  std::optional<flight::types::BitmapBevelType> type;
 };
 
 } // namespace flight::types

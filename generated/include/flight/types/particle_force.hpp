@@ -14,6 +14,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-using ParticleForce = std::variant<flight::Ref<VortexForce>, flight::Ref<AttractorForce>, flight::Ref<WindForce>, flight::Ref<TurbulenceForce>, flight::Ref<DragForce>>;
+using ParticleForce = std::variant<flight::Ref<flight::types::VortexForce>, flight::Ref<flight::types::AttractorForce>, flight::Ref<flight::types::WindForce>, flight::Ref<flight::types::TurbulenceForce>, flight::Ref<flight::types::DragForce>>;
 
 } // namespace flight::types

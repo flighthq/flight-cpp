@@ -12,7 +12,7 @@ namespace flight::types {
 
 struct BitmapConvolutionOptions : public flight::ReferenceEnabled {
   std::optional<double> bias;
-  std::optional<BitmapEdgeMode> edge;
+  std::optional<flight::types::BitmapEdgeMode> edge;
   std::optional<double> divisor;
   flight::Array<double> matrix;
   double matrix_x;

@@ -14,7 +14,7 @@ struct AmbientLightOptions : public flight::ReferenceEnabled {
   std::optional<double> color;
   std::optional<bool> enabled;
   std::optional<double> intensity;
-  std::optional<LightUnit> intensity_unit;
+  std::optional<flight::types::LightUnit> intensity_unit;
 };
 
 } // namespace flight::types

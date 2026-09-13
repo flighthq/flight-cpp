@@ -17,7 +17,7 @@ struct BitmapGradientBevelOptions : public flight::ReferenceEnabled {
   std::optional<double> radius_y;
   std::optional<double> passes;
   std::optional<double> intensity;
-  std::optional<BitmapBevelType> type;
+  std::optional<flight::types::BitmapBevelType> type;
 };
 
 } // namespace flight::types

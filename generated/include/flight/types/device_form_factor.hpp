@@ -7,8 +7,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-using DeviceFormFactor = flight::String;
-
 inline const flight::String device_form_factor_car = flight::String("Car");
 
 inline const flight::String device_form_factor_desktop = flight::String("Desktop");
@@ -22,5 +20,7 @@ inline const flight::String device_form_factor_tv = flight::String("TV");
 inline const flight::String device_form_factor_unknown = flight::String("Unknown");
 
 inline const flight::String device_form_factor_watch = flight::String("Watch");
+
+using DeviceFormFactor = flight::String;
 
 } // namespace flight::types

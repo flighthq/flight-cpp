@@ -35,7 +35,7 @@ struct TextFormat : public flight::ReferenceEnabled {
   std::optional<flight::String> target;
   std::optional<bool> underline;
   std::optional<flight::String> url;
-  std::optional<flight::Array<flight::Ref<FontVariation>>> variations;
+  std::optional<flight::Array<flight::Ref<flight::types::FontVariation>>> variations;
 };
 
 } // namespace flight::types

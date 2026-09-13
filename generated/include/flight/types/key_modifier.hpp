@@ -26,8 +26,8 @@ struct alt_caps_lock_ctrl_left_alt_left_ctrl_left_meta_left_shift_meta_mode_none
   double shift;
 };
 
-using KeyModifier = double;
-
 inline flight::Ref<alt_caps_lock_ctrl_left_alt_left_ctrl_left_meta_left_shift_meta_mode_none_num_lock_right_alt_right_ctrl_right_meta_right_shift_shift> key_modifier = flight::make_ref<alt_caps_lock_ctrl_left_alt_left_ctrl_left_meta_left_shift_meta_mode_none_num_lock_right_alt_right_ctrl_right_meta_right_shift_shift>(alt_caps_lock_ctrl_left_alt_left_ctrl_left_meta_left_shift_meta_mode_none_num_lock_right_alt_right_ctrl_right_meta_right_shift_shift{.alt = flight::bitwise_or(256.0, 512.0), .caps_lock = 8192.0, .ctrl = flight::bitwise_or(64.0, 128.0), .left_alt = 256.0, .left_ctrl = 64.0, .left_meta = 1024.0, .left_shift = 1.0, .meta = flight::bitwise_or(1024.0, 2048.0), .mode = 16384.0, .none = 0.0, .num_lock = 4096.0, .right_alt = 512.0, .right_ctrl = 128.0, .right_meta = 2048.0, .right_shift = 2.0, .shift = flight::bitwise_or(1.0, 2.0)});
+
+using KeyModifier = double;
 
 } // namespace flight::types

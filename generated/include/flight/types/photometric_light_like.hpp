@@ -11,7 +11,7 @@ namespace flight::types {
 
 struct PhotometricLightLike : public flight::ReferenceEnabled {
   double intensity;
-  LightUnit intensity_unit;
+  flight::types::LightUnit intensity_unit;
 };
 
 } // namespace flight::types

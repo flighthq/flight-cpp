@@ -20,7 +20,7 @@ struct VortexForce : public flight::ReferenceEnabled {
   std::optional<double> axis_z;
   double strength;
   std::optional<double> radius;
-  std::optional<ForceFalloff> falloff;
+  std::optional<flight::types::ForceFalloff> falloff;
 };
 
 inline const flight::String vortex_force_kind = flight::String("VortexForce");

@@ -14,7 +14,7 @@ struct HemisphereLightOptions : public flight::ReferenceEnabled {
   std::optional<bool> enabled;
   std::optional<double> ground_color;
   std::optional<double> intensity;
-  std::optional<LightUnit> intensity_unit;
+  std::optional<flight::types::LightUnit> intensity_unit;
   std::optional<double> sky_color;
 };
 

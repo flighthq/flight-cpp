@@ -10,7 +10,7 @@ namespace flight::textbidi {
 
 inline void reorder_bidi_line(flight::Uint8Array levels, double start, double end, flight::Array<double> out) {
   const double count = (end - start);
-  static_cast<double>(out.size()) = count;
+  ([&]() { auto&& assignment_receiver = out; const auto assignment_value = count; assignment_receiver.resize(assignment_value); return assignment_value; }());
   if ((count <= 0.0)) {
     return;
   }

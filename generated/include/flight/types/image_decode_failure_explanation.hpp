@@ -9,7 +9,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types {
 
 struct mime_type_reason : public flight::ReferenceEnabled {
-  void mime_type;
+  flight::Null mime_type;
   flight::String reason;
 };
 

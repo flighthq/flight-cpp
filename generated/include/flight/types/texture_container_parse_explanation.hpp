@@ -12,8 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types {
 
 struct TextureContainerParseExplanation : public flight::ReferenceEnabled {
-  std::optional<TextureContainerKind> container;
-  TextureContainerParseFailureReason reason;
+  std::optional<flight::String> container;
+  flight::types::TextureContainerParseFailureReason reason;
 };
 
 } // namespace flight::types
