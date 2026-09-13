@@ -5,6 +5,7 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "cpp",
     hdrs = [
+        "include/flight/abort.hpp",
         "include/flight/array.hpp",
         "include/flight/array_buffer.hpp",
         "include/flight/array_buffer_view.hpp",

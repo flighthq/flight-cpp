@@ -60,4 +60,5 @@ _PUBLIC_HEADERS = [
     ("sequence_view", 34),
     ("record", 35),
     ("weak_set", 36),
+    ("abort", 37),
 ]

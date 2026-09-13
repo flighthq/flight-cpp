@@ -9,6 +9,7 @@
     "node": ">=22"
   },
   "scripts": {
+    "abort:oracle": "node ./scripts/abortOracle.mjs",
     "abi:check": "node ./scripts/abiHealth.mjs",
     "array-like:oracle": "node ./scripts/arrayLikeOracle.mjs",
     "build:check": "node ./scripts/buildHealth.mjs",

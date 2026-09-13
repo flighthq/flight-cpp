@@ -74,8 +74,36 @@ class ArrayBufferLike {
  public:
   using size_type = std::size_t;
 
+  class ByteLength final {
+   public:
+    explicit ByteLength(const ArrayBufferLike* owner) noexcept : owner_(owner) {}
+    [[nodiscard]] operator size_type() const noexcept { return owner_->backing_->length; }
+    [[nodiscard]] size_type operator()() const noexcept { return owner_->backing_->length; }
+
+   private:
+    const ArrayBufferLike* owner_;
+  };
+
+  ByteLength byte_length{this};
+
   ArrayBufferLike() : backing_(make_owned(0, ArrayBufferKind::array_buffer,
                                            ArrayBufferConcurrency::single_threaded)) {}
+
+  ArrayBufferLike(const ArrayBufferLike& other)
+      : byte_length(this), backing_(other.backing_) {}
+
+  ArrayBufferLike(ArrayBufferLike&& other) noexcept
+      : byte_length(this), backing_(std::move(other.backing_)) {}
+
+  ArrayBufferLike& operator=(const ArrayBufferLike& other) {
+    backing_ = other.backing_;
+    return *this;
+  }
+
+  ArrayBufferLike& operator=(ArrayBufferLike&& other) noexcept {
+    backing_ = std::move(other.backing_);
+    return *this;
+  }
 
   template <typename Owner>
   [[nodiscard]] static ArrayBufferLike from_external(
@@ -102,7 +130,6 @@ class ArrayBufferLike {
         ArrayBufferMutability::read_only, concurrency}));
   }
 
-  [[nodiscard]] size_type byte_length() const noexcept { return backing_->length; }
   [[nodiscard]] const std::byte* data() const noexcept { return backing_->data; }
   [[nodiscard]] std::byte* data() { return writable_data(); }
   [[nodiscard]] std::byte* writable_data() {

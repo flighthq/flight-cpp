@@ -72,6 +72,8 @@
 #include <flight/record.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 36
 #include <flight/weak_set.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 37
+#include <flight/abort.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

@@ -386,6 +386,33 @@ void test_new_runtime_services() {
   check(flight::String("frame=") + 12.0 == flight::String("frame=12"),
         "string concatenation converts emitted numeric operands");
 
+  flight::AbortController abort_controller;
+  const auto abort_signal = abort_controller.signal;
+  int abort_calls = 0;
+  const std::function<void()> abort_listener = [&] { ++abort_calls; };
+  abort_signal.add_event_listener("abort", abort_listener, {.once = true});
+  abort_signal.add_event_listener("abort", abort_listener, {.once = true});
+  abort_controller.abort(flight::String("cancelled"));
+  abort_controller.abort(flight::String("ignored"));
+  check(abort_signal.aborted && abort_calls == 1 &&
+            abort_signal.reason.get<flight::String>() == flight::String("cancelled"),
+        "AbortController shares state, fires listeners once, and retains the first reason");
+  bool abort_threw = false;
+  try {
+    abort_signal.throw_if_aborted();
+  } catch (const flight::AbortError& error) {
+    abort_threw = error.reason().get<flight::String>() == flight::String("cancelled");
+  }
+  check(abort_threw, "AbortSignal throw_if_aborted carries the cancellation reason");
+
+  flight::AbortController removed_abort_controller;
+  int removed_abort_calls = 0;
+  const std::function<void()> removed_abort_listener = [&] { ++removed_abort_calls; };
+  removed_abort_controller.signal.add_event_listener("abort", removed_abort_listener);
+  removed_abort_controller.signal.remove_event_listener("abort", removed_abort_listener);
+  removed_abort_controller.abort();
+  check(removed_abort_calls == 0, "AbortSignal removes a registered listener by callable identity");
+
   const auto json = flight::Json::stringify(flight::Array<double>{1.0, 2.0}, nullptr, 2.0);
   check(json == flight::String("[\n  1,\n  2\n]"),
         "JSON stringification covers semantic arrays and bounded indentation");

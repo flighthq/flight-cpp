@@ -32,6 +32,7 @@ inline constexpr RuntimeContract runtime_contract{
 };
 
 inline constexpr std::array runtime_capabilities{
+    RuntimeCapability{"abort-signal", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"array", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"array-buffer", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"array-buffer-like", RuntimeCapabilityStatus::initial},

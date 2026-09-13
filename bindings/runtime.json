@@ -5,6 +5,40 @@
   "bindings": [
     {
       "headers": [
+        "flight/abort.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "AbortController",
+      "space": "type",
+      "targetName": "flight::AbortController"
+    },
+    {
+      "construction": {
+        "kind": "constructor",
+        "targetName": "flight::AbortController"
+      },
+      "headers": [
+        "flight/abort.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "AbortController",
+      "space": "value",
+      "targetName": "flight::AbortController"
+    },
+    {
+      "headers": [
+        "flight/abort.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "AbortSignal",
+      "space": "type",
+      "targetName": "flight::AbortSignal"
+    },
+    {
+      "headers": [
         "flight/array_buffer_view.hpp"
       ],
       "nullability": "non-null",
@@ -12,6 +46,16 @@
       "sourceName": "ArrayBufferView",
       "space": "type",
       "targetName": "flight::ArrayBufferView"
+    },
+    {
+      "headers": [
+        "flight/array_buffer.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "ArrayBufferLike",
+      "space": "type",
+      "targetName": "flight::ArrayBufferLike"
     },
     {
       "headers": [

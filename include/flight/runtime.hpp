@@ -1,5 +1,6 @@
 #pragma once
 
+#include <flight/abort.hpp>
 #include <flight/array.hpp>
 #include <flight/array_buffer.hpp>
 #include <flight/array_buffer_view.hpp>

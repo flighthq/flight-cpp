@@ -49,6 +49,9 @@ const source = api.parseTypeScriptSource(
    export function byteEnd(view: ArrayBufferView): number {
      return view.byteOffset + view.byteLength;
    }
+   export function bufferBytes(buffer: ArrayBufferLike): number {
+     return buffer.byteLength;
+   }
    export function weakArray(values: number[]): boolean {
      const seen = new WeakSet<readonly number[]>();
      seen.add(values);
@@ -79,6 +82,7 @@ for (const expected of [
   '#include <flight/sequence_view.hpp>',
   '#include <flight/weak_set.hpp>',
   'flight::SequenceView<double>',
+  'flight::ArrayBufferLike',
   'flight::ArrayBufferView',
   'flight::WeakSet<flight::Array<double>>',
   'flight::parse_float',
@@ -108,10 +112,12 @@ int main() {
   const auto custom = std::make_shared<std::vector<double>>(std::initializer_list<double>{4.0, 5.0});
   const auto custom_total = flighthq_runtime_test::total(custom);
   const auto byte_end = flighthq_runtime_test::byte_end(flight::ArrayBufferView(words));
+  const auto buffer_bytes = flighthq_runtime_test::buffer_bytes(words.buffer);
   const auto weak_array = flighthq_runtime_test::weak_array(values);
   const auto parsed = flighthq_runtime_test::parse_prefix(flight::String(" -12.5tail"));
   const auto finite = flighthq_runtime_test::finite(parsed);
   return array_total == 6.0 && typed_total == 0.0 && custom_total == 9.0 && byte_end == 8.0 &&
+                 buffer_bytes == 8.0 &&
                  weak_array && parsed == -12.5 && finite
              ? 0
              : 1;

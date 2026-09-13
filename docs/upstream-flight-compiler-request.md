@@ -23,6 +23,10 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
 
 - stable shared `ArrayBuffer`, typed-array views, complete numeric `DataView` access, UTF-8 `TextDecoder`, and
   `String::from_code_point`;
+- a common `ArrayBufferLike` carrier for ordinary, shared, and host-owned storage, now selected by the runtime binding
+  profile and accepted by typed-array/DataView zero-copy constructors;
+- shared `AbortController`/`AbortSignal` state with first-reason retention, listener dispatch/removal, and
+  `throw_if_aborted`, covered by a live compiler-versus-Node oracle;
 - numeric conversion and prefix parsing, safe-integer checks, object keys/values, symbols, URL protocol parsing,
   regular expressions, and a deterministic Intl baseline;
 - idempotent `Ref<T>` projection, generated structural-row member access, writable entity construction, and
@@ -66,8 +70,9 @@ packages own rendering behavior. These host bindings will increase the emitted m
 1,032-header compile gate remains useful and independent of platform SDKs.
 
 The downstream `flighthq/flight-cpp/sdl-gl/1` profile now names concrete SDL-owned canvas/context types, shared GL
-object handles, context attributes, and a weakly recoverable image-source carrier. It emits 1,085 modules; 21 of its
-22 newly admitted headers compile. The next compiler blocker is exact: `packages/types/src/GlContext.ts` retains
+object handles, context attributes, and a weakly recoverable image-source carrier. Composed with the current runtime
+profile it emits 1,102 modules; 21 of its 29 newly admitted headers compile. The next compiler blocker is exact:
+`packages/types/src/GlContext.ts` retains
 `auto viewport;` after its closed `Pick<WebGL2RenderingContext, GlContextMember>` is materialized. The fail-closed
 placeholder gate correctly refuses it. Once all picked constants and methods receive their concrete callable types,
 flight-cpp can populate the generated `flight::types::GlContext` record from its working `WebGl2Context` and proceed

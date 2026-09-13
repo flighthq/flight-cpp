@@ -29,6 +29,7 @@ add_test(NAME flight_cpp.c_api_threads COMMAND flight_cpp_c_api_thread_tests)
 
 set(
   flight_cpp_public_headers
+  abort
   array
   array_buffer
   array_buffer_view
