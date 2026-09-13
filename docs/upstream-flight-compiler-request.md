@@ -27,6 +27,8 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
   profile and accepted by typed-array/DataView zero-copy constructors;
 - shared `AbortController`/`AbortSignal` state with first-reason retention, listener dispatch/removal, and
   `throw_if_aborted`, covered by a live compiler-versus-Node oracle;
+- immutable shared `Blob` bytes with typed-array construction, slicing, MIME normalization, text decoding, and
+  `ArrayBuffer` conversion, selected through the runtime profile and covered by a live compiler-versus-Node oracle;
 - numeric conversion and prefix parsing, safe-integer checks, object keys/values, symbols, URL protocol parsing,
   regular expressions, and a deterministic Intl baseline;
 - idempotent `Ref<T>` projection, generated structural-row member access, writable entity construction, and

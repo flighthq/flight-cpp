@@ -37,6 +37,7 @@ inline constexpr std::array runtime_capabilities{
     RuntimeCapability{"array-buffer", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"array-buffer-like", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"array-buffer-view", RuntimeCapabilityStatus::initial},
+    RuntimeCapability{"blob", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"data-view", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"date", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"executor", RuntimeCapabilityStatus::initial},

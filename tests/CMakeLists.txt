@@ -33,6 +33,7 @@ set(
   array
   array_buffer
   array_buffer_view
+  blob
   callable
   conditional_facet_ref
   contract

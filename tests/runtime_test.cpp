@@ -173,6 +173,43 @@ void test_binary_data() {
   check(bounds_failed, "DataView rejects reads beyond its declared view");
 }
 
+void test_blob() {
+  const flight::Blob text_blob(
+      flight::Array<flight::String>{"Flight ", flight::String::from_utf8("\xF0\x9F\x98\x80")},
+      {.type = "TEXT/PLAIN"});
+  const auto text_alias = text_blob;
+  check(text_blob.size == 11 && text_blob.type == flight::String("text/plain") &&
+            text_blob.identity() == text_alias.identity() &&
+            text_blob.text().get() == flight::String::from_utf8("Flight \xF0\x9F\x98\x80"),
+        "Blob joins UTF-8 string parts, normalizes MIME types, and preserves identity");
+
+  const flight::Blob binary_blob(
+      flight::Array<flight::Uint8Array>{flight::Uint8Array{0x00, 0x7F, 0xFF}});
+  const auto binary_buffer = binary_blob.array_buffer().get();
+  const flight::Uint8Array binary_bytes(binary_buffer);
+  check(binary_bytes.size() == 3 && binary_bytes[0] == 0x00 && binary_bytes[1] == 0x7F &&
+            binary_bytes[2] == 0xFF,
+        "Blob copies typed-array bytes into an independently owned ArrayBuffer");
+
+  const auto middle = text_blob.slice(1.0, -1.0, "APPLICATION/X-FLIGHT");
+  check(middle.size == 9 && middle.type == flight::String("application/x-flight") &&
+            middle.text().get() == flight::String(u"light \uFFFD"),
+        "Blob slice applies signed byte indexes and normalizes its replacement MIME type");
+
+  const flight::Blob nested(flight::Array<flight::Blob>{middle, binary_blob});
+  check(nested.size == middle.size + binary_blob.size,
+        "Blob parts can retain and concatenate existing immutable byte sequences");
+
+  const auto weak = text_blob.weaken();
+  const auto recovered = flight::Blob::lock_weak(weak);
+  check(recovered.has_value() && recovered->identity() == text_blob.identity() &&
+            recovered->type == flight::String("text/plain"),
+        "Blob weak recovery preserves object identity and MIME metadata");
+
+  const flight::Blob invalid_type(flight::Array<flight::String>{"value"}, {.type = "text/\nplain"});
+  check(invalid_type.type.empty(), "Blob rejects MIME types outside the printable ASCII range");
+}
+
 void test_array_like_views() {
   flight::Array<double> array{1.0, 2.0, 3.0};
   const flight::SequenceView<double> array_view(array);
@@ -291,6 +328,8 @@ void test_contract() {
             flight::runtime_capability_status("array-buffer-view") == flight::RuntimeCapabilityStatus::initial &&
             flight::runtime_capability_status("data-view") == flight::RuntimeCapabilityStatus::initial,
         "binary storage capabilities are advertised after their implementation lands");
+  check(flight::runtime_capability_status("blob") == flight::RuntimeCapabilityStatus::initial,
+        "immutable Blob storage is advertised after its runtime implementation lands");
   check(flight::runtime_capability_status("sequence-view") == flight::RuntimeCapabilityStatus::initial,
         "owner-preserving sequence views are advertised after their implementation lands");
   check(flight::runtime_capability_status("record") == flight::RuntimeCapabilityStatus::initial,
@@ -980,6 +1019,7 @@ int main() {
   test_array_buffer_like();
   test_array_like_views();
   test_binary_data();
+  test_blob();
   test_contract();
   test_date();
   test_error();

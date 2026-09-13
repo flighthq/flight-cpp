@@ -74,6 +74,8 @@
 #include <flight/weak_set.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 37
 #include <flight/abort.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 38
+#include <flight/blob.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

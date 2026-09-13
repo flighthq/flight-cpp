@@ -16,6 +16,7 @@ const gates = [
   { arguments: [], name: 'abortOracle' },
   { arguments: [], name: 'abiHealth' },
   { arguments: [], name: 'arrayLikeOracle' },
+  { arguments: [], name: 'blobOracle' },
   { arguments: [], name: 'buildHealth' },
   { arguments: [], name: 'releaseHealth' },
   { arguments: [], name: 'exampleHealth' },

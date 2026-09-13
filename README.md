@@ -125,6 +125,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run abort:oracle` | Do compiler-emitted cancellation bindings match native `AbortController` behavior? |
 | `npm run abi:check` | Do the C header, its implementation, and the committed ABI snapshot name the same symbols? |
 | `npm run array-like:oracle` | Do compiler-emitted portable bindings for array-like views, weak sets, and numeric globals compile and preserve native behavior? |
+| `npm run blob:oracle` | Do compiler-emitted Blob construction, slicing, text, and binary operations match Node? |
 | `npm run build:check` | Do the CMake and Bazel graphs describe the same headers, sources, tests, and benchmarks? |
 | `npm run examples:check` | Does the pinned compiler reproduce the checked-in native example output? |
 | `npm run facets:oracle` | Do compiler-emitted conditional facets preserve capable and incapable host types? |

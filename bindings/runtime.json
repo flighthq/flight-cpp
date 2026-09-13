@@ -59,6 +59,30 @@
     },
     {
       "headers": [
+        "flight/blob.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "Blob",
+      "space": "type",
+      "targetName": "flight::Blob"
+    },
+    {
+      "construction": {
+        "kind": "constructor",
+        "targetName": "flight::Blob"
+      },
+      "headers": [
+        "flight/blob.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "Blob",
+      "space": "value",
+      "targetName": "flight::Blob"
+    },
+    {
+      "headers": [
         "flight/sequence_view.hpp"
       ],
       "nullability": "non-null",
