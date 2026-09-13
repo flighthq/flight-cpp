@@ -426,4 +426,36 @@ template <typename Value>
   return false;
 }
 
+template <typename Range>
+  requires requires(const Range& values) {
+    std::begin(values);
+    std::end(values);
+  }
+[[nodiscard]] auto array_from(const Range& values)
+    -> Array<std::remove_cvref_t<decltype(*std::begin(values))>> {
+  using Value = std::remove_cvref_t<decltype(*std::begin(values))>;
+  Array<Value> result;
+  for (const auto& value : values) result.push(value);
+  return result;
+}
+
+template <typename Range, typename Transform>
+  requires requires(const Range& values) {
+    std::begin(values);
+    std::end(values);
+  }
+[[nodiscard]] auto array_from(const Range& values, Transform transform)
+    -> Array<std::remove_cvref_t<decltype(detail::invoke_array_callback(
+        transform, *std::begin(values), std::size_t{}))>> {
+  using Value = std::remove_cvref_t<decltype(detail::invoke_array_callback(
+      transform, *std::begin(values), std::size_t{}))>;
+  Array<Value> result;
+  std::size_t index = 0;
+  for (const auto& value : values) {
+    result.push(detail::invoke_array_callback(transform, value, index));
+    ++index;
+  }
+  return result;
+}
+
 } // namespace flight

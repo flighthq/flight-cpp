@@ -128,6 +128,15 @@ void test_array() {
         "array find_index returns a numeric position sentinel");
   check(mapped.reduce([](double total, double value) { return total + value; }, 0.0) == 6.0,
         "array reduce preserves accumulator order");
+
+  const flight::Set<double> iterable{3.0, 1.0, 4.0};
+  const auto copied = flight::array_from(iterable);
+  const auto transformed = flight::array_from(iterable, [](double value, double index) {
+    return value + index;
+  });
+  check(copied.size() == 3 && copied[0] == 3.0 && copied[2] == 4.0 &&
+            transformed.size() == 3 && transformed[0] == 3.0 && transformed[2] == 6.0,
+        "Array.from preserves iterable order and supplies numeric mapper indexes");
   const auto tail = mapped.slice(-2);
   check(tail.size() == 2 && tail[0] == 1.0, "array slice normalizes negative boundaries");
   check(mapped.join(flight::String("|")) == flight::String("0|1|5"),
@@ -1036,6 +1045,33 @@ void test_typed_array() {
             static_cast<std::uint8_t>(clamped[3]) == 2 &&
             static_cast<std::uint8_t>(clamped[4]) == 255,
         "Uint8ClampedArray uses saturating ties-to-even conversion");
+
+  const flight::Array<double> source{-1.0, 4294967297.0,
+                                     std::numeric_limits<double>::quiet_NaN()};
+  const auto unsigned_values = flight::Uint32Array::from(source);
+  const auto signed_values = flight::Int8Array::from(
+      flight::Array<double>{127.0, 128.0, 255.0, 256.0, -129.0});
+  const auto transformed = flight::Uint16Array::from(
+      flight::Array<double>{1.0, 2.0}, [](double value, double index) {
+        return value + index + 65535.0;
+      });
+  check(unsigned_values.size() == 3 && unsigned_values[0] == 4294967295U &&
+            unsigned_values[1] == 1U && unsigned_values[2] == 0U,
+        "typed-array from applies JavaScript unsigned modulo conversion");
+  check(signed_values.size() == 5 && signed_values[0] == 127 && signed_values[1] == -128 &&
+            signed_values[2] == -1 && signed_values[3] == 0 && signed_values[4] == 127,
+        "typed-array from applies JavaScript signed modulo conversion");
+  check(transformed.size() == 2 && transformed[0] == 0 && transformed[1] == 2,
+        "typed-array from invokes its mapper before element conversion");
+
+  const flight::ArrayBuffer buffer(8.0);
+  const flight::DataView data_view(buffer);
+  const std::variant<flight::ArrayBuffer, flight::Uint8Array> source_variant =
+      flight::Uint8Array(buffer);
+  check(!flight::is_array_buffer_view(buffer) && flight::is_array_buffer_view(data_view) &&
+            flight::is_array_buffer_view(values) &&
+            flight::is_array_buffer_view(source_variant),
+        "ArrayBuffer.isView distinguishes buffers from typed and data views");
 }
 
 void test_uri_components() {

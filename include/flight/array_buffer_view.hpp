@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
+#include <variant>
 
 #include <flight/data_view.hpp>
 #include <flight/typed_array.hpp>
@@ -106,5 +107,31 @@ class ArrayBufferView {
  private:
   const void* identity_;
 };
+
+[[nodiscard]] constexpr bool is_array_buffer_view(const ArrayBufferView&) noexcept {
+  return true;
+}
+
+[[nodiscard]] constexpr bool is_array_buffer_view(const DataView&) noexcept {
+  return true;
+}
+
+template <typename Value>
+[[nodiscard]] constexpr bool is_array_buffer_view(const TypedArray<Value>&) noexcept {
+  return true;
+}
+
+[[nodiscard]] constexpr bool is_array_buffer_view(const ArrayBufferLike&) noexcept {
+  return false;
+}
+
+template <typename... Values>
+  requires requires(const std::variant<Values...>& value) {
+    std::visit([](const auto& alternative) { return is_array_buffer_view(alternative); }, value);
+  }
+[[nodiscard]] bool is_array_buffer_view(const std::variant<Values...>& value) {
+  return std::visit(
+      [](const auto& alternative) { return is_array_buffer_view(alternative); }, value);
+}
 
 } // namespace flight

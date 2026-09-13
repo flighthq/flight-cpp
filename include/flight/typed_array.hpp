@@ -6,6 +6,7 @@
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <initializer_list>
 #include <iterator>
 #include <limits>
@@ -154,6 +155,36 @@ class TypedArray {
     }
   explicit TypedArray(const Range& values) : TypedArray(std::begin(values), std::end(values)) {}
 
+  template <typename Range>
+    requires requires(const Range& range) {
+      std::begin(range);
+      std::end(range);
+    }
+  [[nodiscard]] static TypedArray from(const Range& values) {
+    return TypedArray(std::begin(values), std::end(values));
+  }
+
+  template <typename Range, typename Transform>
+    requires requires(const Range& range) {
+      std::begin(range);
+      std::end(range);
+    }
+  [[nodiscard]] static TypedArray from(const Range& values, Transform transform) {
+    std::vector<Value> output;
+    if constexpr (requires { std::size(values); }) output.reserve(std::size(values));
+    size_type index = 0;
+    for (const auto& value : values) {
+      if constexpr (std::invocable<Transform&, decltype(value), double>) {
+        output.push_back(convert_element(
+            std::invoke(transform, value, static_cast<double>(index))));
+      } else {
+        output.push_back(convert_element(std::invoke(transform, value)));
+      }
+      ++index;
+    }
+    return TypedArray(output.begin(), output.end());
+  }
+
   explicit TypedArray(const ArrayBufferLike& source)
       : TypedArray(source, size_type{0}, remaining_length(source, 0), ViewTag{}) {}
 
@@ -285,7 +316,44 @@ class TypedArray {
   template <typename Iterator>
   TypedArray(Iterator first, Iterator last)
       : TypedArray(static_cast<size_type>(std::distance(first, last))) {
-    std::copy(first, last, begin());
+    auto destination = begin();
+    while (first != last) {
+      *destination = convert_element(*first);
+      ++first;
+      ++destination;
+    }
+  }
+
+  template <typename Source>
+  [[nodiscard]] static Value convert_element(Source&& source) {
+    using SourceValue = std::remove_cvref_t<Source>;
+    if constexpr (std::same_as<SourceValue, Value>) {
+      return source;
+    } else if constexpr (std::same_as<Value, Uint8Clamped> &&
+                         std::is_arithmetic_v<SourceValue>) {
+      return Uint8Clamped(source);
+    } else if constexpr (std::floating_point<Value> &&
+                         std::is_arithmetic_v<SourceValue>) {
+      return static_cast<Value>(source);
+    } else if constexpr (std::integral<Value> &&
+                         std::is_arithmetic_v<SourceValue>) {
+      const auto number = static_cast<long double>(source);
+      if (!std::isfinite(number) || number == 0.0L) return Value{0};
+
+      using Unsigned = std::make_unsigned_t<Value>;
+      constexpr auto bits = std::numeric_limits<Unsigned>::digits;
+      const auto modulus = std::ldexp(1.0L, bits);
+      auto wrapped = std::fmod(std::trunc(number), modulus);
+      if (wrapped < 0.0L) wrapped += modulus;
+      if constexpr (std::unsigned_integral<Value>) {
+        return static_cast<Value>(wrapped);
+      } else {
+        const auto midpoint = modulus / 2.0L;
+        return static_cast<Value>(wrapped >= midpoint ? wrapped - modulus : wrapped);
+      }
+    } else {
+      return Value(std::forward<Source>(source));
+    }
   }
 
   TypedArray(const ArrayBufferLike& source, size_type offset, ViewTag)

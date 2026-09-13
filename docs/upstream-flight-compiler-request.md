@@ -44,7 +44,10 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
 - the versioned callable signature/binding ABI used by Signals;
 - an explicit JSON value model plus parsing and stringification for every JSON value domain;
 - conditional capability facet references with required nested-member checks;
-- source-compatible array `length`, resize, and insertion splice operations, plus variadic `Math.min`/`Math.max`.
+- source-compatible array `length`, resize, insertion splice, and iterable `Array.from` operations, plus variadic
+  `Math.min`/`Math.max`;
+- typed-array `from` with JavaScript integer conversion after mapping, and `ArrayBuffer.isView` for represented
+  buffers and views.
 
 The native suite covers the new ownership and observable behavior. A generated SDK executable links
 `Flight::SdkPreview`, calls the emitted interpolation and Entity construction functions, runs under CMake's
@@ -69,6 +72,22 @@ These diagnostics arise after the runtime includes resolve, and many occur in a 
 header can be observed. The JSON report from `npm run sdk:compile` is the compact handoff surface for fixing them in
 flight-compiler. Downstream source rewriting would obscure compiler provenance and produce a second, unversioned
 transpiler, so the checked-in SDK remains the compiler's exact output plus its generated build/member inventories.
+
+Several direct ambient-member refusals now have exact downstream targets and need only compiler election:
+
+- `Number.parseInt` → `flight::parse_int`, `Number.parseFloat` → `flight::parse_float`, and
+  `Number.isSafeInteger` → `flight::is_safe_integer` from `flight/number.hpp`;
+- `Object.values` → `flight::object_values` from `flight/object.hpp`;
+- iterable `Array.from` → `flight::array_from` from `flight/array.hpp`;
+- typed-array `from` → the selected concrete alias's static `from`, such as `flight::Uint32Array::from`, from
+  `flight/typed_array.hpp`;
+- `ArrayBuffer.isView` → `flight::is_array_buffer_view` from `flight/array_buffer_view.hpp` when the argument has a
+  represented closed buffer/view domain.
+
+Length-only `Array.from({ length }, mapper)` still requires dedicated compiler lowering for its implicit
+`undefined` elements. Open `object` arguments to `ArrayBuffer.isView`, `Object.prototype.hasOwnProperty.call`,
+generic structured cloning, and `Promise.allSettled` results still need represented compiler contracts; the runtime
+does not provide a permissive erasure for them.
 
 ## Host boundary
 

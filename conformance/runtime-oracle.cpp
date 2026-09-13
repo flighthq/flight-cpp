@@ -38,6 +38,34 @@ int main() {
   observations.push(flight::to_number("0b101"));
   observations.push(flight::to_number("-0x10"));
 
+  const flight::Set<double> iterable{3.0, 1.0, 4.0};
+  flight::JsonArray array_from_values;
+  for (const auto value : flight::array_from(iterable, [](double value, double index) {
+         return value + index;
+       })) {
+    array_from_values.push(value);
+  }
+  observations.push(std::move(array_from_values));
+
+  flight::JsonArray uint32_values;
+  for (const auto value : flight::Uint32Array::from(
+           flight::Array<double>{-1.0, 4294967297.0,
+                                 std::numeric_limits<double>::quiet_NaN()})) {
+    uint32_values.push(static_cast<double>(value));
+  }
+  observations.push(std::move(uint32_values));
+
+  flight::JsonArray int8_values;
+  for (const auto value : flight::Int8Array::from(
+           flight::Array<double>{127.0, 128.0, 255.0, 256.0, -129.0})) {
+    int8_values.push(static_cast<double>(value));
+  }
+  observations.push(std::move(int8_values));
+
+  const auto converted_view = flight::Uint8Array::from(flight::Array<double>{1.0, 2.0});
+  observations.push(flight::is_array_buffer_view(converted_view));
+  observations.push(flight::is_array_buffer_view(converted_view.buffer));
+
   flight::Map<flight::String, double> target{{"first", 0.0}, {"retained", 3.0}};
   const flight::Map<flight::String, double> source{{"first", 1.0}, {"second", 2.0}};
   flight::object_assign(target, source);
