@@ -123,12 +123,14 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | Gate | Question |
 | --- | --- |
 | `npm run abi:check` | Do the C header, its implementation, and the committed ABI snapshot name the same symbols? |
+| `npm run array-like:oracle` | Do compiler-emitted `ArrayLike<T>` and `ArrayBufferView` parameters preserve native owner, view, and byte-range behavior? |
 | `npm run build:check` | Do the CMake and Bazel graphs describe the same headers, sources, tests, and benchmarks? |
 | `npm run examples:check` | Does the pinned compiler reproduce the checked-in native example output? |
 | `npm run facets:oracle` | Do compiler-emitted conditional facets preserve capable and incapable host types? |
 | `npm run headless:oracle` | Do the headless binding manifest's emitted console, timer, and performance calls compile and run? |
 | `npm run sdk:check` | Does the pinned compiler reproduce the committed SDK headers and refusal inventory? |
 | `npm run sdk:compile` | Which dependency-closed SDK headers compile independently with the selected `CXX` toolchain? |
+| `npm run sdk:compile:headless` | Which headers compile after applying the runtime-carrier and headless binding profiles? |
 | `npm run release:check` | Do the version, ABI, C++ standard, and conformance profile agree across every file that states them? |
 | `npm run runtime:oracle` | Do the native runtime services match the same TypeScript-valid operations under Node? |
 | `npm run structural:oracle` | Does the pinned compiler's generic Entity proxy compile and preserve native write interception? |

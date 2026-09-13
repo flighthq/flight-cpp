@@ -2,6 +2,7 @@
 
 #include <flight/array.hpp>
 #include <flight/array_buffer.hpp>
+#include <flight/array_buffer_view.hpp>
 #include <flight/callable.hpp>
 #include <flight/conditional_facet_ref.hpp>
 #include <flight/contract.hpp>
@@ -22,6 +23,7 @@
 #include <flight/regexp.hpp>
 #include <flight/rejection.hpp>
 #include <flight/set.hpp>
+#include <flight/sequence_view.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/symbol.hpp>

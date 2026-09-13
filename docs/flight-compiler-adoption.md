@@ -14,6 +14,7 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
 | Contract | State | Evidence and remaining work |
 | --- | --- | --- |
 | ArrayBuffer, typed arrays, DataView, TextDecoder, `String.fromCodePoint`, insertion `splice` | Implemented | Native tests cover shared backing, views, byte order, numeric edge cases, UTF-8 replacement, astral scalars, and insertion order. The runtime source differential exercises these behaviors against Node. |
+| `ArrayLike<T>` and `ArrayBufferView` carriers | Implemented downstream ABI | `SequenceView<T>` retains source ownership and identity while adapting `Array<T>`, typed arrays, and structurally compatible shared sources without copying. `ArrayBufferView` retains backing storage, byte range, source-view identity, and dynamic view kind. Native aliasing/lifetime tests and a live compiler-emitted binding oracle cover both. `ArrayBufferLike` remains separate because it still needs ordinary, shared, and external backing behind one contract. |
 | Number conversion, RegExp, URL | Implemented baseline | The emitted APIs compile and the source differential covers the Flight paths in the current SDK. RegExp remains a documented ECMAScript subset rather than a claim that `std::regex` implements every JavaScript expression. |
 | Object helpers | Implemented for represented map records | `object_keys`, `object_entries`, and identity-preserving `object_assign` cover the compiler's current represented map inputs. The ordered `Record<K,V>` ABI remains open. |
 | JSON | Partial | `JsonValue` preserves null, boolean, number, string, array, and object domains; `Json::parse` and `Json::stringify` round-trip them. Generated ordinary structs still need compiler-provided member reflection, and replacer semantics remain open. |
@@ -33,6 +34,9 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
   The preview is intentionally not installed.
 - `npm run sdk:compile` compiles every emitted header independently and writes the compiler-facing report to
   `out/sdk-header-compilation.json`.
+- `npm run sdk:compile:headless` applies the same audit to the combined runtime-carrier/headless inventory. At the
+  current pin, 707 of 1,060 headers pass and 353 expose compiler-emitted C++ errors. Three of the 28 newly emitted
+  headers compile; the other 25 advance to existing tuple, union, reference-conversion, and type-spelling defects.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
   runtime. It currently covers 18 cross-runtime observations.
 - `npm run structural:oracle` generates the exact generic Entity write proxy through the pinned compiler, compiles
@@ -50,7 +54,10 @@ aliases used as templates, value spelling used where a type name is required, in
 non-convertible duplicate anonymous records, package-scope helper collisions, and malformed type queries. These must
 be corrected in flight-compiler rather than rewritten in the generated tree.
 
-The versioned `flighthq/flight-cpp/headless/1` profile supplies monotonic `performance.now`, `console.debug`, and
+The versioned `flighthq/flight-cpp/runtime-carriers/1` profile supplies the implemented `ArrayLike<T>` and
+`ArrayBufferView` type bindings. Combined with the headless profile, it removes every direct refusal for those two
+symbols and expands the dependency-closed inventory from 1,032 to 1,060 emitted modules. The versioned
+`flighthq/flight-cpp/headless/1` profile supplies monotonic `performance.now`, `console.debug`, and
 single-threaded host-pumped timeout/interval functions. Its selected profile, identity, and digest are recorded in
 each profile-specific generated manifest, and a live compiler fixture compiles and runs every binding. SDL's host
 loop exposes the same timer pump. Log now reaches the compiler-owned ordered-`Record` spread refusal, and Signals

@@ -1,0 +1,27 @@
+{
+  "schema": "flight-cpp-external-bindings/1",
+  "identity": "flighthq/flight-cpp/runtime-carriers/1",
+  "profile": "runtime-carriers",
+  "bindings": [
+    {
+      "headers": [
+        "flight/array_buffer_view.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "ArrayBufferView",
+      "space": "type",
+      "targetName": "flight::ArrayBufferView"
+    },
+    {
+      "headers": [
+        "flight/sequence_view.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "ArrayLike",
+      "space": "type",
+      "targetName": "flight::SequenceView"
+    }
+  ]
+}

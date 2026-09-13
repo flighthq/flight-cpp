@@ -195,6 +195,8 @@ class TypedArray {
     return left.identity_ == right.identity_;
   }
 
+  [[nodiscard]] const void* identity() const noexcept { return identity_.get(); }
+
   TypedArray& fill(Value value) {
     std::fill(begin(), end(), std::move(value));
     return *this;

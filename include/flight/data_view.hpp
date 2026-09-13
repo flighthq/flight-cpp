@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <limits>
+#include <memory>
 #include <stdexcept>
 #include <type_traits>
 
@@ -17,6 +18,8 @@ class DataView {
   ArrayBuffer buffer;
   std::size_t byte_offset = 0;
   std::size_t byte_length = 0;
+
+  [[nodiscard]] const void* identity() const noexcept { return identity_.get(); }
 
   explicit DataView(const ArrayBuffer& source)
       : buffer(source), byte_length(source.byte_length()) {}
@@ -104,6 +107,7 @@ class DataView {
   }
 
  private:
+  struct Identity {};
   struct RemainingTag {};
   struct ViewTag {};
 
@@ -173,6 +177,8 @@ class DataView {
     if (result < 0.0) result += modulus;
     return static_cast<Unsigned>(result);
   }
+
+  std::shared_ptr<Identity> identity_ = std::make_shared<Identity>();
 };
 
 } // namespace flight

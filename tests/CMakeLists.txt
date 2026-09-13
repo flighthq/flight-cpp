@@ -31,6 +31,7 @@ set(
   flight_cpp_public_headers
   array
   array_buffer
+  array_buffer_view
   callable
   conditional_facet_ref
   contract
@@ -51,6 +52,7 @@ set(
   regexp
   rejection
   set
+  sequence_view
   string
   structural_ref
   symbol

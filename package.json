@@ -10,6 +10,7 @@
   },
   "scripts": {
     "abi:check": "node ./scripts/abiHealth.mjs",
+    "array-like:oracle": "node ./scripts/arrayLikeOracle.mjs",
     "build:check": "node ./scripts/buildHealth.mjs",
     "check": "node ./scripts/check.mjs",
     "compile:check": "node ./scripts/emittedSourceCompile.mjs",
@@ -23,8 +24,10 @@
     "runtime:oracle": "node ./scripts/runtimeOracle.mjs",
     "sdk:check": "node ./scripts/sdkGeneration.mjs --check",
     "sdk:compile": "node ./scripts/sdkHeaderCompile.mjs",
+    "sdk:compile:headless": "node ./scripts/sdkHeaderCompile.mjs --generated=out/sdk-headless --report=out/sdk-headless-header-compilation.json",
     "sdk:generate": "node ./scripts/sdkGeneration.mjs",
-    "sdk:generate:headless": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/headless.json --output=out/sdk-headless",
+    "sdk:generate:headless": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --binding-profile=bindings/headless.json --output=out/sdk-headless",
+    "sdk:generate:runtime": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --output=out/sdk-runtime",
     "structural:oracle": "node ./scripts/structuralProxyOracle.mjs"
   }
 }

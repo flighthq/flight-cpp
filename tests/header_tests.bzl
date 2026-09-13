@@ -56,4 +56,6 @@ _PUBLIC_HEADERS = [
     ("json", 30),
     ("structural_ref", 31),
     ("weak_map", 32),
+    ("array_buffer_view", 33),
+    ("sequence_view", 34),
 ]

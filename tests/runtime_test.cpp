@@ -7,6 +7,7 @@
 #include <exception>
 #include <iostream>
 #include <limits>
+#include <memory>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -169,6 +170,50 @@ void test_binary_data() {
     bounds_failed = true;
   }
   check(bounds_failed, "DataView rejects reads beyond its declared view");
+}
+
+void test_array_like_views() {
+  flight::Array<double> array{1.0, 2.0, 3.0};
+  const flight::SequenceView<double> array_view(array);
+  check(array_view.identity() == array.identity() && array_view.length == 3 && array_view.element(1.0) == 2.0,
+        "ArrayLike views preserve Array identity, length, and numeric access");
+  array[1] = 8.0;
+  double total = 0.0;
+  for (const auto value : array_view) total += value;
+  check(array_view[1] == 8.0 && total == 12.0,
+        "ArrayLike views observe mutations without copying Array storage");
+  check(array_view.at(-1) == std::optional<double>(3.0) && !array_view.get(3.0).has_value(),
+        "ArrayLike views provide bounded and negative convenience access");
+
+  flight::Uint16Array typed{4, 5, 6};
+  const auto typed_tail = typed.subarray(1);
+  const flight::SequenceView<double> typed_view(typed_tail);
+  typed[1] = 9;
+  check(typed_view.identity() == typed_tail.identity() && typed_view.length == 2 && typed_view[0] == 9.0,
+        "ArrayLike typed-array adapters retain view identity and shared backing");
+
+  auto owned_source = std::make_shared<std::vector<int>>(std::initializer_list<int>{7, 8});
+  const auto erased_view = flight::SequenceView<double>::from_shared(owned_source);
+  (*owned_source)[0] = 11;
+  owned_source.reset();
+  check(erased_view.length == 2 && erased_view[0] == 11.0,
+        "ArrayLike structural adapters retain caller-owned sources and observe their elements");
+
+  flight::ArrayBuffer buffer(12.0);
+  flight::Uint16Array words(buffer, 2.0, 3.0);
+  flight::DataView data(buffer, 4.0, 4.0);
+  const flight::ArrayBufferView word_view(words);
+  const flight::ArrayBufferView data_view(data);
+  words[1] = 0x1234;
+  check(word_view.kind == flight::ArrayBufferViewKind::uint16_array && word_view.byte_offset == 2 &&
+            word_view.byte_length == 6 && word_view.identity() == words.identity(),
+        "ArrayBufferView retains the typed view kind, range, and object identity");
+  check(data_view.kind == flight::ArrayBufferViewKind::data_view && data_view.byte_offset == 4 &&
+            data_view.byte_length == 4 && data_view.identity() == data.identity() &&
+            data_view.same_backing(word_view),
+        "ArrayBufferView preserves DataView identity and shared backing identity");
+  check(data_view.data()[0] == buffer.data()[4] && data_view.data()[1] == buffer.data()[5],
+        "ArrayBufferView exposes the original byte range without copying it");
 }
 
 void test_contract() {
@@ -748,6 +793,7 @@ void test_task() {
 
 int main() {
   test_array();
+  test_array_like_views();
   test_binary_data();
   test_contract();
   test_date();

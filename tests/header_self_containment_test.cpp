@@ -64,6 +64,10 @@
 #include <flight/structural_ref.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 32
 #include <flight/weak_map.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 33
+#include <flight/array_buffer_view.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 34
+#include <flight/sequence_view.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

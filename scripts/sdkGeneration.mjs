@@ -411,7 +411,7 @@ npm run sdk:check
 Generate a profile-specific inventory outside the committed portable tree with:
 
 \`\`\`sh
-node scripts/sdkGeneration.mjs --binding-profile=bindings/headless.json --output=out/sdk-headless
+node scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --binding-profile=bindings/headless.json --output=out/sdk-headless
 \`\`\`
 `;
 }

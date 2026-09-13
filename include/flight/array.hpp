@@ -126,6 +126,8 @@ class Array {
   [[nodiscard]] iterator end() noexcept { return values_->end(); }
   [[nodiscard]] bool empty() const noexcept { return values_->empty(); }
 
+  [[nodiscard]] const void* identity() const noexcept { return values_.get(); }
+
   template <typename Predicate>
   [[nodiscard]] bool every(Predicate predicate) const {
     for (size_type index = 0; index < size(); ++index) {

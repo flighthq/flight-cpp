@@ -5,16 +5,31 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const options = process.argv.slice(2);
+const generatedOption = options.find((option) => option.startsWith('--generated='));
+const reportOption = options.find((option) => option.startsWith('--report='));
+const unknown = options.filter(
+  (option) => !option.startsWith('--generated=') && !option.startsWith('--report='),
+);
+if (unknown.length > 0) {
+  process.stderr.write(`Unknown SDK header compile option(s): ${unknown.join(', ')}\n`);
+  process.exit(1);
+}
 const compiler = process.env.CXX || 'c++';
 const extraFlags = process.env.CXXFLAGS?.split(/\s+/u).filter(Boolean) ?? [];
 const concurrency = Math.max(
   1,
   Number.parseInt(process.env.FLIGHT_CPP_COMPILE_JOBS ?? '', 10) || Math.min(6, os.availableParallelism()),
 );
-const generatedInclude = path.join(root, 'generated', 'include');
+const generatedRoot = generatedOption
+  ? path.resolve(root, generatedOption.slice('--generated='.length))
+  : path.join(root, 'generated');
+const generatedInclude = path.join(generatedRoot, 'include');
 const runtimeInclude = path.join(root, 'include');
-const reportFile = path.join(root, 'out', 'sdk-header-compilation.json');
-const manifest = JSON.parse(readFileSync(path.join(root, 'generated', 'manifest.json'), 'utf8'));
+const reportFile = reportOption
+  ? path.resolve(root, reportOption.slice('--report='.length))
+  : path.join(root, 'out', 'sdk-header-compilation.json');
+const manifest = JSON.parse(readFileSync(path.join(generatedRoot, 'manifest.json'), 'utf8'));
 const headers = filesUnder(generatedInclude)
   .filter((filename) => filename.endsWith('.hpp') && !filename.includes(`${path.sep}sdk${path.sep}`))
   .map((filename) => portable(path.relative(generatedInclude, filename)))
