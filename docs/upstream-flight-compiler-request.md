@@ -31,6 +31,8 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
   `ArrayBuffer` conversion, selected through the runtime profile and covered by a live compiler-versus-Node oracle;
 - URI component and browser base64 globals with UTF-8, binary-string, malformed-input, padding, and whitespace
   semantics covered by live compiler-versus-Node oracles;
+- shared readable/writable stream and async-iterable carriers, including compiler-emitted writer operations and
+  native task callbacks; these admit three more independently compiling SDK headers;
 - numeric conversion and prefix parsing, safe-integer checks, object keys/values, symbols, URL protocol parsing,
   regular expressions, and a deterministic Intl baseline;
 - idempotent `Ref<T>` projection, generated structural-row member access, writable entity construction, and
@@ -75,7 +77,7 @@ packages own rendering behavior. These host bindings will increase the emitted m
 
 The downstream `flighthq/flight-cpp/sdl-gl/1` profile now names concrete SDL-owned canvas/context types, shared GL
 object handles, context attributes, and a weakly recoverable image-source carrier. Composed with the current runtime
-profile it emits 1,102 modules; 21 of its 29 newly admitted headers compile. The next compiler blocker is exact:
+profile it emits 1,105 modules; 21 of its 29 newly admitted headers compile. The next compiler blocker is exact:
 `packages/types/src/GlContext.ts` retains
 `auto viewport;` after its closed `Pick<WebGL2RenderingContext, GlContextMember>` is materialized. The fail-closed
 placeholder gate correctly refuses it. Once all picked constants and methods receive their concrete callable types,

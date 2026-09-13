@@ -355,6 +355,10 @@ void test_contract() {
         "binary storage capabilities are advertised after their implementation lands");
   check(flight::runtime_capability_status("blob") == flight::RuntimeCapabilityStatus::initial,
         "immutable Blob storage is advertised after its runtime implementation lands");
+  check(flight::runtime_capability_status("readable-stream") == flight::RuntimeCapabilityStatus::initial &&
+            flight::runtime_capability_status("writable-stream") == flight::RuntimeCapabilityStatus::initial &&
+            flight::runtime_capability_status("async-iterable") == flight::RuntimeCapabilityStatus::initial,
+        "native streaming carriers are advertised after their runtime implementation lands");
   check(flight::runtime_capability_status("sequence-view") == flight::RuntimeCapabilityStatus::initial,
         "owner-preserving sequence views are advertised after their implementation lands");
   check(flight::runtime_capability_status("record") == flight::RuntimeCapabilityStatus::initial,
@@ -910,6 +914,69 @@ void test_string() {
   }
 }
 
+void test_streams() {
+  flight::Array<double> written;
+  bool closed = false;
+  flight::WritableStream<double> writable({
+      .write = [&](const double& value) {
+        written.push(value);
+        return FlightTask<void>::resolve();
+      },
+      .close = [&] {
+        closed = true;
+        return FlightTask<void>::resolve();
+      },
+      .abort = {},
+  });
+  auto writer = writable.get_writer();
+  writer.write(2.0).get();
+  writer.write(3.0).get();
+  bool duplicate_writer_failed = false;
+  try {
+    static_cast<void>(writable.get_writer());
+  } catch (const std::logic_error&) {
+    duplicate_writer_failed = true;
+  }
+  writer.close().get();
+  check(written.size() == 2 && written[0] == 2.0 && written[1] == 3.0 &&
+            closed && duplicate_writer_failed &&
+            writer.write(4.0).status() == flight::TaskStatus::rejected,
+        "WritableStream serializes sink calls, locks one writer, and rejects writes after close");
+  writer.release_lock();
+  static_cast<void>(writable.get_writer());
+
+  int reads = 0;
+  bool cancelled = false;
+  flight::ReadableStream<double> readable({
+      .read = [&] {
+        ++reads;
+        return FlightTask<flight::ReadableStreamReadResult<double>>::resolve(
+            reads == 1 ? flight::ReadableStreamReadResult<double>{.done = false, .value = 7.0}
+                       : flight::ReadableStreamReadResult<double>{.done = true, .value = std::nullopt});
+      },
+      .cancel = [&](flight::AbortReason) {
+        cancelled = true;
+        return FlightTask<void>::resolve();
+      },
+  });
+  auto reader = readable.get_reader();
+  const auto first = reader.read().get();
+  const auto second = reader.read().get();
+  reader.cancel(flight::AbortReason("done")).get();
+  check(!first.done && first.value == std::optional<double>(7.0) && second.done &&
+            !second.value.has_value() && cancelled,
+        "ReadableStream returns presence-bearing reads and forwards cancellation");
+
+  int next = 0;
+  const flight::AsyncIterable<double> iterable([&] {
+    return FlightTask<std::optional<double>>::resolve(
+        next++ == 0 ? std::optional<double>(9.0) : std::nullopt);
+  });
+  check(iterable.next().get() == std::optional<double>(9.0) &&
+            !iterable.next().get().has_value(),
+        "AsyncIterable preserves a shared asynchronous next operation");
+}
+
 void test_typed_array() {
   flight::Int16Array values{1, 2, 3};
   auto alias = values;
@@ -1084,6 +1151,7 @@ int main() {
   test_reference();
   test_set();
   test_string();
+  test_streams();
   test_task();
   test_typed_array();
   test_uri_components();

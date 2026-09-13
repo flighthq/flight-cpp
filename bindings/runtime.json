@@ -5,6 +5,16 @@
   "bindings": [
     {
       "headers": [
+        "flight/stream.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "AsyncIterable",
+      "space": "type",
+      "targetName": "flight::AsyncIterable"
+    },
+    {
+      "headers": [
         "flight/abort.hpp"
       ],
       "nullability": "non-null",
@@ -159,6 +169,26 @@
     },
     {
       "headers": [
+        "flight/stream.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "ReadableStream",
+      "space": "type",
+      "targetName": "flight::ReadableStream"
+    },
+    {
+      "headers": [
+        "flight/stream.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "ReadableStreamDefaultReader",
+      "space": "type",
+      "targetName": "flight::ReadableStreamDefaultReader"
+    },
+    {
+      "headers": [
         "flight/weak_set.hpp"
       ],
       "nullability": "non-null",
@@ -166,6 +196,26 @@
       "sourceName": "WeakSet",
       "space": "type",
       "targetName": "flight::WeakSet"
+    },
+    {
+      "headers": [
+        "flight/stream.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "WritableStream",
+      "space": "type",
+      "targetName": "flight::WritableStream"
+    },
+    {
+      "headers": [
+        "flight/stream.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "WritableStreamDefaultWriter",
+      "space": "type",
+      "targetName": "flight::WritableStreamDefaultWriter"
     },
     {
       "construction": {

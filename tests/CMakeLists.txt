@@ -58,6 +58,7 @@ set(
   set
   sequence_view
   string
+  stream
   structural_ref
   symbol
   runtime

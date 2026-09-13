@@ -23,6 +23,7 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
 | Abort signals | Implemented baseline | `AbortController` and `AbortSignal` share cancellation state, retain the first reason, dispatch listeners once, support listener removal, and throw `AbortError` from the emitted `throw_if_aborted` call. A live compiler/Node differential covers those operations. Cross-call identity for copied `std::function` listeners still depends on the compiler's eventual callable-identity carrier. |
 | Blob | Implemented baseline | `Blob` owns immutable bytes and shared identity, concatenates string, binary-view, buffer, and Blob parts, normalizes MIME types, slices by byte index, and returns tasks from `text` and `array_buffer`. The runtime profile maps its type and constructor spaces, and a live compiler/Node differential covers every emitted operation used by Flight. The binding removes Blob as a direct ambient refusal; `types/Net.ts` now advances to an unresolved-union `auto` emitted by the compiler, so the dependency-closed header total does not increase at this pin. |
 | URI and base64 globals | Implemented | `encode_uri_component` and `decode_uri_component` preserve the JavaScript unescaped set, UTF-8 scalar rules, and malformed-input errors. `atob` and `btoa` implement the browser binary-string byte domain and forgiving base64 decoding. Live compiler/Node differentials cover both pairs. Their runtime-profile mappings remove every direct `encodeURIComponent`, `decodeURIComponent`, `atob`, and `btoa` refusal. Protocol/form code now reaches unresolved tuple-element `auto`; audio base64 loading reaches its explicit audio-host bindings. The emitted closure count is unchanged at this pin. |
+| Readable, writable, and async-iterable streams | Implemented baseline | Shared stream carriers preserve identity, enforce one active reader or writer, route writes, close, abort, reads, and cancellation through task-returning native callbacks, and expose an asynchronous `next` operation. A live compiler/Node oracle compiles the generic external bindings and executes compiler-emitted writer operations. The profile admits `types/FileSystem.ts`, `types/Socket.ts`, and `socket/explainSocketSendFailure.ts`; all three new headers compile independently. Full Web Streams queuing, backpressure, piping, and `for await` emission remain future contract work. |
 | JSON | Partial | `JsonValue` preserves null, boolean, number, string, array, and object domains; `Json::parse` and `Json::stringify` round-trip them. Generated ordinary structs still need compiler-provided member reflection, and replacer semantics remain open. |
 | Intl | Partial | The locale-neutral baseline and emitted names exist and are source-compared for deterministic English cases. Locale selection, option validation, and a pinned ICU-style provider remain open. |
 | Callable signature ABI | Partial | Exact argument packs, signature metadata, binding, and current emitted Signals headers compile. Optional/rest role metadata, callable wrappers, and their complete oracle matrix remain open. |
@@ -42,14 +43,14 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
 - `npm run sdk:compile` compiles every emitted header independently and writes the compiler-facing report to
   `out/sdk-header-compilation.json`.
 - `npm run sdk:compile:headless` applies the same audit to the combined portable-runtime/headless inventory. At the
-  current pin, the runtime profile emits 1,073 modules: 41 more than the manifest-free floor. Of those additional
-  headers, five compile and 36 advance to existing tuple, union, reference-conversion, aggregate-construction,
-  typed-array-template, spatial-type, and type-spelling defects. The complete expanded result is 709 passing and 364
+  current pin, the runtime profile emits 1,076 modules: 44 more than the manifest-free floor. Of those additional
+  headers, eight compile and 36 advance to existing tuple, union, reference-conversion, aggregate-construction,
+  typed-array-template, spatial-type, and type-spelling defects. The complete expanded result is 712 passing and 364
   failing headers.
-- `npm run sdk:generate:sdl-gl` adds the maintained SDL/OpenGL binding profile. It emits 1,102 modules, 29 more than
+- `npm run sdk:generate:sdl-gl` adds the maintained SDL/OpenGL binding profile. It emits 1,105 modules, 29 more than
   the runtime/headless inventory. Of the new headers, 21 compile independently. The other eight reach existing
   compiler defects: concrete typed-array aliases spelled as templates, a `Record<..., void>` representation, or
-  transitive `Bitmap` failures. The complete expanded result is 730 passing and 372 failing headers.
+  transitive `Bitmap` failures. The complete expanded result is 733 passing and 372 failing headers.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
   runtime. It currently covers 29 cross-runtime observations.
 - `npm run structural:oracle` generates the exact generic Entity write proxy through the pinned compiler, compiles
@@ -69,9 +70,10 @@ be corrected in flight-compiler rather than rewritten in the generated tree.
 
 The versioned `flighthq/flight-cpp/runtime-carriers/1` profile supplies the implemented `AbortController`,
 `AbortSignal`, `ArrayBufferLike`, `ArrayLike<T>`, `ArrayBufferView`, `Blob`, `WeakSet`, `atob`, `btoa`,
-`encodeURIComponent`, `decodeURIComponent`, bare `parseFloat`, and bare `isFinite`
+`encodeURIComponent`, `decodeURIComponent`, `ReadableStream<T>`, `WritableStream<T>`, `AsyncIterable<T>`, bare
+`parseFloat`, and bare `isFinite`
 bindings. Combined with the headless profile, it removes every direct refusal for those portable names and expands
-the dependency-closed inventory from 1,032 to 1,073 emitted modules. The versioned
+the dependency-closed inventory from 1,032 to 1,076 emitted modules. The versioned
 `flighthq/flight-cpp/headless/1` profile supplies monotonic `performance.now`, `console.debug`, and
 single-threaded host-pumped timeout/interval functions. Its selected profile, identity, and digest are recorded in
 each profile-specific generated manifest, and a live compiler fixture compiles and runs every binding. SDL's host

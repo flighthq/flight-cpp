@@ -29,6 +29,7 @@
 #include <flight/set.hpp>
 #include <flight/sequence_view.hpp>
 #include <flight/string.hpp>
+#include <flight/stream.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/symbol.hpp>
 #include <flight/task.hpp>

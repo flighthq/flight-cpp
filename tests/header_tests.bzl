@@ -64,4 +64,5 @@ _PUBLIC_HEADERS = [
     ("blob", 38),
     ("uri", 39),
     ("base64", 40),
+    ("stream", 41),
 ]

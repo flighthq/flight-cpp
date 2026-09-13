@@ -37,6 +37,7 @@ inline constexpr std::array runtime_capabilities{
     RuntimeCapability{"array-buffer", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"array-buffer-like", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"array-buffer-view", RuntimeCapabilityStatus::initial},
+    RuntimeCapability{"async-iterable", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"base64", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"blob", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"data-view", RuntimeCapabilityStatus::initial},
@@ -54,6 +55,7 @@ inline constexpr std::array runtime_capabilities{
     RuntimeCapability{"number-parsing", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"object", RuntimeCapabilityStatus::planned},
     RuntimeCapability{"regexp", RuntimeCapabilityStatus::planned},
+    RuntimeCapability{"readable-stream", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"record", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"set", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"sequence-view", RuntimeCapabilityStatus::initial},
@@ -70,6 +72,7 @@ inline constexpr std::array runtime_capabilities{
     RuntimeCapability{"url", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"weak-map", RuntimeCapabilityStatus::planned},
     RuntimeCapability{"weak-set", RuntimeCapabilityStatus::initial},
+    RuntimeCapability{"writable-stream", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"unicode-case-service", RuntimeCapabilityStatus::planned},
     RuntimeCapability{"task-promise-operations", RuntimeCapabilityStatus::initial},
 };
