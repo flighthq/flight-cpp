@@ -201,6 +201,18 @@ cc_library(
 )
 
 cc_library(
+    name = "host_sdl_sdk_screen",
+    srcs = ["src/host_sdl/sdk_screen.cpp"],
+    hdrs = ["include/flight/host_sdl/sdk_screen.hpp"],
+    strip_include_prefix = "include",
+    tags = ["manual"],
+    deps = [
+        ":host_sdl",
+        ":sdk_preview",
+    ],
+)
+
+cc_library(
     name = "host_sdl_sdk_window",
     srcs = ["src/host_sdl/sdk_window.cpp"],
     hdrs = ["include/flight/host_sdl/sdk_window.hpp"],

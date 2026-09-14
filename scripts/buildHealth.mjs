@@ -98,6 +98,7 @@ for (const target of [
   'Flight::HostSdlSdkCursor',
   'Flight::HostSdlSdkDevice',
   'Flight::HostSdlSdkPlatform',
+  'Flight::HostSdlSdkScreen',
   'Flight::HostSdlSdkWindow',
   'Flight::HostSdlVulkan',
   'Flight::HostSdlWgpu',
@@ -113,6 +114,7 @@ for (const target of [
   'host_sdl_sdk_cursor',
   'host_sdl_sdk_device',
   'host_sdl_sdk_platform',
+  'host_sdl_sdk_screen',
   'host_sdl_sdk_window',
   'host_sdl_wgpu',
 ]) {

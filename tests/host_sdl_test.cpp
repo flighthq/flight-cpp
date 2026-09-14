@@ -8,6 +8,7 @@
 #include <flight/host_sdl/sdk_cursor.hpp>
 #include <flight/host_sdl/sdk_device.hpp>
 #include <flight/host_sdl/sdk_platform.hpp>
+#include <flight/host_sdl/sdk_screen.hpp>
 #include <flight/host_sdl/sdk_window.hpp>
 #include <flight/host_sdl/web_platform.hpp>
 #include <flight/host_sdl/webgl.hpp>
@@ -23,6 +24,7 @@
 #include <flight/types/fullscreen_backend.hpp>
 #include <flight/types/input_target_backend.hpp>
 #include <flight/types/platform.hpp>
+#include <flight/types/screen.hpp>
 
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_mouse.h>
@@ -445,6 +447,41 @@ int main() {
   expect(
       !platform_backend.get_info(nullptr),
       "SDL SDK platform manufactured output for a null caller-owned record");
+
+  flight::host_sdl::SdkScreenBackend sdk_screen;
+  auto screen_query = sdk_screen.query_backend();
+  flight::Array<flight::Ref<flight::types::ScreenInfo>> screens;
+  screens.push(flight::make_ref<flight::types::ScreenInfo>());
+  const void* screen_array_identity = screens.identity();
+  const auto returned_screens = screen_query.get_screens(screens);
+  expect(
+      returned_screens.identity() == screen_array_identity && !screens.empty(),
+      "SDL SDK screen query replaced or emptied its caller-owned array");
+  for (const auto& screen : screens) {
+    expect(
+        screen != nullptr && screen->id > 0.0 && screen->width > 0.0 && screen->height > 0.0 &&
+            screen->work_width > 0.0 && screen->work_height > 0.0 &&
+            screen->scale_factor > 0.0 && screen->physical_width > 0.0 &&
+            screen->physical_height > 0.0 && screen->dpi == -1.0,
+        "SDL SDK screen query returned invalid display geometry or sentinels");
+  }
+  auto primary_screen = flight::make_ref<flight::types::ScreenInfo>();
+  expect(
+      screen_query.get_primary_screen(primary_screen) == primary_screen &&
+          primary_screen->is_primary && primary_screen->id > 0.0,
+      "SDL SDK screen query did not fill its caller-owned primary display");
+  auto cursor_position = flight::make_ref<flight::types::x_y>();
+  expect(
+      screen_query.get_cursor_position(cursor_position) == cursor_position,
+      "SDL SDK screen query replaced its caller-owned cursor position");
+  expect(
+      !screen_query.get_primary_screen(nullptr) && !screen_query.get_cursor_position(nullptr),
+      "SDL SDK screen query manufactured output for a null caller-owned record");
+  auto screen_details = sdk_screen.details_backend();
+  expect(
+      screen_details.query_permission().get() == flight::String("granted") &&
+          screen_details.request().get(),
+      "SDL SDK screen details introduced a permission gate for native enumeration");
 
   flight::host_sdl::SdlCursorBackend native_cursor;
   const auto native_cursor_copy = native_cursor;

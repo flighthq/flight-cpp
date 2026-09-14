@@ -254,6 +254,11 @@ desktop-display dimensions and pixel ratio, per-window safe-area geometry, CPU c
 platform identity; unavailable identity and environment fields retain the upstream sentinel contract. This backend
 needs no further compiler work and resolves its SDL window id on each dynamic read.
 
+`Flight::HostSdlSdkScreen` populates the dependency-closed `ScreenQueryBackend` and `ScreenDetailsBackend` without
+compiler changes. SDL provides native multi-display enumeration and permission-free access. `ScreenChangeBackend`
+can follow through SDL display events; it remains separate from this query adapter rather than manufacturing the
+generated readonly structural change-event view before that path has an end-to-end consumer.
+
 ## Host boundary
 
 The manifest-free generation remains the portable floor. Browser, media, Node, and graphics handles require explicit

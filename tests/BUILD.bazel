@@ -57,6 +57,7 @@ cc_test(
         "//:host_sdl_sdk_cursor",
         "//:host_sdl_sdk_device",
         "//:host_sdl_sdk_platform",
+        "//:host_sdl_sdk_screen",
         "//:host_sdl_sdk_window",
         "//:host_sdl_wgpu",
     ],
