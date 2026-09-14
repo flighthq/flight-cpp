@@ -90,8 +90,10 @@ The installed build exports four targets through the existing `FlightCpp` packag
   `bindings/sdl-app.json` layers a browser-shaped application shell over this target for upstream examples. Its
   document attachment is intentionally lightweight, while its request/cancel frame queue and SDL input bridge
   preserve ordered animation turns and route keyboard, pointer, and wheel events into registered listeners on
-  `window` and `GlCanvas`. The input surface also exposes value-owned standard-layout gamepad snapshots through
-  `navigator.getGamepads()` and a common event carrier for Flight's base-event narrowing.
+  `window` and `GlCanvas`. SDL window focus, visibility, minimize, and restore events update the document facade and
+  dispatch its focus/page lifecycle callbacks. The input surface also exposes value-owned standard-layout gamepad
+  snapshots through `navigator.getGamepads()`, a common event carrier for Flight's base-event narrowing, and an
+  identity-preserving typed `CustomEvent<T>` detail carrier.
 - `Flight::HostSdlVulkan` copies the required instance extension names and owns the `VkSurfaceKHR` returned by SDL.
 - `Flight::HostSdlWgpu` owns a type-erased native WebGPU surface and typed shared WebGPU object handles through
   callbacks supplied by a Dawn or wgpu-native adapter. Handle copies and weak cache keys preserve identity, provider
@@ -164,6 +166,10 @@ thread; no background timer thread can race Flight state.
 `WebPlatformInput` composes the persistent `InputDispatcher` with a `GlCanvas`, and
 `pump_animation_frame(timestamp_ms)` runs the callbacks that were pending when that frame began. Callbacks scheduled
 by another frame callback remain queued for the next turn, matching the browser ordering used by the examples.
+Its SDL window-event path also keeps `document.hidden` and `document.hasFocus()` current and emits
+`visibilitychange`, `pagehide`, `pageshow`, `focus`, and `blur`. Exact `removeEventListener` remains gated on a
+compiler callable representation whose copies preserve JavaScript function identity; plain `std::function` copies
+cannot identify the callback captured by Flight's returned unsubscribe closure.
 
 `SdlAudioDeviceBackend::pump()` delivers each completed source callback on the pumping thread. Call it once per host
 turn, just like `Host::pump_timers()`. Destroying a source suppresses its pending completion, invalid handles follow

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <any>
 #include <cstdint>
 #include <functional>
 #include <optional>
@@ -115,6 +116,14 @@ struct InputGamepadConnectData final {
   String mapping;
 };
 
+template <typename Detail>
+struct DomCustomEvent final {
+  Detail detail;
+  bool default_prevented{false};
+
+  void prevent_default() noexcept { default_prevented = true; }
+};
+
 // Common browser-event carrier used where Flight accepts Event and narrows it to a concrete input
 // event. SDL dispatch remains strongly typed; these conversions preserve the fields visible after
 // the corresponding TypeScript cast.
@@ -126,6 +135,7 @@ struct DomEvent final {
   String code;
   bool ctrl_key{false};
   std::optional<String> data;
+  std::any detail;
   double delta_x{0.0};
   double delta_y{0.0};
   bool default_prevented{false};
@@ -159,6 +169,11 @@ struct DomEvent final {
   void prevent_default() noexcept { default_prevented = true; }
   [[nodiscard]] operator InputKeyboardData() const;
   [[nodiscard]] operator InputPointerData() const;
+
+  template <typename Detail>
+  [[nodiscard]] operator DomCustomEvent<Detail>() const {
+    return DomCustomEvent<Detail>{.detail = std::any_cast<Detail>(detail)};
+  }
 };
 
 class FLIGHT_HOST_SDL_API GamepadNavigator final {

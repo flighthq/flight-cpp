@@ -64,6 +64,7 @@ const source = api.parseTypeScriptSource(
      );
      if (KeyboardEvent.DOM_KEY_LOCATION_RIGHT !== 2) throw new Error('invalid key location');
      if (WheelEvent.DOM_DELTA_PIXEL !== 0) throw new Error('invalid wheel mode');
+     if (document.hidden && document.hasFocus()) throw new Error('hidden document retained focus');
      if (window.devicePixelRatio <= 0) throw new Error('invalid pixel ratio');
      const discarded = requestAnimationFrame((_timestamp) => {});
      cancelAnimationFrame(discarded);
@@ -97,6 +98,8 @@ const emitted = api.emitIrModuleCpp(lowered.module, {
 for (const expected of [
   '#include <flight/host_sdl/web_platform.hpp>',
   'flight::host_sdl::document.body.append_child(canvas)',
+  'flight::host_sdl::document.hidden',
+  'flight::host_sdl::document.has_focus()',
   'flight::host_sdl::window.add_event_listener(',
   'flight::host_sdl::window.device_pixel_ratio',
   'canvas.add_event_listener(flight::String("pointermove")',

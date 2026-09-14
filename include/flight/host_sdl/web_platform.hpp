@@ -80,13 +80,18 @@ class FLIGHT_HOST_SDL_GL_API Document final {
  public:
   DomElement body;
   DomElement head;
+  bool hidden{false};
 
   [[nodiscard]] CreatedElement create_element(String tag) const;
   [[nodiscard]] std::optional<DomElement> get_element_by_id(const String&) const;
+  [[nodiscard]] bool has_focus() const noexcept;
   void add_event_listener(const String& type, std::function<void()> callback);
   void emit(const String& type);
+  void set_focus(bool focused) noexcept;
+  void set_hidden(bool next_hidden);
 
  private:
+  bool focused_{true};
   std::vector<std::pair<String, std::function<void()>>> listeners_;
 };
 
@@ -95,11 +100,14 @@ class FLIGHT_HOST_SDL_GL_API WindowFacade final {
   double device_pixel_ratio{1.0};
   bool flight_capture{false};
 
+  void add_event_listener(const String& type, std::function<void()> callback);
   void add_event_listener(const String& type, std::function<void(InputKeyboardData)> callback);
+  void emit(const String& type) const;
   void emit_keyboard(const String& type, InputKeyboardData event) const;
   void clear_event_listeners();
 
  private:
+  std::vector<std::pair<String, std::function<void()>>> listeners_;
   std::vector<std::pair<String, std::function<void(InputKeyboardData)>>> keyboard_listeners_;
 };
 

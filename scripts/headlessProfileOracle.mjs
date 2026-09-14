@@ -47,6 +47,8 @@ const source = api.parseTypeScriptSource(
      clearInterval(interval);
      const timeout = setTimeout(callback, 0);
      clearTimeout(timeout);
+     const entries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+     if (entries.length !== 0) throw new Error('native process unexpectedly has browser navigation history');
      return performance.now();
    }`,
 );
@@ -67,6 +69,10 @@ for (const header of ['console', 'performance', 'timers']) {
     process.stderr.write(`Headless binding fixture did not emit flight/host/${header}.hpp.\n`);
     process.exit(1);
   }
+}
+if (!emitted.includes('flight::host::performance_get_entries_by_type')) {
+  process.stderr.write('Headless binding fixture did not emit performance navigation lookup.\n');
+  process.exit(1);
 }
 
 const temporary = mkdtempSync(path.join(tmpdir(), 'flight-cpp-headless-profile-'));

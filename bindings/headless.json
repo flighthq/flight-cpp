@@ -45,6 +45,10 @@
       ],
       "members": [
         {
+          "sourceMember": "getEntriesByType",
+          "targetName": "flight::host::performance_get_entries_by_type"
+        },
+        {
           "sourceMember": "now",
           "targetName": "flight::host::performance_now"
         }
@@ -54,6 +58,16 @@
       "sourceName": "performance",
       "space": "value",
       "targetName": "flight::host::performance"
+    },
+    {
+      "headers": [
+        "flight/host/performance.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "PerformanceNavigationTiming",
+      "space": "type",
+      "targetName": "flight::host::PerformanceNavigationTiming"
     },
     {
       "callResultType": "flight::host::TimerHandle",

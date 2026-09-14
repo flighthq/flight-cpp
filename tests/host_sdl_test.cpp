@@ -181,6 +181,17 @@ int main() {
       browser_pointer.pointer_id == 7.0 && browser_pointer.default_prevented &&
           browser_pointer.get_coalesced_events().empty(),
       "SDL DOM event lost pointer fields during narrowing");
+  struct NativeCustomDetail final : flight::ReferenceEnabled {
+    flight::String pressure;
+  };
+  const auto native_detail = flight::make_ref<NativeCustomDetail>();
+  native_detail->pressure = flight::String("firm");
+  browser_event.detail = native_detail;
+  const auto custom_event =
+      static_cast<flight::host_sdl::DomCustomEvent<decltype(native_detail)>>(browser_event);
+  expect(
+      custom_event.detail->pressure == flight::String("firm"),
+      "SDL DOM event lost custom detail during narrowing");
   int frame_calls = 0;
   const auto cancelled_frame = flight::host_sdl::request_animation_frame([&] { frame_calls += 100; });
   flight::host_sdl::cancel_animation_frame(cancelled_frame);
@@ -200,6 +211,25 @@ int main() {
   element.add_event_listener(flight::String("click"), [&] { ++click_calls; });
   element.click();
   expect(click_calls == 1, "SDL document shell lost a registered listener");
+
+  int visibility_calls = 0;
+  flight::host_sdl::document.add_event_listener(
+      flight::String("visibilitychange"), [&] { ++visibility_calls; });
+  flight::host_sdl::document.set_focus(false);
+  flight::host_sdl::document.set_hidden(true);
+  flight::host_sdl::document.set_hidden(true);
+  expect(
+      flight::host_sdl::document.hidden && !flight::host_sdl::document.has_focus() &&
+          visibility_calls == 1,
+      "SDL document shell lost visibility or focus state");
+  flight::host_sdl::document.set_hidden(false);
+  flight::host_sdl::document.set_focus(true);
+
+  int window_lifecycle_calls = 0;
+  flight::host_sdl::window.add_event_listener(
+      flight::String("pagehide"), [&] { ++window_lifecycle_calls; });
+  flight::host_sdl::window.emit(flight::String("pagehide"));
+  expect(window_lifecycle_calls == 1, "SDL window shell lost a lifecycle listener");
 
   int window_key_calls = 0;
   flight::host_sdl::window.add_event_listener(

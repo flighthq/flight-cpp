@@ -77,6 +77,14 @@ header can be observed. The JSON report from `npm run sdk:compile` is the compac
 flight-compiler. Downstream source rewriting would obscure compiler provenance and produce a second, unversioned
 transpiler, so the checked-in SDK remains the compiler's exact output plus its generated build/member inventories.
 
+The SDL lifecycle profile now supplies the exact `CustomEvent<T>`, navigation timing, document visibility, and focus
+carriers. Two compiler contracts remain before that module can use them faithfully. Generated object-valued
+`event.detail` access must dereference `Ref<T>` rather than emit `event.detail.member`, and copied callable values must
+retain source identity so `removeEventListener(type, listener)` can remove the registration added before the listener
+is captured by the returned unsubscribe closure. A diagnostic removal mapping moves `lifecycle.ts` to the separate
+"WeakMap value requires a proven C++ representation" refusal, confirming that these are the remaining event-shell
+edges rather than missing SDL behavior.
+
 Several direct ambient-member refusals now have exact downstream targets and need only compiler election:
 
 - `Number.parseInt` → `flight::parse_int`, `Number.parseFloat` → `flight::parse_float`, and
