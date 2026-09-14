@@ -1,6 +1,6 @@
 {
   "schema": "flight-generated-upstream-example-refusals/1",
-  "compilerRevision": "993c28080d1b3f6e55214ae2d92215d51cd192ff",
+  "compilerRevision": "a6895ee00994bce116c9fdff6c3503462437eee8",
   "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
   "refusals": [
     {
@@ -21,7 +21,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/adjustments/src/renderNative.ts",
       "package": "@flighthq/example-adjustments",
-      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -70,7 +70,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/benchmark/src/renderNative.ts",
       "package": "@flighthq/example-benchmark",
-      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -112,7 +112,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/camera2d/src/renderNative.ts",
       "package": "@flighthq/example-camera2d",
-      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -133,7 +133,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/clock/src/renderNative.ts",
       "package": "@flighthq/example-clock",
-      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -196,7 +196,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/crossfade/src/renderNative.ts",
       "package": "@flighthq/example-crossfade",
-      "reason": "cpp emission failed for @flighthq/example-crossfade/examples/packages/crossfade/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-crossfade/examples/packages/crossfade/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -217,7 +217,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/flowstates/src/renderNative.ts",
       "package": "@flighthq/example-flowstates",
-      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -238,14 +238,14 @@
       "code": "unsupported-ir",
       "module": "examples/packages/formatloading/src/renderNative.ts",
       "package": "@flighthq/example-formatloading",
-      "reason": "cpp emission failed for @flighthq/example-formatloading/examples/packages/formatloading/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-formatloading/examples/packages/formatloading/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/interaction/src/app.ts",
       "package": "@flighthq/example-interaction",
-      "reason": "cpp emission failed for @flighthq/example-interaction/examples/packages/interaction/src/app.ts: contextual union value type flight::Ref<set_cursor_entity_runtime_key> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-interaction/examples/packages/interaction/src/app.ts: contextual union value type flight::Ref<set_cursor_entity_runtime_key_3f4d7f57996d2acb> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -259,7 +259,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/interaction/src/renderNative.ts",
       "package": "@flighthq/example-interaction",
-      "reason": "cpp emission failed for @flighthq/example-interaction/examples/packages/interaction/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-interaction/examples/packages/interaction/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -301,7 +301,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/motionpath/src/renderNative.ts",
       "package": "@flighthq/example-motionpath",
-      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -322,7 +322,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/movieclip/src/renderNative.ts",
       "package": "@flighthq/example-movieclip",
-      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -343,7 +343,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/particleeditor/src/renderNative.ts",
       "package": "@flighthq/example-particleeditor",
-      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -364,7 +364,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/particles/src/renderNative.ts",
       "package": "@flighthq/example-particles",
-      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -406,7 +406,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/platformer/src/renderNative.ts",
       "package": "@flighthq/example-platformer",
-      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -511,7 +511,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/snapshot/src/renderNative.ts",
       "package": "@flighthq/example-snapshot",
-      "reason": "cpp emission failed for @flighthq/example-snapshot/examples/packages/snapshot/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-snapshot/examples/packages/snapshot/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -532,7 +532,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/sound/src/renderNative.ts",
       "package": "@flighthq/example-sound",
-      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -553,7 +553,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/spatial/src/renderNative.ts",
       "package": "@flighthq/example-spatial",
-      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -616,7 +616,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/text/src/renderNative.ts",
       "package": "@flighthq/example-text",
-      "reason": "cpp emission failed for @flighthq/example-text/examples/packages/text/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-text/examples/packages/text/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -637,7 +637,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/textinput/src/renderNative.ts",
       "package": "@flighthq/example-textinput",
-      "reason": "cpp emission failed for @flighthq/example-textinput/examples/packages/textinput/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-textinput/examples/packages/textinput/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -679,7 +679,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/tween/src/renderNative.ts",
       "package": "@flighthq/example-tween",
-      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {

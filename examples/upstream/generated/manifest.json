@@ -2,7 +2,7 @@
   "schema": "flight-generated-upstream-examples/1",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
-    "revision": "993c28080d1b3f6e55214ae2d92215d51cd192ff",
+    "revision": "a6895ee00994bce116c9fdff6c3503462437eee8",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
