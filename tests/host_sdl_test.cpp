@@ -552,8 +552,13 @@ int main() {
   };
   const flight::host_sdl::WgpuSamplerDescriptor sampler_descriptor{
       .address_mode_u = flight::String("repeat"),
+      .address_mode_v = std::nullopt,
+      .address_mode_w = std::nullopt,
       .mag_filter = flight::String("linear"),
+      .min_filter = std::nullopt,
+      .mipmap_filter = std::nullopt,
       .lod_min_clamp = 1.0,
+      .lod_max_clamp = std::nullopt,
       .compare = flight::String("less-equal"),
       .max_anisotropy = 8.0,
       .label = flight::String("material"),
