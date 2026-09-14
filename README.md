@@ -19,10 +19,13 @@ The presets use Ninja and leave compiler selection to CMake. Pass `-DCMAKE_TOOLC
 The independent Bazel 9 module builds and runs the same public runtime, C ABI, generated-source, header, and consumer surfaces. Bazelisk selects the checked-in version:
 
 ```sh
-bazel test --config=local-posix //:tests
+bazel test //:tests
 ```
 
-Use `--config=local-msvc` for the default Visual C++ toolchain, or select an arbitrary registered platform and C++ toolchain without changing the Flight graph. The [Bazel build contract](docs/bazel.md) covers local, cross, remote-execution, and reproducibility policy.
+The checked-in Bazel configuration selects C++20 for the host's GCC/Clang or Visual C++ toolchain. The optional
+`--config=local-posix` adds pthread flags for toolchains that still require them. Cross and remote builds disable the
+host defaults and select a registered C++20 platform/toolchain pair. The [Bazel build contract](docs/bazel.md) covers
+local, cross, remote-execution, and reproducibility policy.
 
 GCC and Clang development builds can add `-DFLIGHT_CPP_ENABLE_SANITIZERS=ON` to run the same runtime and generated-program tests under AddressSanitizer and UndefinedBehaviorSanitizer.
 

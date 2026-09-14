@@ -30,8 +30,19 @@ requireText(bazelModule, 'SDL3-3.4.10.tar.gz', 'Bazel SDL source pin');
 requireText(bazelConfiguration, 'build --incompatible_strict_action_env', 'strict Bazel action environments');
 requireText(bazelConfiguration, 'build --nostamp', 'unstamped Bazel outputs');
 requireText(bazelConfiguration, 'try-import %workspace%/.bazelrc.local', 'ignored local Bazel configuration hook');
-requireText(bazelConfiguration, 'build:local-posix --cxxopt=-std=c++20', 'local POSIX C++20 configuration');
-requireText(bazelConfiguration, 'build:local-msvc --cxxopt=/std:c++20', 'local MSVC C++20 configuration');
+requireText(
+  bazelConfiguration,
+  'common --enable_platform_specific_config',
+  'automatic Bazel host-platform configuration',
+);
+for (const platform of ['linux', 'macos', 'freebsd', 'openbsd']) {
+  requireText(
+    bazelConfiguration,
+    `build:${platform} --cxxopt=-std=c++20`,
+    `${platform} C++20 configuration`,
+  );
+}
+requireText(bazelConfiguration, 'build:windows --cxxopt=/std:c++20', 'Windows C++20 configuration');
 for (const directory of ['.dependencies', 'build', 'out']) {
   if (!bazelIgnore.split(/\r?\n/u).includes(directory)) {
     failures.push(`.bazelignore does not exclude ${directory}`);

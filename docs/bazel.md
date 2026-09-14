@@ -6,15 +6,18 @@
 
 The public targets corresponding to CMake's `Flight::Cpp` and `Flight::C` are `//:cpp` and `//:c`. Compatibility aliases `//:flight_cpp` and `//:flight_cpp_c` are also public.
 
-Bazel C++ toolchains do not expose a portable target attribute for selecting a language dialect. The checked-in targets therefore contain no compiler-specific options. For the usual GCC or Clang toolchain on Linux or macOS, run:
+Bazel C++ toolchains do not expose a portable target attribute for selecting a language dialect. The checked-in
+`.bazelrc` therefore enables Bazel's host-platform configuration and selects C++20 for GCC/Clang on Linux, macOS,
+FreeBSD, and OpenBSD and for Visual C++ on Windows. A clean local checkout can run the core graph directly:
 
 ```sh
 cd flight-cpp
-bazel build --config=local-posix //:cpp //:c
-bazel test --config=local-posix //:tests
+bazel build //:cpp //:c
+bazel test //:tests
 ```
 
-For the Visual C++ toolchain, replace `local-posix` with `local-msvc`. Both named configurations select C++20. A registered toolchain that already selects C++20 needs neither local configuration.
+The optional `--config=local-posix` adds compile and link pthread flags for a local toolchain that still needs them.
+The C++20 selection itself is automatic and does not require callers to remember a named configuration.
 
 `//:tests` covers the runtime, compiler-generated source, C ABI, all public headers in isolation, and C and C++ public-surface consumers. The underlying labels are available for focused runs:
 
@@ -55,12 +58,15 @@ a pinned Bazel dependency.
 Production and cross builds should make the C++20 dialect, compiler, standard library, sysroot, linker, and target constraints part of a registered C++ toolchain. Select that toolchain through the normal Bazel resolution surface:
 
 ```sh
-bazel test //:tests \
+bazel test --noenable_platform_specific_config //:tests \
   --platforms=@company_platforms//cpp:linux_x86_64 \
   --extra_toolchains=@company_toolchains//cpp:clang_linux_x86_64
 ```
 
-The target graph does not inspect the machine operating system or compiler and does not inject GCC, Clang, or MSVC flags. Consequently the same labels work with local, cross, containerized, and remote-execution toolchains. Put personal defaults in the ignored `.bazelrc.local`; checked-in automation should pass platform and toolchain labels explicitly.
+Disabling the automatic host configuration prevents a host compiler flag from leaking into a cross or remote action;
+the selected toolchain must then declare C++20 itself. The target graph remains independent of the compiler and
+platform labels. Put personal defaults in the ignored `.bazelrc.local`; checked-in cross/remote automation should
+pass platform and toolchain labels explicitly.
 
 `//:c` is a linked static C ABI library. The Bazel graph does not yet force a shared-library artifact: a correct portable shared target must give the adapter private export definitions and its consumers public import definitions, then be tested across ELF, Mach-O, and PE/COFF. An ad hoc `cc_binary(linkshared=True)` would not meet that contract on Visual C++. Until that split exists, use the CMake `BUILD_SHARED_LIBS` build when a loadable C ABI artifact is required.
 
