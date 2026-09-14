@@ -87,6 +87,8 @@ class TypedArray {
   using size_type = std::size_t;
   using value_type = Value;
 
+  static constexpr double bytes_per_element = static_cast<double>(sizeof(Value));
+
   class Length {
    public:
     explicit Length(const TypedArray* owner) : owner_(owner) {}

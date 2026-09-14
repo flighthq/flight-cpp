@@ -874,6 +874,17 @@ void test_presence_and_math() {
             !flight::is_integer(std::numeric_limits<double>::infinity()) &&
             !flight::is_integer(std::numeric_limits<double>::quiet_NaN()),
         "Number.isInteger recognizes finite integral doubles");
+  check(flight::fround(1.337) == 1.3370000123977661 &&
+            flight::fround(16777217.0) == 16777216.0 &&
+            std::signbit(flight::fround(-0.0)) &&
+            std::isfinite(flight::fround(3.4028235677973362e38)) &&
+            std::isinf(flight::fround(3.4028235677973366e38)) &&
+            std::isinf(flight::fround(std::numeric_limits<double>::max())) &&
+            std::isnan(flight::fround(std::numeric_limits<double>::quiet_NaN())),
+        "Math.fround preserves binary32 rounding, signed zero, overflow, and NaN");
+  check(flight::Uint16Array::bytes_per_element == 2.0 &&
+            flight::Uint32Array::bytes_per_element == 4.0,
+        "typed-array byte widths match JavaScript constructor constants");
   check(flight::bitwise_and(-1.0, 255.0) == 255.0 &&
             flight::bitwise_or(4294967301.0, 2.0) == 7.0 &&
             flight::bitwise_xor(15.0, 5.0) == 10.0 && flight::bitwise_not(0.0) == -1.0,

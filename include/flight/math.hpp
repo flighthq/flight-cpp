@@ -93,6 +93,20 @@ inline bool is_integer(double value) noexcept {
   return std::isfinite(value) && std::trunc(value) == value;
 }
 
+// ECMAScript Math.fround returns the nearest IEEE-754 binary32 value as a Number. The supported
+// native toolchains use IEC 559 floats; handle overflow explicitly so the conversion never depends
+// on out-of-range C++ floating-conversion behavior.
+inline double fround(double value) noexcept {
+  if (!std::isfinite(value) || value == 0.0) return value;
+  constexpr double maximum = static_cast<double>(std::numeric_limits<float>::max());
+  constexpr double overflow_threshold = maximum + 0x1p103;
+  if (std::abs(value) >= overflow_threshold) {
+    return std::copysign(std::numeric_limits<double>::infinity(), value);
+  }
+  if (std::abs(value) > maximum) return std::copysign(maximum, value);
+  return static_cast<double>(static_cast<float>(value));
+}
+
 inline double bitwise_and(double left, double right) noexcept {
   return detail::int32_bits_to_number(detail::number_to_uint32(left) & detail::number_to_uint32(right));
 }

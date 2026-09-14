@@ -95,6 +95,8 @@ Several direct ambient-member refusals now have exact downstream targets and nee
   `flight/typed_array.hpp`;
 - `ArrayBuffer.isView` → `flight::is_array_buffer_view` from `flight/array_buffer_view.hpp` when the argument has a
   represented closed buffer/view domain.
+- `Math.fround` → `flight::fround` from `flight/math.hpp`, and each typed-array constructor's
+  `BYTES_PER_ELEMENT` → its `bytes_per_element` constant from `flight/typed_array.hpp`.
 
 Length-only `Array.from({ length }, mapper)` still requires dedicated compiler lowering for its implicit
 `undefined` elements. Open `object` arguments to `ArrayBuffer.isView`, `Object.prototype.hasOwnProperty.call`,

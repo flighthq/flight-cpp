@@ -37,6 +37,13 @@ int main() {
   observations.push(flight::is_safe_integer(9007199254740992.0));
   observations.push(flight::to_number("0b101"));
   observations.push(flight::to_number("-0x10"));
+  observations.push(flight::fround(1.337));
+  observations.push(flight::fround(16777217.0));
+  observations.push(std::signbit(flight::fround(-0.0)));
+  observations.push(std::isfinite(flight::fround(3.4028235677973362e38)));
+  observations.push(std::isfinite(flight::fround(3.4028235677973366e38)));
+  observations.push(flight::Uint16Array::bytes_per_element);
+  observations.push(flight::Uint32Array::bytes_per_element);
 
   const flight::Set<double> iterable{3.0, 1.0, 4.0};
   flight::JsonArray array_from_values;
