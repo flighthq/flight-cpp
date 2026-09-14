@@ -71,7 +71,7 @@ inline std::optional<flight::Ref<levels_end_offset>> compute_texture_container_l
                     auto width = flight::maximum(1.0, flight::signed_right_shift(base_width, mip));
                     auto height = flight::maximum(1.0, flight::signed_right_shift(base_height, mip));
                     const double byte_length = get_texture_container_level_byte_length(format, width, height);
-                    levels.push({.byte_offset = offset, .byte_length = byte_length, .height = height, .width = width});
+                    levels.push(([&]() { auto object_member_byte_offset = offset; auto object_member_byte_length = byte_length; auto object_member_height = height; auto object_member_width = width; return flight::make_ref<flight::types::TextureContainerLevel>(flight::types::TextureContainerLevel{.byte_offset = object_member_byte_offset, .byte_length = object_member_byte_length, .width = object_member_width, .height = object_member_height}); }()));
                     offset += byte_length;
                   }
                   mip += 1.0;

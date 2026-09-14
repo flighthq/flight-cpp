@@ -26,7 +26,7 @@ struct VertexDisplaceModifier : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
   flight::String slot;
-  vertex_displace_modifier_source source;
+  VertexDisplaceModifierSource source;
   double amplitude;
   std::optional<flight::Ref<flight::types::Vector3Like>> axis;
   std::optional<flight::types::Texture> map;

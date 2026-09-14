@@ -18,7 +18,7 @@ inline void report_skeleton2_dcoerced_interpolation(flight::String subject, flig
   if (!coerced_interpolation_guard.has_value()) {
     return;
   }
-  coerced_interpolation_guard(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DCoercedInterpolation>>>>(flight::row_field<flight::RowKey<"applied">>(applied), flight::row_field<flight::RowKey<"stated">>(stated), flight::row_field<flight::RowKey<"subject">>(subject)));
+  coerced_interpolation_guard.value()(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DCoercedInterpolation>>>>(flight::row_field<flight::RowKey<"applied">>(applied), flight::row_field<flight::RowKey<"stated">>(stated), flight::row_field<flight::RowKey<"subject">>(subject)));
 }
 
 inline void set_skeleton2_dcoerced_interpolation_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DCoercedInterpolation>>>>)>> guard) {
@@ -31,7 +31,7 @@ inline void report_skeleton2_ddeform_length_mismatch(flight::String subject, dou
   if (!deform_length_guard.has_value()) {
     return;
   }
-  deform_length_guard(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DDeformLengthMismatch>>>>(flight::row_field<flight::RowKey<"addressed">>(addressed), flight::row_field<flight::RowKey<"offsets">>(offsets), flight::row_field<flight::RowKey<"subject">>(subject)));
+  deform_length_guard.value()(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DDeformLengthMismatch>>>>(flight::row_field<flight::RowKey<"addressed">>(addressed), flight::row_field<flight::RowKey<"offsets">>(offsets), flight::row_field<flight::RowKey<"subject">>(subject)));
 }
 
 inline void set_skeleton2_ddeform_length_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DDeformLengthMismatch>>>>)>> guard) {

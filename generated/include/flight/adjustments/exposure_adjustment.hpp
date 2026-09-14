@@ -20,7 +20,7 @@ namespace flight::adjustments {
 
 inline void initialize_exposure_adjustment(flight::types::EntityConstruction<flight::Ref<flight::types::ExposureAdjustment>> out, std::optional<flight::Ref<flight::types::ExposureAdjustment>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<flight::types::ExposureAdjustment>(flight::types::ExposureAdjustment{}));
-  auto exposure = options.value()->exposure.value_or(0.0);
+  const double exposure = options.value()->exposure.value_or(0.0);
   auto m = flight::power(2.0, exposure);
   auto color_matrix = flight::Array<double>{m, 0.0, 0.0, 0.0, 0.0, 0.0, m, 0.0, 0.0, 0.0, 0.0, 0.0, m, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
   flight::adjustments::initialize_color_matrix_adjustment(out, flight::String("ExposureAdjustment"), color_matrix);

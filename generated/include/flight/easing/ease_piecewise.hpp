@@ -23,18 +23,18 @@ inline flight::types::EasingFunction ease_piecewise(flight::Array<flight::Struct
   if ((segments.length == 0.0)) {
     throw flight::Error(flight::String("easePiecewise: segments array must not be empty"));
   }
-  auto total_weight = segments.reduce([=](auto sum, auto seg) { return (sum + seg.weight.value_or(1.0)); }, 0.0);
+  const double total_weight = segments.reduce([=](double sum, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EasingSegment>>>> seg) { return (sum + flight::row_get<flight::RowKey<"weight">>(seg).value_or(1.0)); }, 0.0);
   if ((total_weight <= 0.0)) {
     throw flight::Error(flight::String("easePiecewise: total segment weight must be greater than zero"));
   }
   flight::Array<flight::Ref<ease_end_start>> breakpoints = flight::Array<flight::Ref<ease_end_start>>{};
   double accumulated = 0.0;
   for (auto seg : segments) {
-    auto weight = flight::row_get<flight::RowKey<"weight">>(seg).value_or(1.0);
+    const double weight = flight::row_get<flight::RowKey<"weight">>(seg).value_or(1.0);
     const double start = (accumulated / total_weight);
     accumulated += weight;
     const double end = (accumulated / total_weight);
-    breakpoints.push({.ease = flight::row_get<flight::RowKey<"ease">>(seg), .end = end, .start = start});
+    breakpoints.push(flight::make_ref<ease_end_start>(ease_end_start{.ease = flight::row_get<flight::RowKey<"ease">>(seg), .end = end, .start = start}));
   }
   return [=](double t) {
   {

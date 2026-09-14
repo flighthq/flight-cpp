@@ -14,16 +14,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_screen_space_fog_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ScreenSpaceFogEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::ScreenSpaceFogEffect>>> options) {
+struct color_far_near_density : public flight::ReferenceEnabled {
+  std::optional<double> color;
+  std::optional<double> far;
+  std::optional<double> near;
+  std::optional<double> density;
+};
+
+inline void initialize_screen_space_fog_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ScreenSpaceFogEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<color_far_near_density>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("ScreenSpaceFogEffect"));
-  flight::row_set<flight::RowKey<"color">>(out, options->color);
-  flight::row_set<flight::RowKey<"near">>(out, options->near);
-  flight::row_set<flight::RowKey<"far">>(out, options->far);
-  flight::row_set<flight::RowKey<"density">>(out, options->density);
+  flight::row_set<flight::RowKey<"color">>(out, flight::row_get<flight::RowKey<"color">>(options));
+  flight::row_set<flight::RowKey<"near">>(out, flight::row_get<flight::RowKey<"near">>(options));
+  flight::row_set<flight::RowKey<"far">>(out, flight::row_get<flight::RowKey<"far">>(options));
+  flight::row_set<flight::RowKey<"density">>(out, flight::row_get<flight::RowKey<"density">>(options));
 }
 
-inline flight::Ref<flight::types::ScreenSpaceFogEffect> create_screen_space_fog_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::ScreenSpaceFogEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::ScreenSpaceFogEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::ScreenSpaceFogEffect>>{}));
+inline flight::Ref<flight::types::ScreenSpaceFogEffect> create_screen_space_fog_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<color_far_near_density>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<color_far_near_density>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::ScreenSpaceFogEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ScreenSpaceFogEffect>>();
   initialize_screen_space_fog_effect(out, options.value());
   return flight::entity::finish_entity(out);

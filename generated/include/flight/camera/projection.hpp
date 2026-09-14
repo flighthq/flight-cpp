@@ -61,8 +61,8 @@ inline void set_projection_matrix4(flight::Ref<flight::types::Matrix4Like> out, 
     flight::geometry::set_perspective_matrix4(out, std::tan((projection.fov_y * 0.5)), aspect, near, far);
     return;
   }
-  auto half_width = projection.half_width;
-  auto half_height = projection.half_height;
+  const double half_width = projection.half_width;
+  const double half_height = projection.half_height;
   flight::geometry::set_orthographic_matrix4(out, -half_width, half_width, -half_height, half_height, near, far);
 }
 

@@ -11,11 +11,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_convolution_options.hpp>
 #include <flight/types/bitmap_edge_mode.hpp>
 #include <flight/types/bitmap_region.hpp>
 #include <flight/types/pixel_format.hpp>
+#include <flight/types/texture_source_kind.hpp>
 
 namespace flight::bitmap {
 
@@ -45,24 +47,24 @@ inline double resolve_convolution_mirror(double v, double size) {
 
 inline void convolve_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapConvolutionOptions>>>> options) {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapConvolutionOptions>>>> object_pattern_value = options;
-  auto matrix = flight::row_get<flight::RowKey<"matrix">>(object_pattern_value);
-  auto matrix_x = flight::row_get<flight::RowKey<"matrixX">>(object_pattern_value);
-  auto matrix_y = flight::row_get<flight::RowKey<"matrixY">>(object_pattern_value);
+  flight::Array<double> matrix = flight::row_get<flight::RowKey<"matrix">>(object_pattern_value);
+  const double matrix_x = flight::row_get<flight::RowKey<"matrixX">>(object_pattern_value);
+  const double matrix_y = flight::row_get<flight::RowKey<"matrixY">>(object_pattern_value);
   if (((matrix_x <= 0.0) || (matrix_y <= 0.0))) {
     throw flight::Error(flight::String("Convolution filter matrix dimensions must be positive"));
   }
-  if ((matrix.length < (matrix_x * matrix_y))) {
+  if ((static_cast<double>(matrix.size()) < (matrix_x * matrix_y))) {
     throw flight::Error(flight::String("Convolution filter matrix does not match its dimensions"));
   }
-  auto raw_divisor = flight::row_get<flight::RowKey<"divisor">>(options).value_or(get_convolution_divisor(matrix, (matrix_x * matrix_y)));
-  auto divisor = ((raw_divisor == 0.0) ? 1.0 : raw_divisor);
-  auto bias = flight::row_get<flight::RowKey<"bias">>(options).value_or(0.0);
-  auto edge = flight::row_get<flight::RowKey<"edge">>(options).value_or(flight::String("clamp"));
-  auto preserve_alpha = flight::row_get<flight::RowKey<"preserveAlpha">>(options).value_or(true);
+  const double raw_divisor = flight::row_get<flight::RowKey<"divisor">>(options).value_or(get_convolution_divisor(matrix, (matrix_x * matrix_y)));
+  const double divisor = ((raw_divisor == 0.0) ? 1.0 : raw_divisor);
+  const double bias = flight::row_get<flight::RowKey<"bias">>(options).value_or(0.0);
+  flight::String edge = flight::row_get<flight::RowKey<"edge">>(options).value_or(flight::String("clamp"));
+  const bool preserve_alpha = flight::row_get<flight::RowKey<"preserveAlpha">>(options).value_or(true);
   auto offset_x = std::floor((matrix_x / 2.0));
   auto offset_y = std::floor((matrix_y / 2.0));
-  auto bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
-  auto bitmap_height = flight::row_get<flight::RowKey<"bitmap">>(source)->height;
+  const double bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
+  const double bitmap_height = flight::row_get<flight::RowKey<"bitmap">>(source)->height;
   flight::Uint8ClampedArray<flight::ArrayBuffer> data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
   {
     double py = 0.0;
@@ -87,7 +89,7 @@ inline void convolve_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                       while ((kx < matrix_x)) {
                         {
                           const double raw_sample_x = (((flight::row_get<flight::RowKey<"x">>(source) + px) + kx) - offset_x);
-                          auto weight = matrix.element((weight_row_start + kx));
+                          const double weight = matrix.element((weight_row_start + kx));
                           double sample_x;
                           double sample_y;
                           if (((((raw_sample_y < 0.0) || (raw_sample_y >= bitmap_height)) || (raw_sample_x < 0.0)) || (raw_sample_x >= bitmap_width))) {

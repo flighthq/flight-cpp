@@ -26,7 +26,7 @@ inline void initialize_hemisphere_light(flight::types::EntityConstruction<flight
 
 inline flight::Ref<flight::types::HemisphereLight> create_hemisphere_light(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HemisphereLightOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::HemisphereLight>> out = flight::entity::allocate_entity<flight::Ref<flight::types::HemisphereLight>>();
-  initialize_hemisphere_light(out, options.value());
+  initialize_hemisphere_light(out, options);
   return flight::entity::finish_entity(out);
 }
 

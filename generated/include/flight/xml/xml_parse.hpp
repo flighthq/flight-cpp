@@ -40,7 +40,7 @@ inline flight::String expand_xml_entities(flight::String src, std::unordered_map
       {
         const auto expanded_capture = flight::make_binding_cell(bool{false});
         auto next = output.replace(flight::RegExp(flight::String("&([\\w:.-]+);"), flight::String("g")), [=](flight::String reference, flight::String name) {
-  const flight::String replacement = entities[static_cast<size_t>(name)];
+  const flight::String replacement = entities[name];
   if (!replacement.has_value()) {
     return reference;
   }
@@ -117,7 +117,7 @@ inline std::optional<flight::Ref<flight::types::XmlElement>> parse_element(fligh
   flight::String attrs_str = flight::String("");
   flight::String quote = flight::String("");
   while ((state->pos < static_cast<double>(src.length()))) {
-    auto ch = src[static_cast<size_t>(state->pos)];
+    const flight::String ch = src[static_cast<size_t>(state->pos)];
     if (quote) {
       if ((ch == quote)) {
         quote = flight::String("");
@@ -238,7 +238,7 @@ inline flight::String strip_xml_doctypes(flight::String xml, std::unordered_map<
     double internal_subset_depth = 0.0;
     flight::String quote = flight::String("");
     while ((pos < static_cast<double>(xml.length()))) {
-      auto ch = xml[static_cast<size_t>(pos)];
+      const flight::String ch = xml[static_cast<size_t>(pos)];
       if (quote) {
         if ((ch == quote)) {
           quote = flight::String("");

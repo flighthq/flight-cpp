@@ -23,18 +23,18 @@ inline void get_camera3_dforward(flight::Ref<flight::types::Vector3Like> out, fl
 
 inline void get_camera3_dposition(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"view">>(camera)->m;
-  auto m00 = m.element(0.0);
-  auto m01 = m.element(1.0);
-  auto m02 = m.element(2.0);
-  auto m10 = m.element(4.0);
-  auto m11 = m.element(5.0);
-  auto m12 = m.element(6.0);
-  auto m20 = m.element(8.0);
-  auto m21 = m.element(9.0);
-  auto m22 = m.element(10.0);
-  auto tx = m.element(12.0);
-  auto ty = m.element(13.0);
-  auto tz = m.element(14.0);
+  const double m00 = m.element(0.0);
+  const double m01 = m.element(1.0);
+  const double m02 = m.element(2.0);
+  const double m10 = m.element(4.0);
+  const double m11 = m.element(5.0);
+  const double m12 = m.element(6.0);
+  const double m20 = m.element(8.0);
+  const double m21 = m.element(9.0);
+  const double m22 = m.element(10.0);
+  const double tx = m.element(12.0);
+  const double ty = m.element(13.0);
+  const double tz = m.element(14.0);
   out->x = -(((m00 * tx) + (m01 * ty)) + (m02 * tz));
   out->y = -(((m10 * tx) + (m11 * ty)) + (m12 * tz));
   out->z = -(((m20 * tx) + (m21 * ty)) + (m22 * tz));

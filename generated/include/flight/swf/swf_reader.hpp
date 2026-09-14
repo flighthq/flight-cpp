@@ -12,7 +12,7 @@ inline const double encoded_uint32_max_bytes = 5.0;
 
 inline const double fixed_8_8_one = 256.0;
 
-inline flight::TextDecoder decoder = flight::TextDecoder();
+inline flight::TextDecoder decoder = flight::TextDecoder.construct();
 
 struct SwfReader : public flight::ReferenceEnabled {
   double bit_position = 0.0;

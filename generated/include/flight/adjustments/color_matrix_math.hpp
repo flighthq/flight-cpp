@@ -189,7 +189,7 @@ inline flight::Array<double> fuse_color_matrices(flight::Array<flight::Array<dou
   if ((static_cast<double>(matrices.size()) == 0.0)) {
     return create_identity_color_matrix();
   }
-  auto out = matrices.element(0.0).slice();
+  flight::Array<double> out = matrices.element(0.0).slice();
   {
     double i = 1.0;
     while ((i < static_cast<double>(matrices.size()))) {

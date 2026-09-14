@@ -14,12 +14,12 @@ namespace flight::types {
 
 inline const flight::String render_cache_kind = flight::String("RenderCache");
 
+using RenderCacheKind = flight::String;
+
 struct RenderCache : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  render_cache_kind kind;
+  RenderCacheKind kind;
   flight::Ref<flight::types::Matrix> transform;
 };
-
-using RenderCacheKind = flight::String;
 
 } // namespace flight::types

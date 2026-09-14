@@ -17,8 +17,8 @@ namespace flight::adjustments {
 
 inline void initialize_grayscale_adjustment(flight::types::EntityConstruction<flight::Ref<flight::types::GrayscaleAdjustment>> out, std::optional<flight::Ref<flight::types::GrayscaleAdjustment>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<flight::types::GrayscaleAdjustment>(flight::types::GrayscaleAdjustment{}));
-  auto intensity = options.value()->intensity.value_or(1.0);
-  auto k = intensity;
+  const double intensity = options.value()->intensity.value_or(1.0);
+  const double k = intensity;
   const double j = (1.0 - intensity);
   const double lr = (0.2126 * k);
   const double lg = (0.7152 * k);

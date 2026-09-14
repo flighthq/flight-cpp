@@ -14,14 +14,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_lens_distortion_effect(flight::types::EntityConstruction<flight::Ref<flight::types::LensDistortionEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::LensDistortionEffect>>> options) {
+struct amount_scale : public flight::ReferenceEnabled {
+  std::optional<double> amount;
+  std::optional<double> scale;
+};
+
+inline void initialize_lens_distortion_effect(flight::types::EntityConstruction<flight::Ref<flight::types::LensDistortionEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount_scale>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("LensDistortionEffect"));
-  flight::row_set<flight::RowKey<"amount">>(out, options->amount);
-  flight::row_set<flight::RowKey<"scale">>(out, options->scale);
+  flight::row_set<flight::RowKey<"amount">>(out, flight::row_get<flight::RowKey<"amount">>(options));
+  flight::row_set<flight::RowKey<"scale">>(out, flight::row_get<flight::RowKey<"scale">>(options));
 }
 
-inline flight::Ref<flight::types::LensDistortionEffect> create_lens_distortion_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::LensDistortionEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::LensDistortionEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::LensDistortionEffect>>{}));
+inline flight::Ref<flight::types::LensDistortionEffect> create_lens_distortion_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount_scale>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<amount_scale>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::LensDistortionEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::LensDistortionEffect>>();
   initialize_lens_distortion_effect(out, options.value());
   return flight::entity::finish_entity(out);

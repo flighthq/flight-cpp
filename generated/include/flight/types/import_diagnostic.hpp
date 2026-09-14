@@ -19,13 +19,13 @@ struct drop_recover_reject_skip : public flight::ReferenceEnabled {
 
 inline flight::Ref<drop_recover_reject_skip> import_diagnostic_severity = flight::make_ref<drop_recover_reject_skip>(drop_recover_reject_skip{.drop = flight::String("Drop"), .recover = flight::String("Recover"), .reject = flight::String("Reject"), .skip = flight::String("Skip")});
 
+using ImportDiagnosticSeverity = flight::String;
+
 struct ImportDiagnostic : public flight::ReferenceEnabled {
   std::optional<std::unordered_map<flight::String, std::variant<bool, double, flight::String>>> detail;
   flight::String kind;
   flight::String origin;
-  import_diagnostic_severity severity;
+  ImportDiagnosticSeverity severity;
 };
-
-using ImportDiagnosticSeverity = flight::String;
 
 } // namespace flight::types

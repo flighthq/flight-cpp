@@ -113,14 +113,14 @@ inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_dds_int
     flight::texture_formats::skip_byte_reader(dx10, 4.0);
     const double misc_flag = flight::texture_formats::read_byte_reader_u32(dx10);
     const double array_size = flight::texture_formats::read_byte_reader_u32(dx10);
-    format = dds_dxgi_format[static_cast<size_t>(dxgi_format)].value_or(std::nullopt);
+    format = std::optional<flight::String>{dds_dxgi_format[dxgi_format].value_or(nullptr)};
     cube = (cube || (flight::bitwise_and(misc_flag, dds_dx10_misc_cube) != 0.0));
     layers = flight::maximum(1.0, array_size);
     data_offset = (dds_data_offset + 20.0);
   }
   else {
     if ((flight::bitwise_and(pf_flags, dds_pf_four_cc) != 0.0)) {
-      format = dds_four_cc_format[static_cast<size_t>(four_cc)].value_or(std::nullopt);
+      format = std::optional<flight::String>{dds_four_cc_format[four_cc].value_or(nullptr)};
     }
     else {
       if ((flight::bitwise_and(pf_flags, dds_pf_rgb) != 0.0)) {

@@ -98,12 +98,12 @@ inline void sample_color_lut(flight::StructuralRef<flight::RowReadonly<flight::R
         const double c101 = s.element(((((((b1 * n) + g0) * n) + r1) * 3.0) + c));
         const double c011 = s.element(((((((b1 * n) + g1) * n) + r0) * 3.0) + c));
         const double c111 = s.element(((((((b1 * n) + g1) * n) + r1) * 3.0) + c));
-        auto c00 = (c000 + ((c100 - c000) * dr));
-        auto c10 = (c010 + ((c110 - c010) * dr));
-        auto c01 = (c001 + ((c101 - c001) * dr));
-        auto c11 = (c011 + ((c111 - c011) * dr));
-        auto c0 = (c00 + ((c10 - c00) * dg));
-        auto c1 = (c01 + ((c11 - c01) * dg));
+        const double c00 = (c000 + ((c100 - c000) * dr));
+        const double c10 = (c010 + ((c110 - c010) * dr));
+        const double c01 = (c001 + ((c101 - c001) * dr));
+        const double c11 = (c011 + ((c111 - c011) * dr));
+        const double c0 = (c00 + ((c10 - c00) * dg));
+        const double c1 = (c01 + ((c11 - c01) * dg));
         out.element(c) = (c0 + ((c1 - c0) * db));
       }
       c += 1.0;

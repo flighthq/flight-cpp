@@ -14,7 +14,7 @@ namespace flight::texture_formats {
 
 inline flight::Ref<flight::types::ByteReader> create_byte_reader(flight::Uint8Array bytes, std::optional<double> offset = std::nullopt) {
   offset = offset.value_or(0.0);
-  return flight::make_ref<flight::types::ByteReader>(flight::types::ByteReader{.view = flight::DataView(bytes.buffer, bytes.byte_offset, bytes.byte_length), .offset = offset.value()});
+  return flight::make_ref<flight::types::ByteReader>(flight::types::ByteReader{.view = flight::DataView.construct(bytes.buffer, bytes.byte_offset, bytes.byte_length), .offset = offset.value()});
 }
 
 inline bool has_byte_reader_bytes(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>> reader, double count) {

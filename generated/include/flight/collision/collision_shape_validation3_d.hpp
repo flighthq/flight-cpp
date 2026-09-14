@@ -19,9 +19,9 @@ inline std::optional<flight::String> get_collision_convex_validation_status3_d(f
   if (((static_cast<double>(points.size()) < 9.0) || (std::fmod(static_cast<double>(points.size()), 3.0) != 0.0))) {
     return std::optional<flight::String>{flight::String("degenerate-shape")};
   }
-  auto min_x = std::numeric_limits<double>::infinity();
-  auto min_y = std::numeric_limits<double>::infinity();
-  auto min_z = std::numeric_limits<double>::infinity();
+  double min_x = std::numeric_limits<double>::infinity();
+  double min_y = std::numeric_limits<double>::infinity();
+  double min_z = std::numeric_limits<double>::infinity();
   double max_x = -std::numeric_limits<double>::infinity();
   double max_y = -std::numeric_limits<double>::infinity();
   double max_z = -std::numeric_limits<double>::infinity();

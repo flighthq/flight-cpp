@@ -34,7 +34,7 @@ inline void initialize_spritesheet_frame(flight::types::EntityConstruction<fligh
 
 inline flight::Ref<flight::types::SpritesheetFrame> create_spritesheet_frame(std::optional<flight::Ref<entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetFrame>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpritesheetFrame>>();
-  initialize_spritesheet_frame(out, obj.value());
+  initialize_spritesheet_frame(out, obj);
   return flight::entity::finish_entity(out);
 }
 

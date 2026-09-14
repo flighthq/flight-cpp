@@ -10,6 +10,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/entity.hpp>
 #include <flight/types/outline_effect.hpp>
 #include <flight/types/sketch_effect.hpp>
 
@@ -18,7 +19,7 @@ namespace flight::effects {
 inline void compute_outline_edge_params(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OutlineEffect>>>> effect, flight::Array<double> out) {
   auto threshold = flight::maximum(0.0, flight::row_get<flight::RowKey<"threshold">>(effect).value_or(0.1));
   const double feather = (threshold * 0.5);
-  auto color = flight::row_get<flight::RowKey<"color">>(effect).value_or(255.0);
+  const double color = flight::row_get<flight::RowKey<"color">>(effect).value_or(255.0);
   const double r = (flight::bitwise_and(flight::unsigned_right_shift(color, 24.0), 255.0) / 255.0);
   const double g = (flight::bitwise_and(flight::unsigned_right_shift(color, 16.0), 255.0) / 255.0);
   const double b = (flight::bitwise_and(flight::unsigned_right_shift(color, 8.0), 255.0) / 255.0);

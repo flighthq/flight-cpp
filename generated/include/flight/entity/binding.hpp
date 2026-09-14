@@ -36,7 +36,7 @@ inline std::optional<Type> get_entity_binding_as(flight::StructuralRef<flight::R
 }
 
 inline bool has_entity_binding(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Entity>>>> source) {
-  return (get_entity_binding(source) != nullptr);
+  return get_entity_binding(source).has_value();
 }
 
 } // namespace flight::entity

@@ -18,10 +18,10 @@ inline flight::Ref<flight::types::Velocity2D> get_velocity_sample_at(flight::Str
     out->y = 0.0;
     return out;
   }
-  auto cx = (((flight::row_get<flight::RowKey<"a">>(current_world_transform) * point_x) + (flight::row_get<flight::RowKey<"c">>(current_world_transform) * point_y)) + flight::row_get<flight::RowKey<"tx">>(current_world_transform));
-  auto cy = (((flight::row_get<flight::RowKey<"b">>(current_world_transform) * point_x) + (flight::row_get<flight::RowKey<"d">>(current_world_transform) * point_y)) + flight::row_get<flight::RowKey<"ty">>(current_world_transform));
-  auto px = (((flight::row_get<flight::RowKey<"previousWorldTransform">>(sample).a * point_x) + (flight::row_get<flight::RowKey<"previousWorldTransform">>(sample).c * point_y)) + flight::row_get<flight::RowKey<"previousWorldTransform">>(sample).tx);
-  auto py = (((flight::row_get<flight::RowKey<"previousWorldTransform">>(sample).b * point_x) + (flight::row_get<flight::RowKey<"previousWorldTransform">>(sample).d * point_y)) + flight::row_get<flight::RowKey<"previousWorldTransform">>(sample).ty);
+  const double cx = (((flight::row_get<flight::RowKey<"a">>(current_world_transform) * point_x) + (flight::row_get<flight::RowKey<"c">>(current_world_transform) * point_y)) + flight::row_get<flight::RowKey<"tx">>(current_world_transform));
+  const double cy = (((flight::row_get<flight::RowKey<"b">>(current_world_transform) * point_x) + (flight::row_get<flight::RowKey<"d">>(current_world_transform) * point_y)) + flight::row_get<flight::RowKey<"ty">>(current_world_transform));
+  const double px = (((flight::row_get<flight::RowKey<"previousWorldTransform">>(sample).a * point_x) + (flight::row_get<flight::RowKey<"previousWorldTransform">>(sample).c * point_y)) + flight::row_get<flight::RowKey<"previousWorldTransform">>(sample).tx);
+  const double py = (((flight::row_get<flight::RowKey<"previousWorldTransform">>(sample).b * point_x) + (flight::row_get<flight::RowKey<"previousWorldTransform">>(sample).d * point_y)) + flight::row_get<flight::RowKey<"previousWorldTransform">>(sample).ty);
   out->x = (cx - px);
   out->y = (cy - py);
   return out;

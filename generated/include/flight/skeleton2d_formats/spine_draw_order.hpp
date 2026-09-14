@@ -30,7 +30,7 @@ inline std::optional<flight::Array<double>> resolve_spine_draw_ordering(flight::
     if (((!flight::is_integer(slot_index) || (slot_index < 0.0)) || (slot_index >= slot_count))) {
       return std::nullopt;
     }
-    auto destination = (slot_index + flight::row_get<flight::RowKey<"offset">>(move));
+    const double destination = (slot_index + flight::row_get<flight::RowKey<"offset">>(move));
     if (((!flight::is_integer(destination) || (destination < 0.0)) || (destination >= slot_count))) {
       return std::nullopt;
     }

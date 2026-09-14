@@ -7,10 +7,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/glyph_atlas_entry_explanation.hpp>
 #include <flight/types/glyph_source.hpp>
 #include <flight/types/pixel_format.hpp>
+#include <flight/types/texture_source_kind.hpp>
 
 namespace flight::glyphatlas {
 
@@ -20,15 +22,15 @@ inline flight::Ref<flight::types::GlyphAtlasEntryExplanation> explain_glyph_atla
   const double usable_width = (runtime->bitmap->width - (2.0 * padding));
   const double usable_height = (runtime->bitmap->height - (2.0 * padding));
   if (runtime->entries.has(codepoint)) {
-    auto entry = runtime->entries.get(codepoint);
-    return flight::make_ref<flight::types::GlyphAtlasEntryExplanation>(flight::types::GlyphAtlasEntryExplanation{.renderable = true, .reason = flight::String("ok"), .glyph_width = entry.width, .glyph_height = entry.height, .usable_width = usable_width, .usable_height = usable_height});
+    flight::Ref<flight::types::GlyphEntry> entry = runtime->entries.get(codepoint);
+    return flight::make_ref<flight::types::GlyphAtlasEntryExplanation>(flight::types::GlyphAtlasEntryExplanation{.renderable = true, .reason = flight::String("ok"), .glyph_width = entry->width, .glyph_height = entry->height, .usable_width = usable_width, .usable_height = usable_height});
   }
   auto bitmap = runtime->rasterizer_backend->rasterize(codepoint, runtime->rasterize_options);
   if (!bitmap.has_value()) {
     return flight::make_ref<flight::types::GlyphAtlasEntryExplanation>(flight::types::GlyphAtlasEntryExplanation{.renderable = false, .reason = flight::String("rasterizer-returned-null"), .glyph_width = 0.0, .glyph_height = 0.0, .usable_width = usable_width, .usable_height = usable_height});
   }
-  const bool fits = ((bitmap.width <= usable_width) && (bitmap.height <= usable_height));
-  return flight::make_ref<flight::types::GlyphAtlasEntryExplanation>(flight::types::GlyphAtlasEntryExplanation{.renderable = fits, .reason = (fits ? flight::String("ok") : flight::String("glyph-larger-than-atlas")), .glyph_width = bitmap.width, .glyph_height = bitmap.height, .usable_width = usable_width, .usable_height = usable_height});
+  const bool fits = ((bitmap.value()->width <= usable_width) && (bitmap.value()->height <= usable_height));
+  return flight::make_ref<flight::types::GlyphAtlasEntryExplanation>(flight::types::GlyphAtlasEntryExplanation{.renderable = fits, .reason = (fits ? flight::String("ok") : flight::String("glyph-larger-than-atlas")), .glyph_width = bitmap.value()->width, .glyph_height = bitmap.value()->height, .usable_width = usable_width, .usable_height = usable_height});
 }
 
 } // namespace flight::glyphatlas

@@ -41,7 +41,7 @@ inline void initialize_spritesheet_animation_data(flight::types::EntityConstruct
 
 inline flight::Ref<flight::types::SpritesheetAnimationData> create_spritesheet_animation_data(std::optional<flight::Ref<entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetAnimationData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpritesheetAnimationData>>();
-  initialize_spritesheet_animation_data(out, obj.value());
+  initialize_spritesheet_animation_data(out, obj);
   return flight::entity::finish_entity(out);
 }
 
@@ -66,7 +66,7 @@ inline void initialize_spritesheet_data(flight::types::EntityConstruction<flight
 
 inline flight::Ref<flight::types::SpritesheetData> create_spritesheet_data(std::optional<flight::Ref<entity_runtime_key_animations_frames_image_file_image_height_image_width_scale>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpritesheetData>>();
-  initialize_spritesheet_data(out, obj.value());
+  initialize_spritesheet_data(out, obj);
   return flight::entity::finish_entity(out);
 }
 
@@ -103,7 +103,7 @@ inline void initialize_spritesheet_frame_data(flight::types::EntityConstruction<
 
 inline flight::Ref<flight::types::SpritesheetFrameData> create_spritesheet_frame_data(std::optional<flight::Ref<entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetFrameData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpritesheetFrameData>>();
-  initialize_spritesheet_frame_data(out, obj.value());
+  initialize_spritesheet_frame_data(out, obj);
   return flight::entity::finish_entity(out);
 }
 

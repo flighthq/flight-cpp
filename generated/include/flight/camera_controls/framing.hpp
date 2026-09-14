@@ -25,7 +25,7 @@ inline double get_perspective_projection_frame_distance_to_sphere(flight::Struct
   padding = padding.value_or(1.0);
   const double padded_radius = (radius * padding.value());
   const double vertical_half_fov = (flight::row_get<flight::RowKey<"fovY">>(projection) * 0.5);
-  auto horizontal_half_fov = std::atan((std::tan(vertical_half_fov) * aspect));
+  const double horizontal_half_fov = std::atan((std::tan(vertical_half_fov) * aspect));
   return (padded_radius / std::sin(flight::minimum(vertical_half_fov, horizontal_half_fov)));
 }
 

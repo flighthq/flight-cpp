@@ -14,13 +14,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_smaa_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SmaaEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SmaaEffect>>> options) {
+struct threshold : public flight::ReferenceEnabled {
+  std::optional<double> threshold;
+};
+
+inline void initialize_smaa_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SmaaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<threshold>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("SmaaEffect"));
-  flight::row_set<flight::RowKey<"threshold">>(out, options->threshold);
+  flight::row_set<flight::RowKey<"threshold">>(out, flight::row_get<flight::RowKey<"threshold">>(options));
 }
 
-inline flight::Ref<flight::types::SmaaEffect> create_smaa_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SmaaEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SmaaEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SmaaEffect>>{}));
+inline flight::Ref<flight::types::SmaaEffect> create_smaa_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<threshold>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<threshold>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::SmaaEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SmaaEffect>>();
   initialize_smaa_effect(out, options.value());
   return flight::entity::finish_entity(out);

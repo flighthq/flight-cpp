@@ -2,13 +2,14 @@
 
 The maintained downstream checklist now lives in [flight-compiler adoption status](flight-compiler-adoption.md).
 
-This review covers Flight `1274ec5` and flight-compiler `5649642`. Both revisions are pinned in
+This review covers Flight `1274ec5` and flight-compiler `993c280`. Both revisions are pinned in
 [`dependencies.lock.json`](../dependencies.lock.json).
 
 ## Complete report sweep
 
 The full graph now finishes locally in about two and a half minutes. It processes all 154 SDK packages and 2,851
-source modules, emits 1,032 dependency-closed headers, and records 1,819 refused modules. The exact headers,
+source modules, emits 959 dependency-closed headers, and records 1,892 refused modules: 1,089 direct emission
+refusals and 803 propagated dependency refusals. The exact headers,
 initialization order, package totals, and refusal diagnostics are committed under [`generated/`](../generated/).
 `npm run sdk:check` reproduces the tree from the two pins.
 
@@ -24,7 +25,10 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
 - stable shared `ArrayBuffer`, typed-array views, complete numeric `DataView` access, UTF-8 `TextDecoder`, and
   `String::from_code_point`;
 - a common `ArrayBufferLike` carrier for ordinary, shared, and host-owned storage, now selected by the runtime binding
-  profile and accepted by typed-array/DataView zero-copy constructors;
+  profile and accepted by typed-array/DataView zero-copy constructors, plus the concrete `SharedArrayBuffer` type and
+  constructor mapping;
+- shared live `MapIterator<T>` cursors for `Map.keys`, `Map.values`, and `Map.entries`, including insertion-order,
+  deletion, post-creation insertion, copy identity, and sticky-exhaustion behavior;
 - shared `AbortController`/`AbortSignal` state with first-reason retention, listener dispatch/removal, and
   `throw_if_aborted`, covered by a live compiler-versus-Node oracle;
 - immutable shared `Blob` bytes with typed-array construction, slicing, MIME normalization, text decoding, and
@@ -60,7 +64,10 @@ development preset, and is declared in the Bazel graph.
 ## Remaining compiler-owned native failures
 
 The emitted set is dependency-closed in the TypeScript package graph, but dependency closure is not yet the same as
-C++ well-formedness. With GCC 15.2, 704 of the 1,032 headers compile independently and 328 fail. The current native
+C++ well-formedness. With GCC 15.2, 703 of the 959 headers compile independently and 256 fail. The composed SDL
+profile emits 1,098 modules, of which 755 compile and 343 fail. Compared with compiler `5649642`, the portable pass
+count changes from 704 to 703 while 72 malformed headers move behind explicit refusals; the SDL profile retains all
+755 previously compiling headers while moving 31 malformed headers behind refusals. The current native
 report is dominated by emission defects that cannot be repaired by adding a runtime symbol:
 
 - source module-private helpers are emitted into one package namespace, so package barrels encounter C++
@@ -71,6 +78,14 @@ report is dominated by emission defects that cannot be repaired by adding a runt
 - discriminated unions represented by `std::variant` still receive direct member access;
 - several structurally equivalent anonymous records are emitted as distinct, non-convertible C++ structs;
 - a few emitted tokens and type queries remain malformed, including `typeidel`.
+
+The stricter compiler newly refuses 16 direct roots that the previous portable sweep emitted. Five need equivalent
+source-union evidence, five expose generic typed-array backing domains that are not represented by the concrete C++
+aliases, three contain unresolved callable result types, one needs named structural-row construction, and two retain
+an unresolved alternative in a scene-light-selection union. Their dependency refusals account for the rest of the
+35 previously emitted modules absent from the full SDL profile. Returning `MapIterator<T>.next().value` as
+`T | undefined` also reaches `contextual optionalSingle construction requires expression type evidence`; the exact
+iterator binding and its `done` path compile in the live runtime oracle.
 
 These diagnostics arise after the runtime includes resolve, and many occur in a header before later errors in that
 header can be observed. The JSON report from `npm run sdk:compile` is the compact handoff surface for fixing them in
@@ -103,20 +118,15 @@ Length-only `Array.from({ length }, mapper)` still requires dedicated compiler l
 generic structured cloning, and `Promise.allSettled` results still need represented compiler contracts; the runtime
 does not provide a permissive erasure for them.
 
-A disposable exact-pin compiler diagnostic added only the seven member families above. It removed all 19 direct
-member refusals and expanded the runtime-profile inventory from 1,077 to 1,082 headers. The five added headers all
-reach existing compiler-owned representation defects: `bitmap_fingerprint.hpp`, `capture_comparison.hpp`, and
-`texture_atlas_page_meta.hpp` apply concrete typed-array aliases as templates, while the two physics ABI buffer
-headers refer to `flight::types::SpatialObjectId` with a type spelling the generated dependency does not provide.
-The resulting independent compile is 713 passing and 369 failing, so these mappings expose useful work but do not
-yet increase the buildable header count.
+The latest compiler still records direct refusals for all seven member families above. Newly emitted generic typed
+arrays also expose a distinct representation issue: TypeScript's current library models backing storage as
+`Uint8Array<ArrayBufferLike>` and peers, but C++ emission applies the concrete aliases as templates. The runtime must
+not redefine each concrete element alias as a generic backing template; the compiler must either erase a proven
+backing parameter to the existing `ArrayBufferLike` member or emit a compatible generic carrier deliberately.
 
-The official runtime-profile compile has nine headers whose first error is construction of `std::range_error` from
-`flight::String`. Map both the type and value spaces for `RangeError` to `flight::RangeError` and `TypeError` to
-`flight::TypeError`, with `flight/error.hpp`; the native types now implement that contract. A disposable exact-pin
-mapping removes those nine constructor errors, after which the same headers reach existing optional-unwrapping or
-missing-symbol emission defects. This mapping is still the correct ABI fix, but it does not raise the present 713
-passing-header count by itself.
+The runtime profile maps both spaces for `RangeError` and `TypeError` to the semantic runtime classes in
+`flight/error.hpp`. Current generated headers no longer fail by trying to construct `std::range_error` from
+`flight::String`; the remaining failures are later optional-unwrapping or missing-symbol emission defects.
 
 The runtime now also provides `flight::all_settled_tasks(Array<Task<T>>)` and
 `Task<T>::all_settled(std::vector<Task<T>>)`, returning ordered `TaskSettlement<T>` values without rejecting the
@@ -124,7 +134,7 @@ aggregate. The compiler can bind `Promise.allSettled` to the free function after
 `PromiseSettledResult<T>` to that carrier and lowers the source union's `status`, `value`, and `reason` access. A
 disposable exact-pin member mapping already removes the only direct all-settled refusal; the scene-resource module
 then reaches its existing `resolveScene3DResources` dependency refusal, so this change does not alter the current
-1,077-header total by itself.
+emitted-header total by itself.
 
 ## Complete example sweep
 
@@ -135,18 +145,16 @@ SDL/GL lane: each `render.ts` selector and chosen `render.webgl.ts` implementati
 own `examples/upstream/generated/include/flight/examples` tree and references the single canonical SDK tree rather
 than copying SDK headers per example.
 
-At the current pins, dependency closure emits 0 of those 100 modules. The linked ledger contains 94 dependency, six
-lowering, and one emission refusal entries. Forty example modules are held by the refused `@flighthq/sdk` barrel and
+At the current pins, dependency closure emits 0 of those 100 modules. The linked ledger contains 44 dependency and
+56 emission refusal entries. Forty example modules are held by the refused `@flighthq/sdk` barrel and
 20 renderer modules are held by the refused `@flighthq/host-web/contract` path through `webGraphicsHost`. The exact
 per-module evidence is committed in `examples/upstream/generated/refusals.json`.
 
 The separate frontier ledger deliberately compiles each selected example without its package dependencies, so its
 28 missing package-evaluation entries are boundary markers rather than claims that the full graph omitted those
-packages. It exposes the direct example-source work hidden behind propagation: 29 captured referent mutations need
-the compiler's shared C++ reference representation, four WebGL renderers need contextual typing for empty arrays,
-two array binding patterns need statically recoverable element or tuple types, one spread needs finite/fold
-lowering, one nested interface statement needs lowering, and one target-name candidate reaches an internal compiler
-failure. The SDL application profile resolves every direct keyboard, pointer, wheel, DOM attachment, window, and
+packages. It records 33 dependency and 39 direct emission boundaries, led by contextual optional construction,
+captured referent mutation, contextual typing for empty arrays, and incomplete HTML element profiles. The SDL
+application profile resolves every direct keyboard, pointer, wheel, DOM attachment, window, and
 animation-frame ambient in the chosen lane. Only the sound example still reports `AudioContext[value]`; that belongs
 with an eventual SDL audio adapter rather than the GL host.
 
@@ -162,8 +170,8 @@ renderer ownership.
 
 The manifest-free generation remains the portable floor. Browser, media, Node, and graphics handles require explicit
 binding profiles. SDL owns lifecycle and GL, Vulkan, or WebGPU surface acquisition; generated Flight renderer
-packages own rendering behavior. These host bindings will increase the emitted module set, while the portable
-1,032-header compile gate remains useful and independent of platform SDKs.
+packages own rendering behavior. These host bindings increase the emitted module set from 959 to 1,098, while the
+portable compile gate remains useful and independent of platform SDKs.
 
 The SDL host now also implements the complete emitted `AudioDeviceBackend` operation record over SDL's device
 callback, including PCM buffer acquisition, concurrent source playback, live gain/pan/rate, bounded regions,
@@ -177,7 +185,7 @@ The host playback seam is no longer part of that blocker.
 
 The downstream `flighthq/flight-cpp/sdl-gl/1` profile now names concrete SDL-owned canvas/context types, shared GL
 object handles, context attributes, a weakly recoverable image-source carrier, and
-`EXT_texture_filter_anisotropic`. Composed with the runtime and exact Web string-alias profiles it emits 1,111
+`EXT_texture_filter_anisotropic`. Composed with the runtime and exact Web string-alias profiles it emits 1,081
 modules, 32 beyond the runtime/headless inventory; 23 of those additions compile independently. The extension binding removes its direct
 ambient refusal; `GlContextRuntime` then
 reaches `flight-cpp WeakMap value requires a proven C++ representation`. The next renderer-wide compiler blocker is exact:
@@ -200,11 +208,11 @@ compressed-extension enum lookup still depends on the compiler selecting flight-
 `Record<String, double>` representation and lowering optional indexed access. This proceeds into `render-gl` without
 adding an SDL renderer.
 
-Composing `bindings/sdl-app.json` with that SDL/GL sweep leaves the emitted header tree byte-identical but reduces
-direct external-binding refusals from 92 to 82. The represented window, document, `HTMLElement`, keyboard, mouse,
-pointer, wheel, and animation-frame cancellation contracts now reach their next compiler or package dependency
-failures in the full SDK graph. The runtime profile maps `PromiseLike<T>` to the existing `flight::Task<T>` carrier;
-the dialog module consequently advances to the compiler's async-closure coroutine-lowering refusal.
+Composing `bindings/sdl-app.json` with the maintained renderer profiles admits the represented window, document,
+`HTMLElement`, keyboard, mouse, pointer, wheel, and animation-frame cancellation contracts; these now reach their
+next compiler or package dependency failures in the full SDK graph. The runtime profile maps `PromiseLike<T>` to the
+existing `flight::Task<T>` carrier; the dialog module consequently advances to the compiler's async-closure
+coroutine-lowering refusal.
 
 The SDL profile now also supplies `Event`, `CompositionEvent`, `InputEvent`, `Gamepad`, `GamepadEvent`, and
 `navigator.getGamepads()` with compiler-checked native carriers. `packages/input/src/inputManager.ts` consequently
@@ -215,9 +223,9 @@ identity representation that lets the host remove the same listener without comp
 
 The provider-neutral `flighthq/flight-cpp/sdl-wgpu/1` profile now supplies typed shared identity for 16 WebGPU
 object domains, exact adapter capability metadata, standard usage flags, and weak-key policies. On its own it adds
-19 dependency-closed headers over runtime/headless and all 19 compile. Composed with SDL/GL and the application
-shell, it raises the inventory from 1,111 to 1,129 headers; all 18 additions compile and direct ambient-refused
-modules fall from 92 to 50. The device, origin, vertex, and external-image descriptors now have compiler-checked
+18 dependency-closed headers over runtime/headless and all 18 compile. Composed with SDL/GL and the application
+shell, it raises the inventory from 1,081 to 1,098 headers; all 17 additions compile and direct ambient-refused
+modules fall from the SDL/GL profile's 242 to 166. The device, origin, vertex, and external-image descriptors now have compiler-checked
 native representations. `wgpuHost.ts` reaches contextual optional construction, while `wgpuExternalImageSource.ts`
 retains only browser constructor values (`DOMException`, image/video/canvas/bitmap/frame); both are compiler or
 browser-adapter boundaries rather than missing native WGPU data contracts.

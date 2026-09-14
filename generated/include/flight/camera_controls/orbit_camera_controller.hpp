@@ -84,9 +84,9 @@ inline const double default_min_distance = 0.01;
 inline const double default_min_polar = ((-flight::pi / 2.0) + 0.01);
 
 inline void initialize_orbit_camera_controller(flight::types::EntityConstruction<flight::Ref<flight::types::OrbitCameraController>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrbitCameraControllerOptions>>>>> options = std::nullopt) {
-  auto azimuth = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->azimuth; }()).value_or(0.0);
-  auto polar = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->polar; }()).value_or(0.0);
-  auto distance = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->distance; }()).value_or(10.0);
+  const double azimuth = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->azimuth; }()).value_or(0.0);
+  const double polar = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->polar; }()).value_or(0.0);
+  const double distance = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->distance; }()).value_or(10.0);
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> target = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->target; }());
   flight::row_set<flight::RowKey<"azimuth">>(out, azimuth);
   flight::row_set<flight::RowKey<"distance">>(out, distance);
@@ -104,7 +104,7 @@ inline void initialize_orbit_camera_controller(flight::types::EntityConstruction
 
 inline flight::Ref<flight::types::OrbitCameraController> create_orbit_camera_controller(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrbitCameraControllerOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::OrbitCameraController>> out = flight::entity::allocate_entity<flight::Ref<flight::types::OrbitCameraController>>();
-  initialize_orbit_camera_controller(out, options.value());
+  initialize_orbit_camera_controller(out, options);
   return flight::entity::finish_entity(out);
 }
 
@@ -115,9 +115,9 @@ inline flight::Ref<flight::types::OrbitCameraController> clone_orbit_camera_cont
 }
 
 inline void reset_orbit_camera_controller(flight::Ref<flight::types::OrbitCameraController> controller, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrbitCameraControllerOptions>>>>> options = std::nullopt) {
-  auto azimuth = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->azimuth; }()).value_or(0.0);
-  auto polar = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->polar; }()).value_or(0.0);
-  auto distance = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->distance; }()).value_or(10.0);
+  const double azimuth = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->azimuth; }()).value_or(0.0);
+  const double polar = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->polar; }()).value_or(0.0);
+  const double distance = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->distance; }()).value_or(10.0);
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> target = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->target; }());
   controller->azimuth = azimuth;
   controller->distance = distance;

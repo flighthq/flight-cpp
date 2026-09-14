@@ -89,7 +89,7 @@ struct FlightDocumentRefusalExplanation : public flight::ReferenceEnabled {
   std::optional<flight::String> mode;
   std::optional<double> offset;
   flight::String path;
-  flight_document_refusal_reason reason;
+  FlightDocumentRefusalReason reason;
   std::optional<flight::String> resource_key;
   std::optional<flight::String> token_key;
   std::optional<double> version;

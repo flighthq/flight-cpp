@@ -25,8 +25,8 @@ inline flight::String escape_xml(flight::String s) {
 }
 
 inline flight::Ref<flight::types::CocosPlistFrame> frame_to_entry(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpritesheetFrameData>>>> frame) {
-  auto packed_width = (flight::row_get<flight::RowKey<"rotated">>(frame) ? flight::row_get<flight::RowKey<"height">>(frame) : flight::row_get<flight::RowKey<"width">>(frame));
-  auto packed_height = (flight::row_get<flight::RowKey<"rotated">>(frame) ? flight::row_get<flight::RowKey<"width">>(frame) : flight::row_get<flight::RowKey<"height">>(frame));
+  const double packed_width = (flight::row_get<flight::RowKey<"rotated">>(frame) ? flight::row_get<flight::RowKey<"height">>(frame) : flight::row_get<flight::RowKey<"width">>(frame));
+  const double packed_height = (flight::row_get<flight::RowKey<"rotated">>(frame) ? flight::row_get<flight::RowKey<"width">>(frame) : flight::row_get<flight::RowKey<"height">>(frame));
   const flight::String rect_str = flight::String("{{") + flight::to_string(flight::row_get<flight::RowKey<"x">>(frame)) + flight::String(",") + flight::to_string(flight::row_get<flight::RowKey<"y">>(frame)) + flight::String("},{") + flight::to_string(packed_width) + flight::String(",") + flight::to_string(packed_height) + flight::String("}}");
   const flight::String offset_str = flight::String("{") + flight::to_string(flight::row_get<flight::RowKey<"offsetX">>(frame)) + flight::String(",") + flight::to_string(flight::row_get<flight::RowKey<"offsetY">>(frame)) + flight::String("}");
   const flight::String source_size_str = flight::String("{") + flight::to_string(flight::row_get<flight::RowKey<"sourceWidth">>(frame)) + flight::String(",") + flight::to_string(flight::row_get<flight::RowKey<"sourceHeight">>(frame)) + flight::String("}");

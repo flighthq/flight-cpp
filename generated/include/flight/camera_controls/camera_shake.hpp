@@ -32,7 +32,7 @@ inline void initialize_camera_shake(flight::types::EntityConstruction<flight::Re
 
 inline flight::Ref<flight::types::CameraShake> create_camera_shake(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CameraShakeOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::CameraShake>> out = flight::entity::allocate_entity<flight::Ref<flight::types::CameraShake>>();
-  initialize_camera_shake(out, options.value());
+  initialize_camera_shake(out, options);
   return flight::entity::finish_entity(out);
 }
 

@@ -23,7 +23,7 @@ inline double random_int(flight::types::RandomSource random, double min, double 
   auto lo = std::floor(min);
   auto hi = std::floor(max);
   if ((lo > hi)) {
-    throw std::range_error(flight::String("randomInt: min must be <= max").to_utf8());
+    throw std::range_error.construct(flight::String("randomInt: min must be <= max"));
   }
   return (lo + std::floor((random() * ((hi - lo) + 1.0))));
 }

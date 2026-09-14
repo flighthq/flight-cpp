@@ -20,9 +20,9 @@ inline void linear_rgb_to_oklab(flight::Array<double> out, double r, double g, d
   const double l = (((0.4122214708 * r) + (0.5363325363 * g)) + (0.0514459929 * b));
   const double m = (((0.2119034982 * r) + (0.6806995451 * g)) + (0.1073969566 * b));
   const double s = (((0.0883024619 * r) + (0.2817188376 * g)) + (0.6299787005 * b));
-  auto lc = std::cbrt(flight::maximum(0.0, l));
-  auto mc = std::cbrt(flight::maximum(0.0, m));
-  auto sc = std::cbrt(flight::maximum(0.0, s));
+  const double lc = std::cbrt(flight::maximum(0.0, l));
+  const double mc = std::cbrt(flight::maximum(0.0, m));
+  const double sc = std::cbrt(flight::maximum(0.0, s));
   out.element(0.0) = (((0.2104542553 * lc) + (0.793617785 * mc)) - (0.0040720468 * sc));
   out.element(1.0) = (((1.9779984951 * lc) - (2.428592205 * mc)) + (0.4505937099 * sc));
   out.element(2.0) = (((0.0259040371 * lc) + (0.7827717662 * mc)) - (0.808675766 * sc));

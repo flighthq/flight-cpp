@@ -28,7 +28,7 @@ struct entity_runtime_key_kind_color_matrix : public flight::ReferenceEnabled {
 
 inline std::optional<flight::Array<double>> get_adjustment_color_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<kind_1>>>> operation) {
   std::optional<flight::Array<double>> matrix = flight::structural_ref_cast<flight::Ref<entity_runtime_key_kind_color_matrix>>(operation)->color_matrix;
-  return ((flight::is_array(matrix.value()) && (matrix.value().length == flight::adjustments::color_matrix_length)) ? std::optional<flight::Array<double>>{matrix.value()} : std::nullopt);
+  return ((flight::is_array(matrix) && (matrix.length == flight::adjustments::color_matrix_length)) ? matrix : std::nullopt);
 }
 
 template <typename T>

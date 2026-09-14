@@ -2,20 +2,20 @@
   "schema": "flight-generated-upstream-examples/1",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
-    "revision": "56496423fd865a51023e72966190d10d886eae40",
+    "revision": "993c28080d1b3f6e55214ae2d92215d51cd192ff",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
   "bindingProfiles": [
     {
-      "digest": "sha256:e1e545a5cea4d836332021841544cf1c55e0a80ab1cc540c23529797bc1232c3",
+      "digest": "sha256:d7c1ea155630d5280d369e8d6e8a304f38522790c377999a162c79186ef84a02",
       "identity": "flighthq/flight-cpp/runtime-carriers/1",
       "path": "bindings/runtime.json",
       "profile": "runtime-carriers",
       "schema": "flight-cpp-external-bindings/1"
     },
     {
-      "digest": "sha256:7fa58ef23878cd69ae1f471d24149ca2864fff3228cb1a5bd0b97f9e74da07e2",
+      "digest": "sha256:0970dab5b0dfc7ee48da43b0efa3b4946bef98c4306b7c48f80e850cf4629f6c",
       "identity": "flighthq/flight-cpp/headless/1",
       "path": "bindings/headless.json",
       "profile": "headless",
@@ -36,7 +36,7 @@
       "schema": "flight-cpp-external-bindings/1"
     },
     {
-      "digest": "sha256:456edf3e673913514084ed32acc316c0c18f8c1d72f9861370a5ca5570c190fb",
+      "digest": "sha256:9ca99e32fe5f770b11104bb1cb2861af009676815b5405a8bdc66c205d064c40",
       "identity": "flighthq/flight-cpp/sdl-app/1",
       "path": "bindings/sdl-app.json",
       "profile": "sdl-app",

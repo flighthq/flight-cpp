@@ -95,7 +95,7 @@ inline void initialize_color_scale_bias(flight::types::EntityConstruction<flight
 
 inline flight::Ref<flight::types::ColorScaleBias> create_color_scale_bias(std::optional<flight::Ref<alpha_scale_alpha_bias_blue_scale_blue_bias_green_scale_green_bias_red_scale_red_bias>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::ColorScaleBias>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ColorScaleBias>>();
-  initialize_color_scale_bias(out, opts.value());
+  initialize_color_scale_bias(out, opts);
   return flight::entity::finish_entity(out);
 }
 

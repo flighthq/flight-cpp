@@ -35,10 +35,10 @@ inline void copy_quaternion(flight::Ref<flight::types::QuaternionLike> out, flig
 }
 
 inline bool equals_quaternion(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>, flight::Null, flight::Undefined> b) {
-  if ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b))) {
+  if ((a == b)) {
     return true;
   }
-  if ((!std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a) || !std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b))) {
+  if ((!a || !b)) {
     return false;
   }
   return ((((flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a)) == flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b))) && (flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a)) == flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a)) == flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"w">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a)) == flight::row_get<flight::RowKey<"w">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b))));
@@ -333,16 +333,16 @@ inline void set_quaternion_from_euler(flight::Ref<flight::types::QuaternionLike>
 
 inline void set_quaternion_from_matrix4(flight::Ref<flight::types::QuaternionLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"m">>(source);
-  auto m00 = m.element(0.0);
-  auto m10 = m.element(4.0);
-  auto m20 = m.element(8.0);
-  auto m01 = m.element(1.0);
-  auto m11 = m.element(5.0);
-  auto m21 = m.element(9.0);
-  auto m02 = m.element(2.0);
-  auto m12 = m.element(6.0);
-  auto m22 = m.element(10.0);
-  auto trace = ((m00 + m11) + m22);
+  const double m00 = m.element(0.0);
+  const double m10 = m.element(4.0);
+  const double m20 = m.element(8.0);
+  const double m01 = m.element(1.0);
+  const double m11 = m.element(5.0);
+  const double m21 = m.element(9.0);
+  const double m02 = m.element(2.0);
+  const double m12 = m.element(6.0);
+  const double m22 = m.element(10.0);
+  const double trace = ((m00 + m11) + m22);
   if ((trace > 0.0)) {
     const double s = (0.5 / std::sqrt((trace + 1.0)));
     out->w = (0.25 / s);
@@ -476,7 +476,7 @@ inline void set_quaternion_look_rotation(flight::Ref<flight::types::QuaternionLi
   const double m02 = rz;
   const double m12 = cuz;
   const double m22 = fz;
-  auto trace = ((m00 + m11) + m22);
+  const double trace = ((m00 + m11) + m22);
   if ((trace > 0.0)) {
     const double s = (0.5 / std::sqrt((trace + 1.0)));
     out->w = (0.25 / s);
@@ -531,7 +531,7 @@ inline void slerp_quaternion(flight::Ref<flight::types::QuaternionLike> out, fli
   double scale_a;
   double scale_b;
   if ((cos_half_theta < 0.999999)) {
-    auto half_theta = std::acos(cos_half_theta);
+    const double half_theta = std::acos(cos_half_theta);
     auto sin_half_theta = std::sin(half_theta);
     scale_a = (std::sin(((1.0 - t) * half_theta)) / sin_half_theta);
     scale_b = (std::sin((t * half_theta)) / sin_half_theta);

@@ -21,8 +21,8 @@ inline std::optional<flight::String> get_collision_polygon_validation_status2_d(
   if (((static_cast<double>(points.size()) < 6.0) || (flight::bitwise_and(static_cast<double>(points.size()), 1.0) != 0.0))) {
     return std::optional<flight::String>{flight::String("degenerate-shape")};
   }
-  auto min_x = std::numeric_limits<double>::infinity();
-  auto min_y = std::numeric_limits<double>::infinity();
+  double min_x = std::numeric_limits<double>::infinity();
+  double min_y = std::numeric_limits<double>::infinity();
   double max_x = -std::numeric_limits<double>::infinity();
   double max_y = -std::numeric_limits<double>::infinity();
   {

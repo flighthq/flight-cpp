@@ -14,13 +14,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_pixelate_effect(flight::types::EntityConstruction<flight::Ref<flight::types::PixelateEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::PixelateEffect>>> options) {
+struct size : public flight::ReferenceEnabled {
+  std::optional<double> size;
+};
+
+inline void initialize_pixelate_effect(flight::types::EntityConstruction<flight::Ref<flight::types::PixelateEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<size>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("PixelateEffect"));
-  flight::row_set<flight::RowKey<"size">>(out, options->size);
+  flight::row_set<flight::RowKey<"size">>(out, flight::row_get<flight::RowKey<"size">>(options));
 }
 
-inline flight::Ref<flight::types::PixelateEffect> create_pixelate_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::PixelateEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::PixelateEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::PixelateEffect>>{}));
+inline flight::Ref<flight::types::PixelateEffect> create_pixelate_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<size>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<size>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::PixelateEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::PixelateEffect>>();
   initialize_pixelate_effect(out, options.value());
   return flight::entity::finish_entity(out);

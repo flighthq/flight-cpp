@@ -14,6 +14,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/spritesheet.hpp>
 #include <flight/types/spritesheet_animation.hpp>
 #include <flight/types/spritesheet_animation_direction.hpp>
+#include <flight/types/spritesheet_frame.hpp>
+#include <flight/types/texture.hpp>
+#include <flight/types/texture_atlas.hpp>
+#include <flight/types/texture_atlas_region.hpp>
 
 namespace flight::spritesheet {
 
@@ -40,7 +44,7 @@ inline void initialize_spritesheet_animation(flight::types::EntityConstruction<f
 
 inline flight::Ref<flight::types::SpritesheetAnimation> create_spritesheet_animation(std::optional<flight::Ref<entity_runtime_key_frames_frame_duration_frame_durations_direction_repeat_count_origin_x_origin_y>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetAnimation>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpritesheetAnimation>>();
-  initialize_spritesheet_animation(out, obj.value());
+  initialize_spritesheet_animation(out, obj);
   return flight::entity::finish_entity(out);
 }
 
@@ -56,27 +60,27 @@ struct frame_duration_frame_durations_direction_repeat_count_origin_x_origin_y :
 inline std::optional<flight::Ref<flight::types::SpritesheetAnimation>> create_spritesheet_animation_from_frame_names(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Spritesheet>>>> spritesheet, std::variant<flight::RegExp, flight::String> pattern, std::optional<flight::Ref<frame_duration_frame_durations_direction_repeat_count_origin_x_origin_y>> options = std::nullopt) {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Spritesheet>>>> object_pattern_value = spritesheet;
   auto atlas = flight::row_get<flight::RowKey<"atlas">>(object_pattern_value);
-  auto frames = flight::row_get<flight::RowKey<"frames">>(object_pattern_value);
-  if ((atlas == nullptr)) {
+  flight::Array<flight::Ref<flight::types::SpritesheetFrame>> frames = flight::row_get<flight::RowKey<"frames">>(object_pattern_value);
+  if (!atlas.has_value()) {
     return std::nullopt;
   }
   flight::Array<double> matched_indices = flight::Array<double>{};
   {
     double i = 0.0;
-    while ((i < frames.length)) {
+    while ((i < static_cast<double>(frames.size()))) {
       {
-        auto region_id = frames.element(i)->id;
-        auto region = atlas.regions[static_cast<size_t>(region_id)];
+        const double region_id = frames.element(i)->id;
+        std::optional<flight::Ref<flight::types::TextureAtlasRegion>> region = atlas.value()->regions.get(region_id);
         if (!region.has_value()) {
           i += 1.0;
           continue;
         }
-        auto name = region.name;
+        const std::optional<flight::String> name = region->name;
         if (!name.has_value()) {
           i += 1.0;
           continue;
         }
-        auto matches = (pattern.index() == 1 ? ((name == std::get<1>(pattern)) || name.starts_with(std::get<1>(pattern))) : std::get<0>(pattern).test(name));
+        const bool matches = (pattern.index() == 1 ? ((name.value() == std::get<1>(pattern)) || name.value().starts_with(std::get<1>(pattern))) : std::get<0>(pattern).test(name.value()));
         if (matches) {
           matched_indices.push(i);
         }

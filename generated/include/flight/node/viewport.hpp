@@ -27,7 +27,7 @@ inline void initialize_viewport(flight::types::EntityConstruction<flight::Ref<fl
 
 inline flight::Ref<flight::types::Viewport> create_viewport(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ViewportLike>>>>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Viewport>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Viewport>>();
-  initialize_viewport(out, obj.value());
+  initialize_viewport(out, obj);
   return flight::entity::finish_entity(out);
 }
 

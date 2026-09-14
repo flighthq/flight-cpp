@@ -34,10 +34,10 @@ inline void get_frustum_corners(flight::Array<flight::Ref<flight::types::Vector3
         const double nx = array_pattern_value.element(0.0);
         const double ny = array_pattern_value.element(1.0);
         const double nz = array_pattern_value.element(2.0);
-        auto x = ((((m.element(0.0) * nx) + (m.element(4.0) * ny)) + (m.element(8.0) * nz)) + m.element(12.0));
-        auto y = ((((m.element(1.0) * nx) + (m.element(5.0) * ny)) + (m.element(9.0) * nz)) + m.element(13.0));
-        auto z = ((((m.element(2.0) * nx) + (m.element(6.0) * ny)) + (m.element(10.0) * nz)) + m.element(14.0));
-        auto w = ((((m.element(3.0) * nx) + (m.element(7.0) * ny)) + (m.element(11.0) * nz)) + m.element(15.0));
+        const double x = ((((m.element(0.0) * nx) + (m.element(4.0) * ny)) + (m.element(8.0) * nz)) + m.element(12.0));
+        const double y = ((((m.element(1.0) * nx) + (m.element(5.0) * ny)) + (m.element(9.0) * nz)) + m.element(13.0));
+        const double z = ((((m.element(2.0) * nx) + (m.element(6.0) * ny)) + (m.element(10.0) * nz)) + m.element(14.0));
+        const double w = ((((m.element(3.0) * nx) + (m.element(7.0) * ny)) + (m.element(11.0) * nz)) + m.element(15.0));
         const double inv_w = ((w != 0.0) ? (1.0 / w) : 1.0);
         flight::Ref<flight::types::Vector3Like> corner = out.element(i);
         corner->x = (x * inv_w);
@@ -65,9 +65,9 @@ inline flight::Ref<flight::types::Frustum> create_frustum() {
 }
 
 inline bool plane_intersects_aabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> plane, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
-  auto px = ((flight::row_get<flight::RowKey<"a">>(plane) >= 0.0) ? flight::row_get<flight::RowKey<"max">>(aabb)->x : flight::row_get<flight::RowKey<"min">>(aabb)->x);
-  auto py = ((flight::row_get<flight::RowKey<"b">>(plane) >= 0.0) ? flight::row_get<flight::RowKey<"max">>(aabb)->y : flight::row_get<flight::RowKey<"min">>(aabb)->y);
-  auto pz = ((flight::row_get<flight::RowKey<"c">>(plane) >= 0.0) ? flight::row_get<flight::RowKey<"max">>(aabb)->z : flight::row_get<flight::RowKey<"min">>(aabb)->z);
+  const double px = ((flight::row_get<flight::RowKey<"a">>(plane) >= 0.0) ? flight::row_get<flight::RowKey<"max">>(aabb)->x : flight::row_get<flight::RowKey<"min">>(aabb)->x);
+  const double py = ((flight::row_get<flight::RowKey<"b">>(plane) >= 0.0) ? flight::row_get<flight::RowKey<"max">>(aabb)->y : flight::row_get<flight::RowKey<"min">>(aabb)->y);
+  const double pz = ((flight::row_get<flight::RowKey<"c">>(plane) >= 0.0) ? flight::row_get<flight::RowKey<"max">>(aabb)->z : flight::row_get<flight::RowKey<"min">>(aabb)->z);
   return (((((flight::row_get<flight::RowKey<"a">>(plane) * px) + (flight::row_get<flight::RowKey<"b">>(plane) * py)) + (flight::row_get<flight::RowKey<"c">>(plane) * pz)) + flight::row_get<flight::RowKey<"d">>(plane)) >= 0.0);
 }
 
@@ -79,7 +79,7 @@ inline bool is_frustum_intersecting_aabb(flight::StructuralRef<flight::RowReadon
 }
 
 inline bool plane_intersects_obb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> plane, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObbLike>>>> obb, double ax0, double ay0, double az0, double ax1, double ay1, double az1, double ax2, double ay2, double az2) {
-  auto dist = ((((flight::row_get<flight::RowKey<"a">>(plane) * flight::row_get<flight::RowKey<"centerX">>(obb)) + (flight::row_get<flight::RowKey<"b">>(plane) * flight::row_get<flight::RowKey<"centerY">>(obb))) + (flight::row_get<flight::RowKey<"c">>(plane) * flight::row_get<flight::RowKey<"centerZ">>(obb))) + flight::row_get<flight::RowKey<"d">>(plane));
+  const double dist = ((((flight::row_get<flight::RowKey<"a">>(plane) * flight::row_get<flight::RowKey<"centerX">>(obb)) + (flight::row_get<flight::RowKey<"b">>(plane) * flight::row_get<flight::RowKey<"centerY">>(obb))) + (flight::row_get<flight::RowKey<"c">>(plane) * flight::row_get<flight::RowKey<"centerZ">>(obb))) + flight::row_get<flight::RowKey<"d">>(plane));
   const double r = (((flight::row_get<flight::RowKey<"halfExtentX">>(obb) * std::abs((((flight::row_get<flight::RowKey<"a">>(plane) * ax0) + (flight::row_get<flight::RowKey<"b">>(plane) * ay0)) + (flight::row_get<flight::RowKey<"c">>(plane) * az0)))) + (flight::row_get<flight::RowKey<"halfExtentY">>(obb) * std::abs((((flight::row_get<flight::RowKey<"a">>(plane) * ax1) + (flight::row_get<flight::RowKey<"b">>(plane) * ay1)) + (flight::row_get<flight::RowKey<"c">>(plane) * az1))))) + (flight::row_get<flight::RowKey<"halfExtentZ">>(obb) * std::abs((((flight::row_get<flight::RowKey<"a">>(plane) * ax2) + (flight::row_get<flight::RowKey<"b">>(plane) * ay2)) + (flight::row_get<flight::RowKey<"c">>(plane) * az2)))));
   return (dist >= -r);
 }
@@ -145,22 +145,22 @@ inline void set_plane(flight::Ref<flight::types::PlaneLike> out, double a, doubl
 
 inline void set_frustum_from_matrix4(flight::Ref<flight::types::FrustumLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> view_projection) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"m">>(view_projection);
-  auto r00 = m.element(0.0);
-  auto r01 = m.element(4.0);
-  auto r02 = m.element(8.0);
-  auto r03 = m.element(12.0);
-  auto r10 = m.element(1.0);
-  auto r11 = m.element(5.0);
-  auto r12 = m.element(9.0);
-  auto r13 = m.element(13.0);
-  auto r20 = m.element(2.0);
-  auto r21 = m.element(6.0);
-  auto r22 = m.element(10.0);
-  auto r23 = m.element(14.0);
-  auto r30 = m.element(3.0);
-  auto r31 = m.element(7.0);
-  auto r32 = m.element(11.0);
-  auto r33 = m.element(15.0);
+  const double r00 = m.element(0.0);
+  const double r01 = m.element(4.0);
+  const double r02 = m.element(8.0);
+  const double r03 = m.element(12.0);
+  const double r10 = m.element(1.0);
+  const double r11 = m.element(5.0);
+  const double r12 = m.element(9.0);
+  const double r13 = m.element(13.0);
+  const double r20 = m.element(2.0);
+  const double r21 = m.element(6.0);
+  const double r22 = m.element(10.0);
+  const double r23 = m.element(14.0);
+  const double r30 = m.element(3.0);
+  const double r31 = m.element(7.0);
+  const double r32 = m.element(11.0);
+  const double r33 = m.element(15.0);
   set_plane(out->left, (r30 + r00), (r31 + r01), (r32 + r02), (r33 + r03));
   set_plane(out->right, (r30 - r00), (r31 - r01), (r32 - r02), (r33 - r03));
   set_plane(out->bottom, (r30 + r10), (r31 + r11), (r32 + r12), (r33 + r13));

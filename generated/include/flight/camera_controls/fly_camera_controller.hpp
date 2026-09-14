@@ -60,8 +60,8 @@ inline const double default_max_pitch = ((flight::pi / 2.0) - 0.01);
 inline const double default_min_pitch = ((-flight::pi / 2.0) + 0.01);
 
 inline void initialize_fly_camera_controller(flight::types::EntityConstruction<flight::Ref<flight::types::FlyCameraController>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlyCameraControllerOptions>>>>> options = std::nullopt) {
-  auto yaw = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->yaw; }()).value_or(0.0);
-  auto pitch = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pitch; }()).value_or(0.0);
+  const double yaw = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->yaw; }()).value_or(0.0);
+  const double pitch = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pitch; }()).value_or(0.0);
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> position = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->position; }());
   flight::row_set<flight::RowKey<"goalPitch">>(out, pitch);
   flight::row_set<flight::RowKey<"goalYaw">>(out, yaw);
@@ -75,7 +75,7 @@ inline void initialize_fly_camera_controller(flight::types::EntityConstruction<f
 
 inline flight::Ref<flight::types::FlyCameraController> create_fly_camera_controller(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlyCameraControllerOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::FlyCameraController>> out = flight::entity::allocate_entity<flight::Ref<flight::types::FlyCameraController>>();
-  initialize_fly_camera_controller(out, options.value());
+  initialize_fly_camera_controller(out, options);
   return flight::entity::finish_entity(out);
 }
 
@@ -86,8 +86,8 @@ inline flight::Ref<flight::types::FlyCameraController> clone_fly_camera_controll
 }
 
 inline void reset_fly_camera_controller(flight::Ref<flight::types::FlyCameraController> controller, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlyCameraControllerOptions>>>>> options = std::nullopt) {
-  auto yaw = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->yaw; }()).value_or(0.0);
-  auto pitch = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pitch; }()).value_or(0.0);
+  const double yaw = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->yaw; }()).value_or(0.0);
+  const double pitch = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pitch; }()).value_or(0.0);
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> position = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->position; }());
   controller->goal_pitch = pitch;
   controller->goal_yaw = yaw;

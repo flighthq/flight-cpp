@@ -200,12 +200,12 @@ inline void set_aabb(flight::Ref<flight::types::AabbLike> out, double min_x, dou
 }
 
 inline void set_aabb_from_points(flight::Ref<flight::types::AabbLike> out, flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> points) {
-  auto min_x = std::numeric_limits<double>::infinity();
-  auto min_y = std::numeric_limits<double>::infinity();
-  auto min_z = std::numeric_limits<double>::infinity();
-  auto max_x = -std::numeric_limits<double>::infinity();
-  auto max_y = -std::numeric_limits<double>::infinity();
-  auto max_z = -std::numeric_limits<double>::infinity();
+  double min_x = std::numeric_limits<double>::infinity();
+  double min_y = std::numeric_limits<double>::infinity();
+  double min_z = std::numeric_limits<double>::infinity();
+  double max_x = -std::numeric_limits<double>::infinity();
+  double max_y = -std::numeric_limits<double>::infinity();
+  double max_z = -std::numeric_limits<double>::infinity();
   {
     double i = 0.0;
     while ((i < points.length)) {
@@ -255,9 +255,9 @@ inline void transform_aabb_by_matrix4(flight::Ref<flight::types::AabbLike> out, 
   const double ey = ((max_y - min_y) * 0.5);
   const double ez = ((max_z - min_z) * 0.5);
   flight::Float32Array m = flight::row_get<flight::RowKey<"m">>(m_2);
-  auto tcx = ((((m.element(0.0) * cx) + (m.element(4.0) * cy)) + (m.element(8.0) * cz)) + m.element(12.0));
-  auto tcy = ((((m.element(1.0) * cx) + (m.element(5.0) * cy)) + (m.element(9.0) * cz)) + m.element(13.0));
-  auto tcz = ((((m.element(2.0) * cx) + (m.element(6.0) * cy)) + (m.element(10.0) * cz)) + m.element(14.0));
+  const double tcx = ((((m.element(0.0) * cx) + (m.element(4.0) * cy)) + (m.element(8.0) * cz)) + m.element(12.0));
+  const double tcy = ((((m.element(1.0) * cx) + (m.element(5.0) * cy)) + (m.element(9.0) * cz)) + m.element(13.0));
+  const double tcz = ((((m.element(2.0) * cx) + (m.element(6.0) * cy)) + (m.element(10.0) * cz)) + m.element(14.0));
   const double tex = (((std::abs(m.element(0.0)) * ex) + (std::abs(m.element(4.0)) * ey)) + (std::abs(m.element(8.0)) * ez));
   const double tey = (((std::abs(m.element(1.0)) * ex) + (std::abs(m.element(5.0)) * ey)) + (std::abs(m.element(9.0)) * ez));
   const double tez = (((std::abs(m.element(2.0)) * ex) + (std::abs(m.element(6.0)) * ey)) + (std::abs(m.element(10.0)) * ez));

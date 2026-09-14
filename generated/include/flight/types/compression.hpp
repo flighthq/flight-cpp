@@ -16,9 +16,9 @@ struct raw_rfc1950 : public flight::ReferenceEnabled {
 
 inline flight::Ref<raw_rfc1950> compression_framing = flight::make_ref<raw_rfc1950>(raw_rfc1950{.raw = flight::String("Raw"), .rfc1950 = flight::String("Rfc1950")});
 
-using Decompressor = std::function<std::optional<flight::Uint8Array>(flight::Uint8Array, double, compression_framing)>;
-
 using CompressionFraming = flight::String;
+
+using Decompressor = std::function<std::optional<flight::Uint8Array>(flight::Uint8Array, double, CompressionFraming)>;
 
 struct brotli_deflate_lzma : public flight::ReferenceEnabled {
   flight::String brotli;

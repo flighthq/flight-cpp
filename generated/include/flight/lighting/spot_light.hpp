@@ -69,7 +69,7 @@ inline void initialize_spot_light(flight::types::EntityConstruction<flight::Ref<
   flight::row_set<flight::RowKey<"castsShadow">>(light, ([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->casts_shadow; }()).value_or(false));
   flight::row_set<flight::RowKey<"color">>(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->color; }()).value_or(4294967295.0));
   flight::row_set<flight::RowKey<"decay">>(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->decay; }()).value_or(2.0));
-  flight::row_set<flight::RowKey<"direction">>(light, (direction.value() ? flight::geometry::clone_vector3(direction.value()) : flight::geometry::create_vector3(0.0, -1.0, 0.0)));
+  flight::row_set<flight::RowKey<"direction">>(light, (direction ? flight::geometry::clone_vector3(direction.value()) : flight::geometry::create_vector3(0.0, -1.0, 0.0)));
   flight::row_set<flight::RowKey<"enabled">>(light, ([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->enabled; }()).value_or(true));
   flight::row_set<flight::RowKey<"innerConeCos">>(light, 1.0);
   flight::row_set<flight::RowKey<"intensity">>(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->intensity; }()).value_or(1.0));
@@ -80,7 +80,7 @@ inline void initialize_spot_light(flight::types::EntityConstruction<flight::Ref<
   flight::row_set<flight::RowKey<"normalBias">>(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->normal_bias; }()).value_or(0.0));
   flight::row_set<flight::RowKey<"outerConeCos">>(light, 1.0);
   flight::row_set<flight::RowKey<"pcfRadius">>(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pcf_radius; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"position">>(light, (position.value() ? flight::geometry::clone_vector3(position.value()) : flight::geometry::create_vector3(0.0, 0.0, 0.0)));
+  flight::row_set<flight::RowKey<"position">>(light, (position ? flight::geometry::clone_vector3(position.value()) : flight::geometry::create_vector3(0.0, 0.0, 0.0)));
   flight::row_set<flight::RowKey<"range">>(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->range; }()).value_or(-1.0));
   flight::row_set<flight::RowKey<"shadowBias">>(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->shadow_bias; }()).value_or(0.0));
   flight::row_set<flight::RowKey<"shadowFar">>(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->shadow_far; }()).value_or(500.0));
@@ -94,7 +94,7 @@ inline void initialize_spot_light(flight::types::EntityConstruction<flight::Ref<
 
 inline flight::Ref<flight::types::SpotLight> create_spot_light(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLightOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpotLight>> light = flight::entity::allocate_entity<flight::Ref<flight::types::SpotLight>>();
-  initialize_spot_light(light, options.value());
+  initialize_spot_light(light, options);
   return light;
 }
 

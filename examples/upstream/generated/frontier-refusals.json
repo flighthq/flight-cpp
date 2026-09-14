@@ -1,13 +1,13 @@
 {
   "schema": "flight-generated-upstream-example-frontier-refusals/1",
-  "compilerRevision": "56496423fd865a51023e72966190d10d886eae40",
+  "compilerRevision": "993c28080d1b3f6e55214ae2d92215d51cd192ff",
   "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
   "refusals": [
     {
       "code": "unsupported-ir",
       "module": "examples/packages/adjustments/src/app.ts",
       "package": "@flighthq/example-adjustments",
-      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/app.ts: runtime external symbol binding plan is incomplete (missing: HTMLDivElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
       "stage": "emission"
     },
     {
@@ -28,7 +28,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/awd2loading/src/app.ts",
       "package": "@flighthq/example-awd2loading",
-      "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/app.ts: captured referent mutation of details requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
       "stage": "emission"
     },
     {
@@ -56,7 +56,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/benchmark/src/app.ts",
       "package": "@flighthq/example-benchmark",
-      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/app.ts: captured referent mutation of shapeCanvas requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], DOMHighResTimeStamp[type], HTMLDivElement[type])",
       "stage": "emission"
     },
     {
@@ -77,7 +77,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/bitmapfont-generate/src/app.ts",
       "package": "@flighthq/example-bitmapfont-generate",
-      "reason": "cpp emission failed for @flighthq/example-bitmapfont-generate/examples/packages/bitmapfont-generate/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-bitmapfont-generate/examples/packages/bitmapfont-generate/src/app.ts: runtime external symbol binding plan is incomplete (missing: HTMLParagraphElement[type])",
       "stage": "emission"
     },
     {
@@ -98,7 +98,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/camera2d/src/app.ts",
       "package": "@flighthq/example-camera2d",
-      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], DOMHighResTimeStamp[type], DOMRect[type])",
       "stage": "emission"
     },
     {
@@ -119,7 +119,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/clock/src/app.ts",
       "package": "@flighthq/example-clock",
-      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
       "stage": "emission"
     },
     {
@@ -137,13 +137,11 @@
       "stage": "initialization"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 3,
-      "line": 336,
+      "code": "unsupported-ir",
       "module": "examples/packages/collision/src/app.ts",
       "package": "@flighthq/example-collision",
-      "reason": "unsupported statement InterfaceDeclaration",
-      "stage": "lowering"
+      "reason": "cpp emission failed for @flighthq/example-collision/examples/packages/collision/src/app.ts: captured referent mutation of main requires a shared C++ reference representation",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -163,7 +161,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/cross-backend-embed/src/app.ts",
       "package": "@flighthq/example-cross-backend-embed",
-      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: captured referent mutation of atlasCanvas requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
       "stage": "emission"
     },
     {
@@ -177,14 +175,14 @@
       "code": "unsupported-ir",
       "module": "examples/packages/cross-backend-embed/src/renderNative.ts",
       "package": "@flighthq/example-cross-backend-embed",
-      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/renderNative.ts: captured referent mutation of container requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: HTMLDivElement[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/crossfade/src/app.ts",
       "package": "@flighthq/example-crossfade",
-      "reason": "cpp emission failed for @flighthq/example-crossfade/examples/packages/crossfade/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-crossfade/examples/packages/crossfade/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
       "stage": "emission"
     },
     {
@@ -205,7 +203,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/flowstates/src/app.ts",
       "package": "@flighthq/example-flowstates",
-      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
       "stage": "emission"
     },
     {
@@ -268,7 +266,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/materialshowcase/src/app.ts",
       "package": "@flighthq/example-materialshowcase",
-      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/app.ts: captured referent mutation of standard requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type], HTMLDivElement[type], HTMLLabelElement[type], HTMLOptionElement[type], HTMLParagraphElement[type], HTMLSelectElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
       "stage": "emission"
     },
     {
@@ -289,7 +287,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/motionpath/src/app.ts",
       "package": "@flighthq/example-motionpath",
-      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
       "stage": "emission"
     },
     {
@@ -310,7 +308,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/movieclip/src/app.ts",
       "package": "@flighthq/example-movieclip",
-      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
       "stage": "emission"
     },
     {
@@ -331,7 +329,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/particleeditor/src/app.ts",
       "package": "@flighthq/example-particleeditor",
-      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/app.ts: captured referent mutation of particleCanvas requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMHighResTimeStamp[type], HTMLDetailsElement[type], HTMLDivElement[type], HTMLHeadingElement[type], HTMLLabelElement[type], HTMLOptionElement[type], HTMLSelectElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
       "stage": "emission"
     },
     {
@@ -352,7 +350,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/particles/src/app.ts",
       "package": "@flighthq/example-particles",
-      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/app.ts: captured referent mutation of sparkCanvas requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMHighResTimeStamp[type])",
       "stage": "emission"
     },
     {
@@ -373,7 +371,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/pathboolean/src/app.ts",
       "package": "@flighthq/example-pathboolean",
-      "reason": "cpp emission failed for @flighthq/example-pathboolean/examples/packages/pathboolean/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-pathboolean/examples/packages/pathboolean/src/app.ts: runtime external symbol binding plan is incomplete (missing: HTMLDivElement[type])",
       "stage": "emission"
     },
     {
@@ -394,7 +392,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/platformer/src/app.ts",
       "package": "@flighthq/example-platformer",
-      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
       "stage": "emission"
     },
     {
@@ -415,7 +413,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/scene-fire/src/app.ts",
       "package": "@flighthq/example-scene-fire",
-      "reason": "cpp emission failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/app.ts: Compiler lowering pass array-binding-pattern failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/app.ts: forOf array binding lowering requires a statically known element type",
+      "reason": "cpp emission failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMHighResTimeStamp[type])",
       "stage": "emission"
     },
     {
@@ -436,7 +434,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/scene-picking/src/app.ts",
       "package": "@flighthq/example-scene-picking",
-      "reason": "cpp emission failed for @flighthq/example-scene-picking/examples/packages/scene-picking/src/app.ts: captured referent mutation of canvas requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-scene-picking/examples/packages/scene-picking/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
       "stage": "emission"
     },
     {
@@ -457,7 +455,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/scene3d/src/app.ts",
       "package": "@flighthq/example-scene3d",
-      "reason": "cpp emission failed for @flighthq/example-scene3d/examples/packages/scene3d/src/app.ts: captured referent mutation of ground requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-scene3d/examples/packages/scene3d/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
       "stage": "emission"
     },
     {
@@ -499,7 +497,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/snapshot/src/app.ts",
       "package": "@flighthq/example-snapshot",
-      "reason": "cpp emission failed for @flighthq/example-snapshot/examples/packages/snapshot/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-snapshot/examples/packages/snapshot/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type], Iterable[type])",
       "stage": "emission"
     },
     {
@@ -520,7 +518,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/sound/src/app.ts",
       "package": "@flighthq/example-sound",
-      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/app.ts: runtime external symbol binding plan is incomplete (missing: AudioContext[value])",
+      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/app.ts: runtime external symbol binding plan is incomplete (missing: AudioContext[value], AudioContextOptions[type])",
       "stage": "emission"
     },
     {
@@ -541,7 +539,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/spatial/src/app.ts",
       "package": "@flighthq/example-spatial",
-      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
       "stage": "emission"
     },
     {
@@ -562,7 +560,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/spring/src/app.ts",
       "package": "@flighthq/example-spring",
-      "reason": "cpp emission failed for @flighthq/example-spring/examples/packages/spring/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-spring/examples/packages/spring/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type], HTMLButtonElement[type], HTMLDivElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
       "stage": "emission"
     },
     {
@@ -580,10 +578,10 @@
       "stage": "initialization"
     },
     {
-      "code": "invalid-target-name-candidate",
+      "code": "unsupported-ir",
       "module": "examples/packages/spritesheet/src/app.ts",
       "package": "@flighthq/example-spritesheet",
-      "reason": "Target name candidates require a fixed or renamable disposition and nonempty identity, preferredName, and scope values",
+      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMHighResTimeStamp[type], DOMPointInit[type], Iterable[type])",
       "stage": "emission"
     },
     {
@@ -646,7 +644,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/tilemap/src/app.ts",
       "package": "@flighthq/example-tilemap",
-      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], DOMHighResTimeStamp[type])",
       "stage": "emission"
     },
     {
@@ -688,7 +686,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/video/src/app.ts",
       "package": "@flighthq/example-video",
-      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/app.ts: Compiler lowering pass array-binding-pattern failed for @flighthq/example-video/examples/packages/video/src/app.ts: array binding lowering requires a statically known tuple type",
+      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/app.ts: runtime external symbol binding plan is incomplete (missing: BlobEvent[type], BlobPart[type], BlobPropertyBag[type], CanvasRenderingContext2D[type], HTMLVideoElement[type], MediaRecorder[type], MediaRecorder[value], MediaRecorderOptions[type], MediaStream[type], PropertyDescriptor[type], R[type])",
       "stage": "emission"
     },
     {

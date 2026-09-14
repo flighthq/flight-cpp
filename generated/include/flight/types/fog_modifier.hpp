@@ -26,7 +26,7 @@ struct FogModifier : public flight::ReferenceEnabled {
   flight::String kind;
   flight::String slot;
   double color;
-  std::optional<fog_modifier_mode> mode;
+  std::optional<FogModifierMode> mode;
   std::optional<double> near;
   std::optional<double> far;
   std::optional<double> density;

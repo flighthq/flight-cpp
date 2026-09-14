@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/array_buffer.hpp>
 #include <flight/number.hpp>
 #include <flight/structural_ref.hpp>
 #include <limits>
@@ -42,9 +43,9 @@ inline void compose_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight:
   const double y = flight::row_get<flight::RowKey<"y">>(rotation);
   const double z = flight::row_get<flight::RowKey<"z">>(rotation);
   const double w = flight::row_get<flight::RowKey<"w">>(rotation);
-  auto x2 = (x + x);
-  auto y2 = (y + y);
-  auto z2 = (z + z);
+  const double x2 = (x + x);
+  const double y2 = (y + y);
+  const double z2 = (z + z);
   const double xx = (x * x2);
   const double xy = (x * y2);
   const double xz = (x * z2);
@@ -109,7 +110,7 @@ inline void copy_matrix4_column_from_vector4(flight::Ref<flight::types::Matrix4L
       out_2.element(15.0) = flight::row_get<flight::RowKey<"w">>(source);
     }
     else {
-      throw std::range_error((flight::String("Column ") + column) + flight::String(" out of bounds [0, ..., 3]").to_utf8());
+      throw std::range_error.construct((flight::String("Column ") + column) + flight::String(" out of bounds [0, ..., 3]"));
     }
   }
 }
@@ -143,7 +144,7 @@ inline void copy_matrix4_column_to_vector4(flight::Ref<flight::types::Vector4Lik
       out->w = source_2.element(15.0);
     }
     else {
-      throw std::range_error((flight::String("Column ") + column) + flight::String(" out of bounds [0, ..., 3]").to_utf8());
+      throw std::range_error.construct((flight::String("Column ") + column) + flight::String(" out of bounds [0, ..., 3]"));
     }
   }
 }
@@ -177,7 +178,7 @@ inline void copy_matrix4_row_from_vector4(flight::Ref<flight::types::Matrix4Like
       out_2.element(15.0) = flight::row_get<flight::RowKey<"w">>(source);
     }
     else {
-      throw std::range_error((flight::String("Row ") + row) + flight::String(" out of bounds [0, ..., 3]").to_utf8());
+      throw std::range_error.construct((flight::String("Row ") + row) + flight::String(" out of bounds [0, ..., 3]"));
     }
   }
 }
@@ -211,25 +212,25 @@ inline void copy_matrix4_row_to_vector4(flight::Ref<flight::types::Vector4Like> 
       out->w = source_2.element(15.0);
     }
     else {
-      throw std::range_error((flight::String("Row ") + row) + flight::String(" out of bounds [0, ..., 3]").to_utf8());
+      throw std::range_error.construct((flight::String("Row ") + row) + flight::String(" out of bounds [0, ..., 3]"));
     }
   }
 }
 
 inline void decompose_matrix4(flight::Ref<flight::types::Vector3Like> out_position, flight::Ref<flight::types::QuaternionLike> out_rotation, flight::Ref<flight::types::Vector3Like> out_scale, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> m) {
   flight::Float32Array m_2 = flight::row_get<flight::RowKey<"m">>(m);
-  auto m00 = m_2.element(0.0);
-  auto m01 = m_2.element(1.0);
-  auto m02 = m_2.element(2.0);
-  auto m10 = m_2.element(4.0);
-  auto m11 = m_2.element(5.0);
-  auto m12 = m_2.element(6.0);
-  auto m20 = m_2.element(8.0);
-  auto m21 = m_2.element(9.0);
-  auto m22 = m_2.element(10.0);
-  auto tx = m_2.element(12.0);
-  auto ty = m_2.element(13.0);
-  auto tz = m_2.element(14.0);
+  const double m00 = m_2.element(0.0);
+  const double m01 = m_2.element(1.0);
+  const double m02 = m_2.element(2.0);
+  const double m10 = m_2.element(4.0);
+  const double m11 = m_2.element(5.0);
+  const double m12 = m_2.element(6.0);
+  const double m20 = m_2.element(8.0);
+  const double m21 = m_2.element(9.0);
+  const double m22 = m_2.element(10.0);
+  const double tx = m_2.element(12.0);
+  const double ty = m_2.element(13.0);
+  const double tz = m_2.element(14.0);
   auto sx = std::sqrt((((m00 * m00) + (m01 * m01)) + (m02 * m02)));
   auto sy = std::sqrt((((m10 * m10) + (m11 * m11)) + (m12 * m12)));
   auto sz = std::sqrt((((m20 * m20) + (m21 * m21)) + (m22 * m22)));
@@ -291,10 +292,10 @@ inline void decompose_matrix4(flight::Ref<flight::types::Vector3Like> out_positi
 }
 
 inline bool equals_matrix4(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>, flight::Null, flight::Undefined> b) {
-  if ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>>(b))) {
+  if ((a == b)) {
     return true;
   }
-  if ((!std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>>(a) || !std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>>(b))) {
+  if ((!a || !b)) {
     return false;
   }
   {
@@ -357,22 +358,22 @@ inline bool inverse_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight:
     return false;
   }
   d = (1.0 / d);
-  auto m11 = source_2.element(0.0);
-  auto m21 = source_2.element(4.0);
-  auto m31 = source_2.element(8.0);
-  auto m41 = source_2.element(12.0);
-  auto m12 = source_2.element(1.0);
-  auto m22 = source_2.element(5.0);
-  auto m32 = source_2.element(9.0);
-  auto m42 = source_2.element(13.0);
-  auto m13 = source_2.element(2.0);
-  auto m23 = source_2.element(6.0);
-  auto m33 = source_2.element(10.0);
-  auto m43 = source_2.element(14.0);
-  auto m14 = source_2.element(3.0);
-  auto m24 = source_2.element(7.0);
-  auto m34 = source_2.element(11.0);
-  auto m44 = source_2.element(15.0);
+  const double m11 = source_2.element(0.0);
+  const double m21 = source_2.element(4.0);
+  const double m31 = source_2.element(8.0);
+  const double m41 = source_2.element(12.0);
+  const double m12 = source_2.element(1.0);
+  const double m22 = source_2.element(5.0);
+  const double m32 = source_2.element(9.0);
+  const double m42 = source_2.element(13.0);
+  const double m13 = source_2.element(2.0);
+  const double m23 = source_2.element(6.0);
+  const double m33 = source_2.element(10.0);
+  const double m43 = source_2.element(14.0);
+  const double m14 = source_2.element(3.0);
+  const double m24 = source_2.element(7.0);
+  const double m34 = source_2.element(11.0);
+  const double m44 = source_2.element(15.0);
   out_2.element(0.0) = (d * (((m22 * ((m33 * m44) - (m43 * m34))) - (m32 * ((m23 * m44) - (m43 * m24)))) + (m42 * ((m23 * m34) - (m33 * m24)))));
   out_2.element(1.0) = (-d * (((m12 * ((m33 * m44) - (m43 * m34))) - (m32 * ((m13 * m44) - (m43 * m14)))) + (m42 * ((m13 * m34) - (m33 * m14)))));
   out_2.element(2.0) = (d * (((m12 * ((m23 * m44) - (m43 * m24))) - (m22 * ((m13 * m44) - (m43 * m14)))) + (m42 * ((m13 * m24) - (m23 * m14)))));
@@ -440,38 +441,38 @@ inline void multiply_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight
   flight::Float32Array a_2 = flight::row_get<flight::RowKey<"m">>(a);
   flight::Float32Array b_2 = flight::row_get<flight::RowKey<"m">>(b);
   flight::Float32Array out_2 = out->m;
-  auto m111 = a_2.element(0.0);
-  auto m121 = a_2.element(4.0);
-  auto m131 = a_2.element(8.0);
-  auto m141 = a_2.element(12.0);
-  auto m112 = a_2.element(1.0);
-  auto m122 = a_2.element(5.0);
-  auto m132 = a_2.element(9.0);
-  auto m142 = a_2.element(13.0);
-  auto m113 = a_2.element(2.0);
-  auto m123 = a_2.element(6.0);
-  auto m133 = a_2.element(10.0);
-  auto m143 = a_2.element(14.0);
-  auto m114 = a_2.element(3.0);
-  auto m124 = a_2.element(7.0);
-  auto m134 = a_2.element(11.0);
-  auto m144 = a_2.element(15.0);
-  auto m211 = b_2.element(0.0);
-  auto m221 = b_2.element(4.0);
-  auto m231 = b_2.element(8.0);
-  auto m241 = b_2.element(12.0);
-  auto m212 = b_2.element(1.0);
-  auto m222 = b_2.element(5.0);
-  auto m232 = b_2.element(9.0);
-  auto m242 = b_2.element(13.0);
-  auto m213 = b_2.element(2.0);
-  auto m223 = b_2.element(6.0);
-  auto m233 = b_2.element(10.0);
-  auto m243 = b_2.element(14.0);
-  auto m214 = b_2.element(3.0);
-  auto m224 = b_2.element(7.0);
-  auto m234 = b_2.element(11.0);
-  auto m244 = b_2.element(15.0);
+  const double m111 = a_2.element(0.0);
+  const double m121 = a_2.element(4.0);
+  const double m131 = a_2.element(8.0);
+  const double m141 = a_2.element(12.0);
+  const double m112 = a_2.element(1.0);
+  const double m122 = a_2.element(5.0);
+  const double m132 = a_2.element(9.0);
+  const double m142 = a_2.element(13.0);
+  const double m113 = a_2.element(2.0);
+  const double m123 = a_2.element(6.0);
+  const double m133 = a_2.element(10.0);
+  const double m143 = a_2.element(14.0);
+  const double m114 = a_2.element(3.0);
+  const double m124 = a_2.element(7.0);
+  const double m134 = a_2.element(11.0);
+  const double m144 = a_2.element(15.0);
+  const double m211 = b_2.element(0.0);
+  const double m221 = b_2.element(4.0);
+  const double m231 = b_2.element(8.0);
+  const double m241 = b_2.element(12.0);
+  const double m212 = b_2.element(1.0);
+  const double m222 = b_2.element(5.0);
+  const double m232 = b_2.element(9.0);
+  const double m242 = b_2.element(13.0);
+  const double m213 = b_2.element(2.0);
+  const double m223 = b_2.element(6.0);
+  const double m233 = b_2.element(10.0);
+  const double m243 = b_2.element(14.0);
+  const double m214 = b_2.element(3.0);
+  const double m224 = b_2.element(7.0);
+  const double m234 = b_2.element(11.0);
+  const double m244 = b_2.element(15.0);
   out_2.element(0.0) = ((((m211 * m111) + (m212 * m121)) + (m213 * m131)) + (m214 * m141));
   out_2.element(1.0) = ((((m211 * m112) + (m212 * m122)) + (m213 * m132)) + (m214 * m142));
   out_2.element(2.0) = ((((m211 * m113) + (m212 * m123)) + (m213 * m133)) + (m214 * m143));
@@ -601,9 +602,9 @@ inline void set_matrix4_from_quaternion(flight::Ref<flight::types::Matrix4Like> 
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
   const double w = flight::row_get<flight::RowKey<"w">>(source);
-  auto x2 = (x + x);
-  auto y2 = (y + y);
-  auto z2 = (z + z);
+  const double x2 = (x + x);
+  const double y2 = (y + y);
+  const double z2 = (z + z);
   const double xx = (x * x2);
   const double xy = (x * y2);
   const double xz = (x * z2);
@@ -801,12 +802,12 @@ inline void get_axis_rotation(flight::Ref<flight::types::Matrix4Like> out, doubl
 inline void append_rotation_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double radians, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>> axis, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>> pivot_point = std::nullopt) {
   flight::Ref<flight::types::Matrix4> m = flight::geometry::acquire_identity_matrix4();
   get_axis_rotation(m, flight::row_get<flight::RowKey<"x">>(axis), flight::row_get<flight::RowKey<"y">>(axis), flight::row_get<flight::RowKey<"z">>(axis), radians);
-  if (pivot_point.value().has_value()) {
-    std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>> p = std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>>{pivot_point.value()};
+  if (pivot_point.has_value()) {
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>> p = pivot_point.value();
     flight::Ref<flight::types::Matrix4> t1 = flight::geometry::acquire_identity_matrix4();
     flight::Ref<flight::types::Matrix4> t2 = flight::geometry::acquire_identity_matrix4();
-    append_translation_matrix4(t1, t1, -flight::row_get<flight::RowKey<"x">>(p.value()), -flight::row_get<flight::RowKey<"y">>(p.value()), -flight::row_get<flight::RowKey<"z">>(p.value()));
-    append_translation_matrix4(t2, t2, flight::row_get<flight::RowKey<"x">>(p.value()), flight::row_get<flight::RowKey<"y">>(p.value()), flight::row_get<flight::RowKey<"z">>(p.value()));
+    append_translation_matrix4(t1, t1, -flight::row_get<flight::RowKey<"x">>(p), -flight::row_get<flight::RowKey<"y">>(p), -flight::row_get<flight::RowKey<"z">>(p));
+    append_translation_matrix4(t2, t2, flight::row_get<flight::RowKey<"x">>(p), flight::row_get<flight::RowKey<"y">>(p), flight::row_get<flight::RowKey<"z">>(p));
     multiply_matrix4(m, m, t1);
     multiply_matrix4(m, t2, m);
     flight::geometry::release_matrix4(t1);
@@ -819,12 +820,12 @@ inline void append_rotation_matrix4(flight::Ref<flight::types::Matrix4Like> out,
 inline void prepend_rotation_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double radians, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>> axis, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>> pivot_point = std::nullopt) {
   flight::Ref<flight::types::Matrix4> m = flight::geometry::acquire_identity_matrix4();
   get_axis_rotation(m, flight::row_get<flight::RowKey<"x">>(axis), flight::row_get<flight::RowKey<"y">>(axis), flight::row_get<flight::RowKey<"z">>(axis), radians);
-  if (pivot_point.value().has_value()) {
-    std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>> p = std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>>{pivot_point.value()};
+  if (pivot_point.has_value()) {
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>> p = pivot_point.value();
     flight::Ref<flight::types::Matrix4> t1 = flight::geometry::acquire_identity_matrix4();
     flight::Ref<flight::types::Matrix4> t2 = flight::geometry::acquire_identity_matrix4();
-    append_translation_matrix4(t1, t1, -flight::row_get<flight::RowKey<"x">>(p.value()), -flight::row_get<flight::RowKey<"y">>(p.value()), -flight::row_get<flight::RowKey<"z">>(p.value()));
-    append_translation_matrix4(t2, t2, flight::row_get<flight::RowKey<"x">>(p.value()), flight::row_get<flight::RowKey<"y">>(p.value()), flight::row_get<flight::RowKey<"z">>(p.value()));
+    append_translation_matrix4(t1, t1, -flight::row_get<flight::RowKey<"x">>(p), -flight::row_get<flight::RowKey<"y">>(p), -flight::row_get<flight::RowKey<"z">>(p));
+    append_translation_matrix4(t2, t2, flight::row_get<flight::RowKey<"x">>(p), flight::row_get<flight::RowKey<"y">>(p), flight::row_get<flight::RowKey<"z">>(p));
     multiply_matrix4(m, m, t1);
     multiply_matrix4(m, t2, m);
     flight::geometry::release_matrix4(t1);
@@ -842,7 +843,7 @@ inline void rotate_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::
 }
 
 inline void swap(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double a, double b) {
-  auto temp = flight::row_get<flight::RowKey<"m">>(source).element(a);
+  const double temp = flight::row_get<flight::RowKey<"m">>(source).element(a);
   out->m.element(a) = flight::row_get<flight::RowKey<"m">>(source).element(b);
   out->m.element(b) = temp;
 }
@@ -862,7 +863,7 @@ inline void transpose_matrix4(flight::Ref<flight::types::Matrix4Like> out, fligh
 inline flight::Float32Array identity = flight::Float32Array(flight::Array{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0});
 
 inline flight::Ref<flight::types::Matrix4> create_matrix4(std::optional<double> m00 = std::nullopt, std::optional<double> m01 = std::nullopt, std::optional<double> m02 = std::nullopt, std::optional<double> m03 = std::nullopt, std::optional<double> m10 = std::nullopt, std::optional<double> m11 = std::nullopt, std::optional<double> m12 = std::nullopt, std::optional<double> m13 = std::nullopt, std::optional<double> m20 = std::nullopt, std::optional<double> m21 = std::nullopt, std::optional<double> m22 = std::nullopt, std::optional<double> m23 = std::nullopt, std::optional<double> m30 = std::nullopt, std::optional<double> m31 = std::nullopt, std::optional<double> m32 = std::nullopt, std::optional<double> m33 = std::nullopt) {
-  flight::Float32Array m = flight::Float32Array(identity);
+  flight::Float32Array<flight::ArrayBuffer> m = flight::Float32Array.construct(identity);
   if (m00.has_value()) {
     m.element(0.0) = m00.value();
   }

@@ -54,7 +54,7 @@ inline bool encloses_rectangle(flight::StructuralRef<flight::RowReadonly<flight:
 }
 
 inline bool equals_rectangle(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>, flight::Null, flight::Undefined> b) {
-  if ((!std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>>(a) || !std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>>(b))) {
+  if ((!a || !b)) {
     return false;
   }
   return ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>>(b)) || ((((flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>>(a)) == flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>>(b))) && (flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>>(a)) == flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"width">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>>(a)) == flight::row_get<flight::RowKey<"width">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"height">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>>(a)) == flight::row_get<flight::RowKey<"height">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>>(b)))));
@@ -76,8 +76,8 @@ inline double get_rectangle_bottom(flight::StructuralRef<flight::RowReadonly<fli
 }
 
 inline void get_rectangle_bottom_right(flight::Ref<flight::types::Vector2Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>> source) {
-  auto x = (flight::row_get<flight::RowKey<"x">>(source) + flight::row_get<flight::RowKey<"width">>(source));
-  auto y = (flight::row_get<flight::RowKey<"y">>(source) + flight::row_get<flight::RowKey<"height">>(source));
+  const double x = (flight::row_get<flight::RowKey<"x">>(source) + flight::row_get<flight::RowKey<"width">>(source));
+  const double y = (flight::row_get<flight::RowKey<"y">>(source) + flight::row_get<flight::RowKey<"height">>(source));
   out->x = x;
   out->y = y;
 }

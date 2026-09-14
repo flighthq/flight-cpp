@@ -126,7 +126,7 @@ inline double intersect_ray3_dobb(flight::StructuralRef<flight::RowReadonly<flig
   const double direction1 = (((dx * ax1) + (dy * ay1)) + (dz * az1));
   const double direction2 = (((dx * ax2) + (dy * ay2)) + (dz * az2));
   double t_min = 0.0;
-  auto t_max = std::numeric_limits<double>::infinity();
+  double t_max = std::numeric_limits<double>::infinity();
   if ((direction0 != 0.0)) {
     const double inv_d = (1.0 / direction0);
     double t1 = ((-hx - origin0) * inv_d);
@@ -256,9 +256,9 @@ inline void transform_obb_by_matrix4(flight::Ref<flight::types::ObbLike> out, fl
   const double oqz = flight::row_get<flight::RowKey<"orientationZ">>(obb);
   const double oqw = flight::row_get<flight::RowKey<"orientationW">>(obb);
   flight::Float32Array m_2 = flight::row_get<flight::RowKey<"m">>(m);
-  auto new_cx = ((((m_2.element(0.0) * cx) + (m_2.element(4.0) * cy)) + (m_2.element(8.0) * cz)) + m_2.element(12.0));
-  auto new_cy = ((((m_2.element(1.0) * cx) + (m_2.element(5.0) * cy)) + (m_2.element(9.0) * cz)) + m_2.element(13.0));
-  auto new_cz = ((((m_2.element(2.0) * cx) + (m_2.element(6.0) * cy)) + (m_2.element(10.0) * cz)) + m_2.element(14.0));
+  const double new_cx = ((((m_2.element(0.0) * cx) + (m_2.element(4.0) * cy)) + (m_2.element(8.0) * cz)) + m_2.element(12.0));
+  const double new_cy = ((((m_2.element(1.0) * cx) + (m_2.element(5.0) * cy)) + (m_2.element(9.0) * cz)) + m_2.element(13.0));
+  const double new_cz = ((((m_2.element(2.0) * cx) + (m_2.element(6.0) * cy)) + (m_2.element(10.0) * cz)) + m_2.element(14.0));
   auto sx = std::sqrt((((m_2.element(0.0) * m_2.element(0.0)) + (m_2.element(1.0) * m_2.element(1.0))) + (m_2.element(2.0) * m_2.element(2.0))));
   auto sy = std::sqrt((((m_2.element(4.0) * m_2.element(4.0)) + (m_2.element(5.0) * m_2.element(5.0))) + (m_2.element(6.0) * m_2.element(6.0))));
   auto sz = std::sqrt((((m_2.element(8.0) * m_2.element(8.0)) + (m_2.element(9.0) * m_2.element(9.0))) + (m_2.element(10.0) * m_2.element(10.0))));

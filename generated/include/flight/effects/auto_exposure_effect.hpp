@@ -14,16 +14,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_auto_exposure_effect(flight::types::EntityConstruction<flight::Ref<flight::types::AutoExposureEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::AutoExposureEffect>>> options) {
+struct adaptation_speed_exposure_compensation_max_exposure_min_exposure : public flight::ReferenceEnabled {
+  std::optional<double> adaptation_speed;
+  std::optional<double> exposure_compensation;
+  std::optional<double> max_exposure;
+  std::optional<double> min_exposure;
+};
+
+inline void initialize_auto_exposure_effect(flight::types::EntityConstruction<flight::Ref<flight::types::AutoExposureEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<adaptation_speed_exposure_compensation_max_exposure_min_exposure>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("AutoExposureEffect"));
-  flight::row_set<flight::RowKey<"adaptationSpeed">>(out, options->adaptation_speed);
-  flight::row_set<flight::RowKey<"exposureCompensation">>(out, options->exposure_compensation);
-  flight::row_set<flight::RowKey<"maxExposure">>(out, options->max_exposure);
-  flight::row_set<flight::RowKey<"minExposure">>(out, options->min_exposure);
+  flight::row_set<flight::RowKey<"adaptationSpeed">>(out, flight::row_get<flight::RowKey<"adaptationSpeed">>(options));
+  flight::row_set<flight::RowKey<"exposureCompensation">>(out, flight::row_get<flight::RowKey<"exposureCompensation">>(options));
+  flight::row_set<flight::RowKey<"maxExposure">>(out, flight::row_get<flight::RowKey<"maxExposure">>(options));
+  flight::row_set<flight::RowKey<"minExposure">>(out, flight::row_get<flight::RowKey<"minExposure">>(options));
 }
 
-inline flight::Ref<flight::types::AutoExposureEffect> create_auto_exposure_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::AutoExposureEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::AutoExposureEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::AutoExposureEffect>>{}));
+inline flight::Ref<flight::types::AutoExposureEffect> create_auto_exposure_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<adaptation_speed_exposure_compensation_max_exposure_min_exposure>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<adaptation_speed_exposure_compensation_max_exposure_min_exposure>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::AutoExposureEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AutoExposureEffect>>();
   initialize_auto_exposure_effect(out, options.value());
   return flight::entity::finish_entity(out);

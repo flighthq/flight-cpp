@@ -18,7 +18,7 @@ inline void report_spatial_indexing(flight::StructuralRef<flight::RowReadonly<fl
   if (!indexing_guard.has_value()) {
     return;
   }
-  indexing_guard(notice);
+  indexing_guard.value()(notice);
 }
 
 inline void set_spatial_indexing_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndexingNotice>>>>)>> guard) {

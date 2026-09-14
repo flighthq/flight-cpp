@@ -132,7 +132,7 @@ inline double intersect_ray3_daabb(flight::StructuralRef<flight::RowReadonly<fli
     return -1.0;
   }
   double t_min = 0.0;
-  auto t_max = std::numeric_limits<double>::infinity();
+  double t_max = std::numeric_limits<double>::infinity();
   if ((dx != 0.0)) {
     const double inv_dx = (1.0 / dx);
     double t1 = ((flight::row_get<flight::RowKey<"min">>(aabb)->x - ox) * inv_dx);

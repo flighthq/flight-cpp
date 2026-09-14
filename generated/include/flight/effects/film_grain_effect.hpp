@@ -14,15 +14,21 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_film_grain_effect(flight::types::EntityConstruction<flight::Ref<flight::types::FilmGrainEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::FilmGrainEffect>>> options) {
+struct size_intensity_seed : public flight::ReferenceEnabled {
+  std::optional<double> size;
+  std::optional<double> intensity;
+  std::optional<double> seed;
+};
+
+inline void initialize_film_grain_effect(flight::types::EntityConstruction<flight::Ref<flight::types::FilmGrainEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<size_intensity_seed>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("FilmGrainEffect"));
-  flight::row_set<flight::RowKey<"intensity">>(out, options->intensity);
-  flight::row_set<flight::RowKey<"size">>(out, options->size);
-  flight::row_set<flight::RowKey<"seed">>(out, options->seed);
+  flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
+  flight::row_set<flight::RowKey<"size">>(out, flight::row_get<flight::RowKey<"size">>(options));
+  flight::row_set<flight::RowKey<"seed">>(out, flight::row_get<flight::RowKey<"seed">>(options));
 }
 
-inline flight::Ref<flight::types::FilmGrainEffect> create_film_grain_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::FilmGrainEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::FilmGrainEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::FilmGrainEffect>>{}));
+inline flight::Ref<flight::types::FilmGrainEffect> create_film_grain_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<size_intensity_seed>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<size_intensity_seed>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::FilmGrainEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::FilmGrainEffect>>();
   initialize_film_grain_effect(out, options.value());
   return flight::entity::finish_entity(out);

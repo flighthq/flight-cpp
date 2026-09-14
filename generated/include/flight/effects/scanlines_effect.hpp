@@ -14,14 +14,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_scanlines_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ScanlinesEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::ScanlinesEffect>>> options) {
+struct intensity_count : public flight::ReferenceEnabled {
+  std::optional<double> intensity;
+  std::optional<double> count;
+};
+
+inline void initialize_scanlines_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ScanlinesEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_count>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("ScanlinesEffect"));
-  flight::row_set<flight::RowKey<"count">>(out, options->count);
-  flight::row_set<flight::RowKey<"intensity">>(out, options->intensity);
+  flight::row_set<flight::RowKey<"count">>(out, flight::row_get<flight::RowKey<"count">>(options));
+  flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
 }
 
-inline flight::Ref<flight::types::ScanlinesEffect> create_scanlines_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::ScanlinesEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::ScanlinesEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::ScanlinesEffect>>{}));
+inline flight::Ref<flight::types::ScanlinesEffect> create_scanlines_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_count>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_count>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::ScanlinesEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ScanlinesEffect>>();
   initialize_scanlines_effect(out, options.value());
   return flight::entity::finish_entity(out);

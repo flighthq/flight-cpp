@@ -10,9 +10,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_region.hpp>
 #include <flight/types/pixel_format.hpp>
+#include <flight/types/texture_source_kind.hpp>
 
 namespace flight::bitmap {
 
@@ -20,8 +22,8 @@ inline void apply_morphological(flight::Uint8ClampedArray out, flight::Structura
   auto r = flight::maximum(0.0, flight::round(radius));
   const double w = flight::row_get<flight::RowKey<"width">>(source);
   const double h = flight::row_get<flight::RowKey<"height">>(source);
-  auto bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
-  auto bitmap_height = flight::row_get<flight::RowKey<"bitmap">>(source)->height;
+  const double bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
+  const double bitmap_height = flight::row_get<flight::RowKey<"bitmap">>(source)->height;
   flight::Uint8ClampedArray<flight::ArrayBuffer> data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
   const double identity = (dilate ? 0.0 : 255.0);
   {

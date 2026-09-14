@@ -21,9 +21,9 @@ inline flight::Ref<flight::types::Rectangle> scratch_bounds = flight::geometry::
 inline void update_camera2_dfollow(flight::Ref<flight::types::Camera2D> camera, double target_x, double target_y, double delta_time, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2DFollowOptions>>>>> options = std::nullopt) {
   const double cam_x = camera->x;
   const double cam_y = camera->y;
-  auto dead_half_w = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->deadzone_half_width; }()).value_or(0.0);
-  auto dead_half_h = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->deadzone_half_height; }()).value_or(0.0);
-  auto smooth_time = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->smooth_time; }()).value_or(0.0);
+  const double dead_half_w = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->deadzone_half_width; }()).value_or(0.0);
+  const double dead_half_h = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->deadzone_half_height; }()).value_or(0.0);
+  const double smooth_time = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->smooth_time; }()).value_or(0.0);
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>> world_bounds = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->world_bounds; }());
   const double dx = (target_x - cam_x);
   double goal_x = cam_x;
@@ -56,7 +56,7 @@ inline void update_camera2_dfollow(flight::Ref<flight::types::Camera2D> camera, 
     next_x = goal_x;
     next_y = goal_y;
   }
-  if (world_bounds.value()) {
+  if (world_bounds) {
     flight::camera::get_camera2_dvisible_bounds(camera, scratch_bounds);
     const double half_vis_w = (scratch_bounds->width * 0.5);
     const double half_vis_h = (scratch_bounds->height * 0.5);

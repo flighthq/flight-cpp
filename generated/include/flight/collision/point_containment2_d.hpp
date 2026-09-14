@@ -20,8 +20,8 @@ namespace flight::collision {
 inline const double relative_epsilon = 1e-9;
 
 inline double get_polygon_extent(flight::Array<double> points, double count) {
-  auto min_x = std::numeric_limits<double>::infinity();
-  auto min_y = std::numeric_limits<double>::infinity();
+  double min_x = std::numeric_limits<double>::infinity();
+  double min_y = std::numeric_limits<double>::infinity();
   double max_x = -std::numeric_limits<double>::infinity();
   double max_y = -std::numeric_limits<double>::infinity();
   {
@@ -129,7 +129,7 @@ inline bool get_collision_shape_contains_point2_d(flight::types::CollisionBuiltI
       if (flight::collision::get_collision_polygon_validation_status2_d(shape.points).has_value()) {
         return false;
       }
-      return is_point_in_convex_polygon(x, y, shape.points, flight::signed_right_shift(shape.points.length, 1.0));
+      return is_point_in_convex_polygon(x, y, shape.points, flight::signed_right_shift(static_cast<double>(shape.points.size()), 1.0));
     }
     else if (switch_value == flight::String("segment")) {
       {
@@ -141,8 +141,8 @@ inline bool get_collision_shape_contains_point2_d(flight::types::CollisionBuiltI
           t_2 = ((((x - shape.x0) * dx_3) + ((y - shape.y0) * dy_3)) / length_squared_2);
           t_2 = ((t_2 < 0.0) ? 0.0 : ((t_2 > 1.0) ? 1.0 : t_2));
         }
-        auto closest_x = (shape.x0 + (t_2 * dx_3));
-        auto closest_y = (shape.y0 + (t_2 * dy_3));
+        const double closest_x = (shape.x0 + (t_2 * dx_3));
+        const double closest_y = (shape.y0 + (t_2 * dy_3));
         const double ddx = (x - closest_x);
         const double ddy = (y - closest_y);
         const double epsilon = relative_epsilon_2(std::sqrt(length_squared_2));

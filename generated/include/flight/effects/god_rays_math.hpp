@@ -10,6 +10,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/entity.hpp>
 #include <flight/types/god_rays_effect.hpp>
 
 namespace flight::effects {
@@ -27,16 +28,16 @@ inline void compute_god_rays_light_center(flight::StructuralRef<flight::RowReado
 }
 
 inline double compute_god_rays_sample_weight(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GodRaysEffect>>>> effect, double sample_index) {
-  auto decay = flight::row_get<flight::RowKey<"decay">>(effect).value_or(0.96);
-  auto weight = flight::row_get<flight::RowKey<"weight">>(effect).value_or(0.4);
-  auto exposure = flight::row_get<flight::RowKey<"exposure">>(effect).value_or(0.1);
+  const double decay = flight::row_get<flight::RowKey<"decay">>(effect).value_or(0.96);
+  const double weight = flight::row_get<flight::RowKey<"weight">>(effect).value_or(0.4);
+  const double exposure = flight::row_get<flight::RowKey<"exposure">>(effect).value_or(0.1);
   return ((flight::power(decay, sample_index) * weight) * exposure);
 }
 
 inline void compute_god_rays_step_size(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GodRaysEffect>>>> effect, double px, double py, flight::Array<double> out) {
-  auto cx = flight::row_get<flight::RowKey<"centerX">>(effect).value_or(0.5);
-  auto cy = flight::row_get<flight::RowKey<"centerY">>(effect).value_or(0.5);
-  auto density = flight::row_get<flight::RowKey<"density">>(effect).value_or(0.96);
+  const double cx = flight::row_get<flight::RowKey<"centerX">>(effect).value_or(0.5);
+  const double cy = flight::row_get<flight::RowKey<"centerY">>(effect).value_or(0.5);
+  const double density = flight::row_get<flight::RowKey<"density">>(effect).value_or(0.96);
   auto samples = flight::maximum(1.0, flight::row_get<flight::RowKey<"samples">>(effect).value_or(100.0));
   const double dx = (((cx - px) * density) / samples);
   const double dy = (((cy - py) * density) / samples);

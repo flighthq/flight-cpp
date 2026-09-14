@@ -20,7 +20,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::camera {
 
-inline auto unbounded_extent = std::numeric_limits<double>::max();
+inline const double unbounded_extent = std::numeric_limits<double>::max();
 
 inline const double unbounded_origin = (-std::numeric_limits<double>::max() / 2.0);
 

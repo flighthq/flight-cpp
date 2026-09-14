@@ -7,7 +7,6 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/types/modifier.hpp>
-#include <flight/types/modifier_kind.hpp>
 #include <flight/types/modifier_registry.hpp>
 #include <flight/shading/get_unregistered_modifier_kinds.hpp>
 

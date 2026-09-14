@@ -144,7 +144,7 @@ inline bool has_light_influence_on_bounds(flight::StructuralRef<flight::RowReado
   const double dy = (flight::row_get<flight::RowKey<"position">>(spatial)->y - flight::row_get<flight::RowKey<"center">>(bounds)->y);
   const double dz = (flight::row_get<flight::RowKey<"position">>(spatial)->z - flight::row_get<flight::RowKey<"center">>(bounds)->z);
   const double dist_sq = (((dx * dx) + (dy * dy)) + (dz * dz));
-  auto rad_sum = (flight::row_get<flight::RowKey<"range">>(spatial) + flight::row_get<flight::RowKey<"radius">>(bounds));
+  const double rad_sum = (flight::row_get<flight::RowKey<"range">>(spatial) + flight::row_get<flight::RowKey<"radius">>(bounds));
   return (dist_sq <= (rad_sum * rad_sum));
 }
 
@@ -174,7 +174,7 @@ inline double get_light_contribution_at_bounding_sphere(std::variant<flight::Ref
   const double center_dx = (flight::row_get<flight::RowKey<"center">>(bounds)->x - light.position.x);
   const double center_dy = (flight::row_get<flight::RowKey<"center">>(bounds)->y - light.position.y);
   const double center_dz = (flight::row_get<flight::RowKey<"center">>(bounds)->z - light.position.z);
-  auto center_distance = std::hypot(center_dx, center_dy, center_dz);
+  const double center_distance = std::hypot(center_dx, center_dy, center_dz);
   auto distance = flight::maximum((center_distance - flight::row_get<flight::RowKey<"radius">>(bounds)), 0.0);
   const double distance_squared = (distance * distance);
   double window = 1.0;
@@ -183,11 +183,11 @@ inline double get_light_contribution_at_bounding_sphere(std::variant<flight::Ref
     auto windowed = flight::maximum(0.0, flight::minimum(1.0, (1.0 - (factor * factor))));
     window = (windowed * windowed);
   }
-  const double attenuation = (flight::maximum(distance, 0.01) ** light.decay);
+  const double attenuation = flight::power(flight::maximum(distance, 0.01), light.decay);
   double contribution = ((get_light_luminance(light) * window) / attenuation);
   if ((light.kind == flight::types::spot_light_kind)) {
     flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLight>>>> spot = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLight>>>>>(light);
-    auto direction_length = std::hypot(flight::row_get<flight::RowKey<"direction">>(spot)->x, flight::row_get<flight::RowKey<"direction">>(spot)->y, flight::row_get<flight::RowKey<"direction">>(spot)->z);
+    const double direction_length = std::hypot(flight::row_get<flight::RowKey<"direction">>(spot)->x, flight::row_get<flight::RowKey<"direction">>(spot)->y, flight::row_get<flight::RowKey<"direction">>(spot)->z);
     const double inverse_ray_length = ((center_distance > 0.0) ? (1.0 / center_distance) : 0.0);
     const double inverse_direction_length = ((direction_length > 0.0) ? (1.0 / direction_length) : 0.0);
     const double cosine = (((((flight::row_get<flight::RowKey<"direction">>(spot)->x * center_dx) + (flight::row_get<flight::RowKey<"direction">>(spot)->y * center_dy)) + (flight::row_get<flight::RowKey<"direction">>(spot)->z * center_dz)) * inverse_ray_length) * inverse_direction_length);

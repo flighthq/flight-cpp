@@ -5,9 +5,11 @@ This is flight-cpp's maintained view of the downstream work requested by
 adopted. Adoption also requires build packaging, compiler-emitted compilation, source differential behavior where
 observable, and a complete regenerated SDK closure.
 
-The current pins are Flight `1274ec5` and flight-compiler `5649642`. The portable sweep processes all 154 packages
-and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 refusals. All emitted includes resolve;
-704 headers compile independently with GCC 15.2 and 328 stop at compiler-emitted C++ errors.
+The current pins are Flight `1274ec5` and flight-compiler `993c280`. The portable sweep processes all 154 packages
+and 2,851 modules. It emits 959 dependency-closed headers and records 1,892 refusals. All emitted includes resolve;
+703 headers compile independently with GCC 15.2 and 256 stop at compiler-emitted C++ errors. Compared with compiler
+`5649642`, the stricter semantic pass refuses 73 more modules while removing 72 malformed headers and retaining all
+but one of the portable headers that compiled independently.
 
 ## Downstream implementation
 
@@ -47,19 +49,19 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
 - `npm run sdk:compile` compiles every emitted header independently and writes the compiler-facing report to
   `out/sdk-header-compilation.json`.
 - `npm run sdk:compile:headless` applies the same audit to the combined portable-runtime/headless inventory. At the
-  current pin, the runtime profile emits 1,079 modules: 47 more than the manifest-free floor. Of those additional
-  headers, ten compile and 37 advance to existing tuple, union, reference-conversion, aggregate-construction,
-  typed-array-template, spatial-type, and type-spelling defects. The complete expanded result is 714 passing and 365
-  failing headers.
+  current pin, the composed profile emits 1,049 modules: 90 more than the manifest-free floor. Of those additional
+  headers, 12 compile and 78 advance to existing tuple, union, reference-conversion, aggregate-construction,
+  typed-array-template, spatial-type, and type-spelling defects. Because every shared header is byte-identical to the
+  full SDL inventory, its completed audit gives 715 passing and 334 failing headers.
 - `npm run sdk:generate:sdl-gl` adds the exact Web string-alias and maintained SDL/OpenGL binding profiles. It emits
-  1,111 modules, 32 more than the runtime/headless inventory. Of those additions, 23 compile independently and nine
-  expose existing compiler defects. The complete expanded result is 737 passing and 374 failing headers.
+  1,081 modules, 32 more than the runtime/headless inventory. Of those additions, 23 compile independently and nine
+  expose existing compiler defects. Its byte-identical subset of the full SDL audit is 738 passing and 343 failing.
 - `npm run sdk:generate:sdl-wgpu` applies the Web string aliases and provider-owned WebGPU handle profile. It emits
-  1,098 modules, 19 more than runtime/headless, and every added header compiles independently: 733 pass and 365 fail
+  1,067 modules, 18 more than runtime/headless, and every added header compiles independently: 733 pass and 334 fail
   overall.
-- `npm run sdk:generate:sdl` composes the GL, WebGPU, and SDL application profiles. It emits 1,129 modules; all 18
-  headers beyond the SDL/GL inventory compile, for 755 passing and 374 failing headers. Direct external-binding
-  refusals fall from the SDL/GL profile's 92 to 50. Window, document, `HTMLElement`, animation-frame
+- `npm run sdk:generate:sdl` composes the GL, WebGPU, and SDL application profiles. It emits 1,098 modules; all 17
+  headers beyond the SDL/GL inventory compile, for 755 passing and 343 failing headers. Direct external-binding
+  refusals fall from the SDL/GL profile's 242 to 166. Window, document, `HTMLElement`, animation-frame
   cancellation, and the represented input event types advance to their next compiler or dependency boundary. The
   runtime profile also maps the compiler's existing `PromiseLike<T>` task domain to `flight::Task<T>`; `dialog.ts`
   now reaches the compiler-owned async-closure coroutine blocker instead of stopping at that ambient type.
@@ -79,8 +81,8 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
   module is dependency-closed yet. The SDL application profile removes every direct `window`, `document`, animation
   frame, keyboard, pointer, and wheel refusal; `AudioContext` in the sound example is the only remaining direct
   ambient name, and its decoded-PCM device provider now has an exact generated SDL adapter ready for module remap.
-  The frontier now consists of 33 propagated selector refusals, 28 external-package initialization
-  edges, 38 compiler emission failures, and one lowering failure. The inventory is committed under
+  The frontier now consists of 33 propagated dependency refusals, 28 external-package initialization
+  edges, and 39 compiler emission failures. The inventory is committed under
   `examples/upstream/generated/` and contains no duplicate SDK sources.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
   runtime. It currently covers 44 cross-runtime observations.
@@ -94,17 +96,23 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
 
 ## Compiler and host work still gating the SDK
 
-The current 328 native header failures begin with compiler-emitted optional/value conversions, concrete typed-array
-aliases used as templates, value spelling used where a type name is required, invalid union member access,
+The current 256 portable and 343 SDL-profile native header failures begin with compiler-emitted optional/value
+conversions, concrete typed-array aliases used as templates, value spelling used where a type name is required,
+invalid union member access,
 non-convertible duplicate anonymous records, package-scope helper collisions, and malformed type queries. These must
 be corrected in flight-compiler rather than rewritten in the generated tree.
 
-The generated runtime-profile inventory also contains nine headers that currently construct `std::range_error`
-from `flight::String`. The downstream `flight::RangeError` and `flight::TypeError` now preserve semantic messages
-and their common `flight::Error` base. The compiler can map the corresponding type and value symbols to these
-runtime classes instead of the standard exceptions. An exact-pin mapping experiment removes that constructor error
-from all nine headers; each then reaches an existing optional-unwrapping or missing-symbol emission defect, so it
-does not change the current independently compiling total.
+The stricter compiler newly refuses 16 direct roots that the previous portable sweep emitted. Five need equivalent
+source-union evidence, five expose generic typed-array backing domains that are not represented by the concrete C++
+aliases, three contain unresolved callable result types, one needs named structural-row construction, and two retain
+an unresolved alternative in a scene-light-selection union. Their dependency refusals account for the rest of the
+35 previously emitted modules absent from the full SDL profile. Returning `MapIterator<T>.next().value` as
+`T | undefined` also reaches `contextual optionalSingle construction requires expression type evidence`; the exact
+iterator binding and its `done` path compile in the live runtime oracle.
+
+The runtime profile maps `RangeError` and `TypeError` to downstream classes that preserve semantic messages and their
+common `flight::Error` base. Current generated headers no longer fail by constructing `std::range_error` from
+`flight::String`; they advance to existing optional-unwrapping or missing-symbol emission defects.
 
 `flight::all_settled_tasks` now returns an ordered, non-rejecting task of `TaskSettlement<T>` records and preserves
 exact rejection values, including for `void` tasks. Mapping `Promise.allSettled` also requires the compiler to map
@@ -114,11 +122,12 @@ refusal; the scene-resource caller then reaches an already-refused dependency, s
 unchanged.
 
 The versioned `flighthq/flight-cpp/runtime-carriers/1` profile supplies the implemented `AbortController`,
-`AbortSignal`, `ArrayBufferLike`, `ArrayLike<T>`, `ArrayBufferView`, `Blob`, `WeakSet`, `atob`, `btoa`,
+`AbortSignal`, `ArrayBufferLike`, `SharedArrayBuffer`, `ArrayLike<T>`, `ArrayBufferView`, `Blob`, `MapIterator`,
+`WeakSet`, `atob`, `btoa`,
 `encodeURIComponent`, `decodeURIComponent`, `ReadableStream<T>`, `WritableStream<T>`, `AsyncIterable<T>`,
 `TextEncoder`, `AudioBuffer`, bare `parseFloat`, and bare `isFinite`
 bindings. Combined with the headless profile, it removes every direct refusal for those portable names and expands
-the dependency-closed inventory from 1,032 to 1,079 emitted modules. The versioned
+the dependency-closed inventory from 959 to 1,049 emitted modules. The versioned
 `flighthq/flight-cpp/headless/1` profile supplies monotonic `performance.now`, `console.debug`, and
 single-threaded host-pumped timeout/interval functions. Its selected profile, identity, and digest are recorded in
 each profile-specific generated manifest, and a live compiler fixture compiles and runs every binding. SDL's host
@@ -133,4 +142,5 @@ before `render-gl` can call the native adapter. Its materialized members also co
 collapse to identical snake-case target names; these require deterministic disambiguation in the compiler.
 `GlContextRuntime` has advanced past its extension binding and now
 stops at the compiler's closed-value proof for a `WeakMap` field. Maintained
-profiles for Node/tooling, browser/media, SDL/Vulkan, and SDL/WebGPU are still required.
+profiles for Node/tooling, browser/media, and SDL/Vulkan are still required; the provider-neutral SDL/WebGPU profile
+is maintained here.

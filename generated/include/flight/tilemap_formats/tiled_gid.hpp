@@ -8,8 +8,8 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/types/tiled_gid.hpp>
-#include <flight/types/tiled_layer.hpp>
 #include <flight/types/tiled_map.hpp>
+#include <flight/types/tiled_object.hpp>
 #include <flight/types/tiled_property.hpp>
 #include <flight/types/tiled_tileset.hpp>
 

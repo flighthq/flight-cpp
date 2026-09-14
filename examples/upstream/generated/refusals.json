@@ -1,14 +1,14 @@
 {
   "schema": "flight-generated-upstream-example-refusals/1",
-  "compilerRevision": "56496423fd865a51023e72966190d10d886eae40",
+  "compilerRevision": "993c28080d1b3f6e55214ae2d92215d51cd192ff",
   "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
   "refusals": [
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/adjustments/src/app.ts",
       "package": "@flighthq/example-adjustments",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/app.ts: runtime external symbol binding plan is incomplete (missing: HTMLDivElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -18,20 +18,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/adjustments/src/renderNative.ts",
       "package": "@flighthq/example-adjustments",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 19,
-      "line": 28,
+      "code": "unsupported-ir",
       "module": "examples/packages/awd2loading/src/app.ts",
       "package": "@flighthq/example-awd2loading",
-      "reason": "interface Node inherits incompatible property EntityRuntimeKey",
-      "stage": "lowering"
+      "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], DOMHighResTimeStamp[type])",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -48,18 +46,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/awd2loading/src/renderNative.ts",
       "package": "@flighthq/example-awd2loading",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/benchmark/src/app.ts",
       "package": "@flighthq/example-benchmark",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], DOMHighResTimeStamp[type], HTMLDivElement[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -69,20 +67,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/benchmark/src/renderNative.ts",
       "package": "@flighthq/example-benchmark",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 49,
-      "line": 1,
+      "code": "unsupported-ir",
       "module": "examples/packages/bitmapfont-generate/src/app.ts",
       "package": "@flighthq/example-bitmapfont-generate",
-      "reason": "unsupported type ConditionalType",
-      "stage": "lowering"
+      "reason": "cpp emission failed for @flighthq/example-bitmapfont-generate/examples/packages/bitmapfont-generate/src/app.ts: runtime external symbol binding plan is incomplete (missing: HTMLParagraphElement[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -99,11 +95,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/camera2d/src/app.ts",
       "package": "@flighthq/example-camera2d",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], DOMHighResTimeStamp[type], DOMRect[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -113,18 +109,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/camera2d/src/renderNative.ts",
       "package": "@flighthq/example-camera2d",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/clock/src/app.ts",
       "package": "@flighthq/example-clock",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -134,20 +130,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/clock/src/renderNative.ts",
       "package": "@flighthq/example-clock",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 3,
-      "line": 336,
+      "code": "unsupported-ir",
       "module": "examples/packages/collision/src/app.ts",
       "package": "@flighthq/example-collision",
-      "reason": "unsupported statement InterfaceDeclaration",
-      "stage": "lowering"
+      "reason": "cpp emission failed for @flighthq/example-collision/examples/packages/collision/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMRect[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -160,15 +154,15 @@
       "code": "dependency-refused",
       "module": "examples/packages/collision/src/renderNative.ts",
       "package": "@flighthq/example-collision",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webCanvasRenderSurface.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/cross-backend-embed/src/app.ts",
       "package": "@flighthq/example-cross-backend-embed",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -178,18 +172,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/cross-backend-embed/src/renderNative.ts",
       "package": "@flighthq/example-cross-backend-embed",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: HTMLDivElement[type])",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/crossfade/src/app.ts",
       "package": "@flighthq/example-crossfade",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-crossfade/examples/packages/crossfade/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -199,18 +193,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/crossfade/src/renderNative.ts",
       "package": "@flighthq/example-crossfade",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-crossfade/examples/packages/crossfade/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/flowstates/src/app.ts",
       "package": "@flighthq/example-flowstates",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -220,18 +214,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/flowstates/src/renderNative.ts",
       "package": "@flighthq/example-flowstates",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/formatloading/src/app.ts",
       "package": "@flighthq/example-formatloading",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-formatloading/examples/packages/formatloading/src/app.ts: anonymous object property byte_length requires concrete C++ type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -241,18 +235,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/formatloading/src/renderNative.ts",
       "package": "@flighthq/example-formatloading",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-formatloading/examples/packages/formatloading/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/interaction/src/app.ts",
       "package": "@flighthq/example-interaction",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-interaction/examples/packages/interaction/src/app.ts: contextual union value type flight::Ref<set_cursor_entity_runtime_key> is not a represented runtime domain",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -262,18 +256,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/interaction/src/renderNative.ts",
       "package": "@flighthq/example-interaction",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-interaction/examples/packages/interaction/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/materialshowcase/src/app.ts",
       "package": "@flighthq/example-materialshowcase",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], DOMHighResTimeStamp[type], DOMRect[type], HTMLDivElement[type], HTMLLabelElement[type], HTMLOptionElement[type], HTMLParagraphElement[type], HTMLSelectElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -283,18 +277,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/materialshowcase/src/renderNative.ts",
       "package": "@flighthq/example-materialshowcase",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/motionpath/src/app.ts",
       "package": "@flighthq/example-motionpath",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -304,18 +298,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/motionpath/src/renderNative.ts",
       "package": "@flighthq/example-motionpath",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/movieclip/src/app.ts",
       "package": "@flighthq/example-movieclip",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -325,18 +319,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/movieclip/src/renderNative.ts",
       "package": "@flighthq/example-movieclip",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/particleeditor/src/app.ts",
       "package": "@flighthq/example-particleeditor",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMHighResTimeStamp[type], DOMRect[type], HTMLDetailsElement[type], HTMLDivElement[type], HTMLHeadingElement[type], HTMLLabelElement[type], HTMLOptionElement[type], HTMLSelectElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -346,18 +340,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/particleeditor/src/renderNative.ts",
       "package": "@flighthq/example-particleeditor",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/particles/src/app.ts",
       "package": "@flighthq/example-particles",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMHighResTimeStamp[type], DOMRect[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -367,18 +361,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/particles/src/renderNative.ts",
       "package": "@flighthq/example-particles",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/pathboolean/src/app.ts",
       "package": "@flighthq/example-pathboolean",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-pathboolean/examples/packages/pathboolean/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMRect[type], HTMLDivElement[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -391,15 +385,15 @@
       "code": "dependency-refused",
       "module": "examples/packages/pathboolean/src/renderNative.ts",
       "package": "@flighthq/example-pathboolean",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webCanvasRenderSurface.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/platformer/src/app.ts",
       "package": "@flighthq/example-platformer",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -409,20 +403,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/platformer/src/renderNative.ts",
       "package": "@flighthq/example-platformer",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 13,
-      "line": 4,
+      "code": "unsupported-ir",
       "module": "examples/packages/scene-fire/src/app.ts",
       "package": "@flighthq/example-scene-fire",
-      "reason": "unsupported type ConditionalType",
-      "stage": "lowering"
+      "reason": "cpp emission failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMHighResTimeStamp[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -439,11 +431,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/scene-picking/src/app.ts",
       "package": "@flighthq/example-scene-picking",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-scene-picking/examples/packages/scene-picking/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type], DOMRect[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -453,18 +445,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/scene-picking/src/renderNative.ts",
       "package": "@flighthq/example-scene-picking",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-scene-picking/examples/packages/scene-picking/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/scene3d/src/app.ts",
       "package": "@flighthq/example-scene3d",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-scene3d/examples/packages/scene3d/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], DOMHighResTimeStamp[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -474,18 +466,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/scene3d/src/renderNative.ts",
       "package": "@flighthq/example-scene3d",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-scene3d/examples/packages/scene3d/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/shapes/src/app.ts",
       "package": "@flighthq/example-shapes",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-shapes/examples/packages/shapes/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMRect[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -498,15 +490,15 @@
       "code": "dependency-refused",
       "module": "examples/packages/shapes/src/renderNative.ts",
       "package": "@flighthq/example-shapes",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webCanvasRenderSurface.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/snapshot/src/app.ts",
       "package": "@flighthq/example-snapshot",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-snapshot/examples/packages/snapshot/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type], Iterable[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -516,18 +508,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/snapshot/src/renderNative.ts",
       "package": "@flighthq/example-snapshot",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-snapshot/examples/packages/snapshot/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/sound/src/app.ts",
       "package": "@flighthq/example-sound",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/app.ts: runtime external symbol binding plan is incomplete (missing: AudioContext[value], AudioContextOptions[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -537,18 +529,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/sound/src/renderNative.ts",
       "package": "@flighthq/example-sound",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/spatial/src/app.ts",
       "package": "@flighthq/example-spatial",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type], DOMRect[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -558,18 +550,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/spatial/src/renderNative.ts",
       "package": "@flighthq/example-spatial",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/spring/src/app.ts",
       "package": "@flighthq/example-spring",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-spring/examples/packages/spring/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMHighResTimeStamp[type], DOMRect[type], HTMLButtonElement[type], HTMLDivElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -582,15 +574,15 @@
       "code": "dependency-refused",
       "module": "examples/packages/spring/src/renderNative.ts",
       "package": "@flighthq/example-spring",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webCanvasRenderSurface.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/spritesheet/src/app.ts",
       "package": "@flighthq/example-spritesheet",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMHighResTimeStamp[type], DOMPointInit[type], Iterable[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -610,7 +602,7 @@
       "code": "dependency-refused",
       "module": "examples/packages/text/src/app.ts",
       "package": "@flighthq/example-text",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "reason": "dependency ./render was refused for @flighthq/example-text/examples/packages/text/src/renderNative.ts",
       "stage": "dependency"
     },
     {
@@ -621,11 +613,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/text/src/renderNative.ts",
       "package": "@flighthq/example-text",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-text/examples/packages/text/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -642,29 +634,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/textinput/src/renderNative.ts",
       "package": "@flighthq/example-textinput",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-textinput/examples/packages/textinput/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "unsupported-typescript",
-      "column": 4,
-      "line": 2,
+      "code": "unsupported-ir",
       "module": "examples/packages/tilemap/src/app.ts",
       "package": "@flighthq/example-tilemap",
-      "reason": "unsupported type ConditionalType",
-      "stage": "lowering"
-    },
-    {
-      "code": "unsupported-typescript",
-      "column": 4,
-      "line": 2,
-      "module": "examples/packages/tilemap/src/app.ts",
-      "package": "@flighthq/example-tilemap",
-      "reason": "unsupported type ConditionalType",
-      "stage": "lowering"
+      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], CanvasRenderingContext2D[type], DOMHighResTimeStamp[type], DOMRect[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -681,11 +662,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/tween/src/app.ts",
       "package": "@flighthq/example-tween",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/app.ts: intersection types require C++ multiple-inheritance lowering",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -695,18 +676,18 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/tween/src/renderNative.ts",
       "package": "@flighthq/example-tween",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/renderNative.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/video/src/app.ts",
       "package": "@flighthq/example-video",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/app.ts: runtime external symbol binding plan is incomplete (missing: BlobEvent[type], BlobPart[type], BlobPropertyBag[type], CanvasRenderingContext2D[type], HTMLVideoElement[type], MediaRecorder[type], MediaRecorder[value], MediaRecorderOptions[type], MediaStream[type], PropertyDescriptor[type], const[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",

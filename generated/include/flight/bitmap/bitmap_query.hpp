@@ -9,28 +9,30 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_region.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/pixel_format.hpp>
 #include <flight/types/rectangle.hpp>
+#include <flight/types/texture_source_kind.hpp>
 
 namespace flight::bitmap {
 
 inline std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::Rectangle>>>> get_bitmap_color_bounds_rectangle(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> source, double mask, double color, std::optional<bool> find_color = std::nullopt) {
   find_color = find_color.value_or(true);
   flight::Uint8ClampedArray<flight::ArrayBuffer> data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
-  auto bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
+  const double bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
   const double masked_color = flight::bitwise_and(flight::unsigned_right_shift(color, 0.0), flight::unsigned_right_shift(mask, 0.0));
-  auto min_x = std::numeric_limits<double>::infinity();
-  auto min_y = std::numeric_limits<double>::infinity();
+  double min_x = std::numeric_limits<double>::infinity();
+  double min_y = std::numeric_limits<double>::infinity();
   double max_x = -1.0;
   double max_y = -1.0;
   {
     double py = 0.0;
     while ((py < flight::row_get<flight::RowKey<"height">>(source))) {
       {
-        auto y = (flight::row_get<flight::RowKey<"y">>(source) + py);
+        const double y = (flight::row_get<flight::RowKey<"y">>(source) + py);
         if (((y < 0.0) || (y >= flight::row_get<flight::RowKey<"bitmap">>(source)->height))) {
           py += 1.0;
           continue;
@@ -39,7 +41,7 @@ inline std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref
           double px = 0.0;
           while ((px < flight::row_get<flight::RowKey<"width">>(source))) {
             {
-              auto x = (flight::row_get<flight::RowKey<"x">>(source) + px);
+              const double x = (flight::row_get<flight::RowKey<"x">>(source) + px);
               if (((x < 0.0) || (x >= bitmap_width))) {
                 px += 1.0;
                 continue;
@@ -72,7 +74,7 @@ inline std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref
   if ((max_x == -1.0)) {
     return std::nullopt;
   }
-  return {.x = min_x, .y = min_y, .width = ((max_x - min_x) + 1.0), .height = ((max_y - min_y) + 1.0)};
+  return std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::Rectangle>>>>{([&]() { auto object_member_x = min_x; auto object_member_y = min_y; auto object_member_width = ((max_x - min_x) + 1.0); auto object_member_height = ((max_y - min_y) + 1.0); return flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::Rectangle>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::Rectangle>>{.height = object_member_height, .width = object_member_width, .x = object_member_x, .y = object_member_y}); }())};
 }
 
 } // namespace flight::bitmap

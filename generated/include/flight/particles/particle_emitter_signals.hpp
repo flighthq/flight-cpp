@@ -4,6 +4,7 @@
 #include <flight/symbol.hpp>
 #include <optional>
 #include <unordered_map>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -29,7 +30,7 @@ inline flight::Ref<flight::types::ParticleEmitterSignals> create_particle_emitte
   return flight::entity::finish_entity(out);
 }
 
-inline auto signals_slot = flight::Symbol(flight::String("particleEmitterSignals"));
+inline const flight::Symbol signals_slot = flight::Symbol(std::variant<double, flight::String>{std::in_place_type<flight::String>, flight::String("particleEmitterSignals")});
 
 inline flight::Ref<flight::types::ParticleEmitterSignals> enable_particle_emitter_signals(flight::Ref<void> state) {
   std::unordered_map<flight::Symbol, std::optional<flight::Ref<flight::types::ParticleEmitterSignals>>> s = static_cast<std::unordered_map<flight::Symbol, std::optional<flight::Ref<flight::types::ParticleEmitterSignals>>>>(state);

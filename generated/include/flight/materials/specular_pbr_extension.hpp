@@ -11,8 +11,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/pbr_extension.hpp>
+#include <flight/types/sampler.hpp>
 #include <flight/types/specular_pbr_extension.hpp>
 #include <flight/types/texture.hpp>
+#include <flight/types/voxel_grid.hpp>
 #include <flight/materials/material_validation.hpp>
 #include <flight/materials/pbr_extension.hpp>
 
@@ -83,7 +85,7 @@ inline void initialize_specular_pbr_extension(flight::types::EntityConstruction<
 
 inline flight::Ref<flight::types::SpecularPbrExtension> create_specular_pbr_extension(std::optional<flight::Ref<entity_runtime_key_kind_specular_specular_color_specular_color_map_specular_color_map_uv_set_specular_map_specular_map_uv_set>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpecularPbrExtension>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpecularPbrExtension>>();
-  initialize_specular_pbr_extension(out, opts.value());
+  initialize_specular_pbr_extension(out, opts);
   return flight::entity::finish_entity(out);
 }
 

@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/array_buffer.hpp>
 #include <flight/structural_ref.hpp>
 #include <limits>
 #include <optional>
@@ -67,7 +68,7 @@ inline void copy_matrix3_column_from_vector3(flight::Ref<flight::types::Matrix3L
           }
         }
         else if (switch_value_2 == 3.0) {
-          throw std::range_error((flight::String("Column ") + column) + flight::String(" out of bounds (2)").to_utf8());
+          throw std::range_error.construct((flight::String("Column ") + column) + flight::String(" out of bounds (2)"));
         }
       }
     }
@@ -104,9 +105,9 @@ inline void copy_matrix3_column_to_vector3(flight::Ref<flight::types::Vector3Lik
         else if (switch_value_4 == 2.0) {
           {
             const double base = (column * 3.0);
-            auto x = flight::row_get<flight::RowKey<"m">>(source).element(base);
-            auto y = flight::row_get<flight::RowKey<"m">>(source).element((base + 1.0));
-            auto z = flight::row_get<flight::RowKey<"m">>(source).element((base + 2.0));
+            const double x = flight::row_get<flight::RowKey<"m">>(source).element(base);
+            const double y = flight::row_get<flight::RowKey<"m">>(source).element((base + 1.0));
+            const double z = flight::row_get<flight::RowKey<"m">>(source).element((base + 2.0));
             out->x = x;
             out->y = y;
             out->z = z;
@@ -114,7 +115,7 @@ inline void copy_matrix3_column_to_vector3(flight::Ref<flight::types::Vector3Lik
           }
         }
         else if (switch_value_4 == 3.0) {
-          throw std::range_error((flight::String("Column ") + column) + flight::String(" out of bounds (2)").to_utf8());
+          throw std::range_error.construct((flight::String("Column ") + column) + flight::String(" out of bounds (2)"));
         }
       }
     }
@@ -146,7 +147,7 @@ inline void copy_matrix3_row_from_vector3(flight::Ref<flight::types::Matrix3Like
       return;
     }
     else {
-      throw std::range_error((flight::String("Row ") + row) + flight::String(" out of bounds (2)").to_utf8());
+      throw std::range_error.construct((flight::String("Row ") + row) + flight::String(" out of bounds (2)"));
     }
   }
 }
@@ -180,9 +181,9 @@ inline void copy_matrix3_row_to_vector3(flight::Ref<flight::types::Vector3Like> 
         }
         else if (switch_value_7 == 2.0) {
           {
-            auto x = flight::row_get<flight::RowKey<"m">>(source).element(row);
-            auto y = flight::row_get<flight::RowKey<"m">>(source).element((row + 3.0));
-            auto z = flight::row_get<flight::RowKey<"m">>(source).element((row + 6.0));
+            const double x = flight::row_get<flight::RowKey<"m">>(source).element(row);
+            const double y = flight::row_get<flight::RowKey<"m">>(source).element((row + 3.0));
+            const double z = flight::row_get<flight::RowKey<"m">>(source).element((row + 6.0));
             out->x = x;
             out->y = y;
             out->z = z;
@@ -190,7 +191,7 @@ inline void copy_matrix3_row_to_vector3(flight::Ref<flight::types::Vector3Like> 
           }
         }
         else if (switch_value_7 == 3.0) {
-          throw std::range_error((flight::String("Row ") + row) + flight::String(" out of bounds (2)").to_utf8());
+          throw std::range_error.construct((flight::String("Row ") + row) + flight::String(" out of bounds (2)"));
         }
       }
     }
@@ -198,10 +199,10 @@ inline void copy_matrix3_row_to_vector3(flight::Ref<flight::types::Vector3Like> 
 }
 
 inline bool equals_matrix3(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>>, flight::Null, flight::Undefined> b) {
-  if ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>>>(b))) {
+  if ((a == b)) {
     return true;
   }
-  if ((!std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>>>(a) || !std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>>>(b))) {
+  if ((!a || !b)) {
     return false;
   }
   {
@@ -238,15 +239,15 @@ inline bool is_affine_matrix3(flight::StructuralRef<flight::RowReadonly<flight::
 inline bool inverse_matrix3(flight::Ref<flight::types::Matrix3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>> source) {
   flight::Float32Array out_2 = out->m;
   flight::Float32Array in = flight::row_get<flight::RowKey<"m">>(source);
-  auto a00 = in.element(0.0);
-  auto a10 = in.element(1.0);
-  auto a20 = in.element(2.0);
-  auto a01 = in.element(3.0);
-  auto a11 = in.element(4.0);
-  auto a21 = in.element(5.0);
-  auto a02 = in.element(6.0);
-  auto a12 = in.element(7.0);
-  auto a22 = in.element(8.0);
+  const double a00 = in.element(0.0);
+  const double a10 = in.element(1.0);
+  const double a20 = in.element(2.0);
+  const double a01 = in.element(3.0);
+  const double a11 = in.element(4.0);
+  const double a21 = in.element(5.0);
+  const double a02 = in.element(6.0);
+  const double a12 = in.element(7.0);
+  const double a22 = in.element(8.0);
   if (is_affine_matrix3(source)) {
     const double det = ((a00 * a11) - (a01 * a10));
     if ((det == 0.0)) {
@@ -291,24 +292,24 @@ inline void multiply_matrix3(flight::Ref<flight::types::Matrix3Like> out, flight
   flight::Float32Array a_2 = flight::row_get<flight::RowKey<"m">>(a);
   flight::Float32Array b_2 = flight::row_get<flight::RowKey<"m">>(b);
   flight::Float32Array out_2 = out->m;
-  auto a00 = a_2.element(0.0);
-  auto a10 = a_2.element(1.0);
-  auto a20 = a_2.element(2.0);
-  auto a01 = a_2.element(3.0);
-  auto a11 = a_2.element(4.0);
-  auto a21 = a_2.element(5.0);
-  auto a02 = a_2.element(6.0);
-  auto a12 = a_2.element(7.0);
-  auto a22 = a_2.element(8.0);
-  auto b00 = b_2.element(0.0);
-  auto b10 = b_2.element(1.0);
-  auto b20 = b_2.element(2.0);
-  auto b01 = b_2.element(3.0);
-  auto b11 = b_2.element(4.0);
-  auto b21 = b_2.element(5.0);
-  auto b02 = b_2.element(6.0);
-  auto b12 = b_2.element(7.0);
-  auto b22 = b_2.element(8.0);
+  const double a00 = a_2.element(0.0);
+  const double a10 = a_2.element(1.0);
+  const double a20 = a_2.element(2.0);
+  const double a01 = a_2.element(3.0);
+  const double a11 = a_2.element(4.0);
+  const double a21 = a_2.element(5.0);
+  const double a02 = a_2.element(6.0);
+  const double a12 = a_2.element(7.0);
+  const double a22 = a_2.element(8.0);
+  const double b00 = b_2.element(0.0);
+  const double b10 = b_2.element(1.0);
+  const double b20 = b_2.element(2.0);
+  const double b01 = b_2.element(3.0);
+  const double b11 = b_2.element(4.0);
+  const double b21 = b_2.element(5.0);
+  const double b02 = b_2.element(6.0);
+  const double b12 = b_2.element(7.0);
+  const double b22 = b_2.element(8.0);
   if ((is_affine_matrix3(a) && is_affine_matrix3(b))) {
     out_2.element(0.0) = ((a00 * b00) + (a01 * b10));
     out_2.element(1.0) = ((a10 * b00) + (a11 * b10));
@@ -337,15 +338,15 @@ inline void rotate_matrix3(flight::Ref<flight::types::Matrix3Like> out, flight::
   auto s = std::sin(theta);
   flight::Float32Array a = flight::row_get<flight::RowKey<"m">>(source);
   flight::Float32Array o = out->m;
-  auto a0 = a.element(0.0);
-  auto a1 = a.element(1.0);
-  auto a2 = a.element(2.0);
-  auto a3 = a.element(3.0);
-  auto a4 = a.element(4.0);
-  auto a5 = a.element(5.0);
-  auto a6 = a.element(6.0);
-  auto a7 = a.element(7.0);
-  auto a8 = a.element(8.0);
+  const double a0 = a.element(0.0);
+  const double a1 = a.element(1.0);
+  const double a2 = a.element(2.0);
+  const double a3 = a.element(3.0);
+  const double a4 = a.element(4.0);
+  const double a5 = a.element(5.0);
+  const double a6 = a.element(6.0);
+  const double a7 = a.element(7.0);
+  const double a8 = a.element(8.0);
   o.element(0.0) = ((a0 * c) + (a3 * s));
   o.element(1.0) = ((a1 * c) + (a4 * s));
   o.element(2.0) = ((a2 * c) + (a5 * s));
@@ -360,15 +361,15 @@ inline void rotate_matrix3(flight::Ref<flight::types::Matrix3Like> out, flight::
 inline void scale_matrix3(flight::Ref<flight::types::Matrix3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>> source, double sx, double sy) {
   flight::Float32Array a = flight::row_get<flight::RowKey<"m">>(source);
   flight::Float32Array o = out->m;
-  auto a0 = a.element(0.0);
-  auto a1 = a.element(1.0);
-  auto a2 = a.element(2.0);
-  auto a3 = a.element(3.0);
-  auto a4 = a.element(4.0);
-  auto a5 = a.element(5.0);
-  auto a6 = a.element(6.0);
-  auto a7 = a.element(7.0);
-  auto a8 = a.element(8.0);
+  const double a0 = a.element(0.0);
+  const double a1 = a.element(1.0);
+  const double a2 = a.element(2.0);
+  const double a3 = a.element(3.0);
+  const double a4 = a.element(4.0);
+  const double a5 = a.element(5.0);
+  const double a6 = a.element(6.0);
+  const double a7 = a.element(7.0);
+  const double a8 = a.element(8.0);
   o.element(0.0) = (a0 * sx);
   o.element(1.0) = (a1 * sx);
   o.element(2.0) = (a2 * sx);
@@ -440,15 +441,15 @@ inline void set_matrix3_from_matrix4(flight::Ref<flight::types::Matrix3Like> out
 inline void translate_matrix3(flight::Ref<flight::types::Matrix3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>> source, double tx, double ty) {
   flight::Float32Array a = flight::row_get<flight::RowKey<"m">>(source);
   flight::Float32Array o = out->m;
-  auto a0 = a.element(0.0);
-  auto a1 = a.element(1.0);
-  auto a2 = a.element(2.0);
-  auto a3 = a.element(3.0);
-  auto a4 = a.element(4.0);
-  auto a5 = a.element(5.0);
-  auto a6 = a.element(6.0);
-  auto a7 = a.element(7.0);
-  auto a8 = a.element(8.0);
+  const double a0 = a.element(0.0);
+  const double a1 = a.element(1.0);
+  const double a2 = a.element(2.0);
+  const double a3 = a.element(3.0);
+  const double a4 = a.element(4.0);
+  const double a5 = a.element(5.0);
+  const double a6 = a.element(6.0);
+  const double a7 = a.element(7.0);
+  const double a8 = a.element(8.0);
   o.element(0.0) = a0;
   o.element(1.0) = a1;
   o.element(2.0) = a2;
@@ -462,12 +463,12 @@ inline void translate_matrix3(flight::Ref<flight::types::Matrix3Like> out, fligh
 
 inline void transpose_matrix3(flight::Ref<flight::types::Matrix3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>> source) {
   flight::Float32Array s = flight::row_get<flight::RowKey<"m">>(source);
-  auto m1 = s.element(1.0);
-  auto m2 = s.element(2.0);
-  auto m3 = s.element(3.0);
-  auto m5 = s.element(5.0);
-  auto m6 = s.element(6.0);
-  auto m7 = s.element(7.0);
+  const double m1 = s.element(1.0);
+  const double m2 = s.element(2.0);
+  const double m3 = s.element(3.0);
+  const double m5 = s.element(5.0);
+  const double m6 = s.element(6.0);
+  const double m7 = s.element(7.0);
   flight::Float32Array o = out->m;
   o.element(0.0) = s.element(0.0);
   o.element(1.0) = m3;
@@ -504,7 +505,7 @@ inline void write_matrix3_to_float32_array(flight::Float32Array out, double offs
 inline flight::Float32Array identity = flight::Float32Array(flight::Array{1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0});
 
 inline flight::Ref<flight::types::Matrix3> create_matrix3(std::optional<double> m00 = std::nullopt, std::optional<double> m01 = std::nullopt, std::optional<double> m02 = std::nullopt, std::optional<double> m10 = std::nullopt, std::optional<double> m11 = std::nullopt, std::optional<double> m12 = std::nullopt, std::optional<double> m20 = std::nullopt, std::optional<double> m21 = std::nullopt, std::optional<double> m22 = std::nullopt) {
-  flight::Float32Array m = flight::Float32Array(identity);
+  flight::Float32Array<flight::ArrayBuffer> m = flight::Float32Array.construct(identity);
   if (m00.has_value()) {
     m.element(0.0) = m00.value();
   }

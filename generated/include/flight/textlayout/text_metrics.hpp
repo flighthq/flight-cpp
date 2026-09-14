@@ -11,6 +11,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
+#include <flight/types/text_format.hpp>
 #include <flight/types/text_layout.hpp>
 #include <flight/types/text_metrics.hpp>
 

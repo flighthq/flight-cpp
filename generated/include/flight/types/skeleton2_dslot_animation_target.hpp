@@ -26,7 +26,7 @@ struct Skeleton2DSlotAnimationTarget : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::optional<std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>> attachments;
   flight::types::skeleton2_danimation_target_kind kind;
-  skeleton2_dslot_animation_path path;
+  Skeleton2DSlotAnimationPath path;
   double slot_index;
 };
 

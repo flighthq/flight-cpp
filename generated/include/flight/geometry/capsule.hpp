@@ -230,7 +230,7 @@ inline bool is_capsule_intersecting_sphere(flight::StructuralRef<flight::RowRead
     return false;
   }
   const double dist2 = point_to_segment_distance_sq(flight::row_get<flight::RowKey<"center">>(sphere)->x, flight::row_get<flight::RowKey<"center">>(sphere)->y, flight::row_get<flight::RowKey<"center">>(sphere)->z, flight::row_get<flight::RowKey<"startX">>(capsule), flight::row_get<flight::RowKey<"startY">>(capsule), flight::row_get<flight::RowKey<"startZ">>(capsule), flight::row_get<flight::RowKey<"endX">>(capsule), flight::row_get<flight::RowKey<"endY">>(capsule), flight::row_get<flight::RowKey<"endZ">>(capsule));
-  auto sum_r = (flight::row_get<flight::RowKey<"radius">>(capsule) + flight::row_get<flight::RowKey<"radius">>(sphere));
+  const double sum_r = (flight::row_get<flight::RowKey<"radius">>(capsule) + flight::row_get<flight::RowKey<"radius">>(sphere));
   return (dist2 <= (sum_r * sum_r));
 }
 
@@ -298,7 +298,7 @@ inline bool is_capsule_intersecting_capsule(flight::StructuralRef<flight::RowRea
     return false;
   }
   const double dist = segment_to_segment_distance_sq(flight::row_get<flight::RowKey<"startX">>(a), flight::row_get<flight::RowKey<"startY">>(a), flight::row_get<flight::RowKey<"startZ">>(a), flight::row_get<flight::RowKey<"endX">>(a), flight::row_get<flight::RowKey<"endY">>(a), flight::row_get<flight::RowKey<"endZ">>(a), flight::row_get<flight::RowKey<"startX">>(b), flight::row_get<flight::RowKey<"startY">>(b), flight::row_get<flight::RowKey<"startZ">>(b), flight::row_get<flight::RowKey<"endX">>(b), flight::row_get<flight::RowKey<"endY">>(b), flight::row_get<flight::RowKey<"endZ">>(b));
-  auto sum_r = (flight::row_get<flight::RowKey<"radius">>(a) + flight::row_get<flight::RowKey<"radius">>(b));
+  const double sum_r = (flight::row_get<flight::RowKey<"radius">>(a) + flight::row_get<flight::RowKey<"radius">>(b));
   return (dist <= (sum_r * sum_r));
 }
 
@@ -315,7 +315,7 @@ inline double segment_to_aabb_distance_sq(double ax, double ay, double az, doubl
     auto ez = flight::maximum((min_z - az), 0.0, (az - max_z));
     return (((ex * ex) + (ey * ey)) + (ez * ez));
   }
-  auto best_dist2 = std::numeric_limits<double>::infinity();
+  double best_dist2 = std::numeric_limits<double>::infinity();
   flight::Array<double> candidates = seg_candidates;
   double count = 2.0;
   candidates.element(0.0) = 0.0;

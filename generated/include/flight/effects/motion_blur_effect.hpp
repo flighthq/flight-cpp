@@ -14,14 +14,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_motion_blur_effect(flight::types::EntityConstruction<flight::Ref<flight::types::MotionBlurEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::MotionBlurEffect>>> options) {
+struct samples_intensity : public flight::ReferenceEnabled {
+  std::optional<double> samples;
+  std::optional<double> intensity;
+};
+
+inline void initialize_motion_blur_effect(flight::types::EntityConstruction<flight::Ref<flight::types::MotionBlurEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("MotionBlurEffect"));
-  flight::row_set<flight::RowKey<"intensity">>(out, options->intensity);
-  flight::row_set<flight::RowKey<"samples">>(out, options->samples);
+  flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
+  flight::row_set<flight::RowKey<"samples">>(out, flight::row_get<flight::RowKey<"samples">>(options));
 }
 
-inline flight::Ref<flight::types::MotionBlurEffect> create_motion_blur_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::MotionBlurEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::MotionBlurEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::MotionBlurEffect>>{}));
+inline flight::Ref<flight::types::MotionBlurEffect> create_motion_blur_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::MotionBlurEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::MotionBlurEffect>>();
   initialize_motion_blur_effect(out, options.value());
   return flight::entity::finish_entity(out);

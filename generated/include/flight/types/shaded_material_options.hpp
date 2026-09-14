@@ -12,6 +12,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/surface_material_options.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/sampler.hpp>
+#include <flight/types/texture_source.hpp>
 #include <flight/types/voxel_grid.hpp>
 #include <flight/types/surface_material.hpp>
 #include <flight/types/blend_mode.hpp>
@@ -25,7 +26,7 @@ struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_spa
   flight::Ref<flight::types::Vector2> uv_offset;
   double uv_rotation;
   flight::Ref<flight::types::Vector2> uv_scale;
-  TextureColorSpace color_space;
+  flight::types::TextureColorSpace color_space;
   flight::Ref<flight::types::Sampler> sampler;
   double version;
   flight::String dimension;
@@ -39,7 +40,7 @@ struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_spa
   flight::Ref<flight::types::Vector2> uv_offset;
   double uv_rotation;
   flight::Ref<flight::types::Vector2> uv_scale;
-  TextureColorSpace color_space;
+  flight::types::TextureColorSpace color_space;
   flight::Ref<flight::types::Sampler> sampler;
   double version;
   flight::String dimension;
@@ -53,7 +54,7 @@ struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_spa
   flight::Ref<flight::types::Vector2> uv_offset;
   double uv_rotation;
   flight::Ref<flight::types::Vector2> uv_scale;
-  TextureColorSpace color_space;
+  flight::types::TextureColorSpace color_space;
   flight::Ref<flight::types::Sampler> sampler;
   double version;
   flight::String dimension;

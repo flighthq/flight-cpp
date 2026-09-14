@@ -14,13 +14,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_taa_effect(flight::types::EntityConstruction<flight::Ref<flight::types::TaaEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::TaaEffect>>> options) {
+struct feedback : public flight::ReferenceEnabled {
+  std::optional<double> feedback;
+};
+
+inline void initialize_taa_effect(flight::types::EntityConstruction<flight::Ref<flight::types::TaaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<feedback>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("TaaEffect"));
-  flight::row_set<flight::RowKey<"feedback">>(out, options->feedback);
+  flight::row_set<flight::RowKey<"feedback">>(out, flight::row_get<flight::RowKey<"feedback">>(options));
 }
 
-inline flight::Ref<flight::types::TaaEffect> create_taa_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::TaaEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::TaaEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::TaaEffect>>{}));
+inline flight::Ref<flight::types::TaaEffect> create_taa_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<feedback>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<feedback>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::TaaEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::TaaEffect>>();
   initialize_taa_effect(out, options.value());
   return flight::entity::finish_entity(out);

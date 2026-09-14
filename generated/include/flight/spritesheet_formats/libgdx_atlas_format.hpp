@@ -13,8 +13,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::spritesheet_formats {
 
 inline void append_libgdx_atlas_frame(flight::Array<flight::String> lines, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpritesheetFrameData>>>> frame) {
-  auto packed_width = (flight::row_get<flight::RowKey<"rotated">>(frame) ? flight::row_get<flight::RowKey<"height">>(frame) : flight::row_get<flight::RowKey<"width">>(frame));
-  auto packed_height = (flight::row_get<flight::RowKey<"rotated">>(frame) ? flight::row_get<flight::RowKey<"width">>(frame) : flight::row_get<flight::RowKey<"height">>(frame));
+  const double packed_width = (flight::row_get<flight::RowKey<"rotated">>(frame) ? flight::row_get<flight::RowKey<"height">>(frame) : flight::row_get<flight::RowKey<"width">>(frame));
+  const double packed_height = (flight::row_get<flight::RowKey<"rotated">>(frame) ? flight::row_get<flight::RowKey<"width">>(frame) : flight::row_get<flight::RowKey<"height">>(frame));
   lines.push(flight::row_get<flight::RowKey<"name">>(frame), flight::String("  rotate: ") + flight::to_string(flight::row_get<flight::RowKey<"rotated">>(frame)) + flight::String(""), flight::String("  xy: ") + flight::to_string(flight::row_get<flight::RowKey<"x">>(frame)) + flight::String(", ") + flight::to_string(flight::row_get<flight::RowKey<"y">>(frame)) + flight::String(""), flight::String("  size: ") + flight::to_string(packed_width) + flight::String(", ") + flight::to_string(packed_height) + flight::String(""), flight::String("  orig: ") + flight::to_string(flight::row_get<flight::RowKey<"sourceWidth">>(frame)) + flight::String(", ") + flight::to_string(flight::row_get<flight::RowKey<"sourceHeight">>(frame)) + flight::String(""), flight::String("  offset: ") + flight::to_string(flight::row_get<flight::RowKey<"offsetX">>(frame)) + flight::String(", ") + flight::to_string(flight::row_get<flight::RowKey<"offsetY">>(frame)) + flight::String(""), flight::String("  index: -1"));
 }
 

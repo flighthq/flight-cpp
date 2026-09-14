@@ -37,6 +37,8 @@ struct fixed_length_percent : public flight::ReferenceEnabled {
 
 inline flight::Ref<fixed_length_percent> skeleton2_dpath_spacing_mode = flight::make_ref<fixed_length_percent>(fixed_length_percent{.fixed = flight::String("Fixed"), .length = flight::String("Length"), .percent = flight::String("Percent")});
 
+using Skeleton2DPathSpacingMode = flight::String;
+
 struct Skeleton2DPathConstraint : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
@@ -46,13 +48,11 @@ struct Skeleton2DPathConstraint : public flight::ReferenceEnabled {
   double mix_x;
   double mix_y;
   double position;
-  skeleton2_dpath_position_mode position_mode;
-  skeleton2_dpath_rotate_mode rotate_mode;
+  Skeleton2DPathPositionMode position_mode;
+  Skeleton2DPathRotateMode rotate_mode;
   double spacing;
-  skeleton2_dpath_spacing_mode spacing_mode;
+  Skeleton2DPathSpacingMode spacing_mode;
   double target_slot_index;
 };
-
-using Skeleton2DPathSpacingMode = flight::String;
 
 } // namespace flight::types

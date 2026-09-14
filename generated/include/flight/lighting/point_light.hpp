@@ -54,7 +54,7 @@ inline void initialize_point_light(flight::types::EntityConstruction<flight::Ref
   flight::row_set<flight::RowKey<"kind">>(out, flight::types::point_light_kind);
   flight::row_set<flight::RowKey<"normalBias">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->normal_bias; }()).value_or(0.0));
   flight::row_set<flight::RowKey<"pcfRadius">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pcf_radius; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"position">>(out, (position.value() ? flight::geometry::clone_vector3(position.value()) : flight::geometry::create_vector3(0.0, 0.0, 0.0)));
+  flight::row_set<flight::RowKey<"position">>(out, (position ? flight::geometry::clone_vector3(position.value()) : flight::geometry::create_vector3(0.0, 0.0, 0.0)));
   flight::row_set<flight::RowKey<"range">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->range; }()).value_or(-1.0));
   flight::row_set<flight::RowKey<"shadowBias">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->shadow_bias; }()).value_or(0.0));
   flight::row_set<flight::RowKey<"shadowFar">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->shadow_far; }()).value_or(500.0));
@@ -65,7 +65,7 @@ inline void initialize_point_light(flight::types::EntityConstruction<flight::Ref
 
 inline flight::Ref<flight::types::PointLight> create_point_light(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointLightOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::PointLight>> out = flight::entity::allocate_entity<flight::Ref<flight::types::PointLight>>();
-  initialize_point_light(out, options.value());
+  initialize_point_light(out, options);
   return flight::entity::finish_entity(out);
 }
 

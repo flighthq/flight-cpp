@@ -61,7 +61,7 @@ inline std::optional<flight::String> map_ktx2_format(double vk_format, double su
   if ((vk_format == 0.0)) {
     return ((supercompression_scheme == 1.0) ? std::optional<flight::String>{flight::String("etc1s")} : std::optional<flight::String>{flight::String("uastc")});
   }
-  return ktx2_vk_format[static_cast<size_t>(vk_format)].value_or(std::nullopt);
+  return std::optional<flight::String>{ktx2_vk_format[vk_format].value_or(nullptr)};
 }
 
 inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_ktx2_internal(flight::Uint8Array bytes, std::optional<flight::Ref<ParseFailure>> failure = std::nullopt) {
@@ -81,7 +81,7 @@ inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_ktx2_in
   const double face_count = flight::texture_formats::read_byte_reader_u32(reader);
   const double level_count = flight::texture_formats::read_byte_reader_u32(reader);
   const double supercompression_scheme = flight::texture_formats::read_byte_reader_u32(reader);
-  flight::types::TextureContainerSupercompression supercompression = ktx2_supercompression[static_cast<size_t>(supercompression_scheme)];
+  flight::types::TextureContainerSupercompression supercompression = ktx2_supercompression[supercompression_scheme];
   if (!supercompression.has_value()) {
     return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject(std::optional<flight::Ref<ParseFailure>>{failure}, flight::String("format-unsupported")); return std::nullopt; }());
   }
@@ -115,7 +115,7 @@ inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_ktx2_in
         auto mip_height = flight::maximum(1.0, flight::signed_right_shift(height, mip));
         const bool splittable = (((supercompression == flight::String("None")) && (images_per_level > 1.0)) && (std::fmod(byte_length, images_per_level) == 0.0));
         if (!splittable) {
-          file_order_levels.push({.byte_length = byte_length, .byte_offset = byte_offset, .height = mip_height, .width = mip_width});
+          file_order_levels.push(([&]() { auto object_member_byte_length = byte_length; auto object_member_byte_offset = byte_offset; auto object_member_height = mip_height; auto object_member_width = mip_width; return flight::make_ref<flight::types::TextureContainerLevel>(flight::types::TextureContainerLevel{.byte_offset = object_member_byte_offset, .byte_length = object_member_byte_length, .width = object_member_width, .height = object_member_height}); }()));
           {
             mip += 1.0;
             continue;
@@ -126,7 +126,7 @@ inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_ktx2_in
           double image = 0.0;
           while ((image < images_per_level)) {
             {
-              file_order_levels.push({.byte_length = image_size, .byte_offset = (byte_offset + (image * image_size)), .height = mip_height, .width = mip_width});
+              file_order_levels.push(([&]() { auto object_member_byte_length_2 = image_size; auto object_member_byte_offset_2 = (byte_offset + (image * image_size)); auto object_member_height_2 = mip_height; auto object_member_width_2 = mip_width; return flight::make_ref<flight::types::TextureContainerLevel>(flight::types::TextureContainerLevel{.byte_offset = object_member_byte_offset_2, .byte_length = object_member_byte_length_2, .width = object_member_width_2, .height = object_member_height_2}); }()));
             }
             image += 1.0;
           }

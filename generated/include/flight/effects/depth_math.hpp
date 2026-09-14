@@ -43,7 +43,7 @@ inline double compute_ssao_sample_kernel(double samples, flight::Float32Array ou
         const double h2 = halton((i + 1.0), 2.0);
         const double h3 = halton((i + 1.0), 3.0);
         const double theta = ((h2 * 2.0) * flight::pi);
-        auto phi = std::acos((1.0 - h3));
+        const double phi = std::acos((1.0 - h3));
         const double scale = (i / n);
         const double dist = (0.1 + ((0.9 * scale) * scale));
         out.element(((i * 3.0) + 0.0)) = ((std::sin(phi) * std::cos(theta)) * dist);

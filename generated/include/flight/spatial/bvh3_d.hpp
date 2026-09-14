@@ -46,7 +46,7 @@ struct Bvh3D : public flight::ReferenceEnabled {
 
 inline flight::Ref<flight::types::SpatialIndexingExplanation> explain_bvh3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Bvh3D>>>> tree, flight::types::SpatialObjectId id) {
   const std::optional<flight::String> reason = flight::row_get<flight::RowKey<"declined">>(tree).get(id);
-  if (reason.value().has_value()) {
+  if (reason.has_value()) {
     return ([&]() { auto object_member_bucket_count = 0.0; auto object_member_id = id; auto object_member_mode = flight::String("declined"); auto object_member_reason = reason; return flight::make_ref<flight::types::SpatialIndexingExplanation>(flight::types::SpatialIndexingExplanation{.id = object_member_id, .mode = object_member_mode, .bucket_count = object_member_bucket_count, .reason = object_member_reason}); }());
   }
   if (!flight::row_get<flight::RowKey<"leafByObject">>(tree).has(id)) {
@@ -96,7 +96,7 @@ inline bool node_overlaps_bounds(flight::StructuralRef<flight::RowReadonly<fligh
 
 inline bool ray_slabs_hit(double x, double y, double z, double dx, double dy, double dz, double min_x, double min_y, double min_z, double max_x, double max_y, double max_z) {
   double near = 0.0;
-  auto far = std::numeric_limits<double>::infinity();
+  double far = std::numeric_limits<double>::infinity();
   {
     double axis = 0.0;
     while ((axis < 3.0)) {
@@ -247,9 +247,9 @@ inline void query_bvh3_dpairs(flight::StructuralRef<flight::RowReadonly<flight::
     ([&]() { auto&& assignment_receiver = out_capture.read_binding(); const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
     return;
   }
-  flight::row_get<flight::RowKey<"leafByObject">>(tree).for_each([=](auto leaf, auto id) {
+  flight::row_get<flight::RowKey<"leafByObject">>(tree).for_each([=](double leaf, double id) {
   auto exact = flight::row_get<flight::RowKey<"bounds">>(tree).get(id);
-  if (!exact.value().has_value()) {
+  if (!exact.has_value()) {
     return;
   }
   flight::Array<double> stack = flight::row_get<flight::RowKey<"stack">>(tree);
@@ -269,10 +269,10 @@ inline void query_bvh3_dpairs(flight::StructuralRef<flight::RowReadonly<flight::
         continue;
       }
       auto other_exact = flight::row_get<flight::RowKey<"bounds">>(tree).get(other);
-      if ((other_exact.value().has_value() && bounds_overlap3_d(exact.value(), other_exact.value()))) {
+      if ((other_exact.has_value() && bounds_overlap3_d(exact.value(), other_exact.value()))) {
         std::optional<flight::Ref<flight::types::SpatialPair>> pair = out_capture.read_binding().get(written_capture.read_binding());
         if (!pair.has_value()) {
-          out_capture.read_binding().push({.a = id, .b = other});
+          out_capture.read_binding().push(flight::make_ref<flight::types::SpatialPair>(flight::types::SpatialPair{.a = id, .b = other}));
         }
         else {
           pair->a = id;
@@ -308,7 +308,7 @@ inline void query_bvh3_dpoint(flight::StructuralRef<flight::RowReadonly<flight::
     }
     if ((flight::row_get<flight::RowKey<"height">>(tree).element(node) == 0.0)) {
       auto exact = flight::row_get<flight::RowKey<"bounds">>(tree).get(flight::row_get<flight::RowKey<"object">>(tree).element(node));
-      if (((((((exact.value().has_value() && (x >= exact.value()->min_x)) && (x < exact.value()->max_x)) && (y >= exact.value()->min_y)) && (y < exact.value()->max_y)) && (z >= exact.value()->min_z)) && (z < exact.value()->max_z))) {
+      if (((((((exact.has_value() && (x >= exact.value()->min_x)) && (x < exact.value()->max_x)) && (y >= exact.value()->min_y)) && (y < exact.value()->max_y)) && (z >= exact.value()->min_z)) && (z < exact.value()->max_z))) {
         out.push(flight::row_get<flight::RowKey<"object">>(tree).element(node));
       }
       continue;
@@ -336,7 +336,7 @@ inline void query_bvh3_dray(flight::StructuralRef<flight::RowReadonly<flight::Ro
     }
     if ((flight::row_get<flight::RowKey<"height">>(tree).element(node) == 0.0)) {
       auto exact = flight::row_get<flight::RowKey<"bounds">>(tree).get(flight::row_get<flight::RowKey<"object">>(tree).element(node));
-      if ((exact.value().has_value() && ray_slabs_hit(x, y, z, dx, dy, dz, exact.value()->min_x, exact.value()->min_y, exact.value()->min_z, exact.value()->max_x, exact.value()->max_y, exact.value()->max_z))) {
+      if ((exact.has_value() && ray_slabs_hit(x, y, z, dx, dy, dz, exact.value()->min_x, exact.value()->min_y, exact.value()->min_z, exact.value()->max_x, exact.value()->max_y, exact.value()->max_z))) {
         out.push(flight::row_get<flight::RowKey<"object">>(tree).element(node));
       }
       continue;
@@ -361,7 +361,7 @@ inline void query_bvh3_dregion(flight::StructuralRef<flight::RowReadonly<flight:
     }
     if ((flight::row_get<flight::RowKey<"height">>(tree).element(node) == 0.0)) {
       auto exact = flight::row_get<flight::RowKey<"bounds">>(tree).get(flight::row_get<flight::RowKey<"object">>(tree).element(node));
-      if ((exact.value().has_value() && bounds_overlap3_d(exact.value(), region))) {
+      if ((exact.has_value() && bounds_overlap3_d(exact.value(), region))) {
         out.push(flight::row_get<flight::RowKey<"object">>(tree).element(node));
       }
       continue;
@@ -545,31 +545,9 @@ struct insert_spatial_object_update_spatial_object_remove_spatial_object_clear_s
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
 };
 
-struct margin_root_min_x_min_y_min_z_max_x_max_y_max_z_parent_child1_child2_height_object_free_list_count_leaf_by_object_bounds_declined_stack : public flight::ReferenceEnabled {
-  double margin;
-  double root;
-  flight::Array<double> min_x;
-  flight::Array<double> min_y;
-  flight::Array<double> min_z;
-  flight::Array<double> max_x;
-  flight::Array<double> max_y;
-  flight::Array<double> max_z;
-  flight::Array<double> parent;
-  flight::Array<double> child1;
-  flight::Array<double> child2;
-  flight::Array<double> height;
-  flight::Array<double> object;
-  flight::Array<double> free_list;
-  double count;
-  flight::Map<flight::types::SpatialObjectId, double> leaf_by_object;
-  flight::Map<flight::types::SpatialObjectId, flight::Ref<flight::types::SpatialAabb3D>> bounds;
-  flight::Map<flight::types::SpatialObjectId, flight::String> declined;
-  flight::Array<double> stack;
-};
-
 inline void initialize_bvh_spatial_backend3_d(flight::Ref<flight::types::EntityConstruction<flight::Ref<insert_spatial_object_update_spatial_object_remove_spatial_object_clear_spatial_index_explain_spatial_indexing_query_spatial_pairs_query_spatial_region_query_spatial_point_query_spatial_ray_entity_runtime_key>>> out, std::optional<double> margin = std::nullopt) {
   margin = margin.value_or(default_bvh_margin_3_d);
-  flight::Ref<margin_root_min_x_min_y_min_z_max_x_max_y_max_z_parent_child1_child2_height_object_free_list_count_leaf_by_object_bounds_declined_stack> tree = create_bvh3_d(margin.value());
+  flight::Ref<Bvh3D> tree = create_bvh3_d(margin.value());
   out->clear_spatial_index = [=]() { return clear_bvh3_d(tree); };
   out->explain_spatial_indexing = [=](double id) { return explain_bvh3_d(tree, id); };
   out->insert_spatial_object = [=](double id, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb3D>>>> bounds) { return insert_bvh3_d(tree, id, bounds, flight::String("insert")); };

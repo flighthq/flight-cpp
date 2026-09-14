@@ -20,7 +20,7 @@ inline void reorder_bidi_line(flight::Uint8Array levels, double start, double en
     double i = start;
     while ((i < end)) {
       {
-        auto level = levels.element(i);
+        const double level = levels.element(i);
         out.element((i - start)) = i;
         if ((level > highest)) {
           highest = level;

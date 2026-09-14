@@ -20,8 +20,8 @@ namespace flight::collision {
 inline const double relative_epsilon = 1e-9;
 
 inline double get_polygon_extent(flight::Array<double> points, double count) {
-  auto min_x = std::numeric_limits<double>::infinity();
-  auto min_y = std::numeric_limits<double>::infinity();
+  double min_x = std::numeric_limits<double>::infinity();
+  double min_y = std::numeric_limits<double>::infinity();
   double max_x = -std::numeric_limits<double>::infinity();
   double max_y = -std::numeric_limits<double>::infinity();
   {
@@ -186,8 +186,8 @@ inline bool test_segment_circle_collision2_d(flight::StructuralRef<flight::RowRe
     t = ((((flight::row_get<flight::RowKey<"x">>(b) - x0) * dx) + ((flight::row_get<flight::RowKey<"y">>(b) - y0) * dy)) / length_squared);
     t = ((t < 0.0) ? 0.0 : ((t > 1.0) ? 1.0 : t));
   }
-  auto closest_x = (x0 + (t * dx));
-  auto closest_y = (y0 + (t * dy));
+  const double closest_x = (x0 + (t * dx));
+  const double closest_y = (y0 + (t * dy));
   const double ddx = (flight::row_get<flight::RowKey<"x">>(b) - closest_x);
   const double ddy = (flight::row_get<flight::RowKey<"y">>(b) - closest_y);
   return (((ddx * ddx) + (ddy * ddy)) <= (flight::row_get<flight::RowKey<"radius">>(b) * flight::row_get<flight::RowKey<"radius">>(b)));

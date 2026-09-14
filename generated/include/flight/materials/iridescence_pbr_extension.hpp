@@ -12,7 +12,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/entity.hpp>
 #include <flight/types/iridescence_pbr_extension.hpp>
 #include <flight/types/pbr_extension.hpp>
+#include <flight/types/sampler.hpp>
 #include <flight/types/texture.hpp>
+#include <flight/types/voxel_grid.hpp>
 #include <flight/materials/material_validation.hpp>
 #include <flight/materials/pbr_extension.hpp>
 
@@ -87,7 +89,7 @@ inline void initialize_iridescence_pbr_extension(flight::types::EntityConstructi
 
 inline flight::Ref<flight::types::IridescencePbrExtension> create_iridescence_pbr_extension(std::optional<flight::Ref<entity_runtime_key_kind_iridescence_iridescence_ior_iridescence_map_iridescence_map_uv_set_iridescence_thickness_map_iridescence_thickness_map_uv_set_iridescence_thickness_max_iridescence_thickness_min>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::IridescencePbrExtension>> out = flight::entity::allocate_entity<flight::Ref<flight::types::IridescencePbrExtension>>();
-  initialize_iridescence_pbr_extension(out, opts.value());
+  initialize_iridescence_pbr_extension(out, opts);
   return flight::entity::finish_entity(out);
 }
 

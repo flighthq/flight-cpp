@@ -29,7 +29,7 @@ struct EmissiveModifier : public flight::ReferenceEnabled {
   double color;
   double strength;
   std::optional<flight::types::Texture> mask;
-  std::optional<emissive_modifier_facing> facing;
+  std::optional<EmissiveModifierFacing> facing;
   std::optional<double> facing_softness;
 };
 

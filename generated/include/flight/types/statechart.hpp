@@ -43,12 +43,12 @@ inline const flight::String statechart_nested_state_kind = flight::String("State
 
 struct StatechartInput : public flight::ReferenceEnabled {
   double initial_value;
-  statechart_input_kind kind;
+  StatechartInputKind kind;
   std::optional<flight::String> name;
 };
 
 struct StatechartCondition : public flight::ReferenceEnabled {
-  statechart_comparison comparison;
+  StatechartComparison comparison;
   double input_index;
   double value;
 };
@@ -97,7 +97,7 @@ struct StatechartTransitionExplanation : public flight::ReferenceEnabled {
   double condition_index;
   double region_index;
   double source_state_index;
-  statechart_transition_status status;
+  StatechartTransitionStatus status;
   double target_state_index;
   double transition_index;
 };

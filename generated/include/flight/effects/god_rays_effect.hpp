@@ -14,19 +14,29 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_god_rays_effect(flight::types::EntityConstruction<flight::Ref<flight::types::GodRaysEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::GodRaysEffect>>> options) {
+struct exposure_samples_weight_decay_center_x_center_y_density : public flight::ReferenceEnabled {
+  std::optional<double> exposure;
+  std::optional<double> samples;
+  std::optional<double> weight;
+  std::optional<double> decay;
+  std::optional<double> center_x;
+  std::optional<double> center_y;
+  std::optional<double> density;
+};
+
+inline void initialize_god_rays_effect(flight::types::EntityConstruction<flight::Ref<flight::types::GodRaysEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_samples_weight_decay_center_x_center_y_density>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("GodRaysEffect"));
-  flight::row_set<flight::RowKey<"centerX">>(out, options->center_x);
-  flight::row_set<flight::RowKey<"centerY">>(out, options->center_y);
-  flight::row_set<flight::RowKey<"density">>(out, options->density);
-  flight::row_set<flight::RowKey<"decay">>(out, options->decay);
-  flight::row_set<flight::RowKey<"weight">>(out, options->weight);
-  flight::row_set<flight::RowKey<"exposure">>(out, options->exposure);
-  flight::row_set<flight::RowKey<"samples">>(out, options->samples);
+  flight::row_set<flight::RowKey<"centerX">>(out, flight::row_get<flight::RowKey<"centerX">>(options));
+  flight::row_set<flight::RowKey<"centerY">>(out, flight::row_get<flight::RowKey<"centerY">>(options));
+  flight::row_set<flight::RowKey<"density">>(out, flight::row_get<flight::RowKey<"density">>(options));
+  flight::row_set<flight::RowKey<"decay">>(out, flight::row_get<flight::RowKey<"decay">>(options));
+  flight::row_set<flight::RowKey<"weight">>(out, flight::row_get<flight::RowKey<"weight">>(options));
+  flight::row_set<flight::RowKey<"exposure">>(out, flight::row_get<flight::RowKey<"exposure">>(options));
+  flight::row_set<flight::RowKey<"samples">>(out, flight::row_get<flight::RowKey<"samples">>(options));
 }
 
-inline flight::Ref<flight::types::GodRaysEffect> create_god_rays_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::GodRaysEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::GodRaysEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::GodRaysEffect>>{}));
+inline flight::Ref<flight::types::GodRaysEffect> create_god_rays_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_samples_weight_decay_center_x_center_y_density>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_samples_weight_decay_center_x_center_y_density>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::GodRaysEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::GodRaysEffect>>();
   initialize_god_rays_effect(out, options.value());
   return flight::entity::finish_entity(out);

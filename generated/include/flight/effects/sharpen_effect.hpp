@@ -14,13 +14,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_sharpen_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SharpenEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SharpenEffect>>> options) {
+struct amount : public flight::ReferenceEnabled {
+  std::optional<double> amount;
+};
+
+inline void initialize_sharpen_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SharpenEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("SharpenEffect"));
-  flight::row_set<flight::RowKey<"amount">>(out, options->amount);
+  flight::row_set<flight::RowKey<"amount">>(out, flight::row_get<flight::RowKey<"amount">>(options));
 }
 
-inline flight::Ref<flight::types::SharpenEffect> create_sharpen_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SharpenEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SharpenEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SharpenEffect>>{}));
+inline flight::Ref<flight::types::SharpenEffect> create_sharpen_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<amount>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::SharpenEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SharpenEffect>>();
   initialize_sharpen_effect(out, options.value());
   return flight::entity::finish_entity(out);

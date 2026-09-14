@@ -14,7 +14,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/pbr_extension.hpp>
+#include <flight/types/sampler.hpp>
 #include <flight/types/texture.hpp>
+#include <flight/types/voxel_grid.hpp>
 #include <flight/types/wrapped_diffuse_pbr_extension.hpp>
 #include <flight/materials/material_validation.hpp>
 #include <flight/materials/pbr_extension.hpp>
@@ -88,7 +90,7 @@ inline void initialize_wrapped_diffuse_pbr_extension(flight::types::EntityConstr
 
 inline flight::Ref<flight::types::WrappedDiffusePbrExtension> create_wrapped_diffuse_pbr_extension(std::optional<flight::Ref<entity_runtime_key_kind_thickness_thickness_map_thickness_map_uv_set_wrapped_diffuse_color_wrapped_diffuse_map_wrapped_diffuse_map_uv_set_wrapped_diffuse_strength>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::WrappedDiffusePbrExtension>> out = flight::entity::allocate_entity<flight::Ref<flight::types::WrappedDiffusePbrExtension>>();
-  initialize_wrapped_diffuse_pbr_extension(out, opts.value());
+  initialize_wrapped_diffuse_pbr_extension(out, opts);
   return flight::entity::finish_entity(out);
 }
 

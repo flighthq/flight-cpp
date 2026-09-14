@@ -14,16 +14,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_lens_flare_effect(flight::types::EntityConstruction<flight::Ref<flight::types::LensFlareEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::LensFlareEffect>>> options) {
+struct intensity_threshold_ghosts_halo : public flight::ReferenceEnabled {
+  std::optional<double> intensity;
+  std::optional<double> threshold;
+  std::optional<double> ghosts;
+  std::optional<double> halo;
+};
+
+inline void initialize_lens_flare_effect(flight::types::EntityConstruction<flight::Ref<flight::types::LensFlareEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_threshold_ghosts_halo>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("LensFlareEffect"));
-  flight::row_set<flight::RowKey<"threshold">>(out, options->threshold);
-  flight::row_set<flight::RowKey<"intensity">>(out, options->intensity);
-  flight::row_set<flight::RowKey<"ghosts">>(out, options->ghosts);
-  flight::row_set<flight::RowKey<"halo">>(out, options->halo);
+  flight::row_set<flight::RowKey<"threshold">>(out, flight::row_get<flight::RowKey<"threshold">>(options));
+  flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
+  flight::row_set<flight::RowKey<"ghosts">>(out, flight::row_get<flight::RowKey<"ghosts">>(options));
+  flight::row_set<flight::RowKey<"halo">>(out, flight::row_get<flight::RowKey<"halo">>(options));
 }
 
-inline flight::Ref<flight::types::LensFlareEffect> create_lens_flare_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::LensFlareEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::LensFlareEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::LensFlareEffect>>{}));
+inline flight::Ref<flight::types::LensFlareEffect> create_lens_flare_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_threshold_ghosts_halo>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_threshold_ghosts_halo>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::LensFlareEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::LensFlareEffect>>();
   initialize_lens_flare_effect(out, options.value());
   return flight::entity::finish_entity(out);

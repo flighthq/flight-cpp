@@ -10,9 +10,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_region.hpp>
 #include <flight/types/pixel_format.hpp>
+#include <flight/types/texture_source_kind.hpp>
 
 namespace flight::bitmap {
 
@@ -20,8 +22,8 @@ inline void pixelate_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
   auto block = flight::maximum(1.0, flight::round(block_size));
   const double w = flight::row_get<flight::RowKey<"width">>(source);
   const double h = flight::row_get<flight::RowKey<"height">>(source);
-  auto bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
-  auto bitmap_height = flight::row_get<flight::RowKey<"bitmap">>(source)->height;
+  const double bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
+  const double bitmap_height = flight::row_get<flight::RowKey<"bitmap">>(source)->height;
   flight::Uint8ClampedArray<flight::ArrayBuffer> data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
   {
     double by = 0.0;
@@ -42,7 +44,7 @@ inline void pixelate_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                 double py = by;
                 while ((py < y_end)) {
                   {
-                    auto sy = (flight::row_get<flight::RowKey<"y">>(source) + py);
+                    const double sy = (flight::row_get<flight::RowKey<"y">>(source) + py);
                     if (((sy < 0.0) || (sy >= bitmap_height))) {
                       py += 1.0;
                       continue;
@@ -51,7 +53,7 @@ inline void pixelate_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                       double px = bx;
                       while ((px < x_end)) {
                         {
-                          auto sx = (flight::row_get<flight::RowKey<"x">>(source) + px);
+                          const double sx = (flight::row_get<flight::RowKey<"x">>(source) + px);
                           if (((sx < 0.0) || (sx >= bitmap_width))) {
                             px += 1.0;
                             continue;

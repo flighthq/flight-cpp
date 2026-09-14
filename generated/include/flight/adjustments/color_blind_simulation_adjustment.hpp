@@ -21,7 +21,7 @@ inline std::unordered_map<flight::types::ColorBlindType, flight::Array<double>> 
 inline void initialize_color_blind_simulation_adjustment(flight::types::EntityConstruction<flight::Ref<flight::types::ColorBlindSimulationAdjustment>> out, std::optional<flight::Ref<flight::types::ColorBlindSimulationAdjustment>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<flight::types::ColorBlindSimulationAdjustment>(flight::types::ColorBlindSimulationAdjustment{}));
   flight::types::ColorBlindType type = options.value()->type.value_or(flight::String("deuteranopia"));
-  flight::Array<double> m = color_blind_matrices[static_cast<size_t>(type)];
+  flight::Array<double> m = color_blind_matrices[type];
   flight::Array<double> color_matrix = flight::Array<double>{m.element(0.0), m.element(1.0), m.element(2.0), 0.0, 0.0, m.element(3.0), m.element(4.0), m.element(5.0), 0.0, 0.0, m.element(6.0), m.element(7.0), m.element(8.0), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
   flight::adjustments::initialize_color_matrix_adjustment(out, flight::String("ColorBlindSimulationAdjustment"), color_matrix);
   flight::row_set<flight::RowKey<"type">>(out, std::optional<flight::String>{type});

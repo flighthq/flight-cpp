@@ -104,7 +104,7 @@ inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_basis_i
   flight::Ref<flight::types::ByteReader> header = flight::texture_formats::create_byte_reader(bytes, basis_total_slices_offset);
   const double total_slices = flight::texture_formats::read_byte_reader_u24(header);
   const double total_images = flight::texture_formats::read_byte_reader_u24(header);
-  flight::types::TextureContainerFormat format = basis_tex_format[static_cast<size_t>(bytes.element(basis_tex_format_offset))];
+  flight::types::TextureContainerFormat format = basis_tex_format[bytes.element(basis_tex_format_offset)];
   if (!format.has_value()) {
     return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject(std::optional<flight::Ref<ParseFailure>>{failure}, flight::String("format-unsupported")); return std::nullopt; }());
   }
@@ -149,7 +149,7 @@ inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_basis_i
         if (((level_index + 1.0) > max_level)) {
           max_level = (level_index + 1.0);
         }
-        levels.push({.byte_length = byte_length, .byte_offset = byte_offset, .height = height, .width = width});
+        levels.push(([&]() { auto object_member_byte_length = byte_length; auto object_member_byte_offset = byte_offset; auto object_member_height = height; auto object_member_width = width; return flight::make_ref<flight::types::TextureContainerLevel>(flight::types::TextureContainerLevel{.byte_offset = object_member_byte_offset, .byte_length = object_member_byte_length, .width = object_member_width, .height = object_member_height}); }()));
       }
       slice += 1.0;
     }

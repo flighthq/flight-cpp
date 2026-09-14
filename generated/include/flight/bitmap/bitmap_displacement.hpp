@@ -11,12 +11,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_displacement_map_mode.hpp>
 #include <flight/types/bitmap_displacement_map_options.hpp>
 #include <flight/types/bitmap_edge_mode.hpp>
 #include <flight/types/bitmap_region.hpp>
 #include <flight/types/pixel_format.hpp>
+#include <flight/types/texture_source_kind.hpp>
 
 namespace flight::bitmap {
 
@@ -47,8 +49,8 @@ inline std::optional<double> resolve_displacement_edge(double v, double size, fl
 }
 
 inline double sample_map_channel(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> map, double px, double py, double component) {
-  auto mx = (flight::row_get<flight::RowKey<"x">>(map) + px);
-  auto my = (flight::row_get<flight::RowKey<"y">>(map) + py);
+  const double mx = (flight::row_get<flight::RowKey<"x">>(map) + px);
+  const double my = (flight::row_get<flight::RowKey<"y">>(map) + py);
   if (((((mx < 0.0) || (mx >= flight::row_get<flight::RowKey<"bitmap">>(map)->width)) || (my < 0.0)) || (my >= flight::row_get<flight::RowKey<"bitmap">>(map)->height))) {
     return 128.0;
   }
@@ -59,13 +61,13 @@ inline void displace_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
   const double w = flight::row_get<flight::RowKey<"width">>(source);
   const double h = flight::row_get<flight::RowKey<"height">>(source);
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> map = flight::row_get<flight::RowKey<"map">>(options);
-  auto component_x = flight::row_get<flight::RowKey<"componentX">>(options).value_or(0.0);
-  auto component_y = flight::row_get<flight::RowKey<"componentY">>(options).value_or(1.0);
-  auto scale_x = flight::row_get<flight::RowKey<"scaleX">>(options).value_or(0.0);
-  auto scale_y = flight::row_get<flight::RowKey<"scaleY">>(options).value_or(0.0);
+  const double component_x = flight::row_get<flight::RowKey<"componentX">>(options).value_or(0.0);
+  const double component_y = flight::row_get<flight::RowKey<"componentY">>(options).value_or(1.0);
+  const double scale_x = flight::row_get<flight::RowKey<"scaleX">>(options).value_or(0.0);
+  const double scale_y = flight::row_get<flight::RowKey<"scaleY">>(options).value_or(0.0);
   std::optional<flight::String> edge_mode = flight::row_get<flight::RowKey<"edgeMode">>(options);
-  auto mode = flight::row_get<flight::RowKey<"mode">>(options).value_or(flight::String("wrap"));
-  auto fill_color = flight::row_get<flight::RowKey<"fillColor">>(options).value_or(0.0);
+  flight::String mode = flight::row_get<flight::RowKey<"mode">>(options).value_or(flight::String("wrap"));
+  const double fill_color = flight::row_get<flight::RowKey<"fillColor">>(options).value_or(0.0);
   const double fill_r = flight::bitwise_and(flight::unsigned_right_shift(fill_color, 24.0), 255.0);
   const double fill_g = flight::bitwise_and(flight::signed_right_shift(fill_color, 16.0), 255.0);
   const double fill_b = flight::bitwise_and(flight::signed_right_shift(fill_color, 8.0), 255.0);
@@ -85,7 +87,7 @@ inline void displace_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
               const double raw_sample_y = (py + (((map_vy / 255.0) - 0.5) * scale_y));
               double sample_x = raw_sample_x;
               double sample_y = raw_sample_y;
-              if ((!edge_mode.value().has_value() && ((((raw_sample_x < 0.0) || (raw_sample_x >= w)) || (raw_sample_y < 0.0)) || (raw_sample_y >= h)))) {
+              if ((!edge_mode.has_value() && ((((raw_sample_x < 0.0) || (raw_sample_x >= w)) || (raw_sample_y < 0.0)) || (raw_sample_y >= h)))) {
                 if ((mode == flight::String("wrap"))) {
                   sample_x = std::fmod((std::fmod(raw_sample_x, w) + w), w);
                   sample_y = std::fmod((std::fmod(raw_sample_y, h) + h), h);
@@ -117,12 +119,12 @@ inline void displace_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
               auto y0 = std::floor(sample_y);
               const double tx = (sample_x - x0);
               const double ty = (sample_y - y0);
-              auto s_stride = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
+              const double s_stride = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
               flight::Uint8ClampedArray<flight::ArrayBuffer> s_data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
-              const std::optional<double> rx0 = (!edge_mode.value().has_value() ? std::optional<double>{flight::maximum(0.0, flight::minimum((w - 1.0), x0))} : resolve_displacement_edge(x0, w, edge_mode.value()));
-              const std::optional<double> rx1 = (!edge_mode.value().has_value() ? std::optional<double>{flight::maximum(0.0, flight::minimum((w - 1.0), (x0 + 1.0)))} : resolve_displacement_edge((x0 + 1.0), w, edge_mode.value()));
-              const std::optional<double> ry0 = (!edge_mode.value().has_value() ? std::optional<double>{flight::maximum(0.0, flight::minimum((h - 1.0), y0))} : resolve_displacement_edge(y0, h, edge_mode.value()));
-              const std::optional<double> ry1 = (!edge_mode.value().has_value() ? std::optional<double>{flight::maximum(0.0, flight::minimum((h - 1.0), (y0 + 1.0)))} : resolve_displacement_edge((y0 + 1.0), h, edge_mode.value()));
+              const std::optional<double> rx0 = (!edge_mode.has_value() ? std::optional<double>{flight::maximum(0.0, flight::minimum((w - 1.0), x0))} : resolve_displacement_edge(x0, w, edge_mode.value()));
+              const std::optional<double> rx1 = (!edge_mode.has_value() ? std::optional<double>{flight::maximum(0.0, flight::minimum((w - 1.0), (x0 + 1.0)))} : resolve_displacement_edge((x0 + 1.0), w, edge_mode.value()));
+              const std::optional<double> ry0 = (!edge_mode.has_value() ? std::optional<double>{flight::maximum(0.0, flight::minimum((h - 1.0), y0))} : resolve_displacement_edge(y0, h, edge_mode.value()));
+              const std::optional<double> ry1 = (!edge_mode.has_value() ? std::optional<double>{flight::maximum(0.0, flight::minimum((h - 1.0), (y0 + 1.0)))} : resolve_displacement_edge((y0 + 1.0), h, edge_mode.value()));
               const double i00 = ((!rx0.has_value() || !ry0.has_value()) ? -1.0 : (((((flight::row_get<flight::RowKey<"y">>(source) + ry0.value()) * s_stride) + flight::row_get<flight::RowKey<"x">>(source)) + rx0.value()) * 4.0));
               const double i10 = ((!rx1.has_value() || !ry0.has_value()) ? -1.0 : (((((flight::row_get<flight::RowKey<"y">>(source) + ry0.value()) * s_stride) + flight::row_get<flight::RowKey<"x">>(source)) + rx1.value()) * 4.0));
               const double i01 = ((!rx0.has_value() || !ry1.has_value()) ? -1.0 : (((((flight::row_get<flight::RowKey<"y">>(source) + ry1.value()) * s_stride) + flight::row_get<flight::RowKey<"x">>(source)) + rx0.value()) * 4.0));

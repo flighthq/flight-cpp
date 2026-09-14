@@ -22,14 +22,14 @@ struct ik_path_transform : public flight::ReferenceEnabled {
 
 inline flight::Ref<ik_path_transform> skeleton2_dconstraint_kind = flight::make_ref<ik_path_transform>(ik_path_transform{.ik = flight::String("Skeleton2D.IkConstraint"), .path = flight::String("Skeleton2D.PathConstraint"), .transform = flight::String("Skeleton2D.TransformConstraint")});
 
+using Skeleton2DConstraintKind = flight::String;
+
 struct Skeleton2DConstraint : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  skeleton2_dconstraint_kind kind;
+  Skeleton2DConstraintKind kind;
   double mix;
 };
 
 using Skeleton2DConstraintSolver = std::function<void(flight::Ref<flight::types::Skeleton2D>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Skeleton2DConstraint>>>>)>;
-
-using Skeleton2DConstraintKind = flight::String;
 
 } // namespace flight::types

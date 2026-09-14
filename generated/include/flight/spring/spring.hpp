@@ -65,7 +65,7 @@ inline void update_spring(flight::Ref<flight::types::Spring> spring, double targ
   }
   const double value = spring->value;
   const double velocity = spring->velocity;
-  auto damping_ratio = ((flight::row_get<flight::RowKey<"dampingRatio">>(config) < 0.0) ? 0.0 : flight::row_get<flight::RowKey<"dampingRatio">>(config));
+  const double damping_ratio = ((flight::row_get<flight::RowKey<"dampingRatio">>(config) < 0.0) ? 0.0 : flight::row_get<flight::RowKey<"dampingRatio">>(config));
   const double omega = (flight::math::tau * frequency);
   const double c0 = (value - target);
   double pos_pos_coef;

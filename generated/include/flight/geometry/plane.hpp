@@ -28,7 +28,7 @@ inline void get_closest_point_on_plane(flight::Ref<flight::types::Vector3Like> o
   const double px = flight::row_get<flight::RowKey<"x">>(point);
   const double py = flight::row_get<flight::RowKey<"y">>(point);
   const double pz = flight::row_get<flight::RowKey<"z">>(point);
-  auto dist = ((((flight::row_get<flight::RowKey<"a">>(plane) * px) + (flight::row_get<flight::RowKey<"b">>(plane) * py)) + (flight::row_get<flight::RowKey<"c">>(plane) * pz)) + flight::row_get<flight::RowKey<"d">>(plane));
+  const double dist = ((((flight::row_get<flight::RowKey<"a">>(plane) * px) + (flight::row_get<flight::RowKey<"b">>(plane) * py)) + (flight::row_get<flight::RowKey<"c">>(plane) * pz)) + flight::row_get<flight::RowKey<"d">>(plane));
   out->x = (px - (dist * flight::row_get<flight::RowKey<"a">>(plane)));
   out->y = (py - (dist * flight::row_get<flight::RowKey<"b">>(plane)));
   out->z = (pz - (dist * flight::row_get<flight::RowKey<"c">>(plane)));
@@ -85,7 +85,7 @@ inline void project_vector3_onto_plane(flight::Ref<flight::types::Vector3Like> o
   const double px = flight::row_get<flight::RowKey<"x">>(point);
   const double py = flight::row_get<flight::RowKey<"y">>(point);
   const double pz = flight::row_get<flight::RowKey<"z">>(point);
-  auto dist = ((((flight::row_get<flight::RowKey<"a">>(plane) * px) + (flight::row_get<flight::RowKey<"b">>(plane) * py)) + (flight::row_get<flight::RowKey<"c">>(plane) * pz)) + flight::row_get<flight::RowKey<"d">>(plane));
+  const double dist = ((((flight::row_get<flight::RowKey<"a">>(plane) * px) + (flight::row_get<flight::RowKey<"b">>(plane) * py)) + (flight::row_get<flight::RowKey<"c">>(plane) * pz)) + flight::row_get<flight::RowKey<"d">>(plane));
   out->x = (px - (dist * flight::row_get<flight::RowKey<"a">>(plane)));
   out->y = (py - (dist * flight::row_get<flight::RowKey<"b">>(plane)));
   out->z = (pz - (dist * flight::row_get<flight::RowKey<"c">>(plane)));

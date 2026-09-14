@@ -14,8 +14,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/pbr_extension.hpp>
+#include <flight/types/sampler.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/transmission_volume_pbr_extension.hpp>
+#include <flight/types/voxel_grid.hpp>
 #include <flight/materials/material_validation.hpp>
 #include <flight/materials/pbr_extension.hpp>
 
@@ -92,7 +94,7 @@ inline void initialize_transmission_volume_pbr_extension(flight::types::EntityCo
 
 inline flight::Ref<flight::types::TransmissionVolumePbrExtension> create_transmission_volume_pbr_extension(std::optional<flight::Ref<entity_runtime_key_kind_attenuation_color_attenuation_distance_ior_thickness_thickness_map_thickness_map_uv_set_transmission_transmission_map_transmission_map_uv_set>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::TransmissionVolumePbrExtension>> out = flight::entity::allocate_entity<flight::Ref<flight::types::TransmissionVolumePbrExtension>>();
-  initialize_transmission_volume_pbr_extension(out, opts.value());
+  initialize_transmission_volume_pbr_extension(out, opts);
   return flight::entity::finish_entity(out);
 }
 

@@ -24,7 +24,7 @@ inline void compute_gizmo_alignment_deltas(flight::Array<double> out, flight::Ar
     return;
   }
   const bool horizontal = (((alignment == flight::String("horizontal-center")) || (alignment == flight::String("left"))) || (alignment == flight::String("right")));
-  auto minimum = std::numeric_limits<double>::infinity();
+  double minimum = std::numeric_limits<double>::infinity();
   double maximum = -std::numeric_limits<double>::infinity();
   {
     double i_2 = 0.0;
@@ -39,7 +39,7 @@ inline void compute_gizmo_alignment_deltas(flight::Array<double> out, flight::Ar
       i_2 += 1.0;
     }
   }
-  auto target = (((alignment == flight::String("left")) || (alignment == flight::String("top"))) ? minimum : (((alignment == flight::String("right")) || (alignment == flight::String("bottom"))) ? maximum : ((minimum + maximum) * 0.5)));
+  const double target = (((alignment == flight::String("left")) || (alignment == flight::String("top"))) ? minimum : (((alignment == flight::String("right")) || (alignment == flight::String("bottom"))) ? maximum : ((minimum + maximum) * 0.5)));
   {
     double i = 0.0;
     while ((i < static_cast<double>(bounds.size()))) {
@@ -58,7 +58,7 @@ inline void compute_gizmo_alignment_deltas(flight::Array<double> out, flight::Ar
 
 inline bool find_gizmo_smart_guide_axis(flight::Ref<flight::types::GizmoSmartGuideResult> out, double moving_start, double moving_end, flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>>> candidate_bounds, double threshold, bool horizontal) {
   const double moving_center = ((moving_start + moving_end) * 0.5);
-  auto best_distance = std::numeric_limits<double>::infinity();
+  double best_distance = std::numeric_limits<double>::infinity();
   double best_delta = 0.0;
   double best_guide = 0.0;
   {

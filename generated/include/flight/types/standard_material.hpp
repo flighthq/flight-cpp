@@ -13,12 +13,12 @@ namespace flight::types {
 
 inline const flight::String standard_material_kind = flight::String("StandardMaterial");
 
+using StandardMaterialKind = flight::String;
+
 struct StandardMaterial : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  standard_material_kind kind;
+  StandardMaterialKind kind;
   std::optional<std::optional<flight::String>> name;
 };
-
-using StandardMaterialKind = flight::String;
 
 } // namespace flight::types

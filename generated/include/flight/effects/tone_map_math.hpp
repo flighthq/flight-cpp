@@ -78,8 +78,8 @@ inline double agx_default_contrast_approx(double x) {
 }
 
 inline double compute_agx_tone_map(double x, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AgxToneMapOptions>>>>> options = std::nullopt) {
-  auto min_ev = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->min_ev; }()).value_or(-12.47393);
-  auto max_ev = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->max_ev; }()).value_or(4.026069);
+  const double min_ev = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->min_ev; }()).value_or(-12.47393);
+  const double max_ev = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->max_ev; }()).value_or(4.026069);
   auto val = flight::maximum(1e-10, x);
   auto log = flight::maximum(min_ev, flight::minimum(max_ev, std::log2(val)));
   const double normalized = ((log - min_ev) / (max_ev - min_ev));
@@ -92,22 +92,22 @@ inline double smoothstep01(double edge0, double edge1, double x) {
 }
 
 inline double compute_filmic_tone_map(double x, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FilmicToneMapOptions>>>>> options = std::nullopt) {
-  auto max_brightness = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->max_brightness; }()).value_or(1.0);
-  auto contrast = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->contrast; }()).value_or(1.0);
-  auto linear_start = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->linear_start; }()).value_or(0.22);
-  auto linear_length = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->linear_length; }()).value_or(0.4);
-  auto black_tighten = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->black_tighten; }()).value_or(1.33);
-  auto pedestal = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pedestal; }()).value_or(0.0);
+  const double max_brightness = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->max_brightness; }()).value_or(1.0);
+  const double contrast = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->contrast; }()).value_or(1.0);
+  const double linear_start = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->linear_start; }()).value_or(0.22);
+  const double linear_length = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->linear_length; }()).value_or(0.4);
+  const double black_tighten = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->black_tighten; }()).value_or(1.33);
+  const double pedestal = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pedestal; }()).value_or(0.0);
   const double l0 = (((max_brightness - linear_start) * linear_length) / contrast);
   const double l0_2 = (linear_start - (linear_start / contrast));
-  auto l1 = (linear_start + ((1.0 - linear_start) / contrast));
-  auto s0 = (linear_start + l0);
-  auto s1 = (linear_start + (contrast * l0));
+  const double l1 = (linear_start + ((1.0 - linear_start) / contrast));
+  const double s0 = (linear_start + l0);
+  const double s1 = (linear_start + (contrast * l0));
   const double c2 = (contrast / (max_brightness - s1));
   const double cp = (-c2 / std::log(2.0));
   const double w0 = (1.0 - smoothstep01(linear_start, s0, x));
-  auto t = ((linear_start * flight::power((x / linear_start), black_tighten)) + pedestal);
-  auto l = (linear_start + (contrast * (x - linear_start)));
+  const double t = ((linear_start * flight::power((x / linear_start), black_tighten)) + pedestal);
+  const double l = (linear_start + (contrast * (x - linear_start)));
   const double s = (max_brightness - ((max_brightness - s1) * std::exp((cp * (x - s0)))));
   return flight::maximum(0.0, ((((w0 * (1.0 - smoothstep01(l0_2, l1, x))) * t) + (smoothstep01(l0_2, l1, x) * l)) + ((1.0 - w0) * s)));
 }

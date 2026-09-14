@@ -88,7 +88,7 @@ inline bool is_bounding_sphere_intersecting_bounding_sphere(flight::StructuralRe
   const double dy = (flight::row_get<flight::RowKey<"center">>(a)->y - flight::row_get<flight::RowKey<"center">>(b)->y);
   const double dz = (flight::row_get<flight::RowKey<"center">>(a)->z - flight::row_get<flight::RowKey<"center">>(b)->z);
   const double dist_sq = (((dx * dx) + (dy * dy)) + (dz * dz));
-  auto sum_r = (flight::row_get<flight::RowKey<"radius">>(a) + flight::row_get<flight::RowKey<"radius">>(b));
+  const double sum_r = (flight::row_get<flight::RowKey<"radius">>(a) + flight::row_get<flight::RowKey<"radius">>(b));
   return (dist_sq <= (sum_r * sum_r));
 }
 
@@ -180,9 +180,9 @@ inline void transform_bounding_sphere_by_matrix4(flight::Ref<flight::types::Boun
   const double cz = flight::row_get<flight::RowKey<"center">>(sphere)->z;
   const double radius = flight::row_get<flight::RowKey<"radius">>(sphere);
   flight::Float32Array m_2 = flight::row_get<flight::RowKey<"m">>(m);
-  auto tcx = ((((m_2.element(0.0) * cx) + (m_2.element(4.0) * cy)) + (m_2.element(8.0) * cz)) + m_2.element(12.0));
-  auto tcy = ((((m_2.element(1.0) * cx) + (m_2.element(5.0) * cy)) + (m_2.element(9.0) * cz)) + m_2.element(13.0));
-  auto tcz = ((((m_2.element(2.0) * cx) + (m_2.element(6.0) * cy)) + (m_2.element(10.0) * cz)) + m_2.element(14.0));
+  const double tcx = ((((m_2.element(0.0) * cx) + (m_2.element(4.0) * cy)) + (m_2.element(8.0) * cz)) + m_2.element(12.0));
+  const double tcy = ((((m_2.element(1.0) * cx) + (m_2.element(5.0) * cy)) + (m_2.element(9.0) * cz)) + m_2.element(13.0));
+  const double tcz = ((((m_2.element(2.0) * cx) + (m_2.element(6.0) * cy)) + (m_2.element(10.0) * cz)) + m_2.element(14.0));
   auto sx = std::sqrt((((m_2.element(0.0) * m_2.element(0.0)) + (m_2.element(1.0) * m_2.element(1.0))) + (m_2.element(2.0) * m_2.element(2.0))));
   auto sy = std::sqrt((((m_2.element(4.0) * m_2.element(4.0)) + (m_2.element(5.0) * m_2.element(5.0))) + (m_2.element(6.0) * m_2.element(6.0))));
   auto sz = std::sqrt((((m_2.element(8.0) * m_2.element(8.0)) + (m_2.element(9.0) * m_2.element(9.0))) + (m_2.element(10.0) * m_2.element(10.0))));

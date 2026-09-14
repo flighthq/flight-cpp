@@ -14,16 +14,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_ssao_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SsaoEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SsaoEffect>>> options) {
+struct samples_intensity_bias_radius : public flight::ReferenceEnabled {
+  std::optional<double> samples;
+  std::optional<double> intensity;
+  std::optional<double> bias;
+  std::optional<double> radius;
+};
+
+inline void initialize_ssao_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SsaoEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity_bias_radius>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("SsaoEffect"));
-  flight::row_set<flight::RowKey<"radius">>(out, options->radius);
-  flight::row_set<flight::RowKey<"intensity">>(out, options->intensity);
-  flight::row_set<flight::RowKey<"bias">>(out, options->bias);
-  flight::row_set<flight::RowKey<"samples">>(out, options->samples);
+  flight::row_set<flight::RowKey<"radius">>(out, flight::row_get<flight::RowKey<"radius">>(options));
+  flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
+  flight::row_set<flight::RowKey<"bias">>(out, flight::row_get<flight::RowKey<"bias">>(options));
+  flight::row_set<flight::RowKey<"samples">>(out, flight::row_get<flight::RowKey<"samples">>(options));
 }
 
-inline flight::Ref<flight::types::SsaoEffect> create_ssao_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SsaoEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SsaoEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SsaoEffect>>{}));
+inline flight::Ref<flight::types::SsaoEffect> create_ssao_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity_bias_radius>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity_bias_radius>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::SsaoEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SsaoEffect>>();
   initialize_ssao_effect(out, options.value());
   return flight::entity::finish_entity(out);

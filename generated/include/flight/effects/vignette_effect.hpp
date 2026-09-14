@@ -14,16 +14,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_vignette_effect(flight::types::EntityConstruction<flight::Ref<flight::types::VignetteEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::VignetteEffect>>> options) {
+struct intensity_color_radius_softness : public flight::ReferenceEnabled {
+  std::optional<double> intensity;
+  std::optional<double> color;
+  std::optional<double> radius;
+  std::optional<double> softness;
+};
+
+inline void initialize_vignette_effect(flight::types::EntityConstruction<flight::Ref<flight::types::VignetteEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_color_radius_softness>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("VignetteEffect"));
-  flight::row_set<flight::RowKey<"intensity">>(out, options->intensity);
-  flight::row_set<flight::RowKey<"radius">>(out, options->radius);
-  flight::row_set<flight::RowKey<"softness">>(out, options->softness);
-  flight::row_set<flight::RowKey<"color">>(out, options->color);
+  flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
+  flight::row_set<flight::RowKey<"radius">>(out, flight::row_get<flight::RowKey<"radius">>(options));
+  flight::row_set<flight::RowKey<"softness">>(out, flight::row_get<flight::RowKey<"softness">>(options));
+  flight::row_set<flight::RowKey<"color">>(out, flight::row_get<flight::RowKey<"color">>(options));
 }
 
-inline flight::Ref<flight::types::VignetteEffect> create_vignette_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::VignetteEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::VignetteEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::VignetteEffect>>{}));
+inline flight::Ref<flight::types::VignetteEffect> create_vignette_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_color_radius_softness>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_color_radius_softness>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::VignetteEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::VignetteEffect>>();
   initialize_vignette_effect(out, options.value());
   return flight::entity::finish_entity(out);

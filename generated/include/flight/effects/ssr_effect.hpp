@@ -14,15 +14,21 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_ssr_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SsrEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SsrEffect>>> options) {
+struct max_distance_resolution_steps : public flight::ReferenceEnabled {
+  std::optional<double> max_distance;
+  std::optional<double> resolution;
+  std::optional<double> steps;
+};
+
+inline void initialize_ssr_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SsrEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<max_distance_resolution_steps>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("SsrEffect"));
-  flight::row_set<flight::RowKey<"maxDistance">>(out, options->max_distance);
-  flight::row_set<flight::RowKey<"resolution">>(out, options->resolution);
-  flight::row_set<flight::RowKey<"steps">>(out, options->steps);
+  flight::row_set<flight::RowKey<"maxDistance">>(out, flight::row_get<flight::RowKey<"maxDistance">>(options));
+  flight::row_set<flight::RowKey<"resolution">>(out, flight::row_get<flight::RowKey<"resolution">>(options));
+  flight::row_set<flight::RowKey<"steps">>(out, flight::row_get<flight::RowKey<"steps">>(options));
 }
 
-inline flight::Ref<flight::types::SsrEffect> create_ssr_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SsrEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SsrEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::SsrEffect>>{}));
+inline flight::Ref<flight::types::SsrEffect> create_ssr_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<max_distance_resolution_steps>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<max_distance_resolution_steps>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::SsrEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SsrEffect>>();
   initialize_ssr_effect(out, options.value());
   return flight::entity::finish_entity(out);

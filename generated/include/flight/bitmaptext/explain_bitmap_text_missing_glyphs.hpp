@@ -9,6 +9,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/bitmap_text_missing_glyphs.hpp>
 #include <flight/types/glyph_source.hpp>
+#include <flight/types/texture_source.hpp>
 
 namespace flight::bitmaptext {
 
@@ -17,20 +18,20 @@ inline flight::Ref<flight::types::BitmapTextMissingGlyphs> explain_bitmap_text_m
   flight::Array<double> missing = flight::Array<double>{};
   double total_codepoints = 0.0;
   for (auto character : text) {
-    auto codepoint = character.code_point_at(0.0);
+    const std::optional<double> codepoint = character.code_point_at(0.0);
     if (!codepoint.has_value()) {
       continue;
     }
-    if (((codepoint == 10.0) || (codepoint == 13.0))) {
+    if (((codepoint.value() == 10.0) || (codepoint.value() == 13.0))) {
       continue;
     }
     total_codepoints++;
-    if (seen.has(codepoint)) {
+    if (seen.has(codepoint.value())) {
       continue;
     }
-    seen.add(codepoint);
-    if (!flight::row_get<flight::RowKey<"getGlyphEntry">>(glyph_source)(codepoint).has_value()) {
-      missing.push(codepoint);
+    seen.add(codepoint.value());
+    if (!flight::row_get<flight::RowKey<"getGlyphEntry">>(glyph_source)(codepoint.value()).has_value()) {
+      missing.push(codepoint.value());
     }
   }
   return flight::make_ref<flight::types::BitmapTextMissingGlyphs>(flight::types::BitmapTextMissingGlyphs{.missing_codepoints = missing, .total_codepoints = total_codepoints});

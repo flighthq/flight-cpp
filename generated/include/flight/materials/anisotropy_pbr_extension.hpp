@@ -15,7 +15,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/anisotropy_pbr_extension.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/pbr_extension.hpp>
+#include <flight/types/sampler.hpp>
 #include <flight/types/texture.hpp>
+#include <flight/types/voxel_grid.hpp>
 #include <flight/materials/material_validation.hpp>
 #include <flight/materials/pbr_extension.hpp>
 
@@ -82,7 +84,7 @@ inline void initialize_anisotropy_pbr_extension(flight::types::EntityConstructio
 
 inline flight::Ref<flight::types::AnisotropyPbrExtension> create_anisotropy_pbr_extension(std::optional<flight::Ref<entity_runtime_key_kind_anisotropy_map_anisotropy_map_uv_set_anisotropy_rotation_anisotropy_strength>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::AnisotropyPbrExtension>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AnisotropyPbrExtension>>();
-  initialize_anisotropy_pbr_extension(out, opts.value());
+  initialize_anisotropy_pbr_extension(out, opts);
   return flight::entity::finish_entity(out);
 }
 

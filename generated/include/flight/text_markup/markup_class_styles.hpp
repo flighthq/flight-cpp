@@ -41,7 +41,7 @@ struct align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_l
 };
 
 inline void register_markup_class_styles(flight::Ref<flight::types::MarkupTagRegistry> registry, std::unordered_map<flight::String, flight::Ref<align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations>> styles) {
-  flight::types::MarkupClassResolver resolver = [=](flight::String class_name) { return styles[static_cast<size_t>(class_name)]; };
+  flight::types::MarkupClassResolver resolver = [=](flight::String class_name) { return styles[class_name]; };
   registry->class_resolver = std::optional<std::function<std::optional<flight::Ref<align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations>>(flight::String)>>{resolver};
 }
 

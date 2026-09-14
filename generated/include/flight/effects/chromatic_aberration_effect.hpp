@@ -14,14 +14,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_chromatic_aberration_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ChromaticAberrationEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::ChromaticAberrationEffect>>> options) {
+struct intensity_radial : public flight::ReferenceEnabled {
+  std::optional<double> intensity;
+  std::optional<bool> radial;
+};
+
+inline void initialize_chromatic_aberration_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ChromaticAberrationEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_radial>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("ChromaticAberrationEffect"));
-  flight::row_set<flight::RowKey<"intensity">>(out, options->intensity);
-  flight::row_set<flight::RowKey<"radial">>(out, options->radial);
+  flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
+  flight::row_set<flight::RowKey<"radial">>(out, flight::row_get<flight::RowKey<"radial">>(options));
 }
 
-inline flight::Ref<flight::types::ChromaticAberrationEffect> create_chromatic_aberration_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::ChromaticAberrationEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::ChromaticAberrationEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::ChromaticAberrationEffect>>{}));
+inline flight::Ref<flight::types::ChromaticAberrationEffect> create_chromatic_aberration_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_radial>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_radial>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::ChromaticAberrationEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ChromaticAberrationEffect>>();
   initialize_chromatic_aberration_effect(out, options.value());
   return flight::entity::finish_entity(out);

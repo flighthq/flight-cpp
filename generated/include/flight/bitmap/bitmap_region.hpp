@@ -12,12 +12,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::bitmap {
 
-inline flight::Ref<flight::types::NonEntityCreateResult<flight::Ref<flight::types::BitmapRegion>, flight::String>> create_bitmap_region(flight::Ref<flight::types::Bitmap> bitmap, std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> width = std::nullopt, std::optional<double> height = std::nullopt) {
+inline flight::Ref<flight::types::BitmapRegion> create_bitmap_region(flight::Ref<flight::types::Bitmap> bitmap, std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> width = std::nullopt, std::optional<double> height = std::nullopt) {
   x = x.value_or(0.0);
   y = y.value_or(0.0);
   width = width.value_or(bitmap->width);
   height = height.value_or(bitmap->height);
-  return ([&]() { auto object_member_bitmap = bitmap; auto object_member_x = x.value(); auto object_member_y = y.value(); auto object_member_width = width.value(); auto object_member_height = height.value(); return flight::make_ref<flight::types::NonEntityCreateResult<flight::Ref<flight::types::BitmapRegion>, flight::String>>(flight::types::NonEntityCreateResult<flight::Ref<flight::types::BitmapRegion>, flight::String>{.height = object_member_height, .bitmap = object_member_bitmap, .width = object_member_width, .x = object_member_x, .y = object_member_y}); }());
+  return ([&]() { auto object_member_bitmap = bitmap; auto object_member_x = x.value(); auto object_member_y = y.value(); auto object_member_width = width.value(); auto object_member_height = height.value(); return flight::make_ref<flight::types::BitmapRegion>(flight::types::BitmapRegion{.height = object_member_height, .bitmap = object_member_bitmap, .width = object_member_width, .x = object_member_x, .y = object_member_y}); }());
 }
 
 inline flight::Ref<flight::types::BitmapRegion> set_bitmap_region(flight::Ref<flight::types::BitmapRegion> out, flight::Ref<flight::types::Bitmap> bitmap, std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> width = std::nullopt, std::optional<double> height = std::nullopt) {

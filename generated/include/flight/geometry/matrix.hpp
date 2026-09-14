@@ -44,7 +44,7 @@ inline void copy_matrix_column_from_vector3(flight::Ref<flight::types::MatrixLik
       return;
     }
     else {
-      throw std::range_error((flight::String("Column ") + column) + flight::String(" out of bounds (2)").to_utf8());
+      throw std::range_error.construct((flight::String("Column ") + column) + flight::String(" out of bounds (2)"));
     }
   }
 }
@@ -78,7 +78,7 @@ inline void copy_matrix_column_to_vector3(flight::Ref<flight::types::Vector3Like
       return;
     }
     else {
-      throw std::range_error((flight::String("Column ") + column) + flight::String(" out of bounds (2)").to_utf8());
+      throw std::range_error.construct((flight::String("Column ") + column) + flight::String(" out of bounds (2)"));
     }
   }
 }
@@ -105,7 +105,7 @@ inline void copy_matrix_row_from_vector3(flight::Ref<flight::types::MatrixLike> 
       return;
     }
     else {
-      throw std::range_error((flight::String("Row ") + row) + flight::String(" out of bounds (2)").to_utf8());
+      throw std::range_error.construct((flight::String("Row ") + row) + flight::String(" out of bounds (2)"));
     }
   }
 }
@@ -139,17 +139,17 @@ inline void copy_matrix_row_to_vector3(flight::Ref<flight::types::Vector3Like> o
       return;
     }
     else {
-      throw std::range_error((flight::String("Row ") + row) + flight::String(" out of bounds (2)").to_utf8());
+      throw std::range_error.construct((flight::String("Row ") + row) + flight::String(" out of bounds (2)"));
     }
   }
 }
 
 inline bool equals_matrix(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>, flight::Null, flight::Undefined> b, std::optional<bool> compare_translation = std::nullopt) {
   compare_translation = compare_translation.value_or(true);
-  if ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b))) {
+  if ((a == b)) {
     return true;
   }
-  if ((!std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a) || !std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b))) {
+  if ((!a || !b)) {
     return false;
   }
   return (((((!compare_translation.value() || ((flight::row_get<flight::RowKey<"tx">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"tx">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b))) && (flight::row_get<flight::RowKey<"ty">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"ty">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b))))) && (flight::row_get<flight::RowKey<"a">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"a">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"b">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"b">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"c">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"c">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"d">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"d">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b))));

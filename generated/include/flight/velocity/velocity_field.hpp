@@ -65,15 +65,10 @@ inline flight::Ref<flight::types::Velocity2D> damp_velocity(flight::Ref<flight::
   return out;
 }
 
-struct x_y : public flight::ReferenceEnabled {
-  double x;
-  double y;
-};
-
 inline flight::Ref<flight::types::VelocitySample> ensure_velocity_sample(flight::Ref<flight::types::VelocityField> field, flight::Ref<void> source) {
   std::optional<flight::Ref<flight::types::VelocitySample>> sample = field->samples.get(source);
   if (!sample.has_value()) {
-    sample = {.previous_world_transform = nullptr, .velocity = flight::make_ref<x_y>(x_y{.x = 0.0, .y = 0.0}), .last_frame_id = -1.0, .explicit_frame_id = -1.0};
+    sample = {.previous_world_transform = nullptr, .velocity = flight::make_ref<flight::types::Velocity2D>(flight::types::Velocity2D{.x = 0.0, .y = 0.0}), .last_frame_id = -1.0, .explicit_frame_id = -1.0};
     field->samples.set(source, sample.value());
   }
   return sample.value();

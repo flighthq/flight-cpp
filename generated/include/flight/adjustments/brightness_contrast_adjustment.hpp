@@ -17,11 +17,11 @@ namespace flight::adjustments {
 
 inline void initialize_brightness_contrast_adjustment(flight::types::EntityConstruction<flight::Ref<flight::types::BrightnessContrastAdjustment>> out, std::optional<flight::Ref<flight::types::BrightnessContrastAdjustment>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<flight::types::BrightnessContrastAdjustment>(flight::types::BrightnessContrastAdjustment{}));
-  auto brightness = options.value()->brightness.value_or(0.0);
-  auto contrast = options.value()->contrast.value_or(1.0);
-  auto s = contrast;
+  const double brightness = options.value()->brightness.value_or(0.0);
+  const double contrast = options.value()->contrast.value_or(1.0);
+  const double s = contrast;
   const double o = ((brightness * contrast) + (0.5 * (1.0 - contrast)));
-  auto color_matrix = flight::Array<double>{s, 0.0, 0.0, 0.0, o, 0.0, s, 0.0, 0.0, o, 0.0, 0.0, s, 0.0, o, 0.0, 0.0, 0.0, 1.0, 0.0};
+  flight::Array<double> color_matrix = flight::Array<double>{s, 0.0, 0.0, 0.0, o, 0.0, s, 0.0, 0.0, o, 0.0, 0.0, s, 0.0, o, 0.0, 0.0, 0.0, 1.0, 0.0};
   flight::adjustments::initialize_color_matrix_adjustment(out, flight::String("BrightnessContrastAdjustment"), color_matrix);
   flight::row_set<flight::RowKey<"brightness">>(out, std::optional<double>{brightness});
   flight::row_set<flight::RowKey<"contrast">>(out, std::optional<double>{contrast});

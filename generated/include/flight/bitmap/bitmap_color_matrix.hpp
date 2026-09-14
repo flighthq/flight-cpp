@@ -9,9 +9,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_region.hpp>
 #include <flight/types/pixel_format.hpp>
+#include <flight/types/texture_source_kind.hpp>
 
 namespace flight::bitmap {
 
@@ -63,7 +65,7 @@ inline void color_matrix_bitmap(flight::Uint8ClampedArray out, flight::Structura
     double py = 0.0;
     while ((py < flight::row_get<flight::RowKey<"height">>(source))) {
       {
-        auto source_y = (flight::row_get<flight::RowKey<"y">>(source) + py);
+        const double source_y = (flight::row_get<flight::RowKey<"y">>(source) + py);
         if (((source_y < 0.0) || (source_y >= flight::row_get<flight::RowKey<"bitmap">>(source)->height))) {
           py += 1.0;
           continue;
@@ -72,17 +74,17 @@ inline void color_matrix_bitmap(flight::Uint8ClampedArray out, flight::Structura
           double px = 0.0;
           while ((px < flight::row_get<flight::RowKey<"width">>(source))) {
             {
-              auto source_x = (flight::row_get<flight::RowKey<"x">>(source) + px);
+              const double source_x = (flight::row_get<flight::RowKey<"x">>(source) + px);
               if (((source_x < 0.0) || (source_x >= flight::row_get<flight::RowKey<"bitmap">>(source)->width))) {
                 px += 1.0;
                 continue;
               }
               const double si = (((source_y * flight::row_get<flight::RowKey<"bitmap">>(source)->width) + source_x) * 4.0);
               const double di = (((py * flight::row_get<flight::RowKey<"width">>(source)) + px) * 4.0);
-              auto r = flight::row_get<flight::RowKey<"bitmap">>(source)->data.element(si);
-              auto g = flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 1.0));
-              auto b = flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 2.0));
-              auto a = flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 3.0));
+              const double r = flight::row_get<flight::RowKey<"bitmap">>(source)->data.element(si);
+              const double g = flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 1.0));
+              const double b = flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 2.0));
+              const double a = flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 3.0));
               out.element(di) = clamp_byte((((((r * matrix.element(0.0)) + (g * matrix.element(1.0))) + (b * matrix.element(2.0))) + (a * matrix.element(3.0))) + matrix.element(4.0)));
               out.element((di + 1.0)) = clamp_byte((((((r * matrix.element(5.0)) + (g * matrix.element(6.0))) + (b * matrix.element(7.0))) + (a * matrix.element(8.0))) + matrix.element(9.0)));
               out.element((di + 2.0)) = clamp_byte((((((r * matrix.element(10.0)) + (g * matrix.element(11.0))) + (b * matrix.element(12.0))) + (a * matrix.element(13.0))) + matrix.element(14.0)));

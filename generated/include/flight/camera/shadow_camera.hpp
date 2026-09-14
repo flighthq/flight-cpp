@@ -39,11 +39,11 @@ inline void configure_directional_shadow_camera3_d(flight::Ref<flight::types::Ca
   const double cx = ((min->x + max->x) * 0.5);
   const double cy = ((min->y + max->y) * 0.5);
   const double cz = ((min->z + max->z) * 0.5);
-  auto radius = std::hypot((max->x - cx), (max->y - cy), (max->z - cz));
+  double radius = std::hypot((max->x - cx), (max->y - cy), (max->z - cz));
   if ((radius == 0.0)) {
     radius = 1.0;
   }
-  auto dl = (std::hypot(flight::row_get<flight::RowKey<"x">>(light_direction), flight::row_get<flight::RowKey<"y">>(light_direction), flight::row_get<flight::RowKey<"z">>(light_direction)) || 1.0);
+  const double dl = (std::hypot(flight::row_get<flight::RowKey<"x">>(light_direction), flight::row_get<flight::RowKey<"y">>(light_direction), flight::row_get<flight::RowKey<"z">>(light_direction)) || 1.0);
   const double dx = (flight::row_get<flight::RowKey<"x">>(light_direction) / dl);
   const double dy = (flight::row_get<flight::RowKey<"y">>(light_direction) / dl);
   const double dz = (flight::row_get<flight::RowKey<"z">>(light_direction) / dl);
@@ -54,7 +54,7 @@ inline void configure_directional_shadow_camera3_d(flight::Ref<flight::types::Ca
   target->x = cx;
   target->y = cy;
   target->z = cz;
-  auto up = ((std::abs(dy) > 0.99) ? up_z : up_y);
+  flight::Ref<flight::types::Vector3Like> up = ((std::abs(dy) > 0.99) ? up_z : up_y);
   flight::camera::set_camera3_dview_matrix4_from_look_at(camera, eye, target, up);
   camera->near = radius;
   camera->far = (radius * 3.0);
@@ -77,7 +77,7 @@ inline void configure_directional_shadow_camera3_dtight_fit(flight::Ref<flight::
   double dx = flight::row_get<flight::RowKey<"x">>(light_direction);
   double dy = flight::row_get<flight::RowKey<"y">>(light_direction);
   double dz = flight::row_get<flight::RowKey<"z">>(light_direction);
-  auto direction_length = std::hypot(dx, dy, dz);
+  const double direction_length = std::hypot(dx, dy, dz);
   if ((direction_length > 0.0)) {
     dx /= direction_length;
     dy /= direction_length;
@@ -99,8 +99,8 @@ inline void configure_directional_shadow_camera3_dtight_fit(flight::Ref<flight::
   flight::Float32Array view = camera->view->m;
   double half_width = 0.0;
   double half_height = 0.0;
-  auto min_view_z = std::numeric_limits<double>::infinity();
-  auto max_view_z = -std::numeric_limits<double>::infinity();
+  double min_view_z = std::numeric_limits<double>::infinity();
+  double max_view_z = -std::numeric_limits<double>::infinity();
   {
     double corner = 0.0;
     while ((corner < 8.0)) {

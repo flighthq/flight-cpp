@@ -14,16 +14,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-inline void initialize_film_emulation_effect(flight::types::EntityConstruction<flight::Ref<flight::types::FilmEmulationEffect>> out, flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::FilmEmulationEffect>>> options) {
+struct gate_weave_grain_intensity_halation_radius_halation_strength : public flight::ReferenceEnabled {
+  std::optional<double> gate_weave;
+  std::optional<double> grain_intensity;
+  std::optional<double> halation_radius;
+  std::optional<double> halation_strength;
+};
+
+inline void initialize_film_emulation_effect(flight::types::EntityConstruction<flight::Ref<flight::types::FilmEmulationEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<gate_weave_grain_intensity_halation_radius_halation_strength>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("FilmEmulationEffect"));
-  flight::row_set<flight::RowKey<"gateWeave">>(out, options->gate_weave);
-  flight::row_set<flight::RowKey<"grainIntensity">>(out, options->grain_intensity);
-  flight::row_set<flight::RowKey<"halationRadius">>(out, options->halation_radius);
-  flight::row_set<flight::RowKey<"halationStrength">>(out, options->halation_strength);
+  flight::row_set<flight::RowKey<"gateWeave">>(out, flight::row_get<flight::RowKey<"gateWeave">>(options));
+  flight::row_set<flight::RowKey<"grainIntensity">>(out, flight::row_get<flight::RowKey<"grainIntensity">>(options));
+  flight::row_set<flight::RowKey<"halationRadius">>(out, flight::row_get<flight::RowKey<"halationRadius">>(options));
+  flight::row_set<flight::RowKey<"halationStrength">>(out, flight::row_get<flight::RowKey<"halationStrength">>(options));
 }
 
-inline flight::Ref<flight::types::FilmEmulationEffect> create_film_emulation_effect(std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::FilmEmulationEffect>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::FilmEmulationEffect>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::FilmEmulationEffect>>{}));
+inline flight::Ref<flight::types::FilmEmulationEffect> create_film_emulation_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<gate_weave_grain_intensity_halation_radius_halation_strength>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<gate_weave_grain_intensity_halation_radius_halation_strength>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::FilmEmulationEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::FilmEmulationEffect>>();
   initialize_film_emulation_effect(out, options.value());
   return flight::entity::finish_entity(out);
