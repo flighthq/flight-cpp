@@ -62,7 +62,11 @@ const source = api.parseTypeScriptSource(
        (event: WheelEvent) => event.preventDefault(),
        { passive: false },
      );
+     if (KeyboardEvent.DOM_KEY_LOCATION_RIGHT !== 2) throw new Error('invalid key location');
+     if (WheelEvent.DOM_DELTA_PIXEL !== 0) throw new Error('invalid wheel mode');
      if (window.devicePixelRatio <= 0) throw new Error('invalid pixel ratio');
+     const discarded = requestAnimationFrame((_timestamp) => {});
+     cancelAnimationFrame(discarded);
      return requestAnimationFrame((_timestamp) => {});
    }`,
 );
@@ -85,6 +89,9 @@ for (const expected of [
   'flight::host_sdl::window.device_pixel_ratio',
   'canvas.add_event_listener(flight::String("pointermove")',
   'canvas.add_event_listener(flight::String("wheel")',
+  'flight::host_sdl::keyboard_location_right',
+  'flight::host_sdl::wheel_delta_pixel',
+  'flight::host_sdl::cancel_animation_frame(discarded)',
   'flight::host_sdl::request_animation_frame(',
   'flight::host_sdl::InputKeyboardData event',
   'flight::host_sdl::InputPointerData event',

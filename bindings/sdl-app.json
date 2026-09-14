@@ -7,9 +7,36 @@
     { "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "HTMLInputElement", "space": "type", "targetName": "flight::host_sdl::HtmlInputElement" },
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "borrowed", "sourceName": "HTMLCanvasElement", "space": "value", "targetName": "flight::host_sdl::GlCanvas" },
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "KeyboardEvent", "space": "type", "targetName": "flight::host_sdl::InputKeyboardData" },
+    {
+      "headers": ["flight/host_sdl/input.hpp"],
+      "members": [
+        { "sourceMember": "DOM_KEY_LOCATION_LEFT", "targetName": "flight::host_sdl::keyboard_location_left" },
+        { "sourceMember": "DOM_KEY_LOCATION_NUMPAD", "targetName": "flight::host_sdl::keyboard_location_numpad" },
+        { "sourceMember": "DOM_KEY_LOCATION_RIGHT", "targetName": "flight::host_sdl::keyboard_location_right" },
+        { "sourceMember": "DOM_KEY_LOCATION_STANDARD", "targetName": "flight::host_sdl::keyboard_location_standard" }
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "KeyboardEvent",
+      "space": "value",
+      "targetName": "flight::host_sdl::InputKeyboardData"
+    },
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "MouseEvent", "space": "type", "targetName": "flight::host_sdl::InputPointerData" },
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "PointerEvent", "space": "type", "targetName": "flight::host_sdl::InputPointerData" },
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "WheelEvent", "space": "type", "targetName": "flight::host_sdl::InputPointerData" },
+    {
+      "headers": ["flight/host_sdl/input.hpp"],
+      "members": [
+        { "sourceMember": "DOM_DELTA_LINE", "targetName": "flight::host_sdl::wheel_delta_line" },
+        { "sourceMember": "DOM_DELTA_PAGE", "targetName": "flight::host_sdl::wheel_delta_page" },
+        { "sourceMember": "DOM_DELTA_PIXEL", "targetName": "flight::host_sdl::wheel_delta_pixel" }
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "WheelEvent",
+      "space": "value",
+      "targetName": "flight::host_sdl::InputPointerData"
+    },
     {
       "headers": ["flight/host_sdl/web_platform.hpp"],
       "members": [
@@ -25,6 +52,7 @@
       "space": "value",
       "targetName": "flight::host_sdl::document"
     },
+    { "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "borrowed", "sourceName": "cancelAnimationFrame", "space": "value", "targetName": "flight::host_sdl::cancel_animation_frame" },
     { "callResultType": "double", "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "borrowed", "sourceName": "requestAnimationFrame", "space": "value", "targetName": "flight::host_sdl::request_animation_frame" },
     {
       "headers": ["flight/host_sdl/web_platform.hpp"],

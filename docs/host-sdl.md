@@ -88,9 +88,9 @@ The installed build exports four targets through the existing `FlightCpp` packag
   rejected. Its selected command surface includes 2D/3D and compressed texture upload, framebuffer clear/blit and
   readback, active-uniform metadata, and the render state, vertex, draw, and uniform calls used by Flight.
   `bindings/sdl-app.json` layers a browser-shaped application shell over this target for upstream examples. Its
-  document attachment is intentionally lightweight, while its frame queue and SDL input bridge preserve ordered
-  animation turns and route keyboard, pointer, and wheel events into registered listeners on `window` and
-  `GlCanvas`.
+  document attachment is intentionally lightweight, while its request/cancel frame queue and SDL input bridge
+  preserve ordered animation turns and route keyboard, pointer, and wheel events into registered listeners on
+  `window` and `GlCanvas`.
 - `Flight::HostSdlVulkan` copies the required instance extension names and owns the `VkSurfaceKHR` returned by SDL.
 - `Flight::HostSdlWgpu` owns a type-erased native WebGPU surface through create/destroy callbacks supplied by a Dawn
   or wgpu-native adapter. It intentionally adds no WebGPU implementation dependency.

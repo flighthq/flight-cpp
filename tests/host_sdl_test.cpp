@@ -144,6 +144,17 @@ int main() {
   sdk_backend.destroy_device(sdk_device);
 
   flight::host_sdl::reset_web_platform();
+  expect(
+      flight::host_sdl::keyboard_location_standard == 0.0 &&
+          flight::host_sdl::keyboard_location_left == 1.0 &&
+          flight::host_sdl::keyboard_location_right == 2.0 &&
+          flight::host_sdl::keyboard_location_numpad == 3.0,
+      "SDL host keyboard locations do not match the DOM constants");
+  expect(
+      flight::host_sdl::wheel_delta_pixel == 0.0 &&
+          flight::host_sdl::wheel_delta_line == 1.0 &&
+          flight::host_sdl::wheel_delta_page == 2.0,
+      "SDL host wheel modes do not match the DOM constants");
   int frame_calls = 0;
   const auto cancelled_frame = flight::host_sdl::request_animation_frame([&] { frame_calls += 100; });
   flight::host_sdl::cancel_animation_frame(cancelled_frame);

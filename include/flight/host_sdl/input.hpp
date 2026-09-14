@@ -11,6 +11,15 @@
 
 namespace flight::host_sdl {
 
+inline constexpr double keyboard_location_standard = 0.0;
+inline constexpr double keyboard_location_left = 1.0;
+inline constexpr double keyboard_location_right = 2.0;
+inline constexpr double keyboard_location_numpad = 3.0;
+
+inline constexpr double wheel_delta_pixel = 0.0;
+inline constexpr double wheel_delta_line = 1.0;
+inline constexpr double wheel_delta_page = 2.0;
+
 struct InputKeyboardData final {
   bool alt_key{false};
   bool caps_lock{false};
