@@ -13,11 +13,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Skeleton2DAnimationTarget;
+
 struct Skeleton2DAnimationTarget : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   double bone_index;
-  flight::types::skeleton2_danimation_target_kind kind;
-  flight::types::skeleton2_danimation_path path;
+  flight::String kind;
+  flight::types::Skeleton2DAnimationPath path;
 };
 
 } // namespace flight::types

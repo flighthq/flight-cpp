@@ -13,6 +13,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct BitmapDisplacementMapOptions;
+
 struct BitmapDisplacementMapOptions : public flight::ReferenceEnabled {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> map;
   std::optional<double> component_x;

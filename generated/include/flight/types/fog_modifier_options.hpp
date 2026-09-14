@@ -10,9 +10,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct FogModifierOptions;
+
 struct FogModifierOptions : public flight::ReferenceEnabled {
   double color;
-  std::optional<flight::types::fog_modifier_mode> mode;
+  std::optional<flight::types::FogModifierMode> mode;
   std::optional<double> near;
   std::optional<double> far;
   std::optional<double> density;

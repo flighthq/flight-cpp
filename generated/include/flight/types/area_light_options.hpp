@@ -12,6 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct AreaLightOptions;
+
 struct AreaLightOptions : public flight::ReferenceEnabled {
   std::optional<bool> casts_shadow;
   std::optional<double> color;

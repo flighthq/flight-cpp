@@ -17,12 +17,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct FlightDocumentToken;
+struct FlightDocumentTokenValues;
+struct FlightDocumentTokenResolution;
+struct FlightDocumentTokenResolverRegistry;
+
 struct FlightDocumentTokenValues : public flight::ReferenceEnabled {
 };
 
 struct FlightDocumentToken : public flight::ReferenceEnabled {
   flight::String key;
-  flight::types::Kind kind;
+  flight::String kind;
   flight::Ref<FlightDocumentTokenValues> values;
 };
 

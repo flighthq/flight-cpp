@@ -12,6 +12,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TextSegment;
+struct TextSegmentRange;
+struct TextSegmenterBackend;
+struct TextSegmenterBackendExplanation;
+
 using TextSegmentGranularity = flight::String;
 
 struct TextSegment : public flight::ReferenceEnabled {

@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/array_buffer.hpp>
 #include <flight/structural_ref.hpp>
 #include <random>
 #include <flight/runtime.hpp>
@@ -24,7 +23,7 @@ inline void apply_morphological(flight::Uint8ClampedArray out, flight::Structura
   const double h = flight::row_get<flight::RowKey<"height">>(source);
   const double bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
   const double bitmap_height = flight::row_get<flight::RowKey<"bitmap">>(source)->height;
-  flight::Uint8ClampedArray<flight::ArrayBuffer> data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
+  flight::Uint8ClampedArray data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
   const double identity = (dilate ? 0.0 : 255.0);
   {
     double py = 0.0;
@@ -50,31 +49,31 @@ inline void apply_morphological(flight::Uint8ClampedArray out, flight::Structura
                           auto sx = flight::maximum(0.0, flight::minimum((bitmap_width - 1.0), ((flight::row_get<flight::RowKey<"x">>(source) + px) + kx)));
                           const double si = (((sy * bitmap_width) + sx) * 4.0);
                           if (dilate) {
-                            if ((data.element(si) > v_r)) {
-                              v_r = data.element(si);
+                            if ((static_cast<double>(data.element(si)) > v_r)) {
+                              v_r = static_cast<double>(data.element(si));
                             }
-                            if ((data.element((si + 1.0)) > v_g)) {
-                              v_g = data.element((si + 1.0));
+                            if ((static_cast<double>(data.element((si + 1.0))) > v_g)) {
+                              v_g = static_cast<double>(data.element((si + 1.0)));
                             }
-                            if ((data.element((si + 2.0)) > v_b)) {
-                              v_b = data.element((si + 2.0));
+                            if ((static_cast<double>(data.element((si + 2.0))) > v_b)) {
+                              v_b = static_cast<double>(data.element((si + 2.0)));
                             }
-                            if ((data.element((si + 3.0)) > v_a)) {
-                              v_a = data.element((si + 3.0));
+                            if ((static_cast<double>(data.element((si + 3.0))) > v_a)) {
+                              v_a = static_cast<double>(data.element((si + 3.0)));
                             }
                           }
                           else {
-                            if ((data.element(si) < v_r)) {
-                              v_r = data.element(si);
+                            if ((static_cast<double>(data.element(si)) < v_r)) {
+                              v_r = static_cast<double>(data.element(si));
                             }
-                            if ((data.element((si + 1.0)) < v_g)) {
-                              v_g = data.element((si + 1.0));
+                            if ((static_cast<double>(data.element((si + 1.0))) < v_g)) {
+                              v_g = static_cast<double>(data.element((si + 1.0)));
                             }
-                            if ((data.element((si + 2.0)) < v_b)) {
-                              v_b = data.element((si + 2.0));
+                            if ((static_cast<double>(data.element((si + 2.0))) < v_b)) {
+                              v_b = static_cast<double>(data.element((si + 2.0)));
                             }
-                            if ((data.element((si + 3.0)) < v_a)) {
-                              v_a = data.element((si + 3.0));
+                            if ((static_cast<double>(data.element((si + 3.0))) < v_a)) {
+                              v_a = static_cast<double>(data.element((si + 3.0)));
                             }
                           }
                         }

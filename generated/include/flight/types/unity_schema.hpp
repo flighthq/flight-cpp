@@ -11,6 +11,24 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct UnityColor;
+struct UnityMinMaxValue;
+struct UnityBurst;
+struct UnityEmission;
+struct UnityShape;
+struct UnityGradientColorKey;
+struct UnityGradientAlphaKey;
+struct UnityGradient;
+struct UnityCurveKey;
+struct UnityAnimationCurve;
+struct UnityColorOverLifetime;
+struct UnitySizeOverLifetime;
+struct UnityRotationOverLifetime;
+struct UnityParticleDocument;
+struct UnityParseOptions;
+struct UnityParseResult;
+struct UnitySerializeOptions;
+
 using UnityParticleShapeType = flight::String;
 
 struct UnityColor : public flight::ReferenceEnabled {
@@ -39,29 +57,35 @@ struct UnityEmission : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<UnityBurst>> bursts;
 };
 
-struct x_y_z : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_82615FD0DF8619C4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_82615FD0DF8619C4
+struct x_y_z_82615fd0df8619c4 : public flight::ReferenceEnabled {
   double x;
   double y;
   double z;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_82615FD0DF8619C4
 
 struct UnityShape : public flight::ReferenceEnabled {
   bool enabled;
   UnityParticleShapeType shape_type;
   double radius;
   double angle;
-  flight::Ref<x_y_z> scale;
+  flight::Ref<x_y_z_82615fd0df8619c4> scale;
 };
 
-struct r_g_b : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_120AF2A4CBE78290
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_120AF2A4CBE78290
+struct r_g_b_120af2a4cbe78290 : public flight::ReferenceEnabled {
   double r;
   double g;
   double b;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_120AF2A4CBE78290
 
 struct UnityGradientColorKey : public flight::ReferenceEnabled {
   double time;
-  flight::Ref<r_g_b> color;
+  flight::Ref<r_g_b_120af2a4cbe78290> color;
 };
 
 struct UnityGradientAlphaKey : public flight::ReferenceEnabled {

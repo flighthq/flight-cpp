@@ -13,7 +13,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::spritesheet {
 
-struct entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_CC00688A45C5FE5E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_CC00688A45C5FE5E
+struct entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated_cc00688a45c5fe5e : public flight::ReferenceEnabled {
   std::optional<std::optional<flight::Ref<flight::types::EntityRuntime>>> entity_runtime_key;
   std::optional<double> id;
   std::optional<double> offset_x;
@@ -22,17 +24,18 @@ struct entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated : public 
   std::optional<std::optional<double>> pivot_y;
   std::optional<bool> rotated;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_CC00688A45C5FE5E
 
-inline void initialize_spritesheet_frame(flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetFrame>> out, std::optional<flight::Ref<entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated>> obj = std::nullopt) {
+inline void initialize_spritesheet_frame(flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetFrame>> out, std::optional<flight::Ref<entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated_cc00688a45c5fe5e>> obj = std::nullopt) {
   flight::row_set<flight::RowKey<"id">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->id; }()).value_or(0.0));
   flight::row_set<flight::RowKey<"offsetX">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->offset_x; }()).value_or(0.0));
   flight::row_set<flight::RowKey<"offsetY">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->offset_y; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"pivotX">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pivot_x; }()));
-  flight::row_set<flight::RowKey<"pivotY">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pivot_y; }()));
+  flight::row_set<flight::RowKey<"pivotX">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pivot_x.value_or(std::nullopt); }()));
+  flight::row_set<flight::RowKey<"pivotY">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pivot_y.value_or(std::nullopt); }()));
   flight::row_set<flight::RowKey<"rotated">>(out, ([&]() -> std::optional<bool> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->rotated; }()).value_or(false));
 }
 
-inline flight::Ref<flight::types::SpritesheetFrame> create_spritesheet_frame(std::optional<flight::Ref<entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated>> obj = std::nullopt) {
+inline flight::Ref<flight::types::SpritesheetFrame> create_spritesheet_frame(std::optional<flight::Ref<entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated_cc00688a45c5fe5e>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetFrame>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpritesheetFrame>>();
   initialize_spritesheet_frame(out, obj);
   return flight::entity::finish_entity(out);

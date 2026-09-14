@@ -14,14 +14,16 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct BitmapDisplacementEffect;
+
 using BitmapDisplacementEffectEdgeMode = flight::String;
 
 struct BitmapDisplacementEffect : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture2D>>>>> map;
-  std::optional<flight::types::image_channel> component_x;
-  std::optional<flight::types::image_channel> component_y;
+  std::optional<double> component_x;
+  std::optional<double> component_y;
   std::optional<double> scale_x;
   std::optional<double> scale_y;
   std::optional<BitmapDisplacementEffectEdgeMode> edge_mode;

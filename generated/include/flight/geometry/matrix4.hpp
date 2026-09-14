@@ -2,13 +2,12 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/array_buffer.hpp>
+#include <flight/error.hpp>
 #include <flight/number.hpp>
 #include <flight/structural_ref.hpp>
 #include <limits>
 #include <optional>
 #include <random>
-#include <stdexcept>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -30,7 +29,7 @@ namespace flight::geometry {
 inline void append_translation_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double x, double y, double z) {
   flight::Float32Array out_2 = out->m;
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
-  if ((out != source)) {
+  if ((flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>(out) != source)) {
     out->m.set(flight::row_get<flight::RowKey<"m">>(source));
   }
   out_2.element(12.0) = (source_2.element(12.0) + x);
@@ -110,7 +109,7 @@ inline void copy_matrix4_column_from_vector4(flight::Ref<flight::types::Matrix4L
       out_2.element(15.0) = flight::row_get<flight::RowKey<"w">>(source);
     }
     else {
-      throw std::range_error.construct((flight::String("Column ") + column) + flight::String(" out of bounds [0, ..., 3]"));
+      throw flight::RangeError((flight::String("Column ") + column) + flight::String(" out of bounds [0, ..., 3]"));
     }
   }
 }
@@ -144,7 +143,7 @@ inline void copy_matrix4_column_to_vector4(flight::Ref<flight::types::Vector4Lik
       out->w = source_2.element(15.0);
     }
     else {
-      throw std::range_error.construct((flight::String("Column ") + column) + flight::String(" out of bounds [0, ..., 3]"));
+      throw flight::RangeError((flight::String("Column ") + column) + flight::String(" out of bounds [0, ..., 3]"));
     }
   }
 }
@@ -178,7 +177,7 @@ inline void copy_matrix4_row_from_vector4(flight::Ref<flight::types::Matrix4Like
       out_2.element(15.0) = flight::row_get<flight::RowKey<"w">>(source);
     }
     else {
-      throw std::range_error.construct((flight::String("Row ") + row) + flight::String(" out of bounds [0, ..., 3]"));
+      throw flight::RangeError((flight::String("Row ") + row) + flight::String(" out of bounds [0, ..., 3]"));
     }
   }
 }
@@ -212,7 +211,7 @@ inline void copy_matrix4_row_to_vector4(flight::Ref<flight::types::Vector4Like> 
       out->w = source_2.element(15.0);
     }
     else {
-      throw std::range_error.construct((flight::String("Row ") + row) + flight::String(" out of bounds [0, ..., 3]"));
+      throw flight::RangeError((flight::String("Row ") + row) + flight::String(" out of bounds [0, ..., 3]"));
     }
   }
 }
@@ -295,7 +294,7 @@ inline bool equals_matrix4(std::variant<flight::StructuralRef<flight::RowReadonl
   if ((a == b)) {
     return true;
   }
-  if ((!a || !b)) {
+  if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
   {
@@ -560,8 +559,8 @@ inline void set_matrix4_element(flight::Ref<flight::types::Matrix4Like> out, dou
 
 inline void set_matrix4_from2_d(flight::Ref<flight::types::Matrix4Like> out, double a, double b, double c, double d, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
   flight::Float32Array out_2 = out->m;
-  tx = tx;
-  ty = ty;
+  tx = tx.value_or(0.0);
+  ty = ty.value_or(0.0);
   out_2.element(0.0) = a;
   out_2.element(1.0) = b;
   out_2.element(2.0) = 0.0;
@@ -754,7 +753,7 @@ inline void set_perspective_matrix4(flight::Ref<flight::types::Matrix4Like> out,
 inline void translate_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double tx, double ty, double tz) {
   flight::Float32Array a = flight::row_get<flight::RowKey<"m">>(source);
   flight::Float32Array o = out->m;
-  if ((out != source)) {
+  if ((flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>(out) != source)) {
     out->m.set(flight::row_get<flight::RowKey<"m">>(source));
   }
   o.element(12.0) = ((((a.element(0.0) * tx) + (a.element(4.0) * ty)) + (a.element(8.0) * tz)) + a.element(12.0));
@@ -849,7 +848,7 @@ inline void swap(flight::Ref<flight::types::Matrix4Like> out, flight::Structural
 }
 
 inline void transpose_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
-  if ((out != source)) {
+  if ((flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>(out) != source)) {
     out->m.set(flight::row_get<flight::RowKey<"m">>(source));
   }
   swap(out, source, 1.0, 4.0);
@@ -863,7 +862,7 @@ inline void transpose_matrix4(flight::Ref<flight::types::Matrix4Like> out, fligh
 inline flight::Float32Array identity = flight::Float32Array(flight::Array{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0});
 
 inline flight::Ref<flight::types::Matrix4> create_matrix4(std::optional<double> m00 = std::nullopt, std::optional<double> m01 = std::nullopt, std::optional<double> m02 = std::nullopt, std::optional<double> m03 = std::nullopt, std::optional<double> m10 = std::nullopt, std::optional<double> m11 = std::nullopt, std::optional<double> m12 = std::nullopt, std::optional<double> m13 = std::nullopt, std::optional<double> m20 = std::nullopt, std::optional<double> m21 = std::nullopt, std::optional<double> m22 = std::nullopt, std::optional<double> m23 = std::nullopt, std::optional<double> m30 = std::nullopt, std::optional<double> m31 = std::nullopt, std::optional<double> m32 = std::nullopt, std::optional<double> m33 = std::nullopt) {
-  flight::Float32Array<flight::ArrayBuffer> m = flight::Float32Array.construct(identity);
+  flight::Float32Array m = flight::Float32Array(identity);
   if (m00.has_value()) {
     m.element(0.0) = m00.value();
   }

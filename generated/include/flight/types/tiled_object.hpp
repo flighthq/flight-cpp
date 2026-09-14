@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TiledObject;
+
 struct TiledObject : public flight::ReferenceEnabled {
   double id;
   flight::String name;

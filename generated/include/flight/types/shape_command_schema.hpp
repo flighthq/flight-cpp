@@ -9,6 +9,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+template <typename K>
+struct ShapeCommandSchema;
+struct ShapeCommandSchemaArgument;
+
 using ShapeCommandSchemaArgumentType = flight::String;
 
 struct ShapeCommandSchemaArgument : public flight::ReferenceEnabled {

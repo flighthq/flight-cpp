@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct BitmapResizeOptions;
+
 struct BitmapResizeOptions : public flight::ReferenceEnabled {
   std::optional<flight::types::BitmapResizeMode> mode;
   std::optional<flight::types::BitmapEdgeMode> edge_mode;

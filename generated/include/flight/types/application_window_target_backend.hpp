@@ -13,6 +13,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct InputDropFileBackend;
+struct InputFocusBackend;
+struct InputPointerLockBackend;
+struct RenderContextBackend;
+struct RenderSurfaceBackend;
+
 struct InputDropFileBackend : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::function<std::function<void()>(flight::Ref<flight::types::InputTargetHandle>, std::function<void(flight::String)>)> subscribe;
@@ -23,13 +29,16 @@ struct InputFocusBackend : public flight::ReferenceEnabled {
   std::function<std::function<void()>(flight::Ref<flight::types::InputTargetHandle>, std::function<void()>, std::function<void()>)> subscribe;
 };
 
-struct reason : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
+struct reason_43a745d20647bfb6 : public flight::ReferenceEnabled {
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
 
-using InputPointerLockExitOutcome = flight::Ref<reason>;
+using InputPointerLockExitOutcome = flight::Ref<reason_43a745d20647bfb6>;
 
-using InputPointerLockRequestOutcome = flight::Ref<reason>;
+using InputPointerLockRequestOutcome = flight::Ref<reason_43a745d20647bfb6>;
 
 struct InputPointerLockBackend : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;

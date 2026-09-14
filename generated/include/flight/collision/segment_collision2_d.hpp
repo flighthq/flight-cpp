@@ -201,12 +201,15 @@ inline bool is_valid_obb(flight::StructuralRef<flight::RowReadonly<flight::RowOf
   return ((((((std::isfinite(flight::row_get<flight::RowKey<"x">>(shape)) && std::isfinite(flight::row_get<flight::RowKey<"y">>(shape))) && std::isfinite(flight::row_get<flight::RowKey<"halfW">>(shape))) && std::isfinite(flight::row_get<flight::RowKey<"halfH">>(shape))) && std::isfinite(flight::row_get<flight::RowKey<"rotation">>(shape))) && (flight::row_get<flight::RowKey<"halfW">>(shape) > 0.0)) && (flight::row_get<flight::RowKey<"halfH">>(shape) > 0.0));
 }
 
-struct t0_t1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_47A3406548815F51
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_47A3406548815F51
+struct t0_t1_47a3406548815f51 : public flight::ReferenceEnabled {
   double t0;
   double t1;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_47A3406548815F51
 
-inline flight::Ref<t0_t1> clip_range = flight::make_ref<t0_t1>(t0_t1{.t0 = 0.0, .t1 = 1.0});
+inline flight::Ref<t0_t1_47a3406548815f51> clip_range = flight::make_ref<t0_t1_47a3406548815f51>(t0_t1_47a3406548815f51{.t0 = 0.0, .t1 = 1.0});
 
 inline bool clip_segment_slab(double p, double q, double epsilon) {
   if ((std::abs(p) <= epsilon)) {

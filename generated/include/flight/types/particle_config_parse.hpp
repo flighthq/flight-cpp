@@ -15,6 +15,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ParseParticleConfigOptions;
+struct ParticleConfigParseResult;
+
 struct ParseParticleConfigOptions : public flight::ReferenceEnabled {
   std::optional<double> texture_size;
   std::optional<double> pixels_per_unit;

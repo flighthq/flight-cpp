@@ -11,6 +11,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct GlyphOutlineMetrics;
+struct GlyphOutlineSource;
+
 struct GlyphOutlineMetrics : public flight::ReferenceEnabled {
   double ascent;
   double descent;

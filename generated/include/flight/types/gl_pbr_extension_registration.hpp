@@ -14,6 +14,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct GlPbrExtensionRegistration;
+
 struct GlPbrExtensionRegistration : public flight::ReferenceEnabled {
   std::function<void(flight::Ref<flight::types::GlPbrExtensionBindContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>)> bind;
   std::function<flight::Ref<flight::types::GlPbrExtensionShaderContribution>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>)> create_shader_contribution;

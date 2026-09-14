@@ -14,19 +14,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-struct compression_crop : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_4B4DCF64B88DC788
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_4B4DCF64B88DC788
+struct compression_crop_4b4dcf64b88dc788 : public flight::ReferenceEnabled {
   std::optional<double> compression;
   std::optional<double> crop;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_4B4DCF64B88DC788
 
-inline void initialize_pannini_projection_effect(flight::types::EntityConstruction<flight::Ref<flight::types::PanniniProjectionEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<compression_crop>>>> options) {
+inline void initialize_pannini_projection_effect(flight::types::EntityConstruction<flight::Ref<flight::types::PanniniProjectionEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<compression_crop_4b4dcf64b88dc788>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("PanniniProjectionEffect"));
   flight::row_set<flight::RowKey<"compression">>(out, flight::row_get<flight::RowKey<"compression">>(options));
   flight::row_set<flight::RowKey<"crop">>(out, flight::row_get<flight::RowKey<"crop">>(options));
 }
 
-inline flight::Ref<flight::types::PanniniProjectionEffect> create_pannini_projection_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<compression_crop>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<compression_crop>>>>());
+inline flight::Ref<flight::types::PanniniProjectionEffect> create_pannini_projection_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<compression_crop_4b4dcf64b88dc788>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<compression_crop_4b4dcf64b88dc788>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::PanniniProjectionEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::PanniniProjectionEffect>>();
   initialize_pannini_projection_effect(out, options.value());
   return flight::entity::finish_entity(out);

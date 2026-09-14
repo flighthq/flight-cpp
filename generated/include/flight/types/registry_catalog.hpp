@@ -12,12 +12,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct RegistryCatalogEntry;
+struct RegistryCatalog;
+
 struct RegistryCatalogEntry : public flight::ReferenceEnabled {
   flight::String backend;
-  flight::types::requirement_facet facet;
+  flight::types::RequirementFacet facet;
   flight::String implementation_import;
   flight::String implementation_symbol;
-  flight::types::Kind kind;
+  flight::String kind;
   flight::String registrar_import;
   flight::String registrar_symbol;
 };

@@ -9,6 +9,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct MeshGeometryUvSetExplanation;
+
 struct MeshGeometryUvSetExplanation : public flight::ReferenceEnabled {
   flight::Array<flight::types::PbrUvSet> available_uv_sets;
   flight::Array<flight::types::PbrUvSet> requested_uv_sets;

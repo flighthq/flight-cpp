@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct LassoSelectionRuntime;
+
 struct LassoSelectionRuntime : public flight::ReferenceEnabled {
   std::optional<flight::Ref<void>> binding;
   std::optional<flight::String> uid;

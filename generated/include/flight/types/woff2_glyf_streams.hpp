@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Woff2GlyfStreams;
+
 struct Woff2GlyfStreams : public flight::ReferenceEnabled {
   flight::Uint8Array bbox_stream;
   flight::Uint8Array composite_stream;

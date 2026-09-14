@@ -9,6 +9,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct SkinAttachment2D;
+struct AttachmentSkin2D;
+
 struct SkinAttachment2D : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Attachment2D> attachment;
   flight::String name;

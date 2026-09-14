@@ -14,14 +14,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-struct curvature_scanline_intensity_vignette_aberration : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_3F748AFC0E544F98
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_3F748AFC0E544F98
+struct curvature_scanline_intensity_vignette_aberration_3f748afc0e544f98 : public flight::ReferenceEnabled {
   std::optional<double> curvature;
   std::optional<double> scanline_intensity;
   std::optional<double> vignette;
   std::optional<double> aberration;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_3F748AFC0E544F98
 
-inline void initialize_crt_effect(flight::types::EntityConstruction<flight::Ref<flight::types::CrtEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<curvature_scanline_intensity_vignette_aberration>>>> options) {
+inline void initialize_crt_effect(flight::types::EntityConstruction<flight::Ref<flight::types::CrtEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<curvature_scanline_intensity_vignette_aberration_3f748afc0e544f98>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("CrtEffect"));
   flight::row_set<flight::RowKey<"curvature">>(out, flight::row_get<flight::RowKey<"curvature">>(options));
   flight::row_set<flight::RowKey<"scanlineIntensity">>(out, flight::row_get<flight::RowKey<"scanlineIntensity">>(options));
@@ -29,8 +32,8 @@ inline void initialize_crt_effect(flight::types::EntityConstruction<flight::Ref<
   flight::row_set<flight::RowKey<"aberration">>(out, flight::row_get<flight::RowKey<"aberration">>(options));
 }
 
-inline flight::Ref<flight::types::CrtEffect> create_crt_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<curvature_scanline_intensity_vignette_aberration>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<curvature_scanline_intensity_vignette_aberration>>>>());
+inline flight::Ref<flight::types::CrtEffect> create_crt_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<curvature_scanline_intensity_vignette_aberration_3f748afc0e544f98>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<curvature_scanline_intensity_vignette_aberration_3f748afc0e544f98>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::CrtEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::CrtEffect>>();
   initialize_crt_effect(out, options.value());
   return flight::entity::finish_entity(out);

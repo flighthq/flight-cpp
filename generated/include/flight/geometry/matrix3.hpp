@@ -2,12 +2,11 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/array_buffer.hpp>
+#include <flight/error.hpp>
 #include <flight/structural_ref.hpp>
 #include <limits>
 #include <optional>
 #include <random>
-#include <stdexcept>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -68,7 +67,7 @@ inline void copy_matrix3_column_from_vector3(flight::Ref<flight::types::Matrix3L
           }
         }
         else if (switch_value_2 == 3.0) {
-          throw std::range_error.construct((flight::String("Column ") + column) + flight::String(" out of bounds (2)"));
+          throw flight::RangeError((flight::String("Column ") + column) + flight::String(" out of bounds (2)"));
         }
       }
     }
@@ -115,7 +114,7 @@ inline void copy_matrix3_column_to_vector3(flight::Ref<flight::types::Vector3Lik
           }
         }
         else if (switch_value_4 == 3.0) {
-          throw std::range_error.construct((flight::String("Column ") + column) + flight::String(" out of bounds (2)"));
+          throw flight::RangeError((flight::String("Column ") + column) + flight::String(" out of bounds (2)"));
         }
       }
     }
@@ -147,7 +146,7 @@ inline void copy_matrix3_row_from_vector3(flight::Ref<flight::types::Matrix3Like
       return;
     }
     else {
-      throw std::range_error.construct((flight::String("Row ") + row) + flight::String(" out of bounds (2)"));
+      throw flight::RangeError((flight::String("Row ") + row) + flight::String(" out of bounds (2)"));
     }
   }
 }
@@ -191,7 +190,7 @@ inline void copy_matrix3_row_to_vector3(flight::Ref<flight::types::Vector3Like> 
           }
         }
         else if (switch_value_7 == 3.0) {
-          throw std::range_error.construct((flight::String("Row ") + row) + flight::String(" out of bounds (2)"));
+          throw flight::RangeError((flight::String("Row ") + row) + flight::String(" out of bounds (2)"));
         }
       }
     }
@@ -202,7 +201,7 @@ inline bool equals_matrix3(std::variant<flight::StructuralRef<flight::RowReadonl
   if ((a == b)) {
     return true;
   }
-  if ((!a || !b)) {
+  if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
   {
@@ -505,7 +504,7 @@ inline void write_matrix3_to_float32_array(flight::Float32Array out, double offs
 inline flight::Float32Array identity = flight::Float32Array(flight::Array{1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0});
 
 inline flight::Ref<flight::types::Matrix3> create_matrix3(std::optional<double> m00 = std::nullopt, std::optional<double> m01 = std::nullopt, std::optional<double> m02 = std::nullopt, std::optional<double> m10 = std::nullopt, std::optional<double> m11 = std::nullopt, std::optional<double> m12 = std::nullopt, std::optional<double> m20 = std::nullopt, std::optional<double> m21 = std::nullopt, std::optional<double> m22 = std::nullopt) {
-  flight::Float32Array<flight::ArrayBuffer> m = flight::Float32Array.construct(identity);
+  flight::Float32Array m = flight::Float32Array(identity);
   if (m00.has_value()) {
     m.element(0.0) = m00.value();
   }

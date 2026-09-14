@@ -12,7 +12,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources : public flight::ReferenceEnabled {
+struct AnimatedNormalModifierOptions;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_95B8B467441EC19B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_95B8B467441EC19B
+struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b : public flight::ReferenceEnabled {
   std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;
   bool flip_x;
   bool flip_y;
@@ -25,8 +29,11 @@ struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_spa
   flight::String dimension;
   flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>> sources;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_95B8B467441EC19B
 
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B54DC1BFFA369663
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B54DC1BFFA369663
+struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663 : public flight::ReferenceEnabled {
   std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;
   bool flip_x;
   bool flip_y;
@@ -39,8 +46,11 @@ struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_spa
   flight::String dimension;
   std::optional<flight::Ref<flight::types::VoxelGrid>> source;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B54DC1BFFA369663
 
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_AE19201647327EBA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_AE19201647327EBA
+struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba : public flight::ReferenceEnabled {
   std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;
   bool flip_x;
   bool flip_y;
@@ -53,9 +63,10 @@ struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_spa
   flight::String dimension;
   TextureSourceCubeFaces sources;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_AE19201647327EBA
 
 struct AnimatedNormalModifierOptions : public flight::ReferenceEnabled {
-  std::optional<std::variant<flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_1>, flight::Ref<Texture2D>>> map;
+  std::optional<std::variant<flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<Texture2D>>> map;
   flight::Ref<flight::types::Vector2Like> scroll;
   std::optional<double> strength;
   std::optional<flight::types::Texture> secondary_map;

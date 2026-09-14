@@ -14,6 +14,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Velocity2D;
+struct VelocitySample;
+struct VelocityField;
+struct VelocityExplanation;
+
 struct Velocity2D : public flight::ReferenceEnabled {
   double x;
   double y;

@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Viewport;
+
 struct Viewport : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   double device_pixel_ratio;
@@ -20,7 +22,9 @@ struct Viewport : public flight::ReferenceEnabled {
   double y;
 };
 
-struct entity_runtime_key_device_pixel_ratio_height_width_x_y : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_981DD77A7E38DF0E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_981DD77A7E38DF0E
+struct entity_runtime_key_device_pixel_ratio_height_width_x_y_981dd77a7e38df0e : public flight::ReferenceEnabled {
   std::optional<std::optional<flight::Ref<flight::types::EntityRuntime>>> entity_runtime_key;
   std::optional<double> device_pixel_ratio;
   std::optional<double> height;
@@ -28,7 +32,8 @@ struct entity_runtime_key_device_pixel_ratio_height_width_x_y : public flight::R
   std::optional<double> x;
   std::optional<double> y;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_981DD77A7E38DF0E
 
-using ViewportLike = flight::Ref<entity_runtime_key_device_pixel_ratio_height_width_x_y>;
+using ViewportLike = flight::Ref<entity_runtime_key_device_pixel_ratio_height_width_x_y_981dd77a7e38df0e>;
 
 } // namespace flight::types

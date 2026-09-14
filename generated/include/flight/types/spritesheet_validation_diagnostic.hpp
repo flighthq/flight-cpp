@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct SpritesheetValidationDiagnostic;
+
 using SpritesheetValidationSeverity = flight::String;
 
 struct SpritesheetValidationDiagnostic : public flight::ReferenceEnabled {

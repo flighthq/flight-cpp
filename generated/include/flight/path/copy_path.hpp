@@ -26,7 +26,7 @@ inline flight::Ref<flight::types::Path> copy_path(flight::StructuralRef<flight::
     assign_path_fields(out_2, flight::row_get<flight::RowKey<"commands">>(source).slice(), flight::row_get<flight::RowKey<"data">>(source).slice(), flight::row_get<flight::RowKey<"winding">>(source));
     return flight::entity::finish_entity(out_2);
   }
-  if ((out.value() != source)) {
+  if ((flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>(out.value()) != source)) {
     ([&]() { auto&& assignment_receiver = out.value()->commands; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
     {
       double i = 0.0;

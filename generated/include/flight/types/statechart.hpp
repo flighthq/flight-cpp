@@ -14,17 +14,31 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct boolean_number_trigger : public flight::ReferenceEnabled {
+struct StatechartInput;
+struct StatechartCondition;
+struct StatechartTransition;
+struct StatechartState;
+struct StatechartRegion;
+struct Statechart;
+struct StatechartInstance;
+struct StatechartTransitionExplanation;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_65C24EF4E769DE48
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_65C24EF4E769DE48
+struct boolean_number_trigger_65c24ef4e769de48 : public flight::ReferenceEnabled {
   flight::String boolean;
   flight::String number;
   flight::String trigger;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_65C24EF4E769DE48
 
-inline flight::Ref<boolean_number_trigger> statechart_input_kind = flight::make_ref<boolean_number_trigger>(boolean_number_trigger{.boolean = flight::String("Boolean"), .number = flight::String("Number"), .trigger = flight::String("Trigger")});
+inline flight::Ref<boolean_number_trigger_65c24ef4e769de48> statechart_input_kind = flight::make_ref<boolean_number_trigger_65c24ef4e769de48>(boolean_number_trigger_65c24ef4e769de48{.boolean = flight::String("Boolean"), .number = flight::String("Number"), .trigger = flight::String("Trigger")});
 
 using StatechartInputKind = flight::String;
 
-struct equal_greater_than_greater_than_or_equal_less_than_less_than_or_equal_not_equal : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0392D97345885567
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0392D97345885567
+struct equal_greater_than_greater_than_or_equal_less_than_less_than_or_equal_not_equal_0392d97345885567 : public flight::ReferenceEnabled {
   flight::String equal;
   flight::String greater_than;
   flight::String greater_than_or_equal;
@@ -32,8 +46,9 @@ struct equal_greater_than_greater_than_or_equal_less_than_less_than_or_equal_not
   flight::String less_than_or_equal;
   flight::String not_equal;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0392D97345885567
 
-inline flight::Ref<equal_greater_than_greater_than_or_equal_less_than_less_than_or_equal_not_equal> statechart_comparison = flight::make_ref<equal_greater_than_greater_than_or_equal_less_than_less_than_or_equal_not_equal>(equal_greater_than_greater_than_or_equal_less_than_less_than_or_equal_not_equal{.equal = flight::String("Equal"), .greater_than = flight::String("GreaterThan"), .greater_than_or_equal = flight::String("GreaterThanOrEqual"), .less_than = flight::String("LessThan"), .less_than_or_equal = flight::String("LessThanOrEqual"), .not_equal = flight::String("NotEqual")});
+inline flight::Ref<equal_greater_than_greater_than_or_equal_less_than_less_than_or_equal_not_equal_0392d97345885567> statechart_comparison = flight::make_ref<equal_greater_than_greater_than_or_equal_less_than_less_than_or_equal_not_equal_0392d97345885567>(equal_greater_than_greater_than_or_equal_less_than_less_than_or_equal_not_equal_0392d97345885567{.equal = flight::String("Equal"), .greater_than = flight::String("GreaterThan"), .greater_than_or_equal = flight::String("GreaterThanOrEqual"), .less_than = flight::String("LessThan"), .less_than_or_equal = flight::String("LessThanOrEqual"), .not_equal = flight::String("NotEqual")});
 
 using StatechartComparison = flight::String;
 
@@ -78,7 +93,9 @@ struct Statechart : public flight::ReferenceEnabled {
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<StatechartRegion>>>>> regions;
 };
 
-struct conditions_unmet_exit_time_pending_invalid_region_missing_region_duration_no_transitions_ready_transitioning : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4775C91010CCAEDC
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4775C91010CCAEDC
+struct conditions_unmet_exit_time_pending_invalid_region_missing_region_duration_no_transitions_ready_transitioning_4775c91010ccaedc : public flight::ReferenceEnabled {
   flight::String conditions_unmet;
   flight::String exit_time_pending;
   flight::String invalid_region;
@@ -87,8 +104,9 @@ struct conditions_unmet_exit_time_pending_invalid_region_missing_region_duration
   flight::String ready;
   flight::String transitioning;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4775C91010CCAEDC
 
-inline flight::Ref<conditions_unmet_exit_time_pending_invalid_region_missing_region_duration_no_transitions_ready_transitioning> statechart_transition_status = flight::make_ref<conditions_unmet_exit_time_pending_invalid_region_missing_region_duration_no_transitions_ready_transitioning>(conditions_unmet_exit_time_pending_invalid_region_missing_region_duration_no_transitions_ready_transitioning{.conditions_unmet = flight::String("ConditionsUnmet"), .exit_time_pending = flight::String("ExitTimePending"), .invalid_region = flight::String("InvalidRegion"), .missing_region_duration = flight::String("MissingRegionDuration"), .no_transitions = flight::String("NoTransitions"), .ready = flight::String("Ready"), .transitioning = flight::String("Transitioning")});
+inline flight::Ref<conditions_unmet_exit_time_pending_invalid_region_missing_region_duration_no_transitions_ready_transitioning_4775c91010ccaedc> statechart_transition_status = flight::make_ref<conditions_unmet_exit_time_pending_invalid_region_missing_region_duration_no_transitions_ready_transitioning_4775c91010ccaedc>(conditions_unmet_exit_time_pending_invalid_region_missing_region_duration_no_transitions_ready_transitioning_4775c91010ccaedc{.conditions_unmet = flight::String("ConditionsUnmet"), .exit_time_pending = flight::String("ExitTimePending"), .invalid_region = flight::String("InvalidRegion"), .missing_region_duration = flight::String("MissingRegionDuration"), .no_transitions = flight::String("NoTransitions"), .ready = flight::String("Ready"), .transitioning = flight::String("Transitioning")});
 
 using StatechartTransitionStatus = flight::String;
 

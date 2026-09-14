@@ -9,6 +9,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct SfntTableDirectory;
+struct SfntTableRange;
+
 struct SfntTableRange : public flight::ReferenceEnabled {
   double length;
   double offset;

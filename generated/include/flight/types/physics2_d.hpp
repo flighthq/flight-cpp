@@ -15,6 +15,56 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Physics2DMaterial;
+struct Physics2DCollisionFilter;
+struct Physics2DCollider;
+struct Physics2DMassData;
+struct RigidBody2D;
+struct Physics2DContactPoint;
+struct Physics2DContact;
+struct Physics2DContactHooks;
+struct Physics2DSolverConfig;
+struct Physics2DStepExplanation;
+struct Physics2DWorld;
+struct Physics2DJoint;
+struct Physics2DBrokenJoint;
+struct Physics2DJointEvents;
+struct Physics2DDistanceJoint;
+struct Physics2DRevoluteJoint;
+struct Physics2DWeldJoint;
+struct Physics2DRopeJoint;
+struct Physics2DPulleyJoint;
+struct Physics2DGearJoint;
+struct Physics2DPrismaticJoint;
+struct Physics2DWheelJoint;
+struct Physics2DMouseJoint;
+struct Physics2DJointOptions;
+struct Physics2DDistanceJointOptions;
+struct Physics2DRevoluteJointOptions;
+struct Physics2DWeldJointOptions;
+struct Physics2DRopeJointOptions;
+struct Physics2DPulleyJointOptions;
+struct Physics2DGearJointOptions;
+struct Physics2DPrismaticJointOptions;
+struct Physics2DWheelJointOptions;
+struct Physics2DMouseJointOptions;
+struct Physics2DJointSolver;
+struct Physics2DContactEvents;
+struct Physics2DQueryHit;
+struct Physics2DQueryResult;
+struct Physics2DQueryFilter;
+struct Physics2DRayHit;
+struct Physics2DRayResult;
+struct Physics2DShapeCastResult;
+struct Physics2DCollisionExplanation;
+struct Physics2DJointResolution;
+struct Physics2DJointResolutionExplanation;
+struct Physics2DJointReaction;
+struct Physics2DDebugLine;
+struct Physics2DDebugCircle;
+struct Physics2DDebugGeometry;
+struct Physics2DDebugGeometryOptions;
+
 using Physics2DBodyType = flight::String;
 
 struct Physics2DMaterial : public flight::ReferenceEnabled {

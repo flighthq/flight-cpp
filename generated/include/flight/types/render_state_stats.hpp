@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct RenderStateStats;
+
 struct RenderStateStats : public flight::ReferenceEnabled {
   double draw_call_count;
   double flush_count;

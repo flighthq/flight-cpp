@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct BitmapConvolutionOptions;
+
 struct BitmapConvolutionOptions : public flight::ReferenceEnabled {
   std::optional<double> bias;
   std::optional<flight::types::BitmapEdgeMode> edge;

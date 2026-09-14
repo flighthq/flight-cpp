@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ElectronBackendOptions;
+
 struct ElectronBackendOptions : public flight::ReferenceEnabled {
   flight::types::PlatformName platform;
   std::optional<flight::String> storage_file_name;

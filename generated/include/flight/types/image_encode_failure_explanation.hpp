@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ImageEncodeFailureExplanation;
+
 struct ImageEncodeFailureExplanation : public flight::ReferenceEnabled {
   flight::String mime_type;
   flight::String reason;

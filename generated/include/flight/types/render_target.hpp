@@ -15,6 +15,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct RenderTargetDimensions;
+struct RenderTargetAxes;
+struct RenderTargetAxisDifference;
+struct RenderTargetExplanation;
+struct RenderTargetDescriptor;
+struct RenderTarget;
+struct ResolvedRenderTargetDescriptor;
+
 struct RenderTargetDimensions : public flight::ReferenceEnabled {
   double height;
   double width;

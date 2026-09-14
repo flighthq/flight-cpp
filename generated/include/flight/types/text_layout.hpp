@@ -18,6 +18,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TextLayoutGroup;
+struct TextLayoutParams;
+struct TextLayoutResult;
+
 using TextMeasureFunction = std::function<double(flight::String, flight::Ref<flight::types::TextFormat>)>;
 
 struct TextLayoutGroup : public flight::ReferenceEnabled {

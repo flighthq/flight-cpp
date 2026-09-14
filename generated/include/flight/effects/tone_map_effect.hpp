@@ -14,21 +14,24 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-struct exposure_operator_white : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_974D6747A1009D4B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_974D6747A1009D4B
+struct exposure_operator_white_974d6747a1009d4b : public flight::ReferenceEnabled {
   std::optional<double> exposure;
   std::optional<flight::String> operator_;
   std::optional<double> white;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_974D6747A1009D4B
 
-inline void initialize_tone_map_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ToneMapEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_operator_white>>>> options) {
+inline void initialize_tone_map_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ToneMapEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_operator_white_974d6747a1009d4b>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("ToneMapEffect"));
   flight::row_set<flight::RowKey<"operator">>(out, flight::row_get<flight::RowKey<"operator">>(options));
   flight::row_set<flight::RowKey<"exposure">>(out, flight::row_get<flight::RowKey<"exposure">>(options));
   flight::row_set<flight::RowKey<"white">>(out, flight::row_get<flight::RowKey<"white">>(options));
 }
 
-inline flight::Ref<flight::types::ToneMapEffect> create_tone_map_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_operator_white>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_operator_white>>>>());
+inline flight::Ref<flight::types::ToneMapEffect> create_tone_map_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_operator_white_974d6747a1009d4b>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_operator_white_974d6747a1009d4b>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::ToneMapEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ToneMapEffect>>();
   initialize_tone_map_effect(out, options.value());
   return flight::entity::finish_entity(out);

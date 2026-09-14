@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/array_buffer.hpp>
 #include <flight/structural_ref.hpp>
 #include <random>
 #include <flight/runtime.hpp>
@@ -24,7 +23,7 @@ inline void pixelate_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
   const double h = flight::row_get<flight::RowKey<"height">>(source);
   const double bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
   const double bitmap_height = flight::row_get<flight::RowKey<"bitmap">>(source)->height;
-  flight::Uint8ClampedArray<flight::ArrayBuffer> data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
+  flight::Uint8ClampedArray data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
   {
     double by = 0.0;
     while ((by < h)) {
@@ -59,10 +58,10 @@ inline void pixelate_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                             continue;
                           }
                           const double si = (((sy * bitmap_width) + sx) * 4.0);
-                          r += data.element(si);
-                          g += data.element((si + 1.0));
-                          b += data.element((si + 2.0));
-                          a += data.element((si + 3.0));
+                          r += static_cast<double>(data.element(si));
+                          g += static_cast<double>(data.element((si + 1.0)));
+                          b += static_cast<double>(data.element((si + 2.0)));
+                          a += static_cast<double>(data.element((si + 3.0)));
                           count++;
                         }
                         px += 1.0;

@@ -20,6 +20,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::texture_formats {
 
+struct ParseFailure;
+
 struct ParseFailure : public flight::ReferenceEnabled {
   std::optional<flight::String> reason;
 };

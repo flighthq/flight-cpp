@@ -15,15 +15,20 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct config_diagnostics : public flight::ReferenceEnabled {
+struct ParticleFormatCodec;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_18590BE0AE0A7BC4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_18590BE0AE0A7BC4
+struct config_diagnostics_18590be0ae0a7bc4 : public flight::ReferenceEnabled {
   flight::Ref<flight::types::ParticleEmitterConfig> config;
   flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_18590BE0AE0A7BC4
 
 struct ParticleFormatCodec : public flight::ReferenceEnabled {
   std::function<bool(flight::String)> detect;
   std::function<flight::Ref<flight::types::ParticleEmitterConfig>(flight::String, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>)> parse_to_config;
-  std::function<flight::Ref<config_diagnostics>(flight::String, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>)> parse_to_document;
+  std::function<flight::Ref<config_diagnostics_18590be0ae0a7bc4>(flight::String, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>)> parse_to_document;
   std::optional<std::function<flight::Ref<flight::types::ParticleSerializeResult>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitterConfig>>>>)>> serialize;
 };
 

@@ -8,21 +8,29 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct kind_x_y : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_340F4A4F95F1C5BB
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_340F4A4F95F1C5BB
+struct kind_x_y_340f4a4f95f1c5bb : public flight::ReferenceEnabled {
   flight::String kind;
   double x;
   double y;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_340F4A4F95F1C5BB
 
-struct kind_control_x_control_y_x_y : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_65924B641E5C1F88
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_65924B641E5C1F88
+struct kind_control_x_control_y_x_y_65924b641e5c1f88 : public flight::ReferenceEnabled {
   flight::String kind;
   double control_x;
   double control_y;
   double x;
   double y;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_65924B641E5C1F88
 
-struct kind_control1_x_control1_y_control2_x_control2_y_x_y : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_29B52B6DE0D11011
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_29B52B6DE0D11011
+struct kind_control1_x_control1_y_control2_x_control2_y_x_y_29b52b6de0d11011 : public flight::ReferenceEnabled {
   flight::String kind;
   double control1_x;
   double control1_y;
@@ -31,11 +39,15 @@ struct kind_control1_x_control1_y_control2_x_control2_y_x_y : public flight::Ref
   double x;
   double y;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_29B52B6DE0D11011
 
-struct kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0A56B0507A0DBB94
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0A56B0507A0DBB94
+struct kind_0a56b0507a0dbb94 : public flight::ReferenceEnabled {
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0A56B0507A0DBB94
 
-using PathSegment = std::variant<flight::Ref<kind_control1_x_control1_y_control2_x_control2_y_x_y>, flight::Ref<kind_control_x_control_y_x_y>, flight::Ref<kind_x_y>, flight::Ref<kind>>;
+using PathSegment = std::variant<flight::Ref<kind_control1_x_control1_y_control2_x_control2_y_x_y_29b52b6de0d11011>, flight::Ref<kind_control_x_control_y_x_y_65924b641e5c1f88>, flight::Ref<kind_x_y_340f4a4f95f1c5bb>, flight::Ref<kind_0a56b0507a0dbb94>>;
 
 } // namespace flight::types

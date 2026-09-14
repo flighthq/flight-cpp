@@ -16,7 +16,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::text_markup {
 
-struct align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_5EAF7EDE62EF00CA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_5EAF7EDE62EF00CA
+struct align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations_5eaf7ede62ef00ca : public flight::ReferenceEnabled {
   std::optional<flight::types::TextFormatAlign> align;
   std::optional<double> block_indent;
   std::optional<bool> bold;
@@ -39,10 +41,11 @@ struct align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_l
   std::optional<flight::String> url;
   std::optional<flight::Array<flight::Ref<flight::types::FontVariation>>> variations;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_5EAF7EDE62EF00CA
 
-inline void register_markup_class_styles(flight::Ref<flight::types::MarkupTagRegistry> registry, std::unordered_map<flight::String, flight::Ref<align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations>> styles) {
+inline void register_markup_class_styles(flight::Ref<flight::types::MarkupTagRegistry> registry, std::unordered_map<flight::String, flight::Ref<align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations_5eaf7ede62ef00ca>> styles) {
   flight::types::MarkupClassResolver resolver = [=](flight::String class_name) { return styles[class_name]; };
-  registry->class_resolver = std::optional<std::function<std::optional<flight::Ref<align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations>>(flight::String)>>{resolver};
+  registry->class_resolver = std::optional<std::function<std::optional<flight::Ref<align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations_5eaf7ede62ef00ca>>(flight::String)>>{resolver};
 }
 
 } // namespace flight::text_markup

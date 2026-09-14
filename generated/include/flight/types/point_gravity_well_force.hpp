@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct PointGravityWellForce;
+
 struct PointGravityWellForce : public flight::ReferenceEnabled {
   flight::String kind;
   double x;

@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Skeleton3DValidationDiagnostic;
+
 struct Skeleton3DValidationDiagnostic : public flight::ReferenceEnabled {
   double joint_count;
   double inverse_bind_matrices_length;

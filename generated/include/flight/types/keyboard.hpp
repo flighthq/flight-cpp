@@ -13,6 +13,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct SoftKeyboardInfo;
+struct SoftKeyboard;
+struct SoftKeyboardInfoBackend;
+struct SoftKeyboardChangeSubscription;
+struct SoftKeyboardChangeBackend;
+struct SoftKeyboardVisibilityBackend;
+struct SoftKeyboardResizeModeWriteBackend;
+struct SoftKeyboardStyleBackend;
+struct SoftKeyboardAccessoryBarBackend;
+struct SoftKeyboardScrollAssistBackend;
+
 using SoftKeyboardResizeMode = flight::String;
 
 inline const flight::String soft_keyboard_resize_none_kind = flight::String("None");

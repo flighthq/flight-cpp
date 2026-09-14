@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct PixiParseResult;
+
 struct PixiParseResult : public flight::ReferenceEnabled {
   flight::Ref<flight::types::ParticleEmitterConfig> config;
   flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics;

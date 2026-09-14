@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TextureContainerLevel;
+
 struct TextureContainerLevel : public flight::ReferenceEnabled {
   double byte_offset;
   double byte_length;

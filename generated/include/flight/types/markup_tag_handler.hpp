@@ -14,7 +14,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations : public flight::ReferenceEnabled {
+struct MarkupTagEffect;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5EAF7EDE62EF00CA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5EAF7EDE62EF00CA
+struct align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations_5eaf7ede62ef00ca : public flight::ReferenceEnabled {
   std::optional<TextFormatAlign> align;
   std::optional<double> block_indent;
   std::optional<bool> bold;
@@ -37,14 +41,15 @@ struct align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_l
   std::optional<flight::String> url;
   std::optional<flight::Array<flight::Ref<flight::types::FontVariation>>> variations;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5EAF7EDE62EF00CA
 
 struct MarkupTagEffect : public flight::ReferenceEnabled {
   std::optional<bool> break_before;
-  std::optional<flight::Ref<align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations>> format;
+  std::optional<flight::Ref<align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations_5eaf7ede62ef00ca>> format;
   std::optional<flight::String> text;
 };
 
-using MarkupTagResult = std::variant<flight::Ref<MarkupTagEffect>, flight::Ref<align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations>>;
+using MarkupTagResult = std::variant<flight::Ref<MarkupTagEffect>, flight::Ref<align_block_indent_bold_bullet_color_font_indent_italic_kerning_leading_left_margin_letter_spacing_list_marker_right_margin_size_strikethrough_tab_stops_target_underline_url_variations_5eaf7ede62ef00ca>>;
 
 using MarkupTagHandler = std::function<MarkupTagResult(std::unordered_map<flight::String, flight::String>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>)>;
 

@@ -12,8 +12,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct VertexDisplaceModifierOptions;
+
 struct VertexDisplaceModifierOptions : public flight::ReferenceEnabled {
-  flight::types::vertex_displace_modifier_source source;
+  flight::types::VertexDisplaceModifierSource source;
   double amplitude;
   std::optional<flight::Ref<flight::types::Vector3Like>> axis;
   std::optional<flight::types::Texture> map;

@@ -7,6 +7,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Md5Joint;
+struct Md5Vertex;
+struct Md5Weight;
+struct Md5Mesh;
+
 struct Md5Joint : public flight::ReferenceEnabled {
   flight::String name;
   double orientation_w;

@@ -8,6 +8,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct LibgdxAtlasDocument;
+struct LibgdxAtlasPage;
+struct LibgdxAtlasRegion;
+struct LibgdxAtlasParseOptions;
+
 struct LibgdxAtlasRegion : public flight::ReferenceEnabled {
   double index;
   flight::String name;

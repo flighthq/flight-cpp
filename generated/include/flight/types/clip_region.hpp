@@ -15,6 +15,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ClipRegion;
+struct ClipRegionExplanation;
+struct ClipRegionContoursExplanation;
+
 struct ClipRegion : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::Ref<flight::types::Rectangle> rect;

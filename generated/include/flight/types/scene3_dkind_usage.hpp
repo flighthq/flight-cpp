@@ -12,13 +12,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Scene3DKindUsage;
+
 struct Scene3DKindUsage : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Array<flight::types::Kind> material_kinds;
-  flight::Array<flight::types::Kind> modifier_kinds;
-  flight::Array<flight::types::Kind> node_kinds;
+  flight::Array<flight::String> material_kinds;
+  flight::Array<flight::String> modifier_kinds;
+  flight::Array<flight::String> node_kinds;
   flight::Array<flight::String> resource_mime_types;
-  flight::Array<flight::types::TextureSourceKind> texture_source_kinds;
+  flight::Array<flight::String> texture_source_kinds;
 };
 
 } // namespace flight::types

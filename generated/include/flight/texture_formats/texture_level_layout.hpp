@@ -15,6 +15,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::texture_formats {
 
+struct TextureFormatBlockInfo;
+
 struct TextureFormatBlockInfo : public flight::ReferenceEnabled {
   double block_width;
   double block_height;
@@ -45,12 +47,15 @@ inline double get_texture_container_level_byte_length(flight::types::TextureCont
   return ((blocks_wide * blocks_high) * block.value()->bytes_per_block);
 }
 
-struct levels_end_offset : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_FDDF0B752B0F2901
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_FDDF0B752B0F2901
+struct levels_end_offset_fddf0b752b0f2901 : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<flight::types::TextureContainerLevel>> levels;
   double end_offset;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_FDDF0B752B0F2901
 
-inline std::optional<flight::Ref<levels_end_offset>> compute_texture_container_levels(flight::types::TextureContainerFormat format, double base_width, double base_height, double mip_levels, double layers, double faces, double start_offset) {
+inline std::optional<flight::Ref<levels_end_offset_fddf0b752b0f2901>> compute_texture_container_levels(flight::types::TextureContainerFormat format, double base_width, double base_height, double mip_levels, double layers, double faces, double start_offset) {
   if (!get_texture_container_format_block_info(format).has_value()) {
     return std::nullopt;
   }
@@ -85,7 +90,7 @@ inline std::optional<flight::Ref<levels_end_offset>> compute_texture_container_l
       layer += 1.0;
     }
   }
-  return std::optional<flight::Ref<levels_end_offset>>{([&]() { auto object_member_end_offset = offset; auto object_member_levels = levels; return flight::make_ref<levels_end_offset>(levels_end_offset{.levels = object_member_levels, .end_offset = object_member_end_offset}); }())};
+  return std::optional<flight::Ref<levels_end_offset_fddf0b752b0f2901>>{([&]() { auto object_member_end_offset = offset; auto object_member_levels = levels; return flight::make_ref<levels_end_offset_fddf0b752b0f2901>(levels_end_offset_fddf0b752b0f2901{.levels = object_member_levels, .end_offset = object_member_end_offset}); }())};
 }
 
 } // namespace flight::texture_formats

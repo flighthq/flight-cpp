@@ -13,11 +13,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::easing {
 
-struct ease_end_start : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EASING_9367E63245DFD72E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EASING_9367E63245DFD72E
+struct ease_end_start_9367e63245dfd72e : public flight::ReferenceEnabled {
   flight::types::EasingFunction ease;
   double end;
   double start;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EASING_9367E63245DFD72E
 
 inline flight::types::EasingFunction ease_piecewise(flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EasingSegment>>>>> segments) {
   if ((segments.length == 0.0)) {
@@ -27,21 +30,21 @@ inline flight::types::EasingFunction ease_piecewise(flight::Array<flight::Struct
   if ((total_weight <= 0.0)) {
     throw flight::Error(flight::String("easePiecewise: total segment weight must be greater than zero"));
   }
-  flight::Array<flight::Ref<ease_end_start>> breakpoints = flight::Array<flight::Ref<ease_end_start>>{};
+  flight::Array<flight::Ref<ease_end_start_9367e63245dfd72e>> breakpoints = flight::Array<flight::Ref<ease_end_start_9367e63245dfd72e>>{};
   double accumulated = 0.0;
   for (auto seg : segments) {
     const double weight = flight::row_get<flight::RowKey<"weight">>(seg).value_or(1.0);
     const double start = (accumulated / total_weight);
     accumulated += weight;
     const double end = (accumulated / total_weight);
-    breakpoints.push(flight::make_ref<ease_end_start>(ease_end_start{.ease = flight::row_get<flight::RowKey<"ease">>(seg), .end = end, .start = start}));
+    breakpoints.push(flight::make_ref<ease_end_start_9367e63245dfd72e>(ease_end_start_9367e63245dfd72e{.ease = flight::row_get<flight::RowKey<"ease">>(seg), .end = end, .start = start}));
   }
   return [=](double t) {
   {
     double i = 0.0;
     while ((i < static_cast<double>(breakpoints.size()))) {
       {
-        flight::Ref<ease_end_start> bp = breakpoints.element(i);
+        flight::Ref<ease_end_start_9367e63245dfd72e> bp = breakpoints.element(i);
         if (((t <= bp->end) || (i == (static_cast<double>(breakpoints.size()) - 1.0)))) {
           const double span = (bp->end - bp->start);
           const double local_t = ((span > 0.0) ? ((t - bp->start) / span) : 1.0);

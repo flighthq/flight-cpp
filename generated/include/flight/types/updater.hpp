@@ -14,6 +14,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct UpdateInfo;
+struct DownloadedUpdate;
+struct AppUpdateInstallOutcome;
+struct UpdaterCommandBackend;
+
 struct UpdateInfo : public flight::ReferenceEnabled {
   std::optional<double> download_size_bytes;
   std::optional<bool> is_mandatory;
@@ -29,16 +34,22 @@ struct DownloadedUpdate : public flight::ReferenceEnabled {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<UpdateInfo>>>> info;
 };
 
-struct reason_update : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_938ED6A0D2DA8E0C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_938ED6A0D2DA8E0C
+struct reason_update_938ed6a0d2da8e0c : public flight::ReferenceEnabled {
   flight::String reason;
   flight::Ref<DownloadedUpdate> update;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_938ED6A0D2DA8E0C
 
-struct reason : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_01523507F7B21613
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_01523507F7B21613
+struct reason_01523507f7b21613 : public flight::ReferenceEnabled {
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_01523507F7B21613
 
-using AppUpdateCheckOutcome = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_update>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason>>>>>;
+using AppUpdateCheckOutcome = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_update_938ed6a0d2da8e0c>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_01523507f7b21613>>>>>;
 
 struct AppUpdateInstallOutcome : public flight::ReferenceEnabled {
   flight::String reason;

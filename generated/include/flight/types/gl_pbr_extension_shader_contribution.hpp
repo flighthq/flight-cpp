@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct GlPbrExtensionShaderContribution;
+
 struct GlPbrExtensionShaderContribution : public flight::ReferenceEnabled {
   flight::String apply_surface;
   flight::String contribute_ibl;

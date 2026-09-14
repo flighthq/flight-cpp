@@ -12,6 +12,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TexturePackerRect;
+struct TexturePackerSize;
+struct TexturePackerPivot;
+struct TexturePackerFrameTag;
+struct TexturePackerHashFrame;
+struct TexturePackerArrayFrame;
+struct TexturePackerMeta;
+struct TexturePackerHashDocument;
+struct TexturePackerArrayDocument;
+struct TexturePackerParsed;
+struct TexturePackerSerializeOptions;
+
 struct TexturePackerRect : public flight::ReferenceEnabled {
   double h;
   double w;

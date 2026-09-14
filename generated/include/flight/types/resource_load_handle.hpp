@@ -8,6 +8,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types {
 
 template <typename T>
+struct ResourceLoadHandle;
+
+template <typename T>
 struct ResourceLoadHandle : public flight::ReferenceEnabled {
   flight::String key;
   flight::Task<T> promise;

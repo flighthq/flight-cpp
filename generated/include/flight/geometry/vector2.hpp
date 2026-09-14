@@ -60,7 +60,7 @@ inline void divide_vector2(flight::Ref<flight::types::Vector2Like> out, flight::
 }
 
 inline bool equals_vector2(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>>, flight::Null, flight::Undefined> b) {
-  if ((!a || !b)) {
+  if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
   return ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>>>(b)) || ((flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>>>(a)) == flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>>>(b))) && (flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>>>(a)) == flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>>>(b)))));
@@ -114,7 +114,7 @@ inline void initialize_vector2(flight::types::EntityConstruction<flight::Ref<fli
 
 inline flight::Ref<flight::types::Vector2> create_vector2(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Vector2>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Vector2>>();
-  initialize_vector2(out, x, y);
+  initialize_vector2(out, x.value_or(0.0), y.value_or(0.0));
   return flight::entity::finish_entity(out);
 }
 

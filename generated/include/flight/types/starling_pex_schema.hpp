@@ -11,6 +11,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct StarlingPexColor;
+struct StarlingPexDocument;
+struct StarlingPexParseOptions;
+struct StarlingPexParseResult;
+struct StarlingPexSerializeOptions;
+
 struct StarlingPexColor : public flight::ReferenceEnabled {
   double red;
   double green;

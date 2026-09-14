@@ -7,7 +7,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct compression_kind_document_format_physics2_djoint_kind_scene_blend_mode_scene_material_kind_scene_modifier_kind_scene_node_kind_scene_resource_mime_type_scene_shape_command_scene_texture_source_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_611830BF7603619B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_611830BF7603619B
+struct compression_kind_document_format_physics2_djoint_kind_scene_blend_mode_scene_material_kind_scene_modifier_kind_scene_node_kind_scene_resource_mime_type_scene_shape_command_scene_texture_source_kind_611830bf7603619b : public flight::ReferenceEnabled {
   flight::String compression_kind;
   flight::String document_format;
   flight::String physics2_djoint_kind;
@@ -19,8 +21,9 @@ struct compression_kind_document_format_physics2_djoint_kind_scene_blend_mode_sc
   flight::String scene_shape_command;
   flight::String scene_texture_source_kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_611830BF7603619B
 
-inline flight::Ref<compression_kind_document_format_physics2_djoint_kind_scene_blend_mode_scene_material_kind_scene_modifier_kind_scene_node_kind_scene_resource_mime_type_scene_shape_command_scene_texture_source_kind> requirement_facet = flight::make_ref<compression_kind_document_format_physics2_djoint_kind_scene_blend_mode_scene_material_kind_scene_modifier_kind_scene_node_kind_scene_resource_mime_type_scene_shape_command_scene_texture_source_kind>(compression_kind_document_format_physics2_djoint_kind_scene_blend_mode_scene_material_kind_scene_modifier_kind_scene_node_kind_scene_resource_mime_type_scene_shape_command_scene_texture_source_kind{.compression_kind = flight::String("compression.kind"), .document_format = flight::String("document.format"), .physics2_djoint_kind = flight::String("physics2d.joint-kind"), .scene_blend_mode = flight::String("scene.blend-mode"), .scene_material_kind = flight::String("scene.material-kind"), .scene_modifier_kind = flight::String("scene.modifier-kind"), .scene_node_kind = flight::String("scene.node-kind"), .scene_resource_mime_type = flight::String("scene.resource-mime-type"), .scene_shape_command = flight::String("scene.shape-command"), .scene_texture_source_kind = flight::String("scene.texture-source-kind")});
+inline flight::Ref<compression_kind_document_format_physics2_djoint_kind_scene_blend_mode_scene_material_kind_scene_modifier_kind_scene_node_kind_scene_resource_mime_type_scene_shape_command_scene_texture_source_kind_611830bf7603619b> requirement_facet = flight::make_ref<compression_kind_document_format_physics2_djoint_kind_scene_blend_mode_scene_material_kind_scene_modifier_kind_scene_node_kind_scene_resource_mime_type_scene_shape_command_scene_texture_source_kind_611830bf7603619b>(compression_kind_document_format_physics2_djoint_kind_scene_blend_mode_scene_material_kind_scene_modifier_kind_scene_node_kind_scene_resource_mime_type_scene_shape_command_scene_texture_source_kind_611830bf7603619b{.compression_kind = flight::String("compression.kind"), .document_format = flight::String("document.format"), .physics2_djoint_kind = flight::String("physics2d.joint-kind"), .scene_blend_mode = flight::String("scene.blend-mode"), .scene_material_kind = flight::String("scene.material-kind"), .scene_modifier_kind = flight::String("scene.modifier-kind"), .scene_node_kind = flight::String("scene.node-kind"), .scene_resource_mime_type = flight::String("scene.resource-mime-type"), .scene_shape_command = flight::String("scene.shape-command"), .scene_texture_source_kind = flight::String("scene.texture-source-kind")});
 
 using RequirementFacet = flight::String;
 

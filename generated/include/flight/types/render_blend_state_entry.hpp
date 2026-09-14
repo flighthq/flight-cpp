@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct RenderBlendStateEntry;
+
 struct RenderBlendStateEntry : public flight::ReferenceEnabled {
   double alpha;
   std::optional<flight::String> blend_mode;

@@ -11,11 +11,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct EmissiveModifierOptions;
+
 struct EmissiveModifierOptions : public flight::ReferenceEnabled {
   double color;
   std::optional<double> strength;
   std::optional<flight::types::Texture> mask;
-  std::optional<flight::types::emissive_modifier_facing> facing;
+  std::optional<flight::types::EmissiveModifierFacing> facing;
   std::optional<double> facing_softness;
 };
 

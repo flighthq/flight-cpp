@@ -14,19 +14,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-struct samples_intensity : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D75EBFC642DD8412
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D75EBFC642DD8412
+struct samples_intensity_d75ebfc642dd8412 : public flight::ReferenceEnabled {
   std::optional<double> samples;
   std::optional<double> intensity;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D75EBFC642DD8412
 
-inline void initialize_camera_motion_blur_effect(flight::types::EntityConstruction<flight::Ref<flight::types::CameraMotionBlurEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity>>>> options) {
+inline void initialize_camera_motion_blur_effect(flight::types::EntityConstruction<flight::Ref<flight::types::CameraMotionBlurEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity_d75ebfc642dd8412>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("CameraMotionBlurEffect"));
   flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
   flight::row_set<flight::RowKey<"samples">>(out, flight::row_get<flight::RowKey<"samples">>(options));
 }
 
-inline flight::Ref<flight::types::CameraMotionBlurEffect> create_camera_motion_blur_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity>>>>());
+inline flight::Ref<flight::types::CameraMotionBlurEffect> create_camera_motion_blur_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity_d75ebfc642dd8412>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity_d75ebfc642dd8412>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::CameraMotionBlurEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::CameraMotionBlurEffect>>();
   initialize_camera_motion_blur_effect(out, options.value());
   return flight::entity::finish_entity(out);

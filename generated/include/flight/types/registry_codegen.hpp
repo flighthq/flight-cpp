@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct RegistryCodegenPlan;
+
 struct RegistryCodegenPlan : public flight::ReferenceEnabled {
   flight::String backend;
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RegistryCatalogEntry>>>>> entries;

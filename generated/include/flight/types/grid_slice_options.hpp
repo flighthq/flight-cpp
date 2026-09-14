@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct GridSliceOptions;
+
 struct GridSliceOptions : public flight::ReferenceEnabled {
   double columns;
   std::optional<double> frame_height;

@@ -9,6 +9,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct PhotometricLightLike;
+
 struct PhotometricLightLike : public flight::ReferenceEnabled {
   double intensity;
   flight::types::LightUnit intensity_unit;

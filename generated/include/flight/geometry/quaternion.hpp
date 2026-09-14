@@ -38,7 +38,7 @@ inline bool equals_quaternion(std::variant<flight::StructuralRef<flight::RowRead
   if ((a == b)) {
     return true;
   }
-  if ((!a || !b)) {
+  if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
   return ((((flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a)) == flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b))) && (flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a)) == flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a)) == flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"w">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a)) == flight::row_get<flight::RowKey<"w">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b))));
@@ -185,7 +185,7 @@ inline void initialize_quaternion(flight::types::EntityConstruction<flight::Ref<
 
 inline flight::Ref<flight::types::Quaternion> create_quaternion(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> z = std::nullopt, std::optional<double> w = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Quaternion>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Quaternion>>();
-  initialize_quaternion(out, x, y, z, w);
+  initialize_quaternion(out, x.value_or(0.0), y.value_or(0.0), z.value_or(0.0), w.value_or(1.0));
   return flight::entity::finish_entity(out);
 }
 

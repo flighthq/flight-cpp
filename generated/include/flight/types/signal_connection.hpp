@@ -10,6 +10,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types {
 
 template <typename T>
+struct SignalConnection;
+
+template <typename T>
 struct SignalConnection : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Signal<T>> signal;
   T slot;

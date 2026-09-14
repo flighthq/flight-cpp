@@ -16,25 +16,41 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct text_title_url : public flight::ReferenceEnabled {
+struct ShareFilesContent;
+struct ShareResult;
+struct ShareContentBackend;
+struct ShareFilesBackend;
+struct CapacitorShareContentOptions;
+struct CapacitorShareContentBackend;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0920BC2A3CE65B06
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0920BC2A3CE65B06
+struct text_title_url_0920bc2a3ce65b06 : public flight::ReferenceEnabled {
   std::optional<flight::String> text;
   flight::String title;
   std::optional<flight::String> url;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0920BC2A3CE65B06
 
-struct text_title_url_1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_66EF499C1C8B6060
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_66EF499C1C8B6060
+struct text_title_url_66ef499c1c8b6060 : public flight::ReferenceEnabled {
   flight::String text;
   std::optional<flight::String> title;
   std::optional<flight::String> url;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_66EF499C1C8B6060
 
-struct text_title_url_2 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_178ED2AAB7BFA756
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_178ED2AAB7BFA756
+struct text_title_url_178ed2aab7bfa756 : public flight::ReferenceEnabled {
   std::optional<flight::String> text;
   std::optional<flight::String> title;
   flight::String url;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_178ED2AAB7BFA756
 
-using ShareContent = std::variant<flight::Ref<text_title_url_1>, flight::Ref<text_title_url>, flight::Ref<text_title_url_2>>;
+using ShareContent = std::variant<flight::Ref<text_title_url_66ef499c1c8b6060>, flight::Ref<text_title_url_0920bc2a3ce65b06>, flight::Ref<text_title_url_178ed2aab7bfa756>>;
 
 struct ShareFilesContent : public flight::ReferenceEnabled {
   std::tuple<flight::Ref<flight::types::ShareFile>, flight::Array<flight::Ref<flight::types::ShareFile>>> files;

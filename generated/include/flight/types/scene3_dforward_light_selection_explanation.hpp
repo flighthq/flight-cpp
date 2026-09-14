@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Scene3DForwardLightSelectionExplanation;
+
 struct Scene3DForwardLightSelectionExplanation : public flight::ReferenceEnabled {
   double point_light_count;
   flight::String reason;

@@ -9,11 +9,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct GlPbrExtensionIssue;
+
 using GlPbrExtensionIssueCode = flight::String;
 
 struct GlPbrExtensionIssue : public flight::ReferenceEnabled {
   GlPbrExtensionIssueCode code;
-  flight::types::Kind kind;
+  flight::String kind;
 };
 
 } // namespace flight::types

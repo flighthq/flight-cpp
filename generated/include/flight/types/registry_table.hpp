@@ -12,28 +12,45 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct RegistryTableBase;
+template <typename T>
+struct KeyedTable;
+template <typename T>
+struct SlotTable;
+template <typename T>
+struct OrdinalTable;
+
 using RegistryId = flight::String;
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_49C40B4F01B4314B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_49C40B4F01B4314B
 template <typename T>
-struct state_value : public flight::ReferenceEnabled {
+struct state_value_49c40b4f01b4314b : public flight::ReferenceEnabled {
   flight::String state;
   T value;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_49C40B4F01B4314B
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FB2721E0BB344354
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FB2721E0BB344354
 template <typename T>
-struct state : public flight::ReferenceEnabled {
+struct state_fb2721e0bb344354 : public flight::ReferenceEnabled {
   flight::String state;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FB2721E0BB344354
 
 template <typename T>
-using RegistryTableEntry = std::variant<flight::Ref<state_value<T>>, flight::Ref<state<T>>>;
+using RegistryTableEntry = std::variant<flight::Ref<state_value_49c40b4f01b4314b<T>>, flight::Ref<state_fb2721e0bb344354<T>>>;
 
-struct bound_tombstoned : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_54A1DF218909E3D5
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_54A1DF218909E3D5
+struct bound_tombstoned_54a1df218909e3d5 : public flight::ReferenceEnabled {
   flight::String bound;
   flight::String tombstoned;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_54A1DF218909E3D5
 
-inline flight::Ref<bound_tombstoned> registry_entry_state = flight::make_ref<bound_tombstoned>(bound_tombstoned{.bound = flight::String("bound"), .tombstoned = flight::String("tombstoned")});
+inline flight::Ref<bound_tombstoned_54a1df218909e3d5> registry_entry_state = flight::make_ref<bound_tombstoned_54a1df218909e3d5>(bound_tombstoned_54a1df218909e3d5{.bound = flight::String("bound"), .tombstoned = flight::String("tombstoned")});
 
 using RegistryEntryState = flight::String;
 
@@ -48,7 +65,7 @@ template <typename T>
 struct KeyedTable : public flight::ReferenceEnabled {
   RegistryMissPolicy on_miss;
   RegistryId registry;
-  flight::Map<flight::types::Kind, RegistryTableEntry<T>> entries;
+  flight::Map<flight::String, RegistryTableEntry<T>> entries;
   flight::String shape;
 };
 
@@ -66,7 +83,7 @@ struct OrdinalTable : public flight::ReferenceEnabled {
   RegistryId registry;
   flight::Array<std::optional<T>> entries;
   flight::String shape;
-  flight::Array<flight::types::Kind> vocabulary;
+  flight::Array<flight::String> vocabulary;
 };
 
 template <typename T>

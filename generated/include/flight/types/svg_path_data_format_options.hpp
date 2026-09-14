@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct SvgPathDataFormatOptions;
+
 struct SvgPathDataFormatOptions : public flight::ReferenceEnabled {
   std::optional<double> precision;
 };

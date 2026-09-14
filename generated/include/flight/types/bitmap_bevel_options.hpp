@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct BitmapBevelOptions;
+
 struct BitmapBevelOptions : public flight::ReferenceEnabled {
   std::optional<double> angle;
   std::optional<double> distance;

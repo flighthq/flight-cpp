@@ -7,6 +7,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct CurveKeyframe;
+struct ColorKeyframe;
+
 using ParticleCurve = flight::Array<double>;
 
 struct CurveKeyframe : public flight::ReferenceEnabled {

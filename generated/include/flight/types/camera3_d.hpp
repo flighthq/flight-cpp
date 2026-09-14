@@ -14,6 +14,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Camera3D;
+struct PerspectiveProjection;
+struct OrthographicProjection;
+
 struct PerspectiveProjection : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   double aspect;

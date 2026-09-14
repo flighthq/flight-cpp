@@ -16,6 +16,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct GlyphSource;
+struct GlyphEntry;
+struct GlyphMetrics;
+struct GlyphRasterizedBitmap;
+struct GlyphRasterizeOptions;
+struct GlyphRasterizerBackend;
+struct GlyphAtlasOptions;
+struct GlyphAtlasShelf;
+struct GlyphAtlasRuntime;
+struct GlyphAtlas;
+
 struct GlyphEntry : public flight::ReferenceEnabled {
   double advance;
   double bearing_x;

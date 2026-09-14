@@ -10,6 +10,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TextureAtlasAsepriteRect;
+struct TextureAtlasAsepriteSize;
+struct TextureAtlasAsepriteFrameTag;
+struct TextureAtlasAsepriteBaseFrame;
+struct TextureAtlasAsepriteArrayFrame;
+struct TextureAtlasAsepriteMeta;
+struct TextureAtlasAsepriteHashDocument;
+struct TextureAtlasAsepriteArrayDocument;
+
 struct TextureAtlasAsepriteRect : public flight::ReferenceEnabled {
   double h;
   double w;

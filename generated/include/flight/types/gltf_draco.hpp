@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct GltfDracoMesh;
+
 struct GltfDracoMesh : public flight::ReferenceEnabled {
   std::unordered_map<flight::String, flight::Float32Array> attributes;
   std::optional<flight::Uint32Array> indices;

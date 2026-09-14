@@ -12,6 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct InputKeyRepeatTimer;
+
 struct InputKeyRepeatTimer : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::function<void(std::function<void()>)> start;

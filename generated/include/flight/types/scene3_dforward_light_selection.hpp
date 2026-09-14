@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Scene3DForwardLightSelection;
+
 struct Scene3DForwardLightSelection : public flight::ReferenceEnabled {
   flight::Array<double> indices;
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointLight>>>>> point;

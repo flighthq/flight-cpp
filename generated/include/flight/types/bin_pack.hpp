@@ -9,6 +9,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct PackableRectangle;
+struct PackedRectangle;
+struct BinPackOptions;
+struct PackResult;
+struct UnpackedRectangleExplanation;
+
 using RectangleId = std::variant<double, flight::String>;
 
 struct PackableRectangle : public flight::ReferenceEnabled {

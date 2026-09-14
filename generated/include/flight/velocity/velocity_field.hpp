@@ -130,7 +130,7 @@ inline flight::Ref<flight::types::VelocityField> create_velocity_field() {
 }
 
 inline bool is_velocity_zero(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> velocity, std::optional<double> epsilon = std::nullopt) {
-  const double e = epsilon;
+  const double e = epsilon.value_or(0.0);
   return ((std::abs(flight::row_get<flight::RowKey<"x">>(velocity)) <= e) && (std::abs(flight::row_get<flight::RowKey<"y">>(velocity)) <= e));
 }
 

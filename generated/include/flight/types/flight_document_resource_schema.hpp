@@ -11,9 +11,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct FlightDocumentResourceSchema;
+
 struct FlightDocumentResourceSchema : public flight::ReferenceEnabled {
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlightDocumentFieldSchema>>>>> fields;
-  flight::types::Kind kind;
+  flight::String kind;
 };
 
 } // namespace flight::types

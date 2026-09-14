@@ -8,6 +8,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ThreeDsMaterial;
+struct ThreeDsLight;
+struct ThreeDsCamera;
+struct ThreeDsMaterialGroup;
+struct ThreeDsMesh;
+
 inline const double three_ds_main = 19789.0;
 
 inline const double three_ds_editor = 15677.0;

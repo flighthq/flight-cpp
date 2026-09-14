@@ -79,7 +79,7 @@ inline void divide_vector3(flight::Ref<flight::types::Vector3Like> out, flight::
 }
 
 inline bool equals_vector3(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>, flight::Null, flight::Undefined> b) {
-  if ((!a || !b)) {
+  if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
   return ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(b)) || (((flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(a)) == flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(b))) && (flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(a)) == flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(b)))) && (flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(a)) == flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(b)))));
@@ -145,7 +145,7 @@ inline void initialize_vector3(flight::types::EntityConstruction<flight::Ref<fli
 
 inline flight::Ref<flight::types::Vector3> create_vector3(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> z = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Vector3>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Vector3>>();
-  initialize_vector3(out, x, y, z);
+  initialize_vector3(out, x.value_or(0.0), y.value_or(0.0), z.value_or(0.0));
   return flight::entity::finish_entity(out);
 }
 

@@ -7,6 +7,7 @@
 #include <optional>
 #include <random>
 #include <stdexcept>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -86,63 +87,136 @@ inline bool is_point_in_convex_polygon(double x, double y, flight::Array<double>
   return true;
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_90FBB3B4C4569518
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_90FBB3B4C4569518
+struct x_y_radius_kind_90fbb3b4c4569518_1 : public flight::ReferenceEnabled {
+  double x;
+  double y;
+  double radius;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_90FBB3B4C4569518
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_329D6080B4F31DB4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_329D6080B4F31DB4
+struct min_x_min_y_max_x_max_y_kind_329d6080b4f31db4_1 : public flight::ReferenceEnabled {
+  double min_x;
+  double min_y;
+  double max_x;
+  double max_y;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_329D6080B4F31DB4
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_8FFCEA5C657A2268
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_8FFCEA5C657A2268
+struct x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268_1 : public flight::ReferenceEnabled {
+  double x;
+  double y;
+  double half_w;
+  double half_h;
+  double rotation;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_8FFCEA5C657A2268
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_768BA062D07F3FF6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_768BA062D07F3FF6
+struct x0_y0_x1_y1_radius_kind_768ba062d07f3ff6_1 : public flight::ReferenceEnabled {
+  double x0;
+  double y0;
+  double x1;
+  double y1;
+  double radius;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_768BA062D07F3FF6
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_9B00EBDAD27CDB4E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_9B00EBDAD27CDB4E
+struct points_kind_9b00ebdad27cdb4e_1 : public flight::ReferenceEnabled {
+  flight::Array<double> points;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_9B00EBDAD27CDB4E
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_D4F616534491406F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_D4F616534491406F
+struct x0_y0_x1_y1_kind_d4f616534491406f_1 : public flight::ReferenceEnabled {
+  double x0;
+  double y0;
+  double x1;
+  double y1;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_D4F616534491406F
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_35AD667397176B0F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_35AD667397176B0F
+struct x_y_kind_35ad667397176b0f_1 : public flight::ReferenceEnabled {
+  double x;
+  double y;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_35AD667397176B0F
+
 inline bool get_collision_shape_contains_point2_d(flight::types::CollisionBuiltInShape2D shape, double x, double y) {
   {
-    auto switch_value = shape.kind;
+    auto switch_value = std::visit([](const auto& value) { return value->kind; }, shape);
     if (switch_value == flight::String("circle")) {
       {
-        const double dx_5 = (x - shape.x);
-        const double dy_5 = (y - shape.y);
-        return (((dx_5 * dx_5) + (dy_5 * dy_5)) <= (shape.radius * shape.radius));
+        const double dx_5 = (x - std::get<2>(shape)->x);
+        const double dy_5 = (y - std::get<2>(shape)->y);
+        return (((dx_5 * dx_5) + (dy_5 * dy_5)) <= (std::get<2>(shape)->radius * std::get<2>(shape)->radius));
       }
     }
     else if (switch_value == flight::String("aabb")) {
-      return ((((x >= shape.min_x) && (x <= shape.max_x)) && (y >= shape.min_y)) && (y <= shape.max_y));
+      return ((((x >= std::get<6>(shape)->min_x) && (x <= std::get<6>(shape)->max_x)) && (y >= std::get<6>(shape)->min_y)) && (y <= std::get<6>(shape)->max_y));
     }
     else if (switch_value == flight::String("obb")) {
       {
-        auto cos = std::cos(shape.rotation);
-        auto sin = std::sin(shape.rotation);
-        const double dx = (x - shape.x);
-        const double dy = (y - shape.y);
+        auto cos = std::cos(std::get<0>(shape)->rotation);
+        auto sin = std::sin(std::get<0>(shape)->rotation);
+        const double dx = (x - std::get<0>(shape)->x);
+        const double dy = (y - std::get<0>(shape)->y);
         const double local_x = ((dx * cos) + (dy * sin));
         const double local_y = ((-dx * sin) + (dy * cos));
-        return ((std::abs(local_x) <= shape.half_w) && (std::abs(local_y) <= shape.half_h));
+        return ((std::abs(local_x) <= std::get<0>(shape)->half_w) && (std::abs(local_y) <= std::get<0>(shape)->half_h));
       }
     }
     else if (switch_value == flight::String("capsule")) {
       {
-        const double dx_2 = (shape.x1 - shape.x0);
-        const double dy_2 = (shape.y1 - shape.y0);
+        const double dx_2 = (std::get<1>(shape)->x1 - std::get<1>(shape)->x0);
+        const double dy_2 = (std::get<1>(shape)->y1 - std::get<1>(shape)->y0);
         const double length_squared = ((dx_2 * dx_2) + (dy_2 * dy_2));
         double t = 0.0;
         if ((length_squared > 0.0)) {
-          t = ((((x - shape.x0) * dx_2) + ((y - shape.y0) * dy_2)) / length_squared);
+          t = ((((x - std::get<1>(shape)->x0) * dx_2) + ((y - std::get<1>(shape)->y0) * dy_2)) / length_squared);
           t = ((t < 0.0) ? 0.0 : ((t > 1.0) ? 1.0 : t));
         }
-        const double cx = (x - (shape.x0 + (t * dx_2)));
-        const double cy = (y - (shape.y0 + (t * dy_2)));
-        return (((cx * cx) + (cy * cy)) <= (shape.radius * shape.radius));
+        const double cx = (x - (std::get<1>(shape)->x0 + (t * dx_2)));
+        const double cy = (y - (std::get<1>(shape)->y0 + (t * dy_2)));
+        return (((cx * cx) + (cy * cy)) <= (std::get<1>(shape)->radius * std::get<1>(shape)->radius));
       }
     }
     else if (switch_value == flight::String("polygon")) {
-      if (flight::collision::get_collision_polygon_validation_status2_d(shape.points).has_value()) {
+      if (flight::collision::get_collision_polygon_validation_status2_d(std::get<4>(shape)->points).has_value()) {
         return false;
       }
-      return is_point_in_convex_polygon(x, y, shape.points, flight::signed_right_shift(static_cast<double>(shape.points.size()), 1.0));
+      return is_point_in_convex_polygon(x, y, std::get<4>(shape)->points, flight::signed_right_shift(static_cast<double>(std::get<4>(shape)->points.size()), 1.0));
     }
     else if (switch_value == flight::String("segment")) {
       {
-        const double dx_3 = (shape.x1 - shape.x0);
-        const double dy_3 = (shape.y1 - shape.y0);
+        const double dx_3 = (std::get<5>(shape)->x1 - std::get<5>(shape)->x0);
+        const double dy_3 = (std::get<5>(shape)->y1 - std::get<5>(shape)->y0);
         const double length_squared_2 = ((dx_3 * dx_3) + (dy_3 * dy_3));
         double t_2 = 0.0;
         if ((length_squared_2 > 0.0)) {
-          t_2 = ((((x - shape.x0) * dx_3) + ((y - shape.y0) * dy_3)) / length_squared_2);
+          t_2 = ((((x - std::get<5>(shape)->x0) * dx_3) + ((y - std::get<5>(shape)->y0) * dy_3)) / length_squared_2);
           t_2 = ((t_2 < 0.0) ? 0.0 : ((t_2 > 1.0) ? 1.0 : t_2));
         }
-        const double closest_x = (shape.x0 + (t_2 * dx_3));
-        const double closest_y = (shape.y0 + (t_2 * dy_3));
+        const double closest_x = (std::get<5>(shape)->x0 + (t_2 * dx_3));
+        const double closest_y = (std::get<5>(shape)->y0 + (t_2 * dy_3));
         const double ddx = (x - closest_x);
         const double ddy = (y - closest_y);
         const double epsilon = relative_epsilon_2(std::sqrt(length_squared_2));
@@ -151,9 +225,9 @@ inline bool get_collision_shape_contains_point2_d(flight::types::CollisionBuiltI
     }
     else if (switch_value == flight::String("point")) {
       {
-        const double dx_4 = (x - shape.x);
-        const double dy_4 = (y - shape.y);
-        const double epsilon_2 = (std::numeric_limits<double>::epsilon() * flight::maximum(1.0, std::abs(x), std::abs(y), std::abs(shape.x), std::abs(shape.y)));
+        const double dx_4 = (x - std::get<3>(shape)->x);
+        const double dy_4 = (y - std::get<3>(shape)->y);
+        const double epsilon_2 = (std::numeric_limits<double>::epsilon() * flight::maximum(1.0, std::abs(x), std::abs(y), std::abs(std::get<3>(shape)->x), std::abs(std::get<3>(shape)->y)));
         return (((dx_4 * dx_4) + (dy_4 * dy_4)) <= (epsilon_2 * epsilon_2));
       }
     }

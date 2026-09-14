@@ -16,13 +16,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct CustomShaderMaterial;
+
 struct CustomShaderMaterial : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
   std::optional<std::optional<flight::String>> name;
   double alpha_cutoff;
   flight::Ref<flight::types::MaterialAlphaMode> alpha_mode;
-  flight::Ref<flight::types::blend_mode> blend_mode;
+  flight::Ref<flight::types::BlendMode> blend_mode;
   bool double_sided;
   flight::String shader_key;
   std::optional<std::unordered_map<flight::String, flight::types::Texture>> textures;

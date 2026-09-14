@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TiledGid;
+
 struct TiledGid : public flight::ReferenceEnabled {
   double tile_id;
   bool flip_horizontal;

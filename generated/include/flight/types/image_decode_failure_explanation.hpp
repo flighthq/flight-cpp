@@ -8,16 +8,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct mime_type_reason : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_1AAD5B9ADD090B2E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_1AAD5B9ADD090B2E
+struct mime_type_reason_1aad5b9add090b2e : public flight::ReferenceEnabled {
   flight::Null mime_type;
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_1AAD5B9ADD090B2E
 
-struct mime_type_reason_1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CC3D746A1E0569DE
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CC3D746A1E0569DE
+struct mime_type_reason_cc3d746a1e0569de : public flight::ReferenceEnabled {
   flight::String mime_type;
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CC3D746A1E0569DE
 
-using ImageDecodeFailureExplanation = std::variant<flight::Ref<mime_type_reason>, flight::Ref<mime_type_reason_1>>;
+using ImageDecodeFailureExplanation = std::variant<flight::Ref<mime_type_reason_1aad5b9add090b2e>, flight::Ref<mime_type_reason_cc3d746a1e0569de>>;
 
 } // namespace flight::types

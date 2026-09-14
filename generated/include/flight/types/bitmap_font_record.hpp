@@ -9,6 +9,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct BitmapFontCharRecord;
+struct BitmapFontKerningRecord;
+struct BitmapFontPageRecord;
+struct BitmapFontRecord;
+
 struct BitmapFontCharRecord : public flight::ReferenceEnabled {
   double height;
   double id;

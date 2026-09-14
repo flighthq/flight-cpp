@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct GlyphAtlasEntryExplanation;
+
 using GlyphAtlasEntryBlockReason = flight::String;
 
 struct GlyphAtlasEntryExplanation : public flight::ReferenceEnabled {

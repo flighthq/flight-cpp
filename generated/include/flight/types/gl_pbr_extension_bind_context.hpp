@@ -12,6 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct GlPbrExtensionBindContext;
+
 struct GlPbrExtensionBindContext : public flight::ReferenceEnabled {
   std::function<bool(flight::String, flight::String)> bind_transmission_scene_color;
   std::function<bool(flight::String, flight::String, flight::String, std::optional<flight::types::Texture>, flight::types::PbrUvSet)> bind_texture;

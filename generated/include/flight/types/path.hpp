@@ -12,7 +12,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct no_op_move_to_line_to_curve_to_wide_move_to_wide_line_to_cubic_curve_to_close : public flight::ReferenceEnabled {
+struct Path;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_837F054438B9C590
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_837F054438B9C590
+struct no_op_move_to_line_to_curve_to_wide_move_to_wide_line_to_cubic_curve_to_close_837f054438b9c590 : public flight::ReferenceEnabled {
   double no_op;
   double move_to;
   double line_to;
@@ -22,8 +26,9 @@ struct no_op_move_to_line_to_curve_to_wide_move_to_wide_line_to_cubic_curve_to_c
   double cubic_curve_to;
   double close;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_837F054438B9C590
 
-inline flight::Ref<no_op_move_to_line_to_curve_to_wide_move_to_wide_line_to_cubic_curve_to_close> path_command = flight::make_ref<no_op_move_to_line_to_curve_to_wide_move_to_wide_line_to_cubic_curve_to_close>(no_op_move_to_line_to_curve_to_wide_move_to_wide_line_to_cubic_curve_to_close{.no_op = 0.0, .move_to = 1.0, .line_to = 2.0, .curve_to = 3.0, .wide_move_to = 4.0, .wide_line_to = 5.0, .cubic_curve_to = 6.0, .close = 7.0});
+inline flight::Ref<no_op_move_to_line_to_curve_to_wide_move_to_wide_line_to_cubic_curve_to_close_837f054438b9c590> path_command = flight::make_ref<no_op_move_to_line_to_curve_to_wide_move_to_wide_line_to_cubic_curve_to_close_837f054438b9c590>(no_op_move_to_line_to_curve_to_wide_move_to_wide_line_to_cubic_curve_to_close_837f054438b9c590{.no_op = 0.0, .move_to = 1.0, .line_to = 2.0, .curve_to = 3.0, .wide_move_to = 4.0, .wide_line_to = 5.0, .cubic_curve_to = 6.0, .close = 7.0});
 
 using PathCommand = double;
 

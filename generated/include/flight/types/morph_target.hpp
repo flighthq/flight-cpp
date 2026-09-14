@@ -8,6 +8,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct MorphTarget;
+struct MeshMorph;
+
 struct MorphTarget : public flight::ReferenceEnabled {
   std::optional<flight::Float32Array> normal_deltas;
   flight::Float32Array position_deltas;

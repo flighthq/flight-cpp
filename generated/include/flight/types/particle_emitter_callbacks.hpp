@@ -9,6 +9,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ParticleEmitterCallbacks;
+
 struct ParticleEmitterCallbacks : public flight::ReferenceEnabled {
   std::optional<std::function<void(double, double, double)>> on_death;
   std::optional<std::function<void(double, double, double)>> on_spawn;

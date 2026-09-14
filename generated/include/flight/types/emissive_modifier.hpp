@@ -12,13 +12,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct away_from_light_ignore_toward_light : public flight::ReferenceEnabled {
+struct EmissiveModifier;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D325B674A07A6F10
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D325B674A07A6F10
+struct away_from_light_ignore_toward_light_d325b674a07a6f10 : public flight::ReferenceEnabled {
   flight::String away_from_light;
   flight::String ignore;
   flight::String toward_light;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D325B674A07A6F10
 
-inline flight::Ref<away_from_light_ignore_toward_light> emissive_modifier_facing = flight::make_ref<away_from_light_ignore_toward_light>(away_from_light_ignore_toward_light{.away_from_light = flight::String("AwayFromLight"), .ignore = flight::String("Ignore"), .toward_light = flight::String("TowardLight")});
+inline flight::Ref<away_from_light_ignore_toward_light_d325b674a07a6f10> emissive_modifier_facing = flight::make_ref<away_from_light_ignore_toward_light_d325b674a07a6f10>(away_from_light_ignore_toward_light_d325b674a07a6f10{.away_from_light = flight::String("AwayFromLight"), .ignore = flight::String("Ignore"), .toward_light = flight::String("TowardLight")});
 
 using EmissiveModifierFacing = flight::String;
 

@@ -10,6 +10,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TextMarkupIssue;
+struct TextMarkupExplanation;
+
 using TextMarkupIssueKind = flight::String;
 
 struct TextMarkupIssue : public flight::ReferenceEnabled {

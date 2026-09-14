@@ -1,6 +1,6 @@
 {
   "schema": "flight-generated-sdk-refusals/2",
-  "compilerRevision": "993c28080d1b3f6e55214ae2d92215d51cd192ff",
+  "compilerRevision": "a6895ee00994bce116c9fdff6c3503462437eee8",
   "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
   "refusals": [
     {
@@ -245,7 +245,7 @@
       "code": "unsupported-ir",
       "module": "packages/application/src/applicationRenderView.ts",
       "package": "@flighthq/application",
-      "reason": "cpp emission failed for @flighthq/application/packages/application/src/applicationRenderView.ts: contextual union value type flight::Ref<ApplicationRenderViewRuntime<State, Target>> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/application/packages/application/src/applicationRenderView.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -803,16 +803,37 @@
     },
     {
       "code": "dependency-refused",
+      "module": "packages/camera/src/camera.ts",
+      "package": "@flighthq/camera",
+      "reason": "dependency ./projection was refused for @flighthq/camera/packages/camera/src/projection.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/camera/src/contract.ts",
       "package": "@flighthq/camera",
-      "reason": "dependency ./enableCameraGuards was refused for @flighthq/camera/packages/camera/src/enableCameraGuards.ts",
+      "reason": "dependency ./camera was refused for @flighthq/camera/packages/camera/src/camera.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/camera/src/culling.ts",
+      "package": "@flighthq/camera",
+      "reason": "dependency ./camera was refused for @flighthq/camera/packages/camera/src/camera.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/camera/src/enableCameraGuards.ts",
       "package": "@flighthq/camera",
-      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
+      "reason": "dependency ./camera was refused for @flighthq/camera/packages/camera/src/camera.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/camera/src/frustumCorners.ts",
+      "package": "@flighthq/camera",
+      "reason": "dependency ./camera was refused for @flighthq/camera/packages/camera/src/camera.ts",
       "stage": "dependency"
     },
     {
@@ -820,6 +841,62 @@
       "module": "packages/camera/src/index.ts",
       "package": "@flighthq/camera",
       "reason": "dependency ./contract was refused for @flighthq/camera/packages/camera/src/contract.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/camera/src/intersection.ts",
+      "package": "@flighthq/camera",
+      "reason": "dependency ./picking was refused for @flighthq/camera/packages/camera/src/picking.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/camera/src/picking.ts",
+      "package": "@flighthq/camera",
+      "reason": "dependency ./camera was refused for @flighthq/camera/packages/camera/src/camera.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/camera/src/projection.ts",
+      "package": "@flighthq/camera",
+      "reason": "cpp emission failed for @flighthq/camera/packages/camera/src/projection.ts: property fovY on a C++ variant requires proven union member access",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/camera/src/shadowCamera.ts",
+      "package": "@flighthq/camera",
+      "reason": "dependency ./camera was refused for @flighthq/camera/packages/camera/src/camera.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/camera-controls/src/contract.ts",
+      "package": "@flighthq/camera-controls",
+      "reason": "dependency ./flyCameraController was refused for @flighthq/camera-controls/packages/camera-controls/src/flyCameraController.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/camera-controls/src/flyCameraController.ts",
+      "package": "@flighthq/camera-controls",
+      "reason": "dependency @flighthq/camera/contract was refused for @flighthq/camera/packages/camera/src/camera.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/camera-controls/src/index.ts",
+      "package": "@flighthq/camera-controls",
+      "reason": "dependency ./contract was refused for @flighthq/camera-controls/packages/camera-controls/src/contract.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/camera-controls/src/orbitCameraController.ts",
+      "package": "@flighthq/camera-controls",
+      "reason": "dependency @flighthq/camera/contract was refused for @flighthq/camera/packages/camera/src/camera.ts",
       "stage": "dependency"
     },
     {
@@ -931,7 +1008,7 @@
       "code": "unsupported-ir",
       "module": "packages/collision/src/collideContactManifold2D.ts",
       "package": "@flighthq/collision",
-      "reason": "cpp emission failed for @flighthq/collision/packages/collision/src/collideContactManifold2D.ts: contextual union value type flight::types::CollisionBuiltInShape2D is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/collision/packages/collision/src/collideContactManifold2D.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -1295,7 +1372,7 @@
       "code": "unsupported-ir",
       "module": "packages/dialog/src/fileDialog.ts",
       "package": "@flighthq/dialog",
-      "reason": "cpp emission failed for @flighthq/dialog/packages/dialog/src/fileDialog.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/dialog/packages/dialog/src/fileDialog.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -1533,7 +1610,7 @@
       "code": "unsupported-ir",
       "module": "packages/effects/src/renderEffectPadding.ts",
       "package": "@flighthq/effects",
-      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/renderEffectPadding.ts: contextual union value type flight::Ref<on_miss_registry_entries_shape_entity_runtime_key> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/renderEffectPadding.ts: contextual union value type flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_832b11cd4f290751> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -2630,6 +2707,13 @@
     },
     {
       "code": "unsupported-ir",
+      "module": "packages/entity/src/binding.ts",
+      "package": "@flighthq/entity",
+      "reason": "cpp emission failed for @flighthq/entity/packages/entity/src/binding.ts: type assertion target must identify exactly one C++ variant alternative",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
       "module": "packages/entity/src/clone.ts",
       "package": "@flighthq/entity",
       "reason": "cpp emission failed for @flighthq/entity/packages/entity/src/clone.ts: structural-row projection requires a represented object-reference target",
@@ -2639,7 +2723,7 @@
       "code": "dependency-refused",
       "module": "packages/entity/src/contract.ts",
       "package": "@flighthq/entity",
-      "reason": "dependency ./clone was refused for @flighthq/entity/packages/entity/src/clone.ts",
+      "reason": "dependency ./binding was refused for @flighthq/entity/packages/entity/src/binding.ts",
       "stage": "dependency"
     },
     {
@@ -2961,7 +3045,7 @@
       "code": "unsupported-ir",
       "module": "packages/gizmo/src/gizmoState.ts",
       "package": "@flighthq/gizmo",
-      "reason": "cpp emission failed for @flighthq/gizmo/packages/gizmo/src/gizmoState.ts: contextual union value type flight::Ref<GizmoRuntime<NodeType>> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/gizmo/packages/gizmo/src/gizmoState.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -3701,6 +3785,13 @@
     },
     {
       "code": "unsupported-ir",
+      "module": "packages/lighting/src/lightAnalysis.ts",
+      "package": "@flighthq/lighting",
+      "reason": "cpp emission failed for @flighthq/lighting/packages/lighting/src/lightAnalysis.ts: union has distinct runtime domains erased by C++ target type flight::Ref<flight::types::Vector3>",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
       "module": "packages/lighting/src/lightIntensity.ts",
       "package": "@flighthq/lighting",
       "reason": "cpp emission failed for @flighthq/lighting/packages/lighting/src/lightIntensity.ts: Record construction with spreads requires ordered entry lowering",
@@ -4088,7 +4179,7 @@
       "code": "unsupported-ir",
       "module": "packages/mesh/src/updateMeshMorph.ts",
       "package": "@flighthq/mesh",
-      "reason": "cpp emission failed for @flighthq/mesh/packages/mesh/src/updateMeshMorph.ts: nullish comparison admitting null and undefined requires dual-sentinel union evidence",
+      "reason": "cpp emission failed for @flighthq/mesh/packages/mesh/src/updateMeshMorph.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -4193,7 +4284,7 @@
       "code": "unsupported-ir",
       "module": "packages/movieclip/src/movieClip.ts",
       "package": "@flighthq/movieclip",
-      "reason": "cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -4351,11 +4442,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/node/src/nodeTransform3d.ts",
       "package": "@flighthq/node",
-      "reason": "dependency ./revision was refused for @flighthq/node/packages/node/src/revision.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/node/packages/node/src/nodeTransform3d.ts: type assertion target must identify exactly one C++ variant alternative",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -5016,11 +5107,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/physics2d/src/debugGeometry.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./world was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/physics2d/packages/physics2d/src/debugGeometry.ts: property x on a C++ variant requires proven union member access",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -5037,11 +5128,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/physics2d/src/explainPhysics2DStep.ts",
       "package": "@flighthq/physics2d",
-      "reason": "cpp emission failed for @flighthq/physics2d/packages/physics2d/src/explainPhysics2DStep.ts: ambient value Number member isSafeInteger has no C++ binding",
-      "stage": "emission"
+      "reason": "dependency ./stepValidation was refused for @flighthq/physics2d/packages/physics2d/src/stepValidation.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -5131,7 +5222,7 @@
       "code": "unsupported-ir",
       "module": "packages/physics2d/src/stepValidation.ts",
       "package": "@flighthq/physics2d",
-      "reason": "cpp emission failed for @flighthq/physics2d/packages/physics2d/src/stepValidation.ts: ambient value Number member isSafeInteger has no C++ binding",
+      "reason": "cpp emission failed for @flighthq/physics2d/packages/physics2d/src/stepValidation.ts: object key iteration requires closed key evidence",
       "stage": "emission"
     },
     {
@@ -5240,11 +5331,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/physics3d/src/debugGeometry.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./world was refused for @flighthq/physics3d/packages/physics3d/src/world.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/physics3d/packages/physics3d/src/debugGeometry.ts: contextual union value type flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionHeightfield3D>>>> is not a represented runtime domain",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -5383,7 +5474,7 @@
       "code": "unsupported-ir",
       "module": "packages/physics3d/src/stepValidation.ts",
       "package": "@flighthq/physics3d",
-      "reason": "cpp emission failed for @flighthq/physics3d/packages/physics3d/src/stepValidation.ts: ambient value Number member isSafeInteger has no C++ binding",
+      "reason": "cpp emission failed for @flighthq/physics3d/packages/physics3d/src/stepValidation.ts: object key iteration requires closed key evidence",
       "stage": "emission"
     },
     {
@@ -5397,7 +5488,7 @@
       "code": "unsupported-ir",
       "module": "packages/physics3d/src/world.ts",
       "package": "@flighthq/physics3d",
-      "reason": "cpp emission failed for @flighthq/physics3d/packages/physics3d/src/world.ts: contextual union value type flight::types::CollisionColliderShape3D is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/physics3d/packages/physics3d/src/world.ts: property points on a C++ variant requires proven union member access",
       "stage": "emission"
     },
     {
@@ -5698,7 +5789,7 @@
       "code": "unsupported-ir",
       "module": "packages/render/src/renderAppearance.ts",
       "package": "@flighthq/render",
-      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderAppearance.ts: flight-cpp type position retains unresolved auto placeholder: static_cast<auto",
+      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderAppearance.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -5719,7 +5810,7 @@
       "code": "unsupported-ir",
       "module": "packages/render/src/renderMaterial.ts",
       "package": "@flighthq/render",
-      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderMaterial.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderMaterial.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -5751,17 +5842,17 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/render/src/renderRegistrySignals.ts",
       "package": "@flighthq/render",
-      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderRegistrySignals.ts: callable-object construction requires one compatible nongeneric function expression",
-      "stage": "emission"
+      "reason": "dependency ./renderState was refused for @flighthq/render/packages/render/src/renderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/render/src/renderState.ts",
       "package": "@flighthq/render",
-      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderState.ts: dual-sentinel optional chaining requires presence projection lowering",
+      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderState.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -5775,7 +5866,7 @@
       "code": "unsupported-ir",
       "module": "packages/render/src/renderTransform2d.ts",
       "package": "@flighthq/render",
-      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderTransform2d.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderTransform2d.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -5831,7 +5922,7 @@
       "code": "unsupported-ir",
       "module": "packages/render-gl/src/explainGlTextureResolution.ts",
       "package": "@flighthq/render-gl",
-      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/explainGlTextureResolution.ts: optional chain receiver requires one concrete nullable union member",
+      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/explainGlTextureResolution.ts: typeOf types require C++ type computation lowering",
       "stage": "emission"
     },
     {
@@ -6055,7 +6146,7 @@
       "code": "unsupported-ir",
       "module": "packages/render-wgpu/src/explainWgpuTextureResolution.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/explainWgpuTextureResolution.ts: optional chain receiver requires one concrete nullable union member",
+      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/explainWgpuTextureResolution.ts: typeOf types require C++ type computation lowering",
       "stage": "emission"
     },
     {
@@ -6300,7 +6391,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene-document/src/flightDocumentText.ts",
       "package": "@flighthq/scene-document",
-      "reason": "cpp emission failed for @flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts: ambient value Number member isSafeInteger has no C++ binding",
+      "reason": "cpp emission failed for @flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts: property halfHeight on a C++ variant requires proven union member access",
       "stage": "emission"
     },
     {
@@ -6328,7 +6419,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene-document/src/sceneDocumentMaterializationSelection.ts",
       "package": "@flighthq/scene-document",
-      "reason": "cpp emission failed for @flighthq/scene-document/packages/scene-document/src/sceneDocumentMaterializationSelection.ts: contextual union value type flight::Ref<entity_runtime_key_actual_column_kind_limit_line_mode_offset_path_reason_resource_key_token_key_version> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene-document/packages/scene-document/src/sceneDocumentMaterializationSelection.ts: contextual union value type flight::Ref<entity_runtime_key_actual_column_kind_limit_line_mode_offset_path_reason_resource_key_token_key_version_53edc4ed4943cd49> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -6416,11 +6507,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene2d/src/sceneKindUsage.ts",
       "package": "@flighthq/scene2d",
-      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/traversal.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sceneKindUsage.ts: type assertion target must identify exactly one C++ variant alternative",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -6531,7 +6622,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-canvas/src/canvasNode2D.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_936631377ff06ebb> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -6993,7 +7084,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-dom/src/explainDomTextureResolution.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/explainDomTextureResolution.ts: optional chain receiver requires one concrete nullable union member",
+      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/explainDomTextureResolution.ts: typeOf types require C++ type computation lowering",
       "stage": "emission"
     },
     {
@@ -7238,7 +7329,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-gl/src/glNode2D.ts",
       "package": "@flighthq/scene2d-gl",
-      "reason": "cpp emission failed for @flighthq/scene2d-gl/packages/scene2d-gl/src/glNode2D.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene2d-gl/packages/scene2d-gl/src/glNode2D.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_936631377ff06ebb> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -7504,7 +7595,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-wgpu/src/wgpuBitmapText.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuBitmapText.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuBitmapText.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -7553,7 +7644,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-wgpu/src/wgpuNode2D.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuNode2D.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuNode2D.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_936631377ff06ebb> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -7567,7 +7658,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-wgpu/src/wgpuQuadBatch.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatch.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatch.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -7595,7 +7686,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-wgpu/src/wgpuRendererData.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuRendererData.ts: Object.assign requires one closed callable-object target and an exact compatible object literal source",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuRendererData.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -7616,7 +7707,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-wgpu/src/wgpuScale9Sprite.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuScale9Sprite.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuScale9Sprite.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -7651,7 +7742,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-wgpu/src/wgpuSprite.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuSprite.ts: dual-sentinel nullish coalescing requires presence projection lowering",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuSprite.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -7679,7 +7770,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-wgpu/src/wgpuTilemap.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuTilemap.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuTilemap.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -7781,11 +7872,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d/src/sceneKindUsage.ts",
       "package": "@flighthq/scene3d",
-      "reason": "dependency ./mesh was refused for @flighthq/scene3d/packages/scene3d/src/mesh.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneKindUsage.ts: type assertion target must identify exactly one C++ variant alternative",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -7802,11 +7893,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d/src/sceneNodeAppearance.ts",
       "package": "@flighthq/scene3d",
-      "reason": "dependency ./sceneNode was refused for @flighthq/scene3d/packages/scene3d/src/sceneNode.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneNodeAppearance.ts: type assertion target must identify exactly one C++ variant alternative",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -7924,7 +8015,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene3d-formats/src/gltfTransmissionVolume.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfTransmissionVolume.ts: contextual multiVariant construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfTransmissionVolume.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -7980,7 +8071,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene3d-formats/src/scene3DFormatsTestHelper.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/scene3DFormatsTestHelper.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/scene3DFormatsTestHelper.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -8040,11 +8131,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-gl/src/depthGlMeshMaterialRenderer.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "dependency ./glDebugPrelude was refused for @flighthq/scene3d-gl/packages/scene3d-gl/src/glDebugPrelude.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/depthGlMeshMaterialRenderer.ts: type assertion target must identify exactly one C++ variant alternative",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -8120,7 +8211,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene3d-gl/src/extendedPbrGlMeshMaterialRenderer.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/extendedPbrGlMeshMaterialRenderer.ts: contextual multiVariant construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/extendedPbrGlMeshMaterialRenderer.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -8397,11 +8488,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "dependency ./glLitProgram was refused for @flighthq/scene3d-gl/packages/scene3d-gl/src/glLitProgram.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts: type assertion target must identify exactly one C++ variant alternative",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -8411,11 +8502,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "dependency ./glLitProgram was refused for @flighthq/scene3d-gl/packages/scene3d-gl/src/glLitProgram.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts: type assertion target must identify exactly one C++ variant alternative",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -8439,18 +8530,18 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-gl/src/vertexColorGlMeshMaterialRenderer.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "dependency ./glMeshMaterialRegistry was refused for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshMaterialRegistry.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/vertexColorGlMeshMaterialRenderer.ts: type assertion target must identify exactly one C++ variant alternative",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-gl/src/wireframeGlMeshMaterialRenderer.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "dependency ./glMeshMaterialRegistry was refused for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshMaterialRegistry.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/wireframeGlMeshMaterialRenderer.ts: type assertion target must identify exactly one C++ variant alternative",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -8575,7 +8666,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene3d-resources/src/revealScene3DResourcesOnResolve.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/revealScene3DResourcesOnResolve.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/revealScene3DResourcesOnResolve.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -8904,7 +8995,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene3d-wgpu/src/wgpuScene3DRuntime.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuScene3DRuntime.ts: flight-cpp WeakMap requires explicit key and value type arguments",
+      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuScene3DRuntime.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -9030,7 +9121,7 @@
       "code": "unsupported-ir",
       "module": "packages/selection/src/marqueeSelection.ts",
       "package": "@flighthq/selection",
-      "reason": "cpp emission failed for @flighthq/selection/packages/selection/src/marqueeSelection.ts: contextual union value type flight::Ref<active_binding_rectangle_start_x_start_y> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/selection/packages/selection/src/marqueeSelection.ts: contextual union value type flight::Ref<active_binding_rectangle_start_x_start_y_c43167517b729dad> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -9170,7 +9261,7 @@
       "code": "unsupported-ir",
       "module": "packages/shading/src/orderModifierStack.ts",
       "package": "@flighthq/shading",
-      "reason": "cpp emission failed for @flighthq/shading/packages/shading/src/orderModifierStack.ts: contextual union value type std::function<auto(flight::Ref<index_modifier>, flight::Ref<index_modifier>)> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/shading/packages/shading/src/orderModifierStack.ts: contextual union value type std::function<auto(flight::Ref<index_modifier_e3d4ced0d59beaec>, flight::Ref<index_modifier_e3d4ced0d59beaec>)> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -9296,7 +9387,7 @@
       "code": "unsupported-ir",
       "module": "packages/shape/src/shapeFill.ts",
       "package": "@flighthq/shape",
-      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/shapeFill.ts: contextual union value type auto is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/shapeFill.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -9356,11 +9447,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/share/src/share.ts",
       "package": "@flighthq/share",
-      "reason": "dependency @flighthq/signals/contract was refused for @flighthq/signals/packages/signals/src/slot.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/share/packages/share/src/share.ts: property title on a C++ variant requires proven union member access",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -9625,7 +9716,7 @@
       "code": "unsupported-ir",
       "module": "packages/skeleton2d-formats/src/skeletonDetect.ts",
       "package": "@flighthq/skeleton2d-formats",
-      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts: contextual union value type flight::Ref<on_miss_registry_entries_shape_entity_runtime_key> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts: contextual union value type flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_e9010d54418a8658> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -9786,15 +9877,15 @@
       "code": "dependency-refused",
       "module": "packages/socket/src/contract.ts",
       "package": "@flighthq/socket",
-      "reason": "dependency ./socket was refused for @flighthq/socket/packages/socket/src/socket.ts",
+      "reason": "dependency ./enableSocketGuards was refused for @flighthq/socket/packages/socket/src/enableSocketGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/socket/src/enableSocketGuards.ts",
       "package": "@flighthq/socket",
-      "reason": "dependency ./socket was refused for @flighthq/socket/packages/socket/src/socket.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/socket/packages/socket/src/enableSocketGuards.ts: property socket on a C++ variant requires proven union member access",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -9954,7 +10045,7 @@
       "code": "unsupported-ir",
       "module": "packages/spritesheet-formats/src/spritesheetDetect.ts",
       "package": "@flighthq/spritesheet-formats",
-      "reason": "cpp emission failed for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/spritesheetDetect.ts: contextual union value type flight::Ref<on_miss_registry_entries_shape_entity_runtime_key> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/spritesheetDetect.ts: contextual union value type flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_d665b5c2bd3a948e> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -10052,7 +10143,7 @@
       "code": "unsupported-ir",
       "module": "packages/storage/src/storage.ts",
       "package": "@flighthq/storage",
-      "reason": "cpp emission failed for @flighthq/storage/packages/storage/src/storage.ts: property reason on a C++ variant requires proven union member access",
+      "reason": "cpp emission failed for @flighthq/storage/packages/storage/src/storage.ts: property value on a C++ variant requires proven union member access",
       "stage": "emission"
     },
     {
@@ -10248,7 +10339,7 @@
       "code": "unsupported-ir",
       "module": "packages/text-markup/src/markupTagRegistry.ts",
       "package": "@flighthq/text-markup",
-      "reason": "cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts: ambient value Number member parseInt has no C++ binding",
+      "reason": "cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts: Object.assign requires one closed callable-object target and an exact compatible object literal source",
       "stage": "emission"
     },
     {
@@ -10556,7 +10647,7 @@
       "code": "unsupported-ir",
       "module": "packages/texture/src/cubeTexture.ts",
       "package": "@flighthq/texture",
-      "reason": "cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: flight-cpp type position retains unresolved auto placeholder: static_cast<auto",
+      "reason": "cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -10697,13 +10788,6 @@
       "module": "packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts",
       "package": "@flighthq/textureatlas-formats",
       "reason": "cpp emission failed for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts: runtime external symbol binding plan is incomplete (missing: parseFloat[value])",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/textureatlas-formats/src/textureAtlasPageMeta.ts",
-      "package": "@flighthq/textureatlas-formats",
-      "reason": "cpp emission failed for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasPageMeta.ts: ambient value Number member parseFloat has no C++ binding",
       "stage": "emission"
     },
     {

@@ -12,6 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct RenderCache;
+
 inline const flight::String render_cache_kind = flight::String("RenderCache");
 
 using RenderCacheKind = flight::String;

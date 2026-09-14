@@ -10,6 +10,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct StarlingSubTexture;
+struct StarlingDocument;
+struct StarlingParsed;
+struct StarlingParseOptions;
+
 struct StarlingSubTexture : public flight::ReferenceEnabled {
   std::optional<double> frame_height;
   std::optional<double> frame_width;

@@ -33,11 +33,9 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("anisotropyStrength") && requires { object.anisotropy_strength; }) return (object.anisotropy_strength);
   else if constexpr (Key::name.view() == std::string_view("applied") && requires { object.applied; }) return (object.applied);
   else if constexpr (Key::name.view() == std::string_view("ascent") && requires { object.ascent; }) return (object.ascent);
-  else if constexpr (Key::name.view() == std::string_view("aspect") && requires { object.aspect; }) return (object.aspect);
   else if constexpr (Key::name.view() == std::string_view("atlas") && requires { object.atlas; }) return (object.atlas);
   else if constexpr (Key::name.view() == std::string_view("attenuationColor") && requires { object.attenuation_color; }) return (object.attenuation_color);
   else if constexpr (Key::name.view() == std::string_view("attenuationDistance") && requires { object.attenuation_distance; }) return (object.attenuation_distance);
-  else if constexpr (Key::name.view() == std::string_view("azimuth") && requires { object.azimuth; }) return (object.azimuth);
   else if constexpr (Key::name.view() == std::string_view("b") && requires { object.b; }) return (object.b);
   else if constexpr (Key::name.view() == std::string_view("bias") && requires { object.bias; }) return (object.bias);
   else if constexpr (Key::name.view() == std::string_view("bitmap") && requires { object.bitmap; }) return (object.bitmap);
@@ -114,7 +112,6 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("directionX") && requires { object.direction_x; }) return (object.direction_x);
   else if constexpr (Key::name.view() == std::string_view("directionY") && requires { object.direction_y; }) return (object.direction_y);
   else if constexpr (Key::name.view() == std::string_view("directionZ") && requires { object.direction_z; }) return (object.direction_z);
-  else if constexpr (Key::name.view() == std::string_view("distance") && requires { object.distance; }) return (object.distance);
   else if constexpr (Key::name.view() == std::string_view("divisor") && requires { object.divisor; }) return (object.divisor);
   else if constexpr (Key::name.view() == std::string_view("duration") && requires { object.duration; }) return (object.duration);
   else if constexpr (Key::name.view() == std::string_view("ease") && requires { object.ease; }) return (object.ease);
@@ -163,11 +160,6 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("getGlyphEntry") && requires { object.get_glyph_entry; }) return (object.get_glyph_entry);
   else if constexpr (Key::name.view() == std::string_view("ghosts") && requires { object.ghosts; }) return (object.ghosts);
   else if constexpr (Key::name.view() == std::string_view("glyphs") && requires { object.glyphs; }) return (object.glyphs);
-  else if constexpr (Key::name.view() == std::string_view("goalAzimuth") && requires { object.goal_azimuth; }) return (object.goal_azimuth);
-  else if constexpr (Key::name.view() == std::string_view("goalDistance") && requires { object.goal_distance; }) return (object.goal_distance);
-  else if constexpr (Key::name.view() == std::string_view("goalPitch") && requires { object.goal_pitch; }) return (object.goal_pitch);
-  else if constexpr (Key::name.view() == std::string_view("goalPolar") && requires { object.goal_polar; }) return (object.goal_polar);
-  else if constexpr (Key::name.view() == std::string_view("goalYaw") && requires { object.goal_yaw; }) return (object.goal_yaw);
   else if constexpr (Key::name.view() == std::string_view("grainIntensity") && requires { object.grain_intensity; }) return (object.grain_intensity);
   else if constexpr (Key::name.view() == std::string_view("gravityX") && requires { object.gravity_x; }) return (object.gravity_x);
   else if constexpr (Key::name.view() == std::string_view("gravityY") && requires { object.gravity_y; }) return (object.gravity_y);
@@ -184,9 +176,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("halfExtentY") && requires { object.half_extent_y; }) return (object.half_extent_y);
   else if constexpr (Key::name.view() == std::string_view("halfExtentZ") && requires { object.half_extent_z; }) return (object.half_extent_z);
   else if constexpr (Key::name.view() == std::string_view("halfH") && requires { object.half_h; }) return (object.half_h);
-  else if constexpr (Key::name.view() == std::string_view("halfHeight") && requires { object.half_height; }) return (object.half_height);
   else if constexpr (Key::name.view() == std::string_view("halfW") && requires { object.half_w; }) return (object.half_w);
-  else if constexpr (Key::name.view() == std::string_view("halfWidth") && requires { object.half_width; }) return (object.half_width);
   else if constexpr (Key::name.view() == std::string_view("halo") && requires { object.halo; }) return (object.halo);
   else if constexpr (Key::name.view() == std::string_view("height") && requires { object.height; }) return (object.height);
   else if constexpr (Key::name.view() == std::string_view("id") && requires { object.id; }) return (object.id);
@@ -198,7 +188,6 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("innerConeCos") && requires { object.inner_cone_cos; }) return (object.inner_cone_cos);
   else if constexpr (Key::name.view() == std::string_view("intensity") && requires { object.intensity; }) return (object.intensity);
   else if constexpr (Key::name.view() == std::string_view("intensityUnit") && requires { object.intensity_unit; }) return (object.intensity_unit);
-  else if constexpr (Key::name.view() == std::string_view("inverseViewProjection") && requires { object.inverse_view_projection; }) return (object.inverse_view_projection);
   else if constexpr (Key::name.view() == std::string_view("ior") && requires { object.ior; }) return (object.ior);
   else if constexpr (Key::name.view() == std::string_view("iridescence") && requires { object.iridescence; }) return (object.iridescence);
   else if constexpr (Key::name.view() == std::string_view("iridescenceIor") && requires { object.iridescence_ior; }) return (object.iridescence_ior);
@@ -208,7 +197,6 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("iridescenceThicknessMapUvSet") && requires { object.iridescence_thickness_map_uv_set; }) return (object.iridescence_thickness_map_uv_set);
   else if constexpr (Key::name.view() == std::string_view("iridescenceThicknessMax") && requires { object.iridescence_thickness_max; }) return (object.iridescence_thickness_max);
   else if constexpr (Key::name.view() == std::string_view("iridescenceThicknessMin") && requires { object.iridescence_thickness_min; }) return (object.iridescence_thickness_min);
-  else if constexpr (Key::name.view() == std::string_view("jitter") && requires { object.jitter; }) return (object.jitter);
   else if constexpr (Key::name.view() == std::string_view("jointSolvers") && requires { object.joint_solvers; }) return (object.joint_solvers);
   else if constexpr (Key::name.view() == std::string_view("kind") && requires { object.kind; }) return (object.kind);
   else if constexpr (Key::name.view() == std::string_view("layerMask") && requires { object.layer_mask; }) return (object.layer_mask);
@@ -234,8 +222,6 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("maxDistance") && requires { object.max_distance; }) return (object.max_distance);
   else if constexpr (Key::name.view() == std::string_view("maxExposure") && requires { object.max_exposure; }) return (object.max_exposure);
   else if constexpr (Key::name.view() == std::string_view("maxParticles") && requires { object.max_particles; }) return (object.max_particles);
-  else if constexpr (Key::name.view() == std::string_view("maxPitch") && requires { object.max_pitch; }) return (object.max_pitch);
-  else if constexpr (Key::name.view() == std::string_view("maxPolar") && requires { object.max_polar; }) return (object.max_polar);
   else if constexpr (Key::name.view() == std::string_view("maxRadius") && requires { object.max_radius; }) return (object.max_radius);
   else if constexpr (Key::name.view() == std::string_view("maxRadiusVariance") && requires { object.max_radius_variance; }) return (object.max_radius_variance);
   else if constexpr (Key::name.view() == std::string_view("maxX") && requires { object.max_x; }) return (object.max_x);
@@ -243,11 +229,8 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("maxZ") && requires { object.max_z; }) return (object.max_z);
   else if constexpr (Key::name.view() == std::string_view("metadata") && requires { object.metadata; }) return (object.metadata);
   else if constexpr (Key::name.view() == std::string_view("min") && requires { object.min; }) return (object.min);
-  else if constexpr (Key::name.view() == std::string_view("minDistance") && requires { object.min_distance; }) return (object.min_distance);
   else if constexpr (Key::name.view() == std::string_view("minExposure") && requires { object.min_exposure; }) return (object.min_exposure);
   else if constexpr (Key::name.view() == std::string_view("minFilter") && requires { object.min_filter; }) return (object.min_filter);
-  else if constexpr (Key::name.view() == std::string_view("minPitch") && requires { object.min_pitch; }) return (object.min_pitch);
-  else if constexpr (Key::name.view() == std::string_view("minPolar") && requires { object.min_polar; }) return (object.min_polar);
   else if constexpr (Key::name.view() == std::string_view("minRadius") && requires { object.min_radius; }) return (object.min_radius);
   else if constexpr (Key::name.view() == std::string_view("minRadiusVariance") && requires { object.min_radius_variance; }) return (object.min_radius_variance);
   else if constexpr (Key::name.view() == std::string_view("minX") && requires { object.min_x; }) return (object.min_x);
@@ -285,12 +268,10 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("particleLifespan") && requires { object.particle_lifespan; }) return (object.particle_lifespan);
   else if constexpr (Key::name.view() == std::string_view("particleLifespanVariance") && requires { object.particle_lifespan_variance; }) return (object.particle_lifespan_variance);
   else if constexpr (Key::name.view() == std::string_view("pcfRadius") && requires { object.pcf_radius; }) return (object.pcf_radius);
-  else if constexpr (Key::name.view() == std::string_view("pitch") && requires { object.pitch; }) return (object.pitch);
   else if constexpr (Key::name.view() == std::string_view("pivotX") && requires { object.pivot_x; }) return (object.pivot_x);
   else if constexpr (Key::name.view() == std::string_view("pivotY") && requires { object.pivot_y; }) return (object.pivot_y);
   else if constexpr (Key::name.view() == std::string_view("pointCount") && requires { object.point_count; }) return (object.point_count);
   else if constexpr (Key::name.view() == std::string_view("points") && requires { object.points; }) return (object.points);
-  else if constexpr (Key::name.view() == std::string_view("polar") && requires { object.polar; }) return (object.polar);
   else if constexpr (Key::name.view() == std::string_view("position") && requires { object.position; }) return (object.position);
   else if constexpr (Key::name.view() == std::string_view("positions") && requires { object.positions; }) return (object.positions);
   else if constexpr (Key::name.view() == std::string_view("preserveAlpha") && requires { object.preserve_alpha; }) return (object.preserve_alpha);
@@ -363,7 +344,6 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("skewY") && requires { object.skew_y; }) return (object.skew_y);
   else if constexpr (Key::name.view() == std::string_view("skyColor") && requires { object.sky_color; }) return (object.sky_color);
   else if constexpr (Key::name.view() == std::string_view("slotIndex") && requires { object.slot_index; }) return (object.slot_index);
-  else if constexpr (Key::name.view() == std::string_view("smoothTime") && requires { object.smooth_time; }) return (object.smooth_time);
   else if constexpr (Key::name.view() == std::string_view("softness") && requires { object.softness; }) return (object.softness);
   else if constexpr (Key::name.view() == std::string_view("sourceHeight") && requires { object.source_height; }) return (object.source_height);
   else if constexpr (Key::name.view() == std::string_view("sourcePositionVariancex") && requires { object.source_position_variancex; }) return (object.source_position_variancex);
@@ -399,7 +379,6 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("subpixel") && requires { object.subpixel; }) return (object.subpixel);
   else if constexpr (Key::name.view() == std::string_view("tangentialAccelVariance") && requires { object.tangential_accel_variance; }) return (object.tangential_accel_variance);
   else if constexpr (Key::name.view() == std::string_view("tangentialAcceleration") && requires { object.tangential_acceleration; }) return (object.tangential_acceleration);
-  else if constexpr (Key::name.view() == std::string_view("target") && requires { object.target; }) return (object.target);
   else if constexpr (Key::name.view() == std::string_view("temperature") && requires { object.temperature; }) return (object.temperature);
   else if constexpr (Key::name.view() == std::string_view("textHeight") && requires { object.text_height; }) return (object.text_height);
   else if constexpr (Key::name.view() == std::string_view("textWidth") && requires { object.text_width; }) return (object.text_width);
@@ -454,7 +433,6 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("y") && requires { object.y; }) return (object.y);
   else if constexpr (Key::name.view() == std::string_view("y0") && requires { object.y0; }) return (object.y0);
   else if constexpr (Key::name.view() == std::string_view("y1") && requires { object.y1; }) return (object.y1);
-  else if constexpr (Key::name.view() == std::string_view("yaw") && requires { object.yaw; }) return (object.yaw);
   else if constexpr (Key::name.view() == std::string_view("z") && requires { object.z; }) return (object.z);
   else if constexpr (Key::name.view() == std::string_view("zoom") && requires { object.zoom; }) return (object.zoom);
   else static_assert(dependent_false<Key>, "Flight SDK row key has no compatible generated C++ member");
@@ -483,11 +461,9 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("anisotropyStrength") && requires(Object& object) { object.anisotropy_strength; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().anisotropy_strength)>>{};
   else if constexpr (Key::name.view() == std::string_view("applied") && requires(Object& object) { object.applied; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().applied)>>{};
   else if constexpr (Key::name.view() == std::string_view("ascent") && requires(Object& object) { object.ascent; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ascent)>>{};
-  else if constexpr (Key::name.view() == std::string_view("aspect") && requires(Object& object) { object.aspect; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().aspect)>>{};
   else if constexpr (Key::name.view() == std::string_view("atlas") && requires(Object& object) { object.atlas; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().atlas)>>{};
   else if constexpr (Key::name.view() == std::string_view("attenuationColor") && requires(Object& object) { object.attenuation_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().attenuation_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("attenuationDistance") && requires(Object& object) { object.attenuation_distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().attenuation_distance)>>{};
-  else if constexpr (Key::name.view() == std::string_view("azimuth") && requires(Object& object) { object.azimuth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().azimuth)>>{};
   else if constexpr (Key::name.view() == std::string_view("b") && requires(Object& object) { object.b; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().b)>>{};
   else if constexpr (Key::name.view() == std::string_view("bias") && requires(Object& object) { object.bias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bias)>>{};
   else if constexpr (Key::name.view() == std::string_view("bitmap") && requires(Object& object) { object.bitmap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bitmap)>>{};
@@ -564,7 +540,6 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("directionX") && requires(Object& object) { object.direction_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().direction_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("directionY") && requires(Object& object) { object.direction_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().direction_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("directionZ") && requires(Object& object) { object.direction_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().direction_z)>>{};
-  else if constexpr (Key::name.view() == std::string_view("distance") && requires(Object& object) { object.distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().distance)>>{};
   else if constexpr (Key::name.view() == std::string_view("divisor") && requires(Object& object) { object.divisor; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().divisor)>>{};
   else if constexpr (Key::name.view() == std::string_view("duration") && requires(Object& object) { object.duration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().duration)>>{};
   else if constexpr (Key::name.view() == std::string_view("ease") && requires(Object& object) { object.ease; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ease)>>{};
@@ -613,11 +588,6 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("getGlyphEntry") && requires(Object& object) { object.get_glyph_entry; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_entry)>>{};
   else if constexpr (Key::name.view() == std::string_view("ghosts") && requires(Object& object) { object.ghosts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ghosts)>>{};
   else if constexpr (Key::name.view() == std::string_view("glyphs") && requires(Object& object) { object.glyphs; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().glyphs)>>{};
-  else if constexpr (Key::name.view() == std::string_view("goalAzimuth") && requires(Object& object) { object.goal_azimuth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().goal_azimuth)>>{};
-  else if constexpr (Key::name.view() == std::string_view("goalDistance") && requires(Object& object) { object.goal_distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().goal_distance)>>{};
-  else if constexpr (Key::name.view() == std::string_view("goalPitch") && requires(Object& object) { object.goal_pitch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().goal_pitch)>>{};
-  else if constexpr (Key::name.view() == std::string_view("goalPolar") && requires(Object& object) { object.goal_polar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().goal_polar)>>{};
-  else if constexpr (Key::name.view() == std::string_view("goalYaw") && requires(Object& object) { object.goal_yaw; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().goal_yaw)>>{};
   else if constexpr (Key::name.view() == std::string_view("grainIntensity") && requires(Object& object) { object.grain_intensity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().grain_intensity)>>{};
   else if constexpr (Key::name.view() == std::string_view("gravityX") && requires(Object& object) { object.gravity_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gravity_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("gravityY") && requires(Object& object) { object.gravity_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gravity_y)>>{};
@@ -634,9 +604,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("halfExtentY") && requires(Object& object) { object.half_extent_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_extent_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("halfExtentZ") && requires(Object& object) { object.half_extent_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_extent_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("halfH") && requires(Object& object) { object.half_h; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_h)>>{};
-  else if constexpr (Key::name.view() == std::string_view("halfHeight") && requires(Object& object) { object.half_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("halfW") && requires(Object& object) { object.half_w; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_w)>>{};
-  else if constexpr (Key::name.view() == std::string_view("halfWidth") && requires(Object& object) { object.half_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("halo") && requires(Object& object) { object.halo; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().halo)>>{};
   else if constexpr (Key::name.view() == std::string_view("height") && requires(Object& object) { object.height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().height)>>{};
   else if constexpr (Key::name.view() == std::string_view("id") && requires(Object& object) { object.id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().id)>>{};
@@ -648,7 +616,6 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("innerConeCos") && requires(Object& object) { object.inner_cone_cos; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inner_cone_cos)>>{};
   else if constexpr (Key::name.view() == std::string_view("intensity") && requires(Object& object) { object.intensity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().intensity)>>{};
   else if constexpr (Key::name.view() == std::string_view("intensityUnit") && requires(Object& object) { object.intensity_unit; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().intensity_unit)>>{};
-  else if constexpr (Key::name.view() == std::string_view("inverseViewProjection") && requires(Object& object) { object.inverse_view_projection; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_view_projection)>>{};
   else if constexpr (Key::name.view() == std::string_view("ior") && requires(Object& object) { object.ior; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ior)>>{};
   else if constexpr (Key::name.view() == std::string_view("iridescence") && requires(Object& object) { object.iridescence; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence)>>{};
   else if constexpr (Key::name.view() == std::string_view("iridescenceIor") && requires(Object& object) { object.iridescence_ior; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence_ior)>>{};
@@ -658,7 +625,6 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("iridescenceThicknessMapUvSet") && requires(Object& object) { object.iridescence_thickness_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence_thickness_map_uv_set)>>{};
   else if constexpr (Key::name.view() == std::string_view("iridescenceThicknessMax") && requires(Object& object) { object.iridescence_thickness_max; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence_thickness_max)>>{};
   else if constexpr (Key::name.view() == std::string_view("iridescenceThicknessMin") && requires(Object& object) { object.iridescence_thickness_min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence_thickness_min)>>{};
-  else if constexpr (Key::name.view() == std::string_view("jitter") && requires(Object& object) { object.jitter; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().jitter)>>{};
   else if constexpr (Key::name.view() == std::string_view("jointSolvers") && requires(Object& object) { object.joint_solvers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().joint_solvers)>>{};
   else if constexpr (Key::name.view() == std::string_view("kind") && requires(Object& object) { object.kind; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().kind)>>{};
   else if constexpr (Key::name.view() == std::string_view("layerMask") && requires(Object& object) { object.layer_mask; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().layer_mask)>>{};
@@ -684,8 +650,6 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("maxDistance") && requires(Object& object) { object.max_distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_distance)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxExposure") && requires(Object& object) { object.max_exposure; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_exposure)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxParticles") && requires(Object& object) { object.max_particles; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_particles)>>{};
-  else if constexpr (Key::name.view() == std::string_view("maxPitch") && requires(Object& object) { object.max_pitch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_pitch)>>{};
-  else if constexpr (Key::name.view() == std::string_view("maxPolar") && requires(Object& object) { object.max_polar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_polar)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxRadius") && requires(Object& object) { object.max_radius; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_radius)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxRadiusVariance") && requires(Object& object) { object.max_radius_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_radius_variance)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxX") && requires(Object& object) { object.max_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_x)>>{};
@@ -693,11 +657,8 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("maxZ") && requires(Object& object) { object.max_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("metadata") && requires(Object& object) { object.metadata; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().metadata)>>{};
   else if constexpr (Key::name.view() == std::string_view("min") && requires(Object& object) { object.min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min)>>{};
-  else if constexpr (Key::name.view() == std::string_view("minDistance") && requires(Object& object) { object.min_distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_distance)>>{};
   else if constexpr (Key::name.view() == std::string_view("minExposure") && requires(Object& object) { object.min_exposure; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_exposure)>>{};
   else if constexpr (Key::name.view() == std::string_view("minFilter") && requires(Object& object) { object.min_filter; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_filter)>>{};
-  else if constexpr (Key::name.view() == std::string_view("minPitch") && requires(Object& object) { object.min_pitch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_pitch)>>{};
-  else if constexpr (Key::name.view() == std::string_view("minPolar") && requires(Object& object) { object.min_polar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_polar)>>{};
   else if constexpr (Key::name.view() == std::string_view("minRadius") && requires(Object& object) { object.min_radius; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_radius)>>{};
   else if constexpr (Key::name.view() == std::string_view("minRadiusVariance") && requires(Object& object) { object.min_radius_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_radius_variance)>>{};
   else if constexpr (Key::name.view() == std::string_view("minX") && requires(Object& object) { object.min_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_x)>>{};
@@ -735,12 +696,10 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("particleLifespan") && requires(Object& object) { object.particle_lifespan; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().particle_lifespan)>>{};
   else if constexpr (Key::name.view() == std::string_view("particleLifespanVariance") && requires(Object& object) { object.particle_lifespan_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().particle_lifespan_variance)>>{};
   else if constexpr (Key::name.view() == std::string_view("pcfRadius") && requires(Object& object) { object.pcf_radius; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pcf_radius)>>{};
-  else if constexpr (Key::name.view() == std::string_view("pitch") && requires(Object& object) { object.pitch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pitch)>>{};
   else if constexpr (Key::name.view() == std::string_view("pivotX") && requires(Object& object) { object.pivot_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pivot_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("pivotY") && requires(Object& object) { object.pivot_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pivot_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("pointCount") && requires(Object& object) { object.point_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("points") && requires(Object& object) { object.points; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().points)>>{};
-  else if constexpr (Key::name.view() == std::string_view("polar") && requires(Object& object) { object.polar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().polar)>>{};
   else if constexpr (Key::name.view() == std::string_view("position") && requires(Object& object) { object.position; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().position)>>{};
   else if constexpr (Key::name.view() == std::string_view("positions") && requires(Object& object) { object.positions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().positions)>>{};
   else if constexpr (Key::name.view() == std::string_view("preserveAlpha") && requires(Object& object) { object.preserve_alpha; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().preserve_alpha)>>{};
@@ -813,7 +772,6 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("skewY") && requires(Object& object) { object.skew_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().skew_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("skyColor") && requires(Object& object) { object.sky_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sky_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("slotIndex") && requires(Object& object) { object.slot_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().slot_index)>>{};
-  else if constexpr (Key::name.view() == std::string_view("smoothTime") && requires(Object& object) { object.smooth_time; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().smooth_time)>>{};
   else if constexpr (Key::name.view() == std::string_view("softness") && requires(Object& object) { object.softness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().softness)>>{};
   else if constexpr (Key::name.view() == std::string_view("sourceHeight") && requires(Object& object) { object.source_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("sourcePositionVariancex") && requires(Object& object) { object.source_position_variancex; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source_position_variancex)>>{};
@@ -849,7 +807,6 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("subpixel") && requires(Object& object) { object.subpixel; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subpixel)>>{};
   else if constexpr (Key::name.view() == std::string_view("tangentialAccelVariance") && requires(Object& object) { object.tangential_accel_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangential_accel_variance)>>{};
   else if constexpr (Key::name.view() == std::string_view("tangentialAcceleration") && requires(Object& object) { object.tangential_acceleration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangential_acceleration)>>{};
-  else if constexpr (Key::name.view() == std::string_view("target") && requires(Object& object) { object.target; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().target)>>{};
   else if constexpr (Key::name.view() == std::string_view("temperature") && requires(Object& object) { object.temperature; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().temperature)>>{};
   else if constexpr (Key::name.view() == std::string_view("textHeight") && requires(Object& object) { object.text_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().text_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("textWidth") && requires(Object& object) { object.text_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().text_width)>>{};
@@ -904,7 +861,6 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("y") && requires(Object& object) { object.y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().y)>>{};
   else if constexpr (Key::name.view() == std::string_view("y0") && requires(Object& object) { object.y0; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().y0)>>{};
   else if constexpr (Key::name.view() == std::string_view("y1") && requires(Object& object) { object.y1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().y1)>>{};
-  else if constexpr (Key::name.view() == std::string_view("yaw") && requires(Object& object) { object.yaw; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().yaw)>>{};
   else if constexpr (Key::name.view() == std::string_view("z") && requires(Object& object) { object.z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().z)>>{};
   else if constexpr (Key::name.view() == std::string_view("zoom") && requires(Object& object) { object.zoom; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().zoom)>>{};
   else return std::type_identity<void>{};
@@ -936,11 +892,9 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->anisotropy_strength; }) owner.bind_named("anisotropyStrength", [object]() -> decltype(auto) { return (object->anisotropy_strength); });
   if constexpr (requires { object->applied; }) owner.bind_named("applied", [object]() -> decltype(auto) { return (object->applied); });
   if constexpr (requires { object->ascent; }) owner.bind_named("ascent", [object]() -> decltype(auto) { return (object->ascent); });
-  if constexpr (requires { object->aspect; }) owner.bind_named("aspect", [object]() -> decltype(auto) { return (object->aspect); });
   if constexpr (requires { object->atlas; }) owner.bind_named("atlas", [object]() -> decltype(auto) { return (object->atlas); });
   if constexpr (requires { object->attenuation_color; }) owner.bind_named("attenuationColor", [object]() -> decltype(auto) { return (object->attenuation_color); });
   if constexpr (requires { object->attenuation_distance; }) owner.bind_named("attenuationDistance", [object]() -> decltype(auto) { return (object->attenuation_distance); });
-  if constexpr (requires { object->azimuth; }) owner.bind_named("azimuth", [object]() -> decltype(auto) { return (object->azimuth); });
   if constexpr (requires { object->b; }) owner.bind_named("b", [object]() -> decltype(auto) { return (object->b); });
   if constexpr (requires { object->bias; }) owner.bind_named("bias", [object]() -> decltype(auto) { return (object->bias); });
   if constexpr (requires { object->bitmap; }) owner.bind_named("bitmap", [object]() -> decltype(auto) { return (object->bitmap); });
@@ -1017,7 +971,6 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->direction_x; }) owner.bind_named("directionX", [object]() -> decltype(auto) { return (object->direction_x); });
   if constexpr (requires { object->direction_y; }) owner.bind_named("directionY", [object]() -> decltype(auto) { return (object->direction_y); });
   if constexpr (requires { object->direction_z; }) owner.bind_named("directionZ", [object]() -> decltype(auto) { return (object->direction_z); });
-  if constexpr (requires { object->distance; }) owner.bind_named("distance", [object]() -> decltype(auto) { return (object->distance); });
   if constexpr (requires { object->divisor; }) owner.bind_named("divisor", [object]() -> decltype(auto) { return (object->divisor); });
   if constexpr (requires { object->duration; }) owner.bind_named("duration", [object]() -> decltype(auto) { return (object->duration); });
   if constexpr (requires { object->ease; }) owner.bind_named("ease", [object]() -> decltype(auto) { return (object->ease); });
@@ -1066,11 +1019,6 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->get_glyph_entry; }) owner.bind_named("getGlyphEntry", [object]() -> decltype(auto) { return (object->get_glyph_entry); });
   if constexpr (requires { object->ghosts; }) owner.bind_named("ghosts", [object]() -> decltype(auto) { return (object->ghosts); });
   if constexpr (requires { object->glyphs; }) owner.bind_named("glyphs", [object]() -> decltype(auto) { return (object->glyphs); });
-  if constexpr (requires { object->goal_azimuth; }) owner.bind_named("goalAzimuth", [object]() -> decltype(auto) { return (object->goal_azimuth); });
-  if constexpr (requires { object->goal_distance; }) owner.bind_named("goalDistance", [object]() -> decltype(auto) { return (object->goal_distance); });
-  if constexpr (requires { object->goal_pitch; }) owner.bind_named("goalPitch", [object]() -> decltype(auto) { return (object->goal_pitch); });
-  if constexpr (requires { object->goal_polar; }) owner.bind_named("goalPolar", [object]() -> decltype(auto) { return (object->goal_polar); });
-  if constexpr (requires { object->goal_yaw; }) owner.bind_named("goalYaw", [object]() -> decltype(auto) { return (object->goal_yaw); });
   if constexpr (requires { object->grain_intensity; }) owner.bind_named("grainIntensity", [object]() -> decltype(auto) { return (object->grain_intensity); });
   if constexpr (requires { object->gravity_x; }) owner.bind_named("gravityX", [object]() -> decltype(auto) { return (object->gravity_x); });
   if constexpr (requires { object->gravity_y; }) owner.bind_named("gravityY", [object]() -> decltype(auto) { return (object->gravity_y); });
@@ -1087,9 +1035,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->half_extent_y; }) owner.bind_named("halfExtentY", [object]() -> decltype(auto) { return (object->half_extent_y); });
   if constexpr (requires { object->half_extent_z; }) owner.bind_named("halfExtentZ", [object]() -> decltype(auto) { return (object->half_extent_z); });
   if constexpr (requires { object->half_h; }) owner.bind_named("halfH", [object]() -> decltype(auto) { return (object->half_h); });
-  if constexpr (requires { object->half_height; }) owner.bind_named("halfHeight", [object]() -> decltype(auto) { return (object->half_height); });
   if constexpr (requires { object->half_w; }) owner.bind_named("halfW", [object]() -> decltype(auto) { return (object->half_w); });
-  if constexpr (requires { object->half_width; }) owner.bind_named("halfWidth", [object]() -> decltype(auto) { return (object->half_width); });
   if constexpr (requires { object->halo; }) owner.bind_named("halo", [object]() -> decltype(auto) { return (object->halo); });
   if constexpr (requires { object->height; }) owner.bind_named("height", [object]() -> decltype(auto) { return (object->height); });
   if constexpr (requires { object->id; }) owner.bind_named("id", [object]() -> decltype(auto) { return (object->id); });
@@ -1101,7 +1047,6 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->inner_cone_cos; }) owner.bind_named("innerConeCos", [object]() -> decltype(auto) { return (object->inner_cone_cos); });
   if constexpr (requires { object->intensity; }) owner.bind_named("intensity", [object]() -> decltype(auto) { return (object->intensity); });
   if constexpr (requires { object->intensity_unit; }) owner.bind_named("intensityUnit", [object]() -> decltype(auto) { return (object->intensity_unit); });
-  if constexpr (requires { object->inverse_view_projection; }) owner.bind_named("inverseViewProjection", [object]() -> decltype(auto) { return (object->inverse_view_projection); });
   if constexpr (requires { object->ior; }) owner.bind_named("ior", [object]() -> decltype(auto) { return (object->ior); });
   if constexpr (requires { object->iridescence; }) owner.bind_named("iridescence", [object]() -> decltype(auto) { return (object->iridescence); });
   if constexpr (requires { object->iridescence_ior; }) owner.bind_named("iridescenceIor", [object]() -> decltype(auto) { return (object->iridescence_ior); });
@@ -1111,7 +1056,6 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->iridescence_thickness_map_uv_set; }) owner.bind_named("iridescenceThicknessMapUvSet", [object]() -> decltype(auto) { return (object->iridescence_thickness_map_uv_set); });
   if constexpr (requires { object->iridescence_thickness_max; }) owner.bind_named("iridescenceThicknessMax", [object]() -> decltype(auto) { return (object->iridescence_thickness_max); });
   if constexpr (requires { object->iridescence_thickness_min; }) owner.bind_named("iridescenceThicknessMin", [object]() -> decltype(auto) { return (object->iridescence_thickness_min); });
-  if constexpr (requires { object->jitter; }) owner.bind_named("jitter", [object]() -> decltype(auto) { return (object->jitter); });
   if constexpr (requires { object->joint_solvers; }) owner.bind_named("jointSolvers", [object]() -> decltype(auto) { return (object->joint_solvers); });
   if constexpr (requires { object->kind; }) owner.bind_named("kind", [object]() -> decltype(auto) { return (object->kind); });
   if constexpr (requires { object->layer_mask; }) owner.bind_named("layerMask", [object]() -> decltype(auto) { return (object->layer_mask); });
@@ -1137,8 +1081,6 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->max_distance; }) owner.bind_named("maxDistance", [object]() -> decltype(auto) { return (object->max_distance); });
   if constexpr (requires { object->max_exposure; }) owner.bind_named("maxExposure", [object]() -> decltype(auto) { return (object->max_exposure); });
   if constexpr (requires { object->max_particles; }) owner.bind_named("maxParticles", [object]() -> decltype(auto) { return (object->max_particles); });
-  if constexpr (requires { object->max_pitch; }) owner.bind_named("maxPitch", [object]() -> decltype(auto) { return (object->max_pitch); });
-  if constexpr (requires { object->max_polar; }) owner.bind_named("maxPolar", [object]() -> decltype(auto) { return (object->max_polar); });
   if constexpr (requires { object->max_radius; }) owner.bind_named("maxRadius", [object]() -> decltype(auto) { return (object->max_radius); });
   if constexpr (requires { object->max_radius_variance; }) owner.bind_named("maxRadiusVariance", [object]() -> decltype(auto) { return (object->max_radius_variance); });
   if constexpr (requires { object->max_x; }) owner.bind_named("maxX", [object]() -> decltype(auto) { return (object->max_x); });
@@ -1146,11 +1088,8 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->max_z; }) owner.bind_named("maxZ", [object]() -> decltype(auto) { return (object->max_z); });
   if constexpr (requires { object->metadata; }) owner.bind_named("metadata", [object]() -> decltype(auto) { return (object->metadata); });
   if constexpr (requires { object->min; }) owner.bind_named("min", [object]() -> decltype(auto) { return (object->min); });
-  if constexpr (requires { object->min_distance; }) owner.bind_named("minDistance", [object]() -> decltype(auto) { return (object->min_distance); });
   if constexpr (requires { object->min_exposure; }) owner.bind_named("minExposure", [object]() -> decltype(auto) { return (object->min_exposure); });
   if constexpr (requires { object->min_filter; }) owner.bind_named("minFilter", [object]() -> decltype(auto) { return (object->min_filter); });
-  if constexpr (requires { object->min_pitch; }) owner.bind_named("minPitch", [object]() -> decltype(auto) { return (object->min_pitch); });
-  if constexpr (requires { object->min_polar; }) owner.bind_named("minPolar", [object]() -> decltype(auto) { return (object->min_polar); });
   if constexpr (requires { object->min_radius; }) owner.bind_named("minRadius", [object]() -> decltype(auto) { return (object->min_radius); });
   if constexpr (requires { object->min_radius_variance; }) owner.bind_named("minRadiusVariance", [object]() -> decltype(auto) { return (object->min_radius_variance); });
   if constexpr (requires { object->min_x; }) owner.bind_named("minX", [object]() -> decltype(auto) { return (object->min_x); });
@@ -1188,12 +1127,10 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->particle_lifespan; }) owner.bind_named("particleLifespan", [object]() -> decltype(auto) { return (object->particle_lifespan); });
   if constexpr (requires { object->particle_lifespan_variance; }) owner.bind_named("particleLifespanVariance", [object]() -> decltype(auto) { return (object->particle_lifespan_variance); });
   if constexpr (requires { object->pcf_radius; }) owner.bind_named("pcfRadius", [object]() -> decltype(auto) { return (object->pcf_radius); });
-  if constexpr (requires { object->pitch; }) owner.bind_named("pitch", [object]() -> decltype(auto) { return (object->pitch); });
   if constexpr (requires { object->pivot_x; }) owner.bind_named("pivotX", [object]() -> decltype(auto) { return (object->pivot_x); });
   if constexpr (requires { object->pivot_y; }) owner.bind_named("pivotY", [object]() -> decltype(auto) { return (object->pivot_y); });
   if constexpr (requires { object->point_count; }) owner.bind_named("pointCount", [object]() -> decltype(auto) { return (object->point_count); });
   if constexpr (requires { object->points; }) owner.bind_named("points", [object]() -> decltype(auto) { return (object->points); });
-  if constexpr (requires { object->polar; }) owner.bind_named("polar", [object]() -> decltype(auto) { return (object->polar); });
   if constexpr (requires { object->position; }) owner.bind_named("position", [object]() -> decltype(auto) { return (object->position); });
   if constexpr (requires { object->positions; }) owner.bind_named("positions", [object]() -> decltype(auto) { return (object->positions); });
   if constexpr (requires { object->preserve_alpha; }) owner.bind_named("preserveAlpha", [object]() -> decltype(auto) { return (object->preserve_alpha); });
@@ -1266,7 +1203,6 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->skew_y; }) owner.bind_named("skewY", [object]() -> decltype(auto) { return (object->skew_y); });
   if constexpr (requires { object->sky_color; }) owner.bind_named("skyColor", [object]() -> decltype(auto) { return (object->sky_color); });
   if constexpr (requires { object->slot_index; }) owner.bind_named("slotIndex", [object]() -> decltype(auto) { return (object->slot_index); });
-  if constexpr (requires { object->smooth_time; }) owner.bind_named("smoothTime", [object]() -> decltype(auto) { return (object->smooth_time); });
   if constexpr (requires { object->softness; }) owner.bind_named("softness", [object]() -> decltype(auto) { return (object->softness); });
   if constexpr (requires { object->source_height; }) owner.bind_named("sourceHeight", [object]() -> decltype(auto) { return (object->source_height); });
   if constexpr (requires { object->source_position_variancex; }) owner.bind_named("sourcePositionVariancex", [object]() -> decltype(auto) { return (object->source_position_variancex); });
@@ -1302,7 +1238,6 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->subpixel; }) owner.bind_named("subpixel", [object]() -> decltype(auto) { return (object->subpixel); });
   if constexpr (requires { object->tangential_accel_variance; }) owner.bind_named("tangentialAccelVariance", [object]() -> decltype(auto) { return (object->tangential_accel_variance); });
   if constexpr (requires { object->tangential_acceleration; }) owner.bind_named("tangentialAcceleration", [object]() -> decltype(auto) { return (object->tangential_acceleration); });
-  if constexpr (requires { object->target; }) owner.bind_named("target", [object]() -> decltype(auto) { return (object->target); });
   if constexpr (requires { object->temperature; }) owner.bind_named("temperature", [object]() -> decltype(auto) { return (object->temperature); });
   if constexpr (requires { object->text_height; }) owner.bind_named("textHeight", [object]() -> decltype(auto) { return (object->text_height); });
   if constexpr (requires { object->text_width; }) owner.bind_named("textWidth", [object]() -> decltype(auto) { return (object->text_width); });
@@ -1357,7 +1292,6 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->y; }) owner.bind_named("y", [object]() -> decltype(auto) { return (object->y); });
   if constexpr (requires { object->y0; }) owner.bind_named("y0", [object]() -> decltype(auto) { return (object->y0); });
   if constexpr (requires { object->y1; }) owner.bind_named("y1", [object]() -> decltype(auto) { return (object->y1); });
-  if constexpr (requires { object->yaw; }) owner.bind_named("yaw", [object]() -> decltype(auto) { return (object->yaw); });
   if constexpr (requires { object->z; }) owner.bind_named("z", [object]() -> decltype(auto) { return (object->z); });
   if constexpr (requires { object->zoom; }) owner.bind_named("zoom", [object]() -> decltype(auto) { return (object->zoom); });
 }

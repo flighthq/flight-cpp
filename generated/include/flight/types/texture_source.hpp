@@ -13,12 +13,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TextureSource;
+
 struct TextureSource : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::types::AlphaType alpha_type;
   flight::String gamut;
   double height;
-  flight::types::TextureSourceKind kind;
+  flight::String kind;
   double version;
   double width;
 };

@@ -14,14 +14,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-struct samples_strength_center_x_center_y : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_327F7653C2EF7EBF
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_327F7653C2EF7EBF
+struct samples_strength_center_x_center_y_327f7653c2ef7ebf : public flight::ReferenceEnabled {
   std::optional<double> samples;
   std::optional<double> strength;
   std::optional<double> center_x;
   std::optional<double> center_y;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_327F7653C2EF7EBF
 
-inline void initialize_radial_blur_effect(flight::types::EntityConstruction<flight::Ref<flight::types::RadialBlurEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_strength_center_x_center_y>>>> options) {
+inline void initialize_radial_blur_effect(flight::types::EntityConstruction<flight::Ref<flight::types::RadialBlurEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_strength_center_x_center_y_327f7653c2ef7ebf>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("RadialBlurEffect"));
   flight::row_set<flight::RowKey<"centerX">>(out, flight::row_get<flight::RowKey<"centerX">>(options));
   flight::row_set<flight::RowKey<"centerY">>(out, flight::row_get<flight::RowKey<"centerY">>(options));
@@ -29,8 +32,8 @@ inline void initialize_radial_blur_effect(flight::types::EntityConstruction<flig
   flight::row_set<flight::RowKey<"samples">>(out, flight::row_get<flight::RowKey<"samples">>(options));
 }
 
-inline flight::Ref<flight::types::RadialBlurEffect> create_radial_blur_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_strength_center_x_center_y>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<samples_strength_center_x_center_y>>>>());
+inline flight::Ref<flight::types::RadialBlurEffect> create_radial_blur_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_strength_center_x_center_y_327f7653c2ef7ebf>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<samples_strength_center_x_center_y_327f7653c2ef7ebf>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::RadialBlurEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::RadialBlurEffect>>();
   initialize_radial_blur_effect(out, options.value());
   return flight::entity::finish_entity(out);

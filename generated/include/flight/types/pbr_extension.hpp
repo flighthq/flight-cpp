@@ -11,11 +11,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct PbrExtension;
+
 using PbrUvSet = double;
 
 struct PbrExtension : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::types::Kind kind;
+  flight::String kind;
 };
 
 } // namespace flight::types

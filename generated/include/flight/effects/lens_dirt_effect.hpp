@@ -14,21 +14,24 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-struct intensity_threshold_seed : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9B8823D114125F65
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9B8823D114125F65
+struct intensity_threshold_seed_9b8823d114125f65 : public flight::ReferenceEnabled {
   std::optional<double> intensity;
   std::optional<double> threshold;
   std::optional<double> seed;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9B8823D114125F65
 
-inline void initialize_lens_dirt_effect(flight::types::EntityConstruction<flight::Ref<flight::types::LensDirtEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_threshold_seed>>>> options) {
+inline void initialize_lens_dirt_effect(flight::types::EntityConstruction<flight::Ref<flight::types::LensDirtEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_threshold_seed_9b8823d114125f65>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("LensDirtEffect"));
   flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
   flight::row_set<flight::RowKey<"threshold">>(out, flight::row_get<flight::RowKey<"threshold">>(options));
   flight::row_set<flight::RowKey<"seed">>(out, flight::row_get<flight::RowKey<"seed">>(options));
 }
 
-inline flight::Ref<flight::types::LensDirtEffect> create_lens_dirt_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_threshold_seed>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_threshold_seed>>>>());
+inline flight::Ref<flight::types::LensDirtEffect> create_lens_dirt_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_threshold_seed_9b8823d114125f65>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_threshold_seed_9b8823d114125f65>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::LensDirtEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::LensDirtEffect>>();
   initialize_lens_dirt_effect(out, options.value());
   return flight::entity::finish_entity(out);

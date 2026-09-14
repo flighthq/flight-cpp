@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ParticleSerializeResult;
+
 struct ParticleSerializeResult : public flight::ReferenceEnabled {
   flight::String text;
   flight::Array<flight::String> warnings;

@@ -11,9 +11,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Skeleton2DDeformAnimationTarget;
+
 struct Skeleton2DDeformAnimationTarget : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::Attachment2D>> attachment;
-  flight::types::skeleton2_danimation_target_kind kind;
+  flight::String kind;
   double slot_index;
 };
 

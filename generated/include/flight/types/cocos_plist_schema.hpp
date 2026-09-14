@@ -11,6 +11,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct CocosPlistFrame;
+struct CocosPlistMetadata;
+struct CocosPlistDocument;
+struct CocosPlistParsed;
+
 struct CocosPlistFrame : public flight::ReferenceEnabled {
   flight::String frame;
   flight::String sprite_offset;

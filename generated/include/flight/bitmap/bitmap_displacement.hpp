@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/array_buffer.hpp>
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <random>
@@ -54,7 +53,7 @@ inline double sample_map_channel(flight::StructuralRef<flight::RowReadonly<fligh
   if (((((mx < 0.0) || (mx >= flight::row_get<flight::RowKey<"bitmap">>(map)->width)) || (my < 0.0)) || (my >= flight::row_get<flight::RowKey<"bitmap">>(map)->height))) {
     return 128.0;
   }
-  return flight::row_get<flight::RowKey<"bitmap">>(map)->data.element(((((my * flight::row_get<flight::RowKey<"bitmap">>(map)->width) + mx) * 4.0) + component));
+  return static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(map)->data.element(((((my * flight::row_get<flight::RowKey<"bitmap">>(map)->width) + mx) * 4.0) + component)));
 }
 
 inline void displace_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapDisplacementMapOptions>>>> options) {
@@ -120,7 +119,7 @@ inline void displace_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
               const double tx = (sample_x - x0);
               const double ty = (sample_y - y0);
               const double s_stride = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
-              flight::Uint8ClampedArray<flight::ArrayBuffer> s_data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
+              flight::Uint8ClampedArray s_data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
               const std::optional<double> rx0 = (!edge_mode.has_value() ? std::optional<double>{flight::maximum(0.0, flight::minimum((w - 1.0), x0))} : resolve_displacement_edge(x0, w, edge_mode.value()));
               const std::optional<double> rx1 = (!edge_mode.has_value() ? std::optional<double>{flight::maximum(0.0, flight::minimum((w - 1.0), (x0 + 1.0)))} : resolve_displacement_edge((x0 + 1.0), w, edge_mode.value()));
               const std::optional<double> ry0 = (!edge_mode.has_value() ? std::optional<double>{flight::maximum(0.0, flight::minimum((h - 1.0), y0))} : resolve_displacement_edge(y0, h, edge_mode.value()));
@@ -133,8 +132,8 @@ inline void displace_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                 double c = 0.0;
                 while ((c < 4.0)) {
                   {
-                    const double top = ((((i00 < 0.0) ? 0.0 : s_data.element((i00 + c))) * (1.0 - tx)) + (((i10 < 0.0) ? 0.0 : s_data.element((i10 + c))) * tx));
-                    const double bottom = ((((i01 < 0.0) ? 0.0 : s_data.element((i01 + c))) * (1.0 - tx)) + (((i11 < 0.0) ? 0.0 : s_data.element((i11 + c))) * tx));
+                    const double top = ((((i00 < 0.0) ? 0.0 : static_cast<double>(s_data.element((i00 + c)))) * (1.0 - tx)) + (((i10 < 0.0) ? 0.0 : static_cast<double>(s_data.element((i10 + c)))) * tx));
+                    const double bottom = ((((i01 < 0.0) ? 0.0 : static_cast<double>(s_data.element((i01 + c)))) * (1.0 - tx)) + (((i11 < 0.0) ? 0.0 : static_cast<double>(s_data.element((i11 + c)))) * tx));
                     out.element((di + c)) = flight::round(((top * (1.0 - ty)) + (bottom * ty)));
                   }
                   c += 1.0;

@@ -12,10 +12,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct BlendEffect;
+
 struct BlendEffect : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
-  flight::types::advanced_blend_mode mode;
+  flight::String mode;
   std::optional<flight::String> backdrop_key;
   std::optional<double> opacity;
 };

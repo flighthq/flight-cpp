@@ -14,6 +14,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct SensorSubscribeOptions;
+struct SensorReading;
+struct AmbientLightReading;
+struct MotionReading;
+struct OrientationReading;
+struct PressureReading;
+struct ProximityReading;
+struct QuaternionReading;
+struct RotationRateReading;
+struct SensorsBackend;
+struct Sensors;
+
 using SensorAccuracy = flight::String;
 
 using SensorsPermissionState = flight::String;

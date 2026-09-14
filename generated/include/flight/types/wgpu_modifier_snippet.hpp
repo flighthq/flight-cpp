@@ -17,6 +17,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct WgpuModifierCompileContext;
+struct WgpuModifierContribution;
+struct WgpuModifierSnippet;
+
 struct WgpuModifierCompileContext : public flight::ReferenceEnabled {
   std::function<double(flight::types::Texture)> acquire_texture;
   double uniform_base;
@@ -29,7 +33,7 @@ struct WgpuModifierContribution : public flight::ReferenceEnabled {
 
 struct WgpuModifierSnippet : public flight::ReferenceEnabled {
   flight::Ref<flight::types::ModifierKind> kind;
-  flight::Ref<flight::types::modifier_slot> slot;
+  flight::Ref<flight::types::ModifierSlot> slot;
   std::optional<std::function<flight::String(flight::Ref<flight::types::Modifier>)>> get_define_signature;
   std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>, flight::Float32Array, double)>> bind;
   std::function<flight::Ref<WgpuModifierContribution>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>, double, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<WgpuModifierCompileContext>>>>)> contribution;

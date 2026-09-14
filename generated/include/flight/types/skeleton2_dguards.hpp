@@ -9,6 +9,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Skeleton2DCoercedInterpolation;
+struct Skeleton2DDeformLengthMismatch;
+
 struct Skeleton2DCoercedInterpolation : public flight::ReferenceEnabled {
   flight::String applied;
   flight::String stated;

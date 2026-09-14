@@ -12,6 +12,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct HandleTextInputKeyboardOptions;
+struct ReplaceTextInputOptions;
+
 struct HandleTextInputKeyboardOptions : public flight::ReferenceEnabled {
   std::optional<flight::String> clipboard_text;
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>> layout;

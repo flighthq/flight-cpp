@@ -10,6 +10,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ScreenChangedMetrics;
+struct ScreenChangeEvent;
+
 using ScreenChangeKind = flight::String;
 
 struct ScreenChangedMetrics : public flight::ReferenceEnabled {

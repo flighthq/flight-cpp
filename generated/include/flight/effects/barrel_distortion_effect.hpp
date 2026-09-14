@@ -14,19 +14,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-struct amount_scale : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C48C9692A2C7F0F6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C48C9692A2C7F0F6
+struct amount_scale_c48c9692a2c7f0f6 : public flight::ReferenceEnabled {
   std::optional<double> amount;
   std::optional<double> scale;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C48C9692A2C7F0F6
 
-inline void initialize_barrel_distortion_effect(flight::types::EntityConstruction<flight::Ref<flight::types::BarrelDistortionEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount_scale>>>> options) {
+inline void initialize_barrel_distortion_effect(flight::types::EntityConstruction<flight::Ref<flight::types::BarrelDistortionEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount_scale_c48c9692a2c7f0f6>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("BarrelDistortionEffect"));
   flight::row_set<flight::RowKey<"amount">>(out, flight::row_get<flight::RowKey<"amount">>(options));
   flight::row_set<flight::RowKey<"scale">>(out, flight::row_get<flight::RowKey<"scale">>(options));
 }
 
-inline flight::Ref<flight::types::BarrelDistortionEffect> create_barrel_distortion_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount_scale>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<amount_scale>>>>());
+inline flight::Ref<flight::types::BarrelDistortionEffect> create_barrel_distortion_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount_scale_c48c9692a2c7f0f6>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<amount_scale_c48c9692a2c7f0f6>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::BarrelDistortionEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::BarrelDistortionEffect>>();
   initialize_barrel_distortion_effect(out, options.value());
   return flight::entity::finish_entity(out);

@@ -14,6 +14,16 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct StatusBarInfo;
+struct StatusBarStyleEntry;
+struct StatusBarChangeBackend;
+struct StatusBarInfoBackend;
+struct StatusBarOverlaysBackend;
+struct StatusBarStyleBackend;
+struct StatusBarColorBackend;
+struct StatusBarVisibilityBackend;
+struct StatusBar;
+
 using StatusBarStyle = flight::String;
 
 using StatusBarAnimation = flight::String;

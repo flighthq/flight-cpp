@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Camera3DViewExplanation;
+
 struct Camera3DViewExplanation : public flight::ReferenceEnabled {
   double determinant;
   bool is_orthonormal;

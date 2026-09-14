@@ -16,6 +16,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct MidiAccess;
+struct MidiInputPort;
+struct MidiOutputPort;
+struct MidiInputMessage;
+struct MidiPortLifecycleFailure;
+struct MidiEventAttachment;
+struct MidiAccessStateSubscription;
+struct MidiInputMessageSubscription;
+struct MidiPortStateSubscription;
+struct MidiAccessBackend;
+struct MidiPermissionBackend;
+struct MidiAccessResourceOperations;
+struct MidiPortResourceOperations;
+struct MidiInputPortResourceOperations;
+struct MidiOutputPortResourceOperations;
+
 struct MidiAccess : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
 };
@@ -49,49 +65,70 @@ struct MidiInputMessage : public flight::ReferenceEnabled {
   double timestamp;
 };
 
-struct access_reason : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BF9CAA5FAD2A170B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BF9CAA5FAD2A170B
+struct access_reason_bf9caa5fad2a170b : public flight::ReferenceEnabled {
   flight::Ref<MidiAccess> access;
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BF9CAA5FAD2A170B
 
-struct reason : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
+struct reason_43a745d20647bfb6 : public flight::ReferenceEnabled {
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
 
-using MidiAccessRequestOutcome = std::variant<flight::Ref<access_reason>, flight::Ref<reason>>;
+using MidiAccessRequestOutcome = std::variant<flight::Ref<access_reason_bf9caa5fad2a170b>, flight::Ref<reason_43a745d20647bfb6>>;
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_35DC2E8B05140F3F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_35DC2E8B05140F3F
 template <typename Port>
-struct ports_reason : public flight::ReferenceEnabled {
+struct ports_reason_35dc2e8b05140f3f : public flight::ReferenceEnabled {
   flight::Array<Port> ports;
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_35DC2E8B05140F3F
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BF36B1CFB57C13B3
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BF36B1CFB57C13B3
 template <typename Port>
-struct reason_1 : public flight::ReferenceEnabled {
+struct reason_bf36b1cfb57c13b3 : public flight::ReferenceEnabled {
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BF36B1CFB57C13B3
 
 template <typename Port>
-using MidiAccessPortsOutcome = std::variant<flight::Ref<ports_reason<Port>>, flight::Ref<reason_1<Port>>>;
+using MidiAccessPortsOutcome = std::variant<flight::Ref<ports_reason_35dc2e8b05140f3f<Port>>, flight::Ref<reason_bf36b1cfb57c13b3<Port>>>;
 
-struct operation : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9E8E5495D05E2809
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9E8E5495D05E2809
+struct operation_9e8e5495d05e2809 : public flight::ReferenceEnabled {
   flight::String operation;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9E8E5495D05E2809
 
-struct id_operation_type : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_528B14B6E586258A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_528B14B6E586258A
+struct id_operation_type_528b14b6e586258a : public flight::ReferenceEnabled {
   flight::String id;
   flight::String operation;
   flight::String type;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_528B14B6E586258A
 
-using MidiAccessLifecycleFailure = std::variant<flight::Ref<id_operation_type>, flight::Ref<operation>>;
+using MidiAccessLifecycleFailure = std::variant<flight::Ref<id_operation_type_528b14b6e586258a>, flight::Ref<operation_9e8e5495d05e2809>>;
 
-struct failures_reason : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E5BBCA0586E3D959
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E5BBCA0586E3D959
+struct failures_reason_e5bbca0586e3d959 : public flight::ReferenceEnabled {
   flight::Array<MidiAccessLifecycleFailure> failures;
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E5BBCA0586E3D959
 
-using MidiAccessDisposeOutcome = std::variant<flight::Ref<failures_reason>, flight::Ref<reason>>;
+using MidiAccessDisposeOutcome = std::variant<flight::Ref<failures_reason_e5bbca0586e3d959>, flight::Ref<reason_43a745d20647bfb6>>;
 
 struct MidiPortCloseOutcome : public flight::ReferenceEnabled {
   flight::String reason;
@@ -101,30 +138,39 @@ struct MidiPortOpenOutcome : public flight::ReferenceEnabled {
   flight::String reason;
 };
 
-struct connection_reason : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_C9ED1A6C829FC4F0
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_C9ED1A6C829FC4F0
+struct connection_reason_c9ed1a6c829fc4f0 : public flight::ReferenceEnabled {
   MidiPortConnection connection;
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_C9ED1A6C829FC4F0
 
-using MidiPortConnectionOutcome = std::variant<flight::Ref<connection_reason>, flight::Ref<reason>>;
+using MidiPortConnectionOutcome = std::variant<flight::Ref<connection_reason_c9ed1a6c829fc4f0>, flight::Ref<reason_43a745d20647bfb6>>;
 
-struct reason_state : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5245FA7D24669041
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5245FA7D24669041
+struct reason_state_5245fa7d24669041 : public flight::ReferenceEnabled {
   flight::String reason;
   MidiPortState state;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5245FA7D24669041
 
-using MidiPortStateOutcome = std::variant<flight::Ref<reason_state>, flight::Ref<reason>>;
+using MidiPortStateOutcome = std::variant<flight::Ref<reason_state_5245fa7d24669041>, flight::Ref<reason_43a745d20647bfb6>>;
 
 struct MidiPortLifecycleFailure : public flight::ReferenceEnabled {
   flight::String operation;
 };
 
-struct failures_reason_1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_6D2C4F50DF677DC4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_6D2C4F50DF677DC4
+struct failures_reason_6d2c4f50df677dc4 : public flight::ReferenceEnabled {
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MidiPortLifecycleFailure>>>>> failures;
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_6D2C4F50DF677DC4
 
-using MidiPortDisposeOutcome = std::variant<flight::Ref<failures_reason_1>, flight::Ref<reason>>;
+using MidiPortDisposeOutcome = std::variant<flight::Ref<failures_reason_6d2c4f50df677dc4>, flight::Ref<reason_43a745d20647bfb6>>;
 
 struct MidiMessageSendOutcome : public flight::ReferenceEnabled {
   flight::String reason;
@@ -139,29 +185,38 @@ struct MidiEventAttachment : public flight::ReferenceEnabled {
   std::function<flight::Task<flight::Ref<MidiEventReleaseOutcome>>()> release;
 };
 
-struct attachment_reason : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_2F117FD41A8D24E0
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_2F117FD41A8D24E0
+struct attachment_reason_2f117fd41a8d24e0 : public flight::ReferenceEnabled {
   flight::Ref<MidiEventAttachment> attachment;
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_2F117FD41A8D24E0
 
-struct reason_release_failed : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DF3BBA2DE4A03669
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DF3BBA2DE4A03669
+struct reason_release_failed_df3bba2de4a03669 : public flight::ReferenceEnabled {
   flight::String reason;
   bool release_failed;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DF3BBA2DE4A03669
 
-using MidiEventBackendAttachOutcome = std::variant<flight::Ref<attachment_reason>, flight::Ref<reason_release_failed>>;
+using MidiEventBackendAttachOutcome = std::variant<flight::Ref<attachment_reason_2f117fd41a8d24e0>, flight::Ref<reason_release_failed_df3bba2de4a03669>>;
 
-struct attach_failed_reason_release_failed : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_A670BAC8BA62EF94
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_A670BAC8BA62EF94
+struct attach_failed_reason_release_failed_a670bac8ba62ef94 : public flight::ReferenceEnabled {
   bool attach_failed;
   flight::String reason;
   bool release_failed;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_A670BAC8BA62EF94
 
-using MidiSubscriptionAttachOutcome = std::variant<flight::Ref<attach_failed_reason_release_failed>, flight::Ref<reason>>;
+using MidiSubscriptionAttachOutcome = std::variant<flight::Ref<attach_failed_reason_release_failed_a670bac8ba62ef94>, flight::Ref<reason_43a745d20647bfb6>>;
 
-using MidiSubscriptionDetachOutcome = std::variant<flight::Ref<reason_release_failed>, flight::Ref<reason>>;
+using MidiSubscriptionDetachOutcome = std::variant<flight::Ref<reason_release_failed_df3bba2de4a03669>, flight::Ref<reason_43a745d20647bfb6>>;
 
-using MidiSubscriptionDisposeOutcome = std::variant<flight::Ref<attach_failed_reason_release_failed>, flight::Ref<reason>>;
+using MidiSubscriptionDisposeOutcome = std::variant<flight::Ref<attach_failed_reason_release_failed_a670bac8ba62ef94>, flight::Ref<reason_43a745d20647bfb6>>;
 
 struct MidiAccessStateSubscription : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;

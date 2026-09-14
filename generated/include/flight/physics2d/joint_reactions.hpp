@@ -42,7 +42,7 @@ inline bool write_physics2_djoint_reaction(flight::StructuralRef<flight::RowRead
   if (!([&]() -> std::optional<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>>, double, flight::Ref<flight::types::Physics2DJointReaction>)>> { auto optional_chain_receiver = solver; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->write_reaction; }()).has_value()) {
     return false;
   }
-  return solver.value()->write_reaction(world, joint, (1.0 / dt), out);
+  return solver.value()->write_reaction.value()(world, joint, (1.0 / dt), out);
 }
 
 } // namespace flight::physics2d

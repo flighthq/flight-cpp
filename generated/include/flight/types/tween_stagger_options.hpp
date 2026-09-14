@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TweenStaggerOptions;
+
 struct TweenStaggerOptions : public flight::ReferenceEnabled {
   std::optional<double> each;
   std::optional<std::variant<double, flight::String>> from;

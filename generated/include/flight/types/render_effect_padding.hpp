@@ -12,6 +12,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct RenderEffectPadding;
+struct RenderEffectPaddingExplanation;
+
 struct RenderEffectPadding : public flight::ReferenceEnabled {
   double bottom;
   double left;
@@ -24,7 +27,7 @@ using RenderEffectPaddingResolver = std::function<flight::StructuralRef<flight::
 using RenderEffectPaddingStatus = flight::String;
 
 struct RenderEffectPaddingExplanation : public flight::ReferenceEnabled {
-  flight::Array<flight::types::Kind> missing_kinds;
+  flight::Array<flight::String> missing_kinds;
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<RenderEffectPadding>>>> padding;
   RenderEffectPaddingStatus status;
 };

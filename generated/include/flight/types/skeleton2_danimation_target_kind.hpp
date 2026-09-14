@@ -7,15 +7,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct bone_constraint_deform_draw_order_slot : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DE0ABC015C5F116D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DE0ABC015C5F116D
+struct bone_constraint_deform_draw_order_slot_de0abc015c5f116d : public flight::ReferenceEnabled {
   flight::String bone;
   flight::String constraint;
   flight::String deform;
   flight::String draw_order;
   flight::String slot;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DE0ABC015C5F116D
 
-inline flight::Ref<bone_constraint_deform_draw_order_slot> skeleton2_danimation_target_kind = flight::make_ref<bone_constraint_deform_draw_order_slot>(bone_constraint_deform_draw_order_slot{.bone = flight::String("Skeleton2D.BoneTarget"), .constraint = flight::String("Skeleton2D.ConstraintTarget"), .deform = flight::String("Skeleton2D.DeformTarget"), .draw_order = flight::String("Skeleton2D.DrawOrderTarget"), .slot = flight::String("Skeleton2D.SlotTarget")});
+inline flight::Ref<bone_constraint_deform_draw_order_slot_de0abc015c5f116d> skeleton2_danimation_target_kind = flight::make_ref<bone_constraint_deform_draw_order_slot_de0abc015c5f116d>(bone_constraint_deform_draw_order_slot_de0abc015c5f116d{.bone = flight::String("Skeleton2D.BoneTarget"), .constraint = flight::String("Skeleton2D.ConstraintTarget"), .deform = flight::String("Skeleton2D.DeformTarget"), .draw_order = flight::String("Skeleton2D.DrawOrderTarget"), .slot = flight::String("Skeleton2D.SlotTarget")});
 
 using Skeleton2DAnimationTargetKind = flight::String;
 

@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TimelineSignals;
+
 struct TimelineSignals : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Signal<std::function<void()>>> on_complete;
   flight::Ref<flight::types::Signal<std::function<void(flight::Ref<flight::types::TimelineFrameEvent>)>>> on_enter_frame;

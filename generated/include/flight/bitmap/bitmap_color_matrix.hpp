@@ -81,10 +81,10 @@ inline void color_matrix_bitmap(flight::Uint8ClampedArray out, flight::Structura
               }
               const double si = (((source_y * flight::row_get<flight::RowKey<"bitmap">>(source)->width) + source_x) * 4.0);
               const double di = (((py * flight::row_get<flight::RowKey<"width">>(source)) + px) * 4.0);
-              const double r = flight::row_get<flight::RowKey<"bitmap">>(source)->data.element(si);
-              const double g = flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 1.0));
-              const double b = flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 2.0));
-              const double a = flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 3.0));
+              const double r = static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(source)->data.element(si));
+              const double g = static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 1.0)));
+              const double b = static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 2.0)));
+              const double a = static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 3.0)));
               out.element(di) = clamp_byte((((((r * matrix.element(0.0)) + (g * matrix.element(1.0))) + (b * matrix.element(2.0))) + (a * matrix.element(3.0))) + matrix.element(4.0)));
               out.element((di + 1.0)) = clamp_byte((((((r * matrix.element(5.0)) + (g * matrix.element(6.0))) + (b * matrix.element(7.0))) + (a * matrix.element(8.0))) + matrix.element(9.0)));
               out.element((di + 2.0)) = clamp_byte((((((r * matrix.element(10.0)) + (g * matrix.element(11.0))) + (b * matrix.element(12.0))) + (a * matrix.element(13.0))) + matrix.element(14.0)));
@@ -110,23 +110,23 @@ inline void set_color_matrix(flight::Array<double> out, flight::Array<double> va
 }
 
 inline void build_bitmap_brightness_color_matrix(flight::Array<double> out, double amount) {
-  set_color_matrix(out, amount, 0.0, 0.0, 0.0, 0.0, 0.0, amount, 0.0, 0.0, 0.0, 0.0, 0.0, amount, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  set_color_matrix(out, flight::Array<double>{amount, 0.0, 0.0, 0.0, 0.0, 0.0, amount, 0.0, 0.0, 0.0, 0.0, 0.0, amount, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0});
 }
 
 inline void build_bitmap_contrast_color_matrix(flight::Array<double> out, double amount) {
   const double t = (127.5 * (1.0 - amount));
-  set_color_matrix(out, amount, 0.0, 0.0, 0.0, t, 0.0, amount, 0.0, 0.0, t, 0.0, 0.0, amount, 0.0, t, 0.0, 0.0, 0.0, 1.0, 0.0);
+  set_color_matrix(out, flight::Array<double>{amount, 0.0, 0.0, 0.0, t, 0.0, amount, 0.0, 0.0, t, 0.0, 0.0, amount, 0.0, t, 0.0, 0.0, 0.0, 1.0, 0.0});
 }
 
 inline void build_bitmap_hue_rotation_color_matrix(flight::Array<double> out, double degrees) {
   const double radians = ((degrees * flight::pi) / 180.0);
   auto c = std::cos(radians);
   auto s = std::sin(radians);
-  set_color_matrix(out, ((0.213 + (c * 0.787)) - (s * 0.213)), ((0.715 - (c * 0.715)) - (s * 0.715)), ((0.072 - (c * 0.072)) + (s * 0.928)), 0.0, 0.0, ((0.213 - (c * 0.213)) + (s * 0.143)), ((0.715 + (c * 0.285)) + (s * 0.14)), ((0.072 - (c * 0.072)) - (s * 0.283)), 0.0, 0.0, ((0.213 - (c * 0.213)) - (s * 0.787)), ((0.715 - (c * 0.715)) + (s * 0.715)), ((0.072 + (c * 0.928)) + (s * 0.072)), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  set_color_matrix(out, flight::Array<double>{((0.213 + (c * 0.787)) - (s * 0.213)), ((0.715 - (c * 0.715)) - (s * 0.715)), ((0.072 - (c * 0.072)) + (s * 0.928)), 0.0, 0.0, ((0.213 - (c * 0.213)) + (s * 0.143)), ((0.715 + (c * 0.285)) + (s * 0.14)), ((0.072 - (c * 0.072)) - (s * 0.283)), 0.0, 0.0, ((0.213 - (c * 0.213)) - (s * 0.787)), ((0.715 - (c * 0.715)) + (s * 0.715)), ((0.072 + (c * 0.928)) + (s * 0.072)), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0});
 }
 
 inline void build_bitmap_invert_color_matrix(flight::Array<double> out) {
-  set_color_matrix(out, -1.0, 0.0, 0.0, 0.0, 255.0, 0.0, -1.0, 0.0, 0.0, 255.0, 0.0, 0.0, -1.0, 0.0, 255.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  set_color_matrix(out, flight::Array<double>{-1.0, 0.0, 0.0, 0.0, 255.0, 0.0, -1.0, 0.0, 0.0, 255.0, 0.0, 0.0, -1.0, 0.0, 255.0, 0.0, 0.0, 0.0, 1.0, 0.0});
 }
 
 inline void build_bitmap_saturation_color_matrix(flight::Array<double> out, double amount) {
@@ -134,7 +134,7 @@ inline void build_bitmap_saturation_color_matrix(flight::Array<double> out, doub
   const double r = (luma_r * inv);
   const double g = (luma_g * inv);
   const double b = (luma_b * inv);
-  set_color_matrix(out, (r + amount), g, b, 0.0, 0.0, r, (g + amount), b, 0.0, 0.0, r, g, (b + amount), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  set_color_matrix(out, flight::Array<double>{(r + amount), g, b, 0.0, 0.0, r, (g + amount), b, 0.0, 0.0, r, g, (b + amount), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0});
 }
 
 inline void build_bitmap_grayscale_color_matrix(flight::Array<double> out) {
@@ -142,11 +142,11 @@ inline void build_bitmap_grayscale_color_matrix(flight::Array<double> out) {
 }
 
 inline void build_bitmap_sepia_color_matrix(flight::Array<double> out) {
-  set_color_matrix(out, 0.393, 0.769, 0.189, 0.0, 0.0, 0.349, 0.686, 0.168, 0.0, 0.0, 0.272, 0.534, 0.131, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  set_color_matrix(out, flight::Array<double>{0.393, 0.769, 0.189, 0.0, 0.0, 0.349, 0.686, 0.168, 0.0, 0.0, 0.272, 0.534, 0.131, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0});
 }
 
 inline void set_bitmap_color_matrix_identity(flight::Array<double> out) {
-  set_color_matrix(out, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  set_color_matrix(out, flight::Array<double>{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0});
 }
 
 } // namespace flight::bitmap

@@ -10,6 +10,16 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TexturePackerAtlasRect;
+struct TexturePackerAtlasSize;
+struct TexturePackerAtlasPivot;
+struct TexturePackerAtlasFrameTag;
+struct TexturePackerAtlasHashFrame;
+struct TexturePackerAtlasArrayFrame;
+struct TexturePackerAtlasMeta;
+struct TexturePackerAtlasHashDocument;
+struct TexturePackerAtlasArrayDocument;
+
 struct TexturePackerAtlasRect : public flight::ReferenceEnabled {
   double h;
   double w;

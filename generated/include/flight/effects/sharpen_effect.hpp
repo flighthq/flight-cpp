@@ -14,17 +14,20 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-struct amount : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_F4CF56F49935CC00
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_F4CF56F49935CC00
+struct amount_f4cf56f49935cc00 : public flight::ReferenceEnabled {
   std::optional<double> amount;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_F4CF56F49935CC00
 
-inline void initialize_sharpen_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SharpenEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount>>>> options) {
+inline void initialize_sharpen_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SharpenEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount_f4cf56f49935cc00>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("SharpenEffect"));
   flight::row_set<flight::RowKey<"amount">>(out, flight::row_get<flight::RowKey<"amount">>(options));
 }
 
-inline flight::Ref<flight::types::SharpenEffect> create_sharpen_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<amount>>>>());
+inline flight::Ref<flight::types::SharpenEffect> create_sharpen_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount_f4cf56f49935cc00>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<amount_f4cf56f49935cc00>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::SharpenEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SharpenEffect>>();
   initialize_sharpen_effect(out, options.value());
   return flight::entity::finish_entity(out);

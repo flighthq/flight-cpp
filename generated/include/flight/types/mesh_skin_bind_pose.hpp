@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct MeshSkinBindPose;
+
 struct MeshSkinBindPose : public flight::ReferenceEnabled {
   flight::Float32Array joints;
   flight::Float32Array normals;

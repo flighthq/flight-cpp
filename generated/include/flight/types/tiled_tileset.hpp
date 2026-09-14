@@ -11,6 +11,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TiledTilesetTileFrame;
+struct TiledTilesetTile;
+struct TiledTileset;
+struct TiledTilesetRef;
+
 struct TiledTilesetTileFrame : public flight::ReferenceEnabled {
   double tile_id;
   double duration;

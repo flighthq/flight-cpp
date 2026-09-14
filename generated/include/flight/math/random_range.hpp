@@ -2,9 +2,9 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/error.hpp>
 #include <optional>
 #include <random>
-#include <stdexcept>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -23,7 +23,7 @@ inline double random_int(flight::types::RandomSource random, double min, double 
   auto lo = std::floor(min);
   auto hi = std::floor(max);
   if ((lo > hi)) {
-    throw std::range_error.construct(flight::String("randomInt: min must be <= max"));
+    throw flight::RangeError(flight::String("randomInt: min must be <= max"));
   }
   return (lo + std::floor((random() * ((hi - lo) + 1.0))));
 }

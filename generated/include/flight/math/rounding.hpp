@@ -2,8 +2,8 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/error.hpp>
 #include <random>
-#include <stdexcept>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -20,7 +20,7 @@ inline double ceil_to(double value, double step) {
 
 inline double euclidean_mod(double value, double divisor) {
   if ((divisor == 0.0)) {
-    throw std::range_error.construct(flight::String("euclideanMod: divisor must not be 0"));
+    throw flight::RangeError(flight::String("euclideanMod: divisor must not be 0"));
   }
   return std::fmod((std::fmod(value, divisor) + divisor), divisor);
 }

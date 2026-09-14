@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/array_buffer.hpp>
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <random>
@@ -65,7 +64,7 @@ inline void convolve_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
   auto offset_y = std::floor((matrix_y / 2.0));
   const double bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
   const double bitmap_height = flight::row_get<flight::RowKey<"bitmap">>(source)->height;
-  flight::Uint8ClampedArray<flight::ArrayBuffer> data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
+  flight::Uint8ClampedArray data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
   {
     double py = 0.0;
     while ((py < flight::row_get<flight::RowKey<"height">>(source))) {
@@ -121,10 +120,10 @@ inline void convolve_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                             sample_y = raw_sample_y;
                           }
                           const double i = (((sample_y * bitmap_width) + sample_x) * 4.0);
-                          r += (data.element(i) * weight);
-                          g += (data.element((i + 1.0)) * weight);
-                          b += (data.element((i + 2.0)) * weight);
-                          a += (data.element((i + 3.0)) * weight);
+                          r += (static_cast<double>(data.element(i)) * weight);
+                          g += (static_cast<double>(data.element((i + 1.0))) * weight);
+                          b += (static_cast<double>(data.element((i + 2.0))) * weight);
+                          a += (static_cast<double>(data.element((i + 3.0))) * weight);
                         }
                         kx += 1.0;
                       }

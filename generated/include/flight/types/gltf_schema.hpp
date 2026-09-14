@@ -9,57 +9,110 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct xmag_ymag_zfar_znear : public flight::ReferenceEnabled {
+struct GltfDocument;
+struct GltfCamera;
+struct GltfDocumentExtensions;
+struct GltfPunctualLight;
+struct GltfAnimation;
+struct GltfAnimationChannel;
+struct GltfAnimationSampler;
+struct GltfMaterial;
+struct GltfMaterialsAnisotropy;
+struct GltfMaterialsIor;
+struct GltfMaterialsIridescence;
+struct GltfMaterialsPbrSpecularGlossiness;
+struct GltfMaterialsSpecular;
+struct GltfMaterialsTransmission;
+struct GltfMaterialsVolume;
+struct GltfMaterialsClearcoat;
+struct GltfMaterialsEmissiveStrength;
+struct GltfMaterialsSheen;
+struct GltfPbrMetallicRoughness;
+struct GltfTextureInfo;
+struct GltfTextureTransform;
+struct GltfNormalTextureInfo;
+struct GltfOcclusionTextureInfo;
+struct GltfTexture;
+struct GltfSampler;
+struct GltfImage;
+struct GltfScene3D;
+struct GltfNode;
+struct GltfSkin;
+struct GltfMesh;
+struct GltfMorphTarget;
+struct GltfPrimitive;
+struct GltfDracoMeshCompression;
+struct GltfAccessor;
+struct GltfAccessorSparse;
+struct GltfBufferView;
+struct GltfBuffer;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_108658C0AAAA759C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_108658C0AAAA759C
+struct xmag_ymag_zfar_znear_108658c0aaaa759c : public flight::ReferenceEnabled {
   double xmag;
   double ymag;
   double zfar;
   double znear;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_108658C0AAAA759C
 
-struct aspect_ratio_yfov_zfar_znear : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_41786E02C6A1F03E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_41786E02C6A1F03E
+struct aspect_ratio_yfov_zfar_znear_41786e02c6a1f03e : public flight::ReferenceEnabled {
   std::optional<double> aspect_ratio;
   double yfov;
   std::optional<double> zfar;
   double znear;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_41786E02C6A1F03E
 
 struct GltfCamera : public flight::ReferenceEnabled {
   std::optional<flight::String> name;
-  std::optional<flight::Ref<xmag_ymag_zfar_znear>> orthographic;
-  std::optional<flight::Ref<aspect_ratio_yfov_zfar_znear>> perspective;
+  std::optional<flight::Ref<xmag_ymag_zfar_znear_108658c0aaaa759c>> orthographic;
+  std::optional<flight::Ref<aspect_ratio_yfov_zfar_znear_41786e02c6a1f03e>> perspective;
   flight::String type;
 };
 
-struct inner_cone_angle_outer_cone_angle : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_81AC248F9A5471C3
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_81AC248F9A5471C3
+struct inner_cone_angle_outer_cone_angle_81ac248f9a5471c3 : public flight::ReferenceEnabled {
   std::optional<double> inner_cone_angle;
   std::optional<double> outer_cone_angle;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_81AC248F9A5471C3
 
 struct GltfPunctualLight : public flight::ReferenceEnabled {
   std::optional<flight::Array<double>> color;
   std::optional<double> intensity;
   std::optional<flight::String> name;
   std::optional<double> range;
-  std::optional<flight::Ref<inner_cone_angle_outer_cone_angle>> spot;
+  std::optional<flight::Ref<inner_cone_angle_outer_cone_angle_81ac248f9a5471c3>> spot;
   flight::String type;
 };
 
-struct lights : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E15F7A4836C0BD7C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E15F7A4836C0BD7C
+struct lights_e15f7a4836c0bd7c : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<GltfPunctualLight>> lights;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E15F7A4836C0BD7C
 
 struct GltfDocumentExtensions : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<lights>> khr_lights_punctual;
+  std::optional<flight::Ref<lights_e15f7a4836c0bd7c>> khr_lights_punctual;
 };
 
-struct node_path : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5D2BA38F20C948BB
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5D2BA38F20C948BB
+struct node_path_5d2ba38f20c948bb : public flight::ReferenceEnabled {
   std::optional<double> node;
   flight::String path;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5D2BA38F20C948BB
 
 struct GltfAnimationChannel : public flight::ReferenceEnabled {
   double sampler;
-  flight::Ref<node_path> target;
+  flight::Ref<node_path_5d2ba38f20c948bb> target;
 };
 
 struct GltfAnimationSampler : public flight::ReferenceEnabled {
@@ -89,14 +142,17 @@ struct GltfTextureTransform : public flight::ReferenceEnabled {
   std::optional<double> tex_coord;
 };
 
-struct khr_texture_transform : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F8DA05E9A4F875A5
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F8DA05E9A4F875A5
+struct khr_texture_transform_f8da05e9a4f875a5 : public flight::ReferenceEnabled {
   std::optional<flight::Ref<GltfTextureTransform>> khr_texture_transform;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F8DA05E9A4F875A5
 
 struct GltfTextureInfo : public flight::ReferenceEnabled {
   double index;
   std::optional<double> tex_coord;
-  std::optional<flight::Ref<khr_texture_transform>> extensions;
+  std::optional<flight::Ref<khr_texture_transform_f8da05e9a4f875a5>> extensions;
 };
 
 struct GltfMaterialsAnisotropy : public flight::ReferenceEnabled {
@@ -159,7 +215,7 @@ struct GltfPbrMetallicRoughness : public flight::ReferenceEnabled {
 struct GltfNormalTextureInfo : public flight::ReferenceEnabled {
   double index;
   std::optional<double> tex_coord;
-  std::optional<flight::Ref<khr_texture_transform>> extensions;
+  std::optional<flight::Ref<khr_texture_transform_f8da05e9a4f875a5>> extensions;
   std::optional<double> scale;
 };
 
@@ -174,11 +230,13 @@ struct GltfMaterialsClearcoat : public flight::ReferenceEnabled {
 struct GltfOcclusionTextureInfo : public flight::ReferenceEnabled {
   double index;
   std::optional<double> tex_coord;
-  std::optional<flight::Ref<khr_texture_transform>> extensions;
+  std::optional<flight::Ref<khr_texture_transform_f8da05e9a4f875a5>> extensions;
   std::optional<double> strength;
 };
 
-struct khr_materials_anisotropy_khr_materials_clearcoat_khr_materials_emissive_strength_khr_materials_ior_khr_materials_iridescence_khr_materials_pbr_specular_glossiness_khr_materials_sheen_khr_materials_unlit_khr_materials_specular_khr_materials_transmission_khr_materials_volume : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_591A8A98DDBCAFFC
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_591A8A98DDBCAFFC
+struct khr_materials_anisotropy_khr_materials_clearcoat_khr_materials_emissive_strength_khr_materials_ior_khr_materials_iridescence_khr_materials_pbr_specular_glossiness_khr_materials_sheen_khr_materials_unlit_khr_materials_specular_khr_materials_transmission_khr_materials_volume_591a8a98ddbcaffc : public flight::ReferenceEnabled {
   std::optional<flight::Ref<GltfMaterialsAnisotropy>> khr_materials_anisotropy;
   std::optional<flight::Ref<GltfMaterialsClearcoat>> khr_materials_clearcoat;
   std::optional<flight::Ref<GltfMaterialsEmissiveStrength>> khr_materials_emissive_strength;
@@ -191,6 +249,7 @@ struct khr_materials_anisotropy_khr_materials_clearcoat_khr_materials_emissive_s
   std::optional<flight::Ref<GltfMaterialsTransmission>> khr_materials_transmission;
   std::optional<flight::Ref<GltfMaterialsVolume>> khr_materials_volume;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_591A8A98DDBCAFFC
 
 struct GltfMaterial : public flight::ReferenceEnabled {
   std::optional<flight::String> name;
@@ -202,19 +261,25 @@ struct GltfMaterial : public flight::ReferenceEnabled {
   std::optional<flight::String> alpha_mode;
   std::optional<double> alpha_cutoff;
   std::optional<bool> double_sided;
-  std::optional<flight::Ref<khr_materials_anisotropy_khr_materials_clearcoat_khr_materials_emissive_strength_khr_materials_ior_khr_materials_iridescence_khr_materials_pbr_specular_glossiness_khr_materials_sheen_khr_materials_unlit_khr_materials_specular_khr_materials_transmission_khr_materials_volume>> extensions;
+  std::optional<flight::Ref<khr_materials_anisotropy_khr_materials_clearcoat_khr_materials_emissive_strength_khr_materials_ior_khr_materials_iridescence_khr_materials_pbr_specular_glossiness_khr_materials_sheen_khr_materials_unlit_khr_materials_specular_khr_materials_transmission_khr_materials_volume_591a8a98ddbcaffc>> extensions;
 };
 
-struct source : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_7D365186FBB687BA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_7D365186FBB687BA
+struct source_7d365186fbb687ba : public flight::ReferenceEnabled {
   double source;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_7D365186FBB687BA
 
-struct khr_texture_basisu : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<source>> khr_texture_basisu;
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E59745E8C15A4024
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E59745E8C15A4024
+struct khr_texture_basisu_e59745e8c15a4024 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<source_7d365186fbb687ba>> khr_texture_basisu;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E59745E8C15A4024
 
 struct GltfTexture : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<khr_texture_basisu>> extensions;
+  std::optional<flight::Ref<khr_texture_basisu_e59745e8c15a4024>> extensions;
   std::optional<double> sampler;
   std::optional<double> source;
 };
@@ -237,13 +302,19 @@ struct GltfScene3D : public flight::ReferenceEnabled {
   std::optional<flight::Array<double>> nodes;
 };
 
-struct light : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_811413DFCB370A33
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_811413DFCB370A33
+struct light_811413dfcb370a33 : public flight::ReferenceEnabled {
   double light;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_811413DFCB370A33
 
-struct khr_lights_punctual : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<light>> khr_lights_punctual;
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_57088E9C45E874E0
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_57088E9C45E874E0
+struct khr_lights_punctual_57088e9c45e874e0 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<light_811413dfcb370a33>> khr_lights_punctual;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_57088E9C45E874E0
 
 struct GltfNode : public flight::ReferenceEnabled {
   std::optional<double> camera;
@@ -255,7 +326,7 @@ struct GltfNode : public flight::ReferenceEnabled {
   std::optional<flight::Array<double>> translation;
   std::optional<flight::Array<double>> rotation;
   std::optional<flight::Array<double>> scale;
-  std::optional<flight::Ref<khr_lights_punctual>> extensions;
+  std::optional<flight::Ref<khr_lights_punctual_57088e9c45e874e0>> extensions;
 };
 
 struct GltfSkin : public flight::ReferenceEnabled {
@@ -276,7 +347,9 @@ struct GltfDracoMeshCompression : public flight::ReferenceEnabled {
   double buffer_view;
 };
 
-struct joints_0_normal_position_tangent_texcoord_0_weights_0 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F82F33F6FD3CAE92
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F82F33F6FD3CAE92
+struct joints_0_normal_position_tangent_texcoord_0_weights_0_f82f33f6fd3cae92 : public flight::ReferenceEnabled {
   std::optional<double> joints_0;
   std::optional<double> normal;
   std::optional<double> position;
@@ -284,17 +357,21 @@ struct joints_0_normal_position_tangent_texcoord_0_weights_0 : public flight::Re
   std::optional<double> texcoord_0;
   std::optional<double> weights_0;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F82F33F6FD3CAE92
 
-struct khr_draco_mesh_compression : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_332A1E80702266AC
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_332A1E80702266AC
+struct khr_draco_mesh_compression_332a1e80702266ac : public flight::ReferenceEnabled {
   std::optional<flight::Ref<GltfDracoMeshCompression>> khr_draco_mesh_compression;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_332A1E80702266AC
 
 struct GltfPrimitive : public flight::ReferenceEnabled {
-  flight::Ref<joints_0_normal_position_tangent_texcoord_0_weights_0> attributes;
+  flight::Ref<joints_0_normal_position_tangent_texcoord_0_weights_0_f82f33f6fd3cae92> attributes;
   std::optional<double> indices;
   std::optional<double> material;
   std::optional<double> mode;
-  std::optional<flight::Ref<khr_draco_mesh_compression>> extensions;
+  std::optional<flight::Ref<khr_draco_mesh_compression_332a1e80702266ac>> extensions;
   std::optional<flight::Array<flight::Ref<GltfMorphTarget>>> targets;
 };
 
@@ -306,21 +383,27 @@ struct GltfMesh : public flight::ReferenceEnabled {
 
 using GltfComponentType = double;
 
-struct buffer_view_byte_offset_component_type : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EE77DB74D020D180
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EE77DB74D020D180
+struct buffer_view_byte_offset_component_type_ee77db74d020d180 : public flight::ReferenceEnabled {
   double buffer_view;
   std::optional<double> byte_offset;
   double component_type;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EE77DB74D020D180
 
-struct buffer_view_byte_offset : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_1A707BBB21DE7F77
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_1A707BBB21DE7F77
+struct buffer_view_byte_offset_1a707bbb21de7f77 : public flight::ReferenceEnabled {
   double buffer_view;
   std::optional<double> byte_offset;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_1A707BBB21DE7F77
 
 struct GltfAccessorSparse : public flight::ReferenceEnabled {
   double count;
-  flight::Ref<buffer_view_byte_offset_component_type> indices;
-  flight::Ref<buffer_view_byte_offset> values;
+  flight::Ref<buffer_view_byte_offset_component_type_ee77db74d020d180> indices;
+  flight::Ref<buffer_view_byte_offset_1a707bbb21de7f77> values;
 };
 
 struct GltfAccessor : public flight::ReferenceEnabled {
@@ -345,12 +428,15 @@ struct GltfBuffer : public flight::ReferenceEnabled {
   std::optional<flight::String> uri;
 };
 
-struct version : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FE118D6BC798D137
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FE118D6BC798D137
+struct version_fe118d6bc798d137 : public flight::ReferenceEnabled {
   flight::String version;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FE118D6BC798D137
 
 struct GltfDocument : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<version>> asset;
+  std::optional<flight::Ref<version_fe118d6bc798d137>> asset;
   std::optional<flight::Array<flight::Ref<GltfCamera>>> cameras;
   std::optional<double> scene;
   std::optional<flight::Array<flight::Ref<GltfScene3D>>> scenes;

@@ -14,12 +14,15 @@ namespace flight::skeleton2d_formats {
 
 inline const double unclaimed_position = -1.0;
 
-struct offset_slot_index : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_78B23845EFACF0F9
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_78B23845EFACF0F9
+struct offset_slot_index_78b23845efacf0f9 : public flight::ReferenceEnabled {
   double offset;
   double slot_index;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_78B23845EFACF0F9
 
-inline std::optional<flight::Array<double>> resolve_spine_draw_ordering(flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<offset_slot_index>>>>> moves, double slot_count) {
+inline std::optional<flight::Array<double>> resolve_spine_draw_ordering(flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<offset_slot_index_78b23845efacf0f9>>>>> moves, double slot_count) {
   if ((slot_count <= 0.0)) {
     return std::nullopt;
   }

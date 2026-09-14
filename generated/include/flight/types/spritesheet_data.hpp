@@ -13,6 +13,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct SpritesheetData;
+
 struct SpritesheetData : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::Array<flight::Ref<flight::types::SpritesheetAnimationData>> animations;

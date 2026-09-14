@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct FontMetrics;
+
 struct FontMetrics : public flight::ReferenceEnabled {
   double ascent;
   double cap_height;

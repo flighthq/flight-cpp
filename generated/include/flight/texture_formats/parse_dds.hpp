@@ -21,6 +21,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::texture_formats {
 
+struct ParseFailure;
+
 struct ParseFailure : public flight::ReferenceEnabled {
   std::optional<flight::String> reason;
 };
@@ -67,10 +69,13 @@ inline std::unordered_map<double, flight::types::TextureContainerFormat> dds_dxg
 
 inline std::unordered_map<double, flight::types::TextureContainerFormat> dds_four_cc_format = {{113.0, flight::String("rgba16f")}, {116.0, flight::String("rgba32f")}, {827611204.0, flight::String("bc1")}, {844388420.0, flight::String("bc2")}, {861165636.0, flight::String("bc2")}, {877942852.0, flight::String("bc3")}, {894720068.0, flight::String("bc3")}, {826889281.0, flight::String("bc4")}, {1429488450.0, flight::String("bc4")}, {1395934018.0, flight::String("bc4Snorm")}, {843666497.0, flight::String("bc5")}, {1429553986.0, flight::String("bc5")}, {1395999554.0, flight::String("bc5Snorm")}};
 
-struct levels_end_offset : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_FDDF0B752B0F2901
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_FDDF0B752B0F2901
+struct levels_end_offset_fddf0b752b0f2901 : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<flight::types::TextureContainerLevel>> levels;
   double end_offset;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_FDDF0B752B0F2901
 
 inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_dds_internal(flight::Uint8Array bytes, std::optional<flight::Ref<ParseFailure>> failure = std::nullopt) {
   if (!has_dds_magic(bytes)) {

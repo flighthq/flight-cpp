@@ -15,6 +15,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct DeviceInfo;
+struct SafeAreaInsets;
+struct DeviceBackend;
+
 struct DeviceInfo : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String arch;
@@ -23,7 +27,7 @@ struct DeviceInfo : public flight::ReferenceEnabled {
   flight::String color_gamut;
   double cpu_cores;
   double font_scale;
-  flight::types::DeviceFormFactor form_factor;
+  flight::String form_factor;
   flight::String gpu_renderer;
   flight::String gpu_vendor;
   bool is_hdr;

@@ -12,6 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct SurfaceMaterial;
+
 using MaterialAlphaMode = flight::String;
 
 struct SurfaceMaterial : public flight::ReferenceEnabled {
@@ -20,7 +22,7 @@ struct SurfaceMaterial : public flight::ReferenceEnabled {
   std::optional<std::optional<flight::String>> name;
   double alpha_cutoff;
   MaterialAlphaMode alpha_mode;
-  flight::types::blend_mode blend_mode;
+  flight::String blend_mode;
   bool double_sided;
 };
 

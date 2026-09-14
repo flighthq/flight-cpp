@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct EasingSegment;
+
 struct EasingSegment : public flight::ReferenceEnabled {
   flight::types::EasingFunction ease;
   std::optional<double> weight;

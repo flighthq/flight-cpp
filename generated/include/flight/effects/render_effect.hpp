@@ -12,7 +12,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::effects {
 
 template <typename T>
-inline void initialize_render_effect(flight::types::EntityConstruction<T> out, flight::types::Kind kind) {
+inline void initialize_render_effect(flight::types::EntityConstruction<T> out, flight::String kind) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);
 }
 

@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct BitmapSharpenOptions;
+
 struct BitmapSharpenOptions : public flight::ReferenceEnabled {
   std::optional<double> amount;
   std::optional<double> radius_x;

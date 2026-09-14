@@ -12,6 +12,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct RenderRegistryMiss;
+struct RenderRegistryMissExplanation;
+struct RenderRegistrySignals;
+
 enum class RenderRegistry {
   BlendRealization = 0,
   EffectPaddingResolver = 1,
@@ -25,7 +29,7 @@ enum class RenderRegistry {
 };
 
 struct RenderRegistryMiss : public flight::ReferenceEnabled {
-  flight::types::Kind kind;
+  flight::String kind;
   RenderRegistry registry;
 };
 
@@ -35,7 +39,7 @@ struct RenderRegistryMissExplanation : public flight::ReferenceEnabled {
 };
 
 struct RenderRegistrySignals : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void(RenderRegistry, flight::types::Kind)>>> on_registry_miss;
+  flight::Ref<flight::types::Signal<std::function<void(RenderRegistry, flight::String)>>> on_registry_miss;
 };
 
 } // namespace flight::types

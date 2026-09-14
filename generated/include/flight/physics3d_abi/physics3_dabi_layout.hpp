@@ -15,34 +15,45 @@ inline const double physics3_dabi_command_header_byte_length = 16.0;
 
 inline const double physics3_dabi_command_record_header_byte_length = 16.0;
 
-struct magic_version_byte_length_command_count : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_57470347BD0672FB
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_57470347BD0672FB
+struct magic_version_byte_length_command_count_57470347bd0672fb : public flight::ReferenceEnabled {
   double magic;
   double version;
   double byte_length;
   double command_count;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_57470347BD0672FB
 
-inline flight::Ref<magic_version_byte_length_command_count> physics3_dabi_command_header_offset = flight::make_ref<magic_version_byte_length_command_count>(magic_version_byte_length_command_count{.magic = 0.0, .version = 4.0, .byte_length = 8.0, .command_count = 12.0});
+inline flight::Ref<magic_version_byte_length_command_count_57470347bd0672fb> physics3_dabi_command_header_offset = flight::make_ref<magic_version_byte_length_command_count_57470347bd0672fb>(magic_version_byte_length_command_count_57470347bd0672fb{.magic = 0.0, .version = 4.0, .byte_length = 8.0, .command_count = 12.0});
 
-struct kind_byte_length_object_id_related_id : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_2113A4CEB5A80862
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_2113A4CEB5A80862
+struct kind_byte_length_object_id_related_id_2113a4ceb5a80862 : public flight::ReferenceEnabled {
   double kind;
   double byte_length;
   double object_id;
   double related_id;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_2113A4CEB5A80862
 
-inline flight::Ref<kind_byte_length_object_id_related_id> physics3_dabi_command_record_offset = flight::make_ref<kind_byte_length_object_id_related_id>(kind_byte_length_object_id_related_id{.kind = 0.0, .byte_length = 4.0, .object_id = 8.0, .related_id = 12.0});
+inline flight::Ref<kind_byte_length_object_id_related_id_2113a4ceb5a80862> physics3_dabi_command_record_offset = flight::make_ref<kind_byte_length_object_id_related_id_2113a4ceb5a80862>(kind_byte_length_object_id_related_id_2113a4ceb5a80862{.kind = 0.0, .byte_length = 4.0, .object_id = 8.0, .related_id = 12.0});
 
-struct contact_hooks_persistent_worlds_queries_selective_readback : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_BDA2964766921403
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_BDA2964766921403
+struct contact_hooks_persistent_worlds_queries_selective_readback_bda2964766921403 : public flight::ReferenceEnabled {
   double contact_hooks;
   double persistent_worlds;
   double queries;
   double selective_readback;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_BDA2964766921403
 
-inline flight::Ref<contact_hooks_persistent_worlds_queries_selective_readback> physics3_dabi_capability = flight::make_ref<contact_hooks_persistent_worlds_queries_selective_readback>(contact_hooks_persistent_worlds_queries_selective_readback{.contact_hooks = flight::left_shift(1.0, 0.0), .persistent_worlds = flight::left_shift(1.0, 1.0), .queries = flight::left_shift(1.0, 2.0), .selective_readback = flight::left_shift(1.0, 3.0)});
+inline flight::Ref<contact_hooks_persistent_worlds_queries_selective_readback_bda2964766921403> physics3_dabi_capability = flight::make_ref<contact_hooks_persistent_worlds_queries_selective_readback_bda2964766921403>(contact_hooks_persistent_worlds_queries_selective_readback_bda2964766921403{.contact_hooks = flight::left_shift(1.0, 0.0), .persistent_worlds = flight::left_shift(1.0, 1.0), .queries = flight::left_shift(1.0, 2.0), .selective_readback = flight::left_shift(1.0, 3.0)});
 
-struct set_gravity_set_solver_config_set_body_destroy_body_set_collider_destroy_collider_set_joint_destroy_joint_apply_force_apply_force_at_point_apply_linear_impulse_apply_linear_impulse_at_point_apply_torque_wake_body : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_DCAFCD350169E101
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_DCAFCD350169E101
+struct set_gravity_set_solver_config_set_body_destroy_body_set_collider_destroy_collider_set_joint_destroy_joint_apply_force_apply_force_at_point_apply_linear_impulse_apply_linear_impulse_at_point_apply_torque_wake_body_dcafcd350169e101 : public flight::ReferenceEnabled {
   double set_gravity;
   double set_solver_config;
   double set_body;
@@ -58,10 +69,13 @@ struct set_gravity_set_solver_config_set_body_destroy_body_set_collider_destroy_
   double apply_torque;
   double wake_body;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_DCAFCD350169E101
 
-inline flight::Ref<set_gravity_set_solver_config_set_body_destroy_body_set_collider_destroy_collider_set_joint_destroy_joint_apply_force_apply_force_at_point_apply_linear_impulse_apply_linear_impulse_at_point_apply_torque_wake_body> physics3_dabi_command_kind = flight::make_ref<set_gravity_set_solver_config_set_body_destroy_body_set_collider_destroy_collider_set_joint_destroy_joint_apply_force_apply_force_at_point_apply_linear_impulse_apply_linear_impulse_at_point_apply_torque_wake_body>(set_gravity_set_solver_config_set_body_destroy_body_set_collider_destroy_collider_set_joint_destroy_joint_apply_force_apply_force_at_point_apply_linear_impulse_apply_linear_impulse_at_point_apply_torque_wake_body{.set_gravity = 1.0, .set_solver_config = 2.0, .set_body = 3.0, .destroy_body = 4.0, .set_collider = 5.0, .destroy_collider = 6.0, .set_joint = 7.0, .destroy_joint = 8.0, .apply_force = 9.0, .apply_force_at_point = 10.0, .apply_linear_impulse = 11.0, .apply_linear_impulse_at_point = 12.0, .apply_torque = 13.0, .wake_body = 14.0});
+inline flight::Ref<set_gravity_set_solver_config_set_body_destroy_body_set_collider_destroy_collider_set_joint_destroy_joint_apply_force_apply_force_at_point_apply_linear_impulse_apply_linear_impulse_at_point_apply_torque_wake_body_dcafcd350169e101> physics3_dabi_command_kind = flight::make_ref<set_gravity_set_solver_config_set_body_destroy_body_set_collider_destroy_collider_set_joint_destroy_joint_apply_force_apply_force_at_point_apply_linear_impulse_apply_linear_impulse_at_point_apply_torque_wake_body_dcafcd350169e101>(set_gravity_set_solver_config_set_body_destroy_body_set_collider_destroy_collider_set_joint_destroy_joint_apply_force_apply_force_at_point_apply_linear_impulse_apply_linear_impulse_at_point_apply_torque_wake_body_dcafcd350169e101{.set_gravity = 1.0, .set_solver_config = 2.0, .set_body = 3.0, .destroy_body = 4.0, .set_collider = 5.0, .destroy_collider = 6.0, .set_joint = 7.0, .destroy_joint = 8.0, .apply_force = 9.0, .apply_force_at_point = 10.0, .apply_linear_impulse = 11.0, .apply_linear_impulse_at_point = 12.0, .apply_torque = 13.0, .wake_body = 14.0});
 
-struct sphere_aabb_box_capsule_cylinder_cone_convex_triangle_mesh_heightfield : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_AD99D5F84A545F0C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_AD99D5F84A545F0C
+struct sphere_aabb_box_capsule_cylinder_cone_convex_triangle_mesh_heightfield_ad99d5f84a545f0c : public flight::ReferenceEnabled {
   double sphere;
   double aabb;
   double box;
@@ -72,10 +86,13 @@ struct sphere_aabb_box_capsule_cylinder_cone_convex_triangle_mesh_heightfield : 
   double triangle_mesh;
   double heightfield;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_AD99D5F84A545F0C
 
-inline flight::Ref<sphere_aabb_box_capsule_cylinder_cone_convex_triangle_mesh_heightfield> physics3_dabi_shape_kind = flight::make_ref<sphere_aabb_box_capsule_cylinder_cone_convex_triangle_mesh_heightfield>(sphere_aabb_box_capsule_cylinder_cone_convex_triangle_mesh_heightfield{.sphere = 1.0, .aabb = 2.0, .box = 3.0, .capsule = 4.0, .cylinder = 5.0, .cone = 6.0, .convex = 7.0, .triangle_mesh = 8.0, .heightfield = 9.0});
+inline flight::Ref<sphere_aabb_box_capsule_cylinder_cone_convex_triangle_mesh_heightfield_ad99d5f84a545f0c> physics3_dabi_shape_kind = flight::make_ref<sphere_aabb_box_capsule_cylinder_cone_convex_triangle_mesh_heightfield_ad99d5f84a545f0c>(sphere_aabb_box_capsule_cylinder_cone_convex_triangle_mesh_heightfield_ad99d5f84a545f0c{.sphere = 1.0, .aabb = 2.0, .box = 3.0, .capsule = 4.0, .cylinder = 5.0, .cone = 6.0, .convex = 7.0, .triangle_mesh = 8.0, .heightfield = 9.0});
 
-struct ball_and_socket_distance_fixed_hinge_slider_cone_twist_generic6_dof : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_5D6CFF517E8E248D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_5D6CFF517E8E248D
+struct ball_and_socket_distance_fixed_hinge_slider_cone_twist_generic6_dof_5d6cff517e8e248d : public flight::ReferenceEnabled {
   double ball_and_socket;
   double distance;
   double fixed;
@@ -84,8 +101,9 @@ struct ball_and_socket_distance_fixed_hinge_slider_cone_twist_generic6_dof : pub
   double cone_twist;
   double generic6_dof;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_5D6CFF517E8E248D
 
-inline flight::Ref<ball_and_socket_distance_fixed_hinge_slider_cone_twist_generic6_dof> physics3_dabi_joint_kind = flight::make_ref<ball_and_socket_distance_fixed_hinge_slider_cone_twist_generic6_dof>(ball_and_socket_distance_fixed_hinge_slider_cone_twist_generic6_dof{.ball_and_socket = 1.0, .distance = 2.0, .fixed = 3.0, .hinge = 4.0, .slider = 5.0, .cone_twist = 6.0, .generic6_dof = 7.0});
+inline flight::Ref<ball_and_socket_distance_fixed_hinge_slider_cone_twist_generic6_dof_5d6cff517e8e248d> physics3_dabi_joint_kind = flight::make_ref<ball_and_socket_distance_fixed_hinge_slider_cone_twist_generic6_dof_5d6cff517e8e248d>(ball_and_socket_distance_fixed_hinge_slider_cone_twist_generic6_dof_5d6cff517e8e248d{.ball_and_socket = 1.0, .distance = 2.0, .fixed = 3.0, .hinge = 4.0, .slider = 5.0, .cone_twist = 6.0, .generic6_dof = 7.0});
 
 inline const double physics3_dabi_body_value_stride = 33.0;
 
@@ -101,7 +119,9 @@ inline const double physics3_dabi_query_value_stride = 7.0;
 
 inline const double physics3_dabi_max_contact_points = 4.0;
 
-struct x_y_z_orientation_x_orientation_y_orientation_z_orientation_w_velocity_x_velocity_y_velocity_z_angular_velocity_x_angular_velocity_y_angular_velocity_z_force_x_force_y_force_z_torque_x_torque_y_torque_z_mass_inertia_xx_inertia_yy_inertia_zz_inertia_xy_inertia_xz_inertia_yz_center_x_center_y_center_z_linear_damping_angular_damping_gravity_scale_sleep_timer : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_253C6B3E404D6ADA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_253C6B3E404D6ADA
+struct x_y_z_orientation_x_orientation_y_orientation_z_orientation_w_velocity_x_velocity_y_velocity_z_angular_velocity_x_angular_velocity_y_angular_velocity_z_force_x_force_y_force_z_torque_x_torque_y_torque_z_mass_inertia_xx_inertia_yy_inertia_zz_inertia_xy_inertia_xz_inertia_yz_center_x_center_y_center_z_linear_damping_angular_damping_gravity_scale_sleep_timer_253c6b3e404d6ada : public flight::ReferenceEnabled {
   double x;
   double y;
   double z;
@@ -136,29 +156,38 @@ struct x_y_z_orientation_x_orientation_y_orientation_z_orientation_w_velocity_x_
   double gravity_scale;
   double sleep_timer;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_253C6B3E404D6ADA
 
-inline flight::Ref<x_y_z_orientation_x_orientation_y_orientation_z_orientation_w_velocity_x_velocity_y_velocity_z_angular_velocity_x_angular_velocity_y_angular_velocity_z_force_x_force_y_force_z_torque_x_torque_y_torque_z_mass_inertia_xx_inertia_yy_inertia_zz_inertia_xy_inertia_xz_inertia_yz_center_x_center_y_center_z_linear_damping_angular_damping_gravity_scale_sleep_timer> physics3_dabi_body_value = flight::make_ref<x_y_z_orientation_x_orientation_y_orientation_z_orientation_w_velocity_x_velocity_y_velocity_z_angular_velocity_x_angular_velocity_y_angular_velocity_z_force_x_force_y_force_z_torque_x_torque_y_torque_z_mass_inertia_xx_inertia_yy_inertia_zz_inertia_xy_inertia_xz_inertia_yz_center_x_center_y_center_z_linear_damping_angular_damping_gravity_scale_sleep_timer>(x_y_z_orientation_x_orientation_y_orientation_z_orientation_w_velocity_x_velocity_y_velocity_z_angular_velocity_x_angular_velocity_y_angular_velocity_z_force_x_force_y_force_z_torque_x_torque_y_torque_z_mass_inertia_xx_inertia_yy_inertia_zz_inertia_xy_inertia_xz_inertia_yz_center_x_center_y_center_z_linear_damping_angular_damping_gravity_scale_sleep_timer{.x = 0.0, .y = 1.0, .z = 2.0, .orientation_x = 3.0, .orientation_y = 4.0, .orientation_z = 5.0, .orientation_w = 6.0, .velocity_x = 7.0, .velocity_y = 8.0, .velocity_z = 9.0, .angular_velocity_x = 10.0, .angular_velocity_y = 11.0, .angular_velocity_z = 12.0, .force_x = 13.0, .force_y = 14.0, .force_z = 15.0, .torque_x = 16.0, .torque_y = 17.0, .torque_z = 18.0, .mass = 19.0, .inertia_xx = 20.0, .inertia_yy = 21.0, .inertia_zz = 22.0, .inertia_xy = 23.0, .inertia_xz = 24.0, .inertia_yz = 25.0, .center_x = 26.0, .center_y = 27.0, .center_z = 28.0, .linear_damping = 29.0, .angular_damping = 30.0, .gravity_scale = 31.0, .sleep_timer = 32.0});
+inline flight::Ref<x_y_z_orientation_x_orientation_y_orientation_z_orientation_w_velocity_x_velocity_y_velocity_z_angular_velocity_x_angular_velocity_y_angular_velocity_z_force_x_force_y_force_z_torque_x_torque_y_torque_z_mass_inertia_xx_inertia_yy_inertia_zz_inertia_xy_inertia_xz_inertia_yz_center_x_center_y_center_z_linear_damping_angular_damping_gravity_scale_sleep_timer_253c6b3e404d6ada> physics3_dabi_body_value = flight::make_ref<x_y_z_orientation_x_orientation_y_orientation_z_orientation_w_velocity_x_velocity_y_velocity_z_angular_velocity_x_angular_velocity_y_angular_velocity_z_force_x_force_y_force_z_torque_x_torque_y_torque_z_mass_inertia_xx_inertia_yy_inertia_zz_inertia_xy_inertia_xz_inertia_yz_center_x_center_y_center_z_linear_damping_angular_damping_gravity_scale_sleep_timer_253c6b3e404d6ada>(x_y_z_orientation_x_orientation_y_orientation_z_orientation_w_velocity_x_velocity_y_velocity_z_angular_velocity_x_angular_velocity_y_angular_velocity_z_force_x_force_y_force_z_torque_x_torque_y_torque_z_mass_inertia_xx_inertia_yy_inertia_zz_inertia_xy_inertia_xz_inertia_yz_center_x_center_y_center_z_linear_damping_angular_damping_gravity_scale_sleep_timer_253c6b3e404d6ada{.x = 0.0, .y = 1.0, .z = 2.0, .orientation_x = 3.0, .orientation_y = 4.0, .orientation_z = 5.0, .orientation_w = 6.0, .velocity_x = 7.0, .velocity_y = 8.0, .velocity_z = 9.0, .angular_velocity_x = 10.0, .angular_velocity_y = 11.0, .angular_velocity_z = 12.0, .force_x = 13.0, .force_y = 14.0, .force_z = 15.0, .torque_x = 16.0, .torque_y = 17.0, .torque_z = 18.0, .mass = 19.0, .inertia_xx = 20.0, .inertia_yy = 21.0, .inertia_zz = 22.0, .inertia_xy = 23.0, .inertia_xz = 24.0, .inertia_yz = 25.0, .center_x = 26.0, .center_y = 27.0, .center_z = 28.0, .linear_damping = 29.0, .angular_damping = 30.0, .gravity_scale = 31.0, .sleep_timer = 32.0});
 
-struct body_a_body_b_collider_a_collider_b : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_7F20DAFE90BD2ED2
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_7F20DAFE90BD2ED2
+struct body_a_body_b_collider_a_collider_b_7f20dafe90bd2ed2 : public flight::ReferenceEnabled {
   double body_a;
   double body_b;
   double collider_a;
   double collider_b;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_7F20DAFE90BD2ED2
 
-inline flight::Ref<body_a_body_b_collider_a_collider_b> physics3_dabi_contact_id = flight::make_ref<body_a_body_b_collider_a_collider_b>(body_a_body_b_collider_a_collider_b{.body_a = 0.0, .body_b = 1.0, .collider_a = 2.0, .collider_b = 3.0});
+inline flight::Ref<body_a_body_b_collider_a_collider_b_7f20dafe90bd2ed2> physics3_dabi_contact_id = flight::make_ref<body_a_body_b_collider_a_collider_b_7f20dafe90bd2ed2>(body_a_body_b_collider_a_collider_b_7f20dafe90bd2ed2{.body_a = 0.0, .body_b = 1.0, .collider_a = 2.0, .collider_b = 3.0});
 
-struct normal_x_normal_y_normal_z_friction_restitution : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_80F4EB590D825A7D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_80F4EB590D825A7D
+struct normal_x_normal_y_normal_z_friction_restitution_80f4eb590d825a7d : public flight::ReferenceEnabled {
   double normal_x;
   double normal_y;
   double normal_z;
   double friction;
   double restitution;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_80F4EB590D825A7D
 
-inline flight::Ref<normal_x_normal_y_normal_z_friction_restitution> physics3_dabi_contact_value = flight::make_ref<normal_x_normal_y_normal_z_friction_restitution>(normal_x_normal_y_normal_z_friction_restitution{.normal_x = 0.0, .normal_y = 1.0, .normal_z = 2.0, .friction = 3.0, .restitution = 4.0});
+inline flight::Ref<normal_x_normal_y_normal_z_friction_restitution_80f4eb590d825a7d> physics3_dabi_contact_value = flight::make_ref<normal_x_normal_y_normal_z_friction_restitution_80f4eb590d825a7d>(normal_x_normal_y_normal_z_friction_restitution_80f4eb590d825a7d{.normal_x = 0.0, .normal_y = 1.0, .normal_z = 2.0, .friction = 3.0, .restitution = 4.0});
 
-struct x_y_z_depth_relative_ax_relative_ay_relative_az_relative_bx_relative_by_relative_bz : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_DA33487B25C052F7
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_DA33487B25C052F7
+struct x_y_z_depth_relative_ax_relative_ay_relative_az_relative_bx_relative_by_relative_bz_da33487b25c052f7 : public flight::ReferenceEnabled {
   double x;
   double y;
   double z;
@@ -170,10 +199,13 @@ struct x_y_z_depth_relative_ax_relative_ay_relative_az_relative_bx_relative_by_r
   double relative_by;
   double relative_bz;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_DA33487B25C052F7
 
-inline flight::Ref<x_y_z_depth_relative_ax_relative_ay_relative_az_relative_bx_relative_by_relative_bz> physics3_dabi_contact_point_value = flight::make_ref<x_y_z_depth_relative_ax_relative_ay_relative_az_relative_bx_relative_by_relative_bz>(x_y_z_depth_relative_ax_relative_ay_relative_az_relative_bx_relative_by_relative_bz{.x = 0.0, .y = 1.0, .z = 2.0, .depth = 3.0, .relative_ax = 4.0, .relative_ay = 5.0, .relative_az = 6.0, .relative_bx = 7.0, .relative_by = 8.0, .relative_bz = 9.0});
+inline flight::Ref<x_y_z_depth_relative_ax_relative_ay_relative_az_relative_bx_relative_by_relative_bz_da33487b25c052f7> physics3_dabi_contact_point_value = flight::make_ref<x_y_z_depth_relative_ax_relative_ay_relative_az_relative_bx_relative_by_relative_bz_da33487b25c052f7>(x_y_z_depth_relative_ax_relative_ay_relative_az_relative_bx_relative_by_relative_bz_da33487b25c052f7{.x = 0.0, .y = 1.0, .z = 2.0, .depth = 3.0, .relative_ax = 4.0, .relative_ay = 5.0, .relative_az = 6.0, .relative_bx = 7.0, .relative_by = 8.0, .relative_bz = 9.0});
 
-struct force_x_force_y_force_z_torque_x_torque_y_torque_z : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_919A646BA604994F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_919A646BA604994F
+struct force_x_force_y_force_z_torque_x_torque_y_torque_z_919a646ba604994f : public flight::ReferenceEnabled {
   double force_x;
   double force_y;
   double force_z;
@@ -181,10 +213,13 @@ struct force_x_force_y_force_z_torque_x_torque_y_torque_z : public flight::Refer
   double torque_y;
   double torque_z;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_919A646BA604994F
 
-inline flight::Ref<force_x_force_y_force_z_torque_x_torque_y_torque_z> physics3_dabi_joint_value = flight::make_ref<force_x_force_y_force_z_torque_x_torque_y_torque_z>(force_x_force_y_force_z_torque_x_torque_y_torque_z{.force_x = 0.0, .force_y = 1.0, .force_z = 2.0, .torque_x = 3.0, .torque_y = 4.0, .torque_z = 5.0});
+inline flight::Ref<force_x_force_y_force_z_torque_x_torque_y_torque_z_919a646ba604994f> physics3_dabi_joint_value = flight::make_ref<force_x_force_y_force_z_torque_x_torque_y_torque_z_919a646ba604994f>(force_x_force_y_force_z_torque_x_torque_y_torque_z_919a646ba604994f{.force_x = 0.0, .force_y = 1.0, .force_z = 2.0, .torque_x = 3.0, .torque_y = 4.0, .torque_z = 5.0});
 
-struct fraction_x_y_z_normal_x_normal_y_normal_z : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_8F883AF8B08BA57C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_8F883AF8B08BA57C
+struct fraction_x_y_z_normal_x_normal_y_normal_z_8f883af8b08ba57c : public flight::ReferenceEnabled {
   double fraction;
   double x;
   double y;
@@ -193,10 +228,13 @@ struct fraction_x_y_z_normal_x_normal_y_normal_z : public flight::ReferenceEnabl
   double normal_y;
   double normal_z;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_8F883AF8B08BA57C
 
-inline flight::Ref<fraction_x_y_z_normal_x_normal_y_normal_z> physics3_dabi_query_value = flight::make_ref<fraction_x_y_z_normal_x_normal_y_normal_z>(fraction_x_y_z_normal_x_normal_y_normal_z{.fraction = 0.0, .x = 1.0, .y = 2.0, .z = 3.0, .normal_x = 4.0, .normal_y = 5.0, .normal_z = 6.0});
+inline flight::Ref<fraction_x_y_z_normal_x_normal_y_normal_z_8f883af8b08ba57c> physics3_dabi_query_value = flight::make_ref<fraction_x_y_z_normal_x_normal_y_normal_z_8f883af8b08ba57c>(fraction_x_y_z_normal_x_normal_y_normal_z_8f883af8b08ba57c{.fraction = 0.0, .x = 1.0, .y = 2.0, .z = 3.0, .normal_x = 4.0, .normal_y = 5.0, .normal_z = 6.0});
 
-struct set_gravity_set_solver_config_set_body_destroy_body_set_collider_minimum_destroy_collider_set_joint_destroy_joint_body_action_wake_body : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_B092D3B5528977A9
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_B092D3B5528977A9
+struct set_gravity_set_solver_config_set_body_destroy_body_set_collider_minimum_destroy_collider_set_joint_destroy_joint_body_action_wake_body_b092d3b5528977a9 : public flight::ReferenceEnabled {
   double set_gravity;
   double set_solver_config;
   double set_body;
@@ -208,18 +246,24 @@ struct set_gravity_set_solver_config_set_body_destroy_body_set_collider_minimum_
   double body_action;
   double wake_body;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_B092D3B5528977A9
 
-inline flight::Ref<set_gravity_set_solver_config_set_body_destroy_body_set_collider_minimum_destroy_collider_set_joint_destroy_joint_body_action_wake_body> physics3_dabi_command_byte_length = flight::make_ref<set_gravity_set_solver_config_set_body_destroy_body_set_collider_minimum_destroy_collider_set_joint_destroy_joint_body_action_wake_body>(set_gravity_set_solver_config_set_body_destroy_body_set_collider_minimum_destroy_collider_set_joint_destroy_joint_body_action_wake_body{.set_gravity = 40.0, .set_solver_config = 96.0, .set_body = 288.0, .destroy_body = 16.0, .set_collider_minimum = 72.0, .destroy_collider = 16.0, .set_joint = 272.0, .destroy_joint = 16.0, .body_action = 64.0, .wake_body = 16.0});
+inline flight::Ref<set_gravity_set_solver_config_set_body_destroy_body_set_collider_minimum_destroy_collider_set_joint_destroy_joint_body_action_wake_body_b092d3b5528977a9> physics3_dabi_command_byte_length = flight::make_ref<set_gravity_set_solver_config_set_body_destroy_body_set_collider_minimum_destroy_collider_set_joint_destroy_joint_body_action_wake_body_b092d3b5528977a9>(set_gravity_set_solver_config_set_body_destroy_body_set_collider_minimum_destroy_collider_set_joint_destroy_joint_body_action_wake_body_b092d3b5528977a9{.set_gravity = 40.0, .set_solver_config = 96.0, .set_body = 288.0, .destroy_body = 16.0, .set_collider_minimum = 72.0, .destroy_collider = 16.0, .set_joint = 272.0, .destroy_joint = 16.0, .body_action = 64.0, .wake_body = 16.0});
 
-struct flags_reserved_values : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_26CF55127208D65E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_26CF55127208D65E
+struct flags_reserved_values_26cf55127208d65e : public flight::ReferenceEnabled {
   double flags;
   double reserved;
   double values;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_26CF55127208D65E
 
-inline flight::Ref<flags_reserved_values> physics3_dabi_set_body_payload_offset = flight::make_ref<flags_reserved_values>(flags_reserved_values{.flags = 0.0, .reserved = 4.0, .values = 8.0});
+inline flight::Ref<flags_reserved_values_26cf55127208d65e> physics3_dabi_set_body_payload_offset = flight::make_ref<flags_reserved_values_26cf55127208d65e>(flags_reserved_values_26cf55127208d65e{.flags = 0.0, .reserved = 4.0, .values = 8.0});
 
-struct flags_category_bits_mask_bits_group_index_density_friction_restitution_shape : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_0C726B1D14680611
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_0C726B1D14680611
+struct flags_category_bits_mask_bits_group_index_density_friction_restitution_shape_0c726b1d14680611 : public flight::ReferenceEnabled {
   double flags;
   double category_bits;
   double mask_bits;
@@ -229,10 +273,13 @@ struct flags_category_bits_mask_bits_group_index_density_friction_restitution_sh
   double restitution;
   double shape;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_0C726B1D14680611
 
-inline flight::Ref<flags_category_bits_mask_bits_group_index_density_friction_restitution_shape> physics3_dabi_set_collider_payload_offset = flight::make_ref<flags_category_bits_mask_bits_group_index_density_friction_restitution_shape>(flags_category_bits_mask_bits_group_index_density_friction_restitution_shape{.flags = 0.0, .category_bits = 4.0, .mask_bits = 8.0, .group_index = 12.0, .density = 16.0, .friction = 24.0, .restitution = 32.0, .shape = 40.0});
+inline flight::Ref<flags_category_bits_mask_bits_group_index_density_friction_restitution_shape_0c726b1d14680611> physics3_dabi_set_collider_payload_offset = flight::make_ref<flags_category_bits_mask_bits_group_index_density_friction_restitution_shape_0c726b1d14680611>(flags_category_bits_mask_bits_group_index_density_friction_restitution_shape_0c726b1d14680611{.flags = 0.0, .category_bits = 4.0, .mask_bits = 8.0, .group_index = 12.0, .density = 16.0, .friction = 24.0, .restitution = 32.0, .shape = 40.0});
 
-struct kind_body_a_body_b_flags_common_values_kind_values : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_ED5C8A0DF4745731
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_ED5C8A0DF4745731
+struct kind_body_a_body_b_flags_common_values_kind_values_ed5c8a0df4745731 : public flight::ReferenceEnabled {
   double kind;
   double body_a;
   double body_b;
@@ -240,10 +287,13 @@ struct kind_body_a_body_b_flags_common_values_kind_values : public flight::Refer
   double common_values;
   double kind_values;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_ED5C8A0DF4745731
 
-inline flight::Ref<kind_body_a_body_b_flags_common_values_kind_values> physics3_dabi_set_joint_payload_offset = flight::make_ref<kind_body_a_body_b_flags_common_values_kind_values>(kind_body_a_body_b_flags_common_values_kind_values{.kind = 0.0, .body_a = 4.0, .body_b = 8.0, .flags = 12.0, .common_values = 16.0, .kind_values = 144.0});
+inline flight::Ref<kind_body_a_body_b_flags_common_values_kind_values_ed5c8a0df4745731> physics3_dabi_set_joint_payload_offset = flight::make_ref<kind_body_a_body_b_flags_common_values_kind_values_ed5c8a0df4745731>(kind_body_a_body_b_flags_common_values_kind_values_ed5c8a0df4745731{.kind = 0.0, .body_a = 4.0, .body_b = 8.0, .flags = 12.0, .common_values = 16.0, .kind_values = 144.0});
 
-struct flags_substeps_max_ccd_substeps_max_ccd_rotation_substeps_velocity_iterations_position_iterations_reserved0_reserved1_values : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_4A8156EE51072632
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_4A8156EE51072632
+struct flags_substeps_max_ccd_substeps_max_ccd_rotation_substeps_velocity_iterations_position_iterations_reserved0_reserved1_values_4a8156ee51072632 : public flight::ReferenceEnabled {
   double flags;
   double substeps;
   double max_ccd_substeps;
@@ -254,51 +304,67 @@ struct flags_substeps_max_ccd_substeps_max_ccd_rotation_substeps_velocity_iterat
   double reserved1;
   double values;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_4A8156EE51072632
 
-inline flight::Ref<flags_substeps_max_ccd_substeps_max_ccd_rotation_substeps_velocity_iterations_position_iterations_reserved0_reserved1_values> physics3_dabi_set_solver_config_payload_offset = flight::make_ref<flags_substeps_max_ccd_substeps_max_ccd_rotation_substeps_velocity_iterations_position_iterations_reserved0_reserved1_values>(flags_substeps_max_ccd_substeps_max_ccd_rotation_substeps_velocity_iterations_position_iterations_reserved0_reserved1_values{.flags = 0.0, .substeps = 4.0, .max_ccd_substeps = 8.0, .max_ccd_rotation_substeps = 12.0, .velocity_iterations = 16.0, .position_iterations = 20.0, .reserved0 = 24.0, .reserved1 = 28.0, .values = 32.0});
+inline flight::Ref<flags_substeps_max_ccd_substeps_max_ccd_rotation_substeps_velocity_iterations_position_iterations_reserved0_reserved1_values_4a8156ee51072632> physics3_dabi_set_solver_config_payload_offset = flight::make_ref<flags_substeps_max_ccd_substeps_max_ccd_rotation_substeps_velocity_iterations_position_iterations_reserved0_reserved1_values_4a8156ee51072632>(flags_substeps_max_ccd_substeps_max_ccd_rotation_substeps_velocity_iterations_position_iterations_reserved0_reserved1_values_4a8156ee51072632{.flags = 0.0, .substeps = 4.0, .max_ccd_substeps = 8.0, .max_ccd_rotation_substeps = 12.0, .velocity_iterations = 16.0, .position_iterations = 20.0, .reserved0 = 24.0, .reserved1 = 28.0, .values = 32.0});
 
 inline const double physics3_dabi_shape_header_byte_length = 16.0;
 
-struct kind_scalar_count_integer_count_version_scalars : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_771EBD126F08B2D6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_771EBD126F08B2D6
+struct kind_scalar_count_integer_count_version_scalars_771ebd126f08b2d6 : public flight::ReferenceEnabled {
   double kind;
   double scalar_count;
   double integer_count;
   double version;
   double scalars;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_771EBD126F08B2D6
 
-inline flight::Ref<kind_scalar_count_integer_count_version_scalars> physics3_dabi_shape_header_offset = flight::make_ref<kind_scalar_count_integer_count_version_scalars>(kind_scalar_count_integer_count_version_scalars{.kind = 0.0, .scalar_count = 4.0, .integer_count = 8.0, .version = 12.0, .scalars = 16.0});
+inline flight::Ref<kind_scalar_count_integer_count_version_scalars_771ebd126f08b2d6> physics3_dabi_shape_header_offset = flight::make_ref<kind_scalar_count_integer_count_version_scalars_771ebd126f08b2d6>(kind_scalar_count_integer_count_version_scalars_771ebd126f08b2d6{.kind = 0.0, .scalar_count = 4.0, .integer_count = 8.0, .version = 12.0, .scalars = 16.0});
 
-struct type_mask_fixed_rotation_bullet_sleeping_sleep_enabled : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_8C71867400A314A8
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_8C71867400A314A8
+struct type_mask_fixed_rotation_bullet_sleeping_sleep_enabled_8c71867400a314a8 : public flight::ReferenceEnabled {
   double type_mask;
   double fixed_rotation;
   double bullet;
   double sleeping;
   double sleep_enabled;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_8C71867400A314A8
 
-inline flight::Ref<type_mask_fixed_rotation_bullet_sleeping_sleep_enabled> physics3_dabi_body_flag = flight::make_ref<type_mask_fixed_rotation_bullet_sleeping_sleep_enabled>(type_mask_fixed_rotation_bullet_sleeping_sleep_enabled{.type_mask = 3.0, .fixed_rotation = flight::left_shift(1.0, 2.0), .bullet = flight::left_shift(1.0, 3.0), .sleeping = flight::left_shift(1.0, 4.0), .sleep_enabled = flight::left_shift(1.0, 5.0)});
+inline flight::Ref<type_mask_fixed_rotation_bullet_sleeping_sleep_enabled_8c71867400a314a8> physics3_dabi_body_flag = flight::make_ref<type_mask_fixed_rotation_bullet_sleeping_sleep_enabled_8c71867400a314a8>(type_mask_fixed_rotation_bullet_sleeping_sleep_enabled_8c71867400a314a8{.type_mask = 3.0, .fixed_rotation = flight::left_shift(1.0, 2.0), .bullet = flight::left_shift(1.0, 3.0), .sleeping = flight::left_shift(1.0, 4.0), .sleep_enabled = flight::left_shift(1.0, 5.0)});
 
-struct enabled_sensor_touching : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_B7CD0B4F94E4D533
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_B7CD0B4F94E4D533
+struct enabled_sensor_touching_b7cd0b4f94e4d533 : public flight::ReferenceEnabled {
   double enabled;
   double sensor;
   double touching;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_B7CD0B4F94E4D533
 
-inline flight::Ref<enabled_sensor_touching> physics3_dabi_contact_flag = flight::make_ref<enabled_sensor_touching>(enabled_sensor_touching{.enabled = flight::left_shift(1.0, 0.0), .sensor = flight::left_shift(1.0, 1.0), .touching = flight::left_shift(1.0, 2.0)});
+inline flight::Ref<enabled_sensor_touching_b7cd0b4f94e4d533> physics3_dabi_contact_flag = flight::make_ref<enabled_sensor_touching_b7cd0b4f94e4d533>(enabled_sensor_touching_b7cd0b4f94e4d533{.enabled = flight::left_shift(1.0, 0.0), .sensor = flight::left_shift(1.0, 1.0), .touching = flight::left_shift(1.0, 2.0)});
 
-struct broken : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_251D528ECB3C3B7A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_251D528ECB3C3B7A
+struct broken_251d528ecb3c3b7a : public flight::ReferenceEnabled {
   double broken;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_251D528ECB3C3B7A
 
-inline flight::Ref<broken> physics3_dabi_joint_flag = flight::make_ref<broken>(broken{.broken = flight::left_shift(1.0, 0.0)});
+inline flight::Ref<broken_251d528ecb3c3b7a> physics3_dabi_joint_flag = flight::make_ref<broken_251d528ecb3c3b7a>(broken_251d528ecb3c3b7a{.broken = flight::left_shift(1.0, 0.0)});
 
-struct dynamic_kinematic_static : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_97491F735FA2681F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_97491F735FA2681F
+struct dynamic_kinematic_static_97491f735fa2681f : public flight::ReferenceEnabled {
   double dynamic;
   double kinematic;
   double static_;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ABI_97491F735FA2681F
 
-inline flight::Ref<dynamic_kinematic_static> physics3_dabi_body_type = flight::make_ref<dynamic_kinematic_static>(dynamic_kinematic_static{.dynamic = 0.0, .kinematic = 1.0, .static_ = 2.0});
+inline flight::Ref<dynamic_kinematic_static_97491f735fa2681f> physics3_dabi_body_type = flight::make_ref<dynamic_kinematic_static_97491f735fa2681f>(dynamic_kinematic_static_97491f735fa2681f{.dynamic = 0.0, .kinematic = 1.0, .static_ = 2.0});
 
 } // namespace flight::physics3d_abi

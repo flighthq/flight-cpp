@@ -9,6 +9,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct RenderPassPreserve;
+
 struct RenderPassPreserve : public flight::ReferenceEnabled {
   std::optional<std::variant<flight::Array<bool>, bool>> preserve_color;
   std::optional<bool> preserve_depth;

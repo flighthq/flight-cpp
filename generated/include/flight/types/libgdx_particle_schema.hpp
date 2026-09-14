@@ -11,6 +11,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct LibgdxRangeValue;
+struct LibgdxActiveRangeValue;
+struct LibgdxParticleDocument;
+struct LibgdxParseOptions;
+struct LibgdxParseResult;
+struct LibgdxSerializeOptions;
+
 struct LibgdxRangeValue : public flight::ReferenceEnabled {
   double low_min;
   double low_max;
@@ -32,16 +39,22 @@ struct LibgdxActiveRangeValue : public flight::ReferenceEnabled {
   bool active;
 };
 
-struct shape_edges_side : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_AD397097FB67AFDB
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_AD397097FB67AFDB
+struct shape_edges_side_ad397097fb67afdb : public flight::ReferenceEnabled {
   flight::String shape;
   bool edges;
   flight::String side;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_AD397097FB67AFDB
 
-struct colors_timeline : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_79CEFCEB3EED9427
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_79CEFCEB3EED9427
+struct colors_timeline_79cefceb3eed9427 : public flight::ReferenceEnabled {
   flight::Array<flight::String> colors;
   flight::Array<double> timeline;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_79CEFCEB3EED9427
 
 struct LibgdxParticleDocument : public flight::ReferenceEnabled {
   flight::String name;
@@ -56,7 +69,7 @@ struct LibgdxParticleDocument : public flight::ReferenceEnabled {
   flight::Ref<LibgdxActiveRangeValue> life_offset;
   flight::Ref<LibgdxActiveRangeValue> x_offset;
   flight::Ref<LibgdxActiveRangeValue> y_offset;
-  flight::Ref<shape_edges_side> spawn_shape;
+  flight::Ref<shape_edges_side_ad397097fb67afdb> spawn_shape;
   flight::Ref<LibgdxRangeValue> spawn_width;
   flight::Ref<LibgdxRangeValue> spawn_height;
   flight::Ref<LibgdxRangeValue> scale;
@@ -65,7 +78,7 @@ struct LibgdxParticleDocument : public flight::ReferenceEnabled {
   flight::Ref<LibgdxActiveRangeValue> rotation;
   flight::Ref<LibgdxActiveRangeValue> wind;
   flight::Ref<LibgdxActiveRangeValue> gravity;
-  flight::Ref<colors_timeline> tint;
+  flight::Ref<colors_timeline_79cefceb3eed9427> tint;
   flight::Ref<LibgdxRangeValue> transparency;
   double image_count;
   flight::String image_path;

@@ -15,17 +15,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::physics3d {
 
+struct Physics3DBroadphasePublication;
+
 struct Physics3DBroadphasePublication : public flight::ReferenceEnabled {
   flight::Set<double> body_indices;
   flight::Ref<flight::types::SpatialIndexBackend3D> index;
 };
 
-struct body_indices_index : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_8D559030813F54D4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_8D559030813F54D4
+struct body_indices_index_8d559030813f54d4 : public flight::ReferenceEnabled {
   flight::Set<double> body_indices;
   flight::Ref<flight::types::SpatialIndexBackend3D> index;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_8D559030813F54D4
 
-inline flight::WeakMap<flight::Ref<flight::types::Physics3DWorld>, flight::Ref<body_indices_index>> physics3_dbroadphase_publication_by_world = flight::WeakMap<flight::Ref<flight::types::Physics3DWorld>, flight::Ref<Physics3DBroadphasePublication>>();
+inline flight::WeakMap<flight::Ref<flight::types::Physics3DWorld>, flight::Ref<body_indices_index_8d559030813f54d4>> physics3_dbroadphase_publication_by_world = flight::WeakMap<flight::Ref<flight::types::Physics3DWorld>, flight::Ref<Physics3DBroadphasePublication>>();
 
 inline flight::Set<double> get_physics3_dbroadphase_body_indices(flight::Ref<flight::types::Physics3DWorld> world) {
   auto existing = physics3_dbroadphase_publication_by_world.get(world);
@@ -45,7 +50,7 @@ inline flight::Set<double> get_physics3_dbroadphase_body_indices(flight::Ref<fli
       body_index += 1.0;
     }
   }
-  flight::Ref<body_indices_index> created = flight::make_ref<body_indices_index>(body_indices_index{.body_indices = body_indices, .index = world->index});
+  flight::Ref<body_indices_index_8d559030813f54d4> created = flight::make_ref<body_indices_index_8d559030813f54d4>(body_indices_index_8d559030813f54d4{.body_indices = body_indices, .index = world->index});
   physics3_dbroadphase_publication_by_world.set(world, created);
   return created->body_indices;
 }

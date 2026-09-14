@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct HemisphereLightOptions;
+
 struct HemisphereLightOptions : public flight::ReferenceEnabled {
   std::optional<bool> enabled;
   std::optional<double> ground_color;

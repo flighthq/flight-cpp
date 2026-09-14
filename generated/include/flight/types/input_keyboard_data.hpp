@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct InputKeyboardData;
+
 struct InputKeyboardData : public flight::ReferenceEnabled {
   bool alt_key;
   bool caps_lock;

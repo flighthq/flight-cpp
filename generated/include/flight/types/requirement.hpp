@@ -13,14 +13,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Requirement;
+struct RequirementSet;
+
 struct Requirement : public flight::ReferenceEnabled {
-  flight::types::requirement_facet facet;
-  flight::types::Kind key;
+  flight::types::RequirementFacet facet;
+  flight::String key;
 };
 
 struct RequirementSet : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Array<flight::types::requirement_facet> covers;
+  flight::Array<flight::types::RequirementFacet> covers;
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Requirement>>>>> requirements;
 };
 

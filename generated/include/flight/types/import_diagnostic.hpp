@@ -10,14 +10,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct drop_recover_reject_skip : public flight::ReferenceEnabled {
+struct ImportDiagnostic;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D853010F6F1383A3
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D853010F6F1383A3
+struct drop_recover_reject_skip_d853010f6f1383a3 : public flight::ReferenceEnabled {
   flight::String drop;
   flight::String recover;
   flight::String reject;
   flight::String skip;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D853010F6F1383A3
 
-inline flight::Ref<drop_recover_reject_skip> import_diagnostic_severity = flight::make_ref<drop_recover_reject_skip>(drop_recover_reject_skip{.drop = flight::String("Drop"), .recover = flight::String("Recover"), .reject = flight::String("Reject"), .skip = flight::String("Skip")});
+inline flight::Ref<drop_recover_reject_skip_d853010f6f1383a3> import_diagnostic_severity = flight::make_ref<drop_recover_reject_skip_d853010f6f1383a3>(drop_recover_reject_skip_d853010f6f1383a3{.drop = flight::String("Drop"), .recover = flight::String("Recover"), .reject = flight::String("Reject"), .skip = flight::String("Skip")});
 
 using ImportDiagnosticSeverity = flight::String;
 

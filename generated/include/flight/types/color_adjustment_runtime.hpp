@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ColorAdjustmentRuntime;
+
 struct ColorAdjustmentRuntime : public flight::ReferenceEnabled {
   std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>> color_adjustments;
   bool color_adjustments_unsupported;

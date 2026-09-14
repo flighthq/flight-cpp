@@ -14,6 +14,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct SpatialAabb2D;
+struct SpatialAabb3D;
+struct SpatialPair;
+struct SpatialFrustum3D;
+struct SpatialIndexBackend2D;
+struct SpatialIndexRuntime2D;
+struct SpatialIndex2D;
+struct SpatialIndexBackend3D;
+struct SpatialIndexRuntime3D;
+struct SpatialIndex3D;
+
 using SpatialObjectId = double;
 
 struct SpatialAabb2D : public flight::ReferenceEnabled {

@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TextFormat;
+
 using TextFormatAlign = flight::String;
 
 using TextFormatListMarker = flight::String;

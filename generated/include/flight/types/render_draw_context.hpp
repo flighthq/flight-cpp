@@ -13,11 +13,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct RenderBatchKey;
+struct RenderDrawContext;
+
 struct RenderBatchKey : public flight::ReferenceEnabled {
   std::optional<flight::String> blend;
   flight::types::BatchFormat format;
   std::optional<flight::Ref<flight::types::Material>> material;
-  flight::types::Kind renderer_kind;
+  flight::String renderer_kind;
   std::optional<flight::Ref<void>> texture;
 };
 

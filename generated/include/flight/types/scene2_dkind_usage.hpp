@@ -10,10 +10,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Scene2DKindUsage;
+
 struct Scene2DKindUsage : public flight::ReferenceEnabled {
-  flight::Array<flight::types::blend_mode> blend_modes;
-  flight::Array<flight::types::Kind> material_kinds;
-  flight::Array<flight::types::Kind> node_kinds;
+  flight::Array<flight::String> blend_modes;
+  flight::Array<flight::String> material_kinds;
+  flight::Array<flight::String> node_kinds;
   flight::Array<flight::String> shape_command_keys;
 };
 

@@ -14,19 +14,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-struct temperature_tint : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_6DB947F7962B26FB
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_6DB947F7962B26FB
+struct temperature_tint_6db947f7962b26fb : public flight::ReferenceEnabled {
   std::optional<double> temperature;
   std::optional<double> tint;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_6DB947F7962B26FB
 
-inline void initialize_white_balance_effect(flight::types::EntityConstruction<flight::Ref<flight::types::WhiteBalanceEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<temperature_tint>>>> options) {
+inline void initialize_white_balance_effect(flight::types::EntityConstruction<flight::Ref<flight::types::WhiteBalanceEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<temperature_tint_6db947f7962b26fb>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("WhiteBalanceEffect"));
   flight::row_set<flight::RowKey<"temperature">>(out, flight::row_get<flight::RowKey<"temperature">>(options));
   flight::row_set<flight::RowKey<"tint">>(out, flight::row_get<flight::RowKey<"tint">>(options));
 }
 
-inline flight::Ref<flight::types::WhiteBalanceEffect> create_white_balance_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<temperature_tint>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<temperature_tint>>>>());
+inline flight::Ref<flight::types::WhiteBalanceEffect> create_white_balance_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<temperature_tint_6db947f7962b26fb>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<temperature_tint_6db947f7962b26fb>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::WhiteBalanceEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::WhiteBalanceEffect>>();
   initialize_white_balance_effect(out, options.value());
   return flight::entity::finish_entity(out);

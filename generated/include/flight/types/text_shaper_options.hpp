@@ -12,6 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TextShaperOptions;
+
 struct TextShaperOptions : public flight::ReferenceEnabled {
   std::optional<flight::types::TextDirection> direction;
   std::optional<flight::Array<flight::Ref<flight::types::TextFeature>>> features;

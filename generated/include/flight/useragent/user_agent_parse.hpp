@@ -10,7 +10,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::useragent {
 
-inline flight::types::DeviceFormFactor parse_user_agent_form_factor(flight::String ua, double max_touch_points) {
+inline flight::String parse_user_agent_form_factor(flight::String ua, double max_touch_points) {
   if (flight::RegExp(flight::String("android auto|car browser|automotive"), flight::String("i")).test(ua)) {
     return flight::types::device_form_factor_car;
   }

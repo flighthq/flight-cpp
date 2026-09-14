@@ -15,33 +15,48 @@ using PermissionState = flight::String;
 
 using PermissionQueryFailureReason = flight::String;
 
-struct reason_state : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BD510FE15FA868DD
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BD510FE15FA868DD
+struct reason_state_bd510fe15fa868dd : public flight::ReferenceEnabled {
   flight::String reason;
   PermissionState state;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BD510FE15FA868DD
 
-struct reason_state_1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EF3C073626C4275A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EF3C073626C4275A
+struct reason_state_ef3c073626c4275a : public flight::ReferenceEnabled {
   flight::String reason;
   std::optional<flight::String> state;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EF3C073626C4275A
 
-struct reason : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DAF70A48513DD29C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DAF70A48513DD29C
+struct reason_daf70a48513dd29c : public flight::ReferenceEnabled {
   PermissionQueryFailureReason reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DAF70A48513DD29C
 
-using PermissionQueryOutcome = std::variant<flight::Ref<reason>, flight::Ref<reason_state>, flight::Ref<reason_state_1>>;
+using PermissionQueryOutcome = std::variant<flight::Ref<reason_daf70a48513dd29c>, flight::Ref<reason_state_bd510fe15fa868dd>, flight::Ref<reason_state_ef3c073626c4275a>>;
 
 using PermissionRequestFailureReason = flight::String;
 
-struct reason_state_2 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CC6A9749EE69E3E5
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CC6A9749EE69E3E5
+struct reason_state_cc6a9749ee69e3e5 : public flight::ReferenceEnabled {
   flight::String reason;
   flight::String state;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CC6A9749EE69E3E5
 
-struct reason_1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_24E401D824D7D0B4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_24E401D824D7D0B4
+struct reason_24e401d824d7d0b4 : public flight::ReferenceEnabled {
   PermissionRequestFailureReason reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_24E401D824D7D0B4
 
-using PermissionRequestOutcome = std::variant<flight::Ref<reason_1>, flight::Ref<reason_state_2>, flight::Ref<reason_state_1>>;
+using PermissionRequestOutcome = std::variant<flight::Ref<reason_24e401d824d7d0b4>, flight::Ref<reason_state_cc6a9749ee69e3e5>, flight::Ref<reason_state_ef3c073626c4275a>>;
 
 } // namespace flight::types

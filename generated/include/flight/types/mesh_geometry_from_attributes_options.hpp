@@ -9,6 +9,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct MeshGeometryFromAttributesOptions;
+
 struct MeshGeometryFromAttributesOptions : public flight::ReferenceEnabled {
   std::optional<std::optional<std::variant<flight::Array<double>, flight::Uint16Array, flight::Uint32Array>>> indices;
   std::optional<std::optional<flight::Array<double>>> normals;

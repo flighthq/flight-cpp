@@ -9,6 +9,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct WgpuScene3DForwardLightList;
+
 struct WgpuScene3DForwardLightList : public flight::ReferenceEnabled {
   double mesh_count;
   flight::Array<flight::Ref<flight::types::Scene3DLightBlock>> mesh_light_blocks;

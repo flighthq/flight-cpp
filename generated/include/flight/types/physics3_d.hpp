@@ -15,6 +15,53 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Physics3DMaterial;
+struct Physics3DCollisionFilter;
+struct Physics3DCollider;
+struct Physics3DMassData;
+struct RigidBody3D;
+struct Physics3DContactPoint;
+struct Physics3DContact;
+struct Physics3DContactEvents;
+struct Physics3DContactHooks;
+struct Physics3DContactConstraintPoint;
+struct Physics3DContactConstraint;
+struct Physics3DSequentialImpulseState;
+struct Physics3DSequentialImpulseConfig;
+struct Physics3DSolverConfig;
+struct Physics3DRotationalCcdEnvelope;
+struct Physics3DCollisionExplanation;
+struct Physics3DStepExplanation;
+struct Physics3DJointExplanation;
+struct Physics3DJoint;
+struct Physics3DJointSolver;
+struct Physics3DJointFrames;
+struct Physics3DJointReaction;
+struct Physics3DJointEvents;
+struct Physics3DJointOptions;
+struct Physics3DJointFrameOptions;
+struct Physics3DDistanceJoint;
+struct Physics3DDistanceJointOptions;
+struct Physics3DHingeJoint;
+struct Physics3DHingeJointOptions;
+struct Physics3DSliderJoint;
+struct Physics3DSliderJointOptions;
+struct Physics3DConeTwistJoint;
+struct Physics3DConeTwistJointOptions;
+struct Physics3DGeneric6DofJoint;
+struct Physics3DGeneric6DofJointOptions;
+struct Physics3DWorld;
+struct Physics3DQueryHit;
+struct Physics3DQueryResult;
+struct Physics3DQueryFilter;
+struct Physics3DRayHit;
+struct Physics3DRayResult;
+struct Physics3DShapeCastResult;
+struct Physics3DDebugLine;
+struct Physics3DDebugSphere;
+struct Physics3DDebugGeometry;
+struct Physics3DDebugGeometryOptions;
+
 using Physics3DBodyType = flight::String;
 
 struct Physics3DMaterial : public flight::ReferenceEnabled {

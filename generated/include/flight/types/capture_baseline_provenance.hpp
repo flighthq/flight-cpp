@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct CaptureBaselineProvenance;
+
 struct CaptureBaselineProvenance : public flight::ReferenceEnabled {
   std::optional<flight::String> computation_id;
   double frames;

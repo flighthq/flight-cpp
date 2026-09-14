@@ -20,6 +20,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::texture_formats {
 
+struct ParseFailure;
+
 struct ParseFailure : public flight::ReferenceEnabled {
   std::optional<flight::String> reason;
 };
@@ -57,33 +59,36 @@ inline const double basis_texture_type_video_frames = 3.0;
 
 inline const double basis_texture_type_volume = 4.0;
 
-struct depth_faces_layers : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_967C927D5D51C181
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_967C927D5D51C181
+struct depth_faces_layers_967c927d5d51c181 : public flight::ReferenceEnabled {
   double depth;
   double faces;
   double layers;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_967C927D5D51C181
 
-inline std::optional<flight::Ref<depth_faces_layers>> get_basis_texture_shape(double texture_type, double total_images) {
+inline std::optional<flight::Ref<depth_faces_layers_967c927d5d51c181>> get_basis_texture_shape(double texture_type, double total_images) {
   auto images = flight::maximum(1.0, total_images);
   {
     auto switch_value = texture_type;
     if (switch_value == basis_texture_type2d) {
-      return std::optional<flight::Ref<depth_faces_layers>>{flight::make_ref<depth_faces_layers>(depth_faces_layers{.depth = 1.0, .faces = 1.0, .layers = images})};
+      return std::optional<flight::Ref<depth_faces_layers_967c927d5d51c181>>{flight::make_ref<depth_faces_layers_967c927d5d51c181>(depth_faces_layers_967c927d5d51c181{.depth = 1.0, .faces = 1.0, .layers = images})};
     }
     else if (switch_value == basis_texture_type2d_array) {
-      return std::optional<flight::Ref<depth_faces_layers>>{flight::make_ref<depth_faces_layers>(depth_faces_layers{.depth = 1.0, .faces = 1.0, .layers = images})};
+      return std::optional<flight::Ref<depth_faces_layers_967c927d5d51c181>>{flight::make_ref<depth_faces_layers_967c927d5d51c181>(depth_faces_layers_967c927d5d51c181{.depth = 1.0, .faces = 1.0, .layers = images})};
     }
     else if (switch_value == basis_texture_type_cubemap_array) {
       if (((total_images == 0.0) || (std::fmod(total_images, 6.0) != 0.0))) {
         return std::nullopt;
       }
-      return std::optional<flight::Ref<depth_faces_layers>>{flight::make_ref<depth_faces_layers>(depth_faces_layers{.depth = 1.0, .faces = 6.0, .layers = (total_images / 6.0)})};
+      return std::optional<flight::Ref<depth_faces_layers_967c927d5d51c181>>{flight::make_ref<depth_faces_layers_967c927d5d51c181>(depth_faces_layers_967c927d5d51c181{.depth = 1.0, .faces = 6.0, .layers = (total_images / 6.0)})};
     }
     else if (switch_value == basis_texture_type_video_frames) {
       return std::nullopt;
     }
     else if (switch_value == basis_texture_type_volume) {
-      return std::optional<flight::Ref<depth_faces_layers>>{flight::make_ref<depth_faces_layers>(depth_faces_layers{.depth = images, .faces = 1.0, .layers = 1.0})};
+      return std::optional<flight::Ref<depth_faces_layers_967c927d5d51c181>>{flight::make_ref<depth_faces_layers_967c927d5d51c181>(depth_faces_layers_967c927d5d51c181{.depth = images, .faces = 1.0, .layers = 1.0})};
     }
     else {
       return std::nullopt;

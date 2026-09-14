@@ -60,7 +60,7 @@ inline void initialize_transform2_d(flight::types::EntityConstruction<flight::Re
 
 inline flight::Ref<flight::types::Transform2D> create_transform2_d(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> rotation = std::nullopt, std::optional<double> scale_x = std::nullopt, std::optional<double> scale_y = std::nullopt, std::optional<double> skew_x = std::nullopt, std::optional<double> skew_y = std::nullopt, std::optional<double> pivot_x = std::nullopt, std::optional<double> pivot_y = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Transform2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Transform2D>>();
-  initialize_transform2_d(out, x, y, rotation, scale_x, scale_y, skew_x, skew_y, pivot_x, pivot_y);
+  initialize_transform2_d(out, x.value_or(0.0), y.value_or(0.0), rotation.value_or(0.0), scale_x.value_or(1.0), scale_y.value_or(1.0), skew_x.value_or(0.0), skew_y.value_or(0.0), pivot_x.value_or(0.0), pivot_y.value_or(0.0));
   return flight::entity::finish_entity(out);
 }
 

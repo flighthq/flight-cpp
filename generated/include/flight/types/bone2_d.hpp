@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Bone2D;
+
 struct Bone2D : public flight::ReferenceEnabled {
   double length;
   std::optional<std::optional<flight::String>> name;

@@ -7,6 +7,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Woff2TableDirectory;
+struct Woff2TableEntry;
+
 struct Woff2TableEntry : public flight::ReferenceEnabled {
   double original_length;
   flight::String tag;

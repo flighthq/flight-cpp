@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct OrthographicProjectionOptions;
+
 struct OrthographicProjectionOptions : public flight::ReferenceEnabled {
   double half_height;
   double half_width;

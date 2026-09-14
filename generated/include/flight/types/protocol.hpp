@@ -14,6 +14,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ParsedProtocolUrl;
+struct ProtocolHandler;
+struct ProtocolDefaultBackend;
+struct ProtocolLaunchBackend;
+struct ProtocolOpenBackend;
+struct ProtocolRegistrationBackend;
+struct ProtocolRegistrationQueryBackend;
+struct ProtocolUnregistrationBackend;
+
 struct ParsedProtocolUrl : public flight::ReferenceEnabled {
   flight::String scheme;
   flight::String host;

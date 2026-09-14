@@ -12,6 +12,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct FlowState;
+struct FlowStack;
+
 struct FlowState : public flight::ReferenceEnabled {
   std::optional<flight::String> name;
   std::optional<std::function<void()>> on_enter;

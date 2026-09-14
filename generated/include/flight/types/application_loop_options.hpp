@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ApplicationLoopOptions;
+
 struct ApplicationLoopOptions : public flight::ReferenceEnabled {
   std::optional<double> max_delta_time;
   std::optional<double> target_frame_rate;

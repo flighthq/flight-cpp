@@ -14,6 +14,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ClipboardBookmark;
+struct ClipboardWriteItem;
+struct ClipboardBookmarkBackend;
+struct ClipboardChangeBackend;
+struct ClipboardFormatsBackend;
+struct ClipboardImageBackend;
+struct ClipboardTextBackend;
+
 struct ClipboardBookmark : public flight::ReferenceEnabled {
   flight::String title;
   flight::String url;

@@ -2,10 +2,10 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/error.hpp>
 #include <flight/number.hpp>
 #include <limits>
 #include <random>
-#include <stdexcept>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -15,7 +15,7 @@ namespace flight::math {
 
 inline double factorial(double n) {
   if ((!flight::is_integer(n) || (n < 0.0))) {
-    throw std::range_error.construct(flight::String("factorial: n must be a non-negative integer"));
+    throw flight::RangeError(flight::String("factorial: n must be a non-negative integer"));
   }
   if (((n == 0.0) || (n == 1.0))) {
     return 1.0;
@@ -33,12 +33,12 @@ inline double factorial(double n) {
 
 inline double gcd(double a, double b) {
   if ((!std::isfinite(a) || !std::isfinite(b))) {
-    throw std::range_error.construct(flight::String("gcd: arguments must be finite"));
+    throw flight::RangeError(flight::String("gcd: arguments must be finite"));
   }
   a = std::abs(std::trunc(a));
   b = std::abs(std::trunc(b));
   if (((a == 0.0) && (b == 0.0))) {
-    throw std::range_error.construct(flight::String("gcd: both arguments must not be 0"));
+    throw flight::RangeError(flight::String("gcd: both arguments must not be 0"));
   }
   while ((b != 0.0)) {
     const double t = b;

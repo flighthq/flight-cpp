@@ -8,11 +8,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::swf {
 
+struct SwfReader;
+
 inline const double encoded_uint32_max_bytes = 5.0;
 
 inline const double fixed_8_8_one = 256.0;
 
-inline flight::TextDecoder decoder = flight::TextDecoder.construct();
+inline flight::TextDecoder decoder = flight::TextDecoder();
 
 struct SwfReader : public flight::ReferenceEnabled {
   double bit_position = 0.0;

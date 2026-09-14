@@ -6,6 +6,7 @@
 #include <limits>
 #include <optional>
 #include <random>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -60,29 +61,120 @@ inline std::optional<flight::String> get_collision_convex_validation_status3_d(f
   return ((flight::maximum((max_x - min_x), (max_y - min_y), (max_z - min_z)) > 0.0) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_B0BC53CA3F0E8006
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_B0BC53CA3F0E8006
+struct x_y_z_radius_kind_b0bc53ca3f0e8006_1 : public flight::ReferenceEnabled {
+  double x;
+  double y;
+  double z;
+  double radius;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_B0BC53CA3F0E8006
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_748C675E8E0CF88A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_748C675E8E0CF88A
+struct min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a_1 : public flight::ReferenceEnabled {
+  double min_x;
+  double min_y;
+  double min_z;
+  double max_x;
+  double max_y;
+  double max_z;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_748C675E8E0CF88A
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_BDD50A8E154D5A6A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_BDD50A8E154D5A6A
+struct x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a_1 : public flight::ReferenceEnabled {
+  double x;
+  double y;
+  double z;
+  double half_x;
+  double half_y;
+  double half_z;
+  double rotation_x;
+  double rotation_y;
+  double rotation_z;
+  double rotation_w;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_BDD50A8E154D5A6A
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_3CA9ADA7B527E64B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_3CA9ADA7B527E64B
+struct x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b_1 : public flight::ReferenceEnabled {
+  double x0;
+  double y0;
+  double z0;
+  double x1;
+  double y1;
+  double z1;
+  double radius;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_3CA9ADA7B527E64B
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_AEF60734FA17CFF8
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_AEF60734FA17CFF8
+struct x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8_1 : public flight::ReferenceEnabled {
+  double x0;
+  double y0;
+  double z0;
+  double x1;
+  double y1;
+  double z1;
+  double radius;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_AEF60734FA17CFF8
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_21C650AD310BF539
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_21C650AD310BF539
+struct apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539_1 : public flight::ReferenceEnabled {
+  double apex_x;
+  double apex_y;
+  double apex_z;
+  double base_x;
+  double base_y;
+  double base_z;
+  double radius;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_21C650AD310BF539
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_35A8F5F2A3A8BD66
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_35A8F5F2A3A8BD66
+struct points_kind_35a8f5f2a3a8bd66_1 : public flight::ReferenceEnabled {
+  flight::Array<double> points;
+  flight::String kind;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_35A8F5F2A3A8BD66
+
 inline std::optional<flight::String> get_collision_shape_validation_status3_d(flight::types::CollisionShape3D shape) {
   {
-    auto switch_value = shape.kind;
+    auto switch_value = std::visit([](const auto& value) { return value->kind; }, shape);
     if (switch_value == flight::String("sphere")) {
-      return (((((std::isfinite(shape.x) && std::isfinite(shape.y)) && std::isfinite(shape.z)) && std::isfinite(shape.radius)) && (shape.radius > 0.0)) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
+      return (((((std::isfinite(std::get<0>(shape)->x) && std::isfinite(std::get<0>(shape)->y)) && std::isfinite(std::get<0>(shape)->z)) && std::isfinite(std::get<0>(shape)->radius)) && (std::get<0>(shape)->radius > 0.0)) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
     }
     else if (switch_value == flight::String("aabb")) {
-      return (((((((((std::isfinite(shape.min_x) && std::isfinite(shape.min_y)) && std::isfinite(shape.min_z)) && std::isfinite(shape.max_x)) && std::isfinite(shape.max_y)) && std::isfinite(shape.max_z)) && (shape.max_x > shape.min_x)) && (shape.max_y > shape.min_y)) && (shape.max_z > shape.min_z)) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
+      return (((((((((std::isfinite(std::get<3>(shape)->min_x) && std::isfinite(std::get<3>(shape)->min_y)) && std::isfinite(std::get<3>(shape)->min_z)) && std::isfinite(std::get<3>(shape)->max_x)) && std::isfinite(std::get<3>(shape)->max_y)) && std::isfinite(std::get<3>(shape)->max_z)) && (std::get<3>(shape)->max_x > std::get<3>(shape)->min_x)) && (std::get<3>(shape)->max_y > std::get<3>(shape)->min_y)) && (std::get<3>(shape)->max_z > std::get<3>(shape)->min_z)) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
     }
     else if (switch_value == flight::String("box")) {
-      return ((((((((((((((std::isfinite(shape.x) && std::isfinite(shape.y)) && std::isfinite(shape.z)) && std::isfinite(shape.half_x)) && std::isfinite(shape.half_y)) && std::isfinite(shape.half_z)) && std::isfinite(shape.rotation_x)) && std::isfinite(shape.rotation_y)) && std::isfinite(shape.rotation_z)) && std::isfinite(shape.rotation_w)) && (shape.half_x > 0.0)) && (shape.half_y > 0.0)) && (shape.half_z > 0.0)) && ((((shape.rotation_x != 0.0) || (shape.rotation_y != 0.0)) || (shape.rotation_z != 0.0)) || (shape.rotation_w != 0.0))) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
+      return ((((((((((((((std::isfinite(std::get<2>(shape)->x) && std::isfinite(std::get<2>(shape)->y)) && std::isfinite(std::get<2>(shape)->z)) && std::isfinite(std::get<2>(shape)->half_x)) && std::isfinite(std::get<2>(shape)->half_y)) && std::isfinite(std::get<2>(shape)->half_z)) && std::isfinite(std::get<2>(shape)->rotation_x)) && std::isfinite(std::get<2>(shape)->rotation_y)) && std::isfinite(std::get<2>(shape)->rotation_z)) && std::isfinite(std::get<2>(shape)->rotation_w)) && (std::get<2>(shape)->half_x > 0.0)) && (std::get<2>(shape)->half_y > 0.0)) && (std::get<2>(shape)->half_z > 0.0)) && ((((std::get<2>(shape)->rotation_x != 0.0) || (std::get<2>(shape)->rotation_y != 0.0)) || (std::get<2>(shape)->rotation_z != 0.0)) || (std::get<2>(shape)->rotation_w != 0.0))) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
     }
     else if (switch_value == flight::String("capsule")) {
-      return ((((((((std::isfinite(shape.x0) && std::isfinite(shape.y0)) && std::isfinite(shape.z0)) && std::isfinite(shape.x1)) && std::isfinite(shape.y1)) && std::isfinite(shape.z1)) && std::isfinite(shape.radius)) && (shape.radius > 0.0)) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
+      return ((((((((std::isfinite(std::get<5>(shape)->x0) && std::isfinite(std::get<5>(shape)->y0)) && std::isfinite(std::get<5>(shape)->z0)) && std::isfinite(std::get<5>(shape)->x1)) && std::isfinite(std::get<5>(shape)->y1)) && std::isfinite(std::get<5>(shape)->z1)) && std::isfinite(std::get<5>(shape)->radius)) && (std::get<5>(shape)->radius > 0.0)) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
     }
     else if (switch_value == flight::String("cylinder")) {
-      return (((((((((std::isfinite(shape.x0) && std::isfinite(shape.y0)) && std::isfinite(shape.z0)) && std::isfinite(shape.x1)) && std::isfinite(shape.y1)) && std::isfinite(shape.z1)) && std::isfinite(shape.radius)) && (shape.radius > 0.0)) && (((shape.x0 != shape.x1) || (shape.y0 != shape.y1)) || (shape.z0 != shape.z1))) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
+      return (((((((((std::isfinite(std::get<6>(shape)->x0) && std::isfinite(std::get<6>(shape)->y0)) && std::isfinite(std::get<6>(shape)->z0)) && std::isfinite(std::get<6>(shape)->x1)) && std::isfinite(std::get<6>(shape)->y1)) && std::isfinite(std::get<6>(shape)->z1)) && std::isfinite(std::get<6>(shape)->radius)) && (std::get<6>(shape)->radius > 0.0)) && (((std::get<6>(shape)->x0 != std::get<6>(shape)->x1) || (std::get<6>(shape)->y0 != std::get<6>(shape)->y1)) || (std::get<6>(shape)->z0 != std::get<6>(shape)->z1))) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
     }
     else if (switch_value == flight::String("cone")) {
-      return (((((((((std::isfinite(shape.apex_x) && std::isfinite(shape.apex_y)) && std::isfinite(shape.apex_z)) && std::isfinite(shape.base_x)) && std::isfinite(shape.base_y)) && std::isfinite(shape.base_z)) && std::isfinite(shape.radius)) && (shape.radius > 0.0)) && (((shape.apex_x != shape.base_x) || (shape.apex_y != shape.base_y)) || (shape.apex_z != shape.base_z))) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
+      return (((((((((std::isfinite(std::get<1>(shape)->apex_x) && std::isfinite(std::get<1>(shape)->apex_y)) && std::isfinite(std::get<1>(shape)->apex_z)) && std::isfinite(std::get<1>(shape)->base_x)) && std::isfinite(std::get<1>(shape)->base_y)) && std::isfinite(std::get<1>(shape)->base_z)) && std::isfinite(std::get<1>(shape)->radius)) && (std::get<1>(shape)->radius > 0.0)) && (((std::get<1>(shape)->apex_x != std::get<1>(shape)->base_x) || (std::get<1>(shape)->apex_y != std::get<1>(shape)->base_y)) || (std::get<1>(shape)->apex_z != std::get<1>(shape)->base_z))) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
     }
     else if (switch_value == flight::String("convex")) {
-      return get_collision_convex_validation_status3_d(shape.points);
+      return get_collision_convex_validation_status3_d(std::get<4>(shape)->points);
     }
     else {
       return std::optional<flight::String>{flight::String("unsupported-shape-kind")};

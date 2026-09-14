@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct StrokeStyle;
+
 struct StrokeStyle : public flight::ReferenceEnabled {
   std::optional<flight::String> cap;
   std::optional<flight::Array<double>> dash;

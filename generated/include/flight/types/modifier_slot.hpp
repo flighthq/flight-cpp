@@ -7,7 +7,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct diffuse_effect_emissive_normal_specular_vertex : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D8513B2AC5EF4186
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D8513B2AC5EF4186
+struct diffuse_effect_emissive_normal_specular_vertex_d8513b2ac5ef4186 : public flight::ReferenceEnabled {
   flight::String diffuse;
   flight::String effect;
   flight::String emissive;
@@ -15,8 +17,9 @@ struct diffuse_effect_emissive_normal_specular_vertex : public flight::Reference
   flight::String specular;
   flight::String vertex;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D8513B2AC5EF4186
 
-inline flight::Ref<diffuse_effect_emissive_normal_specular_vertex> modifier_slot = flight::make_ref<diffuse_effect_emissive_normal_specular_vertex>(diffuse_effect_emissive_normal_specular_vertex{.diffuse = flight::String("Diffuse"), .effect = flight::String("Effect"), .emissive = flight::String("Emissive"), .normal = flight::String("Normal"), .specular = flight::String("Specular"), .vertex = flight::String("Vertex")});
+inline flight::Ref<diffuse_effect_emissive_normal_specular_vertex_d8513b2ac5ef4186> modifier_slot = flight::make_ref<diffuse_effect_emissive_normal_specular_vertex_d8513b2ac5ef4186>(diffuse_effect_emissive_normal_specular_vertex_d8513b2ac5ef4186{.diffuse = flight::String("Diffuse"), .effect = flight::String("Effect"), .emissive = flight::String("Emissive"), .normal = flight::String("Normal"), .specular = flight::String("Specular"), .vertex = flight::String("Vertex")});
 
 using ModifierSlot = flight::String;
 

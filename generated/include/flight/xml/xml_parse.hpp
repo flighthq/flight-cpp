@@ -15,6 +15,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::xml {
 
+struct ParseState;
+
 struct ParseState : public flight::ReferenceEnabled {
   double depth;
   bool depth_exceeded;
@@ -76,7 +78,7 @@ inline std::unordered_map<flight::String, flight::String> parse_xml_attributes(f
   std::unordered_map<flight::String, flight::String> result = {};
   flight::RegExp re = flight::RegExp(flight::String("([\\w:.-]+)\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)')"), flight::String("g"));
   std::optional<flight::RegExpExecArray> m;
-  while ((m = re.exec(attrs) != nullptr)) {
+  while (m = re.exec(attrs).has_value()) {
     const flight::String attr_name = m.value()[static_cast<size_t>(1.0)];
     const flight::String value = (m.value()[static_cast<size_t>(2.0)].has_value() ? m.value()[static_cast<size_t>(2.0)] : m.value()[static_cast<size_t>(3.0)].value_or(flight::String("")));
     result[attr_name] = decode_xml_entities(value);
@@ -218,7 +220,7 @@ inline flight::String strip_xml_comments(flight::String xml) {
 inline void collect_xml_entity_declarations(flight::String doctype, std::unordered_map<flight::String, flight::String> out) {
   flight::RegExp declaration = flight::RegExp(flight::String("<!ENTITY\\s+([\\w:.-]+)\\s*(?:\"([^\"]*)\"|'([^']*)')\\s*>"), flight::String("g"));
   std::optional<flight::RegExpExecArray> match;
-  while ((match = declaration.exec(doctype) != nullptr)) {
+  while (match = declaration.exec(doctype).has_value()) {
     out[match.value()[static_cast<size_t>(1.0)]] = match.value()[static_cast<size_t>(2.0)].value_or(match.value()[static_cast<size_t>(3.0)]);
   }
 }

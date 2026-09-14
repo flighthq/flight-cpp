@@ -13,6 +13,38 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct CollisionCircle2D;
+struct CollisionAabb2D;
+struct CollisionObb2D;
+struct CollisionCapsule2D;
+struct CollisionPolygon2D;
+struct CollisionSegment2D;
+struct CollisionPoint2D;
+struct CollisionVendorShape2D;
+struct CollisionManifold2D;
+struct CollisionRaycastHit2D;
+struct CollisionTimeOfImpact2D;
+struct CollisionTestExplanation2D;
+struct CollisionContactPoint2D;
+struct CollisionContactManifold2D;
+struct CollisionSphere3D;
+struct CollisionAabb3D;
+struct CollisionBox3D;
+struct CollisionCapsule3D;
+struct CollisionConvex3D;
+struct CollisionCylinder3D;
+struct CollisionCone3D;
+struct CollisionVendorShape3D;
+struct CollisionTriangleMesh3D;
+struct CollisionHeightfield3D;
+struct CollisionManifold3D;
+struct CollisionTestExplanation3D;
+struct CollisionContactPoint3D;
+struct CollisionContactManifold3D;
+struct CollisionRaycastHit3D;
+struct CollisionDistance3D;
+struct CollisionTimeOfImpact3D;
+
 using CollisionShapeKind2D = flight::String;
 
 struct CollisionCircle2D : public flight::ReferenceEnabled {
@@ -60,22 +92,30 @@ struct CollisionPoint2D : public flight::ReferenceEnabled {
   double y;
 };
 
-struct x_y_radius_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_90FBB3B4C4569518
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_90FBB3B4C4569518
+struct x_y_radius_kind_90fbb3b4c4569518 : public flight::ReferenceEnabled {
   double x;
   double y;
   double radius;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_90FBB3B4C4569518
 
-struct min_x_min_y_max_x_max_y_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_329D6080B4F31DB4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_329D6080B4F31DB4
+struct min_x_min_y_max_x_max_y_kind_329d6080b4f31db4 : public flight::ReferenceEnabled {
   double min_x;
   double min_y;
   double max_x;
   double max_y;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_329D6080B4F31DB4
 
-struct x_y_half_w_half_h_rotation_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_8FFCEA5C657A2268
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_8FFCEA5C657A2268
+struct x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268 : public flight::ReferenceEnabled {
   double x;
   double y;
   double half_w;
@@ -83,8 +123,11 @@ struct x_y_half_w_half_h_rotation_kind : public flight::ReferenceEnabled {
   double rotation;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_8FFCEA5C657A2268
 
-struct x0_y0_x1_y1_radius_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_768BA062D07F3FF6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_768BA062D07F3FF6
+struct x0_y0_x1_y1_radius_kind_768ba062d07f3ff6 : public flight::ReferenceEnabled {
   double x0;
   double y0;
   double x1;
@@ -92,27 +135,37 @@ struct x0_y0_x1_y1_radius_kind : public flight::ReferenceEnabled {
   double radius;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_768BA062D07F3FF6
 
-struct points_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9B00EBDAD27CDB4E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9B00EBDAD27CDB4E
+struct points_kind_9b00ebdad27cdb4e : public flight::ReferenceEnabled {
   flight::Array<double> points;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9B00EBDAD27CDB4E
 
-struct x0_y0_x1_y1_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D4F616534491406F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D4F616534491406F
+struct x0_y0_x1_y1_kind_d4f616534491406f : public flight::ReferenceEnabled {
   double x0;
   double y0;
   double x1;
   double y1;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D4F616534491406F
 
-struct x_y_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_35AD667397176B0F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_35AD667397176B0F
+struct x_y_kind_35ad667397176b0f : public flight::ReferenceEnabled {
   double x;
   double y;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_35AD667397176B0F
 
-using CollisionBuiltInShape2D = std::variant<flight::Ref<x_y_half_w_half_h_rotation_kind>, flight::Ref<x0_y0_x1_y1_radius_kind>, flight::Ref<x_y_radius_kind>, flight::Ref<x_y_kind>, flight::Ref<points_kind>, flight::Ref<x0_y0_x1_y1_kind>, flight::Ref<min_x_min_y_max_x_max_y_kind>>;
+using CollisionBuiltInShape2D = std::variant<flight::Ref<x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<x_y_kind_35ad667397176b0f>, flight::Ref<points_kind_9b00ebdad27cdb4e>, flight::Ref<x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>>;
 
 using CollisionVendorKind2D = flight::String;
 
@@ -120,7 +173,7 @@ struct CollisionVendorShape2D : public flight::ReferenceEnabled {
   CollisionVendorKind2D kind;
 };
 
-using CollisionShape2D = std::variant<flight::Ref<x_y_half_w_half_h_rotation_kind>, flight::Ref<x0_y0_x1_y1_radius_kind>, flight::Ref<x_y_radius_kind>, flight::Ref<x_y_kind>, flight::Ref<points_kind>, flight::Ref<x0_y0_x1_y1_kind>, flight::Ref<min_x_min_y_max_x_max_y_kind>, flight::Ref<CollisionVendorShape2D>>;
+using CollisionShape2D = std::variant<flight::Ref<x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<x_y_kind_35ad667397176b0f>, flight::Ref<points_kind_9b00ebdad27cdb4e>, flight::Ref<x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>, flight::Ref<CollisionVendorShape2D>>;
 
 struct CollisionManifold2D : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
@@ -245,15 +298,20 @@ struct CollisionCone3D : public flight::ReferenceEnabled {
   double radius;
 };
 
-struct x_y_z_radius_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B0BC53CA3F0E8006
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B0BC53CA3F0E8006
+struct x_y_z_radius_kind_b0bc53ca3f0e8006 : public flight::ReferenceEnabled {
   double x;
   double y;
   double z;
   double radius;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B0BC53CA3F0E8006
 
-struct min_x_min_y_min_z_max_x_max_y_max_z_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_748C675E8E0CF88A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_748C675E8E0CF88A
+struct min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a : public flight::ReferenceEnabled {
   double min_x;
   double min_y;
   double min_z;
@@ -262,8 +320,11 @@ struct min_x_min_y_min_z_max_x_max_y_max_z_kind : public flight::ReferenceEnable
   double max_z;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_748C675E8E0CF88A
 
-struct x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BDD50A8E154D5A6A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BDD50A8E154D5A6A
+struct x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a : public flight::ReferenceEnabled {
   double x;
   double y;
   double z;
@@ -276,8 +337,11 @@ struct x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_ki
   double rotation_w;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BDD50A8E154D5A6A
 
-struct x0_y0_z0_x1_y1_z1_radius_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3CA9ADA7B527E64B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3CA9ADA7B527E64B
+struct x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b : public flight::ReferenceEnabled {
   double x0;
   double y0;
   double z0;
@@ -287,8 +351,11 @@ struct x0_y0_z0_x1_y1_z1_radius_kind : public flight::ReferenceEnabled {
   double radius;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3CA9ADA7B527E64B
 
-struct x0_y0_z0_x1_y1_z1_radius_kind_1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_AEF60734FA17CFF8
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_AEF60734FA17CFF8
+struct x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8 : public flight::ReferenceEnabled {
   double x0;
   double y0;
   double z0;
@@ -298,8 +365,11 @@ struct x0_y0_z0_x1_y1_z1_radius_kind_1 : public flight::ReferenceEnabled {
   double radius;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_AEF60734FA17CFF8
 
-struct apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_21C650AD310BF539
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_21C650AD310BF539
+struct apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539 : public flight::ReferenceEnabled {
   double apex_x;
   double apex_y;
   double apex_z;
@@ -309,13 +379,17 @@ struct apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind : public flight::Re
   double radius;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_21C650AD310BF539
 
-struct points_kind_1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_35A8F5F2A3A8BD66
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_35A8F5F2A3A8BD66
+struct points_kind_35a8f5f2a3a8bd66 : public flight::ReferenceEnabled {
   flight::Array<double> points;
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_35A8F5F2A3A8BD66
 
-using CollisionBuiltInShape3D = std::variant<flight::Ref<x_y_z_radius_kind>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind>, flight::Ref<points_kind_1>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_1>>;
+using CollisionBuiltInShape3D = std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>;
 
 using CollisionVendorKind3D = flight::String;
 
@@ -323,7 +397,7 @@ struct CollisionVendorShape3D : public flight::ReferenceEnabled {
   CollisionVendorKind3D kind;
 };
 
-using CollisionShape3D = std::variant<flight::Ref<x_y_z_radius_kind>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind>, flight::Ref<points_kind_1>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_1>, flight::Ref<CollisionVendorShape3D>>;
+using CollisionShape3D = std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<CollisionVendorShape3D>>;
 
 struct CollisionTriangleMesh3D : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
@@ -360,7 +434,7 @@ struct CollisionHeightfield3D : public flight::ReferenceEnabled {
 
 using CollisionStaticShape3D = std::variant<flight::Ref<CollisionHeightfield3D>, flight::Ref<CollisionTriangleMesh3D>>;
 
-using CollisionColliderShape3D = std::variant<flight::Ref<x_y_z_radius_kind>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind>, flight::Ref<points_kind_1>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_1>, flight::Ref<CollisionHeightfield3D>, flight::Ref<CollisionTriangleMesh3D>>;
+using CollisionColliderShape3D = std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<CollisionHeightfield3D>, flight::Ref<CollisionTriangleMesh3D>>;
 
 struct CollisionManifold3D : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;

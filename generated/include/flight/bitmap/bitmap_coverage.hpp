@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/array_buffer.hpp>
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <random>
@@ -24,7 +23,7 @@ inline double get_bitmap_coverage(flight::StructuralRef<flight::RowReadonly<flig
   const double bg = flight::bitwise_and(flight::signed_right_shift(background_color, 16.0), 255.0);
   const double bb = flight::bitwise_and(flight::signed_right_shift(background_color, 8.0), 255.0);
   const double ba = flight::bitwise_and(background_color, 255.0);
-  flight::Uint8ClampedArray<flight::ArrayBuffer> data = flight::row_get<flight::RowKey<"data">>(source);
+  flight::Uint8ClampedArray data = flight::row_get<flight::RowKey<"data">>(source);
   const double total_pixels = (flight::row_get<flight::RowKey<"width">>(source) * flight::row_get<flight::RowKey<"height">>(source));
   if ((total_pixels == 0.0)) {
     return 0.0;
@@ -34,7 +33,7 @@ inline double get_bitmap_coverage(flight::StructuralRef<flight::RowReadonly<flig
     double i = 0.0;
     while ((i < static_cast<double>(data.size()))) {
       {
-        if (((((std::abs((data.element(i) - br)) > channel_tolerance.value()) || (std::abs((data.element((i + 1.0)) - bg)) > channel_tolerance.value())) || (std::abs((data.element((i + 2.0)) - bb)) > channel_tolerance.value())) || (std::abs((data.element((i + 3.0)) - ba)) > channel_tolerance.value()))) {
+        if (((((std::abs((static_cast<double>(data.element(i)) - br)) > channel_tolerance.value()) || (std::abs((static_cast<double>(data.element((i + 1.0))) - bg)) > channel_tolerance.value())) || (std::abs((static_cast<double>(data.element((i + 2.0))) - bb)) > channel_tolerance.value())) || (std::abs((static_cast<double>(data.element((i + 3.0))) - ba)) > channel_tolerance.value()))) {
           covered++;
         }
       }

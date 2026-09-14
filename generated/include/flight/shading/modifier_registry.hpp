@@ -29,7 +29,7 @@ inline void register_modifier(flight::StructuralRef<flight::RowReadonly<flight::
   flight::row_get<flight::RowKey<"definitions">>(registry).set(flight::row_get<flight::RowKey<"kind">>(definition), definition);
 }
 
-inline std::optional<flight::Ref<flight::types::ModifierDefinition>> resolve_modifier(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry, flight::types::ModifierKind kind) {
+inline std::optional<flight::Ref<flight::types::ModifierDefinition>> resolve_modifier(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry, flight::String kind) {
   return flight::row_get<flight::RowKey<"definitions">>(registry).get(kind);
 }
 

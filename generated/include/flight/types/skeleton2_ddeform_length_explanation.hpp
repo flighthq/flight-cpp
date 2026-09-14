@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Skeleton2DDeformLengthExplanation;
+
 struct Skeleton2DDeformLengthExplanation : public flight::ReferenceEnabled {
   bool accepted;
   flight::String addressing;

@@ -12,12 +12,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct SpatialIndexingExplanation;
+struct SpatialIndexingNotice;
+
 using SpatialIndexingMode = flight::String;
 
 using SpatialDeclineReason = flight::String;
 
 struct SpatialIndexingExplanation : public flight::ReferenceEnabled {
-  flight::types::SpatialObjectId id;
+  double id;
   SpatialIndexingMode mode;
   double bucket_count;
   std::optional<flight::String> reason;
@@ -29,7 +32,7 @@ using SpatialIndexingReason = flight::String;
 
 struct SpatialIndexingNotice : public flight::ReferenceEnabled {
   double cell_size;
-  flight::types::SpatialObjectId id;
+  double id;
   SpatialIndexingMode mode;
   SpatialIndexingOperation operation;
   double would_occupy_bucket_count;

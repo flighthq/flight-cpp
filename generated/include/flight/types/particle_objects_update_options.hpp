@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ParticleObjectsUpdateOptions;
+
 struct ParticleObjectsUpdateOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::ParticleEmitterCallbacks>> callbacks;
   std::optional<double> emitter_x;

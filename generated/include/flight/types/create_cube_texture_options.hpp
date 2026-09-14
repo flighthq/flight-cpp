@@ -12,6 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct CreateCubeTextureOptions;
+
 struct CreateCubeTextureOptions : public flight::ReferenceEnabled {
   std::optional<flight::types::TextureColorSpace> color_space;
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>> sampler;

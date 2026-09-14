@@ -12,6 +12,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types {
 
 template <typename T>
+struct Signal;
+template <typename T>
+struct SignalData;
+
+template <typename T>
 struct SignalData : public flight::ReferenceEnabled {
   flight::Array<std::optional<T>> slots;
   flight::Array<double> priorities;

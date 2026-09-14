@@ -16,23 +16,29 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::adjustments {
 
-struct kind_1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_6FEA82D7AA842443
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_6FEA82D7AA842443
+struct kind_6fea82d7aa842443 : public flight::ReferenceEnabled {
   flight::String kind;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_6FEA82D7AA842443
 
-struct entity_runtime_key_kind_color_matrix : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_302C33FFEEEBCAB3
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_302C33FFEEEBCAB3
+struct entity_runtime_key_kind_color_matrix_302c33ffeeebcab3 : public flight::ReferenceEnabled {
   std::optional<std::optional<flight::Ref<flight::types::EntityRuntime>>> entity_runtime_key;
-  std::optional<flight::types::AdjustmentKind> kind;
+  std::optional<flight::String> kind;
   std::optional<flight::Array<double>> color_matrix;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_302C33FFEEEBCAB3
 
-inline std::optional<flight::Array<double>> get_adjustment_color_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<kind_1>>>> operation) {
-  std::optional<flight::Array<double>> matrix = flight::structural_ref_cast<flight::Ref<entity_runtime_key_kind_color_matrix>>(operation)->color_matrix;
-  return ((flight::is_array(matrix) && (matrix.length == flight::adjustments::color_matrix_length)) ? matrix : std::nullopt);
+inline std::optional<flight::Array<double>> get_adjustment_color_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<kind_6fea82d7aa842443>>>> operation) {
+  std::optional<flight::Array<double>> matrix = flight::structural_ref_cast<flight::Ref<entity_runtime_key_kind_color_matrix_302c33ffeeebcab3>>(operation)->color_matrix;
+  return ((flight::is_array(matrix) && (static_cast<double>(matrix.value().size()) == flight::adjustments::color_matrix_length)) ? std::optional<flight::Array<double>>{matrix.value()} : std::nullopt);
 }
 
 template <typename T>
-inline void initialize_color_matrix_adjustment(flight::types::EntityConstruction<T> out, flight::types::AdjustmentKind kind, flight::Array<double> color_matrix) {
+inline void initialize_color_matrix_adjustment(flight::types::EntityConstruction<T> out, flight::String kind, flight::Array<double> color_matrix) {
   flight::adjustments::initialize_adjustment(out, kind);
   flight::row_set<flight::RowKey<"colorMatrix">>(out, color_matrix);
 }
@@ -46,7 +52,7 @@ inline flight::Ref<flight::types::ColorMatrixAdjustment> create_color_matrix_adj
   return flight::entity::finish_entity(out);
 }
 
-inline bool is_color_matrix_adjustment(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<kind_1>>>> operation) {
+inline bool is_color_matrix_adjustment(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<kind_6fea82d7aa842443>>>> operation) {
   return get_adjustment_color_matrix(operation).has_value();
 }
 

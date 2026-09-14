@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct PathOffsetOptions;
+
 struct PathOffsetOptions : public flight::ReferenceEnabled {
   std::optional<flight::types::PathOffsetJoin> join;
   std::optional<flight::types::PathOffsetEnd> end;

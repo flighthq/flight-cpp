@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Scale9Mapper;
+
 struct Scale9Mapper : public flight::ReferenceEnabled {
   std::function<double(double)> map_x;
   std::function<double(double)> map_y;

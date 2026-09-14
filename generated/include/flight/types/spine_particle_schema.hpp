@@ -10,6 +10,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct SpineRangeValue;
+struct SpineAlphaKeyframe;
+struct SpineTintKeyframe;
+struct SpineParticleDocument;
+struct SpineParseResult;
+
 using SpineBlendMode = flight::String;
 
 struct SpineRangeValue : public flight::ReferenceEnabled {

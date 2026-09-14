@@ -14,17 +14,20 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-struct radius : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D9BE18DEA3AB105A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D9BE18DEA3AB105A
+struct radius_d9be18dea3ab105a : public flight::ReferenceEnabled {
   std::optional<double> radius;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D9BE18DEA3AB105A
 
-inline void initialize_kuwahara_effect(flight::types::EntityConstruction<flight::Ref<flight::types::KuwaharaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<radius>>>> options) {
+inline void initialize_kuwahara_effect(flight::types::EntityConstruction<flight::Ref<flight::types::KuwaharaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<radius_d9be18dea3ab105a>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("KuwaharaEffect"));
   flight::row_set<flight::RowKey<"radius">>(out, flight::row_get<flight::RowKey<"radius">>(options));
 }
 
-inline flight::Ref<flight::types::KuwaharaEffect> create_kuwahara_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<radius>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<radius>>>>());
+inline flight::Ref<flight::types::KuwaharaEffect> create_kuwahara_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<radius_d9be18dea3ab105a>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<radius_d9be18dea3ab105a>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::KuwaharaEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::KuwaharaEffect>>();
   initialize_kuwahara_effect(out, options.value());
   return flight::entity::finish_entity(out);

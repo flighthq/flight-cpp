@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct DissolveModifierOptions;
+
 struct DissolveModifierOptions : public flight::ReferenceEnabled {
   double threshold;
   std::optional<double> edge_color;

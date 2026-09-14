@@ -13,12 +13,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct height_map_sine : public flight::ReferenceEnabled {
+struct VertexDisplaceModifier;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_06A0264A98B6176E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_06A0264A98B6176E
+struct height_map_sine_06a0264a98b6176e : public flight::ReferenceEnabled {
   flight::String height_map;
   flight::String sine;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_06A0264A98B6176E
 
-inline flight::Ref<height_map_sine> vertex_displace_modifier_source = flight::make_ref<height_map_sine>(height_map_sine{.height_map = flight::String("HeightMap"), .sine = flight::String("Sine")});
+inline flight::Ref<height_map_sine_06a0264a98b6176e> vertex_displace_modifier_source = flight::make_ref<height_map_sine_06a0264a98b6176e>(height_map_sine_06a0264a98b6176e{.height_map = flight::String("HeightMap"), .sine = flight::String("Sine")});
 
 using VertexDisplaceModifierSource = flight::String;
 

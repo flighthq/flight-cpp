@@ -13,19 +13,24 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct attachment_color : public flight::ReferenceEnabled {
+struct Skeleton2DSlotAnimationTarget;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_46836EA6F2A2F33A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_46836EA6F2A2F33A
+struct attachment_color_46836ea6f2a2f33a : public flight::ReferenceEnabled {
   flight::String attachment;
   flight::String color;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_46836EA6F2A2F33A
 
-inline flight::Ref<attachment_color> skeleton2_dslot_animation_path = flight::make_ref<attachment_color>(attachment_color{.attachment = flight::String("Attachment"), .color = flight::String("Color")});
+inline flight::Ref<attachment_color_46836ea6f2a2f33a> skeleton2_dslot_animation_path = flight::make_ref<attachment_color_46836ea6f2a2f33a>(attachment_color_46836ea6f2a2f33a{.attachment = flight::String("Attachment"), .color = flight::String("Color")});
 
 using Skeleton2DSlotAnimationPath = flight::String;
 
 struct Skeleton2DSlotAnimationTarget : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::optional<std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>> attachments;
-  flight::types::skeleton2_danimation_target_kind kind;
+  flight::String kind;
   Skeleton2DSlotAnimationPath path;
   double slot_index;
 };

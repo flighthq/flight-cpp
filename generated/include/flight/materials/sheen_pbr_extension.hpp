@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <optional>
-#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -20,7 +19,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::materials {
 
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_E4761250FDBE9DA4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_E4761250FDBE9DA4
+struct entity_runtime_key_kind_sheen_color_sheen_color_map_sheen_color_map_uv_set_sheen_roughness_sheen_roughness_map_sheen_roughness_map_uv_set_e4761250fdbe9da4 : public flight::ReferenceEnabled {
+  std::optional<std::optional<flight::Ref<flight::types::EntityRuntime>>> entity_runtime_key;
+  std::optional<flight::String> kind;
+  std::optional<double> sheen_color;
+  std::optional<std::optional<flight::types::Texture>> sheen_color_map;
+  std::optional<flight::types::PbrUvSet> sheen_color_map_uv_set;
+  std::optional<double> sheen_roughness;
+  std::optional<std::optional<flight::types::Texture>> sheen_roughness_map;
+  std::optional<flight::types::PbrUvSet> sheen_roughness_map_uv_set;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_E4761250FDBE9DA4
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_95B8B467441EC19B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_95B8B467441EC19B
+struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   bool flip_x;
   bool flip_y;
@@ -33,8 +48,11 @@ struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_spa
   flight::String dimension;
   flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>> sources;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_95B8B467441EC19B
 
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_B54DC1BFFA369663
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_B54DC1BFFA369663
+struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663 : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   bool flip_x;
   bool flip_y;
@@ -47,8 +65,11 @@ struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_spa
   flight::String dimension;
   std::optional<flight::Ref<flight::types::VoxelGrid>> source;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_B54DC1BFFA369663
 
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_AE19201647327EBA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_AE19201647327EBA
+struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   bool flip_x;
   bool flip_y;
@@ -61,29 +82,19 @@ struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_spa
   flight::String dimension;
   flight::types::TextureSourceCubeFaces sources;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_AE19201647327EBA
 
-struct entity_runtime_key_kind_sheen_color_sheen_color_map_sheen_color_map_uv_set_sheen_roughness_sheen_roughness_map_sheen_roughness_map_uv_set : public flight::ReferenceEnabled {
-  std::optional<std::optional<flight::Ref<flight::types::EntityRuntime>>> entity_runtime_key;
-  std::optional<flight::String> kind;
-  std::optional<double> sheen_color;
-  std::optional<std::optional<std::variant<flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_1>, flight::Ref<flight::types::Texture2D>>>> sheen_color_map;
-  std::optional<flight::types::PbrUvSet> sheen_color_map_uv_set;
-  std::optional<double> sheen_roughness;
-  std::optional<std::optional<std::variant<flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_1>, flight::Ref<flight::types::Texture2D>>>> sheen_roughness_map;
-  std::optional<flight::types::PbrUvSet> sheen_roughness_map_uv_set;
-};
-
-inline void initialize_sheen_pbr_extension(flight::types::EntityConstruction<flight::Ref<flight::types::SheenPbrExtension>> out, std::optional<flight::Ref<entity_runtime_key_kind_sheen_color_sheen_color_map_sheen_color_map_uv_set_sheen_roughness_sheen_roughness_map_sheen_roughness_map_uv_set>> opts = std::nullopt) {
+inline void initialize_sheen_pbr_extension(flight::types::EntityConstruction<flight::Ref<flight::types::SheenPbrExtension>> out, std::optional<flight::Ref<entity_runtime_key_kind_sheen_color_sheen_color_map_sheen_color_map_uv_set_sheen_roughness_sheen_roughness_map_sheen_roughness_map_uv_set_e4761250fdbe9da4>> opts = std::nullopt) {
   flight::row_set<flight::RowKey<"kind">>(out, flight::types::sheen_pbr_extension_kind);
   flight::row_set<flight::RowKey<"sheenColor">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->sheen_color; }()).value_or(255.0));
-  flight::row_set<flight::RowKey<"sheenColorMap">>(out, ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->sheen_color_map; }()));
+  flight::row_set<flight::RowKey<"sheenColorMap">>(out, ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->sheen_color_map.value_or(std::nullopt); }()));
   flight::row_set<flight::RowKey<"sheenColorMapUvSet">>(out, ([&]() -> std::optional<flight::types::PbrUvSet> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->sheen_color_map_uv_set; }()).value_or(0.0));
   flight::row_set<flight::RowKey<"sheenRoughness">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->sheen_roughness; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"sheenRoughnessMap">>(out, ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->sheen_roughness_map; }()));
+  flight::row_set<flight::RowKey<"sheenRoughnessMap">>(out, ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->sheen_roughness_map.value_or(std::nullopt); }()));
   flight::row_set<flight::RowKey<"sheenRoughnessMapUvSet">>(out, ([&]() -> std::optional<flight::types::PbrUvSet> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->sheen_roughness_map_uv_set; }()).value_or(0.0));
 }
 
-inline flight::Ref<flight::types::SheenPbrExtension> create_sheen_pbr_extension(std::optional<flight::Ref<entity_runtime_key_kind_sheen_color_sheen_color_map_sheen_color_map_uv_set_sheen_roughness_sheen_roughness_map_sheen_roughness_map_uv_set>> opts = std::nullopt) {
+inline flight::Ref<flight::types::SheenPbrExtension> create_sheen_pbr_extension(std::optional<flight::Ref<entity_runtime_key_kind_sheen_color_sheen_color_map_sheen_color_map_uv_set_sheen_roughness_sheen_roughness_map_sheen_roughness_map_uv_set_e4761250fdbe9da4>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SheenPbrExtension>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SheenPbrExtension>>();
   initialize_sheen_pbr_extension(out, opts);
   return flight::entity::finish_entity(out);

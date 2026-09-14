@@ -17,9 +17,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct GlobalShortcut;
+struct ShortcutTriggerSubscription;
+struct ShortcutTriggerUnsubscribeOutcome;
+struct ShortcutTriggerBackend;
+struct ShortcutQueryBackend;
+
 struct GlobalShortcut : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::types::Accelerator accelerator;
+  flight::String accelerator;
   flight::Ref<flight::types::Signal<std::function<void()>>> on_trigger;
 };
 
@@ -27,46 +33,67 @@ struct ShortcutTriggerSubscription : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
 };
 
-struct reason_shortcut : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9EE38794422D0090
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9EE38794422D0090
+struct reason_shortcut_9ee38794422d0090 : public flight::ReferenceEnabled {
   flight::String reason;
   flight::Ref<GlobalShortcut> shortcut;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9EE38794422D0090
 
-struct parse_error_reason : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BA940141765F02ED
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BA940141765F02ED
+struct parse_error_reason_ba940141765f02ed : public flight::ReferenceEnabled {
   flight::Ref<flight::types::AcceleratorParseError> parse_error;
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BA940141765F02ED
 
-using CreateGlobalShortcutOutcome = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<parse_error_reason>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_shortcut>>>>>;
+using CreateGlobalShortcutOutcome = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<parse_error_reason_ba940141765f02ed>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_shortcut_9ee38794422d0090>>>>>;
 
-struct reason : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B3999EADECA23809
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B3999EADECA23809
+struct reason_b3999eadeca23809 : public flight::ReferenceEnabled {
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B3999EADECA23809
 
-using GlobalShortcutAttachOutcome = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason>>>>;
+using GlobalShortcutAttachOutcome = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_b3999eadeca23809>>>>;
 
-struct reason_1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3CFF4E0108D25BFD
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3CFF4E0108D25BFD
+struct reason_3cff4e0108d25bfd : public flight::ReferenceEnabled {
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3CFF4E0108D25BFD
 
-using GlobalShortcutDetachOutcome = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_1>>>>;
+using GlobalShortcutDetachOutcome = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_3cff4e0108d25bfd>>>>;
 
-struct reason_2 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FBB74A314A7A269D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FBB74A314A7A269D
+struct reason_fbb74a314a7a269d : public flight::ReferenceEnabled {
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FBB74A314A7A269D
 
-using GlobalShortcutQueryOutcome = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<parse_error_reason>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_2>>>>>;
+using GlobalShortcutQueryOutcome = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<parse_error_reason_ba940141765f02ed>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_fbb74a314a7a269d>>>>>;
 
-struct reason_3 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4890F49C03969010
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4890F49C03969010
+struct reason_4890f49c03969010 : public flight::ReferenceEnabled {
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4890F49C03969010
 
-struct reason_subscription : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5376203DE5004591
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5376203DE5004591
+struct reason_subscription_5376203de5004591 : public flight::ReferenceEnabled {
   flight::String reason;
   flight::Ref<ShortcutTriggerSubscription> subscription;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5376203DE5004591
 
-using ShortcutTriggerSubscribeOutcome = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_3>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_subscription>>>>>;
+using ShortcutTriggerSubscribeOutcome = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_4890f49c03969010>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_subscription_5376203de5004591>>>>>;
 
 struct ShortcutTriggerUnsubscribeOutcome : public flight::ReferenceEnabled {
   flight::String reason;
@@ -75,13 +102,13 @@ struct ShortcutTriggerUnsubscribeOutcome : public flight::ReferenceEnabled {
 struct ShortcutTriggerBackend : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::function<flight::Task<void>()> destroy;
-  std::function<flight::Task<ShortcutTriggerSubscribeOutcome>(flight::types::Accelerator, std::function<void()>)> subscribe;
+  std::function<flight::Task<ShortcutTriggerSubscribeOutcome>(flight::String, std::function<void()>)> subscribe;
   std::function<flight::Task<flight::Ref<ShortcutTriggerUnsubscribeOutcome>>(flight::Ref<ShortcutTriggerSubscription>)> unsubscribe;
 };
 
 struct ShortcutQueryBackend : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::function<flight::Task<bool>(flight::types::Accelerator)> is_registered;
+  std::function<flight::Task<bool>(flight::String)> is_registered;
 };
 
 } // namespace flight::types

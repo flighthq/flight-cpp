@@ -10,8 +10,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Scene2DRenderExplanation;
+
 struct Scene2DRenderExplanation : public flight::ReferenceEnabled {
-  flight::types::Kind kind;
+  flight::String kind;
   bool has_renderer;
   bool prepared;
   bool visible;

@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ParsedAccelerator;
+
 struct ParsedAccelerator : public flight::ReferenceEnabled {
   flight::String key;
   flight::Array<flight::types::ShortcutModifier> modifiers;

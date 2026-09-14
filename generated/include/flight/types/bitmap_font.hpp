@@ -14,6 +14,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct BitmapFont;
+struct BitmapFontData;
+struct BitmapFontGlyphData;
+struct BitmapFontKerningData;
+struct BitmapFontKerningPair;
+struct BitmapFontParseOptions;
+
 using BitmapFontEncoding = flight::String;
 
 struct BitmapFont : public flight::ReferenceEnabled {

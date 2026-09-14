@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct GlCapabilities;
+
 struct GlCapabilities : public flight::ReferenceEnabled {
   double max_texture_size;
   double max_texture_units;

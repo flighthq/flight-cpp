@@ -9,11 +9,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Scene2DPipelineCoverageExplanation;
+
 struct Scene2DPipelineCoverageExplanation : public flight::ReferenceEnabled {
-  flight::Array<flight::types::Kind> registered_kinds;
-  flight::Array<flight::types::Kind> uncovered_kinds;
-  flight::Array<flight::types::Kind> unused_registrations;
-  flight::Array<flight::types::Kind> used_kinds;
+  flight::Array<flight::String> registered_kinds;
+  flight::Array<flight::String> uncovered_kinds;
+  flight::Array<flight::String> unused_registrations;
+  flight::Array<flight::String> used_kinds;
 };
 
 } // namespace flight::types

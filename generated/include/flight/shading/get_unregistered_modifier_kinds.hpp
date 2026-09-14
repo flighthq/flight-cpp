@@ -15,8 +15,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::shading {
 
-inline flight::Array<flight::types::ModifierKind> get_unregistered_modifier_kinds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry, flight::Array<flight::Ref<flight::types::Modifier>> stack) {
-  flight::Array<flight::types::ModifierKind> unregistered = flight::Array<flight::types::ModifierKind>{};
+inline flight::Array<flight::String> get_unregistered_modifier_kinds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry, flight::Array<flight::Ref<flight::types::Modifier>> stack) {
+  flight::Array<flight::String> unregistered = flight::Array<flight::String>{};
   for (auto modifier : stack) {
     if (flight::shading::resolve_modifier(registry, modifier->kind).has_value()) {
       continue;

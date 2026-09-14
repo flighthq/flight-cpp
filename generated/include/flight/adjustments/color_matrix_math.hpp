@@ -157,7 +157,7 @@ inline flight::Array<double> multiply_color_matrix(flight::Array<double> a, flig
   const double b17 = b.element(17.0);
   const double b18 = b.element(18.0);
   const double b19 = b.element(19.0);
-  flight::Array<double> result = out;
+  flight::Array<double> result = out.value_or(flight::Array<double>(20.0));
   result.element(0.0) = ((((a0 * b0) + (a1 * b5)) + (a2 * b10)) + (a3 * b15));
   result.element(1.0) = ((((a0 * b1) + (a1 * b6)) + (a2 * b11)) + (a3 * b16));
   result.element(2.0) = ((((a0 * b2) + (a1 * b7)) + (a2 * b12)) + (a3 * b17));

@@ -70,9 +70,9 @@ inline void initialize_bounding_sphere(flight::types::EntityConstruction<flight:
 }
 
 inline flight::Ref<flight::types::BoundingSphere> create_bounding_sphere(std::optional<double> center_x = std::nullopt, std::optional<double> center_y = std::nullopt, std::optional<double> center_z = std::nullopt, std::optional<double> radius = std::nullopt) {
-  flight::Ref<flight::types::Vector3> center = flight::geometry::create_vector3(center_x, center_y, center_z);
+  flight::Ref<flight::types::Vector3> center = flight::geometry::create_vector3(center_x.value_or(0.0), center_y.value_or(0.0), center_z.value_or(0.0));
   flight::types::EntityConstruction<flight::Ref<flight::types::BoundingSphere>> out = flight::entity::allocate_entity<flight::Ref<flight::types::BoundingSphere>>();
-  initialize_bounding_sphere(out, center, radius);
+  initialize_bounding_sphere(out, center, radius.value_or(-1.0));
   return flight::entity::finish_entity(out);
 }
 

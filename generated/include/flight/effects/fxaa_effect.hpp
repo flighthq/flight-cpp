@@ -14,19 +14,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects {
 
-struct edge_threshold_subpixel : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9A6C8B06D978A242
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9A6C8B06D978A242
+struct edge_threshold_subpixel_9a6c8b06d978a242 : public flight::ReferenceEnabled {
   std::optional<double> edge_threshold;
   std::optional<double> subpixel;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9A6C8B06D978A242
 
-inline void initialize_fxaa_effect(flight::types::EntityConstruction<flight::Ref<flight::types::FxaaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<edge_threshold_subpixel>>>> options) {
+inline void initialize_fxaa_effect(flight::types::EntityConstruction<flight::Ref<flight::types::FxaaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<edge_threshold_subpixel_9a6c8b06d978a242>>>> options) {
   flight::effects::initialize_render_effect(out, flight::String("FxaaEffect"));
   flight::row_set<flight::RowKey<"edgeThreshold">>(out, flight::row_get<flight::RowKey<"edgeThreshold">>(options));
   flight::row_set<flight::RowKey<"subpixel">>(out, flight::row_get<flight::RowKey<"subpixel">>(options));
 }
 
-inline flight::Ref<flight::types::FxaaEffect> create_fxaa_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<edge_threshold_subpixel>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<edge_threshold_subpixel>>>>());
+inline flight::Ref<flight::types::FxaaEffect> create_fxaa_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<edge_threshold_subpixel_9a6c8b06d978a242>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<edge_threshold_subpixel_9a6c8b06d978a242>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::FxaaEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::FxaaEffect>>();
   initialize_fxaa_effect(out, options.value());
   return flight::entity::finish_entity(out);

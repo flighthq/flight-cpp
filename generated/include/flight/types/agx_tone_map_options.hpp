@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct AgxToneMapOptions;
+
 struct AgxToneMapOptions : public flight::ReferenceEnabled {
   std::optional<double> min_ev;
   std::optional<double> max_ev;

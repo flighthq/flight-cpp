@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TextureAtlasRegionTextureExplanation;
+
 using TextureAtlasRegionTextureStatus = flight::String;
 
 struct TextureAtlasRegionTextureExplanation : public flight::ReferenceEnabled {

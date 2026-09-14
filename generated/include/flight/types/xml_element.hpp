@@ -9,6 +9,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct XmlElement;
+
 struct XmlElement : public flight::ReferenceEnabled {
   std::unordered_map<flight::String, flight::String> attributes;
   flight::Array<flight::Ref<XmlElement>> children;

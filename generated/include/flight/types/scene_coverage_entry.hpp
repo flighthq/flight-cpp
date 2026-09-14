@@ -12,21 +12,32 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct fallback_remediable_fallback_unavailable_satisfied_unavailable_unregistered : public flight::ReferenceEnabled {
+struct SceneCoverageEntryBase;
+struct SceneCoverageRemedy;
+struct SatisfiedSceneCoverageEntry;
+struct UnregisteredSceneCoverageEntry;
+struct UnavailableSceneCoverageEntry;
+struct FallbackRemediableSceneCoverageEntry;
+struct FallbackUnavailableSceneCoverageEntry;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E6F21D6E5CDF4DB2
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E6F21D6E5CDF4DB2
+struct fallback_remediable_fallback_unavailable_satisfied_unavailable_unregistered_e6f21d6e5cdf4db2 : public flight::ReferenceEnabled {
   flight::String fallback_remediable;
   flight::String fallback_unavailable;
   flight::String satisfied;
   flight::String unavailable;
   flight::String unregistered;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E6F21D6E5CDF4DB2
 
-inline flight::Ref<fallback_remediable_fallback_unavailable_satisfied_unavailable_unregistered> scene_coverage = flight::make_ref<fallback_remediable_fallback_unavailable_satisfied_unavailable_unregistered>(fallback_remediable_fallback_unavailable_satisfied_unavailable_unregistered{.fallback_remediable = flight::String("FallbackRemediable"), .fallback_unavailable = flight::String("FallbackUnavailable"), .satisfied = flight::String("Satisfied"), .unavailable = flight::String("Unavailable"), .unregistered = flight::String("Unregistered")});
+inline flight::Ref<fallback_remediable_fallback_unavailable_satisfied_unavailable_unregistered_e6f21d6e5cdf4db2> scene_coverage = flight::make_ref<fallback_remediable_fallback_unavailable_satisfied_unavailable_unregistered_e6f21d6e5cdf4db2>(fallback_remediable_fallback_unavailable_satisfied_unavailable_unregistered_e6f21d6e5cdf4db2{.fallback_remediable = flight::String("FallbackRemediable"), .fallback_unavailable = flight::String("FallbackUnavailable"), .satisfied = flight::String("Satisfied"), .unavailable = flight::String("Unavailable"), .unregistered = flight::String("Unregistered")});
 
 using SceneCoverage = flight::String;
 
 struct SceneCoverageEntryBase : public flight::ReferenceEnabled {
-  flight::types::requirement_facet facet;
-  flight::types::Kind kind;
+  flight::types::RequirementFacet facet;
+  flight::String kind;
   flight::types::RenderRegistry registry;
 };
 
@@ -36,15 +47,15 @@ struct SceneCoverageRemedy : public flight::ReferenceEnabled {
 };
 
 struct SatisfiedSceneCoverageEntry : public flight::ReferenceEnabled {
-  flight::types::requirement_facet facet;
-  flight::types::Kind kind;
+  flight::types::RequirementFacet facet;
+  flight::String kind;
   flight::types::RenderRegistry registry;
   flight::String coverage;
 };
 
 struct UnregisteredSceneCoverageEntry : public flight::ReferenceEnabled {
-  flight::types::requirement_facet facet;
-  flight::types::Kind kind;
+  flight::types::RequirementFacet facet;
+  flight::String kind;
   flight::types::RenderRegistry registry;
   flight::String module;
   flight::String registrar;
@@ -52,15 +63,15 @@ struct UnregisteredSceneCoverageEntry : public flight::ReferenceEnabled {
 };
 
 struct UnavailableSceneCoverageEntry : public flight::ReferenceEnabled {
-  flight::types::requirement_facet facet;
-  flight::types::Kind kind;
+  flight::types::RequirementFacet facet;
+  flight::String kind;
   flight::types::RenderRegistry registry;
   flight::String coverage;
 };
 
 struct FallbackRemediableSceneCoverageEntry : public flight::ReferenceEnabled {
-  flight::types::requirement_facet facet;
-  flight::types::Kind kind;
+  flight::types::RequirementFacet facet;
+  flight::String kind;
   flight::types::RenderRegistry registry;
   flight::String module;
   flight::String registrar;
@@ -68,8 +79,8 @@ struct FallbackRemediableSceneCoverageEntry : public flight::ReferenceEnabled {
 };
 
 struct FallbackUnavailableSceneCoverageEntry : public flight::ReferenceEnabled {
-  flight::types::requirement_facet facet;
-  flight::types::Kind kind;
+  flight::types::RequirementFacet facet;
+  flight::String kind;
   flight::types::RenderRegistry registry;
   flight::String coverage;
 };

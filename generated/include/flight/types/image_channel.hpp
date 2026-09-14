@@ -7,14 +7,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct red_green_blue_alpha : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D45757984153FB04
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D45757984153FB04
+struct red_green_blue_alpha_d45757984153fb04 : public flight::ReferenceEnabled {
   double red;
   double green;
   double blue;
   double alpha;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D45757984153FB04
 
-inline flight::Ref<red_green_blue_alpha> image_channel = flight::make_ref<red_green_blue_alpha>(red_green_blue_alpha{.red = 0.0, .green = 1.0, .blue = 2.0, .alpha = 3.0});
+inline flight::Ref<red_green_blue_alpha_d45757984153fb04> image_channel = flight::make_ref<red_green_blue_alpha_d45757984153fb04>(red_green_blue_alpha_d45757984153fb04{.red = 0.0, .green = 1.0, .blue = 2.0, .alpha = 3.0});
 
 using ImageChannel = double;
 

@@ -7,13 +7,16 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct left_middle_right : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_2F13FF0590318001
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_2F13FF0590318001
+struct left_middle_right_2f13ff0590318001 : public flight::ReferenceEnabled {
   double left;
   double middle;
   double right;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_2F13FF0590318001
 
-inline flight::Ref<left_middle_right> mouse_button = flight::make_ref<left_middle_right>(left_middle_right{.left = 0.0, .middle = 1.0, .right = 2.0});
+inline flight::Ref<left_middle_right_2f13ff0590318001> mouse_button = flight::make_ref<left_middle_right_2f13ff0590318001>(left_middle_right_2f13ff0590318001{.left = 0.0, .middle = 1.0, .right = 2.0});
 
 using MouseButton = double;
 

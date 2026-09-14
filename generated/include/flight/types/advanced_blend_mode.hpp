@@ -7,7 +7,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct color_color_burn_color_dodge_darken_difference_exclusion_hard_light_hue_lighten_luminosity_overlay_saturation_soft_light : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5F60A9012F1D62D5
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5F60A9012F1D62D5
+struct color_color_burn_color_dodge_darken_difference_exclusion_hard_light_hue_lighten_luminosity_overlay_saturation_soft_light_5f60a9012f1d62d5 : public flight::ReferenceEnabled {
   flight::String color;
   flight::String color_burn;
   flight::String color_dodge;
@@ -22,8 +24,9 @@ struct color_color_burn_color_dodge_darken_difference_exclusion_hard_light_hue_l
   flight::String saturation;
   flight::String soft_light;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_5F60A9012F1D62D5
 
-inline flight::Ref<color_color_burn_color_dodge_darken_difference_exclusion_hard_light_hue_lighten_luminosity_overlay_saturation_soft_light> advanced_blend_mode = flight::make_ref<color_color_burn_color_dodge_darken_difference_exclusion_hard_light_hue_lighten_luminosity_overlay_saturation_soft_light>(color_color_burn_color_dodge_darken_difference_exclusion_hard_light_hue_lighten_luminosity_overlay_saturation_soft_light{.color = flight::String("Color"), .color_burn = flight::String("ColorBurn"), .color_dodge = flight::String("ColorDodge"), .darken = flight::String("Darken"), .difference = flight::String("Difference"), .exclusion = flight::String("Exclusion"), .hard_light = flight::String("HardLight"), .hue = flight::String("Hue"), .lighten = flight::String("Lighten"), .luminosity = flight::String("Luminosity"), .overlay = flight::String("Overlay"), .saturation = flight::String("Saturation"), .soft_light = flight::String("SoftLight")});
+inline flight::Ref<color_color_burn_color_dodge_darken_difference_exclusion_hard_light_hue_lighten_luminosity_overlay_saturation_soft_light_5f60a9012f1d62d5> advanced_blend_mode = flight::make_ref<color_color_burn_color_dodge_darken_difference_exclusion_hard_light_hue_lighten_luminosity_overlay_saturation_soft_light_5f60a9012f1d62d5>(color_color_burn_color_dodge_darken_difference_exclusion_hard_light_hue_lighten_luminosity_overlay_saturation_soft_light_5f60a9012f1d62d5{.color = flight::String("Color"), .color_burn = flight::String("ColorBurn"), .color_dodge = flight::String("ColorDodge"), .darken = flight::String("Darken"), .difference = flight::String("Difference"), .exclusion = flight::String("Exclusion"), .hard_light = flight::String("HardLight"), .hue = flight::String("Hue"), .lighten = flight::String("Lighten"), .luminosity = flight::String("Luminosity"), .overlay = flight::String("Overlay"), .saturation = flight::String("Saturation"), .soft_light = flight::String("SoftLight")});
 
 using AdvancedBlendMode = flight::String;
 

@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Slot2D;
+
 struct Slot2D : public flight::ReferenceEnabled {
   std::optional<std::optional<flight::Ref<flight::types::Attachment2D>>> attachment;
   std::optional<std::optional<flight::Ref<flight::types::Skeleton2DSlotDeform>>> deform;

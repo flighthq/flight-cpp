@@ -11,13 +11,16 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct auto_size_height_width_word_wrap : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_75A4FF02B472C2DE
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_75A4FF02B472C2DE
+struct auto_size_height_width_word_wrap_75a4ff02b472c2de : public flight::ReferenceEnabled {
   flight::types::TextAutoSize auto_size;
   double height;
   double width;
   std::optional<bool> word_wrap;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_75A4FF02B472C2DE
 
-using TextBoundsSpec = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<auto_size_height_width_word_wrap>>>>;
+using TextBoundsSpec = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<auto_size_height_width_word_wrap_75a4ff02b472c2de>>>>;
 
 } // namespace flight::types

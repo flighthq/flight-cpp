@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ParticleConfigIssue;
+
 struct ParticleConfigIssue : public flight::ReferenceEnabled {
   std::variant<flight::String, flight::Symbol> field;
   flight::String message;

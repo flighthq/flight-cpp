@@ -11,7 +11,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::spatial {
 
-inline flight::Ref<flight::types::SpatialIndexingExplanation> explain_spatial_indexing3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex3D>>>> index, flight::types::SpatialObjectId id) {
+inline flight::Ref<flight::types::SpatialIndexingExplanation> explain_spatial_indexing3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex3D>>>> index, double id) {
   return flight::row_get<flight::RowKey<"runtime">>(index)->backend->explain_spatial_indexing(id);
 }
 

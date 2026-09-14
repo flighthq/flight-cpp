@@ -11,6 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct RenderEffectCaptureGeometry;
+
 struct RenderEffectCaptureGeometry : public flight::ReferenceEnabled {
   flight::Ref<flight::types::RectangleLike> bounds;
   flight::Ref<flight::types::MatrixLike> capture_transform;

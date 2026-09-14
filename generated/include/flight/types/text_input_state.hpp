@@ -8,6 +8,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TextInputHistoryEntry;
+struct TextInputState;
+struct TextInputOptions;
+
 struct TextInputHistoryEntry : public flight::ReferenceEnabled {
   double caret_index_after;
   double caret_index_before;

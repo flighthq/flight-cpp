@@ -78,12 +78,15 @@ inline flight::String document_to_xml(flight::StructuralRef<flight::RowReadonly<
   return lines.join(flight::String("\n"));
 }
 
-struct frames_metadata : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_CB7DB40E359077FA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_CB7DB40E359077FA
+struct frames_metadata_cb7db40e359077fa : public flight::ReferenceEnabled {
   std::optional<std::unordered_map<flight::String, flight::Ref<flight::types::CocosPlistFrame>>> frames;
   std::optional<flight::Ref<flight::types::CocosPlistMetadata>> metadata;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_CB7DB40E359077FA
 
-inline flight::String serialize_cocos_plist_spritesheet(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpritesheetData>>>> data, std::optional<flight::Ref<frames_metadata>> existing = std::nullopt) {
+inline flight::String serialize_cocos_plist_spritesheet(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpritesheetData>>>> data, std::optional<flight::Ref<frames_metadata_cb7db40e359077fa>> existing = std::nullopt) {
   std::unordered_map<flight::String, flight::Ref<flight::types::CocosPlistFrame>> frames = {};
   for (auto frame : flight::row_get<flight::RowKey<"frames">>(data)) {
     frames[frame->name] = frame_to_entry(frame);

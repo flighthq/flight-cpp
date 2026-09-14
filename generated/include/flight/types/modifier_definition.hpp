@@ -14,9 +14,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ModifierDefinition;
+
 struct ModifierDefinition : public flight::ReferenceEnabled {
-  flight::types::ModifierKind kind;
-  flight::types::modifier_slot slot;
+  flight::String kind;
+  flight::String slot;
   std::optional<std::function<flight::String(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>)>> get_define_signature;
 };
 

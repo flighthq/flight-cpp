@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct PerspectiveProjectionOptions;
+
 struct PerspectiveProjectionOptions : public flight::ReferenceEnabled {
   std::optional<double> aspect;
   double fov_y;

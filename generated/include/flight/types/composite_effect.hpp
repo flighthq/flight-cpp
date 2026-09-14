@@ -12,10 +12,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct CompositeEffect;
+
 struct CompositeEffect : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
-  flight::types::composite_operator operator_;
+  flight::String operator_;
   std::optional<flight::String> backdrop_key;
 };
 

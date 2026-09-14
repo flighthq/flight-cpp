@@ -80,7 +80,7 @@ inline void divide_vector4(flight::Ref<flight::types::Vector4Like> out, flight::
 }
 
 inline bool equals_vector4(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>, flight::Null, flight::Undefined> b) {
-  if ((!a || !b)) {
+  if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
   return ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>>(b)) || ((((flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>>(a)) == flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>>(b))) && (flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>>(a)) == flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>>(b)))) && (flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>>(a)) == flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>>(b)))) && (flight::row_get<flight::RowKey<"w">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>>(a)) == flight::row_get<flight::RowKey<"w">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>>(b)))));
@@ -133,7 +133,7 @@ inline void initialize_vector4(flight::types::EntityConstruction<flight::Ref<fli
 
 inline flight::Ref<flight::types::Vector4> create_vector4(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> z = std::nullopt, std::optional<double> w = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Vector4>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Vector4>>();
-  initialize_vector4(out, x, y, z, w);
+  initialize_vector4(out, x.value_or(0.0), y.value_or(0.0), z.value_or(0.0), w.value_or(0.0));
   return flight::entity::finish_entity(out);
 }
 

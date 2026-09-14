@@ -13,6 +13,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Camera2D;
+struct Camera2DFollowOptions;
+struct Camera2DOptions;
+
 struct Camera2D : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   double rotation;

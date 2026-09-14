@@ -26,12 +26,15 @@ inline flight::Ref<flight::types::MatrixLike> bone = flight::make_ref<flight::ty
 
 inline flight::Ref<flight::types::MatrixLike> combined = flight::make_ref<flight::types::MatrixLike>(flight::types::MatrixLike{.a = 1.0, .b = 0.0, .c = 0.0, .d = 1.0, .tx = 0.0, .ty = 0.0});
 
-struct x_y : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_8365950BD60F783F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_8365950BD60F783F
+struct x_y_8365950bd60f783f : public flight::ReferenceEnabled {
   double x;
   double y;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_8365950BD60F783F
 
-inline flight::Ref<x_y> corner = flight::make_ref<x_y>(x_y{.x = 0.0, .y = 0.0});
+inline flight::Ref<x_y_8365950bd60f783f> corner = flight::make_ref<x_y_8365950bd60f783f>(x_y_8365950bd60f783f{.x = 0.0, .y = 0.0});
 
 inline void compute_skeleton2_dregion_attachment_vertices(flight::Float32Array out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RegionAttachment2D>>>> attachment, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index) {
   flight::Float32Array world = flight::row_get<flight::RowKey<"worldMatrices">>(skeleton);

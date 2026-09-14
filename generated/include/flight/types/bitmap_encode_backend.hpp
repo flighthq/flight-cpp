@@ -12,6 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct BitmapEncodeBackend;
+
 struct BitmapEncodeBackend : public flight::ReferenceEnabled {
   std::function<flight::Uint8Array(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Bitmap>>>>, flight::types::ImageFormat, double)> encode_bitmap;
   flight::Array<flight::types::ImageFormat> supported_formats;

@@ -7,6 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ResourceLoadBytes;
+
 struct ResourceLoadBytes : public flight::ReferenceEnabled {
   double bytes_loaded;
   double bytes_total_known;

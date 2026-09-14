@@ -15,6 +15,16 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct MediaSessionArtwork;
+struct MediaSessionMetadata;
+struct MediaSessionActionDetails;
+struct MediaSessionPositionState;
+template <typename BlockReason>
+struct MediaSessionOperationOutcome;
+struct MediaSessionBackend;
+struct MediaSessionActionBackend;
+struct MediaSessionActionSignal;
+
 struct MediaSessionArtwork : public flight::ReferenceEnabled {
   flight::String src;
   std::optional<flight::String> sizes;

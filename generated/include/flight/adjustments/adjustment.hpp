@@ -13,7 +13,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::adjustments {
 
 template <typename T>
-inline void initialize_adjustment(flight::types::EntityConstruction<T> out, flight::types::AdjustmentKind kind) {
+inline void initialize_adjustment(flight::types::EntityConstruction<T> out, flight::String kind) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);
 }
 

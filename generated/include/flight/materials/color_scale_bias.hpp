@@ -71,7 +71,9 @@ inline double get_color_scale_bias_bias_rgba(flight::StructuralRef<flight::RowRe
   return flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::left_shift(flight::round((flight::row_get<flight::RowKey<"redBias">>(source) * 255.0)), 24.0), flight::left_shift(flight::round((flight::row_get<flight::RowKey<"greenBias">>(source) * 255.0)), 16.0)), flight::left_shift(flight::round((flight::row_get<flight::RowKey<"blueBias">>(source) * 255.0)), 8.0)), flight::round((flight::row_get<flight::RowKey<"alphaBias">>(source) * 255.0)));
 }
 
-struct alpha_scale_alpha_bias_blue_scale_blue_bias_green_scale_green_bias_red_scale_red_bias : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_BFFCF35E518714E2
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_BFFCF35E518714E2
+struct alpha_scale_alpha_bias_blue_scale_blue_bias_green_scale_green_bias_red_scale_red_bias_bffcf35e518714e2 : public flight::ReferenceEnabled {
   std::optional<double> alpha_scale;
   std::optional<double> alpha_bias;
   std::optional<double> blue_scale;
@@ -81,8 +83,9 @@ struct alpha_scale_alpha_bias_blue_scale_blue_bias_green_scale_green_bias_red_sc
   std::optional<double> red_scale;
   std::optional<double> red_bias;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_BFFCF35E518714E2
 
-inline void initialize_color_scale_bias(flight::types::EntityConstruction<flight::Ref<flight::types::ColorScaleBias>> out, std::optional<flight::Ref<alpha_scale_alpha_bias_blue_scale_blue_bias_green_scale_green_bias_red_scale_red_bias>> opts = std::nullopt) {
+inline void initialize_color_scale_bias(flight::types::EntityConstruction<flight::Ref<flight::types::ColorScaleBias>> out, std::optional<flight::Ref<alpha_scale_alpha_bias_blue_scale_blue_bias_green_scale_green_bias_red_scale_red_bias_bffcf35e518714e2>> opts = std::nullopt) {
   flight::row_set<flight::RowKey<"redScale">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->red_scale; }()).value_or(1.0));
   flight::row_set<flight::RowKey<"greenScale">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->green_scale; }()).value_or(1.0));
   flight::row_set<flight::RowKey<"blueScale">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->blue_scale; }()).value_or(1.0));
@@ -93,7 +96,7 @@ inline void initialize_color_scale_bias(flight::types::EntityConstruction<flight
   flight::row_set<flight::RowKey<"alphaBias">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->alpha_bias; }()).value_or(0.0));
 }
 
-inline flight::Ref<flight::types::ColorScaleBias> create_color_scale_bias(std::optional<flight::Ref<alpha_scale_alpha_bias_blue_scale_blue_bias_green_scale_green_bias_red_scale_red_bias>> opts = std::nullopt) {
+inline flight::Ref<flight::types::ColorScaleBias> create_color_scale_bias(std::optional<flight::Ref<alpha_scale_alpha_bias_blue_scale_blue_bias_green_scale_green_bias_red_scale_red_bias_bffcf35e518714e2>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::ColorScaleBias>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ColorScaleBias>>();
   initialize_color_scale_bias(out, opts);
   return flight::entity::finish_entity(out);

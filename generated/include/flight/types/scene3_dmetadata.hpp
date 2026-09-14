@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct Scene3DMetadata;
+
 struct Scene3DMetadata : public flight::ReferenceEnabled {
   std::optional<flight::String> copyright;
   std::optional<flight::String> generator;

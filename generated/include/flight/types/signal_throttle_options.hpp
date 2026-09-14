@@ -8,6 +8,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct SignalThrottleOptions;
+
 struct SignalThrottleOptions : public flight::ReferenceEnabled {
   std::optional<bool> leading;
   std::optional<bool> trailing;

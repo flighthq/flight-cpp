@@ -2,11 +2,11 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/error.hpp>
 #include <flight/number.hpp>
 #include <limits>
 #include <optional>
 #include <random>
-#include <stdexcept>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -30,7 +30,7 @@ inline std::optional<T> pick(flight::types::RandomSource random, flight::Array<T
 inline double random_exponential(flight::types::RandomSource random, std::optional<double> rate = std::nullopt) {
   rate = rate.value_or(1.0);
   if ((!std::isfinite(rate.value()) || (rate.value() <= 0.0))) {
-    throw std::range_error.construct(flight::String("randomExponential: rate must be finite and > 0"));
+    throw flight::RangeError(flight::String("randomExponential: rate must be finite and > 0"));
   }
   const double u = random();
   return (-std::log(((u == 0.0) ? std::numeric_limits<double>::epsilon() : u)) / rate.value());
@@ -111,7 +111,7 @@ inline void random_on_unit_sphere(flight::types::RandomSource random, flight::Re
 inline double random_poisson(flight::types::RandomSource random, std::optional<double> lambda = std::nullopt) {
   lambda = lambda.value_or(1.0);
   if ((!std::isfinite(lambda.value()) || (lambda.value() <= 0.0))) {
-    throw std::range_error.construct(flight::String("randomPoisson: lambda must be finite and > 0"));
+    throw flight::RangeError(flight::String("randomPoisson: lambda must be finite and > 0"));
   }
   auto limit = std::exp(-lambda.value());
   double k = 0.0;

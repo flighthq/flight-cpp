@@ -12,6 +12,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct TiledLayerBase;
+struct TiledTileLayer;
+struct TiledObjectGroup;
+struct TiledImageLayer;
+struct TiledGroupLayer;
+
 struct TiledLayerBase : public flight::ReferenceEnabled {
   double id;
   flight::String name;

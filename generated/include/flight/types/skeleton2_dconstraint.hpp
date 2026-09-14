@@ -14,13 +14,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-struct ik_path_transform : public flight::ReferenceEnabled {
+struct Skeleton2DConstraint;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_95FF0CD8AED2477C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_95FF0CD8AED2477C
+struct ik_path_transform_95ff0cd8aed2477c : public flight::ReferenceEnabled {
   flight::String ik;
   flight::String path;
   flight::String transform;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_95FF0CD8AED2477C
 
-inline flight::Ref<ik_path_transform> skeleton2_dconstraint_kind = flight::make_ref<ik_path_transform>(ik_path_transform{.ik = flight::String("Skeleton2D.IkConstraint"), .path = flight::String("Skeleton2D.PathConstraint"), .transform = flight::String("Skeleton2D.TransformConstraint")});
+inline flight::Ref<ik_path_transform_95ff0cd8aed2477c> skeleton2_dconstraint_kind = flight::make_ref<ik_path_transform_95ff0cd8aed2477c>(ik_path_transform_95ff0cd8aed2477c{.ik = flight::String("Skeleton2D.IkConstraint"), .path = flight::String("Skeleton2D.PathConstraint"), .transform = flight::String("Skeleton2D.TransformConstraint")});
 
 using Skeleton2DConstraintKind = flight::String;
 

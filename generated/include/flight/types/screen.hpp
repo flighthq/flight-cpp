@@ -16,6 +16,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct ScreenInfo;
+struct ScreenQueryBackend;
+struct ScreenChangeBackend;
+struct ScreenDetailsBackend;
+struct ScreenPermissionChangeBackend;
+
 struct ScreenInfo : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   double id;
@@ -47,17 +53,20 @@ struct ScreenInfo : public flight::ReferenceEnabled {
 
 using ScreenPermissionState = flight::String;
 
-struct x_y : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_8365950BD60F783F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_8365950BD60F783F
+struct x_y_8365950bd60f783f : public flight::ReferenceEnabled {
   double x;
   double y;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_8365950BD60F783F
 
 struct ScreenQueryBackend : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::optional<std::function<void()>> destroy;
   std::function<flight::Array<flight::Ref<ScreenInfo>>(flight::Array<flight::Ref<ScreenInfo>>)> get_screens;
   std::function<flight::Ref<ScreenInfo>(flight::Ref<ScreenInfo>)> get_primary_screen;
-  std::function<flight::Ref<x_y>(flight::Ref<x_y>)> get_cursor_position;
+  std::function<flight::Ref<x_y_8365950bd60f783f>(flight::Ref<x_y_8365950bd60f783f>)> get_cursor_position;
 };
 
 struct ScreenChangeBackend : public flight::ReferenceEnabled {

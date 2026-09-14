@@ -15,6 +15,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct AccessibilityState;
+struct AccessibilityNode;
+struct AccessibilityBackend;
+
 using AccessibilityRole = flight::String;
 
 using AccessibilityLiveness = flight::String;
@@ -48,18 +52,24 @@ struct AccessibilityNode : public flight::ReferenceEnabled {
 
 using AccessibilityOperationBlockReason = flight::String;
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_70C0CFD9DE29194D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_70C0CFD9DE29194D
 template <typename BlockReason>
-struct reason : public flight::ReferenceEnabled {
+struct reason_70c0cfd9de29194d : public flight::ReferenceEnabled {
   flight::String reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_70C0CFD9DE29194D
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_45EC1A34E73584A8
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_45EC1A34E73584A8
 template <typename BlockReason>
-struct reason_1 : public flight::ReferenceEnabled {
+struct reason_45ec1a34e73584a8 : public flight::ReferenceEnabled {
   BlockReason reason;
 };
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_45EC1A34E73584A8
 
 template <typename BlockReason>
-using AccessibilityOperationOutcome = std::variant<flight::Ref<reason_1<BlockReason>>, flight::Ref<reason<BlockReason>>>;
+using AccessibilityOperationOutcome = std::variant<flight::Ref<reason_45ec1a34e73584a8<BlockReason>>, flight::Ref<reason_70c0cfd9de29194d<BlockReason>>>;
 
 struct AccessibilityBackend : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;

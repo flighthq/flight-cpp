@@ -12,6 +12,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct BidiClassBackend;
+struct BidiClassBackendExplanation;
+struct BidiCodePointRange;
+struct BidiRun;
+
 using BidiClass = flight::String;
 
 struct BidiClassBackend : public flight::ReferenceEnabled {

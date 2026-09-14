@@ -2,10 +2,10 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/error.hpp>
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <random>
-#include <stdexcept>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -44,7 +44,7 @@ inline void copy_matrix_column_from_vector3(flight::Ref<flight::types::MatrixLik
       return;
     }
     else {
-      throw std::range_error.construct((flight::String("Column ") + column) + flight::String(" out of bounds (2)"));
+      throw flight::RangeError((flight::String("Column ") + column) + flight::String(" out of bounds (2)"));
     }
   }
 }
@@ -78,7 +78,7 @@ inline void copy_matrix_column_to_vector3(flight::Ref<flight::types::Vector3Like
       return;
     }
     else {
-      throw std::range_error.construct((flight::String("Column ") + column) + flight::String(" out of bounds (2)"));
+      throw flight::RangeError((flight::String("Column ") + column) + flight::String(" out of bounds (2)"));
     }
   }
 }
@@ -105,7 +105,7 @@ inline void copy_matrix_row_from_vector3(flight::Ref<flight::types::MatrixLike> 
       return;
     }
     else {
-      throw std::range_error.construct((flight::String("Row ") + row) + flight::String(" out of bounds (2)"));
+      throw flight::RangeError((flight::String("Row ") + row) + flight::String(" out of bounds (2)"));
     }
   }
 }
@@ -139,7 +139,7 @@ inline void copy_matrix_row_to_vector3(flight::Ref<flight::types::Vector3Like> o
       return;
     }
     else {
-      throw std::range_error.construct((flight::String("Row ") + row) + flight::String(" out of bounds (2)"));
+      throw flight::RangeError((flight::String("Row ") + row) + flight::String(" out of bounds (2)"));
     }
   }
 }
@@ -149,7 +149,7 @@ inline bool equals_matrix(std::variant<flight::StructuralRef<flight::RowReadonly
   if ((a == b)) {
     return true;
   }
-  if ((!a || !b)) {
+  if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
   return (((((!compare_translation.value() || ((flight::row_get<flight::RowKey<"tx">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"tx">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b))) && (flight::row_get<flight::RowKey<"ty">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"ty">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b))))) && (flight::row_get<flight::RowKey<"a">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"a">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"b">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"b">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"c">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"c">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"d">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"d">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b))));
@@ -166,7 +166,7 @@ inline void initialize_matrix(flight::types::EntityConstruction<flight::Ref<flig
 
 inline flight::Ref<flight::types::Matrix> create_matrix(std::optional<double> a = std::nullopt, std::optional<double> b = std::nullopt, std::optional<double> c = std::nullopt, std::optional<double> d = std::nullopt, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Matrix>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Matrix>>();
-  initialize_matrix(out, a, b, c, d, tx, ty);
+  initialize_matrix(out, a.value_or(1.0), b.value_or(0.0), c.value_or(0.0), d.value_or(1.0), tx.value_or(0.0), ty.value_or(0.0));
   return flight::entity::finish_entity(out);
 }
 

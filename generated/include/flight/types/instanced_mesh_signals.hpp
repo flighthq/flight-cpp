@@ -13,6 +13,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct InstancedMeshSignals;
+
 struct InstancedMeshSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::Ref<flight::types::Signal<std::function<void()>>> on_cleared;

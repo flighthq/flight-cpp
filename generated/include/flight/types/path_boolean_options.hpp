@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
+struct PathBooleanOptions;
+
 struct PathBooleanOptions : public flight::ReferenceEnabled {
   std::optional<flight::types::PathWinding> fill_rule;
   std::optional<double> tolerance;
