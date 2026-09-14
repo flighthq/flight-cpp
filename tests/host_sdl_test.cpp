@@ -484,6 +484,33 @@ int main() {
       screen_details.query_permission().get() == flight::String("granted") &&
           screen_details.request().get(),
       "SDL SDK screen details introduced a permission gate for native enumeration");
+  int screen_change_calls = 0;
+  flight::String screen_change_kind;
+  double changed_screen_id = 0.0;
+  bool screen_change_had_metrics = false;
+  auto release_screen_change = sdk_screen.change_backend().subscribe([&](auto event) {
+    ++screen_change_calls;
+    screen_change_kind = event->kind;
+    changed_screen_id = event->screen->id;
+    screen_change_had_metrics = event->changed_metrics.has_value();
+  });
+  SDL_Event screen_change_event{};
+  screen_change_event.type = SDL_EVENT_DISPLAY_CURRENT_MODE_CHANGED;
+  screen_change_event.display.displayID = static_cast<SDL_DisplayID>(primary_screen->id);
+  expect(
+      sdk_screen.dispatch(screen_change_event),
+      "SDL SDK screen backend rejected a native display event");
+  expect(
+      screen_change_calls == 1 && screen_change_kind == flight::String("ScreenMetricsChanged") &&
+          changed_screen_id == primary_screen->id && screen_change_had_metrics,
+      "SDL SDK screen backend changed its generated metrics event");
+  release_screen_change();
+  release_screen_change();
+  expect(
+      sdk_screen.dispatch(screen_change_event) && screen_change_calls == 1,
+      "released SDL screen subscription was invoked");
+  screen_change_event.type = SDL_EVENT_SYSTEM_THEME_CHANGED;
+  expect(!sdk_screen.dispatch(screen_change_event), "SDL screen backend accepted a foreign event");
 
   flight::host_sdl::SdlCursorBackend native_cursor;
   const auto native_cursor_copy = native_cursor;

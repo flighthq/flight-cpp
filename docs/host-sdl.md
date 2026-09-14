@@ -223,11 +223,12 @@ and touch-device presence and the native compiler target for architecture, byte 
 OS-build, and distribution values stay empty where SDL has no source for them.
 
 `Flight::HostSdlSdkScreen` and Bazel `//:host_sdl_sdk_screen` populate the committed generated
-`ScreenQueryBackend` and `ScreenDetailsBackend`. Query calls enumerate SDL displays into the caller-owned array and
+`ScreenQueryBackend`, `ScreenDetailsBackend`, and `ScreenChangeBackend`. Query calls enumerate SDL displays into the caller-owned array and
 report virtual-desktop bounds, work-area size, density, physical dimensions, refresh and pixel depth, orientation,
 HDR state, labels, the primary display, and global pointer position. Native enumeration has no browser-style
-permission prompt, so the details record resolves `granted` and `true`. SDL does not expose physical DPI, gamut,
-luminance, or portable internal/touch classification; screen-change subscriptions remain a separate event adapter.
+permission prompt, so the details record resolves `granted` and `true`. Pass SDL display events to
+`SdkScreenBackend::dispatch()` to emit exact added, removed, or metrics-changed records; each release closure removes
+its own subscription. SDL does not expose physical DPI, gamut, luminance, or portable internal/touch classification.
 
 `Flight::HostSdlSdkKeyboard` and Bazel `//:host_sdl_sdk_keyboard` populate the committed generated
 `SoftKeyboardInfoBackend`, `SoftKeyboardVisibilityBackend`, and `SoftKeyboardChangeBackend`. SDL reports whether the

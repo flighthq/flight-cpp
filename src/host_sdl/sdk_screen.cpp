@@ -4,8 +4,15 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
+#include <functional>
+#include <memory>
 #include <optional>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
+#include <SDL3/SDL_events.h>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_pixels.h>
 #include <SDL3/SDL_properties.h>
@@ -14,6 +21,10 @@
 
 namespace flight::host_sdl {
 namespace {
+
+using ScreenChangeView = flight::StructuralRef<
+    flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenChangeEvent>>>>;
+using ScreenChangeCallback = std::function<void(ScreenChangeView)>;
 
 void initialize_screen(flight::types::ScreenInfo& output) {
   output.id = 0.0;
@@ -116,29 +127,97 @@ void fill_screen(SDL_DisplayID display, SDL_DisplayID primary, flight::types::Sc
   if (label != nullptr) output.label = flight::String(label);
 }
 
+[[nodiscard]] flight::Ref<flight::types::ScreenInfo> snapshot_screen(
+    SDL_DisplayID display,
+    SDL_DisplayID primary) {
+  auto screen = flight::make_ref<flight::types::ScreenInfo>();
+  fill_screen(display, primary, *screen);
+  return screen;
+}
+
+[[nodiscard]] bool same_bounds(
+    const flight::types::ScreenInfo& left,
+    const flight::types::ScreenInfo& right) {
+  return left.x == right.x && left.y == right.y && left.width == right.width &&
+         left.height == right.height;
+}
+
+[[nodiscard]] bool same_work_area(
+    const flight::types::ScreenInfo& left,
+    const flight::types::ScreenInfo& right) {
+  return left.work_width == right.work_width && left.work_height == right.work_height;
+}
+
+[[nodiscard]] bool same_orientation(
+    const flight::types::ScreenInfo& left,
+    const flight::types::ScreenInfo& right) {
+  return left.rotation == right.rotation && left.orientation == right.orientation;
+}
+
 } // namespace
+
+struct SdkScreenBackend::State final {
+  struct Subscription final {
+    ScreenChangeCallback callback;
+    bool active{true};
+  };
+
+  std::unordered_map<std::uint32_t, flight::Ref<flight::types::ScreenInfo>> screens;
+  std::vector<std::shared_ptr<Subscription>> subscriptions;
+
+  void refresh() {
+    screens.clear();
+    int count = 0;
+    SDL_DisplayID* displays = SDL_GetDisplays(&count);
+    const SDL_DisplayID primary = SDL_GetPrimaryDisplay();
+    for (int index = 0; displays != nullptr && index < count; ++index) {
+      screens.emplace(
+          static_cast<std::uint32_t>(displays[index]),
+          snapshot_screen(displays[index], primary));
+    }
+    SDL_free(displays);
+  }
+
+  void prune() {
+    std::erase_if(subscriptions, [](const auto& subscription) {
+      return !subscription->active;
+    });
+  }
+};
+
+SdkScreenBackend::SdkScreenBackend() : state_(std::make_shared<State>()) { state_->refresh(); }
+SdkScreenBackend::~SdkScreenBackend() noexcept = default;
+SdkScreenBackend::SdkScreenBackend(const SdkScreenBackend&) noexcept = default;
+SdkScreenBackend& SdkScreenBackend::operator=(const SdkScreenBackend&) noexcept = default;
+SdkScreenBackend::SdkScreenBackend(SdkScreenBackend&&) noexcept = default;
+SdkScreenBackend& SdkScreenBackend::operator=(SdkScreenBackend&&) noexcept = default;
 
 flight::types::ScreenQueryBackend SdkScreenBackend::query_backend() const {
   flight::types::ScreenQueryBackend result;
   result.entity_runtime_key = std::nullopt;
   result.destroy = std::nullopt;
-  result.get_screens = [](flight::Array<flight::Ref<flight::types::ScreenInfo>> output) {
+  result.get_screens = [state = state_](
+                           flight::Array<flight::Ref<flight::types::ScreenInfo>> output) {
     output.clear();
+    state->screens.clear();
     int count = 0;
     SDL_DisplayID* displays = SDL_GetDisplays(&count);
     const SDL_DisplayID primary = SDL_GetPrimaryDisplay();
     for (int index = 0; displays != nullptr && index < count; ++index) {
-      auto screen = flight::make_ref<flight::types::ScreenInfo>();
-      fill_screen(displays[index], primary, *screen);
+      auto screen = snapshot_screen(displays[index], primary);
+      state->screens.insert_or_assign(static_cast<std::uint32_t>(displays[index]), screen);
       output.push(std::move(screen));
     }
     SDL_free(displays);
     return output;
   };
-  result.get_primary_screen = [](flight::Ref<flight::types::ScreenInfo> output) {
+  result.get_primary_screen = [state = state_](flight::Ref<flight::types::ScreenInfo> output) {
     if (output == nullptr) return output;
     const SDL_DisplayID primary = SDL_GetPrimaryDisplay();
     fill_screen(primary, primary, *output);
+    if (primary != 0) {
+      state->screens.insert_or_assign(static_cast<std::uint32_t>(primary), output);
+    }
     return output;
   };
   result.get_cursor_position = [](flight::Ref<flight::types::x_y> output) {
@@ -153,6 +232,22 @@ flight::types::ScreenQueryBackend SdkScreenBackend::query_backend() const {
   return result;
 }
 
+flight::types::ScreenChangeBackend SdkScreenBackend::change_backend() const {
+  flight::types::ScreenChangeBackend result;
+  result.entity_runtime_key = std::nullopt;
+  result.subscribe = [state = state_](ScreenChangeCallback callback) {
+    auto subscription = std::make_shared<State::Subscription>();
+    subscription->callback = std::move(callback);
+    state->subscriptions.push_back(subscription);
+    return [state, subscription] {
+      if (!subscription->active) return;
+      subscription->active = false;
+      state->prune();
+    };
+  };
+  return result;
+}
+
 flight::types::ScreenDetailsBackend SdkScreenBackend::details_backend() const {
   flight::types::ScreenDetailsBackend result;
   result.entity_runtime_key = std::nullopt;
@@ -161,6 +256,58 @@ flight::types::ScreenDetailsBackend SdkScreenBackend::details_backend() const {
   };
   result.request = [] { return flight::Task<bool>::resolve(true); };
   return result;
+}
+
+bool SdkScreenBackend::dispatch(const SDL_Event& native_event) const {
+  if (native_event.type < SDL_EVENT_DISPLAY_FIRST || native_event.type > SDL_EVENT_DISPLAY_LAST) {
+    return false;
+  }
+  const SDL_DisplayID display = native_event.display.displayID;
+  const auto key = static_cast<std::uint32_t>(display);
+  const SDL_DisplayID primary = SDL_GetPrimaryDisplay();
+  auto event = flight::make_ref<flight::types::ScreenChangeEvent>();
+
+  if (native_event.type == SDL_EVENT_DISPLAY_REMOVED) {
+    event->kind = flight::String("ScreenRemoved");
+    const auto previous = state_->screens.find(key);
+    event->screen = previous == state_->screens.end()
+                        ? snapshot_screen(display, primary)
+                        : previous->second;
+    event->changed_metrics = std::nullopt;
+    state_->screens.erase(key);
+  } else {
+    auto current = snapshot_screen(display, primary);
+    const auto previous = state_->screens.find(key);
+    if (native_event.type == SDL_EVENT_DISPLAY_ADDED) {
+      event->kind = flight::String("ScreenAdded");
+      event->changed_metrics = std::nullopt;
+    } else {
+      event->kind = flight::String("ScreenMetricsChanged");
+      auto changed = flight::make_ref<flight::types::ScreenChangedMetrics>();
+      if (previous == state_->screens.end()) {
+        changed->bounds = true;
+        changed->work_area = true;
+        changed->scale_factor = true;
+        changed->orientation = true;
+      } else {
+        changed->bounds = !same_bounds(*previous->second, *current);
+        changed->work_area = !same_work_area(*previous->second, *current);
+        changed->scale_factor = previous->second->scale_factor != current->scale_factor;
+        changed->orientation = !same_orientation(*previous->second, *current);
+      }
+      event->changed_metrics = std::move(changed);
+    }
+    event->screen = current;
+    state_->screens.insert_or_assign(key, std::move(current));
+  }
+
+  const ScreenChangeView view(event);
+  const auto subscriptions = state_->subscriptions;
+  for (const auto& subscription : subscriptions) {
+    if (subscription->active && subscription->callback) subscription->callback(view);
+  }
+  state_->prune();
+  return true;
 }
 
 } // namespace flight::host_sdl
