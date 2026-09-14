@@ -152,12 +152,15 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run sdk:compile:headless` | Which headers compile after applying the runtime-carrier and headless binding profiles? |
 | `npm run sdk:generate:sdl-gl` | Generate the full SDK inventory with runtime, headless, Web string-type, and SDL/OpenGL host bindings? |
 | `npm run sdk:compile:sdl-gl` | Which headers compile under the SDL/OpenGL host profile? |
-| `npm run sdk:generate:sdl` | Generate the SDK inventory with the SDL/GL and SDL application-shell profiles composed? |
+| `npm run sdk:generate:sdl-wgpu` | Generate the full SDK inventory with provider-owned SDL/WebGPU handles? |
+| `npm run sdk:compile:sdl-wgpu` | Which headers compile under the SDL/WebGPU handle profile? |
+| `npm run sdk:generate:sdl` | Generate the SDK inventory with the SDL/GL, SDL/WebGPU, and application-shell profiles composed? |
 | `npm run sdk:compile:sdl` | Which headers compile under the complete maintained SDL profile? |
 | `npm run release:check` | Do the version, ABI, C++ standard, and conformance profile agree across every file that states them? |
 | `npm run runtime:oracle` | Do the native runtime services match the same TypeScript-valid operations under Node? |
 | `npm run sdl-app:oracle` | Do compiler-emitted window, document, frame, and input calls match the SDL application shell? |
 | `npm run sdl-gl:oracle` | Does the compiler emit the SDL/OpenGL surface, handle, and weak-cache types from the maintained profile? |
+| `npm run sdl-wgpu:oracle` | Does the compiler emit provider-owned WebGPU handles, weak identities, adapter metadata, and usage flags? |
 | `npm run structural:oracle` | Does the pinned compiler's generic Entity proxy compile and preserve native write interception? |
 | `npm run stream:oracle` | Do compiler-emitted readable, writable, and async-iterable carriers compile and preserve stream behavior? |
 | `npm run text-encoder:oracle` | Does compiler-emitted `TextEncoder` produce the same UTF-8 bytes as Node? |

@@ -1,0 +1,73 @@
+{
+  "schema": "flight-cpp-external-bindings/1",
+  "identity": "flighthq/flight-cpp/sdl-wgpu/1",
+  "profile": "sdl-wgpu",
+  "bindings": [
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPU", "space": "type", "targetName": "flight::host_sdl::WgpuApi", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuApiWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUAdapter", "space": "type", "targetName": "flight::host_sdl::WgpuAdapter" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUBindGroup", "space": "type", "targetName": "flight::host_sdl::WgpuBindGroup", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuBindGroupWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUBindGroupLayout", "space": "type", "targetName": "flight::host_sdl::WgpuBindGroupLayout", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuBindGroupLayoutWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUBuffer", "space": "type", "targetName": "flight::host_sdl::WgpuBuffer", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuBufferWeakPolicy" },
+    {
+      "headers": ["flight/host_sdl/wgpu.hpp"],
+      "members": [
+        { "sourceMember": "COPY_DST", "targetName": "flight::host_sdl::wgpu_buffer_usage_copy_dst" },
+        { "sourceMember": "COPY_SRC", "targetName": "flight::host_sdl::wgpu_buffer_usage_copy_src" },
+        { "sourceMember": "INDEX", "targetName": "flight::host_sdl::wgpu_buffer_usage_index" },
+        { "sourceMember": "INDIRECT", "targetName": "flight::host_sdl::wgpu_buffer_usage_indirect" },
+        { "sourceMember": "MAP_READ", "targetName": "flight::host_sdl::wgpu_buffer_usage_map_read" },
+        { "sourceMember": "MAP_WRITE", "targetName": "flight::host_sdl::wgpu_buffer_usage_map_write" },
+        { "sourceMember": "QUERY_RESOLVE", "targetName": "flight::host_sdl::wgpu_buffer_usage_query_resolve" },
+        { "sourceMember": "STORAGE", "targetName": "flight::host_sdl::wgpu_buffer_usage_storage" },
+        { "sourceMember": "UNIFORM", "targetName": "flight::host_sdl::wgpu_buffer_usage_uniform" },
+        { "sourceMember": "VERTEX", "targetName": "flight::host_sdl::wgpu_buffer_usage_vertex" }
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "GPUBufferUsage",
+      "space": "value",
+      "targetName": "flight::host_sdl::wgpu_buffer_usage"
+    },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUCanvasContext", "space": "type", "targetName": "flight::host_sdl::WgpuCanvasContext", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuCanvasContextWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUColor", "space": "type", "targetName": "flight::host_sdl::WgpuColor" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUCommandEncoder", "space": "type", "targetName": "flight::host_sdl::WgpuCommandEncoder", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuCommandEncoderWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUDevice", "space": "type", "targetName": "flight::host_sdl::WgpuDevice", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuDeviceWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUDeviceLostInfo", "space": "type", "targetName": "flight::host_sdl::WgpuDeviceLostInfo" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUPipelineLayout", "space": "type", "targetName": "flight::host_sdl::WgpuPipelineLayout", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuPipelineLayoutWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUQueue", "space": "type", "targetName": "flight::host_sdl::WgpuQueue", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuQueueWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPURenderPassEncoder", "space": "type", "targetName": "flight::host_sdl::WgpuRenderPassEncoder", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuRenderPassEncoderWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPURenderPipeline", "space": "type", "targetName": "flight::host_sdl::WgpuRenderPipeline", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuRenderPipelineWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUSampler", "space": "type", "targetName": "flight::host_sdl::WgpuSampler", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuSamplerWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUShaderModule", "space": "type", "targetName": "flight::host_sdl::WgpuShaderModule", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuShaderModuleWeakPolicy" },
+    {
+      "headers": ["flight/host_sdl/wgpu.hpp"],
+      "members": [
+        { "sourceMember": "COMPUTE", "targetName": "flight::host_sdl::wgpu_shader_stage_compute" },
+        { "sourceMember": "FRAGMENT", "targetName": "flight::host_sdl::wgpu_shader_stage_fragment" },
+        { "sourceMember": "VERTEX", "targetName": "flight::host_sdl::wgpu_shader_stage_vertex" }
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "GPUShaderStage",
+      "space": "value",
+      "targetName": "flight::host_sdl::wgpu_shader_stage"
+    },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUTexture", "space": "type", "targetName": "flight::host_sdl::WgpuTexture", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuTextureWeakPolicy" },
+    {
+      "headers": ["flight/host_sdl/wgpu.hpp"],
+      "members": [
+        { "sourceMember": "COPY_DST", "targetName": "flight::host_sdl::wgpu_texture_usage_copy_dst" },
+        { "sourceMember": "COPY_SRC", "targetName": "flight::host_sdl::wgpu_texture_usage_copy_src" },
+        { "sourceMember": "RENDER_ATTACHMENT", "targetName": "flight::host_sdl::wgpu_texture_usage_render_attachment" },
+        { "sourceMember": "STORAGE_BINDING", "targetName": "flight::host_sdl::wgpu_texture_usage_storage_binding" },
+        { "sourceMember": "TEXTURE_BINDING", "targetName": "flight::host_sdl::wgpu_texture_usage_texture_binding" }
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "GPUTextureUsage",
+      "space": "value",
+      "targetName": "flight::host_sdl::wgpu_texture_usage"
+    },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUTextureView", "space": "type", "targetName": "flight::host_sdl::WgpuTextureView", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuTextureViewWeakPolicy" }
+  ]
+}

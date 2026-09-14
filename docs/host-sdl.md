@@ -93,13 +93,20 @@ The installed build exports four targets through the existing `FlightCpp` packag
   `window` and `GlCanvas`. The input surface also exposes value-owned standard-layout gamepad snapshots through
   `navigator.getGamepads()` and a common event carrier for Flight's base-event narrowing.
 - `Flight::HostSdlVulkan` copies the required instance extension names and owns the `VkSurfaceKHR` returned by SDL.
-- `Flight::HostSdlWgpu` owns a type-erased native WebGPU surface through create/destroy callbacks supplied by a Dawn
-  or wgpu-native adapter. It intentionally adds no WebGPU implementation dependency.
+- `Flight::HostSdlWgpu` owns a type-erased native WebGPU surface and typed shared WebGPU object handles through
+  callbacks supplied by a Dawn or wgpu-native adapter. Handle copies and weak cache keys preserve identity, provider
+  releases run exactly once, and adapter capabilities remain value-owned metadata. It intentionally adds no WebGPU
+  implementation dependency.
 
 The composed SDK sweeps also include `bindings/web-types.json`. That profile maps standard Canvas, WebGPU,
 image-smoothing, and permission string-literal domains to `flight::String`; it selects no renderer or platform
 provider and keeps those source-level names available until a concrete backend profile supplies their object
 handles.
+
+`bindings/sdl-wgpu.json` supplies those object handles, adapter features/limits, and standard usage flags. It is a
+provider ABI rather than a renderer: device methods and descriptors remain the responsibility of the selected
+Dawn/wgpu-native adapter. Run `npm run sdk:generate:sdl-wgpu` for that profile alone, or `npm run sdk:generate:sdl`
+for the complete GL + WebGPU + application-shell inventory.
 
 An installed consumer selects only the backend it uses:
 

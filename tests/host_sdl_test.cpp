@@ -30,6 +30,15 @@ struct SurfaceState {
   int destroys{};
 };
 
+struct WgpuObjectState {
+  int releases{};
+};
+
+void release_wgpu_object(void* userdata, void* object) noexcept {
+  auto* state = static_cast<WgpuObjectState*>(userdata);
+  if (object == state) ++state->releases;
+}
+
 flight::host_sdl::WgpuSurfaceHandle create_surface(
     void* userdata,
     flight::host_sdl::WgpuInstanceHandle instance,
@@ -437,4 +446,41 @@ int main() {
   }
   expect(surface_state.creates == 1, "WGPU bridge did not create exactly one surface");
   expect(surface_state.destroys == 1, "WGPU bridge did not destroy exactly one surface");
+
+  WgpuObjectState object_state;
+  flight::host_sdl::WgpuDevice::weak_type weak_device;
+  {
+    auto device = flight::host_sdl::WgpuDevice::adopt(
+        &object_state,
+        flight::host_sdl::WgpuObjectCallbacks{&object_state, release_wgpu_object});
+    const auto alias = device;
+    weak_device = device.weaken();
+    expect(
+        alias == device && device.identity() == alias.identity() &&
+            device.native_handle() == &object_state &&
+            flight::host_sdl::WgpuDeviceWeakPolicy::lock(weak_device).has_value(),
+        "WGPU object carrier lost shared native identity");
+  }
+  expect(
+      object_state.releases == 1 && !flight::host_sdl::WgpuDevice::lock_weak(weak_device),
+      "WGPU object carrier did not release exactly once or expire its weak identity");
+  {
+    flight::Set<flight::String> features;
+    features.add(flight::String("timestamp-query"));
+    const auto adapter = flight::host_sdl::WgpuAdapter::adopt(
+        &object_state,
+        flight::host_sdl::WgpuObjectCallbacks{&object_state, release_wgpu_object},
+        std::move(features),
+        flight::host_sdl::WgpuSupportedLimits{16'384.0});
+    expect(
+        adapter.features.has(flight::String("timestamp-query")) &&
+            adapter.limits.max_texture_dimension2_d == 16'384.0,
+        "WGPU adapter carrier lost provider capability metadata");
+  }
+  expect(object_state.releases == 2, "WGPU adapter did not release its provider handle");
+  expect(
+      flight::host_sdl::wgpu_buffer_usage_vertex == 0x20 &&
+          flight::host_sdl::wgpu_texture_usage_render_attachment == 0x10 &&
+          flight::host_sdl::wgpu_shader_stage_fragment == 0x2,
+      "WGPU usage flags do not match the WebGPU constants");
 }

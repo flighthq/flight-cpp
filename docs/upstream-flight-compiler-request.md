@@ -203,6 +203,13 @@ reports only `EventTarget[type]`. A focused compiler probe with an otherwise val
 `removeEventListener`. The compiler needs to materialize the listener's event parameter and elect a callable
 identity representation that lets the host remove the same listener without comparing `std::function` targets.
 
+The provider-neutral `flighthq/flight-cpp/sdl-wgpu/1` profile now supplies typed shared identity for 16 WebGPU
+object domains, exact adapter capability metadata, standard usage flags, and weak-key policies. On its own it adds
+19 dependency-closed headers over runtime/headless and all 19 compile. Composed with SDL/GL and the application
+shell, it raises the inventory from 1,111 to 1,129 headers; all 18 additions compile and direct ambient-refused
+modules fall from 92 to 53. Remaining WGPU externals are the concrete provider layer:
+`GPUDeviceDescriptor`, `GPUOrigin3D`, `GPUVertexBufferLayout`, and the external-image copy descriptors/sources.
+
 Regenerate and validate from the repository root:
 
 ```sh

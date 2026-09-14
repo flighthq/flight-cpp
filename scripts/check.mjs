@@ -28,6 +28,7 @@ const gates = [
   { arguments: [], name: 'runtimeOracle' },
   { arguments: [], name: 'sdlAppProfileOracle' },
   { arguments: [], name: 'sdlGlProfileOracle' },
+  { arguments: [], name: 'sdlWgpuProfileOracle' },
   { arguments: [], name: 'structuralProxyOracle' },
   { arguments: [], name: 'streamOracle' },
   { arguments: [], name: 'textEncoderOracle' },
