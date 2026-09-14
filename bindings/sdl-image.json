@@ -1,0 +1,16 @@
+{
+  "schema": "flight-cpp-external-bindings/1",
+  "identity": "flighthq/flight-cpp/sdl-image/1",
+  "profile": "sdl-image",
+  "bindings": [
+    { "headers": ["flight/host_sdl/image.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "CanvasImageSource", "space": "type", "targetName": "flight::host_sdl::ImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::ImageSourceWeakPolicy" },
+    { "headers": ["flight/host_sdl/image.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUCopyExternalImageSource", "space": "type", "targetName": "flight::host_sdl::ImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::ImageSourceWeakPolicy" },
+    { "headers": ["flight/host_sdl/image.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "HTMLImageElement", "space": "type", "targetName": "flight::host_sdl::ImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::ImageSourceWeakPolicy" },
+    { "headers": ["flight/host_sdl/image.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "HTMLVideoElement", "space": "type", "targetName": "flight::host_sdl::ImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::ImageSourceWeakPolicy" },
+    { "headers": ["flight/host_sdl/image.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "ImageBitmap", "space": "type", "targetName": "flight::host_sdl::ImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::ImageSourceWeakPolicy" },
+    { "headers": ["flight/host_sdl/image.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "OffscreenCanvas", "space": "type", "targetName": "flight::host_sdl::ImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::ImageSourceWeakPolicy" },
+    { "headers": ["flight/host_sdl/image.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "SVGImageElement", "space": "type", "targetName": "flight::host_sdl::ImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::ImageSourceWeakPolicy" },
+    { "headers": ["flight/host_sdl/image.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "TexImageSource", "space": "type", "targetName": "flight::host_sdl::ImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::ImageSourceWeakPolicy" },
+    { "headers": ["flight/host_sdl/image.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "VideoFrame", "space": "type", "targetName": "flight::host_sdl::ImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::ImageSourceWeakPolicy" }
+  ]
+}

@@ -38,6 +38,7 @@ const bindingProfileFiles = [
   'bindings/runtime.json',
   'bindings/headless.json',
   'bindings/web-types.json',
+  'bindings/sdl-image.json',
   'bindings/sdl-gl.json',
   'bindings/sdl-app.json',
 ];

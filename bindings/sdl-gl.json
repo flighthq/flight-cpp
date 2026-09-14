@@ -27,8 +27,6 @@
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "WebGLContextAttributes", "space": "type", "targetName": "flight::host_sdl::WebGlContextAttributes" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "WebGLPowerPreference", "space": "type", "targetName": "flight::String" },
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GLenum", "space": "type", "targetName": "double" },
-    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GLuint", "space": "type", "targetName": "double" },
-    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "CanvasImageSource", "space": "type", "targetName": "flight::host_sdl::GlImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::GlImageSourceWeakPolicy" },
-    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "TexImageSource", "space": "type", "targetName": "flight::host_sdl::GlImageSource" }
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GLuint", "space": "type", "targetName": "double" }
   ]
 }

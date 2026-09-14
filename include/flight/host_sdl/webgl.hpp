@@ -16,6 +16,7 @@
 #include <flight/array.hpp>
 #include <flight/array_buffer_view.hpp>
 #include <flight/host_sdl/export.hpp>
+#include <flight/host_sdl/image.hpp>
 #include <flight/host_sdl/input.hpp>
 #include <flight/host_sdl/web_platform_types.hpp>
 #include <flight/host_sdl/window.hpp>
@@ -58,8 +59,6 @@ struct FLIGHT_HOST_SDL_GL_API WebGlObjectState final {
   std::uint32_t name;
   bool valid;
 };
-
-struct GlImageSourceState;
 
 } // namespace detail
 
@@ -198,51 +197,8 @@ struct WebGlActiveInfo final {
   double type{0.0};
 };
 
-class FLIGHT_HOST_SDL_GL_API GlImageSource final {
- public:
-  using weak_type = std::weak_ptr<detail::GlImageSourceState>;
-
-  GlImageSource() noexcept = default;
-
-  [[nodiscard]] static GlImageSource rgba8(
-      std::size_t width,
-      std::size_t height,
-      Uint8ClampedArray pixels);
-
-  [[nodiscard]] explicit operator bool() const noexcept { return state_ != nullptr; }
-  [[nodiscard]] friend bool operator==(
-      const GlImageSource&,
-      const GlImageSource&) noexcept = default;
-  [[nodiscard]] const void* identity() const noexcept { return state_.get(); }
-  [[nodiscard]] std::size_t width() const noexcept;
-  [[nodiscard]] std::size_t height() const noexcept;
-  [[nodiscard]] std::span<const Uint8Clamped> rgba8_pixels() const noexcept;
-  [[nodiscard]] weak_type weaken() const noexcept { return state_; }
-
-  [[nodiscard]] static std::optional<GlImageSource> lock_weak(const weak_type& weak) noexcept;
-
- private:
-  explicit GlImageSource(std::shared_ptr<detail::GlImageSourceState> state) noexcept
-      : state_(std::move(state)) {}
-
-  std::shared_ptr<detail::GlImageSourceState> state_;
-};
-
-struct GlImageSourceWeakPolicy final {
-  using key_type = GlImageSource;
-  using weak_type = GlImageSource::weak_type;
-  using identity_type = const void*;
-
-  [[nodiscard]] static weak_type weaken(const key_type& key) noexcept { return key.weaken(); }
-  [[nodiscard]] static std::optional<key_type> lock(const weak_type& key) noexcept {
-    return key_type::lock_weak(key);
-  }
-  [[nodiscard]] static identity_type identity(const key_type& key) noexcept { return key.identity(); }
-  [[nodiscard]] static std::size_t hash(identity_type identity) noexcept;
-  [[nodiscard]] static bool equal(identity_type left, identity_type right) noexcept {
-    return left == right;
-  }
-};
+using GlImageSource = ImageSource;
+using GlImageSourceWeakPolicy = ImageSourceWeakPolicy;
 
 // A copyable WebGL-shaped view over one SDL window and its OpenGL context. The context and window
 // share one owner so a canvas, context, or GPU handle can never observe a half-destroyed surface.
@@ -816,13 +772,6 @@ namespace std {
 template <typename Tag>
 struct hash<flight::host_sdl::WebGlHandle<Tag>> {
   [[nodiscard]] size_t operator()(const flight::host_sdl::WebGlHandle<Tag>& value) const noexcept {
-    return hash<const void*>{}(value.identity());
-  }
-};
-
-template <>
-struct hash<flight::host_sdl::GlImageSource> {
-  [[nodiscard]] size_t operator()(const flight::host_sdl::GlImageSource& value) const noexcept {
     return hash<const void*>{}(value.identity());
   }
 };

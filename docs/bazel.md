@@ -46,8 +46,9 @@ SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
   bazel run --config=local-posix //examples:tween_sdl_gl -- --smoke
 ```
 
-Applications depend on `//:host_sdl`, `//:host_sdl_gl`, or `//:host_sdl_wgpu`. The Vulkan adapter remains CMake-only
-until its SDK is represented as a pinned Bazel dependency.
+Applications depend on `//:host_sdl`, `//:host_sdl_image`, `//:host_sdl_gl`, or `//:host_sdl_wgpu`. The image target
+is linked transitively by both graphics paths. The Vulkan adapter remains CMake-only until its SDK is represented as
+a pinned Bazel dependency.
 
 ## Registered toolchains and platforms
 

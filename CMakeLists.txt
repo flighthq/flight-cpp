@@ -104,6 +104,11 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
   target_link_libraries(flight_host_sdl PUBLIC Flight::Cpp SDL3::SDL3)
   flight_cpp_set_project_warnings(flight_host_sdl)
 
+  add_library(flight_host_sdl_image INTERFACE)
+  add_library(Flight::HostSdlImage ALIAS flight_host_sdl_image)
+  set_target_properties(flight_host_sdl_image PROPERTIES EXPORT_NAME HostSdlImage)
+  target_link_libraries(flight_host_sdl_image INTERFACE Flight::Cpp)
+
   add_library(flight_host_sdl_sdk_audio src/host_sdl/sdk_audio.cpp)
   add_library(Flight::HostSdlSdkAudio ALIAS flight_host_sdl_sdk_audio)
   set_target_properties(
@@ -134,7 +139,7 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
       SOVERSION "${FLIGHT_CPP_ABI_VERSION}"
       VERSION "${PROJECT_VERSION}"
   )
-  target_link_libraries(flight_host_sdl_gl PUBLIC Flight::HostSdl)
+  target_link_libraries(flight_host_sdl_gl PUBLIC Flight::HostSdl Flight::HostSdlImage)
   flight_cpp_set_project_warnings(flight_host_sdl_gl)
 
   add_library(flight_host_sdl_wgpu src/host_sdl/wgpu.cpp)
@@ -147,10 +152,16 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
       SOVERSION "${FLIGHT_CPP_ABI_VERSION}"
       VERSION "${PROJECT_VERSION}"
   )
-  target_link_libraries(flight_host_sdl_wgpu PUBLIC Flight::HostSdl)
+  target_link_libraries(flight_host_sdl_wgpu PUBLIC Flight::HostSdl Flight::HostSdlImage)
   flight_cpp_set_project_warnings(flight_host_sdl_wgpu)
 
-  list(APPEND flight_cpp_install_targets flight_host_sdl flight_host_sdl_gl flight_host_sdl_wgpu)
+  list(
+    APPEND flight_cpp_install_targets
+    flight_host_sdl
+    flight_host_sdl_gl
+    flight_host_sdl_image
+    flight_host_sdl_wgpu
+  )
 
   if(FLIGHT_CPP_BUILD_HOST_SDL_VULKAN)
     find_package(Vulkan REQUIRED)

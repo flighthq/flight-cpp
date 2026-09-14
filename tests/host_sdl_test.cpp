@@ -290,25 +290,36 @@ int main() {
          "GL anisotropy maximum query changed");
 
   auto pixels = flight::Uint8ClampedArray{255, 0, 0, 255, 0, 255, 0, 255};
-  auto image = flight::host_sdl::GlImageSource::rgba8(2, 1, std::move(pixels));
+  auto image = flight::host_sdl::ImageSource::rgba8(
+      2,
+      1,
+      std::move(pixels),
+      flight::host_sdl::ImageSourceKind::image_bitmap);
   const auto weak_image = image.weaken();
-  auto image_alias = image;
-  expect(image.width() == 2 && image.height() == 1, "GL image dimensions changed");
-  expect(image.rgba8_pixels().size() == 8, "GL image pixel storage changed");
-  expect(image.identity() == image_alias.identity(), "GL image copy changed host identity");
+  flight::host_sdl::GlImageSource image_alias = image;
+  flight::host_sdl::WgpuExternalImageSource wgpu_image = image;
+  expect(
+      image.kind() == flight::host_sdl::ImageSourceKind::image_bitmap && image.width() == 2 &&
+          image.height() == 1,
+      "SDL image source kind or dimensions changed");
+  expect(image.rgba8_pixels().size() == 8, "SDL image pixel storage changed");
+  expect(
+      image.identity() == image_alias.identity() && image.identity() == wgpu_image.identity(),
+      "GL and WebGPU image views did not preserve shared host identity");
+  wgpu_image = {};
   flight::WeakMap<
       flight::host_sdl::GlImageSource,
       int,
       flight::host_sdl::GlImageSourceWeakPolicy>
       image_cache;
   image_cache.set(image, 7);
-  expect(image_cache.get(image) == 7, "GL image weak cache lost a live entry");
+  expect(image_cache.get(image) == 7, "SDL image weak cache lost a live entry");
   image = {};
   expect(flight::host_sdl::GlImageSource::lock_weak(weak_image).has_value(),
-         "GL image alias did not retain host identity");
+         "SDL image alias did not retain host identity");
   image_alias = {};
   expect(!flight::host_sdl::GlImageSource::lock_weak(weak_image).has_value(),
-         "GL image weak identity retained expired storage");
+         "SDL image weak identity retained expired storage");
 
   flight::host_sdl::Host host;
   expect((host.subsystems() & SDL_INIT_VIDEO) != 0, "SDL video subsystem was not recorded");

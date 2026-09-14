@@ -110,6 +110,14 @@ cc_library(
 )
 
 cc_library(
+    name = "host_sdl_image",
+    hdrs = ["include/flight/host_sdl/image.hpp"],
+    strip_include_prefix = "include",
+    tags = ["manual"],
+    deps = [":cpp"],
+)
+
+cc_library(
     name = "host_sdl_gl",
     srcs = [
         "src/host_sdl/gl.cpp",
@@ -124,7 +132,10 @@ cc_library(
     ],
     strip_include_prefix = "include",
     tags = ["manual"],
-    deps = [":host_sdl"],
+    deps = [
+        ":host_sdl",
+        ":host_sdl_image",
+    ],
 )
 
 cc_library(
@@ -145,7 +156,10 @@ cc_library(
     hdrs = ["include/flight/host_sdl/wgpu.hpp"],
     strip_include_prefix = "include",
     tags = ["manual"],
-    deps = [":host_sdl"],
+    deps = [
+        ":host_sdl",
+        ":host_sdl_image",
+    ],
 )
 
 test_suite(

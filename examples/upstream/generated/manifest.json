@@ -29,7 +29,14 @@
       "schema": "flight-cpp-external-bindings/1"
     },
     {
-      "digest": "sha256:e9927729d98b87d1cd72e457c7eaf547b09da98c1f1b91d25c52c635eb1c62b1",
+      "digest": "sha256:b0b4e3ac41bba815dd5e27b8e677d4edc505bf56ca0ab519914f8525751773ed",
+      "identity": "flighthq/flight-cpp/sdl-image/1",
+      "path": "bindings/sdl-image.json",
+      "profile": "sdl-image",
+      "schema": "flight-cpp-external-bindings/1"
+    },
+    {
+      "digest": "sha256:9b133e774ebed47e77ce47d34639d5bd3446721ab05426f51999facd2fec864e",
       "identity": "flighthq/flight-cpp/sdl-gl/1",
       "path": "bindings/sdl-gl.json",
       "profile": "sdl-gl",

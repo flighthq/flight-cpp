@@ -43,7 +43,7 @@ if (!existsSync(compilerEntry)) {
 }
 
 const api = await import(pathToFileURL(compilerEntry));
-const bindingProfiles = ['web-types', 'sdl-wgpu'].map((name) =>
+const bindingProfiles = ['web-types', 'sdl-image', 'sdl-wgpu'].map((name) =>
   JSON.parse(readFileSync(path.join(root, 'bindings', `${name}.json`), 'utf8')),
 );
 const bindings = {
@@ -60,7 +60,7 @@ const handleTypes = [
   ['GPUCommandBuffer', 'WgpuCommandBuffer'],
   ['GPUCommandEncoder', 'WgpuCommandEncoder'],
   ['GPUDevice', 'WgpuDevice'],
-  ['GPUCopyExternalImageSource', 'WgpuExternalImageSource'],
+  ['GPUCopyExternalImageSource', 'ImageSource'],
   ['GPUExternalTexture', 'WgpuExternalTexture'],
   ['GPUPipelineLayout', 'WgpuPipelineLayout'],
   ['GPUQueue', 'WgpuQueue'],
@@ -74,7 +74,22 @@ const handleTypes = [
 const source = api.parseTypeScriptSource(
   '/flight/packages/host-test/src/wgpu.ts',
   `${handleTypes.map(([sourceName], index) => `export function keep${String(index)}(value: ${sourceName}): ${sourceName} { return value; }`).join('\n')}
+   export interface NativeWgpuImages {
+     cache: WeakMap<GPUCopyExternalImageSource, GPUTexture>;
+     imageElement: HTMLImageElement;
+     videoElement: HTMLVideoElement;
+     imageBitmap: ImageBitmap;
+     offscreenCanvas: OffscreenCanvas;
+     svgImageElement: SVGImageElement;
+     videoFrame: VideoFrame;
+   }
    export function lostMessage(value: GPUDeviceLostInfo): string { return value.message; }
+   export function imageElement(value: HTMLImageElement): HTMLImageElement { return value; }
+   export function videoElement(value: HTMLVideoElement): HTMLVideoElement { return value; }
+   export function imageBitmap(value: ImageBitmap): ImageBitmap { return value; }
+   export function offscreenCanvas(value: OffscreenCanvas): OffscreenCanvas { return value; }
+   export function svgImageElement(value: SVGImageElement): SVGImageElement { return value; }
+   export function videoFrame(value: VideoFrame): VideoFrame { return value; }
    export function red(value: GPUColor): number { return value.r; }
    export function bindingResource(value: GPUBindingResource): GPUBindingResource { return value; }
    export function bindGroupDescriptor(value: GPUBindGroupDescriptor): GPUBindGroupDescriptor { return value; }
@@ -193,6 +208,14 @@ const emitted = api.emitIrModuleCpp(lowered.module, {
 }).contents;
 for (const expected of [
   '#include <flight/host_sdl/wgpu.hpp>',
+  '#include <flight/host_sdl/image.hpp>',
+  'flight::host_sdl::ImageSourceWeakPolicy',
+  'flight::host_sdl::ImageSource image_element;',
+  'flight::host_sdl::ImageSource video_element;',
+  'flight::host_sdl::ImageSource image_bitmap;',
+  'flight::host_sdl::ImageSource offscreen_canvas;',
+  'flight::host_sdl::ImageSource svg_image_element;',
+  'flight::host_sdl::ImageSource video_frame;',
   ...handleTypes.map(([_sourceName, targetName]) => `flight::host_sdl::${targetName}`),
   'flight::host_sdl::WgpuDeviceLostInfo',
   'flight::host_sdl::WgpuColor',

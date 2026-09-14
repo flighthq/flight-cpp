@@ -43,7 +43,7 @@ if (!existsSync(compilerEntry)) {
 }
 
 const api = await import(pathToFileURL(compilerEntry));
-const profileNames = ['runtime', 'headless', 'web-types', 'sdl-gl'];
+const profileNames = ['runtime', 'headless', 'web-types', 'sdl-image', 'sdl-gl'];
 const profiles = profileNames.map((name) =>
   JSON.parse(readFileSync(path.join(root, 'bindings', `${name}.json`), 'utf8')),
 );
@@ -79,6 +79,12 @@ const source = api.parseTypeScriptSource(
      preference: WebGLPowerPreference;
      objectName: GLuint;
      imageCache: WeakMap<CanvasImageSource, WebGLTexture>;
+     imageElement: HTMLImageElement;
+     videoElement: HTMLVideoElement;
+     imageBitmap: ImageBitmap;
+     offscreenCanvas: OffscreenCanvas;
+     svgImageElement: SVGImageElement;
+     videoFrame: VideoFrame;
    }
    export interface NativeGlParameters {
      maxSamples: number;
@@ -250,7 +256,14 @@ for (const expected of [
   'static_cast<flight::Array<bool>>(context.get_parameter(context.color_writemask))',
   'static_cast<flight::Array<double>>(context.get_parameter(context.scissor_box))',
   'flight::host_sdl::WebGlContextAttributes attributes;',
-  'flight::host_sdl::GlImageSourceWeakPolicy',
+  '#include <flight/host_sdl/image.hpp>',
+  'flight::host_sdl::ImageSourceWeakPolicy',
+  'flight::host_sdl::ImageSource image_element;',
+  'flight::host_sdl::ImageSource video_element;',
+  'flight::host_sdl::ImageSource image_bitmap;',
+  'flight::host_sdl::ImageSource offscreen_canvas;',
+  'flight::host_sdl::ImageSource svg_image_element;',
+  'flight::host_sdl::ImageSource video_frame;',
   'double object_name;',
 ]) {
   if (!emitted.includes(expected)) {

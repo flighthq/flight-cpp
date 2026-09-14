@@ -51,9 +51,9 @@ SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
   bazel run --config=local-posix //examples:tween_sdl_gl -- --smoke
 ```
 
-The public Bazel labels are `//:host_sdl`, `//:host_sdl_gl`, `//:host_sdl_sdk_audio`, and `//:host_sdl_wgpu`. They and
-their tests are tagged `manual`, so a core `bazel test //...` does not fetch or build SDL. CMake remains the complete
-package path for the Vulkan surface adapter.
+The public Bazel labels are `//:host_sdl`, `//:host_sdl_image`, `//:host_sdl_gl`, `//:host_sdl_sdk_audio`, and
+`//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core `bazel test //...` does not fetch or build
+SDL. CMake remains the complete package path for the Vulkan surface adapter.
 
 It animates the fifteen easing curves emitted from `examples/tween/source/tween.ts`. Rendering uses the copyable
 `GlCanvas` and `WebGl2Context` host seam exposed by `Flight::HostSdlGl`. The example calls the context's reusable
@@ -69,7 +69,7 @@ Set `-DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF` for an SDL and GL/WGPU build withou
 dependency discovery and target selection belong to CMake or Bazel, so an npm wrapper would only obscure their
 options and is not provided.
 
-The installed build exports four targets through the existing `FlightCpp` package:
+The installed build exports five primary host targets through the existing `FlightCpp` package:
 
 - `Flight::HostSdl` initializes ref-counted SDL subsystems, polls or waits for `SDL_Event`, exposes the monotonic SDL
   clock, and owns plain, OpenGL, or Vulkan windows. `InputDispatcher` converts keyboard, text/IME, mouse, wheel, and
@@ -78,9 +78,13 @@ The installed build exports four targets through the existing `FlightCpp` packag
   Flight's decoded-PCM device, buffer, and source lifecycle with live gain, equal-power pan, playback rate, bounded
   regions, and completion notification. It mixes mono or stereo Float32 sources in SDL's device callback and queues
   completions for serialized application-thread delivery.
+- `Flight::HostSdlImage` owns no graphics context. It is the shared decoded-RGBA image carrier used by GL and
+  WebGPU, with source-kind metadata and weak identity for texture caches. Native image decoders and video providers
+  populate it; neither graphics target owns decoding or frame acquisition.
 - `Flight::HostSdlGl` owns an `SDL_GLContext`, configures OpenGL or OpenGL ES attributes before window creation,
   resolves procedure addresses, controls the swap interval, and swaps the window. Its `GlCanvas` and
-  `WebGl2Context` share that owner and supply the native types named by `bindings/sdl-gl.json`. The context already
+  `WebGl2Context` share that owner and supply the native types named by `bindings/sdl-gl.json`. Image uploads consume
+  the shared carrier selected by `bindings/sdl-image.json`. The context already
   forwards the operations used by the tween and exposes the anisotropic-filter extension constants and live
   availability query required by Flight's GL runtime. Buffer, framebuffer, renderbuffer, texture, vertex-array,
   shader, program, and uniform-location handles share WebGL-style identity. Explicit deletion invalidates every
@@ -103,8 +107,8 @@ The installed build exports four targets through the existing `FlightCpp` packag
 - `Flight::HostSdlVulkan` copies the required instance extension names and owns the `VkSurfaceKHR` returned by SDL.
 - `Flight::HostSdlWgpu` owns a type-erased native WebGPU surface and typed shared WebGPU object handles through
   callbacks supplied by a Dawn or wgpu-native adapter. Handle copies and weak cache keys preserve identity, provider
-  releases run exactly once, and adapter capabilities remain value-owned metadata. It intentionally adds no WebGPU
-  implementation dependency.
+  releases run exactly once, adapter capabilities remain value-owned metadata, and external image copies use the
+  same decoded source as GL. It intentionally adds no WebGPU implementation dependency.
 
 The composed SDK sweeps also include `bindings/web-types.json`. That profile maps standard Canvas, WebGPU,
 image-smoothing, and permission string-literal domains to `flight::String`. It also supplies portable
@@ -112,7 +116,11 @@ image-smoothing, and permission string-literal domains to `flight::String`. It a
 selects no renderer or platform provider and keeps object-handle names available until a concrete backend profile
 supplies them.
 
-`bindings/sdl-wgpu.json` supplies those object handles, adapter features/limits,
+`bindings/sdl-image.json` maps the DOM image, video, bitmap, offscreen-canvas, SVG image, video-frame, GL image-source,
+and WebGPU external-copy type domains to one shared source and weak-key policy. Browser constructor values remain
+unbound until flight-compiler can lower external runtime type tests against the retained source kind.
+
+`bindings/sdl-wgpu.json` supplies the WebGPU object handles, adapter features/limits,
 device/origin/vertex/external-image/sampler descriptors, bind-group resources and layouts, buffer and texture
 transfer descriptors, iterable extents,
 shared buffer/view sources, blend and stencil pipeline values, and standard buffer, texture, shader, color-write,

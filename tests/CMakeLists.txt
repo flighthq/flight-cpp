@@ -103,6 +103,12 @@ if(TARGET Flight::HostSdlWgpu)
 endif()
 
 if(TARGET Flight::HostSdlGl)
+  set(source "${CMAKE_CURRENT_BINARY_DIR}/header_host_sdl_image_test.cpp")
+  file(GENERATE OUTPUT "${source}" CONTENT "#include <flight/host_sdl/image.hpp>\n")
+  add_library(flight_cpp_header_host_sdl_image_test OBJECT "${source}")
+  target_link_libraries(flight_cpp_header_host_sdl_image_test PRIVATE Flight::HostSdlImage)
+  flight_cpp_set_project_warnings(flight_cpp_header_host_sdl_image_test)
+
   set(source "${CMAKE_CURRENT_BINARY_DIR}/header_host_sdl_webgl_test.cpp")
   file(GENERATE OUTPUT "${source}" CONTENT "#include <flight/host_sdl/webgl.hpp>\n")
   add_library(flight_cpp_header_host_sdl_webgl_test OBJECT "${source}")

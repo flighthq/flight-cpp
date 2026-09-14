@@ -60,7 +60,6 @@
       "targetName": "flight::host_sdl::wgpu_color_write"
     },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUCopyExternalImageDestInfo", "space": "type", "targetName": "flight::host_sdl::WgpuExternalImageDestinationInfo" },
-    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUCopyExternalImageSource", "space": "type", "targetName": "flight::host_sdl::WgpuExternalImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuExternalImageSourceWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUCopyExternalImageSourceInfo", "space": "type", "targetName": "flight::host_sdl::WgpuExternalImageSourceInfo" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUDevice", "space": "type", "targetName": "flight::host_sdl::WgpuDevice", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuDeviceWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUDeviceDescriptor", "space": "type", "targetName": "flight::host_sdl::WgpuDeviceDescriptor" },

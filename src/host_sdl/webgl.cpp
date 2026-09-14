@@ -42,12 +42,6 @@ struct GlSurfaceState final {
   std::vector<std::shared_ptr<CanvasListener>> listeners;
 };
 
-struct GlImageSourceState final {
-  std::size_t width;
-  std::size_t height;
-  Uint8ClampedArray pixels;
-};
-
 SDL_FunctionPointer cached_function(GlSurfaceState& state, std::string_view name) {
   const auto existing = state.functions.find(name);
   if (existing != state.functions.end()) return existing->second;
@@ -224,40 +218,6 @@ Function gl_function(const WebGl2Context& context, std::string_view name) {
 }
 
 } // namespace
-
-GlImageSource GlImageSource::rgba8(
-    std::size_t width,
-    std::size_t height,
-    Uint8ClampedArray pixels) {
-  if (width != 0 && height > std::numeric_limits<std::size_t>::max() / width) {
-    throw std::length_error("SDL GL image dimensions exceed addressable storage");
-  }
-  const auto pixel_count = width * height;
-  if (pixel_count > std::numeric_limits<std::size_t>::max() / 4 ||
-      pixels.size() != pixel_count * 4) {
-    throw std::invalid_argument("SDL GL RGBA8 image byte count does not match its dimensions");
-  }
-  return GlImageSource(
-      std::make_shared<detail::GlImageSourceState>(
-          detail::GlImageSourceState{width, height, std::move(pixels)}));
-}
-
-std::size_t GlImageSource::width() const noexcept { return state_ ? state_->width : 0; }
-
-std::size_t GlImageSource::height() const noexcept { return state_ ? state_->height : 0; }
-
-std::span<const Uint8Clamped> GlImageSource::rgba8_pixels() const noexcept {
-  return state_ ? state_->pixels.span() : std::span<const Uint8Clamped>{};
-}
-
-std::optional<GlImageSource> GlImageSource::lock_weak(const weak_type& weak) noexcept {
-  auto state = weak.lock();
-  return state ? std::optional<GlImageSource>(GlImageSource(std::move(state))) : std::nullopt;
-}
-
-std::size_t GlImageSourceWeakPolicy::hash(identity_type identity) noexcept {
-  return std::hash<const void*>{}(identity);
-}
 
 GlParameterValue::operator double() const {
   const auto* value = std::get_if<double>(&value_);

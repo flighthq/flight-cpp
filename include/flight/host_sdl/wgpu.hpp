@@ -13,6 +13,7 @@
 #include <flight/array_buffer.hpp>
 #include <flight/array_buffer_view.hpp>
 #include <flight/host_sdl/export.hpp>
+#include <flight/host_sdl/image.hpp>
 #include <flight/host_sdl/window.hpp>
 #include <flight/array.hpp>
 #include <flight/iterable.hpp>
@@ -120,7 +121,6 @@ struct WgpuCanvasContextTag;
 struct WgpuCommandBufferTag;
 struct WgpuCommandEncoderTag;
 struct WgpuDeviceTag;
-struct WgpuExternalImageSourceTag;
 struct WgpuExternalTextureTag;
 struct WgpuPipelineLayoutTag;
 struct WgpuQueueTag;
@@ -139,7 +139,7 @@ using WgpuCanvasContext = WgpuObject<WgpuCanvasContextTag>;
 using WgpuCommandBuffer = WgpuObject<WgpuCommandBufferTag>;
 using WgpuCommandEncoder = WgpuObject<WgpuCommandEncoderTag>;
 using WgpuDevice = WgpuObject<WgpuDeviceTag>;
-using WgpuExternalImageSource = WgpuObject<WgpuExternalImageSourceTag>;
+using WgpuExternalImageSource = ImageSource;
 using WgpuExternalTexture = WgpuObject<WgpuExternalTextureTag>;
 using WgpuPipelineLayout = WgpuObject<WgpuPipelineLayoutTag>;
 using WgpuQueue = WgpuObject<WgpuQueueTag>;
@@ -199,7 +199,7 @@ using WgpuCanvasContextWeakPolicy = WgpuObjectWeakPolicy<WgpuCanvasContextTag>;
 using WgpuCommandBufferWeakPolicy = WgpuObjectWeakPolicy<WgpuCommandBufferTag>;
 using WgpuCommandEncoderWeakPolicy = WgpuObjectWeakPolicy<WgpuCommandEncoderTag>;
 using WgpuDeviceWeakPolicy = WgpuObjectWeakPolicy<WgpuDeviceTag>;
-using WgpuExternalImageSourceWeakPolicy = WgpuObjectWeakPolicy<WgpuExternalImageSourceTag>;
+using WgpuExternalImageSourceWeakPolicy = ImageSourceWeakPolicy;
 using WgpuExternalTextureWeakPolicy = WgpuObjectWeakPolicy<WgpuExternalTextureTag>;
 using WgpuPipelineLayoutWeakPolicy = WgpuObjectWeakPolicy<WgpuPipelineLayoutTag>;
 using WgpuQueueWeakPolicy = WgpuObjectWeakPolicy<WgpuQueueTag>;

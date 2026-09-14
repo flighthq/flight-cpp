@@ -43,7 +43,7 @@ if (!existsSync(compilerEntry)) {
 }
 
 const api = await import(pathToFileURL(compilerEntry));
-const profileNames = ['runtime', 'headless', 'web-types', 'sdl-gl', 'sdl-app'];
+const profileNames = ['runtime', 'headless', 'web-types', 'sdl-image', 'sdl-gl', 'sdl-app'];
 const profiles = profileNames.map((name) =>
   JSON.parse(readFileSync(path.join(root, 'bindings', `${name}.json`), 'utf8')),
 );
