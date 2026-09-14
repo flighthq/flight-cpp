@@ -12,6 +12,7 @@
 #include <utility>
 #include <vector>
 
+#include <flight/callable.hpp>
 #include <flight/string.hpp>
 
 namespace flight {
@@ -56,7 +57,7 @@ namespace detail {
 
 struct AbortListener final {
   const void* source_identity;
-  std::function<void()> callback;
+  Function<void()> callback;
   bool once;
 };
 
@@ -141,26 +142,39 @@ class AbortSignal final {
       const String& type,
       const std::function<void()>& callback,
       AbortEventListenerOptions options = {}) const {
-    if (type != String("abort")) return;
-    const std::scoped_lock lock(state_->mutex);
-    if (state_->aborted) return;
-    const auto identity = static_cast<const void*>(std::addressof(callback));
-    if (std::ranges::any_of(state_->listeners, [&](const detail::AbortListener& listener) {
-          return listener.source_identity == identity;
-        })) {
-      return;
-    }
-    state_->listeners.push_back(
-        detail::AbortListener{identity, callback, options.once});
+    add_event_listener_impl(
+        type,
+        Function<void()>(callback),
+        std::addressof(callback),
+        options);
+  }
+
+  void add_event_listener(
+      const String& type,
+      Function<void()> callback,
+      AbortEventListenerOptions options = {}) const {
+    const auto identity = callback.identity();
+    add_event_listener_impl(type, std::move(callback), identity, options);
+  }
+
+  template <typename Implementation>
+    requires(
+        !std::same_as<std::remove_cvref_t<Implementation>, Function<void()>> &&
+        !std::same_as<std::remove_cvref_t<Implementation>, std::function<void()>> &&
+        std::invocable<std::remove_reference_t<Implementation>&>)
+  void add_event_listener(
+      const String& type,
+      Implementation&& callback,
+      AbortEventListenerOptions options = {}) const {
+    add_event_listener(type, Function<void()>(std::forward<Implementation>(callback)), options);
   }
 
   void remove_event_listener(const String& type, const std::function<void()>& callback) const {
-    if (type != String("abort")) return;
-    const auto identity = static_cast<const void*>(std::addressof(callback));
-    const std::scoped_lock lock(state_->mutex);
-    std::erase_if(state_->listeners, [&](const detail::AbortListener& listener) {
-      return listener.source_identity == identity;
-    });
+    remove_event_listener_impl(type, std::addressof(callback));
+  }
+
+  void remove_event_listener(const String& type, const Function<void()>& callback) const {
+    remove_event_listener_impl(type, callback.identity());
   }
 
   void throw_if_aborted() const {
@@ -182,8 +196,33 @@ class AbortSignal final {
   explicit AbortSignal(std::shared_ptr<detail::AbortState> state) noexcept
       : state_(std::move(state)), aborted(state_), reason(state_) {}
 
+  void add_event_listener_impl(
+      const String& type,
+      Function<void()> callback,
+      const void* identity,
+      AbortEventListenerOptions options) const {
+    if (type != String("abort")) return;
+    const std::scoped_lock lock(state_->mutex);
+    if (state_->aborted) return;
+    if (std::ranges::any_of(state_->listeners, [&](const detail::AbortListener& listener) {
+          return listener.source_identity == identity;
+        })) {
+      return;
+    }
+    state_->listeners.push_back(
+        detail::AbortListener{identity, std::move(callback), options.once});
+  }
+
+  void remove_event_listener_impl(const String& type, const void* identity) const {
+    if (type != String("abort")) return;
+    const std::scoped_lock lock(state_->mutex);
+    std::erase_if(state_->listeners, [&](const detail::AbortListener& listener) {
+      return listener.source_identity == identity;
+    });
+  }
+
   void abort(AbortReason reason_value) const {
-    std::vector<std::function<void()>> callbacks;
+    std::vector<Function<void()>> callbacks;
     {
       const std::scoped_lock lock(state_->mutex);
       if (state_->aborted) return;

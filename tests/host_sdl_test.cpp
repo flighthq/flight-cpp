@@ -212,6 +212,31 @@ int main() {
   element.click();
   expect(click_calls == 1, "SDL document shell lost a registered listener");
 
+  int removed_click_calls = 0;
+  flight::Function<void()> removable_click = [&] { ++removed_click_calls; };
+  element.add_event_listener(flight::String("click"), removable_click);
+  element.add_event_listener(flight::String("click"), removable_click);
+  const auto captured_click = removable_click;
+  removable_click = nullptr;
+  element.remove_event_listener(flight::String("click"), captured_click);
+  element.click();
+  expect(
+      removed_click_calls == 0,
+      "SDL element did not deduplicate and remove a copied identity-preserving listener");
+
+  int captured_click_calls = 0;
+  const flight::Function<void()> captured_listener = [&] { ++captured_click_calls; };
+  flight::host_sdl::EventListenerOptions capture_options;
+  capture_options.capture = true;
+  element.add_event_listener(flight::String("click"), captured_listener, capture_options);
+  element.remove_event_listener(flight::String("click"), captured_listener);
+  element.click();
+  element.remove_event_listener(flight::String("click"), captured_listener, true);
+  element.click();
+  expect(
+      captured_click_calls == 1,
+      "SDL listener removal did not distinguish the DOM capture flag");
+
   auto created_panel = flight::host_sdl::document.create_element(flight::String("div"));
   auto created_label = flight::host_sdl::document.create_element(flight::String("span"));
   created_panel.class_name = flight::String("controls");
@@ -265,11 +290,38 @@ int main() {
   flight::host_sdl::document.set_hidden(false);
   flight::host_sdl::document.set_focus(true);
 
+  int removed_visibility_calls = 0;
+  flight::Function<void()> visibility_listener = [&] { ++removed_visibility_calls; };
+  flight::host_sdl::document.add_event_listener(
+      flight::String("visibilitychange"), visibility_listener);
+  const auto captured_visibility_listener = visibility_listener;
+  visibility_listener = nullptr;
+  flight::host_sdl::document.remove_event_listener(
+      flight::String("visibilitychange"), captured_visibility_listener);
+  flight::host_sdl::document.set_hidden(true);
+  expect(
+      removed_visibility_calls == 0,
+      "SDL document retained a copied identity-preserving listener after removal");
+  flight::host_sdl::document.set_hidden(false);
+
   int window_lifecycle_calls = 0;
   flight::host_sdl::window.add_event_listener(
       flight::String("pagehide"), [&] { ++window_lifecycle_calls; });
   flight::host_sdl::window.emit(flight::String("pagehide"));
   expect(window_lifecycle_calls == 1, "SDL window shell lost a lifecycle listener");
+
+  int removed_window_calls = 0;
+  flight::Function<void()> removable_window = [&] { ++removed_window_calls; };
+  flight::host_sdl::window.add_event_listener(
+      flight::String("pagehide"), removable_window);
+  const auto captured_window = removable_window;
+  removable_window = nullptr;
+  flight::host_sdl::window.remove_event_listener(
+      flight::String("pagehide"), captured_window);
+  flight::host_sdl::window.emit(flight::String("pagehide"));
+  expect(
+      removed_window_calls == 0,
+      "SDL window retained a copied identity-preserving listener after removal");
 
   int window_key_calls = 0;
   flight::host_sdl::window.add_event_listener(
@@ -282,6 +334,20 @@ int main() {
   synthetic_key.key = flight::String("Enter");
   flight::host_sdl::window.emit_keyboard(flight::String("keydown"), synthetic_key);
   expect(window_key_calls == 1, "SDL window shell did not deliver a keyboard event");
+
+  int removed_window_key_calls = 0;
+  flight::Function<void(flight::host_sdl::InputKeyboardData)> removable_window_key =
+      [&](flight::host_sdl::InputKeyboardData) { ++removed_window_key_calls; };
+  flight::host_sdl::window.add_event_listener(
+      flight::String("keydown"), removable_window_key);
+  const auto captured_window_key = removable_window_key;
+  removable_window_key = nullptr;
+  flight::host_sdl::window.remove_event_listener(
+      flight::String("keydown"), captured_window_key);
+  flight::host_sdl::window.emit_keyboard(flight::String("keydown"), synthetic_key);
+  expect(
+      removed_window_key_calls == 0,
+      "SDL window retained a copied identity-preserving keyboard listener after removal");
 
   const flight::host_sdl::GlAnisotropyExtension anisotropy;
   expect(anisotropy.texture_max_anisotropy_ext == 0x84FE,

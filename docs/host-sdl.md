@@ -187,9 +187,11 @@ thread; no background timer thread can race Flight state.
 `pump_animation_frame(timestamp_ms)` runs the callbacks that were pending when that frame began. Callbacks scheduled
 by another frame callback remain queued for the next turn, matching the browser ordering used by the examples.
 Its SDL window-event path also keeps `document.hidden` and `document.hasFocus()` current and emits
-`visibilitychange`, `pagehide`, `pageshow`, `focus`, and `blur`. Exact `removeEventListener` remains gated on a
-compiler callable representation whose copies preserve JavaScript function identity; plain `std::function` copies
-cannot identify the callback captured by Flight's returned unsubscribe closure.
+`visibilitychange`, `pagehide`, `pageshow`, `focus`, and `blur`. The event stores accept
+`flight::Function<Signature>`, deduplicate its copy-stable identity with the event type and capture flag, and expose
+matching removal operations. The binding remains gated on flight-compiler electing that carrier for JavaScript
+function values; plain `std::function` copies cannot identify the callback captured by Flight's returned unsubscribe
+closure.
 
 `SdlAudioDeviceBackend::pump()` delivers each completed source callback on the pumping thread. Call it once per host
 turn, just like `Host::pump_timers()`. Destroying a source suppresses its pending completion, invalid handles follow

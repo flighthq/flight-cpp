@@ -14,6 +14,7 @@
 #include <vector>
 
 #include <flight/array.hpp>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/export.hpp>
 #include <flight/host_sdl/input.hpp>
 #include <flight/host_sdl/web_platform_types.hpp>
@@ -28,7 +29,9 @@ class EventListenerCollection final {
   struct Listener final {
     std::uint64_t id;
     String type;
-    std::function<void(Event)> callback;
+    const void* source_identity;
+    Function<void(Event)> callback;
+    bool capture;
     bool once;
     std::function<void()> abort_callback;
   };
@@ -44,21 +47,32 @@ class EventListenerCollection final {
 
   void add(
       String type,
-      std::function<void(Event)> callback,
-      const EventListenerOptions& options = {}) {
+      Function<void(Event)> callback,
+      const EventListenerOptions& options = {},
+      const void* source_identity = nullptr) {
     if (!callback) throw std::invalid_argument("DOM event callback cannot be empty");
     if (options.signal && static_cast<bool>(options.signal->aborted)) return;
+    if (source_identity == nullptr) source_identity = callback.identity();
+    const bool capture = options.capture.value_or(false);
 
     std::shared_ptr<Listener> listener;
     {
       const std::scoped_lock lock(state_->mutex);
+      if (std::ranges::any_of(state_->listeners, [&](const auto& candidate) {
+            return candidate->type == type && candidate->source_identity == source_identity &&
+                   candidate->capture == capture;
+          })) {
+        return;
+      }
       if (state_->next_id == std::numeric_limits<std::uint64_t>::max()) {
         throw std::length_error("DOM event listener identity space is exhausted");
       }
       listener = std::make_shared<Listener>(Listener{
           .id = state_->next_id++,
           .type = std::move(type),
+          .source_identity = source_identity,
           .callback = std::move(callback),
+          .capture = capture,
           .once = options.once.value_or(false),
           .abort_callback = {},
       });
@@ -81,6 +95,18 @@ class EventListenerCollection final {
     if (static_cast<bool>(options.signal->aborted)) listener->abort_callback();
   }
 
+  void remove(
+      const String& type,
+      const void* source_identity,
+      bool capture = false) const {
+    if (source_identity == nullptr) return;
+    const std::scoped_lock lock(state_->mutex);
+    std::erase_if(state_->listeners, [&](const auto& candidate) {
+      return candidate->type == type && candidate->source_identity == source_identity &&
+             candidate->capture == capture;
+    });
+  }
+
   void emit(const String& type, Event event) const {
     std::vector<std::uint64_t> dispatch;
     {
@@ -92,7 +118,7 @@ class EventListenerCollection final {
     }
 
     for (const auto id : dispatch) {
-      std::function<void(Event)> callback;
+      Function<void(Event)> callback;
       {
         const std::scoped_lock lock(state_->mutex);
         const auto found = std::ranges::find_if(state_->listeners, [id](const auto& listener) {
@@ -142,23 +168,65 @@ class FLIGHT_HOST_SDL_GL_API DomElement {
 
   void add_event_listener(
       const String& type,
-      std::function<void()> callback,
+      Function<void()> callback,
       const EventListenerOptions& options = {});
+  void remove_event_listener(
+      const String& type,
+      const Function<void()>& callback,
+      bool capture = false);
+  void remove_event_listener(
+      const String& type,
+      const Function<void()>& callback,
+      const EventListenerOptions& options) {
+    remove_event_listener(type, callback, options.capture.value_or(false));
+  }
+
+  template <typename Event>
+  void add_event_listener(
+      const String& type,
+      Function<void(Event)> callback,
+      const EventListenerOptions& options) {
+    const auto source_identity = callback.identity();
+    listeners_.add(
+        type,
+        Function<void(std::nullptr_t)>(
+            [callback = std::move(callback)](std::nullptr_t) mutable { callback(Event{}); }),
+        options,
+        source_identity);
+  }
+
+  template <typename Event>
+  void add_event_listener(const String& type, Function<void(Event)> callback) {
+    add_event_listener(type, std::move(callback), {});
+  }
 
   template <typename Event>
   void add_event_listener(
       const String& type,
       std::function<void(Event)> callback,
       const EventListenerOptions& options) {
-    listeners_.add(
-        type,
-        [callback = std::move(callback)](std::nullptr_t) mutable { callback(Event{}); },
-        options);
+    add_event_listener(type, Function<void(Event)>(std::move(callback)), options);
   }
 
   template <typename Event>
   void add_event_listener(const String& type, std::function<void(Event)> callback) {
-    add_event_listener(type, std::move(callback), {});
+    add_event_listener(type, Function<void(Event)>(std::move(callback)), {});
+  }
+
+  template <typename Event>
+  void remove_event_listener(
+      const String& type,
+      const Function<void(Event)>& callback,
+      bool capture = false) {
+    listeners_.remove(type, callback.identity(), capture);
+  }
+
+  template <typename Event>
+  void remove_event_listener(
+      const String& type,
+      const Function<void(Event)>& callback,
+      const EventListenerOptions& options) {
+    remove_event_listener(type, callback, options.capture.value_or(false));
   }
 
   template <typename Callback, typename Options>
@@ -166,7 +234,7 @@ class FLIGHT_HOST_SDL_GL_API DomElement {
   void add_event_listener(const String& type, Callback callback, const Options& options) {
     add_event_listener(
         type,
-        std::function<void()>(std::move(callback)),
+        Function<void()>(std::move(callback)),
         static_cast<const EventListenerOptions&>(options));
   }
 
@@ -231,8 +299,18 @@ class FLIGHT_HOST_SDL_GL_API Document final {
   [[nodiscard]] bool has_focus() const noexcept;
   void add_event_listener(
       const String& type,
-      std::function<void()> callback,
+      Function<void()> callback,
       const EventListenerOptions& options = {});
+  void remove_event_listener(
+      const String& type,
+      const Function<void()>& callback,
+      bool capture = false);
+  void remove_event_listener(
+      const String& type,
+      const Function<void()>& callback,
+      const EventListenerOptions& options) {
+    remove_event_listener(type, callback, options.capture.value_or(false));
+  }
   void emit(const String& type);
   void set_focus(bool focused) noexcept;
   void set_hidden(bool next_hidden);
@@ -249,12 +327,32 @@ class FLIGHT_HOST_SDL_GL_API WindowFacade final {
 
   void add_event_listener(
       const String& type,
-      std::function<void()> callback,
+      Function<void()> callback,
       const EventListenerOptions& options = {});
   void add_event_listener(
       const String& type,
-      std::function<void(InputKeyboardData)> callback,
+      Function<void(InputKeyboardData)> callback,
       const EventListenerOptions& options = {});
+  void remove_event_listener(
+      const String& type,
+      const Function<void()>& callback,
+      bool capture = false);
+  void remove_event_listener(
+      const String& type,
+      const Function<void()>& callback,
+      const EventListenerOptions& options) {
+    remove_event_listener(type, callback, options.capture.value_or(false));
+  }
+  void remove_event_listener(
+      const String& type,
+      const Function<void(InputKeyboardData)>& callback,
+      bool capture = false);
+  void remove_event_listener(
+      const String& type,
+      const Function<void(InputKeyboardData)>& callback,
+      const EventListenerOptions& options) {
+    remove_event_listener(type, callback, options.capture.value_or(false));
+  }
   void emit(const String& type) const;
   void emit_keyboard(const String& type, InputKeyboardData event) const;
   void clear_event_listeners();

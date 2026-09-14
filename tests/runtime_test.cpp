@@ -754,6 +754,18 @@ void test_new_runtime_services() {
   removed_abort_controller.abort();
   check(removed_abort_calls == 0, "AbortSignal removes a registered listener by callable identity");
 
+  flight::AbortController identified_abort_controller;
+  int identified_abort_calls = 0;
+  flight::Function<void()> identified_abort_listener = [&] { ++identified_abort_calls; };
+  identified_abort_controller.signal.add_event_listener("abort", identified_abort_listener);
+  const auto captured_abort_listener = identified_abort_listener;
+  identified_abort_listener = nullptr;
+  identified_abort_controller.signal.remove_event_listener("abort", captured_abort_listener);
+  identified_abort_controller.abort();
+  check(
+      identified_abort_calls == 0,
+      "AbortSignal removes a copied identity-preserving Function listener");
+
   const auto json = flight::Json::stringify(flight::Array<double>{1.0, 2.0}, nullptr, 2.0);
   check(json == flight::String("[\n  1,\n  2\n]"),
         "JSON stringification covers semantic arrays and bounded indentation");
@@ -852,6 +864,46 @@ void test_new_runtime_services() {
   static_assert(std::same_as<
                 flight::callable_signature_v1<std::function<void(double)>>::parameter_types,
                 std::tuple<double>>);
+
+  int identified_calls = 0;
+  flight::Function<void(double)>::weak_type weak_function;
+  {
+    flight::Function<void(double)> identified = [&](double value) {
+      identified_calls += static_cast<int>(value);
+    };
+    weak_function = identified.weaken();
+    auto copied = identified;
+    identified = nullptr;
+    const auto recovered = flight::Function<void(double)>::lock_weak(weak_function);
+    check(
+        recovered.has_value() && copied == *recovered &&
+            copied.identity() == recovered->identity(),
+        "Function copies and weak recovery preserve callable identity");
+    copied(2.0);
+    (*recovered)(3.0);
+    check(identified_calls == 5, "Function copies invoke one shared callable state");
+
+    flight::WeakMap<flight::Function<void(double)>, flight::String> function_metadata;
+    function_metadata.set(copied, flight::String("listener"));
+    check(
+        function_metadata.get(*recovered) == std::optional<flight::String>("listener"),
+        "Function supplies the generic weak-key identity contract");
+  }
+  check(weak_function.expired(), "Function weak identity does not retain callable state");
+  const auto first_function = flight::Function<void()>([] {});
+  const auto second_function = flight::Function<void()>([] {});
+  check(first_function != second_function, "distinct Function constructions retain distinct identities");
+
+  int identified_ignored_calls = 0;
+  const auto identified_ignored_arguments =
+      flight::bind_callable_v1<flight::Function<void(double)>>([&] { ++identified_ignored_calls; });
+  identified_ignored_arguments(4.0);
+  check(
+      identified_ignored_calls == 1 &&
+          flight::callable_signature_v1<flight::Function<void(double)>>::accepts<double>,
+      "identity-preserving callable ABI binds source functions that ignore emitted arguments");
+  static_assert(!flight::callable_signature_v1<flight::Function<void(double)>>::accepts<int>);
+  static_assert(flight::callable_signature_v1<flight::Function<void(double)>>::arity == 1);
 
   auto facet_source = flight::make_ref<TestReference>(TestReference{.value = 7});
   auto conditional = flight::assume_conditional_facets<TestImageCapabilities>(facet_source);

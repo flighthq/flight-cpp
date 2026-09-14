@@ -25,12 +25,22 @@ WindowFacade window;
 
 void DomElement::add_event_listener(
     const String& type,
-    std::function<void()> callback,
+    Function<void()> callback,
     const EventListenerOptions& options) {
+  const auto source_identity = callback.identity();
   listeners_.add(
       type,
-      [callback = std::move(callback)](std::nullptr_t) mutable { callback(); },
-      options);
+      Function<void(std::nullptr_t)>(
+          [callback = std::move(callback)](std::nullptr_t) mutable { callback(); }),
+      options,
+      source_identity);
+}
+
+void DomElement::remove_event_listener(
+    const String& type,
+    const Function<void()>& callback,
+    bool capture) {
+  listeners_.remove(type, callback.identity(), capture);
 }
 
 ClientRect DomElement::get_bounding_client_rect() const noexcept {
@@ -126,12 +136,22 @@ bool Document::has_focus() const noexcept { return focused_; }
 
 void Document::add_event_listener(
     const String& type,
-    std::function<void()> callback,
+    Function<void()> callback,
     const EventListenerOptions& options) {
+  const auto source_identity = callback.identity();
   listeners_.add(
       type,
-      [callback = std::move(callback)](std::nullptr_t) mutable { callback(); },
-      options);
+      Function<void(std::nullptr_t)>(
+          [callback = std::move(callback)](std::nullptr_t) mutable { callback(); }),
+      options,
+      source_identity);
+}
+
+void Document::remove_event_listener(
+    const String& type,
+    const Function<void()>& callback,
+    bool capture) {
+  listeners_.remove(type, callback.identity(), capture);
 }
 
 void Document::emit(const String& emitted_type) {
@@ -148,19 +168,36 @@ void Document::set_hidden(bool next_hidden) {
 
 void WindowFacade::add_event_listener(
     const String& type,
-    std::function<void()> callback,
+    Function<void()> callback,
     const EventListenerOptions& options) {
+  const auto source_identity = callback.identity();
   listeners_.add(
       type,
-      [callback = std::move(callback)](std::nullptr_t) mutable { callback(); },
-      options);
+      Function<void(std::nullptr_t)>(
+          [callback = std::move(callback)](std::nullptr_t) mutable { callback(); }),
+      options,
+      source_identity);
 }
 
 void WindowFacade::add_event_listener(
     const String& type,
-    std::function<void(InputKeyboardData)> callback,
+    Function<void(InputKeyboardData)> callback,
     const EventListenerOptions& options) {
   keyboard_listeners_.add(type, std::move(callback), options);
+}
+
+void WindowFacade::remove_event_listener(
+    const String& type,
+    const Function<void()>& callback,
+    bool capture) {
+  listeners_.remove(type, callback.identity(), capture);
+}
+
+void WindowFacade::remove_event_listener(
+    const String& type,
+    const Function<void(InputKeyboardData)>& callback,
+    bool capture) {
+  keyboard_listeners_.remove(type, callback.identity(), capture);
 }
 
 void WindowFacade::emit(const String& emitted_type) const {

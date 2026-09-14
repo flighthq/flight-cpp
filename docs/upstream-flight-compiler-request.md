@@ -130,9 +130,11 @@ base-entry array while its native navigation query returns the narrower navigati
 compiler contracts remain before that module can use them faithfully. Generated object-valued
 `event.detail` access must dereference `Ref<T>` rather than emit `event.detail.member`, and copied callable values must
 retain source identity so `removeEventListener(type, listener)` can remove the registration added before the listener
-is captured by the returned unsubscribe closure. A diagnostic removal mapping moves `lifecycle.ts` to the separate
-"WeakMap value requires a proven C++ representation" refusal, confirming that these are the remaining event-shell
-edges rather than missing SDL behavior.
+is captured by the returned unsubscribe closure. Downstream now provides `flight::Function<Signature>`, whose copies
+share a weakly recoverable identity, and the SDL element/document/window stores deduplicate and remove it using the
+DOM type/callback/capture key. flight-compiler must emit that carrier for JavaScript function values; the maintained
+profile cannot bind removal while it still emits `std::function`. A diagnostic removal mapping moves `lifecycle.ts`
+to the separate "WeakMap value requires a proven C++ representation" refusal, confirming the next boundary.
 
 Several direct ambient-member refusals now have exact downstream targets and need only compiler election:
 
@@ -308,8 +310,8 @@ five affected example apps advance to contextual-union or `typeOf` failures; til
 `packages/input/src/inputManager.ts` consequently reports only `EventTarget[type]`. A focused compiler probe with an
 otherwise valid `EventTarget` binding fails with `flight-cpp type position retains unresolved auto placeholder:
 std::function<auto` for `addEventListener` and `removeEventListener`. The compiler needs to materialize the listener's
-event parameter and elect a callable identity representation that lets the host remove the same listener without
-comparing `std::function` targets.
+event parameter and elect the downstream `flight::Function<Signature>` carrier. Its copies preserve identity, and
+the SDL host already accepts it for add/remove operations with the DOM capture-key rule.
 
 The provider-neutral `flighthq/flight-cpp/sdl-wgpu/1` profile now supplies typed shared identity for 18 WebGPU
 object domains, exact adapter capability metadata, standard usage flags, and weak-key policies. The composed
