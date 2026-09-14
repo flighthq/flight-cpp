@@ -39,7 +39,7 @@ SDL_VIDEODRIVER=offscreen bazel run --config=local-posix //examples:tween_sdl_gl
 ```
 
 The SDL package also implements Flight's decoded-PCM audio-device and cursor contracts. Its build-tree preview
-adapters populate the exact generated audio-device, text-clipboard, cursor, device, platform, screen-query, soft-keyboard, application-visibility, and fullscreen records. See the
+adapters populate the exact generated audio-device, text-clipboard, cursor, device, haptics, platform, screen-query, soft-keyboard, application-visibility, and fullscreen records. See the
 [SDL host package guide](docs/host-sdl.md) for dependencies, exported targets, ownership, callback pumping, and the
 remaining generated SDK wiring lane.
 

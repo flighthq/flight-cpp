@@ -254,6 +254,10 @@ desktop-display dimensions and pixel ratio, per-window safe-area geometry, CPU c
 platform identity; unavailable identity and environment fields retain the upstream sentinel contract. This backend
 needs no further compiler work and resolves its SDL window id on each dynamic read.
 
+`Flight::HostSdlSdkHaptics` populates the emitted `HapticsBackend` without compiler changes. It uses SDL gamepad
+rumble for the continuous and named feedback operations, dynamically tracks a capable connected device, and leaves
+multi-step pattern/waveform capability absent because SDL has no corresponding timed primitive.
+
 `Flight::HostSdlSdkScreen` populates the dependency-closed `ScreenQueryBackend`, `ScreenDetailsBackend`, and
 `ScreenChangeBackend` without compiler changes. SDL provides native multi-display enumeration, permission-free
 access, and display events. The adapter caches the prior display snapshots, constructs the generated readonly

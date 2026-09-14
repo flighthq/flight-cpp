@@ -7,6 +7,7 @@
 #include <flight/host_sdl/sdk_clipboard.hpp>
 #include <flight/host_sdl/sdk_cursor.hpp>
 #include <flight/host_sdl/sdk_device.hpp>
+#include <flight/host_sdl/sdk_haptics.hpp>
 #include <flight/host_sdl/sdk_keyboard.hpp>
 #include <flight/host_sdl/sdk_platform.hpp>
 #include <flight/host_sdl/sdk_screen.hpp>
@@ -23,6 +24,7 @@
 #include <flight/types/cursor.hpp>
 #include <flight/types/device.hpp>
 #include <flight/types/fullscreen_backend.hpp>
+#include <flight/types/haptics.hpp>
 #include <flight/types/input_target_backend.hpp>
 #include <flight/types/keyboard.hpp>
 #include <flight/types/platform.hpp>
@@ -449,6 +451,35 @@ int main() {
   expect(
       !platform_backend.get_info(nullptr),
       "SDL SDK platform manufactured output for a null caller-owned record");
+
+  flight::host_sdl::SdkHapticsBackend sdk_haptics;
+  const auto sdk_haptics_copy = sdk_haptics;
+  auto haptics_backend = sdk_haptics.backend();
+  auto haptics_capabilities = flight::make_ref<flight::types::HapticsCapabilities>();
+  expect(
+      haptics_backend.capabilities(haptics_capabilities) == haptics_capabilities,
+      "SDL SDK haptics replaced its caller-owned capabilities output");
+  const bool haptics_supported = haptics_backend.is_supported();
+  expect(
+      haptics_capabilities->supported == haptics_supported &&
+          haptics_capabilities->amplitude_control == haptics_supported &&
+          haptics_capabilities->intensity == haptics_supported &&
+          !haptics_capabilities->custom_events && !haptics_capabilities->patterns &&
+          sdk_haptics_copy.backend().is_supported() == haptics_supported,
+      "SDL SDK haptics capabilities disagree with its selected rumble device");
+  expect(
+      haptics_backend.prepare.has_value() &&
+          !haptics_backend.vibrate_pattern(flight::Array<double>{10.0, 10.0}) &&
+          !haptics_backend.vibrate_waveform.has_value() && !haptics_backend.capabilities(nullptr),
+      "SDL SDK haptics advertised an unsupported waveform or null output");
+  (*haptics_backend.prepare)();
+  if (!haptics_supported) {
+    expect(
+        !haptics_backend.cancel() && !haptics_backend.impact(flight::String("light"), 1.0) &&
+            !haptics_backend.notification(flight::String("success")) &&
+            !haptics_backend.selection() && !haptics_backend.vibrate(10.0),
+        "SDL SDK haptics accepted an operation without a rumble device");
+  }
 
   flight::host_sdl::SdkScreenBackend sdk_screen;
   auto screen_query = sdk_screen.query_backend();

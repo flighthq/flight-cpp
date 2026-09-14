@@ -53,7 +53,7 @@ SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
 ```
 
 The public Bazel labels are `//:host_sdl`, `//:host_sdl_image`, `//:host_sdl_gl`, `//:host_sdl_sdk_audio`,
-`//:host_sdl_sdk_clipboard`, `//:host_sdl_sdk_cursor`, `//:host_sdl_sdk_device`, `//:host_sdl_sdk_keyboard`, `//:host_sdl_sdk_platform`, `//:host_sdl_sdk_screen`, `//:host_sdl_sdk_window`, and `//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core
+`//:host_sdl_sdk_clipboard`, `//:host_sdl_sdk_cursor`, `//:host_sdl_sdk_device`, `//:host_sdl_sdk_haptics`, `//:host_sdl_sdk_keyboard`, `//:host_sdl_sdk_platform`, `//:host_sdl_sdk_screen`, `//:host_sdl_sdk_window`, and `//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core
 `bazel test //...` does not fetch or build SDL. CMake remains the complete package path for the Vulkan surface
 adapter.
 
@@ -216,6 +216,12 @@ area, native architecture, logical CPU count, configured RAM, and canonical plat
 available memory, physical DPI, OS version, and hardware/product details at Flight's documented sentinels because
 SDL does not expose them. Display and safe-area reads resolve the SDL window id each time and return sentinels after
 the native window is destroyed.
+
+`Flight::HostSdlSdkHaptics` and Bazel `//:host_sdl_sdk_haptics` populate the committed generated `HapticsBackend`.
+It selects the first connected SDL gamepad whose properties report rumble support, owns the opened reference, and
+rediscovers a device after disconnection. Continuous vibration, intensity-scaled impacts, notifications, selection,
+prepare, and cancel map to SDL rumble. SDL has no timed multi-step rumble call, so capabilities report patterns and
+custom waveforms unavailable and those operations fail without collapsing their timing into one buzz.
 
 `Flight::HostSdlSdkPlatform` and Bazel `//:host_sdl_sdk_platform` populate the committed generated
 `PlatformBackend`. It writes into Flight's caller-owned `PlatformInfo`, using SDL for the OS name, preferred locale,

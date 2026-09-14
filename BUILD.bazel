@@ -189,6 +189,18 @@ cc_library(
 )
 
 cc_library(
+    name = "host_sdl_sdk_haptics",
+    srcs = ["src/host_sdl/sdk_haptics.cpp"],
+    hdrs = ["include/flight/host_sdl/sdk_haptics.hpp"],
+    strip_include_prefix = "include",
+    tags = ["manual"],
+    deps = [
+        ":host_sdl",
+        ":sdk_preview",
+    ],
+)
+
+cc_library(
     name = "host_sdl_sdk_keyboard",
     srcs = ["src/host_sdl/sdk_keyboard.cpp"],
     hdrs = ["include/flight/host_sdl/sdk_keyboard.hpp"],

@@ -170,6 +170,21 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
   )
   flight_cpp_set_project_warnings(flight_host_sdl_sdk_device)
 
+  add_library(flight_host_sdl_sdk_haptics src/host_sdl/sdk_haptics.cpp)
+  add_library(Flight::HostSdlSdkHaptics ALIAS flight_host_sdl_sdk_haptics)
+  set_target_properties(
+    flight_host_sdl_sdk_haptics
+    PROPERTIES
+      POSITION_INDEPENDENT_CODE ON
+      SOVERSION "${FLIGHT_CPP_ABI_VERSION}"
+      VERSION "${PROJECT_VERSION}"
+  )
+  target_link_libraries(
+    flight_host_sdl_sdk_haptics
+    PUBLIC Flight::HostSdl Flight::SdkPreview
+  )
+  flight_cpp_set_project_warnings(flight_host_sdl_sdk_haptics)
+
   add_library(flight_host_sdl_sdk_keyboard src/host_sdl/sdk_keyboard.cpp)
   add_library(Flight::HostSdlSdkKeyboard ALIAS flight_host_sdl_sdk_keyboard)
   set_target_properties(
@@ -323,6 +338,11 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
       PUBLIC FLIGHT_HOST_SDL_SDK_DEVICE_SHARED
     )
     target_compile_definitions(
+      flight_host_sdl_sdk_haptics
+      PRIVATE FLIGHT_HOST_SDL_SDK_HAPTICS_EXPORTS
+      PUBLIC FLIGHT_HOST_SDL_SDK_HAPTICS_SHARED
+    )
+    target_compile_definitions(
       flight_host_sdl_sdk_keyboard
       PRIVATE FLIGHT_HOST_SDL_SDK_KEYBOARD_EXPORTS
       PUBLIC FLIGHT_HOST_SDL_SDK_KEYBOARD_SHARED
@@ -378,6 +398,7 @@ install(
   PATTERN "flight/host_sdl/sdk_clipboard.hpp" EXCLUDE
   PATTERN "flight/host_sdl/sdk_cursor.hpp" EXCLUDE
   PATTERN "flight/host_sdl/sdk_device.hpp" EXCLUDE
+  PATTERN "flight/host_sdl/sdk_haptics.hpp" EXCLUDE
   PATTERN "flight/host_sdl/sdk_keyboard.hpp" EXCLUDE
   PATTERN "flight/host_sdl/sdk_platform.hpp" EXCLUDE
   PATTERN "flight/host_sdl/sdk_screen.hpp" EXCLUDE
