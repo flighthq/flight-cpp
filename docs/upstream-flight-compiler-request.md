@@ -259,6 +259,11 @@ compiler changes. SDL provides native multi-display enumeration and permission-f
 can follow through SDL display events; it remains separate from this query adapter rather than manufacturing the
 generated readonly structural change-event view before that path has an end-to-end consumer.
 
+`Flight::HostSdlSdkKeyboard` populates the emitted soft-keyboard info, visibility, and change records without
+compiler changes. SDL's shown/hidden events and returned release closure satisfy the subscription contract directly;
+unsupported desktop drivers return the existing failure-domain values. Platform-only style and layout setters remain
+absent capabilities.
+
 ## Host boundary
 
 The manifest-free generation remains the portable floor. Browser, media, Node, and graphics handles require explicit

@@ -7,6 +7,7 @@
 #include <flight/host_sdl/sdk_clipboard.hpp>
 #include <flight/host_sdl/sdk_cursor.hpp>
 #include <flight/host_sdl/sdk_device.hpp>
+#include <flight/host_sdl/sdk_keyboard.hpp>
 #include <flight/host_sdl/sdk_platform.hpp>
 #include <flight/host_sdl/sdk_screen.hpp>
 #include <flight/host_sdl/sdk_window.hpp>
@@ -23,6 +24,7 @@
 #include <flight/types/device.hpp>
 #include <flight/types/fullscreen_backend.hpp>
 #include <flight/types/input_target_backend.hpp>
+#include <flight/types/keyboard.hpp>
 #include <flight/types/platform.hpp>
 #include <flight/types/screen.hpp>
 
@@ -526,6 +528,56 @@ int main() {
   expect(window.pixel_size().width > 0 && window.pixel_size().height > 0, "pixel size is empty");
   window.set_title("Flight host test renamed");
 
+  flight::host_sdl::SdkSoftKeyboardBackend sdk_soft_keyboard(window);
+  auto soft_keyboard_info_backend = sdk_soft_keyboard.info_backend();
+  auto soft_keyboard_info = flight::make_ref<flight::types::SoftKeyboardInfo>();
+  expect(
+      soft_keyboard_info_backend.get_info(soft_keyboard_info) == soft_keyboard_info &&
+          soft_keyboard_info->height == 0.0 && soft_keyboard_info->x == 0.0 &&
+          soft_keyboard_info->y == 0.0 && soft_keyboard_info->width == 0.0,
+      "SDL SDK soft-keyboard backend replaced its output or invented geometry");
+  expect(
+      !soft_keyboard_info_backend.get_info(nullptr),
+      "SDL SDK soft-keyboard backend manufactured a null info output");
+
+  int soft_keyboard_changes = 0;
+  auto soft_keyboard_subscription =
+      sdk_soft_keyboard.change_backend().subscribe([&] { ++soft_keyboard_changes; }).get();
+  SDL_Event soft_keyboard_event{};
+  soft_keyboard_event.type = SDL_EVENT_SCREEN_KEYBOARD_SHOWN;
+  expect(
+      sdk_soft_keyboard.dispatch(soft_keyboard_event),
+      "SDL SDK soft-keyboard backend rejected a native visibility event");
+  if (SDL_HasScreenKeyboardSupport()) {
+    expect(
+        soft_keyboard_subscription->result == flight::types::soft_keyboard_attach_ok_kind &&
+            soft_keyboard_subscription->unsubscribe.has_value() && soft_keyboard_changes == 1,
+        "SDL SDK soft-keyboard backend did not attach its supported change subscription");
+    (*soft_keyboard_subscription->unsubscribe)();
+    (*soft_keyboard_subscription->unsubscribe)();
+    expect(
+        sdk_soft_keyboard.dispatch(soft_keyboard_event),
+        "SDL SDK soft-keyboard backend stopped recognizing visibility events");
+    expect(soft_keyboard_changes == 1, "released SDL soft-keyboard subscription was invoked");
+  } else {
+    expect(
+        soft_keyboard_subscription->result ==
+                flight::types::soft_keyboard_attach_acquisition_failed_kind &&
+            !soft_keyboard_subscription->unsubscribe.has_value() && soft_keyboard_changes == 0,
+        "SDL SDK soft-keyboard backend advertised an unavailable subscription");
+  }
+  auto soft_keyboard_visibility = sdk_soft_keyboard.visibility_backend();
+  const auto show_keyboard = soft_keyboard_visibility.show().get();
+  expect(
+      show_keyboard == flight::types::soft_keyboard_visibility_ok_kind ||
+          show_keyboard == flight::types::soft_keyboard_visibility_operation_failed_kind,
+      "SDL SDK soft-keyboard show returned an outcome outside Flight's domain");
+  const auto hide_keyboard = soft_keyboard_visibility.hide().get();
+  expect(
+      hide_keyboard == flight::types::soft_keyboard_visibility_ok_kind ||
+          hide_keyboard == flight::types::soft_keyboard_visibility_operation_failed_kind,
+      "SDL SDK soft-keyboard hide returned an outcome outside Flight's domain");
+
   flight::host_sdl::SdkDeviceBackend sdk_device_snapshot(window);
   auto device_backend = sdk_device_snapshot.backend();
   auto device_capabilities = flight::make_ref<flight::types::DeviceCapabilities>();
@@ -677,19 +729,30 @@ int main() {
   flight::types::ApplicationVisibilityBackend expired_visibility;
   flight::types::DeviceBackend expired_device;
   flight::types::FullscreenBackend expired_fullscreen;
+  flight::types::SoftKeyboardInfoBackend expired_keyboard_info;
+  flight::types::SoftKeyboardVisibilityBackend expired_keyboard_visibility;
   flight::Ref<flight::types::FullscreenTargetHandle> expired_target;
   {
     flight::host_sdl::WindowOptions transient_options = options;
     transient_options.title = "Flight transient SDK target";
     flight::host_sdl::Window transient_window(transient_options);
     flight::host_sdl::SdkDeviceBackend transient_sdk_device(transient_window);
+    flight::host_sdl::SdkSoftKeyboardBackend transient_sdk_keyboard(transient_window);
     flight::host_sdl::SdkWindowBackend transient_sdk_window(transient_window);
     expired_device = transient_sdk_device.backend();
     expired_visibility = transient_sdk_window.visibility_backend();
     expired_fullscreen = transient_sdk_window.fullscreen_backend();
+    expired_keyboard_info = transient_sdk_keyboard.info_backend();
+    expired_keyboard_visibility = transient_sdk_keyboard.visibility_backend();
     expired_target = transient_sdk_window.fullscreen_target();
   }
   expect(!expired_visibility.is_visible(), "destroyed SDL window remained visible to Flight");
+  auto expired_soft_keyboard = flight::make_ref<flight::types::SoftKeyboardInfo>();
+  expired_keyboard_info.get_info(expired_soft_keyboard);
+  expect(
+      !expired_soft_keyboard->visible && expired_keyboard_visibility.show().get() ==
+                                              flight::types::soft_keyboard_visibility_operation_failed_kind,
+      "destroyed SDL window retained soft-keyboard visibility operations");
   auto expired_metrics = flight::make_ref<flight::types::DeviceDisplayMetrics>();
   expired_device.get_display_metrics(expired_metrics);
   expect(

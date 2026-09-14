@@ -53,7 +53,7 @@ SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
 ```
 
 The public Bazel labels are `//:host_sdl`, `//:host_sdl_image`, `//:host_sdl_gl`, `//:host_sdl_sdk_audio`,
-`//:host_sdl_sdk_clipboard`, `//:host_sdl_sdk_cursor`, `//:host_sdl_sdk_device`, `//:host_sdl_sdk_platform`, `//:host_sdl_sdk_screen`, `//:host_sdl_sdk_window`, and `//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core
+`//:host_sdl_sdk_clipboard`, `//:host_sdl_sdk_cursor`, `//:host_sdl_sdk_device`, `//:host_sdl_sdk_keyboard`, `//:host_sdl_sdk_platform`, `//:host_sdl_sdk_screen`, `//:host_sdl_sdk_window`, and `//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core
 `bazel test //...` does not fetch or build SDL. CMake remains the complete package path for the Vulkan surface
 adapter.
 
@@ -228,6 +228,13 @@ report virtual-desktop bounds, work-area size, density, physical dimensions, ref
 HDR state, labels, the primary display, and global pointer position. Native enumeration has no browser-style
 permission prompt, so the details record resolves `granted` and `true`. SDL does not expose physical DPI, gamut,
 luminance, or portable internal/touch classification; screen-change subscriptions remain a separate event adapter.
+
+`Flight::HostSdlSdkKeyboard` and Bazel `//:host_sdl_sdk_keyboard` populate the committed generated
+`SoftKeyboardInfoBackend`, `SoftKeyboardVisibilityBackend`, and `SoftKeyboardChangeBackend`. SDL reports whether the
+active driver has an on-screen keyboard, whether it is shown for the bound window, starts and stops native text
+input, and emits global shown/hidden events. Pass each polled event to `SdkSoftKeyboardBackend::dispatch()`. Drivers
+without on-screen keyboard support return Flight's acquisition/operation failure values. SDL does not expose the
+keyboard rectangle, so geometry remains zero; platform-specific style and layout controls are separate capabilities.
 
 `Flight::HostSdlSdkWindow` and Bazel `//:host_sdl_sdk_window` bind an SDL window id to the committed generated
 `ApplicationVisibilityBackend` and `FullscreenBackend` records. Generated fullscreen target handles are registered
