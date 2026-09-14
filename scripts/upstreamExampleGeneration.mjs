@@ -37,6 +37,7 @@ const generatedRoot = path.join(root, 'examples', 'upstream', 'generated');
 const bindingProfileFiles = [
   'bindings/runtime.json',
   'bindings/headless.json',
+  'bindings/web-types.json',
   'bindings/sdl-gl.json',
   'bindings/sdl-app.json',
 ];

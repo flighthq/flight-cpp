@@ -150,7 +150,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run sdk:check` | Does the pinned compiler reproduce the committed SDK headers and refusal inventory? |
 | `npm run sdk:compile` | Which dependency-closed SDK headers compile independently with the selected `CXX` toolchain? |
 | `npm run sdk:compile:headless` | Which headers compile after applying the runtime-carrier and headless binding profiles? |
-| `npm run sdk:generate:sdl-gl` | Generate the full SDK inventory with runtime, headless, and SDL/OpenGL host bindings? |
+| `npm run sdk:generate:sdl-gl` | Generate the full SDK inventory with runtime, headless, Web string-type, and SDL/OpenGL host bindings? |
 | `npm run sdk:compile:sdl-gl` | Which headers compile under the SDL/OpenGL host profile? |
 | `npm run sdk:generate:sdl` | Generate the SDK inventory with the SDL/GL and SDL application-shell profiles composed? |
 | `npm run sdk:compile:sdl` | Which headers compile under the complete maintained SDL profile? |
@@ -162,6 +162,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run stream:oracle` | Do compiler-emitted readable, writable, and async-iterable carriers compile and preserve stream behavior? |
 | `npm run text-encoder:oracle` | Does compiler-emitted `TextEncoder` produce the same UTF-8 bytes as Node? |
 | `npm run uri:oracle` | Do compiler-emitted URI component operations match Node? |
+| `npm run web-types:oracle` | Do Web API string-literal aliases remain exact `flight::String` values in emitted C++? |
 | `npm run compile:check` | Does the pinned compiler's emitted C++ still compile against this runtime? |
 
 `compile:check` reports and skips when the checkout is absent or no C++ compiler is installed, so a fresh clone stays runnable. The compiler repository asks the same question from its side against the runtime revision it pins; both are wanted, because each side owns the pin it can move and a failure names which one changed.

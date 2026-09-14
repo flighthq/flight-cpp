@@ -96,6 +96,11 @@ The installed build exports four targets through the existing `FlightCpp` packag
 - `Flight::HostSdlWgpu` owns a type-erased native WebGPU surface through create/destroy callbacks supplied by a Dawn
   or wgpu-native adapter. It intentionally adds no WebGPU implementation dependency.
 
+The composed SDK sweeps also include `bindings/web-types.json`. That profile maps standard Canvas, WebGPU,
+image-smoothing, and permission string-literal domains to `flight::String`; it selects no renderer or platform
+provider and keeps those source-level names available until a concrete backend profile supplies their object
+handles.
+
 An installed consumer selects only the backend it uses:
 
 ```cmake

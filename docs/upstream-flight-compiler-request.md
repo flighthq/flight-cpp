@@ -167,8 +167,8 @@ The host playback seam is no longer part of that blocker.
 
 The downstream `flighthq/flight-cpp/sdl-gl/1` profile now names concrete SDL-owned canvas/context types, shared GL
 object handles, context attributes, a weakly recoverable image-source carrier, and
-`EXT_texture_filter_anisotropic`. Composed with the current runtime profile it emits 1,109 modules, 30 beyond the
-runtime/headless inventory; 21 of those additions compile independently. The extension binding removes its direct
+`EXT_texture_filter_anisotropic`. Composed with the runtime and exact Web string-alias profiles it emits 1,111
+modules, 32 beyond the runtime/headless inventory; 23 of those additions compile independently. The extension binding removes its direct
 ambient refusal; `GlContextRuntime` then
 reaches `flight-cpp WeakMap value requires a proven C++ representation`. The next renderer-wide compiler blocker is exact:
 `packages/types/src/GlContext.ts` retains
@@ -191,7 +191,7 @@ compressed-extension enum lookup still depends on the compiler selecting flight-
 adding an SDL renderer.
 
 Composing `bindings/sdl-app.json` with that SDL/GL sweep leaves the emitted header tree byte-identical but reduces
-direct external-binding refusals from 95 to 85. The represented window, document, `HTMLElement`, keyboard, mouse,
+direct external-binding refusals from 92 to 82. The represented window, document, `HTMLElement`, keyboard, mouse,
 pointer, wheel, and animation-frame cancellation contracts now reach their next compiler or package dependency
 failures in the full SDK graph. The runtime profile maps `PromiseLike<T>` to the existing `flight::Task<T>` carrier;
 the dialog module consequently advances to the compiler's async-closure coroutine-lowering refusal.

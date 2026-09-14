@@ -50,18 +50,21 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
   headers, ten compile and 37 advance to existing tuple, union, reference-conversion, aggregate-construction,
   typed-array-template, spatial-type, and type-spelling defects. The complete expanded result is 714 passing and 365
   failing headers.
-- `npm run sdk:generate:sdl-gl` adds the maintained SDL/OpenGL binding profile. It emits 1,109 modules, 30 more than
-  the runtime/headless inventory. Of those additions, 21 compile independently and nine expose existing compiler
-  defects. The complete expanded result is 735 passing and 374 failing headers.
+- `npm run sdk:generate:sdl-gl` adds the exact Web string-alias and maintained SDL/OpenGL binding profiles. It emits
+  1,111 modules, 32 more than the runtime/headless inventory. Of those additions, 23 compile independently and nine
+  expose existing compiler defects. The complete expanded result is 737 passing and 374 failing headers.
 - `npm run sdk:generate:sdl` composes that graphics profile with the SDL application shell. The dependency-closed
-  header tree and initialization plan are byte-identical at this pin, so the same 735/374 compile report applies,
-  while direct external-binding refusals fall from 95 to 85. Window, document, `HTMLElement`, animation-frame
+  header tree and initialization plan are byte-identical at this pin, so the same 737/374 compile report applies,
+  while direct external-binding refusals fall from 92 to 82. Window, document, `HTMLElement`, animation-frame
   cancellation, and the represented input event types advance to their next compiler or dependency boundary. The
   runtime profile also maps the compiler's existing `PromiseLike<T>` task domain to `flight::Task<T>`; `dialog.ts`
   now reaches the compiler-owned async-closure coroutine blocker instead of stopping at that ambient type.
   `inputManager.ts` now lacks only `EventTarget[type]`; binding that nominally exposes the compiler's unresolved
   `std::function<auto` event-listener parameter, so the host leaves this last binding absent until callable listener
   types and removal identity have a concrete compiler contract.
+  `bindings/web-types.json` separately elects eight standard string-literal domains without selecting a Canvas or
+  WebGPU implementation. This adds compiling `CanvasMaterialState` and `CanvasMaterialRenderer` headers and advances
+  the other affected modules to their concrete handle or dependency boundaries.
 - `npm run examples:generate` selects 100 native modules from all 181 sources in all 33 pinned upstream example
   packages, mirroring Flight's WebGL build selection with an explicit, recorded `renderNative.ts` remap. No example
   module is dependency-closed yet. The SDL application profile removes every direct `window`, `document`, animation

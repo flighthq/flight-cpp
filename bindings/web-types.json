@@ -1,0 +1,15 @@
+{
+  "schema": "flight-cpp-external-bindings/1",
+  "identity": "flighthq/flight-cpp/web-types/1",
+  "profile": "web-types",
+  "bindings": [
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "CanvasFillRule", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GlobalCompositeOperation", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUFeatureName", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUIndexFormat", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUPowerPreference", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUTextureFormat", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "ImageSmoothingQuality", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "PermissionName", "space": "type", "targetName": "flight::String" }
+  ]
+}

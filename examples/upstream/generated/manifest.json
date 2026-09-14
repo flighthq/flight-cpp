@@ -22,6 +22,13 @@
       "schema": "flight-cpp-external-bindings/1"
     },
     {
+      "digest": "sha256:6efc4d9fe7ccf4f41316752049c6865dab4b5ba55d3b862c97fb9a007874c0ab",
+      "identity": "flighthq/flight-cpp/web-types/1",
+      "path": "bindings/web-types.json",
+      "profile": "web-types",
+      "schema": "flight-cpp-external-bindings/1"
+    },
+    {
       "digest": "sha256:bbcf41a5b50cc3092d9d2289b059ccc469670c4c6d0dbd07e9a68cca940a8f55",
       "identity": "flighthq/flight-cpp/sdl-gl/1",
       "path": "bindings/sdl-gl.json",
@@ -29,7 +36,7 @@
       "schema": "flight-cpp-external-bindings/1"
     },
     {
-      "digest": "sha256:f85402789fe3bd3d668f83a0e3c135e12b0473751a9d73fb7d542ae7bba17fd0",
+      "digest": "sha256:456edf3e673913514084ed32acc316c0c18f8c1d72f9861370a5ca5570c190fb",
       "identity": "flighthq/flight-cpp/sdl-app/1",
       "path": "bindings/sdl-app.json",
       "profile": "sdl-app",

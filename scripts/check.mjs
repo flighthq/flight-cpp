@@ -32,6 +32,7 @@ const gates = [
   { arguments: [], name: 'streamOracle' },
   { arguments: [], name: 'textEncoderOracle' },
   { arguments: [], name: 'uriOracle' },
+  { arguments: [], name: 'webTypesOracle' },
   { arguments: ['--check'], name: 'sdkGeneration' },
   { arguments: ['--check'], name: 'upstreamExampleGeneration' },
   { arguments: [], name: 'emittedSourceCompile' },
