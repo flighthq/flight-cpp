@@ -8,6 +8,7 @@ const readCpp = (relativePath) => readFileSync(path.join(cppRoot, relativePath),
 const failures = [];
 
 const bazelVersion = readCpp('.bazelversion').trim();
+const bazelIgnore = readCpp('.bazelignore');
 const bazelModule = readCpp('MODULE.bazel');
 const bazelConfiguration = readCpp('.bazelrc');
 const bazelDocumentation = readCpp('docs/bazel.md');
@@ -29,6 +30,11 @@ requireText(bazelConfiguration, 'build --nostamp', 'unstamped Bazel outputs');
 requireText(bazelConfiguration, 'try-import %workspace%/.bazelrc.local', 'ignored local Bazel configuration hook');
 requireText(bazelConfiguration, 'build:local-posix --cxxopt=-std=c++20', 'local POSIX C++20 configuration');
 requireText(bazelConfiguration, 'build:local-msvc --cxxopt=/std:c++20', 'local MSVC C++20 configuration');
+for (const directory of ['.dependencies', 'build', 'out']) {
+  if (!bazelIgnore.split(/\r?\n/u).includes(directory)) {
+    failures.push(`.bazelignore does not exclude ${directory}`);
+  }
+}
 requireText(bazelDocumentation, '--platforms=', 'documented Bazel platform selection');
 requireText(bazelDocumentation, '--extra_toolchains=', 'documented Bazel toolchain selection');
 
