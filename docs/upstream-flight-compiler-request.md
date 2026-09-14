@@ -160,8 +160,8 @@ callback, including PCM buffer acquisition, concurrent source playback, live gai
 teardown semantics, and application-thread completion delivery. Its generated-record adapter compiles and runs at
 this pin. A native example also executes the upstream sound example's compiler-generated procedural PCM through the
 SDL backend under CMake and Bazel. The compiler still needs importer-specific module remapping to replace
-`webAudioDeviceBackend` in the full sound
-example. The runtime now represents the `AudioBuffer` stored by `AudioResource` and created by
+`webAudioDeviceBackend` in the full sound example. The runtime now represents the `AudioBuffer` stored by
+`AudioResource` and created by
 `createAudioResourceFromSamples`; encoded-byte decoding still requires an explicit native codec/provider contract.
 The host playback seam is no longer part of that blocker.
 
@@ -189,6 +189,10 @@ framebuffer, readback, state-query, shader, draw, and presentation paths against
 compressed-extension enum lookup still depends on the compiler selecting flight-cpp's ordered
 `Record<String, double>` representation and lowering optional indexed access. This proceeds into `render-gl` without
 adding an SDL renderer.
+
+Composing `bindings/sdl-app.json` with that SDL/GL sweep leaves the emitted header tree byte-identical but reduces
+direct external-binding refusals from 95 to 86. The represented window, document, `HTMLElement`, keyboard, mouse,
+pointer, and wheel contracts now reach their next compiler or package dependency failures in the full SDK graph.
 
 Regenerate and validate from the repository root:
 

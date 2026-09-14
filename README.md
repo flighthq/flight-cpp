@@ -151,6 +151,8 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run sdk:compile:headless` | Which headers compile after applying the runtime-carrier and headless binding profiles? |
 | `npm run sdk:generate:sdl-gl` | Generate the full SDK inventory with runtime, headless, and SDL/OpenGL host bindings? |
 | `npm run sdk:compile:sdl-gl` | Which headers compile under the SDL/OpenGL host profile? |
+| `npm run sdk:generate:sdl` | Generate the SDK inventory with the SDL/GL and SDL application-shell profiles composed? |
+| `npm run sdk:compile:sdl` | Which headers compile under the complete maintained SDL profile? |
 | `npm run release:check` | Do the version, ABI, C++ standard, and conformance profile agree across every file that states them? |
 | `npm run runtime:oracle` | Do the native runtime services match the same TypeScript-valid operations under Node? |
 | `npm run sdl-app:oracle` | Do compiler-emitted window, document, frame, and input calls match the SDL application shell? |

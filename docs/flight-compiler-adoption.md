@@ -53,6 +53,10 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
 - `npm run sdk:generate:sdl-gl` adds the maintained SDL/OpenGL binding profile. It emits 1,109 modules, 30 more than
   the runtime/headless inventory. Of those additions, 21 compile independently and nine expose existing compiler
   defects. The complete expanded result is 735 passing and 374 failing headers.
+- `npm run sdk:generate:sdl` composes that graphics profile with the SDL application shell. The dependency-closed
+  header tree and initialization plan are byte-identical at this pin, so the same 735/374 compile report applies,
+  while direct external-binding refusals fall from 95 to 86. Window, document, `HTMLElement`, and the represented
+  input event types advance to their next compiler or dependency boundary.
 - `npm run examples:generate` selects 100 native modules from all 181 sources in all 33 pinned upstream example
   packages, mirroring Flight's WebGL build selection with an explicit, recorded `renderNative.ts` remap. No example
   module is dependency-closed yet. The SDL application profile removes every direct `window`, `document`, animation

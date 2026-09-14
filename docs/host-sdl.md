@@ -187,3 +187,8 @@ The native mechanics are now present. Wiring them to generated Flight contracts 
 The corresponding compiler work is recorded in [the upstream request](upstream-flight-compiler-request.md). The
 installed host package does not wait for those compiler changes; the preview adapter is isolated so compiler-driven
 type changes do not alter SDL ownership or the native playback implementation.
+
+Run `npm run sdk:generate:sdl` to audit the full maintained host profile. It composes the runtime, headless, SDL/GL,
+and SDL application-shell manifests under `out/sdk-sdl`; `npm run sdk:compile:sdl` writes its independent-header
+report. The narrower `sdk:generate:sdl-gl` command remains useful when application-shell ambient bindings are not
+wanted.
