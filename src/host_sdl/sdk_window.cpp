@@ -70,8 +70,9 @@ struct SdkWindowBackend::State final {
 
 namespace {
 
-[[nodiscard]] flight::Ref<flight::types::reason> pointer_lock_outcome(const char* reason) {
-  auto result = flight::make_ref<flight::types::reason>();
+template <typename Outcome>
+[[nodiscard]] Outcome pointer_lock_outcome(const char* reason) {
+  auto result = flight::make_ref<typename Outcome::element_type>();
   result->reason = flight::String(reason);
   return result;
 }
@@ -197,38 +198,40 @@ flight::types::InputPointerLockBackend SdkWindowBackend::input_pointer_lock_back
   result.exit = [state] {
     if (!state->relative_pointer_window_id.has_value()) {
       return flight::Task<flight::types::InputPointerLockExitOutcome>::resolve(
-          pointer_lock_outcome("ok"));
+          pointer_lock_outcome<flight::types::InputPointerLockExitOutcome>("ok"));
     }
     SDL_Window* window = SDL_GetWindowFromID(*state->relative_pointer_window_id);
     if (window == nullptr) {
       state->relative_pointer_window_id.reset();
       return flight::Task<flight::types::InputPointerLockExitOutcome>::resolve(
-          pointer_lock_outcome("operation-failed"));
+          pointer_lock_outcome<flight::types::InputPointerLockExitOutcome>("operation-failed"));
     }
     const bool succeeded = SDL_SetWindowRelativeMouseMode(window, false);
     if (succeeded) state->relative_pointer_window_id.reset();
     return flight::Task<flight::types::InputPointerLockExitOutcome>::resolve(
-        pointer_lock_outcome(succeeded ? "ok" : "operation-failed"));
+        pointer_lock_outcome<flight::types::InputPointerLockExitOutcome>(
+            succeeded ? "ok" : "operation-failed"));
   };
   result.request = [state](flight::Ref<flight::types::InputTargetHandle> target) {
     if (target == nullptr) {
       return flight::Task<flight::types::InputPointerLockRequestOutcome>::resolve(
-          pointer_lock_outcome("target-not-found"));
+          pointer_lock_outcome<flight::types::InputPointerLockRequestOutcome>("target-not-found"));
     }
     const auto window_id = state->input_targets.get(target);
     if (!window_id.has_value()) {
       return flight::Task<flight::types::InputPointerLockRequestOutcome>::resolve(
-          pointer_lock_outcome("target-not-found"));
+          pointer_lock_outcome<flight::types::InputPointerLockRequestOutcome>("target-not-found"));
     }
     SDL_Window* window = SDL_GetWindowFromID(*window_id);
     if (window == nullptr) {
       return flight::Task<flight::types::InputPointerLockRequestOutcome>::resolve(
-          pointer_lock_outcome("operation-failed"));
+          pointer_lock_outcome<flight::types::InputPointerLockRequestOutcome>("operation-failed"));
     }
     const bool succeeded = SDL_SetWindowRelativeMouseMode(window, true);
     if (succeeded) state->relative_pointer_window_id = *window_id;
     return flight::Task<flight::types::InputPointerLockRequestOutcome>::resolve(
-        pointer_lock_outcome(succeeded ? "ok" : "operation-failed"));
+        pointer_lock_outcome<flight::types::InputPointerLockRequestOutcome>(
+            succeeded ? "ok" : "operation-failed"));
   };
   return result;
 }

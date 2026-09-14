@@ -220,7 +220,7 @@ flight::types::ScreenQueryBackend SdkScreenBackend::query_backend() const {
     }
     return output;
   };
-  result.get_cursor_position = [](flight::Ref<flight::types::x_y> output) {
+  result.get_cursor_position = [](auto output) {
     if (output == nullptr) return output;
     float x = 0.0F;
     float y = 0.0F;

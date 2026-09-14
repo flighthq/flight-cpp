@@ -503,7 +503,8 @@ int main() {
       screen_query.get_primary_screen(primary_screen) == primary_screen &&
           primary_screen->is_primary && primary_screen->id > 0.0,
       "SDL SDK screen query did not fill its caller-owned primary display");
-  auto cursor_position = flight::make_ref<flight::types::x_y>();
+  using CursorPositionRef = decltype(screen_query.get_cursor_position)::result_type;
+  auto cursor_position = flight::make_ref<typename CursorPositionRef::element_type>();
   expect(
       screen_query.get_cursor_position(cursor_position) == cursor_position,
       "SDL SDK screen query replaced its caller-owned cursor position");
