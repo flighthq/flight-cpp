@@ -61,6 +61,7 @@ const handleTypes = [
   ['GPUCommandEncoder', 'WgpuCommandEncoder'],
   ['GPUDevice', 'WgpuDevice'],
   ['GPUCopyExternalImageSource', 'WgpuExternalImageSource'],
+  ['GPUExternalTexture', 'WgpuExternalTexture'],
   ['GPUPipelineLayout', 'WgpuPipelineLayout'],
   ['GPUQueue', 'WgpuQueue'],
   ['GPURenderPassEncoder', 'WgpuRenderPassEncoder'],
@@ -75,6 +76,17 @@ const source = api.parseTypeScriptSource(
   `${handleTypes.map(([sourceName], index) => `export function keep${String(index)}(value: ${sourceName}): ${sourceName} { return value; }`).join('\n')}
    export function lostMessage(value: GPUDeviceLostInfo): string { return value.message; }
    export function red(value: GPUColor): number { return value.r; }
+   export function bindingResource(value: GPUBindingResource): GPUBindingResource { return value; }
+   export function bindGroupDescriptor(value: GPUBindGroupDescriptor): GPUBindGroupDescriptor { return value; }
+   export function bindGroupEntry(value: GPUBindGroupEntry): GPUBindGroupEntry { return value; }
+   export function bindGroupLayoutDescriptor(value: GPUBindGroupLayoutDescriptor): GPUBindGroupLayoutDescriptor { return value; }
+   export function bindGroupLayoutEntry(value: GPUBindGroupLayoutEntry): GPUBindGroupLayoutEntry { return value; }
+   export function bufferBinding(value: GPUBufferBinding): GPUBufferBinding { return value; }
+   export function bufferBindingLayout(value: GPUBufferBindingLayout): GPUBufferBindingLayout { return value; }
+   export function samplerBindingLayout(value: GPUSamplerBindingLayout): GPUSamplerBindingLayout { return value; }
+   export function textureBindingLayout(value: GPUTextureBindingLayout): GPUTextureBindingLayout { return value; }
+   export function storageTextureBindingLayout(value: GPUStorageTextureBindingLayout): GPUStorageTextureBindingLayout { return value; }
+   export function externalTextureBindingLayout(value: GPUExternalTextureBindingLayout): GPUExternalTextureBindingLayout { return value; }
    export function bufferSource(value: GPUAllowSharedBufferSource): GPUAllowSharedBufferSource { return value; }
    export function bufferDescriptor(value: GPUBufferDescriptor): GPUBufferDescriptor { return value; }
    export function deviceDescriptor(value: GPUDeviceDescriptor): GPUDeviceDescriptor { return value; }
@@ -98,6 +110,30 @@ const source = api.parseTypeScriptSource(
    }
    export function makeBufferDescriptor(size: number, usage: number): GPUBufferDescriptor {
      return { size, usage, mappedAtCreation: false, label: 'vertices' };
+   }
+   export function makeBufferBinding(buffer: GPUBuffer): GPUBufferBinding {
+     return { buffer, offset: 16, size: 64 };
+   }
+   export function makeBindGroupEntry(binding: number, resource: GPUBindingResource): GPUBindGroupEntry {
+     return { binding, resource };
+   }
+   export function makeBindGroupDescriptor(
+     layout: GPUBindGroupLayout, entries: GPUBindGroupEntry[],
+   ): GPUBindGroupDescriptor {
+     return { layout, entries, label: 'material' };
+   }
+   export function makeBufferBindingLayout(): GPUBufferBindingLayout {
+     return { type: 'uniform', hasDynamicOffset: true, minBindingSize: 64 };
+   }
+   export function makeBindGroupLayoutEntry(
+     binding: number, visibility: number, buffer: GPUBufferBindingLayout,
+   ): GPUBindGroupLayoutEntry {
+     return { binding, visibility, buffer };
+   }
+   export function makeBindGroupLayoutDescriptor(
+     entries: GPUBindGroupLayoutEntry[],
+   ): GPUBindGroupLayoutDescriptor {
+     return { entries, label: 'material-layout' };
    }
    export function makeExtent(width: number, height: number): GPUExtent3DDict {
      return { width, height, depthOrArrayLayers: 1 };
@@ -152,6 +188,17 @@ for (const expected of [
   'flight::host_sdl::WgpuColor',
   'flight::host_sdl::WgpuBlendComponent',
   'flight::host_sdl::WgpuBlendState',
+  'flight::host_sdl::WgpuBindingResource',
+  'flight::host_sdl::WgpuBindGroupDescriptor',
+  'flight::host_sdl::WgpuBindGroupEntry',
+  'flight::host_sdl::WgpuBindGroupLayoutDescriptor',
+  'flight::host_sdl::WgpuBindGroupLayoutEntry',
+  'flight::host_sdl::WgpuBufferBinding',
+  'flight::host_sdl::WgpuBufferBindingLayout',
+  'flight::host_sdl::WgpuSamplerBindingLayout',
+  'flight::host_sdl::WgpuTextureBindingLayout',
+  'flight::host_sdl::WgpuStorageTextureBindingLayout',
+  'flight::host_sdl::WgpuExternalTextureBindingLayout',
   'flight::host_sdl::WgpuAllowSharedBufferSource',
   'flight::host_sdl::WgpuBufferDescriptor',
   'flight::host_sdl::WgpuDeviceDescriptor',
@@ -167,6 +214,12 @@ for (const expected of [
   'flight::host_sdl::WgpuStencilFaceState',
   'flight::host_sdl::WgpuSamplerDescriptor',
   '.src_factor = src_factor, .dst_factor = dst_factor, .operation = flight::String("add")',
+  '.buffer = buffer, .offset = 16.0, .size = 64.0',
+  '.binding = binding, .resource = resource',
+  '.layout = layout, .entries = entries, .label = flight::String("material")',
+  '.type = flight::String("uniform"), .has_dynamic_offset = true, .min_binding_size = 64.0',
+  '.binding = binding, .visibility = visibility, .buffer = buffer',
+  '.entries = entries, .label = flight::String("material-layout")',
   '.size = size, .usage = usage, .mapped_at_creation = false, .label = flight::String("vertices")',
   '.width = width, .height = height, .depth_or_array_layers = 1.0',
   '.offset = 0.0, .bytes_per_row = bytes_per_row, .rows_per_image = 1.0',

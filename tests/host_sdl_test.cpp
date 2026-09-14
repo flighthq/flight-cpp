@@ -642,6 +642,70 @@ int main() {
           std::get<flight::ArrayBufferView>(view_source).byte_length == 3 &&
           std::get<flight::ArrayBufferView>(view_source).identity() == upload_view.identity(),
       "WGPU transfer descriptors lost required values, optional presence, or iterable domains");
+  WgpuObjectState binding_object_state;
+  {
+    const auto buffer = flight::host_sdl::WgpuBuffer::adopt(
+        &binding_object_state,
+        flight::host_sdl::WgpuObjectCallbacks{
+            &binding_object_state, release_wgpu_object});
+    const flight::host_sdl::WgpuBufferBinding buffer_binding{
+        .buffer = buffer,
+        .offset = 16.0,
+        .size = 64.0,
+    };
+    const flight::host_sdl::WgpuBindGroupEntry binding_entry{
+        .binding = 2.0,
+        .resource = buffer_binding,
+    };
+    const flight::host_sdl::WgpuBufferBindingLayout buffer_layout{
+        .type = flight::String("uniform"),
+        .has_dynamic_offset = true,
+        .min_binding_size = 64.0,
+    };
+    const flight::host_sdl::WgpuBindGroupLayoutEntry layout_entry{
+        .binding = 2.0,
+        .visibility = flight::host_sdl::wgpu_shader_stage_vertex,
+        .buffer = buffer_layout,
+        .sampler = std::nullopt,
+        .texture = std::nullopt,
+        .storage_texture = std::nullopt,
+        .external_texture = std::nullopt,
+    };
+    const flight::host_sdl::WgpuStorageTextureBindingLayout storage_layout{
+        .access = flight::String("write-only"),
+        .format = flight::String("rgba8unorm"),
+        .view_dimension = std::nullopt,
+    };
+    const flight::host_sdl::WgpuBindGroupDescriptor bind_group_descriptor{
+        .layout = {},
+        .entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{binding_entry},
+        .label = flight::String("material"),
+    };
+    const flight::host_sdl::WgpuBindGroupLayoutDescriptor layout_descriptor{
+        .entries = flight::Array<flight::host_sdl::WgpuBindGroupLayoutEntry>{layout_entry},
+        .label = flight::String("material-layout"),
+    };
+    auto bind_group_entries = bind_group_descriptor.entries.begin();
+    auto layout_entries = layout_descriptor.entries.begin();
+    expect(
+        std::holds_alternative<flight::host_sdl::WgpuBufferBinding>(binding_entry.resource) &&
+            std::get<flight::host_sdl::WgpuBufferBinding>(binding_entry.resource)
+                    .buffer.identity() == buffer.identity() &&
+            layout_entry.buffer->type == flight::String("uniform") &&
+            layout_entry.buffer->has_dynamic_offset == true &&
+            !layout_entry.texture.has_value() &&
+            storage_layout.access == flight::String("write-only") &&
+            !storage_layout.view_dimension.has_value() &&
+            bind_group_entries != std::default_sentinel && bind_group_entries->binding == 2.0 &&
+            bind_group_descriptor.label == flight::String("material") &&
+            layout_entries != std::default_sentinel && layout_entries->visibility ==
+                flight::host_sdl::wgpu_shader_stage_vertex &&
+            layout_descriptor.label == flight::String("material-layout"),
+        "WGPU bind-group descriptors lost resource identity or optional layout members");
+  }
+  expect(
+      binding_object_state.releases == 1,
+      "WGPU binding resources did not preserve provider-owned handle lifetime");
   {
     flight::Set<flight::String> features;
     features.add(flight::String("timestamp-query"));

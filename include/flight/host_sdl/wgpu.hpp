@@ -121,6 +121,7 @@ struct WgpuCommandBufferTag;
 struct WgpuCommandEncoderTag;
 struct WgpuDeviceTag;
 struct WgpuExternalImageSourceTag;
+struct WgpuExternalTextureTag;
 struct WgpuPipelineLayoutTag;
 struct WgpuQueueTag;
 struct WgpuRenderPassEncoderTag;
@@ -139,6 +140,7 @@ using WgpuCommandBuffer = WgpuObject<WgpuCommandBufferTag>;
 using WgpuCommandEncoder = WgpuObject<WgpuCommandEncoderTag>;
 using WgpuDevice = WgpuObject<WgpuDeviceTag>;
 using WgpuExternalImageSource = WgpuObject<WgpuExternalImageSourceTag>;
+using WgpuExternalTexture = WgpuObject<WgpuExternalTextureTag>;
 using WgpuPipelineLayout = WgpuObject<WgpuPipelineLayoutTag>;
 using WgpuQueue = WgpuObject<WgpuQueueTag>;
 using WgpuRenderPassEncoder = WgpuObject<WgpuRenderPassEncoderTag>;
@@ -198,6 +200,7 @@ using WgpuCommandBufferWeakPolicy = WgpuObjectWeakPolicy<WgpuCommandBufferTag>;
 using WgpuCommandEncoderWeakPolicy = WgpuObjectWeakPolicy<WgpuCommandEncoderTag>;
 using WgpuDeviceWeakPolicy = WgpuObjectWeakPolicy<WgpuDeviceTag>;
 using WgpuExternalImageSourceWeakPolicy = WgpuObjectWeakPolicy<WgpuExternalImageSourceTag>;
+using WgpuExternalTextureWeakPolicy = WgpuObjectWeakPolicy<WgpuExternalTextureTag>;
 using WgpuPipelineLayoutWeakPolicy = WgpuObjectWeakPolicy<WgpuPipelineLayoutTag>;
 using WgpuQueueWeakPolicy = WgpuObjectWeakPolicy<WgpuQueueTag>;
 using WgpuRenderPassEncoderWeakPolicy = WgpuObjectWeakPolicy<WgpuRenderPassEncoderTag>;
@@ -245,6 +248,70 @@ struct WgpuSamplerDescriptor final {
   std::optional<double> lod_max_clamp;
   std::optional<String> compare;
   std::optional<double> max_anisotropy;
+  std::optional<String> label;
+};
+
+struct WgpuBufferBinding final {
+  WgpuBuffer buffer;
+  std::optional<double> offset;
+  std::optional<double> size;
+};
+
+using WgpuBindingResource = std::variant<
+    WgpuSampler,
+    WgpuTexture,
+    WgpuTextureView,
+    WgpuBuffer,
+    WgpuBufferBinding,
+    WgpuExternalTexture>;
+
+struct WgpuBindGroupEntry final {
+  double binding{0.0};
+  WgpuBindingResource resource;
+};
+
+struct WgpuBindGroupDescriptor final {
+  WgpuBindGroupLayout layout;
+  Iterable<WgpuBindGroupEntry> entries;
+  std::optional<String> label;
+};
+
+struct WgpuBufferBindingLayout final {
+  std::optional<String> type;
+  std::optional<bool> has_dynamic_offset;
+  std::optional<double> min_binding_size;
+};
+
+struct WgpuSamplerBindingLayout final {
+  std::optional<String> type;
+};
+
+struct WgpuTextureBindingLayout final {
+  std::optional<String> sample_type;
+  std::optional<String> view_dimension;
+  std::optional<bool> multisampled;
+};
+
+struct WgpuStorageTextureBindingLayout final {
+  std::optional<String> access;
+  String format;
+  std::optional<String> view_dimension;
+};
+
+struct WgpuExternalTextureBindingLayout final {};
+
+struct WgpuBindGroupLayoutEntry final {
+  double binding{0.0};
+  double visibility{0.0};
+  std::optional<WgpuBufferBindingLayout> buffer;
+  std::optional<WgpuSamplerBindingLayout> sampler;
+  std::optional<WgpuTextureBindingLayout> texture;
+  std::optional<WgpuStorageTextureBindingLayout> storage_texture;
+  std::optional<WgpuExternalTextureBindingLayout> external_texture;
+};
+
+struct WgpuBindGroupLayoutDescriptor final {
+  Iterable<WgpuBindGroupLayoutEntry> entries;
   std::optional<String> label;
 };
 

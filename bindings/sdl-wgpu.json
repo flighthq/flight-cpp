@@ -7,10 +7,17 @@
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUAdapter", "space": "type", "targetName": "flight::host_sdl::WgpuAdapter" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUAllowSharedBufferSource", "space": "type", "targetName": "flight::host_sdl::WgpuAllowSharedBufferSource" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUBindGroup", "space": "type", "targetName": "flight::host_sdl::WgpuBindGroup", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuBindGroupWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBindGroupDescriptor", "space": "type", "targetName": "flight::host_sdl::WgpuBindGroupDescriptor" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBindGroupEntry", "space": "type", "targetName": "flight::host_sdl::WgpuBindGroupEntry" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUBindGroupLayout", "space": "type", "targetName": "flight::host_sdl::WgpuBindGroupLayout", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuBindGroupLayoutWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBindGroupLayoutDescriptor", "space": "type", "targetName": "flight::host_sdl::WgpuBindGroupLayoutDescriptor" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBindGroupLayoutEntry", "space": "type", "targetName": "flight::host_sdl::WgpuBindGroupLayoutEntry" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBindingResource", "space": "type", "targetName": "flight::host_sdl::WgpuBindingResource" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBlendComponent", "space": "type", "targetName": "flight::host_sdl::WgpuBlendComponent" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBlendState", "space": "type", "targetName": "flight::host_sdl::WgpuBlendState" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUBuffer", "space": "type", "targetName": "flight::host_sdl::WgpuBuffer", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuBufferWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBufferBinding", "space": "type", "targetName": "flight::host_sdl::WgpuBufferBinding" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBufferBindingLayout", "space": "type", "targetName": "flight::host_sdl::WgpuBufferBindingLayout" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBufferDescriptor", "space": "type", "targetName": "flight::host_sdl::WgpuBufferDescriptor" },
     {
       "headers": ["flight/host_sdl/wgpu.hpp"],
@@ -60,6 +67,8 @@
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUExtent3D", "space": "type", "targetName": "flight::host_sdl::WgpuExtent3D" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUExtent3DDict", "space": "type", "targetName": "flight::host_sdl::WgpuExtent3DDictionary" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUExtent3DStrict", "space": "type", "targetName": "flight::host_sdl::WgpuExtent3D" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUExternalTexture", "space": "type", "targetName": "flight::host_sdl::WgpuExternalTexture", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuExternalTextureWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUExternalTextureBindingLayout", "space": "type", "targetName": "flight::host_sdl::WgpuExternalTextureBindingLayout" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUOrigin3D", "space": "type", "targetName": "flight::host_sdl::WgpuOrigin3D" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUOrigin2D", "space": "type", "targetName": "flight::host_sdl::WgpuOrigin2D" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUOrigin2DDict", "space": "type", "targetName": "flight::host_sdl::WgpuOrigin2DDictionary" },
@@ -81,9 +90,11 @@
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPURenderPassEncoder", "space": "type", "targetName": "flight::host_sdl::WgpuRenderPassEncoder", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuRenderPassEncoderWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPURenderPipeline", "space": "type", "targetName": "flight::host_sdl::WgpuRenderPipeline", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuRenderPipelineWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUSampler", "space": "type", "targetName": "flight::host_sdl::WgpuSampler", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuSamplerWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUSamplerBindingLayout", "space": "type", "targetName": "flight::host_sdl::WgpuSamplerBindingLayout" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUSamplerDescriptor", "space": "type", "targetName": "flight::host_sdl::WgpuSamplerDescriptor" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUShaderModule", "space": "type", "targetName": "flight::host_sdl::WgpuShaderModule", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuShaderModuleWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUStencilFaceState", "space": "type", "targetName": "flight::host_sdl::WgpuStencilFaceState" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUStorageTextureBindingLayout", "space": "type", "targetName": "flight::host_sdl::WgpuStorageTextureBindingLayout" },
     {
       "headers": ["flight/host_sdl/wgpu.hpp"],
       "members": [
@@ -101,6 +112,7 @@
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUTexelCopyTextureInfo", "space": "type", "targetName": "flight::host_sdl::WgpuTexelCopyTextureInfo" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUTexture", "space": "type", "targetName": "flight::host_sdl::WgpuTexture", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuTextureWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUTextureDescriptor", "space": "type", "targetName": "flight::host_sdl::WgpuTextureDescriptor" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUTextureBindingLayout", "space": "type", "targetName": "flight::host_sdl::WgpuTextureBindingLayout" },
     {
       "headers": ["flight/host_sdl/wgpu.hpp"],
       "members": [

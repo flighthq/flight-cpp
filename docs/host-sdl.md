@@ -113,7 +113,8 @@ selects no renderer or platform provider and keeps object-handle names available
 supplies them.
 
 `bindings/sdl-wgpu.json` supplies those object handles, adapter features/limits,
-device/origin/vertex/external-image/sampler descriptors, buffer and texture transfer descriptors, iterable extents,
+device/origin/vertex/external-image/sampler descriptors, bind-group resources and layouts, buffer and texture
+transfer descriptors, iterable extents,
 shared buffer/view sources, blend and stencil pipeline values, and standard buffer, texture, shader, color-write,
 and map-mode flags. Optional descriptor fields retain their source presence for the provider, and copied buffers and
 views retain their backing identity.
