@@ -128,10 +128,16 @@ newly admitted headers compile. The extension binding removes its direct ambient
 reaches `flight-cpp WeakMap value requires a proven C++ representation`. The next renderer-wide compiler blocker is exact:
 `packages/types/src/GlContext.ts` retains
 `auto viewport;` after its closed `Pick<WebGL2RenderingContext, GlContextMember>` is materialized. The fail-closed
-placeholder gate correctly refuses it. Once all picked constants and methods receive their concrete callable types,
+placeholder gate correctly refuses it. The materialized surface also has six C++ target-name collisions because the
+current snake-case transform maps `ACTIVE_TEXTURE`/`activeTexture`, `CULL_FACE`/`cullFace`,
+`DEPTH_FUNC`/`depthFunc`, `FRONT_FACE`/`frontFace`, `STENCIL_FUNC`/`stencilFunc`, and `VIEWPORT`/`viewport` to the
+same six names. The mapped-interface fix must assign distinct stable names before the record can be well formed.
+Once all picked constants and methods receive their concrete callable types,
 flight-cpp can populate the generated `flight::types::GlContext` record from its working `WebGl2Context`; the host
-adapter already forwards the clear/scissor/viewport subset exercised by the SDL tween. This proceeds into
-`render-gl` without adding an SDL renderer.
+adapter already forwards buffer upload, shared GL object lifetime, shader/program compilation, and the
+state, framebuffer, vertex attribute, draw, and uniform operations selected by Flight. A compiler fixture emits a
+representative buffer/program/uniform/draw path directly through the external `WebGL2RenderingContext` binding and
+compiles it. This proceeds into `render-gl` without adding an SDL renderer.
 
 Regenerate and validate from the repository root:
 

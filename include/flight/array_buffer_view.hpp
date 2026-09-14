@@ -94,6 +94,21 @@ class ArrayBufferView {
 
   [[nodiscard]] const std::byte* data() const noexcept { return buffer.data() + byte_offset; }
   [[nodiscard]] std::byte* data() { return buffer.writable_data() + byte_offset; }
+  [[nodiscard]] constexpr std::size_t bytes_per_element() const noexcept {
+    switch (kind) {
+      case ArrayBufferViewKind::float64_array: return 8;
+      case ArrayBufferViewKind::float32_array:
+      case ArrayBufferViewKind::int32_array:
+      case ArrayBufferViewKind::uint32_array: return 4;
+      case ArrayBufferViewKind::int16_array:
+      case ArrayBufferViewKind::uint16_array: return 2;
+      case ArrayBufferViewKind::data_view:
+      case ArrayBufferViewKind::int8_array:
+      case ArrayBufferViewKind::uint8_array:
+      case ArrayBufferViewKind::uint8_clamped_array: return 1;
+    }
+    return 1;
+  }
   [[nodiscard]] const void* identity() const noexcept { return identity_; }
   [[nodiscard]] bool same_backing(const ArrayBufferView& other) const noexcept {
     return buffer == other.buffer;

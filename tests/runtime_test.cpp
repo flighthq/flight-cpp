@@ -291,10 +291,12 @@ void test_array_like_views() {
   const flight::ArrayBufferView data_view(data);
   words[1] = 0x1234;
   check(word_view.kind == flight::ArrayBufferViewKind::uint16_array && word_view.byte_offset == 2 &&
-            word_view.byte_length == 6 && word_view.identity() == words.identity(),
+            word_view.byte_length == 6 && word_view.bytes_per_element() == 2 &&
+            word_view.identity() == words.identity(),
         "ArrayBufferView retains the typed view kind, range, and object identity");
   check(data_view.kind == flight::ArrayBufferViewKind::data_view && data_view.byte_offset == 4 &&
-            data_view.byte_length == 4 && data_view.identity() == data.identity() &&
+            data_view.byte_length == 4 && data_view.bytes_per_element() == 1 &&
+            data_view.identity() == data.identity() &&
             data_view.same_backing(word_view),
         "ArrayBufferView preserves DataView identity and shared backing identity");
   check(data_view.data()[0] == buffer.data()[4] && data_view.data()[1] == buffer.data()[5],

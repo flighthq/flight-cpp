@@ -55,7 +55,10 @@ The build exports four targets through the existing `FlightCpp` package:
   resolves procedure addresses, controls the swap interval, and swaps the window. Its `GlCanvas` and
   `WebGl2Context` share that owner and supply the native types named by `bindings/sdl-gl.json`. The context already
   forwards the operations used by the tween and exposes the anisotropic-filter extension constants and live
-  availability query required by Flight's GL runtime.
+  availability query required by Flight's GL runtime. Buffer, framebuffer, renderbuffer, texture, vertex-array,
+  shader, program, and uniform-location handles share WebGL-style identity. Explicit deletion invalidates every
+  alias, remaining live resources are reclaimed while their context is alive, and cross-context handle use is
+  rejected.
 - `Flight::HostSdlVulkan` copies the required instance extension names and owns the `VkSurfaceKHR` returned by SDL.
 - `Flight::HostSdlWgpu` owns a type-erased native WebGPU surface through create/destroy callbacks supplied by a Dawn
   or wgpu-native adapter. It intentionally adds no WebGPU implementation dependency.
@@ -110,11 +113,15 @@ The native mechanics are now present. Wiring them to generated Flight contracts 
 
 1. Finish compiler emission of the narrowed Flight `GlContext` interface. The current compiler resolves the SDL/GL
    ambient bindings but leaves its inherited `viewport` member as an unresolved C++ type.
-2. Populate that generated callable interface from `WebGl2Context` and add the remaining GL operations as their
-   emitted signatures become available. The SDL/GL binding profile, shared object handle identities, image-source
-   weak-key policy, anisotropy carrier, context ownership, first forwarded draw operations, procedure lookup, and
-   presentation path are present. With the anisotropy ambient refusal removed, `GlContextRuntime` now reaches the
-   compiler's closed-value proof for one of its `WeakMap` fields.
+2. Populate that generated callable interface from `WebGl2Context` and add the remaining texture upload, compressed
+   texture, readback, and polymorphic query operations as their emitted signatures become available. The SDL/GL
+   binding profile, shared object handle identities and lifetime, image-source weak-key policy, anisotropy carrier,
+   context ownership, buffer
+   upload, shader/program compilation, state/framebuffer commands, vertex attributes, draw calls, uniform uploads,
+   procedure lookup, and presentation path are present. A live compiler fixture already emits and compiles calls
+   through this native context. With the
+   anisotropy ambient refusal removed, `GlContextRuntime` now reaches the compiler's closed-value proof for one of
+   its `WeakMap` fields.
 3. Implement generated `WgpuHostBackend` and `WgpuRenderSurfaceProvider` with a selected Dawn or wgpu-native adapter.
    `WgpuSurfaceCallbacks` is the stable point where that dependency enters.
 4. Translate SDL events into the generated Flight input and lifecycle types.

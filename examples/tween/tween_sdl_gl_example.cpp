@@ -121,6 +121,81 @@ void draw_frame(
   }
 }
 
+void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
+  auto buffer = gl.create_buffer();
+  if (!buffer) throw std::runtime_error("OpenGL could not allocate the tween smoke buffer");
+  const flight::Float32Array vertices{-1.0F, -1.0F, 1.0F, -1.0F, 0.0F, 1.0F};
+  gl.bind_buffer(flight::host_sdl::WebGl2Context::array_buffer, buffer);
+  gl.buffer_data(
+      flight::host_sdl::WebGl2Context::array_buffer,
+      flight::ArrayBufferView(vertices),
+      flight::host_sdl::WebGl2Context::static_draw);
+  gl.buffer_sub_data(
+      flight::host_sdl::WebGl2Context::array_buffer,
+      0,
+      flight::ArrayBufferView(vertices),
+      2,
+      2);
+  gl.bind_buffer(flight::host_sdl::WebGl2Context::array_buffer, std::nullopt);
+  gl.delete_buffer(buffer);
+  if (buffer) throw std::runtime_error("deleting a WebGL buffer did not invalidate its aliases");
+
+  const auto compile = [&](std::uint32_t type, const char* source) {
+    auto shader = gl.create_shader(type);
+    if (!shader) throw std::runtime_error("OpenGL could not allocate a tween smoke shader");
+    gl.shader_source(*shader, flight::String(source));
+    gl.compile_shader(*shader);
+    if (gl.get_shader_parameter(*shader, flight::host_sdl::WebGl2Context::compile_status) == 0.0) {
+      const auto log = gl.get_shader_info_log(*shader).value_or(flight::String()).to_utf8();
+      gl.delete_shader(shader);
+      throw std::runtime_error("OpenGL rejected a tween smoke shader: " + log);
+    }
+    return *shader;
+  };
+
+  auto vertex_shader = compile(
+      flight::host_sdl::WebGl2Context::vertex_shader,
+      "#version 300 es\n"
+      "const vec2 p[3] = vec2[3](vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.0, 0.5));\n"
+      "void main() { gl_Position = vec4(p[gl_VertexID], 0.0, 1.0); }\n");
+  auto fragment_shader = compile(
+      flight::host_sdl::WebGl2Context::fragment_shader,
+      "#version 300 es\nprecision mediump float;\nuniform vec4 u_color;\nout vec4 color;\n"
+      "void main() { color = u_color; }\n");
+  auto program = gl.create_program();
+  if (!program) throw std::runtime_error("OpenGL could not allocate the tween smoke program");
+  gl.attach_shader(program, vertex_shader);
+  gl.attach_shader(program, fragment_shader);
+  gl.link_program(program);
+  if (gl.get_program_parameter(program, flight::host_sdl::WebGl2Context::link_status) == 0.0) {
+    const auto log = gl.get_program_info_log(program).value_or(flight::String()).to_utf8();
+    gl.delete_program(program);
+    gl.delete_shader(vertex_shader);
+    gl.delete_shader(fragment_shader);
+    throw std::runtime_error("OpenGL rejected the tween smoke program: " + log);
+  }
+  gl.use_program(program);
+  const auto color_location = gl.get_uniform_location(program, flight::String("u_color"));
+  if (!color_location) throw std::runtime_error("OpenGL removed the tween smoke uniform");
+  gl.uniform4f(color_location, 1.0F, 1.0F, 1.0F, 1.0F);
+  auto vertex_array = gl.create_vertex_array();
+  if (!vertex_array) throw std::runtime_error("OpenGL could not allocate the tween smoke vertex array");
+  gl.bind_vertex_array(vertex_array);
+  gl.draw_arrays(flight::host_sdl::WebGl2Context::triangles, 0, 3);
+  gl.bind_vertex_array(std::nullopt);
+  gl.delete_vertex_array(vertex_array);
+  gl.use_program(std::nullopt);
+  gl.delete_program(program);
+  gl.delete_shader(vertex_shader);
+  gl.delete_shader(fragment_shader);
+  if (program || vertex_shader || fragment_shader || vertex_array) {
+    throw std::runtime_error("deleting WebGL resources did not invalidate their aliases");
+  }
+  if (gl.get_error() != flight::host_sdl::WebGl2Context::no_error) {
+    throw std::runtime_error("OpenGL rejected the tween resource smoke path");
+  }
+}
+
 int run(bool smoke) {
   using namespace std::chrono_literals;
 
@@ -129,6 +204,7 @@ int run(bool smoke) {
       960, 720, 1.0, flight::String("Flight tween - SDL + OpenGL ES"), smoke);
   auto context = canvas.get_context();
   context.make_current();
+  validate_gl_resource_path(context);
 
   const std::uint64_t started = flight::host_sdl::Host::ticks_nanoseconds();
   std::size_t frames = 0;

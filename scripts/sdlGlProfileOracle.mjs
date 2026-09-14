@@ -71,6 +71,38 @@ const source = api.parseTypeScriptSource(
    }
    export function anisotropyEnums(extension: EXT_texture_filter_anisotropic): number {
      return extension.TEXTURE_MAX_ANISOTROPY_EXT + extension.MAX_TEXTURE_MAX_ANISOTROPY_EXT;
+   }
+   export function nativeGlSmoke(context: WebGL2RenderingContext, data: Float32Array): void {
+     const buffer = context.createBuffer();
+     context.bindBuffer(context.ARRAY_BUFFER, buffer);
+     context.bufferData(context.ARRAY_BUFFER, data, context.STATIC_DRAW);
+     context.bufferSubData(context.ARRAY_BUFFER, 0, data, 0, data.length);
+     context.clearColor(0, 0, 0, 1);
+     context.clear(context.COLOR_BUFFER_BIT);
+     const vertexArray = context.createVertexArray();
+     context.bindVertexArray(vertexArray);
+     context.drawArrays(context.TRIANGLES, 0, 3);
+     context.bindVertexArray(null);
+     context.deleteVertexArray(vertexArray);
+     context.deleteBuffer(buffer);
+   }
+   export function nativeGlProgram(context: WebGL2RenderingContext): boolean {
+     const vertex = context.createShader(context.VERTEX_SHADER);
+     if (vertex === null) return false;
+     context.shaderSource(vertex, '#version 300 es\\nvoid main() { gl_Position = vec4(0.0); }');
+     context.compileShader(vertex);
+     if (!context.getShaderParameter(vertex, context.COMPILE_STATUS)) return false;
+     const program = context.createProgram();
+     context.attachShader(program, vertex);
+     context.linkProgram(program);
+     const linked = context.getProgramParameter(program, context.LINK_STATUS) !== 0;
+     if (linked) context.useProgram(program);
+     else context.useProgram(null);
+     const color = context.getUniformLocation(program, 'u_color');
+     context.uniform4f(color, 1, 1, 1, 1);
+     context.deleteProgram(program);
+     context.deleteShader(vertex);
+     return linked;
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -93,6 +125,29 @@ for (const expected of [
   'flight::host_sdl::GlAnisotropyExtension anisotropy;',
   'extension.texture_max_anisotropy_ext',
   'extension.max_texture_max_anisotropy_ext',
+  'context.create_buffer()',
+  'context.bind_buffer(context.array_buffer, buffer)',
+  'context.buffer_data(context.array_buffer, data, context.static_draw)',
+  'context.buffer_sub_data(context.array_buffer, 0.0, data, 0.0, static_cast<double>(data.size()))',
+  'context.clear_color(0.0, 0.0, 0.0, 1.0)',
+  'context.clear(context.color_buffer_bit)',
+  'context.create_vertex_array()',
+  'context.bind_vertex_array(vertex_array)',
+  'context.draw_arrays(context.triangles, 0.0, 3.0)',
+  'context.delete_vertex_array(vertex_array)',
+  'context.delete_buffer(buffer)',
+  'context.create_shader(context.vertex_shader)',
+  'context.shader_source(',
+  'context.compile_shader(',
+  'context.get_shader_parameter(',
+  'context.create_program()',
+  'context.attach_shader(',
+  'context.link_program(program)',
+  'context.get_program_parameter(program, context.link_status)',
+  'context.get_uniform_location(program, flight::String("u_color"))',
+  'context.uniform4f(color, 1.0, 1.0, 1.0, 1.0)',
+  'context.delete_program(program)',
+  'context.delete_shader(',
   'flight::host_sdl::WebGlContextAttributes attributes;',
   'flight::host_sdl::GlImageSourceWeakPolicy',
 ]) {
@@ -129,5 +184,5 @@ try {
 }
 
 process.stdout.write(
-  `SDL/GL binding profile emits compilable native surface, handle, and weak-cache types (${compiler.commit.slice(0, 7)}, ${cppCompiler}).\n`,
+  `SDL/GL profile emits compilable surface, handle, extension, weak-cache, and GL command bindings (${compiler.commit.slice(0, 7)}, ${cppCompiler}).\n`,
 );
