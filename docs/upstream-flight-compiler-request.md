@@ -196,6 +196,13 @@ pointer, wheel, and animation-frame cancellation contracts now reach their next 
 failures in the full SDK graph. The runtime profile maps `PromiseLike<T>` to the existing `flight::Task<T>` carrier;
 the dialog module consequently advances to the compiler's async-closure coroutine-lowering refusal.
 
+The SDL profile now also supplies `Event`, `CompositionEvent`, `InputEvent`, `Gamepad`, `GamepadEvent`, and
+`navigator.getGamepads()` with compiler-checked native carriers. `packages/input/src/inputManager.ts` consequently
+reports only `EventTarget[type]`. A focused compiler probe with an otherwise valid `EventTarget` binding fails with
+`flight-cpp type position retains unresolved auto placeholder: std::function<auto` for `addEventListener` and
+`removeEventListener`. The compiler needs to materialize the listener's event parameter and elect a callable
+identity representation that lets the host remove the same listener without comparing `std::function` targets.
+
 Regenerate and validate from the repository root:
 
 ```sh

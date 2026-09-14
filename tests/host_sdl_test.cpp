@@ -155,6 +155,23 @@ int main() {
           flight::host_sdl::wheel_delta_line == 1.0 &&
           flight::host_sdl::wheel_delta_page == 2.0,
       "SDL host wheel modes do not match the DOM constants");
+  flight::host_sdl::DomEvent browser_event;
+  browser_event.alt_key = true;
+  browser_event.caps_lock = true;
+  browser_event.key = flight::String("A");
+  browser_event.pointer_id = 7.0;
+  browser_event.prevent_default();
+  const auto browser_keyboard = static_cast<flight::host_sdl::InputKeyboardData>(browser_event);
+  const auto browser_pointer = static_cast<flight::host_sdl::InputPointerData>(browser_event);
+  expect(
+      browser_keyboard.alt_key && browser_keyboard.default_prevented &&
+          browser_keyboard.get_modifier_state(flight::String("CapsLock")) &&
+          browser_keyboard.key == flight::String("A"),
+      "SDL DOM event lost keyboard fields during narrowing");
+  expect(
+      browser_pointer.pointer_id == 7.0 && browser_pointer.default_prevented &&
+          browser_pointer.get_coalesced_events().empty(),
+      "SDL DOM event lost pointer fields during narrowing");
   int frame_calls = 0;
   const auto cancelled_frame = flight::host_sdl::request_animation_frame([&] { frame_calls += 100; });
   flight::host_sdl::cancel_animation_frame(cancelled_frame);
@@ -367,6 +384,26 @@ int main() {
   expect(input.dispatch(gamepad_button_event), "SDL gamepad button was not translated");
   expect(gamepad_down_calls == 2 && gamepad_button_data.button == 4.0,
          "SDL gamepad button changed Flight standard mapping");
+
+  const auto gamepads = flight::host_sdl::navigator.get_gamepads();
+  expect(gamepads.size() == 1 && gamepads[0].has_value(),
+         "SDL navigator did not expose the translated gamepad");
+  const auto& gamepad = *gamepads[0];
+  expect(
+      gamepad.index == 4.0 && gamepad.mapping == flight::String("standard") &&
+          gamepad.axes[0] == 1.0 && gamepad.buttons[4].pressed &&
+          !gamepad.buttons[6].pressed,
+      "SDL navigator gamepad snapshot changed standard axes or buttons");
+  gamepad.axes[0] = -1.0;
+  expect((*flight::host_sdl::navigator.get_gamepads()[0]).axes[0] == 1.0,
+         "SDL navigator exposed mutable shared snapshot storage");
+
+  SDL_Event gamepad_removed_event{};
+  gamepad_removed_event.type = SDL_EVENT_GAMEPAD_REMOVED;
+  gamepad_removed_event.gdevice.which = 4;
+  static_cast<void>(input.dispatch(gamepad_removed_event));
+  expect(flight::host_sdl::navigator.get_gamepads().empty(),
+         "SDL navigator retained a removed gamepad");
 
   SDL_Event received{};
   while (host.poll_event(received)) {}

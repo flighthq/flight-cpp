@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <map>
 #include <optional>
 #include <stdexcept>
 #include <string_view>
@@ -14,6 +15,8 @@
 namespace flight::host_sdl {
 
 namespace {
+
+thread_local std::map<std::uint32_t, GamepadSnapshot> gamepad_snapshots;
 
 double milliseconds(std::uint64_t nanoseconds) noexcept {
   return static_cast<double>(nanoseconds) / 1'000'000.0;
@@ -82,11 +85,110 @@ std::optional<std::uint8_t> standard_gamepad_button(std::uint8_t button) noexcep
   }
 }
 
+GamepadSnapshot& ensure_gamepad(std::uint32_t id) {
+  auto [entry, inserted] = gamepad_snapshots.try_emplace(id);
+  if (inserted) entry->second.index = static_cast<double>(id);
+  return entry->second;
+}
+
+void update_gamepad_axis(std::uint32_t id, std::uint8_t axis, std::int16_t raw_value) {
+  auto& gamepad = ensure_gamepad(id);
+  const auto kind = static_cast<SDL_GamepadAxis>(axis);
+  if (kind == SDL_GAMEPAD_AXIS_LEFT_TRIGGER || kind == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) {
+    const std::size_t index = kind == SDL_GAMEPAD_AXIS_LEFT_TRIGGER ? 6U : 7U;
+    const auto value = std::clamp(
+        static_cast<double>(raw_value) /
+            static_cast<double>(std::numeric_limits<std::int16_t>::max()),
+        0.0,
+        1.0);
+    gamepad.buttons[index] = GamepadButtonSnapshot{.pressed = value > 0.5, .value = value};
+    return;
+  }
+  if (axis < gamepad.axes.size()) gamepad.axes[axis] = normalized_gamepad_axis(raw_value);
+}
+
+void update_gamepad_button(std::uint32_t id, std::uint8_t button, bool down) {
+  const auto standard = standard_gamepad_button(button);
+  if (!standard) return;
+  auto& gamepad = ensure_gamepad(id);
+  gamepad.buttons[*standard] =
+      GamepadButtonSnapshot{.pressed = down, .value = down ? 1.0 : 0.0};
+}
+
 } // namespace
+
+GamepadNavigator navigator;
+
+DomEvent::operator InputKeyboardData() const {
+  return InputKeyboardData{
+      .alt_key = alt_key,
+      .caps_lock = caps_lock,
+      .code = code,
+      .ctrl_key = ctrl_key,
+      .key = key,
+      .key_code = key_code,
+      .location = location,
+      .meta_key = meta_key,
+      .modifier = modifier,
+      .num_lock = num_lock,
+      .repeat = repeat,
+      .shift_key = shift_key,
+      .time_stamp = time_stamp,
+      .default_prevented = default_prevented,
+  };
+}
+
+DomEvent::operator InputPointerData() const {
+  return InputPointerData{
+      .alt_key = alt_key,
+      .button = button,
+      .buttons = buttons,
+      .ctrl_key = ctrl_key,
+      .delta_x = delta_x,
+      .delta_y = delta_y,
+      .height = height,
+      .is_primary = is_primary,
+      .meta_key = meta_key,
+      .pointer_id = pointer_id,
+      .pointer_type = pointer_type,
+      .pressure = pressure,
+      .shift_key = shift_key,
+      .tilt_x = tilt_x,
+      .tilt_y = tilt_y,
+      .time_stamp = time_stamp,
+      .twist = twist,
+      .wheel_mode = wheel_mode,
+      .width = width,
+      .x = x,
+      .y = y,
+      .client_x = client_x,
+      .client_y = client_y,
+      .default_prevented = default_prevented,
+  };
+}
+
+Array<std::optional<GamepadSnapshot>> GamepadNavigator::get_gamepads() const {
+  Array<std::optional<GamepadSnapshot>> result;
+  for (const auto& [id, gamepad] : gamepad_snapshots) {
+    static_cast<void>(id);
+    auto snapshot = gamepad;
+    snapshot.axes = gamepad.axes.clone();
+    snapshot.buttons = gamepad.buttons.clone();
+    result.push(std::move(snapshot));
+  }
+  return result;
+}
 
 InputDispatcher::InputDispatcher(std::uint32_t window_id, InputSink sink)
     : window_id_(window_id), sink_(std::move(sink)) {
   if (window_id_ == 0) throw std::invalid_argument("SDL input dispatcher requires a window id");
+}
+
+InputDispatcher::~InputDispatcher() {
+  for (const auto& [id, gamepad] : gamepads_) {
+    static_cast<void>(id);
+    SDL_CloseGamepad(gamepad);
+  }
 }
 
 bool InputDispatcher::dispatch(const SDL_Event& event) {
@@ -199,6 +301,8 @@ bool InputDispatcher::dispatch(const SDL_Event& event) {
       return true;
     }
     case SDL_EVENT_GAMEPAD_AXIS_MOTION: {
+      update_gamepad_axis(
+          static_cast<std::uint32_t>(event.gaxis.which), event.gaxis.axis, event.gaxis.value);
       const auto axis = static_cast<SDL_GamepadAxis>(event.gaxis.axis);
       if (axis == SDL_GAMEPAD_AXIS_LEFT_TRIGGER || axis == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) {
         const std::uint8_t button = axis == SDL_GAMEPAD_AXIS_LEFT_TRIGGER ? 6 : 7;
@@ -240,6 +344,10 @@ bool InputDispatcher::dispatch(const SDL_Event& event) {
     }
     case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
     case SDL_EVENT_GAMEPAD_BUTTON_UP: {
+      update_gamepad_button(
+          static_cast<std::uint32_t>(event.gbutton.which),
+          event.gbutton.button,
+          event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN);
       const auto button = standard_gamepad_button(event.gbutton.button);
       if (!button) return false;
       const auto& callback = event.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN
@@ -262,12 +370,26 @@ bool InputDispatcher::dispatch(const SDL_Event& event) {
       if (event.type == SDL_EVENT_GAMEPAD_ADDED) {
         name = sdl_string(SDL_GetGamepadNameForID(event.gdevice.which));
         gamepad_names_.insert_or_assign(id, name);
+        if (!gamepads_.contains(id)) {
+          if (auto* gamepad = SDL_OpenGamepad(event.gdevice.which); gamepad != nullptr) {
+            gamepads_.emplace(id, gamepad);
+          }
+        }
+        auto& snapshot = ensure_gamepad(id);
+        snapshot.id = name;
+        snapshot.mapping = String("standard");
       } else {
         const auto existing = gamepad_names_.find(id);
         if (existing != gamepad_names_.end()) {
           name = existing->second;
           gamepad_names_.erase(existing);
         }
+        const auto open = gamepads_.find(id);
+        if (open != gamepads_.end()) {
+          SDL_CloseGamepad(open->second);
+          gamepads_.erase(open);
+        }
+        gamepad_snapshots.erase(id);
         const auto first_trigger = static_cast<std::uint64_t>(id) << 8U;
         gamepad_trigger_state_.erase(first_trigger | 6U);
         gamepad_trigger_state_.erase(first_trigger | 7U);

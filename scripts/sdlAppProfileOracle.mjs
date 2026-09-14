@@ -68,6 +68,18 @@ const source = api.parseTypeScriptSource(
      const discarded = requestAnimationFrame((_timestamp) => {});
      cancelAnimationFrame(discarded);
      return requestAnimationFrame((_timestamp) => {});
+   }
+   export function inspectNativeEvents(
+     event: Event,
+     input: InputEvent,
+     composition: CompositionEvent,
+     gamepadEvent: GamepadEvent,
+   ): string {
+     event.preventDefault();
+     const keyboard = event as KeyboardEvent;
+     const gamepad: Gamepad = gamepadEvent.gamepad;
+     navigator.getGamepads();
+     return keyboard.key + (input.data ?? '') + (composition.data ?? '') + gamepad.id;
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -95,6 +107,10 @@ for (const expected of [
   'flight::host_sdl::request_animation_frame(',
   'flight::host_sdl::InputKeyboardData event',
   'flight::host_sdl::InputPointerData event',
+  'flight::host_sdl::DomEvent event',
+  'static_cast<flight::host_sdl::InputKeyboardData>(event)',
+  'flight::host_sdl::navigator.get_gamepads()',
+  'flight::host_sdl::GamepadSnapshot gamepad',
 ]) {
   if (!emitted.includes(expected)) {
     process.stderr.write(`SDL app binding fixture did not emit ${expected}.\n`);

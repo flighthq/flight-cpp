@@ -3,9 +3,14 @@
   "identity": "flighthq/flight-cpp/sdl-app/1",
   "profile": "sdl-app",
   "bindings": [
+    { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "CompositionEvent", "space": "type", "targetName": "flight::host_sdl::DomEvent" },
+    { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "Event", "space": "type", "targetName": "flight::host_sdl::DomEvent" },
+    { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "Gamepad", "space": "type", "targetName": "flight::host_sdl::GamepadSnapshot" },
+    { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GamepadEvent", "space": "type", "targetName": "flight::host_sdl::DomEvent" },
     { "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "HTMLElement", "space": "type", "targetName": "flight::host_sdl::HtmlElement" },
     { "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "HTMLInputElement", "space": "type", "targetName": "flight::host_sdl::HtmlInputElement" },
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "borrowed", "sourceName": "HTMLCanvasElement", "space": "value", "targetName": "flight::host_sdl::GlCanvas" },
+    { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "InputEvent", "space": "type", "targetName": "flight::host_sdl::DomEvent" },
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "KeyboardEvent", "space": "type", "targetName": "flight::host_sdl::InputKeyboardData" },
     {
       "headers": ["flight/host_sdl/input.hpp"],
@@ -53,6 +58,17 @@
       "targetName": "flight::host_sdl::document"
     },
     { "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "borrowed", "sourceName": "cancelAnimationFrame", "space": "value", "targetName": "flight::host_sdl::cancel_animation_frame" },
+    {
+      "headers": ["flight/host_sdl/input.hpp"],
+      "members": [
+        { "sourceMember": "getGamepads", "targetName": "flight::host_sdl::navigator.get_gamepads" }
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "navigator",
+      "space": "value",
+      "targetName": "flight::host_sdl::navigator"
+    },
     { "callResultType": "double", "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "borrowed", "sourceName": "requestAnimationFrame", "space": "value", "targetName": "flight::host_sdl::request_animation_frame" },
     {
       "headers": ["flight/host_sdl/web_platform.hpp"],

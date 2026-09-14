@@ -90,7 +90,8 @@ The installed build exports four targets through the existing `FlightCpp` packag
   `bindings/sdl-app.json` layers a browser-shaped application shell over this target for upstream examples. Its
   document attachment is intentionally lightweight, while its request/cancel frame queue and SDL input bridge
   preserve ordered animation turns and route keyboard, pointer, and wheel events into registered listeners on
-  `window` and `GlCanvas`.
+  `window` and `GlCanvas`. The input surface also exposes value-owned standard-layout gamepad snapshots through
+  `navigator.getGamepads()` and a common event carrier for Flight's base-event narrowing.
 - `Flight::HostSdlVulkan` copies the required instance extension names and owns the `VkSurfaceKHR` returned by SDL.
 - `Flight::HostSdlWgpu` owns a type-erased native WebGPU surface through create/destroy callbacks supplied by a Dawn
   or wgpu-native adapter. It intentionally adds no WebGPU implementation dependency.
