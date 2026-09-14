@@ -2,8 +2,15 @@
 
 The maintained downstream checklist now lives in [flight-compiler adoption status](flight-compiler-adoption.md).
 
-This review covers Flight `1274ec5` and flight-compiler `993c280`. Both revisions are pinned in
-[`dependencies.lock.json`](../dependencies.lock.json).
+The current checkout pins Flight `1274ec5` and flight-compiler `a6895ee`. Its portable sweep emits 947 of 2,851
+modules; GCC 15.2 compiles 881 of those headers and reports 66 generated-code failures. The complete SDL profile
+emits 1,088 modules, with 980 passing and 108 failing independent-header checks. All 33 upstream example packages
+still remain dependency-blocked: the selected graph and direct frontier each emit 0 of 100 modules. Their native
+renderer roots now reach the compiler's unrepresented optional `Raster2DSurfaceProvider` reference domain.
+
+The detailed review below records the earlier `993c280` handoff that defined the downstream runtime and host work.
+Both current revisions are pinned in [`dependencies.lock.json`](../dependencies.lock.json), and the maintained status
+document records the active counts and remaining ownership.
 
 ## Complete report sweep
 

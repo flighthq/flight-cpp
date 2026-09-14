@@ -5,11 +5,13 @@ This is flight-cpp's maintained view of the downstream work requested by
 adopted. Adoption also requires build packaging, compiler-emitted compilation, source differential behavior where
 observable, and a complete regenerated SDK closure.
 
-The current pins are Flight `1274ec5` and flight-compiler `993c280`. The portable sweep processes all 154 packages
-and 2,851 modules. It emits 959 dependency-closed headers and records 1,892 refusals. All emitted includes resolve;
-703 headers compile independently with GCC 15.2 and 256 stop at compiler-emitted C++ errors. Compared with compiler
-`5649642`, the stricter semantic pass refuses 73 more modules while removing 72 malformed headers and retaining all
-but one of the portable headers that compiled independently.
+The current pins are Flight `1274ec5` and flight-compiler `a6895ee`. The portable sweep processes all 154 packages
+and 2,851 modules. It emits 947 dependency-closed headers and records 1,904 refusals: 1,102 direct emission refusals
+and 802 propagated dependency refusals. All emitted includes resolve; 881 headers compile independently with GCC
+15.2 and 66 stop at compiler-emitted C++ errors. The complete SDL profile emits 1,088 headers with 1,763 refusals;
+980 compile independently and 108 expose generated-code defects. Compared with the previous `993c280` pin, the
+portable pass count increased by 178 while the failure count fell by 190, despite a stricter boundary removing 12
+headers from the portable inventory.
 
 ## Downstream implementation
 
@@ -57,12 +59,15 @@ but one of the portable headers that compiled independently.
   member table are committed under `generated/` and reproduced by `npm run sdk:check`.
 - CMake `Flight::SdkPreview` and Bazel `//:sdk_preview` expose every emitted header without claiming a finished SDK.
   The preview is intentionally not installed.
+- Bazel automatically selects C++20 for its local Linux, macOS, BSD, and Windows host configuration; a default
+  `bazel test //tests:runtime_test` no longer relies on a caller-supplied dialect flag. Cross and remote builds disable
+  that host selection and provide C++20 through their registered toolchain.
 - CMake `Flight::HostSdlSdkPreview` and Bazel `//:host_sdl_sdk_preview` collect every exact generated-record SDL
   adapter as one build-tree dependency without fabricating the compiler-refused aggregate `Host` record.
 - `npm run sdk:compile` compiles every emitted header independently and writes the compiler-facing report to
   `out/sdk-header-compilation.json`.
 - `npm run sdk:compile:headless` applies the same audit to the combined portable-runtime/headless inventory. At the
-  current pin, the composed profile emits 1,049 modules: 90 more than the manifest-free floor. Of those additional
+  previous `993c280` pin, the composed profile emitted 1,049 modules: 90 more than the manifest-free floor. Of those additional
   headers, 12 compile and 78 advance to existing tuple, union, reference-conversion, aggregate-construction,
   typed-array-template, spatial-type, and type-spelling defects. Because every shared header is byte-identical to the
   full SDL inventory, its completed audit gives 715 passing and 334 failing headers.
@@ -72,9 +77,9 @@ but one of the portable headers that compiled independently.
 - `npm run sdk:generate:sdl-wgpu` applies the Web string aliases and provider-owned WebGPU handle profile. It emits
   1,067 modules, 18 more than runtime/headless, and every added header compiles independently: 733 pass and 334 fail
   overall.
-- `npm run sdk:generate:sdl` composes the GL, WebGPU, and SDL application profiles. It emits 1,098 modules; all 17
-  headers beyond the SDL/GL inventory compile, for 756 passing and 342 failing headers. Direct external-binding
-  refusals fall from the SDL/GL profile's original 242 to 111. Window, document, `HTMLElement`, animation-frame
+- `npm run sdk:generate:sdl` composes the GL, WebGPU, and SDL application profiles. At `a6895ee` it emits 1,088
+  modules; 980 compile independently and 108 fail in generated C++. Its 1,763 refusals comprise 872 direct emission
+  and 891 propagated dependency refusals. Window, document, `HTMLElement`, animation-frame
   cancellation, and the represented input event types advance to their next compiler or dependency boundary. The
   runtime profile also maps the compiler's existing `PromiseLike<T>` task domain to `flight::Task<T>`; `dialog.ts`
   now reaches the compiler-owned async-closure coroutine blocker instead of stopping at that ambient type.
@@ -112,9 +117,10 @@ but one of the portable headers that compiled independently.
   frame, keyboard, pointer, wheel, gamepad-button, and `DOMRect` refusal. The rectangle binding clears that ambient
   name from eleven selected roots; collision, scene-picking, shapes, and spatial now expose their next compiler or
   dependency boundary. Remaining direct names describe real work: Canvas 2D, richer HTML controls, media, and the
-  sound example's `AudioContext`. The selected ledger contains 55 emission and 45
-  dependency refusals; its dependency-first frontier remains 39 compiler emission failures, 33 propagated dependency
-  failures, and 28 external-package initialization edges. The inventory is committed under
+  sound example's `AudioContext`. The selected ledger contains 54 emission and 46
+  dependency refusals; its dependency-first frontier remains 38 compiler emission failures, 33 propagated dependency
+  failures, and 29 external-package initialization edges. Every native renderer currently reaches the compiler's
+  unrepresented optional `Raster2DSurfaceProvider` reference domain. The inventory is committed under
   `examples/upstream/generated/` and contains no duplicate SDK sources.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
   runtime. It currently covers 49 cross-runtime observations.
@@ -128,11 +134,14 @@ but one of the portable headers that compiled independently.
 
 ## Compiler and host work still gating the SDK
 
-The current 256 portable and 342 SDL-profile native header failures begin with compiler-emitted optional/value
+The current 66 portable and 108 SDL-profile native header failures begin with compiler-emitted optional/value
 conversions, concrete typed-array aliases used as templates, value spelling used where a type name is required,
 invalid union member access,
 non-convertible duplicate anonymous records, circular generated includes without forward declarations, package-scope helper collisions, and malformed type queries. These must
 be corrected in flight-compiler rather than rewritten in the generated tree.
+
+The detailed profile-frontier notes below record the `993c280` binding bring-up. Their intermediate counts are
+historical; the current aggregate figures above come from complete `a6895ee` regeneration and compilation.
 
 The stricter compiler newly refuses 16 direct roots that the previous portable sweep emitted. Five need equivalent
 source-union evidence, five expose generic typed-array backing domains that are not represented by the concrete C++
