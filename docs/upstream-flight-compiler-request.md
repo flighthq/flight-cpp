@@ -33,6 +33,8 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
   semantics covered by live compiler-versus-Node oracles;
 - shared readable/writable stream and async-iterable carriers, including compiler-emitted writer operations and
   native task callbacks; these admit three more independently compiling SDK headers;
+- shared decoded-PCM `AudioBuffer` storage with live channel views and bounded channel copies, selected through the
+  runtime profile and exercised by compiler-emitted native code;
 - `TextEncoder` scalar UTF-8 and unpaired-surrogate replacement, whose newly admitted SWF helper compiles after
   shared runtime containers gained JavaScript-compatible logical constness;
 - numeric conversion and prefix parsing, safe-integer checks, object keys/values, symbols, URL protocol parsing,
@@ -157,13 +159,15 @@ The SDL host now also implements the complete emitted `AudioDeviceBackend` opera
 callback, including PCM buffer acquisition, concurrent source playback, live gain/pan/rate, bounded regions,
 teardown semantics, and application-thread completion delivery. Its generated-record adapter compiles and runs at
 this pin. The compiler still needs importer-specific module remapping to replace `webAudioDeviceBackend` in the sound
-example, and the SDK still needs a native representation for the `AudioBuffer` stored by `AudioResource` and created
-by `createAudioResourceFromSamples`. The host playback seam is no longer part of that blocker.
+example. The runtime now represents the `AudioBuffer` stored by `AudioResource` and created by
+`createAudioResourceFromSamples`; encoded-byte decoding still requires an explicit native codec/provider contract.
+The host playback seam is no longer part of that blocker.
 
 The downstream `flighthq/flight-cpp/sdl-gl/1` profile now names concrete SDL-owned canvas/context types, shared GL
 object handles, context attributes, a weakly recoverable image-source carrier, and
-`EXT_texture_filter_anisotropic`. Composed with the current runtime profile it emits 1,106 modules; 21 of its 29
-newly admitted headers compile. The extension binding removes its direct ambient refusal; `GlContextRuntime` then
+`EXT_texture_filter_anisotropic`. Composed with the current runtime profile it emits 1,109 modules, 30 beyond the
+runtime/headless inventory; 21 of those additions compile independently. The extension binding removes its direct
+ambient refusal; `GlContextRuntime` then
 reaches `flight-cpp WeakMap value requires a proven C++ representation`. The next renderer-wide compiler blocker is exact:
 `packages/types/src/GlContext.ts` retains
 `auto viewport;` after its closed `Pick<WebGL2RenderingContext, GlContextMember>` is materialized. The fail-closed

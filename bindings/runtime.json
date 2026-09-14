@@ -68,6 +68,30 @@
       "targetName": "flight::ArrayBufferLike"
     },
     {
+      "headers": [
+        "flight/audio_buffer.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "AudioBuffer",
+      "space": "type",
+      "targetName": "flight::AudioBuffer"
+    },
+    {
+      "construction": {
+        "kind": "constructor",
+        "targetName": "flight::AudioBuffer"
+      },
+      "headers": [
+        "flight/audio_buffer.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "AudioBuffer",
+      "space": "value",
+      "targetName": "flight::AudioBuffer"
+    },
+    {
       "callResultType": "flight::String",
       "headers": [
         "flight/base64.hpp"

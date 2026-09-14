@@ -66,4 +66,5 @@ _PUBLIC_HEADERS = [
     ("base64", 40),
     ("stream", 41),
     ("text_encoder", 42),
+    ("audio_buffer", 43),
 ]

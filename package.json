@@ -12,6 +12,7 @@
     "abort:oracle": "node ./scripts/abortOracle.mjs",
     "abi:check": "node ./scripts/abiHealth.mjs",
     "array-like:oracle": "node ./scripts/arrayLikeOracle.mjs",
+    "audio-buffer:oracle": "node ./scripts/audioBufferOracle.mjs",
     "base64:oracle": "node ./scripts/base64Oracle.mjs",
     "blob:oracle": "node ./scripts/blobOracle.mjs",
     "build:check": "node ./scripts/buildHealth.mjs",

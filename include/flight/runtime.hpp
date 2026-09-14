@@ -4,6 +4,7 @@
 #include <flight/array.hpp>
 #include <flight/array_buffer.hpp>
 #include <flight/array_buffer_view.hpp>
+#include <flight/audio_buffer.hpp>
 #include <flight/base64.hpp>
 #include <flight/blob.hpp>
 #include <flight/callable.hpp>

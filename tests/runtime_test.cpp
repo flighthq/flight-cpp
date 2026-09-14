@@ -195,6 +195,69 @@ void test_binary_data() {
   check(bounds_failed, "DataView rejects reads beyond its declared view");
 }
 
+void test_audio_buffer() {
+  const flight::AudioBuffer buffer({
+      .length = 4.0,
+      .number_of_channels = 2.0,
+      .sample_rate = 48'000.0,
+  });
+  check(buffer.length == 4.0 && buffer.number_of_channels == 2.0 &&
+            buffer.sample_rate == 48'000.0 && buffer.duration == 4.0 / 48'000.0,
+        "AudioBuffer exposes decoded PCM dimensions and duration");
+  const flight::AudioBuffer mono({.length = 1.0, .sample_rate = 48'000.0});
+  check(mono.number_of_channels == 1.0,
+        "AudioBuffer defaults an omitted numberOfChannels option to one");
+
+  const auto first_channel = buffer.get_channel_data(0.0);
+  const auto second_channel = buffer.get_channel_data(1.0);
+  check(first_channel != second_channel && first_channel.size() == 4 &&
+            second_channel.size() == 4,
+        "AudioBuffer allocates an independent live typed-array view for each channel");
+
+  buffer.copy_to_channel(flight::Float32Array{0.25F, -0.5F, 0.75F}, 1.0, 1.0);
+  const auto second_alias = buffer.get_channel_data(1.0);
+  check(second_alias == second_channel && second_alias[0] == 0.0F &&
+            second_alias[1] == 0.25F && second_alias[2] == -0.5F &&
+            second_alias[3] == 0.75F,
+        "AudioBuffer copyToChannel truncates to its range and updates the stable live view");
+
+  flight::Float32Array destination{9.0F, 9.0F, 9.0F};
+  buffer.copy_from_channel(destination, 1.0, 2.0);
+  check(destination[0] == -0.5F && destination[1] == 0.75F && destination[2] == 9.0F,
+        "AudioBuffer copyFromChannel copies available samples without overwriting the tail");
+
+  const auto alias = buffer;
+  alias.get_channel_data(0.0)[0] = 1.0F;
+  check(alias == buffer && alias.identity() == buffer.identity() &&
+            buffer.get_channel_data(0.0)[0] == 1.0F,
+        "AudioBuffer copies retain object identity and shared channel storage");
+
+  bool invalid_channel_failed = false;
+  bool invalid_offset_failed = false;
+  bool invalid_options_failed = false;
+  try {
+    static_cast<void>(buffer.get_channel_data(2.0));
+  } catch (const std::range_error&) {
+    invalid_channel_failed = true;
+  }
+  try {
+    buffer.copy_to_channel(flight::Float32Array{1.0F}, 0.0, 5.0);
+  } catch (const std::range_error&) {
+    invalid_offset_failed = true;
+  }
+  try {
+    static_cast<void>(flight::AudioBuffer({
+        .length = 0.0,
+        .number_of_channels = 1.0,
+        .sample_rate = 48'000.0,
+    }));
+  } catch (const std::range_error&) {
+    invalid_options_failed = true;
+  }
+  check(invalid_channel_failed && invalid_offset_failed && invalid_options_failed,
+        "AudioBuffer rejects invalid channels, offsets, and construction options");
+}
+
 void test_blob() {
   const flight::Blob text_blob(
       flight::Array<flight::String>{"Flight ", flight::String::from_utf8("\xF0\x9F\x98\x80")},
@@ -1249,6 +1312,7 @@ int main() {
   test_array();
   test_array_buffer_like();
   test_array_like_views();
+  test_audio_buffer();
   test_binary_data();
   test_base64();
   test_blob();

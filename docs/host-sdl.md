@@ -166,8 +166,8 @@ The native mechanics are now present. Wiring them to generated Flight contracts 
 3. `Flight::HostSdlSdkAudio` and Bazel `//:host_sdl_sdk_audio` already populate the emitted
    `flight::types::AudioDeviceBackend` record and execute it against SDL's dummy driver in the host test. The CMake
    target and `sdk_audio.hpp` are build-tree preview surfaces until `Flight::Sdk` is installable. A compiler module
-   remap must replace the sound example's `webAudioDeviceBackend` provider, while the compiler still needs a native
-   representation for `AudioBuffer` in `AudioResource` and `createAudioResourceFromSamples`.
+   remap must replace the sound example's `webAudioDeviceBackend` provider. Encoded sound bytes still need a native
+   decoder/provider; decoded PCM now uses the portable `flight::AudioBuffer` carrier.
 4. Implement generated `WgpuHostBackend` and `WgpuRenderSurfaceProvider` with a selected Dawn or wgpu-native adapter.
    `WgpuSurfaceCallbacks` is the stable point where that dependency enters.
 5. Adapt `InputDispatcher`'s normalized records into the generated Flight input types once `InputPointerData` and

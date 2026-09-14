@@ -33,6 +33,7 @@ set(
   array
   array_buffer
   array_buffer_view
+  audio_buffer
   base64
   blob
   callable
