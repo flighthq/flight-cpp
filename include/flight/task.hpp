@@ -568,6 +568,47 @@ class Task {
     return join_all(std::move(tasks), std::move(executor));
   }
 
+  [[nodiscard]] static Task<std::vector<TaskSettlement<Value>>> all_settled(
+      std::vector<Task> tasks, std::shared_ptr<Executor> executor = current_executor()) {
+    using Settlement = TaskSettlement<Value>;
+    auto output = Task<std::vector<Settlement>>::pending(std::move(executor));
+    if (tasks.empty()) {
+      output.state_->fulfill({});
+      return output;
+    }
+
+    struct JoinState {
+      std::mutex mutex;
+      std::size_t remaining;
+      std::vector<std::optional<Settlement>> settlements;
+    };
+    auto join = std::make_shared<JoinState>();
+    join->remaining = tasks.size();
+    join->settlements.resize(tasks.size());
+    for (std::size_t index = 0; index < tasks.size(); ++index) {
+      auto source = tasks[index];
+      source.state_->subscribe([source, output_state = output.state_, executor = output.executor_, join, index] {
+        post(executor, [source, output_state, join, index] {
+          std::optional<std::vector<Settlement>> settlements;
+          {
+            std::lock_guard lock(join->mutex);
+            join->settlements[index] = source.state_->settlement();
+            --join->remaining;
+            if (join->remaining == 0) {
+              settlements.emplace();
+              settlements->reserve(join->settlements.size());
+              for (auto& settlement : join->settlements) {
+                settlements->push_back(std::move(*settlement));
+              }
+            }
+          }
+          if (settlements) output_state->fulfill(std::move(*settlements));
+        });
+      });
+    }
+    return output;
+  }
+
   template <typename Function>
     requires(!std::is_void_v<Value> && std::copy_constructible<std::remove_cvref_t<Function>>)
   [[nodiscard]] auto then(Function function) const
@@ -812,6 +853,20 @@ template <typename Value>
     return Array<Value>(std::make_move_iterator(settled.begin()),
                         std::make_move_iterator(settled.end()));
   });
+}
+
+template <typename Value>
+[[nodiscard]] Task<Array<TaskSettlement<Value>>> all_settled_tasks(
+    const Array<Task<Value>>& tasks) {
+  std::vector<Task<Value>> values;
+  values.reserve(tasks.size());
+  for (const auto& task : tasks) values.push_back(task);
+  return Task<Value>::all_settled(std::move(values)).then(
+      [](std::vector<TaskSettlement<Value>> settlements) {
+        return Array<TaskSettlement<Value>>(
+            std::make_move_iterator(settlements.begin()),
+            std::make_move_iterator(settlements.end()));
+      });
 }
 
 template <typename Value, typename Reason>

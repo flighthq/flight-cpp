@@ -63,6 +63,7 @@ const weakSetKey = {};
 const weakSet = new WeakSet();
 const weakSetAddIdentity = weakSet.add(weakSetKey) === weakSet && weakSet.has(weakSetKey);
 const weakSetDelete = weakSet.delete(weakSetKey) && !weakSet.has(weakSetKey);
+const settlements = await Promise.allSettled([Promise.resolve(3), Promise.reject('bad')]);
 const expected = JSON.stringify([
   dataView.getUint32(1, true),
   new TextDecoder().decode(new Uint8Array([0xe0, 0x80, 0x80])),
@@ -88,6 +89,11 @@ const expected = JSON.stringify([
   ArrayBuffer.isView(Uint8Array.from([1, 2]).buffer),
   [new RangeError('outside').name, new RangeError('outside').message],
   [new TypeError('wrong type').name, new TypeError('wrong type').message],
+  settlements.map((settlement) =>
+    settlement.status === 'fulfilled'
+      ? [settlement.status, settlement.value]
+      : [settlement.status, settlement.reason],
+  ),
   Object.entries(Object.assign(target, source)),
   Object.keys(record),
   Object.entries(record),

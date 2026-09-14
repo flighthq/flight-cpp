@@ -71,6 +71,15 @@ int main() {
   const flight::TypeError type_error("wrong type");
   observations.push(flight::JsonArray{flight::TypeError::name(), type_error.message()});
 
+  const auto settlements = flight::all_settled_tasks(flight::Array{
+      flight::Task<double>::ready(3.0),
+      flight::Task<double>::reject(flight::String("bad"))}).get();
+  flight::JsonArray settlement_values;
+  settlement_values.push(flight::JsonArray{flight::String("fulfilled"), *settlements[0].value});
+  settlement_values.push(flight::JsonArray{
+      flight::String("rejected"), settlements[1].rejection->as<flight::String>()});
+  observations.push(std::move(settlement_values));
+
   flight::Map<flight::String, double> target{{"first", 0.0}, {"retained", 3.0}};
   const flight::Map<flight::String, double> source{{"first", 1.0}, {"second", 2.0}};
   flight::object_assign(target, source);

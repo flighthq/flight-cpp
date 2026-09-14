@@ -52,7 +52,7 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
   compiler defects: concrete typed-array aliases spelled as templates, a `Record<..., void>` representation, or
   transitive `Bitmap` failures. The complete expanded result is 734 passing and 372 failing headers.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
-  runtime. It currently covers 36 cross-runtime observations.
+  runtime. It currently covers 37 cross-runtime observations.
 - `npm run structural:oracle` generates the exact generic Entity write proxy through the pinned compiler, compiles
   the emitted headers, and executes an intercepted write against the working runtime.
 - `Flight::Sdk` remains blocked until every emitted header in the selected binding profile compiles. At that point it
@@ -74,6 +74,13 @@ and their common `flight::Error` base. The compiler can map the corresponding ty
 runtime classes instead of the standard exceptions. An exact-pin mapping experiment removes that constructor error
 from all nine headers; each then reaches an existing optional-unwrapping or missing-symbol emission defect, so it
 does not change the current independently compiling total.
+
+`flight::all_settled_tasks` now returns an ordered, non-rejecting task of `TaskSettlement<T>` records and preserves
+exact rejection values, including for `void` tasks. Mapping `Promise.allSettled` also requires the compiler to map
+the source `PromiseSettledResult<T>` discriminated union onto this carrier and lower `status`, `value`, and `reason`
+access without direct `std::variant` member access. A disposable exact-pin member mapping removes the current direct
+refusal; the scene-resource caller then reaches an already-refused dependency, so the emitted header total is
+unchanged.
 
 The versioned `flighthq/flight-cpp/runtime-carriers/1` profile supplies the implemented `AbortController`,
 `AbortSignal`, `ArrayBufferLike`, `ArrayLike<T>`, `ArrayBufferView`, `Blob`, `WeakSet`, `atob`, `btoa`,

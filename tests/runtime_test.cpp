@@ -1186,6 +1186,27 @@ void test_task() {
   check(all.size() == 2 && all[0] == 3 && all[1] == 4,
         "Promise all helper bridges semantic arrays and tasks");
 
+  const auto all_settled = flight::all_settled_tasks(flight::Array{
+      FlightTask<int>::ready(3), FlightTask<int>::reject(flight::String("bad")),
+      FlightTask<int>::ready(4)}).get();
+  check(all_settled.size() == 3 &&
+            all_settled[0].status == flight::TaskStatus::fulfilled &&
+            all_settled[0].value == std::optional<int>(3) &&
+            all_settled[1].status == flight::TaskStatus::rejected &&
+            all_settled[1].rejection->as<flight::String>() == flight::String("bad") &&
+            all_settled[2].status == flight::TaskStatus::fulfilled &&
+            all_settled[2].value == std::optional<int>(4),
+        "Promise allSettled helper preserves source order and exact rejection values");
+
+  const auto all_settled_void = FlightTask<void>::all_settled(
+      std::vector<FlightTask<void>>{FlightTask<void>::ready(),
+                                    FlightTask<void>::reject(flight::String("void bad"))}).get();
+  check(all_settled_void.size() == 2 &&
+            all_settled_void[0].status == flight::TaskStatus::fulfilled &&
+            all_settled_void[1].status == flight::TaskStatus::rejected &&
+            all_settled_void[1].rejection->as<flight::String>() == flight::String("void bad"),
+        "Promise allSettled supports void tasks without rejecting the aggregate");
+
   const auto preserved_rejection = value_rejection.finally([] {});
   const auto preserved_settlement = preserved_rejection.settle();
   check(preserved_settlement.status == flight::TaskStatus::rejected &&

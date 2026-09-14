@@ -106,6 +106,14 @@ mapping removes those nine constructor errors, after which the same headers reac
 missing-symbol emission defects. This mapping is still the correct ABI fix, but it does not raise the present 713
 passing-header count by itself.
 
+The runtime now also provides `flight::all_settled_tasks(Array<Task<T>>)` and
+`Task<T>::all_settled(std::vector<Task<T>>)`, returning ordered `TaskSettlement<T>` values without rejecting the
+aggregate. The compiler can bind `Promise.allSettled` to the free function after it maps
+`PromiseSettledResult<T>` to that carrier and lowers the source union's `status`, `value`, and `reason` access. A
+disposable exact-pin member mapping already removes the only direct all-settled refusal; the scene-resource module
+then reaches its existing `resolveScene3DResources` dependency refusal, so this change does not alter the current
+1,077-header total by itself.
+
 ## Host boundary
 
 The manifest-free generation remains the portable floor. Browser, media, Node, and graphics handles require explicit
