@@ -234,6 +234,12 @@ SDL's main-thread system-cursor API. The interaction and sound examples still im
 remap must select a native provider with the same requested export before those entry points can consume this
 adapter without source rewriting.
 
+The SDL window side now also populates emitted `ApplicationVisibilityBackend` and the request/exit portion of
+`FullscreenBackend` through `Flight::HostSdlSdkWindow`. The optional fullscreen listener fields and the required
+`ApplicationExitBackend` listener pair are deliberately left unwired: the provider must remove the same JavaScript
+function object passed at subscription time, which cannot be recovered from separately copied `std::function`
+values. Emitting the prepared `flight::Function` carrier unlocks those exact adapters.
+
 ## Host boundary
 
 The manifest-free generation remains the portable floor. Browser, media, Node, and graphics handles require explicit

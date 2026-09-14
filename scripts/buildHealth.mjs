@@ -95,6 +95,7 @@ for (const target of [
   'Flight::HostSdlImage',
   'Flight::HostSdlSdkAudio',
   'Flight::HostSdlSdkCursor',
+  'Flight::HostSdlSdkWindow',
   'Flight::HostSdlVulkan',
   'Flight::HostSdlWgpu',
 ]) {
@@ -106,6 +107,7 @@ for (const target of [
   'host_sdl_image',
   'host_sdl_sdk_audio',
   'host_sdl_sdk_cursor',
+  'host_sdl_sdk_window',
   'host_sdl_wgpu',
 ]) {
   requireText(bazelGraph, `name = "${target}"`, `Bazel //:${target} target`);

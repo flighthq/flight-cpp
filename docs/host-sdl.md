@@ -53,7 +53,7 @@ SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
 ```
 
 The public Bazel labels are `//:host_sdl`, `//:host_sdl_image`, `//:host_sdl_gl`, `//:host_sdl_sdk_audio`,
-`//:host_sdl_sdk_cursor`, and `//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core
+`//:host_sdl_sdk_cursor`, `//:host_sdl_sdk_window`, and `//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core
 `bazel test //...` does not fetch or build SDL. CMake remains the complete package path for the Vulkan surface
 adapter.
 
@@ -205,6 +205,12 @@ Flight's sentinel/no-op contract, and destroying a buffer does not invalidate so
 `flight::types::CursorBackend` record. Copies of the adapter and emitted record share the selected cursor state, and
 the native operations stay on the SDL application thread.
 
+`Flight::HostSdlSdkWindow` and Bazel `//:host_sdl_sdk_window` bind an SDL window id to the committed generated
+`ApplicationVisibilityBackend` and `FullscreenBackend` records. Generated fullscreen target handles are registered
+weakly, unknown handles return `false`, and records retained after native window destruction fail closed. The
+fullscreen event callbacks remain absent from the optional fields because the current emitted `std::function`
+carrier cannot satisfy callback-identity removal; the same issue gates the non-optional `ApplicationExitBackend`.
+
 ## Generated SDK wiring lane
 
 The native mechanics are now present. Wiring them to generated Flight contracts remains a narrow integration task:
@@ -228,11 +234,14 @@ The native mechanics are now present. Wiring them to generated Flight contracts 
 4. `Flight::HostSdlSdkCursor` and Bazel `//:host_sdl_sdk_cursor` populate and execute the emitted
    `flight::types::CursorBackend` record. The compiler source-remap lane must select that native provider in place of
    `createWebCursorBackend` for the interaction and sound examples.
-5. Implement generated `WgpuHostBackend` and `WgpuRenderSurfaceProvider` with a selected Dawn or wgpu-native adapter.
+5. `Flight::HostSdlSdkWindow` and Bazel `//:host_sdl_sdk_window` populate the generated visibility and fullscreen
+   command records. Compiler adoption of `flight::Function` will unlock exact fullscreen event subscriptions and
+   `ApplicationExitBackend`; no identity approximation is installed in the meantime.
+6. Implement generated `WgpuHostBackend` and `WgpuRenderSurfaceProvider` with a selected Dawn or wgpu-native adapter.
    `WgpuSurfaceCallbacks` is the stable point where that dependency enters.
-6. Adapt `InputDispatcher`'s normalized records into the generated Flight input types once `InputPointerData` and
+7. Adapt `InputDispatcher`'s normalized records into the generated Flight input types once `InputPointerData` and
    `InputIngressBackend` clear their current generated dependency refusals.
-7. Clear the remaining SDK and example compiler refusals, then replace the handwritten tween loop with the generated
+8. Clear the remaining SDK and example compiler refusals, then replace the handwritten tween loop with the generated
    application module. The repository now selects and compiles all upstream WebGL example sources through a recorded
    source remap and the SDL application-shell profile.
 

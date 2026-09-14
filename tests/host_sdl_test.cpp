@@ -5,13 +5,16 @@
 #include <flight/host_sdl/input.hpp>
 #include <flight/host_sdl/sdk_audio.hpp>
 #include <flight/host_sdl/sdk_cursor.hpp>
+#include <flight/host_sdl/sdk_window.hpp>
 #include <flight/host_sdl/web_platform.hpp>
 #include <flight/host_sdl/webgl.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/host_sdl/window.hpp>
 #include <flight/weak_map.hpp>
 #include <flight/types/audio_device_backend.hpp>
+#include <flight/types/application_visibility_backend.hpp>
 #include <flight/types/cursor.hpp>
+#include <flight/types/fullscreen_backend.hpp>
 
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_mouse.h>
@@ -436,6 +439,57 @@ int main() {
   expect(window.size() == flight::host_sdl::WindowSize{320, 180}, "logical window size changed");
   expect(window.pixel_size().width > 0 && window.pixel_size().height > 0, "pixel size is empty");
   window.set_title("Flight host test renamed");
+
+  flight::host_sdl::SdkWindowBackend sdk_window(window);
+  const auto sdk_window_copy = sdk_window;
+  auto visibility_backend = sdk_window.visibility_backend();
+  expect(!visibility_backend.is_visible(), "hidden SDL window reported visible to Flight");
+  window.show();
+  expect(
+      sdk_window_copy.visibility_backend().is_visible(),
+      "SDL SDK window copies did not share a visible window");
+  window.hide();
+  expect(!visibility_backend.is_visible(), "hidden SDL window remained visible to Flight");
+  window.show();
+
+  auto fullscreen_backend = sdk_window.fullscreen_backend();
+  const auto fullscreen_target = sdk_window_copy.fullscreen_target();
+  expect(
+      fullscreen_target->brand == flight::String("FullscreenTargetHandle"),
+      "SDL fullscreen target lost its generated brand");
+  const auto foreign_fullscreen_target =
+      flight::make_ref<flight::types::FullscreenTargetHandle>();
+  foreign_fullscreen_target->brand = flight::String("FullscreenTargetHandle");
+  expect(
+      !fullscreen_backend.request(foreign_fullscreen_target).get(),
+      "SDL fullscreen accepted an unregistered Flight target");
+  const bool entered_fullscreen = fullscreen_backend.request(fullscreen_target).get();
+  if (entered_fullscreen) {
+    expect(
+        (SDL_GetWindowFlags(window.native_handle()) & SDL_WINDOW_FULLSCREEN) != 0,
+        "SDL fullscreen request succeeded without changing the native window");
+    expect(fullscreen_backend.exit().get(), "SDL fullscreen exit failed after a successful request");
+    expect(
+        (SDL_GetWindowFlags(window.native_handle()) & SDL_WINDOW_FULLSCREEN) == 0,
+        "SDL fullscreen exit left the native window fullscreen");
+  }
+
+  flight::types::ApplicationVisibilityBackend expired_visibility;
+  flight::types::FullscreenBackend expired_fullscreen;
+  flight::Ref<flight::types::FullscreenTargetHandle> expired_target;
+  {
+    flight::host_sdl::WindowOptions transient_options = options;
+    transient_options.title = "Flight transient SDK target";
+    flight::host_sdl::Window transient_window(transient_options);
+    flight::host_sdl::SdkWindowBackend transient_sdk_window(transient_window);
+    expired_visibility = transient_sdk_window.visibility_backend();
+    expired_fullscreen = transient_sdk_window.fullscreen_backend();
+    expired_target = transient_sdk_window.fullscreen_target();
+  }
+  expect(!expired_visibility.is_visible(), "destroyed SDL window remained visible to Flight");
+  expect(
+      !expired_fullscreen.request(expired_target).get() && !expired_fullscreen.exit().get(),
+      "destroyed SDL window accepted a fullscreen operation");
 
   flight::host_sdl::InputKeyboardData keyboard_data;
   flight::host_sdl::InputPointerData pointer_data;

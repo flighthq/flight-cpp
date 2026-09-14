@@ -140,6 +140,21 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
   )
   flight_cpp_set_project_warnings(flight_host_sdl_sdk_cursor)
 
+  add_library(flight_host_sdl_sdk_window src/host_sdl/sdk_window.cpp)
+  add_library(Flight::HostSdlSdkWindow ALIAS flight_host_sdl_sdk_window)
+  set_target_properties(
+    flight_host_sdl_sdk_window
+    PROPERTIES
+      POSITION_INDEPENDENT_CODE ON
+      SOVERSION "${FLIGHT_CPP_ABI_VERSION}"
+      VERSION "${PROJECT_VERSION}"
+  )
+  target_link_libraries(
+    flight_host_sdl_sdk_window
+    PUBLIC Flight::HostSdl Flight::SdkPreview
+  )
+  flight_cpp_set_project_warnings(flight_host_sdl_sdk_window)
+
   add_library(
     flight_host_sdl_gl
     src/host_sdl/gl.cpp
@@ -222,6 +237,11 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
       PRIVATE FLIGHT_HOST_SDL_SDK_CURSOR_EXPORTS
       PUBLIC FLIGHT_HOST_SDL_SDK_CURSOR_SHARED
     )
+    target_compile_definitions(
+      flight_host_sdl_sdk_window
+      PRIVATE FLIGHT_HOST_SDL_SDK_WINDOW_EXPORTS
+      PUBLIC FLIGHT_HOST_SDL_SDK_WINDOW_SHARED
+    )
     if(TARGET flight_host_sdl_vulkan)
       target_compile_definitions(
         flight_host_sdl_vulkan
@@ -256,6 +276,7 @@ install(
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
   PATTERN "flight/host_sdl/sdk_audio.hpp" EXCLUDE
   PATTERN "flight/host_sdl/sdk_cursor.hpp" EXCLUDE
+  PATTERN "flight/host_sdl/sdk_window.hpp" EXCLUDE
 )
 install(
   EXPORT FlightCppTargets

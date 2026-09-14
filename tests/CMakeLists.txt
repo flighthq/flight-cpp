@@ -96,6 +96,7 @@ if(TARGET Flight::HostSdlWgpu)
       Flight::HostSdlGl
       Flight::HostSdlSdkAudio
       Flight::HostSdlSdkCursor
+      Flight::HostSdlSdkWindow
       Flight::HostSdlWgpu
   )
   flight_cpp_set_project_warnings(flight_cpp_host_sdl_tests)
@@ -127,7 +128,7 @@ if(TARGET Flight::HostSdlGl)
 endif()
 
 if(TARGET Flight::HostSdl)
-  foreach(header IN ITEMS audio cursor input sdk_audio sdk_cursor)
+  foreach(header IN ITEMS audio cursor input sdk_audio sdk_cursor sdk_window)
     set(source "${CMAKE_CURRENT_BINARY_DIR}/header_host_sdl_${header}_test.cpp")
     file(GENERATE OUTPUT "${source}" CONTENT "#include <flight/host_sdl/${header}.hpp>\n")
     add_library("flight_cpp_header_host_sdl_${header}_test" OBJECT "${source}")
