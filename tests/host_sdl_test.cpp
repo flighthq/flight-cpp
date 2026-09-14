@@ -13,8 +13,10 @@
 #include <flight/weak_map.hpp>
 #include <flight/types/audio_device_backend.hpp>
 #include <flight/types/application_visibility_backend.hpp>
+#include <flight/types/application_window_target_backend.hpp>
 #include <flight/types/cursor.hpp>
 #include <flight/types/fullscreen_backend.hpp>
+#include <flight/types/input_target_backend.hpp>
 
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_mouse.h>
@@ -473,6 +475,76 @@ int main() {
         (SDL_GetWindowFlags(window.native_handle()) & SDL_WINDOW_FULLSCREEN) == 0,
         "SDL fullscreen exit left the native window fullscreen");
   }
+
+  const auto input_target = sdk_window.input_target();
+  expect(
+      input_target->brand == flight::String("InputTargetHandle"),
+      "SDL input target lost its generated brand");
+  auto input_target_backend = sdk_window.input_target_backend();
+  input_target_backend.prepare(input_target);
+  input_target_backend.prepare(flight::make_ref<flight::types::InputTargetHandle>());
+
+  int sdk_focus_calls = 0;
+  int sdk_blur_calls = 0;
+  auto focus_backend = sdk_window.input_focus_backend();
+  auto release_focus = focus_backend.subscribe(
+      input_target,
+      [&] { ++sdk_focus_calls; },
+      [&] { ++sdk_blur_calls; });
+  SDL_Event sdk_focus_event{};
+  sdk_focus_event.type = SDL_EVENT_WINDOW_FOCUS_GAINED;
+  sdk_focus_event.window.windowID = window.id();
+  expect(sdk_window.dispatch(sdk_focus_event), "SDL SDK window rejected its focus event");
+  sdk_focus_event.type = SDL_EVENT_WINDOW_FOCUS_LOST;
+  expect(sdk_window_copy.dispatch(sdk_focus_event), "SDL SDK window rejected its blur event");
+  expect(
+      sdk_focus_calls == 1 && sdk_blur_calls == 1,
+      "SDL SDK focus backend did not route generated callbacks");
+  release_focus();
+  expect(sdk_window.dispatch(sdk_focus_event), "released SDL focus event was not recognized");
+  expect(sdk_blur_calls == 1, "released SDL focus subscription was invoked");
+
+  flight::String dropped_path;
+  auto drop_file_backend = sdk_window.input_drop_file_backend();
+  auto release_drop_file = drop_file_backend.subscribe(
+      input_target,
+      [&](flight::String path) { dropped_path = std::move(path); });
+  SDL_Event sdk_drop_event{};
+  sdk_drop_event.type = SDL_EVENT_DROP_FILE;
+  sdk_drop_event.drop.windowID = window.id();
+  sdk_drop_event.drop.data = "/tmp/flight.txt";
+  expect(sdk_window.dispatch(sdk_drop_event), "SDL SDK window rejected its file drop event");
+  expect(
+      dropped_path == flight::String("/tmp/flight.txt"),
+      "SDL SDK file-drop backend changed the native path");
+  release_drop_file();
+  dropped_path = flight::String();
+  expect(sdk_window.dispatch(sdk_drop_event), "released SDL file-drop event was not recognized");
+  expect(dropped_path.empty(), "released SDL file-drop subscription was invoked");
+  sdk_drop_event.drop.windowID = window.id() + 1;
+  expect(!sdk_window.dispatch(sdk_drop_event), "SDL SDK window accepted a foreign drop event");
+
+  auto pointer_lock_backend = sdk_window.input_pointer_lock_backend();
+  const auto missing_pointer_lock = pointer_lock_backend
+                                        .request(flight::make_ref<flight::types::InputTargetHandle>())
+                                        .get();
+  expect(
+      missing_pointer_lock->reason == flight::String("target-not-found"),
+      "SDL pointer lock accepted an unregistered Flight target");
+  const auto pointer_lock = pointer_lock_backend.request(input_target).get();
+  expect(
+      pointer_lock->reason == flight::String("ok") ||
+          pointer_lock->reason == flight::String("operation-failed"),
+      "SDL pointer lock returned an outcome outside its generated contract");
+  if (pointer_lock->reason == flight::String("ok")) {
+    expect(
+        SDL_GetWindowRelativeMouseMode(window.native_handle()),
+        "SDL pointer-lock success did not enable relative mouse mode");
+  }
+  const auto pointer_unlock = pointer_lock_backend.exit().get();
+  expect(
+      pointer_unlock->reason == flight::String("ok"),
+      "SDL pointer-lock exit did not return the generated success outcome");
 
   flight::types::ApplicationVisibilityBackend expired_visibility;
   flight::types::FullscreenBackend expired_fullscreen;

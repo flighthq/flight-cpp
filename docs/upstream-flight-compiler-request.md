@@ -235,7 +235,8 @@ remap must select a native provider with the same requested export before those 
 adapter without source rewriting.
 
 The SDL window side now also populates emitted `ApplicationVisibilityBackend` and the request/exit portion of
-`FullscreenBackend` through `Flight::HostSdlSdkWindow`. The optional fullscreen listener fields and the required
+`FullscreenBackend` through `Flight::HostSdlSdkWindow`. It also populates the dependency-closed input-target,
+focus, file-drop, and pointer-lock records; their returned release closures do not require callback comparison. The optional fullscreen listener fields and the required
 `ApplicationExitBackend` listener pair are deliberately left unwired: the provider must remove the same JavaScript
 function object passed at subscription time, which cannot be recovered from separately copied `std::function`
 values. Emitting the prepared `flight::Function` carrier unlocks those exact adapters.

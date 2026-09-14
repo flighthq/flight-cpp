@@ -210,6 +210,10 @@ the native operations stay on the SDL application thread.
 weakly, unknown handles return `false`, and records retained after native window destruction fail closed. The
 fullscreen event callbacks remain absent from the optional fields because the current emitted `std::function`
 carrier cannot satisfy callback-identity removal; the same issue gates the non-optional `ApplicationExitBackend`.
+The adapter also creates weakly registered generated `InputTargetHandle` values and populates
+`InputTargetBackend`, `InputFocusBackend`, `InputDropFileBackend`, and `InputPointerLockBackend`. Pass each polled
+event to `SdkWindowBackend::dispatch()` as well as other host dispatchers to deliver focus and file paths. The
+returned release closures remove the exact subscription, and pointer lock maps to SDL relative mouse mode.
 
 ## Generated SDK wiring lane
 
@@ -234,9 +238,10 @@ The native mechanics are now present. Wiring them to generated Flight contracts 
 4. `Flight::HostSdlSdkCursor` and Bazel `//:host_sdl_sdk_cursor` populate and execute the emitted
    `flight::types::CursorBackend` record. The compiler source-remap lane must select that native provider in place of
    `createWebCursorBackend` for the interaction and sound examples.
-5. `Flight::HostSdlSdkWindow` and Bazel `//:host_sdl_sdk_window` populate the generated visibility and fullscreen
-   command records. Compiler adoption of `flight::Function` will unlock exact fullscreen event subscriptions and
-   `ApplicationExitBackend`; no identity approximation is installed in the meantime.
+5. `Flight::HostSdlSdkWindow` and Bazel `//:host_sdl_sdk_window` populate the generated visibility, fullscreen
+   command, target preparation, focus, file-drop, and pointer-lock records. Compiler adoption of `flight::Function`
+   will unlock exact fullscreen event subscriptions and `ApplicationExitBackend`; no identity approximation is
+   installed in the meantime.
 6. Implement generated `WgpuHostBackend` and `WgpuRenderSurfaceProvider` with a selected Dawn or wgpu-native adapter.
    `WgpuSurfaceCallbacks` is the stable point where that dependency enters.
 7. Adapt `InputDispatcher`'s normalized records into the generated Flight input types once `InputPointerData` and
