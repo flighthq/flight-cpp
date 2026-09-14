@@ -1,0 +1,1357 @@
+{
+  "schema": "flight-generated-upstream-example-refusals/1",
+  "compilerRevision": "56496423fd865a51023e72966190d10d886eae40",
+  "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
+  "refusals": [
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/adjustments/src/app.ts",
+      "package": "@flighthq/example-adjustments",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/adjustments/src/render.canvas.ts",
+      "package": "@flighthq/example-adjustments",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/adjustments/src/render.dom.ts",
+      "package": "@flighthq/example-adjustments",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/adjustments/src/render.ts",
+      "package": "@flighthq/example-adjustments",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/adjustments/src/render.webgl.ts",
+      "package": "@flighthq/example-adjustments",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 37,
+      "module": "examples/packages/adjustments/src/render.webgpu.ts",
+      "package": "@flighthq/example-adjustments",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 19,
+      "line": 28,
+      "module": "examples/packages/awd2loading/src/app.ts",
+      "package": "@flighthq/example-awd2loading",
+      "reason": "interface Node inherits incompatible property EntityRuntimeKey",
+      "stage": "lowering"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "examples/packages/awd2loading/src/createSyntheticAwd2.ts",
+      "package": "@flighthq/example-awd2loading",
+      "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/createSyntheticAwd2.ts: spreading an unbounded collection requires a fold or a variadic target",
+      "stage": "emission"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/awd2loading/src/render.ts",
+      "package": "@flighthq/example-awd2loading",
+      "reason": "Module evaluation dependency is missing for ./render.webgl",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/awd2loading/src/render.webgl.ts",
+      "package": "@flighthq/example-awd2loading",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 24,
+      "module": "examples/packages/awd2loading/src/render.webgpu.ts",
+      "package": "@flighthq/example-awd2loading",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/benchmark/src/app.ts",
+      "package": "@flighthq/example-benchmark",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/benchmark/src/render.canvas.ts",
+      "package": "@flighthq/example-benchmark",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/benchmark/src/render.ts",
+      "package": "@flighthq/example-benchmark",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/benchmark/src/render.webgl.ts",
+      "package": "@flighthq/example-benchmark",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 25,
+      "module": "examples/packages/benchmark/src/render.webgpu.ts",
+      "package": "@flighthq/example-benchmark",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 49,
+      "line": 1,
+      "module": "examples/packages/bitmapfont-generate/src/app.ts",
+      "package": "@flighthq/example-bitmapfont-generate",
+      "reason": "unsupported type ConditionalType",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/bitmapfont-generate/src/render.canvas.ts",
+      "package": "@flighthq/example-bitmapfont-generate",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/bitmapfont-generate/src/render.ts",
+      "package": "@flighthq/example-bitmapfont-generate",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/bitmapfont-generate/src/render.webgl.ts",
+      "package": "@flighthq/example-bitmapfont-generate",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 24,
+      "module": "examples/packages/bitmapfont-generate/src/render.webgpu.ts",
+      "package": "@flighthq/example-bitmapfont-generate",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/camera2d/src/app.ts",
+      "package": "@flighthq/example-camera2d",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/camera2d/src/render.canvas.ts",
+      "package": "@flighthq/example-camera2d",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/camera2d/src/render.dom.ts",
+      "package": "@flighthq/example-camera2d",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/camera2d/src/render.ts",
+      "package": "@flighthq/example-camera2d",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/camera2d/src/render.webgl.ts",
+      "package": "@flighthq/example-camera2d",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 41,
+      "module": "examples/packages/camera2d/src/render.webgpu.ts",
+      "package": "@flighthq/example-camera2d",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/clock/src/app.ts",
+      "package": "@flighthq/example-clock",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/clock/src/render.canvas.ts",
+      "package": "@flighthq/example-clock",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/clock/src/render.dom.ts",
+      "package": "@flighthq/example-clock",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/clock/src/render.ts",
+      "package": "@flighthq/example-clock",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/clock/src/render.webgl.ts",
+      "package": "@flighthq/example-clock",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 37,
+      "module": "examples/packages/clock/src/render.webgpu.ts",
+      "package": "@flighthq/example-clock",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 3,
+      "line": 336,
+      "module": "examples/packages/collision/src/app.ts",
+      "package": "@flighthq/example-collision",
+      "reason": "unsupported statement InterfaceDeclaration",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/collision/src/render.canvas.ts",
+      "package": "@flighthq/example-collision",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/collision/src/render.dom.ts",
+      "package": "@flighthq/example-collision",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/collision/src/render.ts",
+      "package": "@flighthq/example-collision",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/collision/src/render.webgl.ts",
+      "package": "@flighthq/example-collision",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 31,
+      "module": "examples/packages/collision/src/render.webgpu.ts",
+      "package": "@flighthq/example-collision",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/cross-backend-embed/src/app.ts",
+      "package": "@flighthq/example-cross-backend-embed",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/cross-backend-embed/src/render.dom.ts",
+      "package": "@flighthq/example-cross-backend-embed",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/cross-backend-embed/src/render.ts",
+      "package": "@flighthq/example-cross-backend-embed",
+      "reason": "Module evaluation dependency is missing for ./render.dom",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/crossfade/src/app.ts",
+      "package": "@flighthq/example-crossfade",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/crossfade/src/render.canvas.ts",
+      "package": "@flighthq/example-crossfade",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/crossfade/src/render.dom.ts",
+      "package": "@flighthq/example-crossfade",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/crossfade/src/render.ts",
+      "package": "@flighthq/example-crossfade",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/crossfade/src/render.webgl.ts",
+      "package": "@flighthq/example-crossfade",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 37,
+      "module": "examples/packages/crossfade/src/render.webgpu.ts",
+      "package": "@flighthq/example-crossfade",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/flowstates/src/app.ts",
+      "package": "@flighthq/example-flowstates",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/flowstates/src/render.canvas.ts",
+      "package": "@flighthq/example-flowstates",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/flowstates/src/render.dom.ts",
+      "package": "@flighthq/example-flowstates",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/flowstates/src/render.ts",
+      "package": "@flighthq/example-flowstates",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/flowstates/src/render.webgl.ts",
+      "package": "@flighthq/example-flowstates",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 37,
+      "module": "examples/packages/flowstates/src/render.webgpu.ts",
+      "package": "@flighthq/example-flowstates",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/formatloading/src/app.ts",
+      "package": "@flighthq/example-formatloading",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/formatloading/src/render.canvas.ts",
+      "package": "@flighthq/example-formatloading",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/formatloading/src/render.dom.ts",
+      "package": "@flighthq/example-formatloading",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/formatloading/src/render.ts",
+      "package": "@flighthq/example-formatloading",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/formatloading/src/render.webgl.ts",
+      "package": "@flighthq/example-formatloading",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 38,
+      "module": "examples/packages/formatloading/src/render.webgpu.ts",
+      "package": "@flighthq/example-formatloading",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/interaction/src/app.ts",
+      "package": "@flighthq/example-interaction",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/interaction/src/render.canvas.ts",
+      "package": "@flighthq/example-interaction",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/interaction/src/render.dom.ts",
+      "package": "@flighthq/example-interaction",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/interaction/src/render.ts",
+      "package": "@flighthq/example-interaction",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/interaction/src/render.webgl.ts",
+      "package": "@flighthq/example-interaction",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 37,
+      "module": "examples/packages/interaction/src/render.webgpu.ts",
+      "package": "@flighthq/example-interaction",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/materialshowcase/src/app.ts",
+      "package": "@flighthq/example-materialshowcase",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/materialshowcase/src/render.ts",
+      "package": "@flighthq/example-materialshowcase",
+      "reason": "Module evaluation dependency is missing for ./render.webgl",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/materialshowcase/src/render.webgl.ts",
+      "package": "@flighthq/example-materialshowcase",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 36,
+      "module": "examples/packages/materialshowcase/src/render.webgpu.ts",
+      "package": "@flighthq/example-materialshowcase",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/motionpath/src/app.ts",
+      "package": "@flighthq/example-motionpath",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/motionpath/src/render.canvas.ts",
+      "package": "@flighthq/example-motionpath",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/motionpath/src/render.dom.ts",
+      "package": "@flighthq/example-motionpath",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/motionpath/src/render.ts",
+      "package": "@flighthq/example-motionpath",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/motionpath/src/render.webgl.ts",
+      "package": "@flighthq/example-motionpath",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 37,
+      "module": "examples/packages/motionpath/src/render.webgpu.ts",
+      "package": "@flighthq/example-motionpath",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/movieclip/src/app.ts",
+      "package": "@flighthq/example-movieclip",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/movieclip/src/render.canvas.ts",
+      "package": "@flighthq/example-movieclip",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/movieclip/src/render.dom.ts",
+      "package": "@flighthq/example-movieclip",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/movieclip/src/render.ts",
+      "package": "@flighthq/example-movieclip",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/movieclip/src/render.webgl.ts",
+      "package": "@flighthq/example-movieclip",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 37,
+      "module": "examples/packages/movieclip/src/render.webgpu.ts",
+      "package": "@flighthq/example-movieclip",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/particleeditor/src/app.ts",
+      "package": "@flighthq/example-particleeditor",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/particleeditor/src/render.canvas.ts",
+      "package": "@flighthq/example-particleeditor",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/particleeditor/src/render.ts",
+      "package": "@flighthq/example-particleeditor",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/particleeditor/src/render.webgl.ts",
+      "package": "@flighthq/example-particleeditor",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 26,
+      "module": "examples/packages/particleeditor/src/render.webgpu.ts",
+      "package": "@flighthq/example-particleeditor",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/particles/src/app.ts",
+      "package": "@flighthq/example-particles",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/particles/src/render.canvas.ts",
+      "package": "@flighthq/example-particles",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/particles/src/render.ts",
+      "package": "@flighthq/example-particles",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/particles/src/render.webgl.ts",
+      "package": "@flighthq/example-particles",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 26,
+      "module": "examples/packages/particles/src/render.webgpu.ts",
+      "package": "@flighthq/example-particles",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/pathboolean/src/app.ts",
+      "package": "@flighthq/example-pathboolean",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/pathboolean/src/render.canvas.ts",
+      "package": "@flighthq/example-pathboolean",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/pathboolean/src/render.dom.ts",
+      "package": "@flighthq/example-pathboolean",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/pathboolean/src/render.ts",
+      "package": "@flighthq/example-pathboolean",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/pathboolean/src/render.webgl.ts",
+      "package": "@flighthq/example-pathboolean",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 31,
+      "module": "examples/packages/pathboolean/src/render.webgpu.ts",
+      "package": "@flighthq/example-pathboolean",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/platformer/src/app.ts",
+      "package": "@flighthq/example-platformer",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/platformer/src/render.canvas.ts",
+      "package": "@flighthq/example-platformer",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/platformer/src/render.dom.ts",
+      "package": "@flighthq/example-platformer",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/platformer/src/render.ts",
+      "package": "@flighthq/example-platformer",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/platformer/src/render.webgl.ts",
+      "package": "@flighthq/example-platformer",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 40,
+      "module": "examples/packages/platformer/src/render.webgpu.ts",
+      "package": "@flighthq/example-platformer",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 13,
+      "line": 4,
+      "module": "examples/packages/scene-fire/src/app.ts",
+      "package": "@flighthq/example-scene-fire",
+      "reason": "unsupported type ConditionalType",
+      "stage": "lowering"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/scene-fire/src/render.ts",
+      "package": "@flighthq/example-scene-fire",
+      "reason": "Module evaluation dependency is missing for ./render.webgl",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/scene-fire/src/render.webgl.ts",
+      "package": "@flighthq/example-scene-fire",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 27,
+      "module": "examples/packages/scene-fire/src/render.webgpu.ts",
+      "package": "@flighthq/example-scene-fire",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/scene-picking/src/app.ts",
+      "package": "@flighthq/example-scene-picking",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/scene-picking/src/render.ts",
+      "package": "@flighthq/example-scene-picking",
+      "reason": "Module evaluation dependency is missing for ./render.webgl",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/scene-picking/src/render.webgl.ts",
+      "package": "@flighthq/example-scene-picking",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 22,
+      "module": "examples/packages/scene-picking/src/render.webgpu.ts",
+      "package": "@flighthq/example-scene-picking",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/scene3d/src/app.ts",
+      "package": "@flighthq/example-scene3d",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/scene3d/src/render.ts",
+      "package": "@flighthq/example-scene3d",
+      "reason": "Module evaluation dependency is missing for ./render.webgl",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/scene3d/src/render.webgl.ts",
+      "package": "@flighthq/example-scene3d",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 22,
+      "module": "examples/packages/scene3d/src/render.webgpu.ts",
+      "package": "@flighthq/example-scene3d",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/shapes/src/app.ts",
+      "package": "@flighthq/example-shapes",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/shapes/src/render.canvas.ts",
+      "package": "@flighthq/example-shapes",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/shapes/src/render.dom.ts",
+      "package": "@flighthq/example-shapes",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/shapes/src/render.ts",
+      "package": "@flighthq/example-shapes",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/shapes/src/render.webgl.ts",
+      "package": "@flighthq/example-shapes",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 30,
+      "module": "examples/packages/shapes/src/render.webgpu.ts",
+      "package": "@flighthq/example-shapes",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/snapshot/src/app.ts",
+      "package": "@flighthq/example-snapshot",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/snapshot/src/render.canvas.ts",
+      "package": "@flighthq/example-snapshot",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/snapshot/src/render.dom.ts",
+      "package": "@flighthq/example-snapshot",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/snapshot/src/render.ts",
+      "package": "@flighthq/example-snapshot",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/snapshot/src/render.webgl.ts",
+      "package": "@flighthq/example-snapshot",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 37,
+      "module": "examples/packages/snapshot/src/render.webgpu.ts",
+      "package": "@flighthq/example-snapshot",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/sound/src/app.ts",
+      "package": "@flighthq/example-sound",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/sound/src/render.canvas.ts",
+      "package": "@flighthq/example-sound",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/sound/src/render.dom.ts",
+      "package": "@flighthq/example-sound",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/sound/src/render.ts",
+      "package": "@flighthq/example-sound",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/sound/src/render.webgl.ts",
+      "package": "@flighthq/example-sound",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 37,
+      "module": "examples/packages/sound/src/render.webgpu.ts",
+      "package": "@flighthq/example-sound",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/spatial/src/app.ts",
+      "package": "@flighthq/example-spatial",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/spatial/src/render.canvas.ts",
+      "package": "@flighthq/example-spatial",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/spatial/src/render.dom.ts",
+      "package": "@flighthq/example-spatial",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/spatial/src/render.ts",
+      "package": "@flighthq/example-spatial",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/spatial/src/render.webgl.ts",
+      "package": "@flighthq/example-spatial",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 37,
+      "module": "examples/packages/spatial/src/render.webgpu.ts",
+      "package": "@flighthq/example-spatial",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/spring/src/app.ts",
+      "package": "@flighthq/example-spring",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/spring/src/render.canvas.ts",
+      "package": "@flighthq/example-spring",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/spring/src/render.dom.ts",
+      "package": "@flighthq/example-spring",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/spring/src/render.ts",
+      "package": "@flighthq/example-spring",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/spring/src/render.webgl.ts",
+      "package": "@flighthq/example-spring",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 31,
+      "module": "examples/packages/spring/src/render.webgpu.ts",
+      "package": "@flighthq/example-spring",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/spritesheet/src/app.ts",
+      "package": "@flighthq/example-spritesheet",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/spritesheet/src/render.canvas.ts",
+      "package": "@flighthq/example-spritesheet",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/spritesheet/src/render.dom.ts",
+      "package": "@flighthq/example-spritesheet",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/spritesheet/src/render.ts",
+      "package": "@flighthq/example-spritesheet",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/spritesheet/src/render.webgl.ts",
+      "package": "@flighthq/example-spritesheet",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 22,
+      "module": "examples/packages/spritesheet/src/render.webgpu.ts",
+      "package": "@flighthq/example-spritesheet",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/text/src/app.ts",
+      "package": "@flighthq/example-text",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/text/src/render.canvas.ts",
+      "package": "@flighthq/example-text",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/text/src/render.dom.ts",
+      "package": "@flighthq/example-text",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/text/src/render.ts",
+      "package": "@flighthq/example-text",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/text/src/render.webgl.ts",
+      "package": "@flighthq/example-text",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 39,
+      "module": "examples/packages/text/src/render.webgpu.ts",
+      "package": "@flighthq/example-text",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/textinput/src/app.ts",
+      "package": "@flighthq/example-textinput",
+      "reason": "dependency @flighthq/host-web was refused for @flighthq/host-web/packages/host-web/src/webHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/textinput/src/render.canvas.ts",
+      "package": "@flighthq/example-textinput",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/textinput/src/render.dom.ts",
+      "package": "@flighthq/example-textinput",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/textinput/src/render.ts",
+      "package": "@flighthq/example-textinput",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/textinput/src/render.webgl.ts",
+      "package": "@flighthq/example-textinput",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 41,
+      "module": "examples/packages/textinput/src/render.webgpu.ts",
+      "package": "@flighthq/example-textinput",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 4,
+      "line": 2,
+      "module": "examples/packages/tilemap/src/app.ts",
+      "package": "@flighthq/example-tilemap",
+      "reason": "unsupported type ConditionalType",
+      "stage": "lowering"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 4,
+      "line": 2,
+      "module": "examples/packages/tilemap/src/app.ts",
+      "package": "@flighthq/example-tilemap",
+      "reason": "unsupported type ConditionalType",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/tilemap/src/render.canvas.ts",
+      "package": "@flighthq/example-tilemap",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/tilemap/src/render.ts",
+      "package": "@flighthq/example-tilemap",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/tilemap/src/render.webgl.ts",
+      "package": "@flighthq/example-tilemap",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 24,
+      "module": "examples/packages/tilemap/src/render.webgpu.ts",
+      "package": "@flighthq/example-tilemap",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/tween/src/app.ts",
+      "package": "@flighthq/example-tween",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/tween/src/render.canvas.ts",
+      "package": "@flighthq/example-tween",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/tween/src/render.dom.ts",
+      "package": "@flighthq/example-tween",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/tween/src/render.ts",
+      "package": "@flighthq/example-tween",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/tween/src/render.webgl.ts",
+      "package": "@flighthq/example-tween",
+      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webGraphicsHost.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 37,
+      "module": "examples/packages/tween/src/render.webgpu.ts",
+      "package": "@flighthq/example-tween",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/video/src/app.ts",
+      "package": "@flighthq/example-video",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/video/src/render.canvas.ts",
+      "package": "@flighthq/example-video",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/video/src/render.dom.ts",
+      "package": "@flighthq/example-video",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "missing-dependency",
+      "module": "examples/packages/video/src/render.ts",
+      "package": "@flighthq/example-video",
+      "reason": "Module evaluation dependency is missing for ./render.canvas",
+      "stage": "initialization"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/video/src/render.webgl.ts",
+      "package": "@flighthq/example-video",
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-typescript",
+      "column": 22,
+      "line": 22,
+      "module": "examples/packages/video/src/render.webgpu.ts",
+      "package": "@flighthq/example-video",
+      "reason": "top-level await requires asynchronous module evaluation",
+      "stage": "lowering"
+    }
+  ]
+}

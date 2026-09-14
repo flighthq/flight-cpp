@@ -30,6 +30,7 @@ const gates = [
   { arguments: [], name: 'textEncoderOracle' },
   { arguments: [], name: 'uriOracle' },
   { arguments: ['--check'], name: 'sdkGeneration' },
+  { arguments: ['--check'], name: 'upstreamExampleGeneration' },
   { arguments: [], name: 'emittedSourceCompile' },
 ];
 const failed = [];

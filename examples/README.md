@@ -2,6 +2,12 @@
 
 These examples follow the examples in the pinned [`flighthq/flight`](https://github.com/flighthq/flight) checkout while keeping the source computation separate from the native host. Code supported by `flight-portable-typescript/1` lives under `source/` and is transpiled into `generated/`; handwritten C++ supplies the executable entry point and platform integration.
 
+The complete upstream example corpus also has a generated inventory at `upstream/generated/`.
+`npm run examples:generate` compiles all example packages in one dependency-aware graph using the repository's
+runtime, headless, and SDL/GL binding profiles. It commits every emitted example header and every refusal while
+referring to the single SDK tree at top-level `generated/`; it does not make a private SDK copy for each example.
+Run `npm run examples:generate:check` to check that inventory against the pinned Flight and compiler revisions.
+
 ## Generated SDK math
 
 `sdk_math_example.cpp` links the full generated inventory through `Flight::SdkPreview` and executes interpolation

@@ -51,6 +51,12 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
   the runtime/headless inventory. Of the new headers, 21 compile independently. The other eight reach existing
   compiler defects: concrete typed-array aliases spelled as templates, a `Record<..., void>` representation, or
   transitive `Bitmap` failures. The complete expanded result is 734 passing and 372 failing headers.
+- `npm run examples:generate` compiles all 181 modules in all 33 pinned upstream example packages in one graph with
+  the shared SDK and runtime/headless/SDL-GL profiles. No example module is dependency-closed yet. Of the linked
+  refusals, 110 are propagated dependencies, 33 are selector initialization failures, 38 are lowering failures, and
+  one is direct emission. The adjacent frontier ledger suppresses package propagation for diagnosis and identifies
+  115 direct emission failures, 33 selector initialization failures, and 33 lowering failures. This inventory is
+  committed under `examples/upstream/generated/` and deliberately contains no duplicate SDK sources.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
   runtime. It currently covers 37 cross-runtime observations.
 - `npm run structural:oracle` generates the exact generic Entity write proxy through the pinned compiler, compiles

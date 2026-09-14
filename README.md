@@ -102,6 +102,10 @@ native lane that injects GL or WebGPU handles without duplicating upstream rende
 The [flight-compiler adoption status](docs/flight-compiler-adoption.md) tracks each downstream runtime, host, and
 release obligation without treating a present header as a completed semantic contract.
 
+All 33 upstream example packages have a pinned SDL/GL compilation inventory under
+[`examples/upstream/generated/`](examples/upstream/generated/README.md). It keeps example headers and refusal
+ledgers separate while resolving SDK dependencies against the one shared top-level generated tree.
+
 The supported input boundary is versioned as [`flight-portable-typescript/1`](conformance/portable-typescript-v1.json). [`known-exceptions.json`](conformance/known-exceptions.json) owns every checked-in C++ refusal. The compiler repository verifies it against its own fixture corpus, because a refusal changes when the compiler changes; this repository owns the file, and that gate reads it from a pinned checkout of this repository.
 
 ## Pinned siblings
@@ -129,6 +133,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run blob:oracle` | Do compiler-emitted Blob construction, slicing, text, and binary operations match Node? |
 | `npm run build:check` | Do the CMake and Bazel graphs describe the same headers, sources, tests, and benchmarks? |
 | `npm run examples:check` | Does the pinned compiler reproduce the checked-in native example output? |
+| `npm run examples:generate:check` | Does the SDL/GL graph reproduce the committed inventory for all upstream example packages? |
 | `npm run facets:oracle` | Do compiler-emitted conditional facets preserve capable and incapable host types? |
 | `npm run headless:oracle` | Do the headless binding manifest's emitted console, timer, and performance calls compile and run? |
 | `npm run sdk:check` | Does the pinned compiler reproduce the committed SDK headers and refusal inventory? |

@@ -19,6 +19,8 @@
     "compile:check": "node ./scripts/emittedSourceCompile.mjs",
     "facets:oracle": "node ./scripts/conditionalFacetOracle.mjs",
     "examples:check": "node ./scripts/exampleHealth.mjs",
+    "examples:generate": "node ./scripts/upstreamExampleGeneration.mjs",
+    "examples:generate:check": "node ./scripts/upstreamExampleGeneration.mjs --check",
     "headless:oracle": "node ./scripts/headlessProfileOracle.mjs",
     "rehydrate": "node ./scripts/rehydrate.mjs",
     "rehydrate:check": "node ./scripts/rehydrate.mjs --check",

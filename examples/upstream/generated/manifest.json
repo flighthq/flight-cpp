@@ -1,0 +1,414 @@
+{
+  "schema": "flight-generated-upstream-examples/1",
+  "compiler": {
+    "repository": "https://github.com/flighthq/flight-compiler",
+    "revision": "56496423fd865a51023e72966190d10d886eae40",
+    "runtimeProfile": "flight-cpp",
+    "target": "cpp"
+  },
+  "bindingProfiles": [
+    {
+      "digest": "sha256:c21157b55100ce4a54fe106fbecb90afc0b3985db7fc2fe60d2b5871cec65316",
+      "identity": "flighthq/flight-cpp/runtime-carriers/1",
+      "path": "bindings/runtime.json",
+      "profile": "runtime-carriers",
+      "schema": "flight-cpp-external-bindings/1"
+    },
+    {
+      "digest": "sha256:7fa58ef23878cd69ae1f471d24149ca2864fff3228cb1a5bd0b97f9e74da07e2",
+      "identity": "flighthq/flight-cpp/headless/1",
+      "path": "bindings/headless.json",
+      "profile": "headless",
+      "schema": "flight-cpp-external-bindings/1"
+    },
+    {
+      "digest": "sha256:bbcf41a5b50cc3092d9d2289b059ccc469670c4c6d0dbd07e9a68cca940a8f55",
+      "identity": "flighthq/flight-cpp/sdl-gl/1",
+      "path": "bindings/sdl-gl.json",
+      "profile": "sdl-gl",
+      "schema": "flight-cpp-external-bindings/1"
+    }
+  ],
+  "generatedSdk": {
+    "location": "../../../generated",
+    "ownership": "shared"
+  },
+  "packages": [
+    {
+      "cppIncludePrefix": "flight/examples/adjustments",
+      "cppNamespace": "flight::examples::adjustments",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-adjustments",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "adjustments"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/awd2loading",
+      "cppNamespace": "flight::examples::awd2loading",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 5,
+      "package": "@flighthq/example-awd2loading",
+      "refusedModules": 5,
+      "sourceModules": 5,
+      "upstreamPackage": "awd2loading"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/benchmark",
+      "cppNamespace": "flight::examples::benchmark",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 5,
+      "package": "@flighthq/example-benchmark",
+      "refusedModules": 5,
+      "sourceModules": 5,
+      "upstreamPackage": "benchmark"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/bitmapfont_generate",
+      "cppNamespace": "flight::examples::bitmapfont_generate",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 5,
+      "package": "@flighthq/example-bitmapfont-generate",
+      "refusedModules": 5,
+      "sourceModules": 5,
+      "upstreamPackage": "bitmapfont-generate"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/camera2d",
+      "cppNamespace": "flight::examples::camera2d",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-camera2d",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "camera2d"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/clock",
+      "cppNamespace": "flight::examples::clock",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-clock",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "clock"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/collision",
+      "cppNamespace": "flight::examples::collision",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-collision",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "collision"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/cross_backend_embed",
+      "cppNamespace": "flight::examples::cross_backend_embed",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 3,
+      "package": "@flighthq/example-cross-backend-embed",
+      "refusedModules": 3,
+      "sourceModules": 3,
+      "upstreamPackage": "cross-backend-embed"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/crossfade",
+      "cppNamespace": "flight::examples::crossfade",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-crossfade",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "crossfade"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/flowstates",
+      "cppNamespace": "flight::examples::flowstates",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-flowstates",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "flowstates"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/formatloading",
+      "cppNamespace": "flight::examples::formatloading",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-formatloading",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "formatloading"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/interaction",
+      "cppNamespace": "flight::examples::interaction",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-interaction",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "interaction"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/materialshowcase",
+      "cppNamespace": "flight::examples::materialshowcase",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 4,
+      "package": "@flighthq/example-materialshowcase",
+      "refusedModules": 4,
+      "sourceModules": 4,
+      "upstreamPackage": "materialshowcase"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/motionpath",
+      "cppNamespace": "flight::examples::motionpath",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-motionpath",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "motionpath"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/movieclip",
+      "cppNamespace": "flight::examples::movieclip",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-movieclip",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "movieclip"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/particleeditor",
+      "cppNamespace": "flight::examples::particleeditor",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 5,
+      "package": "@flighthq/example-particleeditor",
+      "refusedModules": 5,
+      "sourceModules": 5,
+      "upstreamPackage": "particleeditor"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/particles",
+      "cppNamespace": "flight::examples::particles",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 5,
+      "package": "@flighthq/example-particles",
+      "refusedModules": 5,
+      "sourceModules": 5,
+      "upstreamPackage": "particles"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/pathboolean",
+      "cppNamespace": "flight::examples::pathboolean",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-pathboolean",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "pathboolean"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/platformer",
+      "cppNamespace": "flight::examples::platformer",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-platformer",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "platformer"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/scene_fire",
+      "cppNamespace": "flight::examples::scene_fire",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 4,
+      "package": "@flighthq/example-scene-fire",
+      "refusedModules": 4,
+      "sourceModules": 4,
+      "upstreamPackage": "scene-fire"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/scene_picking",
+      "cppNamespace": "flight::examples::scene_picking",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 4,
+      "package": "@flighthq/example-scene-picking",
+      "refusedModules": 4,
+      "sourceModules": 4,
+      "upstreamPackage": "scene-picking"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/scene3d",
+      "cppNamespace": "flight::examples::scene3d",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 4,
+      "package": "@flighthq/example-scene3d",
+      "refusedModules": 4,
+      "sourceModules": 4,
+      "upstreamPackage": "scene3d"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/shapes",
+      "cppNamespace": "flight::examples::shapes",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-shapes",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "shapes"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/snapshot",
+      "cppNamespace": "flight::examples::snapshot",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-snapshot",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "snapshot"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/sound",
+      "cppNamespace": "flight::examples::sound",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-sound",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "sound"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/spatial",
+      "cppNamespace": "flight::examples::spatial",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-spatial",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "spatial"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/spring",
+      "cppNamespace": "flight::examples::spring",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-spring",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "spring"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/spritesheet",
+      "cppNamespace": "flight::examples::spritesheet",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-spritesheet",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "spritesheet"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/text",
+      "cppNamespace": "flight::examples::text",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-text",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "text"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/textinput",
+      "cppNamespace": "flight::examples::textinput",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-textinput",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "textinput"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/tilemap",
+      "cppNamespace": "flight::examples::tilemap",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 5,
+      "package": "@flighthq/example-tilemap",
+      "refusedModules": 5,
+      "sourceModules": 5,
+      "upstreamPackage": "tilemap"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/tween",
+      "cppNamespace": "flight::examples::tween",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-tween",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "tween"
+    },
+    {
+      "cppIncludePrefix": "flight/examples/video",
+      "cppNamespace": "flight::examples::video",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 6,
+      "package": "@flighthq/example-video",
+      "refusedModules": 6,
+      "sourceModules": 6,
+      "upstreamPackage": "video"
+    }
+  ],
+  "source": {
+    "directory": "examples/packages",
+    "repository": "https://github.com/flighthq/flight",
+    "revision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f"
+  },
+  "summary": {
+    "packages": 33,
+    "frontierEmittedModules": 0,
+    "frontierRefusedModules": 181,
+    "emittedModules": 0,
+    "refusedModules": 181,
+    "sourceModules": 181
+  }
+}
