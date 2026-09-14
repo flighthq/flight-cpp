@@ -114,6 +114,38 @@ disposable exact-pin member mapping already removes the only direct all-settled 
 then reaches its existing `resolveScene3DResources` dependency refusal, so this change does not alter the current
 1,077-header total by itself.
 
+## Complete example sweep
+
+`npm run examples:generate:check` now gives flight-compiler a stable downstream example gate. It discovers all 33
+packages under Flight's `examples/packages`, inventories all 181 source modules, and selects the 100-module native
+SDL/GL lane: each `render.ts` selector and chosen `render.webgl.ts` implementation receive an explicit recorded
+`renderNative` source remap, with the DOM-only cross-backend example recording its fallback. Example output has its
+own `examples/upstream/generated/include/flight/examples` tree and references the single canonical SDK tree rather
+than copying SDK headers per example.
+
+At the current pins, dependency closure emits 0 of those 100 modules. The linked ledger contains 94 dependency, six
+lowering, and one emission refusal entries. Forty example modules are held by the refused `@flighthq/sdk` barrel and
+20 renderer modules are held by the refused `@flighthq/host-web/contract` path through `webGraphicsHost`. The exact
+per-module evidence is committed in `examples/upstream/generated/refusals.json`.
+
+The separate frontier ledger deliberately compiles each selected example without its package dependencies, so its
+28 missing package-evaluation entries are boundary markers rather than claims that the full graph omitted those
+packages. It exposes the direct example-source work hidden behind propagation: 29 captured referent mutations need
+the compiler's shared C++ reference representation, four WebGL renderers need contextual typing for empty arrays,
+two array binding patterns need statically recoverable element or tuple types, one spread needs finite/fold
+lowering, one nested interface statement needs lowering, and one target-name candidate reaches an internal compiler
+failure. The SDL application profile resolves every direct keyboard, pointer, wheel, DOM attachment, window, and
+animation-frame ambient in the chosen lane. Only the sound example still reports `AudioContext[value]`; that belongs
+with an eventual SDL audio adapter rather than the GL host.
+
+The remaining integration request is a first-class source/package remap in the programmatic graph API. Flight uses
+build-time renderer aliases and its examples import Web host providers. `flight-cpp` can name selected native
+renderer and host modules, but it should not edit upstream import strings or maintain a second TypeScript transform
+to do so. A remap must be importer-specific, recorded in provenance, participate in both type and module-evaluation
+resolution, and continue to verify that the replacement exports every requested name. With that contract, the
+handwritten SDL package can replace Web lifecycle/input/context providers while generated Flight GL modules retain
+renderer ownership.
+
 ## Host boundary
 
 The manifest-free generation remains the portable floor. Browser, media, Node, and graphics handles require explicit
