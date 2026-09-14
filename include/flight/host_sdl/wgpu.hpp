@@ -114,6 +114,7 @@ struct WgpuBindGroupTag;
 struct WgpuBindGroupLayoutTag;
 struct WgpuBufferTag;
 struct WgpuCanvasContextTag;
+struct WgpuCommandBufferTag;
 struct WgpuCommandEncoderTag;
 struct WgpuDeviceTag;
 struct WgpuExternalImageSourceTag;
@@ -131,6 +132,7 @@ using WgpuBindGroup = WgpuObject<WgpuBindGroupTag>;
 using WgpuBindGroupLayout = WgpuObject<WgpuBindGroupLayoutTag>;
 using WgpuBuffer = WgpuObject<WgpuBufferTag>;
 using WgpuCanvasContext = WgpuObject<WgpuCanvasContextTag>;
+using WgpuCommandBuffer = WgpuObject<WgpuCommandBufferTag>;
 using WgpuCommandEncoder = WgpuObject<WgpuCommandEncoderTag>;
 using WgpuDevice = WgpuObject<WgpuDeviceTag>;
 using WgpuExternalImageSource = WgpuObject<WgpuExternalImageSourceTag>;
@@ -189,6 +191,7 @@ using WgpuBindGroupWeakPolicy = WgpuObjectWeakPolicy<WgpuBindGroupTag>;
 using WgpuBindGroupLayoutWeakPolicy = WgpuObjectWeakPolicy<WgpuBindGroupLayoutTag>;
 using WgpuBufferWeakPolicy = WgpuObjectWeakPolicy<WgpuBufferTag>;
 using WgpuCanvasContextWeakPolicy = WgpuObjectWeakPolicy<WgpuCanvasContextTag>;
+using WgpuCommandBufferWeakPolicy = WgpuObjectWeakPolicy<WgpuCommandBufferTag>;
 using WgpuCommandEncoderWeakPolicy = WgpuObjectWeakPolicy<WgpuCommandEncoderTag>;
 using WgpuDeviceWeakPolicy = WgpuObjectWeakPolicy<WgpuDeviceTag>;
 using WgpuExternalImageSourceWeakPolicy = WgpuObjectWeakPolicy<WgpuExternalImageSourceTag>;
@@ -226,6 +229,20 @@ struct WgpuStencilFaceState final {
   std::optional<String> pass_op;
   std::optional<String> fail_op;
   std::optional<String> depth_fail_op;
+};
+
+struct WgpuSamplerDescriptor final {
+  std::optional<String> address_mode_u;
+  std::optional<String> address_mode_v;
+  std::optional<String> address_mode_w;
+  std::optional<String> mag_filter;
+  std::optional<String> min_filter;
+  std::optional<String> mipmap_filter;
+  std::optional<double> lod_min_clamp;
+  std::optional<double> lod_max_clamp;
+  std::optional<String> compare;
+  std::optional<double> max_anisotropy;
+  std::optional<String> label;
 };
 
 struct WgpuDeviceLostInfo final {

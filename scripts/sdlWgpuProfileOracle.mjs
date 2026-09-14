@@ -57,6 +57,7 @@ const handleTypes = [
   ['GPUBindGroupLayout', 'WgpuBindGroupLayout'],
   ['GPUBuffer', 'WgpuBuffer'],
   ['GPUCanvasContext', 'WgpuCanvasContext'],
+  ['GPUCommandBuffer', 'WgpuCommandBuffer'],
   ['GPUCommandEncoder', 'WgpuCommandEncoder'],
   ['GPUDevice', 'WgpuDevice'],
   ['GPUCopyExternalImageSource', 'WgpuExternalImageSource'],
@@ -95,6 +96,15 @@ const source = api.parseTypeScriptSource(
    export function stencil(): GPUStencilFaceState {
      return { compare: 'always', passOp: 'replace', failOp: 'keep', depthFailOp: 'keep' };
    }
+   export function sampler(compare?: GPUCompareFunction): GPUSamplerDescriptor {
+     const descriptor: GPUSamplerDescriptor = {
+       addressModeU: 'repeat', addressModeV: 'mirror-repeat', addressModeW: 'clamp-to-edge',
+       magFilter: 'linear', minFilter: 'nearest', mipmapFilter: 'linear',
+       lodMinClamp: 1, lodMaxClamp: 4, maxAnisotropy: 8, label: 'material',
+     };
+     if (compare !== undefined) descriptor.compare = compare;
+     return descriptor;
+   }
    export function usageFlags(): number {
      return GPUBufferUsage.VERTEX | GPUTextureUsage.RENDER_ATTACHMENT | GPUShaderStage.FRAGMENT |
        GPUColorWrite.ALL | GPUMapMode.READ;
@@ -125,8 +135,11 @@ for (const expected of [
   'flight::host_sdl::WgpuOrigin3D',
   'flight::host_sdl::WgpuVertexBufferLayout',
   'flight::host_sdl::WgpuStencilFaceState',
+  'flight::host_sdl::WgpuSamplerDescriptor',
   '.src_factor = src_factor, .dst_factor = dst_factor, .operation = flight::String("add")',
   '.compare = flight::String("always"), .pass_op = flight::String("replace")',
+  '.address_mode_u = flight::String("repeat"), .address_mode_v = flight::String("mirror-repeat")',
+  'descriptor.compare = compare.value()',
   'flight::host_sdl::wgpu_buffer_usage_vertex',
   'flight::host_sdl::wgpu_texture_usage_render_attachment',
   'flight::host_sdl::wgpu_shader_stage_fragment',

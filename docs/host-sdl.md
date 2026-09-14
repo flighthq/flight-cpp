@@ -113,7 +113,7 @@ selects no renderer or platform provider and keeps object-handle names available
 supplies them.
 
 `bindings/sdl-wgpu.json` supplies those object handles, adapter features/limits,
-device/origin/vertex/external-image descriptors, blend and stencil pipeline values, and standard buffer, texture,
+device/origin/vertex/external-image/sampler descriptors, blend and stencil pipeline values, and standard buffer, texture,
 shader, color-write, and map-mode flags. Optional descriptor fields retain their source presence for the provider.
 It is a provider ABI rather than a renderer: device methods remain the responsibility of the selected Dawn or
 wgpu-native adapter. Run `npm run sdk:generate:sdl-wgpu` for that profile alone, or `npm run sdk:generate:sdl` for

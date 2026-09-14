@@ -253,7 +253,7 @@ The same profile maps `DOMRect` to the host's complete eight-field `ClientRect`,
 canvas dimensions. This removes the name from all eleven selected example roots that referenced it. Four of those
 roots now stop directly at compiler-owned union, captured-reference, intersection, or SDK-dependency boundaries;
 the others retain separate Canvas, listener-option, or HTML-control requirements. In the full SDK sweep, direct
-ambient-binding refusals are now 127 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
+ambient-binding refusals are now 126 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
 at 1,098 modules.
 
 The SDL profile now also supplies `Event`, `CompositionEvent`, `InputEvent`, `Gamepad`, `GamepadButton`,
@@ -269,12 +269,14 @@ std::function<auto` for `addEventListener` and `removeEventListener`. The compil
 event parameter and elect a callable identity representation that lets the host remove the same listener without
 comparing `std::function` targets.
 
-The provider-neutral `flighthq/flight-cpp/sdl-wgpu/1` profile now supplies typed shared identity for 16 WebGPU
+The provider-neutral `flighthq/flight-cpp/sdl-wgpu/1` profile now supplies typed shared identity for 18 WebGPU
 object domains, exact adapter capability metadata, standard usage flags, and weak-key policies. On its own it adds
 18 dependency-closed headers over runtime/headless and all 18 compile. Composed with SDL/GL and the application
 shell, it raises the inventory from 1,081 to 1,098 headers; all 17 additions compile and direct ambient-refused
 modules fall from the SDL/GL profile's 242 to 166. The device, origin, vertex, and external-image descriptors now have compiler-checked
-native representations. `wgpuHost.ts` reaches contextual optional construction, while `wgpuExternalImageSource.ts`
+native representations. The sampler descriptor also preserves every optional source field; binding it advances
+`wgpuRenderState.ts` to `dual-sentinel optional chaining requires presence projection lowering`. `wgpuHost.ts`
+reaches contextual optional construction, while `wgpuExternalImageSource.ts`
 retains only browser constructor values (`DOMException`, image/video/canvas/bitmap/frame); both are compiler or
 browser-adapter boundaries rather than missing native WGPU data contracts.
 

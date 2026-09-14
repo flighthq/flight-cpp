@@ -550,11 +550,29 @@ int main() {
       .fail_op = std::nullopt,
       .depth_fail_op = std::nullopt,
   };
+  const flight::host_sdl::WgpuSamplerDescriptor sampler_descriptor{
+      .address_mode_u = flight::String("repeat"),
+      .mag_filter = flight::String("linear"),
+      .lod_min_clamp = 1.0,
+      .compare = flight::String("less-equal"),
+      .max_anisotropy = 8.0,
+      .label = flight::String("material"),
+  };
   expect(
       blend_state.color.dst_factor == flight::String("one-minus-src-alpha") &&
           stencil_state.pass_op == flight::String("replace") &&
           !stencil_state.depth_fail_op.has_value(),
       "WGPU pipeline dictionaries lost explicit values or omitted-member presence");
+  expect(
+      sampler_descriptor.address_mode_u == flight::String("repeat") &&
+          !sampler_descriptor.address_mode_v.has_value() &&
+          sampler_descriptor.mag_filter == flight::String("linear") &&
+          !sampler_descriptor.min_filter.has_value() && sampler_descriptor.lod_min_clamp == 1.0 &&
+          !sampler_descriptor.lod_max_clamp.has_value() &&
+          sampler_descriptor.compare == flight::String("less-equal") &&
+          sampler_descriptor.max_anisotropy == 8.0 &&
+          sampler_descriptor.label == flight::String("material"),
+      "WGPU sampler descriptors lost explicit values or omitted-member presence");
   {
     flight::Set<flight::String> features;
     features.add(flight::String("timestamp-query"));
