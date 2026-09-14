@@ -144,6 +144,17 @@
       "targetName": "flight::Blob"
     },
     {
+      "callResultType": "bool",
+      "headers": [
+        "flight/boolean.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "Boolean",
+      "space": "value",
+      "targetName": "flight::to_boolean"
+    },
+    {
       "headers": [
         "flight/blob.hpp"
       ],

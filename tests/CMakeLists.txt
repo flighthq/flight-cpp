@@ -36,6 +36,7 @@ set(
   audio_buffer
   base64
   blob
+  boolean
   callable
   conditional_facet_ref
   contract

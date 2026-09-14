@@ -253,8 +253,12 @@ The same profile maps `DOMRect` to the host's complete eight-field `ClientRect`,
 canvas dimensions. This removes the name from all eleven selected example roots that referenced it. Four of those
 roots now stop directly at compiler-owned union, captured-reference, intersection, or SDK-dependency boundaries;
 the others retain separate Canvas, listener-option, or HTML-control requirements. In the full SDK sweep, direct
-ambient-binding refusals are now 126 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
+ambient-binding refusals are now 125 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
 at 1,098 modules.
+
+The runtime profile also binds the global `Boolean` value to a callable object with exact represented truthiness.
+This supports both direct conversion and `filter(Boolean)` without overload erasure. `svgDocument.ts` now reaches
+the existing `Number.parseFloat` intrinsic gap, whose downstream `flight::parse_float` operation is already present.
 
 The SDL profile now also supplies `Event`, `CompositionEvent`, `InputEvent`, `Gamepad`, `GamepadButton`,
 `GamepadEvent`, `navigator.getGamepads()`, and `AddEventListenerOptions` with compiler-checked native carriers. SDL's

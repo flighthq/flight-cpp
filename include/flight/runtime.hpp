@@ -7,6 +7,7 @@
 #include <flight/audio_buffer.hpp>
 #include <flight/base64.hpp>
 #include <flight/blob.hpp>
+#include <flight/boolean.hpp>
 #include <flight/callable.hpp>
 #include <flight/conditional_facet_ref.hpp>
 #include <flight/contract.hpp>

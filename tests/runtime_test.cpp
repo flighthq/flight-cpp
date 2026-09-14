@@ -493,6 +493,41 @@ void test_error() {
         "TypeError preserves its source-language name and message");
 }
 
+void test_boolean_conversion() {
+  check(!flight::to_boolean(flight::String()) && flight::to_boolean(flight::String("0")),
+        "Boolean conversion uses string length rather than string contents");
+  check(!flight::to_boolean(0.0) && !flight::to_boolean(-0.0) &&
+            !flight::to_boolean(std::numeric_limits<double>::quiet_NaN()) &&
+            flight::to_boolean(std::numeric_limits<double>::infinity()) &&
+            flight::to_boolean(-3.0),
+        "Boolean conversion preserves JavaScript number truthiness");
+  check(!flight::to_boolean(flight::null) && !flight::to_boolean(flight::undefined) &&
+            !flight::to_boolean(nullptr),
+        "Boolean conversion rejects each nullish representation");
+
+  const std::optional<flight::String> missing;
+  const std::optional<flight::String> empty{flight::String()};
+  const std::optional<flight::String> present{flight::String("flight")};
+  check(!flight::to_boolean(missing) && !flight::to_boolean(empty) && flight::to_boolean(present),
+        "Boolean conversion projects optional presence before converting its value");
+
+  std::variant<flight::Null, double, flight::String> union_value{flight::null};
+  check(!flight::to_boolean(union_value), "Boolean conversion visits a null union member");
+  union_value = flight::String("flight");
+  check(flight::to_boolean(union_value), "Boolean conversion visits a string union member");
+
+  const flight::Array<double> empty_array;
+  const flight::Record<flight::String, double> empty_record;
+  check(flight::to_boolean(empty_array) && flight::to_boolean(empty_record),
+        "empty JavaScript collection objects remain truthy");
+
+  const auto compact = flight::Array<flight::String>{"", "flight", "", "cpp"}.filter(
+      flight::to_boolean);
+  check(compact.size() == 2 && compact[0] == flight::String("flight") &&
+            compact[1] == flight::String("cpp"),
+        "Boolean remains a first-class filter predicate");
+}
+
 void test_host() {
   const auto previous_executor = flight::current_executor();
   const auto executor = std::make_shared<flight::QueueExecutor>();
@@ -1392,6 +1427,7 @@ int main() {
   test_binary_data();
   test_base64();
   test_blob();
+  test_boolean_conversion();
   test_contract();
   test_date();
   test_error();

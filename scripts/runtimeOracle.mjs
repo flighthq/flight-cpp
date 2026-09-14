@@ -96,6 +96,7 @@ const expected = JSON.stringify([
   Number.isFinite(Math.fround(3.4028235677973366e38)),
   Uint16Array.BYTES_PER_ELEMENT,
   Uint32Array.BYTES_PER_ELEMENT,
+  [Boolean(''), Boolean('0'), Boolean(0), Boolean(-0), Boolean(Number.NaN), Boolean(Infinity), Boolean(null), Boolean(undefined), Boolean([]), Boolean({})],
   Array.from(new Set([3, 1, 4]), (value, index) => value + index),
   Array.from(Uint32Array.from([-1, 4294967297, Number.NaN])),
   Array.from(Int8Array.from([127, 128, 255, 256, -129])),

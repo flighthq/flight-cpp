@@ -19,6 +19,7 @@ const gates = [
   { arguments: [], name: 'audioBufferOracle' },
   { arguments: [], name: 'base64Oracle' },
   { arguments: [], name: 'blobOracle' },
+  { arguments: [], name: 'booleanOracle' },
   { arguments: [], name: 'buildHealth' },
   { arguments: [], name: 'releaseHealth' },
   { arguments: [], name: 'exampleHealth' },

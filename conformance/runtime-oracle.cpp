@@ -67,6 +67,19 @@ int main() {
   observations.push(flight::Uint16Array::bytes_per_element);
   observations.push(flight::Uint32Array::bytes_per_element);
 
+  observations.push(flight::JsonArray{
+      flight::to_boolean(flight::String()),
+      flight::to_boolean(flight::String("0")),
+      flight::to_boolean(0.0),
+      flight::to_boolean(-0.0),
+      flight::to_boolean(std::numeric_limits<double>::quiet_NaN()),
+      flight::to_boolean(std::numeric_limits<double>::infinity()),
+      flight::to_boolean(flight::null),
+      flight::to_boolean(flight::undefined),
+      flight::to_boolean(flight::Array<double>{}),
+      flight::to_boolean(flight::Record<flight::String, double>{}),
+  });
+
   const flight::Set<double> iterable{3.0, 1.0, 4.0};
   flight::JsonArray array_from_values;
   for (const auto value : flight::array_from(iterable, [](double value, double index) {

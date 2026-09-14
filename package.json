@@ -15,6 +15,7 @@
     "audio-buffer:oracle": "node ./scripts/audioBufferOracle.mjs",
     "base64:oracle": "node ./scripts/base64Oracle.mjs",
     "blob:oracle": "node ./scripts/blobOracle.mjs",
+    "boolean:oracle": "node ./scripts/booleanOracle.mjs",
     "build:check": "node ./scripts/buildHealth.mjs",
     "check": "node ./scripts/check.mjs",
     "compile:check": "node ./scripts/emittedSourceCompile.mjs",

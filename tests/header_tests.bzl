@@ -69,4 +69,5 @@ _PUBLIC_HEADERS = [
     ("audio_buffer", 43),
     ("iterable", 44),
     ("web_types", 45),
+    ("boolean", 46),
 ]
