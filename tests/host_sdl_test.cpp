@@ -222,6 +222,14 @@ int main() {
       panel.class_name == flight::String("controls") &&
           appended_label.text_content == flight::String("Flight"),
       "SDL createElement facade lost tag-specific DOM fields or appendChild values");
+  created_panel.insert_adjacent_html(flight::String("beforeend"), flight::String("<span>A</span>"));
+  created_panel.insert_adjacent_html(flight::String("afterbegin"), flight::String("<span>B</span>"));
+  expect(
+      created_panel.inner_html == flight::String("<span>B</span><span>A</span>") &&
+          created_panel.query_selector_all(flight::String("[data-input-overlay]")).empty(),
+      "SDL DOM shell changed adjacent markup order or retained nonexistent query results");
+  created_panel.remove();
+  expect(created_panel.inner_html.empty(), "SDL DOM shell remove retained element content");
 
   int once_calls = 0;
   flight::host_sdl::EventListenerOptions once_options;
@@ -527,6 +535,26 @@ int main() {
   expect(
       object_state.releases == 1 && !flight::host_sdl::WgpuDevice::lock_weak(weak_device),
       "WGPU object carrier did not release exactly once or expire its weak identity");
+  const flight::host_sdl::WgpuBlendComponent blend_component{
+      .src_factor = flight::String("one"),
+      .dst_factor = flight::String("one-minus-src-alpha"),
+      .operation = flight::String("add"),
+  };
+  const flight::host_sdl::WgpuBlendState blend_state{
+      .color = blend_component,
+      .alpha = blend_component,
+  };
+  const flight::host_sdl::WgpuStencilFaceState stencil_state{
+      .compare = flight::String("always"),
+      .pass_op = flight::String("replace"),
+      .fail_op = std::nullopt,
+      .depth_fail_op = std::nullopt,
+  };
+  expect(
+      blend_state.color.dst_factor == flight::String("one-minus-src-alpha") &&
+          stencil_state.pass_op == flight::String("replace") &&
+          !stencil_state.depth_fail_op.has_value(),
+      "WGPU pipeline dictionaries lost explicit values or omitted-member presence");
   {
     flight::Set<flight::String> features;
     features.add(flight::String("timestamp-query"));

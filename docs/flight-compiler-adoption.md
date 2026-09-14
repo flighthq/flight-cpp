@@ -62,7 +62,7 @@ but one of the portable headers that compiled independently.
   overall.
 - `npm run sdk:generate:sdl` composes the GL, WebGPU, and SDL application profiles. It emits 1,098 modules; all 17
   headers beyond the SDL/GL inventory compile, for 755 passing and 343 failing headers. Direct external-binding
-  refusals fall from the SDL/GL profile's 242 to 134. Window, document, `HTMLElement`, animation-frame
+  refusals fall from the SDL/GL profile's 242 to 127. Window, document, `HTMLElement`, animation-frame
   cancellation, and the represented input event types advance to their next compiler or dependency boundary. The
   runtime profile also maps the compiler's existing `PromiseLike<T>` task domain to `flight::Task<T>`; `dialog.ts`
   now reaches the compiler-owned async-closure coroutine blocker instead of stopping at that ambient type.
@@ -128,12 +128,13 @@ an unresolved alternative in a scene-light-selection union. Their dependency ref
 `T | undefined` also reaches `contextual optionalSingle construction requires expression type evidence`; the exact
 iterator binding and its `done` path compile in the live runtime oracle.
 
-WebGPU descriptor bindings cannot yet be enabled faithfully. A focused `GPUBlendState` fixture emits nested
-`GPUBlendComponent` literals as new anonymous `Ref<T>` records instead of contextual target values. Direct external
-descriptor literals preserve source property order in C++ designators, so valid TypeScript objects whose properties
-are written in a different order than the target struct fail C++'s ordered-designator rule. The compiler must
-contextualize nested object literals and emit target declaration order before the host can bind `GPUBlendState`,
-`GPUStencilFaceState`, `GPUSamplerDescriptor`, and the related bind-group layouts to exact value carriers.
+The SDL/WGPU profile now binds the `GPUBlendComponent`, `GPUBlendState`, and `GPUStencilFaceState` values used by
+Flight's current renderer literals. Optional fields preserve presence for the provider adapter. Seven modules advance
+to their actual union-evidence, optional-callable, anonymous-property, or `Record`-spread compiler failures. Broader
+descriptor coverage remains gated: bind-group resource and layout literals still fail while contextualizing nested
+anonymous properties, and direct external descriptor construction still preserves source property order instead of
+the target aggregate's declaration order. The compiler must supply contextual target types and ordered designators
+before arbitrary valid TypeScript descriptors can use these carriers safely.
 
 The runtime profile maps `RangeError` and `TypeError` to downstream classes that preserve semantic messages and their
 common `flight::Error` base. Current generated headers no longer fail by constructing `std::range_error` from

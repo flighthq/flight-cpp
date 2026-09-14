@@ -112,10 +112,12 @@ image-smoothing, and permission string-literal domains to `flight::String`. It a
 selects no renderer or platform provider and keeps object-handle names available until a concrete backend profile
 supplies them.
 
-`bindings/sdl-wgpu.json` supplies those object handles, adapter features/limits, device/origin/vertex/external-image
-descriptors, and standard buffer, texture, shader, color-write, and map-mode flags. It is a provider ABI rather than a renderer: device methods remain the
-responsibility of the selected Dawn/wgpu-native adapter. Run `npm run sdk:generate:sdl-wgpu` for that profile alone,
-or `npm run sdk:generate:sdl` for the complete GL + WebGPU + application-shell inventory.
+`bindings/sdl-wgpu.json` supplies those object handles, adapter features/limits,
+device/origin/vertex/external-image descriptors, blend and stencil pipeline values, and standard buffer, texture,
+shader, color-write, and map-mode flags. Optional descriptor fields retain their source presence for the provider.
+It is a provider ABI rather than a renderer: device methods remain the responsibility of the selected Dawn or
+wgpu-native adapter. Run `npm run sdk:generate:sdl-wgpu` for that profile alone, or `npm run sdk:generate:sdl` for
+the complete GL + WebGPU + application-shell inventory.
 
 An installed consumer selects only the backend it uses:
 

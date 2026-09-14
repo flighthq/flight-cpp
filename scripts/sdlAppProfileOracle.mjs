@@ -106,6 +106,10 @@ const source = api.parseTypeScriptSource(
      canvas.width = 8;
      canvas.height = 4;
      return canvas.getContext('webgl2')!;
+   }
+   export function replaceNativeOverlay(div: HTMLDivElement): void {
+     for (const element of div.querySelectorAll('[data-flight-overlay]')) element.remove();
+     div.insertAdjacentHTML('beforeend', '<span data-flight-overlay>Flight</span>');
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -152,6 +156,9 @@ for (const expected of [
   'controls.append_child(label)',
   'flight::host_sdl::WebGl2Context create_native_gl_context()',
   'canvas.get_context(flight::String("webgl2"))',
+  'for (auto element : div.query_selector_all(flight::String("[data-flight-overlay]")))',
+  'element.remove()',
+  'div.insert_adjacent_html(flight::String("beforeend")',
 ]) {
   if (!emitted.includes(expected)) {
     process.stderr.write(`SDL app binding fixture did not emit ${expected}.\n`);

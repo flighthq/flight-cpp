@@ -88,6 +88,13 @@ const source = api.parseTypeScriptSource(
    export function vertexLayout(value: GPUVertexBufferLayout): GPUVertexBufferLayout { return value; }
    export function maxTextureSize(value: GPUAdapter): number { return value.limits.maxTextureDimension2D ?? 8192; }
    export function supportsTimestamp(value: GPUAdapter): boolean { return value.features.has('timestamp-query'); }
+   export function blend(srcFactor: GPUBlendFactor, dstFactor: GPUBlendFactor): GPUBlendState {
+     const component: GPUBlendComponent = { srcFactor, dstFactor, operation: 'add' };
+     return { color: component, alpha: component };
+   }
+   export function stencil(): GPUStencilFaceState {
+     return { compare: 'always', passOp: 'replace', failOp: 'keep', depthFailOp: 'keep' };
+   }
    export function usageFlags(): number {
      return GPUBufferUsage.VERTEX | GPUTextureUsage.RENDER_ATTACHMENT | GPUShaderStage.FRAGMENT |
        GPUColorWrite.ALL | GPUMapMode.READ;
@@ -110,11 +117,16 @@ for (const expected of [
   ...handleTypes.map(([_sourceName, targetName]) => `flight::host_sdl::${targetName}`),
   'flight::host_sdl::WgpuDeviceLostInfo',
   'flight::host_sdl::WgpuColor',
+  'flight::host_sdl::WgpuBlendComponent',
+  'flight::host_sdl::WgpuBlendState',
   'flight::host_sdl::WgpuDeviceDescriptor',
   'flight::host_sdl::WgpuExternalImageSourceInfo',
   'flight::host_sdl::WgpuExternalImageDestinationInfo',
   'flight::host_sdl::WgpuOrigin3D',
   'flight::host_sdl::WgpuVertexBufferLayout',
+  'flight::host_sdl::WgpuStencilFaceState',
+  '.src_factor = src_factor, .dst_factor = dst_factor, .operation = flight::String("add")',
+  '.compare = flight::String("always"), .pass_op = flight::String("replace")',
   'flight::host_sdl::wgpu_buffer_usage_vertex',
   'flight::host_sdl::wgpu_texture_usage_render_attachment',
   'flight::host_sdl::wgpu_shader_stage_fragment',

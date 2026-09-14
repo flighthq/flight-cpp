@@ -7,6 +7,8 @@
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUAdapter", "space": "type", "targetName": "flight::host_sdl::WgpuAdapter" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUBindGroup", "space": "type", "targetName": "flight::host_sdl::WgpuBindGroup", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuBindGroupWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUBindGroupLayout", "space": "type", "targetName": "flight::host_sdl::WgpuBindGroupLayout", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuBindGroupLayoutWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBlendComponent", "space": "type", "targetName": "flight::host_sdl::WgpuBlendComponent" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBlendState", "space": "type", "targetName": "flight::host_sdl::WgpuBlendState" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUBuffer", "space": "type", "targetName": "flight::host_sdl::WgpuBuffer", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuBufferWeakPolicy" },
     {
       "headers": ["flight/host_sdl/wgpu.hpp"],
@@ -71,6 +73,7 @@
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPURenderPipeline", "space": "type", "targetName": "flight::host_sdl::WgpuRenderPipeline", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuRenderPipelineWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUSampler", "space": "type", "targetName": "flight::host_sdl::WgpuSampler", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuSamplerWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUShaderModule", "space": "type", "targetName": "flight::host_sdl::WgpuShaderModule", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuShaderModuleWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUStencilFaceState", "space": "type", "targetName": "flight::host_sdl::WgpuStencilFaceState" },
     {
       "headers": ["flight/host_sdl/wgpu.hpp"],
       "members": [

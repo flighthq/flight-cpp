@@ -95,12 +95,14 @@ match offset at that position. An explicit `offset: number` annotation emits the
 native oracle. Capture-aware callback typing must also preserve the runtime `undefined` value for unmatched groups;
 the TypeScript library's broad callback signature does not expose that absence by itself.
 
-WebGPU descriptor bindings cannot yet be enabled faithfully. A focused `GPUBlendState` fixture emits nested
-`GPUBlendComponent` literals as new anonymous `Ref<T>` records instead of contextual target values. Direct external
-descriptor literals preserve source property order in C++ designators, so valid TypeScript objects whose properties
-are written in a different order than the target struct fail C++'s ordered-designator rule. The compiler must
-contextualize nested object literals and emit target declaration order before the host can bind `GPUBlendState`,
-`GPUStencilFaceState`, `GPUSamplerDescriptor`, and the related bind-group layouts to exact value carriers.
+The current compiler can now contextualize Flight's nested `GPUBlendComponent` literals, so flight-cpp binds
+`GPUBlendComponent`, `GPUBlendState`, and `GPUStencilFaceState` to provider-neutral value carriers. Seven affected
+modules advance to their next union-evidence, optional-callable, anonymous-property, or `Record`-spread failures.
+Bind-group resource and layout literals still fail with `anonymous object property ... requires concrete C++ type
+evidence` even when the entry, resource union, and buffer-binding types are supplied. Direct external descriptor
+literals also preserve source property order in C++ designators; arbitrary valid TypeScript property order can
+therefore violate the target aggregate's declaration order. Contextual target types and ordered-designator emission
+remain required before the rest of the WebGPU descriptor family can be bound safely.
 
 These diagnostics arise after the runtime includes resolve, and many occur in a header before later errors in that
 header can be observed. The JSON report from `npm run sdk:compile` is the compact handoff surface for fixing them in
@@ -251,7 +253,7 @@ The same profile maps `DOMRect` to the host's complete eight-field `ClientRect`,
 canvas dimensions. This removes the name from all eleven selected example roots that referenced it. Four of those
 roots now stop directly at compiler-owned union, captured-reference, intersection, or SDK-dependency boundaries;
 the others retain separate Canvas, listener-option, or HTML-control requirements. In the full SDK sweep, direct
-ambient-binding refusals are now 135 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
+ambient-binding refusals are now 127 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
 at 1,098 modules.
 
 The SDL profile now also supplies `Event`, `CompositionEvent`, `InputEvent`, `Gamepad`, `GamepadButton`,

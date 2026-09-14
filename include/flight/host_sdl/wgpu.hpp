@@ -208,6 +208,26 @@ struct WgpuColor final {
   double r{0.0};
 };
 
+// Provider-neutral WebGPU pipeline values. Optional members preserve dictionary presence so the
+// selected Dawn or wgpu-native adapter can apply the WebGPU defaults at its ABI boundary.
+struct WgpuBlendComponent final {
+  std::optional<String> src_factor;
+  std::optional<String> dst_factor;
+  std::optional<String> operation;
+};
+
+struct WgpuBlendState final {
+  WgpuBlendComponent color;
+  WgpuBlendComponent alpha;
+};
+
+struct WgpuStencilFaceState final {
+  std::optional<String> compare;
+  std::optional<String> pass_op;
+  std::optional<String> fail_op;
+  std::optional<String> depth_fail_op;
+};
+
 struct WgpuDeviceLostInfo final {
   String message;
   String reason;

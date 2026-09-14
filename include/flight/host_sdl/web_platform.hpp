@@ -13,6 +13,7 @@
 #include <utility>
 #include <vector>
 
+#include <flight/array.hpp>
 #include <flight/host_sdl/export.hpp>
 #include <flight/host_sdl/input.hpp>
 #include <flight/host_sdl/web_platform_types.hpp>
@@ -170,6 +171,9 @@ class FLIGHT_HOST_SDL_GL_API DomElement {
   }
 
   [[nodiscard]] ClientRect get_bounding_client_rect() const noexcept;
+  [[nodiscard]] Array<DomElement> query_selector_all(const String& selector) const;
+  void insert_adjacent_html(const String& position, const String& text);
+  void remove() noexcept;
   void click();
 
  private:
@@ -188,6 +192,10 @@ using HtmlParagraphElement = DomElement;
 using HtmlSelectElement = DomElement;
 using HtmlSpanElement = DomElement;
 using HtmlStyleElement = DomElement;
+using Element = DomElement;
+
+template <typename Value>
+using NodeListOf = Array<Value>;
 
 // document.createElement has a tag-dependent TypeScript return type, while generated C++ retains
 // `auto` for the call. This facade therefore exposes the common DOM surface and lazily materializes

@@ -37,6 +37,31 @@ ClientRect DomElement::get_bounding_client_rect() const noexcept {
   return ClientRect{.bottom = height, .height = height, .right = width, .width = width};
 }
 
+Array<DomElement> DomElement::query_selector_all(const String&) const {
+  // The shell does not materialize an HTML tree. Returning an empty static snapshot is exact for
+  // its retained children and lets generated cleanup loops remain deterministic.
+  return {};
+}
+
+void DomElement::insert_adjacent_html(const String& position, const String& text) {
+  if (position == String("beforeend")) {
+    inner_html = inner_html.concat(text);
+    return;
+  }
+  if (position == String("afterbegin")) {
+    inner_html = text.concat(inner_html);
+    return;
+  }
+  throw std::invalid_argument(
+      "SDL DOM shell only represents insertAdjacentHTML within the current element");
+}
+
+void DomElement::remove() noexcept {
+  inner_html = {};
+  text_content = {};
+  listeners_.clear();
+}
+
 void DomElement::click() {
   listeners_.emit(String("click"), nullptr);
 }
