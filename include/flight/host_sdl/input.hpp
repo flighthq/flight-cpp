@@ -26,6 +26,7 @@ inline constexpr double wheel_delta_page = 2.0;
 
 struct GamepadButtonSnapshot final {
   bool pressed{false};
+  bool touched{false};
   double value{0.0};
 };
 

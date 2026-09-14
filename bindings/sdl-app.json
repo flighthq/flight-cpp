@@ -7,6 +7,7 @@
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "CustomEvent", "space": "type", "targetName": "flight::host_sdl::DomCustomEvent" },
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "Event", "space": "type", "targetName": "flight::host_sdl::DomEvent" },
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "Gamepad", "space": "type", "targetName": "flight::host_sdl::GamepadSnapshot" },
+    { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GamepadButton", "space": "type", "targetName": "flight::host_sdl::GamepadButtonSnapshot" },
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GamepadEvent", "space": "type", "targetName": "flight::host_sdl::DomEvent" },
     { "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "HTMLElement", "space": "type", "targetName": "flight::host_sdl::HtmlElement" },
     { "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "HTMLInputElement", "space": "type", "targetName": "flight::host_sdl::HtmlInputElement" },

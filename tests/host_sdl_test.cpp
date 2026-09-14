@@ -431,7 +431,8 @@ int main() {
   expect(
       gamepad.index == 4.0 && gamepad.mapping == flight::String("standard") &&
           gamepad.axes[0] == 1.0 && gamepad.buttons[4].pressed &&
-          !gamepad.buttons[6].pressed,
+          gamepad.buttons[4].touched && !gamepad.buttons[6].pressed &&
+          !gamepad.buttons[6].touched,
       "SDL navigator gamepad snapshot changed standard axes or buttons");
   gamepad.axes[0] = -1.0;
   expect((*flight::host_sdl::navigator.get_gamepads()[0]).axes[0] == 1.0,

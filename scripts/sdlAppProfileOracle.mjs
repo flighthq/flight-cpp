@@ -79,8 +79,10 @@ const source = api.parseTypeScriptSource(
      event.preventDefault();
      const keyboard = event as KeyboardEvent;
      const gamepad: Gamepad = gamepadEvent.gamepad;
+     const button: GamepadButton = gamepad.buttons[0]!;
      navigator.getGamepads();
-     return keyboard.key + (input.data ?? '') + (composition.data ?? '') + gamepad.id;
+     return keyboard.key + (input.data ?? '') + (composition.data ?? '') + gamepad.id +
+       (button.touched ? String(button.value) : '');
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -114,6 +116,8 @@ for (const expected of [
   'static_cast<flight::host_sdl::InputKeyboardData>(event)',
   'flight::host_sdl::navigator.get_gamepads()',
   'flight::host_sdl::GamepadSnapshot gamepad',
+  'flight::host_sdl::GamepadButtonSnapshot button',
+  'button.touched',
 ]) {
   if (!emitted.includes(expected)) {
     process.stderr.write(`SDL app binding fixture did not emit ${expected}.\n`);

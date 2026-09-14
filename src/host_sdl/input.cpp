@@ -101,7 +101,11 @@ void update_gamepad_axis(std::uint32_t id, std::uint8_t axis, std::int16_t raw_v
             static_cast<double>(std::numeric_limits<std::int16_t>::max()),
         0.0,
         1.0);
-    gamepad.buttons[index] = GamepadButtonSnapshot{.pressed = value > 0.5, .value = value};
+    gamepad.buttons[index] = GamepadButtonSnapshot{
+        .pressed = value > 0.5,
+        .touched = value > 0.0,
+        .value = value,
+    };
     return;
   }
   if (axis < gamepad.axes.size()) gamepad.axes[axis] = normalized_gamepad_axis(raw_value);
@@ -111,8 +115,11 @@ void update_gamepad_button(std::uint32_t id, std::uint8_t button, bool down) {
   const auto standard = standard_gamepad_button(button);
   if (!standard) return;
   auto& gamepad = ensure_gamepad(id);
-  gamepad.buttons[*standard] =
-      GamepadButtonSnapshot{.pressed = down, .value = down ? 1.0 : 0.0};
+  gamepad.buttons[*standard] = GamepadButtonSnapshot{
+      .pressed = down,
+      .touched = down,
+      .value = down ? 1.0 : 0.0,
+  };
 }
 
 } // namespace

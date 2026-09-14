@@ -221,12 +221,16 @@ next compiler or package dependency failures in the full SDK graph. The runtime 
 existing `flight::Task<T>` carrier; the dialog module consequently advances to the compiler's async-closure
 coroutine-lowering refusal.
 
-The SDL profile now also supplies `Event`, `CompositionEvent`, `InputEvent`, `Gamepad`, `GamepadEvent`, and
-`navigator.getGamepads()` with compiler-checked native carriers. `packages/input/src/inputManager.ts` consequently
-reports only `EventTarget[type]`. A focused compiler probe with an otherwise valid `EventTarget` binding fails with
-`flight-cpp type position retains unresolved auto placeholder: std::function<auto` for `addEventListener` and
+The SDL profile now also supplies `Event`, `CompositionEvent`, `InputEvent`, `Gamepad`, `GamepadButton`,
+`GamepadEvent`, and `navigator.getGamepads()` with compiler-checked native carriers. SDL's gamepad carrier exposes
+the standard `pressed`, `touched`, and `value` button fields and preserves them in each polled snapshot.
+`packages/input/src/inputManager.ts` consequently reports only `AddEventListenerOptions[type]` and
+`EventTarget[type]`. A focused compiler probe with an otherwise valid `EventTarget` binding fails with `flight-cpp
+type position retains unresolved auto placeholder: std::function<auto` for `addEventListener` and
 `removeEventListener`. The compiler needs to materialize the listener's event parameter and elect a callable
 identity representation that lets the host remove the same listener without comparing `std::function` targets.
+`AddEventListenerOptions` also needs a concrete representation of capture, once, passive, and abort-signal behavior;
+the current host listener surface does not claim the type while those semantics are incomplete.
 
 The provider-neutral `flighthq/flight-cpp/sdl-wgpu/1` profile now supplies typed shared identity for 16 WebGPU
 object domains, exact adapter capability metadata, standard usage flags, and weak-key policies. On its own it adds

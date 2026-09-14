@@ -65,9 +65,11 @@ but one of the portable headers that compiled independently.
   cancellation, and the represented input event types advance to their next compiler or dependency boundary. The
   runtime profile also maps the compiler's existing `PromiseLike<T>` task domain to `flight::Task<T>`; `dialog.ts`
   now reaches the compiler-owned async-closure coroutine blocker instead of stopping at that ambient type.
-  `inputManager.ts` now lacks only `EventTarget[type]`; binding that nominally exposes the compiler's unresolved
-  `std::function<auto` event-listener parameter, so the host leaves this last binding absent until callable listener
-  types and removal identity have a concrete compiler contract.
+  `inputManager.ts` now has exact native `Gamepad`, `GamepadButton`, and `navigator.getGamepads()` carriers and lacks
+  only `AddEventListenerOptions[type]` and `EventTarget[type]`. The former includes capture, once, passive, and abort
+  semantics; the latter nominally exposes the compiler's unresolved `std::function<auto` event-listener parameter.
+  The host leaves both bindings absent until callable listener types and removal identity have a concrete compiler
+  contract.
   The lifecycle module now passes `CustomEvent<T>`, `PerformanceNavigationTiming`, `document.hidden`, and
   `document.hasFocus()` and stops at `document.removeEventListener`. A diagnostic mapping for removal advances it to
   its separate closed-`WeakMap` value proof, but it cannot be maintained while copied `std::function` values lose
