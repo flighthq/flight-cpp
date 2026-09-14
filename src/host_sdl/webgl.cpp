@@ -8,12 +8,24 @@
 #include <functional>
 #include <limits>
 #include <map>
+#include <mutex>
 #include <stdexcept>
 #include <string>
 #include <utility>
+#include <variant>
 #include <vector>
 
 namespace flight::host_sdl::detail {
+
+struct CanvasListener final {
+  std::uint64_t id;
+  String type;
+  std::variant<std::function<void(InputPointerData)>, std::function<void()>> callback;
+  bool capture;
+  bool once;
+  bool passive;
+  std::function<void()> abort_callback;
+};
 
 struct GlSurfaceState final {
   explicit GlSurfaceState(WindowOptions options) : window(std::move(options)), context(window) {}
@@ -25,8 +37,9 @@ struct GlSurfaceState final {
       std::pair<WebGlObjectKind, std::uint32_t>,
       std::weak_ptr<WebGlObjectState>> objects;
   bool unpack_premultiply_alpha{false};
-  std::vector<std::pair<String, std::function<void(InputPointerData)>>> pointer_listeners;
-  std::vector<std::pair<String, std::function<void()>>> simple_listeners;
+  std::mutex listener_mutex;
+  std::uint64_t next_listener_id{1};
+  std::vector<std::shared_ptr<CanvasListener>> listeners;
 };
 
 struct GlImageSourceState final {
@@ -1639,23 +1652,113 @@ ClientRect GlCanvas::get_bounding_client_rect() const {
 
 void GlCanvas::add_event_listener(
     const String& type,
-    std::function<void(InputPointerData)> callback) {
+    std::function<void(InputPointerData)> callback,
+    const EventListenerOptions& options) {
   if (!callback) throw std::invalid_argument("canvas event callback cannot be empty");
-  require_state().pointer_listeners.emplace_back(type, std::move(callback));
+  auto& state = require_state();
+  if (options.signal && static_cast<bool>(options.signal->aborted)) return;
+
+  std::shared_ptr<detail::CanvasListener> listener;
+  {
+    const std::scoped_lock lock(state.listener_mutex);
+    if (state.next_listener_id == std::numeric_limits<std::uint64_t>::max()) {
+      throw std::length_error("canvas event listener identity space is exhausted");
+    }
+    listener = std::make_shared<detail::CanvasListener>(detail::CanvasListener{
+        .id = state.next_listener_id++,
+        .type = type,
+        .callback = std::move(callback),
+        .capture = options.capture.value_or(false),
+        .once = options.once.value_or(false),
+        .passive = options.passive.value_or(false),
+        .abort_callback = {},
+    });
+    state.listeners.push_back(listener);
+  }
+  if (!options.signal) return;
+  const std::weak_ptr<detail::GlSurfaceState> weak_state = state_;
+  const auto id = listener->id;
+  listener->abort_callback = [weak_state, id] {
+    const auto owner = weak_state.lock();
+    if (!owner) return;
+    const std::scoped_lock lock(owner->listener_mutex);
+    std::erase_if(owner->listeners, [id](const auto& candidate) {
+      return candidate->id == id;
+    });
+  };
+  options.signal->add_event_listener(
+      String("abort"), listener->abort_callback, AbortEventListenerOptions{.once = true});
+  if (static_cast<bool>(options.signal->aborted)) listener->abort_callback();
 }
 
-void GlCanvas::add_event_listener(const String& type, std::function<void()> callback) {
+void GlCanvas::add_event_listener(
+    const String& type,
+    std::function<void()> callback,
+    const EventListenerOptions& options) {
   if (!callback) throw std::invalid_argument("canvas event callback cannot be empty");
-  require_state().simple_listeners.emplace_back(type, std::move(callback));
+  auto& state = require_state();
+  if (options.signal && static_cast<bool>(options.signal->aborted)) return;
+
+  std::shared_ptr<detail::CanvasListener> listener;
+  {
+    const std::scoped_lock lock(state.listener_mutex);
+    if (state.next_listener_id == std::numeric_limits<std::uint64_t>::max()) {
+      throw std::length_error("canvas event listener identity space is exhausted");
+    }
+    listener = std::make_shared<detail::CanvasListener>(detail::CanvasListener{
+        .id = state.next_listener_id++,
+        .type = type,
+        .callback = std::move(callback),
+        .capture = options.capture.value_or(false),
+        .once = options.once.value_or(false),
+        .passive = options.passive.value_or(false),
+        .abort_callback = {},
+    });
+    state.listeners.push_back(listener);
+  }
+  if (!options.signal) return;
+  const std::weak_ptr<detail::GlSurfaceState> weak_state = state_;
+  const auto id = listener->id;
+  listener->abort_callback = [weak_state, id] {
+    const auto owner = weak_state.lock();
+    if (!owner) return;
+    const std::scoped_lock lock(owner->listener_mutex);
+    std::erase_if(owner->listeners, [id](const auto& candidate) {
+      return candidate->id == id;
+    });
+  };
+  options.signal->add_event_listener(
+      String("abort"), listener->abort_callback, AbortEventListenerOptions{.once = true});
+  if (static_cast<bool>(options.signal->aborted)) listener->abort_callback();
 }
 
 void GlCanvas::emit_pointer(const String& emitted_type, InputPointerData event) const {
-  const auto& state = require_state();
-  for (const auto& [type, callback] : state.pointer_listeners) {
-    if (type == emitted_type) callback(event);
+  auto& state = require_state();
+  std::vector<std::uint64_t> dispatch;
+  {
+    const std::scoped_lock lock(state.listener_mutex);
+    dispatch.reserve(state.listeners.size());
+    for (const auto& listener : state.listeners) {
+      if (listener->type == emitted_type) dispatch.push_back(listener->id);
+    }
   }
-  for (const auto& [type, callback] : state.simple_listeners) {
-    if (type == emitted_type) callback();
+
+  for (const auto id : dispatch) {
+    std::variant<std::function<void(InputPointerData)>, std::function<void()>> callback;
+    {
+      const std::scoped_lock lock(state.listener_mutex);
+      const auto found = std::ranges::find_if(state.listeners, [id](const auto& listener) {
+        return listener->id == id;
+      });
+      if (found == state.listeners.end()) continue;
+      callback = (*found)->callback;
+      if ((*found)->once) state.listeners.erase(found);
+    }
+    if (const auto* pointer = std::get_if<std::function<void(InputPointerData)>>(&callback)) {
+      (*pointer)(event);
+    } else {
+      std::get<std::function<void()>>(callback)();
+    }
   }
 }
 

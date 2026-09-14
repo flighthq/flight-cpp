@@ -23,9 +23,14 @@ bool same_string(const String& left, const String& right) { return left == right
 Document document;
 WindowFacade window;
 
-void DomElement::add_event_listener(const String& type, std::function<void()> callback) {
-  if (!callback) throw std::invalid_argument("DOM event callback cannot be empty");
-  listeners_.emplace_back(type, std::move(callback));
+void DomElement::add_event_listener(
+    const String& type,
+    std::function<void()> callback,
+    const EventListenerOptions& options) {
+  listeners_.add(
+      type,
+      [callback = std::move(callback)](std::nullptr_t) mutable { callback(); },
+      options);
 }
 
 ClientRect DomElement::get_bounding_client_rect() const noexcept {
@@ -33,9 +38,7 @@ ClientRect DomElement::get_bounding_client_rect() const noexcept {
 }
 
 void DomElement::click() {
-  for (const auto& [type, callback] : listeners_) {
-    if (same_string(type, String("click"))) callback();
-  }
+  listeners_.emit(String("click"), nullptr);
 }
 
 CreatedElement::operator DomElement() const { return {}; }
@@ -53,15 +56,18 @@ std::optional<DomElement> Document::get_element_by_id(const String&) const { ret
 
 bool Document::has_focus() const noexcept { return focused_; }
 
-void Document::add_event_listener(const String& type, std::function<void()> callback) {
-  if (!callback) throw std::invalid_argument("document event callback cannot be empty");
-  listeners_.emplace_back(type, std::move(callback));
+void Document::add_event_listener(
+    const String& type,
+    std::function<void()> callback,
+    const EventListenerOptions& options) {
+  listeners_.add(
+      type,
+      [callback = std::move(callback)](std::nullptr_t) mutable { callback(); },
+      options);
 }
 
 void Document::emit(const String& emitted_type) {
-  for (const auto& [type, callback] : listeners_) {
-    if (same_string(type, emitted_type)) callback();
-  }
+  listeners_.emit(emitted_type, nullptr);
 }
 
 void Document::set_focus(bool focused) noexcept { focused_ = focused; }
@@ -72,28 +78,29 @@ void Document::set_hidden(bool next_hidden) {
   emit(String("visibilitychange"));
 }
 
-void WindowFacade::add_event_listener(const String& type, std::function<void()> callback) {
-  if (!callback) throw std::invalid_argument("window event callback cannot be empty");
-  listeners_.emplace_back(type, std::move(callback));
+void WindowFacade::add_event_listener(
+    const String& type,
+    std::function<void()> callback,
+    const EventListenerOptions& options) {
+  listeners_.add(
+      type,
+      [callback = std::move(callback)](std::nullptr_t) mutable { callback(); },
+      options);
 }
 
 void WindowFacade::add_event_listener(
     const String& type,
-    std::function<void(InputKeyboardData)> callback) {
-  if (!callback) throw std::invalid_argument("window event callback cannot be empty");
-  keyboard_listeners_.emplace_back(type, std::move(callback));
+    std::function<void(InputKeyboardData)> callback,
+    const EventListenerOptions& options) {
+  keyboard_listeners_.add(type, std::move(callback), options);
 }
 
 void WindowFacade::emit(const String& emitted_type) const {
-  for (const auto& [type, callback] : listeners_) {
-    if (same_string(type, emitted_type)) callback();
-  }
+  listeners_.emit(emitted_type, nullptr);
 }
 
 void WindowFacade::emit_keyboard(const String& emitted_type, InputKeyboardData event) const {
-  for (const auto& [type, callback] : keyboard_listeners_) {
-    if (same_string(type, emitted_type)) callback(event);
-  }
+  keyboard_listeners_.emit(emitted_type, std::move(event));
 }
 
 void WindowFacade::clear_event_listeners() {

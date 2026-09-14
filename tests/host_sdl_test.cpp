@@ -212,6 +212,27 @@ int main() {
   element.click();
   expect(click_calls == 1, "SDL document shell lost a registered listener");
 
+  int once_calls = 0;
+  flight::host_sdl::EventListenerOptions once_options;
+  once_options.once = true;
+  element.add_event_listener(
+      flight::String("click"), [&] { ++once_calls; }, once_options);
+  element.click();
+  element.click();
+  expect(once_calls == 1, "SDL document shell repeated a once listener");
+
+  flight::AbortController event_abort;
+  int aborted_listener_calls = 0;
+  flight::host_sdl::EventListenerOptions abort_options;
+  abort_options.signal = event_abort.signal;
+  element.add_event_listener(
+      flight::String("click"),
+      [&] { ++aborted_listener_calls; },
+      abort_options);
+  event_abort.abort();
+  element.click();
+  expect(aborted_listener_calls == 0, "SDL document shell retained an aborted listener");
+
   int visibility_calls = 0;
   flight::host_sdl::document.add_event_listener(
       flight::String("visibilitychange"), [&] { ++visibility_calls; });

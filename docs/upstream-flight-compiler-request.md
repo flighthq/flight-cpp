@@ -172,7 +172,7 @@ packages. It records 33 dependency and 39 direct emission boundaries, led by con
 captured referent mutation, contextual typing for empty arrays, and incomplete HTML element profiles. The SDL
 application profile resolves every direct keyboard, pointer, wheel, gamepad-button, rectangle, DOM attachment,
 window, animation-frame, and generic iterable ambient in the chosen lane. Remaining direct names describe Canvas
-2D, richer HTML controls, listener options, media, and the sound example's `AudioContext`; each stays explicit until
+2D, richer HTML controls, media, and the sound example's `AudioContext`; each stays explicit until
 its compiler or host contract exists.
 
 The remaining integration request is a first-class source/package remap in the programmatic graph API. Flight uses
@@ -235,19 +235,21 @@ The same profile maps `DOMRect` to the host's complete eight-field `ClientRect`,
 canvas dimensions. This removes the name from all eleven selected example roots that referenced it. Four of those
 roots now stop directly at compiler-owned union, captured-reference, intersection, or SDK-dependency boundaries;
 the others retain separate Canvas, listener-option, or HTML-control requirements. In the full SDK sweep, direct
-ambient-binding refusals are now 140 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
+ambient-binding refusals are now 138 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
 at 1,098 modules.
 
 The SDL profile now also supplies `Event`, `CompositionEvent`, `InputEvent`, `Gamepad`, `GamepadButton`,
-`GamepadEvent`, and `navigator.getGamepads()` with compiler-checked native carriers. SDL's gamepad carrier exposes
-the standard `pressed`, `touched`, and `value` button fields and preserves them in each polled snapshot.
-`packages/input/src/inputManager.ts` consequently reports only `AddEventListenerOptions[type]` and
-`EventTarget[type]`. A focused compiler probe with an otherwise valid `EventTarget` binding fails with `flight-cpp
-type position retains unresolved auto placeholder: std::function<auto` for `addEventListener` and
-`removeEventListener`. The compiler needs to materialize the listener's event parameter and elect a callable
-identity representation that lets the host remove the same listener without comparing `std::function` targets.
-`AddEventListenerOptions` also needs a concrete representation of capture, once, passive, and abort-signal behavior;
-the current host listener surface does not claim the type while those semantics are incomplete.
+`GamepadEvent`, `navigator.getGamepads()`, and `AddEventListenerOptions` with compiler-checked native carriers. SDL's
+gamepad carrier exposes the standard `pressed`, `touched`, and `value` button fields and preserves them in each
+polled snapshot. The listener option carrier represents optional capture, once, passive, and abort signal fields;
+the shell removes once registrations before reentrant dispatch and removes signal-bound registrations on abort.
+Filesystem and scene-resource roots now advance to awaited-union and source-union compiler failures, and four of the
+five affected example apps advance to contextual-union or `typeOf` failures; tilemap retains only its Canvas 2D gap.
+`packages/input/src/inputManager.ts` consequently reports only `EventTarget[type]`. A focused compiler probe with an
+otherwise valid `EventTarget` binding fails with `flight-cpp type position retains unresolved auto placeholder:
+std::function<auto` for `addEventListener` and `removeEventListener`. The compiler needs to materialize the listener's
+event parameter and elect a callable identity representation that lets the host remove the same listener without
+comparing `std::function` targets.
 
 The provider-neutral `flighthq/flight-cpp/sdl-wgpu/1` profile now supplies typed shared identity for 16 WebGPU
 object domains, exact adapter capability metadata, standard usage flags, and weak-key policies. On its own it adds

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <optional>
+
+#include <flight/abort.hpp>
 #include <flight/string.hpp>
 
 namespace flight::host_sdl {
@@ -29,7 +32,14 @@ struct DomStyle final {
 };
 
 struct EventListenerOptions final {
-  bool passive{false};
+  std::optional<bool> capture;
+  std::optional<bool> once;
+  std::optional<bool> passive;
+  std::optional<AbortSignal> signal;
+
+  [[nodiscard]] operator AbortEventListenerOptions() const noexcept {
+    return AbortEventListenerOptions{.once = once.value_or(false)};
+  }
 };
 
 } // namespace flight::host_sdl

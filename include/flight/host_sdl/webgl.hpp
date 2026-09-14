@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <cstddef>
 #include <cstdint>
 #include <functional>
@@ -776,18 +777,22 @@ class FLIGHT_HOST_SDL_GL_API GlCanvas final {
       const String& context_id,
       const WebGlContextAttributes& attributes) const;
   [[nodiscard]] ClientRect get_bounding_client_rect() const;
-  void add_event_listener(const String& type, std::function<void(InputPointerData)> callback);
-  void add_event_listener(const String& type, std::function<void()> callback);
   void add_event_listener(
       const String& type,
       std::function<void(InputPointerData)> callback,
-      const EventListenerOptions&) {
-    add_event_listener(type, std::move(callback));
-  }
+      const EventListenerOptions& options = {});
+  void add_event_listener(
+      const String& type,
+      std::function<void()> callback,
+      const EventListenerOptions& options = {});
 
   template <typename Callback, typename Options>
-  void add_event_listener(const String& type, Callback callback, const Options&) {
-    add_event_listener(type, std::move(callback));
+    requires std::invocable<Callback&>
+  void add_event_listener(const String& type, Callback callback, const Options& options) {
+    add_event_listener(
+        type,
+        std::function<void()>(std::move(callback)),
+        static_cast<const EventListenerOptions&>(options));
   }
 
   void emit_pointer(const String& type, InputPointerData event) const;

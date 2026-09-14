@@ -86,6 +86,9 @@ const source = api.parseTypeScriptSource(
    }
    export function inspectNativeRect(rect: DOMRect): number {
      return rect.left + rect.top + rect.right + rect.bottom + rect.x + rect.y + rect.width + rect.height;
+   }
+   export function inspectListenerOptions(options: AddEventListenerOptions): boolean {
+     return (options.capture ?? false) || (options.once ?? false) || (options.passive ?? false);
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -123,6 +126,8 @@ for (const expected of [
   'button.touched',
   'flight::host_sdl::ClientRect rect',
   'rect.width',
+  'flight::host_sdl::EventListenerOptions options',
+  'options.once',
 ]) {
   if (!emitted.includes(expected)) {
     process.stderr.write(`SDL app binding fixture did not emit ${expected}.\n`);
