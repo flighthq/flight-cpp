@@ -578,6 +578,70 @@ int main() {
           sampler_descriptor.max_anisotropy == 8.0 &&
           sampler_descriptor.label == flight::String("material"),
       "WGPU sampler descriptors lost explicit values or omitted-member presence");
+  const flight::host_sdl::WgpuBufferDescriptor buffer_descriptor{
+      .size = 4096.0,
+      .usage = flight::host_sdl::wgpu_buffer_usage_vertex,
+      .mapped_at_creation = false,
+      .label = flight::String("vertices"),
+  };
+  const flight::host_sdl::WgpuExtent3DDictionary extent_dictionary{
+      .width = 64.0,
+      .height = 32.0,
+      .depth_or_array_layers = std::nullopt,
+  };
+  const flight::host_sdl::WgpuOrigin3DDictionary omitted_origin{};
+  const flight::host_sdl::WgpuExternalImageSourceInfo external_source_info{};
+  const flight::host_sdl::WgpuExternalImageDestinationInfo external_destination_info{};
+  const flight::host_sdl::WgpuTexelCopyBufferLayout copy_layout{
+      .offset = 16.0,
+      .bytes_per_row = 256.0,
+      .rows_per_image = std::nullopt,
+  };
+  const flight::host_sdl::WgpuTextureDescriptor texture_descriptor{
+      .size = extent_dictionary,
+      .mip_level_count = 4.0,
+      .sample_count = std::nullopt,
+      .dimension = flight::String("2d"),
+      .format = flight::String("rgba8unorm"),
+      .usage = flight::host_sdl::wgpu_texture_usage_texture_binding,
+      .view_formats = flight::Iterable<flight::String>(
+          flight::Array<flight::String>{flight::String("rgba8unorm-srgb")}),
+      .texture_binding_view_dimension = std::nullopt,
+      .label = flight::String("atlas"),
+  };
+  flight::host_sdl::WgpuExtent3D iterable_extent =
+      flight::Array<double>{128.0, 64.0, 2.0};
+  auto iterable_extent_values = std::get<flight::Iterable<double>>(iterable_extent);
+  auto iterable_extent_iterator = iterable_extent_values.begin();
+  const flight::SharedArrayBuffer shared_buffer(32.0);
+  const flight::host_sdl::WgpuAllowSharedBufferSource shared_buffer_source = shared_buffer;
+  const flight::Uint8Array upload_bytes(flight::Array<double>{1.0, 2.0, 3.0});
+  const flight::ArrayBufferView upload_view(upload_bytes);
+  const flight::host_sdl::WgpuAllowSharedBufferSource view_source = upload_view;
+  expect(
+      buffer_descriptor.size == 4096.0 && buffer_descriptor.mapped_at_creation == false &&
+          copy_layout.bytes_per_row == 256.0 && !copy_layout.rows_per_image.has_value() &&
+          !omitted_origin.x.has_value() && !omitted_origin.y.has_value() &&
+          !omitted_origin.z.has_value() && !external_source_info.origin.has_value() &&
+          !external_source_info.flip_y.has_value() &&
+          !external_destination_info.mip_level.has_value() &&
+          !external_destination_info.origin.has_value() &&
+          !external_destination_info.aspect.has_value() &&
+          !external_destination_info.color_space.has_value() &&
+          !external_destination_info.premultiplied_alpha.has_value() &&
+          std::get<flight::host_sdl::WgpuExtent3DDictionary>(texture_descriptor.size).width ==
+              64.0 &&
+          texture_descriptor.format == flight::String("rgba8unorm") &&
+          iterable_extent_iterator != std::default_sentinel && *iterable_extent_iterator == 128.0 &&
+          std::holds_alternative<flight::ArrayBufferLike>(shared_buffer_source) &&
+          std::get<flight::ArrayBufferLike>(shared_buffer_source).kind() ==
+              flight::ArrayBufferKind::shared_array_buffer &&
+          std::get<flight::ArrayBufferLike>(shared_buffer_source).identity() ==
+              shared_buffer.identity() &&
+          std::holds_alternative<flight::ArrayBufferView>(view_source) &&
+          std::get<flight::ArrayBufferView>(view_source).byte_length == 3 &&
+          std::get<flight::ArrayBufferView>(view_source).identity() == upload_view.identity(),
+      "WGPU transfer descriptors lost required values, optional presence, or iterable domains");
   {
     flight::Set<flight::String> features;
     features.add(flight::String("timestamp-query"));

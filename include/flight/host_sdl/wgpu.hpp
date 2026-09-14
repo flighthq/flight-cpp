@@ -10,9 +10,12 @@
 
 #include <SDL3/SDL_video.h>
 
+#include <flight/array_buffer.hpp>
+#include <flight/array_buffer_view.hpp>
 #include <flight/host_sdl/export.hpp>
 #include <flight/host_sdl/window.hpp>
 #include <flight/array.hpp>
+#include <flight/iterable.hpp>
 #include <flight/record.hpp>
 #include <flight/set.hpp>
 #include <flight/string.hpp>
@@ -245,6 +248,66 @@ struct WgpuSamplerDescriptor final {
   std::optional<String> label;
 };
 
+// Buffer and texture upload dictionaries are values owned by the selected WebGPU provider. The
+// runtime retains Web IDL dictionary presence and iterable inputs; validation and default
+// application remain at the Dawn or wgpu-native call boundary.
+using WgpuAllowSharedBufferSource = std::variant<ArrayBufferLike, ArrayBufferView>;
+
+struct WgpuOrigin3DDictionary final {
+  std::optional<double> x;
+  std::optional<double> y;
+  std::optional<double> z;
+};
+
+using WgpuOrigin3D = std::variant<WgpuOrigin3DDictionary, Iterable<double>>;
+
+struct WgpuOrigin2DDictionary final {
+  std::optional<double> x;
+  std::optional<double> y;
+};
+
+using WgpuOrigin2D = std::variant<WgpuOrigin2DDictionary, Iterable<double>>;
+
+struct WgpuBufferDescriptor final {
+  double size{0.0};
+  double usage{0.0};
+  std::optional<bool> mapped_at_creation;
+  std::optional<String> label;
+};
+
+struct WgpuExtent3DDictionary final {
+  double width{0.0};
+  std::optional<double> height;
+  std::optional<double> depth_or_array_layers;
+};
+
+using WgpuExtent3D = std::variant<WgpuExtent3DDictionary, Iterable<double>>;
+
+struct WgpuTexelCopyBufferLayout final {
+  std::optional<double> offset;
+  std::optional<double> bytes_per_row;
+  std::optional<double> rows_per_image;
+};
+
+struct WgpuTexelCopyTextureInfo final {
+  WgpuTexture texture;
+  std::optional<double> mip_level;
+  std::optional<WgpuOrigin3D> origin;
+  std::optional<String> aspect;
+};
+
+struct WgpuTextureDescriptor final {
+  WgpuExtent3D size;
+  std::optional<double> mip_level_count;
+  std::optional<double> sample_count;
+  std::optional<String> dimension;
+  String format;
+  double usage{0.0};
+  std::optional<Iterable<String>> view_formats;
+  std::optional<String> texture_binding_view_dimension;
+  std::optional<String> label;
+};
+
 struct WgpuDeviceLostInfo final {
   String message;
   String reason;
@@ -255,34 +318,19 @@ struct WgpuDeviceDescriptor final {
   std::optional<Record<String, double>> required_limits;
 };
 
-struct WgpuOrigin3DDictionary final {
-  double x{0.0};
-  double y{0.0};
-  double z{0.0};
-};
-
-using WgpuOrigin3D = std::variant<WgpuOrigin3DDictionary, Array<double>>;
-
-struct WgpuOrigin2DDictionary final {
-  double x{0.0};
-  double y{0.0};
-};
-
-using WgpuOrigin2D = std::variant<WgpuOrigin2DDictionary, Array<double>>;
-
 struct WgpuExternalImageSourceInfo final {
   WgpuExternalImageSource source;
-  WgpuOrigin2D origin;
-  bool flip_y{false};
+  std::optional<WgpuOrigin2D> origin;
+  std::optional<bool> flip_y;
 };
 
 struct WgpuExternalImageDestinationInfo final {
   WgpuTexture texture;
-  WgpuOrigin3D origin;
-  double mip_level{0.0};
-  String aspect{"all"};
-  String color_space{"srgb"};
-  bool premultiplied_alpha{false};
+  std::optional<double> mip_level;
+  std::optional<WgpuOrigin3D> origin;
+  std::optional<String> aspect;
+  std::optional<String> color_space;
+  std::optional<bool> premultiplied_alpha;
 };
 
 struct WgpuVertexAttribute final {

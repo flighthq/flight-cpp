@@ -75,7 +75,18 @@ const source = api.parseTypeScriptSource(
   `${handleTypes.map(([sourceName], index) => `export function keep${String(index)}(value: ${sourceName}): ${sourceName} { return value; }`).join('\n')}
    export function lostMessage(value: GPUDeviceLostInfo): string { return value.message; }
    export function red(value: GPUColor): number { return value.r; }
+   export function bufferSource(value: GPUAllowSharedBufferSource): GPUAllowSharedBufferSource { return value; }
+   export function bufferDescriptor(value: GPUBufferDescriptor): GPUBufferDescriptor { return value; }
    export function deviceDescriptor(value: GPUDeviceDescriptor): GPUDeviceDescriptor { return value; }
+   export function extent(value: GPUExtent3D): GPUExtent3D { return value; }
+   export function extentDictionary(value: GPUExtent3DDict): GPUExtent3DDict { return value; }
+   export function strictExtent(value: GPUExtent3DStrict): GPUExtent3DStrict { return value; }
+   export function origin2d(value: GPUOrigin2D): GPUOrigin2D { return value; }
+   export function origin2dDictionary(value: GPUOrigin2DDict): GPUOrigin2DDict { return value; }
+   export function origin3dDictionary(value: GPUOrigin3DDict): GPUOrigin3DDict { return value; }
+   export function texelLayout(value: GPUTexelCopyBufferLayout): GPUTexelCopyBufferLayout { return value; }
+   export function texelTexture(value: GPUTexelCopyTextureInfo): GPUTexelCopyTextureInfo { return value; }
+   export function textureDescriptor(value: GPUTextureDescriptor): GPUTextureDescriptor { return value; }
    export function sourceInfo(value: GPUCopyExternalImageSourceInfo): GPUCopyExternalImageSourceInfo { return value; }
    export function destinationInfo(value: GPUCopyExternalImageDestInfo): GPUCopyExternalImageDestInfo { return value; }
    export function makeSourceInfo(source: GPUCopyExternalImageSource): GPUCopyExternalImageSourceInfo { return { source }; }
@@ -84,6 +95,18 @@ const source = api.parseTypeScriptSource(
    }
    export function makeDeviceDescriptor(requiredFeatures: GPUFeatureName[]): GPUDeviceDescriptor {
      return { requiredFeatures };
+   }
+   export function makeBufferDescriptor(size: number, usage: number): GPUBufferDescriptor {
+     return { size, usage, mappedAtCreation: false, label: 'vertices' };
+   }
+   export function makeExtent(width: number, height: number): GPUExtent3DDict {
+     return { width, height, depthOrArrayLayers: 1 };
+   }
+   export function makeTexelLayout(bytesPerRow: number): GPUTexelCopyBufferLayout {
+     return { offset: 0, bytesPerRow, rowsPerImage: 1 };
+   }
+   export function makeTexelTexture(texture: GPUTexture, origin: GPUOrigin3D): GPUTexelCopyTextureInfo {
+     return { texture, mipLevel: 0, origin, aspect: 'all' };
    }
    export function origin(value: GPUOrigin3D): GPUOrigin3D { return value; }
    export function vertexLayout(value: GPUVertexBufferLayout): GPUVertexBufferLayout { return value; }
@@ -129,7 +152,14 @@ for (const expected of [
   'flight::host_sdl::WgpuColor',
   'flight::host_sdl::WgpuBlendComponent',
   'flight::host_sdl::WgpuBlendState',
+  'flight::host_sdl::WgpuAllowSharedBufferSource',
+  'flight::host_sdl::WgpuBufferDescriptor',
   'flight::host_sdl::WgpuDeviceDescriptor',
+  'flight::host_sdl::WgpuExtent3D',
+  'flight::host_sdl::WgpuExtent3DDictionary',
+  'flight::host_sdl::WgpuTexelCopyBufferLayout',
+  'flight::host_sdl::WgpuTexelCopyTextureInfo',
+  'flight::host_sdl::WgpuTextureDescriptor',
   'flight::host_sdl::WgpuExternalImageSourceInfo',
   'flight::host_sdl::WgpuExternalImageDestinationInfo',
   'flight::host_sdl::WgpuOrigin3D',
@@ -137,6 +167,10 @@ for (const expected of [
   'flight::host_sdl::WgpuStencilFaceState',
   'flight::host_sdl::WgpuSamplerDescriptor',
   '.src_factor = src_factor, .dst_factor = dst_factor, .operation = flight::String("add")',
+  '.size = size, .usage = usage, .mapped_at_creation = false, .label = flight::String("vertices")',
+  '.width = width, .height = height, .depth_or_array_layers = 1.0',
+  '.offset = 0.0, .bytes_per_row = bytes_per_row, .rows_per_image = 1.0',
+  '.texture = texture, .mip_level = 0.0, .origin = origin, .aspect = flight::String("all")',
   '.compare = flight::String("always"), .pass_op = flight::String("replace")',
   '.address_mode_u = flight::String("repeat"), .address_mode_v = flight::String("mirror-repeat")',
   'descriptor.compare = compare.value()',

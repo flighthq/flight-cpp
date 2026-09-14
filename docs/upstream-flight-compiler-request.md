@@ -101,11 +101,13 @@ the TypeScript library's broad callback signature does not expose that absence b
 The current compiler can now contextualize Flight's nested `GPUBlendComponent` literals, so flight-cpp binds
 `GPUBlendComponent`, `GPUBlendState`, and `GPUStencilFaceState` to provider-neutral value carriers. Seven affected
 modules advance to their next union-evidence, optional-callable, anonymous-property, or `Record`-spread failures.
-Bind-group resource and layout literals still fail with `anonymous object property ... requires concrete C++ type
-evidence` even when the entry, resource union, and buffer-binding types are supplied. Direct external descriptor
-literals also preserve source property order in C++ designators; arbitrary valid TypeScript property order can
-therefore violate the target aggregate's declaration order. Contextual target types and ordered-designator emission
-remain required before the rest of the WebGPU descriptor family can be bound safely.
+The profile now also supplies buffer/texture descriptors, iterable extents, shared buffer/view sources, and texel-copy
+layouts. Their pass-through signatures and declaration-ordered compiler fixtures compile. Bind-group resource and
+layout literals still fail with `anonymous object property ... requires concrete C++ type evidence` even when the
+entry, resource union, and buffer-binding types are supplied. Direct external descriptor literals also preserve
+source property order in C++ designators; arbitrary valid TypeScript property order can therefore violate the target
+aggregate's declaration order. Contextual target types and ordered-designator emission remain required for the
+remaining descriptor family and property-order-independent construction.
 
 These diagnostics arise after the runtime includes resolve, and many occur in a header before later errors in that
 header can be observed. The JSON report from `npm run sdk:compile` is the compact handoff surface for fixing them in
@@ -301,8 +303,9 @@ The provider-neutral `flighthq/flight-cpp/sdl-wgpu/1` profile now supplies typed
 object domains, exact adapter capability metadata, standard usage flags, and weak-key policies. On its own it adds
 18 dependency-closed headers over runtime/headless and all 18 compile. Composed with SDL/GL and the application
 shell, it raises the inventory from 1,081 to 1,098 headers; all 17 additions compile and direct ambient-refused
-modules fall from the SDL/GL profile's 242 to 166. The device, origin, vertex, and external-image descriptors now have compiler-checked
-native representations. The sampler descriptor also preserves every optional source field; binding it advances
+modules fall from the SDL/GL profile's 242 to 166. The device, origin, vertex, external-image, buffer, texture,
+extent, shared-buffer-source, texel-copy, and sampler descriptors now have compiler-checked native representations.
+Optional source fields preserve their presence; binding the sampler advances
 `wgpuRenderState.ts` to `dual-sentinel optional chaining requires presence projection lowering`. `wgpuHost.ts`
 reaches contextual optional construction, while `wgpuExternalImageSource.ts`
 retains only browser constructor values (`DOMException`, image/video/canvas/bitmap/frame); both are compiler or
