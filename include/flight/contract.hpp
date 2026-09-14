@@ -71,7 +71,7 @@ inline constexpr std::array runtime_capabilities{
     RuntimeCapability{"uint32-array", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"uri-component", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"url", RuntimeCapabilityStatus::initial},
-    RuntimeCapability{"weak-map", RuntimeCapabilityStatus::planned},
+    RuntimeCapability{"weak-map", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"weak-set", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"writable-stream", RuntimeCapabilityStatus::initial},
     RuntimeCapability{"unicode-case-service", RuntimeCapabilityStatus::planned},

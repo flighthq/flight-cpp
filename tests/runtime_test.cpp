@@ -387,6 +387,8 @@ void test_contract() {
         "ordered Record storage is advertised after its runtime implementation lands");
   check(flight::runtime_capability_status("weak-set") == flight::RuntimeCapabilityStatus::initial,
         "weak identity sets are advertised after their runtime implementation lands");
+  check(flight::runtime_capability_status("weak-map") == flight::RuntimeCapabilityStatus::initial,
+        "weak identity maps are advertised after their runtime implementation lands");
   check(flight::runtime_capability_status("unicode-case-service") == flight::RuntimeCapabilityStatus::planned,
         "planned capabilities remain distinguishable");
   check(flight::runtime_capability_status("unknown") == flight::RuntimeCapabilityStatus::unavailable,
