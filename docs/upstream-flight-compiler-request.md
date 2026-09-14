@@ -68,10 +68,10 @@ development preset, and is declared in the Bazel graph.
 ## Remaining compiler-owned native failures
 
 The emitted set is dependency-closed in the TypeScript package graph, but dependency closure is not yet the same as
-C++ well-formedness. With GCC 15.2, 703 of the 959 headers compile independently and 256 fail. The composed SDL
-profile emits 1,098 modules, of which 755 compile and 343 fail. Compared with compiler `5649642`, the portable pass
-count changes from 704 to 703 while 72 malformed headers move behind explicit refusals; the SDL profile retains all
-755 previously compiling headers while moving 31 malformed headers behind refusals. The current native
+C++ well-formedness. With GCC 15.2, 704 of the 959 headers compile independently and 255 fail. The composed SDL
+profile emits 1,098 modules, of which 756 compile and 342 fail. Compared with compiler `5649642`, the portable pass
+count remains 704 while 72 malformed headers move behind explicit refusals; the SDL profile retains its previously
+compiling headers while moving 31 malformed headers behind refusals. The current native
 report is dominated by emission defects that cannot be repaired by adding a runtime symbol:
 
 - source module-private helpers are emitted into one package namespace, so package barrels encounter C++
@@ -276,6 +276,9 @@ at 1,098 modules.
 The runtime profile also binds the global `Boolean` value to a callable object with exact represented truthiness.
 This supports both direct conversion and `filter(Boolean)` without overload erasure. `svgDocument.ts` now reaches
 the existing `Number.parseFloat` intrinsic gap, whose downstream `flight::parse_float` operation is already present.
+Closed `std::variant` unions use the same operation for logical negation. That removes the invalid `operator!`
+diagnostic from all 22 affected SDL headers: `texture/sampler.ts` now compiles, while the other 21 expose the
+existing optional-number unwrapping defect.
 
 The runtime profile now maps `ArrayIterator<T>` to shared live cursors over `Array.keys`, `Array.values`, and
 `Array.entries`. `tiledXmlParse.ts` moves immediately to the existing concrete typed-array backing error:

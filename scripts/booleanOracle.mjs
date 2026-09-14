@@ -51,6 +51,9 @@ const source = api.parseTypeScriptSource(
    }
    export function compact(value: string): string[] {
      return value.split(',').filter(Boolean);
+   }
+   export function negated(value: string | null | undefined): boolean {
+     return !value;
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -70,6 +73,7 @@ for (const expected of [
   'flight::to_boolean(text)',
   'flight::to_boolean(nullable)',
   '.filter(flight::to_boolean)',
+  '!value',
 ]) {
   if (!emitted.includes(expected)) {
     process.stderr.write(`Boolean fixture did not emit ${expected}.\n${emitted}\n`);
@@ -88,9 +92,13 @@ int main() {
   const auto values = flighthq_host_test::truthiness(
       flight::String(), 0.0, std::nullopt, flight::Array<flight::String>{});
   const auto compact = flighthq_host_test::compact(flight::String(",flight,,cpp"));
+  using NullableString = std::variant<flight::String, flight::Null, flight::Undefined>;
   return values.size() == 4 && !values[0] && !values[1] && !values[2] && values[3] &&
                  compact.size() == 2 && compact[0] == flight::String("flight") &&
-                 compact[1] == flight::String("cpp")
+                 compact[1] == flight::String("cpp") &&
+                 flighthq_host_test::negated(NullableString{flight::null}) &&
+                 flighthq_host_test::negated(NullableString{flight::String()}) &&
+                 !flighthq_host_test::negated(NullableString{flight::String("flight")})
              ? 0
              : 1;
 }

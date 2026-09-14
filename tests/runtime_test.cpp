@@ -600,9 +600,13 @@ void test_boolean_conversion() {
         "Boolean conversion projects optional presence before converting its value");
 
   std::variant<flight::Null, double, flight::String> union_value{flight::null};
-  check(!flight::to_boolean(union_value), "Boolean conversion visits a null union member");
+  check(!flight::to_boolean(union_value) && !union_value,
+        "Boolean conversion and negation visit a null union member");
   union_value = flight::String("flight");
-  check(flight::to_boolean(union_value), "Boolean conversion visits a string union member");
+  check(flight::to_boolean(union_value) && !(!union_value),
+        "Boolean conversion and negation visit a string union member");
+  union_value = flight::String();
+  check(!union_value, "closed-union negation preserves empty-string falsiness");
 
   const flight::Array<double> empty_array;
   const flight::Record<flight::String, double> empty_record;

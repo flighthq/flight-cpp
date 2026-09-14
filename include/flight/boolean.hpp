@@ -78,4 +78,11 @@ struct ToBoolean final {
 
 inline constexpr ToBoolean to_boolean{};
 
+// Closed source unions use std::variant. The compiler emits ordinary logical negation for those
+// values, so route it through the same JavaScript truthiness operation used by Boolean(value).
+template <typename... Values>
+[[nodiscard]] bool operator!(const std::variant<Values...>& value) noexcept {
+  return !to_boolean(value);
+}
+
 } // namespace flight
