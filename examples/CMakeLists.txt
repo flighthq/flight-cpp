@@ -12,9 +12,9 @@ if(TARGET Flight::HostSdlGl)
   flight_cpp_set_project_warnings(flight_cpp_tween_sdl_gl_example)
 endif()
 
-if(TARGET Flight::HostSdl)
+if(TARGET Flight::HostSdlSdkAudio)
   add_executable(flight_cpp_sound_sdl_example sound/sound_sdl_example.cpp)
-  target_link_libraries(flight_cpp_sound_sdl_example PRIVATE Flight::HostSdl)
+  target_link_libraries(flight_cpp_sound_sdl_example PRIVATE Flight::HostSdlSdkAudio)
   flight_cpp_set_project_warnings(flight_cpp_sound_sdl_example)
 endif()
 

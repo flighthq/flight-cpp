@@ -61,8 +61,9 @@ texture upload, framebuffer clear/readback, shader/program, draw, viewport, and 
 example-private OpenGL dispatch table or SDL renderer is involved.
 
 The sound example transpiles the upstream procedural tone and sweep calculations, narrows their results to Float32
-PCM once, and plays three concurrent sources through `SdlAudioDeviceBackend`. Its `--smoke` mode runs with SDL's
-dummy audio driver and verifies application-thread completion delivery.
+PCM once, and plays three concurrent sources through the generated `AudioDeviceBackend` record returned by
+`SdkAudioDeviceBackend`. Its `--smoke` mode runs with SDL's dummy audio driver and verifies application-thread
+completion delivery.
 
 Set `-DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF` for an SDL and GL/WGPU build without Vulkan development files. Native
 dependency discovery and target selection belong to CMake or Bazel, so an npm wrapper would only obscure their

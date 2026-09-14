@@ -71,7 +71,7 @@ adaptations.
 The SDL sound example uses the procedural tone and frequency-sweep calculations from Flight's upstream sound
 example. Those calculations are transpiled from `sound/source/sound.ts`; the native entry point narrows the emitted
 number arrays once to Float32 PCM, wraps them in `flight::AudioBuffer`, and plays three concurrent sources through
-`SdlAudioDeviceBackend`:
+the exact generated `AudioDeviceBackend` record populated by `SdkAudioDeviceBackend`:
 
 ```sh
 cmake --preset development \

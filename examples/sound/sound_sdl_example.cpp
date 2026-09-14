@@ -1,15 +1,16 @@
 #include "generated/sound.hpp"
 
 #include <flight/audio_buffer.hpp>
-#include <flight/host_sdl/audio.hpp>
+#include <flight/host_sdl/sdk_audio.hpp>
+#include <flight/types/audio_device_backend.hpp>
 
 #include <array>
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <exception>
+#include <functional>
 #include <iostream>
-#include <span>
 #include <stdexcept>
 #include <string_view>
 #include <thread>
@@ -19,7 +20,7 @@ namespace {
 constexpr std::uint32_t sample_rate = 44'100;
 
 struct Voice final {
-  flight::host_sdl::AudioSourceHandle source;
+  double source{};
   bool completed{};
 };
 
@@ -35,28 +36,27 @@ struct Voice final {
 }
 
 void configure_voice(
-    flight::host_sdl::SdlAudioDeviceBackend& backend,
-    flight::host_sdl::AudioDeviceHandle device,
+    flight::types::AudioDeviceBackend& backend,
+    double device,
     const flight::AudioBuffer& decoded,
     Voice& voice,
     double gain,
     double pan) {
   const auto channel = decoded.get_channel_data(0.0);
-  const std::array<std::span<const float>, 1> channels{
-      std::span<const float>(channel.begin(), channel.size()),
-  };
   const auto buffer = backend.create_buffer(
       device,
-      1,
-      channel.size(),
-      sample_rate,
-      channels);
-  if (!buffer) throw std::runtime_error("SDL could not create a Flight audio buffer");
+      decoded.number_of_channels,
+      decoded.length,
+      decoded.sample_rate,
+      flight::Array<flight::Float32Array>{channel});
+  if (buffer == 0.0) throw std::runtime_error("SDL could not create a Flight audio buffer");
 
   voice.source = backend.create_source(device, buffer);
   backend.destroy_buffer(buffer);
-  if (!voice.source) throw std::runtime_error("SDL could not create a Flight audio source");
-  backend.on_source_ended(voice.source, [&voice] { voice.completed = true; });
+  if (voice.source == 0.0) throw std::runtime_error("SDL could not create a Flight audio source");
+  backend.on_source_ended(
+      voice.source,
+      std::function<void()>([&voice] { voice.completed = true; }));
   backend.set_source_gain(voice.source, gain);
   backend.set_source_pan(voice.source, pan);
 }
@@ -84,9 +84,10 @@ int main(int argc, char** argv) {
         6.0,
         static_cast<double>(sample_rate)));
 
-    flight::host_sdl::SdlAudioDeviceBackend backend;
-    const auto device = backend.create_device(sample_rate);
-    if (!device) throw std::runtime_error("SDL could not open the default audio device");
+    flight::host_sdl::SdkAudioDeviceBackend adapter;
+    auto backend = adapter.backend();
+    const auto device = backend.create_device(static_cast<double>(sample_rate));
+    if (device == 0.0) throw std::runtime_error("SDL could not open the default audio device");
 
     std::array<Voice, 3> voices{};
     configure_voice(backend, device, click, voices[0], 0.8, -0.5);
@@ -97,7 +98,7 @@ int main(int argc, char** argv) {
 
     const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(5);
     while (std::chrono::steady_clock::now() < deadline) {
-      static_cast<void>(backend.pump());
+      static_cast<void>(adapter.pump());
       if (voices[0].completed && voices[1].completed && voices[2].completed) break;
       std::this_thread::sleep_for(std::chrono::milliseconds(2));
     }

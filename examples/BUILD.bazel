@@ -22,7 +22,7 @@ cc_binary(
         "sound/sound_sdl_example.cpp",
     ],
     tags = ["manual"],
-    deps = ["//:host_sdl"],
+    deps = ["//:host_sdl_sdk_audio"],
 )
 
 cc_binary(
