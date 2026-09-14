@@ -169,18 +169,20 @@ SDL/GL lane: each `render.ts` selector and chosen `render.webgl.ts` implementati
 own `examples/upstream/generated/include/flight/examples` tree and references the single canonical SDK tree rather
 than copying SDK headers per example.
 
-At the current pins, dependency closure emits 0 of those 100 modules. The linked ledger contains 45 dependency and
-55 emission refusal entries. Forty example modules are held by the refused `@flighthq/sdk` barrel and
+At the current pins, dependency closure emits 0 of those 100 modules. The linked ledger contains 46 dependency and
+54 emission refusal entries. Forty example modules are held by the refused `@flighthq/sdk` barrel and
 20 renderer modules are held by the refused `@flighthq/host-web/contract` path through `webGraphicsHost`. The exact
 per-module evidence is committed in `examples/upstream/generated/refusals.json`.
 
 The separate frontier ledger deliberately compiles each selected example without its package dependencies, so its
-28 missing package-evaluation entries are boundary markers rather than claims that the full graph omitted those
-packages. It records 33 dependency and 39 direct emission boundaries, led by contextual optional construction,
-captured referent mutation, contextual typing for empty arrays, and incomplete HTML element profiles. The SDL
+29 missing package-evaluation entries are boundary markers rather than claims that the full graph omitted those
+packages. It records 33 dependency and 38 direct emission boundaries, led by contextual optional construction,
+captured referent mutation, contextual typing for empty arrays, and package evaluation. The SDL
 application profile resolves every direct keyboard, pointer, wheel, gamepad-button, rectangle, DOM attachment,
-window, animation-frame, and generic iterable ambient in the chosen lane. Remaining direct names describe Canvas
-2D, richer HTML controls, media, and the sound example's `AudioContext`; each stays explicit until
+window, animation-frame, generic iterable, and concrete HTML control ambient in the chosen lane. Those HTML bindings
+expose intersection, `typeOf`, contextual union, multi-variant, optional construction, and empty-array compiler
+failures in eight UI-heavy examples. Remaining direct names describe Canvas 2D, media, and the sound example's
+`AudioContext`; each stays explicit until
 its compiler or host contract exists.
 
 The remaining integration request is a first-class source/package remap in the programmatic graph API. Flight uses

@@ -1633,6 +1633,12 @@ WebGl2Context GlCanvas::get_context() const {
   return WebGl2Context(state_);
 }
 
+WebGl2Context GlCanvas::get_context(const String& context_id) const {
+  const auto context = get_context(context_id, {});
+  if (!context) throw std::invalid_argument("Only a webgl2 context is available from an SDL GL canvas");
+  return *context;
+}
+
 std::optional<WebGl2Context> GlCanvas::get_context(
     const String& context_id,
     const WebGlContextAttributes&) const {

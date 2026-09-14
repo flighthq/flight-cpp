@@ -62,7 +62,7 @@ but one of the portable headers that compiled independently.
   overall.
 - `npm run sdk:generate:sdl` composes the GL, WebGPU, and SDL application profiles. It emits 1,098 modules; all 17
   headers beyond the SDL/GL inventory compile, for 755 passing and 343 failing headers. Direct external-binding
-  refusals fall from the SDL/GL profile's 242 to 135. Window, document, `HTMLElement`, animation-frame
+  refusals fall from the SDL/GL profile's 242 to 134. Window, document, `HTMLElement`, animation-frame
   cancellation, and the represented input event types advance to their next compiler or dependency boundary. The
   runtime profile also maps the compiler's existing `PromiseLike<T>` task domain to `flight::Task<T>`; `dialog.ts`
   now reaches the compiler-owned async-closure coroutine blocker instead of stopping at that ambient type.
@@ -82,6 +82,10 @@ but one of the portable headers that compiled independently.
   profile maps `DOMRect` to the complete eight-field logical rectangle already returned by the GL canvas. Together
   these contracts add compiling `CanvasMaterialState` and `CanvasMaterialRenderer` headers and advance the other
   affected modules to their concrete handle, lowering, or dependency boundaries.
+  The application profile also binds the concrete HTML element families used by upstream controls. Its universal
+  `CreatedElement` facade is required because emitted `document.createElement()` calls retain `auto` despite their
+  tag-dependent TypeScript types; DOM members compile on that facade, while canvas-only calls lazily materialize the
+  existing SDL GL surface.
   The GL profile also removes all direct standard extension-type refusals. `glCompressedTexture.ts` now stops at
   dual-sentinel optional-chain lowering, `glRenderTarget.ts` at nullish-coalescing presence lowering, and
   `glEnvironmentIblBake.ts` at an unrelated contextual `flight::Map` union conversion.

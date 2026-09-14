@@ -212,6 +212,17 @@ int main() {
   element.click();
   expect(click_calls == 1, "SDL document shell lost a registered listener");
 
+  auto created_panel = flight::host_sdl::document.create_element(flight::String("div"));
+  auto created_label = flight::host_sdl::document.create_element(flight::String("span"));
+  created_panel.class_name = flight::String("controls");
+  created_label.text_content = flight::String("Flight");
+  const auto appended_label = created_panel.append_child(created_label);
+  const flight::host_sdl::HtmlDivElement panel = created_panel;
+  expect(
+      panel.class_name == flight::String("controls") &&
+          appended_label.text_content == flight::String("Flight"),
+      "SDL createElement facade lost tag-specific DOM fields or appendChild values");
+
   int once_calls = 0;
   flight::host_sdl::EventListenerOptions once_options;
   once_options.once = true;

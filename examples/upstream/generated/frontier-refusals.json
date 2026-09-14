@@ -7,7 +7,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/adjustments/src/app.ts",
       "package": "@flighthq/example-adjustments",
-      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/app.ts: runtime external symbol binding plan is incomplete (missing: HTMLDivElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
+      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -56,7 +56,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/benchmark/src/app.ts",
       "package": "@flighthq/example-benchmark",
-      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], HTMLDivElement[type])",
+      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
       "stage": "emission"
     },
     {
@@ -77,7 +77,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/bitmapfont-generate/src/app.ts",
       "package": "@flighthq/example-bitmapfont-generate",
-      "reason": "cpp emission failed for @flighthq/example-bitmapfont-generate/examples/packages/bitmapfont-generate/src/app.ts: runtime external symbol binding plan is incomplete (missing: HTMLParagraphElement[type])",
+      "reason": "cpp emission failed for @flighthq/example-bitmapfont-generate/examples/packages/bitmapfont-generate/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -172,11 +172,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "missing-dependency",
       "module": "examples/packages/cross-backend-embed/src/renderNative.ts",
       "package": "@flighthq/example-cross-backend-embed",
-      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: HTMLDivElement[type])",
-      "stage": "emission"
+      "reason": "Module evaluation dependency is missing for @flighthq/sdk",
+      "stage": "initialization"
     },
     {
       "code": "unsupported-ir",
@@ -266,7 +266,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/materialshowcase/src/app.ts",
       "package": "@flighthq/example-materialshowcase",
-      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/app.ts: runtime external symbol binding plan is incomplete (missing: HTMLDivElement[type], HTMLLabelElement[type], HTMLOptionElement[type], HTMLParagraphElement[type], HTMLSelectElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
+      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/app.ts: captured referent mutation of standard requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -329,7 +329,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/particleeditor/src/app.ts",
       "package": "@flighthq/example-particleeditor",
-      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], HTMLDetailsElement[type], HTMLDivElement[type], HTMLHeadingElement[type], HTMLLabelElement[type], HTMLOptionElement[type], HTMLSelectElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
+      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type])",
       "stage": "emission"
     },
     {
@@ -371,7 +371,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/pathboolean/src/app.ts",
       "package": "@flighthq/example-pathboolean",
-      "reason": "cpp emission failed for @flighthq/example-pathboolean/examples/packages/pathboolean/src/app.ts: runtime external symbol binding plan is incomplete (missing: HTMLDivElement[type])",
+      "reason": "cpp emission failed for @flighthq/example-pathboolean/examples/packages/pathboolean/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -560,7 +560,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/spring/src/app.ts",
       "package": "@flighthq/example-spring",
-      "reason": "cpp emission failed for @flighthq/example-spring/examples/packages/spring/src/app.ts: runtime external symbol binding plan is incomplete (missing: HTMLButtonElement[type], HTMLDivElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
+      "reason": "cpp emission failed for @flighthq/example-spring/examples/packages/spring/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {

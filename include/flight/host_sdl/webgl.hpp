@@ -773,6 +773,7 @@ class FLIGHT_HOST_SDL_GL_API GlCanvas final {
   [[nodiscard]] WindowSize pixel_size() const;
   [[nodiscard]] SDL_Window* native_window() const noexcept;
   [[nodiscard]] WebGl2Context get_context() const;
+  [[nodiscard]] WebGl2Context get_context(const String& context_id) const;
   [[nodiscard]] std::optional<WebGl2Context> get_context(
       const String& context_id,
       const WebGlContextAttributes& attributes) const;

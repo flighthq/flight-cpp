@@ -94,6 +94,12 @@ The installed build exports four targets through the existing `FlightCpp` packag
   dispatch its focus/page lifecycle callbacks. The input surface also exposes value-owned standard-layout gamepad
   snapshots through `navigator.getGamepads()`, a common event carrier for Flight's base-event narrowing, and an
   identity-preserving typed `CustomEvent<T>` detail carrier.
+
+  The document facade also covers the concrete button, details, div, heading, input, label, option, paragraph,
+  select, span, and style element types used by the upstream examples. `document.createElement()` returns one C++
+  facade because the compiler retains `auto` for its tag-dependent TypeScript result; that facade exposes the DOM
+  value surface directly and lazily creates an SDL GL canvas when a canvas context is requested. It does not
+  implement a Canvas2D renderer.
 - `Flight::HostSdlVulkan` copies the required instance extension names and owns the `VkSurfaceKHR` returned by SDL.
 - `Flight::HostSdlWgpu` owns a type-erased native WebGPU surface and typed shared WebGPU object handles through
   callbacks supplied by a Dawn or wgpu-native adapter. Handle copies and weak cache keys preserve identity, provider

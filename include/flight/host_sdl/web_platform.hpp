@@ -119,7 +119,7 @@ using SimpleEventListenerCollection = EventListenerCollection<std::nullptr_t>;
 // Small browser-shaped application shell for upstream examples. Rendering stays in Flight's
 // generated render-gl packages; these types only represent document attachment, event registration,
 // and frame scheduling at the native host boundary.
-class FLIGHT_HOST_SDL_GL_API DomElement final {
+class FLIGHT_HOST_SDL_GL_API DomElement {
  public:
   String class_name;
   String id;
@@ -177,17 +177,39 @@ class FLIGHT_HOST_SDL_GL_API DomElement final {
 };
 
 using HtmlElement = DomElement;
+using HtmlButtonElement = DomElement;
+using HtmlDetailsElement = DomElement;
+using HtmlDivElement = DomElement;
+using HtmlHeadingElement = DomElement;
 using HtmlInputElement = DomElement;
+using HtmlLabelElement = DomElement;
+using HtmlOptionElement = DomElement;
+using HtmlParagraphElement = DomElement;
+using HtmlSelectElement = DomElement;
+using HtmlSpanElement = DomElement;
+using HtmlStyleElement = DomElement;
 
-class FLIGHT_HOST_SDL_GL_API CreatedElement final {
+// document.createElement has a tag-dependent TypeScript return type, while generated C++ retains
+// `auto` for the call. This facade therefore exposes the common DOM surface and lazily materializes
+// an SDL GL canvas when canvas-only operations are reached.
+class FLIGHT_HOST_SDL_GL_API CreatedElement final : public DomElement {
  public:
-  explicit CreatedElement(String tag) : tag_(std::move(tag)) {}
+  explicit CreatedElement(String tag);
 
-  [[nodiscard]] operator DomElement() const;
   [[nodiscard]] operator GlCanvas() const;
+  [[nodiscard]] WebGl2Context get_context() const;
+  [[nodiscard]] WebGl2Context get_context(const String& context_id) const;
+  [[nodiscard]] std::optional<WebGl2Context> get_context(
+      const String& context_id,
+      const WebGlContextAttributes& attributes) const;
+  void set_pointer_capture(double pointer_id) const;
+  void release_pointer_capture(double pointer_id) const;
 
  private:
+  [[nodiscard]] GlCanvas& require_canvas() const;
+
   String tag_;
+  mutable std::optional<GlCanvas> canvas_;
 };
 
 class FLIGHT_HOST_SDL_GL_API Document final {

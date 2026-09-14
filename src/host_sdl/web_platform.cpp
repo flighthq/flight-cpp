@@ -41,13 +41,56 @@ void DomElement::click() {
   listeners_.emit(String("click"), nullptr);
 }
 
-CreatedElement::operator DomElement() const { return {}; }
+CreatedElement::CreatedElement(String tag) : tag_(std::move(tag)) {
+  if (same_string(tag_, String("canvas"))) {
+    width = 300.0;
+    height = 150.0;
+  }
+}
 
-CreatedElement::operator GlCanvas() const {
+GlCanvas& CreatedElement::require_canvas() const {
   if (!same_string(tag_, String("canvas"))) {
     throw std::invalid_argument("Only canvas elements convert to an SDL GL surface");
   }
-  return GlCanvas::create(1, 1, 1.0, String("Flight offscreen surface"), true);
+  if (!canvas_) {
+    const auto extent = [](double value, int fallback) {
+      if (!std::isfinite(value) || value <= 0.0) return fallback;
+      return static_cast<int>(std::min(
+          std::floor(value), static_cast<double>(std::numeric_limits<int>::max())));
+    };
+    canvas_ = GlCanvas::create(
+        extent(width, 300),
+        extent(height, 150),
+        1.0,
+        String("Flight offscreen surface"),
+        true);
+  }
+  canvas_->width = width;
+  canvas_->height = height;
+  canvas_->style = style;
+  return *canvas_;
+}
+
+CreatedElement::operator GlCanvas() const { return require_canvas(); }
+
+WebGl2Context CreatedElement::get_context() const { return require_canvas().get_context(); }
+
+WebGl2Context CreatedElement::get_context(const String& context_id) const {
+  return require_canvas().get_context(context_id);
+}
+
+std::optional<WebGl2Context> CreatedElement::get_context(
+    const String& context_id,
+    const WebGlContextAttributes& attributes) const {
+  return require_canvas().get_context(context_id, attributes);
+}
+
+void CreatedElement::set_pointer_capture(double pointer_id) const {
+  require_canvas().set_pointer_capture(pointer_id);
+}
+
+void CreatedElement::release_pointer_capture(double pointer_id) const {
+  require_canvas().release_pointer_capture(pointer_id);
 }
 
 CreatedElement Document::create_element(String tag) const { return CreatedElement(std::move(tag)); }

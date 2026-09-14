@@ -89,6 +89,23 @@ const source = api.parseTypeScriptSource(
    }
    export function inspectListenerOptions(options: AddEventListenerOptions): boolean {
      return (options.capture ?? false) || (options.once ?? false) || (options.passive ?? false);
+   }
+   export function buildNativeControls(): HTMLDivElement {
+     const style = document.createElement('style');
+     style.textContent = '.controls { color: white; }';
+     document.head.appendChild(style);
+     const controls = document.createElement('div');
+     const label = document.createElement('span');
+     label.textContent = 'Flight';
+     controls.appendChild(label);
+     document.body.appendChild(controls);
+     return controls;
+   }
+   export function createNativeGlContext(): WebGL2RenderingContext {
+     const canvas = document.createElement('canvas');
+     canvas.width = 8;
+     canvas.height = 4;
+     return canvas.getContext('webgl2')!;
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -128,6 +145,13 @@ for (const expected of [
   'rect.width',
   'flight::host_sdl::EventListenerOptions options',
   'options.once',
+  'flight::host_sdl::HtmlDivElement build_native_controls()',
+  'auto style = flight::host_sdl::document.create_element(flight::String("style"))',
+  'style.text_content = flight::String(".controls { color: white; }")',
+  'auto controls = flight::host_sdl::document.create_element(flight::String("div"))',
+  'controls.append_child(label)',
+  'flight::host_sdl::WebGl2Context create_native_gl_context()',
+  'canvas.get_context(flight::String("webgl2"))',
 ]) {
   if (!emitted.includes(expected)) {
     process.stderr.write(`SDL app binding fixture did not emit ${expected}.\n`);
