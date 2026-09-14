@@ -1,13 +1,14 @@
 # SDL host package
 
 `host_sdl` is the handwritten native boundary for Flight applications running in an SDL 3 process. It owns SDL
-subsystem lifetime, windows, event ingress, and native graphics surface acquisition. It does not implement a scene
-renderer. Generated `render-gl`, `scene2d-gl`, `render-wgpu`, and `scene2d-wgpu` code remains responsible for
-rendering after an adapter supplies its native context or surface.
+subsystem lifetime, windows, event ingress, decoded-PCM playback, and native graphics surface acquisition. It does
+not implement a scene renderer. Generated `render-gl`, `scene2d-gl`, `render-wgpu`, and `scene2d-wgpu` code remains
+responsible for rendering after an adapter supplies its native context or surface.
 
-The package is independent of the generated SDK while the compiler contracts settle. Its public API lives under
-`include/flight/host_sdl/`, its implementations live under `src/host_sdl/`, and none of its targets changes the
-dependency-free `Flight::Cpp` target.
+The installed package is independent of the generated SDK while the compiler contracts settle. Its public API lives
+under `include/flight/host_sdl/`, its implementations live under `src/host_sdl/`, and none of its targets changes the
+dependency-free `Flight::Cpp` target. The build tree additionally exposes an SDK audio adapter against the committed
+preview headers so the exact generated interface is continuously compiled and executed before it becomes installable.
 
 ## Build
 
@@ -47,9 +48,9 @@ SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
   bazel run --config=local-posix //examples:tween_sdl_gl -- --smoke
 ```
 
-The public Bazel labels are `//:host_sdl`, `//:host_sdl_gl`, and `//:host_sdl_wgpu`. They and their tests are tagged
-`manual`, so a core `bazel test //...` does not fetch or build SDL. CMake remains the complete package path for the
-Vulkan surface adapter.
+The public Bazel labels are `//:host_sdl`, `//:host_sdl_gl`, `//:host_sdl_sdk_audio`, and `//:host_sdl_wgpu`. They and
+their tests are tagged `manual`, so a core `bazel test //...` does not fetch or build SDL. CMake remains the complete
+package path for the Vulkan surface adapter.
 
 It animates the fifteen easing curves emitted from `examples/tween/source/tween.ts`. Rendering uses the copyable
 `GlCanvas` and `WebGl2Context` host seam exposed by `Flight::HostSdlGl`. The example calls the context's reusable
@@ -60,12 +61,15 @@ Set `-DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF` for an SDL and GL/WGPU build withou
 dependency discovery and target selection belong to CMake or Bazel, so an npm wrapper would only obscure their
 options and is not provided.
 
-The build exports four targets through the existing `FlightCpp` package:
+The installed build exports four targets through the existing `FlightCpp` package:
 
 - `Flight::HostSdl` initializes ref-counted SDL subsystems, polls or waits for `SDL_Event`, exposes the monotonic SDL
   clock, and owns plain, OpenGL, or Vulkan windows. `InputDispatcher` converts keyboard, text/IME, mouse, wheel, and
   standard-layout gamepad events into records matching Flight's input-ingress data shapes. `Window` controls SDL text
-  input and relative-pointer mode for the eventual generated ingress adapter.
+  input and relative-pointer mode for the eventual generated ingress adapter. `SdlAudioDeviceBackend` implements
+  Flight's decoded-PCM device, buffer, and source lifecycle with live gain, equal-power pan, playback rate, bounded
+  regions, and completion notification. It mixes mono or stereo Float32 sources in SDL's device callback and queues
+  completions for serialized application-thread delivery.
 - `Flight::HostSdlGl` owns an `SDL_GLContext`, configures OpenGL or OpenGL ES attributes before window creation,
   resolves procedure addresses, controls the swap interval, and swaps the window. Its `GlCanvas` and
   `WebGl2Context` share that owner and supply the native types named by `bindings/sdl-gl.json`. The context already
@@ -98,11 +102,13 @@ WebGPU surfaces before their window; destroy windows before `Host`. The types ar
 explicit.
 
 ```cpp
+#include <flight/host_sdl/audio.hpp>
 #include <flight/host_sdl/host.hpp>
 #include <flight/host_sdl/window.hpp>
 
 int main() {
   flight::host_sdl::Host host;
+  flight::host_sdl::SdlAudioDeviceBackend audio;
   flight::host_sdl::Window window({
       .title = "Flight",
       .width = 1280,
@@ -123,6 +129,7 @@ int main() {
       input.dispatch(event);
     }
     host.pump_timers();
+    static_cast<void>(audio.pump());
     // Update Flight, render through render-wgpu or render-gl, then present.
   }
 }
@@ -137,9 +144,13 @@ thread; no background timer thread can race Flight state.
 `pump_animation_frame(timestamp_ms)` runs the callbacks that were pending when that frame began. Callbacks scheduled
 by another frame callback remain queued for the next turn, matching the browser ordering used by the examples.
 
+`SdlAudioDeviceBackend::pump()` delivers each completed source callback on the pumping thread. Call it once per host
+turn, just like `Host::pump_timers()`. Destroying a source suppresses its pending completion, invalid handles follow
+Flight's sentinel/no-op contract, and destroying a buffer does not invalidate sources that already acquired it.
+
 ## Generated SDK wiring lane
 
-The native mechanics are now present. Wiring them to generated Flight contracts remains a narrow adapter task:
+The native mechanics are now present. Wiring them to generated Flight contracts remains a narrow integration task:
 
 1. Finish compiler emission of the narrowed Flight `GlContext` interface. The current compiler resolves the SDL/GL
    ambient bindings but leaves its inherited `viewport` member as an unresolved C++ type.
@@ -152,14 +163,19 @@ The native mechanics are now present. Wiring them to generated Flight contracts 
    context, and the offscreen SDL smoke executes its ordinary texture/readback path. With the
    anisotropy ambient refusal removed, `GlContextRuntime` now reaches the compiler's closed-value proof for one of
    its `WeakMap` fields.
-3. Implement generated `WgpuHostBackend` and `WgpuRenderSurfaceProvider` with a selected Dawn or wgpu-native adapter.
+3. `Flight::HostSdlSdkAudio` and Bazel `//:host_sdl_sdk_audio` already populate the emitted
+   `flight::types::AudioDeviceBackend` record and execute it against SDL's dummy driver in the host test. The CMake
+   target and `sdk_audio.hpp` are build-tree preview surfaces until `Flight::Sdk` is installable. A compiler module
+   remap must replace the sound example's `webAudioDeviceBackend` provider, while the compiler still needs a native
+   representation for `AudioBuffer` in `AudioResource` and `createAudioResourceFromSamples`.
+4. Implement generated `WgpuHostBackend` and `WgpuRenderSurfaceProvider` with a selected Dawn or wgpu-native adapter.
    `WgpuSurfaceCallbacks` is the stable point where that dependency enters.
-4. Adapt `InputDispatcher`'s normalized records into the generated Flight input types once `InputPointerData` and
+5. Adapt `InputDispatcher`'s normalized records into the generated Flight input types once `InputPointerData` and
    `InputIngressBackend` clear their current generated dependency refusals.
-5. Clear the remaining SDK and example compiler refusals, then replace the handwritten tween loop with the generated
+6. Clear the remaining SDK and example compiler refusals, then replace the handwritten tween loop with the generated
    application module. The repository now selects and compiles all upstream WebGL example sources through a recorded
    source remap and the SDL application-shell profile.
 
-The corresponding compiler work is recorded in [the upstream request](upstream-flight-compiler-request.md). The host
-package does not need to wait for those compiler changes: it does not yet include generated contracts, and the
-eventual adapter can be replaced without changing SDL ownership.
+The corresponding compiler work is recorded in [the upstream request](upstream-flight-compiler-request.md). The
+installed host package does not wait for those compiler changes; the preview adapter is isolated so compiler-driven
+type changes do not alter SDL ownership or the native playback implementation.

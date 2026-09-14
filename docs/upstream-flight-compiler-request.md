@@ -153,6 +153,13 @@ binding profiles. SDL owns lifecycle and GL, Vulkan, or WebGPU surface acquisiti
 packages own rendering behavior. These host bindings will increase the emitted module set, while the portable
 1,032-header compile gate remains useful and independent of platform SDKs.
 
+The SDL host now also implements the complete emitted `AudioDeviceBackend` operation record over SDL's device
+callback, including PCM buffer acquisition, concurrent source playback, live gain/pan/rate, bounded regions,
+teardown semantics, and application-thread completion delivery. Its generated-record adapter compiles and runs at
+this pin. The compiler still needs importer-specific module remapping to replace `webAudioDeviceBackend` in the sound
+example, and the SDK still needs a native representation for the `AudioBuffer` stored by `AudioResource` and created
+by `createAudioResourceFromSamples`. The host playback seam is no longer part of that blocker.
+
 The downstream `flighthq/flight-cpp/sdl-gl/1` profile now names concrete SDL-owned canvas/context types, shared GL
 object handles, context attributes, a weakly recoverable image-source carrier, and
 `EXT_texture_filter_anisotropic`. Composed with the current runtime profile it emits 1,106 modules; 21 of its 29

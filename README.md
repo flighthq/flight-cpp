@@ -38,8 +38,9 @@ bazel test --config=local-posix //tests:host_sdl_test
 SDL_VIDEODRIVER=offscreen bazel run --config=local-posix //examples:tween_sdl_gl -- --smoke
 ```
 
-See the [SDL host package guide](docs/host-sdl.md) for dependencies, exported targets, ownership, and the generated
-SDK wiring lane.
+The SDL package also implements Flight's decoded-PCM audio-device contract; its build-tree preview adapter populates
+the exact generated `AudioDeviceBackend` record. See the [SDL host package guide](docs/host-sdl.md) for dependencies,
+exported targets, ownership, callback pumping, and the remaining generated SDK wiring lane.
 
 Release builds can add `-DFLIGHT_CPP_BUILD_BENCHMARKS=ON`. The resulting `flight_cpp.performance` CTest emits JSON-lines measurements and applies deliberately broad throughput floors for collection, ordered-map, and settled-task regressions. These are smoke gates, not cross-machine comparisons; release-candidate history should tighten them only after a stable runner baseline exists.
 

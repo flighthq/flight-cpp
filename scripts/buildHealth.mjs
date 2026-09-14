@@ -89,10 +89,16 @@ for (const source of hostSdlSources) {
   requireText(cmakeGraph, basename, `CMake SDL host source ${basename}`);
   if (basename !== 'vulkan.cpp') requireText(bazelGraph, basename, `Bazel SDL host source ${basename}`);
 }
-for (const target of ['Flight::HostSdl', 'Flight::HostSdlGl', 'Flight::HostSdlVulkan', 'Flight::HostSdlWgpu']) {
+for (const target of [
+  'Flight::HostSdl',
+  'Flight::HostSdlGl',
+  'Flight::HostSdlSdkAudio',
+  'Flight::HostSdlVulkan',
+  'Flight::HostSdlWgpu',
+]) {
   requireText(cmakeGraph, target, `CMake ${target} target`);
 }
-for (const target of ['host_sdl', 'host_sdl_gl', 'host_sdl_wgpu']) {
+for (const target of ['host_sdl', 'host_sdl_gl', 'host_sdl_sdk_audio', 'host_sdl_wgpu']) {
   requireText(bazelGraph, `name = "${target}"`, `Bazel //:${target} target`);
 }
 

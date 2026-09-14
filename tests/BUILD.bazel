@@ -52,6 +52,7 @@ cc_test(
     tags = ["manual"],
     deps = [
         "//:host_sdl_gl",
+        "//:host_sdl_sdk_audio",
         "//:host_sdl_wgpu",
     ],
 )

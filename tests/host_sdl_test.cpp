@@ -1,16 +1,22 @@
 #include <flight/host/timers.hpp>
+#include <flight/host_sdl/audio.hpp>
 #include <flight/host_sdl/host.hpp>
 #include <flight/host_sdl/input.hpp>
+#include <flight/host_sdl/sdk_audio.hpp>
 #include <flight/host_sdl/web_platform.hpp>
 #include <flight/host_sdl/webgl.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/host_sdl/window.hpp>
 #include <flight/weak_map.hpp>
+#include <flight/types/audio_device_backend.hpp>
 
 #include <SDL3/SDL_events.h>
 
+#include <array>
+#include <chrono>
 #include <limits>
 #include <stdexcept>
+#include <thread>
 #include <utility>
 
 namespace {
@@ -46,6 +52,97 @@ void destroy_surface(
 } // namespace
 
 int main() {
+  flight::host_sdl::SdlAudioDeviceBackend audio;
+  const auto audio_device = audio.create_device(48'000);
+  expect(static_cast<bool>(audio_device), "SDL audio device was not created");
+  expect(audio.get_device_time({}) == 0.0, "invalid SDL audio device reported time");
+
+  std::array<float, 48> tone_samples{};
+  for (std::size_t i = 0; i < tone_samples.size(); ++i) {
+    tone_samples[i] = static_cast<float>(i) / static_cast<float>(tone_samples.size());
+  }
+  const std::array<std::span<const float>, 1> tone_channels{
+      std::span<const float>(tone_samples)};
+  const auto audio_buffer = audio.create_buffer(
+      audio_device,
+      1,
+      tone_samples.size(),
+      48'000,
+      tone_channels);
+  expect(static_cast<bool>(audio_buffer), "SDL audio buffer was not created");
+  expect(
+      !audio.create_buffer(audio_device, 3, tone_samples.size(), 48'000, tone_channels),
+      "SDL audio accepted an unsupported channel layout");
+  const auto audio_source = audio.create_source(audio_device, audio_buffer);
+  const auto second_audio_source = audio.create_source(audio_device, audio_buffer);
+  const auto cancelled_audio_source = audio.create_source(audio_device, audio_buffer);
+  expect(
+      audio_source && second_audio_source && cancelled_audio_source,
+      "SDL audio sources were not created");
+  audio.destroy_buffer(audio_buffer);
+  expect(
+      !audio.create_source(audio_device, audio_buffer),
+      "SDL audio created a source from a destroyed buffer handle");
+  const auto callback_thread = std::this_thread::get_id();
+  int audio_completions = 0;
+  const auto completed = [&] {
+    expect(
+        std::this_thread::get_id() == callback_thread,
+        "SDL audio completion escaped the pumping thread");
+    ++audio_completions;
+  };
+  audio.on_source_ended(audio_source, completed);
+  audio.on_source_ended(second_audio_source, completed);
+  audio.on_source_ended(cancelled_audio_source, [&] { audio_completions += 100; });
+  audio.set_source_gain(audio_source, 0.5);
+  audio.set_source_pan(audio_source, -0.25);
+  audio.start_source(audio_source, 0.0, 0.0);
+  audio.set_source_playback_rate(audio_source, 2.0);
+  audio.set_source_pan(second_audio_source, 0.75);
+  audio.start_source(second_audio_source, 0.0, 0.0005);
+  audio.start_source(cancelled_audio_source, 1.0, 0.0);
+  audio.stop_source(cancelled_audio_source);
+  expect(audio.pump() == 0, "SDL audio delivered a stopped source completion");
+  audio.resume_device(audio_device);
+  for (int attempt = 0; attempt < 100 && audio_completions < 2; ++attempt) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(2));
+    static_cast<void>(audio.pump());
+  }
+  expect(audio_completions == 2, "SDL audio did not complete concurrent acquired-buffer sources");
+  expect(audio.pump() == 0, "SDL audio delivered a completion more than once");
+  expect(audio.get_device_time(audio_device) > 0.0, "SDL audio device clock did not advance");
+  audio.destroy_source(audio_source);
+  audio.destroy_source(second_audio_source);
+  audio.destroy_source(cancelled_audio_source);
+  audio.destroy_device(audio_device);
+  expect(audio.get_device_time(audio_device) == 0.0, "destroyed SDL audio device reported time");
+
+  flight::host_sdl::SdkAudioDeviceBackend sdk_audio;
+  const auto sdk_audio_copy = sdk_audio;
+  auto sdk_backend = sdk_audio.backend();
+  const auto sdk_device = sdk_backend.create_device(48'000);
+  expect(sdk_device != 0.0, "SDL SDK audio adapter did not create a device");
+  const flight::Float32Array sdk_samples{0.0F, 0.25F, -0.25F, 0.0F};
+  const flight::Array<flight::Float32Array> sdk_channels{sdk_samples};
+  const auto sdk_buffer = sdk_backend.create_buffer(
+      sdk_device,
+      1.0,
+      static_cast<double>(sdk_samples.size()),
+      48'000,
+      sdk_channels);
+  expect(sdk_buffer != 0.0, "SDL SDK audio adapter did not copy a Flight Float32Array");
+  const auto sdk_source = sdk_backend.create_source(sdk_device, sdk_buffer);
+  expect(sdk_source != 0.0, "SDL SDK audio adapter did not create a source");
+  int sdk_audio_completions = 0;
+  sdk_backend.on_source_ended(sdk_source, [&] { ++sdk_audio_completions; });
+  sdk_backend.start_source(sdk_source, 1.0, 0.0);
+  expect(
+      sdk_audio_copy.pump() == 1 && sdk_audio_completions == 1,
+      "SDL SDK audio adapter did not share or pump its native backend");
+  sdk_backend.destroy_source(sdk_source);
+  sdk_backend.destroy_buffer(sdk_buffer);
+  sdk_backend.destroy_device(sdk_device);
+
   flight::host_sdl::reset_web_platform();
   int frame_calls = 0;
   const auto cancelled_frame = flight::host_sdl::request_animation_frame([&] { frame_calls += 100; });

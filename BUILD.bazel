@@ -82,11 +82,13 @@ cc_library(
     name = "host_sdl",
     srcs = [
         "src/host_sdl/detail.hpp",
+        "src/host_sdl/audio.cpp",
         "src/host_sdl/host.cpp",
         "src/host_sdl/input.cpp",
         "src/host_sdl/window.cpp",
     ],
     hdrs = [
+        "include/flight/host_sdl/audio.hpp",
         "include/flight/host_sdl/export.hpp",
         "include/flight/host_sdl/host.hpp",
         "include/flight/host_sdl/input.hpp",
@@ -116,6 +118,18 @@ cc_library(
     strip_include_prefix = "include",
     tags = ["manual"],
     deps = [":host_sdl"],
+)
+
+cc_library(
+    name = "host_sdl_sdk_audio",
+    srcs = ["src/host_sdl/sdk_audio.cpp"],
+    hdrs = ["include/flight/host_sdl/sdk_audio.hpp"],
+    strip_include_prefix = "include",
+    tags = ["manual"],
+    deps = [
+        ":host_sdl",
+        ":sdk_preview",
+    ],
 )
 
 cc_library(
