@@ -92,7 +92,11 @@ if(TARGET Flight::HostSdlWgpu)
   add_executable(flight_cpp_host_sdl_tests host_sdl_test.cpp)
   target_link_libraries(
     flight_cpp_host_sdl_tests
-    PRIVATE Flight::HostSdlGl Flight::HostSdlSdkAudio Flight::HostSdlWgpu
+    PRIVATE
+      Flight::HostSdlGl
+      Flight::HostSdlSdkAudio
+      Flight::HostSdlSdkCursor
+      Flight::HostSdlWgpu
   )
   flight_cpp_set_project_warnings(flight_cpp_host_sdl_tests)
   add_test(NAME flight_cpp.host_sdl COMMAND flight_cpp_host_sdl_tests)
@@ -123,7 +127,7 @@ if(TARGET Flight::HostSdlGl)
 endif()
 
 if(TARGET Flight::HostSdl)
-  foreach(header IN ITEMS audio input sdk_audio)
+  foreach(header IN ITEMS audio cursor input sdk_audio sdk_cursor)
     set(source "${CMAKE_CURRENT_BINARY_DIR}/header_host_sdl_${header}_test.cpp")
     file(GENERATE OUTPUT "${source}" CONTENT "#include <flight/host_sdl/${header}.hpp>\n")
     add_library("flight_cpp_header_host_sdl_${header}_test" OBJECT "${source}")

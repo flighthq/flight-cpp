@@ -7,8 +7,9 @@ responsible for rendering after an adapter supplies its native context or surfac
 
 The installed package is independent of the generated SDK while the compiler contracts settle. Its public API lives
 under `include/flight/host_sdl/`, its implementations live under `src/host_sdl/`, and none of its targets changes the
-dependency-free `Flight::Cpp` target. The build tree additionally exposes an SDK audio adapter against the committed
-preview headers so the exact generated interface is continuously compiled and executed before it becomes installable.
+dependency-free `Flight::Cpp` target. The build tree additionally exposes SDK audio and cursor adapters against the
+committed preview headers so the exact generated interfaces are continuously compiled and executed before they
+become installable.
 
 ## Build
 
@@ -51,9 +52,10 @@ SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
   bazel run --config=local-posix //examples:tween_sdl_gl -- --smoke
 ```
 
-The public Bazel labels are `//:host_sdl`, `//:host_sdl_image`, `//:host_sdl_gl`, `//:host_sdl_sdk_audio`, and
-`//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core `bazel test //...` does not fetch or build
-SDL. CMake remains the complete package path for the Vulkan surface adapter.
+The public Bazel labels are `//:host_sdl`, `//:host_sdl_image`, `//:host_sdl_gl`, `//:host_sdl_sdk_audio`,
+`//:host_sdl_sdk_cursor`, and `//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core
+`bazel test //...` does not fetch or build SDL. CMake remains the complete package path for the Vulkan surface
+adapter.
 
 It animates the fifteen easing curves emitted from `examples/tween/source/tween.ts`. Rendering uses the copyable
 `GlCanvas` and `WebGl2Context` host seam exposed by `Flight::HostSdlGl`. The example calls the context's reusable
@@ -77,7 +79,9 @@ The installed build exports five primary host targets through the existing `Flig
   input and relative-pointer mode for the eventual generated ingress adapter. `SdlAudioDeviceBackend` implements
   Flight's decoded-PCM device, buffer, and source lifecycle with live gain, equal-power pan, playback rate, bounded
   regions, and completion notification. It mixes mono or stereo Float32 sources in SDL's device callback and queues
-  completions for serialized application-thread delivery.
+  completions for serialized application-thread delivery. `SdlCursorBackend` maps Flight's CSS cursor identifiers to
+  SDL system cursors, implements `none` with SDL visibility, and retains the requested value when a headless driver
+  has no native cursor. Unknown or unsupported CSS cursor images use the SDL default.
 - `Flight::HostSdlImage` owns no graphics context. It is the shared decoded-RGBA image carrier used by GL and
   WebGPU, with source-kind metadata and weak identity for texture caches. Native image decoders and video providers
   populate it; neither graphics target owns decoding or frame acquisition.
@@ -197,6 +201,10 @@ closure.
 turn, just like `Host::pump_timers()`. Destroying a source suppresses its pending completion, invalid handles follow
 Flight's sentinel/no-op contract, and destroying a buffer does not invalidate sources that already acquired it.
 
+`Flight::HostSdlSdkCursor` and Bazel `//:host_sdl_sdk_cursor` populate the committed generated
+`flight::types::CursorBackend` record. Copies of the adapter and emitted record share the selected cursor state, and
+the native operations stay on the SDL application thread.
+
 ## Generated SDK wiring lane
 
 The native mechanics are now present. Wiring them to generated Flight contracts remains a narrow integration task:
@@ -217,11 +225,14 @@ The native mechanics are now present. Wiring them to generated Flight contracts 
    target and `sdk_audio.hpp` are build-tree preview surfaces until `Flight::Sdk` is installable. A compiler module
    remap must replace the sound example's `webAudioDeviceBackend` provider. Encoded sound bytes still need a native
    decoder/provider; decoded PCM now uses the portable `flight::AudioBuffer` carrier.
-4. Implement generated `WgpuHostBackend` and `WgpuRenderSurfaceProvider` with a selected Dawn or wgpu-native adapter.
+4. `Flight::HostSdlSdkCursor` and Bazel `//:host_sdl_sdk_cursor` populate and execute the emitted
+   `flight::types::CursorBackend` record. The compiler source-remap lane must select that native provider in place of
+   `createWebCursorBackend` for the interaction and sound examples.
+5. Implement generated `WgpuHostBackend` and `WgpuRenderSurfaceProvider` with a selected Dawn or wgpu-native adapter.
    `WgpuSurfaceCallbacks` is the stable point where that dependency enters.
-5. Adapt `InputDispatcher`'s normalized records into the generated Flight input types once `InputPointerData` and
+6. Adapt `InputDispatcher`'s normalized records into the generated Flight input types once `InputPointerData` and
    `InputIngressBackend` clear their current generated dependency refusals.
-6. Clear the remaining SDK and example compiler refusals, then replace the handwritten tween loop with the generated
+7. Clear the remaining SDK and example compiler refusals, then replace the handwritten tween loop with the generated
    application module. The repository now selects and compiles all upstream WebGL example sources through a recorded
    source remap and the SDL application-shell profile.
 

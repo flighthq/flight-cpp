@@ -228,6 +228,12 @@ resolution, and continue to verify that the replacement exports every requested 
 handwritten SDL package can replace Web lifecycle/input/context providers while generated Flight GL modules retain
 renderer ownership.
 
+The SDL cursor side of that replacement is now concrete. `Flight::HostSdlSdkCursor` and Bazel
+`//:host_sdl_sdk_cursor` populate the compiler-emitted `flight::types::CursorBackend` record and execute it against
+SDL's main-thread system-cursor API. The interaction and sound examples still import `createWebCursorBackend`; the
+remap must select a native provider with the same requested export before those entry points can consume this
+adapter without source rewriting.
+
 ## Host boundary
 
 The manifest-free generation remains the portable floor. Browser, media, Node, and graphics handles require explicit

@@ -1,16 +1,20 @@
 #include <flight/host/timers.hpp>
 #include <flight/host_sdl/audio.hpp>
+#include <flight/host_sdl/cursor.hpp>
 #include <flight/host_sdl/host.hpp>
 #include <flight/host_sdl/input.hpp>
 #include <flight/host_sdl/sdk_audio.hpp>
+#include <flight/host_sdl/sdk_cursor.hpp>
 #include <flight/host_sdl/web_platform.hpp>
 #include <flight/host_sdl/webgl.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/host_sdl/window.hpp>
 #include <flight/weak_map.hpp>
 #include <flight/types/audio_device_backend.hpp>
+#include <flight/types/cursor.hpp>
 
 #include <SDL3/SDL_events.h>
+#include <SDL3/SDL_mouse.h>
 
 #include <array>
 #include <chrono>
@@ -389,6 +393,33 @@ int main() {
 
   flight::host_sdl::Host host;
   expect((host.subsystems() & SDL_INIT_VIDEO) != 0, "SDL video subsystem was not recorded");
+
+  flight::host_sdl::SdlCursorBackend native_cursor;
+  const auto native_cursor_copy = native_cursor;
+  native_cursor.set_cursor(flight::String("pointer"));
+  expect(
+      native_cursor_copy.current_cursor() == flight::String("pointer") && SDL_CursorVisible(),
+      "SDL cursor copies did not share a visible pointer selection");
+  native_cursor_copy.set_cursor(flight::String("none"));
+  expect(
+      native_cursor.current_cursor() == flight::String("none") && !SDL_CursorVisible(),
+      "SDL cursor did not implement the CSS none selection");
+  native_cursor.set_cursor(std::nullopt);
+  expect(
+      !native_cursor_copy.current_cursor().has_value() && SDL_CursorVisible(),
+      "SDL cursor did not restore the host default");
+
+  flight::host_sdl::SdkCursorBackend sdk_cursor;
+  const auto sdk_cursor_copy = sdk_cursor;
+  auto sdk_cursor_backend = sdk_cursor.backend();
+  sdk_cursor_backend.set_cursor(flight::String("ew-resize"));
+  expect(
+      sdk_cursor_copy.current_cursor() == flight::String("ew-resize"),
+      "SDL SDK cursor record did not retain the generated cursor value");
+  sdk_cursor_backend.set_cursor(std::nullopt);
+  expect(
+      !sdk_cursor.current_cursor().has_value(),
+      "SDL SDK cursor record did not clear to the host default");
 
   flight::host_sdl::WindowOptions options;
   options.title = "Flight host test";

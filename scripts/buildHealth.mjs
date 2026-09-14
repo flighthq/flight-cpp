@@ -94,12 +94,20 @@ for (const target of [
   'Flight::HostSdlGl',
   'Flight::HostSdlImage',
   'Flight::HostSdlSdkAudio',
+  'Flight::HostSdlSdkCursor',
   'Flight::HostSdlVulkan',
   'Flight::HostSdlWgpu',
 ]) {
   requireText(cmakeGraph, target, `CMake ${target} target`);
 }
-for (const target of ['host_sdl', 'host_sdl_gl', 'host_sdl_image', 'host_sdl_sdk_audio', 'host_sdl_wgpu']) {
+for (const target of [
+  'host_sdl',
+  'host_sdl_gl',
+  'host_sdl_image',
+  'host_sdl_sdk_audio',
+  'host_sdl_sdk_cursor',
+  'host_sdl_wgpu',
+]) {
   requireText(bazelGraph, `name = "${target}"`, `Bazel //:${target} target`);
 }
 
