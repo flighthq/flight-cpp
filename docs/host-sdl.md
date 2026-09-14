@@ -53,7 +53,7 @@ SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
 ```
 
 The public Bazel labels are `//:host_sdl`, `//:host_sdl_image`, `//:host_sdl_gl`, `//:host_sdl_sdk_audio`,
-`//:host_sdl_sdk_cursor`, `//:host_sdl_sdk_window`, and `//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core
+`//:host_sdl_sdk_clipboard`, `//:host_sdl_sdk_cursor`, `//:host_sdl_sdk_window`, and `//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core
 `bazel test //...` does not fetch or build SDL. CMake remains the complete package path for the Vulkan surface
 adapter.
 
@@ -204,6 +204,11 @@ Flight's sentinel/no-op contract, and destroying a buffer does not invalidate so
 `Flight::HostSdlSdkCursor` and Bazel `//:host_sdl_sdk_cursor` populate the committed generated
 `flight::types::CursorBackend` record. Copies of the adapter and emitted record share the selected cursor state, and
 the native operations stay on the SDL application thread.
+
+`Flight::HostSdlSdkClipboard` and Bazel `//:host_sdl_sdk_clipboard` populate the committed generated
+`ClipboardTextBackend` record. It exposes clear, nonempty-text detection, UTF-8 reading, and UTF-8 writing with the
+same resolved-task sentinels as the Web host. SDL clipboard calls must run on the application thread. Rich formats,
+images, bookmarks, and change notifications are not advertised by this adapter.
 
 `Flight::HostSdlSdkWindow` and Bazel `//:host_sdl_sdk_window` bind an SDL window id to the committed generated
 `ApplicationVisibilityBackend` and `FullscreenBackend` records. Generated fullscreen target handles are registered

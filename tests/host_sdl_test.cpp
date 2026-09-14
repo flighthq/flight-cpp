@@ -4,6 +4,7 @@
 #include <flight/host_sdl/host.hpp>
 #include <flight/host_sdl/input.hpp>
 #include <flight/host_sdl/sdk_audio.hpp>
+#include <flight/host_sdl/sdk_clipboard.hpp>
 #include <flight/host_sdl/sdk_cursor.hpp>
 #include <flight/host_sdl/sdk_window.hpp>
 #include <flight/host_sdl/web_platform.hpp>
@@ -14,6 +15,7 @@
 #include <flight/types/audio_device_backend.hpp>
 #include <flight/types/application_visibility_backend.hpp>
 #include <flight/types/application_window_target_backend.hpp>
+#include <flight/types/clipboard.hpp>
 #include <flight/types/cursor.hpp>
 #include <flight/types/fullscreen_backend.hpp>
 #include <flight/types/input_target_backend.hpp>
@@ -398,6 +400,20 @@ int main() {
 
   flight::host_sdl::Host host;
   expect((host.subsystems() & SDL_INIT_VIDEO) != 0, "SDL video subsystem was not recorded");
+
+  flight::host_sdl::SdkClipboardTextBackend sdk_clipboard;
+  auto clipboard_backend = sdk_clipboard.backend();
+  expect(
+      clipboard_backend.write_text(flight::String("Flight clipboard \u2603")).get(),
+      "SDL SDK clipboard did not accept UTF-8 text");
+  expect(clipboard_backend.has_text().get(), "SDL SDK clipboard lost written text");
+  expect(
+      clipboard_backend.read_text().get() == flight::String("Flight clipboard \u2603"),
+      "SDL SDK clipboard changed written UTF-8 text");
+  expect(clipboard_backend.clear().get(), "SDL SDK clipboard clear failed");
+  expect(
+      !clipboard_backend.has_text().get() && clipboard_backend.read_text().get().empty(),
+      "SDL SDK clipboard retained text after clear");
 
   flight::host_sdl::SdlCursorBackend native_cursor;
   const auto native_cursor_copy = native_cursor;

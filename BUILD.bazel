@@ -153,6 +153,18 @@ cc_library(
 )
 
 cc_library(
+    name = "host_sdl_sdk_clipboard",
+    srcs = ["src/host_sdl/sdk_clipboard.cpp"],
+    hdrs = ["include/flight/host_sdl/sdk_clipboard.hpp"],
+    strip_include_prefix = "include",
+    tags = ["manual"],
+    deps = [
+        ":host_sdl",
+        ":sdk_preview",
+    ],
+)
+
+cc_library(
     name = "host_sdl_sdk_cursor",
     srcs = ["src/host_sdl/sdk_cursor.cpp"],
     hdrs = ["include/flight/host_sdl/sdk_cursor.hpp"],

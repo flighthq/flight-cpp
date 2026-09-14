@@ -125,6 +125,21 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
   )
   flight_cpp_set_project_warnings(flight_host_sdl_sdk_audio)
 
+  add_library(flight_host_sdl_sdk_clipboard src/host_sdl/sdk_clipboard.cpp)
+  add_library(Flight::HostSdlSdkClipboard ALIAS flight_host_sdl_sdk_clipboard)
+  set_target_properties(
+    flight_host_sdl_sdk_clipboard
+    PROPERTIES
+      POSITION_INDEPENDENT_CODE ON
+      SOVERSION "${FLIGHT_CPP_ABI_VERSION}"
+      VERSION "${PROJECT_VERSION}"
+  )
+  target_link_libraries(
+    flight_host_sdl_sdk_clipboard
+    PUBLIC Flight::HostSdl Flight::SdkPreview
+  )
+  flight_cpp_set_project_warnings(flight_host_sdl_sdk_clipboard)
+
   add_library(flight_host_sdl_sdk_cursor src/host_sdl/sdk_cursor.cpp)
   add_library(Flight::HostSdlSdkCursor ALIAS flight_host_sdl_sdk_cursor)
   set_target_properties(
@@ -233,6 +248,11 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
       PUBLIC FLIGHT_HOST_SDL_SDK_AUDIO_SHARED
     )
     target_compile_definitions(
+      flight_host_sdl_sdk_clipboard
+      PRIVATE FLIGHT_HOST_SDL_SDK_CLIPBOARD_EXPORTS
+      PUBLIC FLIGHT_HOST_SDL_SDK_CLIPBOARD_SHARED
+    )
+    target_compile_definitions(
       flight_host_sdl_sdk_cursor
       PRIVATE FLIGHT_HOST_SDL_SDK_CURSOR_EXPORTS
       PUBLIC FLIGHT_HOST_SDL_SDK_CURSOR_SHARED
@@ -275,6 +295,7 @@ install(
   DIRECTORY include/
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
   PATTERN "flight/host_sdl/sdk_audio.hpp" EXCLUDE
+  PATTERN "flight/host_sdl/sdk_clipboard.hpp" EXCLUDE
   PATTERN "flight/host_sdl/sdk_cursor.hpp" EXCLUDE
   PATTERN "flight/host_sdl/sdk_window.hpp" EXCLUDE
 )

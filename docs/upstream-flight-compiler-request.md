@@ -241,6 +241,10 @@ focus, file-drop, and pointer-lock records; their returned release closures do n
 function object passed at subscription time, which cannot be recovered from separately copied `std::function`
 values. Emitting the prepared `flight::Function` carrier unlocks those exact adapters.
 
+The dependency-closed `ClipboardTextBackend` is also populated by `Flight::HostSdlSdkClipboard`; SDL covers its
+clear, presence, UTF-8 read, and UTF-8 write methods without a new compiler contract. Rich clipboard records remain
+absent until a native provider implements those separate capabilities.
+
 ## Host boundary
 
 The manifest-free generation remains the portable floor. Browser, media, Node, and graphics handles require explicit
