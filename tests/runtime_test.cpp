@@ -554,6 +554,32 @@ void test_map() {
   captured_map.set("value", 4.0);
   check(captured_map.get("value") == std::optional<double>(4.0),
         "const map handles retain mutable JavaScript referent semantics");
+
+  flight::Map<flight::String, double> live{{"first", 1.0}, {"second", 2.0}};
+  auto keys = live.keys();
+  auto shared_cursor = keys;
+  const auto first = keys.next();
+  live.erase("second");
+  live.set("third", 3.0).set("second", 4.0);
+  const auto third = shared_cursor.next();
+  const auto second = keys.next();
+  check(!first.done && first.value == std::optional<flight::String>("first") &&
+            !third.done && third.value == std::optional<flight::String>("third") &&
+            !second.done && second.value == std::optional<flight::String>("second"),
+        "map iterator copies share a live insertion-order cursor");
+  check(keys.next().done, "map iterator reports exhaustion");
+  live.set("after-done", 5.0);
+  check(shared_cursor.next().done, "an exhausted map iterator stays exhausted after additions");
+
+  flight::Array<double> iterated_values;
+  for (const auto value : live.values()) iterated_values.push(value);
+  check(iterated_values.size() == 4 && iterated_values[0] == 1.0 && iterated_values[1] == 3.0 &&
+            iterated_values[2] == 4.0 && iterated_values[3] == 5.0,
+        "map value iterators support native range traversal in insertion order");
+  const auto first_entry = live.entries().next();
+  check(!first_entry.done && first_entry.value.has_value() &&
+            first_entry.value->first == flight::String("first") && first_entry.value->second == 1.0,
+        "map entry iterators retain key-value pairs");
 }
 
 void test_new_runtime_services() {

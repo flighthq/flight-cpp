@@ -52,6 +52,16 @@ const source = api.parseTypeScriptSource(
    export function bufferBytes(buffer: ArrayBufferLike): number {
      return buffer.byteLength;
    }
+   export function sharedBytes(): number {
+     const buffer = new SharedArrayBuffer(8);
+     return buffer.byteLength;
+   }
+   export function mapIteratorAdvances(values: Map<string, number>): boolean {
+     return !values.keys().next().done;
+   }
+   export function mapKeys(values: Map<string, number>): MapIterator<string> {
+     return values.keys();
+   }
    export function weakArray(values: number[]): boolean {
      const seen = new WeakSet<readonly number[]>();
      seen.add(values);
@@ -84,6 +94,8 @@ for (const expected of [
   'flight::SequenceView<double>',
   'flight::ArrayBufferLike',
   'flight::ArrayBufferView',
+  'flight::MapIterator<flight::String>',
+  'flight::SharedArrayBuffer',
   'flight::WeakSet<flight::Array<double>>',
   'flight::parse_float',
   'std::isfinite',
@@ -113,11 +125,17 @@ int main() {
   const auto custom_total = flighthq_runtime_test::total(custom);
   const auto byte_end = flighthq_runtime_test::byte_end(flight::ArrayBufferView(words));
   const auto buffer_bytes = flighthq_runtime_test::buffer_bytes(words.buffer);
+  const auto shared_bytes = flighthq_runtime_test::shared_bytes();
+  flight::Map<flight::String, double> keyed{{"first", 1.0}, {"second", 2.0}};
+  const auto map_iterator_advances = flighthq_runtime_test::map_iterator_advances(keyed);
+  const auto first_key = flighthq_runtime_test::map_keys(keyed).next();
   const auto weak_array = flighthq_runtime_test::weak_array(values);
   const auto parsed = flighthq_runtime_test::parse_prefix(flight::String(" -12.5tail"));
   const auto finite = flighthq_runtime_test::finite(parsed);
   return array_total == 6.0 && typed_total == 0.0 && custom_total == 9.0 && byte_end == 8.0 &&
-                 buffer_bytes == 8.0 &&
+                 buffer_bytes == 8.0 && shared_bytes == 8.0 &&
+                 map_iterator_advances && !first_key.done &&
+                 first_key.value == std::optional<flight::String>("first") &&
                  weak_array && parsed == -12.5 && finite
              ? 0
              : 1;

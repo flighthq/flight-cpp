@@ -124,6 +124,16 @@
       "targetName": "flight::Blob"
     },
     {
+      "headers": [
+        "flight/map.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "MapIterator",
+      "space": "type",
+      "targetName": "flight::MapIterator"
+    },
+    {
       "construction": {
         "kind": "constructor",
         "targetName": "flight::Blob"
@@ -220,6 +230,30 @@
       "sourceName": "ReadableStreamDefaultReader",
       "space": "type",
       "targetName": "flight::ReadableStreamDefaultReader"
+    },
+    {
+      "headers": [
+        "flight/array_buffer.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "SharedArrayBuffer",
+      "space": "type",
+      "targetName": "flight::SharedArrayBuffer"
+    },
+    {
+      "construction": {
+        "kind": "constructor",
+        "targetName": "flight::SharedArrayBuffer"
+      },
+      "headers": [
+        "flight/array_buffer.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "SharedArrayBuffer",
+      "space": "value",
+      "targetName": "flight::SharedArrayBuffer"
     },
     {
       "headers": [

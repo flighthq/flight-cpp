@@ -18,6 +18,88 @@
 
 namespace flight {
 
+template <typename Value>
+struct IteratorResult final {
+  std::optional<Value> value;
+  bool done{true};
+};
+
+// JavaScript Map iterators are shared, live cursors. Copies retain the same cursor; additions made
+// before exhaustion remain visible, while a cursor that has returned done stays exhausted.
+template <typename Value>
+class MapIterator {
+ public:
+  using Advance = std::function<std::optional<Value>(std::optional<std::uint64_t>&)>;
+
+ private:
+  struct State final {
+    Advance advance;
+    std::optional<std::uint64_t> cursor;
+    bool finished;
+  };
+
+  [[nodiscard]] static std::optional<Value> next_value(const std::shared_ptr<State>& state) {
+    if (!state || state->finished) return std::nullopt;
+    auto value = state->advance(state->cursor);
+    if (!value) state->finished = true;
+    return value;
+  }
+
+ public:
+  class sentinel final {};
+
+  class iterator final {
+   public:
+    using difference_type = std::ptrdiff_t;
+    using iterator_category = std::input_iterator_tag;
+    using pointer = const Value*;
+    using reference = const Value&;
+    using value_type = Value;
+
+    iterator() = default;
+
+    [[nodiscard]] reference operator*() const noexcept { return *current_; }
+    [[nodiscard]] pointer operator->() const noexcept { return std::addressof(*current_); }
+
+    iterator& operator++() {
+      current_ = next_value(state_);
+      return *this;
+    }
+
+    void operator++(int) { ++*this; }
+
+    [[nodiscard]] friend bool operator==(const iterator& value, sentinel) noexcept {
+      return !value.current_.has_value();
+    }
+
+   private:
+    friend class MapIterator;
+
+    explicit iterator(std::shared_ptr<State> state)
+        : state_(std::move(state)), current_(next_value(state_)) {}
+
+    std::shared_ptr<State> state_;
+    std::optional<Value> current_;
+  };
+
+  MapIterator() = default;
+
+  explicit MapIterator(Advance advance)
+      : state_(std::make_shared<State>(State{std::move(advance), std::nullopt, false})) {}
+
+  [[nodiscard]] IteratorResult<Value> next() const {
+    auto value = next_value(state_);
+    if (!value) return {};
+    return IteratorResult<Value>{.value = std::move(value), .done = false};
+  }
+
+  [[nodiscard]] iterator begin() const { return iterator(state_); }
+  [[nodiscard]] sentinel end() const noexcept { return {}; }
+
+ private:
+  std::shared_ptr<State> state_;
+};
+
 template <typename Key, typename Value, typename Equal = SameValueZero<Key>>
 class Map {
  public:
@@ -138,6 +220,33 @@ class Map {
 
   [[nodiscard]] bool has(const Key& key) const { return find(key) != storage_->records.end(); }
 
+  [[nodiscard]] MapIterator<Key> keys() const {
+    return MapIterator<Key>([storage = storage_](std::optional<std::uint64_t>& cursor) {
+      const auto record = next_record(*storage, cursor);
+      if (record == storage->records.cend()) return std::optional<Key>{};
+      cursor = record->insertion_identity;
+      return std::optional<Key>{record->entry.first};
+    });
+  }
+
+  [[nodiscard]] MapIterator<Value> values() const {
+    return MapIterator<Value>([storage = storage_](std::optional<std::uint64_t>& cursor) {
+      const auto record = next_record(*storage, cursor);
+      if (record == storage->records.cend()) return std::optional<Value>{};
+      cursor = record->insertion_identity;
+      return std::optional<Value>{record->entry.second};
+    });
+  }
+
+  [[nodiscard]] MapIterator<Entry> entries() const {
+    return MapIterator<Entry>([storage = storage_](std::optional<std::uint64_t>& cursor) {
+      const auto record = next_record(*storage, cursor);
+      if (record == storage->records.cend()) return std::optional<Entry>{};
+      cursor = record->insertion_identity;
+      return std::optional<Entry>{record->entry};
+    });
+  }
+
   Map& set(Key key, Value value) const {
     const auto entry = find_mutable(key);
     if (entry == storage_->records.end()) {
@@ -159,6 +268,13 @@ class Map {
   [[nodiscard]] size_type size() const noexcept { return storage_->records.size(); }
 
  private:
+  [[nodiscard]] static auto next_record(
+      const Storage& storage, const std::optional<std::uint64_t>& cursor) {
+    return std::find_if(storage.records.cbegin(), storage.records.cend(), [&](const Record& record) {
+      return !cursor || record.insertion_identity > *cursor;
+    });
+  }
+
   [[nodiscard]] auto find_mutable(const Key& key) const {
     return std::find_if(storage_->records.begin(), storage_->records.end(), [&](const Record& record) {
       return equal_(record.entry.first, key);
