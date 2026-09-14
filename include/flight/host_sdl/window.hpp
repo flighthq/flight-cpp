@@ -66,6 +66,10 @@ class FLIGHT_HOST_SDL_API Window final {
   [[nodiscard]] WindowSize pixel_size() const;
 
   void set_title(std::string_view title);
+  void set_relative_pointer(bool enabled);
+  void start_text_input();
+  void stop_text_input();
+  [[nodiscard]] bool text_input_active() const;
   void show();
   void hide();
 

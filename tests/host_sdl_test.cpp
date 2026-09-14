@@ -1,5 +1,6 @@
 #include <flight/host/timers.hpp>
 #include <flight/host_sdl/host.hpp>
+#include <flight/host_sdl/input.hpp>
 #include <flight/host_sdl/webgl.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/host_sdl/window.hpp>
@@ -7,6 +8,7 @@
 
 #include <SDL3/SDL_events.h>
 
+#include <limits>
 #include <stdexcept>
 #include <utility>
 
@@ -88,6 +90,141 @@ int main() {
   expect(window.size() == flight::host_sdl::WindowSize{320, 180}, "logical window size changed");
   expect(window.pixel_size().width > 0 && window.pixel_size().height > 0, "pixel size is empty");
   window.set_title("Flight host test renamed");
+
+  flight::host_sdl::InputKeyboardData keyboard_data;
+  flight::host_sdl::InputPointerData pointer_data;
+  flight::host_sdl::InputTextData text_data;
+  int keyboard_calls = 0;
+  int pointer_calls = 0;
+  int wheel_calls = 0;
+  int text_calls = 0;
+  int gamepad_axis_calls = 0;
+  int gamepad_down_calls = 0;
+  int gamepad_up_calls = 0;
+  flight::host_sdl::InputGamepadAxisData gamepad_axis_data;
+  flight::host_sdl::InputGamepadButtonData gamepad_button_data;
+  flight::host_sdl::InputSink input_sink;
+  input_sink.key_down = [&](const auto& data) {
+    keyboard_data = data;
+    ++keyboard_calls;
+  };
+  input_sink.pointer_move = [&](const auto& data) {
+    pointer_data = data;
+    ++pointer_calls;
+  };
+  input_sink.wheel = [&](const auto& data) {
+    pointer_data = data;
+    ++wheel_calls;
+  };
+  input_sink.text_input = [&](const auto& data) {
+    text_data = data;
+    ++text_calls;
+  };
+  input_sink.gamepad_axis_move = [&](const auto& data) {
+    gamepad_axis_data = data;
+    ++gamepad_axis_calls;
+  };
+  input_sink.gamepad_button_down = [&](const auto& data) {
+    gamepad_button_data = data;
+    ++gamepad_down_calls;
+  };
+  input_sink.gamepad_button_up = [&](const auto& data) {
+    gamepad_button_data = data;
+    ++gamepad_up_calls;
+  };
+  flight::host_sdl::InputDispatcher input(window.id(), std::move(input_sink));
+
+  SDL_Event key_event{};
+  key_event.type = SDL_EVENT_KEY_DOWN;
+  key_event.key.timestamp = 2'000'000;
+  key_event.key.windowID = window.id();
+  key_event.key.scancode = SDL_SCANCODE_A;
+  key_event.key.key = SDLK_A;
+  key_event.key.mod = SDL_KMOD_LSHIFT;
+  key_event.key.repeat = true;
+  expect(input.dispatch(key_event), "SDL key event was not translated");
+  expect(
+      keyboard_calls == 1 && keyboard_data.key_code == SDLK_A && keyboard_data.shift_key &&
+          keyboard_data.modifier == SDL_KMOD_LSHIFT && keyboard_data.repeat &&
+          keyboard_data.time_stamp == 2.0,
+      "SDL key translation changed Flight keyboard semantics");
+
+  SDL_Event motion_event{};
+  motion_event.type = SDL_EVENT_MOUSE_MOTION;
+  motion_event.motion.timestamp = 3'000'000;
+  motion_event.motion.windowID = window.id();
+  motion_event.motion.which = 7;
+  motion_event.motion.state = SDL_BUTTON_LMASK | SDL_BUTTON_RMASK;
+  motion_event.motion.x = 11.0F;
+  motion_event.motion.y = 13.0F;
+  motion_event.motion.xrel = 2.0F;
+  motion_event.motion.yrel = -3.0F;
+  expect(input.dispatch(motion_event), "SDL pointer event was not translated");
+  expect(
+      pointer_calls == 1 && pointer_data.buttons == 3.0 && pointer_data.x == 11.0 &&
+          pointer_data.y == 13.0 && pointer_data.delta_x == 2.0 && pointer_data.delta_y == -3.0,
+      "SDL pointer translation changed Flight pointer semantics");
+
+  SDL_Event wheel_event{};
+  wheel_event.type = SDL_EVENT_MOUSE_WHEEL;
+  wheel_event.wheel.timestamp = 4'000'000;
+  wheel_event.wheel.windowID = window.id();
+  wheel_event.wheel.x = 2.0F;
+  wheel_event.wheel.y = 3.0F;
+  wheel_event.wheel.direction = SDL_MOUSEWHEEL_NORMAL;
+  wheel_event.wheel.mouse_x = 17.0F;
+  wheel_event.wheel.mouse_y = 19.0F;
+  expect(input.dispatch(wheel_event), "SDL wheel event was not translated");
+  expect(
+      wheel_calls == 1 && pointer_data.delta_x == 2.0 && pointer_data.delta_y == -3.0 &&
+          pointer_data.wheel_mode == flight::String("lines"),
+      "SDL wheel translation changed Flight wheel semantics");
+
+  SDL_Event text_event{};
+  text_event.type = SDL_EVENT_TEXT_INPUT;
+  text_event.text.windowID = window.id();
+  text_event.text.text = "Flight";
+  expect(input.dispatch(text_event), "SDL text event was not translated");
+  expect(
+      text_calls == 1 && !text_data.is_composing && text_data.text == flight::String("Flight"),
+      "SDL text translation changed Flight text semantics");
+
+  SDL_Event foreign_event = key_event;
+  foreign_event.key.windowID = window.id() + 1;
+  expect(!input.dispatch(foreign_event), "SDL input accepted an event from another window");
+
+  SDL_Event gamepad_axis_event{};
+  gamepad_axis_event.type = SDL_EVENT_GAMEPAD_AXIS_MOTION;
+  gamepad_axis_event.gaxis.timestamp = 5'000'000;
+  gamepad_axis_event.gaxis.which = 4;
+  gamepad_axis_event.gaxis.axis = static_cast<Uint8>(SDL_GAMEPAD_AXIS_LEFTX);
+  gamepad_axis_event.gaxis.value = std::numeric_limits<Sint16>::max();
+  expect(input.dispatch(gamepad_axis_event), "SDL gamepad axis was not translated");
+  expect(
+      gamepad_axis_calls == 1 && gamepad_axis_data.axis == 0.0 &&
+          gamepad_axis_data.gamepad == 4.0 && gamepad_axis_data.value == 1.0,
+      "SDL gamepad axis changed Flight standard mapping");
+
+  gamepad_axis_event.gaxis.axis = static_cast<Uint8>(SDL_GAMEPAD_AXIS_LEFT_TRIGGER);
+  expect(input.dispatch(gamepad_axis_event), "SDL gamepad trigger press was not translated");
+  expect(
+      gamepad_down_calls == 1 && gamepad_button_data.button == 6.0 &&
+          gamepad_button_data.value == 1.0,
+      "SDL gamepad trigger changed Flight standard button mapping");
+  expect(!input.dispatch(gamepad_axis_event), "unchanged SDL trigger emitted a duplicate transition");
+  gamepad_axis_event.gaxis.value = 0;
+  expect(input.dispatch(gamepad_axis_event), "SDL gamepad trigger release was not translated");
+  expect(gamepad_up_calls == 1 && gamepad_button_data.button == 6.0,
+         "SDL gamepad trigger release changed Flight standard mapping");
+
+  SDL_Event gamepad_button_event{};
+  gamepad_button_event.type = SDL_EVENT_GAMEPAD_BUTTON_DOWN;
+  gamepad_button_event.gbutton.which = 4;
+  gamepad_button_event.gbutton.button = static_cast<Uint8>(SDL_GAMEPAD_BUTTON_LEFT_SHOULDER);
+  gamepad_button_event.gbutton.down = true;
+  expect(input.dispatch(gamepad_button_event), "SDL gamepad button was not translated");
+  expect(gamepad_down_calls == 2 && gamepad_button_data.button == 4.0,
+         "SDL gamepad button changed Flight standard mapping");
 
   SDL_Event received{};
   while (host.poll_event(received)) {}

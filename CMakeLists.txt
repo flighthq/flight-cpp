@@ -88,6 +88,7 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
   add_library(
     flight_host_sdl
     src/host_sdl/host.cpp
+    src/host_sdl/input.cpp
     src/host_sdl/window.cpp
   )
   add_library(Flight::HostSdl ALIAS flight_host_sdl)

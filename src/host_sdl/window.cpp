@@ -6,6 +6,9 @@
 #include <string>
 #include <utility>
 
+#include <SDL3/SDL_keyboard.h>
+#include <SDL3/SDL_mouse.h>
+
 namespace flight::host_sdl {
 namespace {
 
@@ -125,6 +128,22 @@ void Window::set_title(std::string_view title) {
   const std::string value(title);
   detail::require_sdl(SDL_SetWindowTitle(window_, value.c_str()), "SDL_SetWindowTitle");
 }
+
+void Window::set_relative_pointer(bool enabled) {
+  detail::require_sdl(
+      SDL_SetWindowRelativeMouseMode(window_, enabled),
+      "SDL_SetWindowRelativeMouseMode");
+}
+
+void Window::start_text_input() {
+  detail::require_sdl(SDL_StartTextInput(window_), "SDL_StartTextInput");
+}
+
+void Window::stop_text_input() {
+  detail::require_sdl(SDL_StopTextInput(window_), "SDL_StopTextInput");
+}
+
+bool Window::text_input_active() const { return SDL_TextInputActive(window_); }
 
 void Window::show() { detail::require_sdl(SDL_ShowWindow(window_), "SDL_ShowWindow"); }
 

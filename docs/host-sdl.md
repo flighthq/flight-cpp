@@ -50,7 +50,9 @@ package contract.
 The build exports four targets through the existing `FlightCpp` package:
 
 - `Flight::HostSdl` initializes ref-counted SDL subsystems, polls or waits for `SDL_Event`, exposes the monotonic SDL
-  clock, and owns plain, OpenGL, or Vulkan windows.
+  clock, and owns plain, OpenGL, or Vulkan windows. `InputDispatcher` converts keyboard, text/IME, mouse, wheel, and
+  standard-layout gamepad events into records matching Flight's input-ingress data shapes. `Window` controls SDL text
+  input and relative-pointer mode for the eventual generated ingress adapter.
 - `Flight::HostSdlGl` owns an `SDL_GLContext`, configures OpenGL or OpenGL ES attributes before window creation,
   resolves procedure addresses, controls the swap interval, and swaps the window. Its `GlCanvas` and
   `WebGl2Context` share that owner and supply the native types named by `bindings/sdl-gl.json`. The context already
@@ -90,12 +92,18 @@ int main() {
       .height = 720,
       .graphics_api = flight::host_sdl::GraphicsApi::vulkan,
   });
+  flight::host_sdl::InputDispatcher input(window.id(), {
+      .key_down = [](const flight::host_sdl::InputKeyboardData& data) {
+        // Forward synchronously to the generated Flight InputIngressSink adapter.
+      },
+  });
 
   SDL_Event event{};
   bool running = true;
   while (running) {
     while (host.poll_event(event)) {
       if (event.type == SDL_EVENT_QUIT) running = false;
+      input.dispatch(event);
     }
     host.pump_timers();
     // Update Flight, render through render-wgpu or render-gl, then present.
@@ -125,7 +133,8 @@ The native mechanics are now present. Wiring them to generated Flight contracts 
    its `WeakMap` fields.
 3. Implement generated `WgpuHostBackend` and `WgpuRenderSurfaceProvider` with a selected Dawn or wgpu-native adapter.
    `WgpuSurfaceCallbacks` is the stable point where that dependency enters.
-4. Translate SDL events into the generated Flight input and lifecycle types.
+4. Adapt `InputDispatcher`'s normalized records into the generated Flight input types once `InputPointerData` and
+   `InputIngressBackend` clear their current generated dependency refusals.
 5. Transpile the renderer and one scene package, then render a solid shape through the selected backend.
 
 The corresponding compiler work is recorded in [the upstream request](upstream-flight-compiler-request.md). The host
