@@ -42,10 +42,12 @@ set(
   contract
   data_view
   date
+  dom_exception
   equality
   error
   executor
   host
+  image_data
   intl
   iterable
   iterator

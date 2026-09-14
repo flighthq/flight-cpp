@@ -40,6 +40,8 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
   native task callbacks; these admit three more independently compiling SDK headers;
 - shared decoded-PCM `AudioBuffer` storage with live channel views and bounded channel copies, plus its named
   `AudioBufferOptions` type, selected through the runtime profile and exercised by compiler-emitted native code;
+- CPU-backed `ImageData` with exact live `Uint8ClampedArray` reuse, Web IDL dimensions, color-space values, named
+  DOM exceptions, shared identity, and a live compiler-emitted constructor/property fixture;
 - `TextEncoder` scalar UTF-8 and unpaired-surrogate replacement, whose newly admitted SWF helper compiles after
   shared runtime containers gained JavaScript-compatible logical constness;
 - numeric conversion and prefix parsing, safe-integer checks, object keys/values, symbols, URL protocol parsing,
@@ -154,6 +156,15 @@ The runtime profile maps both spaces for `RangeError` and `TypeError` to the sem
 `flight/error.hpp`. Current generated headers no longer fail by trying to construct `std::range_error` from
 `flight::String`; the remaining failures are later optional-unwrapping or missing-symbol emission defects.
 
+The Web-types profile maps both `ImageData` spaces, `ImageDataArray`, and `ImageDataSettings` to the downstream
+CPU-backed RGBA carrier. This removes `ImageData` from every direct refusal and moves bitmap/effects modules to
+their `CanvasRenderingContext2D` provider boundary and image-codec modules to their bitmap/canvas provider boundary.
+The composed SDL direct ambient frontier falls from 124 to 123 modules. The downstream `DOMException` carrier has
+exact message, name, and legacy-code values, but its ambient constructor remains deliberately unbound: the current
+`typeof DOMException !== 'undefined' && error instanceof DOMException` path emits C++ `instanceof` syntax and member
+access on the erased catch value. flight-compiler needs a represented external runtime-type-test operation before
+that global can be selected soundly.
+
 The runtime now also provides `flight::all_settled_tasks(Array<Task<T>>)` and
 `Task<T>::all_settled(std::vector<Task<T>>)`, returning ordered `TaskSettlement<T>` values without rejecting the
 aggregate. The compiler can bind `Promise.allSettled` to the free function after it maps
@@ -253,7 +264,7 @@ The same profile maps `DOMRect` to the host's complete eight-field `ClientRect`,
 canvas dimensions. This removes the name from all eleven selected example roots that referenced it. Four of those
 roots now stop directly at compiler-owned union, captured-reference, intersection, or SDK-dependency boundaries;
 the others retain separate Canvas, listener-option, or HTML-control requirements. In the full SDK sweep, direct
-ambient-binding refusals are now 124 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
+ambient-binding refusals are now 123 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
 at 1,098 modules.
 
 The runtime profile also binds the global `Boolean` value to a callable object with exact represented truthiness.

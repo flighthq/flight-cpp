@@ -71,4 +71,6 @@ _PUBLIC_HEADERS = [
     ("web_types", 45),
     ("boolean", 46),
     ("iterator", 47),
+    ("dom_exception", 48),
+    ("image_data", 49),
 ]

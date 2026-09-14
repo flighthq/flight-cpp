@@ -22,7 +22,7 @@
       "schema": "flight-cpp-external-bindings/1"
     },
     {
-      "digest": "sha256:3d13c7db94644c4afecb07d38cb45949f5161a087f21a544bd3bc67a3ffa89ea",
+      "digest": "sha256:1804a63c5e49c8319ed9bd78e496186b264427534578468b90d2c2ded8fc0faa",
       "identity": "flighthq/flight-cpp/web-types/1",
       "path": "bindings/web-types.json",
       "profile": "web-types",

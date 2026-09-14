@@ -513,6 +513,72 @@ void test_error() {
   check(type_error.message() == flight::String("wrong type") &&
             flight::TypeError::name() == flight::String("TypeError"),
         "TypeError preserves its source-language name and message");
+
+  const flight::DOMException dom_error("bad dimensions", "IndexSizeError");
+  check(dom_error.message == flight::String("bad dimensions") &&
+            dom_error.name == flight::String("IndexSizeError") && dom_error.code == 1.0 &&
+            std::string(dom_error.what()) == "bad dimensions",
+        "DOMException exposes its Web IDL name, message, and legacy code");
+}
+
+void test_image_data() {
+  const flight::ImageData blank(2.0, 3.0);
+  check(blank.width == 2.0 && blank.height == 3.0 && blank.data.size() == 24 &&
+            blank.color_space == flight::String("srgb") &&
+            static_cast<std::uint8_t>(blank.data[0]) == 0,
+        "ImageData allocates transparent RGBA storage and applies the default color space");
+
+  const flight::Uint8ClampedArray pixels{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+  const flight::ImageData sourced(
+      pixels, 2.0, std::nullopt,
+      flight::ImageDataSettings{.color_space = flight::String("display-p3")});
+  check(sourced.data == pixels && sourced.width == 2.0 && sourced.height == 1.0 &&
+            sourced.color_space == flight::String("display-p3"),
+        "ImageData retains its supplied typed array and derives an omitted height");
+  sourced.data[0] = 99.0;
+  check(static_cast<std::uint8_t>(pixels[0]) == 99,
+        "ImageData exposes the supplied typed array as live pixel storage");
+
+  const auto alias = sourced;
+  const flight::ImageData distinct(pixels, 2.0, 1.0);
+  check(alias == sourced && alias.identity() == sourced.identity() && distinct != sourced,
+        "ImageData copies preserve object identity while separate constructions do not");
+
+  bool zero_dimension_failed = false;
+  bool invalid_data_failed = false;
+  bool inconsistent_height_failed = false;
+  bool unsupported_color_space_failed = false;
+  bool unaddressable_storage_failed = false;
+  try {
+    static_cast<void>(flight::ImageData(0.0, 1.0));
+  } catch (const flight::DOMException& error) {
+    zero_dimension_failed = error.name == flight::String("IndexSizeError");
+  }
+  try {
+    static_cast<void>(flight::ImageData(flight::Uint8ClampedArray(3.0), 1.0));
+  } catch (const flight::DOMException& error) {
+    invalid_data_failed = error.name == flight::String("InvalidStateError");
+  }
+  try {
+    static_cast<void>(flight::ImageData(pixels, 1.0, 1.0));
+  } catch (const flight::DOMException& error) {
+    inconsistent_height_failed = error.name == flight::String("IndexSizeError");
+  }
+  try {
+    static_cast<void>(flight::ImageData(
+        1.0, 1.0,
+        flight::ImageDataSettings{.color_space = flight::String("unsupported")}));
+  } catch (const flight::TypeError&) {
+    unsupported_color_space_failed = true;
+  }
+  try {
+    static_cast<void>(flight::ImageData(-1.0, -1.0));
+  } catch (const flight::RangeError&) {
+    unaddressable_storage_failed = true;
+  }
+  check(zero_dimension_failed && invalid_data_failed && inconsistent_height_failed &&
+            unsupported_color_space_failed && unaddressable_storage_failed,
+        "ImageData rejects invalid dimensions, source lengths, enums, and storage sizes");
 }
 
 void test_boolean_conversion() {
@@ -1454,6 +1520,7 @@ int main() {
   test_date();
   test_error();
   test_host();
+  test_image_data();
   test_map();
   test_new_runtime_services();
   test_presence_and_math();

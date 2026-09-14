@@ -94,6 +94,10 @@
 #include <flight/boolean.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 47
 #include <flight/iterator.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 48
+#include <flight/dom_exception.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 49
+#include <flight/image_data.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

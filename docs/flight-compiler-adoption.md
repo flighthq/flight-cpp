@@ -26,6 +26,7 @@ but one of the portable headers that compiled independently.
 | Abort signals | Implemented baseline | `AbortController` and `AbortSignal` share cancellation state, retain the first reason, dispatch listeners once, support listener removal, and throw `AbortError` from the emitted `throw_if_aborted` call. A live compiler/Node differential covers those operations. Cross-call identity for copied `std::function` listeners still depends on the compiler's eventual callable-identity carrier. |
 | Blob | Implemented baseline | `Blob` owns immutable bytes and shared identity, concatenates string, binary-view, buffer, and Blob parts, normalizes MIME types, slices by byte index, and returns tasks from `text` and `array_buffer`. The runtime profile maps its type and constructor spaces plus the standard `BlobPart` and `BlobPropertyBag` names, and a live compiler/Node differential covers those emitted signatures and operations. The added aliases remove their remaining direct refusals from the image and image-codec modules; those modules retain their explicit image-element and decoder-provider requirements, so the dependency-closed header total does not increase at this pin. |
 | Decoded PCM `AudioBuffer` | Implemented baseline | `AudioBuffer` preserves shared object identity, owns distinct live `Float32Array` views per channel, validates Web Audio construction limits, and implements bounded `copyToChannel`/`copyFromChannel`. The runtime profile maps its type, constructor, and named `AudioBufferOptions` space, and a live compiler-emitted fixture constructs, mutates, and reads the carrier through both inferred and named options. This admits `types/AudioResource.ts` and `types/AudioResourceReference.ts`; the first compiles independently and the second exposes a compiler type/value spelling error. The audio and media modules now retain only their explicit `AudioContext`/node provider requirements. Encoded-byte decoding through `AudioContext` remains an explicit host/codec boundary. |
+| `ImageData` and DOM exceptions | Implemented portable value ABI | `ImageData` allocates transparent RGBA storage or retains the exact supplied `Uint8ClampedArray`, derives omitted heights, preserves shared object identity, applies Web IDL unsigned-long conversion, and reports the specified `IndexSizeError`, `InvalidStateError`, `TypeError`, and allocation `RangeError` paths. `DOMException` exposes message, name, and legacy code values. The Web-types profile maps `ImageData`, `ImageDataArray`, `ImageDataSettings`, and both constructor/type spaces; a live compiler fixture compiles and runs both constructors and live pixel access. The ambient `DOMException` value remains unbound because current `typeof`/`instanceof` emission produces invalid C++ rather than calling a runtime type-test contract. |
 | URI and base64 globals | Implemented | `encode_uri_component` and `decode_uri_component` preserve the JavaScript unescaped set, UTF-8 scalar rules, and malformed-input errors. `atob` and `btoa` implement the browser binary-string byte domain and forgiving base64 decoding. Live compiler/Node differentials cover both pairs. Their runtime-profile mappings remove every direct `encodeURIComponent`, `decodeURIComponent`, `atob`, and `btoa` refusal. Protocol/form code now reaches unresolved tuple-element `auto`; audio base64 loading reaches its explicit audio-host bindings. The emitted closure count is unchanged at this pin. |
 | Readable, writable, and async-iterable streams | Implemented baseline | Shared stream carriers preserve identity, enforce one active reader or writer, route writes, close, abort, reads, and cancellation through task-returning native callbacks, and expose an asynchronous `next` operation. A live compiler/Node oracle compiles the generic external bindings and executes compiler-emitted writer operations. The profile admits `types/FileSystem.ts`, `types/Socket.ts`, and `socket/explainSocketSendFailure.ts`; all three new headers compile independently. Full Web Streams queuing, backpressure, piping, and `for await` emission remain future contract work. |
 | JSON | Partial | `JsonValue` preserves null, boolean, number, string, array, and object domains; `Json::parse` and `Json::stringify` round-trip them. Generated ordinary structs still need compiler-provided member reflection, and replacer semantics remain open. |
@@ -62,7 +63,7 @@ but one of the portable headers that compiled independently.
   overall.
 - `npm run sdk:generate:sdl` composes the GL, WebGPU, and SDL application profiles. It emits 1,098 modules; all 17
   headers beyond the SDL/GL inventory compile, for 755 passing and 343 failing headers. Direct external-binding
-  refusals fall from the SDL/GL profile's 242 to 124. Window, document, `HTMLElement`, animation-frame
+  refusals fall from the SDL/GL profile's 242 to 123. Window, document, `HTMLElement`, animation-frame
   cancellation, and the represented input event types advance to their next compiler or dependency boundary. The
   runtime profile also maps the compiler's existing `PromiseLike<T>` task domain to `flight::Task<T>`; `dialog.ts`
   now reaches the compiler-owned async-closure coroutine blocker instead of stopping at that ambient type.
@@ -76,8 +77,8 @@ but one of the portable headers that compiled independently.
   JavaScript callback identity in the returned unsubscribe closure. Object-valued custom event detail also needs the
   compiler to emit reference member access instead of `Ref<T>.member`; the native carrier retains the exact `Ref<T>`.
   `bindings/web-types.json` separately elects 22 standard string-literal domains, the exact
-  `DOMHighResTimeStamp` number alias, and portable `DOMPointInit` and `CanvasRenderingContext2DSettings`
-  dictionaries without selecting a Canvas or WebGPU implementation. Optional dictionary fields retain the
+  `DOMHighResTimeStamp` number alias, portable `DOMPointInit` and `CanvasRenderingContext2DSettings`
+  dictionaries, and CPU-backed `ImageData` values without selecting a Canvas or WebGPU implementation. Optional dictionary fields retain the
   difference between an omitted member and an explicit false or zero. The SDL application
   profile maps `DOMRect` to the complete eight-field logical rectangle already returned by the GL canvas. Together
   these contracts add compiling `CanvasMaterialState` and `CanvasMaterialRenderer` headers and advance the other
@@ -151,6 +152,13 @@ the Map iterator's sticky exhaustion behavior. The compiler-emitted return types
 in the runtime oracle. `tilemap-formats/tiledXmlParse.ts` advances from its ambient iterator refusal to
 `contextual union value type flight::Uint32Array<flight::ArrayBuffer> is not a represented runtime domain`, the
 known concrete-typed-array-as-template compiler defect.
+
+The Web-types profile now maps `ImageData`, `ImageDataArray`, and `ImageDataSettings` to a CPU-backed RGBA carrier.
+Both source constructors compile and run through a live compiler fixture; supplied typed arrays remain the exact
+live storage object, and invalid dimensions or lengths expose named DOM exceptions. The bitmap and effects modules
+advance to their explicit `CanvasRenderingContext2D` boundary, while the image-codec modules retain only their
+bitmap/canvas provider contracts. This removes `ImageData` from every direct refusal and lowers the SDL profile's
+direct ambient-binding frontier from 124 to 123 modules without adding a Canvas 2D implementation.
 
 `flight::all_settled_tasks` now returns an ordered, non-rejecting task of `TaskSettlement<T>` records and preserves
 exact rejection values, including for `void` tasks. Mapping `Promise.allSettled` also requires the compiler to map

@@ -13,10 +13,12 @@
 #include <flight/contract.hpp>
 #include <flight/date.hpp>
 #include <flight/data_view.hpp>
+#include <flight/dom_exception.hpp>
 #include <flight/equality.hpp>
 #include <flight/error.hpp>
 #include <flight/executor.hpp>
 #include <flight/host.hpp>
+#include <flight/image_data.hpp>
 #include <flight/intl.hpp>
 #include <flight/iterable.hpp>
 #include <flight/iterator.hpp>
