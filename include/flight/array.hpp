@@ -14,11 +14,13 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <tuple>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
 #include <flight/equality.hpp>
+#include <flight/iterator.hpp>
 
 namespace flight {
 
@@ -36,6 +38,86 @@ decltype(auto) invoke_array_callback(Function& function, Element&& element, std:
 }
 
 } // namespace detail
+
+// JavaScript Array iterators are shared, live cursors over integer indices. Appends made before
+// exhaustion remain visible, while a cursor that has returned done stays exhausted.
+template <typename Value>
+class ArrayIterator {
+ public:
+  using Advance = std::function<std::optional<Value>(std::size_t&)>;
+
+ private:
+  struct State final {
+    Advance advance;
+    std::size_t index{0};
+    bool finished{false};
+  };
+
+  [[nodiscard]] static std::optional<Value> next_value(const std::shared_ptr<State>& state) {
+    if (!state || state->finished) return std::nullopt;
+    auto value = state->advance(state->index);
+    if (!value) state->finished = true;
+    return value;
+  }
+
+ public:
+  class sentinel final {};
+
+  class iterator final {
+   public:
+    using difference_type = std::ptrdiff_t;
+    using iterator_category = std::input_iterator_tag;
+    using pointer = const Value*;
+    using reference = const Value&;
+    using value_type = Value;
+
+    iterator() = default;
+
+    [[nodiscard]] reference operator*() const noexcept { return *current_; }
+    [[nodiscard]] pointer operator->() const noexcept { return std::addressof(*current_); }
+
+    iterator& operator++() {
+      current_ = next_value(state_);
+      return *this;
+    }
+
+    void operator++(int) { ++*this; }
+
+    [[nodiscard]] friend bool operator==(const iterator& value, sentinel) noexcept {
+      return !value.current_.has_value();
+    }
+
+   private:
+    friend class ArrayIterator;
+
+    explicit iterator(std::shared_ptr<State> state)
+        : state_(std::move(state)), current_(next_value(state_)) {}
+
+    std::shared_ptr<State> state_;
+    std::optional<Value> current_;
+  };
+
+  ArrayIterator() = default;
+
+  explicit ArrayIterator(Advance advance)
+      : state_(std::make_shared<State>(State{
+            .advance = std::move(advance),
+            .index = 0,
+            .finished = false,
+        })) {}
+
+  [[nodiscard]] IteratorResult<Value> next() const {
+    auto value = next_value(state_);
+    if (!value) return {};
+    return IteratorResult<Value>{.value = std::move(value), .done = false};
+  }
+
+  [[nodiscard]] iterator begin() const { return iterator(state_); }
+  [[nodiscard]] sentinel end() const noexcept { return {}; }
+
+ private:
+  std::shared_ptr<State> state_;
+};
 
 template <typename Value>
 class Array {
@@ -107,6 +189,29 @@ class Array {
   void clear() const noexcept { values_->clear(); }
 
   [[nodiscard]] Array clone() const { return Array(values_->begin(), values_->end()); }
+
+  [[nodiscard]] ArrayIterator<std::tuple<double, Value>> entries() const {
+    return ArrayIterator<std::tuple<double, Value>>([values = values_](size_type& index) {
+      if (index >= values->size()) return std::optional<std::tuple<double, Value>>{};
+      const auto current = index++;
+      return std::optional<std::tuple<double, Value>>{
+          std::tuple<double, Value>(static_cast<double>(current), (*values)[current])};
+    });
+  }
+
+  [[nodiscard]] ArrayIterator<double> keys() const {
+    return ArrayIterator<double>([values = values_](size_type& index) {
+      if (index >= values->size()) return std::optional<double>{};
+      return std::optional<double>{static_cast<double>(index++)};
+    });
+  }
+
+  [[nodiscard]] ArrayIterator<Value> values() const {
+    return ArrayIterator<Value>([values = values_](size_type& index) {
+      if (index >= values->size()) return std::optional<Value>{};
+      return std::optional<Value>{(*values)[index++]};
+    });
+  }
 
   template <typename... Arrays>
     requires(std::same_as<std::remove_cvref_t<Arrays>, Array> && ...)

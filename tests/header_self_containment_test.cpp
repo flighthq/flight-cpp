@@ -92,6 +92,8 @@
 #include <flight/web_types.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 46
 #include <flight/boolean.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 47
+#include <flight/iterator.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

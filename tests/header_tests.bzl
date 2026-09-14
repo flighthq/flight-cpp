@@ -70,4 +70,5 @@ _PUBLIC_HEADERS = [
     ("iterable", 44),
     ("web_types", 45),
     ("boolean", 46),
+    ("iterator", 47),
 ]

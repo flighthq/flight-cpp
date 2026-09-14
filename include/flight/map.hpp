@@ -15,14 +15,9 @@
 #include <vector>
 
 #include <flight/equality.hpp>
+#include <flight/iterator.hpp>
 
 namespace flight {
-
-template <typename Value>
-struct IteratorResult final {
-  std::optional<Value> value;
-  bool done{true};
-};
 
 // JavaScript Map iterators are shared, live cursors. Copies retain the same cursor; additions made
 // before exhaustion remain visible, while a cursor that has returned done stays exhausted.

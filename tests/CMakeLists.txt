@@ -48,6 +48,7 @@ set(
   host
   intl
   iterable
+  iterator
   json
   map
   math

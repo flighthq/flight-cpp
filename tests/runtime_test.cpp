@@ -148,6 +148,28 @@ void test_array() {
   const auto removed = spliced.splice(1, 0, 2.0, 3.0);
   check(removed.empty() && spliced.size() == 4 && spliced[1] == 2.0 && spliced[2] == 3.0,
         "array splice inserts forwarded values in source order");
+
+  flight::Array<flight::String> live_values{"first"};
+  auto entries = live_values.entries();
+  auto entries_alias = entries;
+  const auto first_entry = entries.next();
+  live_values.push("second");
+  const auto second_entry = entries_alias.next();
+  const auto exhausted = entries.next();
+  live_values.push("late");
+  const auto still_exhausted = entries_alias.next();
+  check(first_entry.value == std::optional(std::tuple(0.0, flight::String("first"))) &&
+            second_entry.value == std::optional(std::tuple(1.0, flight::String("second"))) &&
+            exhausted.done && still_exhausted.done,
+        "array entry iterator copies share a live cursor that stays exhausted after done");
+
+  auto keys = live_values.keys();
+  auto array_values = live_values.values();
+  const auto first_key = keys.next();
+  const auto first_value = array_values.next();
+  check(first_key.value == std::optional(0.0) &&
+            first_value.value == std::optional(flight::String("first")),
+        "array key and value iterators preserve their source domains");
 }
 
 void test_binary_data() {

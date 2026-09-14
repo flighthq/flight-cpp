@@ -62,6 +62,15 @@ const source = api.parseTypeScriptSource(
    export function mapKeys(values: Map<string, number>): MapIterator<string> {
      return values.keys();
    }
+   export function arrayEntries(values: string[]): ArrayIterator<[number, string]> {
+     return values.entries();
+   }
+   export function arrayValues(values: string[]): ArrayIterator<string> {
+     return values.values();
+   }
+   export function arrayKeys(values: string[]): ArrayIterator<number> {
+     return values.keys();
+   }
    export function iterableTotal(values: Iterable<number>): number {
      let result = 0;
      for (const value of values) result += value;
@@ -100,6 +109,9 @@ for (const expected of [
   'flight::ArrayBufferLike',
   'flight::ArrayBufferView',
   'flight::MapIterator<flight::String>',
+  'flight::ArrayIterator<std::tuple<double, flight::String>>',
+  'flight::ArrayIterator<flight::String>',
+  'flight::ArrayIterator<double>',
   'flight::Iterable<double>',
   'flight::SharedArrayBuffer',
   'flight::WeakSet<flight::Array<double>>',
@@ -135,6 +147,14 @@ int main() {
   flight::Map<flight::String, double> keyed{{"first", 1.0}, {"second", 2.0}};
   const auto map_iterator_advances = flighthq_runtime_test::map_iterator_advances(keyed);
   const auto first_key = flighthq_runtime_test::map_keys(keyed).next();
+  flight::Array<flight::String> strings{"first"};
+  auto array_entries = flighthq_runtime_test::array_entries(strings);
+  auto array_entries_alias = array_entries;
+  const auto first_array_entry = array_entries.next();
+  strings.push("second");
+  const auto second_array_entry = array_entries_alias.next();
+  const auto first_array_value = flighthq_runtime_test::array_values(strings).next();
+  const auto first_array_key = flighthq_runtime_test::array_keys(strings).next();
   const auto iterable_total = flighthq_runtime_test::iterable_total(values);
   flight::Array<double> live_array{1.0};
   flight::Iterable<double> live_array_values(live_array);
@@ -161,6 +181,10 @@ int main() {
                  buffer_bytes == 8.0 && shared_bytes == 8.0 &&
                  map_iterator_advances && !first_key.done &&
                  first_key.value == std::optional<flight::String>("first") &&
+                 first_array_entry.value == std::optional(std::tuple(0.0, flight::String("first"))) &&
+                 second_array_entry.value == std::optional(std::tuple(1.0, flight::String("second"))) &&
+                 first_array_value.value == std::optional<flight::String>("first") &&
+                 first_array_key.value == std::optional(0.0) &&
                  iterable_total == 6.0 && *array_value == 2.0 &&
                  first_entry.first == flight::String("first") &&
                  third_entry.first == flight::String("third") && *set_value == 2.0 &&

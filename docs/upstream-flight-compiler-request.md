@@ -27,8 +27,8 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
 - a common `ArrayBufferLike` carrier for ordinary, shared, and host-owned storage, now selected by the runtime binding
   profile and accepted by typed-array/DataView zero-copy constructors, plus the concrete `SharedArrayBuffer` type and
   constructor mapping;
-- shared live `MapIterator<T>` cursors for `Map.keys`, `Map.values`, and `Map.entries`, including insertion-order,
-  deletion, post-creation insertion, copy identity, and sticky-exhaustion behavior;
+- shared live `MapIterator<T>` and `ArrayIterator<T>` cursors for `keys`, `values`, and `entries`, including
+  insertion-order, deletion, post-creation insertion, copy identity, and sticky-exhaustion behavior;
 - shared `AbortController`/`AbortSignal` state with first-reason retention, listener dispatch/removal, and
   `throw_if_aborted`, covered by a live compiler-versus-Node oracle;
 - immutable shared `Blob` bytes with typed-array construction, slicing, MIME normalization, text decoding, and
@@ -253,12 +253,16 @@ The same profile maps `DOMRect` to the host's complete eight-field `ClientRect`,
 canvas dimensions. This removes the name from all eleven selected example roots that referenced it. Four of those
 roots now stop directly at compiler-owned union, captured-reference, intersection, or SDK-dependency boundaries;
 the others retain separate Canvas, listener-option, or HTML-control requirements. In the full SDK sweep, direct
-ambient-binding refusals are now 125 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
+ambient-binding refusals are now 124 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
 at 1,098 modules.
 
 The runtime profile also binds the global `Boolean` value to a callable object with exact represented truthiness.
 This supports both direct conversion and `filter(Boolean)` without overload erasure. `svgDocument.ts` now reaches
 the existing `Number.parseFloat` intrinsic gap, whose downstream `flight::parse_float` operation is already present.
+
+The runtime profile now maps `ArrayIterator<T>` to shared live cursors over `Array.keys`, `Array.values`, and
+`Array.entries`. `tiledXmlParse.ts` moves immediately to the existing concrete typed-array backing error:
+`flight::Uint32Array<flight::ArrayBuffer>` is emitted as though the concrete alias were a template.
 
 The SDL profile now also supplies `Event`, `CompositionEvent`, `InputEvent`, `Gamepad`, `GamepadButton`,
 `GamepadEvent`, `navigator.getGamepads()`, and `AddEventListenerOptions` with compiler-checked native carriers. SDL's

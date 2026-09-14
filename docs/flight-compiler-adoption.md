@@ -15,7 +15,7 @@ but one of the portable headers that compiled independently.
 
 | Contract | State | Evidence and remaining work |
 | --- | --- | --- |
-| ArrayBuffer, typed arrays, DataView, text encoding, `String.fromCodePoint`, insertion `splice` | Implemented | Native tests cover shared backing, views, byte order, numeric edge cases, UTF-8 replacement, astral scalars, and insertion order. `TextEncoder` handles scalar UTF-8 and unpaired-surrogate replacement through a live compiler/Node differential. `TypedArray::from` applies JavaScript modulo or clamped element conversion after its optional mapper, and `is_array_buffer_view` recognizes typed and data views without treating their backing buffers as views. Map `keys`, `values`, and `entries` expose shared live cursors that retain insertions until exhaustion and preserve the exhausted state. The runtime source differential exercises these behaviors against Node. Arrays, typed arrays, DataView, maps, sets, records, weak maps, and weak sets treat C++ `const` as constness of the shared handle; referent mutation remains available inside compiler-emitted value-capturing lambdas, matching JavaScript object bindings. |
+| ArrayBuffer, typed arrays, DataView, text encoding, `String.fromCodePoint`, insertion `splice` | Implemented | Native tests cover shared backing, views, byte order, numeric edge cases, UTF-8 replacement, astral scalars, and insertion order. `TextEncoder` handles scalar UTF-8 and unpaired-surrogate replacement through a live compiler/Node differential. `TypedArray::from` applies JavaScript modulo or clamped element conversion after its optional mapper, and `is_array_buffer_view` recognizes typed and data views without treating their backing buffers as views. Array and Map `keys`, `values`, and `entries` expose shared live cursors that retain insertions until exhaustion and preserve the exhausted state. The runtime source differential exercises these behaviors against Node. Arrays, typed arrays, DataView, maps, sets, records, weak maps, and weak sets treat C++ `const` as constness of the shared handle; referent mutation remains available inside compiler-emitted value-capturing lambdas, matching JavaScript object bindings. |
 | `ArrayLike<T>` and `ArrayBufferView` carriers | Implemented downstream ABI | `SequenceView<T>` retains source ownership and identity while adapting `Array<T>`, typed arrays, and structurally compatible shared sources without copying. `ArrayBufferView` retains backing storage, byte range, source-view identity, and dynamic view kind. Native aliasing/lifetime tests and a live compiler-emitted binding oracle cover both. |
 | `Iterable<T>` carrier | Implemented downstream ABI | `Iterable<T>` type-erases synchronous traversal while retaining Flight Array, Map, or Set shared storage. Each traversal gets the source collection's iterator semantics; active Array, Map, and Set traversals observe additions before exhaustion. The runtime profile and live compiler fixture cover the generic parameter and all three collection paths. This removes `Iterable[type]` from 14 full-SDK roots and both selected example roots. Ten full-SDK roots advance directly to existing compiler emission failures, while the example snapshot reaches the compiler-owned `Array.from` member mapping. The dependency-closed totals do not change at this pin. |
 | `ArrayBufferLike` common backing | Implemented downstream ABI | `ArrayBufferLike` carries ordinary, shared, or host-owned storage with stable identity, lifetime, byte length, mutability, and concurrency policy. Its property view supports emitted `byte_length` access while retaining the existing callable spelling. Typed arrays and `DataView` construct zero-copy views over it; native tests cover shared and external lifetimes plus read-only rejection. The runtime profile binds both `ArrayBufferLike` and `SharedArrayBuffer`, and its live compiler fixture constructs and reads the shared carrier. Full atomic JavaScript `SharedArrayBuffer` operations remain outside this carrier contract. |
@@ -62,7 +62,7 @@ but one of the portable headers that compiled independently.
   overall.
 - `npm run sdk:generate:sdl` composes the GL, WebGPU, and SDL application profiles. It emits 1,098 modules; all 17
   headers beyond the SDL/GL inventory compile, for 755 passing and 343 failing headers. Direct external-binding
-  refusals fall from the SDL/GL profile's 242 to 125. Window, document, `HTMLElement`, animation-frame
+  refusals fall from the SDL/GL profile's 242 to 124. Window, document, `HTMLElement`, animation-frame
   cancellation, and the represented input event types advance to their next compiler or dependency boundary. The
   runtime profile also maps the compiler's existing `PromiseLike<T>` task domain to `flight::Task<T>`; `dialog.ts`
   now reaches the compiler-owned async-closure coroutine blocker instead of stopping at that ambient type.
@@ -146,6 +146,12 @@ The global `Boolean` value maps to the callable `flight::to_boolean` object. The
 `Boolean(value)` and `array.filter(Boolean)`. The SDL sweep's `scene2d-formats/svgDocument.ts` consequently advances
 to the compiler-owned `ambient value Number member parseFloat has no C++ binding` boundary.
 
+`ArrayIterator<T>` now provides shared live cursors for `Array.keys`, `Array.values`, and `Array.entries`, matching
+the Map iterator's sticky exhaustion behavior. The compiler-emitted return types and native cursor behavior compile
+in the runtime oracle. `tilemap-formats/tiledXmlParse.ts` advances from its ambient iterator refusal to
+`contextual union value type flight::Uint32Array<flight::ArrayBuffer> is not a represented runtime domain`, the
+known concrete-typed-array-as-template compiler defect.
+
 `flight::all_settled_tasks` now returns an ordered, non-rejecting task of `TaskSettlement<T>` records and preserves
 exact rejection values, including for `void` tasks. Mapping `Promise.allSettled` also requires the compiler to map
 the source `PromiseSettledResult<T>` discriminated union onto this carrier and lower `status`, `value`, and `reason`
@@ -155,7 +161,7 @@ unchanged.
 
 The versioned `flighthq/flight-cpp/runtime-carriers/1` profile supplies the implemented `AbortController`,
 `AbortSignal`, `ArrayBufferLike`, `SharedArrayBuffer`, `ArrayLike<T>`, `ArrayBufferView`, `Iterable<T>`, `Blob`, `BlobPart`,
-`BlobPropertyBag`, `MapIterator`,
+`BlobPropertyBag`, `MapIterator`, `ArrayIterator`,
 `WeakSet`, `atob`, `btoa`,
 `encodeURIComponent`, `decodeURIComponent`, `ReadableStream<T>`, `WritableStream<T>`, `AsyncIterable<T>`,
 `TextEncoder`, `AudioBuffer`, `AudioBufferOptions`, `Boolean`, bare `parseFloat`, and bare `isFinite`

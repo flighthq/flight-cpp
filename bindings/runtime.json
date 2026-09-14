@@ -185,6 +185,16 @@
       "targetName": "flight::MapIterator"
     },
     {
+      "headers": [
+        "flight/array.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "ArrayIterator",
+      "space": "type",
+      "targetName": "flight::ArrayIterator"
+    },
+    {
       "construction": {
         "kind": "constructor",
         "targetName": "flight::Blob"
