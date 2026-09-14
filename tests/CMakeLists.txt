@@ -46,6 +46,7 @@ set(
   executor
   host
   intl
+  iterable
   json
   map
   math

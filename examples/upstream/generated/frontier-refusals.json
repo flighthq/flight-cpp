@@ -497,7 +497,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/snapshot/src/app.ts",
       "package": "@flighthq/example-snapshot",
-      "reason": "cpp emission failed for @flighthq/example-snapshot/examples/packages/snapshot/src/app.ts: runtime external symbol binding plan is incomplete (missing: Iterable[type])",
+      "reason": "cpp emission failed for @flighthq/example-snapshot/examples/packages/snapshot/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -581,7 +581,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/spritesheet/src/app.ts",
       "package": "@flighthq/example-spritesheet",
-      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMPointInit[type], Iterable[type])",
+      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMPointInit[type])",
       "stage": "emission"
     },
     {

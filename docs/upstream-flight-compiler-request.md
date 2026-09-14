@@ -125,6 +125,15 @@ Length-only `Array.from({ length }, mapper)` still requires dedicated compiler l
 generic structured cloning, and `Promise.allSettled` results still need represented compiler contracts; the runtime
 does not provide a permissive erasure for them.
 
+The runtime profile now binds `Iterable<T>` to an owner-preserving `flight::Iterable<T>` carrier. It removes this
+ambient type from 14 full-SDK roots and from the snapshot and spritesheet example roots. Ten of the full-SDK roots
+advance immediately to named compiler failures: anonymous-object evidence, target-name candidate identity,
+source-union evidence, `typeOf` lowering, optional construction, captured reference representation, structural-union
+representation, or optional-variant construction. In the selected examples, spritesheet advances to its Canvas
+types and snapshot reaches `ambient value Array member from has no C++ binding`. `Array[value]` is already reserved
+by the compiler runtime plan, so an external member mapping for `from` is rejected as a duplicate; the compiler must
+elect the existing `flight::array_from` helper in that intrinsic plan.
+
 The latest compiler still records direct refusals for all seven member families above. Newly emitted generic typed
 arrays also expose a distinct representation issue: TypeScript's current library models backing storage as
 `Uint8Array<ArrayBufferLike>` and peers, but C++ emission applies the concrete aliases as templates. The runtime must
@@ -152,8 +161,8 @@ SDL/GL lane: each `render.ts` selector and chosen `render.webgl.ts` implementati
 own `examples/upstream/generated/include/flight/examples` tree and references the single canonical SDK tree rather
 than copying SDK headers per example.
 
-At the current pins, dependency closure emits 0 of those 100 modules. The linked ledger contains 44 dependency and
-56 emission refusal entries. Forty example modules are held by the refused `@flighthq/sdk` barrel and
+At the current pins, dependency closure emits 0 of those 100 modules. The linked ledger contains 45 dependency and
+55 emission refusal entries. Forty example modules are held by the refused `@flighthq/sdk` barrel and
 20 renderer modules are held by the refused `@flighthq/host-web/contract` path through `webGraphicsHost`. The exact
 per-module evidence is committed in `examples/upstream/generated/refusals.json`.
 
@@ -161,9 +170,10 @@ The separate frontier ledger deliberately compiles each selected example without
 28 missing package-evaluation entries are boundary markers rather than claims that the full graph omitted those
 packages. It records 33 dependency and 39 direct emission boundaries, led by contextual optional construction,
 captured referent mutation, contextual typing for empty arrays, and incomplete HTML element profiles. The SDL
-application profile resolves every direct keyboard, pointer, wheel, DOM attachment, window, and
-animation-frame ambient in the chosen lane. Only the sound example still reports `AudioContext[value]`; that belongs
-with an eventual SDL audio adapter rather than the GL host.
+application profile resolves every direct keyboard, pointer, wheel, gamepad-button, rectangle, DOM attachment,
+window, animation-frame, and generic iterable ambient in the chosen lane. Remaining direct names describe Canvas
+2D, richer HTML controls, listener options, media, and the sound example's `AudioContext`; each stays explicit until
+its compiler or host contract exists.
 
 The remaining integration request is a first-class source/package remap in the programmatic graph API. Flight uses
 build-time renderer aliases and its examples import Web host providers. `flight-cpp` can name selected native
@@ -225,7 +235,7 @@ The same profile maps `DOMRect` to the host's complete eight-field `ClientRect`,
 canvas dimensions. This removes the name from all eleven selected example roots that referenced it. Four of those
 roots now stop directly at compiler-owned union, captured-reference, intersection, or SDK-dependency boundaries;
 the others retain separate Canvas, listener-option, or HTML-control requirements. In the full SDK sweep, direct
-ambient-binding refusals are now 150 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
+ambient-binding refusals are now 140 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
 at 1,098 modules.
 
 The SDL profile now also supplies `Event`, `CompositionEvent`, `InputEvent`, `Gamepad`, `GamepadButton`,

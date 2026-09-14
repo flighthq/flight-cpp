@@ -15,6 +15,16 @@
     },
     {
       "headers": [
+        "flight/iterable.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "Iterable",
+      "space": "type",
+      "targetName": "flight::Iterable"
+    },
+    {
+      "headers": [
         "flight/abort.hpp"
       ],
       "nullability": "non-null",

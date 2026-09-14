@@ -13,6 +13,7 @@
 #include <vector>
 
 #include <flight/equality.hpp>
+#include <flight/map.hpp>
 
 namespace flight {
 
@@ -144,7 +145,26 @@ class Set {
 
   [[nodiscard]] size_type size() const noexcept { return storage_->records.size(); }
 
+  [[nodiscard]] MapIterator<Value> keys() const { return values(); }
+
+  [[nodiscard]] MapIterator<Value> values() const {
+    return MapIterator<Value>([storage = storage_](std::optional<std::uint64_t>& cursor) {
+      const auto record = next_record(*storage, cursor);
+      if (record == storage->records.cend()) return std::optional<Value>{};
+      cursor = record->insertion_identity;
+      return std::optional<Value>{record->value};
+    });
+  }
+
  private:
+  [[nodiscard]] static auto next_record(
+      const Storage& storage,
+      const std::optional<std::uint64_t>& cursor) {
+    return std::find_if(storage.records.cbegin(), storage.records.cend(), [&](const Record& record) {
+      return !cursor || record.insertion_identity > *cursor;
+    });
+  }
+
   [[nodiscard]] auto find(const Value& value) const {
     return std::find_if(storage_->records.cbegin(), storage_->records.cend(), [&](const Record& record) {
       return equal_(record.value, value);

@@ -17,6 +17,7 @@
 #include <flight/executor.hpp>
 #include <flight/host.hpp>
 #include <flight/intl.hpp>
+#include <flight/iterable.hpp>
 #include <flight/json.hpp>
 #include <flight/map.hpp>
 #include <flight/math.hpp>

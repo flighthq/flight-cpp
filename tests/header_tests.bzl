@@ -67,4 +67,5 @@ _PUBLIC_HEADERS = [
     ("stream", 41),
     ("text_encoder", 42),
     ("audio_buffer", 43),
+    ("iterable", 44),
 ]

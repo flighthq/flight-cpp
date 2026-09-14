@@ -62,6 +62,11 @@ const source = api.parseTypeScriptSource(
    export function mapKeys(values: Map<string, number>): MapIterator<string> {
      return values.keys();
    }
+   export function iterableTotal(values: Iterable<number>): number {
+     let result = 0;
+     for (const value of values) result += value;
+     return result;
+   }
    export function weakArray(values: number[]): boolean {
      const seen = new WeakSet<readonly number[]>();
      seen.add(values);
@@ -95,6 +100,7 @@ for (const expected of [
   'flight::ArrayBufferLike',
   'flight::ArrayBufferView',
   'flight::MapIterator<flight::String>',
+  'flight::Iterable<double>',
   'flight::SharedArrayBuffer',
   'flight::WeakSet<flight::Array<double>>',
   'flight::parse_float',
@@ -129,6 +135,25 @@ int main() {
   flight::Map<flight::String, double> keyed{{"first", 1.0}, {"second", 2.0}};
   const auto map_iterator_advances = flighthq_runtime_test::map_iterator_advances(keyed);
   const auto first_key = flighthq_runtime_test::map_keys(keyed).next();
+  const auto iterable_total = flighthq_runtime_test::iterable_total(values);
+  flight::Array<double> live_array{1.0};
+  flight::Iterable<double> live_array_values(live_array);
+  auto array_value = live_array_values.begin();
+  live_array.push(2.0);
+  ++array_value;
+  flight::Iterable<std::pair<flight::String, double>> live_entries(keyed);
+  auto entry = live_entries.begin();
+  const auto first_entry = *entry;
+  keyed.set("third", 3.0);
+  ++entry;
+  ++entry;
+  const auto third_entry = *entry;
+  flight::Set<double> live_set{1.0, 9.0};
+  flight::Iterable<double> live_values(live_set);
+  auto set_value = live_values.begin();
+  live_set.erase(9.0);
+  live_set.add(2.0);
+  ++set_value;
   const auto weak_array = flighthq_runtime_test::weak_array(values);
   const auto parsed = flighthq_runtime_test::parse_prefix(flight::String(" -12.5tail"));
   const auto finite = flighthq_runtime_test::finite(parsed);
@@ -136,6 +161,9 @@ int main() {
                  buffer_bytes == 8.0 && shared_bytes == 8.0 &&
                  map_iterator_advances && !first_key.done &&
                  first_key.value == std::optional<flight::String>("first") &&
+                 iterable_total == 6.0 && *array_value == 2.0 &&
+                 first_entry.first == flight::String("first") &&
+                 third_entry.first == flight::String("third") && *set_value == 2.0 &&
                  weak_array && parsed == -12.5 && finite
              ? 0
              : 1;
