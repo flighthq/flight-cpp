@@ -115,6 +115,14 @@ struct WebGlContextAttributes final {
   bool stencil{false};
 };
 
+// Native carrier for the only WebGL extension object retained by Flight's shared GL runtime.
+// The enum values are fixed by EXT_texture_filter_anisotropic and are the same for its desktop
+// ARB alias. Availability remains a property of a live context and is queried below.
+struct GlAnisotropyExtension final {
+  static constexpr double texture_max_anisotropy_ext = 0x84FE;
+  static constexpr double max_texture_max_anisotropy_ext = 0x84FF;
+};
+
 class FLIGHT_HOST_SDL_GL_API GlImageSource final {
  public:
   using weak_type = std::weak_ptr<detail::GlImageSourceState>;
@@ -167,6 +175,10 @@ struct GlImageSourceWeakPolicy final {
 // context, object identities, and presentation boundary.
 class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
  public:
+  static constexpr std::uint32_t no_error = 0;
+  static constexpr std::uint32_t scissor_test = 0x0C11;
+  static constexpr std::uint32_t color_buffer_bit = 0x00004000;
+
   WebGl2Context() noexcept = default;
 
   [[nodiscard]] explicit operator bool() const noexcept { return state_ != nullptr; }
@@ -177,6 +189,16 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   [[nodiscard]] int drawing_buffer_width() const;
   [[nodiscard]] int drawing_buffer_height() const;
   [[nodiscard]] SDL_FunctionPointer function_address(std::string_view name) const;
+  [[nodiscard]] bool supports_extension(std::string_view name) const;
+  [[nodiscard]] std::optional<GlAnisotropyExtension> anisotropy_extension() const;
+
+  void clear(std::uint32_t mask) const;
+  void clear_color(float red, float green, float blue, float alpha) const;
+  void disable(std::uint32_t capability) const;
+  void enable(std::uint32_t capability) const;
+  [[nodiscard]] std::uint32_t get_error() const;
+  void scissor(int x, int y, int width, int height) const;
+  void viewport(int x, int y, int width, int height) const;
 
   void make_current() const;
   void present() const;

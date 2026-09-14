@@ -43,6 +43,12 @@ void destroy_surface(
 } // namespace
 
 int main() {
+  const flight::host_sdl::GlAnisotropyExtension anisotropy;
+  expect(anisotropy.texture_max_anisotropy_ext == 0x84FE,
+         "GL anisotropy texture parameter changed");
+  expect(anisotropy.max_texture_max_anisotropy_ext == 0x84FF,
+         "GL anisotropy maximum query changed");
+
   auto pixels = flight::Uint8ClampedArray{255, 0, 0, 255, 0, 255, 0, 255};
   auto image = flight::host_sdl::GlImageSource::rgba8(2, 1, std::move(pixels));
   const auto weak_image = image.weaken();

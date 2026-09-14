@@ -64,9 +64,13 @@ const source = api.parseTypeScriptSource(
      texture: WebGLTexture;
      uniformLocation: WebGLUniformLocation;
      vertexArray: WebGLVertexArrayObject;
+     anisotropy: EXT_texture_filter_anisotropic;
      attributes: WebGLContextAttributes;
      preference: WebGLPowerPreference;
      imageCache: WeakMap<CanvasImageSource, WebGLTexture>;
+   }
+   export function anisotropyEnums(extension: EXT_texture_filter_anisotropic): number {
+     return extension.TEXTURE_MAX_ANISOTROPY_EXT + extension.MAX_TEXTURE_MAX_ANISOTROPY_EXT;
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -86,6 +90,9 @@ for (const expected of [
   'flight::host_sdl::GlCanvas canvas;',
   'flight::host_sdl::WebGl2Context context;',
   'flight::host_sdl::WebGlProgram program;',
+  'flight::host_sdl::GlAnisotropyExtension anisotropy;',
+  'extension.texture_max_anisotropy_ext',
+  'extension.max_texture_max_anisotropy_ext',
   'flight::host_sdl::WebGlContextAttributes attributes;',
   'flight::host_sdl::GlImageSourceWeakPolicy',
 ]) {

@@ -13,6 +13,7 @@
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLTexture", "space": "type", "targetName": "flight::host_sdl::WebGlTexture" },
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLUniformLocation", "space": "type", "targetName": "flight::host_sdl::WebGlUniformLocation" },
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLVertexArrayObject", "space": "type", "targetName": "flight::host_sdl::WebGlVertexArrayObject" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "EXT_texture_filter_anisotropic", "space": "type", "targetName": "flight::host_sdl::GlAnisotropyExtension" },
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "WebGLContextAttributes", "space": "type", "targetName": "flight::host_sdl::WebGlContextAttributes" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "WebGLPowerPreference", "space": "type", "targetName": "flight::String" },
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GLenum", "space": "type", "targetName": "double" },

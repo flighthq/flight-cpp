@@ -2,10 +2,14 @@
 
 #include <flight/host_sdl/gl.hpp>
 
+#include <SDL3/SDL_opengles2.h>
+
 #include <cmath>
 #include <functional>
 #include <limits>
+#include <map>
 #include <stdexcept>
+#include <string>
 #include <utility>
 
 namespace flight::host_sdl::detail {
@@ -15,6 +19,7 @@ struct GlSurfaceState final {
 
   Window window;
   GlContext context;
+  std::map<std::string, SDL_FunctionPointer, std::less<>> functions;
 };
 
 struct GlImageSourceState final {
@@ -36,6 +41,16 @@ WebGlObjectState::~WebGlObjectState() noexcept = default;
 } // namespace flight::host_sdl::detail
 
 namespace flight::host_sdl {
+
+namespace {
+
+template <typename Function>
+Function gl_function(const WebGl2Context& context, std::string_view name) {
+  context.make_current();
+  return reinterpret_cast<Function>(context.function_address(name));
+}
+
+} // namespace
 
 GlImageSource GlImageSource::rgba8(
     std::size_t width,
@@ -76,7 +91,55 @@ int WebGl2Context::drawing_buffer_width() const { return require_state().window.
 int WebGl2Context::drawing_buffer_height() const { return require_state().window.pixel_size().height; }
 
 SDL_FunctionPointer WebGl2Context::function_address(std::string_view name) const {
-  return require_state().context.function_address(name);
+  auto& state = require_state();
+  const auto existing = state.functions.find(name);
+  if (existing != state.functions.end()) return existing->second;
+  const auto function = state.context.function_address(name);
+  state.functions.emplace(std::string(name), function);
+  return function;
+}
+
+bool WebGl2Context::supports_extension(std::string_view name) const {
+  auto& state = require_state();
+  state.context.make_current(state.window);
+  const std::string terminated(name);
+  return SDL_GL_ExtensionSupported(terminated.c_str());
+}
+
+std::optional<GlAnisotropyExtension> WebGl2Context::anisotropy_extension() const {
+  if (!supports_extension("GL_EXT_texture_filter_anisotropic") &&
+      !supports_extension("GL_ARB_texture_filter_anisotropic")) {
+    return std::nullopt;
+  }
+  return GlAnisotropyExtension{};
+}
+
+void WebGl2Context::clear(std::uint32_t mask) const {
+  gl_function<PFNGLCLEARPROC>(*this, "glClear")(mask);
+}
+
+void WebGl2Context::clear_color(float red, float green, float blue, float alpha) const {
+  gl_function<PFNGLCLEARCOLORPROC>(*this, "glClearColor")(red, green, blue, alpha);
+}
+
+void WebGl2Context::disable(std::uint32_t capability) const {
+  gl_function<PFNGLDISABLEPROC>(*this, "glDisable")(capability);
+}
+
+void WebGl2Context::enable(std::uint32_t capability) const {
+  gl_function<PFNGLENABLEPROC>(*this, "glEnable")(capability);
+}
+
+std::uint32_t WebGl2Context::get_error() const {
+  return gl_function<PFNGLGETERRORPROC>(*this, "glGetError")();
+}
+
+void WebGl2Context::scissor(int x, int y, int width, int height) const {
+  gl_function<PFNGLSCISSORPROC>(*this, "glScissor")(x, y, width, height);
+}
+
+void WebGl2Context::viewport(int x, int y, int width, int height) const {
+  gl_function<PFNGLVIEWPORTPROC>(*this, "glViewport")(x, y, width, height);
 }
 
 void WebGl2Context::make_current() const {

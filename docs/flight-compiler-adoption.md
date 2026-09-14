@@ -95,7 +95,9 @@ loop exposes the same timer pump. Log now reaches the compiler-owned ordered-`Re
 throttle reaches the dependent-callable-pack refusal; neither remains blocked on its headless ambient names. The
 headless values do not change the aggregate count independently at this pin. The
 `flighthq/flight-cpp/sdl-gl/1` profile supplies the concrete SDL surface, WebGL2 context, GL handle, image source, and
-weak-cache policy types. In composition with the current runtime profile it admits 29 additional modules. The Flight
-`GlContext` module then reaches a compiler fail-closed check because inherited `viewport` is emitted as unresolved
-`auto`; fixing that method typing is the next boundary before `render-gl` can call the native adapter. Maintained
+weak-cache policy types, as well as the `EXT_texture_filter_anisotropic` carrier. In composition with the current
+runtime profile it admits 29 additional modules. The Flight `GlContext` module then reaches a compiler fail-closed
+check because inherited `viewport` is emitted as unresolved `auto`; fixing that method typing is the next boundary
+before `render-gl` can call the native adapter. `GlContextRuntime` has advanced past its extension binding and now
+stops at the compiler's closed-value proof for a `WeakMap` field. Maintained
 profiles for Node/tooling, browser/media, SDL/Vulkan, and SDL/WebGPU are still required.

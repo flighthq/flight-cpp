@@ -4,7 +4,6 @@
 #include <flight/host_sdl/webgl.hpp>
 
 #include <SDL3/SDL_keycode.h>
-#include <SDL3/SDL_opengles2.h>
 
 #include <algorithm>
 #include <array>
@@ -16,44 +15,17 @@
 #include <stdexcept>
 #include <string_view>
 #include <thread>
-#include <type_traits>
 
 namespace {
 
 struct Color {
-  GLfloat red;
-  GLfloat green;
-  GLfloat blue;
-};
-
-template <typename Function>
-Function load_gl_function(const flight::host_sdl::WebGl2Context& context, std::string_view name) {
-  static_assert(std::is_pointer_v<Function>);
-  return reinterpret_cast<Function>(context.function_address(name));
-}
-
-class GlFunctions final {
- public:
-  explicit GlFunctions(const flight::host_sdl::WebGl2Context& context)
-      : clear(load_gl_function<PFNGLCLEARPROC>(context, "glClear")),
-        clear_color(load_gl_function<PFNGLCLEARCOLORPROC>(context, "glClearColor")),
-        disable(load_gl_function<PFNGLDISABLEPROC>(context, "glDisable")),
-        enable(load_gl_function<PFNGLENABLEPROC>(context, "glEnable")),
-        get_error(load_gl_function<PFNGLGETERRORPROC>(context, "glGetError")),
-        scissor(load_gl_function<PFNGLSCISSORPROC>(context, "glScissor")),
-        viewport(load_gl_function<PFNGLVIEWPORTPROC>(context, "glViewport")) {}
-
-  PFNGLCLEARPROC clear;
-  PFNGLCLEARCOLORPROC clear_color;
-  PFNGLDISABLEPROC disable;
-  PFNGLENABLEPROC enable;
-  PFNGLGETERRORPROC get_error;
-  PFNGLSCISSORPROC scissor;
-  PFNGLVIEWPORTPROC viewport;
+  float red;
+  float green;
+  float blue;
 };
 
 void fill_rectangle(
-    const GlFunctions& gl,
+    const flight::host_sdl::WebGl2Context& gl,
     flight::host_sdl::WindowSize viewport,
     int x,
     int y,
@@ -67,11 +39,11 @@ void fill_rectangle(
   if (right <= left || top <= bottom) return;
   gl.scissor(left, bottom, right - left, top - bottom);
   gl.clear_color(color.red, color.green, color.blue, 1.0F);
-  gl.clear(GL_COLOR_BUFFER_BIT);
+  gl.clear(flight::host_sdl::WebGl2Context::color_buffer_bit);
 }
 
 void fill_circle(
-    const GlFunctions& gl,
+    const flight::host_sdl::WebGl2Context& gl,
     flight::host_sdl::WindowSize viewport,
     int center_x,
     int center_y,
@@ -93,7 +65,7 @@ void fill_circle(
 }
 
 void draw_frame(
-    const GlFunctions& gl,
+    const flight::host_sdl::WebGl2Context& gl,
     flight::host_sdl::WindowSize size,
     double progress) {
   constexpr Color background{0.035F, 0.047F, 0.075F};
@@ -117,10 +89,10 @@ void draw_frame(
   }};
 
   gl.viewport(0, 0, size.width, size.height);
-  gl.disable(GL_SCISSOR_TEST);
+  gl.disable(flight::host_sdl::WebGl2Context::scissor_test);
   gl.clear_color(background.red, background.green, background.blue, 1.0F);
-  gl.clear(GL_COLOR_BUFFER_BIT);
-  gl.enable(GL_SCISSOR_TEST);
+  gl.clear(flight::host_sdl::WebGl2Context::color_buffer_bit);
+  gl.enable(flight::host_sdl::WebGl2Context::scissor_test);
 
   const auto values = flighthq_examples_tween::sample_tween_curves(progress);
   if (values.size() != colors.size()) throw std::runtime_error("unexpected tween curve count");
@@ -143,8 +115,10 @@ void draw_frame(
     const int center_x = track_left + static_cast<int>(std::lround(value * static_cast<double>(track_width)));
     fill_circle(gl, size, center_x, center_y, radius, colors[index]);
   }
-  gl.disable(GL_SCISSOR_TEST);
-  if (gl.get_error() != GL_NO_ERROR) throw std::runtime_error("OpenGL rejected the tween frame");
+  gl.disable(flight::host_sdl::WebGl2Context::scissor_test);
+  if (gl.get_error() != flight::host_sdl::WebGl2Context::no_error) {
+    throw std::runtime_error("OpenGL rejected the tween frame");
+  }
 }
 
 int run(bool smoke) {
@@ -155,7 +129,6 @@ int run(bool smoke) {
       960, 720, 1.0, flight::String("Flight tween - SDL + OpenGL ES"), smoke);
   auto context = canvas.get_context();
   context.make_current();
-  const GlFunctions gl(context);
 
   const std::uint64_t started = flight::host_sdl::Host::ticks_nanoseconds();
   std::size_t frames = 0;
@@ -173,7 +146,7 @@ int run(bool smoke) {
     const double seconds = static_cast<double>(elapsed) / 1'000'000'000.0;
     const double cycle = std::fmod(seconds / 2.0, 2.0);
     const double progress = cycle <= 1.0 ? cycle : 2.0 - cycle;
-    draw_frame(gl, canvas.pixel_size(), progress);
+    draw_frame(context, canvas.pixel_size(), progress);
     context.present();
 
     ++frames;
