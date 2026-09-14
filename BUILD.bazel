@@ -177,6 +177,18 @@ cc_library(
 )
 
 cc_library(
+    name = "host_sdl_sdk_device",
+    srcs = ["src/host_sdl/sdk_device.cpp"],
+    hdrs = ["include/flight/host_sdl/sdk_device.hpp"],
+    strip_include_prefix = "include",
+    tags = ["manual"],
+    deps = [
+        ":host_sdl",
+        ":sdk_preview",
+    ],
+)
+
+cc_library(
     name = "host_sdl_sdk_platform",
     srcs = ["src/host_sdl/sdk_platform.cpp"],
     hdrs = ["include/flight/host_sdl/sdk_platform.hpp"],

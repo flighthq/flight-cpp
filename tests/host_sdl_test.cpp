@@ -6,6 +6,7 @@
 #include <flight/host_sdl/sdk_audio.hpp>
 #include <flight/host_sdl/sdk_clipboard.hpp>
 #include <flight/host_sdl/sdk_cursor.hpp>
+#include <flight/host_sdl/sdk_device.hpp>
 #include <flight/host_sdl/sdk_platform.hpp>
 #include <flight/host_sdl/sdk_window.hpp>
 #include <flight/host_sdl/web_platform.hpp>
@@ -18,6 +19,7 @@
 #include <flight/types/application_window_target_backend.hpp>
 #include <flight/types/clipboard.hpp>
 #include <flight/types/cursor.hpp>
+#include <flight/types/device.hpp>
 #include <flight/types/fullscreen_backend.hpp>
 #include <flight/types/input_target_backend.hpp>
 #include <flight/types/platform.hpp>
@@ -487,6 +489,50 @@ int main() {
   expect(window.pixel_size().width > 0 && window.pixel_size().height > 0, "pixel size is empty");
   window.set_title("Flight host test renamed");
 
+  flight::host_sdl::SdkDeviceBackend sdk_device_snapshot(window);
+  auto device_backend = sdk_device_snapshot.backend();
+  auto device_capabilities = flight::make_ref<flight::types::DeviceCapabilities>();
+  expect(
+      device_backend.get_capabilities(device_capabilities) == device_capabilities,
+      "SDL SDK device backend replaced its caller-owned capability output");
+  expect(!device_capabilities->has_stylus, "SDL SDK device claimed an unenumerated stylus");
+
+  auto display_metrics = flight::make_ref<flight::types::DeviceDisplayMetrics>();
+  expect(
+      device_backend.get_display_metrics(display_metrics) == display_metrics,
+      "SDL SDK device backend replaced its caller-owned display output");
+  expect(
+      display_metrics->logical_width > 0.0 && display_metrics->logical_height > 0.0 &&
+          display_metrics->physical_width > 0.0 && display_metrics->physical_height > 0.0 &&
+          display_metrics->pixel_ratio > 0.0 && display_metrics->density_dpi == -1.0,
+      "SDL SDK device did not report its display dimensions or DPI sentinel");
+
+  auto device_info = flight::make_ref<flight::types::DeviceInfo>();
+  expect(
+      device_backend.get_info(device_info) == device_info,
+      "SDL SDK device backend replaced its caller-owned info output");
+  expect(
+      (device_info->cpu_cores > 0.0 || device_info->cpu_cores == -1.0) &&
+          (device_info->total_memory > 0.0 || device_info->total_memory == -1.0) &&
+          device_info->available_memory == -1.0 && device_info->font_scale == -1.0 &&
+          device_info->supported_abis.empty(),
+      "SDL SDK device lost native system facts or unknown-value sentinels");
+  expect(
+      device_info->form_factor == flight::types::device_form_factor_desktop ||
+          device_info->form_factor == flight::types::device_form_factor_unknown,
+      "SDL SDK device returned a form factor outside its native mapping");
+  expect(device_backend.get_id().empty(), "SDL SDK device manufactured a durable install id");
+
+  auto safe_area = flight::make_ref<flight::types::SafeAreaInsets>();
+  expect(
+      device_backend.get_safe_area_insets(safe_area) == safe_area && safe_area->top >= 0.0 &&
+          safe_area->right >= 0.0 && safe_area->bottom >= 0.0 && safe_area->left >= 0.0,
+      "SDL SDK device returned invalid safe-area insets");
+  expect(
+      !device_backend.get_capabilities(nullptr) && !device_backend.get_display_metrics(nullptr) &&
+          !device_backend.get_info(nullptr) && !device_backend.get_safe_area_insets(nullptr),
+      "SDL SDK device manufactured output for a null caller-owned record");
+
   flight::host_sdl::SdkWindowBackend sdk_window(window);
   const auto sdk_window_copy = sdk_window;
   auto visibility_backend = sdk_window.visibility_backend();
@@ -592,18 +638,28 @@ int main() {
       "SDL pointer-lock exit did not return the generated success outcome");
 
   flight::types::ApplicationVisibilityBackend expired_visibility;
+  flight::types::DeviceBackend expired_device;
   flight::types::FullscreenBackend expired_fullscreen;
   flight::Ref<flight::types::FullscreenTargetHandle> expired_target;
   {
     flight::host_sdl::WindowOptions transient_options = options;
     transient_options.title = "Flight transient SDK target";
     flight::host_sdl::Window transient_window(transient_options);
+    flight::host_sdl::SdkDeviceBackend transient_sdk_device(transient_window);
     flight::host_sdl::SdkWindowBackend transient_sdk_window(transient_window);
+    expired_device = transient_sdk_device.backend();
     expired_visibility = transient_sdk_window.visibility_backend();
     expired_fullscreen = transient_sdk_window.fullscreen_backend();
     expired_target = transient_sdk_window.fullscreen_target();
   }
   expect(!expired_visibility.is_visible(), "destroyed SDL window remained visible to Flight");
+  auto expired_metrics = flight::make_ref<flight::types::DeviceDisplayMetrics>();
+  expired_device.get_display_metrics(expired_metrics);
+  expect(
+      expired_metrics->logical_width == -1.0 && expired_metrics->logical_height == -1.0 &&
+          expired_metrics->physical_width == -1.0 && expired_metrics->physical_height == -1.0 &&
+          expired_metrics->pixel_ratio == -1.0,
+      "destroyed SDL window retained generated display metrics");
   expect(
       !expired_fullscreen.request(expired_target).get() && !expired_fullscreen.exit().get(),
       "destroyed SDL window accepted a fullscreen operation");

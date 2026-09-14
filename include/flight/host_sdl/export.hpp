@@ -107,3 +107,15 @@
 #else
 #define FLIGHT_HOST_SDL_SDK_PLATFORM_API
 #endif
+
+#if defined(_WIN32) && defined(FLIGHT_HOST_SDL_SDK_DEVICE_SHARED)
+#if defined(FLIGHT_HOST_SDL_SDK_DEVICE_EXPORTS)
+#define FLIGHT_HOST_SDL_SDK_DEVICE_API __declspec(dllexport)
+#else
+#define FLIGHT_HOST_SDL_SDK_DEVICE_API __declspec(dllimport)
+#endif
+#elif defined(__GNUC__) || defined(__clang__)
+#define FLIGHT_HOST_SDL_SDK_DEVICE_API __attribute__((visibility("default")))
+#else
+#define FLIGHT_HOST_SDL_SDK_DEVICE_API
+#endif

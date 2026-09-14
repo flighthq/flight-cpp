@@ -249,6 +249,11 @@ absent until a native provider implements those separate capabilities.
 the exact caller-owned `PlatformInfo`. It needs no additional compiler behavior and leaves unavailable version,
 build, and distribution fields at their specified sentinels.
 
+`Flight::HostSdlSdkDevice` also populates the dependency-closed `DeviceBackend`. SDL supplies input-device presence,
+desktop-display dimensions and pixel ratio, per-window safe-area geometry, CPU count, configured memory, and native
+platform identity; unavailable identity and environment fields retain the upstream sentinel contract. This backend
+needs no further compiler work and resolves its SDL window id on each dynamic read.
+
 ## Host boundary
 
 The manifest-free generation remains the portable floor. Browser, media, Node, and graphics handles require explicit
