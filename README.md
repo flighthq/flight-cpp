@@ -146,6 +146,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run examples:generate:check` | Does the SDL/GL graph reproduce the committed inventory for all upstream example packages? |
 | `npm run facets:oracle` | Do compiler-emitted conditional facets preserve capable and incapable host types? |
 | `npm run headless:oracle` | Do the headless binding manifest's emitted console, timer, and performance calls compile and run? |
+| `npm run promise-like:oracle` | Does compiler-emitted `PromiseLike<T>` use the runtime's working `Task<T>` contract? |
 | `npm run sdk:check` | Does the pinned compiler reproduce the committed SDK headers and refusal inventory? |
 | `npm run sdk:compile` | Which dependency-closed SDK headers compile independently with the selected `CXX` toolchain? |
 | `npm run sdk:compile:headless` | Which headers compile after applying the runtime-carrier and headless binding profiles? |

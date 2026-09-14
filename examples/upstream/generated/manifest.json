@@ -8,7 +8,7 @@
   },
   "bindingProfiles": [
     {
-      "digest": "sha256:7d17b7f04fd12f3ff0cf2e3300475320bd5eb663c32c226d740512cdfe1122c3",
+      "digest": "sha256:e1e545a5cea4d836332021841544cf1c55e0a80ab1cc540c23529797bc1232c3",
       "identity": "flighthq/flight-cpp/runtime-carriers/1",
       "path": "bindings/runtime.json",
       "profile": "runtime-carriers",
@@ -29,7 +29,7 @@
       "schema": "flight-cpp-external-bindings/1"
     },
     {
-      "digest": "sha256:141eba92d049f29dcd5253540bf8f5e533ceeadc7bda252c9ec22aebdac07ad7",
+      "digest": "sha256:f85402789fe3bd3d668f83a0e3c135e12b0473751a9d73fb7d542ae7bba17fd0",
       "identity": "flighthq/flight-cpp/sdl-app/1",
       "path": "bindings/sdl-app.json",
       "profile": "sdl-app",

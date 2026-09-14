@@ -191,8 +191,10 @@ compressed-extension enum lookup still depends on the compiler selecting flight-
 adding an SDL renderer.
 
 Composing `bindings/sdl-app.json` with that SDL/GL sweep leaves the emitted header tree byte-identical but reduces
-direct external-binding refusals from 95 to 86. The represented window, document, `HTMLElement`, keyboard, mouse,
-pointer, and wheel contracts now reach their next compiler or package dependency failures in the full SDK graph.
+direct external-binding refusals from 95 to 85. The represented window, document, `HTMLElement`, keyboard, mouse,
+pointer, wheel, and animation-frame cancellation contracts now reach their next compiler or package dependency
+failures in the full SDK graph. The runtime profile maps `PromiseLike<T>` to the existing `flight::Task<T>` carrier;
+the dialog module consequently advances to the compiler's async-closure coroutine-lowering refusal.
 
 Regenerate and validate from the repository root:
 

@@ -23,6 +23,7 @@
     "examples:generate": "node ./scripts/upstreamExampleGeneration.mjs",
     "examples:generate:check": "node ./scripts/upstreamExampleGeneration.mjs --check",
     "headless:oracle": "node ./scripts/headlessProfileOracle.mjs",
+    "promise-like:oracle": "node ./scripts/promiseLikeOracle.mjs",
     "rehydrate": "node ./scripts/rehydrate.mjs",
     "rehydrate:check": "node ./scripts/rehydrate.mjs --check",
     "rehydrate:update": "node ./scripts/rehydrate.mjs --update",

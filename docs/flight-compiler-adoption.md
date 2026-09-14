@@ -55,8 +55,10 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
   defects. The complete expanded result is 735 passing and 374 failing headers.
 - `npm run sdk:generate:sdl` composes that graphics profile with the SDL application shell. The dependency-closed
   header tree and initialization plan are byte-identical at this pin, so the same 735/374 compile report applies,
-  while direct external-binding refusals fall from 95 to 86. Window, document, `HTMLElement`, and the represented
-  input event types advance to their next compiler or dependency boundary.
+  while direct external-binding refusals fall from 95 to 85. Window, document, `HTMLElement`, animation-frame
+  cancellation, and the represented input event types advance to their next compiler or dependency boundary. The
+  runtime profile also maps the compiler's existing `PromiseLike<T>` task domain to `flight::Task<T>`; `dialog.ts`
+  now reaches the compiler-owned async-closure coroutine blocker instead of stopping at that ambient type.
 - `npm run examples:generate` selects 100 native modules from all 181 sources in all 33 pinned upstream example
   packages, mirroring Flight's WebGL build selection with an explicit, recorded `renderNative.ts` remap. No example
   module is dependency-closed yet. The SDL application profile removes every direct `window`, `document`, animation

@@ -193,6 +193,16 @@
     },
     {
       "headers": [
+        "flight/task.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "PromiseLike",
+      "space": "type",
+      "targetName": "flight::Task"
+    },
+    {
+      "headers": [
         "flight/stream.hpp"
       ],
       "nullability": "non-null",
