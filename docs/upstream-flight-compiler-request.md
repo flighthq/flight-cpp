@@ -38,8 +38,8 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
   semantics covered by live compiler-versus-Node oracles;
 - shared readable/writable stream and async-iterable carriers, including compiler-emitted writer operations and
   native task callbacks; these admit three more independently compiling SDK headers;
-- shared decoded-PCM `AudioBuffer` storage with live channel views and bounded channel copies, selected through the
-  runtime profile and exercised by compiler-emitted native code;
+- shared decoded-PCM `AudioBuffer` storage with live channel views and bounded channel copies, plus its named
+  `AudioBufferOptions` type, selected through the runtime profile and exercised by compiler-emitted native code;
 - `TextEncoder` scalar UTF-8 and unpaired-surrogate replacement, whose newly admitted SWF helper compiles after
   shared runtime containers gained JavaScript-compatible logical constness;
 - numeric conversion and prefix parsing, safe-integer checks, object keys/values, symbols, URL protocol parsing,

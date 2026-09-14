@@ -41,6 +41,8 @@ const api = await import(pathToFileURL(compilerEntry));
 const bindings = JSON.parse(readFileSync(path.join(root, 'bindings', 'web-types.json'), 'utf8'));
 const names = [
   'CanvasFillRule',
+  'CanvasLineCap',
+  'CanvasLineJoin',
   'GlobalCompositeOperation',
   'GPUAddressMode',
   'GPUBlendFactor',
@@ -56,7 +58,9 @@ const names = [
   'GPUStencilOperation',
   'GPUTextureFormat',
   'ImageSmoothingQuality',
+  'LDMLPluralRule',
   'PermissionName',
+  'WakeLockType',
 ];
 const source = api.parseTypeScriptSource(
   '/flight/packages/host-test/src/webTypes.ts',

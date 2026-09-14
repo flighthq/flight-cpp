@@ -4,6 +4,8 @@
   "profile": "web-types",
   "bindings": [
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "CanvasFillRule", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "CanvasLineCap", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "CanvasLineJoin", "space": "type", "targetName": "flight::String" },
     { "headers": ["flight/number.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "DOMHighResTimeStamp", "space": "type", "targetName": "double" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GlobalCompositeOperation", "space": "type", "targetName": "flight::String" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUAddressMode", "space": "type", "targetName": "flight::String" },
@@ -20,6 +22,8 @@
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUStencilOperation", "space": "type", "targetName": "flight::String" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUTextureFormat", "space": "type", "targetName": "flight::String" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "ImageSmoothingQuality", "space": "type", "targetName": "flight::String" },
-    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "PermissionName", "space": "type", "targetName": "flight::String" }
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "LDMLPluralRule", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "PermissionName", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "WakeLockType", "space": "type", "targetName": "flight::String" }
   ]
 }

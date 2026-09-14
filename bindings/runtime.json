@@ -88,6 +88,16 @@
       "targetName": "flight::AudioBuffer"
     },
     {
+      "headers": [
+        "flight/audio_buffer.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "AudioBufferOptions",
+      "space": "type",
+      "targetName": "flight::AudioBufferOptions"
+    },
+    {
       "construction": {
         "kind": "constructor",
         "targetName": "flight::AudioBuffer"

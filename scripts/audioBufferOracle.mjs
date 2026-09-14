@@ -53,6 +53,9 @@ const source = api.parseTypeScriptSource(
      buffer.copyToChannel(samples, 1, 1);
      return buffer;
    }
+   export function makeAudioBufferWithOptions(options: AudioBufferOptions): AudioBuffer {
+     return new AudioBuffer(options);
+   }
    export function observeAudioBuffer(buffer: AudioBuffer): number[] {
      const channel = buffer.getChannelData(1);
      channel[0] = 0.5;
@@ -83,6 +86,7 @@ const emitted = api.emitIrModuleCpp(lowered.module, {
 }).contents;
 for (const expected of [
   '#include <flight/audio_buffer.hpp>',
+  'flight::AudioBufferOptions options',
   'flight::AudioBuffer({',
   '.number_of_channels = 2.0',
   '.sample_rate = 48000.0',
@@ -110,6 +114,8 @@ try {
 int main() {
   const auto buffer = flighthq_runtime_test::make_audio_buffer(
       flight::Float32Array{0.25F, -0.5F, 0.75F});
+  const auto named_options_buffer = flighthq_runtime_test::make_audio_buffer_with_options(
+      flight::AudioBufferOptions{.length = 2.0, .sample_rate = 8000.0});
   const auto observed = flighthq_runtime_test::observe_audio_buffer(buffer);
   if (observed.size() != 6 || observed[0] != 2.0 || observed[1] != 5.0 ||
       observed[2] != 48000.0 || std::abs(observed[3] - 5.0 / 48000.0) > 1.0e-12 ||
@@ -118,7 +124,10 @@ int main() {
   }
   flight::Float32Array destination{9.0F, 9.0F, 9.0F};
   flighthq_runtime_test::copy_audio_samples(buffer, destination);
-  return destination[0] == -0.5F && destination[1] == 0.75F && destination[2] == 0.0F ? 0 : 2;
+  return destination[0] == -0.5F && destination[1] == 0.75F && destination[2] == 0.0F &&
+                 named_options_buffer.length == 2.0 && named_options_buffer.sample_rate == 8000.0
+             ? 0
+             : 2;
 }
 `,
   );
