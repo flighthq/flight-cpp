@@ -12,6 +12,21 @@ The detailed review below records the earlier `993c280` handoff that defined the
 Both current revisions are pinned in [`dependencies.lock.json`](../dependencies.lock.json), and the maintained status
 document records the active counts and remaining ownership.
 
+## Regression at a6895ee
+
+`npm run facets:oracle` now emits an invalid declaration pair for the existing conditional-facet fixture:
+
+```cpp
+struct TrayWithImage;
+using TrayWithImage = flight::FacetRef<TrayIcon, tray_with_image_facet>;
+```
+
+The second declaration conflicts with the first, leaving the alias incomplete at every conversion and call site.
+The runtime ABI and fixture passed at `993c280`; the failure appears in the compiler's module-reference
+forward-declaration path added in this update. Alias targets must not receive record-style `struct` forward
+declarations. `npm run check` otherwise passes 26 of 27 gates at `a6895ee`, including 201 emitted C++ files across
+200 compiler fixtures. Keep this oracle red until the compiler emits a legal alias dependency order.
+
 ## Complete report sweep
 
 The full graph now finishes locally in about two and a half minutes. It processes all 154 SDK packages and 2,851

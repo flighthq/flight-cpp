@@ -123,9 +123,12 @@ headers from the portable inventory.
   unrepresented optional `Raster2DSurfaceProvider` reference domain. The inventory is committed under
   `examples/upstream/generated/` and contains no duplicate SDK sources.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
-  runtime. It currently covers 49 cross-runtime observations.
+  runtime. It currently covers 50 cross-runtime observations.
 - `npm run structural:oracle` generates the exact generic Entity write proxy through the pinned compiler, compiles
   the emitted headers, and executes an intercepted write against the working runtime.
+- `npm run facets:oracle` is the sole failing repository gate at `a6895ee`: the compiler forward-declares the
+  `TrayWithImage` alias as a struct before defining it as `flight::FacetRef`. The downstream conditional-facet ABI
+  still passes its native coverage; the generated declaration collision requires a compiler fix.
 - `Flight::Sdk` remains blocked until every emitted header in the selected binding profile compiles. At that point it
   must be installed/exported through CMake and exposed through Bazel, then exercised as an installed consumer.
 - The reciprocal lock cannot be completed solely in this checkout: after these commits land, flight-compiler must pin
