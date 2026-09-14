@@ -33,6 +33,7 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
 | WeakMap, WeakSet, and erased typed views | Implemented runtime ABI | Default Flight-reference, closed-variant, and weakly recoverable Flight value policies are weak and identity-based. External policies use the specified weaken/lock/identity/hash/equal contract. Tests cover expiry, shared views, wrong tags, overwrite, and deletion. Host weak-key policies remain host-profile work. |
 | SDL host mechanics | Implemented | SDL lifecycle, events, monotonic clock, windows, GL contexts, Vulkan surfaces, and callback-owned WebGPU surfaces are packaged by CMake. `InputDispatcher` translates keyboard, text/IME, pointer, wheel, and standard-layout gamepad events into records shaped for Flight's synchronous input-ingress seam; windows expose text-input and relative-pointer controls. `GlCanvas` and `WebGl2Context` share context/window lifetime and supply native procedure lookup and presentation. Connecting those records to generated `InputIngressSink` remains a thin adapter after its refused pointer dependency emits. |
 | SDL/OpenGL binding profile | Implemented host ABI | The versioned profile maps the canvas, WebGL2 context, GL objects, context options, active-uniform metadata, and image sources to concrete `host_sdl` types. GL object and image carriers preserve shared identity; image sources supply the weak-key policy used by Flight texture caches. The context forwards Flight's buffer, texture, compressed-texture, framebuffer, readback, shader/program, state, query, draw, and uniform command surface. Its closed `getParameter` carrier preserves queried object identity, and its extension result handles feature detection without `any`. The live compiler fixture compiles exact calls in each category, and the SDL tween exercises resource allocation, texture upload, framebuffer readback, state queries, shader drawing, and presentation through the same canvas/context seam. Populating the generated Flight `GlContext` callable record remains blocked on compiler method-type emission. |
+| SDL application-shell profile | Implemented host ABI | The profile binds `window`, `document`, animation-frame scheduling, keyboard events, and pointer/wheel events to the SDL host. `WebPlatformInput` preserves `InputDispatcher` state across events and routes it to listeners; frame callbacks use a one-turn queue. A live compiler fixture compiles calls through the profile, and native tests cover frame ordering, cancellation, document listeners, and keyboard delivery. Rich HTML controls remain a deliberately narrow compatibility surface for examples rather than a browser DOM implementation. |
 
 ## Integration and release gates
 
@@ -51,12 +52,13 @@ and 2,851 modules. It emits 1,032 dependency-closed headers and records 1,819 re
   the runtime/headless inventory. Of the new headers, 21 compile independently. The other eight reach existing
   compiler defects: concrete typed-array aliases spelled as templates, a `Record<..., void>` representation, or
   transitive `Bitmap` failures. The complete expanded result is 734 passing and 372 failing headers.
-- `npm run examples:generate` compiles all 181 modules in all 33 pinned upstream example packages in one graph with
-  the shared SDK and runtime/headless/SDL-GL profiles. No example module is dependency-closed yet. Of the linked
-  refusals, 110 are propagated dependencies, 33 are selector initialization failures, 38 are lowering failures, and
-  one is direct emission. The adjacent frontier ledger suppresses package propagation for diagnosis and identifies
-  115 direct emission failures, 33 selector initialization failures, and 33 lowering failures. This inventory is
-  committed under `examples/upstream/generated/` and deliberately contains no duplicate SDK sources.
+- `npm run examples:generate` selects 100 native modules from all 181 sources in all 33 pinned upstream example
+  packages, mirroring Flight's WebGL build selection with an explicit, recorded `renderNative.ts` remap. No example
+  module is dependency-closed yet. The SDL application profile removes every direct `window`, `document`, animation
+  frame, keyboard, pointer, and wheel refusal; `AudioContext` in the sound example is the only remaining direct
+  ambient name. The frontier now consists of 33 propagated selector refusals, 28 external-package initialization
+  edges, 38 compiler emission failures, and one lowering failure. The inventory is committed under
+  `examples/upstream/generated/` and contains no duplicate SDK sources.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
   runtime. It currently covers 37 cross-runtime observations.
 - `npm run structural:oracle` generates the exact generic Entity write proxy through the pinned compiler, compiles

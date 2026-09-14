@@ -25,6 +25,8 @@ struct GlSurfaceState final {
       std::pair<WebGlObjectKind, std::uint32_t>,
       std::weak_ptr<WebGlObjectState>> objects;
   bool unpack_premultiply_alpha{false};
+  std::vector<std::pair<String, std::function<void(InputPointerData)>>> pointer_listeners;
+  std::vector<std::pair<String, std::function<void()>>> simple_listeners;
 };
 
 struct GlImageSourceState final {
@@ -1599,7 +1601,10 @@ GlCanvas GlCanvas::create(int width, int height, double pixel_ratio, String titl
   options.open_gl.major_version = 3;
   options.open_gl.minor_version = 0;
   options.open_gl.profile = OpenGlProfile::es;
-  return GlCanvas(std::make_shared<detail::GlSurfaceState>(std::move(options)));
+  GlCanvas result(std::make_shared<detail::GlSurfaceState>(std::move(options)));
+  result.width = static_cast<double>(width);
+  result.height = static_cast<double>(height);
+  return result;
 }
 
 WindowSize GlCanvas::logical_size() const { return require_state().window.size(); }
@@ -1613,6 +1618,45 @@ SDL_Window* GlCanvas::native_window() const noexcept {
 WebGl2Context GlCanvas::get_context() const {
   static_cast<void>(require_state());
   return WebGl2Context(state_);
+}
+
+std::optional<WebGl2Context> GlCanvas::get_context(
+    const String& context_id,
+    const WebGlContextAttributes&) const {
+  if (context_id != String("webgl2")) return std::nullopt;
+  return get_context();
+}
+
+ClientRect GlCanvas::get_bounding_client_rect() const {
+  const auto size = logical_size();
+  return ClientRect{
+      .bottom = static_cast<double>(size.height),
+      .height = static_cast<double>(size.height),
+      .right = static_cast<double>(size.width),
+      .width = static_cast<double>(size.width),
+  };
+}
+
+void GlCanvas::add_event_listener(
+    const String& type,
+    std::function<void(InputPointerData)> callback) {
+  if (!callback) throw std::invalid_argument("canvas event callback cannot be empty");
+  require_state().pointer_listeners.emplace_back(type, std::move(callback));
+}
+
+void GlCanvas::add_event_listener(const String& type, std::function<void()> callback) {
+  if (!callback) throw std::invalid_argument("canvas event callback cannot be empty");
+  require_state().simple_listeners.emplace_back(type, std::move(callback));
+}
+
+void GlCanvas::emit_pointer(const String& emitted_type, InputPointerData event) const {
+  const auto& state = require_state();
+  for (const auto& [type, callback] : state.pointer_listeners) {
+    if (type == emitted_type) callback(event);
+  }
+  for (const auto& [type, callback] : state.simple_listeners) {
+    if (type == emitted_type) callback();
+  }
 }
 
 detail::GlSurfaceState& GlCanvas::require_state() const {

@@ -1,0 +1,43 @@
+{
+  "schema": "flight-cpp-external-bindings/1",
+  "identity": "flighthq/flight-cpp/sdl-app/1",
+  "profile": "sdl-app",
+  "bindings": [
+    { "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "HTMLElement", "space": "type", "targetName": "flight::host_sdl::HtmlElement" },
+    { "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "HTMLInputElement", "space": "type", "targetName": "flight::host_sdl::HtmlInputElement" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "borrowed", "sourceName": "HTMLCanvasElement", "space": "value", "targetName": "flight::host_sdl::GlCanvas" },
+    { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "KeyboardEvent", "space": "type", "targetName": "flight::host_sdl::InputKeyboardData" },
+    { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "MouseEvent", "space": "type", "targetName": "flight::host_sdl::InputPointerData" },
+    { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "PointerEvent", "space": "type", "targetName": "flight::host_sdl::InputPointerData" },
+    { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "WheelEvent", "space": "type", "targetName": "flight::host_sdl::InputPointerData" },
+    {
+      "headers": ["flight/host_sdl/web_platform.hpp"],
+      "members": [
+        { "sourceMember": "addEventListener", "targetName": "flight::host_sdl::document.add_event_listener" },
+        { "sourceMember": "body", "targetName": "flight::host_sdl::document.body" },
+        { "sourceMember": "createElement", "targetName": "flight::host_sdl::document.create_element" },
+        { "sourceMember": "getElementById", "targetName": "flight::host_sdl::document.get_element_by_id" },
+        { "sourceMember": "head", "targetName": "flight::host_sdl::document.head" }
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "document",
+      "space": "value",
+      "targetName": "flight::host_sdl::document"
+    },
+    { "callResultType": "double", "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "borrowed", "sourceName": "requestAnimationFrame", "space": "value", "targetName": "flight::host_sdl::request_animation_frame" },
+    {
+      "headers": ["flight/host_sdl/web_platform.hpp"],
+      "members": [
+        { "sourceMember": "__flightCapture", "targetName": "flight::host_sdl::window.flight_capture" },
+        { "sourceMember": "addEventListener", "targetName": "flight::host_sdl::window.add_event_listener" },
+        { "sourceMember": "devicePixelRatio", "targetName": "flight::host_sdl::window.device_pixel_ratio" }
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "window",
+      "space": "value",
+      "targetName": "flight::host_sdl::window"
+    }
+  ]
+}

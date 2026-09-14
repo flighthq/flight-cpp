@@ -24,6 +24,7 @@ const gates = [
   { arguments: [], name: 'conditionalFacetOracle' },
   { arguments: [], name: 'headlessProfileOracle' },
   { arguments: [], name: 'runtimeOracle' },
+  { arguments: [], name: 'sdlAppProfileOracle' },
   { arguments: [], name: 'sdlGlProfileOracle' },
   { arguments: [], name: 'structuralProxyOracle' },
   { arguments: [], name: 'streamOracle' },

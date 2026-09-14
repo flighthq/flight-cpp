@@ -25,6 +25,9 @@ struct InputKeyboardData final {
   bool repeat{false};
   bool shift_key{false};
   double time_stamp{0.0};
+  bool default_prevented{false};
+
+  void prevent_default() noexcept { default_prevented = true; }
 };
 
 struct InputPointerData final {
@@ -49,6 +52,11 @@ struct InputPointerData final {
   double width{1.0};
   double x{0.0};
   double y{0.0};
+  double client_x{0.0};
+  double client_y{0.0};
+  bool default_prevented{false};
+
+  void prevent_default() noexcept { default_prevented = true; }
 };
 
 struct InputTextData final {

@@ -34,7 +34,12 @@ if (unknown.length > 0) {
 const flight = resolveDependency(root, 'flight');
 const compiler = resolveDependency(root, 'flight-compiler');
 const generatedRoot = path.join(root, 'examples', 'upstream', 'generated');
-const bindingProfileFiles = ['bindings/runtime.json', 'bindings/headless.json', 'bindings/sdl-gl.json'];
+const bindingProfileFiles = [
+  'bindings/runtime.json',
+  'bindings/headless.json',
+  'bindings/sdl-gl.json',
+  'bindings/sdl-app.json',
+];
 const bindingProfiles = loadBindingProfiles(bindingProfileFiles);
 const inputFailure = validateInput(flight, compiler);
 if (inputFailure !== undefined) {
@@ -120,17 +125,23 @@ async function generateExamples(outputRoot, flightDependency, compilerDependency
         target: sdkTarget(package_.name),
       };
     });
-  const exampleDescriptors = examples.map((example) => ({
-    dependencies: example.dependencies.filter((dependency) => packageNames.has(dependency)).sort(compareText),
-    name: example.packageName,
-    packageRoot: example.directory,
-    sources: listSourceFiles(path.join(example.directory, 'src')),
-    target: {
-      includePrefix: `flight/examples/${example.cppName}`,
-      namespace: `flight::examples::${example.cppName}`,
-    },
-    upstreamName: example.name,
-  }));
+  const exampleDescriptors = examples.map((example) => {
+    const selection = selectNativeExampleSources(example.directory);
+    return {
+      dependencies: example.dependencies.filter((dependency) => packageNames.has(dependency)).sort(compareText),
+      name: example.packageName,
+      packageRoot: example.directory,
+      renderer: selection.renderer,
+      selectorRemap: selection.selectorRemap,
+      sources: selection.sources,
+      target: {
+        includePrefix: `flight/examples/${example.cppName}`,
+        namespace: `flight::examples::${example.cppName}`,
+      },
+      upstreamName: example.name,
+      upstreamSourceModules: selection.upstreamSourceModules,
+    };
+  });
   const descriptors = [...sdkDescriptors, ...exampleDescriptors];
   const sources = descriptors.flatMap((package_) =>
     package_.sources.map((source) => ({
@@ -201,8 +212,11 @@ async function generateExamples(outputRoot, flightDependency, compilerDependency
       frontierRefusedModules: frontier.filter((module) => module.status === 'refused').length,
       package: example.name,
       refusedModules: modules.filter((module) => module.status === 'refused').length,
+      renderer: example.renderer,
+      selectorRemap: example.selectorRemap,
       sourceModules: modules.length,
       upstreamPackage: example.upstreamName,
+      upstreamSourceModules: example.upstreamSourceModules,
     };
   });
   const refusals = exampleModules.flatMap((module) =>
@@ -264,6 +278,7 @@ async function generateExamples(outputRoot, flightDependency, compilerDependency
       packages: packageResults.length,
       frontierEmittedModules: frontierModules.filter((module) => module.status === 'emitted').length,
       frontierRefusedModules: frontierModules.filter((module) => module.status === 'refused').length,
+      upstreamSourceModules: packageResults.reduce((total, package_) => total + package_.upstreamSourceModules, 0),
       ...totals,
     },
   };
@@ -313,6 +328,48 @@ function readExamplePackages(flightDirectory) {
         packageName: `@flighthq/example-${upstreamName}`,
       }];
     });
+}
+
+function selectNativeExampleSources(exampleDirectory) {
+  const allSources = listSourceFiles(path.join(exampleDirectory, 'src'));
+  const webGl = allSources.find((source) => path.basename(source.sourcePath) === 'render.webgl.ts');
+  const dom = allSources.find((source) => path.basename(source.sourcePath) === 'render.dom.ts');
+  const rendererSource = webGl ?? dom;
+  const renderer = webGl ? 'webgl' : dom ? 'dom-fallback' : 'unavailable';
+  const selected = allSources.filter((source) => {
+    const basename = path.basename(source.sourcePath);
+    return !/^render\.(?:canvas|dom|webgl|webgpu)\.ts$/u.test(basename) || source === rendererSource;
+  });
+  const selector = selected.find((source) => path.basename(source.sourcePath) === 'render.ts');
+  if (!selector || !rendererSource) {
+    return {
+      renderer,
+      selectorRemap: null,
+      sources: selected,
+      upstreamSourceModules: allSources.length,
+    };
+  }
+  // The compiler currently treats dotted renderer basenames as an unresolved evaluation edge.
+  // Give the selected implementation a virtual, portable module name as part of the same explicit
+  // source remap used for Flight's build-time RENDER alias.
+  const virtualRendererPath = path.join(path.dirname(rendererSource.sourcePath), 'renderNative.ts');
+  const target = './renderNative';
+  return {
+    renderer,
+    selectorRemap: {
+      implementation: {
+        source: portable(path.relative(exampleDirectory, rendererSource.sourcePath)),
+        target: portable(path.relative(exampleDirectory, virtualRendererPath)),
+      },
+      selector: { source: 'src/render.ts', target },
+    },
+    sources: selected.map((source) => {
+      if (source === selector) return { ...source, contents: `export * from '${target}';\n` };
+      if (source === rendererSource) return { ...source, sourcePath: virtualRendererPath };
+      return source;
+    }),
+    upstreamSourceModules: allSources.length,
+  };
 }
 
 function filterInitialization(initialization, packageNames) {
@@ -448,8 +505,11 @@ function generatedReadme(manifest) {
 This directory is generated from every package under Flight \`${manifest.source.directory}\` at
 \`${manifest.source.revision}\` by \`flight-compiler\` at \`${manifest.compiler.revision}\`. Do not edit it by hand.
 
-The SDL/GL native profile emitted ${manifest.summary.emittedModules} of ${manifest.summary.sourceModules} modules from
-${manifest.summary.packages} example packages. Every dependency-closed refusal is retained in \`refusals.json\`.
+The SDL/GL native profile selected ${manifest.summary.sourceModules} of ${manifest.summary.upstreamSourceModules}
+upstream modules across ${manifest.summary.packages} example packages and emitted ${manifest.summary.emittedModules}.
+The selection mirrors Flight's \`RENDER=webgl\` alias by remapping each \`render.ts\` selector to its WebGL source;
+the DOM-only cross-backend-embed example records its fallback explicitly. Every dependency-closed refusal is retained
+in \`refusals.json\`.
 \`frontier-refusals.json\` compiles each example without its package dependencies to expose the next direct source,
 compiler, or host boundary hidden by dependency propagation. \`initialization.json\` retains any module-evaluation
 plans available for emitted examples. Generated headers, as they become available,

@@ -15,6 +15,8 @@
 #include <flight/array.hpp>
 #include <flight/array_buffer_view.hpp>
 #include <flight/host_sdl/export.hpp>
+#include <flight/host_sdl/input.hpp>
+#include <flight/host_sdl/web_platform_types.hpp>
 #include <flight/host_sdl/window.hpp>
 #include <flight/presence.hpp>
 #include <flight/sequence_view.hpp>
@@ -752,6 +754,10 @@ class FLIGHT_HOST_SDL_GL_API GlCanvas final {
  public:
   GlCanvas() noexcept = default;
 
+  DomStyle style;
+  double height{0.0};
+  double width{0.0};
+
   [[nodiscard]] static GlCanvas create(
       int width,
       int height,
@@ -766,6 +772,27 @@ class FLIGHT_HOST_SDL_GL_API GlCanvas final {
   [[nodiscard]] WindowSize pixel_size() const;
   [[nodiscard]] SDL_Window* native_window() const noexcept;
   [[nodiscard]] WebGl2Context get_context() const;
+  [[nodiscard]] std::optional<WebGl2Context> get_context(
+      const String& context_id,
+      const WebGlContextAttributes& attributes) const;
+  [[nodiscard]] ClientRect get_bounding_client_rect() const;
+  void add_event_listener(const String& type, std::function<void(InputPointerData)> callback);
+  void add_event_listener(const String& type, std::function<void()> callback);
+  void add_event_listener(
+      const String& type,
+      std::function<void(InputPointerData)> callback,
+      const EventListenerOptions&) {
+    add_event_listener(type, std::move(callback));
+  }
+
+  template <typename Callback, typename Options>
+  void add_event_listener(const String& type, Callback callback, const Options&) {
+    add_event_listener(type, std::move(callback));
+  }
+
+  void emit_pointer(const String& type, InputPointerData event) const;
+  void set_pointer_capture(double) const noexcept {}
+  void release_pointer_capture(double) const noexcept {}
 
  private:
   explicit GlCanvas(std::shared_ptr<detail::GlSurfaceState> state) noexcept

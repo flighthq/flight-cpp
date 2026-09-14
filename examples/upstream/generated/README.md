@@ -3,8 +3,11 @@
 This directory is generated from every package under Flight `examples/packages` at
 `1274ec5c923947dc64d5ffedcbd8169fc758cd9f` by `flight-compiler` at `56496423fd865a51023e72966190d10d886eae40`. Do not edit it by hand.
 
-The SDL/GL native profile emitted 0 of 181 modules from
-33 example packages. Every dependency-closed refusal is retained in `refusals.json`.
+The SDL/GL native profile selected 100 of 181
+upstream modules across 33 example packages and emitted 0.
+The selection mirrors Flight's `RENDER=webgl` alias by remapping each `render.ts` selector to its WebGL source;
+the DOM-only cross-backend-embed example records its fallback explicitly. Every dependency-closed refusal is retained
+in `refusals.json`.
 `frontier-refusals.json` compiles each example without its package dependencies to expose the next direct source,
 compiler, or host boundary hidden by dependency propagation. `initialization.json` retains any module-evaluation
 plans available for emitted examples. Generated headers, as they become available,

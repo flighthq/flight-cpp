@@ -326,6 +326,9 @@ InputPointerData InputDispatcher::pointer_data(
       .width = 1.0,
       .x = x,
       .y = y,
+      .client_x = x,
+      .client_y = y,
+      .default_prevented = false,
   };
 }
 

@@ -27,6 +27,13 @@
       "path": "bindings/sdl-gl.json",
       "profile": "sdl-gl",
       "schema": "flight-cpp-external-bindings/1"
+    },
+    {
+      "digest": "sha256:141eba92d049f29dcd5253540bf8f5e533ceeadc7bda252c9ec22aebdac07ad7",
+      "identity": "flighthq/flight-cpp/sdl-app/1",
+      "path": "bindings/sdl-app.json",
+      "profile": "sdl-app",
+      "schema": "flight-cpp-external-bindings/1"
     }
   ],
   "generatedSdk": {
@@ -39,77 +46,161 @@
       "cppNamespace": "flight::examples::adjustments",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-adjustments",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "adjustments"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "adjustments",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/awd2loading",
       "cppNamespace": "flight::examples::awd2loading",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 5,
+      "frontierRefusedModules": 4,
       "package": "@flighthq/example-awd2loading",
-      "refusedModules": 5,
-      "sourceModules": 5,
-      "upstreamPackage": "awd2loading"
+      "refusedModules": 4,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 4,
+      "upstreamPackage": "awd2loading",
+      "upstreamSourceModules": 5
     },
     {
       "cppIncludePrefix": "flight/examples/benchmark",
       "cppNamespace": "flight::examples::benchmark",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 5,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-benchmark",
-      "refusedModules": 5,
-      "sourceModules": 5,
-      "upstreamPackage": "benchmark"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "benchmark",
+      "upstreamSourceModules": 5
     },
     {
       "cppIncludePrefix": "flight/examples/bitmapfont_generate",
       "cppNamespace": "flight::examples::bitmapfont_generate",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 5,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-bitmapfont-generate",
-      "refusedModules": 5,
-      "sourceModules": 5,
-      "upstreamPackage": "bitmapfont-generate"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "bitmapfont-generate",
+      "upstreamSourceModules": 5
     },
     {
       "cppIncludePrefix": "flight/examples/camera2d",
       "cppNamespace": "flight::examples::camera2d",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-camera2d",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "camera2d"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "camera2d",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/clock",
       "cppNamespace": "flight::examples::clock",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-clock",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "clock"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "clock",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/collision",
       "cppNamespace": "flight::examples::collision",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-collision",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "collision"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "collision",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/cross_backend_embed",
@@ -119,283 +210,595 @@
       "frontierRefusedModules": 3,
       "package": "@flighthq/example-cross-backend-embed",
       "refusedModules": 3,
+      "renderer": "dom-fallback",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.dom.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
       "sourceModules": 3,
-      "upstreamPackage": "cross-backend-embed"
+      "upstreamPackage": "cross-backend-embed",
+      "upstreamSourceModules": 3
     },
     {
       "cppIncludePrefix": "flight/examples/crossfade",
       "cppNamespace": "flight::examples::crossfade",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-crossfade",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "crossfade"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "crossfade",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/flowstates",
       "cppNamespace": "flight::examples::flowstates",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-flowstates",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "flowstates"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "flowstates",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/formatloading",
       "cppNamespace": "flight::examples::formatloading",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-formatloading",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "formatloading"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "formatloading",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/interaction",
       "cppNamespace": "flight::examples::interaction",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-interaction",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "interaction"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "interaction",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/materialshowcase",
       "cppNamespace": "flight::examples::materialshowcase",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 4,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-materialshowcase",
-      "refusedModules": 4,
-      "sourceModules": 4,
-      "upstreamPackage": "materialshowcase"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "materialshowcase",
+      "upstreamSourceModules": 4
     },
     {
       "cppIncludePrefix": "flight/examples/motionpath",
       "cppNamespace": "flight::examples::motionpath",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-motionpath",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "motionpath"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "motionpath",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/movieclip",
       "cppNamespace": "flight::examples::movieclip",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-movieclip",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "movieclip"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "movieclip",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/particleeditor",
       "cppNamespace": "flight::examples::particleeditor",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 5,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-particleeditor",
-      "refusedModules": 5,
-      "sourceModules": 5,
-      "upstreamPackage": "particleeditor"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "particleeditor",
+      "upstreamSourceModules": 5
     },
     {
       "cppIncludePrefix": "flight/examples/particles",
       "cppNamespace": "flight::examples::particles",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 5,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-particles",
-      "refusedModules": 5,
-      "sourceModules": 5,
-      "upstreamPackage": "particles"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "particles",
+      "upstreamSourceModules": 5
     },
     {
       "cppIncludePrefix": "flight/examples/pathboolean",
       "cppNamespace": "flight::examples::pathboolean",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-pathboolean",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "pathboolean"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "pathboolean",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/platformer",
       "cppNamespace": "flight::examples::platformer",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-platformer",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "platformer"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "platformer",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/scene_fire",
       "cppNamespace": "flight::examples::scene_fire",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 4,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-scene-fire",
-      "refusedModules": 4,
-      "sourceModules": 4,
-      "upstreamPackage": "scene-fire"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "scene-fire",
+      "upstreamSourceModules": 4
     },
     {
       "cppIncludePrefix": "flight/examples/scene_picking",
       "cppNamespace": "flight::examples::scene_picking",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 4,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-scene-picking",
-      "refusedModules": 4,
-      "sourceModules": 4,
-      "upstreamPackage": "scene-picking"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "scene-picking",
+      "upstreamSourceModules": 4
     },
     {
       "cppIncludePrefix": "flight/examples/scene3d",
       "cppNamespace": "flight::examples::scene3d",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 4,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-scene3d",
-      "refusedModules": 4,
-      "sourceModules": 4,
-      "upstreamPackage": "scene3d"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "scene3d",
+      "upstreamSourceModules": 4
     },
     {
       "cppIncludePrefix": "flight/examples/shapes",
       "cppNamespace": "flight::examples::shapes",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-shapes",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "shapes"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "shapes",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/snapshot",
       "cppNamespace": "flight::examples::snapshot",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-snapshot",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "snapshot"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "snapshot",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/sound",
       "cppNamespace": "flight::examples::sound",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-sound",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "sound"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "sound",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/spatial",
       "cppNamespace": "flight::examples::spatial",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-spatial",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "spatial"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "spatial",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/spring",
       "cppNamespace": "flight::examples::spring",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-spring",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "spring"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "spring",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/spritesheet",
       "cppNamespace": "flight::examples::spritesheet",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-spritesheet",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "spritesheet"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "spritesheet",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/text",
       "cppNamespace": "flight::examples::text",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-text",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "text"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "text",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/textinput",
       "cppNamespace": "flight::examples::textinput",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-textinput",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "textinput"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "textinput",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/tilemap",
       "cppNamespace": "flight::examples::tilemap",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 5,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-tilemap",
-      "refusedModules": 5,
-      "sourceModules": 5,
-      "upstreamPackage": "tilemap"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "tilemap",
+      "upstreamSourceModules": 5
     },
     {
       "cppIncludePrefix": "flight/examples/tween",
       "cppNamespace": "flight::examples::tween",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-tween",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "tween"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "tween",
+      "upstreamSourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/examples/video",
       "cppNamespace": "flight::examples::video",
       "emittedModules": 0,
       "frontierEmittedModules": 0,
-      "frontierRefusedModules": 6,
+      "frontierRefusedModules": 3,
       "package": "@flighthq/example-video",
-      "refusedModules": 6,
-      "sourceModules": 6,
-      "upstreamPackage": "video"
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "video",
+      "upstreamSourceModules": 6
     }
   ],
   "source": {
@@ -406,9 +809,10 @@
   "summary": {
     "packages": 33,
     "frontierEmittedModules": 0,
-    "frontierRefusedModules": 181,
+    "frontierRefusedModules": 100,
+    "upstreamSourceModules": 181,
     "emittedModules": 0,
-    "refusedModules": 181,
-    "sourceModules": 181
+    "refusedModules": 100,
+    "sourceModules": 100
   }
 }

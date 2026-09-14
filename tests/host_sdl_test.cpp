@@ -1,6 +1,7 @@
 #include <flight/host/timers.hpp>
 #include <flight/host_sdl/host.hpp>
 #include <flight/host_sdl/input.hpp>
+#include <flight/host_sdl/web_platform.hpp>
 #include <flight/host_sdl/webgl.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/host_sdl/window.hpp>
@@ -45,6 +46,39 @@ void destroy_surface(
 } // namespace
 
 int main() {
+  flight::host_sdl::reset_web_platform();
+  int frame_calls = 0;
+  const auto cancelled_frame = flight::host_sdl::request_animation_frame([&] { frame_calls += 100; });
+  flight::host_sdl::cancel_animation_frame(cancelled_frame);
+  static_cast<void>(flight::host_sdl::request_animation_frame([&](double timestamp) {
+    expect(timestamp == 12.5, "animation frame timestamp changed");
+    ++frame_calls;
+    static_cast<void>(flight::host_sdl::request_animation_frame([&] { ++frame_calls; }));
+  }));
+  expect(flight::host_sdl::pump_animation_frame(12.5) == 1 && frame_calls == 1,
+         "animation frame turn did not preserve cancellation or callback ordering");
+  expect(flight::host_sdl::pump_animation_frame(13.5) == 1 && frame_calls == 2,
+         "animation frame scheduled during a callback ran in the same turn");
+
+  auto element = static_cast<flight::host_sdl::DomElement>(
+      flight::host_sdl::document.create_element(flight::String("button")));
+  int click_calls = 0;
+  element.add_event_listener(flight::String("click"), [&] { ++click_calls; });
+  element.click();
+  expect(click_calls == 1, "SDL document shell lost a registered listener");
+
+  int window_key_calls = 0;
+  flight::host_sdl::window.add_event_listener(
+      flight::String("keydown"),
+      [&](flight::host_sdl::InputKeyboardData event) {
+        expect(event.key == flight::String("Enter"), "SDL window changed a keyboard event");
+        ++window_key_calls;
+      });
+  flight::host_sdl::InputKeyboardData synthetic_key;
+  synthetic_key.key = flight::String("Enter");
+  flight::host_sdl::window.emit_keyboard(flight::String("keydown"), synthetic_key);
+  expect(window_key_calls == 1, "SDL window shell did not deliver a keyboard event");
+
   const flight::host_sdl::GlAnisotropyExtension anisotropy;
   expect(anisotropy.texture_max_anisotropy_ext == 0x84FE,
          "GL anisotropy texture parameter changed");

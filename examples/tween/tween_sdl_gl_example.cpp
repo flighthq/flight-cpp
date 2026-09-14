@@ -1,6 +1,7 @@
 #include "generated/tween.hpp"
 
 #include <flight/host_sdl/host.hpp>
+#include <flight/host_sdl/web_platform.hpp>
 #include <flight/host_sdl/webgl.hpp>
 
 #include <SDL3/SDL_keycode.h>
@@ -331,6 +332,7 @@ int run(bool smoke) {
   auto canvas = flight::host_sdl::GlCanvas::create(
       960, 720, 1.0, flight::String("Flight tween - SDL + OpenGL ES"), smoke);
   auto context = canvas.get_context();
+  flight::host_sdl::WebPlatformInput platform_input(canvas);
   context.make_current();
   validate_gl_resource_path(context);
 
@@ -344,6 +346,7 @@ int run(bool smoke) {
           (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE)) {
         running = false;
       }
+      static_cast<void>(platform_input.dispatch(event));
     }
 
     const std::uint64_t elapsed = flight::host_sdl::Host::ticks_nanoseconds() - started;
@@ -352,6 +355,8 @@ int run(bool smoke) {
     const double progress = cycle <= 1.0 ? cycle : 2.0 - cycle;
     draw_frame(context, canvas.pixel_size(), progress);
     context.present();
+    static_cast<void>(flight::host_sdl::pump_animation_frame(
+        static_cast<double>(flight::host_sdl::Host::ticks_nanoseconds()) / 1'000'000.0));
 
     ++frames;
     if (smoke && frames >= 3) running = false;

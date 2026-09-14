@@ -101,6 +101,12 @@ if(TARGET Flight::HostSdlGl)
   add_library(flight_cpp_header_host_sdl_webgl_test OBJECT "${source}")
   target_link_libraries(flight_cpp_header_host_sdl_webgl_test PRIVATE Flight::HostSdlGl)
   flight_cpp_set_project_warnings(flight_cpp_header_host_sdl_webgl_test)
+
+  set(source "${CMAKE_CURRENT_BINARY_DIR}/header_host_sdl_web_platform_test.cpp")
+  file(GENERATE OUTPUT "${source}" CONTENT "#include <flight/host_sdl/web_platform.hpp>\n")
+  add_library(flight_cpp_header_host_sdl_web_platform_test OBJECT "${source}")
+  target_link_libraries(flight_cpp_header_host_sdl_web_platform_test PRIVATE Flight::HostSdlGl)
+  flight_cpp_set_project_warnings(flight_cpp_header_host_sdl_web_platform_test)
 endif()
 
 if(TARGET Flight::HostSdl)

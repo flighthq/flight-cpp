@@ -35,6 +35,7 @@
     "sdk:generate:headless": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --binding-profile=bindings/headless.json --output=out/sdk-headless",
     "sdk:generate:sdl-gl": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --binding-profile=bindings/headless.json --binding-profile=bindings/sdl-gl.json --output=out/sdk-sdl-gl",
     "sdk:generate:runtime": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --output=out/sdk-runtime",
+    "sdl-app:oracle": "node ./scripts/sdlAppProfileOracle.mjs",
     "sdl-gl:oracle": "node ./scripts/sdlGlProfileOracle.mjs",
     "structural:oracle": "node ./scripts/structuralProxyOracle.mjs",
     "stream:oracle": "node ./scripts/streamOracle.mjs",

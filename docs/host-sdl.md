@@ -62,6 +62,10 @@ The build exports four targets through the existing `FlightCpp` package:
   alias, remaining live resources are reclaimed while their context is alive, and cross-context handle use is
   rejected. Its selected command surface includes 2D/3D and compressed texture upload, framebuffer clear/blit and
   readback, active-uniform metadata, and the render state, vertex, draw, and uniform calls used by Flight.
+  `bindings/sdl-app.json` layers a browser-shaped application shell over this target for upstream examples. Its
+  document attachment is intentionally lightweight, while its frame queue and SDL input bridge preserve ordered
+  animation turns and route keyboard, pointer, and wheel events into registered listeners on `window` and
+  `GlCanvas`.
 - `Flight::HostSdlVulkan` copies the required instance extension names and owns the `VkSurfaceKHR` returned by SDL.
 - `Flight::HostSdlWgpu` owns a type-erased native WebGPU surface through create/destroy callbacks supplied by a Dawn
   or wgpu-native adapter. It intentionally adds no WebGPU implementation dependency.
@@ -116,6 +120,10 @@ int main() {
 displays. `Host::pump_timers()` executes the headless binding profile's due timeout and interval callbacks on the SDL
 thread; no background timer thread can race Flight state.
 
+`WebPlatformInput` composes the persistent `InputDispatcher` with a `GlCanvas`, and
+`pump_animation_frame(timestamp_ms)` runs the callbacks that were pending when that frame began. Callbacks scheduled
+by another frame callback remain queued for the next turn, matching the browser ordering used by the examples.
+
 ## Generated SDK wiring lane
 
 The native mechanics are now present. Wiring them to generated Flight contracts remains a narrow adapter task:
@@ -135,7 +143,9 @@ The native mechanics are now present. Wiring them to generated Flight contracts 
    `WgpuSurfaceCallbacks` is the stable point where that dependency enters.
 4. Adapt `InputDispatcher`'s normalized records into the generated Flight input types once `InputPointerData` and
    `InputIngressBackend` clear their current generated dependency refusals.
-5. Transpile the renderer and one scene package, then render a solid shape through the selected backend.
+5. Clear the remaining SDK and example compiler refusals, then replace the handwritten tween loop with the generated
+   application module. The repository now selects and compiles all upstream WebGL example sources through a recorded
+   source remap and the SDL application-shell profile.
 
 The corresponding compiler work is recorded in [the upstream request](upstream-flight-compiler-request.md). The host
 package does not need to wait for those compiler changes: it does not yet include generated contracts, and the

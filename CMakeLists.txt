@@ -103,7 +103,12 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
   target_link_libraries(flight_host_sdl PUBLIC Flight::Cpp SDL3::SDL3)
   flight_cpp_set_project_warnings(flight_host_sdl)
 
-  add_library(flight_host_sdl_gl src/host_sdl/gl.cpp src/host_sdl/webgl.cpp)
+  add_library(
+    flight_host_sdl_gl
+    src/host_sdl/gl.cpp
+    src/host_sdl/web_platform.cpp
+    src/host_sdl/webgl.cpp
+  )
   add_library(Flight::HostSdlGl ALIAS flight_host_sdl_gl)
   set_target_properties(
     flight_host_sdl_gl
