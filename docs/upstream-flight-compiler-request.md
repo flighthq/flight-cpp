@@ -207,8 +207,10 @@ The provider-neutral `flighthq/flight-cpp/sdl-wgpu/1` profile now supplies typed
 object domains, exact adapter capability metadata, standard usage flags, and weak-key policies. On its own it adds
 19 dependency-closed headers over runtime/headless and all 19 compile. Composed with SDL/GL and the application
 shell, it raises the inventory from 1,111 to 1,129 headers; all 18 additions compile and direct ambient-refused
-modules fall from 92 to 53. Remaining WGPU externals are the concrete provider layer:
-`GPUDeviceDescriptor`, `GPUOrigin3D`, `GPUVertexBufferLayout`, and the external-image copy descriptors/sources.
+modules fall from 92 to 50. The device, origin, vertex, and external-image descriptors now have compiler-checked
+native representations. `wgpuHost.ts` reaches contextual optional construction, while `wgpuExternalImageSource.ts`
+retains only browser constructor values (`DOMException`, image/video/canvas/bitmap/frame); both are compiler or
+browser-adapter boundaries rather than missing native WGPU data contracts.
 
 Regenerate and validate from the repository root:
 

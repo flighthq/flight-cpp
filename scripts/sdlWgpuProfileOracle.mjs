@@ -43,7 +43,13 @@ if (!existsSync(compilerEntry)) {
 }
 
 const api = await import(pathToFileURL(compilerEntry));
-const bindings = JSON.parse(readFileSync(path.join(root, 'bindings', 'sdl-wgpu.json'), 'utf8'));
+const bindingProfiles = ['web-types', 'sdl-wgpu'].map((name) =>
+  JSON.parse(readFileSync(path.join(root, 'bindings', `${name}.json`), 'utf8')),
+);
+const bindings = {
+  schema: 'flight-cpp-external-bindings/1',
+  bindings: bindingProfiles.flatMap((profile) => profile.bindings),
+};
 const handleTypes = [
   ['GPU', 'WgpuApi'],
   ['GPUAdapter', 'WgpuAdapter'],
@@ -53,6 +59,7 @@ const handleTypes = [
   ['GPUCanvasContext', 'WgpuCanvasContext'],
   ['GPUCommandEncoder', 'WgpuCommandEncoder'],
   ['GPUDevice', 'WgpuDevice'],
+  ['GPUCopyExternalImageSource', 'WgpuExternalImageSource'],
   ['GPUPipelineLayout', 'WgpuPipelineLayout'],
   ['GPUQueue', 'WgpuQueue'],
   ['GPURenderPassEncoder', 'WgpuRenderPassEncoder'],
@@ -67,6 +74,18 @@ const source = api.parseTypeScriptSource(
   `${handleTypes.map(([sourceName], index) => `export function keep${String(index)}(value: ${sourceName}): ${sourceName} { return value; }`).join('\n')}
    export function lostMessage(value: GPUDeviceLostInfo): string { return value.message; }
    export function red(value: GPUColor): number { return value.r; }
+   export function deviceDescriptor(value: GPUDeviceDescriptor): GPUDeviceDescriptor { return value; }
+   export function sourceInfo(value: GPUCopyExternalImageSourceInfo): GPUCopyExternalImageSourceInfo { return value; }
+   export function destinationInfo(value: GPUCopyExternalImageDestInfo): GPUCopyExternalImageDestInfo { return value; }
+   export function makeSourceInfo(source: GPUCopyExternalImageSource): GPUCopyExternalImageSourceInfo { return { source }; }
+   export function makeDestinationInfo(texture: GPUTexture, origin: GPUOrigin3D): GPUCopyExternalImageDestInfo {
+     return { texture, origin };
+   }
+   export function makeDeviceDescriptor(requiredFeatures: GPUFeatureName[]): GPUDeviceDescriptor {
+     return { requiredFeatures };
+   }
+   export function origin(value: GPUOrigin3D): GPUOrigin3D { return value; }
+   export function vertexLayout(value: GPUVertexBufferLayout): GPUVertexBufferLayout { return value; }
    export function maxTextureSize(value: GPUAdapter): number { return value.limits.maxTextureDimension2D ?? 8192; }
    export function supportsTimestamp(value: GPUAdapter): boolean { return value.features.has('timestamp-query'); }
    export function usageFlags(): number {
@@ -90,6 +109,11 @@ for (const expected of [
   ...handleTypes.map(([_sourceName, targetName]) => `flight::host_sdl::${targetName}`),
   'flight::host_sdl::WgpuDeviceLostInfo',
   'flight::host_sdl::WgpuColor',
+  'flight::host_sdl::WgpuDeviceDescriptor',
+  'flight::host_sdl::WgpuExternalImageSourceInfo',
+  'flight::host_sdl::WgpuExternalImageDestinationInfo',
+  'flight::host_sdl::WgpuOrigin3D',
+  'flight::host_sdl::WgpuVertexBufferLayout',
   'flight::host_sdl::wgpu_buffer_usage_vertex',
   'flight::host_sdl::wgpu_texture_usage_render_attachment',
   'flight::host_sdl::wgpu_shader_stage_fragment',

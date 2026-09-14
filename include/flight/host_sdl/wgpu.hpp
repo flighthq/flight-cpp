@@ -6,11 +6,14 @@
 #include <optional>
 #include <stdexcept>
 #include <utility>
+#include <variant>
 
 #include <SDL3/SDL_video.h>
 
 #include <flight/host_sdl/export.hpp>
 #include <flight/host_sdl/window.hpp>
+#include <flight/array.hpp>
+#include <flight/record.hpp>
 #include <flight/set.hpp>
 #include <flight/string.hpp>
 
@@ -113,6 +116,7 @@ struct WgpuBufferTag;
 struct WgpuCanvasContextTag;
 struct WgpuCommandEncoderTag;
 struct WgpuDeviceTag;
+struct WgpuExternalImageSourceTag;
 struct WgpuPipelineLayoutTag;
 struct WgpuQueueTag;
 struct WgpuRenderPassEncoderTag;
@@ -129,6 +133,7 @@ using WgpuBuffer = WgpuObject<WgpuBufferTag>;
 using WgpuCanvasContext = WgpuObject<WgpuCanvasContextTag>;
 using WgpuCommandEncoder = WgpuObject<WgpuCommandEncoderTag>;
 using WgpuDevice = WgpuObject<WgpuDeviceTag>;
+using WgpuExternalImageSource = WgpuObject<WgpuExternalImageSourceTag>;
 using WgpuPipelineLayout = WgpuObject<WgpuPipelineLayoutTag>;
 using WgpuQueue = WgpuObject<WgpuQueueTag>;
 using WgpuRenderPassEncoder = WgpuObject<WgpuRenderPassEncoderTag>;
@@ -186,6 +191,7 @@ using WgpuBufferWeakPolicy = WgpuObjectWeakPolicy<WgpuBufferTag>;
 using WgpuCanvasContextWeakPolicy = WgpuObjectWeakPolicy<WgpuCanvasContextTag>;
 using WgpuCommandEncoderWeakPolicy = WgpuObjectWeakPolicy<WgpuCommandEncoderTag>;
 using WgpuDeviceWeakPolicy = WgpuObjectWeakPolicy<WgpuDeviceTag>;
+using WgpuExternalImageSourceWeakPolicy = WgpuObjectWeakPolicy<WgpuExternalImageSourceTag>;
 using WgpuPipelineLayoutWeakPolicy = WgpuObjectWeakPolicy<WgpuPipelineLayoutTag>;
 using WgpuQueueWeakPolicy = WgpuObjectWeakPolicy<WgpuQueueTag>;
 using WgpuRenderPassEncoderWeakPolicy = WgpuObjectWeakPolicy<WgpuRenderPassEncoderTag>;
@@ -205,6 +211,53 @@ struct WgpuColor final {
 struct WgpuDeviceLostInfo final {
   String message;
   String reason;
+};
+
+struct WgpuDeviceDescriptor final {
+  std::optional<Array<String>> required_features;
+  std::optional<Record<String, double>> required_limits;
+};
+
+struct WgpuOrigin3DDictionary final {
+  double x{0.0};
+  double y{0.0};
+  double z{0.0};
+};
+
+using WgpuOrigin3D = std::variant<WgpuOrigin3DDictionary, Array<double>>;
+
+struct WgpuOrigin2DDictionary final {
+  double x{0.0};
+  double y{0.0};
+};
+
+using WgpuOrigin2D = std::variant<WgpuOrigin2DDictionary, Array<double>>;
+
+struct WgpuExternalImageSourceInfo final {
+  WgpuExternalImageSource source;
+  WgpuOrigin2D origin;
+  bool flip_y{false};
+};
+
+struct WgpuExternalImageDestinationInfo final {
+  WgpuTexture texture;
+  WgpuOrigin3D origin;
+  double mip_level{0.0};
+  String aspect{"all"};
+  String color_space{"srgb"};
+  bool premultiplied_alpha{false};
+};
+
+struct WgpuVertexAttribute final {
+  String format;
+  double offset{0.0};
+  double shader_location{0.0};
+};
+
+struct WgpuVertexBufferLayout final {
+  Array<WgpuVertexAttribute> attributes;
+  double array_stride{0.0};
+  String step_mode{"vertex"};
 };
 
 inline constexpr double wgpu_buffer_usage_map_read = 0x0001;

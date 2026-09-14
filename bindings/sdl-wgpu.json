@@ -31,8 +31,13 @@
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUCanvasContext", "space": "type", "targetName": "flight::host_sdl::WgpuCanvasContext", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuCanvasContextWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUColor", "space": "type", "targetName": "flight::host_sdl::WgpuColor" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUCommandEncoder", "space": "type", "targetName": "flight::host_sdl::WgpuCommandEncoder", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuCommandEncoderWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUCopyExternalImageDestInfo", "space": "type", "targetName": "flight::host_sdl::WgpuExternalImageDestinationInfo" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUCopyExternalImageSource", "space": "type", "targetName": "flight::host_sdl::WgpuExternalImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuExternalImageSourceWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUCopyExternalImageSourceInfo", "space": "type", "targetName": "flight::host_sdl::WgpuExternalImageSourceInfo" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUDevice", "space": "type", "targetName": "flight::host_sdl::WgpuDevice", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuDeviceWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUDeviceDescriptor", "space": "type", "targetName": "flight::host_sdl::WgpuDeviceDescriptor" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUDeviceLostInfo", "space": "type", "targetName": "flight::host_sdl::WgpuDeviceLostInfo" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUOrigin3D", "space": "type", "targetName": "flight::host_sdl::WgpuOrigin3D" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUPipelineLayout", "space": "type", "targetName": "flight::host_sdl::WgpuPipelineLayout", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuPipelineLayoutWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUQueue", "space": "type", "targetName": "flight::host_sdl::WgpuQueue", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuQueueWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPURenderPassEncoder", "space": "type", "targetName": "flight::host_sdl::WgpuRenderPassEncoder", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuRenderPassEncoderWeakPolicy" },
@@ -68,6 +73,7 @@
       "space": "value",
       "targetName": "flight::host_sdl::wgpu_texture_usage"
     },
-    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUTextureView", "space": "type", "targetName": "flight::host_sdl::WgpuTextureView", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuTextureViewWeakPolicy" }
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUTextureView", "space": "type", "targetName": "flight::host_sdl::WgpuTextureView", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuTextureViewWeakPolicy" },
+    { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUVertexBufferLayout", "space": "type", "targetName": "flight::host_sdl::WgpuVertexBufferLayout" }
   ]
 }
