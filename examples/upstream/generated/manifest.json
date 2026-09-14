@@ -36,7 +36,7 @@
       "schema": "flight-cpp-external-bindings/1"
     },
     {
-      "digest": "sha256:4d2d8bc91c5e13ef0a23f36388de290fed693ddd2bcdfbe354bf0c948a29990d",
+      "digest": "sha256:9b477ee564593c2bc42cbd097f4954113e91fc4520ac849554ab60dd9d285b6e",
       "identity": "flighthq/flight-cpp/sdl-app/1",
       "path": "bindings/sdl-app.json",
       "profile": "sdl-app",

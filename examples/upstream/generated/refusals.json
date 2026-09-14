@@ -98,7 +98,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/camera2d/src/app.ts",
       "package": "@flighthq/example-camera2d",
-      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], DOMRect[type])",
+      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type])",
       "stage": "emission"
     },
     {
@@ -140,7 +140,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/collision/src/app.ts",
       "package": "@flighthq/example-collision",
-      "reason": "cpp emission failed for @flighthq/example-collision/examples/packages/collision/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMRect[type])",
+      "reason": "cpp emission failed for @flighthq/example-collision/examples/packages/collision/src/app.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -266,7 +266,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/materialshowcase/src/app.ts",
       "package": "@flighthq/example-materialshowcase",
-      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], DOMRect[type], HTMLDivElement[type], HTMLLabelElement[type], HTMLOptionElement[type], HTMLParagraphElement[type], HTMLSelectElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
+      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], HTMLDivElement[type], HTMLLabelElement[type], HTMLOptionElement[type], HTMLParagraphElement[type], HTMLSelectElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
       "stage": "emission"
     },
     {
@@ -329,7 +329,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/particleeditor/src/app.ts",
       "package": "@flighthq/example-particleeditor",
-      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMRect[type], HTMLDetailsElement[type], HTMLDivElement[type], HTMLHeadingElement[type], HTMLLabelElement[type], HTMLOptionElement[type], HTMLSelectElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
+      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], HTMLDetailsElement[type], HTMLDivElement[type], HTMLHeadingElement[type], HTMLLabelElement[type], HTMLOptionElement[type], HTMLSelectElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
       "stage": "emission"
     },
     {
@@ -350,7 +350,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/particles/src/app.ts",
       "package": "@flighthq/example-particles",
-      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMRect[type])",
+      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type])",
       "stage": "emission"
     },
     {
@@ -371,7 +371,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/pathboolean/src/app.ts",
       "package": "@flighthq/example-pathboolean",
-      "reason": "cpp emission failed for @flighthq/example-pathboolean/examples/packages/pathboolean/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMRect[type], HTMLDivElement[type])",
+      "reason": "cpp emission failed for @flighthq/example-pathboolean/examples/packages/pathboolean/src/app.ts: runtime external symbol binding plan is incomplete (missing: HTMLDivElement[type])",
       "stage": "emission"
     },
     {
@@ -434,7 +434,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/scene-picking/src/app.ts",
       "package": "@flighthq/example-scene-picking",
-      "reason": "cpp emission failed for @flighthq/example-scene-picking/examples/packages/scene-picking/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMRect[type])",
+      "reason": "cpp emission failed for @flighthq/example-scene-picking/examples/packages/scene-picking/src/app.ts: captured referent mutation of canvas requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -473,11 +473,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "examples/packages/shapes/src/app.ts",
       "package": "@flighthq/example-shapes",
-      "reason": "cpp emission failed for @flighthq/example-shapes/examples/packages/shapes/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMRect[type])",
-      "stage": "emission"
+      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -539,7 +539,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/spatial/src/app.ts",
       "package": "@flighthq/example-spatial",
-      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMRect[type])",
+      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/app.ts: intersection types require C++ multiple-inheritance lowering",
       "stage": "emission"
     },
     {
@@ -560,7 +560,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/spring/src/app.ts",
       "package": "@flighthq/example-spring",
-      "reason": "cpp emission failed for @flighthq/example-spring/examples/packages/spring/src/app.ts: runtime external symbol binding plan is incomplete (missing: DOMRect[type], HTMLButtonElement[type], HTMLDivElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
+      "reason": "cpp emission failed for @flighthq/example-spring/examples/packages/spring/src/app.ts: runtime external symbol binding plan is incomplete (missing: HTMLButtonElement[type], HTMLDivElement[type], HTMLSpanElement[type], HTMLStyleElement[type])",
       "stage": "emission"
     },
     {
@@ -644,7 +644,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/tilemap/src/app.ts",
       "package": "@flighthq/example-tilemap",
-      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], CanvasRenderingContext2D[type], DOMRect[type])",
+      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], CanvasRenderingContext2D[type])",
       "stage": "emission"
     },
     {

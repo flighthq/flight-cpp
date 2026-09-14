@@ -61,7 +61,7 @@ but one of the portable headers that compiled independently.
   overall.
 - `npm run sdk:generate:sdl` composes the GL, WebGPU, and SDL application profiles. It emits 1,098 modules; all 17
   headers beyond the SDL/GL inventory compile, for 755 passing and 343 failing headers. Direct external-binding
-  refusals fall from the SDL/GL profile's 242 to 166. Window, document, `HTMLElement`, animation-frame
+  refusals fall from the SDL/GL profile's 242 to 150. Window, document, `HTMLElement`, animation-frame
   cancellation, and the represented input event types advance to their next compiler or dependency boundary. The
   runtime profile also maps the compiler's existing `PromiseLike<T>` task domain to `flight::Task<T>`; `dialog.ts`
   now reaches the compiler-owned async-closure coroutine blocker instead of stopping at that ambient type.
@@ -76,16 +76,19 @@ but one of the portable headers that compiled independently.
   JavaScript callback identity in the returned unsubscribe closure. Object-valued custom event detail also needs the
   compiler to emit reference member access instead of `Ref<T>.member`; the native carrier retains the exact `Ref<T>`.
   `bindings/web-types.json` separately elects 17 standard string-literal domains and the exact
-  `DOMHighResTimeStamp` number alias without selecting a Canvas or WebGPU implementation. This adds compiling
-  `CanvasMaterialState` and `CanvasMaterialRenderer` headers and advances
-  the other affected modules to their concrete handle or dependency boundaries.
+  `DOMHighResTimeStamp` number alias without selecting a Canvas or WebGPU implementation. The SDL application
+  profile maps `DOMRect` to the complete eight-field logical rectangle already returned by the GL canvas. Together
+  these contracts add compiling `CanvasMaterialState` and `CanvasMaterialRenderer` headers and advance the other
+  affected modules to their concrete handle, lowering, or dependency boundaries.
 - `npm run examples:generate` selects 100 native modules from all 181 sources in all 33 pinned upstream example
   packages, mirroring Flight's WebGL build selection with an explicit, recorded `renderNative.ts` remap. No example
   module is dependency-closed yet. The SDL application profile removes every direct `window`, `document`, animation
-  frame, keyboard, pointer, and wheel refusal; `AudioContext` in the sound example is the only remaining direct
-  ambient name, and its decoded-PCM device provider now has an exact generated SDL adapter ready for module remap.
-  The frontier now consists of 33 propagated dependency refusals, 28 external-package initialization
-  edges, and 39 compiler emission failures. The inventory is committed under
+  frame, keyboard, pointer, wheel, gamepad-button, and `DOMRect` refusal. The rectangle binding clears that ambient
+  name from eleven selected roots; collision, scene-picking, shapes, and spatial now expose their next compiler or
+  dependency boundary. Remaining direct names describe real work: Canvas 2D, richer HTML controls, listener options,
+  media, iterable inputs, and the sound example's `AudioContext`. The selected ledger contains 55 emission and 45
+  dependency refusals; its dependency-first frontier remains 39 compiler emission failures, 33 propagated dependency
+  failures, and 28 external-package initialization edges. The inventory is committed under
   `examples/upstream/generated/` and contains no duplicate SDK sources.
 - `npm run runtime:oracle` executes TypeScript-valid source behavior under Node and compares it with the native
   runtime. It currently covers 44 cross-runtime observations.

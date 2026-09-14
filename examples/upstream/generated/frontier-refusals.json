@@ -98,7 +98,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/camera2d/src/app.ts",
       "package": "@flighthq/example-camera2d",
-      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], DOMRect[type])",
+      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/app.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type])",
       "stage": "emission"
     },
     {

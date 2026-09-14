@@ -221,6 +221,13 @@ next compiler or package dependency failures in the full SDK graph. The runtime 
 existing `flight::Task<T>` carrier; the dialog module consequently advances to the compiler's async-closure
 coroutine-lowering refusal.
 
+The same profile maps `DOMRect` to the host's complete eight-field `ClientRect`, which is populated from SDL logical
+canvas dimensions. This removes the name from all eleven selected example roots that referenced it. Four of those
+roots now stop directly at compiler-owned union, captured-reference, intersection, or SDK-dependency boundaries;
+the others retain separate Canvas, listener-option, or HTML-control requirements. In the full SDK sweep, direct
+ambient-binding refusals are now 150 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
+at 1,098 modules.
+
 The SDL profile now also supplies `Event`, `CompositionEvent`, `InputEvent`, `Gamepad`, `GamepadButton`,
 `GamepadEvent`, and `navigator.getGamepads()` with compiler-checked native carriers. SDL's gamepad carrier exposes
 the standard `pressed`, `touched`, and `value` button fields and preserves them in each polled snapshot.

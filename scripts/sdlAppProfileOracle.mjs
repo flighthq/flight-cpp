@@ -83,6 +83,9 @@ const source = api.parseTypeScriptSource(
      navigator.getGamepads();
      return keyboard.key + (input.data ?? '') + (composition.data ?? '') + gamepad.id +
        (button.touched ? String(button.value) : '');
+   }
+   export function inspectNativeRect(rect: DOMRect): number {
+     return rect.left + rect.top + rect.right + rect.bottom + rect.x + rect.y + rect.width + rect.height;
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -118,6 +121,8 @@ for (const expected of [
   'flight::host_sdl::GamepadSnapshot gamepad',
   'flight::host_sdl::GamepadButtonSnapshot button',
   'button.touched',
+  'flight::host_sdl::ClientRect rect',
+  'rect.width',
 ]) {
   if (!emitted.includes(expected)) {
     process.stderr.write(`SDL app binding fixture did not emit ${expected}.\n`);

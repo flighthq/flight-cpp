@@ -5,6 +5,7 @@
   "bindings": [
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "CompositionEvent", "space": "type", "targetName": "flight::host_sdl::DomEvent" },
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "CustomEvent", "space": "type", "targetName": "flight::host_sdl::DomCustomEvent" },
+    { "headers": ["flight/host_sdl/web_platform_types.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "DOMRect", "space": "type", "targetName": "flight::host_sdl::ClientRect" },
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "Event", "space": "type", "targetName": "flight::host_sdl::DomEvent" },
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "Gamepad", "space": "type", "targetName": "flight::host_sdl::GamepadSnapshot" },
     { "headers": ["flight/host_sdl/input.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GamepadButton", "space": "type", "targetName": "flight::host_sdl::GamepadButtonSnapshot" },
