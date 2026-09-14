@@ -16,6 +16,16 @@ cc_test(
 )
 
 cc_binary(
+    name = "sound_sdl",
+    srcs = [
+        "sound/generated/sound.hpp",
+        "sound/sound_sdl_example.cpp",
+    ],
+    tags = ["manual"],
+    deps = ["//:host_sdl"],
+)
+
+cc_binary(
     name = "tween_sdl_gl",
     srcs = [
         "tween/generated/tween.hpp",

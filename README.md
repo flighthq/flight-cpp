@@ -72,6 +72,12 @@ cmake --build --preset development
 ./out/cmake/development/examples/flight_cpp_tween_sdl_gl_example
 ```
 
+The same host package plays PCM generated from the upstream sound example's transpiled TypeScript calculations:
+
+```sh
+./out/cmake/development/examples/flight_cpp_sound_sdl_example
+```
+
 Consumers can build it in-tree with `add_subdirectory`, or install it and use:
 
 ```cmake

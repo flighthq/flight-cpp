@@ -158,7 +158,9 @@ packages own rendering behavior. These host bindings will increase the emitted m
 The SDL host now also implements the complete emitted `AudioDeviceBackend` operation record over SDL's device
 callback, including PCM buffer acquisition, concurrent source playback, live gain/pan/rate, bounded regions,
 teardown semantics, and application-thread completion delivery. Its generated-record adapter compiles and runs at
-this pin. The compiler still needs importer-specific module remapping to replace `webAudioDeviceBackend` in the sound
+this pin. A native example also executes the upstream sound example's compiler-generated procedural PCM through the
+SDL backend under CMake and Bazel. The compiler still needs importer-specific module remapping to replace
+`webAudioDeviceBackend` in the full sound
 example. The runtime now represents the `AudioBuffer` stored by `AudioResource` and created by
 `createAudioResourceFromSamples`; encoded-byte decoding still requires an explicit native codec/provider contract.
 The host playback seam is no longer part of that blocker.

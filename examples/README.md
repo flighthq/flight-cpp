@@ -65,3 +65,36 @@ source also spells the elastic curve's phase shift as the equivalent `period / 4
 emits `Math.asin` with an invalid C++ qualifier. Keeping the curve calculation in a separate source module makes both
 supported compiler boundaries visible and gives later compiler revisions a straightforward place to remove the
 adaptations.
+
+## Sound
+
+The SDL sound example uses the procedural tone and frequency-sweep calculations from Flight's upstream sound
+example. Those calculations are transpiled from `sound/source/sound.ts`; the native entry point narrows the emitted
+number arrays once to Float32 PCM, wraps them in `flight::AudioBuffer`, and plays three concurrent sources through
+`SdlAudioDeviceBackend`:
+
+```sh
+cmake --preset development \
+  -DFLIGHT_CPP_BUILD_HOST_SDL=ON \
+  -DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF
+cmake --build --preset development
+./out/cmake/development/examples/flight_cpp_sound_sdl_example
+```
+
+Use `--smoke` to generate shorter samples. Automated builds run that form with SDL's dummy audio driver. The full
+upstream application still waits on compiler package/source remapping and its renderer dependency closure; this
+entry point exercises the already available generated PCM and native playback seam without duplicating the SDK. The
+portable source uses `number[]` as a temporary because the current compiler emits intentional Float32 assignment
+narrowing without an explicit C++ cast, which conflicts with this repository's warning-as-error development build.
+
+Regenerate the checked-in sound header with its pinned compiler:
+
+```sh
+npm run rehydrate
+npm ci --prefix .dependencies/flight-compiler
+npm --prefix .dependencies/flight-compiler run compile -- \
+  "$PWD/examples/sound/source" \
+  --target cpp \
+  --out "$PWD/examples/sound/generated" \
+  --package @flighthq/examples-sound
+```

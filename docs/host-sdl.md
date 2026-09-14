@@ -36,6 +36,7 @@ With examples enabled by the preset, the native tween example exercises the GL p
 
 ```sh
 ./out/cmake/development/examples/flight_cpp_tween_sdl_gl_example
+./out/cmake/development/examples/flight_cpp_sound_sdl_example
 ```
 
 Bazel pins and builds SDL 3.4.10 from source for the SDL, GL, and type-erased WGPU targets. CMake, Ninja, Make, M4,
@@ -44,6 +45,8 @@ same host test and run the GL smoke with:
 
 ```sh
 bazel test --config=local-posix //tests:host_sdl_test
+SDL_AUDIODRIVER=dummy \
+  bazel run --config=local-posix //examples:sound_sdl -- --smoke
 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
   bazel run --config=local-posix //examples:tween_sdl_gl -- --smoke
 ```
@@ -56,6 +59,10 @@ It animates the fifteen easing curves emitted from `examples/tween/source/tween.
 `GlCanvas` and `WebGl2Context` host seam exposed by `Flight::HostSdlGl`. The example calls the context's reusable
 texture upload, framebuffer clear/readback, shader/program, draw, viewport, and presentation operations; no
 example-private OpenGL dispatch table or SDL renderer is involved.
+
+The sound example transpiles the upstream procedural tone and sweep calculations, narrows their results to Float32
+PCM once, and plays three concurrent sources through `SdlAudioDeviceBackend`. Its `--smoke` mode runs with SDL's
+dummy audio driver and verifies application-thread completion delivery.
 
 Set `-DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF` for an SDL and GL/WGPU build without Vulkan development files. Native
 dependency discovery and target selection belong to CMake or Bazel, so an npm wrapper would only obscure their

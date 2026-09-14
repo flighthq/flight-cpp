@@ -115,7 +115,7 @@ for (const source of benchmarkSources) requireSourceInBothBuilds(source, 'benchm
 
 const exampleSources = filesUnder(path.join(cppRoot, 'examples'), isNativeSource);
 const hostSdlExampleSources = exampleSources.filter(
-  (filename) => path.basename(filename) === 'tween_sdl_gl_example.cpp',
+  (filename) => path.basename(filename).includes('_sdl_'),
 );
 const portableExampleSources = exampleSources.filter((filename) => !hostSdlExampleSources.includes(filename));
 for (const source of portableExampleSources) requireSourceInBothBuilds(source, 'example source');
@@ -152,6 +152,7 @@ requireText(
   'Bazel performance smoke CI run',
 );
 requireText(ci, 'bazel test --config=local-posix //tests:host_sdl_test', 'Bazel SDL host CI run');
+requireText(ci, 'bazel run --config=local-posix //examples:sound_sdl -- --smoke', 'Bazel SDL sound example CI run');
 requireText(ci, 'bazel run --config=local-posix //examples:tween_sdl_gl -- --smoke', 'Bazel SDL example CI run');
 
 if (failures.length > 0) {
