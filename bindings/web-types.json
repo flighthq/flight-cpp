@@ -28,9 +28,13 @@
     { "construction": { "kind": "constructor", "targetName": "flight::ImageData" }, "headers": ["flight/image_data.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "ImageData", "space": "value", "targetName": "flight::ImageData" },
     { "headers": ["flight/typed_array.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "ImageDataArray", "space": "type", "targetName": "flight::Uint8ClampedArray" },
     { "headers": ["flight/image_data.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "ImageDataSettings", "space": "type", "targetName": "flight::ImageDataSettings" },
+    { "headers": ["flight/web_types.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "ImageEncodeOptions", "space": "type", "targetName": "flight::WebImageEncodeOptions" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "LDMLPluralRule", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/web_types.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "PermissionDescriptor", "space": "type", "targetName": "flight::WebPermissionDescriptor" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "PermissionName", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/web_types.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "PositionOptions", "space": "type", "targetName": "flight::WebPositionOptions" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "PredefinedColorSpace", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/web_types.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "TextMetrics", "space": "type", "targetName": "flight::WebTextMetrics" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "WakeLockType", "space": "type", "targetName": "flight::String" }
   ]
 }

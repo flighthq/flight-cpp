@@ -41,7 +41,8 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
 - shared decoded-PCM `AudioBuffer` storage with live channel views and bounded channel copies, plus its named
   `AudioBufferOptions` type, selected through the runtime profile and exercised by compiler-emitted native code;
 - CPU-backed `ImageData` with exact live `Uint8ClampedArray` reuse, Web IDL dimensions, color-space values, named
-  DOM exceptions, shared identity, and a live compiler-emitted constructor/property fixture;
+  DOM exceptions, and shared identity, plus complete provider-neutral `TextMetrics`, `ImageEncodeOptions`,
+  `PermissionDescriptor`, and `PositionOptions` values exercised by live compiler fixtures;
 - `TextEncoder` scalar UTF-8 and unpaired-surrogate replacement, whose newly admitted SWF helper compiles after
   shared runtime containers gained JavaScript-compatible logical constness;
 - numeric conversion and prefix parsing, safe-integer checks, object keys/values, symbols, URL protocol parsing,
@@ -164,6 +165,11 @@ exact message, name, and legacy-code values, but its ambient constructor remains
 `typeof DOMException !== 'undefined' && error instanceof DOMException` path emits C++ `instanceof` syntax and member
 access on the erased catch value. flight-compiler needs a represented external runtime-type-test operation before
 that global can be selected soundly.
+
+The same profile removes `TextMetrics`, `ImageEncodeOptions`, `PermissionDescriptor`, and `PositionOptions` from
+every direct refusal. Each affected root advances to its remaining Canvas, offscreen-canvas, geolocation,
+permissions, media, or wake-lock provider contract. The emitted closure remains 1,098 because no root was otherwise
+dependency-complete; these portable values are ready for those host adapters without choosing their implementation.
 
 The runtime now also provides `flight::all_settled_tasks(Array<Task<T>>)` and
 `Task<T>::all_settled(std::vector<Task<T>>)`, returning ordered `TaskSettlement<T>` values without rejecting the

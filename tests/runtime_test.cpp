@@ -1381,6 +1381,31 @@ void test_uri_components() {
         "URI component operations reject malformed percent UTF-8 and unpaired surrogates");
 }
 
+void test_web_types() {
+  flight::WebTextMetrics metrics;
+  metrics.width = 12.0;
+  metrics.actual_bounding_box_ascent = 8.0;
+  const auto alias = metrics;
+  const flight::WebTextMetrics distinct;
+  check(alias == metrics && alias.identity() == metrics.identity() && distinct != metrics &&
+            alias.width == 12.0 && alias.actual_bounding_box_ascent == 8.0,
+        "Web TextMetrics copies preserve provider result identity and measured values");
+
+  const flight::WebImageEncodeOptions encode{
+      .quality = 0.75,
+      .type = flight::String("image/webp"),
+  };
+  const flight::WebPositionOptions position{
+      .enable_high_accuracy = true,
+      .maximum_age = std::nullopt,
+      .timeout = 500.0,
+  };
+  check(encode.quality == 0.75 && encode.type == flight::String("image/webp") &&
+            position.enable_high_accuracy == true && !position.maximum_age.has_value() &&
+            position.timeout == 500.0,
+        "portable Web dictionaries preserve optional member presence");
+}
+
 void test_task() {
   const auto source = FlightTask<int>::ready(21);
   check(source.is_ready() && source.get() == 21, "ready task exposes its settled value");
@@ -1532,5 +1557,6 @@ int main() {
   test_task();
   test_typed_array();
   test_uri_components();
+  test_web_types();
   return failures == 0 ? 0 : 1;
 }

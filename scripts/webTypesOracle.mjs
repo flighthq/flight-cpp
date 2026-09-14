@@ -76,6 +76,31 @@ const source = api.parseTypeScriptSource(
    }
    export function settings(value: CanvasRenderingContext2DSettings): CanvasRenderingContext2DSettings {
      return value;
+   }
+   export function encodeOptions(value: ImageEncodeOptions): ImageEncodeOptions {
+     return value;
+   }
+   export function permission(value: PermissionDescriptor): PermissionDescriptor {
+     return value;
+   }
+   export function position(value: PositionOptions): PositionOptions {
+     return value;
+   }
+   export function metrics(value: TextMetrics): number[] {
+     return [
+       value.actualBoundingBoxAscent,
+       value.actualBoundingBoxDescent,
+       value.actualBoundingBoxLeft,
+       value.actualBoundingBoxRight,
+       value.alphabeticBaseline,
+       value.emHeightAscent,
+       value.emHeightDescent,
+       value.fontBoundingBoxAscent,
+       value.fontBoundingBoxDescent,
+       value.hangingBaseline,
+       value.ideographicBaseline,
+       value.width,
+     ];
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -102,6 +127,11 @@ for (const expected of [
   '#include <flight/web_types.hpp>',
   'flight::DomPointInit point(flight::DomPointInit value)',
   'flight::CanvasRenderingContext2DSettings settings(flight::CanvasRenderingContext2DSettings value)',
+  'flight::WebImageEncodeOptions encode_options(flight::WebImageEncodeOptions value)',
+  'flight::WebPermissionDescriptor permission(flight::WebPermissionDescriptor value)',
+  'flight::WebPositionOptions position(flight::WebPositionOptions value)',
+  'flight::Array<double> metrics(flight::WebTextMetrics value)',
+  'value.font_bounding_box_ascent',
 ]) {
   if (!emitted.includes(expected)) {
     process.stderr.write(`Web dictionary fixture did not emit ${expected}.\n${emitted}\n`);
@@ -125,9 +155,35 @@ int main() {
           .color_space = flight::String("display-p3"),
           .will_read_frequently = true,
       });
+  const auto encode_options = flighthq_host_test::encode_options(
+      flight::WebImageEncodeOptions{.quality = 0.75, .type = flight::String("image/webp")});
+  const auto permission = flighthq_host_test::permission(
+      flight::WebPermissionDescriptor{.name = flight::String("camera")});
+  const auto position = flighthq_host_test::position(
+      flight::WebPositionOptions{.enable_high_accuracy = true, .timeout = 500.0});
+  flight::WebTextMetrics metrics;
+  metrics.actual_bounding_box_ascent = 1.0;
+  metrics.actual_bounding_box_descent = 2.0;
+  metrics.actual_bounding_box_left = 3.0;
+  metrics.actual_bounding_box_right = 4.0;
+  metrics.alphabetic_baseline = 5.0;
+  metrics.em_height_ascent = 6.0;
+  metrics.em_height_descent = 7.0;
+  metrics.font_bounding_box_ascent = 8.0;
+  metrics.font_bounding_box_descent = 9.0;
+  metrics.hanging_baseline = 10.0;
+  metrics.ideographic_baseline = 11.0;
+  metrics.width = 12.0;
+  const auto measured = flighthq_host_test::metrics(metrics);
   return point.w == 2.0 && point.x == 3.0 && !point.z.has_value() &&
                  settings.alpha == false && settings.color_space == flight::String("display-p3") &&
-                 !settings.desynchronized.has_value() && settings.will_read_frequently == true
+                 !settings.desynchronized.has_value() && settings.will_read_frequently == true &&
+                 encode_options.quality == 0.75 &&
+                 encode_options.type == flight::String("image/webp") &&
+                 permission.name == flight::String("camera") &&
+                 position.enable_high_accuracy == true && !position.maximum_age.has_value() &&
+                 position.timeout == 500.0 && measured.size() == 12 && measured[0] == 1.0 &&
+                 measured[7] == 8.0 && measured[11] == 12.0
              ? 0
              : 1;
 }
