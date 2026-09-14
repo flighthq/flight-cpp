@@ -3,13 +3,30 @@
 #include <chrono>
 
 #include <flight/array.hpp>
+#include <flight/json.hpp>
 #include <flight/string.hpp>
 
 namespace flight::host {
 
 struct Performance final {};
 
-struct PerformanceNavigationTiming final {
+struct PerformanceEntry {
+  String name;
+  String entry_type;
+  double start_time = 0.0;
+  double duration = 0.0;
+
+  [[nodiscard]] JsonValue to_json() const {
+    return JsonObject{
+        {String("name"), name},
+        {String("entryType"), entry_type},
+        {String("startTime"), start_time},
+        {String("duration"), duration},
+    };
+  }
+};
+
+struct PerformanceNavigationTiming final : PerformanceEntry {
   String type;
 };
 

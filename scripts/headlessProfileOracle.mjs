@@ -41,7 +41,10 @@ const api = await import(pathToFileURL(compilerEntry));
 const bindings = JSON.parse(readFileSync(path.join(root, 'bindings', 'headless.json'), 'utf8'));
 const source = api.parseTypeScriptSource(
   '/flight/packages/host-test/src/headless.ts',
-  `export function exercise(message: string, callback: () => void): number {
+  `export function preserveEntries(entries: PerformanceEntryList): PerformanceEntryList { return entries; }
+   export function entryName(entry: PerformanceEntry): string { return entry.name + ':' + entry.entryType; }
+   export function entryTiming(entry: PerformanceEntry): number { return entry.startTime + entry.duration; }
+   export function exercise(message: string, callback: () => void): number {
      console.debug(message);
      const interval = setInterval(callback, 0);
      clearInterval(interval);
@@ -74,6 +77,16 @@ if (!emitted.includes('flight::host::performance_get_entries_by_type')) {
   process.stderr.write('Headless binding fixture did not emit performance navigation lookup.\n');
   process.exit(1);
 }
+if (!emitted.includes('flight::Array<flight::host::PerformanceEntry>')) {
+  process.stderr.write('Headless binding fixture did not emit the selected performance entry list.\n');
+  process.exit(1);
+}
+for (const member of ['entry.entry_type', 'entry.start_time', 'entry.duration']) {
+  if (!emitted.includes(member)) {
+    process.stderr.write(`Headless binding fixture did not emit performance member ${member}.\n`);
+    process.exit(1);
+  }
+}
 
 const temporary = mkdtempSync(path.join(tmpdir(), 'flight-cpp-headless-profile-'));
 try {
@@ -84,10 +97,23 @@ try {
 
 int main() {
   int calls = 0;
+  const flight::host::PerformanceEntry entry{
+      .name = flight::String("navigation"),
+      .entry_type = flight::String("navigation"),
+      .start_time = 2.0,
+      .duration = 3.0,
+  };
+  const auto entry_json = entry.to_json();
+  const auto json_duration = entry_json.as_object().get(flight::String("duration"));
   const double timestamp = flighthq_host_test::exercise(
       flight::String("headless profile oracle"), [&] { ++calls; });
   static_cast<void>(flight::host::pump_timers());
-  return timestamp >= 0.0 && calls == 0 ? 0 : 1;
+  return timestamp >= 0.0 && calls == 0 &&
+          flighthq_host_test::entry_name(entry) == flight::String("navigation:navigation") &&
+          flighthq_host_test::entry_timing(entry) == 5.0 && json_duration.has_value() &&
+          json_duration->as_number() == 3.0
+      ? 0
+      : 1;
 }
 `,
   );

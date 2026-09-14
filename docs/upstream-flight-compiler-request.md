@@ -125,7 +125,9 @@ flight-compiler. Downstream source rewriting would obscure compiler provenance a
 transpiler, so the checked-in SDK remains the compiler's exact output plus its generated build/member inventories.
 
 The SDL lifecycle profile now supplies the exact `CustomEvent<T>`, navigation timing, document visibility, and focus
-carriers. Two compiler contracts remain before that module can use them faithfully. Generated object-valued
+carriers. The headless profile also maps `PerformanceEntry` and `PerformanceEntryList` to the standard value and
+base-entry array while its native navigation query returns the narrower navigation-timing array used by Flight. Two
+compiler contracts remain before that module can use them faithfully. Generated object-valued
 `event.detail` access must dereference `Ref<T>` rather than emit `event.detail.member`, and copied callable values must
 retain source identity so `removeEventListener(type, listener)` can remove the registration added before the listener
 is captured by the returned unsubscribe closure. A diagnostic removal mapping moves `lifecycle.ts` to the separate
@@ -282,7 +284,7 @@ The same profile maps `DOMRect` to the host's complete eight-field `ClientRect`,
 canvas dimensions. This removes the name from all eleven selected example roots that referenced it. Four of those
 roots now stop directly at compiler-owned union, captured-reference, intersection, or SDK-dependency boundaries;
 the others retain separate Canvas, listener-option, or HTML-control requirements. In the full SDK sweep, direct
-ambient-binding refusals are now 112 modules, down from the original 242-module SDL/GL frontier, while the
+ambient-binding refusals are now 111 modules, down from the original 242-module SDL/GL frontier, while the
 dependency-closed total stays at 1,098 modules.
 
 The runtime profile also binds the global `Boolean` value to a callable object with exact represented truthiness.

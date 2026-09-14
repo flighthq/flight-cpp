@@ -64,7 +64,7 @@ but one of the portable headers that compiled independently.
   overall.
 - `npm run sdk:generate:sdl` composes the GL, WebGPU, and SDL application profiles. It emits 1,098 modules; all 17
   headers beyond the SDL/GL inventory compile, for 756 passing and 342 failing headers. Direct external-binding
-  refusals fall from the SDL/GL profile's original 242 to 112. Window, document, `HTMLElement`, animation-frame
+  refusals fall from the SDL/GL profile's original 242 to 111. Window, document, `HTMLElement`, animation-frame
   cancellation, and the represented input event types advance to their next compiler or dependency boundary. The
   runtime profile also maps the compiler's existing `PromiseLike<T>` task domain to `flight::Task<T>`; `dialog.ts`
   now reaches the compiler-owned async-closure coroutine blocker instead of stopping at that ambient type.
@@ -72,11 +72,12 @@ but one of the portable headers that compiled independently.
   `AddEventListenerOptions` carriers and lacks only `EventTarget[type]`. Binding that target nominally exposes the
   compiler's unresolved `std::function<auto` event-listener parameter, so the host leaves it absent until callable
   listener types and removal identity have a concrete compiler contract.
-  The lifecycle module now passes `CustomEvent<T>`, `PerformanceNavigationTiming`, `document.hidden`, and
-  `document.hasFocus()` and stops at `document.removeEventListener`. A diagnostic mapping for removal advances it to
-  its separate closed-`WeakMap` value proof, but it cannot be maintained while copied `std::function` values lose
-  JavaScript callback identity in the returned unsubscribe closure. Object-valued custom event detail also needs the
-  compiler to emit reference member access instead of `Ref<T>.member`; the native carrier retains the exact `Ref<T>`.
+  The lifecycle module now passes `CustomEvent<T>`, `PerformanceEntryList`, `PerformanceNavigationTiming`,
+  `document.hidden`, and `document.hasFocus()` and stops at `document.removeEventListener`. A diagnostic mapping for
+  removal advances it to its separate closed-`WeakMap` value proof, but it cannot be maintained while copied
+  `std::function` values lose JavaScript callback identity in the returned unsubscribe closure. Object-valued custom
+  event detail also needs the compiler to emit reference member access instead of `Ref<T>.member`; the native carrier
+  retains the exact `Ref<T>`.
   `bindings/web-types.json` separately elects 22 standard string-literal domains, the exact
   `DOMHighResTimeStamp` number alias, portable `DOMPointInit` and `CanvasRenderingContext2DSettings`
   dictionaries, and CPU-backed `ImageData` values without selecting a Canvas or WebGPU implementation. Optional dictionary fields retain the
@@ -154,6 +155,11 @@ The separate SDL image profile then supplies one provider-owned decoded source a
 from the full graph and direct ambient-refusal records fall from 120 to 112. `glDraw.ts` and several scene renderers
 now expose contextual source-union evidence, while `wgpuDraw.ts` retains only its browser constructor values. The
 emitted closure remains 1,098 because no newly advanced root is otherwise dependency-complete.
+The headless profile now supplies the standard `PerformanceEntry` value and `PerformanceEntryList` base-entry array
+used by the lifecycle module while retaining the narrower native navigation-timing result for
+`getEntriesByType('navigation')`. This removes the last performance ambient from that root and lowers direct
+ambient-refusal records from 112 to 111; the module then stops at the deliberately unbound listener-removal contract
+described above.
 Direct external descriptor construction still preserves source property order instead of the target aggregate's
 declaration order. The compiler must supply contextual target types and ordered designators before arbitrary valid
 TypeScript descriptor literals compile regardless of property order.

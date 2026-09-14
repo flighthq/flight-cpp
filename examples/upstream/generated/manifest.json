@@ -15,7 +15,7 @@
       "schema": "flight-cpp-external-bindings/1"
     },
     {
-      "digest": "sha256:0970dab5b0dfc7ee48da43b0efa3b4946bef98c4306b7c48f80e850cf4629f6c",
+      "digest": "sha256:0dcdadfb1a56a90afff9a5073fc80c4f897077c94d2c2ace07e0a54393e7f48c",
       "identity": "flighthq/flight-cpp/headless/1",
       "path": "bindings/headless.json",
       "profile": "headless",

@@ -65,6 +65,26 @@
       ],
       "nullability": "non-null",
       "ownership": "value",
+      "sourceName": "PerformanceEntry",
+      "space": "type",
+      "targetName": "flight::host::PerformanceEntry"
+    },
+    {
+      "headers": [
+        "flight/host/performance.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "PerformanceEntryList",
+      "space": "type",
+      "targetName": "flight::Array<flight::host::PerformanceEntry>"
+    },
+    {
+      "headers": [
+        "flight/host/performance.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
       "sourceName": "PerformanceNavigationTiming",
       "space": "type",
       "targetName": "flight::host::PerformanceNavigationTiming"
