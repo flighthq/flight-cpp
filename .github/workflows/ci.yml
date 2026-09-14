@@ -49,6 +49,14 @@ jobs:
       - name: Run Bazel performance smoke gate
         if: matrix.os == 'ubuntu-latest'
         run: bazel test --config=${{ matrix.toolchain_config }} --config=release //benchmarks:runtime_benchmark
+      - name: Build and test pinned SDL host
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          SDL_AUDIODRIVER: dummy
+          SDL_VIDEODRIVER: offscreen
+        run: |
+          bazel test --config=local-posix //tests:host_sdl_test
+          bazel run --config=local-posix //examples:tween_sdl_gl -- --smoke
 
   cpp-runtime:
     name: C++ runtime (${{ matrix.compiler }})

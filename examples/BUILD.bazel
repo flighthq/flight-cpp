@@ -1,4 +1,4 @@
-load("@rules_cc//cc:defs.bzl", "cc_test")
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_test")
 
 cc_test(
     name = "tween",
@@ -13,4 +13,14 @@ cc_test(
     name = "sdk_math",
     srcs = ["sdk_math_example.cpp"],
     deps = ["//:sdk_preview"],
+)
+
+cc_binary(
+    name = "tween_sdl_gl",
+    srcs = [
+        "tween/generated/tween.hpp",
+        "tween/tween_sdl_gl_example.cpp",
+    ],
+    tags = ["manual"],
+    deps = ["//:host_sdl_gl"],
 )

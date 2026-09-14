@@ -41,4 +41,19 @@ cc_test(
     deps = ["//:c"],
 )
 
+cc_test(
+    name = "host_sdl_test",
+    srcs = ["host_sdl_test.cpp"],
+    env = {
+        "SDL_AUDIODRIVER": "dummy",
+        "SDL_VIDEODRIVER": "dummy",
+    },
+    size = "small",
+    tags = ["manual"],
+    deps = [
+        "//:host_sdl_gl",
+        "//:host_sdl_wgpu",
+    ],
+)
+
 flight_cpp_public_header_tests()

@@ -26,13 +26,16 @@ Use `--config=local-msvc` for the default Visual C++ toolchain, or select an arb
 
 GCC and Clang development builds can add `-DFLIGHT_CPP_ENABLE_SANITIZERS=ON` to run the same runtime and generated-program tests under AddressSanitizer and UndefinedBehaviorSanitizer.
 
-The handwritten SDL 3 host is an optional CMake package. Enabling it builds SDL lifecycle/window support plus
-separate GL, Vulkan, and WebGPU surface targets without adding dependencies to `Flight::Cpp`:
+The handwritten SDL 3 host is optional. CMake can use an installed SDL, while Bazel builds its pinned SDL source;
+both keep SDL out of `Flight::Cpp`:
 
 ```sh
 cmake --preset development -DFLIGHT_CPP_BUILD_HOST_SDL=ON
 cmake --build --preset development
 ctest --preset development
+
+bazel test --config=local-posix //tests:host_sdl_test
+SDL_VIDEODRIVER=offscreen bazel run --config=local-posix //examples:tween_sdl_gl -- --smoke
 ```
 
 See the [SDL host package guide](docs/host-sdl.md) for dependencies, exported targets, ownership, and the generated

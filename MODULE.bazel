@@ -5,5 +5,24 @@ module(
 )
 
 bazel_dep(name = "rules_cc", version = "0.2.22")
+bazel_dep(name = "rules_foreign_cc", version = "0.15.1")
+
+register_toolchains(
+    "@rules_foreign_cc//toolchains:preinstalled_cmake_toolchain",
+    "@rules_foreign_cc//toolchains:preinstalled_m4_toolchain",
+    "@rules_foreign_cc//toolchains:preinstalled_make_toolchain",
+    "@rules_foreign_cc//toolchains:preinstalled_ninja_toolchain",
+    "@rules_foreign_cc//toolchains:preinstalled_pkgconfig_toolchain",
+)
+
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "sdl3_source",
+    build_file = "//third_party:sdl3.BUILD.bazel",
+    sha256 = "12b34280415ec8418c864408b93d008a20a6530687ee613d60bfbd20411f2785",
+    strip_prefix = "SDL3-3.4.10",
+    urls = ["https://github.com/libsdl-org/SDL/releases/download/release-3.4.10/SDL3-3.4.10.tar.gz"],
+)
 
 # rules_cc supplies build rules; the runtime and its tests link no external libraries.

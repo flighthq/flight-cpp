@@ -78,6 +78,55 @@ alias(
     actual = "//generated:sdk_preview",
 )
 
+cc_library(
+    name = "host_sdl",
+    srcs = [
+        "src/host_sdl/detail.hpp",
+        "src/host_sdl/host.cpp",
+        "src/host_sdl/input.cpp",
+        "src/host_sdl/window.cpp",
+    ],
+    hdrs = [
+        "include/flight/host_sdl/export.hpp",
+        "include/flight/host_sdl/host.hpp",
+        "include/flight/host_sdl/input.hpp",
+        "include/flight/host_sdl/window.hpp",
+    ],
+    strip_include_prefix = "include",
+    tags = ["manual"],
+    deps = [
+        ":cpp",
+        "@sdl3_source//:sdl3",
+    ],
+)
+
+cc_library(
+    name = "host_sdl_gl",
+    srcs = [
+        "src/host_sdl/gl.cpp",
+        "src/host_sdl/web_platform.cpp",
+        "src/host_sdl/webgl.cpp",
+    ],
+    hdrs = [
+        "include/flight/host_sdl/gl.hpp",
+        "include/flight/host_sdl/web_platform.hpp",
+        "include/flight/host_sdl/web_platform_types.hpp",
+        "include/flight/host_sdl/webgl.hpp",
+    ],
+    strip_include_prefix = "include",
+    tags = ["manual"],
+    deps = [":host_sdl"],
+)
+
+cc_library(
+    name = "host_sdl_wgpu",
+    srcs = ["src/host_sdl/wgpu.cpp"],
+    hdrs = ["include/flight/host_sdl/wgpu.hpp"],
+    strip_include_prefix = "include",
+    tags = ["manual"],
+    deps = [":host_sdl"],
+)
+
 test_suite(
     name = "tests",
     tests = [

@@ -25,6 +25,8 @@ const sdkManifest = JSON.parse(readCpp('generated/manifest.json'));
 if (bazelVersion !== '9.2.0') failures.push(`.bazelversion selects ${bazelVersion || '<empty>'}, expected 9.2.0`);
 requireText(bazelModule, 'name = "flight_cpp"', 'Bazel module identity');
 requireText(bazelModule, 'bazel_compatibility = [">=9.2.0"]', 'Bazel compatibility floor');
+requireText(bazelModule, 'rules_foreign_cc", version = "0.15.1"', 'Bazel foreign CMake rules pin');
+requireText(bazelModule, 'SDL3-3.4.10.tar.gz', 'Bazel SDL source pin');
 requireText(bazelConfiguration, 'build --incompatible_strict_action_env', 'strict Bazel action environments');
 requireText(bazelConfiguration, 'build --nostamp', 'unstamped Bazel outputs');
 requireText(bazelConfiguration, 'try-import %workspace%/.bazelrc.local', 'ignored local Bazel configuration hook');
@@ -82,9 +84,16 @@ const productionSources = filesUnder(path.join(cppRoot, 'src'), isNativeSource).
 );
 for (const source of productionSources) requireSourceInBothBuilds(source, 'runtime source');
 const hostSdlSources = filesUnder(hostSdlSourceRoot, isNativeSource);
-for (const source of hostSdlSources) requireText(cmakeGraph, path.basename(source), `CMake SDL host source ${path.basename(source)}`);
+for (const source of hostSdlSources) {
+  const basename = path.basename(source);
+  requireText(cmakeGraph, basename, `CMake SDL host source ${basename}`);
+  if (basename !== 'vulkan.cpp') requireText(bazelGraph, basename, `Bazel SDL host source ${basename}`);
+}
 for (const target of ['Flight::HostSdl', 'Flight::HostSdlGl', 'Flight::HostSdlVulkan', 'Flight::HostSdlWgpu']) {
   requireText(cmakeGraph, target, `CMake ${target} target`);
+}
+for (const target of ['host_sdl', 'host_sdl_gl', 'host_sdl_wgpu']) {
+  requireText(bazelGraph, `name = "${target}"`, `Bazel //:${target} target`);
 }
 
 const executableTests = filesUnder(path.join(cppRoot, 'tests'), isNativeSource).filter(
@@ -93,6 +102,7 @@ const executableTests = filesUnder(path.join(cppRoot, 'tests'), isNativeSource).
 );
 for (const source of executableTests) requireSourceInBothBuilds(source, 'test source');
 requireText(cmakeGraph, 'host_sdl_test.cpp', 'CMake SDL host test source');
+requireText(bazelGraph, 'host_sdl_test.cpp', 'Bazel SDL host test source');
 
 const benchmarkSources = filesUnder(path.join(cppRoot, 'benchmarks'), isNativeSource);
 for (const source of benchmarkSources) requireSourceInBothBuilds(source, 'benchmark source');
@@ -105,6 +115,7 @@ const portableExampleSources = exampleSources.filter((filename) => !hostSdlExamp
 for (const source of portableExampleSources) requireSourceInBothBuilds(source, 'example source');
 for (const source of hostSdlExampleSources) {
   requireText(cmakeGraph, path.basename(source), `CMake SDL example source ${path.basename(source)}`);
+  requireText(bazelGraph, path.basename(source), `Bazel SDL example source ${path.basename(source)}`);
 }
 
 if (presets.version !== 2 || presets.cmakeMinimumRequired?.major !== 3 || presets.cmakeMinimumRequired.minor !== 20) {
@@ -134,6 +145,8 @@ requireText(
   'bazel test --config=${{ matrix.toolchain_config }} --config=release //benchmarks:runtime_benchmark',
   'Bazel performance smoke CI run',
 );
+requireText(ci, 'bazel test --config=local-posix //tests:host_sdl_test', 'Bazel SDL host CI run');
+requireText(ci, 'bazel run --config=local-posix //examples:tween_sdl_gl -- --smoke', 'Bazel SDL example CI run');
 
 if (failures.length > 0) {
   process.stderr.write(`C++ build metadata failed with ${String(failures.length)} error(s):\n`);
@@ -142,7 +155,7 @@ if (failures.length > 0) {
 }
 
 process.stdout.write(
-  `C++ build metadata agrees across CMake and Bazel ${bazelVersion}: ${String(publicHeaders.length)} public headers, ${String(productionSources.length)} runtime source(s), ${String(executableTests.length)} executable test source(s), ${String(benchmarkSources.length)} benchmark source(s), and ${String(portableExampleSources.length)} portable example source(s); CMake additionally declares ${String(hostSdlSources.length)} optional SDL host source(s) and ${String(hostSdlExampleSources.length)} SDL example source(s).\n`,
+  `C++ build metadata agrees across CMake and Bazel ${bazelVersion}: ${String(publicHeaders.length)} public headers, ${String(productionSources.length)} runtime source(s), ${String(executableTests.length)} executable test source(s), ${String(benchmarkSources.length)} benchmark source(s), and ${String(portableExampleSources.length)} portable example source(s); both builds declare ${String(hostSdlSources.length - 1)} SDL/GL/WGPU host source(s) and ${String(hostSdlExampleSources.length)} SDL example source(s), while CMake additionally declares the Vulkan adapter.\n`,
 );
 
 function filesUnder(directory, include) {

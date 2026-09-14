@@ -37,15 +37,28 @@ With examples enabled by the preset, the native tween example exercises the GL p
 ./out/cmake/development/examples/flight_cpp_tween_sdl_gl_example
 ```
 
+Bazel pins and builds SDL 3.4.10 from source for the SDL, GL, and type-erased WGPU targets. CMake, Ninja, Make, M4,
+and pkg-config are the build tools used by `rules_foreign_cc`; SDL itself does not need to be installed. Build the
+same host test and run the GL smoke with:
+
+```sh
+bazel test --config=local-posix //tests:host_sdl_test
+SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
+  bazel run --config=local-posix //examples:tween_sdl_gl -- --smoke
+```
+
+The public Bazel labels are `//:host_sdl`, `//:host_sdl_gl`, and `//:host_sdl_wgpu`. They and their tests are tagged
+`manual`, so a core `bazel test //...` does not fetch or build SDL. CMake remains the complete package path for the
+Vulkan surface adapter.
+
 It animates the fifteen easing curves emitted from `examples/tween/source/tween.ts`. Rendering uses the copyable
 `GlCanvas` and `WebGl2Context` host seam exposed by `Flight::HostSdlGl`. The example calls the context's reusable
 texture upload, framebuffer clear/readback, shader/program, draw, viewport, and presentation operations; no
 example-private OpenGL dispatch table or SDL renderer is involved.
 
 Set `-DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF` for an SDL and GL/WGPU build without Vulkan development files. Native
-dependency discovery and target selection belong to CMake, so an npm wrapper would only obscure the options and is
-not provided. Bazel continues to cover the dependency-free runtime; the optional SDL package currently has a CMake
-package contract.
+dependency discovery and target selection belong to CMake or Bazel, so an npm wrapper would only obscure their
+options and is not provided.
 
 The build exports four targets through the existing `FlightCpp` package:
 

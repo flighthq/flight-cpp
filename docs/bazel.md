@@ -34,6 +34,21 @@ The performance smoke test is intentionally excluded from wildcard and suite run
 bazel test --config=local-posix --config=release //benchmarks:runtime_benchmark
 ```
 
+## SDL host
+
+The optional SDL host pins SDL 3.4.10 and builds it from source with `rules_foreign_cc`. Its targets are manual, so
+the dependency-free runtime suite above does not download or build SDL. With CMake, Ninja, Make, M4, and pkg-config
+available as build tools, run the host test and the offscreen GL example with:
+
+```sh
+bazel test --config=local-posix //tests:host_sdl_test
+SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
+  bazel run --config=local-posix //examples:tween_sdl_gl -- --smoke
+```
+
+Applications depend on `//:host_sdl`, `//:host_sdl_gl`, or `//:host_sdl_wgpu`. The Vulkan adapter remains CMake-only
+until its SDK is represented as a pinned Bazel dependency.
+
 ## Registered toolchains and platforms
 
 Production and cross builds should make the C++20 dialect, compiler, standard library, sysroot, linker, and target constraints part of a registered C++ toolchain. Select that toolchain through the normal Bazel resolution surface:
