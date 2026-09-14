@@ -101,9 +101,10 @@ The installed build exports four targets through the existing `FlightCpp` packag
   implementation dependency.
 
 The composed SDK sweeps also include `bindings/web-types.json`. That profile maps standard Canvas, WebGPU,
-image-smoothing, and permission string-literal domains to `flight::String`; it selects no renderer or platform
-provider and keeps those source-level names available until a concrete backend profile supplies their object
-handles.
+image-smoothing, and permission string-literal domains to `flight::String`. It also supplies portable
+`DOMPointInit` and `CanvasRenderingContext2DSettings` value dictionaries, preserving optional-member presence. It
+selects no renderer or platform provider and keeps object-handle names available until a concrete backend profile
+supplies them.
 
 `bindings/sdl-wgpu.json` supplies those object handles, adapter features/limits, device/origin/vertex/external-image
 descriptors, and standard buffer, texture, shader, color-write, and map-mode flags. It is a provider ABI rather than a renderer: device methods remain the

@@ -88,6 +88,8 @@
 #include <flight/audio_buffer.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 44
 #include <flight/iterable.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 45
+#include <flight/web_types.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

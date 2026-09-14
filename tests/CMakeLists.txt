@@ -73,6 +73,7 @@ set(
   version
   weak_map
   weak_set
+  web_types
 )
 
 foreach(header IN LISTS flight_cpp_public_headers)

@@ -75,14 +75,19 @@ but one of the portable headers that compiled independently.
   its separate closed-`WeakMap` value proof, but it cannot be maintained while copied `std::function` values lose
   JavaScript callback identity in the returned unsubscribe closure. Object-valued custom event detail also needs the
   compiler to emit reference member access instead of `Ref<T>.member`; the native carrier retains the exact `Ref<T>`.
-  `bindings/web-types.json` separately elects 21 standard string-literal domains and the exact
-  `DOMHighResTimeStamp` number alias without selecting a Canvas or WebGPU implementation. The SDL application
+  `bindings/web-types.json` separately elects 22 standard string-literal domains, the exact
+  `DOMHighResTimeStamp` number alias, and portable `DOMPointInit` and `CanvasRenderingContext2DSettings`
+  dictionaries without selecting a Canvas or WebGPU implementation. Optional dictionary fields retain the
+  difference between an omitted member and an explicit false or zero. The SDL application
   profile maps `DOMRect` to the complete eight-field logical rectangle already returned by the GL canvas. Together
   these contracts add compiling `CanvasMaterialState` and `CanvasMaterialRenderer` headers and advance the other
   affected modules to their concrete handle, lowering, or dependency boundaries.
   The GL profile also removes all direct standard extension-type refusals. `glCompressedTexture.ts` now stops at
   dual-sentinel optional-chain lowering, `glRenderTarget.ts` at nullish-coalescing presence lowering, and
   `glEnvironmentIblBake.ts` at an unrelated contextual `flight::Map` union conversion.
+  The portable dictionary mappings similarly clear those ambient names without admitting a fake 2D renderer:
+  Canvas render-state modules now stop solely at `CanvasRenderingContext2D`, and `canvasShapeCommands.ts` retains
+  only its concrete Canvas and media handle requirements.
 - `npm run examples:generate` selects 100 native modules from all 181 sources in all 33 pinned upstream example
   packages, mirroring Flight's WebGL build selection with an explicit, recorded `renderNative.ts` remap. No example
   module is dependency-closed yet. The SDL application profile removes every direct `window`, `document`, animation

@@ -43,6 +43,7 @@
 #include <flight/version.hpp>
 #include <flight/weak_map.hpp>
 #include <flight/weak_set.hpp>
+#include <flight/web_types.hpp>
 
 template <typename Value>
 using FlightTask = flight::Task<Value>;

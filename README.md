@@ -165,7 +165,7 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 | `npm run stream:oracle` | Do compiler-emitted readable, writable, and async-iterable carriers compile and preserve stream behavior? |
 | `npm run text-encoder:oracle` | Does compiler-emitted `TextEncoder` produce the same UTF-8 bytes as Node? |
 | `npm run uri:oracle` | Do compiler-emitted URI component operations match Node? |
-| `npm run web-types:oracle` | Do Web API string-literal aliases remain exact `flight::String` values in emitted C++? |
+| `npm run web-types:oracle` | Do portable Web scalar aliases and value dictionaries retain their exact emitted C++ representation? |
 | `npm run compile:check` | Does the pinned compiler's emitted C++ still compile against this runtime? |
 
 `compile:check` reports and skips when the checkout is absent or no C++ compiler is installed, so a fresh clone stays runnable. The compiler repository asks the same question from its side against the runtime revision it pins; both are wanted, because each side owns the pin it can move and a failure names which one changed.

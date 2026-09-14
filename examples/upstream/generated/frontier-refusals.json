@@ -581,7 +581,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/spritesheet/src/app.ts",
       "package": "@flighthq/example-spritesheet",
-      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type], DOMPointInit[type])",
+      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type])",
       "stage": "emission"
     },
     {
