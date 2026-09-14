@@ -57,6 +57,8 @@ but one of the portable headers that compiled independently.
   member table are committed under `generated/` and reproduced by `npm run sdk:check`.
 - CMake `Flight::SdkPreview` and Bazel `//:sdk_preview` expose every emitted header without claiming a finished SDK.
   The preview is intentionally not installed.
+- CMake `Flight::HostSdlSdkPreview` and Bazel `//:host_sdl_sdk_preview` collect every exact generated-record SDL
+  adapter as one build-tree dependency without fabricating the compiler-refused aggregate `Host` record.
 - `npm run sdk:compile` compiles every emitted header independently and writes the compiler-facing report to
   `out/sdk-header-compilation.json`.
 - `npm run sdk:compile:headless` applies the same audit to the combined portable-runtime/headless inventory. At the

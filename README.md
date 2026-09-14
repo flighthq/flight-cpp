@@ -42,6 +42,8 @@ The SDL package also implements Flight's decoded-PCM audio-device and cursor con
 adapters populate the exact generated audio-device, text-clipboard, cursor, device, haptics, platform, screen-query, soft-keyboard, application-visibility, and fullscreen records. See the
 [SDL host package guide](docs/host-sdl.md) for dependencies, exported targets, ownership, callback pumping, and the
 remaining generated SDK wiring lane.
+`Flight::HostSdlSdkPreview` and Bazel `//:host_sdl_sdk_preview` collect those build-tree-only generated-record
+adapters behind one dependency while the compiler-emitted aggregate `Host` type remains refused.
 
 Release builds can add `-DFLIGHT_CPP_BUILD_BENCHMARKS=ON`. The resulting `flight_cpp.performance` CTest emits JSON-lines measurements and applies deliberately broad throughput floors for collection, ordered-map, and settled-task regressions. These are smoke gates, not cross-machine comparisons; release-candidate history should tighten them only after a stable runner baseline exists.
 

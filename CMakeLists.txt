@@ -245,6 +245,22 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
   )
   flight_cpp_set_project_warnings(flight_host_sdl_sdk_window)
 
+  add_library(flight_host_sdl_sdk_preview INTERFACE)
+  add_library(Flight::HostSdlSdkPreview ALIAS flight_host_sdl_sdk_preview)
+  target_link_libraries(
+    flight_host_sdl_sdk_preview
+    INTERFACE
+      Flight::HostSdlSdkAudio
+      Flight::HostSdlSdkClipboard
+      Flight::HostSdlSdkCursor
+      Flight::HostSdlSdkDevice
+      Flight::HostSdlSdkHaptics
+      Flight::HostSdlSdkKeyboard
+      Flight::HostSdlSdkPlatform
+      Flight::HostSdlSdkScreen
+      Flight::HostSdlSdkWindow
+  )
+
   add_library(
     flight_host_sdl_gl
     src/host_sdl/gl.cpp

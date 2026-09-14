@@ -94,15 +94,7 @@ if(TARGET Flight::HostSdlWgpu)
     flight_cpp_host_sdl_tests
     PRIVATE
       Flight::HostSdlGl
-      Flight::HostSdlSdkAudio
-      Flight::HostSdlSdkClipboard
-      Flight::HostSdlSdkCursor
-      Flight::HostSdlSdkDevice
-      Flight::HostSdlSdkHaptics
-      Flight::HostSdlSdkKeyboard
-      Flight::HostSdlSdkPlatform
-      Flight::HostSdlSdkScreen
-      Flight::HostSdlSdkWindow
+      Flight::HostSdlSdkPreview
       Flight::HostSdlWgpu
   )
   flight_cpp_set_project_warnings(flight_cpp_host_sdl_tests)

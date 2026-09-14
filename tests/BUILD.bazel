@@ -52,15 +52,7 @@ cc_test(
     tags = ["manual"],
     deps = [
         "//:host_sdl_gl",
-        "//:host_sdl_sdk_audio",
-        "//:host_sdl_sdk_clipboard",
-        "//:host_sdl_sdk_cursor",
-        "//:host_sdl_sdk_device",
-        "//:host_sdl_sdk_haptics",
-        "//:host_sdl_sdk_keyboard",
-        "//:host_sdl_sdk_platform",
-        "//:host_sdl_sdk_screen",
-        "//:host_sdl_sdk_window",
+        "//:host_sdl_sdk_preview",
         "//:host_sdl_wgpu",
     ],
 )

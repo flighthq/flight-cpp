@@ -249,6 +249,22 @@ cc_library(
 )
 
 cc_library(
+    name = "host_sdl_sdk_preview",
+    tags = ["manual"],
+    deps = [
+        ":host_sdl_sdk_audio",
+        ":host_sdl_sdk_clipboard",
+        ":host_sdl_sdk_cursor",
+        ":host_sdl_sdk_device",
+        ":host_sdl_sdk_haptics",
+        ":host_sdl_sdk_keyboard",
+        ":host_sdl_sdk_platform",
+        ":host_sdl_sdk_screen",
+        ":host_sdl_sdk_window",
+    ],
+)
+
+cc_library(
     name = "host_sdl_wgpu",
     srcs = ["src/host_sdl/wgpu.cpp"],
     hdrs = ["include/flight/host_sdl/wgpu.hpp"],

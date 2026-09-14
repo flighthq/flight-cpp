@@ -53,9 +53,13 @@ SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
 ```
 
 The public Bazel labels are `//:host_sdl`, `//:host_sdl_image`, `//:host_sdl_gl`, `//:host_sdl_sdk_audio`,
-`//:host_sdl_sdk_clipboard`, `//:host_sdl_sdk_cursor`, `//:host_sdl_sdk_device`, `//:host_sdl_sdk_haptics`, `//:host_sdl_sdk_keyboard`, `//:host_sdl_sdk_platform`, `//:host_sdl_sdk_screen`, `//:host_sdl_sdk_window`, and `//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core
+`//:host_sdl_sdk_clipboard`, `//:host_sdl_sdk_cursor`, `//:host_sdl_sdk_device`, `//:host_sdl_sdk_haptics`, `//:host_sdl_sdk_keyboard`, `//:host_sdl_sdk_platform`, `//:host_sdl_sdk_screen`, `//:host_sdl_sdk_window`, `//:host_sdl_sdk_preview`, and `//:host_sdl_wgpu`. They and their tests are tagged `manual`, so a core
 `bazel test //...` does not fetch or build SDL. CMake remains the complete package path for the Vulkan surface
 adapter.
+
+`Flight::HostSdlSdkPreview` and Bazel `//:host_sdl_sdk_preview` are the single dependency for every exact generated
+record adapter listed above. They remain build-tree-only with `Flight::SdkPreview`; the name does not claim a
+generated `Host` aggregate, which flight-compiler still refuses through its `ApplicationWindow` dependency.
 
 It animates the fifteen easing curves emitted from `examples/tween/source/tween.ts`. Rendering uses the copyable
 `GlCanvas` and `WebGl2Context` host seam exposed by `Flight::HostSdlGl`. The example calls the context's reusable
