@@ -65,6 +65,15 @@ const source = api.parseTypeScriptSource(
      uniformLocation: WebGLUniformLocation;
      vertexArray: WebGLVertexArrayObject;
      anisotropy: EXT_texture_filter_anisotropic;
+     colorBufferFloat: EXT_color_buffer_float;
+     bptc: EXT_texture_compression_bptc;
+     rgtc: EXT_texture_compression_rgtc;
+     floatLinear: OES_texture_float_linear;
+     astc: WEBGL_compressed_texture_astc;
+     etc: WEBGL_compressed_texture_etc;
+     pvrtc: WEBGL_compressed_texture_pvrtc;
+     s3tc: WEBGL_compressed_texture_s3tc;
+     s3tcSrgb: WEBGL_compressed_texture_s3tc_srgb;
      activeInfo: WebGLActiveInfo;
      attributes: WebGLContextAttributes;
      preference: WebGLPowerPreference;
@@ -185,6 +194,15 @@ for (const expected of [
   'flight::host_sdl::WebGl2Context context;',
   'flight::host_sdl::WebGlProgram program;',
   'flight::host_sdl::GlAnisotropyExtension anisotropy;',
+  'flight::host_sdl::GlExtension color_buffer_float;',
+  'flight::host_sdl::GlExtension bptc;',
+  'flight::host_sdl::GlExtension rgtc;',
+  'flight::host_sdl::GlExtension float_linear;',
+  'flight::host_sdl::GlExtension astc;',
+  'flight::host_sdl::GlExtension etc;',
+  'flight::host_sdl::GlExtension pvrtc;',
+  'flight::host_sdl::GlExtension s3tc;',
+  'flight::host_sdl::GlExtension s3tc_srgb;',
   'flight::host_sdl::WebGlActiveInfo active_info;',
   'extension.texture_max_anisotropy_ext',
   'extension.max_texture_max_anisotropy_ext',

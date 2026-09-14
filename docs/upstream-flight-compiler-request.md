@@ -208,8 +208,9 @@ SDL backend under CMake and Bazel. The compiler still needs importer-specific mo
 The host playback seam is no longer part of that blocker.
 
 The downstream `flighthq/flight-cpp/sdl-gl/1` profile now names concrete SDL-owned canvas/context types, shared GL
-object handles, context attributes, a weakly recoverable image-source carrier, and
-`EXT_texture_filter_anisotropic`. Composed with the runtime and exact Web string-alias profiles it emits 1,081
+object handles, context attributes, a weakly recoverable image-source carrier, and the standard anisotropy,
+float-buffer/filtering, ASTC, BPTC, ETC, PVRTC, RGTC, S3TC, and S3TC-sRGB extension domains. Composed with the runtime
+and exact Web string-alias profiles it emits 1,081
 modules, 32 beyond the runtime/headless inventory; 23 of those additions compile independently. The extension binding removes its direct
 ambient refusal; `GlContextRuntime` then
 reaches `flight-cpp WeakMap value requires a proven C++ representation`. The next renderer-wide compiler blocker is exact:
@@ -232,6 +233,11 @@ compressed-extension enum lookup still depends on the compiler selecting flight-
 `Record<String, double>` representation and lowering optional indexed access. This proceeds into `render-gl` without
 adding an SDL renderer.
 
+The added extension domains remove every direct refusal for those interfaces. `glCompressedTexture.ts` advances to
+dual-sentinel optional-chain lowering, `glRenderTarget.ts` advances to nullish-coalescing presence lowering, and
+`glEnvironmentIblBake.ts` advances to an unrelated contextual `flight::Map` union conversion. The dependency-closed
+header count remains 1,098 until those compiler-owned boundaries move.
+
 Composing `bindings/sdl-app.json` with the maintained renderer profiles admits the represented window, document,
 `HTMLElement`, keyboard, mouse, pointer, wheel, and animation-frame cancellation contracts; these now reach their
 next compiler or package dependency failures in the full SDK graph. The runtime profile maps `PromiseLike<T>` to the
@@ -242,7 +248,7 @@ The same profile maps `DOMRect` to the host's complete eight-field `ClientRect`,
 canvas dimensions. This removes the name from all eleven selected example roots that referenced it. Four of those
 roots now stop directly at compiler-owned union, captured-reference, intersection, or SDK-dependency boundaries;
 the others retain separate Canvas, listener-option, or HTML-control requirements. In the full SDK sweep, direct
-ambient-binding refusals are now 138 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
+ambient-binding refusals are now 135 modules, down from 242 with SDL/GL alone, while the dependency-closed total stays
 at 1,098 modules.
 
 The SDL profile now also supplies `Event`, `CompositionEvent`, `InputEvent`, `Gamepad`, `GamepadButton`,
