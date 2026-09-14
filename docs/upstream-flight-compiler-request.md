@@ -245,6 +245,10 @@ The dependency-closed `ClipboardTextBackend` is also populated by `Flight::HostS
 clear, presence, UTF-8 read, and UTF-8 write methods without a new compiler contract. Rich clipboard records remain
 absent until a native provider implements those separate capabilities.
 
+`Flight::HostSdlSdkPlatform` now populates the dependency-closed `PlatformBackend` and writes SDL/native facts into
+the exact caller-owned `PlatformInfo`. It needs no additional compiler behavior and leaves unavailable version,
+build, and distribution fields at their specified sentinels.
+
 ## Host boundary
 
 The manifest-free generation remains the portable floor. Browser, media, Node, and graphics handles require explicit

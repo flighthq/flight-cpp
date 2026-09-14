@@ -155,6 +155,21 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
   )
   flight_cpp_set_project_warnings(flight_host_sdl_sdk_cursor)
 
+  add_library(flight_host_sdl_sdk_platform src/host_sdl/sdk_platform.cpp)
+  add_library(Flight::HostSdlSdkPlatform ALIAS flight_host_sdl_sdk_platform)
+  set_target_properties(
+    flight_host_sdl_sdk_platform
+    PROPERTIES
+      POSITION_INDEPENDENT_CODE ON
+      SOVERSION "${FLIGHT_CPP_ABI_VERSION}"
+      VERSION "${PROJECT_VERSION}"
+  )
+  target_link_libraries(
+    flight_host_sdl_sdk_platform
+    PUBLIC Flight::HostSdl Flight::SdkPreview
+  )
+  flight_cpp_set_project_warnings(flight_host_sdl_sdk_platform)
+
   add_library(flight_host_sdl_sdk_window src/host_sdl/sdk_window.cpp)
   add_library(Flight::HostSdlSdkWindow ALIAS flight_host_sdl_sdk_window)
   set_target_properties(
@@ -258,6 +273,11 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
       PUBLIC FLIGHT_HOST_SDL_SDK_CURSOR_SHARED
     )
     target_compile_definitions(
+      flight_host_sdl_sdk_platform
+      PRIVATE FLIGHT_HOST_SDL_SDK_PLATFORM_EXPORTS
+      PUBLIC FLIGHT_HOST_SDL_SDK_PLATFORM_SHARED
+    )
+    target_compile_definitions(
       flight_host_sdl_sdk_window
       PRIVATE FLIGHT_HOST_SDL_SDK_WINDOW_EXPORTS
       PUBLIC FLIGHT_HOST_SDL_SDK_WINDOW_SHARED
@@ -297,6 +317,7 @@ install(
   PATTERN "flight/host_sdl/sdk_audio.hpp" EXCLUDE
   PATTERN "flight/host_sdl/sdk_clipboard.hpp" EXCLUDE
   PATTERN "flight/host_sdl/sdk_cursor.hpp" EXCLUDE
+  PATTERN "flight/host_sdl/sdk_platform.hpp" EXCLUDE
   PATTERN "flight/host_sdl/sdk_window.hpp" EXCLUDE
 )
 install(

@@ -6,6 +6,7 @@
 #include <flight/host_sdl/sdk_audio.hpp>
 #include <flight/host_sdl/sdk_clipboard.hpp>
 #include <flight/host_sdl/sdk_cursor.hpp>
+#include <flight/host_sdl/sdk_platform.hpp>
 #include <flight/host_sdl/sdk_window.hpp>
 #include <flight/host_sdl/web_platform.hpp>
 #include <flight/host_sdl/webgl.hpp>
@@ -19,6 +20,7 @@
 #include <flight/types/cursor.hpp>
 #include <flight/types/fullscreen_backend.hpp>
 #include <flight/types/input_target_backend.hpp>
+#include <flight/types/platform.hpp>
 
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_mouse.h>
@@ -414,6 +416,33 @@ int main() {
   expect(
       !clipboard_backend.has_text().get() && clipboard_backend.read_text().get().empty(),
       "SDL SDK clipboard retained text after clear");
+
+  flight::host_sdl::SdkPlatformBackend sdk_platform;
+  auto platform_backend = sdk_platform.backend();
+  auto platform_info = flight::make_ref<flight::types::PlatformInfo>();
+  expect(
+      platform_backend.get_info(platform_info) == platform_info,
+      "SDL SDK platform backend replaced its caller-owned output");
+  const bool known_platform =
+      platform_info->name == flight::String("windows") ||
+      platform_info->name == flight::String("macos") ||
+      platform_info->name == flight::String("linux") ||
+      platform_info->name == flight::String("ios") ||
+      platform_info->name == flight::String("android");
+  expect(
+      known_platform || platform_info->name == flight::String("unknown"),
+      "SDL SDK platform returned a name outside Flight's closed domain");
+  expect(
+      platform_info->runtime == flight::String("native") &&
+          platform_info->engine == flight::String("unknown") &&
+          (platform_info->endianness == flight::String("little") ||
+           platform_info->endianness == flight::String("big") ||
+           platform_info->endianness == flight::String("unknown")) &&
+          (platform_info->pointer_width == 32.0 || platform_info->pointer_width == 64.0),
+      "SDL SDK platform lost native runtime, byte-order, or pointer-width facts");
+  expect(
+      !platform_backend.get_info(nullptr),
+      "SDL SDK platform manufactured output for a null caller-owned record");
 
   flight::host_sdl::SdlCursorBackend native_cursor;
   const auto native_cursor_copy = native_cursor;
