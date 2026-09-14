@@ -134,10 +134,13 @@ current snake-case transform maps `ACTIVE_TEXTURE`/`activeTexture`, `CULL_FACE`/
 same six names. The mapped-interface fix must assign distinct stable names before the record can be well formed.
 Once all picked constants and methods receive their concrete callable types,
 flight-cpp can populate the generated `flight::types::GlContext` record from its working `WebGl2Context`; the host
-adapter already forwards buffer upload, shared GL object lifetime, shader/program compilation, and the
-state, framebuffer, vertex attribute, draw, and uniform operations selected by Flight. A compiler fixture emits a
-representative buffer/program/uniform/draw path directly through the external `WebGL2RenderingContext` binding and
-compiles it. This proceeds into `render-gl` without adding an SDL renderer.
+adapter already forwards shared GL object lifetime and every non-polymorphic command selected by Flight: buffer and
+texture upload, compressed texture upload, framebuffer clear/blit/readback, shader/program compilation, render
+state, vertex attributes, draw calls, and uniforms. A compiler fixture emits representative calls for that complete
+surface directly through the external `WebGL2RenderingContext` binding and compiles them. The SDL tween also executes
+the ordinary texture, framebuffer, readback, shader, draw, and presentation paths against an offscreen GLES 3
+context. The remaining host-side query gap is `getParameter`/`getActiveUniform`, whose JavaScript result domains need
+compiler-selected closed carriers. This proceeds into `render-gl` without adding an SDL renderer.
 
 Regenerate and validate from the repository root:
 

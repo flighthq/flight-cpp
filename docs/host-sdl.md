@@ -39,8 +39,8 @@ With examples enabled by the preset, the native tween example exercises the GL p
 
 It animates the fifteen easing curves emitted from `examples/tween/source/tween.ts`. Rendering uses the copyable
 `GlCanvas` and `WebGl2Context` host seam exposed by `Flight::HostSdlGl`. The example calls the context's reusable
-clear, scissor, viewport, and presentation operations; no example-private OpenGL dispatch table or SDL renderer is
-involved.
+texture upload, framebuffer clear/readback, shader/program, draw, viewport, and presentation operations; no
+example-private OpenGL dispatch table or SDL renderer is involved.
 
 Set `-DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF` for an SDL and GL/WGPU build without Vulkan development files. Native
 dependency discovery and target selection belong to CMake, so an npm wrapper would only obscure the options and is
@@ -58,7 +58,8 @@ The build exports four targets through the existing `FlightCpp` package:
   availability query required by Flight's GL runtime. Buffer, framebuffer, renderbuffer, texture, vertex-array,
   shader, program, and uniform-location handles share WebGL-style identity. Explicit deletion invalidates every
   alias, remaining live resources are reclaimed while their context is alive, and cross-context handle use is
-  rejected.
+  rejected. Its selected command surface includes 2D/3D and compressed texture upload, framebuffer clear/blit and
+  readback, active-uniform metadata, and the render state, vertex, draw, and uniform calls used by Flight.
 - `Flight::HostSdlVulkan` copies the required instance extension names and owns the `VkSurfaceKHR` returned by SDL.
 - `Flight::HostSdlWgpu` owns a type-erased native WebGPU surface through create/destroy callbacks supplied by a Dawn
   or wgpu-native adapter. It intentionally adds no WebGPU implementation dependency.
@@ -113,13 +114,13 @@ The native mechanics are now present. Wiring them to generated Flight contracts 
 
 1. Finish compiler emission of the narrowed Flight `GlContext` interface. The current compiler resolves the SDL/GL
    ambient bindings but leaves its inherited `viewport` member as an unresolved C++ type.
-2. Populate that generated callable interface from `WebGl2Context` and add the remaining texture upload, compressed
-   texture, readback, and polymorphic query operations as their emitted signatures become available. The SDL/GL
+2. Populate that generated callable interface from `WebGl2Context` and add the remaining polymorphic query carriers
+   as their emitted result domains become available. The SDL/GL
    binding profile, shared object handle identities and lifetime, image-source weak-key policy, anisotropy carrier,
-   context ownership, buffer
-   upload, shader/program compilation, state/framebuffer commands, vertex attributes, draw calls, uniform uploads,
-   procedure lookup, and presentation path are present. A live compiler fixture already emits and compiles calls
-   through this native context. With the
+   context ownership, buffer and texture upload, compressed texture upload, framebuffer clear/blit/readback,
+   shader/program compilation, state commands, vertex attributes, draw calls, uniform uploads, procedure lookup,
+   and presentation path are present. A live compiler fixture emits and compiles exact calls through this native
+   context, and the offscreen SDL smoke executes its ordinary texture/readback path. With the
    anisotropy ambient refusal removed, `GlContextRuntime` now reaches the compiler's closed-value proof for one of
    its `WeakMap` fields.
 3. Implement generated `WgpuHostBackend` and `WgpuRenderSurfaceProvider` with a selected Dawn or wgpu-native adapter.

@@ -122,6 +122,98 @@ void draw_frame(
 }
 
 void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
+  auto texture = gl.create_texture();
+  if (!texture) throw std::runtime_error("OpenGL could not allocate the tween smoke texture");
+  const flight::Uint8Array pixels{
+      255, 0, 0, 255,
+      0, 255, 0, 255,
+      0, 0, 255, 255,
+      255, 255, 255, 255,
+  };
+  gl.bind_texture(flight::host_sdl::WebGl2Context::texture_2_d, texture);
+  gl.tex_image2_d(
+      flight::host_sdl::WebGl2Context::texture_2_d,
+      0,
+      flight::host_sdl::WebGl2Context::rgba8,
+      2,
+      2,
+      0,
+      flight::host_sdl::WebGl2Context::rgba,
+      flight::host_sdl::WebGl2Context::unsigned_byte,
+      flight::ArrayBufferView(pixels));
+  gl.tex_sub_image2_d(
+      flight::host_sdl::WebGl2Context::texture_2_d,
+      0,
+      0,
+      0,
+      1,
+      1,
+      flight::host_sdl::WebGl2Context::rgba,
+      flight::host_sdl::WebGl2Context::unsigned_byte,
+      flight::ArrayBufferView(pixels));
+  gl.tex_parameteri(
+      flight::host_sdl::WebGl2Context::texture_2_d,
+      flight::host_sdl::WebGl2Context::texture_min_filter,
+      flight::host_sdl::WebGl2Context::nearest);
+  auto framebuffer = gl.create_framebuffer();
+  gl.bind_framebuffer(flight::host_sdl::WebGl2Context::framebuffer, framebuffer);
+  gl.framebuffer_texture2_d(
+      flight::host_sdl::WebGl2Context::framebuffer,
+      flight::host_sdl::WebGl2Context::color_attachment0,
+      flight::host_sdl::WebGl2Context::texture_2_d,
+      texture,
+      0);
+  if (gl.check_framebuffer_status(flight::host_sdl::WebGl2Context::framebuffer) !=
+      flight::host_sdl::WebGl2Context::framebuffer_complete) {
+    throw std::runtime_error("OpenGL could not complete the tween smoke framebuffer");
+  }
+  gl.clear_bufferfv(
+      flight::host_sdl::WebGl2Context::color,
+      0,
+      flight::Float32Array{0.25F, 0.5F, 0.75F, 1.0F});
+  flight::Uint8Array readback(16);
+  gl.read_pixels(
+      0,
+      0,
+      2,
+      2,
+      flight::host_sdl::WebGl2Context::rgba,
+      flight::host_sdl::WebGl2Context::unsigned_byte,
+      flight::ArrayBufferView(readback));
+  gl.bind_framebuffer(flight::host_sdl::WebGl2Context::framebuffer, std::nullopt);
+  gl.delete_framebuffer(framebuffer);
+  gl.delete_texture(texture);
+  if (framebuffer || texture) {
+    throw std::runtime_error("deleting WebGL texture resources did not invalidate their aliases");
+  }
+
+  auto volume_texture = gl.create_texture();
+  const flight::Uint8Array volume_pixels(32);
+  gl.bind_texture(flight::host_sdl::WebGl2Context::texture_3_d, volume_texture);
+  gl.tex_image3_d(
+      flight::host_sdl::WebGl2Context::texture_3_d,
+      0,
+      flight::host_sdl::WebGl2Context::rgba8,
+      2,
+      2,
+      2,
+      0,
+      flight::host_sdl::WebGl2Context::rgba,
+      flight::host_sdl::WebGl2Context::unsigned_byte,
+      flight::ArrayBufferView(volume_pixels));
+  gl.delete_texture(volume_texture);
+
+  auto array_texture = gl.create_texture();
+  gl.bind_texture(flight::host_sdl::WebGl2Context::texture_2_d_array, array_texture);
+  gl.tex_storage3_d(
+      flight::host_sdl::WebGl2Context::texture_2_d_array,
+      1,
+      flight::host_sdl::WebGl2Context::rgba8,
+      2,
+      2,
+      1);
+  gl.delete_texture(array_texture);
+
   auto buffer = gl.create_buffer();
   if (!buffer) throw std::runtime_error("OpenGL could not allocate the tween smoke buffer");
   const flight::Float32Array vertices{-1.0F, -1.0F, 1.0F, -1.0F, 0.0F, 1.0F};
@@ -175,6 +267,12 @@ void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
     throw std::runtime_error("OpenGL rejected the tween smoke program: " + log);
   }
   gl.use_program(program);
+  const auto active_uniform = gl.get_active_uniform(program, 0);
+  if (!active_uniform || active_uniform->name != flight::String("u_color") ||
+      active_uniform->size != 1.0 ||
+      active_uniform->type != flight::host_sdl::WebGl2Context::float_vec4) {
+    throw std::runtime_error("OpenGL returned unexpected tween smoke uniform metadata");
+  }
   const auto color_location = gl.get_uniform_location(program, flight::String("u_color"));
   if (!color_location) throw std::runtime_error("OpenGL removed the tween smoke uniform");
   gl.uniform4f(color_location, 1.0F, 1.0F, 1.0F, 1.0F);

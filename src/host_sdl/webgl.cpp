@@ -83,15 +83,106 @@ namespace flight::host_sdl {
 namespace {
 
 using BindVertexArrayFunction = void(GL_APIENTRYP)(GLuint);
+using BlitFramebufferFunction = void(GL_APIENTRYP)(
+    GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLbitfield, GLenum);
+using ClearBufferfiFunction = void(GL_APIENTRYP)(GLenum, GLint, GLfloat, GLint);
+using ClearBufferfvFunction = void(GL_APIENTRYP)(GLenum, GLint, const GLfloat*);
+using CompressedTexSubImage3DFunction = void(GL_APIENTRYP)(
+    GLenum, GLint, GLint, GLint, GLint, GLsizei, GLsizei, GLsizei, GLenum, GLsizei, const void*);
 using DeleteVertexArraysFunction = void(GL_APIENTRYP)(GLsizei, const GLuint*);
 using DrawArraysInstancedFunction = void(GL_APIENTRYP)(GLenum, GLint, GLsizei, GLsizei);
+using DrawBuffersFunction = void(GL_APIENTRYP)(GLsizei, const GLenum*);
 using DrawElementsInstancedFunction =
     void(GL_APIENTRYP)(GLenum, GLsizei, GLenum, const void*, GLsizei);
 using GenVertexArraysFunction = void(GL_APIENTRYP)(GLsizei, GLuint*);
 using ReadBufferFunction = void(GL_APIENTRYP)(GLenum);
 using RenderbufferStorageMultisampleFunction =
     void(GL_APIENTRYP)(GLenum, GLsizei, GLenum, GLsizei, GLsizei);
+using TexImage3DFunction = void(GL_APIENTRYP)(
+    GLenum, GLint, GLint, GLsizei, GLsizei, GLsizei, GLint, GLenum, GLenum, const void*);
+using TexStorage3DFunction =
+    void(GL_APIENTRYP)(GLenum, GLsizei, GLenum, GLsizei, GLsizei, GLsizei);
 using VertexAttribDivisorFunction = void(GL_APIENTRYP)(GLuint, GLuint);
+
+struct GlByteRange final {
+  const std::byte* data;
+  GLsizei size;
+};
+
+GlByteRange gl_byte_range(
+    const ArrayBufferView& source,
+    std::size_t source_offset,
+    std::optional<std::size_t> source_length,
+    std::string_view operation) {
+  const auto element_size = source.bytes_per_element();
+  const auto element_count = source.byte_length / element_size;
+  if (source_offset > element_count) {
+    throw std::range_error(std::string(operation) + " source offset exceeds its view");
+  }
+  const auto selected_elements = source_length.value_or(element_count - source_offset);
+  if (selected_elements > element_count - source_offset ||
+      selected_elements > std::numeric_limits<std::size_t>::max() / element_size) {
+    throw std::range_error(std::string(operation) + " source length exceeds its view");
+  }
+  const auto selected_bytes = selected_elements * element_size;
+  if (selected_bytes > static_cast<std::size_t>(std::numeric_limits<GLsizei>::max())) {
+    throw std::range_error(std::string(operation) + " source length exceeds the native GL range");
+  }
+  return {
+      source.data() + (source_offset * element_size),
+      static_cast<GLsizei>(selected_bytes),
+  };
+}
+
+std::size_t checked_texel_bytes(
+    int width,
+    int height,
+    int depth,
+    std::uint32_t format,
+    std::uint32_t type,
+    std::string_view operation) {
+  if (width < 0 || height < 0 || depth < 0) {
+    throw std::invalid_argument(std::string(operation) + " dimensions cannot be negative");
+  }
+  std::size_t bytes_per_pixel = 0;
+  if (format == WebGl2Context::rgba) {
+    switch (type) {
+      case WebGl2Context::unsigned_byte: bytes_per_pixel = 4; break;
+      case WebGl2Context::half_float: bytes_per_pixel = 8; break;
+      case WebGl2Context::float_: bytes_per_pixel = 16; break;
+      default:
+        throw std::invalid_argument(std::string(operation) + " received an unsupported pixel type");
+    }
+  } else if (
+      format == WebGl2Context::depth_stencil &&
+      type == WebGl2Context::unsigned_int_24_8) {
+    bytes_per_pixel = 4;
+  } else {
+    throw std::invalid_argument(std::string(operation) + " received an unsupported pixel layout");
+  }
+  auto size = static_cast<std::size_t>(width);
+  for (const auto factor : {height, depth, static_cast<int>(bytes_per_pixel)}) {
+    const auto unsigned_factor = static_cast<std::size_t>(factor);
+    if (unsigned_factor != 0 && size > std::numeric_limits<std::size_t>::max() / unsigned_factor) {
+      throw std::range_error(std::string(operation) + " pixel span exceeds addressable storage");
+    }
+    size *= unsigned_factor;
+  }
+  return size;
+}
+
+void require_texel_storage(
+    const ArrayBufferView& view,
+    int width,
+    int height,
+    int depth,
+    std::uint32_t format,
+    std::uint32_t type,
+    std::string_view operation) {
+  if (view.byte_length < checked_texel_bytes(width, height, depth, format, type, operation)) {
+    throw std::range_error(std::string(operation) + " pixel view is too small");
+  }
+}
 
 GLsizei gl_value_count(std::size_t values, std::size_t width, std::string_view operation) {
   if (values % width != 0 || values / width > static_cast<std::size_t>(std::numeric_limits<GLsizei>::max())) {
@@ -374,8 +465,73 @@ void WebGl2Context::blend_func_separate(
       source_rgb, destination_rgb, source_alpha, destination_alpha);
 }
 
+void WebGl2Context::blit_framebuffer(
+    int source_x0,
+    int source_y0,
+    int source_x1,
+    int source_y1,
+    int destination_x0,
+    int destination_y0,
+    int destination_x1,
+    int destination_y1,
+    std::uint32_t mask,
+    std::uint32_t filter) const {
+  gl_function<BlitFramebufferFunction>(*this, "glBlitFramebuffer")(
+      source_x0,
+      source_y0,
+      source_x1,
+      source_y1,
+      destination_x0,
+      destination_y0,
+      destination_x1,
+      destination_y1,
+      mask,
+      filter);
+}
+
 std::uint32_t WebGl2Context::check_framebuffer_status(std::uint32_t target) const {
   return gl_function<PFNGLCHECKFRAMEBUFFERSTATUSPROC>(*this, "glCheckFramebufferStatus")(target);
+}
+
+void WebGl2Context::clear_bufferfi(
+    std::uint32_t buffer,
+    int draw_buffer,
+    float depth,
+    int stencil) const {
+  gl_function<ClearBufferfiFunction>(*this, "glClearBufferfi")(
+      buffer, draw_buffer, depth, stencil);
+}
+
+void WebGl2Context::clear_bufferfv(
+    std::uint32_t buffer,
+    int draw_buffer,
+    const Float32Array& values,
+    std::size_t source_offset) const {
+  const auto data = values.span();
+  const auto required_values = buffer == color ? 4U : 1U;
+  if (source_offset > data.size() || required_values > data.size() - source_offset) {
+    throw std::range_error("clearBufferfv source does not contain the required values");
+  }
+  gl_function<ClearBufferfvFunction>(*this, "glClearBufferfv")(
+      buffer, draw_buffer, data.data() + source_offset);
+}
+
+void WebGl2Context::clear_bufferfv(
+    std::uint32_t buffer,
+    int draw_buffer,
+    const Array<double>& values,
+    std::size_t source_offset) const {
+  if (source_offset > values.size()) {
+    throw std::range_error("clearBufferfv source offset exceeds its array");
+  }
+  const Array<double> selected(values.begin() + static_cast<std::ptrdiff_t>(source_offset), values.end());
+  const auto data = gl_float_values(selected);
+  const auto required_values = buffer == color ? 4U : 1U;
+  if (required_values > data.size()) {
+    throw std::range_error("clearBufferfv source does not contain the required values");
+  }
+  gl_function<ClearBufferfvFunction>(*this, "glClearBufferfv")(
+      buffer, draw_buffer, data.data());
 }
 
 void WebGl2Context::clear_depth(float depth) const {
@@ -389,6 +545,50 @@ void WebGl2Context::color_mask(bool red, bool green, bool blue, bool alpha) cons
 void WebGl2Context::compile_shader(const std::optional<WebGlShader>& shader) const {
   gl_function<PFNGLCOMPILESHADERPROC>(*this, "glCompileShader")(
       require_object(shader ? shader->state_ : nullptr, detail::WebGlObjectKind::shader));
+}
+
+void WebGl2Context::compressed_tex_image2_d(
+    std::uint32_t target,
+    int level,
+    std::uint32_t internal_format,
+    int width,
+    int height,
+    int border,
+    const ArrayBufferView& source,
+    std::size_t source_offset,
+    std::optional<std::size_t> source_length) const {
+  const auto range = gl_byte_range(source, source_offset, source_length, "compressedTexImage2D");
+  gl_function<PFNGLCOMPRESSEDTEXIMAGE2DPROC>(*this, "glCompressedTexImage2D")(
+      target, level, internal_format, width, height, border, range.size, range.data);
+}
+
+void WebGl2Context::compressed_tex_sub_image3_d(
+    std::uint32_t target,
+    int level,
+    int x_offset,
+    int y_offset,
+    int z_offset,
+    int width,
+    int height,
+    int depth,
+    std::uint32_t format,
+    const ArrayBufferView& source,
+    std::size_t source_offset,
+    std::optional<std::size_t> source_length) const {
+  const auto range =
+      gl_byte_range(source, source_offset, source_length, "compressedTexSubImage3D");
+  gl_function<CompressedTexSubImage3DFunction>(*this, "glCompressedTexSubImage3D")(
+      target,
+      level,
+      x_offset,
+      y_offset,
+      z_offset,
+      width,
+      height,
+      depth,
+      format,
+      range.size,
+      range.data);
 }
 
 void WebGl2Context::cull_face(std::uint32_t mode) const {
@@ -472,6 +672,32 @@ void WebGl2Context::draw_arrays_instanced(
       mode, first, count, instance_count);
 }
 
+void WebGl2Context::draw_buffers(const Array<double>& buffers) const {
+  if (buffers.size() > static_cast<std::size_t>(std::numeric_limits<GLsizei>::max())) {
+    throw std::range_error("drawBuffers source exceeds the native GL range");
+  }
+  std::vector<GLenum> native_buffers;
+  native_buffers.reserve(buffers.size());
+  for (const auto buffer : buffers) {
+    if (!std::isfinite(buffer) || buffer < 0.0 ||
+        buffer > static_cast<double>(std::numeric_limits<GLenum>::max())) {
+      throw std::range_error("drawBuffers received an invalid enum value");
+    }
+    native_buffers.push_back(static_cast<GLenum>(buffer));
+  }
+  gl_function<DrawBuffersFunction>(*this, "glDrawBuffers")(
+      static_cast<GLsizei>(native_buffers.size()), native_buffers.data());
+}
+
+void WebGl2Context::draw_buffers(const Array<std::uint32_t>& buffers) const {
+  if (buffers.size() > static_cast<std::size_t>(std::numeric_limits<GLsizei>::max())) {
+    throw std::range_error("drawBuffers source exceeds the native GL range");
+  }
+  std::vector<GLenum> native_buffers(buffers.begin(), buffers.end());
+  gl_function<DrawBuffersFunction>(*this, "glDrawBuffers")(
+      static_cast<GLsizei>(native_buffers.size()), native_buffers.data());
+}
+
 void WebGl2Context::draw_elements(
     std::uint32_t mode,
     int count,
@@ -534,6 +760,38 @@ void WebGl2Context::front_face(std::uint32_t mode) const {
 
 void WebGl2Context::generate_mipmap(std::uint32_t target) const {
   gl_function<PFNGLGENERATEMIPMAPPROC>(*this, "glGenerateMipmap")(target);
+}
+
+std::optional<WebGlActiveInfo> WebGl2Context::get_active_uniform(
+    const WebGlProgram& program,
+    int index) const {
+  if (index < 0) return std::nullopt;
+  const auto name = require_object(program.state_, detail::WebGlObjectKind::program);
+  GLint active_count = 0;
+  const auto get_program = gl_function<PFNGLGETPROGRAMIVPROC>(*this, "glGetProgramiv");
+  get_program(name, GL_ACTIVE_UNIFORMS, &active_count);
+  if (index >= active_count) return std::nullopt;
+  GLint maximum_length = 0;
+  get_program(name, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maximum_length);
+  if (maximum_length <= 0) return std::nullopt;
+  std::string uniform_name(static_cast<std::size_t>(maximum_length), '\0');
+  GLsizei written = 0;
+  GLint size = 0;
+  GLenum type = 0;
+  gl_function<PFNGLGETACTIVEUNIFORMPROC>(*this, "glGetActiveUniform")(
+      name,
+      static_cast<GLuint>(index),
+      maximum_length,
+      &written,
+      &size,
+      &type,
+      uniform_name.data());
+  uniform_name.resize(written > 0 ? static_cast<std::size_t>(written) : 0);
+  return WebGlActiveInfo{
+      .name = String(uniform_name),
+      .size = static_cast<double>(size),
+      .type = static_cast<double>(type),
+  };
 }
 
 int WebGl2Context::get_attrib_location(const WebGlProgram& program, const String& name) const {
@@ -618,6 +876,19 @@ void WebGl2Context::read_buffer(std::uint32_t source) const {
   gl_function<ReadBufferFunction>(*this, "glReadBuffer")(source);
 }
 
+void WebGl2Context::read_pixels(
+    int x,
+    int y,
+    int width,
+    int height,
+    std::uint32_t format,
+    std::uint32_t type,
+    ArrayBufferView destination) const {
+  require_texel_storage(destination, width, height, 1, format, type, "readPixels");
+  gl_function<PFNGLREADPIXELSPROC>(*this, "glReadPixels")(
+      x, y, width, height, format, type, destination.data());
+}
+
 void WebGl2Context::renderbuffer_storage(
     std::uint32_t target,
     std::uint32_t internal_format,
@@ -693,6 +964,105 @@ void WebGl2Context::stencil_op_separate(
       face, fail, depth_fail, depth_pass);
 }
 
+void WebGl2Context::tex_image2_d(
+    std::uint32_t target,
+    int level,
+    int internal_format,
+    int width,
+    int height,
+    int border,
+    std::uint32_t format,
+    std::uint32_t type,
+    const ArrayBufferView& pixels) const {
+  require_texel_storage(pixels, width, height, 1, format, type, "texImage2D");
+  gl_function<PFNGLTEXIMAGE2DPROC>(*this, "glTexImage2D")(
+      target, level, internal_format, width, height, border, format, type, pixels.data());
+}
+
+void WebGl2Context::tex_image2_d(
+    std::uint32_t target,
+    int level,
+    int internal_format,
+    int width,
+    int height,
+    int border,
+    std::uint32_t format,
+    std::uint32_t type,
+    std::nullptr_t) const {
+  static_cast<void>(checked_texel_bytes(width, height, 1, format, type, "texImage2D"));
+  gl_function<PFNGLTEXIMAGE2DPROC>(*this, "glTexImage2D")(
+      target, level, internal_format, width, height, border, format, type, nullptr);
+}
+
+void WebGl2Context::tex_image2_d(
+    std::uint32_t target,
+    int level,
+    int internal_format,
+    std::uint32_t format,
+    std::uint32_t type,
+    const GlImageSource& source) const {
+  if (!source) throw std::invalid_argument("texImage2D image source is empty");
+  if (format != rgba || type != unsigned_byte) {
+    throw std::invalid_argument("texImage2D RGBA8 image source requires RGBA and UNSIGNED_BYTE");
+  }
+  if (source.width() > static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()) ||
+      source.height() > static_cast<std::size_t>(std::numeric_limits<GLsizei>::max())) {
+    throw std::range_error("texImage2D image dimensions exceed the native GL range");
+  }
+  const auto pixels = source.rgba8_pixels();
+  gl_function<PFNGLTEXIMAGE2DPROC>(*this, "glTexImage2D")(
+      target,
+      level,
+      internal_format,
+      static_cast<GLsizei>(source.width()),
+      static_cast<GLsizei>(source.height()),
+      0,
+      format,
+      type,
+      pixels.data());
+}
+
+void WebGl2Context::tex_image3_d(
+    std::uint32_t target,
+    int level,
+    int internal_format,
+    int width,
+    int height,
+    int depth,
+    int border,
+    std::uint32_t format,
+    std::uint32_t type,
+    const ArrayBufferView& pixels) const {
+  require_texel_storage(pixels, width, height, depth, format, type, "texImage3D");
+  gl_function<TexImage3DFunction>(*this, "glTexImage3D")(
+      target,
+      level,
+      internal_format,
+      width,
+      height,
+      depth,
+      border,
+      format,
+      type,
+      pixels.data());
+}
+
+void WebGl2Context::tex_image3_d(
+    std::uint32_t target,
+    int level,
+    int internal_format,
+    int width,
+    int height,
+    int depth,
+    int border,
+    std::uint32_t format,
+    std::uint32_t type,
+    std::nullptr_t) const {
+  static_cast<void>(checked_texel_bytes(width, height, depth, format, type, "texImage3D"));
+  gl_function<TexImage3DFunction>(*this, "glTexImage3D")(
+      target, level, internal_format, width, height, depth, border, format, type, nullptr);
+}
+
 void WebGl2Context::tex_parameterf(
     std::uint32_t target,
     std::uint32_t parameter,
@@ -705,6 +1075,32 @@ void WebGl2Context::tex_parameteri(
     std::uint32_t parameter,
     int value) const {
   gl_function<PFNGLTEXPARAMETERIPROC>(*this, "glTexParameteri")(target, parameter, value);
+}
+
+void WebGl2Context::tex_storage3_d(
+    std::uint32_t target,
+    int levels,
+    std::uint32_t internal_format,
+    int width,
+    int height,
+    int depth) const {
+  gl_function<TexStorage3DFunction>(*this, "glTexStorage3D")(
+      target, levels, internal_format, width, height, depth);
+}
+
+void WebGl2Context::tex_sub_image2_d(
+    std::uint32_t target,
+    int level,
+    int x_offset,
+    int y_offset,
+    int width,
+    int height,
+    std::uint32_t format,
+    std::uint32_t type,
+    const ArrayBufferView& pixels) const {
+  require_texel_storage(pixels, width, height, 1, format, type, "texSubImage2D");
+  gl_function<PFNGLTEXSUBIMAGE2DPROC>(*this, "glTexSubImage2D")(
+      target, level, x_offset, y_offset, width, height, format, type, pixels.data());
 }
 
 void WebGl2Context::uniform1f(

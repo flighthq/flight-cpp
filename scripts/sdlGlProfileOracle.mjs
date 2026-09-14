@@ -65,6 +65,7 @@ const source = api.parseTypeScriptSource(
      uniformLocation: WebGLUniformLocation;
      vertexArray: WebGLVertexArrayObject;
      anisotropy: EXT_texture_filter_anisotropic;
+     activeInfo: WebGLActiveInfo;
      attributes: WebGLContextAttributes;
      preference: WebGLPowerPreference;
      imageCache: WeakMap<CanvasImageSource, WebGLTexture>;
@@ -100,9 +101,41 @@ const source = api.parseTypeScriptSource(
      else context.useProgram(null);
      const color = context.getUniformLocation(program, 'u_color');
      context.uniform4f(color, 1, 1, 1, 1);
+     context.getActiveUniform(program, 0);
      context.deleteProgram(program);
      context.deleteShader(vertex);
      return linked;
+   }
+   export function nativeGlTextureAndFramebuffer(
+     context: WebGL2RenderingContext,
+     bytes: Uint8Array,
+     floats: Float32Array,
+     image: CanvasImageSource,
+   ): void {
+     context.texImage2D(
+       context.TEXTURE_2D, 0, context.RGBA8, 1, 1, 0, context.RGBA, context.UNSIGNED_BYTE, bytes,
+     );
+     context.texImage2D(
+       context.TEXTURE_2D, 0, context.RGBA8, 1, 1, 0, context.RGBA, context.UNSIGNED_BYTE, null,
+     );
+     context.texImage2D(context.TEXTURE_2D, 0, context.RGBA, context.RGBA, context.UNSIGNED_BYTE, image);
+     context.texSubImage2D(
+       context.TEXTURE_2D, 0, 0, 0, 1, 1, context.RGBA, context.UNSIGNED_BYTE, bytes,
+     );
+     context.texImage3D(
+       context.TEXTURE_3D, 0, context.RGBA8, 1, 1, 1, 0, context.RGBA, context.UNSIGNED_BYTE, bytes,
+     );
+     context.texStorage3D(context.TEXTURE_2D_ARRAY, 1, context.RGBA8, 1, 1, 1);
+     context.compressedTexImage2D(context.TEXTURE_2D, 0, context.RGBA8, 1, 1, 0, bytes);
+     context.compressedTexSubImage3D(
+       context.TEXTURE_2D_ARRAY, 0, 0, 0, 0, 1, 1, 1, context.RGBA8, bytes,
+     );
+     context.clearBufferfi(context.DEPTH_STENCIL, 0, 1, 0);
+     context.clearBufferfv(context.COLOR, 0, [0, 0, 0, 1]);
+     context.drawBuffers([context.COLOR_ATTACHMENT0]);
+     context.blitFramebuffer(0, 0, 1, 1, 0, 0, 1, 1, context.COLOR_BUFFER_BIT, context.NEAREST);
+     context.readPixels(0, 0, 1, 1, context.RGBA, context.UNSIGNED_BYTE, bytes);
+     context.readPixels(0, 0, 1, 1, context.RGBA, context.FLOAT, floats);
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -123,6 +156,7 @@ for (const expected of [
   'flight::host_sdl::WebGl2Context context;',
   'flight::host_sdl::WebGlProgram program;',
   'flight::host_sdl::GlAnisotropyExtension anisotropy;',
+  'flight::host_sdl::WebGlActiveInfo active_info;',
   'extension.texture_max_anisotropy_ext',
   'extension.max_texture_max_anisotropy_ext',
   'context.create_buffer()',
@@ -146,8 +180,21 @@ for (const expected of [
   'context.get_program_parameter(program, context.link_status)',
   'context.get_uniform_location(program, flight::String("u_color"))',
   'context.uniform4f(color, 1.0, 1.0, 1.0, 1.0)',
+  'context.get_active_uniform(program, 0.0)',
   'context.delete_program(program)',
   'context.delete_shader(',
+  'context.tex_image2_d(context.texture_2_d, 0.0, context.rgba8, 1.0, 1.0, 0.0, context.rgba, context.unsigned_byte, bytes)',
+  'context.tex_image2_d(context.texture_2_d, 0.0, context.rgba, context.rgba, context.unsigned_byte, image)',
+  'context.tex_sub_image2_d(',
+  'context.tex_image3_d(',
+  'context.tex_storage3_d(',
+  'context.compressed_tex_image2_d(',
+  'context.compressed_tex_sub_image3_d(',
+  'context.clear_bufferfi(',
+  'context.clear_bufferfv(',
+  'context.draw_buffers(',
+  'context.blit_framebuffer(',
+  'context.read_pixels(',
   'flight::host_sdl::WebGlContextAttributes attributes;',
   'flight::host_sdl::GlImageSourceWeakPolicy',
 ]) {

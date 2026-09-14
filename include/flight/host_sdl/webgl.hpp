@@ -126,6 +126,12 @@ struct GlAnisotropyExtension final {
   static constexpr double max_texture_max_anisotropy_ext = 0x84FF;
 };
 
+struct WebGlActiveInfo final {
+  String name;
+  double size{0.0};
+  double type{0.0};
+};
+
 class FLIGHT_HOST_SDL_GL_API GlImageSource final {
  public:
   using weak_type = std::weak_ptr<detail::GlImageSourceState>;
@@ -371,10 +377,59 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::uint32_t destination_rgb,
       std::uint32_t source_alpha,
       std::uint32_t destination_alpha) const;
+  void blit_framebuffer(
+      int source_x0,
+      int source_y0,
+      int source_x1,
+      int source_y1,
+      int destination_x0,
+      int destination_y0,
+      int destination_x1,
+      int destination_y1,
+      std::uint32_t mask,
+      std::uint32_t filter) const;
   [[nodiscard]] std::uint32_t check_framebuffer_status(std::uint32_t target) const;
+  void clear_bufferfi(
+      std::uint32_t buffer,
+      int draw_buffer,
+      float depth,
+      int stencil) const;
+  void clear_bufferfv(
+      std::uint32_t buffer,
+      int draw_buffer,
+      const Float32Array& values,
+      std::size_t source_offset = 0) const;
+  void clear_bufferfv(
+      std::uint32_t buffer,
+      int draw_buffer,
+      const Array<double>& values,
+      std::size_t source_offset = 0) const;
   void clear_depth(float depth) const;
   void color_mask(bool red, bool green, bool blue, bool alpha) const;
   void compile_shader(const std::optional<WebGlShader>& shader) const;
+  void compressed_tex_image2_d(
+      std::uint32_t target,
+      int level,
+      std::uint32_t internal_format,
+      int width,
+      int height,
+      int border,
+      const ArrayBufferView& source,
+      std::size_t source_offset = 0,
+      std::optional<std::size_t> source_length = std::nullopt) const;
+  void compressed_tex_sub_image3_d(
+      std::uint32_t target,
+      int level,
+      int x_offset,
+      int y_offset,
+      int z_offset,
+      int width,
+      int height,
+      int depth,
+      std::uint32_t format,
+      const ArrayBufferView& source,
+      std::size_t source_offset = 0,
+      std::optional<std::size_t> source_length = std::nullopt) const;
   void cull_face(std::uint32_t mode) const;
   void delete_buffer(const std::optional<WebGlBuffer>& buffer) const;
   void delete_framebuffer(const std::optional<WebGlFramebuffer>& framebuffer) const;
@@ -392,6 +447,8 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       int first,
       int count,
       int instance_count) const;
+  void draw_buffers(const Array<std::uint32_t>& buffers) const;
+  void draw_buffers(const Array<double>& buffers) const;
   void draw_elements(std::uint32_t mode, int count, std::uint32_t type, std::ptrdiff_t offset) const;
   void draw_elements_instanced(
       std::uint32_t mode,
@@ -415,6 +472,9 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       int level) const;
   void front_face(std::uint32_t mode) const;
   void generate_mipmap(std::uint32_t target) const;
+  [[nodiscard]] std::optional<WebGlActiveInfo> get_active_uniform(
+      const WebGlProgram& program,
+      int index) const;
   [[nodiscard]] int get_attrib_location(const WebGlProgram& program, const String& name) const;
   [[nodiscard]] std::optional<String> get_program_info_log(const WebGlProgram& program) const;
   [[nodiscard]] double get_program_parameter(
@@ -432,6 +492,14 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   void link_program(const WebGlProgram& program) const;
   void pixel_storei(std::uint32_t parameter, int value) const;
   void read_buffer(std::uint32_t source) const;
+  void read_pixels(
+      int x,
+      int y,
+      int width,
+      int height,
+      std::uint32_t format,
+      std::uint32_t type,
+      ArrayBufferView destination) const;
   void renderbuffer_storage(
       std::uint32_t target,
       std::uint32_t internal_format,
@@ -458,8 +526,74 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::uint32_t fail,
       std::uint32_t depth_fail,
       std::uint32_t depth_pass) const;
+  void tex_image2_d(
+      std::uint32_t target,
+      int level,
+      int internal_format,
+      int width,
+      int height,
+      int border,
+      std::uint32_t format,
+      std::uint32_t type,
+      const ArrayBufferView& pixels) const;
+  void tex_image2_d(
+      std::uint32_t target,
+      int level,
+      int internal_format,
+      int width,
+      int height,
+      int border,
+      std::uint32_t format,
+      std::uint32_t type,
+      std::nullptr_t) const;
+  void tex_image2_d(
+      std::uint32_t target,
+      int level,
+      int internal_format,
+      std::uint32_t format,
+      std::uint32_t type,
+      const GlImageSource& source) const;
+  void tex_image3_d(
+      std::uint32_t target,
+      int level,
+      int internal_format,
+      int width,
+      int height,
+      int depth,
+      int border,
+      std::uint32_t format,
+      std::uint32_t type,
+      const ArrayBufferView& pixels) const;
+  void tex_image3_d(
+      std::uint32_t target,
+      int level,
+      int internal_format,
+      int width,
+      int height,
+      int depth,
+      int border,
+      std::uint32_t format,
+      std::uint32_t type,
+      std::nullptr_t) const;
   void tex_parameterf(std::uint32_t target, std::uint32_t parameter, float value) const;
   void tex_parameteri(std::uint32_t target, std::uint32_t parameter, int value) const;
+  void tex_storage3_d(
+      std::uint32_t target,
+      int levels,
+      std::uint32_t internal_format,
+      int width,
+      int height,
+      int depth) const;
+  void tex_sub_image2_d(
+      std::uint32_t target,
+      int level,
+      int x_offset,
+      int y_offset,
+      int width,
+      int height,
+      std::uint32_t format,
+      std::uint32_t type,
+      const ArrayBufferView& pixels) const;
   void uniform1f(const std::optional<WebGlUniformLocation>& location, float x) const;
   void uniform1i(const std::optional<WebGlUniformLocation>& location, int x) const;
   void uniform2f(const std::optional<WebGlUniformLocation>& location, float x, float y) const;
