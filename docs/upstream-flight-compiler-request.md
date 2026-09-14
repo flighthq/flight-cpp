@@ -137,10 +137,13 @@ flight-cpp can populate the generated `flight::types::GlContext` record from its
 adapter already forwards shared GL object lifetime and every non-polymorphic command selected by Flight: buffer and
 texture upload, compressed texture upload, framebuffer clear/blit/readback, shader/program compilation, render
 state, vertex attributes, draw calls, and uniforms. A compiler fixture emits representative calls for that complete
-surface directly through the external `WebGL2RenderingContext` binding and compiles them. The SDL tween also executes
-the ordinary texture, framebuffer, readback, shader, draw, and presentation paths against an offscreen GLES 3
-context. The remaining host-side query gap is `getParameter`/`getActiveUniform`, whose JavaScript result domains need
-compiler-selected closed carriers. This proceeds into `render-gl` without adding an SDL renderer.
+surface directly through the external `WebGL2RenderingContext` binding and compiles them. Its closed `getParameter`
+result carrier converts to every numeric, boolean, array, and identity-preserving GL handle domain used by Flight;
+`getExtension` supplies feature presence and anisotropy enums. The SDL tween also executes the ordinary texture,
+framebuffer, readback, state-query, shader, draw, and presentation paths against an offscreen GLES 3 context. Dynamic
+compressed-extension enum lookup still depends on the compiler selecting flight-cpp's ordered
+`Record<String, double>` representation and lowering optional indexed access. This proceeds into `render-gl` without
+adding an SDL renderer.
 
 Regenerate and validate from the repository root:
 

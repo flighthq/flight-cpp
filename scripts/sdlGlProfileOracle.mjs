@@ -70,8 +70,24 @@ const source = api.parseTypeScriptSource(
      preference: WebGLPowerPreference;
      imageCache: WeakMap<CanvasImageSource, WebGLTexture>;
    }
+   export interface NativeGlParameters {
+     maxSamples: number;
+     depthWrite: boolean;
+     texture: WebGLTexture | null;
+     framebuffer: WebGLFramebuffer | null;
+     program: WebGLProgram | null;
+     vertexArray: WebGLVertexArrayObject | null;
+     colorMask: boolean[];
+     viewport: number[];
+   }
    export function anisotropyEnums(extension: EXT_texture_filter_anisotropic): number {
      return extension.TEXTURE_MAX_ANISOTROPY_EXT + extension.MAX_TEXTURE_MAX_ANISOTROPY_EXT;
+   }
+   export function nativeGlExtensions(context: WebGL2RenderingContext): number {
+     const anisotropy = context.getExtension('EXT_texture_filter_anisotropic');
+     if (anisotropy === null) return 0;
+     const colorBufferFloat = context.getExtension('EXT_color_buffer_float') !== null;
+     return anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT + (colorBufferFloat ? 1 : 0);
    }
    export function nativeGlSmoke(context: WebGL2RenderingContext, data: Float32Array): void {
      const buffer = context.createBuffer();
@@ -136,6 +152,18 @@ const source = api.parseTypeScriptSource(
      context.blitFramebuffer(0, 0, 1, 1, 0, 0, 1, 1, context.COLOR_BUFFER_BIT, context.NEAREST);
      context.readPixels(0, 0, 1, 1, context.RGBA, context.UNSIGNED_BYTE, bytes);
      context.readPixels(0, 0, 1, 1, context.RGBA, context.FLOAT, floats);
+   }
+   export function nativeGlParameters(context: WebGL2RenderingContext): NativeGlParameters {
+     return {
+       maxSamples: context.getParameter(context.MAX_SAMPLES) as number,
+       depthWrite: context.getParameter(context.DEPTH_WRITEMASK) as boolean,
+       texture: context.getParameter(context.TEXTURE_BINDING_2D) as WebGLTexture | null,
+       framebuffer: context.getParameter(context.FRAMEBUFFER_BINDING) as WebGLFramebuffer | null,
+       program: context.getParameter(context.CURRENT_PROGRAM) as WebGLProgram | null,
+       vertexArray: context.getParameter(context.VERTEX_ARRAY_BINDING) as WebGLVertexArrayObject | null,
+       colorMask: context.getParameter(context.COLOR_WRITEMASK) as boolean[],
+       viewport: context.getParameter(context.SCISSOR_BOX) as number[],
+     };
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -159,6 +187,8 @@ for (const expected of [
   'flight::host_sdl::WebGlActiveInfo active_info;',
   'extension.texture_max_anisotropy_ext',
   'extension.max_texture_max_anisotropy_ext',
+  'context.get_extension(flight::String("EXT_texture_filter_anisotropic"))',
+  'anisotropy.max_texture_max_anisotropy_ext',
   'context.create_buffer()',
   'context.bind_buffer(context.array_buffer, buffer)',
   'context.buffer_data(context.array_buffer, data, context.static_draw)',
@@ -195,6 +225,11 @@ for (const expected of [
   'context.draw_buffers(',
   'context.blit_framebuffer(',
   'context.read_pixels(',
+  'static_cast<double>(context.get_parameter(context.max_samples))',
+  'static_cast<bool>(context.get_parameter(context.depth_writemask))',
+  'static_cast<std::optional<flight::host_sdl::WebGlTexture>>(context.get_parameter(context.texture_binding_2_d))',
+  'static_cast<flight::Array<bool>>(context.get_parameter(context.color_writemask))',
+  'static_cast<flight::Array<double>>(context.get_parameter(context.scissor_box))',
   'flight::host_sdl::WebGlContextAttributes attributes;',
   'flight::host_sdl::GlImageSourceWeakPolicy',
 ]) {

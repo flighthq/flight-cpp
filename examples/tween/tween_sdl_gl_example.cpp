@@ -122,6 +122,10 @@ void draw_frame(
 }
 
 void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
+  if (!gl.get_extension(flight::String("WEBGL_compressed_texture_etc")).has_value() ||
+      gl.get_extension(flight::String("FLIGHT_missing_extension")).has_value()) {
+    throw std::runtime_error("WebGL extension availability did not match the GLES 3 context");
+  }
   auto texture = gl.create_texture();
   if (!texture) throw std::runtime_error("OpenGL could not allocate the tween smoke texture");
   const flight::Uint8Array pixels{
@@ -131,6 +135,26 @@ void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
       255, 255, 255, 255,
   };
   gl.bind_texture(flight::host_sdl::WebGl2Context::texture_2_d, texture);
+  const auto queried_texture = static_cast<std::optional<flight::host_sdl::WebGlTexture>>(
+      gl.get_parameter(flight::host_sdl::WebGl2Context::texture_binding_2_d));
+  if (!queried_texture || *queried_texture != texture) {
+    throw std::runtime_error("WebGL texture binding did not preserve object identity");
+  }
+  const auto image = flight::host_sdl::GlImageSource::rgba8(
+      1, 1, flight::Uint8ClampedArray{100, 50, 25, 128});
+  gl.pixel_storei(flight::host_sdl::WebGl2Context::unpack_premultiply_alpha_webgl, 1);
+  if (!static_cast<bool>(
+          gl.get_parameter(flight::host_sdl::WebGl2Context::unpack_premultiply_alpha_webgl))) {
+    throw std::runtime_error("WebGL premultiply unpack state was not retained");
+  }
+  gl.tex_image2_d(
+      flight::host_sdl::WebGl2Context::texture_2_d,
+      0,
+      flight::host_sdl::WebGl2Context::rgba,
+      flight::host_sdl::WebGl2Context::rgba,
+      flight::host_sdl::WebGl2Context::unsigned_byte,
+      image);
+  gl.pixel_storei(flight::host_sdl::WebGl2Context::unpack_premultiply_alpha_webgl, 0);
   gl.tex_image2_d(
       flight::host_sdl::WebGl2Context::texture_2_d,
       0,
@@ -157,6 +181,12 @@ void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
       flight::host_sdl::WebGl2Context::nearest);
   auto framebuffer = gl.create_framebuffer();
   gl.bind_framebuffer(flight::host_sdl::WebGl2Context::framebuffer, framebuffer);
+  const auto queried_framebuffer =
+      static_cast<std::optional<flight::host_sdl::WebGlFramebuffer>>(
+          gl.get_parameter(flight::host_sdl::WebGl2Context::framebuffer_binding));
+  if (!queried_framebuffer || *queried_framebuffer != framebuffer) {
+    throw std::runtime_error("WebGL framebuffer binding did not preserve object identity");
+  }
   gl.framebuffer_texture2_d(
       flight::host_sdl::WebGl2Context::framebuffer,
       flight::host_sdl::WebGl2Context::color_attachment0,

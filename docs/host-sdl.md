@@ -114,12 +114,12 @@ The native mechanics are now present. Wiring them to generated Flight contracts 
 
 1. Finish compiler emission of the narrowed Flight `GlContext` interface. The current compiler resolves the SDL/GL
    ambient bindings but leaves its inherited `viewport` member as an unresolved C++ type.
-2. Populate that generated callable interface from `WebGl2Context` and add the remaining polymorphic query carriers
-   as their emitted result domains become available. The SDL/GL
+2. Populate that generated callable interface from `WebGl2Context` and connect compressed-extension enum lookup once
+   the compiler selects the downstream ordered `Record<String, double>` carrier. The SDL/GL
    binding profile, shared object handle identities and lifetime, image-source weak-key policy, anisotropy carrier,
    context ownership, buffer and texture upload, compressed texture upload, framebuffer clear/blit/readback,
-   shader/program compilation, state commands, vertex attributes, draw calls, uniform uploads, procedure lookup,
-   and presentation path are present. A live compiler fixture emits and compiles exact calls through this native
+   shader/program compilation, closed state queries, extension availability, state commands, vertex attributes, draw
+   calls, uniform uploads, procedure lookup, and presentation path are present. A live compiler fixture emits and compiles exact calls through this native
    context, and the offscreen SDL smoke executes its ordinary texture/readback path. With the
    anisotropy ambient refusal removed, `GlContextRuntime` now reaches the compiler's closed-value proof for one of
    its `WeakMap` fields.

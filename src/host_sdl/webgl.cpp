@@ -21,6 +21,10 @@ struct GlSurfaceState final {
   Window window;
   GlContext context;
   std::map<std::string, SDL_FunctionPointer, std::less<>> functions;
+  std::map<
+      std::pair<WebGlObjectKind, std::uint32_t>,
+      std::weak_ptr<WebGlObjectState>> objects;
+  bool unpack_premultiply_alpha{false};
 };
 
 struct GlImageSourceState final {
@@ -240,6 +244,66 @@ std::size_t GlImageSourceWeakPolicy::hash(identity_type identity) noexcept {
   return std::hash<const void*>{}(identity);
 }
 
+GlParameterValue::operator double() const {
+  const auto* value = std::get_if<double>(&value_);
+  if (!value) throw std::logic_error("WebGL parameter is not numeric");
+  return *value;
+}
+
+GlParameterValue::operator bool() const {
+  const auto* value = std::get_if<bool>(&value_);
+  if (!value) throw std::logic_error("WebGL parameter is not boolean");
+  return *value;
+}
+
+GlParameterValue::operator Array<double>() const {
+  const auto* value = std::get_if<Array<double>>(&value_);
+  if (!value) throw std::logic_error("WebGL parameter is not a numeric array");
+  return *value;
+}
+
+GlParameterValue::operator Array<bool>() const {
+  const auto* value = std::get_if<Array<bool>>(&value_);
+  if (!value) throw std::logic_error("WebGL parameter is not a boolean array");
+  return *value;
+}
+
+GlParameterValue::operator std::variant<SequenceView<double>, Null, Undefined>() const {
+  const auto* value = std::get_if<Array<double>>(&value_);
+  if (!value) throw std::logic_error("WebGL parameter is not a numeric sequence");
+  return SequenceView<double>(*value);
+}
+
+GlParameterValue::operator std::variant<SequenceView<bool>, Null, Undefined>() const {
+  const auto* value = std::get_if<Array<bool>>(&value_);
+  if (!value) throw std::logic_error("WebGL parameter is not a boolean sequence");
+  return SequenceView<bool>(*value);
+}
+
+GlParameterValue::operator std::optional<WebGlFramebuffer>() const {
+  const auto* value = std::get_if<std::optional<WebGlFramebuffer>>(&value_);
+  if (!value) throw std::logic_error("WebGL parameter is not a framebuffer");
+  return *value;
+}
+
+GlParameterValue::operator std::optional<WebGlProgram>() const {
+  const auto* value = std::get_if<std::optional<WebGlProgram>>(&value_);
+  if (!value) throw std::logic_error("WebGL parameter is not a program");
+  return *value;
+}
+
+GlParameterValue::operator std::optional<WebGlTexture>() const {
+  const auto* value = std::get_if<std::optional<WebGlTexture>>(&value_);
+  if (!value) throw std::logic_error("WebGL parameter is not a texture");
+  return *value;
+}
+
+GlParameterValue::operator std::optional<WebGlVertexArrayObject>() const {
+  const auto* value = std::get_if<std::optional<WebGlVertexArrayObject>>(&value_);
+  if (!value) throw std::logic_error("WebGL parameter is not a vertex array");
+  return *value;
+}
+
 int WebGl2Context::drawing_buffer_width() const { return require_state().window.pixel_size().width; }
 
 int WebGl2Context::drawing_buffer_height() const { return require_state().window.pixel_size().height; }
@@ -267,49 +331,42 @@ std::optional<GlAnisotropyExtension> WebGl2Context::anisotropy_extension() const
 WebGlBuffer WebGl2Context::create_buffer() const {
   GLuint name = 0;
   gl_function<PFNGLGENBUFFERSPROC>(*this, "glGenBuffers")(1, &name);
-  return WebGlBuffer(std::make_shared<detail::WebGlObjectState>(
-      state_, detail::WebGlObjectKind::buffer, name));
+  return WebGlBuffer(create_object_state(detail::WebGlObjectKind::buffer, name));
 }
 
 WebGlFramebuffer WebGl2Context::create_framebuffer() const {
   GLuint name = 0;
   gl_function<PFNGLGENFRAMEBUFFERSPROC>(*this, "glGenFramebuffers")(1, &name);
-  return WebGlFramebuffer(std::make_shared<detail::WebGlObjectState>(
-      state_, detail::WebGlObjectKind::framebuffer, name));
+  return WebGlFramebuffer(create_object_state(detail::WebGlObjectKind::framebuffer, name));
 }
 
 WebGlProgram WebGl2Context::create_program() const {
   const auto name = gl_function<PFNGLCREATEPROGRAMPROC>(*this, "glCreateProgram")();
-  return WebGlProgram(std::make_shared<detail::WebGlObjectState>(
-      state_, detail::WebGlObjectKind::program, name));
+  return WebGlProgram(create_object_state(detail::WebGlObjectKind::program, name));
 }
 
 WebGlRenderbuffer WebGl2Context::create_renderbuffer() const {
   GLuint name = 0;
   gl_function<PFNGLGENRENDERBUFFERSPROC>(*this, "glGenRenderbuffers")(1, &name);
-  return WebGlRenderbuffer(std::make_shared<detail::WebGlObjectState>(
-      state_, detail::WebGlObjectKind::renderbuffer, name));
+  return WebGlRenderbuffer(create_object_state(detail::WebGlObjectKind::renderbuffer, name));
 }
 
 std::optional<WebGlShader> WebGl2Context::create_shader(std::uint32_t type) const {
   const auto name = gl_function<PFNGLCREATESHADERPROC>(*this, "glCreateShader")(type);
   if (name == 0) return std::nullopt;
-  return WebGlShader(std::make_shared<detail::WebGlObjectState>(
-      state_, detail::WebGlObjectKind::shader, name));
+  return WebGlShader(create_object_state(detail::WebGlObjectKind::shader, name));
 }
 
 WebGlTexture WebGl2Context::create_texture() const {
   GLuint name = 0;
   gl_function<PFNGLGENTEXTURESPROC>(*this, "glGenTextures")(1, &name);
-  return WebGlTexture(std::make_shared<detail::WebGlObjectState>(
-      state_, detail::WebGlObjectKind::texture, name));
+  return WebGlTexture(create_object_state(detail::WebGlObjectKind::texture, name));
 }
 
 WebGlVertexArrayObject WebGl2Context::create_vertex_array() const {
   GLuint name = 0;
   gl_function<GenVertexArraysFunction>(*this, "glGenVertexArrays")(1, &name);
-  return WebGlVertexArrayObject(std::make_shared<detail::WebGlObjectState>(
-      state_, detail::WebGlObjectKind::vertex_array, name));
+  return WebGlVertexArrayObject(create_object_state(detail::WebGlObjectKind::vertex_array, name));
 }
 
 void WebGl2Context::active_texture(std::uint32_t texture) const {
@@ -800,6 +857,115 @@ int WebGl2Context::get_attrib_location(const WebGlProgram& program, const String
       require_object(program.state_, detail::WebGlObjectKind::program), encoded.c_str());
 }
 
+GlExtension WebGl2Context::get_extension(const String& name) const {
+  const auto requested = name.to_utf8();
+  bool available = false;
+  if (requested == "EXT_texture_filter_anisotropic") {
+    available =
+        supports_extension("GL_EXT_texture_filter_anisotropic") ||
+        supports_extension("GL_ARB_texture_filter_anisotropic");
+  } else if (requested == "EXT_color_buffer_float") {
+    available = supports_extension("GL_EXT_color_buffer_float");
+  } else if (requested == "WEBGL_compressed_texture_astc") {
+    available =
+        supports_extension("GL_KHR_texture_compression_astc_ldr") ||
+        supports_extension("GL_KHR_texture_compression_astc_hdr");
+  } else if (requested == "EXT_texture_compression_bptc") {
+    available = supports_extension("GL_EXT_texture_compression_bptc");
+  } else if (requested == "WEBGL_compressed_texture_etc") {
+    // ETC2/EAC is part of the OpenGL ES 3.0 core requested by GlCanvas.
+    available = true;
+  } else if (requested == "WEBGL_compressed_texture_pvrtc") {
+    available = supports_extension("GL_IMG_texture_compression_pvrtc");
+  } else if (requested == "EXT_texture_compression_rgtc") {
+    available = supports_extension("GL_EXT_texture_compression_rgtc");
+  } else if (requested == "WEBGL_compressed_texture_s3tc") {
+    available = supports_extension("GL_EXT_texture_compression_s3tc");
+  } else if (requested == "WEBGL_compressed_texture_s3tc_srgb") {
+    available = supports_extension("GL_EXT_texture_compression_s3tc_srgb");
+  } else {
+    available = supports_extension(requested);
+    if (!available && !requested.starts_with("GL_")) {
+      available = supports_extension("GL_" + requested);
+    }
+  }
+  return GlExtension(available);
+}
+
+GlParameterValue WebGl2Context::get_parameter(std::uint32_t parameter) const {
+  if (parameter == unpack_premultiply_alpha_webgl) {
+    return GlParameterValue(require_state().unpack_premultiply_alpha);
+  }
+  if (parameter == color_clear_value) {
+    GLfloat values[4]{};
+    gl_function<PFNGLGETFLOATVPROC>(*this, "glGetFloatv")(parameter, values);
+    return GlParameterValue(Array<double>{values[0], values[1], values[2], values[3]});
+  }
+  if (parameter == color_writemask) {
+    GLboolean values[4]{};
+    gl_function<PFNGLGETBOOLEANVPROC>(*this, "glGetBooleanv")(parameter, values);
+    return GlParameterValue(Array<bool>{
+        values[0] != 0,
+        values[1] != 0,
+        values[2] != 0,
+        values[3] != 0,
+    });
+  }
+  if (parameter == scissor_box || parameter == viewport_constant) {
+    GLint values[4]{};
+    gl_function<PFNGLGETINTEGERVPROC>(*this, "glGetIntegerv")(parameter, values);
+    return GlParameterValue(Array<double>{
+        static_cast<double>(values[0]),
+        static_cast<double>(values[1]),
+        static_cast<double>(values[2]),
+        static_cast<double>(values[3]),
+    });
+  }
+  if (parameter == depth_writemask) {
+    GLboolean value = 0;
+    gl_function<PFNGLGETBOOLEANVPROC>(*this, "glGetBooleanv")(parameter, &value);
+    return GlParameterValue(value != 0);
+  }
+  if (parameter == static_cast<std::uint32_t>(GlAnisotropyExtension::max_texture_max_anisotropy_ext)) {
+    GLfloat value = 0.0F;
+    gl_function<PFNGLGETFLOATVPROC>(*this, "glGetFloatv")(parameter, &value);
+    return GlParameterValue(static_cast<double>(value));
+  }
+
+  GLint value = 0;
+  gl_function<PFNGLGETINTEGERVPROC>(*this, "glGetIntegerv")(parameter, &value);
+  const auto name = static_cast<std::uint32_t>(value);
+  if (parameter == framebuffer_binding) {
+    return GlParameterValue(
+        name == 0
+            ? std::optional<WebGlFramebuffer>{}
+            : std::optional<WebGlFramebuffer>(WebGlFramebuffer(
+                  find_object_state(detail::WebGlObjectKind::framebuffer, name))));
+  }
+  if (parameter == current_program) {
+    return GlParameterValue(
+        name == 0
+            ? std::optional<WebGlProgram>{}
+            : std::optional<WebGlProgram>(WebGlProgram(
+                  find_object_state(detail::WebGlObjectKind::program, name))));
+  }
+  if (parameter == texture_binding_2_d) {
+    return GlParameterValue(
+        name == 0
+            ? std::optional<WebGlTexture>{}
+            : std::optional<WebGlTexture>(WebGlTexture(
+                  find_object_state(detail::WebGlObjectKind::texture, name))));
+  }
+  if (parameter == vertex_array_binding) {
+    return GlParameterValue(
+        name == 0
+            ? std::optional<WebGlVertexArrayObject>{}
+            : std::optional<WebGlVertexArrayObject>(WebGlVertexArrayObject(
+                  find_object_state(detail::WebGlObjectKind::vertex_array, name))));
+  }
+  return GlParameterValue(static_cast<double>(value));
+}
+
 std::optional<String> WebGl2Context::get_program_info_log(const WebGlProgram& program) const {
   const auto name = require_object(program.state_, detail::WebGlObjectKind::program);
   GLint length = 0;
@@ -869,6 +1035,10 @@ void WebGl2Context::link_program(const WebGlProgram& program) const {
 }
 
 void WebGl2Context::pixel_storei(std::uint32_t parameter, int value) const {
+  if (parameter == unpack_premultiply_alpha_webgl) {
+    require_state().unpack_premultiply_alpha = value != 0;
+    return;
+  }
   gl_function<PFNGLPIXELSTOREIPROC>(*this, "glPixelStorei")(parameter, value);
 }
 
@@ -1010,6 +1180,22 @@ void WebGl2Context::tex_image2_d(
     throw std::range_error("texImage2D image dimensions exceed the native GL range");
   }
   const auto pixels = source.rgba8_pixels();
+  static_assert(sizeof(Uint8Clamped) == sizeof(GLubyte));
+  const void* pixel_data = pixels.data();
+  std::vector<GLubyte> premultiplied;
+  if (require_state().unpack_premultiply_alpha) {
+    premultiplied.reserve(pixels.size());
+    for (std::size_t index = 0; index < pixels.size(); index += 4) {
+      const auto alpha = static_cast<std::uint8_t>(pixels[index + 3]);
+      for (std::size_t channel = 0; channel < 3; ++channel) {
+        const auto color = static_cast<std::uint8_t>(pixels[index + channel]);
+        premultiplied.push_back(static_cast<GLubyte>(
+            (static_cast<unsigned int>(color) * alpha + 127U) / 255U));
+      }
+      premultiplied.push_back(alpha);
+    }
+    pixel_data = premultiplied.data();
+  }
   gl_function<PFNGLTEXIMAGE2DPROC>(*this, "glTexImage2D")(
       target,
       level,
@@ -1019,7 +1205,7 @@ void WebGl2Context::tex_image2_d(
       0,
       format,
       type,
-      pixels.data());
+      pixel_data);
 }
 
 void WebGl2Context::tex_image3_d(
@@ -1337,6 +1523,30 @@ detail::GlSurfaceState& WebGl2Context::require_state() const {
   return *state_;
 }
 
+std::shared_ptr<detail::WebGlObjectState> WebGl2Context::create_object_state(
+    detail::WebGlObjectKind kind,
+    std::uint32_t name) const {
+  auto object = std::make_shared<detail::WebGlObjectState>(state_, kind, name);
+  if (object->valid) require_state().objects[{kind, name}] = object;
+  return object;
+}
+
+std::shared_ptr<detail::WebGlObjectState> WebGl2Context::find_object_state(
+    detail::WebGlObjectKind kind,
+    std::uint32_t name) const {
+  auto& objects = require_state().objects;
+  const auto existing = objects.find({kind, name});
+  if (existing == objects.end()) {
+    throw std::logic_error("native GL returned an object outside this WebGL context");
+  }
+  auto object = existing->second.lock();
+  if (!object || !object->valid) {
+    objects.erase(existing);
+    throw std::logic_error("native GL returned an expired WebGL object");
+  }
+  return object;
+}
+
 std::uint32_t WebGl2Context::require_object(
     const std::shared_ptr<detail::WebGlObjectState>& object,
     detail::WebGlObjectKind kind) const {
@@ -1353,6 +1563,7 @@ void WebGl2Context::invalidate_object(
     const std::shared_ptr<detail::WebGlObjectState>& object,
     detail::WebGlObjectKind kind) const {
   static_cast<void>(require_object(object, kind));
+  require_state().objects.erase({kind, object->name});
   object->name = 0;
   object->valid = false;
 }

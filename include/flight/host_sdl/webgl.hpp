@@ -7,6 +7,8 @@
 #include <optional>
 #include <span>
 #include <string_view>
+#include <utility>
+#include <variant>
 
 #include <SDL3/SDL_video.h>
 
@@ -14,6 +16,8 @@
 #include <flight/array_buffer_view.hpp>
 #include <flight/host_sdl/export.hpp>
 #include <flight/host_sdl/window.hpp>
+#include <flight/presence.hpp>
+#include <flight/sequence_view.hpp>
 #include <flight/string.hpp>
 #include <flight/typed_array.hpp>
 
@@ -106,6 +110,45 @@ using WebGlTexture = WebGlHandle<WebGlTextureTag>;
 using WebGlUniformLocation = WebGlHandle<WebGlUniformLocationTag>;
 using WebGlVertexArrayObject = WebGlHandle<WebGlVertexArrayObjectTag>;
 
+class FLIGHT_HOST_SDL_GL_API GlParameterValue final {
+ public:
+  [[nodiscard]] explicit operator double() const;
+  [[nodiscard]] explicit operator bool() const;
+  [[nodiscard]] explicit operator Array<double>() const;
+  [[nodiscard]] explicit operator Array<bool>() const;
+  [[nodiscard]] explicit operator std::variant<SequenceView<double>, Null, Undefined>() const;
+  [[nodiscard]] explicit operator std::variant<SequenceView<bool>, Null, Undefined>() const;
+  [[nodiscard]] explicit operator std::optional<WebGlFramebuffer>() const;
+  [[nodiscard]] explicit operator std::optional<WebGlProgram>() const;
+  [[nodiscard]] explicit operator std::optional<WebGlTexture>() const;
+  [[nodiscard]] explicit operator std::optional<WebGlVertexArrayObject>() const;
+
+  [[nodiscard]] friend bool operator==(const GlParameterValue& value, bool expected) {
+    return static_cast<bool>(value) == expected;
+  }
+  [[nodiscard]] friend bool operator==(bool expected, const GlParameterValue& value) {
+    return value == expected;
+  }
+
+ private:
+  friend class WebGl2Context;
+
+  using Value = std::variant<
+      double,
+      bool,
+      Array<double>,
+      Array<bool>,
+      std::optional<WebGlFramebuffer>,
+      std::optional<WebGlProgram>,
+      std::optional<WebGlTexture>,
+      std::optional<WebGlVertexArrayObject>>;
+
+  template <typename ValueType>
+  explicit GlParameterValue(ValueType value) : value_(std::move(value)) {}
+
+  Value value_;
+};
+
 struct WebGlContextAttributes final {
   bool alpha{true};
   bool antialias{true};
@@ -124,6 +167,26 @@ struct WebGlContextAttributes final {
 struct GlAnisotropyExtension final {
   static constexpr double texture_max_anisotropy_ext = 0x84FE;
   static constexpr double max_texture_max_anisotropy_ext = 0x84FF;
+};
+
+// Presence-bearing result for WebGL getExtension calls. Flight currently uses extension objects
+// either as availability tokens or for the anisotropy enums; compressed-format member lookup remains
+// a compiler-owned Record<String, number> conversion.
+class FLIGHT_HOST_SDL_GL_API GlExtension final {
+ public:
+  static constexpr double texture_max_anisotropy_ext =
+      GlAnisotropyExtension::texture_max_anisotropy_ext;
+  static constexpr double max_texture_max_anisotropy_ext =
+      GlAnisotropyExtension::max_texture_max_anisotropy_ext;
+
+  [[nodiscard]] bool has_value() const noexcept { return available_; }
+  [[nodiscard]] explicit operator bool() const noexcept { return available_; }
+
+ private:
+  friend class WebGl2Context;
+  explicit GlExtension(bool available) noexcept : available_(available) {}
+
+  bool available_;
 };
 
 struct WebGlActiveInfo final {
@@ -476,6 +539,8 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       const WebGlProgram& program,
       int index) const;
   [[nodiscard]] int get_attrib_location(const WebGlProgram& program, const String& name) const;
+  [[nodiscard]] GlExtension get_extension(const String& name) const;
+  [[nodiscard]] GlParameterValue get_parameter(std::uint32_t parameter) const;
   [[nodiscard]] std::optional<String> get_program_info_log(const WebGlProgram& program) const;
   [[nodiscard]] double get_program_parameter(
       const WebGlProgram& program,
@@ -663,6 +728,12 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       : state_(std::move(state)) {}
 
   [[nodiscard]] detail::GlSurfaceState& require_state() const;
+  [[nodiscard]] std::shared_ptr<detail::WebGlObjectState> create_object_state(
+      detail::WebGlObjectKind kind,
+      std::uint32_t name) const;
+  [[nodiscard]] std::shared_ptr<detail::WebGlObjectState> find_object_state(
+      detail::WebGlObjectKind kind,
+      std::uint32_t name) const;
   [[nodiscard]] std::uint32_t require_object(
       const std::shared_ptr<detail::WebGlObjectState>& object,
       detail::WebGlObjectKind kind) const;
