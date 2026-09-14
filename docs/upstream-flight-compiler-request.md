@@ -32,7 +32,8 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
 - shared `AbortController`/`AbortSignal` state with first-reason retention, listener dispatch/removal, and
   `throw_if_aborted`, covered by a live compiler-versus-Node oracle;
 - immutable shared `Blob` bytes with typed-array construction, slicing, MIME normalization, text decoding, and
-  `ArrayBuffer` conversion, selected through the runtime profile and covered by a live compiler-versus-Node oracle;
+  `ArrayBuffer` conversion, plus exact `BlobPart` and `BlobPropertyBag` aliases selected through the runtime profile
+  and covered by a live compiler-versus-Node oracle;
 - URI component and browser base64 globals with UTF-8, binary-string, malformed-input, padding, and whitespace
   semantics covered by live compiler-versus-Node oracles;
 - shared readable/writable stream and async-iterable carriers, including compiler-emitted writer operations and

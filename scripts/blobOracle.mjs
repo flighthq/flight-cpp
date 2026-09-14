@@ -44,6 +44,9 @@ const source = api.parseTypeScriptSource(
   `export function makeText(): Blob {
      return new Blob(['Flight'], { type: 'TEXT/PLAIN' });
    }
+   export function makeParts(parts: BlobPart[], options: BlobPropertyBag): Blob {
+     return new Blob(parts, options);
+   }
    export function sliceText(blob: Blob): Blob {
      return blob.slice(1, -1, 'APPLICATION/X-FLIGHT');
    }
@@ -69,6 +72,8 @@ const emitted = api.emitIrModuleCpp(lowered.module, {
 }).contents;
 for (const expected of [
   '#include <flight/blob.hpp>',
+  'flight::Array<flight::BlobPart> parts',
+  'flight::BlobPropertyBag options',
   'flight::Blob(',
   '.slice(',
   'co_await blob.text()',
@@ -92,11 +97,15 @@ try {
 
 int main() {
   const auto blob = flighthq_runtime_test::make_text();
+  const auto parts = flighthq_runtime_test::make_parts(
+      flight::Array<flight::BlobPart>{flight::String("Fli"), flight::String("ght")},
+      flight::BlobOptions{.type = "TEXT/PLAIN"});
   const auto sliced = flighthq_runtime_test::slice_text(blob);
   std::cout << blob.type.to_utf8() << '|' << blob.size << '|'
             << flighthq_runtime_test::read_text(blob).get().to_utf8() << '|'
             << sliced.type.to_utf8() << '|' << sliced.size << '|'
-            << flighthq_runtime_test::byte_length(blob).get();
+            << flighthq_runtime_test::byte_length(blob).get() << '|'
+            << flighthq_runtime_test::read_text(parts).get().to_utf8();
 }
 `,
   );
@@ -129,7 +138,7 @@ int main() {
       `const blob = new Blob(['Flight'], { type: 'TEXT/PLAIN' });
 const sliced = blob.slice(1, -1, 'APPLICATION/X-FLIGHT');
 process.stdout.write(blob.type + '|' + blob.size + '|' + await blob.text() + '|' +
-  sliced.type + '|' + sliced.size + '|' + (await blob.arrayBuffer()).byteLength);`,
+  sliced.type + '|' + sliced.size + '|' + (await blob.arrayBuffer()).byteLength + '|Flight');`,
     ],
     { cwd: root, encoding: 'utf8' },
   );

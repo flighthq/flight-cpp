@@ -135,6 +135,26 @@
     },
     {
       "headers": [
+        "flight/blob.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "BlobPart",
+      "space": "type",
+      "targetName": "flight::BlobPart"
+    },
+    {
+      "headers": [
+        "flight/blob.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "BlobPropertyBag",
+      "space": "type",
+      "targetName": "flight::BlobPropertyBag"
+    },
+    {
+      "headers": [
         "flight/map.hpp"
       ],
       "nullability": "non-null",

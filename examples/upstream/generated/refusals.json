@@ -686,7 +686,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/video/src/app.ts",
       "package": "@flighthq/example-video",
-      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/app.ts: runtime external symbol binding plan is incomplete (missing: BlobEvent[type], BlobPart[type], BlobPropertyBag[type], CanvasRenderingContext2D[type], HTMLVideoElement[type], MediaRecorder[type], MediaRecorder[value], MediaRecorderOptions[type], MediaStream[type], PropertyDescriptor[type], const[type])",
+      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/app.ts: runtime external symbol binding plan is incomplete (missing: BlobEvent[type], CanvasRenderingContext2D[type], HTMLVideoElement[type], MediaRecorder[type], MediaRecorder[value], MediaRecorderOptions[type], MediaStream[type], PropertyDescriptor[type], const[type])",
       "stage": "emission"
     },
     {

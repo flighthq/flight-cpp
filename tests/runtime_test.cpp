@@ -285,6 +285,18 @@ void test_blob() {
   check(nested.size == middle.size + binary_blob.size,
         "Blob parts can retain and concatenate existing immutable byte sequences");
 
+  const flight::Uint8Array view_part{0x21};
+  const flight::Blob typed_parts(
+      flight::Array<flight::BlobPart>{
+          flight::String("Flight"),
+          flight::ArrayBufferView(view_part),
+          flight::Blob(flight::Array<flight::String>{" SDK"}),
+      },
+      flight::BlobPropertyBag{.type = "TEXT/PLAIN"});
+  check(typed_parts.text().get() == flight::String("Flight! SDK") &&
+            typed_parts.type == flight::String("text/plain"),
+        "BlobPart and BlobPropertyBag preserve the standard constructor domains");
+
   const auto weak = text_blob.weaken();
   const auto recovered = flight::Blob::lock_weak(weak);
   check(recovered.has_value() && recovered->identity() == text_blob.identity() &&

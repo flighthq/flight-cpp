@@ -72,12 +72,12 @@ inline void append_blob_part(std::vector<std::byte>& output, const TypedArray<Va
   append_blob_bytes(output, std::as_bytes(value.span()));
 }
 
+void append_blob_part(std::vector<std::byte>& output, const Blob& value);
+
 template <typename... Values>
 inline void append_blob_part(std::vector<std::byte>& output, const std::variant<Values...>& value) {
   std::visit([&](const auto& part) { append_blob_part(output, part); }, value);
 }
-
-void append_blob_part(std::vector<std::byte>& output, const Blob& value);
 
 } // namespace detail
 
@@ -168,6 +168,9 @@ class Blob final {
              : static_cast<std::size_t>(integer);
   }
 };
+
+using BlobPart = std::variant<String, ArrayBufferLike, ArrayBufferView, Blob>;
+using BlobPropertyBag = BlobOptions;
 
 namespace detail {
 
