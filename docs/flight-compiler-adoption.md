@@ -126,10 +126,10 @@ but one of the portable headers that compiled independently.
 
 ## Compiler and host work still gating the SDK
 
-The current 255 portable and 342 SDL-profile native header failures begin with compiler-emitted optional/value
+The current 256 portable and 342 SDL-profile native header failures begin with compiler-emitted optional/value
 conversions, concrete typed-array aliases used as templates, value spelling used where a type name is required,
 invalid union member access,
-non-convertible duplicate anonymous records, package-scope helper collisions, and malformed type queries. These must
+non-convertible duplicate anonymous records, circular generated includes without forward declarations, package-scope helper collisions, and malformed type queries. These must
 be corrected in flight-compiler rather than rewritten in the generated tree.
 
 The stricter compiler newly refuses 16 direct roots that the previous portable sweep emitted. Five need equivalent

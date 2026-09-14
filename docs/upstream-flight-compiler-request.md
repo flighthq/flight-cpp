@@ -68,9 +68,9 @@ development preset, and is declared in the Bazel graph.
 ## Remaining compiler-owned native failures
 
 The emitted set is dependency-closed in the TypeScript package graph, but dependency closure is not yet the same as
-C++ well-formedness. With GCC 15.2, 704 of the 959 headers compile independently and 255 fail. The composed SDL
+C++ well-formedness. With GCC 15.2, 703 of the 959 headers compile independently and 256 fail. The composed SDL
 profile emits 1,098 modules, of which 756 compile and 342 fail. Compared with compiler `5649642`, the portable pass
-count remains 704 while 72 malformed headers move behind explicit refusals; the SDL profile retains its previously
+count is one lower while 72 malformed headers move behind explicit refusals; the SDL profile retains its previously
 compiling headers while moving 31 malformed headers behind refusals. The current native
 report is dominated by emission defects that cannot be repaired by adding a runtime symbol:
 
@@ -81,6 +81,8 @@ report is dominated by emission defects that cannot be repaired by adding a runt
 - optional values are passed or assigned where their contained value is required;
 - discriminated unions represented by `std::variant` still receive direct member access;
 - several structurally equivalent anonymous records are emitted as distinct, non-convertible C++ structs;
+- mutually importing generated records can include one another before either side forward-declares its referenced
+  type (`Screen`, `ScreenChangeEvent`, and `ScreenSignals` currently demonstrate this cycle);
 - a few emitted tokens and type queries remain malformed, including `typeidel`.
 
 The stricter compiler newly refuses 16 direct roots that the previous portable sweep emitted. Five need equivalent
