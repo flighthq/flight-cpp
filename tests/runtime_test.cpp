@@ -843,6 +843,14 @@ void test_new_runtime_services() {
   check(captures.has_value() && captures->size() == 3 && (*captures)[1] == flight::String("id") &&
             (*captures)[2] == flight::String("42") && captures->index == 0.0,
         "RegExp exec returns the complete match, captures, and source index");
+  const auto unmatched = flight::RegExp("(a)?b").exec("b");
+  check(unmatched.has_value() && unmatched->has_capture(0) && !unmatched->has_capture(1) &&
+            !unmatched->capture(1).has_value() && (*unmatched)[1].empty(),
+        "RegExp exec preserves unmatched-capture absence independently from its string projection");
+  const auto global_matches = flight::String("a1b2").match(flight::RegExp("[0-9]", "g"));
+  check(global_matches.has_value() && global_matches->size() == 2 &&
+            (*global_matches)[0] == flight::String("1") && (*global_matches)[1] == flight::String("2"),
+        "String match returns complete matches rather than captures for global expressions");
   check(flight::String("a1 b2").replace(flight::RegExp("([a-z])([0-9])", "g"),
                                          flight::String("$2$1")) == flight::String("1a 2b") &&
             flight::String("x=12").replace(
@@ -851,6 +859,25 @@ void test_new_runtime_services() {
                   return name.concat(flight::String(":"), value);
                 }) == flight::String("x:12"),
         "RegExp global replacement expands captures and invokes replacement callbacks");
+  check(flight::String("abc").replace(flight::RegExp("(a)(b)?(z)?"),
+                                      flight::String("$$|$&|$`|$'|$1|$2|$3|$12")) ==
+            flight::String("$|ab||c|a|b||a2c") &&
+            flight::String("-").replace(flight::RegExp("(?:)", "g"), flight::String("_")) ==
+                flight::String("_-_"),
+        "RegExp replacement implements JavaScript substitution tokens and advances empty global matches");
+  check(flight::String("b").replace(
+            flight::RegExp("(a)?b"),
+            [](const flight::String&, const std::optional<flight::String>& capture,
+               double offset, const flight::String& input) {
+              return (capture ? *capture : flight::String("undefined")) + flight::String(":") +
+                     flight::String::from_number(offset) + flight::String(":") + input;
+            }) == flight::String("undefined:0:b") &&
+            flight::String::from_utf8("\xC3\xA9" "0x0").replace(
+                flight::RegExp("[0-9]", "g"),
+                [](const flight::String&, double offset) {
+                  return flight::String::from_number(offset);
+                }) == flight::String::from_utf8("\xC3\xA9" "1x3"),
+        "RegExp replacement callbacks preserve absent captures and report UTF-16 source offsets");
 
   check(flight::IntlCollator().compare("a", "b") < 0.0 &&
             flight::IntlListFormat().format(flight::Array<flight::String>{"a", "b", "c"}) ==

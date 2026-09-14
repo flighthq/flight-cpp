@@ -28,6 +28,28 @@ int main() {
   observations.push(expression_alias.test("flight"));
   observations.push(expression.test("flight"));
 
+  observations.push(flight::String("abc").replace(
+      flight::RegExp("(a)(b)?(z)?"), flight::String("$$|$&|$`|$'|$1|$2|$3|$12")));
+  observations.push(flight::String("-").replace(flight::RegExp("(?:)", "g"), flight::String("_")));
+  flight::JsonArray global_matches;
+  const auto matched_digits = flight::String("a1b2").match(flight::RegExp("[0-9]", "g"));
+  for (const auto& match : *matched_digits) {
+    global_matches.push(match);
+  }
+  observations.push(std::move(global_matches));
+  observations.push(flight::String("b").replace(
+      flight::RegExp("(a)?b"),
+      [](const flight::String&, const std::optional<flight::String>& capture,
+         double offset, const flight::String& input) {
+        return (capture ? *capture : flight::String("undefined")) + flight::String(":") +
+               flight::String::from_number(offset) + flight::String(":") + input;
+      }));
+  observations.push(flight::String::from_utf8("\xC3\xA9" "0x0").replace(
+      flight::RegExp("[0-9]", "g"),
+      [](const flight::String&, double offset) {
+        return flight::String::from_number(offset);
+      }));
+
   observations.push(flight::Url("child", "https://example.test/base").protocol);
   observations.push(flight::parse_int("  -0x10tail"));
   observations.push(flight::parse_float("  -1.25e2tail"));

@@ -73,6 +73,13 @@ const expected = JSON.stringify([
   expression.test('FLIGHT'),
   expression.test('flight'),
   expression.test('flight'),
+  'abc'.replace(/(a)(b)?(z)?/, "$$|$&|$`|$'|$1|$2|$3|$12"),
+  '-'.replace(/(?:)/g, '_'),
+  Array.from('a1b2'.match(/[0-9]/g) ?? []),
+  'b'.replace(/(a)?b/, (_match, capture, offset, input) =>
+    `${capture === undefined ? 'undefined' : capture}:${offset}:${input}`,
+  ),
+  'é0x0'.replace(/[0-9]/g, (_match, offset) => String(offset)),
   new URL('child', 'https://example.test/base').protocol,
   Number.parseInt('  -0x10tail'),
   Number.parseFloat('  -1.25e2tail'),

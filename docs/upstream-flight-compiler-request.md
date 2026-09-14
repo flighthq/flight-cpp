@@ -87,6 +87,13 @@ an unresolved alternative in a scene-light-selection union. Their dependency ref
 `T | undefined` also reaches `contextual optionalSingle construction requires expression type evidence`; the exact
 iterator binding and its `done` path compile in the live runtime oracle.
 
+The compiler-emitted RegExp fixture now verifies global `String.match`, substitution tokens, empty global matches,
+and callback offsets against Node. One contextual callback edge remains: an unannotated second parameter for a
+zero-capture `String.replace` callback currently emits as `flight::String`, although JavaScript supplies the numeric
+match offset at that position. An explicit `offset: number` annotation emits the correct `double` and passes the
+native oracle. Capture-aware callback typing must also preserve the runtime `undefined` value for unmatched groups;
+the TypeScript library's broad callback signature does not expose that absence by itself.
+
 WebGPU descriptor bindings cannot yet be enabled faithfully. A focused `GPUBlendState` fixture emits nested
 `GPUBlendComponent` literals as new anonymous `Ref<T>` records instead of contextual target values. Direct external
 descriptor literals preserve source property order in C++ designators, so valid TypeScript objects whose properties
