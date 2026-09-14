@@ -106,7 +106,7 @@ provider and keeps those source-level names available until a concrete backend p
 handles.
 
 `bindings/sdl-wgpu.json` supplies those object handles, adapter features/limits, device/origin/vertex/external-image
-descriptors, and standard usage flags. It is a provider ABI rather than a renderer: device methods remain the
+descriptors, and standard buffer, texture, shader, color-write, and map-mode flags. It is a provider ABI rather than a renderer: device methods remain the
 responsibility of the selected Dawn/wgpu-native adapter. Run `npm run sdk:generate:sdl-wgpu` for that profile alone,
 or `npm run sdk:generate:sdl` for the complete GL + WebGPU + application-shell inventory.
 

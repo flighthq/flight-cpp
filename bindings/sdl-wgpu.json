@@ -31,6 +31,21 @@
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUCanvasContext", "space": "type", "targetName": "flight::host_sdl::WgpuCanvasContext", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuCanvasContextWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUColor", "space": "type", "targetName": "flight::host_sdl::WgpuColor" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUCommandEncoder", "space": "type", "targetName": "flight::host_sdl::WgpuCommandEncoder", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuCommandEncoderWeakPolicy" },
+    {
+      "headers": ["flight/host_sdl/wgpu.hpp"],
+      "members": [
+        { "sourceMember": "ALL", "targetName": "flight::host_sdl::wgpu_color_write_all" },
+        { "sourceMember": "ALPHA", "targetName": "flight::host_sdl::wgpu_color_write_alpha" },
+        { "sourceMember": "BLUE", "targetName": "flight::host_sdl::wgpu_color_write_blue" },
+        { "sourceMember": "GREEN", "targetName": "flight::host_sdl::wgpu_color_write_green" },
+        { "sourceMember": "RED", "targetName": "flight::host_sdl::wgpu_color_write_red" }
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "GPUColorWrite",
+      "space": "value",
+      "targetName": "flight::host_sdl::wgpu_color_write"
+    },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUCopyExternalImageDestInfo", "space": "type", "targetName": "flight::host_sdl::WgpuExternalImageDestinationInfo" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUCopyExternalImageSource", "space": "type", "targetName": "flight::host_sdl::WgpuExternalImageSource", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuExternalImageSourceWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUCopyExternalImageSourceInfo", "space": "type", "targetName": "flight::host_sdl::WgpuExternalImageSourceInfo" },
@@ -39,6 +54,18 @@
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUDeviceLostInfo", "space": "type", "targetName": "flight::host_sdl::WgpuDeviceLostInfo" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUOrigin3D", "space": "type", "targetName": "flight::host_sdl::WgpuOrigin3D" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUPipelineLayout", "space": "type", "targetName": "flight::host_sdl::WgpuPipelineLayout", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuPipelineLayoutWeakPolicy" },
+    {
+      "headers": ["flight/host_sdl/wgpu.hpp"],
+      "members": [
+        { "sourceMember": "READ", "targetName": "flight::host_sdl::wgpu_map_mode_read" },
+        { "sourceMember": "WRITE", "targetName": "flight::host_sdl::wgpu_map_mode_write" }
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "GPUMapMode",
+      "space": "value",
+      "targetName": "flight::host_sdl::wgpu_map_mode"
+    },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPUQueue", "space": "type", "targetName": "flight::host_sdl::WgpuQueue", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuQueueWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPURenderPassEncoder", "space": "type", "targetName": "flight::host_sdl::WgpuRenderPassEncoder", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuRenderPassEncoderWeakPolicy" },
     { "headers": ["flight/host_sdl/wgpu.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "GPURenderPipeline", "space": "type", "targetName": "flight::host_sdl::WgpuRenderPipeline", "weakKeyPolicyTargetName": "flight::host_sdl::WgpuRenderPipelineWeakPolicy" },

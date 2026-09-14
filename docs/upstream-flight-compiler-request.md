@@ -87,6 +87,13 @@ an unresolved alternative in a scene-light-selection union. Their dependency ref
 `T | undefined` also reaches `contextual optionalSingle construction requires expression type evidence`; the exact
 iterator binding and its `done` path compile in the live runtime oracle.
 
+WebGPU descriptor bindings cannot yet be enabled faithfully. A focused `GPUBlendState` fixture emits nested
+`GPUBlendComponent` literals as new anonymous `Ref<T>` records instead of contextual target values. Direct external
+descriptor literals preserve source property order in C++ designators, so valid TypeScript objects whose properties
+are written in a different order than the target struct fail C++'s ordered-designator rule. The compiler must
+contextualize nested object literals and emit target declaration order before the host can bind `GPUBlendState`,
+`GPUStencilFaceState`, `GPUSamplerDescriptor`, and the related bind-group layouts to exact value carriers.
+
 These diagnostics arise after the runtime includes resolve, and many occur in a header before later errors in that
 header can be observed. The JSON report from `npm run sdk:compile` is the compact handoff surface for fixing them in
 flight-compiler. Downstream source rewriting would obscure compiler provenance and produce a second, unversioned

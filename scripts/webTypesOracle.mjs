@@ -42,9 +42,18 @@ const bindings = JSON.parse(readFileSync(path.join(root, 'bindings', 'web-types.
 const names = [
   'CanvasFillRule',
   'GlobalCompositeOperation',
+  'GPUAddressMode',
+  'GPUBlendFactor',
+  'GPUBlendOperation',
+  'GPUCompareFunction',
   'GPUFeatureName',
+  'GPUFilterMode',
   'GPUIndexFormat',
+  'GPULoadOp',
+  'GPUMipmapFilterMode',
   'GPUPowerPreference',
+  'GPUPrimitiveTopology',
+  'GPUStencilOperation',
   'GPUTextureFormat',
   'ImageSmoothingQuality',
   'PermissionName',
@@ -53,6 +62,9 @@ const source = api.parseTypeScriptSource(
   '/flight/packages/host-test/src/webTypes.ts',
   `export function values(${names.map((name, index) => `v${String(index)}: ${name}`).join(', ')}): string[] {
      return [${names.map((_name, index) => `v${String(index)}`).join(', ')}];
+   }
+   export function time(value: DOMHighResTimeStamp): number {
+     return value;
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -69,6 +81,10 @@ const emitted = api.emitIrModuleCpp(lowered.module, {
 }).contents;
 if (!emitted.includes(`flight::Array<flight::String> values(${names.map((_name, index) => `flight::String v${String(index)}`).join(', ')})`)) {
   process.stderr.write(`Web string type fixture did not emit exact flight::String parameters.\n${emitted}\n`);
+  process.exit(1);
+}
+if (!emitted.includes('double time(double value)')) {
+  process.stderr.write(`DOMHighResTimeStamp fixture did not emit an exact double parameter.\n${emitted}\n`);
   process.exit(1);
 }
 

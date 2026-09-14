@@ -281,6 +281,15 @@ inline constexpr double wgpu_shader_stage_vertex = 0x1;
 inline constexpr double wgpu_shader_stage_fragment = 0x2;
 inline constexpr double wgpu_shader_stage_compute = 0x4;
 
+inline constexpr double wgpu_color_write_red = 0x1;
+inline constexpr double wgpu_color_write_green = 0x2;
+inline constexpr double wgpu_color_write_blue = 0x4;
+inline constexpr double wgpu_color_write_alpha = 0x8;
+inline constexpr double wgpu_color_write_all = 0xf;
+
+inline constexpr double wgpu_map_mode_read = 0x1;
+inline constexpr double wgpu_map_mode_write = 0x2;
+
 struct WgpuSurfaceCallbacks {
   void* userdata{nullptr};
   WgpuSurfaceHandle (*create)(void* userdata, WgpuInstanceHandle instance, SDL_Window* window){nullptr};

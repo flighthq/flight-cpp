@@ -511,6 +511,8 @@ int main() {
   expect(
       flight::host_sdl::wgpu_buffer_usage_vertex == 0x20 &&
           flight::host_sdl::wgpu_texture_usage_render_attachment == 0x10 &&
-          flight::host_sdl::wgpu_shader_stage_fragment == 0x2,
+          flight::host_sdl::wgpu_shader_stage_fragment == 0x2 &&
+          flight::host_sdl::wgpu_color_write_all == 0xf &&
+          flight::host_sdl::wgpu_map_mode_read == 0x1,
       "WGPU usage flags do not match the WebGPU constants");
 }

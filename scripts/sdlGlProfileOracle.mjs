@@ -68,6 +68,7 @@ const source = api.parseTypeScriptSource(
      activeInfo: WebGLActiveInfo;
      attributes: WebGLContextAttributes;
      preference: WebGLPowerPreference;
+     objectName: GLuint;
      imageCache: WeakMap<CanvasImageSource, WebGLTexture>;
    }
    export interface NativeGlParameters {
@@ -232,6 +233,7 @@ for (const expected of [
   'static_cast<flight::Array<double>>(context.get_parameter(context.scissor_box))',
   'flight::host_sdl::WebGlContextAttributes attributes;',
   'flight::host_sdl::GlImageSourceWeakPolicy',
+  'double object_name;',
 ]) {
   if (!emitted.includes(expected)) {
     process.stderr.write(`SDL/GL binding fixture did not emit ${expected}.\n`);

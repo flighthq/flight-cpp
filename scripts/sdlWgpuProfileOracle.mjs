@@ -89,7 +89,8 @@ const source = api.parseTypeScriptSource(
    export function maxTextureSize(value: GPUAdapter): number { return value.limits.maxTextureDimension2D ?? 8192; }
    export function supportsTimestamp(value: GPUAdapter): boolean { return value.features.has('timestamp-query'); }
    export function usageFlags(): number {
-     return GPUBufferUsage.VERTEX | GPUTextureUsage.RENDER_ATTACHMENT | GPUShaderStage.FRAGMENT;
+     return GPUBufferUsage.VERTEX | GPUTextureUsage.RENDER_ATTACHMENT | GPUShaderStage.FRAGMENT |
+       GPUColorWrite.ALL | GPUMapMode.READ;
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -117,6 +118,8 @@ for (const expected of [
   'flight::host_sdl::wgpu_buffer_usage_vertex',
   'flight::host_sdl::wgpu_texture_usage_render_attachment',
   'flight::host_sdl::wgpu_shader_stage_fragment',
+  'flight::host_sdl::wgpu_color_write_all',
+  'flight::host_sdl::wgpu_map_mode_read',
 ]) {
   if (!emitted.includes(expected)) {
     process.stderr.write(`SDL/WGPU binding fixture did not emit ${expected}.\n${emitted}\n`);
