@@ -102,10 +102,13 @@ The current compiler can now contextualize Flight's nested `GPUBlendComponent` l
 `GPUBlendComponent`, `GPUBlendState`, and `GPUStencilFaceState` to provider-neutral value carriers. Seven affected
 modules advance to their next union-evidence, optional-callable, anonymous-property, or `Record`-spread failures.
 The profile now also supplies buffer/texture descriptors, iterable extents, shared buffer/view sources, texel-copy
-layouts, and the complete bind-group resource and layout value family. Their pass-through signatures and
+layouts, the complete bind-group resource and layout value family, and the render-pipeline descriptor family. Their
+pass-through signatures and
 declaration-ordered compiler fixtures compile. Three production scene3d-wgpu modules advance past their ambient
 refusals: one reaches `typeOf` computation, one reaches dense-array length construction, and the inline `{ buffer }`
 resource in `wgpuMeshPipeline.ts` reaches `anonymous object property buffer requires concrete C++ type evidence`.
+`wgpuTestHelper.ts` no longer requests `GPURenderPipelineDescriptor`; it remains refused on its browser-image and
+test-host names, so the full SDL profile still has 120 direct ambient-refusal records and emits 1,098 modules.
 Direct external descriptor literals also preserve source property order in C++ designators; arbitrary valid
 TypeScript property order can therefore violate the target aggregate's declaration order. Contextual target types
 and ordered-designator emission remain required for inline resource construction and property-order-independent
@@ -306,8 +309,8 @@ object domains, exact adapter capability metadata, standard usage flags, and wea
 18 dependency-closed headers over runtime/headless and all 18 compile. Composed with SDL/GL and the application
 shell, it raises the inventory from 1,081 to 1,098 headers; all 17 additions compile and direct ambient-refused
 modules fall from the SDL/GL profile's 242 to 163. The device, origin, vertex, external-image, buffer, texture,
-extent, shared-buffer-source, texel-copy, sampler, and bind-group descriptors now have compiler-checked native
-representations.
+extent, shared-buffer-source, texel-copy, sampler, bind-group, and render-pipeline descriptors now have
+compiler-checked native representations.
 Optional source fields preserve their presence; binding the sampler advances
 `wgpuRenderState.ts` to `dual-sentinel optional chaining requires presence projection lowering`. `wgpuHost.ts`
 reaches contextual optional construction, while `wgpuExternalImageSource.ts`

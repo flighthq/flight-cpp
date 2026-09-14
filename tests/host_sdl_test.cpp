@@ -706,6 +706,80 @@ int main() {
   expect(
       binding_object_state.releases == 1,
       "WGPU binding resources did not preserve provider-owned handle lifetime");
+  const flight::host_sdl::WgpuVertexAttribute vertex_attribute{
+      .format = flight::String("float32x3"),
+      .offset = 0.0,
+      .shader_location = 0.0,
+  };
+  const flight::host_sdl::WgpuVertexBufferLayout vertex_buffer_layout{
+      .array_stride = 48.0,
+      .step_mode = std::nullopt,
+      .attributes = flight::Array<flight::host_sdl::WgpuVertexAttribute>{vertex_attribute},
+  };
+  const flight::host_sdl::WgpuVertexState vertex_state{
+      .module = {},
+      .entry_point = flight::String("vs_main"),
+      .constants = std::nullopt,
+      .buffers = flight::Array<std::optional<flight::host_sdl::WgpuVertexBufferLayout>>{
+          vertex_buffer_layout},
+  };
+  const flight::host_sdl::WgpuColorTargetState color_target{
+      .format = flight::String("bgra8unorm"),
+      .blend = blend_state,
+      .write_mask = flight::host_sdl::wgpu_color_write_all,
+  };
+  const flight::host_sdl::WgpuFragmentState fragment_state{
+      .module = {},
+      .entry_point = flight::String("fs_main"),
+      .constants = std::nullopt,
+      .targets = flight::Array<std::optional<flight::host_sdl::WgpuColorTargetState>>{
+          color_target},
+  };
+  const flight::host_sdl::WgpuRenderPipelineDescriptor pipeline_descriptor{
+      .layout = flight::String("auto"),
+      .vertex = vertex_state,
+      .fragment = fragment_state,
+      .primitive = flight::host_sdl::WgpuPrimitiveState{
+          .topology = flight::String("triangle-list"),
+          .strip_index_format = std::nullopt,
+          .front_face = flight::String("ccw"),
+          .cull_mode = flight::String("back"),
+          .unclipped_depth = std::nullopt,
+      },
+      .depth_stencil = flight::host_sdl::WgpuDepthStencilState{
+          .format = flight::String("depth24plus-stencil8"),
+          .depth_write_enabled = true,
+          .depth_compare = flight::String("less"),
+          .stencil_front = std::nullopt,
+          .stencil_back = std::nullopt,
+          .stencil_read_mask = std::nullopt,
+          .stencil_write_mask = std::nullopt,
+          .depth_bias = std::nullopt,
+          .depth_bias_slope_scale = std::nullopt,
+          .depth_bias_clamp = std::nullopt,
+      },
+      .multisample = flight::host_sdl::WgpuMultisampleState{
+          .count = 4.0,
+          .mask = std::nullopt,
+          .alpha_to_coverage_enabled = false,
+      },
+      .label = flight::String("main-pipeline"),
+  };
+  auto vertex_buffers = pipeline_descriptor.vertex.buffers->begin();
+  auto color_targets = pipeline_descriptor.fragment->targets.begin();
+  expect(
+      std::holds_alternative<flight::String>(pipeline_descriptor.layout) &&
+          std::get<flight::String>(pipeline_descriptor.layout) == flight::String("auto") &&
+          vertex_buffers != std::default_sentinel && vertex_buffers->has_value() &&
+          (*vertex_buffers)->attributes.begin()->format == flight::String("float32x3") &&
+          !(*vertex_buffers)->step_mode.has_value() && color_targets != std::default_sentinel &&
+          color_targets->has_value() &&
+          (*color_targets)->write_mask == flight::host_sdl::wgpu_color_write_all &&
+          pipeline_descriptor.primitive->cull_mode == flight::String("back") &&
+          pipeline_descriptor.depth_stencil->depth_compare == flight::String("less") &&
+          pipeline_descriptor.multisample->count == 4.0 &&
+          pipeline_descriptor.label == flight::String("main-pipeline"),
+      "WGPU render-pipeline descriptors lost nested values, iterable slots, or optional presence");
   {
     flight::Set<flight::String> features;
     features.add(flight::String("timestamp-query"));

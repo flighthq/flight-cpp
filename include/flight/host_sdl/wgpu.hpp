@@ -407,9 +407,82 @@ struct WgpuVertexAttribute final {
 };
 
 struct WgpuVertexBufferLayout final {
-  Array<WgpuVertexAttribute> attributes;
   double array_stride{0.0};
-  String step_mode{"vertex"};
+  std::optional<String> step_mode;
+  Iterable<WgpuVertexAttribute> attributes;
+};
+
+using WgpuPipelineLayoutSelection = std::variant<WgpuPipelineLayout, String>;
+
+struct WgpuPipelineDescriptorBase final {
+  WgpuPipelineLayoutSelection layout;
+  std::optional<String> label;
+};
+
+struct WgpuProgrammableStage final {
+  WgpuShaderModule module;
+  std::optional<String> entry_point;
+  std::optional<Record<String, double>> constants;
+};
+
+struct WgpuColorTargetState final {
+  String format;
+  std::optional<WgpuBlendState> blend;
+  std::optional<double> write_mask;
+};
+
+struct WgpuDepthStencilState final {
+  String format;
+  std::optional<bool> depth_write_enabled;
+  std::optional<String> depth_compare;
+  std::optional<WgpuStencilFaceState> stencil_front;
+  std::optional<WgpuStencilFaceState> stencil_back;
+  std::optional<double> stencil_read_mask;
+  std::optional<double> stencil_write_mask;
+  std::optional<double> depth_bias;
+  std::optional<double> depth_bias_slope_scale;
+  std::optional<double> depth_bias_clamp;
+};
+
+struct WgpuFragmentState final {
+  WgpuShaderModule module;
+  std::optional<String> entry_point;
+  std::optional<Record<String, double>> constants;
+  Iterable<std::optional<WgpuColorTargetState>> targets;
+};
+
+struct WgpuMultisampleState final {
+  std::optional<double> count;
+  std::optional<double> mask;
+  std::optional<bool> alpha_to_coverage_enabled;
+};
+
+struct WgpuPrimitiveState final {
+  std::optional<String> topology;
+  std::optional<String> strip_index_format;
+  std::optional<String> front_face;
+  std::optional<String> cull_mode;
+  std::optional<bool> unclipped_depth;
+};
+
+struct WgpuVertexState final {
+  WgpuShaderModule module;
+  std::optional<String> entry_point;
+  std::optional<Record<String, double>> constants;
+  std::optional<Iterable<std::optional<WgpuVertexBufferLayout>>> buffers;
+};
+
+// This order follows the layout/vertex/fragment/primitive/depth sequence used by Flight's WebGPU
+// pipeline literals. C++20 designated initializers remain order-sensitive, so the compiler still
+// owns reordering arbitrary TypeScript property order before emission.
+struct WgpuRenderPipelineDescriptor final {
+  WgpuPipelineLayoutSelection layout;
+  WgpuVertexState vertex;
+  std::optional<WgpuFragmentState> fragment;
+  std::optional<WgpuPrimitiveState> primitive;
+  std::optional<WgpuDepthStencilState> depth_stencil;
+  std::optional<WgpuMultisampleState> multisample;
+  std::optional<String> label;
 };
 
 inline constexpr double wgpu_buffer_usage_map_read = 0x0001;

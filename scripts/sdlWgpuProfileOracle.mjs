@@ -145,7 +145,17 @@ const source = api.parseTypeScriptSource(
      return { texture, mipLevel: 0, origin, aspect: 'all' };
    }
    export function origin(value: GPUOrigin3D): GPUOrigin3D { return value; }
+   export function colorTarget(value: GPUColorTargetState): GPUColorTargetState { return value; }
+   export function depthStencil(value: GPUDepthStencilState): GPUDepthStencilState { return value; }
+   export function fragment(value: GPUFragmentState): GPUFragmentState { return value; }
+   export function multisample(value: GPUMultisampleState): GPUMultisampleState { return value; }
+   export function pipelineBase(value: GPUPipelineDescriptorBase): GPUPipelineDescriptorBase { return value; }
+   export function primitive(value: GPUPrimitiveState): GPUPrimitiveState { return value; }
+   export function programmable(value: GPUProgrammableStage): GPUProgrammableStage { return value; }
+   export function renderPipelineDescriptor(value: GPURenderPipelineDescriptor): GPURenderPipelineDescriptor { return value; }
+   export function vertexAttribute(value: GPUVertexAttribute): GPUVertexAttribute { return value; }
    export function vertexLayout(value: GPUVertexBufferLayout): GPUVertexBufferLayout { return value; }
+   export function vertexState(value: GPUVertexState): GPUVertexState { return value; }
    export function maxTextureSize(value: GPUAdapter): number { return value.limits.maxTextureDimension2D ?? 8192; }
    export function supportsTimestamp(value: GPUAdapter): boolean { return value.features.has('timestamp-query'); }
    export function blend(srcFactor: GPUBlendFactor, dstFactor: GPUBlendFactor): GPUBlendState {
@@ -210,7 +220,17 @@ for (const expected of [
   'flight::host_sdl::WgpuExternalImageSourceInfo',
   'flight::host_sdl::WgpuExternalImageDestinationInfo',
   'flight::host_sdl::WgpuOrigin3D',
+  'flight::host_sdl::WgpuColorTargetState',
+  'flight::host_sdl::WgpuDepthStencilState',
+  'flight::host_sdl::WgpuFragmentState',
+  'flight::host_sdl::WgpuMultisampleState',
+  'flight::host_sdl::WgpuPipelineDescriptorBase',
+  'flight::host_sdl::WgpuPrimitiveState',
+  'flight::host_sdl::WgpuProgrammableStage',
+  'flight::host_sdl::WgpuRenderPipelineDescriptor',
+  'flight::host_sdl::WgpuVertexAttribute',
   'flight::host_sdl::WgpuVertexBufferLayout',
+  'flight::host_sdl::WgpuVertexState',
   'flight::host_sdl::WgpuStencilFaceState',
   'flight::host_sdl::WgpuSamplerDescriptor',
   '.src_factor = src_factor, .dst_factor = dst_factor, .operation = flight::String("add")',
