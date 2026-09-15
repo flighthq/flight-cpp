@@ -7,6 +7,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct IridescencePbrExtension; }
+namespace flight::types { struct Sampler; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct VoxelGrid; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/iridescence_pbr_extension.hpp>
@@ -101,7 +107,7 @@ inline void initialize_iridescence_pbr_extension(flight::types::EntityConstructi
 inline flight::Ref<flight::types::IridescencePbrExtension> create_iridescence_pbr_extension(std::optional<flight::Ref<entity_runtime_key_kind_iridescence_iridescence_ior_iridescence_map_iridescence_map_uv_set_iridescence_thickness_map_iridescence_thickness_map_uv_set_iridescence_thickness_max_iridescence_thickness_min_ced5e6fc72decfd8>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::IridescencePbrExtension>> out = flight::entity::allocate_entity<flight::Ref<flight::types::IridescencePbrExtension>>();
   initialize_iridescence_pbr_extension(out, opts);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::IridescencePbrExtension>>(out);
 }
 
 inline bool is_valid_iridescence_pbr_extension(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::IridescencePbrExtension>>>> value) {

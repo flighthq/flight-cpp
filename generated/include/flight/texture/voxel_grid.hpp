@@ -5,6 +5,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct VoxelGrid; }
+
 #include <flight/types/alpha_type.hpp>
 #include <flight/types/pixel_format.hpp>
 #include <flight/types/texture_source_kind.hpp>
@@ -13,7 +15,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::texture {
 
 inline void invalidate_voxel_grid(flight::Ref<flight::types::VoxelGrid> voxel_grid) {
-  voxel_grid->version = flight::unsigned_right_shift((voxel_grid->version + 1.0), 0.0);
+  (voxel_grid->version = flight::unsigned_right_shift((voxel_grid->version + 1.0), 0.0));
 }
 
 } // namespace flight::texture

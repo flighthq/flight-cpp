@@ -5,6 +5,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Path; }
+namespace flight::types { struct ShapeFillRegion; }
+namespace flight::types { struct StrokeStyle; }
+
 #include <flight/types/shape_fill_region.hpp>
 #include <flight/types/stroke_style.hpp>
 #include <flight/types/path.hpp>

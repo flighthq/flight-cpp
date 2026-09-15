@@ -10,6 +10,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct ColorLut; }
+
 #include <flight/types/color_lut.hpp>
 #include <flight/types/color_transform_function.hpp>
 
@@ -17,7 +19,7 @@ namespace flight::adjustments {
 
 inline const double color_lut_default_size = 32.0;
 
-inline double clamp01(double v) {
+inline double clamp01_flight_value_function_clamp01_flight_private_558b3b0601a35a82(double v) {
   return ((v < 0.0) ? 0.0 : ((v > 1.0) ? 1.0 : v));
 }
 
@@ -42,29 +44,29 @@ inline flight::Ref<flight::types::ColorLut> bake_color_lut(flight::Array<flight:
                 double ri = 0.0;
                 while ((ri < n)) {
                   {
-                    cell.element(0.0) = (ri / denom);
-                    cell.element(1.0) = g;
-                    cell.element(2.0) = b;
+                    (cell.element(0.0) = (ri / denom));
+                    (cell.element(1.0) = g);
+                    (cell.element(2.0) = b);
                     {
                       double k = 0.0;
                       while ((k < static_cast<double>(transforms.size()))) {
                         transforms.element(k)(cell, cell.element(0.0), cell.element(1.0), cell.element(2.0));
-                        k += 1.0;
+                        (k += 1.0);
                       }
                     }
-                    samples.element(i++) = clamp01(cell.element(0.0));
-                    samples.element(i++) = clamp01(cell.element(1.0));
-                    samples.element(i++) = clamp01(cell.element(2.0));
+                    (samples.element(i++) = clamp01_flight_value_function_clamp01_flight_private_558b3b0601a35a82(cell.element(0.0)));
+                    (samples.element(i++) = clamp01_flight_value_function_clamp01_flight_private_558b3b0601a35a82(cell.element(1.0)));
+                    (samples.element(i++) = clamp01_flight_value_function_clamp01_flight_private_558b3b0601a35a82(cell.element(2.0)));
                   }
-                  ri += 1.0;
+                  (ri += 1.0);
                 }
               }
             }
-            gi += 1.0;
+            (gi += 1.0);
           }
         }
       }
-      bi += 1.0;
+      (bi += 1.0);
     }
   }
   return flight::make_ref<flight::types::ColorLut>(flight::types::ColorLut{.size = n, .samples = samples});
@@ -74,9 +76,9 @@ inline void sample_color_lut(flight::StructuralRef<flight::RowReadonly<flight::R
   const double n = flight::row_get<flight::RowKey<"size">>(lut);
   flight::Array<double> s = flight::row_get<flight::RowKey<"samples">>(lut);
   const double max = (n - 1.0);
-  const double fr = (clamp01(r) * max);
-  const double fg = (clamp01(g) * max);
-  const double fb = (clamp01(b) * max);
+  const double fr = (clamp01_flight_value_function_clamp01_flight_private_558b3b0601a35a82(r) * max);
+  const double fg = (clamp01_flight_value_function_clamp01_flight_private_558b3b0601a35a82(g) * max);
+  const double fb = (clamp01_flight_value_function_clamp01_flight_private_558b3b0601a35a82(b) * max);
   auto r0 = std::floor(fr);
   auto g0 = std::floor(fg);
   auto b0 = std::floor(fb);
@@ -104,9 +106,9 @@ inline void sample_color_lut(flight::StructuralRef<flight::RowReadonly<flight::R
         const double c11 = (c011 + ((c111 - c011) * dr));
         const double c0 = (c00 + ((c10 - c00) * dg));
         const double c1 = (c01 + ((c11 - c01) * dg));
-        out.element(c) = (c0 + ((c1 - c0) * db));
+        (out.element(c) = (c0 + ((c1 - c0) * db)));
       }
-      c += 1.0;
+      (c += 1.0);
     }
   }
 }

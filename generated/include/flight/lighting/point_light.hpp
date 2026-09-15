@@ -7,6 +7,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct PointLight; }
+namespace flight::types { struct PointLightOptions; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/geometry/vector3.hpp>
 #include <flight/types/entity.hpp>
@@ -38,11 +43,11 @@ inline flight::Ref<flight::types::PointLight> clone_point_light(flight::Structur
   flight::row_set<flight::RowKey<"shadowMapSize">>(out, flight::row_get<flight::RowKey<"shadowMapSize">>(source));
   flight::row_set<flight::RowKey<"shadowNear">>(out, flight::row_get<flight::RowKey<"shadowNear">>(source));
   flight::row_set<flight::RowKey<"shadowStrength">>(out, flight::row_get<flight::RowKey<"shadowStrength">>(source));
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::PointLight>>(out);
 }
 
 inline void initialize_point_light(flight::types::EntityConstruction<flight::Ref<flight::types::PointLight>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointLightOptions>>>>> options = std::nullopt) {
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> position = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->position; }());
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> position = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->position; }());
   flight::row_set<flight::RowKey<"castsShadow">>(out, ([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->casts_shadow; }()).value_or(false));
   flight::row_set<flight::RowKey<"color">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->color; }()).value_or(4294967295.0));
   flight::row_set<flight::RowKey<"decay">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->decay; }()).value_or(2.0));
@@ -66,7 +71,7 @@ inline void initialize_point_light(flight::types::EntityConstruction<flight::Ref
 inline flight::Ref<flight::types::PointLight> create_point_light(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointLightOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::PointLight>> out = flight::entity::allocate_entity<flight::Ref<flight::types::PointLight>>();
   initialize_point_light(out, options);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::PointLight>>(out);
 }
 
 } // namespace flight::lighting

@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct VolumetricLightEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/volumetric_light_effect.hpp>
@@ -27,7 +30,7 @@ struct samples_density_light_color_light_x_light_y_scattering_21019199062e7f35 :
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_21019199062E7F35
 
 inline void initialize_volumetric_light_effect(flight::types::EntityConstruction<flight::Ref<flight::types::VolumetricLightEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_density_light_color_light_x_light_y_scattering_21019199062e7f35>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("VolumetricLightEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::VolumetricLightEffect>>(out, flight::String("VolumetricLightEffect"));
   flight::row_set<flight::RowKey<"density">>(out, flight::row_get<flight::RowKey<"density">>(options));
   flight::row_set<flight::RowKey<"lightColor">>(out, flight::row_get<flight::RowKey<"lightColor">>(options));
   flight::row_set<flight::RowKey<"lightX">>(out, flight::row_get<flight::RowKey<"lightX">>(options));
@@ -40,7 +43,7 @@ inline flight::Ref<flight::types::VolumetricLightEffect> create_volumetric_light
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<samples_density_light_color_light_x_light_y_scattering_21019199062e7f35>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::VolumetricLightEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::VolumetricLightEffect>>();
   initialize_volumetric_light_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::VolumetricLightEffect>>(out);
 }
 
 } // namespace flight::effects

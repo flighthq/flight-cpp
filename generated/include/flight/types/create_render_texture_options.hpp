@@ -28,10 +28,10 @@ struct CreateRenderTextureOptions : public flight::ReferenceEnabled {
   std::optional<flight::types::RenderTargetFormat> format;
   double height;
   std::optional<double> sample_count;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>> sampler;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>>> uv_offset;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>> sampler;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>>> uv_offset;
   std::optional<double> uv_rotation;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>>> uv_scale;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>>> uv_scale;
   double width;
 };
 

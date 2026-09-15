@@ -7,6 +7,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AmbientLight; }
+namespace flight::types { struct AmbientLightOptions; }
+namespace flight::types { struct Entity; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/ambient_light.hpp>
 #include <flight/types/ambient_light_options.hpp>
@@ -26,7 +30,7 @@ inline void initialize_ambient_light(flight::types::EntityConstruction<flight::R
 inline flight::Ref<flight::types::AmbientLight> create_ambient_light(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLightOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::AmbientLight>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AmbientLight>>();
   initialize_ambient_light(out, options);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::AmbientLight>>(out);
 }
 
 inline flight::Ref<flight::types::AmbientLight> clone_ambient_light(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>> source) {

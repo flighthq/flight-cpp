@@ -6,6 +6,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct TextFormat; }
+namespace flight::types { struct TextLayoutGroup; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/text_format.hpp>
@@ -31,7 +35,7 @@ inline void initialize_text_layout_group(flight::types::EntityConstruction<fligh
 inline flight::Ref<flight::types::TextLayoutGroup> create_text_layout_group(flight::Ref<flight::types::TextFormat> format, double start_index, double end_index) {
   flight::types::EntityConstruction<flight::Ref<flight::types::TextLayoutGroup>> out = flight::entity::allocate_entity<flight::Ref<flight::types::TextLayoutGroup>>();
   initialize_text_layout_group(out, format, start_index, end_index);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::TextLayoutGroup>>(out);
 }
 
 } // namespace flight::textlayout

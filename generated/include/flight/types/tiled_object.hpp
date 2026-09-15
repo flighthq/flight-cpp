@@ -6,6 +6,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct TiledProperty; }
+
 #include <flight/types/tiled_property.hpp>
 #include <flight/types/vector2.hpp>
 
@@ -24,8 +26,8 @@ struct TiledObject : public flight::ReferenceEnabled {
   std::optional<double> gid;
   bool point;
   bool ellipse;
-  std::optional<flight::Array<flight::Ref<flight::types::Vector2Like>>> polygon;
-  std::optional<flight::Array<flight::Ref<flight::types::Vector2Like>>> polyline;
+  std::optional<flight::Array<flight::types::Vector2Like>> polygon;
+  std::optional<flight::Array<flight::types::Vector2Like>> polyline;
   double rotation;
   bool visible;
   flight::Array<flight::Ref<flight::types::TiledProperty>> properties;

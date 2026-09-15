@@ -10,6 +10,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BoundingSphere; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/aabb.hpp>
 #include <flight/types/bounding_sphere.hpp>
@@ -20,7 +25,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::geometry {
 
-inline bool contains_bounding_sphere_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> sphere, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline bool contains_bounding_sphere_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   if ((flight::row_get<flight::RowKey<"radius">>(sphere) < 0.0)) {
     return false;
   }
@@ -30,22 +35,22 @@ inline bool contains_bounding_sphere_point(flight::StructuralRef<flight::RowRead
   return ((((dx * dx) + (dy * dy)) + (dz * dz)) <= (flight::row_get<flight::RowKey<"radius">>(sphere) * flight::row_get<flight::RowKey<"radius">>(sphere)));
 }
 
-inline void copy_bounding_sphere(flight::Ref<flight::types::BoundingSphereLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> source) {
-  out->center->x = flight::row_get<flight::RowKey<"center">>(source)->x;
-  out->center->y = flight::row_get<flight::RowKey<"center">>(source)->y;
-  out->center->z = flight::row_get<flight::RowKey<"center">>(source)->z;
-  out->radius = flight::row_get<flight::RowKey<"radius">>(source);
+inline void copy_bounding_sphere(flight::types::BoundingSphereLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> source) {
+  (out->center->x = flight::row_get<flight::RowKey<"center">>(source)->x);
+  (out->center->y = flight::row_get<flight::RowKey<"center">>(source)->y);
+  (out->center->z = flight::row_get<flight::RowKey<"center">>(source)->z);
+  (out->radius = flight::row_get<flight::RowKey<"radius">>(source));
 }
 
-inline void get_closest_point_on_bounding_sphere(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> sphere, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline void get_closest_point_on_bounding_sphere(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   const double cx = flight::row_get<flight::RowKey<"center">>(sphere)->x;
   const double cy = flight::row_get<flight::RowKey<"center">>(sphere)->y;
   const double cz = flight::row_get<flight::RowKey<"center">>(sphere)->z;
   const double r = flight::row_get<flight::RowKey<"radius">>(sphere);
   if ((r < 0.0)) {
-    out->x = cx;
-    out->y = cy;
-    out->z = cz;
+    (out->x = cx);
+    (out->y = cy);
+    (out->z = cz);
     return;
   }
   const double dx = (flight::row_get<flight::RowKey<"x">>(point) - cx);
@@ -53,15 +58,15 @@ inline void get_closest_point_on_bounding_sphere(flight::Ref<flight::types::Vect
   const double dz = (flight::row_get<flight::RowKey<"z">>(point) - cz);
   auto dist = std::sqrt((((dx * dx) + (dy * dy)) + (dz * dz)));
   if ((dist == 0.0)) {
-    out->x = (cx + r);
-    out->y = cy;
-    out->z = cz;
+    (out->x = (cx + r));
+    (out->y = cy);
+    (out->z = cz);
     return;
   }
   const double scale = (r / dist);
-  out->x = (cx + (dx * scale));
-  out->y = (cy + (dy * scale));
-  out->z = (cz + (dz * scale));
+  (out->x = (cx + (dx * scale)));
+  (out->y = (cy + (dy * scale)));
+  (out->z = (cz + (dz * scale)));
 }
 
 inline void initialize_bounding_sphere(flight::types::EntityConstruction<flight::Ref<flight::types::BoundingSphere>> out, flight::Ref<flight::types::Vector3> center, double radius) {
@@ -73,14 +78,14 @@ inline flight::Ref<flight::types::BoundingSphere> create_bounding_sphere(std::op
   flight::Ref<flight::types::Vector3> center = flight::geometry::create_vector3(center_x.value_or(0.0), center_y.value_or(0.0), center_z.value_or(0.0));
   flight::types::EntityConstruction<flight::Ref<flight::types::BoundingSphere>> out = flight::entity::allocate_entity<flight::Ref<flight::types::BoundingSphere>>();
   initialize_bounding_sphere(out, center, radius.value_or(-1.0));
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::BoundingSphere>>(out);
 }
 
-inline flight::Ref<flight::types::BoundingSphere> clone_bounding_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> source) {
+inline flight::Ref<flight::types::BoundingSphere> clone_bounding_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> source) {
   return create_bounding_sphere(flight::row_get<flight::RowKey<"center">>(source)->x, flight::row_get<flight::RowKey<"center">>(source)->y, flight::row_get<flight::RowKey<"center">>(source)->z, flight::row_get<flight::RowKey<"radius">>(source));
 }
 
-inline bool is_bounding_sphere_intersecting_bounding_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> b) {
+inline bool is_bounding_sphere_intersecting_bounding_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> b) {
   if (((flight::row_get<flight::RowKey<"radius">>(a) < 0.0) || (flight::row_get<flight::RowKey<"radius">>(b) < 0.0))) {
     return false;
   }
@@ -92,19 +97,19 @@ inline bool is_bounding_sphere_intersecting_bounding_sphere(flight::StructuralRe
   return (dist_sq <= (sum_r * sum_r));
 }
 
-inline void merge_bounding_sphere(flight::Ref<flight::types::BoundingSphereLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> b) {
+inline void merge_bounding_sphere(flight::types::BoundingSphereLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> b) {
   if ((flight::row_get<flight::RowKey<"radius">>(a) < 0.0)) {
-    out->center->x = flight::row_get<flight::RowKey<"center">>(b)->x;
-    out->center->y = flight::row_get<flight::RowKey<"center">>(b)->y;
-    out->center->z = flight::row_get<flight::RowKey<"center">>(b)->z;
-    out->radius = flight::row_get<flight::RowKey<"radius">>(b);
+    (out->center->x = flight::row_get<flight::RowKey<"center">>(b)->x);
+    (out->center->y = flight::row_get<flight::RowKey<"center">>(b)->y);
+    (out->center->z = flight::row_get<flight::RowKey<"center">>(b)->z);
+    (out->radius = flight::row_get<flight::RowKey<"radius">>(b));
     return;
   }
   if ((flight::row_get<flight::RowKey<"radius">>(b) < 0.0)) {
-    out->center->x = flight::row_get<flight::RowKey<"center">>(a)->x;
-    out->center->y = flight::row_get<flight::RowKey<"center">>(a)->y;
-    out->center->z = flight::row_get<flight::RowKey<"center">>(a)->z;
-    out->radius = flight::row_get<flight::RowKey<"radius">>(a);
+    (out->center->x = flight::row_get<flight::RowKey<"center">>(a)->x);
+    (out->center->y = flight::row_get<flight::RowKey<"center">>(a)->y);
+    (out->center->z = flight::row_get<flight::RowKey<"center">>(a)->z);
+    (out->radius = flight::row_get<flight::RowKey<"radius">>(a));
     return;
   }
   const double acx = flight::row_get<flight::RowKey<"center">>(a)->x;
@@ -120,35 +125,35 @@ inline void merge_bounding_sphere(flight::Ref<flight::types::BoundingSphereLike>
   const double dz = (bcz - acz);
   auto dist = std::sqrt((((dx * dx) + (dy * dy)) + (dz * dz)));
   if (((dist + br) <= ar)) {
-    out->center->x = acx;
-    out->center->y = acy;
-    out->center->z = acz;
-    out->radius = ar;
+    (out->center->x = acx);
+    (out->center->y = acy);
+    (out->center->z = acz);
+    (out->radius = ar);
     return;
   }
   if (((dist + ar) <= br)) {
-    out->center->x = bcx;
-    out->center->y = bcy;
-    out->center->z = bcz;
-    out->radius = br;
+    (out->center->x = bcx);
+    (out->center->y = bcy);
+    (out->center->z = bcz);
+    (out->radius = br);
     return;
   }
   const double new_radius = (((dist + ar) + br) * 0.5);
   const double t = ((new_radius - ar) / dist);
-  out->center->x = (acx + (dx * t));
-  out->center->y = (acy + (dy * t));
-  out->center->z = (acz + (dz * t));
-  out->radius = new_radius;
+  (out->center->x = (acx + (dx * t)));
+  (out->center->y = (acy + (dy * t)));
+  (out->center->z = (acz + (dz * t)));
+  (out->radius = new_radius);
 }
 
-inline void set_bounding_sphere(flight::Ref<flight::types::BoundingSphereLike> out, double center_x, double center_y, double center_z, double radius) {
-  out->center->x = center_x;
-  out->center->y = center_y;
-  out->center->z = center_z;
-  out->radius = radius;
+inline void set_bounding_sphere(flight::types::BoundingSphereLike out, double center_x, double center_y, double center_z, double radius) {
+  (out->center->x = center_x);
+  (out->center->y = center_y);
+  (out->center->z = center_z);
+  (out->radius = radius);
 }
 
-inline void set_bounding_sphere_from_aabb(flight::Ref<flight::types::BoundingSphereLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
+inline void set_bounding_sphere_from_aabb(flight::types::BoundingSphereLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
   const double min_x = flight::row_get<flight::RowKey<"min">>(aabb)->x;
   const double min_y = flight::row_get<flight::RowKey<"min">>(aabb)->y;
   const double min_z = flight::row_get<flight::RowKey<"min">>(aabb)->z;
@@ -156,10 +161,10 @@ inline void set_bounding_sphere_from_aabb(flight::Ref<flight::types::BoundingSph
   const double max_y = flight::row_get<flight::RowKey<"max">>(aabb)->y;
   const double max_z = flight::row_get<flight::RowKey<"max">>(aabb)->z;
   if ((((min_x > max_x) || (min_y > max_y)) || (min_z > max_z))) {
-    out->center->x = 0.0;
-    out->center->y = 0.0;
-    out->center->z = 0.0;
-    out->radius = -1.0;
+    (out->center->x = 0.0);
+    (out->center->y = 0.0);
+    (out->center->z = 0.0);
+    (out->radius = -1.0);
     return;
   }
   const double cx = ((min_x + max_x) * 0.5);
@@ -168,13 +173,13 @@ inline void set_bounding_sphere_from_aabb(flight::Ref<flight::types::BoundingSph
   const double ex = ((max_x - min_x) * 0.5);
   const double ey = ((max_y - min_y) * 0.5);
   const double ez = ((max_z - min_z) * 0.5);
-  out->center->x = cx;
-  out->center->y = cy;
-  out->center->z = cz;
-  out->radius = std::sqrt((((ex * ex) + (ey * ey)) + (ez * ez)));
+  (out->center->x = cx);
+  (out->center->y = cy);
+  (out->center->z = cz);
+  (out->radius = std::sqrt((((ex * ex) + (ey * ey)) + (ez * ez))));
 }
 
-inline void transform_bounding_sphere_by_matrix4(flight::Ref<flight::types::BoundingSphereLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> sphere, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> m) {
+inline void transform_bounding_sphere_by_matrix4(flight::types::BoundingSphereLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> m) {
   const double cx = flight::row_get<flight::RowKey<"center">>(sphere)->x;
   const double cy = flight::row_get<flight::RowKey<"center">>(sphere)->y;
   const double cz = flight::row_get<flight::RowKey<"center">>(sphere)->z;
@@ -187,10 +192,10 @@ inline void transform_bounding_sphere_by_matrix4(flight::Ref<flight::types::Boun
   auto sy = std::sqrt((((m_2.element(4.0) * m_2.element(4.0)) + (m_2.element(5.0) * m_2.element(5.0))) + (m_2.element(6.0) * m_2.element(6.0))));
   auto sz = std::sqrt((((m_2.element(8.0) * m_2.element(8.0)) + (m_2.element(9.0) * m_2.element(9.0))) + (m_2.element(10.0) * m_2.element(10.0))));
   auto max_scale = flight::maximum(sx, sy, sz);
-  out->center->x = tcx;
-  out->center->y = tcy;
-  out->center->z = tcz;
-  out->radius = ((radius < 0.0) ? radius : (radius * max_scale));
+  (out->center->x = tcx);
+  (out->center->y = tcy);
+  (out->center->z = tcz);
+  (out->radius = ((radius < 0.0) ? radius : (radius * max_scale)));
 }
 
 } // namespace flight::geometry

@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CameraMotionBlurEffect; }
+namespace flight::types { struct Entity; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/camera_motion_blur_effect.hpp>
 #include <flight/types/entity.hpp>
@@ -23,7 +26,7 @@ struct samples_intensity_d75ebfc642dd8412 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D75EBFC642DD8412
 
 inline void initialize_camera_motion_blur_effect(flight::types::EntityConstruction<flight::Ref<flight::types::CameraMotionBlurEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity_d75ebfc642dd8412>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("CameraMotionBlurEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::CameraMotionBlurEffect>>(out, flight::String("CameraMotionBlurEffect"));
   flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
   flight::row_set<flight::RowKey<"samples">>(out, flight::row_get<flight::RowKey<"samples">>(options));
 }
@@ -32,7 +35,7 @@ inline flight::Ref<flight::types::CameraMotionBlurEffect> create_camera_motion_b
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity_d75ebfc642dd8412>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::CameraMotionBlurEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::CameraMotionBlurEffect>>();
   initialize_camera_motion_blur_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::CameraMotionBlurEffect>>(out);
 }
 
 } // namespace flight::effects

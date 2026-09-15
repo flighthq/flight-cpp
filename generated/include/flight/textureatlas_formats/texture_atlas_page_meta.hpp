@@ -10,6 +10,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct TextureAtlas; }
+namespace flight::types { struct TextureAtlasRegion; }
+
 #include <flight/types/texture.hpp>
 #include <flight/types/texture_atlas.hpp>
 #include <flight/types/texture_atlas_region.hpp>
@@ -25,10 +29,10 @@ inline double read_texture_atlas_scale(std::optional<std::variant<double, flight
 }
 
 inline void reset_texture_atlas_page_meta(flight::Ref<flight::types::TextureAtlas> atlas) {
-  atlas->image_height = 0.0;
-  atlas->image_name = std::nullopt;
-  atlas->image_width = 0.0;
-  atlas->scale = 1.0;
+  (atlas->image_height = 0.0);
+  (atlas->image_name = std::nullopt);
+  (atlas->image_width = 0.0);
+  (atlas->scale = 1.0);
 }
 
 } // namespace flight::textureatlas_formats

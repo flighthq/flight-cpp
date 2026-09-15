@@ -17,11 +17,11 @@ struct VertexDisplaceModifierOptions;
 struct VertexDisplaceModifierOptions : public flight::ReferenceEnabled {
   flight::types::VertexDisplaceModifierSource source;
   double amplitude;
-  std::optional<flight::Ref<flight::types::Vector3Like>> axis;
+  std::optional<flight::types::Vector3Like> axis;
   std::optional<flight::types::Texture> map;
   std::optional<double> frequency;
   std::optional<double> speed;
-  std::optional<flight::Ref<flight::types::Vector3Like>> direction;
+  std::optional<flight::types::Vector3Like> direction;
 };
 
 } // namespace flight::types

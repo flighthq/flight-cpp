@@ -11,6 +11,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BoundingSphere; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Obb; }
+namespace flight::types { struct Ray3D; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/aabb.hpp>
 #include <flight/types/bounding_sphere.hpp>
@@ -22,7 +29,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::geometry {
 
-inline void get_closest_point_on_obb(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObbLike>>>> obb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline void get_closest_point_on_obb(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ObbLike>>> obb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   const double cx = flight::row_get<flight::RowKey<"centerX">>(obb);
   const double cy = flight::row_get<flight::RowKey<"centerY">>(obb);
   const double cz = flight::row_get<flight::RowKey<"centerZ">>(obb);
@@ -60,9 +67,9 @@ inline void get_closest_point_on_obb(flight::Ref<flight::types::Vector3Like> out
   auto d0 = flight::minimum(flight::maximum((((dx * ax0) + (dy * ay0)) + (dz * az0)), -hx), hx);
   auto d1 = flight::minimum(flight::maximum((((dx * ax1) + (dy * ay1)) + (dz * az1)), -hy), hy);
   auto d2 = flight::minimum(flight::maximum((((dx * ax2) + (dy * ay2)) + (dz * az2)), -hz), hz);
-  out->x = (((cx + (d0 * ax0)) + (d1 * ax1)) + (d2 * ax2));
-  out->y = (((cy + (d0 * ay0)) + (d1 * ay1)) + (d2 * ay2));
-  out->z = (((cz + (d0 * az0)) + (d1 * az1)) + (d2 * az2));
+  (out->x = (((cx + (d0 * ax0)) + (d1 * ax1)) + (d2 * ax2)));
+  (out->y = (((cy + (d0 * ay0)) + (d1 * ay1)) + (d2 * ay2)));
+  (out->z = (((cz + (d0 * az0)) + (d1 * az1)) + (d2 * az2)));
 }
 
 inline void initialize_obb(flight::types::EntityConstruction<flight::Ref<flight::types::Obb>> out, double center_x, double center_y, double center_z, double half_extent_x, double half_extent_y, double half_extent_z, double orientation_x, double orientation_y, double orientation_z, double orientation_w) {
@@ -81,10 +88,10 @@ inline void initialize_obb(flight::types::EntityConstruction<flight::Ref<flight:
 inline flight::Ref<flight::types::Obb> create_obb(double center_x, double center_y, double center_z, double half_extent_x, double half_extent_y, double half_extent_z, double orientation_x, double orientation_y, double orientation_z, double orientation_w) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Obb>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Obb>>();
   initialize_obb(out, center_x, center_y, center_z, half_extent_x, half_extent_y, half_extent_z, orientation_x, orientation_y, orientation_z, orientation_w);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Obb>>(out);
 }
 
-inline double intersect_ray3_dobb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3DLike>>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObbLike>>>> obb) {
+inline double intersect_ray3_dobb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ObbLike>>> obb) {
   const double ox = (flight::row_get<flight::RowKey<"origin">>(ray)->x - flight::row_get<flight::RowKey<"centerX">>(obb));
   const double oy = (flight::row_get<flight::RowKey<"origin">>(ray)->y - flight::row_get<flight::RowKey<"centerY">>(obb));
   const double oz = (flight::row_get<flight::RowKey<"origin">>(ray)->z - flight::row_get<flight::RowKey<"centerZ">>(obb));
@@ -133,11 +140,11 @@ inline double intersect_ray3_dobb(flight::StructuralRef<flight::RowReadonly<flig
     double t2 = ((hx - origin0) * inv_d);
     if ((t1 > t2)) {
       const double swap = t1;
-      t1 = t2;
-      t2 = swap;
+      (t1 = t2);
+      (t2 = swap);
     }
-    t_min = flight::maximum(t_min, t1);
-    t_max = flight::minimum(t_max, t2);
+    (t_min = flight::maximum(t_min, t1));
+    (t_max = flight::minimum(t_max, t2));
     if ((t_min > t_max)) {
       return -1.0;
     }
@@ -153,11 +160,11 @@ inline double intersect_ray3_dobb(flight::StructuralRef<flight::RowReadonly<flig
     double t2_2 = ((hy - origin1) * inv_d_2);
     if ((t1_2 > t2_2)) {
       const double swap_2 = t1_2;
-      t1_2 = t2_2;
-      t2_2 = swap_2;
+      (t1_2 = t2_2);
+      (t2_2 = swap_2);
     }
-    t_min = flight::maximum(t_min, t1_2);
-    t_max = flight::minimum(t_max, t2_2);
+    (t_min = flight::maximum(t_min, t1_2));
+    (t_max = flight::minimum(t_max, t2_2));
     if ((t_min > t_max)) {
       return -1.0;
     }
@@ -173,11 +180,11 @@ inline double intersect_ray3_dobb(flight::StructuralRef<flight::RowReadonly<flig
     double t2_3 = ((hz - origin2) * inv_d_3);
     if ((t1_3 > t2_3)) {
       const double swap_3 = t1_3;
-      t1_3 = t2_3;
-      t2_3 = swap_3;
+      (t1_3 = t2_3);
+      (t2_3 = swap_3);
     }
-    t_min = flight::maximum(t_min, t1_3);
-    t_max = flight::minimum(t_max, t2_3);
+    (t_min = flight::maximum(t_min, t1_3));
+    (t_max = flight::minimum(t_max, t2_3));
     if ((t_min > t_max)) {
       return -1.0;
     }
@@ -190,7 +197,7 @@ inline double intersect_ray3_dobb(flight::StructuralRef<flight::RowReadonly<flig
   return t_min;
 }
 
-inline bool is_obb_intersecting_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObbLike>>>> obb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> sphere) {
+inline bool is_obb_intersecting_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ObbLike>>> obb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere) {
   if ((flight::row_get<flight::RowKey<"radius">>(sphere) < 0.0)) {
     return false;
   }
@@ -231,20 +238,20 @@ inline bool is_obb_intersecting_sphere(flight::StructuralRef<flight::RowReadonly
   return ((((ex * ex) + (ey * ey)) + (ez * ez)) <= (flight::row_get<flight::RowKey<"radius">>(sphere) * flight::row_get<flight::RowKey<"radius">>(sphere)));
 }
 
-inline void set_obb(flight::Ref<flight::types::ObbLike> out, double center_x, double center_y, double center_z, double half_extent_x, double half_extent_y, double half_extent_z, double orientation_x, double orientation_y, double orientation_z, double orientation_w) {
-  out->center_x = center_x;
-  out->center_y = center_y;
-  out->center_z = center_z;
-  out->half_extent_x = half_extent_x;
-  out->half_extent_y = half_extent_y;
-  out->half_extent_z = half_extent_z;
-  out->orientation_x = orientation_x;
-  out->orientation_y = orientation_y;
-  out->orientation_z = orientation_z;
-  out->orientation_w = orientation_w;
+inline void set_obb(flight::types::ObbLike out, double center_x, double center_y, double center_z, double half_extent_x, double half_extent_y, double half_extent_z, double orientation_x, double orientation_y, double orientation_z, double orientation_w) {
+  (out->center_x = center_x);
+  (out->center_y = center_y);
+  (out->center_z = center_z);
+  (out->half_extent_x = half_extent_x);
+  (out->half_extent_y = half_extent_y);
+  (out->half_extent_z = half_extent_z);
+  (out->orientation_x = orientation_x);
+  (out->orientation_y = orientation_y);
+  (out->orientation_z = orientation_z);
+  (out->orientation_w = orientation_w);
 }
 
-inline void transform_obb_by_matrix4(flight::Ref<flight::types::ObbLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObbLike>>>> obb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> m) {
+inline void transform_obb_by_matrix4(flight::types::ObbLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ObbLike>>> obb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> m) {
   const double cx = flight::row_get<flight::RowKey<"centerX">>(obb);
   const double cy = flight::row_get<flight::RowKey<"centerY">>(obb);
   const double cz = flight::row_get<flight::RowKey<"centerZ">>(obb);
@@ -278,46 +285,46 @@ inline void transform_obb_by_matrix4(flight::Ref<flight::types::ObbLike> out, fl
   const double trace = ((r00 + r11) + r22);
   if ((trace > 0.0)) {
     const double s = (0.5 / std::sqrt((trace + 1.0)));
-    mqw = (0.25 / s);
-    mqx = ((r21 - r12) * s);
-    mqy = ((r02 - r20) * s);
-    mqz = ((r10 - r01) * s);
+    (mqw = (0.25 / s));
+    (mqx = ((r21 - r12) * s));
+    (mqy = ((r02 - r20) * s));
+    (mqz = ((r10 - r01) * s));
   }
   else {
     if (((r00 > r11) && (r00 > r22))) {
       const double s_2 = (2.0 * std::sqrt((((1.0 + r00) - r11) - r22)));
-      mqw = ((r21 - r12) / s_2);
-      mqx = (0.25 * s_2);
-      mqy = ((r10 + r01) / s_2);
-      mqz = ((r20 + r02) / s_2);
+      (mqw = ((r21 - r12) / s_2));
+      (mqx = (0.25 * s_2));
+      (mqy = ((r10 + r01) / s_2));
+      (mqz = ((r20 + r02) / s_2));
     }
     else {
       if ((r11 > r22)) {
         const double s_3 = (2.0 * std::sqrt((((1.0 + r11) - r00) - r22)));
-        mqw = ((r02 - r20) / s_3);
-        mqx = ((r10 + r01) / s_3);
-        mqy = (0.25 * s_3);
-        mqz = ((r21 + r12) / s_3);
+        (mqw = ((r02 - r20) / s_3));
+        (mqx = ((r10 + r01) / s_3));
+        (mqy = (0.25 * s_3));
+        (mqz = ((r21 + r12) / s_3));
       }
       else {
         const double s_4 = (2.0 * std::sqrt((((1.0 + r22) - r00) - r11)));
-        mqw = ((r10 - r01) / s_4);
-        mqx = ((r20 + r02) / s_4);
-        mqy = ((r21 + r12) / s_4);
-        mqz = (0.25 * s_4);
+        (mqw = ((r10 - r01) / s_4));
+        (mqx = ((r20 + r02) / s_4));
+        (mqy = ((r21 + r12) / s_4));
+        (mqz = (0.25 * s_4));
       }
     }
   }
-  out->center_x = new_cx;
-  out->center_y = new_cy;
-  out->center_z = new_cz;
-  out->half_extent_x = (hx * sx);
-  out->half_extent_y = (hy * sy);
-  out->half_extent_z = (hz * sz);
-  out->orientation_x = ((((mqw * oqx) + (mqx * oqw)) + (mqy * oqz)) - (mqz * oqy));
-  out->orientation_y = ((((mqw * oqy) - (mqx * oqz)) + (mqy * oqw)) + (mqz * oqx));
-  out->orientation_z = ((((mqw * oqz) + (mqx * oqy)) - (mqy * oqx)) + (mqz * oqw));
-  out->orientation_w = ((((mqw * oqw) - (mqx * oqx)) - (mqy * oqy)) - (mqz * oqz));
+  (out->center_x = new_cx);
+  (out->center_y = new_cy);
+  (out->center_z = new_cz);
+  (out->half_extent_x = (hx * sx));
+  (out->half_extent_y = (hy * sy));
+  (out->half_extent_z = (hz * sz));
+  (out->orientation_x = ((((mqw * oqx) + (mqx * oqw)) + (mqy * oqz)) - (mqz * oqy)));
+  (out->orientation_y = ((((mqw * oqy) - (mqx * oqz)) + (mqy * oqw)) + (mqz * oqx)));
+  (out->orientation_z = ((((mqw * oqz) + (mqx * oqy)) - (mqy * oqx)) + (mqz * oqw)));
+  (out->orientation_w = ((((mqw * oqw) - (mqx * oqx)) - (mqy * oqy)) - (mqz * oqz)));
 }
 
 inline bool obb_sat_separated(double tx, double ty, double tz, double ax0, double ay0, double az0, double ax1, double ay1, double az1, double ax2, double ay2, double az2, double hax, double hay, double haz, double bx0, double by0, double bz0, double bx1, double by1, double bz1, double bx2, double by2, double bz2, double hbx, double hby, double hbz) {
@@ -331,84 +338,84 @@ inline bool obb_sat_separated(double tx, double ty, double tz, double ax0, doubl
         {
           auto switch_value = axis;
           if (switch_value == 0.0) {
-            lx = ax0;
-            ly = ay0;
-            lz = az0;
+            (lx = ax0);
+            (ly = ay0);
+            (lz = az0);
           }
           else if (switch_value == 1.0) {
-            lx = ax1;
-            ly = ay1;
-            lz = az1;
+            (lx = ax1);
+            (ly = ay1);
+            (lz = az1);
           }
           else if (switch_value == 2.0) {
-            lx = ax2;
-            ly = ay2;
-            lz = az2;
+            (lx = ax2);
+            (ly = ay2);
+            (lz = az2);
           }
           else if (switch_value == 3.0) {
-            lx = bx0;
-            ly = by0;
-            lz = bz0;
+            (lx = bx0);
+            (ly = by0);
+            (lz = bz0);
           }
           else if (switch_value == 4.0) {
-            lx = bx1;
-            ly = by1;
-            lz = bz1;
+            (lx = bx1);
+            (ly = by1);
+            (lz = bz1);
           }
           else if (switch_value == 5.0) {
-            lx = bx2;
-            ly = by2;
-            lz = bz2;
+            (lx = bx2);
+            (ly = by2);
+            (lz = bz2);
           }
           else if (switch_value == 6.0) {
-            lx = ((ay0 * bz0) - (az0 * by0));
-            ly = ((az0 * bx0) - (ax0 * bz0));
-            lz = ((ax0 * by0) - (ay0 * bx0));
+            (lx = ((ay0 * bz0) - (az0 * by0)));
+            (ly = ((az0 * bx0) - (ax0 * bz0)));
+            (lz = ((ax0 * by0) - (ay0 * bx0)));
           }
           else if (switch_value == 7.0) {
-            lx = ((ay0 * bz1) - (az0 * by1));
-            ly = ((az0 * bx1) - (ax0 * bz1));
-            lz = ((ax0 * by1) - (ay0 * bx1));
+            (lx = ((ay0 * bz1) - (az0 * by1)));
+            (ly = ((az0 * bx1) - (ax0 * bz1)));
+            (lz = ((ax0 * by1) - (ay0 * bx1)));
           }
           else if (switch_value == 8.0) {
-            lx = ((ay0 * bz2) - (az0 * by2));
-            ly = ((az0 * bx2) - (ax0 * bz2));
-            lz = ((ax0 * by2) - (ay0 * bx2));
+            (lx = ((ay0 * bz2) - (az0 * by2)));
+            (ly = ((az0 * bx2) - (ax0 * bz2)));
+            (lz = ((ax0 * by2) - (ay0 * bx2)));
           }
           else if (switch_value == 9.0) {
-            lx = ((ay1 * bz0) - (az1 * by0));
-            ly = ((az1 * bx0) - (ax1 * bz0));
-            lz = ((ax1 * by0) - (ay1 * bx0));
+            (lx = ((ay1 * bz0) - (az1 * by0)));
+            (ly = ((az1 * bx0) - (ax1 * bz0)));
+            (lz = ((ax1 * by0) - (ay1 * bx0)));
           }
           else if (switch_value == 10.0) {
-            lx = ((ay1 * bz1) - (az1 * by1));
-            ly = ((az1 * bx1) - (ax1 * bz1));
-            lz = ((ax1 * by1) - (ay1 * bx1));
+            (lx = ((ay1 * bz1) - (az1 * by1)));
+            (ly = ((az1 * bx1) - (ax1 * bz1)));
+            (lz = ((ax1 * by1) - (ay1 * bx1)));
           }
           else if (switch_value == 11.0) {
-            lx = ((ay1 * bz2) - (az1 * by2));
-            ly = ((az1 * bx2) - (ax1 * bz2));
-            lz = ((ax1 * by2) - (ay1 * bx2));
+            (lx = ((ay1 * bz2) - (az1 * by2)));
+            (ly = ((az1 * bx2) - (ax1 * bz2)));
+            (lz = ((ax1 * by2) - (ay1 * bx2)));
           }
           else if (switch_value == 12.0) {
-            lx = ((ay2 * bz0) - (az2 * by0));
-            ly = ((az2 * bx0) - (ax2 * bz0));
-            lz = ((ax2 * by0) - (ay2 * bx0));
+            (lx = ((ay2 * bz0) - (az2 * by0)));
+            (ly = ((az2 * bx0) - (ax2 * bz0)));
+            (lz = ((ax2 * by0) - (ay2 * bx0)));
           }
           else if (switch_value == 13.0) {
-            lx = ((ay2 * bz1) - (az2 * by1));
-            ly = ((az2 * bx1) - (ax2 * bz1));
-            lz = ((ax2 * by1) - (ay2 * bx1));
+            (lx = ((ay2 * bz1) - (az2 * by1)));
+            (ly = ((az2 * bx1) - (ax2 * bz1)));
+            (lz = ((ax2 * by1) - (ay2 * bx1)));
           }
           else {
-            lx = ((ay2 * bz2) - (az2 * by2));
-            ly = ((az2 * bx2) - (ax2 * bz2));
-            lz = ((ax2 * by2) - (ay2 * bx2));
+            (lx = ((ay2 * bz2) - (az2 * by2)));
+            (ly = ((az2 * bx2) - (ax2 * bz2)));
+            (lz = ((ax2 * by2) - (ay2 * bx2)));
           }
         }
         const double len_sq = (((lx * lx) + (ly * ly)) + (lz * lz));
         if ((len_sq < 1e-10)) {
-          axis += 1.0;
+          (axis += 1.0);
           continue;
         }
         auto d = std::abs((((tx * lx) + (ty * ly)) + (tz * lz)));
@@ -418,13 +425,13 @@ inline bool obb_sat_separated(double tx, double ty, double tz, double ax0, doubl
           return true;
         }
       }
-      axis += 1.0;
+      (axis += 1.0);
     }
   }
   return false;
 }
 
-inline bool is_obb_intersecting_aabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObbLike>>>> obb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
+inline bool is_obb_intersecting_aabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ObbLike>>> obb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
   if ((((flight::row_get<flight::RowKey<"min">>(aabb)->x > flight::row_get<flight::RowKey<"max">>(aabb)->x) || (flight::row_get<flight::RowKey<"min">>(aabb)->y > flight::row_get<flight::RowKey<"max">>(aabb)->y)) || (flight::row_get<flight::RowKey<"min">>(aabb)->z > flight::row_get<flight::RowKey<"max">>(aabb)->z))) {
     return false;
   }
@@ -462,7 +469,7 @@ inline bool is_obb_intersecting_aabb(flight::StructuralRef<flight::RowReadonly<f
   return !obb_sat_separated(tx, ty, tz, ax0, ay0, az0, ax1, ay1, az1, ax2, ay2, az2, flight::row_get<flight::RowKey<"halfExtentX">>(obb), flight::row_get<flight::RowKey<"halfExtentY">>(obb), flight::row_get<flight::RowKey<"halfExtentZ">>(obb), 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, ahx, ahy, ahz);
 }
 
-inline bool is_obb_intersecting_obb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObbLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObbLike>>>> b) {
+inline bool is_obb_intersecting_obb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ObbLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ObbLike>>> b) {
   const double aqx = flight::row_get<flight::RowKey<"orientationX">>(a);
   const double aqy = flight::row_get<flight::RowKey<"orientationY">>(a);
   const double aqz = flight::row_get<flight::RowKey<"orientationZ">>(a);

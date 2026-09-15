@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct RadialBlurEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/radial_blur_effect.hpp>
@@ -25,7 +28,7 @@ struct samples_strength_center_x_center_y_327f7653c2ef7ebf : public flight::Refe
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_327F7653C2EF7EBF
 
 inline void initialize_radial_blur_effect(flight::types::EntityConstruction<flight::Ref<flight::types::RadialBlurEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_strength_center_x_center_y_327f7653c2ef7ebf>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("RadialBlurEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::RadialBlurEffect>>(out, flight::String("RadialBlurEffect"));
   flight::row_set<flight::RowKey<"centerX">>(out, flight::row_get<flight::RowKey<"centerX">>(options));
   flight::row_set<flight::RowKey<"centerY">>(out, flight::row_get<flight::RowKey<"centerY">>(options));
   flight::row_set<flight::RowKey<"strength">>(out, flight::row_get<flight::RowKey<"strength">>(options));
@@ -36,7 +39,7 @@ inline flight::Ref<flight::types::RadialBlurEffect> create_radial_blur_effect(st
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<samples_strength_center_x_center_y_327f7653c2ef7ebf>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::RadialBlurEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::RadialBlurEffect>>();
   initialize_radial_blur_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::RadialBlurEffect>>(out);
 }
 
 } // namespace flight::effects

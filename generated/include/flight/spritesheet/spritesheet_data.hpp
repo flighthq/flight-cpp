@@ -7,6 +7,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct SpritesheetAnimationData; }
+namespace flight::types { struct SpritesheetData; }
+namespace flight::types { struct SpritesheetFrameData; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/spritesheet_animation_data.hpp>
@@ -45,7 +50,7 @@ inline void initialize_spritesheet_animation_data(flight::types::EntityConstruct
 inline flight::Ref<flight::types::SpritesheetAnimationData> create_spritesheet_animation_data(std::optional<flight::Ref<entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_2de998edb64e8039>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetAnimationData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpritesheetAnimationData>>();
   initialize_spritesheet_animation_data(out, obj);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpritesheetAnimationData>>(out);
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_7834B920F8A7D194
@@ -73,7 +78,7 @@ inline void initialize_spritesheet_data(flight::types::EntityConstruction<flight
 inline flight::Ref<flight::types::SpritesheetData> create_spritesheet_data(std::optional<flight::Ref<entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_7834b920f8a7d194>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpritesheetData>>();
   initialize_spritesheet_data(out, obj);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpritesheetData>>(out);
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_764BE38B43135437
@@ -113,7 +118,7 @@ inline void initialize_spritesheet_frame_data(flight::types::EntityConstruction<
 inline flight::Ref<flight::types::SpritesheetFrameData> create_spritesheet_frame_data(std::optional<flight::Ref<entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetFrameData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpritesheetFrameData>>();
   initialize_spritesheet_frame_data(out, obj);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpritesheetFrameData>>(out);
 }
 
 } // namespace flight::spritesheet

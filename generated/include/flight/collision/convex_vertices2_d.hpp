@@ -9,6 +9,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CollisionAabb2D; }
+namespace flight::types { struct CollisionObb2D; }
+
 #include <flight/types/collision.hpp>
 
 namespace flight::collision {
@@ -18,14 +21,14 @@ inline void write_aabb_vertices(flight::StructuralRef<flight::RowReadonly<flight
   const double min_y = flight::row_get<flight::RowKey<"minY">>(aabb);
   const double max_x = flight::row_get<flight::RowKey<"maxX">>(aabb);
   const double max_y = flight::row_get<flight::RowKey<"maxY">>(aabb);
-  out.element(0.0) = min_x;
-  out.element(1.0) = min_y;
-  out.element(2.0) = max_x;
-  out.element(3.0) = min_y;
-  out.element(4.0) = max_x;
-  out.element(5.0) = max_y;
-  out.element(6.0) = min_x;
-  out.element(7.0) = max_y;
+  (out.element(0.0) = min_x);
+  (out.element(1.0) = min_y);
+  (out.element(2.0) = max_x);
+  (out.element(3.0) = min_y);
+  (out.element(4.0) = max_x);
+  (out.element(5.0) = max_y);
+  (out.element(6.0) = min_x);
+  (out.element(7.0) = max_y);
 }
 
 inline void write_obb_vertices(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionObb2D>>>> obb, flight::Float64Array out) {
@@ -39,14 +42,14 @@ inline void write_obb_vertices(flight::StructuralRef<flight::RowReadonly<flight:
   const double wy = (sin * half_w);
   const double hx = (-sin * half_h);
   const double hy = (cos * half_h);
-  out.element(0.0) = ((cx - wx) - hx);
-  out.element(1.0) = ((cy - wy) - hy);
-  out.element(2.0) = ((cx + wx) - hx);
-  out.element(3.0) = ((cy + wy) - hy);
-  out.element(4.0) = ((cx + wx) + hx);
-  out.element(5.0) = ((cy + wy) + hy);
-  out.element(6.0) = ((cx - wx) + hx);
-  out.element(7.0) = ((cy - wy) + hy);
+  (out.element(0.0) = ((cx - wx) - hx));
+  (out.element(1.0) = ((cy - wy) - hy));
+  (out.element(2.0) = ((cx + wx) - hx));
+  (out.element(3.0) = ((cy + wy) - hy));
+  (out.element(4.0) = ((cx + wx) + hx));
+  (out.element(5.0) = ((cy + wy) + hy));
+  (out.element(6.0) = ((cx - wx) + hx));
+  (out.element(7.0) = ((cy - wy) + hy));
 }
 
 } // namespace flight::collision

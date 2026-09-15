@@ -16,26 +16,26 @@ inline double color_from_kelvin(double kelvin) {
   double g;
   double b;
   if ((temp <= 66.0)) {
-    r = 255.0;
+    (r = 255.0);
   }
   else {
-    r = (329.698727446 * flight::power((temp - 60.0), -0.1332047592));
+    (r = (329.698727446 * flight::power((temp - 60.0), -0.1332047592)));
   }
   if ((temp <= 66.0)) {
-    g = ((99.4708025861 * std::log(temp)) - 161.1195681661);
+    (g = ((99.4708025861 * std::log(temp)) - 161.1195681661));
   }
   else {
-    g = (288.1221695283 * flight::power((temp - 60.0), -0.0755148492));
+    (g = (288.1221695283 * flight::power((temp - 60.0), -0.0755148492)));
   }
   if ((temp >= 66.0)) {
-    b = 255.0;
+    (b = 255.0);
   }
   else {
     if ((temp <= 19.0)) {
-      b = 0.0;
+      (b = 0.0);
     }
     else {
-      b = ((138.5177312231 * std::log((temp - 10.0))) - 305.0447927307);
+      (b = ((138.5177312231 * std::log((temp - 10.0))) - 305.0447927307));
     }
   }
   auto ri = flight::maximum(0.0, flight::minimum(255.0, flight::round(r)));

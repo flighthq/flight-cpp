@@ -8,6 +8,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct ByteReader; }
+
 #include <flight/types/byte_reader.hpp>
 
 namespace flight::texture_formats {
@@ -23,7 +25,7 @@ inline bool has_byte_reader_bytes(flight::StructuralRef<flight::RowReadonly<flig
 
 inline double read_byte_reader_u16(flight::Ref<flight::types::ByteReader> reader) {
   auto value = reader->view.get_uint16(reader->offset, true);
-  reader->offset += 2.0;
+  (reader->offset += 2.0);
   return value;
 }
 
@@ -31,7 +33,7 @@ inline double read_byte_reader_u24(flight::Ref<flight::types::ByteReader> reader
   flight::DataView view = reader->view;
   const double offset = reader->offset;
   const double value = flight::bitwise_or(flight::bitwise_or(view.get_uint8(offset), flight::left_shift(view.get_uint8((offset + 1.0)), 8.0)), flight::left_shift(view.get_uint8((offset + 2.0)), 16.0));
-  reader->offset += 3.0;
+  (reader->offset += 3.0);
   return value;
 }
 
@@ -39,37 +41,37 @@ inline double read_byte_reader_u24_big_endian(flight::Ref<flight::types::ByteRea
   flight::DataView view = reader->view;
   const double offset = reader->offset;
   const double value = flight::bitwise_or(flight::bitwise_or(flight::left_shift(view.get_uint8(offset), 16.0), flight::left_shift(view.get_uint8((offset + 1.0)), 8.0)), view.get_uint8((offset + 2.0)));
-  reader->offset += 3.0;
+  (reader->offset += 3.0);
   return value;
 }
 
 inline double read_byte_reader_u32(flight::Ref<flight::types::ByteReader> reader) {
   auto value = reader->view.get_uint32(reader->offset, true);
-  reader->offset += 4.0;
+  (reader->offset += 4.0);
   return value;
 }
 
 inline double read_byte_reader_u32_big_endian(flight::Ref<flight::types::ByteReader> reader) {
   auto value = reader->view.get_uint32(reader->offset, false);
-  reader->offset += 4.0;
+  (reader->offset += 4.0);
   return value;
 }
 
 inline double read_byte_reader_u64(flight::Ref<flight::types::ByteReader> reader) {
   auto low = reader->view.get_uint32(reader->offset, true);
   auto high = reader->view.get_uint32((reader->offset + 4.0), true);
-  reader->offset += 8.0;
+  (reader->offset += 8.0);
   return ((high * 4294967296.0) + low);
 }
 
 inline double read_byte_reader_u8(flight::Ref<flight::types::ByteReader> reader) {
   auto value = reader->view.get_uint8(reader->offset);
-  reader->offset += 1.0;
+  (reader->offset += 1.0);
   return value;
 }
 
 inline void skip_byte_reader(flight::Ref<flight::types::ByteReader> reader, double count) {
-  reader->offset += count;
+  (reader->offset += count);
 }
 
 } // namespace flight::texture_formats

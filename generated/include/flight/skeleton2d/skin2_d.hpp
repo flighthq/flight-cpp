@@ -6,6 +6,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Skin2D; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/skin2_d.hpp>
@@ -20,7 +23,7 @@ inline void initialize_skin2_d(flight::types::EntityConstruction<flight::Ref<fli
 inline flight::Ref<flight::types::Skin2D> create_skin2_d(flight::Uint16Array influence_counts, flight::Float32Array influences) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Skin2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Skin2D>>();
   initialize_skin2_d(out, influence_counts, influences);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Skin2D>>(out);
 }
 
 } // namespace flight::skeleton2d

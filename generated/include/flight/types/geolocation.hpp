@@ -8,6 +8,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/entity.hpp>
 
@@ -53,7 +56,7 @@ struct GeolocationBackend : public flight::ReferenceEnabled {
   std::function<flight::Task<std::optional<flight::Ref<GeolocationPosition>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GeolocationRequestOptions>>>>)> get_current_position;
   std::function<flight::Task<flight::Ref<GeolocationPositionResult>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GeolocationRequestOptions>>>>)> get_current_position_result;
   std::function<bool()> is_available;
-  std::function<double(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GeolocationPosition>>>>)>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GeolocationRequestOptions>>>>, std::function<void(GeolocationErrorReason)>)> watch_position;
+  std::function<double(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GeolocationPosition>>>>)>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GeolocationRequestOptions>>>>, std::optional<std::function<void(GeolocationErrorReason)>>)> watch_position;
   std::function<void(double)> clear_watch;
   std::function<flight::Task<flight::Ref<GeolocationAccessOutcome>>()> prompt_for_access;
 };

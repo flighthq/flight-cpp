@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename T> struct SignalData; }
+
 #include <flight/types/signal.hpp>
 
 namespace flight::signals {
@@ -14,7 +17,7 @@ namespace flight::signals {
 template <typename T>
 inline void cancel_signal(flight::Ref<flight::types::Signal<T>> signal) {
   if (signal->data.has_value()) {
-    signal->data.cancelled = true;
+    (signal->data.value()->cancelled = true);
   }
 }
 

@@ -12,8 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::math {
 
-inline double deg_to_rad(double degrees) {
-  return (degrees * flight::math::deg_to_rad);
+inline double deg_to_rad_flight_value_function_deg_u000054_o_u000052_ad_flight_source_59eefa411bb2f66d(double degrees) {
+  return (degrees * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3);
 }
 
 inline double delta_angle(double from, double to) {
@@ -26,8 +26,8 @@ inline double normalize_angle(double radians) {
   return ((wrapped >= flight::pi) ? (wrapped - flight::math::tau) : wrapped);
 }
 
-inline double rad_to_deg(double radians) {
-  return (radians * flight::math::rad_to_deg);
+inline double rad_to_deg_flight_value_function_rad_u000054_o_u000044_eg_flight_source_59eefa411bb2f66d(double radians) {
+  return (radians * flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3);
 }
 
 } // namespace flight::math

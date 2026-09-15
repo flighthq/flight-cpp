@@ -10,6 +10,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AgxToneMapOptions; }
+namespace flight::types { struct FilmicToneMapOptions; }
+
 #include <flight/types/agx_tone_map_options.hpp>
 #include <flight/types/filmic_tone_map_options.hpp>
 
@@ -48,27 +51,27 @@ inline double compute_uncharted2_tone_map(double x) {
 }
 
 inline void get_aces_input_matrix(flight::Float32Array out) {
-  out.element(0.0) = 0.59719;
-  out.element(1.0) = 0.076;
-  out.element(2.0) = 0.0284;
-  out.element(3.0) = 0.35458;
-  out.element(4.0) = 0.90834;
-  out.element(5.0) = 0.13383;
-  out.element(6.0) = 0.04823;
-  out.element(7.0) = 0.01566;
-  out.element(8.0) = 0.83777;
+  (out.element(0.0) = 0.59719);
+  (out.element(1.0) = 0.076);
+  (out.element(2.0) = 0.0284);
+  (out.element(3.0) = 0.35458);
+  (out.element(4.0) = 0.90834);
+  (out.element(5.0) = 0.13383);
+  (out.element(6.0) = 0.04823);
+  (out.element(7.0) = 0.01566);
+  (out.element(8.0) = 0.83777);
 }
 
 inline void get_aces_output_matrix(flight::Float32Array out) {
-  out.element(0.0) = 1.60475;
-  out.element(1.0) = -0.10208;
-  out.element(2.0) = -0.00327;
-  out.element(3.0) = -0.53108;
-  out.element(4.0) = 1.10813;
-  out.element(5.0) = -0.07276;
-  out.element(6.0) = -0.07367;
-  out.element(7.0) = -0.00605;
-  out.element(8.0) = 1.07602;
+  (out.element(0.0) = 1.60475);
+  (out.element(1.0) = -0.10208);
+  (out.element(2.0) = -0.00327);
+  (out.element(3.0) = -0.53108);
+  (out.element(4.0) = 1.10813);
+  (out.element(5.0) = -0.07276);
+  (out.element(6.0) = -0.07367);
+  (out.element(7.0) = -0.00605);
+  (out.element(8.0) = 1.07602);
 }
 
 inline double agx_default_contrast_approx(double x) {

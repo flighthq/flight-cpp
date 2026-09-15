@@ -6,6 +6,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct GlyphAtlas; }
+namespace flight::types { struct GlyphAtlasRuntime; }
+namespace flight::types { struct GlyphMetrics; }
+
 #include <flight/types/bitmap.hpp>
 #include <flight/types/glyph_source.hpp>
 

@@ -6,8 +6,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct TextureContainer; }
+namespace flight::types { struct TextureContainerLevel; }
+
 #include <flight/types/texture_container.hpp>
 #include <flight/types/texture_container_format.hpp>
+#include <flight/types/texture_container_level.hpp>
+#include <flight/types/texture_container_supercompression.hpp>
 
 namespace flight::texture_formats {
 

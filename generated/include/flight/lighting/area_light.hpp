@@ -10,6 +10,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AreaLight; }
+namespace flight::types { struct AreaLightOptions; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/geometry/vector3.hpp>
 #include <flight/types/area_light.hpp>
@@ -41,14 +46,14 @@ inline flight::Ref<flight::types::AreaLight> clone_area_light(flight::Structural
   flight::row_set<flight::RowKey<"shadowNear">>(out, flight::row_get<flight::RowKey<"shadowNear">>(source));
   flight::row_set<flight::RowKey<"shadowStrength">>(out, flight::row_get<flight::RowKey<"shadowStrength">>(source));
   flight::row_set<flight::RowKey<"up">>(out, flight::geometry::clone_vector3(flight::row_get<flight::RowKey<"up">>(source)));
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::AreaLight>>(out);
 }
 
 inline void initialize_area_light(flight::types::EntityConstruction<flight::Ref<flight::types::AreaLight>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AreaLightOptions>>>>> options = std::nullopt) {
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> position = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->position; }());
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> direction = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->direction; }());
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> right = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->right; }());
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> up = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->up; }());
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> position = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->position; }());
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> direction = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->direction; }());
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> right = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->right; }());
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> up = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->up; }());
   flight::row_set<flight::RowKey<"castsShadow">>(out, ([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->casts_shadow; }()).value_or(false));
   flight::row_set<flight::RowKey<"color">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->color; }()).value_or(4294967295.0));
   flight::row_set<flight::RowKey<"decay">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->decay; }()).value_or(2.0));
@@ -73,10 +78,10 @@ inline void initialize_area_light(flight::types::EntityConstruction<flight::Ref<
 inline flight::Ref<flight::types::AreaLight> create_area_light(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AreaLightOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::AreaLight>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AreaLight>>();
   initialize_area_light(out, options);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::AreaLight>>(out);
 }
 
-inline void set_area_light_orientation(flight::Ref<flight::types::AreaLight> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> direction, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> right, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> up) {
+inline void set_area_light_orientation(flight::Ref<flight::types::AreaLight> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> direction, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> right, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> up) {
   auto right_len = std::sqrt((((flight::row_get<flight::RowKey<"x">>(right) * flight::row_get<flight::RowKey<"x">>(right)) + (flight::row_get<flight::RowKey<"y">>(right) * flight::row_get<flight::RowKey<"y">>(right))) + (flight::row_get<flight::RowKey<"z">>(right) * flight::row_get<flight::RowKey<"z">>(right))));
   auto up_len = std::sqrt((((flight::row_get<flight::RowKey<"x">>(up) * flight::row_get<flight::RowKey<"x">>(up)) + (flight::row_get<flight::RowKey<"y">>(up) * flight::row_get<flight::RowKey<"y">>(up))) + (flight::row_get<flight::RowKey<"z">>(up) * flight::row_get<flight::RowKey<"z">>(up))));
   auto dir_len = std::sqrt((((flight::row_get<flight::RowKey<"x">>(direction) * flight::row_get<flight::RowKey<"x">>(direction)) + (flight::row_get<flight::RowKey<"y">>(direction) * flight::row_get<flight::RowKey<"y">>(direction))) + (flight::row_get<flight::RowKey<"z">>(direction) * flight::row_get<flight::RowKey<"z">>(direction))));

@@ -1,6 +1,6 @@
 {
   "schema": "flight-generated-sdk-refusals/2",
-  "compilerRevision": "a6895ee00994bce116c9fdff6c3503462437eee8",
+  "compilerRevision": "9f6ce1cad0d5cfcb047ccb2237995bca39161acc",
   "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
   "refusals": [
     {
@@ -70,7 +70,7 @@
       "code": "unsupported-ir",
       "module": "packages/adjustments/src/colorLutAdjustment.ts",
       "package": "@flighthq/adjustments",
-      "reason": "cpp emission failed for @flighthq/adjustments/packages/adjustments/src/colorLutAdjustment.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/adjustments/packages/adjustments/src/colorLutAdjustment.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -79,13 +79,6 @@
       "package": "@flighthq/adjustments",
       "reason": "dependency ./colorLutAdjustment was refused for @flighthq/adjustments/packages/adjustments/src/colorLutAdjustment.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/adjustments/src/colorScaleBiasAdjustment.ts",
-      "package": "@flighthq/adjustments",
-      "reason": "cpp emission failed for @flighthq/adjustments/packages/adjustments/src/colorScaleBiasAdjustment.ts: structural-row construction requires explicit named properties",
-      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -200,11 +193,11 @@
       "stage": "emission"
     },
     {
-      "code": "invalid-target-name-candidate",
+      "code": "dependency-refused",
       "module": "packages/animation/src/contract.ts",
       "package": "@flighthq/animation",
-      "reason": "Target name candidates require a fixed or renamable disposition and nonempty identity, preferredName, and scope values",
-      "stage": "emission"
+      "reason": "dependency ./animationBlend was refused for @flighthq/animation/packages/animation/src/animationBlend.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -380,34 +373,6 @@
       "package": "@flighthq/audio",
       "reason": "dependency ./contract was refused for @flighthq/audio/packages/audio/src/contract.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/binpack/src/contract.ts",
-      "package": "@flighthq/binpack",
-      "reason": "dependency ./packRectangles was refused for @flighthq/binpack/packages/binpack/src/packRectangles.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/binpack/src/explainUnpackedRectangles.ts",
-      "package": "@flighthq/binpack",
-      "reason": "dependency ./packRectangles was refused for @flighthq/binpack/packages/binpack/src/packRectangles.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/binpack/src/index.ts",
-      "package": "@flighthq/binpack",
-      "reason": "dependency ./contract was refused for @flighthq/binpack/packages/binpack/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/binpack/src/packRectangles.ts",
-      "package": "@flighthq/binpack",
-      "reason": "cpp emission failed for @flighthq/binpack/packages/binpack/src/packRectangles.ts: contextual union value type std::function<auto(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PackableRectangle>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PackableRectangle>>>>)> is not a represented runtime domain",
-      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -728,7 +693,7 @@
       "code": "unsupported-ir",
       "module": "packages/bitmapfont-formats/src/bitmapFontJson.ts",
       "package": "@flighthq/bitmapfont-formats",
-      "reason": "cpp emission failed for @flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontJson.ts: contextual union value type auto is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontJson.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -756,7 +721,7 @@
       "code": "unsupported-ir",
       "module": "packages/bitmapfont-formats/src/explainBitmapFontParse.ts",
       "package": "@flighthq/bitmapfont-formats",
-      "reason": "cpp emission failed for @flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/explainBitmapFontParse.ts: ambient value Object member values has no C++ binding",
+      "reason": "cpp emission failed for @flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/explainBitmapFontParse.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -786,6 +751,13 @@
       "package": "@flighthq/bitmaptext",
       "reason": "dependency ./updateBitmapText was refused for @flighthq/bitmaptext/packages/bitmaptext/src/updateBitmapText.ts",
       "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/bitmaptext/src/explainBitmapTextMissingGlyphs.ts",
+      "package": "@flighthq/bitmaptext",
+      "reason": "cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/explainBitmapTextMissingGlyphs.ts: string for-of requires a Unicode code-point iteration runtime contract",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -956,11 +928,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/clipboard/src/clipboard.ts",
       "package": "@flighthq/clipboard",
-      "reason": "cpp emission failed for @flighthq/clipboard/packages/clipboard/src/clipboard.ts: flight-cpp type position retains unresolved auto placeholder: std::function<auto",
-      "stage": "emission"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Host.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -1204,7 +1176,7 @@
       "code": "unsupported-ir",
       "module": "packages/command/src/commandBinding.ts",
       "package": "@flighthq/command",
-      "reason": "cpp emission failed for @flighthq/command/packages/command/src/commandBinding.ts: contextual union value type std::function<auto(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Command>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Command>>>>)> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/command/packages/command/src/commandBinding.ts: contextual union value type std::function<std::optional<flight::Ref<flight::types::SetNodePropertyCommand>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Command>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Command>>>>)> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -1365,7 +1337,7 @@
       "code": "unsupported-ir",
       "module": "packages/dialog/src/dialog.ts",
       "package": "@flighthq/dialog",
-      "reason": "cpp emission failed for @flighthq/dialog/packages/dialog/src/dialog.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type], PromiseLike[type], window[value])",
+      "reason": "cpp emission failed for @flighthq/dialog/packages/dialog/src/dialog.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type], window[value])",
       "stage": "emission"
     },
     {
@@ -1586,10 +1558,10 @@
       "stage": "dependency"
     },
     {
-      "code": "invalid-target-name-candidate",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/renderEffectCaptureGeometry.ts",
       "package": "@flighthq/effects",
-      "reason": "Target name candidates require a fixed or renamable disposition and nonempty identity, preferredName, and scope values",
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/renderEffectCaptureGeometry.ts: contextual union value type flight::Ref<flight::types::RenderEffectPadding> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -3112,18 +3084,18 @@
       "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/gui/src/buttonController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
+      "reason": "cpp emission failed for @flighthq/gui/packages/gui/src/buttonController.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
-      "code": "internal-error",
+      "code": "dependency-refused",
       "module": "packages/gui/src/comboBoxController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
-      "stage": "emission"
+      "reason": "dependency ./buttonController was refused for @flighthq/gui/packages/gui/src/buttonController.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -3133,17 +3105,17 @@
       "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/gui/src/guiController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 1 argument(s) for 0 parameter(s)",
+      "reason": "cpp emission failed for @flighthq/gui/packages/gui/src/guiController.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/gui/src/guiDialog.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
+      "reason": "cpp emission failed for @flighthq/gui/packages/gui/src/guiDialog.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -3161,25 +3133,25 @@
       "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/gui/src/listController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
+      "reason": "cpp emission failed for @flighthq/gui/packages/gui/src/listController.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
-      "code": "internal-error",
+      "code": "dependency-refused",
       "module": "packages/gui/src/progressBarController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
-      "stage": "emission"
+      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "dependency-refused",
       "module": "packages/gui/src/radioGroupController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
-      "stage": "emission"
+      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -3189,46 +3161,46 @@
       "stage": "emission"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/gui/src/scrollViewController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
+      "reason": "cpp emission failed for @flighthq/gui/packages/gui/src/scrollViewController.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
-      "code": "internal-error",
+      "code": "dependency-refused",
       "module": "packages/gui/src/sliderController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
-      "stage": "emission"
+      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "dependency-refused",
       "module": "packages/gui/src/splitPaneController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
-      "stage": "emission"
+      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "dependency-refused",
       "module": "packages/gui/src/tabBarController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
-      "stage": "emission"
+      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "dependency-refused",
       "module": "packages/gui/src/textInputController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
-      "stage": "emission"
+      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "dependency-refused",
       "module": "packages/gui/src/toggleController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
-      "stage": "emission"
+      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -3238,17 +3210,17 @@
       "stage": "emission"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/gui/src/treeViewController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
+      "reason": "cpp emission failed for @flighthq/gui/packages/gui/src/treeViewController.ts: dual-sentinel nullish coalescing requires presence projection lowering",
       "stage": "emission"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/gui/src/windowController.ts",
       "package": "@flighthq/gui",
-      "reason": "Structural type receives 2 argument(s) for 0 parameter(s)",
+      "reason": "cpp emission failed for @flighthq/gui/packages/gui/src/windowController.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -3826,10 +3798,10 @@
       "stage": "dependency"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/loader/src/resourceLoader.ts",
       "package": "@flighthq/loader",
-      "reason": "Compiler lowering pass catch-await-hoisting failed for @flighthq/loader/packages/loader/src/resourceLoader.ts: out-of-scope-binding-reference at $.declarations[32].body[7].statements[2].consequent.statements[3].consequent.statements[2].expression.arguments[0].reference.binding: binding binding:[\"@flighthq/loader\",\"packages/loader/src/resourceLoader.ts\",22274] is introduced outside the reference's lexical scope at $.declarations[32].body[7].statements[1].catchClause.binding; out-of-scope-binding-reference at $.declarations[32].body[7].statements[2].consequent.statements[4].declarations[0].initializer.left.left.reference.binding: binding binding:[\"@flighthq/loader\",\"packages/loader/src/resourceLoader.ts\",22274] is introduced outside the reference's lexical scope at $.declarations[32].body[7].statements[1].catchClause.binding; out-of-scope-binding-reference at $.declarations[32].body[7].statements[2].consequent.statements[4].declarations[0].initializer.right.left.left.object.reference.binding: binding binding:[\"@flighthq/loader\",\"packages/loader/src/resourceLoader.ts\",22274] is introduced outside the reference's lexical scope at $.declarations[32].body[7].statements[1].catchClause.binding; out-of-scope-binding-reference at $.declarations[32].body[7].statements[2].consequent.statements[4].declarations[0].initializer.right.right.left.object.reference.binding: binding binding:[\"@flighthq/loader\",\"packages/loader/src/resourceLoader.ts\",22274] is introduced outside the reference's lexical scope at $.declarations[32].body[7].statements[1].catchClause.binding; out-of-scope-binding-reference at $.declarations[32].body[7].statements[2].consequent.statements[9].consequent.statements[0].expression.arguments[2].reference.binding: binding binding:[\"@flighthq/loader\",\"packages/loader/src/resourceLoader.ts\",22274] is introduced outside the reference's lexical scope at $.declarations[32].body[7].statements[1].catchClause.binding; out-of-scope-binding-reference at $.declarations[32].body[7].statements[2].consequent.statements[10].expression.arguments[0].reference.binding: binding binding:[\"@flighthq/loader\",\"packages/loader/src/resourceLoader.ts\",22274] is introduced outside the reference's lexical scope at $.declarations[32].body[7].statements[1].catchClause.binding; out-of-scope-binding-reference at $.declarations[32].body[7].statements[2].consequent.statements[11].expression.arguments[1].reference.binding: binding binding:[\"@flighthq/loader\",\"packages/loader/src/resourceLoader.ts\",22274] is introduced outside the reference's lexical scope at $.declarations[32].body[7].statements[1].catchClause.binding",
+      "reason": "cpp emission failed for @flighthq/loader/packages/loader/src/resourceLoader.ts: Compiler lowering pass catch-await-hoisting failed for @flighthq/loader/packages/loader/src/resourceLoader.ts: a referenced catch binding cannot cross an await without owned exception-value lowering",
       "stage": "emission"
     },
     {
@@ -3949,27 +3921,6 @@
       "module": "packages/materials/src/unlitMaterials.ts",
       "package": "@flighthq/materials",
       "reason": "cpp emission failed for @flighthq/materials/packages/materials/src/unlitMaterials.ts: typeOf types require C++ type computation lowering",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/math/src/contract.ts",
-      "package": "@flighthq/math",
-      "reason": "dependency ./statistics was refused for @flighthq/math/packages/math/src/statistics.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/math/src/index.ts",
-      "package": "@flighthq/math",
-      "reason": "dependency ./contract was refused for @flighthq/math/packages/math/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/math/src/statistics.ts",
-      "package": "@flighthq/math",
-      "reason": "cpp emission failed for @flighthq/math/packages/math/src/statistics.ts: contextual union value type std::function<auto(double, double)> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -4368,7 +4319,7 @@
       "code": "unsupported-ir",
       "module": "packages/node/src/hasBoundsRectangle.ts",
       "package": "@flighthq/node",
-      "reason": "cpp emission failed for @flighthq/node/packages/node/src/hasBoundsRectangle.ts: Partial<T> requires a statically resolvable C++ object shape",
+      "reason": "cpp emission failed for @flighthq/node/packages/node/src/hasBoundsRectangle.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
       "stage": "emission"
     },
     {
@@ -4596,13 +4547,6 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "module": "packages/particles/src/curve.ts",
-      "package": "@flighthq/particles",
-      "reason": "cpp emission failed for @flighthq/particles/packages/particles/src/curve.ts: contextual union value type std::function<auto(flight::Ref<flight::types::ColorKeyframe>, flight::Ref<flight::types::ColorKeyframe>)> is not a represented runtime domain",
-      "stage": "emission"
-    },
-    {
       "code": "dependency-refused",
       "module": "packages/particles/src/index.ts",
       "package": "@flighthq/particles",
@@ -4634,7 +4578,7 @@
       "code": "dependency-refused",
       "module": "packages/particles/src/updateParticleObjects.ts",
       "package": "@flighthq/particles",
-      "reason": "dependency ./curve was refused for @flighthq/particles/packages/particles/src/curve.ts",
+      "reason": "dependency ./particleObjectsState was refused for @flighthq/particles/packages/particles/src/particleObjectsState.ts",
       "stage": "dependency"
     },
     {
@@ -4683,7 +4627,7 @@
       "code": "unsupported-ir",
       "module": "packages/particles-formats/src/libgdxSerialize.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/libgdxSerialize.ts: flight-cpp type position retains unresolved auto placeholder: std::function<auto",
+      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/libgdxSerialize.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -4711,7 +4655,7 @@
       "code": "unsupported-ir",
       "module": "packages/particles-formats/src/pixiParse.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/pixiParse.ts: anonymous object property value requires concrete C++ type evidence",
+      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/pixiParse.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -4725,14 +4669,7 @@
       "code": "unsupported-ir",
       "module": "packages/particles-formats/src/spineParse.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/spineParse.ts: contextual C++ union conversion requires equivalent source union evidence",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/particles-formats/src/spineSerialize.ts",
-      "package": "@flighthq/particles-formats",
-      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/spineSerialize.ts: flight-cpp type position retains unresolved auto placeholder: std::function<auto",
+      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/spineParse.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -4744,17 +4681,17 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/particles-formats/src/unityParse.ts",
+      "module": "packages/particles-formats/src/starlingPexSerialize.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/unityParse.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/starlingPexSerialize.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
-      "module": "packages/particles-formats/src/unitySerialize.ts",
+      "code": "unsupported-ir",
+      "module": "packages/particles-formats/src/unityParse.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "dependency @flighthq/particles/contract was refused for @flighthq/particles/packages/particles/src/curve.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/unityParse.ts: typeof requires closed runtime type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -4764,17 +4701,17 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/path/src/containsPathPoint.ts",
       "package": "@flighthq/path",
-      "reason": "cpp emission failed for @flighthq/path/packages/path/src/containsPathPoint.ts: flight-cpp type position retains unresolved auto placeholder: std::function<auto",
-      "stage": "emission"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/path/src/contract.ts",
       "package": "@flighthq/path",
-      "reason": "dependency ./containsPathPoint was refused for @flighthq/path/packages/path/src/containsPathPoint.ts",
+      "reason": "dependency ./decimatePath was refused for @flighthq/path/packages/path/src/decimatePath.ts",
       "stage": "dependency"
     },
     {
@@ -4827,11 +4764,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/path/src/getPathBounds.ts",
       "package": "@flighthq/path",
-      "reason": "cpp emission failed for @flighthq/path/packages/path/src/getPathBounds.ts: flight-cpp type position retains unresolved auto placeholder: std::function<auto",
-      "stage": "emission"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -5236,7 +5173,7 @@
       "code": "unsupported-ir",
       "module": "packages/physics2d/src/worldQueries.ts",
       "package": "@flighthq/physics2d",
-      "reason": "cpp emission failed for @flighthq/physics2d/packages/physics2d/src/worldQueries.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/physics2d/packages/physics2d/src/worldQueries.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -5310,11 +5247,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/physics3d/src/contactIntake.ts",
       "package": "@flighthq/physics3d",
-      "reason": "cpp emission failed for @flighthq/physics3d/packages/physics3d/src/contactIntake.ts: contextual optionalSingle construction requires expression type evidence",
-      "stage": "emission"
+      "reason": "dependency ./broadphase was refused for @flighthq/physics3d/packages/physics3d/src/broadphase.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -5758,10 +5695,10 @@
       "stage": "emission"
     },
     {
-      "code": "internal-error",
+      "code": "unsupported-ir",
       "module": "packages/render/src/explainScene2DPipelineCoverage.ts",
       "package": "@flighthq/render",
-      "reason": "Structural type receives 1 argument(s) for 0 parameter(s)",
+      "reason": "cpp emission failed for @flighthq/render/packages/render/src/explainScene2DPipelineCoverage.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -5831,7 +5768,7 @@
       "code": "unsupported-ir",
       "module": "packages/render/src/renderQueue.ts",
       "package": "@flighthq/render",
-      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderQueue.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderQueue.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -5873,7 +5810,7 @@
       "code": "unsupported-ir",
       "module": "packages/render/src/renderViewport.ts",
       "package": "@flighthq/render",
-      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderViewport.ts: nullish comparison admitting null and undefined requires dual-sentinel union evidence",
+      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderViewport.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -6045,10 +5982,10 @@
       "stage": "emission"
     },
     {
-      "code": "invalid-target-name-candidate",
+      "code": "unsupported-ir",
       "module": "packages/render-gl/src/glRenderTargetPool.ts",
       "package": "@flighthq/render-gl",
-      "reason": "Target name candidates require a fixed or renamable disposition and nonempty identity, preferredName, and scope values",
+      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glRenderTargetPool.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -6426,7 +6363,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene-document/src/sceneDocumentRefusal.ts",
       "package": "@flighthq/scene-document",
-      "reason": "cpp emission failed for @flighthq/scene-document/packages/scene-document/src/sceneDocumentRefusal.ts: contextual union value type auto is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene-document/packages/scene-document/src/sceneDocumentRefusal.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -6468,7 +6405,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d/src/displayObject.ts",
       "package": "@flighthq/scene2d",
-      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: Partial<T> requires a statically resolvable C++ object shape",
+      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
       "stage": "emission"
     },
     {
@@ -6482,7 +6419,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d/src/htmlView.ts",
       "package": "@flighthq/scene2d",
-      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: Partial<T> requires a statically resolvable C++ object shape",
+      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
       "stage": "emission"
     },
     {
@@ -6517,7 +6454,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d/src/sprite.ts",
       "package": "@flighthq/scene2d",
-      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: type assertion target must identify exactly one C++ variant alternative",
+      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
       "stage": "emission"
     },
     {
@@ -6545,7 +6482,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts: runtime external symbol binding plan is incomplete (missing: CanvasImageSource[type], HTMLCanvasElement[type])",
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts: runtime external symbol binding plan is incomplete (missing: CanvasImageSource[type], HTMLCanvasElement[type], HTMLImageElement[type], HTMLVideoElement[type], ImageBitmap[type], OffscreenCanvas[type], SVGImageElement[type], VideoFrame[type])",
       "stage": "emission"
     },
     {
@@ -6731,11 +6668,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene2d-canvas/src/canvasShapeCommandTable.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasShapeCommands was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommands.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommandTable.ts: flight-cpp type position retains unresolved auto placeholder: flight::registry::with_registry_table_entry<flight::Ref<flight::types::CanvasShapeCommand<auto",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -6888,7 +6825,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-dom/src/domBitmapTextureResolver.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domBitmapTextureResolver.ts: runtime external symbol binding plan is incomplete (missing: CanvasImageSource[type], HTMLCanvasElement[type])",
+      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domBitmapTextureResolver.ts: runtime external symbol binding plan is incomplete (missing: CanvasImageSource[type], HTMLCanvasElement[type], HTMLImageElement[type], HTMLVideoElement[type], ImageBitmap[type], OffscreenCanvas[type], SVGImageElement[type], VideoFrame[type])",
       "stage": "emission"
     },
     {
@@ -7112,7 +7049,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/lottieDocument.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: runtime external symbol binding plan is incomplete (missing: ArrayLike[type], SharedArrayBuffer[type])",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: runtime external symbol binding plan is incomplete (missing: ArrayBufferLike[type], ArrayLike[type], SharedArrayBuffer[type])",
       "stage": "emission"
     },
     {
@@ -7154,7 +7091,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/riveDrawOrder.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveDrawOrder.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveDrawOrder.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -7189,21 +7126,21 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/riveShapePaint.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapePaint.ts: contextual union value type auto is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapePaint.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/riveShapePath.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency @flighthq/importdiagnostics/contract was refused for @flighthq/importdiagnostics/packages/importdiagnostics/src/importDiagnosticCollector.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapePath.ts: typeof requires closed runtime type evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/riveSkeleton.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveSkeleton.ts: contextual union value type std::function<auto(double, double)> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveSkeleton.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -7217,22 +7154,22 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/riveSolo.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveSolo.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveSolo.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/riveStateMachine.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveStateMachine.ts: flight-cpp type position retains unresolved auto placeholder: std::optional<auto",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveStateMachine.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/riveText.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency @flighthq/text/contract was refused for @flighthq/text/packages/text/src/richText.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveText.ts: typeof requires closed runtime type evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -8453,11 +8390,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/scene3d-gl/src/prepareGlScene3DForwardLights.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/prepareGlScene3DForwardLights.ts: an empty array requires contextual element type in C++ emission",
-      "stage": "emission"
+      "reason": "dependency @flighthq/lighting/contract was refused for @flighthq/lighting/packages/lighting/src/sceneForwardLights.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -8551,11 +8488,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-resources/src/anisotropyPbrScene3DMaterialTextures.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Scene3DResources.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/anisotropyPbrScene3DMaterialTextures.ts: present access requires optional C++ storage with one value domain",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -8565,11 +8502,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-resources/src/clearcoatPbrScene3DMaterialTextures.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Scene3DResources.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/clearcoatPbrScene3DMaterialTextures.ts: present access requires optional C++ storage with one value domain",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -8621,11 +8558,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-resources/src/iridescencePbrScene3DMaterialTextures.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Scene3DResources.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/iridescencePbrScene3DMaterialTextures.ts: present access requires optional C++ storage with one value domain",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -8677,11 +8614,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts: present access requires optional C++ storage with one value domain",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -8705,25 +8642,25 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-resources/src/shadedScene3DMaterialTextures.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency ./sceneMaterialTextureRegistry was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/shadedScene3DMaterialTextures.ts: present access requires optional C++ storage with one value domain",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-resources/src/sheenPbrScene3DMaterialTextures.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Scene3DResources.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/sheenPbrScene3DMaterialTextures.ts: present access requires optional C++ storage with one value domain",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-resources/src/specularPbrScene3DMaterialTextures.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Scene3DResources.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/specularPbrScene3DMaterialTextures.ts: present access requires optional C++ storage with one value domain",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -8733,18 +8670,18 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-resources/src/transmissionVolumePbrScene3DMaterialTextures.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Scene3DResources.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/transmissionVolumePbrScene3DMaterialTextures.ts: present access requires optional C++ storage with one value domain",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-resources/src/wrappedDiffusePbrScene3DMaterialTextures.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Scene3DResources.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/wrappedDiffusePbrScene3DMaterialTextures.ts: present access requires optional C++ storage with one value domain",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -8852,11 +8789,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/prepareWgpuScene3DForwardLights.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/prepareWgpuScene3DForwardLights.ts: an empty array requires contextual element type in C++ emission",
-      "stage": "emission"
+      "reason": "dependency @flighthq/lighting/contract was refused for @flighthq/lighting/packages/lighting/src/sceneForwardLights.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -9163,29 +9100,29 @@
       "code": "dependency-refused",
       "module": "packages/shading/src/contract.ts",
       "package": "@flighthq/shading",
-      "reason": "dependency ./createShadedMaterial was refused for @flighthq/shading/packages/shading/src/createShadedMaterial.ts",
+      "reason": "dependency ./createAnimatedNormalModifier was refused for @flighthq/shading/packages/shading/src/createAnimatedNormalModifier.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/shading/src/createAnimatedNormalModifier.ts",
       "package": "@flighthq/shading",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/shading/packages/shading/src/createAnimatedNormalModifier.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/shading/src/createDissolveModifier.ts",
       "package": "@flighthq/shading",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/shading/packages/shading/src/createDissolveModifier.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/shading/src/createEmissiveModifier.ts",
       "package": "@flighthq/shading",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/shading/packages/shading/src/createEmissiveModifier.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -9223,17 +9160,24 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/shading/src/createVertexDisplaceModifier.ts",
+      "package": "@flighthq/shading",
+      "reason": "cpp emission failed for @flighthq/shading/packages/shading/src/createVertexDisplaceModifier.ts: contextual union value type flight::Ref<flight::types::Vector3> is not a represented runtime domain",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/shading/src/getModifierDefineKey.ts",
       "package": "@flighthq/shading",
       "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
-      "module": "packages/shading/src/getModifierDefineKey.ts",
+      "module": "packages/shading/src/getUnregisteredModifierKinds.ts",
       "package": "@flighthq/shading",
-      "reason": "dependency ./orderModifierStack was refused for @flighthq/shading/packages/shading/src/orderModifierStack.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -9252,17 +9196,31 @@
     },
     {
       "code": "dependency-refused",
+      "module": "packages/shading/src/isModifierStackValid.ts",
+      "package": "@flighthq/shading",
+      "reason": "dependency ./getUnregisteredModifierKinds was refused for @flighthq/shading/packages/shading/src/getUnregisteredModifierKinds.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/shading/src/modifier.ts",
       "package": "@flighthq/shading",
       "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
+      "module": "packages/shading/src/modifierRegistry.ts",
+      "package": "@flighthq/shading",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/shading/src/orderModifierStack.ts",
       "package": "@flighthq/shading",
-      "reason": "cpp emission failed for @flighthq/shading/packages/shading/src/orderModifierStack.ts: contextual union value type std::function<auto(flight::Ref<index_modifier_e3d4ced0d59beaec>, flight::Ref<index_modifier_e3d4ced0d59beaec>)> is not a represented runtime domain",
-      "stage": "emission"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -9359,7 +9317,7 @@
       "code": "unsupported-ir",
       "module": "packages/shape/src/shape.ts",
       "package": "@flighthq/shape",
-      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: structural-row projection requires a represented object-reference target",
+      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
       "stage": "emission"
     },
     {
@@ -9394,14 +9352,14 @@
       "code": "unsupported-ir",
       "module": "packages/shape/src/shapeStroke.ts",
       "package": "@flighthq/shape",
-      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/shapeStroke.ts: contextual union value type auto is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/shapeStroke.ts: an empty array requires contextual element type in C++ emission",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/shape/src/shapeStrokeOutline.ts",
       "package": "@flighthq/shape",
-      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/shapeStrokeOutline.ts: contextual union value type auto is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/shapeStrokeOutline.ts: an empty array requires contextual element type in C++ emission",
       "stage": "emission"
     },
     {
@@ -9429,7 +9387,7 @@
       "code": "unsupported-ir",
       "module": "packages/shape-formats/src/shapeJson.ts",
       "package": "@flighthq/shape-formats",
-      "reason": "cpp emission failed for @flighthq/shape-formats/packages/shape-formats/src/shapeJson.ts: flight-cpp type position retains unresolved auto placeholder: flight::Array<auto",
+      "reason": "cpp emission failed for @flighthq/shape-formats/packages/shape-formats/src/shapeJson.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -9478,7 +9436,7 @@
       "code": "dependency-refused",
       "module": "packages/shortcut/src/contract.ts",
       "package": "@flighthq/shortcut",
-      "reason": "dependency ./shortcut was refused for @flighthq/shortcut/packages/shortcut/src/shortcut.ts",
+      "reason": "dependency ./shortcutExplicitDependency was refused for @flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts",
       "stage": "dependency"
     },
     {
@@ -9487,13 +9445,6 @@
       "package": "@flighthq/shortcut",
       "reason": "dependency ./contract was refused for @flighthq/shortcut/packages/shortcut/src/contract.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/shortcut/src/shortcut.ts",
-      "package": "@flighthq/shortcut",
-      "reason": "cpp emission failed for @flighthq/shortcut/packages/shortcut/src/shortcut.ts: contextual union value type std::function<auto(flight::types::ShortcutModifier, flight::types::ShortcutModifier)> is not a represented runtime domain",
-      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -9849,7 +9800,7 @@
       "code": "unsupported-ir",
       "module": "packages/snapshot/src/equalsSnapshot.ts",
       "package": "@flighthq/snapshot",
-      "reason": "cpp emission failed for @flighthq/snapshot/packages/snapshot/src/equalsSnapshot.ts: ambient value Object member prototype has no C++ binding",
+      "reason": "cpp emission failed for @flighthq/snapshot/packages/snapshot/src/equalsSnapshot.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -10122,7 +10073,7 @@
       "code": "unsupported-ir",
       "module": "packages/statusbar/src/statusbar.ts",
       "package": "@flighthq/statusbar",
-      "reason": "cpp emission failed for @flighthq/statusbar/packages/statusbar/src/statusbar.ts: an empty array requires contextual element type in C++ emission",
+      "reason": "cpp emission failed for @flighthq/statusbar/packages/statusbar/src/statusbar.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -10283,7 +10234,7 @@
       "code": "unsupported-ir",
       "module": "packages/text/src/nativeText.ts",
       "package": "@flighthq/text",
-      "reason": "cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: Partial<T> requires a statically resolvable C++ object shape",
+      "reason": "cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
       "stage": "emission"
     },
     {
@@ -10297,7 +10248,7 @@
       "code": "unsupported-ir",
       "module": "packages/text/src/textLabel.ts",
       "package": "@flighthq/text",
-      "reason": "cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: Partial<T> requires a statically resolvable C++ object shape",
+      "reason": "cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
       "stage": "emission"
     },
     {
@@ -10311,7 +10262,7 @@
       "code": "dependency-refused",
       "module": "packages/text-markup/src/contract.ts",
       "package": "@flighthq/text-markup",
-      "reason": "dependency ./markupNamedColors was refused for @flighthq/text-markup/packages/text-markup/src/markupNamedColors.ts",
+      "reason": "dependency ./markupClassStyles was refused for @flighthq/text-markup/packages/text-markup/src/markupClassStyles.ts",
       "stage": "dependency"
     },
     {
@@ -10327,6 +10278,13 @@
       "package": "@flighthq/text-markup",
       "reason": "dependency ./contract was refused for @flighthq/text-markup/packages/text-markup/src/contract.ts",
       "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/text-markup/src/markupClassStyles.ts",
+      "package": "@flighthq/text-markup",
+      "reason": "cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupClassStyles.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -10462,11 +10420,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/textlayout/src/richTextQuery.ts",
       "package": "@flighthq/textlayout",
-      "reason": "cpp emission failed for @flighthq/textlayout/packages/textlayout/src/richTextQuery.ts: contextual union value type auto is not a represented runtime domain",
-      "stage": "emission"
+      "reason": "dependency ./textLayout was refused for @flighthq/textlayout/packages/textlayout/src/textLayout.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -10479,7 +10437,7 @@
       "code": "unsupported-ir",
       "module": "packages/textlayout/src/textFormat.ts",
       "package": "@flighthq/textlayout",
-      "reason": "cpp emission failed for @flighthq/textlayout/packages/textlayout/src/textFormat.ts: contextual optionalVariant construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/textlayout/packages/textlayout/src/textFormat.ts: flight-cpp type position retains unresolved auto placeholder: static_cast<flight::Record<flight::String, auto",
       "stage": "emission"
     },
     {
@@ -10616,11 +10574,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/textshaper/src/textShaperSignals.ts",
       "package": "@flighthq/textshaper",
-      "reason": "cpp emission failed for @flighthq/textshaper/packages/textshaper/src/textShaperSignals.ts: contextual union value type auto is not a represented runtime domain",
-      "stage": "emission"
+      "reason": "dependency @flighthq/signals/contract was refused for @flighthq/signals/packages/signals/src/slot.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -10682,15 +10640,15 @@
       "code": "dependency-refused",
       "module": "packages/texture-formats/src/contract.ts",
       "package": "@flighthq/texture-formats",
-      "reason": "dependency ./parseAtf was refused for @flighthq/texture-formats/packages/texture-formats/src/parseAtf.ts",
+      "reason": "dependency ./explainTextureContainerParse was refused for @flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/texture-formats/src/explainTextureContainerParse.ts",
       "package": "@flighthq/texture-formats",
-      "reason": "dependency ./parseAtf was refused for @flighthq/texture-formats/packages/texture-formats/src/parseAtf.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -10704,6 +10662,20 @@
       "module": "packages/texture-formats/src/parseAtf.ts",
       "package": "@flighthq/texture-formats",
       "reason": "cpp emission failed for @flighthq/texture-formats/packages/texture-formats/src/parseAtf.ts: an empty array requires contextual element type in C++ emission",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/texture-formats/src/parseDds.ts",
+      "package": "@flighthq/texture-formats",
+      "reason": "cpp emission failed for @flighthq/texture-formats/packages/texture-formats/src/parseDds.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/texture-formats/src/parseKtx2.ts",
+      "package": "@flighthq/texture-formats",
+      "reason": "cpp emission failed for @flighthq/texture-formats/packages/texture-formats/src/parseKtx2.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -10780,7 +10752,7 @@
       "code": "unsupported-ir",
       "module": "packages/textureatlas-formats/src/textureAtlasDetect.ts",
       "package": "@flighthq/textureatlas-formats",
-      "reason": "cpp emission failed for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts: ambient value Object member values has no C++ binding",
+      "reason": "cpp emission failed for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -10878,7 +10850,7 @@
       "code": "unsupported-ir",
       "module": "packages/tilemap-formats/src/tiledTmxFormat.ts",
       "package": "@flighthq/tilemap-formats",
-      "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmxFormat.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmxFormat.ts: contextual multiVariant construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -10941,7 +10913,7 @@
       "code": "unsupported-ir",
       "module": "packages/tokens/src/substituteFlightDocumentSceneTokens.ts",
       "package": "@flighthq/tokens",
-      "reason": "cpp emission failed for @flighthq/tokens/packages/tokens/src/substituteFlightDocumentSceneTokens.ts: contextual union value type auto is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/tokens/packages/tokens/src/substituteFlightDocumentSceneTokens.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -11015,11 +10987,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/tween/src/tweenManager.ts",
       "package": "@flighthq/tween",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Tween.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/tween/packages/tween/src/tweenManager.ts: flight-cpp type position retains unresolved auto placeholder: flight::Array<flight::Ref<flight::types::Tween<auto",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -11200,7 +11172,7 @@
       "code": "dependency-refused",
       "module": "packages/types/src/ButtonController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./NodeInteractiveStateBinding was refused for @flighthq/types/packages/types/src/NodeInteractiveStateBinding.ts",
       "stage": "dependency"
     },
     {
@@ -11466,15 +11438,15 @@
       "code": "dependency-refused",
       "module": "packages/types/src/FlightDocument.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./FlightDocumentResource was refused for @flighthq/types/packages/types/src/FlightDocumentResource.ts",
+      "reason": "dependency ./FlightDocumentInteractiveState was refused for @flighthq/types/packages/types/src/FlightDocumentInteractiveState.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/types/src/FlightDocumentInteractiveState.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node was refused for @flighthq/types/packages/types/src/Node.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/FlightDocumentInteractiveState.ts: flight-cpp type position retains unresolved auto placeholder: flight::Ref<Node<auto",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -11491,17 +11463,17 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/types/src/FlightDocumentLayout.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Layout was refused for @flighthq/types/packages/types/src/Layout.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/FlightDocumentLayout.ts: flight-cpp type position retains unresolved auto placeholder: flight::Ref<Node<auto",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/types/src/FlightDocumentNodeSchema.ts",
       "package": "@flighthq/types",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/FlightDocumentNodeSchema.ts: flight-cpp type position retains unresolved auto placeholder: std::unordered_map<flight::String, auto",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/FlightDocumentNodeSchema.ts: flight-cpp type position retains unresolved auto placeholder: flight::Record<flight::String, auto",
       "stage": "emission"
     },
     {
@@ -11865,7 +11837,7 @@
       "code": "dependency-refused",
       "module": "packages/types/src/GuiController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./NodeInteractiveStateBinding was refused for @flighthq/types/packages/types/src/NodeInteractiveStateBinding.ts",
       "stage": "dependency"
     },
     {
@@ -12068,7 +12040,7 @@
       "code": "unsupported-ir",
       "module": "packages/types/src/Lifecycle.ts",
       "package": "@flighthq/types",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/Lifecycle.ts: flight-cpp type position retains unresolved auto placeholder: flight::Ref<flight::types::Signal<std::function<void(std::unordered_map<flight::String, auto",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/Lifecycle.ts: flight-cpp type position retains unresolved auto placeholder: flight::Ref<flight::types::Signal<std::function<void(flight::Record<flight::String, auto",
       "stage": "emission"
     },
     {
@@ -12089,7 +12061,7 @@
       "code": "unsupported-ir",
       "module": "packages/types/src/Log.ts",
       "package": "@flighthq/types",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/Log.ts: flight-cpp type position retains unresolved auto placeholder: std::variant<std::unordered_map<flight::String, auto",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/Log.ts: flight-cpp type position retains unresolved auto placeholder: std::variant<flight::Record<flight::String, auto",
       "stage": "emission"
     },
     {
@@ -12268,11 +12240,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/types/src/NodeInteractiveStateBinding.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node was refused for @flighthq/types/packages/types/src/Node.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/NodeInteractiveStateBinding.ts: flight-cpp type position retains unresolved auto placeholder: flight::Ref<Node<auto",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -12362,7 +12334,7 @@
       "code": "dependency-refused",
       "module": "packages/types/src/ProgressBarController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./GuiController was refused for @flighthq/types/packages/types/src/GuiController.ts",
       "stage": "dependency"
     },
     {
@@ -12614,14 +12586,14 @@
       "code": "dependency-refused",
       "module": "packages/types/src/ScrollBarController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./GuiController was refused for @flighthq/types/packages/types/src/GuiController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/types/src/ScrollViewController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./GuiController was refused for @flighthq/types/packages/types/src/GuiController.ts",
       "stage": "dependency"
     },
     {
@@ -12682,6 +12654,13 @@
     },
     {
       "code": "unsupported-ir",
+      "module": "packages/types/src/SignalConnection.ts",
+      "package": "@flighthq/types",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/SignalConnection.ts: flight-cpp type position retains unresolved auto placeholder: std::function<void(flight::Array<auto",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
       "module": "packages/types/src/SignalScope.ts",
       "package": "@flighthq/types",
       "reason": "cpp emission failed for @flighthq/types/packages/types/src/SignalScope.ts: flight-cpp type position retains unresolved auto placeholder: flight::Array<flight::Ref<flight::types::SignalConnection<std::function<void(flight::Array<auto",
@@ -12733,7 +12712,7 @@
       "code": "dependency-refused",
       "module": "packages/types/src/SliderController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./GuiController was refused for @flighthq/types/packages/types/src/GuiController.ts",
       "stage": "dependency"
     },
     {
@@ -12754,7 +12733,7 @@
       "code": "dependency-refused",
       "module": "packages/types/src/SplitPaneController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./GuiController was refused for @flighthq/types/packages/types/src/GuiController.ts",
       "stage": "dependency"
     },
     {
@@ -12789,7 +12768,7 @@
       "code": "dependency-refused",
       "module": "packages/types/src/TabBarController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./GuiController was refused for @flighthq/types/packages/types/src/GuiController.ts",
       "stage": "dependency"
     },
     {
@@ -12824,7 +12803,7 @@
       "code": "dependency-refused",
       "module": "packages/types/src/TextInputController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./GuiController was refused for @flighthq/types/packages/types/src/GuiController.ts",
       "stage": "dependency"
     },
     {
@@ -12894,14 +12873,14 @@
       "code": "dependency-refused",
       "module": "packages/types/src/ToggleController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./GuiController was refused for @flighthq/types/packages/types/src/GuiController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/types/src/TooltipController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./GuiController was refused for @flighthq/types/packages/types/src/GuiController.ts",
       "stage": "dependency"
     },
     {
@@ -12915,7 +12894,7 @@
       "code": "dependency-refused",
       "module": "packages/types/src/TreeViewController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./GuiController was refused for @flighthq/types/packages/types/src/GuiController.ts",
       "stage": "dependency"
     },
     {
@@ -13195,7 +13174,7 @@
       "code": "dependency-refused",
       "module": "packages/types/src/WindowController.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Node2D was refused for @flighthq/types/packages/types/src/Node2D.ts",
+      "reason": "dependency ./ButtonController was refused for @flighthq/types/packages/types/src/ButtonController.ts",
       "stage": "dependency"
     },
     {

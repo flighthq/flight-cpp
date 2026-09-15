@@ -12,6 +12,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix3; }
+namespace flight::types { struct Vector2; }
+namespace flight::types { struct Vector3; }
+namespace flight::types { struct Vector4; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix3.hpp>
@@ -21,19 +27,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::geometry {
 
-inline void add_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> b) {
+inline void add_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> b) {
   const double ax = flight::row_get<flight::RowKey<"x">>(a);
   const double ay = flight::row_get<flight::RowKey<"y">>(a);
   const double az = flight::row_get<flight::RowKey<"z">>(a);
   const double bx = flight::row_get<flight::RowKey<"x">>(b);
   const double by = flight::row_get<flight::RowKey<"y">>(b);
   const double bz = flight::row_get<flight::RowKey<"z">>(b);
-  out->x = (ax + bx);
-  out->y = (ay + by);
-  out->z = (az + bz);
+  (out->x = (ax + bx));
+  (out->y = (ay + by));
+  (out->z = (az + bz));
 }
 
-inline void clamp_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> value, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> min, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> max) {
+inline void clamp_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> value, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> min, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> max) {
   const double vx = flight::row_get<flight::RowKey<"x">>(value);
   const double vy = flight::row_get<flight::RowKey<"y">>(value);
   const double vz = flight::row_get<flight::RowKey<"z">>(value);
@@ -43,71 +49,71 @@ inline void clamp_vector3(flight::Ref<flight::types::Vector3Like> out, flight::S
   const double max_x = flight::row_get<flight::RowKey<"x">>(max);
   const double max_y = flight::row_get<flight::RowKey<"y">>(max);
   const double max_z = flight::row_get<flight::RowKey<"z">>(max);
-  out->x = ((vx < min_x) ? min_x : ((vx > max_x) ? max_x : vx));
-  out->y = ((vy < min_y) ? min_y : ((vy > max_y) ? max_y : vy));
-  out->z = ((vz < min_z) ? min_z : ((vz > max_z) ? max_z : vz));
+  (out->x = ((vx < min_x) ? min_x : ((vx > max_x) ? max_x : vx)));
+  (out->y = ((vy < min_y) ? min_y : ((vy > max_y) ? max_y : vy)));
+  (out->z = ((vz < min_z) ? min_z : ((vz > max_z) ? max_z : vz)));
 }
 
-inline void copy_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source) {
+inline void copy_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source) {
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
-  out->x = x;
-  out->y = y;
-  out->z = z;
+  (out->x = x);
+  (out->y = y);
+  (out->z = z);
 }
 
-inline void cross_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> other) {
+inline void cross_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> other) {
   const double x = ((flight::row_get<flight::RowKey<"y">>(source) * flight::row_get<flight::RowKey<"z">>(other)) - (flight::row_get<flight::RowKey<"z">>(source) * flight::row_get<flight::RowKey<"y">>(other)));
   const double y = ((flight::row_get<flight::RowKey<"z">>(source) * flight::row_get<flight::RowKey<"x">>(other)) - (flight::row_get<flight::RowKey<"x">>(source) * flight::row_get<flight::RowKey<"z">>(other)));
   const double z = ((flight::row_get<flight::RowKey<"x">>(source) * flight::row_get<flight::RowKey<"y">>(other)) - (flight::row_get<flight::RowKey<"y">>(source) * flight::row_get<flight::RowKey<"x">>(other)));
-  out->x = x;
-  out->y = y;
-  out->z = z;
+  (out->x = x);
+  (out->y = y);
+  (out->z = z);
 }
 
-inline void divide_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> divisor) {
+inline void divide_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> divisor) {
   const double sx = flight::row_get<flight::RowKey<"x">>(source);
   const double sy = flight::row_get<flight::RowKey<"y">>(source);
   const double sz = flight::row_get<flight::RowKey<"z">>(source);
   const double dx = flight::row_get<flight::RowKey<"x">>(divisor);
   const double dy = flight::row_get<flight::RowKey<"y">>(divisor);
   const double dz = flight::row_get<flight::RowKey<"z">>(divisor);
-  out->x = ((dx != 0.0) ? (sx / dx) : 0.0);
-  out->y = ((dy != 0.0) ? (sy / dy) : 0.0);
-  out->z = ((dz != 0.0) ? (sz / dz) : 0.0);
+  (out->x = ((dx != 0.0) ? (sx / dx) : 0.0));
+  (out->y = ((dy != 0.0) ? (sy / dy) : 0.0));
+  (out->z = ((dz != 0.0) ? (sz / dz) : 0.0));
 }
 
-inline bool equals_vector3(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>, flight::Null, flight::Undefined> b) {
+inline bool equals_vector3(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>, flight::Null, flight::Undefined> b) {
   if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
-  return ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(b)) || (((flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(a)) == flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(b))) && (flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(a)) == flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(b)))) && (flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(a)) == flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>>(b)))));
+  return ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(b)) || (((flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(a)) == flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(b))) && (flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(a)) == flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(b)))) && (flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(a)) == flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(b)))));
 }
 
-inline double get_vector3_distance(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> b) {
+inline double get_vector3_distance(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> b) {
   const double x = (flight::row_get<flight::RowKey<"x">>(b) - flight::row_get<flight::RowKey<"x">>(a));
   const double y = (flight::row_get<flight::RowKey<"y">>(b) - flight::row_get<flight::RowKey<"y">>(a));
   const double z = (flight::row_get<flight::RowKey<"z">>(b) - flight::row_get<flight::RowKey<"z">>(a));
   return std::sqrt(((flight::power(x, 2.0) + flight::power(y, 2.0)) + flight::power(z, 2.0)));
 }
 
-inline double get_vector3_distance_squared(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> b) {
+inline double get_vector3_distance_squared(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> b) {
   const double x = (flight::row_get<flight::RowKey<"x">>(b) - flight::row_get<flight::RowKey<"x">>(a));
   const double y = (flight::row_get<flight::RowKey<"y">>(b) - flight::row_get<flight::RowKey<"y">>(a));
   const double z = (flight::row_get<flight::RowKey<"z">>(b) - flight::row_get<flight::RowKey<"z">>(a));
   return ((flight::power(x, 2.0) + flight::power(y, 2.0)) + flight::power(z, 2.0));
 }
 
-inline double get_vector3_dot(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> b) {
+inline double get_vector3_dot(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> b) {
   return (((flight::row_get<flight::RowKey<"x">>(a) * flight::row_get<flight::RowKey<"x">>(b)) + (flight::row_get<flight::RowKey<"y">>(a) * flight::row_get<flight::RowKey<"y">>(b))) + (flight::row_get<flight::RowKey<"z">>(a) * flight::row_get<flight::RowKey<"z">>(b)));
 }
 
-inline double get_vector3_length(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source) {
+inline double get_vector3_length(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source) {
   return std::sqrt(((flight::power(flight::row_get<flight::RowKey<"x">>(source), 2.0) + flight::power(flight::row_get<flight::RowKey<"y">>(source), 2.0)) + flight::power(flight::row_get<flight::RowKey<"z">>(source), 2.0)));
 }
 
-inline double get_vector3_angle_between(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> b) {
+inline double get_vector3_angle_between(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> b) {
   const double la = get_vector3_length(a);
   const double lb = get_vector3_length(b);
   if (((la == 0.0) || (lb == 0.0))) {
@@ -117,24 +123,24 @@ inline double get_vector3_angle_between(flight::StructuralRef<flight::RowReadonl
   return std::acos(flight::minimum(1.0, flight::maximum(-1.0, dot)));
 }
 
-inline double get_vector3_length_squared(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source) {
+inline double get_vector3_length_squared(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source) {
   return ((flight::power(flight::row_get<flight::RowKey<"x">>(source), 2.0) + flight::power(flight::row_get<flight::RowKey<"y">>(source), 2.0)) + flight::power(flight::row_get<flight::RowKey<"z">>(source), 2.0));
 }
 
-inline void get_vector3_spherical(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source) {
+inline void get_vector3_spherical(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source) {
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
   auto radius = std::sqrt((((x * x) + (y * y)) + (z * z)));
   if ((radius == 0.0)) {
-    out->x = 0.0;
-    out->y = 0.0;
-    out->z = 0.0;
+    (out->x = 0.0);
+    (out->y = 0.0);
+    (out->z = 0.0);
     return;
   }
-  out->x = radius;
-  out->y = std::acos(flight::minimum(1.0, flight::maximum(-1.0, (y / radius))));
-  out->z = std::atan2(z, x);
+  (out->x = radius);
+  (out->y = std::acos(flight::minimum(1.0, flight::maximum(-1.0, (y / radius)))));
+  (out->z = std::atan2(z, x));
 }
 
 inline void initialize_vector3(flight::types::EntityConstruction<flight::Ref<flight::types::Vector3>> out, double x, double y, double z) {
@@ -146,108 +152,108 @@ inline void initialize_vector3(flight::types::EntityConstruction<flight::Ref<fli
 inline flight::Ref<flight::types::Vector3> create_vector3(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> z = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Vector3>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Vector3>>();
   initialize_vector3(out, x.value_or(0.0), y.value_or(0.0), z.value_or(0.0));
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Vector3>>(out);
 }
 
-inline flight::Ref<flight::types::Vector3> clone_vector3(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source) {
+inline flight::Ref<flight::types::Vector3> clone_vector3(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source) {
   return create_vector3(flight::row_get<flight::RowKey<"x">>(source), flight::row_get<flight::RowKey<"y">>(source), flight::row_get<flight::RowKey<"z">>(source));
 }
 
-inline void interpolate_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> b, double t) {
+inline void interpolate_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> b, double t) {
   const double ax = flight::row_get<flight::RowKey<"x">>(a);
   const double ay = flight::row_get<flight::RowKey<"y">>(a);
   const double az = flight::row_get<flight::RowKey<"z">>(a);
   const double bx = flight::row_get<flight::RowKey<"x">>(b);
   const double by = flight::row_get<flight::RowKey<"y">>(b);
   const double bz = flight::row_get<flight::RowKey<"z">>(b);
-  out->x = (ax + (t * (bx - ax)));
-  out->y = (ay + (t * (by - ay)));
-  out->z = (az + (t * (bz - az)));
+  (out->x = (ax + (t * (bx - ax))));
+  (out->y = (ay + (t * (by - ay))));
+  (out->z = (az + (t * (bz - az))));
 }
 
-inline void max_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> b) {
+inline void max_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> b) {
   const double ax = flight::row_get<flight::RowKey<"x">>(a);
   const double ay = flight::row_get<flight::RowKey<"y">>(a);
   const double az = flight::row_get<flight::RowKey<"z">>(a);
   const double bx = flight::row_get<flight::RowKey<"x">>(b);
   const double by = flight::row_get<flight::RowKey<"y">>(b);
   const double bz = flight::row_get<flight::RowKey<"z">>(b);
-  out->x = ((ax > bx) ? ax : bx);
-  out->y = ((ay > by) ? ay : by);
-  out->z = ((az > bz) ? az : bz);
+  (out->x = ((ax > bx) ? ax : bx));
+  (out->y = ((ay > by) ? ay : by));
+  (out->z = ((az > bz) ? az : bz));
 }
 
-inline void min_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> b) {
+inline void min_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> b) {
   const double ax = flight::row_get<flight::RowKey<"x">>(a);
   const double ay = flight::row_get<flight::RowKey<"y">>(a);
   const double az = flight::row_get<flight::RowKey<"z">>(a);
   const double bx = flight::row_get<flight::RowKey<"x">>(b);
   const double by = flight::row_get<flight::RowKey<"y">>(b);
   const double bz = flight::row_get<flight::RowKey<"z">>(b);
-  out->x = ((ax < bx) ? ax : bx);
-  out->y = ((ay < by) ? ay : by);
-  out->z = ((az < bz) ? az : bz);
+  (out->x = ((ax < bx) ? ax : bx));
+  (out->y = ((ay < by) ? ay : by));
+  (out->z = ((az < bz) ? az : bz));
 }
 
-inline void multiply_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> b) {
+inline void multiply_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> b) {
   const double ax = flight::row_get<flight::RowKey<"x">>(a);
   const double ay = flight::row_get<flight::RowKey<"y">>(a);
   const double az = flight::row_get<flight::RowKey<"z">>(a);
   const double bx = flight::row_get<flight::RowKey<"x">>(b);
   const double by = flight::row_get<flight::RowKey<"y">>(b);
   const double bz = flight::row_get<flight::RowKey<"z">>(b);
-  out->x = (ax * bx);
-  out->y = (ay * by);
-  out->z = (az * bz);
+  (out->x = (ax * bx));
+  (out->y = (ay * by));
+  (out->z = (az * bz));
 }
 
-inline bool near_equals_vector3(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> b, std::optional<double> tolerance = std::nullopt) {
+inline bool near_equals_vector3(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> b, std::optional<double> tolerance = std::nullopt) {
   tolerance = tolerance.value_or(0.000001);
   return (((std::abs((flight::row_get<flight::RowKey<"x">>(a) - flight::row_get<flight::RowKey<"x">>(b))) < tolerance.value()) && (std::abs((flight::row_get<flight::RowKey<"y">>(a) - flight::row_get<flight::RowKey<"y">>(b))) < tolerance.value())) && (std::abs((flight::row_get<flight::RowKey<"z">>(a) - flight::row_get<flight::RowKey<"z">>(b))) < tolerance.value()));
 }
 
-inline void negate_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source) {
+inline void negate_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source) {
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
-  out->x = (x * -1.0);
-  out->y = (y * -1.0);
-  out->z = (z * -1.0);
+  (out->x = (x * -1.0));
+  (out->y = (y * -1.0));
+  (out->z = (z * -1.0));
 }
 
-inline double normalize_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source) {
+inline double normalize_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source) {
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
   auto l = std::sqrt(((flight::power(x, 2.0) + flight::power(y, 2.0)) + flight::power(z, 2.0)));
   if ((l != 0.0)) {
-    out->x = (x / l);
-    out->y = (y / l);
-    out->z = (z / l);
+    (out->x = (x / l));
+    (out->y = (y / l));
+    (out->z = (z / l));
   }
   else {
-    out->x = 0.0;
-    out->y = 0.0;
-    out->z = 0.0;
+    (out->x = 0.0);
+    (out->y = 0.0);
+    (out->z = 0.0);
   }
   return l;
 }
 
-inline void offset_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source, double dx, double dy, double dz) {
+inline void offset_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source, double dx, double dy, double dz) {
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
-  out->x = (x + dx);
-  out->y = (y + dy);
-  out->z = (z + dz);
+  (out->x = (x + dx));
+  (out->y = (y + dy));
+  (out->z = (z + dz));
 }
 
-inline void project_vector3(flight::Ref<flight::types::Vector2Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source) {
-  out->x = (flight::row_get<flight::RowKey<"x">>(source) / flight::row_get<flight::RowKey<"z">>(source));
-  out->y = (flight::row_get<flight::RowKey<"y">>(source) / flight::row_get<flight::RowKey<"z">>(source));
+inline void project_vector3(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source) {
+  (out->x = (flight::row_get<flight::RowKey<"x">>(source) / flight::row_get<flight::RowKey<"z">>(source)));
+  (out->y = (flight::row_get<flight::RowKey<"y">>(source) / flight::row_get<flight::RowKey<"z">>(source)));
 }
 
-inline void reflect_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> incident, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> normal) {
+inline void reflect_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> incident, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> normal) {
   const double ix = flight::row_get<flight::RowKey<"x">>(incident);
   const double iy = flight::row_get<flight::RowKey<"y">>(incident);
   const double iz = flight::row_get<flight::RowKey<"z">>(incident);
@@ -255,80 +261,80 @@ inline void reflect_vector3(flight::Ref<flight::types::Vector3Like> out, flight:
   const double ny = flight::row_get<flight::RowKey<"y">>(normal);
   const double nz = flight::row_get<flight::RowKey<"z">>(normal);
   const double two_dot = (2.0 * (((ix * nx) + (iy * ny)) + (iz * nz)));
-  out->x = (ix - (two_dot * nx));
-  out->y = (iy - (two_dot * ny));
-  out->z = (iz - (two_dot * nz));
+  (out->x = (ix - (two_dot * nx)));
+  (out->y = (iy - (two_dot * ny)));
+  (out->z = (iz - (two_dot * nz)));
 }
 
-inline void scale_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source, double scalar) {
+inline void scale_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source, double scalar) {
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
-  out->x = (x * scalar);
-  out->y = (y * scalar);
-  out->z = (z * scalar);
+  (out->x = (x * scalar));
+  (out->y = (y * scalar));
+  (out->z = (z * scalar));
 }
 
-inline void set_vector3(flight::Ref<flight::types::Vector3Like> out, double x, double y, double z) {
-  out->x = x;
-  out->y = y;
-  out->z = z;
+inline void set_vector3(flight::types::Vector3Like out, double x, double y, double z) {
+  (out->x = x);
+  (out->y = y);
+  (out->z = z);
 }
 
-inline void set_vector3_from_float32_array(flight::Ref<flight::types::Vector3Like> out, double offset, flight::Float32Array source) {
-  out->x = source.element(offset);
-  out->y = source.element((offset + 1.0));
-  out->z = source.element((offset + 2.0));
+inline void set_vector3_from_float32_array(flight::types::Vector3Like out, double offset, flight::Float32Array source) {
+  (out->x = source.element(offset));
+  (out->y = source.element((offset + 1.0)));
+  (out->z = source.element((offset + 2.0)));
 }
 
-inline void set_vector3_from_spherical(flight::Ref<flight::types::Vector3Like> out, double radius, double theta, double phi) {
+inline void set_vector3_from_spherical(flight::types::Vector3Like out, double radius, double theta, double phi) {
   auto sin_theta = std::sin(theta);
-  out->x = ((radius * sin_theta) * std::cos(phi));
-  out->y = (radius * std::cos(theta));
-  out->z = ((radius * sin_theta) * std::sin(phi));
+  (out->x = ((radius * sin_theta) * std::cos(phi)));
+  (out->y = (radius * std::cos(theta)));
+  (out->z = ((radius * sin_theta) * std::sin(phi)));
 }
 
 inline flight::Ref<flight::types::Vector3> create_vector3_from_spherical(double radius, double theta, double phi) {
-  flight::Ref<flight::types::Vector3> out = create_vector3();
+  flight::Ref<flight::types::Vector3> out = create_vector3(std::nullopt, std::nullopt, std::nullopt);
   set_vector3_from_spherical(out, radius, theta, phi);
   return out;
 }
 
-inline void set_vector3_from_vector4(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>> source) {
+inline void set_vector3_from_vector4(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> source) {
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
-  out->x = x;
-  out->y = y;
-  out->z = z;
+  (out->x = x);
+  (out->y = y);
+  (out->z = z);
 }
 
-inline void subtract_vector3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> other) {
+inline void subtract_vector3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> other) {
   const double sx = flight::row_get<flight::RowKey<"x">>(source);
   const double sy = flight::row_get<flight::RowKey<"y">>(source);
   const double sz = flight::row_get<flight::RowKey<"z">>(source);
   const double ox = flight::row_get<flight::RowKey<"x">>(other);
   const double oy = flight::row_get<flight::RowKey<"y">>(other);
   const double oz = flight::row_get<flight::RowKey<"z">>(other);
-  out->x = (sx - ox);
-  out->y = (sy - oy);
-  out->z = (sz - oz);
+  (out->x = (sx - ox));
+  (out->y = (sy - oy));
+  (out->z = (sz - oz));
 }
 
-inline void transform_vector3_by_matrix3(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>> matrix) {
+inline void transform_vector3_by_matrix3(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix3Like>>> matrix) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"m">>(matrix);
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
-  out->x = (((m.element(0.0) * x) + (m.element(3.0) * y)) + (m.element(6.0) * z));
-  out->y = (((m.element(1.0) * x) + (m.element(4.0) * y)) + (m.element(7.0) * z));
-  out->z = (((m.element(2.0) * x) + (m.element(5.0) * y)) + (m.element(8.0) * z));
+  (out->x = (((m.element(0.0) * x) + (m.element(3.0) * y)) + (m.element(6.0) * z)));
+  (out->y = (((m.element(1.0) * x) + (m.element(4.0) * y)) + (m.element(7.0) * z)));
+  (out->z = (((m.element(2.0) * x) + (m.element(5.0) * y)) + (m.element(8.0) * z)));
 }
 
-inline void write_vector3_to_float32_array(flight::Float32Array out, double offset, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source) {
-  out.element(offset) = flight::row_get<flight::RowKey<"x">>(source);
-  out.element((offset + 1.0)) = flight::row_get<flight::RowKey<"y">>(source);
-  out.element((offset + 2.0)) = flight::row_get<flight::RowKey<"z">>(source);
+inline void write_vector3_to_float32_array(flight::Float32Array out, double offset, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source) {
+  (out.element(offset) = flight::row_get<flight::RowKey<"x">>(source));
+  (out.element((offset + 1.0)) = flight::row_get<flight::RowKey<"y">>(source));
+  (out.element((offset + 2.0)) = flight::row_get<flight::RowKey<"z">>(source));
 }
 
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3>>>> vector3_x_axis = create_vector3(1.0, 0.0, 0.0);

@@ -67,10 +67,10 @@ struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_spa
 
 struct AnimatedNormalModifierOptions : public flight::ReferenceEnabled {
   std::optional<std::variant<flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<Texture2D>>> map;
-  flight::Ref<flight::types::Vector2Like> scroll;
+  flight::types::Vector2Like scroll;
   std::optional<double> strength;
   std::optional<flight::types::Texture> secondary_map;
-  std::optional<flight::Ref<flight::types::Vector2Like>> secondary_scroll;
+  std::optional<flight::types::Vector2Like> secondary_scroll;
 };
 
 } // namespace flight::types

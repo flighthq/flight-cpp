@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct GrayscaleAdjustment; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/adjustment_kind.hpp>
 #include <flight/types/entity.hpp>
@@ -24,7 +27,7 @@ inline void initialize_grayscale_adjustment(flight::types::EntityConstruction<fl
   const double lg = (0.7152 * k);
   const double lb = (0.0722 * k);
   flight::Array<double> color_matrix = flight::Array<double>{(j + lr), lg, lb, 0.0, 0.0, lr, (j + lg), lb, 0.0, 0.0, lr, lg, (j + lb), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
-  flight::adjustments::initialize_color_matrix_adjustment(out, flight::String("GrayscaleAdjustment"), color_matrix);
+  flight::adjustments::initialize_color_matrix_adjustment<flight::Ref<flight::types::GrayscaleAdjustment>>(out, flight::String("GrayscaleAdjustment"), color_matrix);
   flight::row_set<flight::RowKey<"intensity">>(out, std::optional<double>{intensity});
 }
 
@@ -32,7 +35,7 @@ inline flight::Ref<flight::types::GrayscaleAdjustment> create_grayscale_adjustme
   options = options.value_or(flight::make_ref<flight::types::GrayscaleAdjustment>(flight::types::GrayscaleAdjustment{}));
   flight::types::EntityConstruction<flight::Ref<flight::types::GrayscaleAdjustment>> out = flight::entity::allocate_entity<flight::Ref<flight::types::GrayscaleAdjustment>>();
   initialize_grayscale_adjustment(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::GrayscaleAdjustment>>(out);
 }
 
 } // namespace flight::adjustments

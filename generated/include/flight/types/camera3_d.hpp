@@ -7,6 +7,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Vector2; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/vector2.hpp>
@@ -44,6 +49,6 @@ struct Camera3D : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Matrix4> view;
 };
 
-using Camera3DLike = flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<Camera3D>>>;
+using Camera3DLike = flight::types::EntityWithoutRuntime<flight::Ref<Camera3D>>;
 
 } // namespace flight::types

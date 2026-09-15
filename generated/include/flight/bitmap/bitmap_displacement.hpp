@@ -10,6 +10,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct BitmapDisplacementMapOptions; }
+namespace flight::types { struct BitmapRegion; }
+
 #include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_displacement_map_mode.hpp>
@@ -88,26 +92,26 @@ inline void displace_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
               double sample_y = raw_sample_y;
               if ((!edge_mode.has_value() && ((((raw_sample_x < 0.0) || (raw_sample_x >= w)) || (raw_sample_y < 0.0)) || (raw_sample_y >= h)))) {
                 if ((mode == flight::String("wrap"))) {
-                  sample_x = std::fmod((std::fmod(raw_sample_x, w) + w), w);
-                  sample_y = std::fmod((std::fmod(raw_sample_y, h) + h), h);
+                  (sample_x = std::fmod((std::fmod(raw_sample_x, w) + w), w));
+                  (sample_y = std::fmod((std::fmod(raw_sample_y, h) + h), h));
                 }
                 else {
                   if ((mode == flight::String("clamp"))) {
-                    sample_x = flight::maximum(0.0, flight::minimum((w - 1.0), raw_sample_x));
-                    sample_y = flight::maximum(0.0, flight::minimum((h - 1.0), raw_sample_y));
+                    (sample_x = flight::maximum(0.0, flight::minimum((w - 1.0), raw_sample_x)));
+                    (sample_y = flight::maximum(0.0, flight::minimum((h - 1.0), raw_sample_y)));
                   }
                   else {
                     if ((mode == flight::String("ignore"))) {
-                      sample_x = px;
-                      sample_y = py;
+                      (sample_x = px);
+                      (sample_y = py);
                     }
                     else {
-                      out.element(di) = fill_r;
-                      out.element((di + 1.0)) = fill_g;
-                      out.element((di + 2.0)) = fill_b;
-                      out.element((di + 3.0)) = fill_a;
+                      (out.element(di) = fill_r);
+                      (out.element((di + 1.0)) = fill_g);
+                      (out.element((di + 2.0)) = fill_b);
+                      (out.element((di + 3.0)) = fill_a);
                       {
-                        px += 1.0;
+                        (px += 1.0);
                         continue;
                       }
                     }
@@ -134,17 +138,17 @@ inline void displace_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                   {
                     const double top = ((((i00 < 0.0) ? 0.0 : static_cast<double>(s_data.element((i00 + c)))) * (1.0 - tx)) + (((i10 < 0.0) ? 0.0 : static_cast<double>(s_data.element((i10 + c)))) * tx));
                     const double bottom = ((((i01 < 0.0) ? 0.0 : static_cast<double>(s_data.element((i01 + c)))) * (1.0 - tx)) + (((i11 < 0.0) ? 0.0 : static_cast<double>(s_data.element((i11 + c)))) * tx));
-                    out.element((di + c)) = flight::round(((top * (1.0 - ty)) + (bottom * ty)));
+                    (out.element((di + c)) = flight::round(((top * (1.0 - ty)) + (bottom * ty))));
                   }
-                  c += 1.0;
+                  (c += 1.0);
                 }
               }
             }
-            px += 1.0;
+            (px += 1.0);
           }
         }
       }
-      py += 1.0;
+      (py += 1.0);
     }
   }
 }

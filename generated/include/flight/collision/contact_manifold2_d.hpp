@@ -6,6 +6,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CollisionContactManifold2D; }
+namespace flight::types { struct CollisionContactPoint2D; }
+namespace flight::types { struct Entity; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
@@ -13,11 +17,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::collision {
 
 inline void clear_collision_contact_manifold2_d(flight::Ref<flight::types::CollisionContactManifold2D> out) {
-  out->overlapping = false;
-  out->normal_x = 0.0;
-  out->normal_y = 0.0;
-  out->depth = 0.0;
-  out->point_count = 0.0;
+  (out->overlapping = false);
+  (out->normal_x = 0.0);
+  (out->normal_y = 0.0);
+  (out->depth = 0.0);
+  (out->point_count = 0.0);
 }
 
 inline flight::Ref<flight::types::CollisionContactPoint2D> create_contact_point() {
@@ -36,7 +40,7 @@ inline void initialize_collision_contact_manifold2_d(flight::types::EntityConstr
 inline flight::Ref<flight::types::CollisionContactManifold2D> create_collision_contact_manifold2_d() {
   flight::types::EntityConstruction<flight::Ref<flight::types::CollisionContactManifold2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::CollisionContactManifold2D>>();
   initialize_collision_contact_manifold2_d(out);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::CollisionContactManifold2D>>(out);
 }
 
 } // namespace flight::collision

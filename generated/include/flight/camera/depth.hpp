@@ -7,6 +7,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Camera3D; }
+namespace flight::types { struct Matrix4; }
+namespace flight::types { struct OrthographicProjection; }
+namespace flight::types { struct PerspectiveProjection; }
+namespace flight::types { struct Vector2; }
+
 #include <flight/types/camera3_d.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/vector2.hpp>

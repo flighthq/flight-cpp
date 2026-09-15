@@ -18,7 +18,7 @@ inline void report_text_segmenter_unavailable() {
 }
 
 inline void set_text_segment_guard(std::optional<std::function<void()>> guard) {
-  guard = guard;
+  (guard = guard);
 }
 
 } // namespace flight::textsegment

@@ -5,6 +5,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct TimelineSignals; }
+
 #include <flight/types/timeline_signals.hpp>
 
 namespace flight::types {

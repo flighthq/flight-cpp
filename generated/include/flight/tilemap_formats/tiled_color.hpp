@@ -13,7 +13,7 @@ namespace flight::tilemap_formats {
 inline std::optional<double> parse_tiled_color(flight::String text) {
   auto s = text.trim();
   if (s.starts_with(flight::String("#"))) {
-    s = s.slice(1.0);
+    (s = s.slice(1.0));
   }
   if (!flight::RegExp(flight::String("^[0-9a-fA-F]+$"), flight::String("")).test(s)) {
     return std::nullopt;
@@ -32,11 +32,11 @@ inline std::optional<double> parse_tiled_color(flight::String text) {
 }
 
 inline flight::String hex2(double value) {
-  return flight::to_string(value).pad_start(2.0, flight::String("0"));
+  return flight::number_to_string(value, 16.0).pad_start(2.0, flight::String("0"));
 }
 
 inline flight::String hex6(double value) {
-  return flight::to_string(value).pad_start(6.0, flight::String("0"));
+  return flight::number_to_string(value, 16.0).pad_start(6.0, flight::String("0"));
 }
 
 inline flight::String format_tiled_color(double packed) {

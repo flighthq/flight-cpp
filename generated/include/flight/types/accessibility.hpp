@@ -9,6 +9,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct Rectangle; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/rectangle.hpp>
 #include <flight/types/entity.hpp>
@@ -68,7 +72,7 @@ struct reason_45ec1a34e73584a8 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_45EC1A34E73584A8
 
-template <typename BlockReason>
+template <typename BlockReason = flight::String>
 using AccessibilityOperationOutcome = std::variant<flight::Ref<reason_45ec1a34e73584a8<BlockReason>>, flight::Ref<reason_70c0cfd9de29194d<BlockReason>>>;
 
 struct AccessibilityBackend : public flight::ReferenceEnabled {

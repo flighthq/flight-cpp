@@ -41,10 +41,10 @@ inline flight::types::LinearColor lerp_linear_color(flight::types::LinearColor o
   const double g1 = end.element(1.0);
   const double b1 = end.element(2.0);
   const double a1 = end.element(3.0);
-  out.element(0.0) = (r0 + ((r1 - r0) * tc));
-  out.element(1.0) = (g0 + ((g1 - g0) * tc));
-  out.element(2.0) = (b0 + ((b1 - b0) * tc));
-  out.element(3.0) = (a0 + ((a1 - a0) * tc));
+  (out.element(0.0) = (r0 + ((r1 - r0) * tc)));
+  (out.element(1.0) = (g0 + ((g1 - g0) * tc)));
+  (out.element(2.0) = (b0 + ((b1 - b0) * tc)));
+  (out.element(3.0) = (a0 + ((a1 - a0) * tc)));
   return out;
 }
 

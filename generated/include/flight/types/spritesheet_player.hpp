@@ -7,6 +7,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct SpritesheetAnimation; }
+namespace flight::types { template <typename T> struct Signal; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/types/spritesheet_animation.hpp>

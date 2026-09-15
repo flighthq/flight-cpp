@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct SharpenEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/sharpen_effect.hpp>
@@ -22,7 +25,7 @@ struct amount_f4cf56f49935cc00 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_F4CF56F49935CC00
 
 inline void initialize_sharpen_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SharpenEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount_f4cf56f49935cc00>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("SharpenEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::SharpenEffect>>(out, flight::String("SharpenEffect"));
   flight::row_set<flight::RowKey<"amount">>(out, flight::row_get<flight::RowKey<"amount">>(options));
 }
 
@@ -30,7 +33,7 @@ inline flight::Ref<flight::types::SharpenEffect> create_sharpen_effect(std::opti
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<amount_f4cf56f49935cc00>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::SharpenEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SharpenEffect>>();
   initialize_sharpen_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SharpenEffect>>(out);
 }
 
 } // namespace flight::effects

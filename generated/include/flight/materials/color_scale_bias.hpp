@@ -10,64 +10,67 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct ColorScaleBias; }
+namespace flight::types { struct Entity; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/color_scale_bias.hpp>
 #include <flight/types/entity.hpp>
 
 namespace flight::materials {
 
-inline void concat_color_scale_bias(flight::Ref<flight::types::ColorScaleBiasLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> other) {
-  out->red_bias = ((flight::row_get<flight::RowKey<"redScale">>(source) * flight::row_get<flight::RowKey<"redBias">>(other)) + flight::row_get<flight::RowKey<"redBias">>(source));
-  out->green_bias = ((flight::row_get<flight::RowKey<"greenScale">>(source) * flight::row_get<flight::RowKey<"greenBias">>(other)) + flight::row_get<flight::RowKey<"greenBias">>(source));
-  out->blue_bias = ((flight::row_get<flight::RowKey<"blueScale">>(source) * flight::row_get<flight::RowKey<"blueBias">>(other)) + flight::row_get<flight::RowKey<"blueBias">>(source));
-  out->alpha_bias = ((flight::row_get<flight::RowKey<"alphaScale">>(source) * flight::row_get<flight::RowKey<"alphaBias">>(other)) + flight::row_get<flight::RowKey<"alphaBias">>(source));
-  out->red_scale = (flight::row_get<flight::RowKey<"redScale">>(source) * flight::row_get<flight::RowKey<"redScale">>(other));
-  out->green_scale = (flight::row_get<flight::RowKey<"greenScale">>(source) * flight::row_get<flight::RowKey<"greenScale">>(other));
-  out->blue_scale = (flight::row_get<flight::RowKey<"blueScale">>(source) * flight::row_get<flight::RowKey<"blueScale">>(other));
-  out->alpha_scale = (flight::row_get<flight::RowKey<"alphaScale">>(source) * flight::row_get<flight::RowKey<"alphaScale">>(other));
+inline void concat_color_scale_bias(flight::types::ColorScaleBiasLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> other) {
+  (out->red_bias = ((flight::row_get<flight::RowKey<"redScale">>(source) * flight::row_get<flight::RowKey<"redBias">>(other)) + flight::row_get<flight::RowKey<"redBias">>(source)));
+  (out->green_bias = ((flight::row_get<flight::RowKey<"greenScale">>(source) * flight::row_get<flight::RowKey<"greenBias">>(other)) + flight::row_get<flight::RowKey<"greenBias">>(source)));
+  (out->blue_bias = ((flight::row_get<flight::RowKey<"blueScale">>(source) * flight::row_get<flight::RowKey<"blueBias">>(other)) + flight::row_get<flight::RowKey<"blueBias">>(source)));
+  (out->alpha_bias = ((flight::row_get<flight::RowKey<"alphaScale">>(source) * flight::row_get<flight::RowKey<"alphaBias">>(other)) + flight::row_get<flight::RowKey<"alphaBias">>(source)));
+  (out->red_scale = (flight::row_get<flight::RowKey<"redScale">>(source) * flight::row_get<flight::RowKey<"redScale">>(other)));
+  (out->green_scale = (flight::row_get<flight::RowKey<"greenScale">>(source) * flight::row_get<flight::RowKey<"greenScale">>(other)));
+  (out->blue_scale = (flight::row_get<flight::RowKey<"blueScale">>(source) * flight::row_get<flight::RowKey<"blueScale">>(other)));
+  (out->alpha_scale = (flight::row_get<flight::RowKey<"alphaScale">>(source) * flight::row_get<flight::RowKey<"alphaScale">>(other)));
 }
 
-inline void copy_color_scale_bias(flight::Ref<flight::types::ColorScaleBiasLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> source) {
-  out->red_scale = flight::row_get<flight::RowKey<"redScale">>(source);
-  out->green_scale = flight::row_get<flight::RowKey<"greenScale">>(source);
-  out->blue_scale = flight::row_get<flight::RowKey<"blueScale">>(source);
-  out->alpha_scale = flight::row_get<flight::RowKey<"alphaScale">>(source);
-  out->red_bias = flight::row_get<flight::RowKey<"redBias">>(source);
-  out->green_bias = flight::row_get<flight::RowKey<"greenBias">>(source);
-  out->blue_bias = flight::row_get<flight::RowKey<"blueBias">>(source);
-  out->alpha_bias = flight::row_get<flight::RowKey<"alphaBias">>(source);
+inline void copy_color_scale_bias(flight::types::ColorScaleBiasLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> source) {
+  (out->red_scale = flight::row_get<flight::RowKey<"redScale">>(source));
+  (out->green_scale = flight::row_get<flight::RowKey<"greenScale">>(source));
+  (out->blue_scale = flight::row_get<flight::RowKey<"blueScale">>(source));
+  (out->alpha_scale = flight::row_get<flight::RowKey<"alphaScale">>(source));
+  (out->red_bias = flight::row_get<flight::RowKey<"redBias">>(source));
+  (out->green_bias = flight::row_get<flight::RowKey<"greenBias">>(source));
+  (out->blue_bias = flight::row_get<flight::RowKey<"blueBias">>(source));
+  (out->alpha_bias = flight::row_get<flight::RowKey<"alphaBias">>(source));
 }
 
-inline void copy_color_scale_bias_to_arrays(flight::Array<double> out_color_scales, flight::Array<double> out_color_biases, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> source) {
-  out_color_scales.element(0.0) = flight::row_get<flight::RowKey<"redScale">>(source);
-  out_color_scales.element(1.0) = flight::row_get<flight::RowKey<"greenScale">>(source);
-  out_color_scales.element(2.0) = flight::row_get<flight::RowKey<"blueScale">>(source);
-  out_color_scales.element(3.0) = flight::row_get<flight::RowKey<"alphaScale">>(source);
-  out_color_biases.element(0.0) = flight::row_get<flight::RowKey<"redBias">>(source);
-  out_color_biases.element(1.0) = flight::row_get<flight::RowKey<"greenBias">>(source);
-  out_color_biases.element(2.0) = flight::row_get<flight::RowKey<"blueBias">>(source);
-  out_color_biases.element(3.0) = flight::row_get<flight::RowKey<"alphaBias">>(source);
+inline void copy_color_scale_bias_to_arrays(flight::Array<double> out_color_scales, flight::Array<double> out_color_biases, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> source) {
+  (out_color_scales.element(0.0) = flight::row_get<flight::RowKey<"redScale">>(source));
+  (out_color_scales.element(1.0) = flight::row_get<flight::RowKey<"greenScale">>(source));
+  (out_color_scales.element(2.0) = flight::row_get<flight::RowKey<"blueScale">>(source));
+  (out_color_scales.element(3.0) = flight::row_get<flight::RowKey<"alphaScale">>(source));
+  (out_color_biases.element(0.0) = flight::row_get<flight::RowKey<"redBias">>(source));
+  (out_color_biases.element(1.0) = flight::row_get<flight::RowKey<"greenBias">>(source));
+  (out_color_biases.element(2.0) = flight::row_get<flight::RowKey<"blueBias">>(source));
+  (out_color_biases.element(3.0) = flight::row_get<flight::RowKey<"alphaBias">>(source));
 }
 
-inline bool equals_color_scale_bias_biases(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> b, std::optional<bool> compare_alpha = std::nullopt) {
+inline bool equals_color_scale_bias_biases(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> b, std::optional<bool> compare_alpha = std::nullopt) {
   compare_alpha = compare_alpha.value_or(true);
   return ((((flight::row_get<flight::RowKey<"redBias">>(a) == flight::row_get<flight::RowKey<"redBias">>(b)) && (flight::row_get<flight::RowKey<"greenBias">>(a) == flight::row_get<flight::RowKey<"greenBias">>(b))) && (flight::row_get<flight::RowKey<"blueBias">>(a) == flight::row_get<flight::RowKey<"blueBias">>(b))) && (!compare_alpha.value() || (flight::row_get<flight::RowKey<"alphaBias">>(a) == flight::row_get<flight::RowKey<"alphaBias">>(b))));
 }
 
-inline bool equals_color_scale_bias_scales(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> b, std::optional<bool> compare_alpha = std::nullopt) {
+inline bool equals_color_scale_bias_scales(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> b, std::optional<bool> compare_alpha = std::nullopt) {
   compare_alpha = compare_alpha.value_or(true);
   return ((((flight::row_get<flight::RowKey<"redScale">>(a) == flight::row_get<flight::RowKey<"redScale">>(b)) && (flight::row_get<flight::RowKey<"greenScale">>(a) == flight::row_get<flight::RowKey<"greenScale">>(b))) && (flight::row_get<flight::RowKey<"blueScale">>(a) == flight::row_get<flight::RowKey<"blueScale">>(b))) && (!compare_alpha.value() || (flight::row_get<flight::RowKey<"alphaScale">>(a) == flight::row_get<flight::RowKey<"alphaScale">>(b))));
 }
 
-inline bool equals_color_scale_bias(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> b) {
-  return (equals_color_scale_bias_biases(a, b) && equals_color_scale_bias_scales(a, b));
+inline bool equals_color_scale_bias(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> b) {
+  return (equals_color_scale_bias_biases(a, b, std::nullopt) && equals_color_scale_bias_scales(a, b, std::nullopt));
 }
 
-inline double get_color_scale_bias_bias_rgb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> source) {
+inline double get_color_scale_bias_bias_rgb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> source) {
   return flight::bitwise_or(flight::bitwise_or(flight::left_shift(flight::round((flight::row_get<flight::RowKey<"redBias">>(source) * 255.0)), 16.0), flight::left_shift(flight::round((flight::row_get<flight::RowKey<"greenBias">>(source) * 255.0)), 8.0)), flight::round((flight::row_get<flight::RowKey<"blueBias">>(source) * 255.0)));
 }
 
-inline double get_color_scale_bias_bias_rgba(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> source) {
+inline double get_color_scale_bias_bias_rgba(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> source) {
   return flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::left_shift(flight::round((flight::row_get<flight::RowKey<"redBias">>(source) * 255.0)), 24.0), flight::left_shift(flight::round((flight::row_get<flight::RowKey<"greenBias">>(source) * 255.0)), 16.0)), flight::left_shift(flight::round((flight::row_get<flight::RowKey<"blueBias">>(source) * 255.0)), 8.0)), flight::round((flight::row_get<flight::RowKey<"alphaBias">>(source) * 255.0)));
 }
 
@@ -99,66 +102,66 @@ inline void initialize_color_scale_bias(flight::types::EntityConstruction<flight
 inline flight::Ref<flight::types::ColorScaleBias> create_color_scale_bias(std::optional<flight::Ref<alpha_scale_alpha_bias_blue_scale_blue_bias_green_scale_green_bias_red_scale_red_bias_bffcf35e518714e2>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::ColorScaleBias>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ColorScaleBias>>();
   initialize_color_scale_bias(out, opts);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::ColorScaleBias>>(out);
 }
 
-inline flight::Ref<flight::types::ColorScaleBias> clone_color_scale_bias(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> source) {
+inline flight::Ref<flight::types::ColorScaleBias> clone_color_scale_bias(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> source) {
   return create_color_scale_bias(source);
 }
 
-inline void invert_color_scale_bias(flight::Ref<flight::types::ColorScaleBiasLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> source) {
-  out->red_scale = ((flight::row_get<flight::RowKey<"redScale">>(source) != 0.0) ? (1.0 / flight::row_get<flight::RowKey<"redScale">>(source)) : 1.0);
-  out->green_scale = ((flight::row_get<flight::RowKey<"greenScale">>(source) != 0.0) ? (1.0 / flight::row_get<flight::RowKey<"greenScale">>(source)) : 1.0);
-  out->blue_scale = ((flight::row_get<flight::RowKey<"blueScale">>(source) != 0.0) ? (1.0 / flight::row_get<flight::RowKey<"blueScale">>(source)) : 1.0);
-  out->alpha_scale = ((flight::row_get<flight::RowKey<"alphaScale">>(source) != 0.0) ? (1.0 / flight::row_get<flight::RowKey<"alphaScale">>(source)) : 1.0);
-  out->red_bias = -flight::row_get<flight::RowKey<"redBias">>(source);
-  out->green_bias = -flight::row_get<flight::RowKey<"greenBias">>(source);
-  out->blue_bias = -flight::row_get<flight::RowKey<"blueBias">>(source);
-  out->alpha_bias = -flight::row_get<flight::RowKey<"alphaBias">>(source);
+inline void invert_color_scale_bias(flight::types::ColorScaleBiasLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> source) {
+  (out->red_scale = ((flight::row_get<flight::RowKey<"redScale">>(source) != 0.0) ? (1.0 / flight::row_get<flight::RowKey<"redScale">>(source)) : 1.0));
+  (out->green_scale = ((flight::row_get<flight::RowKey<"greenScale">>(source) != 0.0) ? (1.0 / flight::row_get<flight::RowKey<"greenScale">>(source)) : 1.0));
+  (out->blue_scale = ((flight::row_get<flight::RowKey<"blueScale">>(source) != 0.0) ? (1.0 / flight::row_get<flight::RowKey<"blueScale">>(source)) : 1.0));
+  (out->alpha_scale = ((flight::row_get<flight::RowKey<"alphaScale">>(source) != 0.0) ? (1.0 / flight::row_get<flight::RowKey<"alphaScale">>(source)) : 1.0));
+  (out->red_bias = -flight::row_get<flight::RowKey<"redBias">>(source));
+  (out->green_bias = -flight::row_get<flight::RowKey<"greenBias">>(source));
+  (out->blue_bias = -flight::row_get<flight::RowKey<"blueBias">>(source));
+  (out->alpha_bias = -flight::row_get<flight::RowKey<"alphaBias">>(source));
 }
 
-inline void set_color_scale_bias(flight::Ref<flight::types::ColorScaleBiasLike> out, double red_scale, double green_scale, double blue_scale, double alpha_scale, double red_bias, double green_bias, double blue_bias, double alpha_bias) {
-  out->red_scale = red_scale;
-  out->green_scale = green_scale;
-  out->blue_scale = blue_scale;
-  out->alpha_scale = alpha_scale;
-  out->red_bias = red_bias;
-  out->green_bias = green_bias;
-  out->blue_bias = blue_bias;
-  out->alpha_bias = alpha_bias;
+inline void set_color_scale_bias(flight::types::ColorScaleBiasLike out, double red_scale, double green_scale, double blue_scale, double alpha_scale, double red_bias, double green_bias, double blue_bias, double alpha_bias) {
+  (out->red_scale = red_scale);
+  (out->green_scale = green_scale);
+  (out->blue_scale = blue_scale);
+  (out->alpha_scale = alpha_scale);
+  (out->red_bias = red_bias);
+  (out->green_bias = green_bias);
+  (out->blue_bias = blue_bias);
+  (out->alpha_bias = alpha_bias);
 }
 
-inline void set_color_scale_bias_bias_rgb(flight::Ref<flight::types::ColorScaleBiasLike> out, double value) {
-  out->red_bias = (flight::bitwise_and(flight::signed_right_shift(value, 16.0), 255.0) / 255.0);
-  out->green_bias = (flight::bitwise_and(flight::signed_right_shift(value, 8.0), 255.0) / 255.0);
-  out->blue_bias = (flight::bitwise_and(value, 255.0) / 255.0);
-  out->alpha_bias = 0.0;
-  out->red_scale = 0.0;
-  out->green_scale = 0.0;
-  out->blue_scale = 0.0;
-  out->alpha_scale = 1.0;
+inline void set_color_scale_bias_bias_rgb(flight::types::ColorScaleBiasLike out, double value) {
+  (out->red_bias = (flight::bitwise_and(flight::signed_right_shift(value, 16.0), 255.0) / 255.0));
+  (out->green_bias = (flight::bitwise_and(flight::signed_right_shift(value, 8.0), 255.0) / 255.0));
+  (out->blue_bias = (flight::bitwise_and(value, 255.0) / 255.0));
+  (out->alpha_bias = 0.0);
+  (out->red_scale = 0.0);
+  (out->green_scale = 0.0);
+  (out->blue_scale = 0.0);
+  (out->alpha_scale = 1.0);
 }
 
-inline void set_color_scale_bias_bias_rgba(flight::Ref<flight::types::ColorScaleBiasLike> out, double value) {
-  out->red_bias = (flight::bitwise_and(flight::signed_right_shift(value, 24.0), 255.0) / 255.0);
-  out->green_bias = (flight::bitwise_and(flight::signed_right_shift(value, 16.0), 255.0) / 255.0);
-  out->blue_bias = (flight::bitwise_and(flight::signed_right_shift(value, 8.0), 255.0) / 255.0);
-  out->alpha_bias = (flight::bitwise_and(value, 255.0) / 255.0);
-  out->red_scale = 0.0;
-  out->green_scale = 0.0;
-  out->blue_scale = 0.0;
-  out->alpha_scale = 0.0;
+inline void set_color_scale_bias_bias_rgba(flight::types::ColorScaleBiasLike out, double value) {
+  (out->red_bias = (flight::bitwise_and(flight::signed_right_shift(value, 24.0), 255.0) / 255.0));
+  (out->green_bias = (flight::bitwise_and(flight::signed_right_shift(value, 16.0), 255.0) / 255.0));
+  (out->blue_bias = (flight::bitwise_and(flight::signed_right_shift(value, 8.0), 255.0) / 255.0));
+  (out->alpha_bias = (flight::bitwise_and(value, 255.0) / 255.0));
+  (out->red_scale = 0.0);
+  (out->green_scale = 0.0);
+  (out->blue_scale = 0.0);
+  (out->alpha_scale = 0.0);
 }
 
 inline void set_color_scale_bias_identity(flight::Ref<flight::types::ColorScaleBias> out) {
   set_color_scale_bias(out, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0);
 }
 
-inline flight::Ref<flight::types::ColorScaleBias> identity = create_color_scale_bias();
+inline flight::Ref<flight::types::ColorScaleBias> identity = create_color_scale_bias(std::nullopt);
 
-inline bool is_identity_color_scale_bias(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> source, std::optional<bool> compare_alpha_scale = std::nullopt) {
+inline bool is_identity_color_scale_bias(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> source, std::optional<bool> compare_alpha_scale = std::nullopt) {
   compare_alpha_scale = compare_alpha_scale.value_or(true);
-  return (equals_color_scale_bias_biases(source, identity) && equals_color_scale_bias_scales(source, identity, compare_alpha_scale.value()));
+  return (equals_color_scale_bias_biases(source, identity, std::nullopt) && equals_color_scale_bias_scales(source, identity, compare_alpha_scale.value()));
 }
 
 } // namespace flight::materials

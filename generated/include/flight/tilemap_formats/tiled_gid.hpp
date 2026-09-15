@@ -7,6 +7,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct TiledGid; }
+namespace flight::types { struct TiledMap; }
+namespace flight::types { struct TiledObject; }
+namespace flight::types { struct TiledProperty; }
+namespace flight::types { struct TiledTileset; }
+namespace flight::types { struct TiledTilesetRef; }
+
 #include <flight/types/tiled_gid.hpp>
 #include <flight/types/tiled_map.hpp>
 #include <flight/types/tiled_object.hpp>
@@ -22,7 +29,7 @@ inline std::optional<flight::Ref<flight::types::TiledTilesetRef>> get_tiled_tile
   std::optional<flight::Ref<flight::types::TiledTilesetRef>> best = std::nullopt;
   for (auto ref : flight::row_get<flight::RowKey<"tilesets">>(map)) {
     if (((ref->first_gid <= tile_id) && (!best.has_value() || (ref->first_gid > best.value()->first_gid)))) {
-      best = std::optional<flight::Ref<flight::types::TiledTilesetRef>>{ref};
+      (best = std::optional<flight::Ref<flight::types::TiledTilesetRef>>{ref});
     }
   }
   return best;

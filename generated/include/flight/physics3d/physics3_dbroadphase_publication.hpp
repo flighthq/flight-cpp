@@ -8,6 +8,22 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Physics3DCollider; }
+namespace flight::types { struct Physics3DContact; }
+namespace flight::types { struct Physics3DContactEvents; }
+namespace flight::types { struct Physics3DContactHooks; }
+namespace flight::types { struct Physics3DJoint; }
+namespace flight::types { struct Physics3DJointEvents; }
+namespace flight::types { struct Physics3DJointSolver; }
+namespace flight::types { struct Physics3DSequentialImpulseState; }
+namespace flight::types { struct Physics3DSolverConfig; }
+namespace flight::types { struct Physics3DWorld; }
+namespace flight::types { struct RigidBody3D; }
+namespace flight::types { struct SpatialAabb3D; }
+namespace flight::types { struct SpatialIndexBackend3D; }
+namespace flight::types { struct SpatialIndexingExplanation; }
+namespace flight::types { struct SpatialPair; }
+
 #include <flight/types/collision.hpp>
 #include <flight/types/physics3_d.hpp>
 #include <flight/types/spatial.hpp>
@@ -47,7 +63,7 @@ inline flight::Set<double> get_physics3_dbroadphase_body_indices(flight::Ref<fli
           body_indices.add(id);
         }
       }
-      body_index += 1.0;
+      (body_index += 1.0);
     }
   }
   flight::Ref<body_indices_index_8d559030813f54d4> created = flight::make_ref<body_indices_index_8d559030813f54d4>(body_indices_index_8d559030813f54d4{.body_indices = body_indices, .index = world->index});

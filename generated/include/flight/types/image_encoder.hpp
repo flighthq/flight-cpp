@@ -2,16 +2,20 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <functional>
+#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
+
+namespace flight::types { struct DecodedImage; }
+namespace flight::types { struct ImageEncodeOptions; }
 
 #include <flight/types/decoded_image.hpp>
 #include <flight/types/image_encode_options.hpp>
 
 namespace flight::types {
 
-using ImageEncoder = std::function<flight::Task<flight::Uint8Array>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DecodedImage>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageEncodeOptions>>>>)>;
+using ImageEncoder = std::function<flight::Task<flight::Uint8Array>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DecodedImage>>>>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageEncodeOptions>>>>>)>;
 
 } // namespace flight::types

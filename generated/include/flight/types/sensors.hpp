@@ -8,6 +8,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { template <typename T> struct Signal; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/types/entity.hpp>
@@ -112,7 +116,7 @@ struct RotationRateReading : public flight::ReferenceEnabled {
 
 struct SensorsBackend : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::function<flight::Task<SensorsPermissionState>(flight::String)> get_permission_state;
+  std::function<flight::Task<SensorsPermissionState>(std::optional<flight::String>)> get_permission_state;
   std::function<bool()> is_ambient_light_supported;
   std::function<bool()> is_barometer_supported;
   std::function<bool()> is_gravity_supported;
@@ -123,16 +127,16 @@ struct SensorsBackend : public flight::ReferenceEnabled {
   std::function<bool()> is_orientation_supported;
   std::function<bool()> is_proximity_supported;
   std::function<flight::Task<bool>()> request_permission;
-  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<OrientationReading>>>>)>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>)> subscribe_absolute_orientation;
-  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AmbientLightReading>>>>)>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>)> subscribe_ambient_light;
-  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PressureReading>>>>)>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>)> subscribe_barometer;
-  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MotionReading>>>>)>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>)> subscribe_gravity;
-  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MotionReading>>>>)>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>)> subscribe_linear_acceleration;
-  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MotionReading>>>>)>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>)> subscribe_magnetometer;
-  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MotionReading>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<RotationRateReading>>>>)>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>)> subscribe_motion;
-  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<OrientationReading>>>>)>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>)> subscribe_orientation;
-  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ProximityReading>>>>)>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>)> subscribe_proximity;
-  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<QuaternionReading>>>>)>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>)> subscribe_quaternion;
+  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<OrientationReading>>>>)>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>>)> subscribe_absolute_orientation;
+  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AmbientLightReading>>>>)>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>>)> subscribe_ambient_light;
+  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PressureReading>>>>)>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>>)> subscribe_barometer;
+  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MotionReading>>>>)>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>>)> subscribe_gravity;
+  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MotionReading>>>>)>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>>)> subscribe_linear_acceleration;
+  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MotionReading>>>>)>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>>)> subscribe_magnetometer;
+  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MotionReading>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<RotationRateReading>>>>)>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>>)> subscribe_motion;
+  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<OrientationReading>>>>)>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>>)> subscribe_orientation;
+  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ProximityReading>>>>)>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>>)> subscribe_proximity;
+  std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<QuaternionReading>>>>)>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>>)> subscribe_quaternion;
 };
 
 struct Sensors : public flight::ReferenceEnabled {

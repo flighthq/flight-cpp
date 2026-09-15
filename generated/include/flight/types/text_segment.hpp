@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/entity.hpp>
 
@@ -33,7 +36,7 @@ struct TextSegmentRange : public flight::ReferenceEnabled {
 
 struct TextSegmenterBackend : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::function<flight::Array<flight::Ref<TextSegment>>(flight::String, TextSegmentGranularity, flight::String)> segment;
+  std::function<flight::Array<flight::Ref<TextSegment>>(flight::String, TextSegmentGranularity, std::optional<flight::String>)> segment;
 };
 
 using TextSegmenterBackendKind = flight::String;

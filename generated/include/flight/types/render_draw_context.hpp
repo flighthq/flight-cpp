@@ -6,6 +6,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Material; }
+
 #include <flight/types/batch_format.hpp>
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/entity.hpp>

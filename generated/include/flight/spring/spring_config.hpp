@@ -10,6 +10,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct SpringConfig; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/math/constants.hpp>
 #include <flight/types/entity.hpp>
@@ -21,21 +24,21 @@ inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<fligh
   flight::types::EntityConstruction<flight::Ref<flight::types::SpringConfig>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpringConfig>>();
   flight::row_set<flight::RowKey<"dampingRatio">>(out, 0.35);
   flight::row_set<flight::RowKey<"frequency">>(out, 2.0);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpringConfig>>(out);
 })();
 
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpringConfig>>>> spring_preset_gentle = ([]() {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpringConfig>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpringConfig>>();
   flight::row_set<flight::RowKey<"dampingRatio">>(out, 0.8);
   flight::row_set<flight::RowKey<"frequency">>(out, 1.5);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpringConfig>>(out);
 })();
 
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpringConfig>>>> spring_preset_stiff = ([]() {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpringConfig>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpringConfig>>();
   flight::row_set<flight::RowKey<"dampingRatio">>(out, 1.0);
   flight::row_set<flight::RowKey<"frequency">>(out, 4.0);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpringConfig>>(out);
 })();
 
 inline void initialize_spring_config(flight::types::EntityConstruction<flight::Ref<flight::types::SpringConfig>> out, double frequency, double damping_ratio) {
@@ -46,7 +49,7 @@ inline void initialize_spring_config(flight::types::EntityConstruction<flight::R
 inline flight::Ref<flight::types::SpringConfig> create_spring_config(double frequency, double damping_ratio) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpringConfig>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpringConfig>>();
   initialize_spring_config(out, frequency, damping_ratio);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpringConfig>>(out);
 }
 
 inline void initialize_spring_config_from_physical(flight::types::EntityConstruction<flight::Ref<flight::types::SpringConfig>> out, double stiffness, double damping, double mass) {
@@ -57,7 +60,7 @@ inline void initialize_spring_config_from_physical(flight::types::EntityConstruc
 inline flight::Ref<flight::types::SpringConfig> create_spring_config_from_physical(double stiffness, double damping, double mass) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpringConfig>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpringConfig>>();
   initialize_spring_config_from_physical(out, stiffness, damping, mass);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpringConfig>>(out);
 }
 
 } // namespace flight::spring

@@ -27,17 +27,17 @@ inline flight::types::EasingFunction ease_steps(double count, std::optional<flig
   return [=](double t) {
   double step = (std::floor((t * count)) + start_offset);
   if (((t >= 0.0) && (step < 0.0))) {
-    step = 0.0;
+    (step = 0.0);
   }
   if (((t <= 1.0) && (step > jumps))) {
-    step = jumps;
+    (step = jumps);
   }
   return (step / jumps);
 };
 }
 
 inline void set_easing_steps_guard(std::optional<std::function<void(double, flight::types::StepPosition)>> guard) {
-  steps_guard = guard;
+  (steps_guard = guard);
 }
 
 } // namespace flight::easing

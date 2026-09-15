@@ -7,6 +7,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct DeviceCapabilities; }
+namespace flight::types { struct DeviceDisplayMetrics; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+
 #include <flight/types/device_capabilities.hpp>
 #include <flight/types/device_display_metrics.hpp>
 #include <flight/types/device_form_factor.hpp>

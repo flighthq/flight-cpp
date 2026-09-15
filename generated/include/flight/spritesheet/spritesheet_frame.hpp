@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct SpritesheetFrame; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/spritesheet_frame.hpp>
@@ -38,7 +41,7 @@ inline void initialize_spritesheet_frame(flight::types::EntityConstruction<fligh
 inline flight::Ref<flight::types::SpritesheetFrame> create_spritesheet_frame(std::optional<flight::Ref<entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated_cc00688a45c5fe5e>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetFrame>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpritesheetFrame>>();
   initialize_spritesheet_frame(out, obj);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpritesheetFrame>>(out);
 }
 
 } // namespace flight::spritesheet

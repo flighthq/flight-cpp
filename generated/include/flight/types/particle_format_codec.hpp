@@ -8,6 +8,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct ParseParticleConfigOptions; }
+namespace flight::types { struct ParticleEmitterConfig; }
+namespace flight::types { struct ParticleSerializeResult; }
+
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/particle_config_parse.hpp>
 #include <flight/types/particle_emitter_config.hpp>
@@ -27,8 +32,8 @@ struct config_diagnostics_18590be0ae0a7bc4 : public flight::ReferenceEnabled {
 
 struct ParticleFormatCodec : public flight::ReferenceEnabled {
   std::function<bool(flight::String)> detect;
-  std::function<flight::Ref<flight::types::ParticleEmitterConfig>(flight::String, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>)> parse_to_config;
-  std::function<flight::Ref<config_diagnostics_18590be0ae0a7bc4>(flight::String, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>)> parse_to_document;
+  std::function<flight::Ref<flight::types::ParticleEmitterConfig>(flight::String, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>>)> parse_to_config;
+  std::function<flight::Ref<config_diagnostics_18590be0ae0a7bc4>(flight::String, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>>)> parse_to_document;
   std::optional<std::function<flight::Ref<flight::types::ParticleSerializeResult>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitterConfig>>>>)>> serialize;
 };
 

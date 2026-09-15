@@ -6,6 +6,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct BitmapRegion; }
+
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_region.hpp>
 #include <flight/types/non_entity_create_result.hpp>
@@ -25,11 +28,11 @@ inline flight::Ref<flight::types::BitmapRegion> set_bitmap_region(flight::Ref<fl
   y = y.value_or(0.0);
   width = width.value_or(bitmap->width);
   height = height.value_or(bitmap->height);
-  out->bitmap = bitmap;
-  out->x = x.value();
-  out->y = y.value();
-  out->width = width.value();
-  out->height = height.value();
+  (out->bitmap = bitmap);
+  (out->x = x.value());
+  (out->y = y.value());
+  (out->width = width.value());
+  (out->height = height.value());
   return out;
 }
 

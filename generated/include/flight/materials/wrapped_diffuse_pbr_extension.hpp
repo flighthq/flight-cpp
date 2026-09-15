@@ -10,6 +10,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Sampler; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct VoxelGrid; }
+namespace flight::types { struct WrappedDiffusePbrExtension; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/pbr_extension.hpp>
@@ -102,7 +108,7 @@ inline void initialize_wrapped_diffuse_pbr_extension(flight::types::EntityConstr
 inline flight::Ref<flight::types::WrappedDiffusePbrExtension> create_wrapped_diffuse_pbr_extension(std::optional<flight::Ref<entity_runtime_key_kind_thickness_thickness_map_thickness_map_uv_set_wrapped_diffuse_color_wrapped_diffuse_map_wrapped_diffuse_map_uv_set_wrapped_diffuse_strength_617898c73e94fca3>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::WrappedDiffusePbrExtension>> out = flight::entity::allocate_entity<flight::Ref<flight::types::WrappedDiffusePbrExtension>>();
   initialize_wrapped_diffuse_pbr_extension(out, opts);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::WrappedDiffusePbrExtension>>(out);
 }
 
 inline bool is_valid_wrapped_diffuse_pbr_extension(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WrappedDiffusePbrExtension>>>> value) {

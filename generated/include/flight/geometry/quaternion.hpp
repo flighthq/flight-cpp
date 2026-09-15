@@ -11,6 +11,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Quaternion; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/euler_order.hpp>
@@ -20,56 +25,56 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::geometry {
 
-inline void conjugate_quaternion(flight::Ref<flight::types::QuaternionLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> source) {
-  out->x = -flight::row_get<flight::RowKey<"x">>(source);
-  out->y = -flight::row_get<flight::RowKey<"y">>(source);
-  out->z = -flight::row_get<flight::RowKey<"z">>(source);
-  out->w = flight::row_get<flight::RowKey<"w">>(source);
+inline void conjugate_quaternion(flight::types::QuaternionLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> source) {
+  (out->x = -flight::row_get<flight::RowKey<"x">>(source));
+  (out->y = -flight::row_get<flight::RowKey<"y">>(source));
+  (out->z = -flight::row_get<flight::RowKey<"z">>(source));
+  (out->w = flight::row_get<flight::RowKey<"w">>(source));
 }
 
-inline void copy_quaternion(flight::Ref<flight::types::QuaternionLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> source) {
-  out->x = flight::row_get<flight::RowKey<"x">>(source);
-  out->y = flight::row_get<flight::RowKey<"y">>(source);
-  out->z = flight::row_get<flight::RowKey<"z">>(source);
-  out->w = flight::row_get<flight::RowKey<"w">>(source);
+inline void copy_quaternion(flight::types::QuaternionLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> source) {
+  (out->x = flight::row_get<flight::RowKey<"x">>(source));
+  (out->y = flight::row_get<flight::RowKey<"y">>(source));
+  (out->z = flight::row_get<flight::RowKey<"z">>(source));
+  (out->w = flight::row_get<flight::RowKey<"w">>(source));
 }
 
-inline bool equals_quaternion(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>, flight::Null, flight::Undefined> b) {
+inline bool equals_quaternion(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>, flight::Null, flight::Undefined> b) {
   if ((a == b)) {
     return true;
   }
   if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
-  return ((((flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a)) == flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b))) && (flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a)) == flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a)) == flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"w">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(a)) == flight::row_get<flight::RowKey<"w">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>>>(b))));
+  return ((((flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(a)) == flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(b))) && (flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(a)) == flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(b)))) && (flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(a)) == flight::row_get<flight::RowKey<"z">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(b)))) && (flight::row_get<flight::RowKey<"w">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(a)) == flight::row_get<flight::RowKey<"w">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(b))));
 }
 
-inline double get_quaternion_axis_angle(flight::Ref<flight::types::Vector3Like> out_axis, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> source) {
+inline double get_quaternion_axis_angle(flight::types::Vector3Like out_axis, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> source) {
   const double w = flight::row_get<flight::RowKey<"w">>(source);
   const double sin_half_sq = (1.0 - (w * w));
   if ((sin_half_sq <= 0.0)) {
-    out_axis->x = 1.0;
-    out_axis->y = 0.0;
-    out_axis->z = 0.0;
+    (out_axis->x = 1.0);
+    (out_axis->y = 0.0);
+    (out_axis->z = 0.0);
     return 0.0;
   }
   const double inv_sin_half = (1.0 / std::sqrt(sin_half_sq));
-  out_axis->x = (flight::row_get<flight::RowKey<"x">>(source) * inv_sin_half);
-  out_axis->y = (flight::row_get<flight::RowKey<"y">>(source) * inv_sin_half);
-  out_axis->z = (flight::row_get<flight::RowKey<"z">>(source) * inv_sin_half);
+  (out_axis->x = (flight::row_get<flight::RowKey<"x">>(source) * inv_sin_half));
+  (out_axis->y = (flight::row_get<flight::RowKey<"y">>(source) * inv_sin_half));
+  (out_axis->z = (flight::row_get<flight::RowKey<"z">>(source) * inv_sin_half));
   return (2.0 * std::acos(flight::minimum(1.0, flight::maximum(-1.0, w))));
 }
 
-inline double get_quaternion_dot(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> b) {
+inline double get_quaternion_dot(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> b) {
   return ((((flight::row_get<flight::RowKey<"x">>(a) * flight::row_get<flight::RowKey<"x">>(b)) + (flight::row_get<flight::RowKey<"y">>(a) * flight::row_get<flight::RowKey<"y">>(b))) + (flight::row_get<flight::RowKey<"z">>(a) * flight::row_get<flight::RowKey<"z">>(b))) + (flight::row_get<flight::RowKey<"w">>(a) * flight::row_get<flight::RowKey<"w">>(b)));
 }
 
-inline double get_quaternion_angle_between(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> b) {
+inline double get_quaternion_angle_between(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> b) {
   auto dot = std::abs(get_quaternion_dot(a, b));
   return (2.0 * std::acos(flight::minimum(1.0, dot)));
 }
 
-inline void get_quaternion_euler(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> source, std::optional<flight::types::EulerOrder> order = std::nullopt) {
+inline void get_quaternion_euler(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> source, std::optional<flight::types::EulerOrder> order = std::nullopt) {
   order = order.value_or(flight::String("XYZ"));
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
@@ -97,79 +102,79 @@ inline void get_quaternion_euler(flight::Ref<flight::types::Vector3Like> out, fl
     auto switch_value = order.value();
     if (switch_value == flight::String("XYZ")) {
       {
-        out->y = std::asin(flight::minimum(1.0, flight::maximum(-1.0, m02)));
+        (out->y = std::asin(flight::minimum(1.0, flight::maximum(-1.0, m02))));
         if ((std::abs(m02) < 0.9999999)) {
-          out->x = std::atan2(-m12, m22);
-          out->z = std::atan2(-m01, m00);
+          (out->x = std::atan2(-m12, m22));
+          (out->z = std::atan2(-m01, m00));
         }
         else {
-          out->x = std::atan2(m21, m11);
-          out->z = 0.0;
+          (out->x = std::atan2(m21, m11));
+          (out->z = 0.0);
         }
       }
     }
     else if (switch_value == flight::String("XZY")) {
       {
-        out->z = std::asin(flight::minimum(1.0, flight::maximum(-1.0, -m01)));
+        (out->z = std::asin(flight::minimum(1.0, flight::maximum(-1.0, -m01))));
         if ((std::abs(m01) < 0.9999999)) {
-          out->x = std::atan2(m21, m11);
-          out->y = std::atan2(m02, m00);
+          (out->x = std::atan2(m21, m11));
+          (out->y = std::atan2(m02, m00));
         }
         else {
-          out->x = std::atan2(-m12, m22);
-          out->y = 0.0;
+          (out->x = std::atan2(-m12, m22));
+          (out->y = 0.0);
         }
       }
     }
     else if (switch_value == flight::String("YXZ")) {
       {
-        out->x = std::asin(flight::minimum(1.0, flight::maximum(-1.0, -m12)));
+        (out->x = std::asin(flight::minimum(1.0, flight::maximum(-1.0, -m12))));
         if ((std::abs(m12) < 0.9999999)) {
-          out->y = std::atan2(m02, m22);
-          out->z = std::atan2(m10, m11);
+          (out->y = std::atan2(m02, m22));
+          (out->z = std::atan2(m10, m11));
         }
         else {
-          out->y = std::atan2(-m20, m00);
-          out->z = 0.0;
+          (out->y = std::atan2(-m20, m00));
+          (out->z = 0.0);
         }
       }
     }
     else if (switch_value == flight::String("YZX")) {
       {
-        out->z = std::asin(flight::minimum(1.0, flight::maximum(-1.0, m10)));
+        (out->z = std::asin(flight::minimum(1.0, flight::maximum(-1.0, m10))));
         if ((std::abs(m10) < 0.9999999)) {
-          out->x = std::atan2(-m12, m11);
-          out->y = std::atan2(-m20, m00);
+          (out->x = std::atan2(-m12, m11));
+          (out->y = std::atan2(-m20, m00));
         }
         else {
-          out->x = 0.0;
-          out->y = std::atan2(m02, m22);
+          (out->x = 0.0);
+          (out->y = std::atan2(m02, m22));
         }
       }
     }
     else if (switch_value == flight::String("ZXY")) {
       {
-        out->x = std::asin(flight::minimum(1.0, flight::maximum(-1.0, m21)));
+        (out->x = std::asin(flight::minimum(1.0, flight::maximum(-1.0, m21))));
         if ((std::abs(m21) < 0.9999999)) {
-          out->y = std::atan2(-m20, m22);
-          out->z = std::atan2(-m01, m11);
+          (out->y = std::atan2(-m20, m22));
+          (out->z = std::atan2(-m01, m11));
         }
         else {
-          out->y = 0.0;
-          out->z = std::atan2(m10, m00);
+          (out->y = 0.0);
+          (out->z = std::atan2(m10, m00));
         }
       }
     }
     else if (switch_value == flight::String("ZYX")) {
       {
-        out->y = std::asin(flight::minimum(1.0, flight::maximum(-1.0, -m20)));
+        (out->y = std::asin(flight::minimum(1.0, flight::maximum(-1.0, -m20))));
         if ((std::abs(m20) < 0.9999999)) {
-          out->x = std::atan2(m21, m22);
-          out->z = std::atan2(m10, m00);
+          (out->x = std::atan2(m21, m22));
+          (out->z = std::atan2(m10, m00));
         }
         else {
-          out->x = 0.0;
-          out->z = std::atan2(-m01, m11);
+          (out->x = 0.0);
+          (out->z = std::atan2(-m01, m11));
         }
       }
     }
@@ -186,34 +191,34 @@ inline void initialize_quaternion(flight::types::EntityConstruction<flight::Ref<
 inline flight::Ref<flight::types::Quaternion> create_quaternion(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> z = std::nullopt, std::optional<double> w = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Quaternion>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Quaternion>>();
   initialize_quaternion(out, x.value_or(0.0), y.value_or(0.0), z.value_or(0.0), w.value_or(1.0));
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Quaternion>>(out);
 }
 
-inline flight::Ref<flight::types::Quaternion> clone_quaternion(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> source) {
+inline flight::Ref<flight::types::Quaternion> clone_quaternion(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> source) {
   return create_quaternion(flight::row_get<flight::RowKey<"x">>(source), flight::row_get<flight::RowKey<"y">>(source), flight::row_get<flight::RowKey<"z">>(source), flight::row_get<flight::RowKey<"w">>(source));
 }
 
-inline void inverse_quaternion(flight::Ref<flight::types::QuaternionLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> source) {
+inline void inverse_quaternion(flight::types::QuaternionLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> source) {
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
   const double w = flight::row_get<flight::RowKey<"w">>(source);
   const double len_sq = ((((x * x) + (y * y)) + (z * z)) + (w * w));
   if ((len_sq == 0.0)) {
-    out->x = 0.0;
-    out->y = 0.0;
-    out->z = 0.0;
-    out->w = 1.0;
+    (out->x = 0.0);
+    (out->y = 0.0);
+    (out->z = 0.0);
+    (out->w = 1.0);
     return;
   }
   const double inv = (1.0 / len_sq);
-  out->x = (-x * inv);
-  out->y = (-y * inv);
-  out->z = (-z * inv);
-  out->w = (w * inv);
+  (out->x = (-x * inv));
+  (out->y = (-y * inv));
+  (out->z = (-z * inv));
+  (out->w = (w * inv));
 }
 
-inline void multiply_quaternion(flight::Ref<flight::types::QuaternionLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> b) {
+inline void multiply_quaternion(flight::types::QuaternionLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> b) {
   const double ax = flight::row_get<flight::RowKey<"x">>(a);
   const double ay = flight::row_get<flight::RowKey<"y">>(a);
   const double az = flight::row_get<flight::RowKey<"z">>(a);
@@ -222,13 +227,13 @@ inline void multiply_quaternion(flight::Ref<flight::types::QuaternionLike> out, 
   const double by = flight::row_get<flight::RowKey<"y">>(b);
   const double bz = flight::row_get<flight::RowKey<"z">>(b);
   const double bw = flight::row_get<flight::RowKey<"w">>(b);
-  out->x = ((((aw * bx) + (ax * bw)) + (ay * bz)) - (az * by));
-  out->y = ((((aw * by) - (ax * bz)) + (ay * bw)) + (az * bx));
-  out->z = ((((aw * bz) + (ax * by)) - (ay * bx)) + (az * bw));
-  out->w = ((((aw * bw) - (ax * bx)) - (ay * by)) - (az * bz));
+  (out->x = ((((aw * bx) + (ax * bw)) + (ay * bz)) - (az * by)));
+  (out->y = ((((aw * by) - (ax * bz)) + (ay * bw)) + (az * bx)));
+  (out->z = ((((aw * bz) + (ax * by)) - (ay * bx)) + (az * bw)));
+  (out->w = ((((aw * bw) - (ax * bx)) - (ay * by)) - (az * bz)));
 }
 
-inline double normalize_quaternion(flight::Ref<flight::types::QuaternionLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> source) {
+inline double normalize_quaternion(flight::types::QuaternionLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> source) {
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
@@ -236,21 +241,21 @@ inline double normalize_quaternion(flight::Ref<flight::types::QuaternionLike> ou
   auto l = std::sqrt(((((x * x) + (y * y)) + (z * z)) + (w * w)));
   if ((l != 0.0)) {
     const double inv = (1.0 / l);
-    out->x = (x * inv);
-    out->y = (y * inv);
-    out->z = (z * inv);
-    out->w = (w * inv);
+    (out->x = (x * inv));
+    (out->y = (y * inv));
+    (out->z = (z * inv));
+    (out->w = (w * inv));
   }
   else {
-    out->x = 0.0;
-    out->y = 0.0;
-    out->z = 0.0;
-    out->w = 1.0;
+    (out->x = 0.0);
+    (out->y = 0.0);
+    (out->z = 0.0);
+    (out->w = 1.0);
   }
   return l;
 }
 
-inline void rotate_vector3_by_quaternion(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> vector, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> q) {
+inline void rotate_vector3_by_quaternion(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> vector, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> q) {
   const double qx = flight::row_get<flight::RowKey<"x">>(q);
   const double qy = flight::row_get<flight::RowKey<"y">>(q);
   const double qz = flight::row_get<flight::RowKey<"z">>(q);
@@ -261,28 +266,28 @@ inline void rotate_vector3_by_quaternion(flight::Ref<flight::types::Vector3Like>
   const double tx = (2.0 * ((qy * vz) - (qz * vy)));
   const double ty = (2.0 * ((qz * vx) - (qx * vz)));
   const double tz = (2.0 * ((qx * vy) - (qy * vx)));
-  out->x = ((vx + (qw * tx)) + ((qy * tz) - (qz * ty)));
-  out->y = ((vy + (qw * ty)) + ((qz * tx) - (qx * tz)));
-  out->z = ((vz + (qw * tz)) + ((qx * ty) - (qy * tx)));
+  (out->x = ((vx + (qw * tx)) + ((qy * tz) - (qz * ty))));
+  (out->y = ((vy + (qw * ty)) + ((qz * tx) - (qx * tz))));
+  (out->z = ((vz + (qw * tz)) + ((qx * ty) - (qy * tx))));
 }
 
-inline void set_quaternion(flight::Ref<flight::types::QuaternionLike> out, double x, double y, double z, double w) {
-  out->x = x;
-  out->y = y;
-  out->z = z;
-  out->w = w;
+inline void set_quaternion(flight::types::QuaternionLike out, double x, double y, double z, double w) {
+  (out->x = x);
+  (out->y = y);
+  (out->z = z);
+  (out->w = w);
 }
 
-inline void set_quaternion_from_axis_angle(flight::Ref<flight::types::QuaternionLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> axis, double angle) {
+inline void set_quaternion_from_axis_angle(flight::types::QuaternionLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> axis, double angle) {
   const double half = (angle * 0.5);
   auto s = std::sin(half);
-  out->x = (flight::row_get<flight::RowKey<"x">>(axis) * s);
-  out->y = (flight::row_get<flight::RowKey<"y">>(axis) * s);
-  out->z = (flight::row_get<flight::RowKey<"z">>(axis) * s);
-  out->w = std::cos(half);
+  (out->x = (flight::row_get<flight::RowKey<"x">>(axis) * s));
+  (out->y = (flight::row_get<flight::RowKey<"y">>(axis) * s));
+  (out->z = (flight::row_get<flight::RowKey<"z">>(axis) * s));
+  (out->w = std::cos(half));
 }
 
-inline void set_quaternion_from_euler(flight::Ref<flight::types::QuaternionLike> out, double x, double y, double z, std::optional<flight::types::EulerOrder> order = std::nullopt) {
+inline void set_quaternion_from_euler(flight::types::QuaternionLike out, double x, double y, double z, std::optional<flight::types::EulerOrder> order = std::nullopt) {
   order = order.value_or(flight::String("XYZ"));
   auto c1 = std::cos((x / 2.0));
   auto s1 = std::sin((x / 2.0));
@@ -293,45 +298,45 @@ inline void set_quaternion_from_euler(flight::Ref<flight::types::QuaternionLike>
   {
     auto switch_value_2 = order.value();
     if (switch_value_2 == flight::String("XYZ")) {
-      out->x = (((s1 * c2) * c3) + ((c1 * s2) * s3));
-      out->y = (((c1 * s2) * c3) - ((s1 * c2) * s3));
-      out->z = (((c1 * c2) * s3) + ((s1 * s2) * c3));
-      out->w = (((c1 * c2) * c3) - ((s1 * s2) * s3));
+      (out->x = (((s1 * c2) * c3) + ((c1 * s2) * s3)));
+      (out->y = (((c1 * s2) * c3) - ((s1 * c2) * s3)));
+      (out->z = (((c1 * c2) * s3) + ((s1 * s2) * c3)));
+      (out->w = (((c1 * c2) * c3) - ((s1 * s2) * s3)));
     }
     else if (switch_value_2 == flight::String("XZY")) {
-      out->x = (((s1 * c2) * c3) - ((c1 * s2) * s3));
-      out->y = (((c1 * s2) * c3) - ((s1 * c2) * s3));
-      out->z = (((c1 * c2) * s3) + ((s1 * s2) * c3));
-      out->w = (((c1 * c2) * c3) + ((s1 * s2) * s3));
+      (out->x = (((s1 * c2) * c3) - ((c1 * s2) * s3)));
+      (out->y = (((c1 * s2) * c3) - ((s1 * c2) * s3)));
+      (out->z = (((c1 * c2) * s3) + ((s1 * s2) * c3)));
+      (out->w = (((c1 * c2) * c3) + ((s1 * s2) * s3)));
     }
     else if (switch_value_2 == flight::String("YXZ")) {
-      out->x = (((s1 * c2) * c3) + ((c1 * s2) * s3));
-      out->y = (((c1 * s2) * c3) - ((s1 * c2) * s3));
-      out->z = (((c1 * c2) * s3) - ((s1 * s2) * c3));
-      out->w = (((c1 * c2) * c3) + ((s1 * s2) * s3));
+      (out->x = (((s1 * c2) * c3) + ((c1 * s2) * s3)));
+      (out->y = (((c1 * s2) * c3) - ((s1 * c2) * s3)));
+      (out->z = (((c1 * c2) * s3) - ((s1 * s2) * c3)));
+      (out->w = (((c1 * c2) * c3) + ((s1 * s2) * s3)));
     }
     else if (switch_value_2 == flight::String("YZX")) {
-      out->x = (((s1 * c2) * c3) + ((c1 * s2) * s3));
-      out->y = (((c1 * s2) * c3) + ((s1 * c2) * s3));
-      out->z = (((c1 * c2) * s3) - ((s1 * s2) * c3));
-      out->w = (((c1 * c2) * c3) - ((s1 * s2) * s3));
+      (out->x = (((s1 * c2) * c3) + ((c1 * s2) * s3)));
+      (out->y = (((c1 * s2) * c3) + ((s1 * c2) * s3)));
+      (out->z = (((c1 * c2) * s3) - ((s1 * s2) * c3)));
+      (out->w = (((c1 * c2) * c3) - ((s1 * s2) * s3)));
     }
     else if (switch_value_2 == flight::String("ZXY")) {
-      out->x = (((s1 * c2) * c3) - ((c1 * s2) * s3));
-      out->y = (((c1 * s2) * c3) + ((s1 * c2) * s3));
-      out->z = (((c1 * c2) * s3) + ((s1 * s2) * c3));
-      out->w = (((c1 * c2) * c3) - ((s1 * s2) * s3));
+      (out->x = (((s1 * c2) * c3) - ((c1 * s2) * s3)));
+      (out->y = (((c1 * s2) * c3) + ((s1 * c2) * s3)));
+      (out->z = (((c1 * c2) * s3) + ((s1 * s2) * c3)));
+      (out->w = (((c1 * c2) * c3) - ((s1 * s2) * s3)));
     }
     else if (switch_value_2 == flight::String("ZYX")) {
-      out->x = (((s1 * c2) * c3) - ((c1 * s2) * s3));
-      out->y = (((c1 * s2) * c3) + ((s1 * c2) * s3));
-      out->z = (((c1 * c2) * s3) - ((s1 * s2) * c3));
-      out->w = (((c1 * c2) * c3) + ((s1 * s2) * s3));
+      (out->x = (((s1 * c2) * c3) - ((c1 * s2) * s3)));
+      (out->y = (((c1 * s2) * c3) + ((s1 * c2) * s3)));
+      (out->z = (((c1 * c2) * s3) - ((s1 * s2) * c3)));
+      (out->w = (((c1 * c2) * c3) + ((s1 * s2) * s3)));
     }
   }
 }
 
-inline void set_quaternion_from_matrix4(flight::Ref<flight::types::QuaternionLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
+inline void set_quaternion_from_matrix4(flight::types::QuaternionLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"m">>(source);
   const double m00 = m.element(0.0);
   const double m10 = m.element(4.0);
@@ -345,46 +350,46 @@ inline void set_quaternion_from_matrix4(flight::Ref<flight::types::QuaternionLik
   const double trace = ((m00 + m11) + m22);
   if ((trace > 0.0)) {
     const double s = (0.5 / std::sqrt((trace + 1.0)));
-    out->w = (0.25 / s);
-    out->x = ((m12 - m21) * s);
-    out->y = ((m20 - m02) * s);
-    out->z = ((m01 - m10) * s);
+    (out->w = (0.25 / s));
+    (out->x = ((m12 - m21) * s));
+    (out->y = ((m20 - m02) * s));
+    (out->z = ((m01 - m10) * s));
   }
   else {
     if (((m00 > m11) && (m00 > m22))) {
       const double s_2 = (2.0 * std::sqrt((((1.0 + m00) - m11) - m22)));
-      out->w = ((m12 - m21) / s_2);
-      out->x = (0.25 * s_2);
-      out->y = ((m10 + m01) / s_2);
-      out->z = ((m20 + m02) / s_2);
+      (out->w = ((m12 - m21) / s_2));
+      (out->x = (0.25 * s_2));
+      (out->y = ((m10 + m01) / s_2));
+      (out->z = ((m20 + m02) / s_2));
     }
     else {
       if ((m11 > m22)) {
         const double s_3 = (2.0 * std::sqrt((((1.0 + m11) - m00) - m22)));
-        out->w = ((m20 - m02) / s_3);
-        out->x = ((m10 + m01) / s_3);
-        out->y = (0.25 * s_3);
-        out->z = ((m21 + m12) / s_3);
+        (out->w = ((m20 - m02) / s_3));
+        (out->x = ((m10 + m01) / s_3));
+        (out->y = (0.25 * s_3));
+        (out->z = ((m21 + m12) / s_3));
       }
       else {
         const double s_4 = (2.0 * std::sqrt((((1.0 + m22) - m00) - m11)));
-        out->w = ((m01 - m10) / s_4);
-        out->x = ((m20 + m02) / s_4);
-        out->y = ((m21 + m12) / s_4);
-        out->z = (0.25 * s_4);
+        (out->w = ((m01 - m10) / s_4));
+        (out->x = ((m20 + m02) / s_4));
+        (out->y = ((m21 + m12) / s_4));
+        (out->z = (0.25 * s_4));
       }
     }
   }
 }
 
-inline void set_quaternion_identity(flight::Ref<flight::types::QuaternionLike> out) {
-  out->x = 0.0;
-  out->y = 0.0;
-  out->z = 0.0;
-  out->w = 1.0;
+inline void set_quaternion_identity(flight::types::QuaternionLike out) {
+  (out->x = 0.0);
+  (out->y = 0.0);
+  (out->z = 0.0);
+  (out->w = 1.0);
 }
 
-inline void set_quaternion_from_unit_vectors(flight::Ref<flight::types::QuaternionLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> from, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> to) {
+inline void set_quaternion_from_unit_vectors(flight::types::QuaternionLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> from, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> to) {
   const double fx = flight::row_get<flight::RowKey<"x">>(from);
   const double fy = flight::row_get<flight::RowKey<"y">>(from);
   const double fz = flight::row_get<flight::RowKey<"z">>(from);
@@ -401,38 +406,38 @@ inline void set_quaternion_from_unit_vectors(flight::Ref<flight::types::Quaterni
     double ay = 0.0;
     double az = 0.0;
     if ((std::abs(fx) > 0.9)) {
-      ax = 0.0;
-      ay = 1.0;
-      az = 0.0;
+      (ax = 0.0);
+      (ay = 1.0);
+      (az = 0.0);
     }
     double px = ((fy * az) - (fz * ay));
     double py = ((fz * ax) - (fx * az));
     double pz = ((fx * ay) - (fy * ax));
     auto p_len = std::sqrt((((px * px) + (py * py)) + (pz * pz)));
-    px /= p_len;
-    py /= p_len;
-    pz /= p_len;
-    out->x = px;
-    out->y = py;
-    out->z = pz;
-    out->w = 0.0;
+    (px /= p_len);
+    (py /= p_len);
+    (pz /= p_len);
+    (out->x = px);
+    (out->y = py);
+    (out->z = pz);
+    (out->w = 0.0);
     return;
   }
   const double cx = ((fy * tz) - (fz * ty));
   const double cy = ((fz * tx) - (fx * tz));
   const double cz = ((fx * ty) - (fy * tx));
-  out->x = cx;
-  out->y = cy;
-  out->z = cz;
-  out->w = (1.0 + dot);
+  (out->x = cx);
+  (out->y = cy);
+  (out->z = cz);
+  (out->w = (1.0 + dot));
   const double inv = (1.0 / std::sqrt(((((out->x * out->x) + (out->y * out->y)) + (out->z * out->z)) + (out->w * out->w))));
-  out->x *= inv;
-  out->y *= inv;
-  out->z *= inv;
-  out->w *= inv;
+  (out->x *= inv);
+  (out->y *= inv);
+  (out->z *= inv);
+  (out->w *= inv);
 }
 
-inline void set_quaternion_look_rotation(flight::Ref<flight::types::QuaternionLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> forward, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> up) {
+inline void set_quaternion_look_rotation(flight::types::QuaternionLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> forward, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> up) {
   const double fx = flight::row_get<flight::RowKey<"x">>(forward);
   const double fy = flight::row_get<flight::RowKey<"y">>(forward);
   const double fz = flight::row_get<flight::RowKey<"z">>(forward);
@@ -449,21 +454,21 @@ inline void set_quaternion_look_rotation(flight::Ref<flight::types::QuaternionLi
   auto r_len = std::sqrt((((rx * rx) + (ry * ry)) + (rz * rz)));
   if ((r_len == 0.0)) {
     if ((std::abs(fz) < 0.9)) {
-      rx = -fy;
-      ry = fx;
-      rz = 0.0;
+      (rx = -fy);
+      (ry = fx);
+      (rz = 0.0);
     }
     else {
-      rx = 0.0;
-      ry = -fz;
-      rz = fy;
+      (rx = 0.0);
+      (ry = -fz);
+      (rz = fy);
     }
-    r_len = std::sqrt((((rx * rx) + (ry * ry)) + (rz * rz)));
+    (r_len = std::sqrt((((rx * rx) + (ry * ry)) + (rz * rz))));
   }
   const double r_inv = (1.0 / r_len);
-  rx *= r_inv;
-  ry *= r_inv;
-  rz *= r_inv;
+  (rx *= r_inv);
+  (ry *= r_inv);
+  (rz *= r_inv);
   const double cux = ((fy * rz) - (fz * ry));
   const double cuy = ((fz * rx) - (fx * rz));
   const double cuz = ((fx * ry) - (fy * rx));
@@ -479,39 +484,39 @@ inline void set_quaternion_look_rotation(flight::Ref<flight::types::QuaternionLi
   const double trace = ((m00 + m11) + m22);
   if ((trace > 0.0)) {
     const double s = (0.5 / std::sqrt((trace + 1.0)));
-    out->w = (0.25 / s);
-    out->x = ((m12 - m21) * s);
-    out->y = ((m20 - m02) * s);
-    out->z = ((m01 - m10) * s);
+    (out->w = (0.25 / s));
+    (out->x = ((m12 - m21) * s));
+    (out->y = ((m20 - m02) * s));
+    (out->z = ((m01 - m10) * s));
   }
   else {
     if (((m00 > m11) && (m00 > m22))) {
       const double s_2 = (2.0 * std::sqrt((((1.0 + m00) - m11) - m22)));
-      out->w = ((m12 - m21) / s_2);
-      out->x = (0.25 * s_2);
-      out->y = ((m10 + m01) / s_2);
-      out->z = ((m20 + m02) / s_2);
+      (out->w = ((m12 - m21) / s_2));
+      (out->x = (0.25 * s_2));
+      (out->y = ((m10 + m01) / s_2));
+      (out->z = ((m20 + m02) / s_2));
     }
     else {
       if ((m11 > m22)) {
         const double s_3 = (2.0 * std::sqrt((((1.0 + m11) - m00) - m22)));
-        out->w = ((m20 - m02) / s_3);
-        out->x = ((m10 + m01) / s_3);
-        out->y = (0.25 * s_3);
-        out->z = ((m21 + m12) / s_3);
+        (out->w = ((m20 - m02) / s_3));
+        (out->x = ((m10 + m01) / s_3));
+        (out->y = (0.25 * s_3));
+        (out->z = ((m21 + m12) / s_3));
       }
       else {
         const double s_4 = (2.0 * std::sqrt((((1.0 + m22) - m00) - m11)));
-        out->w = ((m01 - m10) / s_4);
-        out->x = ((m20 + m02) / s_4);
-        out->y = ((m21 + m12) / s_4);
-        out->z = (0.25 * s_4);
+        (out->w = ((m01 - m10) / s_4));
+        (out->x = ((m20 + m02) / s_4));
+        (out->y = ((m21 + m12) / s_4));
+        (out->z = (0.25 * s_4));
       }
     }
   }
 }
 
-inline void slerp_quaternion(flight::Ref<flight::types::QuaternionLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> b, double t) {
+inline void slerp_quaternion(flight::types::QuaternionLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> b, double t) {
   const double ax = flight::row_get<flight::RowKey<"x">>(a);
   const double ay = flight::row_get<flight::RowKey<"y">>(a);
   const double az = flight::row_get<flight::RowKey<"z">>(a);
@@ -522,28 +527,28 @@ inline void slerp_quaternion(flight::Ref<flight::types::QuaternionLike> out, fli
   double bw = flight::row_get<flight::RowKey<"w">>(b);
   double cos_half_theta = ((((ax * bx) + (ay * by)) + (az * bz)) + (aw * bw));
   if ((cos_half_theta < 0.0)) {
-    cos_half_theta = -cos_half_theta;
-    bx = -bx;
-    by = -by;
-    bz = -bz;
-    bw = -bw;
+    (cos_half_theta = -cos_half_theta);
+    (bx = -bx);
+    (by = -by);
+    (bz = -bz);
+    (bw = -bw);
   }
   double scale_a;
   double scale_b;
   if ((cos_half_theta < 0.999999)) {
     const double half_theta = std::acos(cos_half_theta);
     auto sin_half_theta = std::sin(half_theta);
-    scale_a = (std::sin(((1.0 - t) * half_theta)) / sin_half_theta);
-    scale_b = (std::sin((t * half_theta)) / sin_half_theta);
+    (scale_a = (std::sin(((1.0 - t) * half_theta)) / sin_half_theta));
+    (scale_b = (std::sin((t * half_theta)) / sin_half_theta));
   }
   else {
-    scale_a = (1.0 - t);
-    scale_b = t;
+    (scale_a = (1.0 - t));
+    (scale_b = t);
   }
-  out->x = ((ax * scale_a) + (bx * scale_b));
-  out->y = ((ay * scale_a) + (by * scale_b));
-  out->z = ((az * scale_a) + (bz * scale_b));
-  out->w = ((aw * scale_a) + (bw * scale_b));
+  (out->x = ((ax * scale_a) + (bx * scale_b)));
+  (out->y = ((ay * scale_a) + (by * scale_b)));
+  (out->z = ((az * scale_a) + (bz * scale_b)));
+  (out->w = ((aw * scale_a) + (bw * scale_b)));
 }
 
 } // namespace flight::geometry

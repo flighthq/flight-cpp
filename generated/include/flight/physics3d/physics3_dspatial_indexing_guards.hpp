@@ -8,6 +8,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Physics3DWorld; }
+
 #include <flight/types/physics3_d.hpp>
 
 namespace flight::physics3d {
@@ -19,7 +21,7 @@ inline void report_physics3_dspatial_indexing(flight::StructuralRef<flight::RowR
 }
 
 inline void set_physics3_dspatial_indexing_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>)>> guard) {
-  physics3_dspatial_indexing_guard = guard;
+  (physics3_dspatial_indexing_guard = guard);
 }
 
 } // namespace flight::physics3d

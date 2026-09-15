@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct WhiteBalanceEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/white_balance_effect.hpp>
@@ -23,7 +26,7 @@ struct temperature_tint_6db947f7962b26fb : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_6DB947F7962B26FB
 
 inline void initialize_white_balance_effect(flight::types::EntityConstruction<flight::Ref<flight::types::WhiteBalanceEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<temperature_tint_6db947f7962b26fb>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("WhiteBalanceEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::WhiteBalanceEffect>>(out, flight::String("WhiteBalanceEffect"));
   flight::row_set<flight::RowKey<"temperature">>(out, flight::row_get<flight::RowKey<"temperature">>(options));
   flight::row_set<flight::RowKey<"tint">>(out, flight::row_get<flight::RowKey<"tint">>(options));
 }
@@ -32,7 +35,7 @@ inline flight::Ref<flight::types::WhiteBalanceEffect> create_white_balance_effec
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<temperature_tint_6db947f7962b26fb>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::WhiteBalanceEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::WhiteBalanceEffect>>();
   initialize_white_balance_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::WhiteBalanceEffect>>(out);
 }
 
 } // namespace flight::effects

@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct FilmGrainEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/film_grain_effect.hpp>
@@ -24,7 +27,7 @@ struct size_intensity_seed_7a43a9a5c99619d9 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_7A43A9A5C99619D9
 
 inline void initialize_film_grain_effect(flight::types::EntityConstruction<flight::Ref<flight::types::FilmGrainEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<size_intensity_seed_7a43a9a5c99619d9>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("FilmGrainEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::FilmGrainEffect>>(out, flight::String("FilmGrainEffect"));
   flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
   flight::row_set<flight::RowKey<"size">>(out, flight::row_get<flight::RowKey<"size">>(options));
   flight::row_set<flight::RowKey<"seed">>(out, flight::row_get<flight::RowKey<"seed">>(options));
@@ -34,7 +37,7 @@ inline flight::Ref<flight::types::FilmGrainEffect> create_film_grain_effect(std:
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<size_intensity_seed_7a43a9a5c99619d9>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::FilmGrainEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::FilmGrainEffect>>();
   initialize_film_grain_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::FilmGrainEffect>>(out);
 }
 
 } // namespace flight::effects

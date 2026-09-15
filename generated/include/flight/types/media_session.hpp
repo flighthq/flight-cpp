@@ -9,6 +9,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { template <typename T> struct Signal; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/types/entity.hpp>
@@ -19,7 +23,7 @@ struct MediaSessionArtwork;
 struct MediaSessionMetadata;
 struct MediaSessionActionDetails;
 struct MediaSessionPositionState;
-template <typename BlockReason>
+template <typename BlockReason = flight::String>
 struct MediaSessionOperationOutcome;
 struct MediaSessionBackend;
 struct MediaSessionActionBackend;
@@ -74,12 +78,12 @@ using MediaSessionClearPositionStateOutcome = flight::Ref<MediaSessionOperationO
 
 struct MediaSessionBackend : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::function<flight::Ref<MediaSessionClearMetadataOutcome>()> clear_metadata;
-  std::function<flight::Ref<MediaSessionClearPositionStateOutcome>()> clear_position_state;
+  std::function<MediaSessionClearMetadataOutcome()> clear_metadata;
+  std::function<MediaSessionClearPositionStateOutcome()> clear_position_state;
   std::function<void()> destroy;
-  std::function<flight::Ref<MediaSessionSetMetadataOutcome>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MediaSessionMetadata>>>>)> set_metadata;
-  std::function<flight::Ref<MediaSessionSetPlaybackStateOutcome>(MediaSessionPlaybackState)> set_playback_state;
-  std::function<flight::Ref<MediaSessionSetPositionStateOutcome>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MediaSessionPositionState>>>>)> set_position_state;
+  std::function<MediaSessionSetMetadataOutcome(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MediaSessionMetadata>>>>)> set_metadata;
+  std::function<MediaSessionSetPlaybackStateOutcome(MediaSessionPlaybackState)> set_playback_state;
+  std::function<MediaSessionSetPositionStateOutcome(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MediaSessionPositionState>>>>)> set_position_state;
 };
 
 struct MediaSessionActionBackend : public flight::ReferenceEnabled {

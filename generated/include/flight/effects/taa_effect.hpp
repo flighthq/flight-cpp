@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct TaaEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/taa_effect.hpp>
@@ -22,7 +25,7 @@ struct feedback_c00eb6c334d4eb2f : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C00EB6C334D4EB2F
 
 inline void initialize_taa_effect(flight::types::EntityConstruction<flight::Ref<flight::types::TaaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<feedback_c00eb6c334d4eb2f>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("TaaEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::TaaEffect>>(out, flight::String("TaaEffect"));
   flight::row_set<flight::RowKey<"feedback">>(out, flight::row_get<flight::RowKey<"feedback">>(options));
 }
 
@@ -30,7 +33,7 @@ inline flight::Ref<flight::types::TaaEffect> create_taa_effect(std::optional<fli
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<feedback_c00eb6c334d4eb2f>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::TaaEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::TaaEffect>>();
   initialize_taa_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::TaaEffect>>(out);
 }
 
 } // namespace flight::effects

@@ -6,6 +6,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/entity.hpp>
 
@@ -27,6 +30,6 @@ struct Obb : public flight::ReferenceEnabled {
   double orientation_z;
 };
 
-using ObbLike = flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<Obb>>>;
+using ObbLike = flight::types::EntityWithoutRuntime<flight::Ref<Obb>>;
 
 } // namespace flight::types

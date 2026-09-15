@@ -20,7 +20,7 @@ struct SpotLightOptions : public flight::ReferenceEnabled {
   std::optional<double> priority;
   std::optional<double> color;
   std::optional<double> decay;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> direction;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> direction;
   std::optional<bool> enabled;
   std::optional<double> inner_cone_degrees;
   std::optional<double> intensity;
@@ -28,7 +28,7 @@ struct SpotLightOptions : public flight::ReferenceEnabled {
   std::optional<double> normal_bias;
   std::optional<double> outer_cone_degrees;
   std::optional<double> pcf_radius;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> position;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> position;
   std::optional<double> range;
   std::optional<double> shadow_bias;
   std::optional<double> shadow_far;

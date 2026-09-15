@@ -7,6 +7,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Spring2D; }
+namespace flight::types { struct Spring; }
+namespace flight::types { struct SpringConfig; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/spring.hpp>
@@ -35,7 +40,7 @@ inline flight::Ref<flight::types::Spring2D> create_spring2_d(std::optional<doubl
   velocity_y = velocity_y.value_or(0.0);
   flight::types::EntityConstruction<flight::Ref<flight::types::Spring2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Spring2D>>();
   initialize_spring2_d(out, value_x.value(), value_y.value(), velocity_x.value(), velocity_y.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Spring2D>>(out);
 }
 
 inline bool is_spring2_dsettled(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Spring2D>>>> spring2_d, double target_x, double target_y, std::optional<double> position_epsilon = std::nullopt, std::optional<double> velocity_epsilon = std::nullopt) {

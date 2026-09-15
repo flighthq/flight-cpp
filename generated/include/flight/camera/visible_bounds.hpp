@@ -11,6 +11,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Camera2D; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Rectangle; }
+
 #include <flight/geometry/matrix.hpp>
 #include <flight/types/camera2_d.hpp>
 #include <flight/types/entity.hpp>
@@ -27,24 +32,24 @@ inline const double unbounded_origin = (-std::numeric_limits<double>::max() / 2.
 inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>)>> degenerate_visible_bounds_guard = std::nullopt;
 
 inline void set_camera2_dvisible_bounds_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>)>> guard) {
-  degenerate_visible_bounds_guard = guard;
+  (degenerate_visible_bounds_guard = guard);
 }
 
-inline flight::Ref<flight::types::Matrix> scratch_inverse = flight::geometry::create_matrix();
+inline flight::Ref<flight::types::Matrix> scratch_inverse_flight_value_variable_scratch_u000049_nverse_flight_private_638d665e2480a6d2 = flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline flight::Ref<flight::types::Matrix> scratch_matrix = flight::geometry::create_matrix();
+inline flight::Ref<flight::types::Matrix> scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_638d665e2480a6d2 = flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline void get_camera2_dvisible_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera, flight::Ref<flight::types::RectangleLike> out) {
-  flight::camera::get_camera2_dview_matrix(camera, scratch_matrix);
-  if (!flight::geometry::inverse_matrix(scratch_inverse, scratch_matrix)) {
-    out->x = unbounded_origin;
-    out->y = unbounded_origin;
-    out->width = unbounded_extent;
-    out->height = unbounded_extent;
+inline void get_camera2_dvisible_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera, flight::types::RectangleLike out) {
+  flight::camera::get_camera2_dview_matrix(camera, scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_638d665e2480a6d2);
+  if (!flight::geometry::inverse_matrix(scratch_inverse_flight_value_variable_scratch_u000049_nverse_flight_private_638d665e2480a6d2, scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_638d665e2480a6d2)) {
+    (out->x = unbounded_origin);
+    (out->y = unbounded_origin);
+    (out->width = unbounded_extent);
+    (out->height = unbounded_extent);
     ([&]() { auto optional_chain_receiver = degenerate_visible_bounds_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(camera); }());
     return;
   }
-  flight::geometry::matrix_transform_bounds(out, scratch_inverse, 0.0, 0.0, flight::row_get<flight::RowKey<"viewportWidth">>(camera), flight::row_get<flight::RowKey<"viewportHeight">>(camera));
+  flight::geometry::matrix_transform_bounds(out, scratch_inverse_flight_value_variable_scratch_u000049_nverse_flight_private_638d665e2480a6d2, 0.0, 0.0, flight::row_get<flight::RowKey<"viewportWidth">>(camera), flight::row_get<flight::RowKey<"viewportHeight">>(camera));
 }
 
 } // namespace flight::camera

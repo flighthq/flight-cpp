@@ -12,6 +12,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix3; }
+namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct Vector2; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix.hpp>
@@ -23,24 +31,24 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::geometry {
 
-inline void copy_matrix_column_from_vector3(flight::Ref<flight::types::MatrixLike> out, double column, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source) {
+inline void copy_matrix_column_from_vector3(flight::types::MatrixLike out, double column, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source) {
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   {
     auto switch_value = column;
     if (switch_value == 0.0) {
-      out->a = x;
-      out->b = y;
+      (out->a = x);
+      (out->b = y);
       return;
     }
     else if (switch_value == 1.0) {
-      out->c = x;
-      out->d = y;
+      (out->c = x);
+      (out->d = y);
       return;
     }
     else if (switch_value == 2.0) {
-      out->tx = x;
-      out->ty = y;
+      (out->tx = x);
+      (out->ty = y);
       return;
     }
     else {
@@ -49,8 +57,8 @@ inline void copy_matrix_column_from_vector3(flight::Ref<flight::types::MatrixLik
   }
 }
 
-inline void copy_matrix_column_to_vector3(flight::Ref<flight::types::Vector3Like> out, double column, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source) {
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> object_pattern_value = source;
+inline void copy_matrix_column_to_vector3(flight::types::Vector3Like out, double column, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> object_pattern_value = source;
   auto a = flight::row_get<flight::RowKey<"a">>(object_pattern_value);
   auto b = flight::row_get<flight::RowKey<"b">>(object_pattern_value);
   auto c = flight::row_get<flight::RowKey<"c">>(object_pattern_value);
@@ -60,21 +68,21 @@ inline void copy_matrix_column_to_vector3(flight::Ref<flight::types::Vector3Like
   {
     auto switch_value_2 = column;
     if (switch_value_2 == 0.0) {
-      out->x = a;
-      out->y = b;
-      out->z = 0.0;
+      (out->x = a);
+      (out->y = b);
+      (out->z = 0.0);
       return;
     }
     else if (switch_value_2 == 1.0) {
-      out->x = c;
-      out->y = d;
-      out->z = 0.0;
+      (out->x = c);
+      (out->y = d);
+      (out->z = 0.0);
       return;
     }
     else if (switch_value_2 == 2.0) {
-      out->x = tx;
-      out->y = ty;
-      out->z = 1.0;
+      (out->x = tx);
+      (out->y = ty);
+      (out->z = 1.0);
       return;
     }
     else {
@@ -83,22 +91,22 @@ inline void copy_matrix_column_to_vector3(flight::Ref<flight::types::Vector3Like
   }
 }
 
-inline void copy_matrix_row_from_vector3(flight::Ref<flight::types::MatrixLike> out, double row, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source) {
+inline void copy_matrix_row_from_vector3(flight::types::MatrixLike out, double row, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source) {
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
   {
     auto switch_value_3 = row;
     if (switch_value_3 == 0.0) {
-      out->a = x;
-      out->c = y;
-      out->tx = z;
+      (out->a = x);
+      (out->c = y);
+      (out->tx = z);
       return;
     }
     else if (switch_value_3 == 1.0) {
-      out->b = x;
-      out->d = y;
-      out->ty = z;
+      (out->b = x);
+      (out->d = y);
+      (out->ty = z);
       return;
     }
     else if (switch_value_3 == 2.0) {
@@ -110,8 +118,8 @@ inline void copy_matrix_row_from_vector3(flight::Ref<flight::types::MatrixLike> 
   }
 }
 
-inline void copy_matrix_row_to_vector3(flight::Ref<flight::types::Vector3Like> out, double row, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source) {
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> object_pattern_value = source;
+inline void copy_matrix_row_to_vector3(flight::types::Vector3Like out, double row, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> object_pattern_value = source;
   auto a = flight::row_get<flight::RowKey<"a">>(object_pattern_value);
   auto b = flight::row_get<flight::RowKey<"b">>(object_pattern_value);
   auto c = flight::row_get<flight::RowKey<"c">>(object_pattern_value);
@@ -121,21 +129,21 @@ inline void copy_matrix_row_to_vector3(flight::Ref<flight::types::Vector3Like> o
   {
     auto switch_value_4 = row;
     if (switch_value_4 == 0.0) {
-      out->x = a;
-      out->y = c;
-      out->z = tx;
+      (out->x = a);
+      (out->y = c);
+      (out->z = tx);
       return;
     }
     else if (switch_value_4 == 1.0) {
-      out->x = b;
-      out->y = d;
-      out->z = ty;
+      (out->x = b);
+      (out->y = d);
+      (out->z = ty);
       return;
     }
     else if (switch_value_4 == 2.0) {
-      out->x = 0.0;
-      out->y = 0.0;
-      out->z = 1.0;
+      (out->x = 0.0);
+      (out->y = 0.0);
+      (out->z = 1.0);
       return;
     }
     else {
@@ -144,7 +152,7 @@ inline void copy_matrix_row_to_vector3(flight::Ref<flight::types::Vector3Like> o
   }
 }
 
-inline bool equals_matrix(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>, flight::Null, flight::Undefined> b, std::optional<bool> compare_translation = std::nullopt) {
+inline bool equals_matrix(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>, flight::Null, flight::Undefined> b, std::optional<bool> compare_translation = std::nullopt) {
   compare_translation = compare_translation.value_or(true);
   if ((a == b)) {
     return true;
@@ -152,7 +160,7 @@ inline bool equals_matrix(std::variant<flight::StructuralRef<flight::RowReadonly
   if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
-  return (((((!compare_translation.value() || ((flight::row_get<flight::RowKey<"tx">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"tx">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b))) && (flight::row_get<flight::RowKey<"ty">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"ty">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b))))) && (flight::row_get<flight::RowKey<"a">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"a">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"b">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"b">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"c">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"c">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"d">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(a)) == flight::row_get<flight::RowKey<"d">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>>>(b))));
+  return (((((!compare_translation.value() || ((flight::row_get<flight::RowKey<"tx">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(a)) == flight::row_get<flight::RowKey<"tx">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(b))) && (flight::row_get<flight::RowKey<"ty">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(a)) == flight::row_get<flight::RowKey<"ty">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(b))))) && (flight::row_get<flight::RowKey<"a">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(a)) == flight::row_get<flight::RowKey<"a">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(b)))) && (flight::row_get<flight::RowKey<"b">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(a)) == flight::row_get<flight::RowKey<"b">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(b)))) && (flight::row_get<flight::RowKey<"c">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(a)) == flight::row_get<flight::RowKey<"c">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(b)))) && (flight::row_get<flight::RowKey<"d">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(a)) == flight::row_get<flight::RowKey<"d">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(b))));
 }
 
 inline void initialize_matrix(flight::types::EntityConstruction<flight::Ref<flight::types::Matrix>> out, double a, double b, double c, double d, double tx, double ty) {
@@ -167,10 +175,10 @@ inline void initialize_matrix(flight::types::EntityConstruction<flight::Ref<flig
 inline flight::Ref<flight::types::Matrix> create_matrix(std::optional<double> a = std::nullopt, std::optional<double> b = std::nullopt, std::optional<double> c = std::nullopt, std::optional<double> d = std::nullopt, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Matrix>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Matrix>>();
   initialize_matrix(out, a.value_or(1.0), b.value_or(0.0), c.value_or(0.0), d.value_or(1.0), tx.value_or(0.0), ty.value_or(0.0));
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Matrix>>(out);
 }
 
-inline bool inverse_matrix(flight::Ref<flight::types::MatrixLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source) {
+inline bool inverse_matrix(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
   const double a = flight::row_get<flight::RowKey<"a">>(source);
   const double b = flight::row_get<flight::RowKey<"b">>(source);
   const double c = flight::row_get<flight::RowKey<"c">>(source);
@@ -179,9 +187,9 @@ inline bool inverse_matrix(flight::Ref<flight::types::MatrixLike> out, flight::S
   const double ty = flight::row_get<flight::RowKey<"ty">>(source);
   const double det = ((a * d) - (c * b));
   if ((det == 0.0)) {
-    out->a = out->b = out->c = out->d = 0.0;
-    out->tx = -tx;
-    out->ty = -ty;
+    (out->a = (out->b = (out->c = (out->d = 0.0))));
+    (out->tx = -tx);
+    (out->ty = -ty);
     return false;
   }
   const double inv_det = (1.0 / det);
@@ -189,51 +197,51 @@ inline bool inverse_matrix(flight::Ref<flight::types::MatrixLike> out, flight::S
   const double out_b = (-b * inv_det);
   const double out_c = (-c * inv_det);
   const double out_d = (a * inv_det);
-  out->a = out_a;
-  out->b = out_b;
-  out->c = out_c;
-  out->d = out_d;
-  out->tx = -((out_a * tx) + (out_c * ty));
-  out->ty = -((out_b * tx) + (out_d * ty));
+  (out->a = out_a);
+  (out->b = out_b);
+  (out->c = out_c);
+  (out->d = out_d);
+  (out->tx = -((out_a * tx) + (out_c * ty)));
+  (out->ty = -((out_b * tx) + (out_d * ty)));
   return true;
 }
 
-inline void inverse_matrix_transform_point_xy(flight::Ref<flight::types::Vector2Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source, double x, double y) {
+inline void inverse_matrix_transform_point_xy(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source, double x, double y) {
   const double norm = ((flight::row_get<flight::RowKey<"a">>(source) * flight::row_get<flight::RowKey<"d">>(source)) - (flight::row_get<flight::RowKey<"b">>(source) * flight::row_get<flight::RowKey<"c">>(source)));
   if ((norm == 0.0)) {
-    out->x = -flight::row_get<flight::RowKey<"tx">>(source);
-    out->y = -flight::row_get<flight::RowKey<"ty">>(source);
+    (out->x = -flight::row_get<flight::RowKey<"tx">>(source));
+    (out->y = -flight::row_get<flight::RowKey<"ty">>(source));
   }
   else {
     const double px = ((1.0 / norm) * ((flight::row_get<flight::RowKey<"c">>(source) * (flight::row_get<flight::RowKey<"ty">>(source) - y)) + (flight::row_get<flight::RowKey<"d">>(source) * (x - flight::row_get<flight::RowKey<"tx">>(source)))));
-    out->y = ((1.0 / norm) * ((flight::row_get<flight::RowKey<"a">>(source) * (y - flight::row_get<flight::RowKey<"ty">>(source))) + (flight::row_get<flight::RowKey<"b">>(source) * (flight::row_get<flight::RowKey<"tx">>(source) - x))));
-    out->x = px;
+    (out->y = ((1.0 / norm) * ((flight::row_get<flight::RowKey<"a">>(source) * (y - flight::row_get<flight::RowKey<"ty">>(source))) + (flight::row_get<flight::RowKey<"b">>(source) * (flight::row_get<flight::RowKey<"tx">>(source) - x)))));
+    (out->x = px);
   }
 }
 
-inline void inverse_matrix_transform_point(flight::Ref<flight::types::Vector2Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>> point) {
+inline void inverse_matrix_transform_point(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>> point) {
   inverse_matrix_transform_point_xy(out, matrix, flight::row_get<flight::RowKey<"x">>(point), flight::row_get<flight::RowKey<"y">>(point));
 }
 
-inline void inverse_matrix_transform_vector_xy(flight::Ref<flight::types::Vector2Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source, double x, double y) {
+inline void inverse_matrix_transform_vector_xy(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source, double x, double y) {
   const double norm = ((flight::row_get<flight::RowKey<"a">>(source) * flight::row_get<flight::RowKey<"d">>(source)) - (flight::row_get<flight::RowKey<"b">>(source) * flight::row_get<flight::RowKey<"c">>(source)));
   if ((norm == 0.0)) {
-    out->x = 0.0;
-    out->y = 0.0;
+    (out->x = 0.0);
+    (out->y = 0.0);
   }
   else {
     const double px = ((1.0 / norm) * ((flight::row_get<flight::RowKey<"d">>(source) * x) - (flight::row_get<flight::RowKey<"c">>(source) * y)));
-    out->y = ((1.0 / norm) * ((-flight::row_get<flight::RowKey<"b">>(source) * x) + (flight::row_get<flight::RowKey<"a">>(source) * y)));
-    out->x = px;
+    (out->y = ((1.0 / norm) * ((-flight::row_get<flight::RowKey<"b">>(source) * x) + (flight::row_get<flight::RowKey<"a">>(source) * y))));
+    (out->x = px);
   }
 }
 
-inline void inverse_matrix_transform_vector(flight::Ref<flight::types::Vector2Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>> vector) {
+inline void inverse_matrix_transform_vector(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>> vector) {
   inverse_matrix_transform_vector_xy(out, matrix, flight::row_get<flight::RowKey<"x">>(vector), flight::row_get<flight::RowKey<"y">>(vector));
 }
 
-inline void matrix_transform_bounds(flight::Ref<flight::types::RectangleLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source, double ax, double ay, double bx, double by) {
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> object_pattern_value = source;
+inline void matrix_transform_bounds(flight::types::RectangleLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source, double ax, double ay, double bx, double by) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> object_pattern_value = source;
   auto a = flight::row_get<flight::RowKey<"a">>(object_pattern_value);
   auto b = flight::row_get<flight::RowKey<"b">>(object_pattern_value);
   auto c = flight::row_get<flight::RowKey<"c">>(object_pattern_value);
@@ -241,10 +249,10 @@ inline void matrix_transform_bounds(flight::Ref<flight::types::RectangleLike> ou
   auto source_tx = flight::row_get<flight::RowKey<"tx">>(object_pattern_value);
   auto source_ty = flight::row_get<flight::RowKey<"ty">>(object_pattern_value);
   if (((ax == bx) && (ay == by))) {
-    out->x = source_tx;
-    out->y = source_ty;
-    out->width = 0.0;
-    out->height = 0.0;
+    (out->x = source_tx);
+    (out->y = source_ty);
+    (out->width = 0.0);
+    (out->height = 0.0);
     return;
   }
   double tx0 = ((a * ax) + (c * ay));
@@ -254,78 +262,78 @@ inline void matrix_transform_bounds(flight::Ref<flight::types::RectangleLike> ou
   double tx = ((a * bx) + (c * ay));
   double ty = ((b * bx) + (d * ay));
   if ((tx < tx0)) {
-    tx0 = tx;
+    (tx0 = tx);
   }
   if ((ty < ty0)) {
-    ty0 = ty;
+    (ty0 = ty);
   }
   if ((tx > tx1)) {
-    tx1 = tx;
+    (tx1 = tx);
   }
   if ((ty > ty1)) {
-    ty1 = ty;
+    (ty1 = ty);
   }
-  tx = ((a * bx) + (c * by));
-  ty = ((b * bx) + (d * by));
+  (tx = ((a * bx) + (c * by)));
+  (ty = ((b * bx) + (d * by)));
   if ((tx < tx0)) {
-    tx0 = tx;
+    (tx0 = tx);
   }
   if ((ty < ty0)) {
-    ty0 = ty;
+    (ty0 = ty);
   }
   if ((tx > tx1)) {
-    tx1 = tx;
+    (tx1 = tx);
   }
   if ((ty > ty1)) {
-    ty1 = ty;
+    (ty1 = ty);
   }
-  tx = ((a * ax) + (c * by));
-  ty = ((b * ax) + (d * by));
+  (tx = ((a * ax) + (c * by)));
+  (ty = ((b * ax) + (d * by)));
   if ((tx < tx0)) {
-    tx0 = tx;
+    (tx0 = tx);
   }
   if ((ty < ty0)) {
-    ty0 = ty;
+    (ty0 = ty);
   }
   if ((tx > tx1)) {
-    tx1 = tx;
+    (tx1 = tx);
   }
   if ((ty > ty1)) {
-    ty1 = ty;
+    (ty1 = ty);
   }
-  out->x = (tx0 + source_tx);
-  out->y = (ty0 + source_ty);
-  out->width = (tx1 - tx0);
-  out->height = (ty1 - ty0);
+  (out->x = (tx0 + source_tx));
+  (out->y = (ty0 + source_ty));
+  (out->width = (tx1 - tx0));
+  (out->height = (ty1 - ty0));
 }
 
-inline void matrix_transform_bounds_vector2(flight::Ref<flight::types::RectangleLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>> b) {
+inline void matrix_transform_bounds_vector2(flight::types::RectangleLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>> b) {
   matrix_transform_bounds(out, matrix, flight::row_get<flight::RowKey<"x">>(a), flight::row_get<flight::RowKey<"y">>(a), flight::row_get<flight::RowKey<"x">>(b), flight::row_get<flight::RowKey<"y">>(b));
 }
 
-inline void matrix_transform_point_xy(flight::Ref<flight::types::Vector2Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source, double x, double y) {
-  out->x = (((x * flight::row_get<flight::RowKey<"a">>(source)) + (y * flight::row_get<flight::RowKey<"c">>(source))) + flight::row_get<flight::RowKey<"tx">>(source));
-  out->y = (((x * flight::row_get<flight::RowKey<"b">>(source)) + (y * flight::row_get<flight::RowKey<"d">>(source))) + flight::row_get<flight::RowKey<"ty">>(source));
+inline void matrix_transform_point_xy(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source, double x, double y) {
+  (out->x = (((x * flight::row_get<flight::RowKey<"a">>(source)) + (y * flight::row_get<flight::RowKey<"c">>(source))) + flight::row_get<flight::RowKey<"tx">>(source)));
+  (out->y = (((x * flight::row_get<flight::RowKey<"b">>(source)) + (y * flight::row_get<flight::RowKey<"d">>(source))) + flight::row_get<flight::RowKey<"ty">>(source)));
 }
 
-inline void matrix_transform_point(flight::Ref<flight::types::Vector2Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>> point) {
+inline void matrix_transform_point(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>> point) {
   matrix_transform_point_xy(out, matrix, flight::row_get<flight::RowKey<"x">>(point), flight::row_get<flight::RowKey<"y">>(point));
 }
 
-inline void matrix_transform_rectangle(flight::Ref<flight::types::RectangleLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>> source) {
+inline void matrix_transform_rectangle(flight::types::RectangleLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>> source) {
   matrix_transform_bounds(out, matrix, flight::row_get<flight::RowKey<"x">>(source), flight::row_get<flight::RowKey<"y">>(source), (flight::row_get<flight::RowKey<"x">>(source) + flight::row_get<flight::RowKey<"width">>(source)), (flight::row_get<flight::RowKey<"y">>(source) + flight::row_get<flight::RowKey<"height">>(source)));
 }
 
-inline void matrix_transform_vector_xy(flight::Ref<flight::types::Vector2Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source, double x, double y) {
-  out->x = ((x * flight::row_get<flight::RowKey<"a">>(source)) + (y * flight::row_get<flight::RowKey<"c">>(source)));
-  out->y = ((x * flight::row_get<flight::RowKey<"b">>(source)) + (y * flight::row_get<flight::RowKey<"d">>(source)));
+inline void matrix_transform_vector_xy(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source, double x, double y) {
+  (out->x = ((x * flight::row_get<flight::RowKey<"a">>(source)) + (y * flight::row_get<flight::RowKey<"c">>(source))));
+  (out->y = ((x * flight::row_get<flight::RowKey<"b">>(source)) + (y * flight::row_get<flight::RowKey<"d">>(source))));
 }
 
-inline void matrix_transform_vector(flight::Ref<flight::types::Vector2Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>> vector) {
+inline void matrix_transform_vector(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>> vector) {
   matrix_transform_vector_xy(out, matrix, flight::row_get<flight::RowKey<"x">>(vector), flight::row_get<flight::RowKey<"y">>(vector));
 }
 
-inline void multiply_matrix(flight::Ref<flight::types::MatrixLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> b) {
+inline void multiply_matrix(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> b) {
   const double a1 = flight::row_get<flight::RowKey<"a">>(a);
   const double b1 = flight::row_get<flight::RowKey<"b">>(a);
   const double tx1 = flight::row_get<flight::RowKey<"tx">>(a);
@@ -338,18 +346,18 @@ inline void multiply_matrix(flight::Ref<flight::types::MatrixLike> out, flight::
   const double c2 = flight::row_get<flight::RowKey<"c">>(b);
   const double d2 = flight::row_get<flight::RowKey<"d">>(b);
   const double ty2 = flight::row_get<flight::RowKey<"ty">>(b);
-  out->a = ((a1 * a2) + (c1 * b2));
-  out->b = ((b1 * a2) + (d1 * b2));
-  out->tx = (((a1 * tx2) + (c1 * ty2)) + tx1);
-  out->c = ((a1 * c2) + (c1 * d2));
-  out->d = ((b1 * c2) + (d1 * d2));
-  out->ty = (((b1 * tx2) + (d1 * ty2)) + ty1);
+  (out->a = ((a1 * a2) + (c1 * b2)));
+  (out->b = ((b1 * a2) + (d1 * b2)));
+  (out->tx = (((a1 * tx2) + (c1 * ty2)) + tx1));
+  (out->c = ((a1 * c2) + (c1 * d2)));
+  (out->d = ((b1 * c2) + (d1 * d2)));
+  (out->ty = (((b1 * tx2) + (d1 * ty2)) + ty1));
 }
 
-inline void rotate_matrix(flight::Ref<flight::types::MatrixLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source, double theta) {
+inline void rotate_matrix(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source, double theta) {
   auto cos = std::cos(theta);
   auto sin = std::sin(theta);
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> object_pattern_value = source;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> object_pattern_value = source;
   auto a = flight::row_get<flight::RowKey<"a">>(object_pattern_value);
   auto b = flight::row_get<flight::RowKey<"b">>(object_pattern_value);
   auto c = flight::row_get<flight::RowKey<"c">>(object_pattern_value);
@@ -357,74 +365,74 @@ inline void rotate_matrix(flight::Ref<flight::types::MatrixLike> out, flight::St
   auto tx = flight::row_get<flight::RowKey<"tx">>(object_pattern_value);
   auto ty = flight::row_get<flight::RowKey<"ty">>(object_pattern_value);
   const double a1 = ((a * cos) - (b * sin));
-  out->b = ((a * sin) + (b * cos));
-  out->a = a1;
+  (out->b = ((a * sin) + (b * cos)));
+  (out->a = a1);
   const double c1 = ((c * cos) - (d * sin));
-  out->d = ((c * sin) + (d * cos));
-  out->c = c1;
+  (out->d = ((c * sin) + (d * cos)));
+  (out->c = c1);
   const double tx1 = ((tx * cos) - (ty * sin));
-  out->ty = ((tx * sin) + (ty * cos));
-  out->tx = tx1;
+  (out->ty = ((tx * sin) + (ty * cos)));
+  (out->tx = tx1);
 }
 
-inline void scale_matrix(flight::Ref<flight::types::MatrixLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source, double sx, double sy) {
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> object_pattern_value = source;
+inline void scale_matrix(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source, double sx, double sy) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> object_pattern_value = source;
   auto a = flight::row_get<flight::RowKey<"a">>(object_pattern_value);
   auto b = flight::row_get<flight::RowKey<"b">>(object_pattern_value);
   auto c = flight::row_get<flight::RowKey<"c">>(object_pattern_value);
   auto d = flight::row_get<flight::RowKey<"d">>(object_pattern_value);
   auto tx = flight::row_get<flight::RowKey<"tx">>(object_pattern_value);
   auto ty = flight::row_get<flight::RowKey<"ty">>(object_pattern_value);
-  out->a = (a * sx);
-  out->b = (b * sy);
-  out->c = (c * sx);
-  out->d = (d * sy);
-  out->tx = (tx * sx);
-  out->ty = (ty * sy);
+  (out->a = (a * sx));
+  (out->b = (b * sy));
+  (out->c = (c * sx));
+  (out->d = (d * sy));
+  (out->tx = (tx * sx));
+  (out->ty = (ty * sy));
 }
 
-inline void set_gradient_transform_matrix(flight::Ref<flight::types::MatrixLike> out, double width, double height, std::optional<double> rotation = std::nullopt, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
+inline void set_gradient_transform_matrix(flight::types::MatrixLike out, double width, double height, std::optional<double> rotation = std::nullopt, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
   rotation = rotation.value_or(0.0);
   tx = tx.value_or(0.0);
   ty = ty.value_or(0.0);
-  out->a = (width / 1638.4);
-  out->d = (height / 1638.4);
+  (out->a = (width / 1638.4));
+  (out->d = (height / 1638.4));
   if ((rotation.value() != 0.0)) {
     auto cos = std::cos(rotation.value());
     auto sin = std::sin(rotation.value());
-    out->b = (sin * out->d);
-    out->c = (-sin * out->a);
-    out->a *= cos;
-    out->d *= cos;
+    (out->b = (sin * out->d));
+    (out->c = (-sin * out->a));
+    (out->a *= cos);
+    (out->d *= cos);
   }
   else {
-    out->b = 0.0;
-    out->c = 0.0;
+    (out->b = 0.0);
+    (out->c = 0.0);
   }
-  out->tx = (tx.value() + (width / 2.0));
-  out->ty = (ty.value() + (height / 2.0));
+  (out->tx = (tx.value() + (width / 2.0)));
+  (out->ty = (ty.value() + (height / 2.0)));
 }
 
 inline flight::Ref<flight::types::Matrix> create_gradient_transform_matrix(double width, double height, std::optional<double> rotation = std::nullopt, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
   rotation = rotation.value_or(0.0);
   tx = tx.value_or(0.0);
   ty = ty.value_or(0.0);
-  flight::Ref<flight::types::Matrix> out = create_matrix();
+  flight::Ref<flight::types::Matrix> out = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   set_gradient_transform_matrix(out, width, height, rotation.value(), tx.value(), ty.value());
   return out;
 }
 
-inline void set_matrix(flight::Ref<flight::types::MatrixLike> out, double a, double b, double c, double d, double tx, double ty) {
-  out->a = a;
-  out->b = b;
-  out->c = c;
-  out->d = d;
-  out->tx = tx;
-  out->ty = ty;
+inline void set_matrix(flight::types::MatrixLike out, double a, double b, double c, double d, double tx, double ty) {
+  (out->a = a);
+  (out->b = b);
+  (out->c = c);
+  (out->d = d);
+  (out->tx = tx);
+  (out->ty = ty);
 }
 
-inline void copy_matrix(flight::Ref<flight::types::MatrixLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source) {
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> object_pattern_value = source;
+inline void copy_matrix(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> object_pattern_value = source;
   auto a = flight::row_get<flight::RowKey<"a">>(object_pattern_value);
   auto b = flight::row_get<flight::RowKey<"b">>(object_pattern_value);
   auto c = flight::row_get<flight::RowKey<"c">>(object_pattern_value);
@@ -434,73 +442,73 @@ inline void copy_matrix(flight::Ref<flight::types::MatrixLike> out, flight::Stru
   set_matrix(out, a, b, c, d, tx, ty);
 }
 
-inline flight::Ref<flight::types::Matrix> clone_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source) {
-  flight::Ref<flight::types::Matrix> m = create_matrix();
+inline flight::Ref<flight::types::Matrix> clone_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
+  flight::Ref<flight::types::Matrix> m = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   copy_matrix(m, source);
   return m;
 }
 
-inline void set_matrix_from_float32_array(flight::Ref<flight::types::MatrixLike> out, double offset, flight::Float32Array source) {
-  out->a = source.element(offset);
-  out->b = source.element((offset + 1.0));
-  out->c = source.element((offset + 2.0));
-  out->d = source.element((offset + 3.0));
-  out->tx = source.element((offset + 4.0));
-  out->ty = source.element((offset + 5.0));
+inline void set_matrix_from_float32_array(flight::types::MatrixLike out, double offset, flight::Float32Array source) {
+  (out->a = source.element(offset));
+  (out->b = source.element((offset + 1.0)));
+  (out->c = source.element((offset + 2.0)));
+  (out->d = source.element((offset + 3.0)));
+  (out->tx = source.element((offset + 4.0)));
+  (out->ty = source.element((offset + 5.0)));
 }
 
-inline void set_matrix_from_matrix3(flight::Ref<flight::types::MatrixLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>> source) {
+inline void set_matrix_from_matrix3(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix3Like>>> source) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"m">>(source);
   set_matrix(out, m.element(0.0), m.element(3.0), m.element(1.0), m.element(4.0), m.element(6.0), m.element(7.0));
 }
 
-inline void set_matrix_from_matrix4(flight::Ref<flight::types::MatrixLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
+inline void set_matrix_from_matrix4(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
   flight::Float32Array s = flight::row_get<flight::RowKey<"m">>(source);
-  out->a = s.element(0.0);
-  out->b = s.element(4.0);
-  out->tx = s.element(12.0);
-  out->c = s.element(1.0);
-  out->d = s.element(5.0);
-  out->ty = s.element(13.0);
+  (out->a = s.element(0.0));
+  (out->b = s.element(4.0));
+  (out->tx = s.element(12.0));
+  (out->c = s.element(1.0));
+  (out->d = s.element(5.0));
+  (out->ty = s.element(13.0));
 }
 
-inline void set_matrix_identity(flight::Ref<flight::types::MatrixLike> out) {
+inline void set_matrix_identity(flight::types::MatrixLike out) {
   set_matrix(out, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0);
 }
 
-inline void set_transform_matrix(flight::Ref<flight::types::MatrixLike> out, double scale_x, double scale_y, std::optional<double> rotation = std::nullopt, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
+inline void set_transform_matrix(flight::types::MatrixLike out, double scale_x, double scale_y, std::optional<double> rotation = std::nullopt, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
   rotation = rotation.value_or(0.0);
   tx = tx.value_or(0.0);
   ty = ty.value_or(0.0);
   if ((rotation.value() != 0.0)) {
     auto cos = std::cos(rotation.value());
     auto sin = std::sin(rotation.value());
-    out->a = (cos * scale_x);
-    out->b = (sin * scale_y);
-    out->c = (-sin * scale_x);
-    out->d = (cos * scale_y);
+    (out->a = (cos * scale_x));
+    (out->b = (sin * scale_y));
+    (out->c = (-sin * scale_x));
+    (out->d = (cos * scale_y));
   }
   else {
-    out->a = scale_x;
-    out->b = 0.0;
-    out->c = 0.0;
-    out->d = scale_y;
+    (out->a = scale_x);
+    (out->b = 0.0);
+    (out->c = 0.0);
+    (out->d = scale_y);
   }
-  out->tx = tx.value();
-  out->ty = ty.value();
+  (out->tx = tx.value());
+  (out->ty = ty.value());
 }
 
 inline flight::Ref<flight::types::Matrix> create_transform_matrix(double scale_x, double scale_y, std::optional<double> rotation = std::nullopt, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
   rotation = rotation.value_or(0.0);
   tx = tx.value_or(0.0);
   ty = ty.value_or(0.0);
-  flight::Ref<flight::types::Matrix> out = create_matrix();
+  flight::Ref<flight::types::Matrix> out = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   set_transform_matrix(out, scale_x, scale_y, rotation.value(), tx.value(), ty.value());
   return out;
 }
 
-inline void translate_matrix(flight::Ref<flight::types::MatrixLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source, double dx, double dy) {
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> object_pattern_value = source;
+inline void translate_matrix(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source, double dx, double dy) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> object_pattern_value = source;
   auto a = flight::row_get<flight::RowKey<"a">>(object_pattern_value);
   auto b = flight::row_get<flight::RowKey<"b">>(object_pattern_value);
   auto c = flight::row_get<flight::RowKey<"c">>(object_pattern_value);
@@ -510,8 +518,8 @@ inline void translate_matrix(flight::Ref<flight::types::MatrixLike> out, flight:
   set_matrix(out, a, b, c, d, (tx + dx), (ty + dy));
 }
 
-inline void translate_matrix_by_vector_xy(flight::Ref<flight::types::MatrixLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source, double x, double y) {
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> object_pattern_value = source;
+inline void translate_matrix_by_vector_xy(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source, double x, double y) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> object_pattern_value = source;
   auto a = flight::row_get<flight::RowKey<"a">>(object_pattern_value);
   auto b = flight::row_get<flight::RowKey<"b">>(object_pattern_value);
   auto c = flight::row_get<flight::RowKey<"c">>(object_pattern_value);
@@ -521,17 +529,17 @@ inline void translate_matrix_by_vector_xy(flight::Ref<flight::types::MatrixLike>
   set_matrix(out, a, b, c, d, ((tx + (a * x)) + (c * y)), ((ty + (b * x)) + (d * y)));
 }
 
-inline void translate_matrix_by_vector(flight::Ref<flight::types::MatrixLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2Like>>>> vector) {
+inline void translate_matrix_by_vector(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> matrix, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>> vector) {
   translate_matrix_by_vector_xy(out, matrix, flight::row_get<flight::RowKey<"x">>(vector), flight::row_get<flight::RowKey<"y">>(vector));
 }
 
-inline void write_matrix_to_float32_array(flight::Float32Array out, double offset, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source) {
-  out.element(offset) = flight::row_get<flight::RowKey<"a">>(source);
-  out.element((offset + 1.0)) = flight::row_get<flight::RowKey<"b">>(source);
-  out.element((offset + 2.0)) = flight::row_get<flight::RowKey<"c">>(source);
-  out.element((offset + 3.0)) = flight::row_get<flight::RowKey<"d">>(source);
-  out.element((offset + 4.0)) = flight::row_get<flight::RowKey<"tx">>(source);
-  out.element((offset + 5.0)) = flight::row_get<flight::RowKey<"ty">>(source);
+inline void write_matrix_to_float32_array(flight::Float32Array out, double offset, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
+  (out.element(offset) = flight::row_get<flight::RowKey<"a">>(source));
+  (out.element((offset + 1.0)) = flight::row_get<flight::RowKey<"b">>(source));
+  (out.element((offset + 2.0)) = flight::row_get<flight::RowKey<"c">>(source));
+  (out.element((offset + 3.0)) = flight::row_get<flight::RowKey<"d">>(source));
+  (out.element((offset + 4.0)) = flight::row_get<flight::RowKey<"tx">>(source));
+  (out.element((offset + 5.0)) = flight::row_get<flight::RowKey<"ty">>(source));
 }
 
 } // namespace flight::geometry

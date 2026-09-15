@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct GodRaysEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/god_rays_effect.hpp>
@@ -28,7 +31,7 @@ struct exposure_samples_weight_decay_center_x_center_y_density_0f92475b54b33657 
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_0F92475B54B33657
 
 inline void initialize_god_rays_effect(flight::types::EntityConstruction<flight::Ref<flight::types::GodRaysEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_samples_weight_decay_center_x_center_y_density_0f92475b54b33657>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("GodRaysEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::GodRaysEffect>>(out, flight::String("GodRaysEffect"));
   flight::row_set<flight::RowKey<"centerX">>(out, flight::row_get<flight::RowKey<"centerX">>(options));
   flight::row_set<flight::RowKey<"centerY">>(out, flight::row_get<flight::RowKey<"centerY">>(options));
   flight::row_set<flight::RowKey<"density">>(out, flight::row_get<flight::RowKey<"density">>(options));
@@ -42,7 +45,7 @@ inline flight::Ref<flight::types::GodRaysEffect> create_god_rays_effect(std::opt
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_samples_weight_decay_center_x_center_y_density_0f92475b54b33657>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::GodRaysEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::GodRaysEffect>>();
   initialize_god_rays_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::GodRaysEffect>>(out);
 }
 
 } // namespace flight::effects

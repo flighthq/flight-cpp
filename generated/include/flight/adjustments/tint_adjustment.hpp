@@ -5,6 +5,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct TintAdjustment; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/adjustment_kind.hpp>
 #include <flight/types/entity.hpp>
@@ -19,13 +21,13 @@ inline void initialize_tint_adjustment(flight::types::EntityConstruction<flight:
   const double blue_scale = (flight::bitwise_and(flight::unsigned_right_shift(rgba, 8.0), 255.0) / 255.0);
   const double alpha_scale = (flight::bitwise_and(rgba, 255.0) / 255.0);
   flight::Array<double> color_matrix = flight::Array<double>{red_scale, 0.0, 0.0, 0.0, 0.0, 0.0, green_scale, 0.0, 0.0, 0.0, 0.0, 0.0, blue_scale, 0.0, 0.0, 0.0, 0.0, 0.0, alpha_scale, 0.0};
-  flight::adjustments::initialize_color_matrix_adjustment(out, flight::String("TintAdjustment"), color_matrix);
+  flight::adjustments::initialize_color_matrix_adjustment<flight::Ref<flight::types::TintAdjustment>>(out, flight::String("TintAdjustment"), color_matrix);
 }
 
 inline flight::Ref<flight::types::TintAdjustment> create_tint_adjustment(double rgba) {
   flight::types::EntityConstruction<flight::Ref<flight::types::TintAdjustment>> out = flight::entity::allocate_entity<flight::Ref<flight::types::TintAdjustment>>();
   initialize_tint_adjustment(out, rgba);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::TintAdjustment>>(out);
 }
 
 } // namespace flight::adjustments

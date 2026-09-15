@@ -8,13 +8,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Sampler; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/sampler.hpp>
 
 namespace flight::texture {
 
-inline flight::Ref<flight::types::Sampler> clone_sampler(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>> source) {
+inline flight::Ref<flight::types::Sampler> clone_sampler(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>> source) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Sampler>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Sampler>>();
   flight::row_set<flight::RowKey<"anisotropy">>(out, flight::row_get<flight::RowKey<"anisotropy">>(source));
   flight::row_set<flight::RowKey<"magFilter">>(out, flight::row_get<flight::RowKey<"magFilter">>(source));
@@ -22,23 +25,23 @@ inline flight::Ref<flight::types::Sampler> clone_sampler(flight::StructuralRef<f
   flight::row_set<flight::RowKey<"mipmaps">>(out, flight::row_get<flight::RowKey<"mipmaps">>(source));
   flight::row_set<flight::RowKey<"wrapU">>(out, flight::row_get<flight::RowKey<"wrapU">>(source));
   flight::row_set<flight::RowKey<"wrapV">>(out, flight::row_get<flight::RowKey<"wrapV">>(source));
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Sampler>>(out);
 }
 
-inline void copy_sampler(flight::Ref<flight::types::SamplerLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>> source) {
-  out->anisotropy = flight::row_get<flight::RowKey<"anisotropy">>(source);
-  out->mag_filter = flight::row_get<flight::RowKey<"magFilter">>(source);
-  out->min_filter = flight::row_get<flight::RowKey<"minFilter">>(source);
-  out->mipmaps = flight::row_get<flight::RowKey<"mipmaps">>(source);
-  out->wrap_u = flight::row_get<flight::RowKey<"wrapU">>(source);
-  out->wrap_v = flight::row_get<flight::RowKey<"wrapV">>(source);
+inline void copy_sampler(flight::types::SamplerLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>> source) {
+  (out->anisotropy = flight::row_get<flight::RowKey<"anisotropy">>(source));
+  (out->mag_filter = flight::row_get<flight::RowKey<"magFilter">>(source));
+  (out->min_filter = flight::row_get<flight::RowKey<"minFilter">>(source));
+  (out->mipmaps = flight::row_get<flight::RowKey<"mipmaps">>(source));
+  (out->wrap_u = flight::row_get<flight::RowKey<"wrapU">>(source));
+  (out->wrap_v = flight::row_get<flight::RowKey<"wrapV">>(source));
 }
 
-inline bool equals_sampler(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>, flight::Null, flight::Undefined> b) {
+inline bool equals_sampler(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>, flight::Null, flight::Undefined> b) {
   if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
-  return ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(b)) || ((((((flight::row_get<flight::RowKey<"anisotropy">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(a)) == flight::row_get<flight::RowKey<"anisotropy">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(b))) && (flight::row_get<flight::RowKey<"magFilter">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(a)) == flight::row_get<flight::RowKey<"magFilter">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"minFilter">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(a)) == flight::row_get<flight::RowKey<"minFilter">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"mipmaps">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(a)) == flight::row_get<flight::RowKey<"mipmaps">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"wrapU">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(a)) == flight::row_get<flight::RowKey<"wrapU">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(b)))) && (flight::row_get<flight::RowKey<"wrapV">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(a)) == flight::row_get<flight::RowKey<"wrapV">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>>(b)))));
+  return ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(b)) || ((((((flight::row_get<flight::RowKey<"anisotropy">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(a)) == flight::row_get<flight::RowKey<"anisotropy">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(b))) && (flight::row_get<flight::RowKey<"magFilter">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(a)) == flight::row_get<flight::RowKey<"magFilter">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(b)))) && (flight::row_get<flight::RowKey<"minFilter">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(a)) == flight::row_get<flight::RowKey<"minFilter">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(b)))) && (flight::row_get<flight::RowKey<"mipmaps">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(a)) == flight::row_get<flight::RowKey<"mipmaps">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(b)))) && (flight::row_get<flight::RowKey<"wrapU">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(a)) == flight::row_get<flight::RowKey<"wrapU">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(b)))) && (flight::row_get<flight::RowKey<"wrapV">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(a)) == flight::row_get<flight::RowKey<"wrapV">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(b)))));
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_45A866961DA67592
@@ -65,7 +68,7 @@ inline void initialize_sampler(flight::types::EntityConstruction<flight::Ref<fli
 inline flight::Ref<flight::types::Sampler> create_sampler(std::optional<flight::Ref<anisotropy_mag_filter_min_filter_mipmaps_wrap_u_wrap_v_45a866961da67592>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Sampler>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Sampler>>();
   initialize_sampler(out, opts);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Sampler>>(out);
 }
 
 inline flight::Ref<flight::types::Sampler> create_anisotropic_sampler(double level) {
@@ -73,7 +76,7 @@ inline flight::Ref<flight::types::Sampler> create_anisotropic_sampler(double lev
 }
 
 inline flight::Ref<flight::types::Sampler> create_clamp_linear_sampler() {
-  return create_sampler();
+  return create_sampler(std::nullopt);
 }
 
 inline flight::Ref<flight::types::Sampler> create_pixel_art_sampler() {

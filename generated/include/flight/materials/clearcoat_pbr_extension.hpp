@@ -10,6 +10,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct ClearcoatPbrExtension; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Sampler; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct VoxelGrid; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/clearcoat_pbr_extension.hpp>
 #include <flight/types/entity.hpp>
@@ -106,7 +112,7 @@ inline void initialize_clearcoat_pbr_extension(flight::types::EntityConstruction
 inline flight::Ref<flight::types::ClearcoatPbrExtension> create_clearcoat_pbr_extension(std::optional<flight::Ref<entity_runtime_key_kind_clearcoat_clearcoat_map_clearcoat_map_uv_set_clearcoat_normal_map_clearcoat_normal_map_uv_set_clearcoat_normal_scale_clearcoat_roughness_clearcoat_roughness_map_clearcoat_roughness_map_uv_set_8d7831df5f83a4a3>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::ClearcoatPbrExtension>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ClearcoatPbrExtension>>();
   initialize_clearcoat_pbr_extension(out, opts);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::ClearcoatPbrExtension>>(out);
 }
 
 inline bool is_valid_clearcoat_pbr_extension(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ClearcoatPbrExtension>>>> value) {

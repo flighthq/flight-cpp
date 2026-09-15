@@ -24,7 +24,7 @@ inline double next_power_of_two(double n) {
   if ((n <= 1.0)) {
     return 1.0;
   }
-  n = flight::bitwise_or((n - 1.0), 0.0);
+  (n = flight::bitwise_or((n - 1.0), 0.0));
   ([&]() { auto&& assignment_target = n; assignment_target = flight::bitwise_or(assignment_target, flight::signed_right_shift(n, 1.0)); return assignment_target; }());
   ([&]() { auto&& assignment_target = n; assignment_target = flight::bitwise_or(assignment_target, flight::signed_right_shift(n, 2.0)); return assignment_target; }());
   ([&]() { auto&& assignment_target = n; assignment_target = flight::bitwise_or(assignment_target, flight::signed_right_shift(n, 4.0)); return assignment_target; }());
@@ -37,7 +37,7 @@ inline double previous_power_of_two(double n) {
   if ((n <= 1.0)) {
     return 1.0;
   }
-  n = flight::bitwise_or(n, 0.0);
+  (n = flight::bitwise_or(n, 0.0));
   ([&]() { auto&& assignment_target = n; assignment_target = flight::bitwise_or(assignment_target, flight::signed_right_shift(n, 1.0)); return assignment_target; }());
   ([&]() { auto&& assignment_target = n; assignment_target = flight::bitwise_or(assignment_target, flight::signed_right_shift(n, 2.0)); return assignment_target; }());
   ([&]() { auto&& assignment_target = n; assignment_target = flight::bitwise_or(assignment_target, flight::signed_right_shift(n, 4.0)); return assignment_target; }());

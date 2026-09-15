@@ -11,6 +11,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Physics2DContact; }
+namespace flight::types { struct Physics2DContactEvents; }
+namespace flight::types { struct Physics2DContactHooks; }
+namespace flight::types { struct Physics2DJoint; }
+namespace flight::types { struct Physics2DJointEvents; }
+namespace flight::types { struct Physics2DJointReaction; }
+namespace flight::types { struct Physics2DJointSolver; }
+namespace flight::types { struct Physics2DSolverConfig; }
+namespace flight::types { struct Physics2DWorld; }
+namespace flight::types { struct RigidBody2D; }
+namespace flight::types { struct SpatialIndexBackend2D; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
@@ -28,13 +41,13 @@ inline void initialize_physics2_djoint_reaction(flight::types::EntityConstructio
 inline flight::Ref<flight::types::Physics2DJointReaction> create_physics2_djoint_reaction() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DJointReaction>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DJointReaction>>();
   initialize_physics2_djoint_reaction(out);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DJointReaction>>(out);
 }
 
 inline bool write_physics2_djoint_reaction(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>> joint, double dt, flight::Ref<flight::types::Physics2DJointReaction> out) {
-  out->force_x = 0.0;
-  out->force_y = 0.0;
-  out->torque = 0.0;
+  (out->force_x = 0.0);
+  (out->force_y = 0.0);
+  (out->torque = 0.0);
   if ((!(dt > 0.0) || !std::isfinite(dt))) {
     return false;
   }

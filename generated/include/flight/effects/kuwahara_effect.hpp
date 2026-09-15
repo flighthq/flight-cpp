@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct KuwaharaEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/kuwahara_effect.hpp>
@@ -22,7 +25,7 @@ struct radius_d9be18dea3ab105a : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D9BE18DEA3AB105A
 
 inline void initialize_kuwahara_effect(flight::types::EntityConstruction<flight::Ref<flight::types::KuwaharaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<radius_d9be18dea3ab105a>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("KuwaharaEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::KuwaharaEffect>>(out, flight::String("KuwaharaEffect"));
   flight::row_set<flight::RowKey<"radius">>(out, flight::row_get<flight::RowKey<"radius">>(options));
 }
 
@@ -30,7 +33,7 @@ inline flight::Ref<flight::types::KuwaharaEffect> create_kuwahara_effect(std::op
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<radius_d9be18dea3ab105a>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::KuwaharaEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::KuwaharaEffect>>();
   initialize_kuwahara_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::KuwaharaEffect>>(out);
 }
 
 } // namespace flight::effects

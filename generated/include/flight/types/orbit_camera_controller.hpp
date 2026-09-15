@@ -7,6 +7,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/vector3.hpp>
 #include <flight/types/entity.hpp>
@@ -41,7 +45,7 @@ struct OrbitCameraControllerOptions : public flight::ReferenceEnabled {
   std::optional<double> min_polar;
   std::optional<double> polar;
   std::optional<double> smooth_time;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> target;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> target;
 };
 
 } // namespace flight::types

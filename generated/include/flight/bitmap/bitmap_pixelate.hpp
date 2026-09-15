@@ -9,6 +9,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct BitmapRegion; }
+
 #include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_region.hpp>
@@ -45,7 +48,7 @@ inline void pixelate_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                   {
                     const double sy = (flight::row_get<flight::RowKey<"y">>(source) + py);
                     if (((sy < 0.0) || (sy >= bitmap_height))) {
-                      py += 1.0;
+                      (py += 1.0);
                       continue;
                     }
                     {
@@ -54,25 +57,25 @@ inline void pixelate_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                         {
                           const double sx = (flight::row_get<flight::RowKey<"x">>(source) + px);
                           if (((sx < 0.0) || (sx >= bitmap_width))) {
-                            px += 1.0;
+                            (px += 1.0);
                             continue;
                           }
                           const double si = (((sy * bitmap_width) + sx) * 4.0);
-                          r += static_cast<double>(data.element(si));
-                          g += static_cast<double>(data.element((si + 1.0)));
-                          b += static_cast<double>(data.element((si + 2.0)));
-                          a += static_cast<double>(data.element((si + 3.0)));
+                          (r += static_cast<double>(data.element(si)));
+                          (g += static_cast<double>(data.element((si + 1.0))));
+                          (b += static_cast<double>(data.element((si + 2.0))));
+                          (a += static_cast<double>(data.element((si + 3.0))));
                           count++;
                         }
-                        px += 1.0;
+                        (px += 1.0);
                       }
                     }
                   }
-                  py += 1.0;
+                  (py += 1.0);
                 }
               }
               if ((count == 0.0)) {
-                bx += block;
+                (bx += block);
                 continue;
               }
               auto ar = flight::round((r / count));
@@ -88,24 +91,24 @@ inline void pixelate_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                       while ((px_2 < x_end)) {
                         {
                           const double di = (((py_2 * w) + px_2) * 4.0);
-                          out.element(di) = ar;
-                          out.element((di + 1.0)) = ag;
-                          out.element((di + 2.0)) = ab;
-                          out.element((di + 3.0)) = aa;
+                          (out.element(di) = ar);
+                          (out.element((di + 1.0)) = ag);
+                          (out.element((di + 2.0)) = ab);
+                          (out.element((di + 3.0)) = aa);
                         }
-                        px_2 += 1.0;
+                        (px_2 += 1.0);
                       }
                     }
                   }
-                  py_2 += 1.0;
+                  (py_2 += 1.0);
                 }
               }
             }
-            bx += block;
+            (bx += block);
           }
         }
       }
-      by += block;
+      (by += block);
     }
   }
 }

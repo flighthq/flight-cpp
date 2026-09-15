@@ -9,6 +9,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct BitmapRegion; }
+
 #include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_region.hpp>
@@ -50,51 +53,51 @@ inline void apply_morphological(flight::Uint8ClampedArray out, flight::Structura
                           const double si = (((sy * bitmap_width) + sx) * 4.0);
                           if (dilate) {
                             if ((static_cast<double>(data.element(si)) > v_r)) {
-                              v_r = static_cast<double>(data.element(si));
+                              (v_r = static_cast<double>(data.element(si)));
                             }
                             if ((static_cast<double>(data.element((si + 1.0))) > v_g)) {
-                              v_g = static_cast<double>(data.element((si + 1.0)));
+                              (v_g = static_cast<double>(data.element((si + 1.0))));
                             }
                             if ((static_cast<double>(data.element((si + 2.0))) > v_b)) {
-                              v_b = static_cast<double>(data.element((si + 2.0)));
+                              (v_b = static_cast<double>(data.element((si + 2.0))));
                             }
                             if ((static_cast<double>(data.element((si + 3.0))) > v_a)) {
-                              v_a = static_cast<double>(data.element((si + 3.0)));
+                              (v_a = static_cast<double>(data.element((si + 3.0))));
                             }
                           }
                           else {
                             if ((static_cast<double>(data.element(si)) < v_r)) {
-                              v_r = static_cast<double>(data.element(si));
+                              (v_r = static_cast<double>(data.element(si)));
                             }
                             if ((static_cast<double>(data.element((si + 1.0))) < v_g)) {
-                              v_g = static_cast<double>(data.element((si + 1.0)));
+                              (v_g = static_cast<double>(data.element((si + 1.0))));
                             }
                             if ((static_cast<double>(data.element((si + 2.0))) < v_b)) {
-                              v_b = static_cast<double>(data.element((si + 2.0)));
+                              (v_b = static_cast<double>(data.element((si + 2.0))));
                             }
                             if ((static_cast<double>(data.element((si + 3.0))) < v_a)) {
-                              v_a = static_cast<double>(data.element((si + 3.0)));
+                              (v_a = static_cast<double>(data.element((si + 3.0))));
                             }
                           }
                         }
-                        kx += 1.0;
+                        (kx += 1.0);
                       }
                     }
                   }
-                  ky += 1.0;
+                  (ky += 1.0);
                 }
               }
               const double di = (((py * w) + px) * 4.0);
-              out.element(di) = v_r;
-              out.element((di + 1.0)) = v_g;
-              out.element((di + 2.0)) = v_b;
-              out.element((di + 3.0)) = v_a;
+              (out.element(di) = v_r);
+              (out.element((di + 1.0)) = v_g);
+              (out.element((di + 2.0)) = v_b);
+              (out.element((di + 3.0)) = v_a);
             }
-            px += 1.0;
+            (px += 1.0);
           }
         }
       }
-      py += 1.0;
+      (py += 1.0);
     }
   }
 }

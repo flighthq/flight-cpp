@@ -9,6 +9,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Spritesheet; }
+namespace flight::types { struct SpritesheetAnimation; }
+namespace flight::types { struct SpritesheetFrame; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct TextureAtlas; }
+namespace flight::types { struct TextureAtlasRegion; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/spritesheet.hpp>
@@ -48,7 +56,7 @@ inline void initialize_spritesheet_animation(flight::types::EntityConstruction<f
 inline flight::Ref<flight::types::SpritesheetAnimation> create_spritesheet_animation(std::optional<flight::Ref<entity_runtime_key_frames_frame_duration_frame_durations_direction_repeat_count_origin_x_origin_y_0b000cf350971a9f>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetAnimation>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpritesheetAnimation>>();
   initialize_spritesheet_animation(out, obj);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpritesheetAnimation>>(out);
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_516631BB1797EA0F
@@ -78,12 +86,12 @@ inline std::optional<flight::Ref<flight::types::SpritesheetAnimation>> create_sp
         const double region_id = frames.element(i)->id;
         std::optional<flight::Ref<flight::types::TextureAtlasRegion>> region = atlas.value()->regions.get(region_id);
         if (!region.has_value()) {
-          i += 1.0;
+          (i += 1.0);
           continue;
         }
-        const std::optional<flight::String> name = region->name;
+        const std::optional<flight::String> name = region.value()->name;
         if (!name.has_value()) {
-          i += 1.0;
+          (i += 1.0);
           continue;
         }
         const bool matches = (pattern.index() == 1 ? ((name.value() == std::get<1>(pattern)) || name.value().starts_with(std::get<1>(pattern))) : std::get<0>(pattern).test(name.value()));
@@ -91,7 +99,7 @@ inline std::optional<flight::Ref<flight::types::SpritesheetAnimation>> create_sp
           matched_indices.push(i);
         }
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   if ((static_cast<double>(matched_indices.size()) == 0.0)) {

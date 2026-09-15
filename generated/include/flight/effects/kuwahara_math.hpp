@@ -10,6 +10,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct KuwaharaEffect; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/kuwahara_effect.hpp>
 
@@ -30,14 +32,14 @@ inline double compute_kuwahara_gaussian_weights(double radius, flight::Float32Ar
           while ((x < size)) {
             {
               const double d = ((x * x) + (y * y));
-              out.element(((y * size) + x)) = std::exp((-d / two_sigma_sq));
-              sum += out.element(((y * size) + x));
+              (out.element(((y * size) + x)) = std::exp((-d / two_sigma_sq)));
+              (sum += out.element(((y * size) + x)));
             }
-            x += 1.0;
+            (x += 1.0);
           }
         }
       }
-      y += 1.0;
+      (y += 1.0);
     }
   }
   const double inv_sum = ((sum > 1e-10) ? (1.0 / sum) : 1.0);
@@ -45,9 +47,9 @@ inline double compute_kuwahara_gaussian_weights(double radius, flight::Float32Ar
     double i = 0.0;
     while ((i < (size * size))) {
       {
-        out.element(i) *= inv_sum;
+        (out.element(i) *= inv_sum);
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   return (size * size);
@@ -64,14 +66,14 @@ inline void compute_kuwahara_sector_offsets(double radius, flight::Array<double>
   const double v5 = 0.0;
   const double v6 = 0.0;
   const double v7 = 0.0;
-  out.element(0.0) = v0;
-  out.element(1.0) = v1;
-  out.element(2.0) = v2;
-  out.element(3.0) = v3;
-  out.element(4.0) = v4;
-  out.element(5.0) = v5;
-  out.element(6.0) = v6;
-  out.element(7.0) = v7;
+  (out.element(0.0) = v0);
+  (out.element(1.0) = v1);
+  (out.element(2.0) = v2);
+  (out.element(3.0) = v3);
+  (out.element(4.0) = v4);
+  (out.element(5.0) = v5);
+  (out.element(6.0) = v6);
+  (out.element(7.0) = v7);
 }
 
 inline double compute_kuwahara_sector_size(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::KuwaharaEffect>>>> effect) {

@@ -13,14 +13,22 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CollisionAabb2D; }
+namespace flight::types { struct CollisionCapsule2D; }
+namespace flight::types { struct CollisionCircle2D; }
+namespace flight::types { struct CollisionObb2D; }
+namespace flight::types { struct CollisionPoint2D; }
+namespace flight::types { struct CollisionPolygon2D; }
+namespace flight::types { struct CollisionSegment2D; }
+
 #include <flight/types/collision.hpp>
 #include <flight/collision/collision_shape_validation2_d.hpp>
 
 namespace flight::collision {
 
-inline const double relative_epsilon = 1e-9;
+inline const double relative_epsilon_flight_value_variable__u000052__u000045__u00004c__u000041__u000054__u000049__u000056__u000045__u00005f__u000045__u000050__u000053__u000049__u00004c__u00004f__u00004e__flight_private_c799915e874e1852 = 1e-9;
 
-inline double get_polygon_extent(flight::Array<double> points, double count) {
+inline double get_polygon_extent_flight_value_function_get_u000050_olygon_u000045_xtent_flight_private_c799915e874e1852(flight::Array<double> points, double count) {
   double min_x = std::numeric_limits<double>::infinity();
   double min_y = std::numeric_limits<double>::infinity();
   double max_x = -std::numeric_limits<double>::infinity();
@@ -32,30 +40,30 @@ inline double get_polygon_extent(flight::Array<double> points, double count) {
         const double x = points.element(flight::left_shift(i, 1.0));
         const double y = points.element((flight::left_shift(i, 1.0) + 1.0));
         if ((x < min_x)) {
-          min_x = x;
+          (min_x = x);
         }
         if ((x > max_x)) {
-          max_x = x;
+          (max_x = x);
         }
         if ((y < min_y)) {
-          min_y = y;
+          (min_y = y);
         }
         if ((y > max_y)) {
-          max_y = y;
+          (max_y = y);
         }
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   return flight::maximum((max_x - min_x), (max_y - min_y));
 }
 
-inline double relative_epsilon_2(double extent) {
-  return ((extent > 0.0) ? (extent * relative_epsilon) : std::numeric_limits<double>::epsilon());
+inline double relative_epsilon_flight_value_function_relative_u000045_psilon_flight_private_c799915e874e1852(double extent) {
+  return ((extent > 0.0) ? (extent * relative_epsilon_flight_value_variable__u000052__u000045__u00004c__u000041__u000054__u000049__u000056__u000045__u00005f__u000045__u000050__u000053__u000049__u00004c__u00004f__u00004e__flight_private_c799915e874e1852) : std::numeric_limits<double>::epsilon());
 }
 
-inline bool is_point_in_convex_polygon(double x, double y, flight::Array<double> px, double pn) {
-  const double epsilon = relative_epsilon_2(get_polygon_extent(px, pn));
+inline bool is_point_in_convex_polygon_flight_value_function_is_u000050_oint_u000049_n_u000043_onvex_u000050_olygon_flight_private_c799915e874e1852(double x, double y, flight::Array<double> px, double pn) {
+  const double epsilon = relative_epsilon_flight_value_function_relative_u000045_psilon_flight_private_c799915e874e1852(get_polygon_extent_flight_value_function_get_u000050_olygon_u000045_xtent_flight_private_c799915e874e1852(px, pn));
   bool positive = false;
   bool negative = false;
   {
@@ -70,18 +78,18 @@ inline bool is_point_in_convex_polygon(double x, double y, flight::Array<double>
         const double cross = (((x1 - x0) * (y - y0)) - ((y1 - y0) * (x - x0)));
         const double edge_epsilon = (std::hypot((x1 - x0), (y1 - y0)) * epsilon);
         if ((cross > edge_epsilon)) {
-          positive = true;
+          (positive = true);
         }
         else {
           if ((cross < -edge_epsilon)) {
-            negative = true;
+            (negative = true);
           }
         }
         if ((positive && negative)) {
           return false;
         }
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   return true;
@@ -191,8 +199,8 @@ inline bool get_collision_shape_contains_point2_d(flight::types::CollisionBuiltI
         const double length_squared = ((dx_2 * dx_2) + (dy_2 * dy_2));
         double t = 0.0;
         if ((length_squared > 0.0)) {
-          t = ((((x - std::get<1>(shape)->x0) * dx_2) + ((y - std::get<1>(shape)->y0) * dy_2)) / length_squared);
-          t = ((t < 0.0) ? 0.0 : ((t > 1.0) ? 1.0 : t));
+          (t = ((((x - std::get<1>(shape)->x0) * dx_2) + ((y - std::get<1>(shape)->y0) * dy_2)) / length_squared));
+          (t = ((t < 0.0) ? 0.0 : ((t > 1.0) ? 1.0 : t)));
         }
         const double cx = (x - (std::get<1>(shape)->x0 + (t * dx_2)));
         const double cy = (y - (std::get<1>(shape)->y0 + (t * dy_2)));
@@ -203,7 +211,7 @@ inline bool get_collision_shape_contains_point2_d(flight::types::CollisionBuiltI
       if (flight::collision::get_collision_polygon_validation_status2_d(std::get<4>(shape)->points).has_value()) {
         return false;
       }
-      return is_point_in_convex_polygon(x, y, std::get<4>(shape)->points, flight::signed_right_shift(static_cast<double>(std::get<4>(shape)->points.size()), 1.0));
+      return is_point_in_convex_polygon_flight_value_function_is_u000050_oint_u000049_n_u000043_onvex_u000050_olygon_flight_private_c799915e874e1852(x, y, std::get<4>(shape)->points, flight::signed_right_shift(static_cast<double>(std::get<4>(shape)->points.size()), 1.0));
     }
     else if (switch_value == flight::String("segment")) {
       {
@@ -212,14 +220,14 @@ inline bool get_collision_shape_contains_point2_d(flight::types::CollisionBuiltI
         const double length_squared_2 = ((dx_3 * dx_3) + (dy_3 * dy_3));
         double t_2 = 0.0;
         if ((length_squared_2 > 0.0)) {
-          t_2 = ((((x - std::get<5>(shape)->x0) * dx_3) + ((y - std::get<5>(shape)->y0) * dy_3)) / length_squared_2);
-          t_2 = ((t_2 < 0.0) ? 0.0 : ((t_2 > 1.0) ? 1.0 : t_2));
+          (t_2 = ((((x - std::get<5>(shape)->x0) * dx_3) + ((y - std::get<5>(shape)->y0) * dy_3)) / length_squared_2));
+          (t_2 = ((t_2 < 0.0) ? 0.0 : ((t_2 > 1.0) ? 1.0 : t_2)));
         }
         const double closest_x = (std::get<5>(shape)->x0 + (t_2 * dx_3));
         const double closest_y = (std::get<5>(shape)->y0 + (t_2 * dy_3));
         const double ddx = (x - closest_x);
         const double ddy = (y - closest_y);
-        const double epsilon = relative_epsilon_2(std::sqrt(length_squared_2));
+        const double epsilon = relative_epsilon_flight_value_function_relative_u000045_psilon_flight_private_c799915e874e1852(std::sqrt(length_squared_2));
         return (((ddx * ddx) + (ddy * ddy)) <= (epsilon * epsilon));
       }
     }

@@ -7,6 +7,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Spring3D; }
+namespace flight::types { struct Spring; }
+namespace flight::types { struct SpringConfig; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/spring.hpp>
@@ -41,7 +46,7 @@ inline flight::Ref<flight::types::Spring3D> create_spring3_d(std::optional<doubl
   velocity_z = velocity_z.value_or(0.0);
   flight::types::EntityConstruction<flight::Ref<flight::types::Spring3D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Spring3D>>();
   initialize_spring3_d(out, value_x.value(), value_y.value(), value_z.value(), velocity_x.value(), velocity_y.value(), velocity_z.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Spring3D>>(out);
 }
 
 inline bool is_spring3_dsettled(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Spring3D>>>> spring3_d, double target_x, double target_y, double target_z, std::optional<double> position_epsilon = std::nullopt, std::optional<double> velocity_epsilon = std::nullopt) {

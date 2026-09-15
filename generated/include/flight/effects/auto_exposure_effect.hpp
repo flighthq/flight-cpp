@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AutoExposureEffect; }
+namespace flight::types { struct Entity; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/auto_exposure_effect.hpp>
 #include <flight/types/entity.hpp>
@@ -25,7 +28,7 @@ struct adaptation_speed_exposure_compensation_max_exposure_min_exposure_dd435b0b
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_DD435B0BABCBF29F
 
 inline void initialize_auto_exposure_effect(flight::types::EntityConstruction<flight::Ref<flight::types::AutoExposureEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<adaptation_speed_exposure_compensation_max_exposure_min_exposure_dd435b0babcbf29f>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("AutoExposureEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::AutoExposureEffect>>(out, flight::String("AutoExposureEffect"));
   flight::row_set<flight::RowKey<"adaptationSpeed">>(out, flight::row_get<flight::RowKey<"adaptationSpeed">>(options));
   flight::row_set<flight::RowKey<"exposureCompensation">>(out, flight::row_get<flight::RowKey<"exposureCompensation">>(options));
   flight::row_set<flight::RowKey<"maxExposure">>(out, flight::row_get<flight::RowKey<"maxExposure">>(options));
@@ -36,7 +39,7 @@ inline flight::Ref<flight::types::AutoExposureEffect> create_auto_exposure_effec
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<adaptation_speed_exposure_compensation_max_exposure_min_exposure_dd435b0babcbf29f>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::AutoExposureEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AutoExposureEffect>>();
   initialize_auto_exposure_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::AutoExposureEffect>>(out);
 }
 
 } // namespace flight::effects

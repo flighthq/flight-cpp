@@ -10,6 +10,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct ParticleEmitterConfig; }
+
 #include <flight/types/particle_curve.hpp>
 #include <flight/types/particle_emitter_config.hpp>
 #include <flight/types/random_source.hpp>
@@ -25,31 +27,31 @@ inline void write_particle_spawn_offset(std::variant<flight::Array<double>, flig
   if (((shape == flight::String("circle")) && (flight::row_get<flight::RowKey<"emitterRadius">>(config) > 0.0))) {
     const double radius = (std::sqrt(random()) * flight::row_get<flight::RowKey<"emitterRadius">>(config));
     const double angle_2 = (random() * two_pi);
-    x = (std::cos(angle_2) * radius);
-    y = (std::sin(angle_2) * radius);
+    (x = (std::cos(angle_2) * radius));
+    (y = (std::sin(angle_2) * radius));
   }
   else {
     if (((shape == flight::String("line")) && (flight::row_get<flight::RowKey<"emitterWidth">>(config) > 0.0))) {
-      x = ((random() - 0.5) * flight::row_get<flight::RowKey<"emitterWidth">>(config));
+      (x = ((random() - 0.5) * flight::row_get<flight::RowKey<"emitterWidth">>(config)));
     }
     else {
       if (((shape == flight::String("rect")) && ((flight::row_get<flight::RowKey<"emitterWidth">>(config) > 0.0) || (flight::row_get<flight::RowKey<"emitterHeight">>(config) > 0.0)))) {
         const double x_sample = random();
         const double y_sample = random();
-        x = ((x_sample - 0.5) * flight::row_get<flight::RowKey<"emitterWidth">>(config));
-        y = ((y_sample - 0.5) * flight::row_get<flight::RowKey<"emitterHeight">>(config));
+        (x = ((x_sample - 0.5) * flight::row_get<flight::RowKey<"emitterWidth">>(config)));
+        (y = ((y_sample - 0.5) * flight::row_get<flight::RowKey<"emitterHeight">>(config)));
       }
       else {
         if (((shape == flight::String("ring")) && (flight::row_get<flight::RowKey<"emitterRadius">>(config) > 0.0))) {
           const double angle = (random() * two_pi);
-          x = (std::cos(angle) * flight::row_get<flight::RowKey<"emitterRadius">>(config));
-          y = (std::sin(angle) * flight::row_get<flight::RowKey<"emitterRadius">>(config));
+          (x = (std::cos(angle) * flight::row_get<flight::RowKey<"emitterRadius">>(config)));
+          (y = (std::sin(angle) * flight::row_get<flight::RowKey<"emitterRadius">>(config)));
         }
       }
     }
   }
-  out.element(offset) = x;
-  out.element((offset + 1.0)) = y;
+  ([&]() { auto&& indexed_source = out; const auto indexed_index = offset; const auto indexed_value = x; std::visit([&](auto& indexed_receiver) { indexed_receiver.element(indexed_index) = indexed_value; }, indexed_source); return indexed_value; }());
+  ([&]() { auto&& indexed_source_2 = out; const auto indexed_index_2 = (offset + 1.0); const auto indexed_value_2 = y; std::visit([&](auto& indexed_receiver_2) { indexed_receiver_2.element(indexed_index_2) = indexed_value_2; }, indexed_source_2); return indexed_value_2; }());
 }
 
 } // namespace flight::particles

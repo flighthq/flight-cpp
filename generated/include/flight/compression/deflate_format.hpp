@@ -21,13 +21,13 @@ inline double compute_adler32(flight::Uint8Array input) {
   double first = 1.0;
   double second = 0.0;
   for (auto byte : input) {
-    first += byte;
+    (first += byte);
     if ((first >= adler_modulus)) {
-      first -= adler_modulus;
+      (first -= adler_modulus);
     }
-    second += first;
+    (second += first);
     if ((second >= adler_modulus)) {
-      second -= adler_modulus;
+      (second -= adler_modulus);
     }
   }
   return flight::unsigned_right_shift(flight::bitwise_or(flight::left_shift(second, 16.0), first), 0.0);

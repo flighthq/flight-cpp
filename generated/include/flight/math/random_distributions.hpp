@@ -12,6 +12,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Vector2; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/random_source.hpp>
 #include <flight/types/vector2.hpp>
@@ -21,10 +25,10 @@ namespace flight::math {
 
 template <typename T>
 inline std::optional<T> pick(flight::types::RandomSource random, flight::Array<T> items) {
-  if ((items.length == 0.0)) {
+  if ((static_cast<double>(items.size()) == 0.0)) {
     return std::nullopt;
   }
-  return items.element(std::floor((random() * items.length)));
+  return items.element(std::floor((random() * static_cast<double>(items.size()))));
 }
 
 inline double random_exponential(flight::types::RandomSource random, std::optional<double> rate = std::nullopt) {
@@ -57,55 +61,55 @@ inline flight::Array<double> random_gaussian_pair(flight::types::RandomSource ra
   return flight::Array<double>{z0, z1};
 }
 
-inline void random_inside_unit_disc(flight::types::RandomSource random, flight::Ref<flight::types::Vector2Like> out) {
+inline void random_inside_unit_disc(flight::types::RandomSource random, flight::types::Vector2Like out) {
   double x;
   double y;
   do {
-    x = ((random() * 2.0) - 1.0);
-    y = ((random() * 2.0) - 1.0);
+    (x = ((random() * 2.0) - 1.0));
+    (y = ((random() * 2.0) - 1.0));
   } while ((((x * x) + (y * y)) > 1.0));
-  out->x = x;
-  out->y = y;
+  (out->x = x);
+  (out->y = y);
 }
 
-inline void random_inside_unit_sphere(flight::types::RandomSource random, flight::Ref<flight::types::Vector3Like> out) {
+inline void random_inside_unit_sphere(flight::types::RandomSource random, flight::types::Vector3Like out) {
   double x;
   double y;
   double z;
   do {
-    x = ((random() * 2.0) - 1.0);
-    y = ((random() * 2.0) - 1.0);
-    z = ((random() * 2.0) - 1.0);
+    (x = ((random() * 2.0) - 1.0));
+    (y = ((random() * 2.0) - 1.0));
+    (z = ((random() * 2.0) - 1.0));
   } while (((((x * x) + (y * y)) + (z * z)) > 1.0));
-  out->x = x;
-  out->y = y;
-  out->z = z;
+  (out->x = x);
+  (out->y = y);
+  (out->z = z);
 }
 
-inline void random_on_unit_circle(flight::types::RandomSource random, flight::Ref<flight::types::Vector2Like> out) {
+inline void random_on_unit_circle(flight::types::RandomSource random, flight::types::Vector2Like out) {
   const double angle = ((random() * flight::pi) * 2.0);
   auto x = std::cos(angle);
   auto y = std::sin(angle);
-  out->x = x;
-  out->y = y;
+  (out->x = x);
+  (out->y = y);
 }
 
-inline void random_on_unit_sphere(flight::types::RandomSource random, flight::Ref<flight::types::Vector3Like> out) {
+inline void random_on_unit_sphere(flight::types::RandomSource random, flight::types::Vector3Like out) {
   double x;
   double y;
   double s;
   do {
-    x = ((random() * 2.0) - 1.0);
-    y = ((random() * 2.0) - 1.0);
-    s = ((x * x) + (y * y));
+    (x = ((random() * 2.0) - 1.0));
+    (y = ((random() * 2.0) - 1.0));
+    (s = ((x * x) + (y * y)));
   } while ((s >= 1.0));
   const double f = (2.0 * std::sqrt((1.0 - s)));
   const double rx = (x * f);
   const double ry = (y * f);
   const double rz = (1.0 - (2.0 * s));
-  out->x = rx;
-  out->y = ry;
-  out->z = rz;
+  (out->x = rx);
+  (out->y = ry);
+  (out->z = rz);
 }
 
 inline double random_poisson(flight::types::RandomSource random, std::optional<double> lambda = std::nullopt) {
@@ -118,7 +122,7 @@ inline double random_poisson(flight::types::RandomSource random, std::optional<d
   double product = random();
   while ((product > limit)) {
     k++;
-    product *= random();
+    (product *= random());
   }
   return k;
 }
@@ -127,9 +131,9 @@ inline double random_weighted(flight::types::RandomSource random, flight::Array<
   double total = 0.0;
   {
     double i = 0.0;
-    while ((i < weights.length)) {
-      total += weights.element(i);
-      i += 1.0;
+    while ((i < static_cast<double>(weights.size()))) {
+      (total += weights.element(i));
+      (i += 1.0);
     }
   }
   if ((total <= 0.0)) {
@@ -138,17 +142,17 @@ inline double random_weighted(flight::types::RandomSource random, flight::Array<
   double r = (random() * total);
   {
     double i_2 = 0.0;
-    while ((i_2 < weights.length)) {
+    while ((i_2 < static_cast<double>(weights.size()))) {
       {
-        r -= weights.element(i_2);
+        (r -= weights.element(i_2));
         if ((r <= 0.0)) {
           return i_2;
         }
       }
-      i_2 += 1.0;
+      (i_2 += 1.0);
     }
   }
-  return (weights.length - 1.0);
+  return (static_cast<double>(weights.size()) - 1.0);
 }
 
 template <typename T>
@@ -159,10 +163,10 @@ inline void shuffle_in_place(flight::types::RandomSource random, flight::Array<T
       {
         auto j = std::floor((random() * (i + 1.0)));
         T tmp = items.element(i);
-        items.element(i) = items.element(j);
-        items.element(j) = tmp;
+        (items.element(i) = items.element(j));
+        (items.element(j) = tmp);
       }
-      i -= 1.0;
+      (i -= 1.0);
     }
   }
 }

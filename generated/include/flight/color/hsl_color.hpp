@@ -24,28 +24,28 @@ inline flight::types::HslColor rgb_to_hsl(flight::types::HslColor out, double co
   auto min = flight::minimum(r, g, b);
   const double l = ((max + min) / 2.0);
   if ((max == min)) {
-    out.element(0.0) = 0.0;
-    out.element(1.0) = 0.0;
-    out.element(2.0) = l;
+    (out.element(0.0) = 0.0);
+    (out.element(1.0) = 0.0);
+    (out.element(2.0) = l);
     return out;
   }
   const double d = (max - min);
   const double s = ((l > 0.5) ? (d / ((2.0 - max) - min)) : (d / (max + min)));
   double h;
   if ((max == r)) {
-    h = ((((g - b) / d) + ((g < b) ? 6.0 : 0.0)) / 6.0);
+    (h = ((((g - b) / d) + ((g < b) ? 6.0 : 0.0)) / 6.0));
   }
   else {
     if ((max == g)) {
-      h = ((((b - r) / d) + 2.0) / 6.0);
+      (h = ((((b - r) / d) + 2.0) / 6.0));
     }
     else {
-      h = ((((r - g) / d) + 4.0) / 6.0);
+      (h = ((((r - g) / d) + 4.0) / 6.0));
     }
   }
-  out.element(0.0) = (h * 360.0);
-  out.element(1.0) = s;
-  out.element(2.0) = l;
+  (out.element(0.0) = (h * 360.0));
+  (out.element(1.0) = s);
+  (out.element(2.0) = l);
   return out;
 }
 
@@ -65,17 +65,17 @@ inline double hue_to_rgb_channel(double p, double q, double t) {
 
 inline void hsl_to_rgb(flight::Array<double> out, double h, double s, double l) {
   if ((s == 0.0)) {
-    out.element(0.0) = l;
-    out.element(1.0) = l;
-    out.element(2.0) = l;
+    (out.element(0.0) = l);
+    (out.element(1.0) = l);
+    (out.element(2.0) = l);
     return;
   }
   const double q = ((l < 0.5) ? (l * (1.0 + s)) : ((l + s) - (l * s)));
   const double p = ((2.0 * l) - q);
   const double hn = (h / 360.0);
-  out.element(0.0) = hue_to_rgb_channel(p, q, (hn + (1.0 / 3.0)));
-  out.element(1.0) = hue_to_rgb_channel(p, q, hn);
-  out.element(2.0) = hue_to_rgb_channel(p, q, (hn - (1.0 / 3.0)));
+  (out.element(0.0) = hue_to_rgb_channel(p, q, (hn + (1.0 / 3.0))));
+  (out.element(1.0) = hue_to_rgb_channel(p, q, hn));
+  (out.element(2.0) = hue_to_rgb_channel(p, q, (hn - (1.0 / 3.0))));
 }
 
 } // namespace flight::color

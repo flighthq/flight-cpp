@@ -18,21 +18,21 @@ struct AreaLightOptions : public flight::ReferenceEnabled {
   std::optional<bool> casts_shadow;
   std::optional<double> color;
   std::optional<double> decay;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> direction;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> direction;
   std::optional<bool> enabled;
   std::optional<double> intensity;
   std::optional<flight::types::LightUnit> intensity_unit;
   std::optional<double> normal_bias;
   std::optional<double> pcf_radius;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> position;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> position;
   std::optional<double> range;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> right;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> right;
   std::optional<double> shadow_bias;
   std::optional<double> shadow_far;
   std::optional<double> shadow_map_size;
   std::optional<double> shadow_near;
   std::optional<double> shadow_strength;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> up;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> up;
 };
 
 } // namespace flight::types

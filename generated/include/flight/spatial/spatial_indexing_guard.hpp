@@ -8,6 +8,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct SpatialIndexingNotice; }
+
 #include <flight/types/spatial_indexing.hpp>
 
 namespace flight::spatial {
@@ -22,7 +24,7 @@ inline void report_spatial_indexing(flight::StructuralRef<flight::RowReadonly<fl
 }
 
 inline void set_spatial_indexing_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndexingNotice>>>>)>> guard) {
-  indexing_guard = guard;
+  (indexing_guard = guard);
 }
 
 } // namespace flight::spatial

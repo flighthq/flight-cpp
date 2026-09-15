@@ -7,6 +7,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct HemisphereLight; }
+namespace flight::types { struct HemisphereLightOptions; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/hemisphere_light.hpp>
@@ -27,7 +31,7 @@ inline void initialize_hemisphere_light(flight::types::EntityConstruction<flight
 inline flight::Ref<flight::types::HemisphereLight> create_hemisphere_light(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HemisphereLightOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::HemisphereLight>> out = flight::entity::allocate_entity<flight::Ref<flight::types::HemisphereLight>>();
   initialize_hemisphere_light(out, options);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::HemisphereLight>>(out);
 }
 
 inline flight::Ref<flight::types::HemisphereLight> clone_hemisphere_light(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HemisphereLight>>>> source) {

@@ -9,6 +9,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct TextureSource; }
+
 #include <flight/types/bitmap.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/texture_source.hpp>
@@ -46,7 +51,7 @@ struct GlyphMetrics : public flight::ReferenceEnabled {
 
 struct GlyphSource : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::function<std::optional<flight::Ref<flight::types::TextureSource>>(double)> get_glyph_atlas_image;
+  std::function<std::optional<flight::Ref<flight::types::TextureSource>>(std::optional<double>)> get_glyph_atlas_image;
   std::function<std::optional<flight::Ref<GlyphEntry>>(double)> get_glyph_entry;
   std::function<double(double, double)> get_glyph_kerning;
   std::function<double()> get_glyph_layout_version;

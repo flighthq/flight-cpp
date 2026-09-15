@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct ScreenSpaceFogEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/screen_space_fog_effect.hpp>
@@ -25,7 +28,7 @@ struct color_far_near_density_8a44e18a319168a6 : public flight::ReferenceEnabled
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_8A44E18A319168A6
 
 inline void initialize_screen_space_fog_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ScreenSpaceFogEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<color_far_near_density_8a44e18a319168a6>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("ScreenSpaceFogEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::ScreenSpaceFogEffect>>(out, flight::String("ScreenSpaceFogEffect"));
   flight::row_set<flight::RowKey<"color">>(out, flight::row_get<flight::RowKey<"color">>(options));
   flight::row_set<flight::RowKey<"near">>(out, flight::row_get<flight::RowKey<"near">>(options));
   flight::row_set<flight::RowKey<"far">>(out, flight::row_get<flight::RowKey<"far">>(options));
@@ -36,7 +39,7 @@ inline flight::Ref<flight::types::ScreenSpaceFogEffect> create_screen_space_fog_
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<color_far_near_density_8a44e18a319168a6>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::ScreenSpaceFogEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ScreenSpaceFogEffect>>();
   initialize_screen_space_fog_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::ScreenSpaceFogEffect>>(out);
 }
 
 } // namespace flight::effects

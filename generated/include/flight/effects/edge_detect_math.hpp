@@ -10,6 +10,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct OutlineEffect; }
+namespace flight::types { struct SketchEffect; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/outline_effect.hpp>
 #include <flight/types/sketch_effect.hpp>
@@ -24,12 +27,12 @@ inline void compute_outline_edge_params(flight::StructuralRef<flight::RowReadonl
   const double g = (flight::bitwise_and(flight::unsigned_right_shift(color, 16.0), 255.0) / 255.0);
   const double b = (flight::bitwise_and(flight::unsigned_right_shift(color, 8.0), 255.0) / 255.0);
   const double a = (flight::bitwise_and(color, 255.0) / 255.0);
-  out.element(0.0) = threshold;
-  out.element(1.0) = feather;
-  out.element(2.0) = r;
-  out.element(3.0) = g;
-  out.element(4.0) = b;
-  out.element(5.0) = a;
+  (out.element(0.0) = threshold);
+  (out.element(1.0) = feather);
+  (out.element(2.0) = r);
+  (out.element(3.0) = g);
+  (out.element(4.0) = b);
+  (out.element(5.0) = a);
 }
 
 inline double compute_outline_thickness_px(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OutlineEffect>>>> effect) {
@@ -39,29 +42,29 @@ inline double compute_outline_thickness_px(flight::StructuralRef<flight::RowRead
 inline void compute_sketch_edge_params(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SketchEffect>>>> effect, flight::Array<double> out) {
   auto strength = flight::maximum(0.0, flight::minimum(1.0, flight::row_get<flight::RowKey<"strength">>(effect).value_or(1.0)));
   auto threshold = flight::maximum(0.01, flight::minimum(1.0, (1.0 - (strength * 0.95))));
-  out.element(0.0) = threshold;
-  out.element(1.0) = strength;
+  (out.element(0.0) = threshold);
+  (out.element(1.0) = strength);
 }
 
 inline void get_sobel_kernel_coefficients(flight::Float32Array out) {
-  out.element(0.0) = -1.0;
-  out.element(1.0) = 0.0;
-  out.element(2.0) = 1.0;
-  out.element(3.0) = -2.0;
-  out.element(4.0) = 0.0;
-  out.element(5.0) = 2.0;
-  out.element(6.0) = -1.0;
-  out.element(7.0) = 0.0;
-  out.element(8.0) = 1.0;
-  out.element(9.0) = -1.0;
-  out.element(10.0) = -2.0;
-  out.element(11.0) = -1.0;
-  out.element(12.0) = 0.0;
-  out.element(13.0) = 0.0;
-  out.element(14.0) = 0.0;
-  out.element(15.0) = 1.0;
-  out.element(16.0) = 2.0;
-  out.element(17.0) = 1.0;
+  (out.element(0.0) = -1.0);
+  (out.element(1.0) = 0.0);
+  (out.element(2.0) = 1.0);
+  (out.element(3.0) = -2.0);
+  (out.element(4.0) = 0.0);
+  (out.element(5.0) = 2.0);
+  (out.element(6.0) = -1.0);
+  (out.element(7.0) = 0.0);
+  (out.element(8.0) = 1.0);
+  (out.element(9.0) = -1.0);
+  (out.element(10.0) = -2.0);
+  (out.element(11.0) = -1.0);
+  (out.element(12.0) = 0.0);
+  (out.element(13.0) = 0.0);
+  (out.element(14.0) = 0.0);
+  (out.element(15.0) = 1.0);
+  (out.element(16.0) = 2.0);
+  (out.element(17.0) = 1.0);
 }
 
 } // namespace flight::effects

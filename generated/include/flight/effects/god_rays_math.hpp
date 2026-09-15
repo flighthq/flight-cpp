@@ -10,6 +10,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct GodRaysEffect; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/god_rays_effect.hpp>
 
@@ -23,8 +25,8 @@ inline double compute_god_rays_accumulation_scale(flight::StructuralRef<flight::
 }
 
 inline void compute_god_rays_light_center(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GodRaysEffect>>>> effect, flight::Array<double> out) {
-  out.element(0.0) = flight::maximum(0.0, flight::minimum(1.0, flight::row_get<flight::RowKey<"centerX">>(effect).value_or(0.5)));
-  out.element(1.0) = flight::maximum(0.0, flight::minimum(1.0, flight::row_get<flight::RowKey<"centerY">>(effect).value_or(0.5)));
+  (out.element(0.0) = flight::maximum(0.0, flight::minimum(1.0, flight::row_get<flight::RowKey<"centerX">>(effect).value_or(0.5))));
+  (out.element(1.0) = flight::maximum(0.0, flight::minimum(1.0, flight::row_get<flight::RowKey<"centerY">>(effect).value_or(0.5))));
 }
 
 inline double compute_god_rays_sample_weight(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GodRaysEffect>>>> effect, double sample_index) {
@@ -41,8 +43,8 @@ inline void compute_god_rays_step_size(flight::StructuralRef<flight::RowReadonly
   auto samples = flight::maximum(1.0, flight::row_get<flight::RowKey<"samples">>(effect).value_or(100.0));
   const double dx = (((cx - px) * density) / samples);
   const double dy = (((cy - py) * density) / samples);
-  out.element(0.0) = dx;
-  out.element(1.0) = dy;
+  (out.element(0.0) = dx);
+  (out.element(1.0) = dy);
 }
 
 } // namespace flight::effects

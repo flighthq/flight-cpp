@@ -10,6 +10,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Plane; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/plane.hpp>
@@ -17,30 +21,30 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::geometry {
 
-inline void copy_plane(flight::Ref<flight::types::PlaneLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> source) {
-  out->a = flight::row_get<flight::RowKey<"a">>(source);
-  out->b = flight::row_get<flight::RowKey<"b">>(source);
-  out->c = flight::row_get<flight::RowKey<"c">>(source);
-  out->d = flight::row_get<flight::RowKey<"d">>(source);
+inline void copy_plane(flight::types::PlaneLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> source) {
+  (out->a = flight::row_get<flight::RowKey<"a">>(source));
+  (out->b = flight::row_get<flight::RowKey<"b">>(source));
+  (out->c = flight::row_get<flight::RowKey<"c">>(source));
+  (out->d = flight::row_get<flight::RowKey<"d">>(source));
 }
 
-inline void get_closest_point_on_plane(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> plane, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline void get_closest_point_on_plane(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> plane, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   const double px = flight::row_get<flight::RowKey<"x">>(point);
   const double py = flight::row_get<flight::RowKey<"y">>(point);
   const double pz = flight::row_get<flight::RowKey<"z">>(point);
   const double dist = ((((flight::row_get<flight::RowKey<"a">>(plane) * px) + (flight::row_get<flight::RowKey<"b">>(plane) * py)) + (flight::row_get<flight::RowKey<"c">>(plane) * pz)) + flight::row_get<flight::RowKey<"d">>(plane));
-  out->x = (px - (dist * flight::row_get<flight::RowKey<"a">>(plane)));
-  out->y = (py - (dist * flight::row_get<flight::RowKey<"b">>(plane)));
-  out->z = (pz - (dist * flight::row_get<flight::RowKey<"c">>(plane)));
+  (out->x = (px - (dist * flight::row_get<flight::RowKey<"a">>(plane))));
+  (out->y = (py - (dist * flight::row_get<flight::RowKey<"b">>(plane))));
+  (out->z = (pz - (dist * flight::row_get<flight::RowKey<"c">>(plane))));
 }
 
-inline void get_plane_coplanar_point(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> plane) {
-  out->x = (-flight::row_get<flight::RowKey<"a">>(plane) * flight::row_get<flight::RowKey<"d">>(plane));
-  out->y = (-flight::row_get<flight::RowKey<"b">>(plane) * flight::row_get<flight::RowKey<"d">>(plane));
-  out->z = (-flight::row_get<flight::RowKey<"c">>(plane) * flight::row_get<flight::RowKey<"d">>(plane));
+inline void get_plane_coplanar_point(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> plane) {
+  (out->x = (-flight::row_get<flight::RowKey<"a">>(plane) * flight::row_get<flight::RowKey<"d">>(plane)));
+  (out->y = (-flight::row_get<flight::RowKey<"b">>(plane) * flight::row_get<flight::RowKey<"d">>(plane)));
+  (out->z = (-flight::row_get<flight::RowKey<"c">>(plane) * flight::row_get<flight::RowKey<"d">>(plane)));
 }
 
-inline double get_plane_signed_distance_to_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> plane, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline double get_plane_signed_distance_to_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> plane, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   return ((((flight::row_get<flight::RowKey<"a">>(plane) * flight::row_get<flight::RowKey<"x">>(point)) + (flight::row_get<flight::RowKey<"b">>(plane) * flight::row_get<flight::RowKey<"y">>(point))) + (flight::row_get<flight::RowKey<"c">>(plane) * flight::row_get<flight::RowKey<"z">>(point))) + flight::row_get<flight::RowKey<"d">>(plane));
 }
 
@@ -54,58 +58,58 @@ inline void initialize_plane(flight::types::EntityConstruction<flight::Ref<fligh
 inline flight::Ref<flight::types::Plane> create_plane(std::optional<double> a = std::nullopt, std::optional<double> b = std::nullopt, std::optional<double> c = std::nullopt, std::optional<double> d = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Plane>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Plane>>();
   initialize_plane(out, a.value_or(0.0), b.value_or(0.0), c.value_or(0.0), d.value_or(0.0));
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Plane>>(out);
 }
 
-inline flight::Ref<flight::types::Plane> clone_plane(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> source) {
+inline flight::Ref<flight::types::Plane> clone_plane(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> source) {
   return create_plane(flight::row_get<flight::RowKey<"a">>(source), flight::row_get<flight::RowKey<"b">>(source), flight::row_get<flight::RowKey<"c">>(source), flight::row_get<flight::RowKey<"d">>(source));
 }
 
-inline void normalize_plane(flight::Ref<flight::types::PlaneLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> source) {
+inline void normalize_plane(flight::types::PlaneLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> source) {
   const double a = flight::row_get<flight::RowKey<"a">>(source);
   const double b = flight::row_get<flight::RowKey<"b">>(source);
   const double c = flight::row_get<flight::RowKey<"c">>(source);
   const double d = flight::row_get<flight::RowKey<"d">>(source);
   auto len = std::sqrt((((a * a) + (b * b)) + (c * c)));
   if ((len == 0.0)) {
-    out->a = a;
-    out->b = b;
-    out->c = c;
-    out->d = d;
+    (out->a = a);
+    (out->b = b);
+    (out->c = c);
+    (out->d = d);
     return;
   }
   const double inv = (1.0 / len);
-  out->a = (a * inv);
-  out->b = (b * inv);
-  out->c = (c * inv);
-  out->d = (d * inv);
+  (out->a = (a * inv));
+  (out->b = (b * inv));
+  (out->c = (c * inv));
+  (out->d = (d * inv));
 }
 
-inline void project_vector3_onto_plane(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> plane) {
+inline void project_vector3_onto_plane(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> plane) {
   const double px = flight::row_get<flight::RowKey<"x">>(point);
   const double py = flight::row_get<flight::RowKey<"y">>(point);
   const double pz = flight::row_get<flight::RowKey<"z">>(point);
   const double dist = ((((flight::row_get<flight::RowKey<"a">>(plane) * px) + (flight::row_get<flight::RowKey<"b">>(plane) * py)) + (flight::row_get<flight::RowKey<"c">>(plane) * pz)) + flight::row_get<flight::RowKey<"d">>(plane));
-  out->x = (px - (dist * flight::row_get<flight::RowKey<"a">>(plane)));
-  out->y = (py - (dist * flight::row_get<flight::RowKey<"b">>(plane)));
-  out->z = (pz - (dist * flight::row_get<flight::RowKey<"c">>(plane)));
+  (out->x = (px - (dist * flight::row_get<flight::RowKey<"a">>(plane))));
+  (out->y = (py - (dist * flight::row_get<flight::RowKey<"b">>(plane))));
+  (out->z = (pz - (dist * flight::row_get<flight::RowKey<"c">>(plane))));
 }
 
-inline void set_plane(flight::Ref<flight::types::PlaneLike> out, double a, double b, double c, double d) {
-  out->a = a;
-  out->b = b;
-  out->c = c;
-  out->d = d;
+inline void set_plane(flight::types::PlaneLike out, double a, double b, double c, double d) {
+  (out->a = a);
+  (out->b = b);
+  (out->c = c);
+  (out->d = d);
 }
 
-inline void set_plane_from_normal_and_point(flight::Ref<flight::types::PlaneLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> normal, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
-  out->a = flight::row_get<flight::RowKey<"x">>(normal);
-  out->b = flight::row_get<flight::RowKey<"y">>(normal);
-  out->c = flight::row_get<flight::RowKey<"z">>(normal);
-  out->d = -(((flight::row_get<flight::RowKey<"x">>(normal) * flight::row_get<flight::RowKey<"x">>(point)) + (flight::row_get<flight::RowKey<"y">>(normal) * flight::row_get<flight::RowKey<"y">>(point))) + (flight::row_get<flight::RowKey<"z">>(normal) * flight::row_get<flight::RowKey<"z">>(point)));
+inline void set_plane_from_normal_and_point(flight::types::PlaneLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> normal, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
+  (out->a = flight::row_get<flight::RowKey<"x">>(normal));
+  (out->b = flight::row_get<flight::RowKey<"y">>(normal));
+  (out->c = flight::row_get<flight::RowKey<"z">>(normal));
+  (out->d = -(((flight::row_get<flight::RowKey<"x">>(normal) * flight::row_get<flight::RowKey<"x">>(point)) + (flight::row_get<flight::RowKey<"y">>(normal) * flight::row_get<flight::RowKey<"y">>(point))) + (flight::row_get<flight::RowKey<"z">>(normal) * flight::row_get<flight::RowKey<"z">>(point))));
 }
 
-inline void set_plane_from_points(flight::Ref<flight::types::PlaneLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> c) {
+inline void set_plane_from_points(flight::types::PlaneLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> c) {
   const double e1x = (flight::row_get<flight::RowKey<"x">>(b) - flight::row_get<flight::RowKey<"x">>(a));
   const double e1y = (flight::row_get<flight::RowKey<"y">>(b) - flight::row_get<flight::RowKey<"y">>(a));
   const double e1z = (flight::row_get<flight::RowKey<"z">>(b) - flight::row_get<flight::RowKey<"z">>(a));
@@ -117,17 +121,17 @@ inline void set_plane_from_points(flight::Ref<flight::types::PlaneLike> out, fli
   const double nz = ((e1x * e2y) - (e1y * e2x));
   auto len = std::sqrt((((nx * nx) + (ny * ny)) + (nz * nz)));
   if ((len == 0.0)) {
-    out->a = nx;
-    out->b = ny;
-    out->c = nz;
-    out->d = 0.0;
+    (out->a = nx);
+    (out->b = ny);
+    (out->c = nz);
+    (out->d = 0.0);
     return;
   }
   const double inv = (1.0 / len);
-  out->a = (nx * inv);
-  out->b = (ny * inv);
-  out->c = (nz * inv);
-  out->d = -(((out->a * flight::row_get<flight::RowKey<"x">>(a)) + (out->b * flight::row_get<flight::RowKey<"y">>(a))) + (out->c * flight::row_get<flight::RowKey<"z">>(a)));
+  (out->a = (nx * inv));
+  (out->b = (ny * inv));
+  (out->c = (nz * inv));
+  (out->d = -(((out->a * flight::row_get<flight::RowKey<"x">>(a)) + (out->b * flight::row_get<flight::RowKey<"y">>(a))) + (out->c * flight::row_get<flight::RowKey<"z">>(a))));
 }
 
 } // namespace flight::geometry

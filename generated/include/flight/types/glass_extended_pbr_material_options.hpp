@@ -6,6 +6,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct StandardPbrMaterialProperties; }
+namespace flight::types { struct SurfaceMaterialOptions; }
+namespace flight::types { struct TransmissionVolumePbrExtension; }
+
 #include <flight/types/standard_pbr_material.hpp>
 #include <flight/types/surface_material_options.hpp>
 #include <flight/types/transmission_volume_pbr_extension.hpp>

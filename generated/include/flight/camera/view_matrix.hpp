@@ -6,13 +6,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Camera2D; }
+
 #include <flight/geometry/matrix.hpp>
 #include <flight/types/camera2_d.hpp>
 #include <flight/types/matrix.hpp>
 
 namespace flight::camera {
 
-inline void get_camera2_dview_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera, flight::Ref<flight::types::MatrixLike> out) {
+inline void get_camera2_dview_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera, flight::types::MatrixLike out) {
   const double zoom = flight::row_get<flight::RowKey<"zoom">>(camera);
   flight::geometry::set_transform_matrix(out, zoom, zoom, -flight::row_get<flight::RowKey<"rotation">>(camera), (flight::row_get<flight::RowKey<"viewportWidth">>(camera) * 0.5), (flight::row_get<flight::RowKey<"viewportHeight">>(camera) * 0.5));
   flight::geometry::translate_matrix_by_vector_xy(out, out, -flight::row_get<flight::RowKey<"x">>(camera), -flight::row_get<flight::RowKey<"y">>(camera));

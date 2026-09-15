@@ -7,6 +7,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Camera2D; }
+namespace flight::types { struct Camera2DOptions; }
+namespace flight::types { struct Entity; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/camera2_d.hpp>
 #include <flight/types/entity.hpp>
@@ -25,7 +29,7 @@ inline void initialize_camera2_d(flight::types::EntityConstruction<flight::Ref<f
 inline flight::Ref<flight::types::Camera2D> create_camera2_d(double viewport_width, double viewport_height, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2DOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Camera2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Camera2D>>();
   initialize_camera2_d(out, viewport_width, viewport_height, options);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Camera2D>>(out);
 }
 
 } // namespace flight::camera

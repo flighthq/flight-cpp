@@ -6,6 +6,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AttractorForce; }
+namespace flight::types { struct DragForce; }
+namespace flight::types { struct TurbulenceForce; }
+namespace flight::types { struct VortexForce; }
+namespace flight::types { struct WindForce; }
+
 #include <flight/types/attractor_force.hpp>
 #include <flight/types/drag_force.hpp>
 #include <flight/types/turbulence_force.hpp>

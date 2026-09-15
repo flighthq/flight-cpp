@@ -10,6 +10,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnisotropyPbrExtension; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Sampler; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct VoxelGrid; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/anisotropy_pbr_extension.hpp>
 #include <flight/types/entity.hpp>
@@ -96,7 +102,7 @@ inline void initialize_anisotropy_pbr_extension(flight::types::EntityConstructio
 inline flight::Ref<flight::types::AnisotropyPbrExtension> create_anisotropy_pbr_extension(std::optional<flight::Ref<entity_runtime_key_kind_anisotropy_map_anisotropy_map_uv_set_anisotropy_rotation_anisotropy_strength_a261c1f3d9cac407>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::AnisotropyPbrExtension>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AnisotropyPbrExtension>>();
   initialize_anisotropy_pbr_extension(out, opts);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::AnisotropyPbrExtension>>(out);
 }
 
 inline bool is_valid_anisotropy_pbr_extension(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnisotropyPbrExtension>>>> value) {

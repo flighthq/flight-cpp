@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BrightnessContrastAdjustment; }
+namespace flight::types { struct Entity; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/adjustment_kind.hpp>
 #include <flight/types/brightness_contrast_adjustment.hpp>
@@ -22,7 +25,7 @@ inline void initialize_brightness_contrast_adjustment(flight::types::EntityConst
   const double s = contrast;
   const double o = ((brightness * contrast) + (0.5 * (1.0 - contrast)));
   flight::Array<double> color_matrix = flight::Array<double>{s, 0.0, 0.0, 0.0, o, 0.0, s, 0.0, 0.0, o, 0.0, 0.0, s, 0.0, o, 0.0, 0.0, 0.0, 1.0, 0.0};
-  flight::adjustments::initialize_color_matrix_adjustment(out, flight::String("BrightnessContrastAdjustment"), color_matrix);
+  flight::adjustments::initialize_color_matrix_adjustment<flight::Ref<flight::types::BrightnessContrastAdjustment>>(out, flight::String("BrightnessContrastAdjustment"), color_matrix);
   flight::row_set<flight::RowKey<"brightness">>(out, std::optional<double>{brightness});
   flight::row_set<flight::RowKey<"contrast">>(out, std::optional<double>{contrast});
 }
@@ -31,7 +34,7 @@ inline flight::Ref<flight::types::BrightnessContrastAdjustment> create_brightnes
   options = options.value_or(flight::make_ref<flight::types::BrightnessContrastAdjustment>(flight::types::BrightnessContrastAdjustment{}));
   flight::types::EntityConstruction<flight::Ref<flight::types::BrightnessContrastAdjustment>> out = flight::entity::allocate_entity<flight::Ref<flight::types::BrightnessContrastAdjustment>>();
   initialize_brightness_contrast_adjustment(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::BrightnessContrastAdjustment>>(out);
 }
 
 } // namespace flight::adjustments

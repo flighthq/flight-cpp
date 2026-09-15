@@ -17,7 +17,7 @@ struct CreateExternalTextureOptions;
 struct CreateExternalTextureOptions : public flight::ReferenceEnabled {
   std::optional<flight::types::TextureColorSpace> color_space;
   double height;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SamplerLike>>>>> sampler;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>> sampler;
   double width;
 };
 

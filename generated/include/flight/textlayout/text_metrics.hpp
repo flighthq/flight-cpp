@@ -9,6 +9,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct TextFormat; }
+namespace flight::types { struct TextLayoutGroup; }
+namespace flight::types { struct TextLayoutResult; }
+namespace flight::types { struct TextMetrics; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/text_format.hpp>
@@ -18,9 +24,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::textlayout {
 
 inline void get_text_metrics(flight::Ref<flight::types::TextMetrics> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout) {
-  out->width = std::ceil(flight::row_get<flight::RowKey<"textWidth">>(layout));
-  out->height = std::ceil(flight::row_get<flight::RowKey<"textHeight">>(layout));
-  out->num_lines = flight::row_get<flight::RowKey<"numLines">>(layout);
+  (out->width = std::ceil(flight::row_get<flight::RowKey<"textWidth">>(layout)));
+  (out->height = std::ceil(flight::row_get<flight::RowKey<"textHeight">>(layout)));
+  (out->num_lines = flight::row_get<flight::RowKey<"numLines">>(layout));
 }
 
 inline void initialize_text_metrics(flight::types::EntityConstruction<flight::Ref<flight::types::TextMetrics>> out) {
@@ -32,7 +38,7 @@ inline void initialize_text_metrics(flight::types::EntityConstruction<flight::Re
 inline flight::Ref<flight::types::TextMetrics> create_text_metrics() {
   flight::types::EntityConstruction<flight::Ref<flight::types::TextMetrics>> out = flight::entity::allocate_entity<flight::Ref<flight::types::TextMetrics>>();
   initialize_text_metrics(out);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::TextMetrics>>(out);
 }
 
 } // namespace flight::textlayout

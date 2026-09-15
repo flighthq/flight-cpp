@@ -12,7 +12,7 @@ struct SwfReader;
 
 inline const double encoded_uint32_max_bytes = 5.0;
 
-inline const double fixed_8_8_one = 256.0;
+inline const double fixed_8_8_one_flight_value_variable__u000046__u000049__u000058__u000045__u000044__u00005f_8_u00005f_8_u00005f__u00004f__u00004e__u000045__flight_private_067d49ed9358bf99 = 256.0;
 
 inline flight::TextDecoder decoder = flight::TextDecoder();
 
@@ -23,13 +23,13 @@ struct SwfReader : public flight::ReferenceEnabled {
   flight::Uint8Array source;
   double end;
   SwfReader(flight::Uint8Array source, double start, double end) {
-    this->pos = start;
+    (this->pos = start);
   }
   void align_to_byte() {
     if ((this->bit_position == 0.0)) {
       return;
     }
-    this->bit_position = 0.0;
+    (this->bit_position = 0.0);
     this->pos++;
   }
   double read_encoded_uint32() {
@@ -39,19 +39,19 @@ struct SwfReader : public flight::ReferenceEnabled {
       while ((i < encoded_uint32_max_bytes)) {
         {
           const double byte = this->read_uint8();
-          value += (flight::bitwise_and(byte, 127.0) * flight::power(2.0, (7.0 * i)));
+          (value += (flight::bitwise_and(byte, 127.0) * flight::power(2.0, (7.0 * i))));
           if ((flight::bitwise_and(byte, 128.0) == 0.0)) {
             break;
           }
         }
-        i += 1.0;
+        (i += 1.0);
       }
     }
     return value;
   }
   double read_fixed8() {
     const double value = this->read_uint16();
-    return (((value >= 32768.0) ? (value - 65536.0) : value) / fixed_8_8_one);
+    return (((value >= 32768.0) ? (value - 65536.0) : value) / fixed_8_8_one_flight_value_variable__u000046__u000049__u000058__u000045__u000044__u00005f_8_u00005f_8_u00005f__u00004f__u00004e__u000045__flight_private_067d49ed9358bf99);
   }
   double read_signed_bits(double count) {
     const double value = this->read_unsigned_bits(count);
@@ -68,7 +68,7 @@ struct SwfReader : public flight::ReferenceEnabled {
       this->pos++;
     }
     if ((this->pos >= this->end)) {
-      this->valid = false;
+      (this->valid = false);
       return flight::String("");
     }
     auto value = decoder.decode(this->source.subarray(start, this->pos));
@@ -78,7 +78,7 @@ struct SwfReader : public flight::ReferenceEnabled {
   double read_uint8() {
     this->align_to_byte();
     if ((this->pos >= this->end)) {
-      this->valid = false;
+      (this->valid = false);
       return 0.0;
     }
     return this->source.element(this->pos++);
@@ -100,17 +100,17 @@ struct SwfReader : public flight::ReferenceEnabled {
       while ((i < count)) {
         {
           if ((this->pos >= this->end)) {
-            this->valid = false;
+            (this->valid = false);
             return 0.0;
           }
-          value = ((value * 2.0) + flight::bitwise_and(flight::signed_right_shift(this->source.element(this->pos), (7.0 - this->bit_position)), 1.0));
+          (value = ((value * 2.0) + flight::bitwise_and(flight::signed_right_shift(this->source.element(this->pos), (7.0 - this->bit_position)), 1.0)));
           this->bit_position++;
           if ((this->bit_position == 8.0)) {
-            this->bit_position = 0.0;
+            (this->bit_position = 0.0);
             this->pos++;
           }
         }
-        i += 1.0;
+        (i += 1.0);
       }
     }
     return value;

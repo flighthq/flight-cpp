@@ -6,6 +6,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AttachmentSkin2D; }
+namespace flight::types { struct Bone2D; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct RegionAttachment2D; }
+namespace flight::types { struct Skeleton2D; }
+namespace flight::types { struct Slot2D; }
+
 #include <flight/geometry/matrix.hpp>
 #include <flight/math/constants.hpp>
 #include <flight/types/attachment_skin2_d.hpp>
@@ -20,11 +28,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::skeleton2d {
 
-inline flight::Ref<flight::types::MatrixLike> local = flight::make_ref<flight::types::MatrixLike>(flight::types::MatrixLike{.a = 1.0, .b = 0.0, .c = 0.0, .d = 1.0, .tx = 0.0, .ty = 0.0});
+inline flight::types::MatrixLike local = flight::make_ref<flight::types::Matrix>(flight::types::Matrix{.a = 1.0, .b = 0.0, .c = 0.0, .d = 1.0, .tx = 0.0, .ty = 0.0});
 
-inline flight::Ref<flight::types::MatrixLike> bone = flight::make_ref<flight::types::MatrixLike>(flight::types::MatrixLike{.a = 1.0, .b = 0.0, .c = 0.0, .d = 1.0, .tx = 0.0, .ty = 0.0});
+inline flight::types::MatrixLike bone = flight::make_ref<flight::types::Matrix>(flight::types::Matrix{.a = 1.0, .b = 0.0, .c = 0.0, .d = 1.0, .tx = 0.0, .ty = 0.0});
 
-inline flight::Ref<flight::types::MatrixLike> combined = flight::make_ref<flight::types::MatrixLike>(flight::types::MatrixLike{.a = 1.0, .b = 0.0, .c = 0.0, .d = 1.0, .tx = 0.0, .ty = 0.0});
+inline flight::types::MatrixLike combined = flight::make_ref<flight::types::Matrix>(flight::types::Matrix{.a = 1.0, .b = 0.0, .c = 0.0, .d = 1.0, .tx = 0.0, .ty = 0.0});
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_8365950BD60F783F
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_8365950BD60F783F
@@ -41,29 +49,29 @@ inline void compute_skeleton2_dregion_attachment_vertices(flight::Float32Array o
   if (((bone_index < 0.0) || ((bone_index * flight::skeleton2d::skeleton_2_d_matrix_stride) >= static_cast<double>(world.size())))) {
     return;
   }
-  flight::geometry::set_transform_matrix(local, flight::row_get<flight::RowKey<"scaleX">>(attachment), flight::row_get<flight::RowKey<"scaleY">>(attachment), (flight::row_get<flight::RowKey<"rotation">>(attachment) * flight::math::deg_to_rad), flight::row_get<flight::RowKey<"x">>(attachment), flight::row_get<flight::RowKey<"y">>(attachment));
+  flight::geometry::set_transform_matrix(local, flight::row_get<flight::RowKey<"scaleX">>(attachment), flight::row_get<flight::RowKey<"scaleY">>(attachment), (flight::row_get<flight::RowKey<"rotation">>(attachment) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3), flight::row_get<flight::RowKey<"x">>(attachment), flight::row_get<flight::RowKey<"y">>(attachment));
   const double b = (bone_index * flight::skeleton2d::skeleton_2_d_matrix_stride);
-  bone->a = world.element(b);
-  bone->b = world.element((b + 1.0));
-  bone->c = world.element((b + 2.0));
-  bone->d = world.element((b + 3.0));
-  bone->tx = world.element((b + 4.0));
-  bone->ty = world.element((b + 5.0));
+  (bone->a = world.element(b));
+  (bone->b = world.element((b + 1.0)));
+  (bone->c = world.element((b + 2.0)));
+  (bone->d = world.element((b + 3.0)));
+  (bone->tx = world.element((b + 4.0)));
+  (bone->ty = world.element((b + 5.0)));
   flight::geometry::multiply_matrix(combined, bone, local);
   const double hw = (flight::row_get<flight::RowKey<"width">>(attachment) / 2.0);
   const double hh = (flight::row_get<flight::RowKey<"height">>(attachment) / 2.0);
   flight::geometry::matrix_transform_point_xy(corner, combined, -hw, -hh);
-  out.element(0.0) = corner->x;
-  out.element(1.0) = corner->y;
+  (out.element(0.0) = corner->x);
+  (out.element(1.0) = corner->y);
   flight::geometry::matrix_transform_point_xy(corner, combined, -hw, hh);
-  out.element(2.0) = corner->x;
-  out.element(3.0) = corner->y;
+  (out.element(2.0) = corner->x);
+  (out.element(3.0) = corner->y);
   flight::geometry::matrix_transform_point_xy(corner, combined, hw, hh);
-  out.element(4.0) = corner->x;
-  out.element(5.0) = corner->y;
+  (out.element(4.0) = corner->x);
+  (out.element(5.0) = corner->y);
   flight::geometry::matrix_transform_point_xy(corner, combined, hw, -hh);
-  out.element(6.0) = corner->x;
-  out.element(7.0) = corner->y;
+  (out.element(6.0) = corner->x);
+  (out.element(7.0) = corner->y);
 }
 
 } // namespace flight::skeleton2d

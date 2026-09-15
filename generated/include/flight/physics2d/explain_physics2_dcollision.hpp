@@ -7,6 +7,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CollisionAabb2D; }
+namespace flight::types { struct CollisionCapsule2D; }
+namespace flight::types { struct CollisionCircle2D; }
+namespace flight::types { struct CollisionObb2D; }
+namespace flight::types { struct CollisionPoint2D; }
+namespace flight::types { struct CollisionPolygon2D; }
+namespace flight::types { struct CollisionSegment2D; }
+namespace flight::types { struct Physics2DCollider; }
+namespace flight::types { struct Physics2DCollisionExplanation; }
+namespace flight::types { struct Physics2DCollisionFilter; }
+namespace flight::types { struct Physics2DMaterial; }
+namespace flight::types { struct Physics2DWorld; }
+namespace flight::types { struct RigidBody2D; }
+
 #include <flight/types/collision.hpp>
 #include <flight/types/physics2_d.hpp>
 

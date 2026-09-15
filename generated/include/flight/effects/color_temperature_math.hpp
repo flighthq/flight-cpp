@@ -16,27 +16,27 @@ inline void compute_color_temperature_rgb(double kelvin, flight::Array<double> o
   double g;
   double b;
   if ((temp <= 66.0)) {
-    r = 1.0;
-    g = (((99.4708025861 * std::log(temp)) - 161.1195681661) / 255.0);
-    b = ((temp <= 19.0) ? 0.0 : (((138.5177312231 * std::log((temp - 10.0))) - 305.0447927307) / 255.0));
+    (r = 1.0);
+    (g = (((99.4708025861 * std::log(temp)) - 161.1195681661) / 255.0));
+    (b = ((temp <= 19.0) ? 0.0 : (((138.5177312231 * std::log((temp - 10.0))) - 305.0447927307) / 255.0)));
   }
   else {
-    r = ((329.698727446 * flight::power((temp - 60.0), -0.1332047592)) / 255.0);
-    g = ((288.1221695283 * flight::power((temp - 60.0), -0.0755148492)) / 255.0);
-    b = 1.0;
+    (r = ((329.698727446 * flight::power((temp - 60.0), -0.1332047592)) / 255.0));
+    (g = ((288.1221695283 * flight::power((temp - 60.0), -0.0755148492)) / 255.0));
+    (b = 1.0);
   }
-  out.element(0.0) = flight::maximum(0.0, flight::minimum(1.0, r));
-  out.element(1.0) = flight::maximum(0.0, flight::minimum(1.0, g));
-  out.element(2.0) = flight::maximum(0.0, flight::minimum(1.0, b));
+  (out.element(0.0) = flight::maximum(0.0, flight::minimum(1.0, r)));
+  (out.element(1.0) = flight::maximum(0.0, flight::minimum(1.0, g)));
+  (out.element(2.0) = flight::maximum(0.0, flight::minimum(1.0, b)));
 }
 
 inline void compute_white_balance_multipliers(double temperature, double tint, flight::Array<double> out) {
   const double kelvin = (6500.0 - (temperature * 4500.0));
   compute_color_temperature_rgb(kelvin, out);
   const double green_shift = (-tint * 0.1);
-  out.element(0.0) = flight::maximum(0.0, out.element(0.0));
-  out.element(1.0) = flight::maximum(0.0, (out.element(1.0) + green_shift));
-  out.element(2.0) = flight::maximum(0.0, out.element(2.0));
+  (out.element(0.0) = flight::maximum(0.0, out.element(0.0)));
+  (out.element(1.0) = flight::maximum(0.0, (out.element(1.0) + green_shift)));
+  (out.element(2.0) = flight::maximum(0.0, out.element(2.0)));
 }
 
 } // namespace flight::effects

@@ -10,6 +10,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CameraShake; }
+namespace flight::types { struct CameraShakeOffset; }
+namespace flight::types { struct CameraShakeOptions; }
+namespace flight::types { struct Entity; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/math/clamp.hpp>
 #include <flight/types/camera_shake.hpp>
@@ -18,7 +23,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::camera_controls {
 
 inline void add_camera_shake_trauma(flight::Ref<flight::types::CameraShake> shake, double amount) {
-  shake->trauma = flight::math::clamp((shake->trauma + amount), 0.0, 1.0);
+  (shake->trauma = flight::math::clamp((shake->trauma + amount), 0.0, 1.0));
 }
 
 inline void initialize_camera_shake(flight::types::EntityConstruction<flight::Ref<flight::types::CameraShake>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CameraShakeOptions>>>>> options = std::nullopt) {
@@ -33,7 +38,7 @@ inline void initialize_camera_shake(flight::types::EntityConstruction<flight::Re
 inline flight::Ref<flight::types::CameraShake> create_camera_shake(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CameraShakeOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::CameraShake>> out = flight::entity::allocate_entity<flight::Ref<flight::types::CameraShake>>();
   initialize_camera_shake(out, options);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::CameraShake>>(out);
 }
 
 inline void initialize_camera_shake_offset(flight::types::EntityConstruction<flight::Ref<flight::types::CameraShakeOffset>> out) {
@@ -48,12 +53,12 @@ inline void initialize_camera_shake_offset(flight::types::EntityConstruction<fli
 inline flight::Ref<flight::types::CameraShakeOffset> create_camera_shake_offset() {
   flight::types::EntityConstruction<flight::Ref<flight::types::CameraShakeOffset>> out = flight::entity::allocate_entity<flight::Ref<flight::types::CameraShakeOffset>>();
   initialize_camera_shake_offset(out);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::CameraShakeOffset>>(out);
 }
 
 inline void reset_camera_shake(flight::Ref<flight::types::CameraShake> shake) {
-  shake->trauma = 0.0;
-  shake->time = 0.0;
+  (shake->trauma = 0.0);
+  (shake->time = 0.0);
 }
 
 inline double sample_noise(double t, double seed_a, double seed_b, double seed_c) {
@@ -97,15 +102,15 @@ inline const double seed_rz_b = 2.53;
 inline const double seed_rz_c = 3.29;
 
 inline void update_camera_shake(flight::Ref<flight::types::CameraShake> shake, double dt, flight::Ref<flight::types::CameraShakeOffset> out) {
-  shake->time += dt;
-  shake->trauma = flight::maximum(0.0, (shake->trauma - (shake->decay * dt)));
+  (shake->time += dt);
+  (shake->trauma = flight::maximum(0.0, (shake->trauma - (shake->decay * dt))));
   if ((shake->trauma <= 0.0)) {
-    out->x = 0.0;
-    out->y = 0.0;
-    out->z = 0.0;
-    out->rotation_x = 0.0;
-    out->rotation_y = 0.0;
-    out->rotation_z = 0.0;
+    (out->x = 0.0);
+    (out->y = 0.0);
+    (out->z = 0.0);
+    (out->rotation_x = 0.0);
+    (out->rotation_y = 0.0);
+    (out->rotation_z = 0.0);
     return;
   }
   const double intensity = (shake->trauma * shake->trauma);
@@ -116,12 +121,12 @@ inline void update_camera_shake(flight::Ref<flight::types::CameraShake> shake, d
   const double rx = sample_noise(t, seed_rx_a, seed_rx_b, seed_rx_c);
   const double ry = sample_noise(t, seed_ry_a, seed_ry_b, seed_ry_c);
   const double rz = sample_noise(t, seed_rz_a, seed_rz_b, seed_rz_c);
-  out->x = ((tx * intensity) * shake->translation_amplitude);
-  out->y = ((ty * intensity) * shake->translation_amplitude);
-  out->z = ((tz * intensity) * shake->translation_amplitude);
-  out->rotation_x = ((rx * intensity) * shake->rotation_amplitude);
-  out->rotation_y = ((ry * intensity) * shake->rotation_amplitude);
-  out->rotation_z = ((rz * intensity) * shake->rotation_amplitude);
+  (out->x = ((tx * intensity) * shake->translation_amplitude));
+  (out->y = ((ty * intensity) * shake->translation_amplitude));
+  (out->z = ((tz * intensity) * shake->translation_amplitude));
+  (out->rotation_x = ((rx * intensity) * shake->rotation_amplitude));
+  (out->rotation_y = ((ry * intensity) * shake->rotation_amplitude));
+  (out->rotation_z = ((rz * intensity) * shake->rotation_amplitude));
 }
 
 } // namespace flight::camera_controls

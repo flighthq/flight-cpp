@@ -10,6 +10,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct BitmapConvolutionOptions; }
+namespace flight::types { struct BitmapRegion; }
+
 #include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_convolution_options.hpp>
@@ -20,7 +24,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::bitmap {
 
-inline double clamp_byte(double value) {
+inline double clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(double value) {
   return flight::maximum(0.0, flight::minimum(255.0, flight::round(value)));
 }
 
@@ -30,9 +34,9 @@ inline double get_convolution_divisor(flight::Array<double> matrix, double lengt
     double i = 0.0;
     while ((i < length)) {
       {
-        sum += matrix.element(i);
+        (sum += matrix.element(i));
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   return ((sum == 0.0) ? 1.0 : sum);
@@ -94,62 +98,62 @@ inline void convolve_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                           if (((((raw_sample_y < 0.0) || (raw_sample_y >= bitmap_height)) || (raw_sample_x < 0.0)) || (raw_sample_x >= bitmap_width))) {
                             if ((edge == flight::String("transparent"))) {
                               {
-                                kx += 1.0;
+                                (kx += 1.0);
                                 continue;
                               }
                             }
                             else {
                               if ((edge == flight::String("wrap"))) {
-                                sample_x = std::fmod((std::fmod(raw_sample_x, bitmap_width) + bitmap_width), bitmap_width);
-                                sample_y = std::fmod((std::fmod(raw_sample_y, bitmap_height) + bitmap_height), bitmap_height);
+                                (sample_x = std::fmod((std::fmod(raw_sample_x, bitmap_width) + bitmap_width), bitmap_width));
+                                (sample_y = std::fmod((std::fmod(raw_sample_y, bitmap_height) + bitmap_height), bitmap_height));
                               }
                               else {
                                 if ((edge == flight::String("mirror"))) {
-                                  sample_x = resolve_convolution_mirror(raw_sample_x, bitmap_width);
-                                  sample_y = resolve_convolution_mirror(raw_sample_y, bitmap_height);
+                                  (sample_x = resolve_convolution_mirror(raw_sample_x, bitmap_width));
+                                  (sample_y = resolve_convolution_mirror(raw_sample_y, bitmap_height));
                                 }
                                 else {
-                                  sample_x = ((raw_sample_x < 0.0) ? 0.0 : ((raw_sample_x >= bitmap_width) ? (bitmap_width - 1.0) : raw_sample_x));
-                                  sample_y = ((raw_sample_y < 0.0) ? 0.0 : ((raw_sample_y >= bitmap_height) ? (bitmap_height - 1.0) : raw_sample_y));
+                                  (sample_x = ((raw_sample_x < 0.0) ? 0.0 : ((raw_sample_x >= bitmap_width) ? (bitmap_width - 1.0) : raw_sample_x)));
+                                  (sample_y = ((raw_sample_y < 0.0) ? 0.0 : ((raw_sample_y >= bitmap_height) ? (bitmap_height - 1.0) : raw_sample_y)));
                                 }
                               }
                             }
                           }
                           else {
-                            sample_x = raw_sample_x;
-                            sample_y = raw_sample_y;
+                            (sample_x = raw_sample_x);
+                            (sample_y = raw_sample_y);
                           }
                           const double i = (((sample_y * bitmap_width) + sample_x) * 4.0);
-                          r += (static_cast<double>(data.element(i)) * weight);
-                          g += (static_cast<double>(data.element((i + 1.0))) * weight);
-                          b += (static_cast<double>(data.element((i + 2.0))) * weight);
-                          a += (static_cast<double>(data.element((i + 3.0))) * weight);
+                          (r += (static_cast<double>(data.element(i)) * weight));
+                          (g += (static_cast<double>(data.element((i + 1.0))) * weight));
+                          (b += (static_cast<double>(data.element((i + 2.0))) * weight));
+                          (a += (static_cast<double>(data.element((i + 3.0))) * weight));
                         }
-                        kx += 1.0;
+                        (kx += 1.0);
                       }
                     }
                   }
-                  ky += 1.0;
+                  (ky += 1.0);
                 }
               }
               const double di = (((py * flight::row_get<flight::RowKey<"width">>(source)) + px) * 4.0);
-              out.element(di) = clamp_byte(((r / divisor) + bias));
-              out.element((di + 1.0)) = clamp_byte(((g / divisor) + bias));
-              out.element((di + 2.0)) = clamp_byte(((b / divisor) + bias));
+              (out.element(di) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(((r / divisor) + bias)));
+              (out.element((di + 1.0)) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(((g / divisor) + bias)));
+              (out.element((di + 2.0)) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(((b / divisor) + bias)));
               if (preserve_alpha) {
                 auto cy = flight::maximum(0.0, flight::minimum((bitmap_height - 1.0), (flight::row_get<flight::RowKey<"y">>(source) + py)));
                 auto cx = flight::maximum(0.0, flight::minimum((bitmap_width - 1.0), (flight::row_get<flight::RowKey<"x">>(source) + px)));
-                out.element((di + 3.0)) = data.element(((((cy * bitmap_width) + cx) * 4.0) + 3.0));
+                (out.element((di + 3.0)) = static_cast<double>(data.element(((((cy * bitmap_width) + cx) * 4.0) + 3.0))));
               }
               else {
-                out.element((di + 3.0)) = clamp_byte(((a / divisor) + bias));
+                (out.element((di + 3.0)) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(((a / divisor) + bias)));
               }
             }
-            px += 1.0;
+            (px += 1.0);
           }
         }
       }
-      py += 1.0;
+      (py += 1.0);
     }
   }
 }

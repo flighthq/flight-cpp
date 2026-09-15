@@ -9,6 +9,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct BitmapRegion; }
+
 #include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_region.hpp>
@@ -31,29 +34,29 @@ inline void concat_bitmap_color_matrix(flight::Array<double> out, flight::Array<
                 double k = 0.0;
                 while ((k < 4.0)) {
                   {
-                    sum += (second.element(((row * 5.0) + k)) * ((col == 4.0) ? first.element(((k * 5.0) + 4.0)) : first.element(((k * 5.0) + col))));
+                    (sum += (second.element(((row * 5.0) + k)) * ((col == 4.0) ? first.element(((k * 5.0) + 4.0)) : first.element(((k * 5.0) + col)))));
                   }
-                  k += 1.0;
+                  (k += 1.0);
                 }
               }
-              out.element(((row * 5.0) + col)) = sum;
+              (out.element(((row * 5.0) + col)) = sum);
             }
-            col += 1.0;
+            (col += 1.0);
           }
         }
       }
-      row += 1.0;
+      (row += 1.0);
     }
   }
 }
 
-inline const double luma_r = 0.213;
+inline const double luma_r_flight_value_variable__u00004c__u000055__u00004d__u000041__u00005f__u000052__flight_private_ac066552cc0a5526 = 0.213;
 
-inline const double luma_g = 0.715;
+inline const double luma_g_flight_value_variable__u00004c__u000055__u00004d__u000041__u00005f__u000047__flight_private_ac066552cc0a5526 = 0.715;
 
-inline const double luma_b = 0.072;
+inline const double luma_b_flight_value_variable__u00004c__u000055__u00004d__u000041__u00005f__u000042__flight_private_ac066552cc0a5526 = 0.072;
 
-inline double clamp_byte(double value) {
+inline double clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526(double value) {
   return flight::maximum(0.0, flight::minimum(255.0, flight::round(value)));
 }
 
@@ -67,7 +70,7 @@ inline void color_matrix_bitmap(flight::Uint8ClampedArray out, flight::Structura
       {
         const double source_y = (flight::row_get<flight::RowKey<"y">>(source) + py);
         if (((source_y < 0.0) || (source_y >= flight::row_get<flight::RowKey<"bitmap">>(source)->height))) {
-          py += 1.0;
+          (py += 1.0);
           continue;
         }
         {
@@ -76,7 +79,7 @@ inline void color_matrix_bitmap(flight::Uint8ClampedArray out, flight::Structura
             {
               const double source_x = (flight::row_get<flight::RowKey<"x">>(source) + px);
               if (((source_x < 0.0) || (source_x >= flight::row_get<flight::RowKey<"bitmap">>(source)->width))) {
-                px += 1.0;
+                (px += 1.0);
                 continue;
               }
               const double si = (((source_y * flight::row_get<flight::RowKey<"bitmap">>(source)->width) + source_x) * 4.0);
@@ -85,16 +88,16 @@ inline void color_matrix_bitmap(flight::Uint8ClampedArray out, flight::Structura
               const double g = static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 1.0)));
               const double b = static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 2.0)));
               const double a = static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 3.0)));
-              out.element(di) = clamp_byte((((((r * matrix.element(0.0)) + (g * matrix.element(1.0))) + (b * matrix.element(2.0))) + (a * matrix.element(3.0))) + matrix.element(4.0)));
-              out.element((di + 1.0)) = clamp_byte((((((r * matrix.element(5.0)) + (g * matrix.element(6.0))) + (b * matrix.element(7.0))) + (a * matrix.element(8.0))) + matrix.element(9.0)));
-              out.element((di + 2.0)) = clamp_byte((((((r * matrix.element(10.0)) + (g * matrix.element(11.0))) + (b * matrix.element(12.0))) + (a * matrix.element(13.0))) + matrix.element(14.0)));
-              out.element((di + 3.0)) = clamp_byte((((((r * matrix.element(15.0)) + (g * matrix.element(16.0))) + (b * matrix.element(17.0))) + (a * matrix.element(18.0))) + matrix.element(19.0)));
+              (out.element(di) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526((((((r * matrix.element(0.0)) + (g * matrix.element(1.0))) + (b * matrix.element(2.0))) + (a * matrix.element(3.0))) + matrix.element(4.0))));
+              (out.element((di + 1.0)) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526((((((r * matrix.element(5.0)) + (g * matrix.element(6.0))) + (b * matrix.element(7.0))) + (a * matrix.element(8.0))) + matrix.element(9.0))));
+              (out.element((di + 2.0)) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526((((((r * matrix.element(10.0)) + (g * matrix.element(11.0))) + (b * matrix.element(12.0))) + (a * matrix.element(13.0))) + matrix.element(14.0))));
+              (out.element((di + 3.0)) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526((((((r * matrix.element(15.0)) + (g * matrix.element(16.0))) + (b * matrix.element(17.0))) + (a * matrix.element(18.0))) + matrix.element(19.0))));
             }
-            px += 1.0;
+            (px += 1.0);
           }
         }
       }
-      py += 1.0;
+      (py += 1.0);
     }
   }
 }
@@ -103,8 +106,8 @@ inline void set_color_matrix(flight::Array<double> out, flight::Array<double> va
   {
     double i = 0.0;
     while ((i < 20.0)) {
-      out.element(i) = values.element(i);
-      i += 1.0;
+      (out.element(i) = values.element(i));
+      (i += 1.0);
     }
   }
 }
@@ -131,9 +134,9 @@ inline void build_bitmap_invert_color_matrix(flight::Array<double> out) {
 
 inline void build_bitmap_saturation_color_matrix(flight::Array<double> out, double amount) {
   const double inv = (1.0 - amount);
-  const double r = (luma_r * inv);
-  const double g = (luma_g * inv);
-  const double b = (luma_b * inv);
+  const double r = (luma_r_flight_value_variable__u00004c__u000055__u00004d__u000041__u00005f__u000052__flight_private_ac066552cc0a5526 * inv);
+  const double g = (luma_g_flight_value_variable__u00004c__u000055__u00004d__u000041__u00005f__u000047__flight_private_ac066552cc0a5526 * inv);
+  const double b = (luma_b_flight_value_variable__u00004c__u000055__u00004d__u000041__u00005f__u000042__flight_private_ac066552cc0a5526 * inv);
   set_color_matrix(out, flight::Array<double>{(r + amount), g, b, 0.0, 0.0, r, (g + amount), b, 0.0, 0.0, r, g, (b + amount), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0});
 }
 

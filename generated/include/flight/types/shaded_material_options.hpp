@@ -7,6 +7,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Modifier; }
+namespace flight::types { struct Sampler; }
+namespace flight::types { struct ShadedMaterial; }
+namespace flight::types { struct SurfaceMaterialOptions; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct TextureSource; }
+namespace flight::types { struct VoxelGrid; }
+
 #include <flight/types/modifier.hpp>
 #include <flight/types/shaded_material.hpp>
 #include <flight/types/surface_material_options.hpp>

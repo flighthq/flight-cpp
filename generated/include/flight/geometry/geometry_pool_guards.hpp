@@ -9,14 +9,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::geometry {
 
-using GeometryPoolReleaseFunction = flight::String;
+using GeometryPoolReleaseFunction_flight_type_type_u000041_lias__u000047_eometry_u000050_ool_u000052_elease_u000046_unction_flight_private_e88746d412547d20 = flight::String;
 
-using GeometryPoolReleaseGuard = std::function<void(GeometryPoolReleaseFunction)>;
+using GeometryPoolReleaseGuard = std::function<void(GeometryPoolReleaseFunction_flight_type_type_u000041_lias__u000047_eometry_u000050_ool_u000052_elease_u000046_unction_flight_private_e88746d412547d20)>;
 
-inline std::optional<std::function<void(GeometryPoolReleaseFunction)>> geometry_pool_release_guard = std::nullopt;
+inline std::optional<std::function<void(GeometryPoolReleaseFunction_flight_type_type_u000041_lias__u000047_eometry_u000050_ool_u000052_elease_u000046_unction_flight_private_e88746d412547d20)>> geometry_pool_release_guard = std::nullopt;
 
-inline void set_geometry_pool_release_guard(std::optional<std::function<void(GeometryPoolReleaseFunction)>> guard) {
-  geometry_pool_release_guard = guard;
+inline void set_geometry_pool_release_guard(std::optional<std::function<void(GeometryPoolReleaseFunction_flight_type_type_u000041_lias__u000047_eometry_u000050_ool_u000052_elease_u000046_unction_flight_private_e88746d412547d20)>> guard) {
+  (geometry_pool_release_guard = guard);
 }
 
 } // namespace flight::geometry

@@ -12,6 +12,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Aabb; }
+namespace flight::types { struct BoundingSphere; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/aabb.hpp>
 #include <flight/types/bounding_sphere.hpp>
@@ -22,7 +28,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::geometry {
 
-inline bool contains_aabb_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline bool contains_aabb_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   return ((((((flight::row_get<flight::RowKey<"x">>(point) >= flight::row_get<flight::RowKey<"min">>(aabb)->x) && (flight::row_get<flight::RowKey<"x">>(point) <= flight::row_get<flight::RowKey<"max">>(aabb)->x)) && (flight::row_get<flight::RowKey<"y">>(point) >= flight::row_get<flight::RowKey<"min">>(aabb)->y)) && (flight::row_get<flight::RowKey<"y">>(point) <= flight::row_get<flight::RowKey<"max">>(aabb)->y)) && (flight::row_get<flight::RowKey<"z">>(point) >= flight::row_get<flight::RowKey<"min">>(aabb)->z)) && (flight::row_get<flight::RowKey<"z">>(point) <= flight::row_get<flight::RowKey<"max">>(aabb)->z));
 }
 
@@ -33,15 +39,15 @@ inline void copy_aabb(flight::Ref<flight::types::AabbLike> out, flight::Structur
   const double max_x = flight::row_get<flight::RowKey<"max">>(source)->x;
   const double max_y = flight::row_get<flight::RowKey<"max">>(source)->y;
   const double max_z = flight::row_get<flight::RowKey<"max">>(source)->z;
-  out->min->x = min_x;
-  out->min->y = min_y;
-  out->min->z = min_z;
-  out->max->x = max_x;
-  out->max->y = max_y;
-  out->max->z = max_z;
+  (out->min->x = min_x);
+  (out->min->y = min_y);
+  (out->min->z = min_z);
+  (out->max->x = max_x);
+  (out->max->y = max_y);
+  (out->max->z = max_z);
 }
 
-inline void expand_aabb_by_point(flight::Ref<flight::types::AabbLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline void expand_aabb_by_point(flight::Ref<flight::types::AabbLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   const double min_x = flight::row_get<flight::RowKey<"min">>(aabb)->x;
   const double min_y = flight::row_get<flight::RowKey<"min">>(aabb)->y;
   const double min_z = flight::row_get<flight::RowKey<"min">>(aabb)->z;
@@ -51,15 +57,15 @@ inline void expand_aabb_by_point(flight::Ref<flight::types::AabbLike> out, fligh
   const double px = flight::row_get<flight::RowKey<"x">>(point);
   const double py = flight::row_get<flight::RowKey<"y">>(point);
   const double pz = flight::row_get<flight::RowKey<"z">>(point);
-  out->min->x = flight::minimum(min_x, px);
-  out->min->y = flight::minimum(min_y, py);
-  out->min->z = flight::minimum(min_z, pz);
-  out->max->x = flight::maximum(max_x, px);
-  out->max->y = flight::maximum(max_y, py);
-  out->max->z = flight::maximum(max_z, pz);
+  (out->min->x = flight::minimum(min_x, px));
+  (out->min->y = flight::minimum(min_y, py));
+  (out->min->z = flight::minimum(min_z, pz));
+  (out->max->x = flight::maximum(max_x, px));
+  (out->max->y = flight::maximum(max_y, py));
+  (out->max->z = flight::maximum(max_z, pz));
 }
 
-inline void expand_aabb_by_sphere(flight::Ref<flight::types::AabbLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> sphere) {
+inline void expand_aabb_by_sphere(flight::Ref<flight::types::AabbLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere) {
   const double min_x = flight::row_get<flight::RowKey<"min">>(aabb)->x;
   const double min_y = flight::row_get<flight::RowKey<"min">>(aabb)->y;
   const double min_z = flight::row_get<flight::RowKey<"min">>(aabb)->z;
@@ -71,50 +77,50 @@ inline void expand_aabb_by_sphere(flight::Ref<flight::types::AabbLike> out, flig
   const double cz = flight::row_get<flight::RowKey<"center">>(sphere)->z;
   const double radius = flight::row_get<flight::RowKey<"radius">>(sphere);
   if ((radius < 0.0)) {
-    out->min->x = min_x;
-    out->min->y = min_y;
-    out->min->z = min_z;
-    out->max->x = max_x;
-    out->max->y = max_y;
-    out->max->z = max_z;
+    (out->min->x = min_x);
+    (out->min->y = min_y);
+    (out->min->z = min_z);
+    (out->max->x = max_x);
+    (out->max->y = max_y);
+    (out->max->z = max_z);
     return;
   }
-  out->min->x = flight::minimum(min_x, (cx - radius));
-  out->min->y = flight::minimum(min_y, (cy - radius));
-  out->min->z = flight::minimum(min_z, (cz - radius));
-  out->max->x = flight::maximum(max_x, (cx + radius));
-  out->max->y = flight::maximum(max_y, (cy + radius));
-  out->max->z = flight::maximum(max_z, (cz + radius));
+  (out->min->x = flight::minimum(min_x, (cx - radius)));
+  (out->min->y = flight::minimum(min_y, (cy - radius)));
+  (out->min->z = flight::minimum(min_z, (cz - radius)));
+  (out->max->x = flight::maximum(max_x, (cx + radius)));
+  (out->max->y = flight::maximum(max_y, (cy + radius)));
+  (out->max->z = flight::maximum(max_z, (cz + radius)));
 }
 
-inline void get_aabb_center(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
+inline void get_aabb_center(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
   const double x = ((flight::row_get<flight::RowKey<"min">>(aabb)->x + flight::row_get<flight::RowKey<"max">>(aabb)->x) * 0.5);
   const double y = ((flight::row_get<flight::RowKey<"min">>(aabb)->y + flight::row_get<flight::RowKey<"max">>(aabb)->y) * 0.5);
   const double z = ((flight::row_get<flight::RowKey<"min">>(aabb)->z + flight::row_get<flight::RowKey<"max">>(aabb)->z) * 0.5);
-  out->x = x;
-  out->y = y;
-  out->z = z;
+  (out->x = x);
+  (out->y = y);
+  (out->z = z);
 }
 
-inline void get_aabb_extents(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
+inline void get_aabb_extents(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
   const double x = ((flight::row_get<flight::RowKey<"max">>(aabb)->x - flight::row_get<flight::RowKey<"min">>(aabb)->x) * 0.5);
   const double y = ((flight::row_get<flight::RowKey<"max">>(aabb)->y - flight::row_get<flight::RowKey<"min">>(aabb)->y) * 0.5);
   const double z = ((flight::row_get<flight::RowKey<"max">>(aabb)->z - flight::row_get<flight::RowKey<"min">>(aabb)->z) * 0.5);
-  out->x = x;
-  out->y = y;
-  out->z = z;
+  (out->x = x);
+  (out->y = y);
+  (out->z = z);
 }
 
-inline void get_aabb_size(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
+inline void get_aabb_size(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
   const double x = (flight::row_get<flight::RowKey<"max">>(aabb)->x - flight::row_get<flight::RowKey<"min">>(aabb)->x);
   const double y = (flight::row_get<flight::RowKey<"max">>(aabb)->y - flight::row_get<flight::RowKey<"min">>(aabb)->y);
   const double z = (flight::row_get<flight::RowKey<"max">>(aabb)->z - flight::row_get<flight::RowKey<"min">>(aabb)->z);
-  out->x = x;
-  out->y = y;
-  out->z = z;
+  (out->x = x);
+  (out->y = y);
+  (out->z = z);
 }
 
-inline void get_closest_point_on_aabb(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline void get_closest_point_on_aabb(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   const double px = flight::row_get<flight::RowKey<"x">>(point);
   const double py = flight::row_get<flight::RowKey<"y">>(point);
   const double pz = flight::row_get<flight::RowKey<"z">>(point);
@@ -124,9 +130,9 @@ inline void get_closest_point_on_aabb(flight::Ref<flight::types::Vector3Like> ou
   const double max_x = flight::row_get<flight::RowKey<"max">>(aabb)->x;
   const double max_y = flight::row_get<flight::RowKey<"max">>(aabb)->y;
   const double max_z = flight::row_get<flight::RowKey<"max">>(aabb)->z;
-  out->x = flight::minimum(flight::maximum(px, min_x), max_x);
-  out->y = flight::minimum(flight::maximum(py, min_y), max_y);
-  out->z = flight::minimum(flight::maximum(pz, min_z), max_z);
+  (out->x = flight::minimum(flight::maximum(px, min_x), max_x));
+  (out->y = flight::minimum(flight::maximum(py, min_y), max_y));
+  (out->z = flight::minimum(flight::maximum(pz, min_z), max_z));
 }
 
 inline void initialize_aabb(flight::types::EntityConstruction<flight::Ref<flight::types::Aabb>> out, flight::Ref<flight::types::Vector3> min, flight::Ref<flight::types::Vector3> max) {
@@ -139,7 +145,7 @@ inline flight::Ref<flight::types::Aabb> create_aabb(std::optional<double> min_x 
   flight::Ref<flight::types::Vector3> max = flight::geometry::create_vector3(max_x.value_or(-std::numeric_limits<double>::infinity()), max_y.value_or(-std::numeric_limits<double>::infinity()), max_z.value_or(-std::numeric_limits<double>::infinity()));
   flight::types::EntityConstruction<flight::Ref<flight::types::Aabb>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Aabb>>();
   initialize_aabb(out, min, max);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Aabb>>(out);
 }
 
 inline flight::Ref<flight::types::Aabb> clone_aabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> source) {
@@ -159,12 +165,12 @@ inline void intersect_aabb(flight::Ref<flight::types::AabbLike> out, flight::Str
   const double b_max_x = flight::row_get<flight::RowKey<"max">>(b)->x;
   const double b_max_y = flight::row_get<flight::RowKey<"max">>(b)->y;
   const double b_max_z = flight::row_get<flight::RowKey<"max">>(b)->z;
-  out->min->x = flight::maximum(a_min_x, b_min_x);
-  out->min->y = flight::maximum(a_min_y, b_min_y);
-  out->min->z = flight::maximum(a_min_z, b_min_z);
-  out->max->x = flight::minimum(a_max_x, b_max_x);
-  out->max->y = flight::minimum(a_max_y, b_max_y);
-  out->max->z = flight::minimum(a_max_z, b_max_z);
+  (out->min->x = flight::maximum(a_min_x, b_min_x));
+  (out->min->y = flight::maximum(a_min_y, b_min_y));
+  (out->min->z = flight::maximum(a_min_z, b_min_z));
+  (out->max->x = flight::minimum(a_max_x, b_max_x));
+  (out->max->y = flight::minimum(a_max_y, b_max_y));
+  (out->max->z = flight::minimum(a_max_z, b_max_z));
 }
 
 inline bool is_aabb_intersecting_aabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> b) {
@@ -174,7 +180,7 @@ inline bool is_aabb_intersecting_aabb(flight::StructuralRef<flight::RowReadonly<
   return ((((((flight::row_get<flight::RowKey<"min">>(a)->x <= flight::row_get<flight::RowKey<"max">>(b)->x) && (flight::row_get<flight::RowKey<"max">>(a)->x >= flight::row_get<flight::RowKey<"min">>(b)->x)) && (flight::row_get<flight::RowKey<"min">>(a)->y <= flight::row_get<flight::RowKey<"max">>(b)->y)) && (flight::row_get<flight::RowKey<"max">>(a)->y >= flight::row_get<flight::RowKey<"min">>(b)->y)) && (flight::row_get<flight::RowKey<"min">>(a)->z <= flight::row_get<flight::RowKey<"max">>(b)->z)) && (flight::row_get<flight::RowKey<"max">>(a)->z >= flight::row_get<flight::RowKey<"min">>(b)->z));
 }
 
-inline bool is_aabb_intersecting_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> sphere) {
+inline bool is_aabb_intersecting_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere) {
   if ((((flight::row_get<flight::RowKey<"min">>(aabb)->x > flight::row_get<flight::RowKey<"max">>(aabb)->x) || (flight::row_get<flight::RowKey<"min">>(aabb)->y > flight::row_get<flight::RowKey<"max">>(aabb)->y)) || (flight::row_get<flight::RowKey<"min">>(aabb)->z > flight::row_get<flight::RowKey<"max">>(aabb)->z))) {
     return false;
   }
@@ -191,15 +197,15 @@ inline bool is_aabb_intersecting_sphere(flight::StructuralRef<flight::RowReadonl
 }
 
 inline void set_aabb(flight::Ref<flight::types::AabbLike> out, double min_x, double min_y, double min_z, double max_x, double max_y, double max_z) {
-  out->min->x = min_x;
-  out->min->y = min_y;
-  out->min->z = min_z;
-  out->max->x = max_x;
-  out->max->y = max_y;
-  out->max->z = max_z;
+  (out->min->x = min_x);
+  (out->min->y = min_y);
+  (out->min->z = min_z);
+  (out->max->x = max_x);
+  (out->max->y = max_y);
+  (out->max->z = max_z);
 }
 
-inline void set_aabb_from_points(flight::Ref<flight::types::AabbLike> out, flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> points) {
+inline void set_aabb_from_points(flight::Ref<flight::types::AabbLike> out, flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> points) {
   double min_x = std::numeric_limits<double>::infinity();
   double min_y = std::numeric_limits<double>::infinity();
   double min_z = std::numeric_limits<double>::infinity();
@@ -208,40 +214,40 @@ inline void set_aabb_from_points(flight::Ref<flight::types::AabbLike> out, fligh
   double max_z = -std::numeric_limits<double>::infinity();
   {
     double i = 0.0;
-    while ((i < points.length)) {
+    while ((i < static_cast<double>(points.size()))) {
       {
-        flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> p = points.element(i);
+        flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> p = points.element(i);
         if ((flight::row_get<flight::RowKey<"x">>(p) < min_x)) {
-          min_x = flight::row_get<flight::RowKey<"x">>(p);
+          (min_x = flight::row_get<flight::RowKey<"x">>(p));
         }
         if ((flight::row_get<flight::RowKey<"y">>(p) < min_y)) {
-          min_y = flight::row_get<flight::RowKey<"y">>(p);
+          (min_y = flight::row_get<flight::RowKey<"y">>(p));
         }
         if ((flight::row_get<flight::RowKey<"z">>(p) < min_z)) {
-          min_z = flight::row_get<flight::RowKey<"z">>(p);
+          (min_z = flight::row_get<flight::RowKey<"z">>(p));
         }
         if ((flight::row_get<flight::RowKey<"x">>(p) > max_x)) {
-          max_x = flight::row_get<flight::RowKey<"x">>(p);
+          (max_x = flight::row_get<flight::RowKey<"x">>(p));
         }
         if ((flight::row_get<flight::RowKey<"y">>(p) > max_y)) {
-          max_y = flight::row_get<flight::RowKey<"y">>(p);
+          (max_y = flight::row_get<flight::RowKey<"y">>(p));
         }
         if ((flight::row_get<flight::RowKey<"z">>(p) > max_z)) {
-          max_z = flight::row_get<flight::RowKey<"z">>(p);
+          (max_z = flight::row_get<flight::RowKey<"z">>(p));
         }
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
-  out->min->x = min_x;
-  out->min->y = min_y;
-  out->min->z = min_z;
-  out->max->x = max_x;
-  out->max->y = max_y;
-  out->max->z = max_z;
+  (out->min->x = min_x);
+  (out->min->y = min_y);
+  (out->min->z = min_z);
+  (out->max->x = max_x);
+  (out->max->y = max_y);
+  (out->max->z = max_z);
 }
 
-inline void transform_aabb_by_matrix4(flight::Ref<flight::types::AabbLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> m_2) {
+inline void transform_aabb_by_matrix4(flight::Ref<flight::types::AabbLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> m_2) {
   const double min_x = flight::row_get<flight::RowKey<"min">>(aabb)->x;
   const double min_y = flight::row_get<flight::RowKey<"min">>(aabb)->y;
   const double min_z = flight::row_get<flight::RowKey<"min">>(aabb)->z;
@@ -261,12 +267,12 @@ inline void transform_aabb_by_matrix4(flight::Ref<flight::types::AabbLike> out, 
   const double tex = (((std::abs(m.element(0.0)) * ex) + (std::abs(m.element(4.0)) * ey)) + (std::abs(m.element(8.0)) * ez));
   const double tey = (((std::abs(m.element(1.0)) * ex) + (std::abs(m.element(5.0)) * ey)) + (std::abs(m.element(9.0)) * ez));
   const double tez = (((std::abs(m.element(2.0)) * ex) + (std::abs(m.element(6.0)) * ey)) + (std::abs(m.element(10.0)) * ez));
-  out->min->x = (tcx - tex);
-  out->min->y = (tcy - tey);
-  out->min->z = (tcz - tez);
-  out->max->x = (tcx + tex);
-  out->max->y = (tcy + tey);
-  out->max->z = (tcz + tez);
+  (out->min->x = (tcx - tex));
+  (out->min->y = (tcy - tey));
+  (out->min->z = (tcz - tez));
+  (out->max->x = (tcx + tex));
+  (out->max->y = (tcy + tey));
+  (out->max->z = (tcz + tez));
 }
 
 inline void union_aabb(flight::Ref<flight::types::AabbLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> b) {
@@ -282,12 +288,12 @@ inline void union_aabb(flight::Ref<flight::types::AabbLike> out, flight::Structu
   const double b_max_x = flight::row_get<flight::RowKey<"max">>(b)->x;
   const double b_max_y = flight::row_get<flight::RowKey<"max">>(b)->y;
   const double b_max_z = flight::row_get<flight::RowKey<"max">>(b)->z;
-  out->min->x = flight::minimum(a_min_x, b_min_x);
-  out->min->y = flight::minimum(a_min_y, b_min_y);
-  out->min->z = flight::minimum(a_min_z, b_min_z);
-  out->max->x = flight::maximum(a_max_x, b_max_x);
-  out->max->y = flight::maximum(a_max_y, b_max_y);
-  out->max->z = flight::maximum(a_max_z, b_max_z);
+  (out->min->x = flight::minimum(a_min_x, b_min_x));
+  (out->min->y = flight::minimum(a_min_y, b_min_y));
+  (out->min->z = flight::minimum(a_min_z, b_min_z));
+  (out->max->x = flight::maximum(a_max_x, b_max_x));
+  (out->max->y = flight::maximum(a_max_y, b_max_y));
+  (out->max->z = flight::maximum(a_max_z, b_max_z));
 }
 
 } // namespace flight::geometry

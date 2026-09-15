@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct FilmEmulationEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/film_emulation_effect.hpp>
@@ -25,7 +28,7 @@ struct gate_weave_grain_intensity_halation_radius_halation_strength_0bdbc530cb9e
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_0BDBC530CB9EE804
 
 inline void initialize_film_emulation_effect(flight::types::EntityConstruction<flight::Ref<flight::types::FilmEmulationEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<gate_weave_grain_intensity_halation_radius_halation_strength_0bdbc530cb9ee804>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("FilmEmulationEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::FilmEmulationEffect>>(out, flight::String("FilmEmulationEffect"));
   flight::row_set<flight::RowKey<"gateWeave">>(out, flight::row_get<flight::RowKey<"gateWeave">>(options));
   flight::row_set<flight::RowKey<"grainIntensity">>(out, flight::row_get<flight::RowKey<"grainIntensity">>(options));
   flight::row_set<flight::RowKey<"halationRadius">>(out, flight::row_get<flight::RowKey<"halationRadius">>(options));
@@ -36,7 +39,7 @@ inline flight::Ref<flight::types::FilmEmulationEffect> create_film_emulation_eff
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<gate_weave_grain_intensity_halation_radius_halation_strength_0bdbc530cb9ee804>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::FilmEmulationEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::FilmEmulationEffect>>();
   initialize_film_emulation_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::FilmEmulationEffect>>(out);
 }
 
 } // namespace flight::effects

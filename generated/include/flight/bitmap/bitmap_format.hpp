@@ -18,13 +18,13 @@ inline void premultiply_bitmap_pixels(flight::Uint8ClampedArray out, flight::Uin
     double i = 0.0;
     while ((i < length)) {
       {
-        const double a = (source.element((i + 3.0)) / 255.0);
-        out.element(i) = flight::round((source.element(i) * a));
-        out.element((i + 1.0)) = flight::round((source.element((i + 1.0)) * a));
-        out.element((i + 2.0)) = flight::round((source.element((i + 2.0)) * a));
-        out.element((i + 3.0)) = source.element((i + 3.0));
+        const double a = (static_cast<double>(source.element((i + 3.0))) / 255.0);
+        (out.element(i) = flight::round((static_cast<double>(source.element(i)) * a)));
+        (out.element((i + 1.0)) = flight::round((static_cast<double>(source.element((i + 1.0))) * a)));
+        (out.element((i + 2.0)) = flight::round((static_cast<double>(source.element((i + 2.0))) * a)));
+        (out.element((i + 3.0)) = static_cast<double>(source.element((i + 3.0))));
       }
-      i += 4.0;
+      (i += 4.0);
     }
   }
 }
@@ -34,22 +34,22 @@ inline void unpremultiply_bitmap_pixels(flight::Uint8ClampedArray out, flight::U
     double i = 0.0;
     while ((i < length)) {
       {
-        const double a = source.element((i + 3.0));
+        const double a = static_cast<double>(source.element((i + 3.0)));
         if ((a == 0.0)) {
-          out.element(i) = 0.0;
-          out.element((i + 1.0)) = 0.0;
-          out.element((i + 2.0)) = 0.0;
-          out.element((i + 3.0)) = 0.0;
+          (out.element(i) = 0.0);
+          (out.element((i + 1.0)) = 0.0);
+          (out.element((i + 2.0)) = 0.0);
+          (out.element((i + 3.0)) = 0.0);
         }
         else {
           const double inv = (255.0 / a);
-          out.element(i) = flight::minimum(255.0, flight::round((source.element(i) * inv)));
-          out.element((i + 1.0)) = flight::minimum(255.0, flight::round((source.element((i + 1.0)) * inv)));
-          out.element((i + 2.0)) = flight::minimum(255.0, flight::round((source.element((i + 2.0)) * inv)));
-          out.element((i + 3.0)) = a;
+          (out.element(i) = flight::minimum(255.0, flight::round((static_cast<double>(source.element(i)) * inv))));
+          (out.element((i + 1.0)) = flight::minimum(255.0, flight::round((static_cast<double>(source.element((i + 1.0))) * inv))));
+          (out.element((i + 2.0)) = flight::minimum(255.0, flight::round((static_cast<double>(source.element((i + 2.0))) * inv))));
+          (out.element((i + 3.0)) = a);
         }
       }
-      i += 4.0;
+      (i += 4.0);
     }
   }
 }
@@ -94,16 +94,16 @@ inline void convert_bitmap_pixel_order(flight::Uint8ClampedArray out, flight::Ui
     double i = 0.0;
     while ((i < length)) {
       {
-        const double r = source.element((i + src_r));
-        const double g = source.element((i + src_g));
-        const double b = source.element((i + src_b));
-        const double a = source.element((i + src_a));
-        out.element((i + dst_r)) = r;
-        out.element((i + dst_g)) = g;
-        out.element((i + dst_b)) = b;
-        out.element((i + dst_a)) = a;
+        const double r = static_cast<double>(source.element((i + src_r)));
+        const double g = static_cast<double>(source.element((i + src_g)));
+        const double b = static_cast<double>(source.element((i + src_b)));
+        const double a = static_cast<double>(source.element((i + src_a)));
+        (out.element((i + dst_r)) = r);
+        (out.element((i + dst_g)) = g);
+        (out.element((i + dst_b)) = b);
+        (out.element((i + dst_a)) = a);
       }
-      i += 4.0;
+      (i += 4.0);
     }
   }
 }

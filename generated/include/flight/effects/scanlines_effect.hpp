@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct ScanlinesEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/scanlines_effect.hpp>
@@ -23,7 +26,7 @@ struct intensity_count_1982fda6a055fcd2 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_1982FDA6A055FCD2
 
 inline void initialize_scanlines_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ScanlinesEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_count_1982fda6a055fcd2>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("ScanlinesEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::ScanlinesEffect>>(out, flight::String("ScanlinesEffect"));
   flight::row_set<flight::RowKey<"count">>(out, flight::row_get<flight::RowKey<"count">>(options));
   flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
 }
@@ -32,7 +35,7 @@ inline flight::Ref<flight::types::ScanlinesEffect> create_scanlines_effect(std::
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_count_1982fda6a055fcd2>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::ScanlinesEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ScanlinesEffect>>();
   initialize_scanlines_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::ScanlinesEffect>>(out);
 }
 
 } // namespace flight::effects

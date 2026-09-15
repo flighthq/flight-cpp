@@ -158,26 +158,26 @@ inline flight::Array<double> multiply_color_matrix(flight::Array<double> a, flig
   const double b18 = b.element(18.0);
   const double b19 = b.element(19.0);
   flight::Array<double> result = out.value_or(flight::Array<double>(20.0));
-  result.element(0.0) = ((((a0 * b0) + (a1 * b5)) + (a2 * b10)) + (a3 * b15));
-  result.element(1.0) = ((((a0 * b1) + (a1 * b6)) + (a2 * b11)) + (a3 * b16));
-  result.element(2.0) = ((((a0 * b2) + (a1 * b7)) + (a2 * b12)) + (a3 * b17));
-  result.element(3.0) = ((((a0 * b3) + (a1 * b8)) + (a2 * b13)) + (a3 * b18));
-  result.element(4.0) = (((((a0 * b4) + (a1 * b9)) + (a2 * b14)) + (a3 * b19)) + a4);
-  result.element(5.0) = ((((a5 * b0) + (a6 * b5)) + (a7 * b10)) + (a8 * b15));
-  result.element(6.0) = ((((a5 * b1) + (a6 * b6)) + (a7 * b11)) + (a8 * b16));
-  result.element(7.0) = ((((a5 * b2) + (a6 * b7)) + (a7 * b12)) + (a8 * b17));
-  result.element(8.0) = ((((a5 * b3) + (a6 * b8)) + (a7 * b13)) + (a8 * b18));
-  result.element(9.0) = (((((a5 * b4) + (a6 * b9)) + (a7 * b14)) + (a8 * b19)) + a9);
-  result.element(10.0) = ((((a10 * b0) + (a11 * b5)) + (a12 * b10)) + (a13 * b15));
-  result.element(11.0) = ((((a10 * b1) + (a11 * b6)) + (a12 * b11)) + (a13 * b16));
-  result.element(12.0) = ((((a10 * b2) + (a11 * b7)) + (a12 * b12)) + (a13 * b17));
-  result.element(13.0) = ((((a10 * b3) + (a11 * b8)) + (a12 * b13)) + (a13 * b18));
-  result.element(14.0) = (((((a10 * b4) + (a11 * b9)) + (a12 * b14)) + (a13 * b19)) + a14);
-  result.element(15.0) = ((((a15 * b0) + (a16 * b5)) + (a17 * b10)) + (a18 * b15));
-  result.element(16.0) = ((((a15 * b1) + (a16 * b6)) + (a17 * b11)) + (a18 * b16));
-  result.element(17.0) = ((((a15 * b2) + (a16 * b7)) + (a17 * b12)) + (a18 * b17));
-  result.element(18.0) = ((((a15 * b3) + (a16 * b8)) + (a17 * b13)) + (a18 * b18));
-  result.element(19.0) = (((((a15 * b4) + (a16 * b9)) + (a17 * b14)) + (a18 * b19)) + a19);
+  (result.element(0.0) = ((((a0 * b0) + (a1 * b5)) + (a2 * b10)) + (a3 * b15)));
+  (result.element(1.0) = ((((a0 * b1) + (a1 * b6)) + (a2 * b11)) + (a3 * b16)));
+  (result.element(2.0) = ((((a0 * b2) + (a1 * b7)) + (a2 * b12)) + (a3 * b17)));
+  (result.element(3.0) = ((((a0 * b3) + (a1 * b8)) + (a2 * b13)) + (a3 * b18)));
+  (result.element(4.0) = (((((a0 * b4) + (a1 * b9)) + (a2 * b14)) + (a3 * b19)) + a4));
+  (result.element(5.0) = ((((a5 * b0) + (a6 * b5)) + (a7 * b10)) + (a8 * b15)));
+  (result.element(6.0) = ((((a5 * b1) + (a6 * b6)) + (a7 * b11)) + (a8 * b16)));
+  (result.element(7.0) = ((((a5 * b2) + (a6 * b7)) + (a7 * b12)) + (a8 * b17)));
+  (result.element(8.0) = ((((a5 * b3) + (a6 * b8)) + (a7 * b13)) + (a8 * b18)));
+  (result.element(9.0) = (((((a5 * b4) + (a6 * b9)) + (a7 * b14)) + (a8 * b19)) + a9));
+  (result.element(10.0) = ((((a10 * b0) + (a11 * b5)) + (a12 * b10)) + (a13 * b15)));
+  (result.element(11.0) = ((((a10 * b1) + (a11 * b6)) + (a12 * b11)) + (a13 * b16)));
+  (result.element(12.0) = ((((a10 * b2) + (a11 * b7)) + (a12 * b12)) + (a13 * b17)));
+  (result.element(13.0) = ((((a10 * b3) + (a11 * b8)) + (a12 * b13)) + (a13 * b18)));
+  (result.element(14.0) = (((((a10 * b4) + (a11 * b9)) + (a12 * b14)) + (a13 * b19)) + a14));
+  (result.element(15.0) = ((((a15 * b0) + (a16 * b5)) + (a17 * b10)) + (a18 * b15)));
+  (result.element(16.0) = ((((a15 * b1) + (a16 * b6)) + (a17 * b11)) + (a18 * b16)));
+  (result.element(17.0) = ((((a15 * b2) + (a16 * b7)) + (a17 * b12)) + (a18 * b17)));
+  (result.element(18.0) = ((((a15 * b3) + (a16 * b8)) + (a17 * b13)) + (a18 * b18)));
+  (result.element(19.0) = (((((a15 * b4) + (a16 * b9)) + (a17 * b14)) + (a18 * b19)) + a19));
   return result;
 }
 
@@ -194,7 +194,7 @@ inline flight::Array<double> fuse_color_matrices(flight::Array<flight::Array<dou
     double i = 1.0;
     while ((i < static_cast<double>(matrices.size()))) {
       multiply_color_matrix(matrices.element(i), out, out);
-      i += 1.0;
+      (i += 1.0);
     }
   }
   return out;

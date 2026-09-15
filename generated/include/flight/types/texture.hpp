@@ -7,6 +7,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct Sampler; }
+namespace flight::types { struct TextureSource; }
+namespace flight::types { struct TextureUvTransform; }
+namespace flight::types { struct Vector2; }
+namespace flight::types { struct VoxelGrid; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/sampler.hpp>
 #include <flight/types/texture_source.hpp>
@@ -104,7 +112,7 @@ struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_spa
 using Texture = std::variant<flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<Texture2D>>;
 
 template <typename Type>
-using TextureLikeFrom = flight::Ref<flight::types::EntityWithoutRuntime<Type>>;
+using TextureLikeFrom = flight::types::EntityWithoutRuntime<Type>;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_06E64A362B012722
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_06E64A362B012722

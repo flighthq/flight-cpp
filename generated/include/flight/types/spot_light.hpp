@@ -6,6 +6,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct Light; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/types/light.hpp>
 #include <flight/types/light_unit.hpp>
 #include <flight/types/vector3.hpp>

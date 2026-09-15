@@ -6,6 +6,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct LibgdxParseOptions; }
+namespace flight::types { struct ParticleDesignerParseOptions; }
+namespace flight::types { struct ParticleEmitterConfig; }
+namespace flight::types { struct StarlingPexParseOptions; }
+namespace flight::types { struct UnityParseOptions; }
+
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/libgdx_particle_schema.hpp>
 #include <flight/types/particle_designer_schema.hpp>

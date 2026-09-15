@@ -8,6 +8,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct ChannelMixerAdjustment; }
+namespace flight::types { struct Entity; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/adjustment_kind.hpp>
 #include <flight/types/channel_mixer_adjustment.hpp>
@@ -22,12 +25,14 @@ inline flight::Array<double> identity_channel_mixer = flight::Array<double>{1.0,
 inline void initialize_channel_mixer_adjustment(flight::types::EntityConstruction<flight::Ref<flight::types::ChannelMixerAdjustment>> out, std::optional<flight::Ref<flight::types::ChannelMixerAdjustment>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<flight::types::ChannelMixerAdjustment>(flight::types::ChannelMixerAdjustment{.matrix = identity_channel_mixer}));
   flight::Array<double> matrix = options.value()->matrix;
-  std::function<double(double)> m = [=](double i) { return matrix.element(i); };
+  std::function<double(double)> m = [=](double i) {
+  return matrix.get(i).value_or(identity_channel_mixer.element(i));
+};
   flight::Array<double> color_matrix = flight::adjustments::create_channel_mixer_color_matrix(flight::Array{m(0.0), m(1.0), m(2.0)}, flight::Array{m(4.0), m(5.0), m(6.0)}, flight::Array{m(8.0), m(9.0), m(10.0)});
-  color_matrix.element(4.0) = m(3.0);
-  color_matrix.element(9.0) = m(7.0);
-  color_matrix.element(14.0) = m(11.0);
-  flight::adjustments::initialize_color_matrix_adjustment(out, flight::String("ChannelMixerAdjustment"), color_matrix);
+  (color_matrix.element(4.0) = m(3.0));
+  (color_matrix.element(9.0) = m(7.0));
+  (color_matrix.element(14.0) = m(11.0));
+  flight::adjustments::initialize_color_matrix_adjustment<flight::Ref<flight::types::ChannelMixerAdjustment>>(out, flight::String("ChannelMixerAdjustment"), color_matrix);
   flight::row_set<flight::RowKey<"matrix">>(out, matrix);
 }
 
@@ -35,7 +40,7 @@ inline flight::Ref<flight::types::ChannelMixerAdjustment> create_channel_mixer_a
   options = options.value_or(flight::make_ref<flight::types::ChannelMixerAdjustment>(flight::types::ChannelMixerAdjustment{.matrix = identity_channel_mixer}));
   flight::types::EntityConstruction<flight::Ref<flight::types::ChannelMixerAdjustment>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ChannelMixerAdjustment>>();
   initialize_channel_mixer_adjustment(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::ChannelMixerAdjustment>>(out);
 }
 
 } // namespace flight::adjustments

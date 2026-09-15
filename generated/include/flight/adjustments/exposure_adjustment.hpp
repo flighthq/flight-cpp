@@ -10,6 +10,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct ExposureAdjustment; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/adjustment_kind.hpp>
 #include <flight/types/entity.hpp>
@@ -23,7 +26,7 @@ inline void initialize_exposure_adjustment(flight::types::EntityConstruction<fli
   const double exposure = options.value()->exposure.value_or(0.0);
   auto m = flight::power(2.0, exposure);
   auto color_matrix = flight::Array<double>{m, 0.0, 0.0, 0.0, 0.0, 0.0, m, 0.0, 0.0, 0.0, 0.0, 0.0, m, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
-  flight::adjustments::initialize_color_matrix_adjustment(out, flight::String("ExposureAdjustment"), color_matrix);
+  flight::adjustments::initialize_color_matrix_adjustment<flight::Ref<flight::types::ExposureAdjustment>>(out, flight::String("ExposureAdjustment"), color_matrix);
   flight::row_set<flight::RowKey<"exposure">>(out, std::optional<double>{exposure});
 }
 
@@ -31,7 +34,7 @@ inline flight::Ref<flight::types::ExposureAdjustment> create_exposure_adjustment
   options = options.value_or(flight::make_ref<flight::types::ExposureAdjustment>(flight::types::ExposureAdjustment{}));
   flight::types::EntityConstruction<flight::Ref<flight::types::ExposureAdjustment>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ExposureAdjustment>>();
   initialize_exposure_adjustment(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::ExposureAdjustment>>(out);
 }
 
 } // namespace flight::adjustments

@@ -6,6 +6,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct Modifier; }
+
 #include <flight/types/modifier.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/vector3.hpp>
@@ -33,11 +36,11 @@ struct VertexDisplaceModifier : public flight::ReferenceEnabled {
   flight::String slot;
   VertexDisplaceModifierSource source;
   double amplitude;
-  std::optional<flight::Ref<flight::types::Vector3Like>> axis;
+  std::optional<flight::types::Vector3Like> axis;
   std::optional<flight::types::Texture> map;
   std::optional<double> frequency;
   std::optional<double> speed;
-  std::optional<flight::Ref<flight::types::Vector3Like>> direction;
+  std::optional<flight::types::Vector3Like> direction;
 };
 
 inline const flight::String vertex_displace_modifier_kind = flight::String("VertexDisplaceModifier");

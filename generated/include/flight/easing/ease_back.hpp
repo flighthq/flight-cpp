@@ -10,14 +10,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::easing {
 
-inline const double s = 1.70158;
+inline const double s_flight_value_variable_s_flight_private_029d6dde45b0d91a = 1.70158;
 
-inline flight::types::EasingFunction ease_in_back = [](double t) { return ((t * t) * (((s + 1.0) * t) - s)); };
+inline flight::types::EasingFunction ease_in_back = [](double t) { return ((t * t) * (((s_flight_value_variable_s_flight_private_029d6dde45b0d91a + 1.0) * t) - s_flight_value_variable_s_flight_private_029d6dde45b0d91a)); };
 
-inline flight::types::EasingFunction ease_out_back = [](double t) { return (((t -= 1.0 * t) * (((s + 1.0) * t) + s)) + 1.0); };
+inline flight::types::EasingFunction ease_out_back = [](double t) { return ((((t -= 1.0) * t) * (((s_flight_value_variable_s_flight_private_029d6dde45b0d91a + 1.0) * t) + s_flight_value_variable_s_flight_private_029d6dde45b0d91a)) + 1.0); };
 
-inline const double s2 = (s * 1.525);
+inline const double s2_flight_value_variable_s2_flight_private_029d6dde45b0d91a = (s_flight_value_variable_s_flight_private_029d6dde45b0d91a * 1.525);
 
-inline flight::types::EasingFunction ease_in_out_back = [](double t) { return ((t *= 2.0 < 1.0) ? (0.5 * ((t * t) * (((s2 + 1.0) * t) - s2))) : (0.5 * (((t -= 2.0 * t) * (((s2 + 1.0) * t) + s2)) + 2.0))); };
+inline flight::types::EasingFunction ease_in_out_back = [](double t) { return (((t *= 2.0) < 1.0) ? (0.5 * ((t * t) * (((s2_flight_value_variable_s2_flight_private_029d6dde45b0d91a + 1.0) * t) - s2_flight_value_variable_s2_flight_private_029d6dde45b0d91a))) : (0.5 * ((((t -= 2.0) * t) * (((s2_flight_value_variable_s2_flight_private_029d6dde45b0d91a + 1.0) * t) + s2_flight_value_variable_s2_flight_private_029d6dde45b0d91a)) + 2.0))); };
 
 } // namespace flight::easing

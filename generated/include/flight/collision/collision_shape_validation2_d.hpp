@@ -12,11 +12,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CollisionAabb2D; }
+namespace flight::types { struct CollisionCapsule2D; }
+namespace flight::types { struct CollisionCircle2D; }
+namespace flight::types { struct CollisionObb2D; }
+namespace flight::types { struct CollisionPoint2D; }
+namespace flight::types { struct CollisionPolygon2D; }
+namespace flight::types { struct CollisionSegment2D; }
+namespace flight::types { struct CollisionVendorShape2D; }
+
 #include <flight/types/collision.hpp>
 
 namespace flight::collision {
 
-inline const double relative_epsilon = 1e-12;
+inline const double relative_epsilon_flight_value_variable__u000052__u000045__u00004c__u000041__u000054__u000049__u000056__u000045__u00005f__u000045__u000050__u000053__u000049__u00004c__u00004f__u00004e__flight_private_26bc63f62e325982 = 1e-12;
 
 inline std::optional<flight::String> get_collision_polygon_validation_status2_d(flight::Array<double> points) {
   if (((static_cast<double>(points.size()) < 6.0) || (flight::bitwise_and(static_cast<double>(points.size()), 1.0) != 0.0))) {
@@ -36,26 +45,26 @@ inline std::optional<flight::String> get_collision_polygon_validation_status2_d(
           return std::optional<flight::String>{flight::String("degenerate-shape")};
         }
         if ((x_2 < min_x)) {
-          min_x = x_2;
+          (min_x = x_2);
         }
         if ((x_2 > max_x)) {
-          max_x = x_2;
+          (max_x = x_2);
         }
         if ((y_2 < min_y)) {
-          min_y = y_2;
+          (min_y = y_2);
         }
         if ((y_2 > max_y)) {
-          max_y = y_2;
+          (max_y = y_2);
         }
       }
-      i_2 += 2.0;
+      (i_2 += 2.0);
     }
   }
   auto extent = flight::maximum((max_x - min_x), (max_y - min_y));
   if (!(extent > 0.0)) {
     return std::optional<flight::String>{flight::String("degenerate-shape")};
   }
-  const double cross_epsilon = ((extent * extent) * relative_epsilon);
+  const double cross_epsilon = ((extent * extent) * relative_epsilon_flight_value_variable__u000052__u000045__u00004c__u000041__u000054__u000049__u000056__u000045__u00005f__u000045__u000050__u000053__u000049__u00004c__u00004f__u00004e__flight_private_26bc63f62e325982);
   const double x_origin = points.element(0.0);
   const double y_origin = points.element(1.0);
   double area_twice = 0.0;
@@ -71,23 +80,23 @@ inline std::optional<flight::String> get_collision_polygon_validation_status2_d(
         const double y = (points.element((flight::left_shift(i, 1.0) + 1.0)) - y_origin);
         const double next_x = (points.element(flight::left_shift(next, 1.0)) - x_origin);
         const double next_y = (points.element((flight::left_shift(next, 1.0) + 1.0)) - y_origin);
-        area_twice += ((x * next_y) - (y * next_x));
+        (area_twice += ((x * next_y) - (y * next_x)));
         const double ax = (x - (points.element(flight::left_shift(previous, 1.0)) - x_origin));
         const double ay = (y - (points.element((flight::left_shift(previous, 1.0) + 1.0)) - y_origin));
         const double bx = (next_x - x);
         const double by = (next_y - y);
         const double cross = ((ax * by) - (ay * bx));
         if ((std::abs(cross) <= cross_epsilon)) {
-          i += 1.0;
+          (i += 1.0);
           continue;
         }
         const double sign = ((cross > 0.0) ? 1.0 : -1.0);
         if (((turn_sign != 0.0) && (sign != turn_sign))) {
           return std::optional<flight::String>{flight::String("non-convex-polygon")};
         }
-        turn_sign = sign;
+        (turn_sign = sign);
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   return (((std::abs(area_twice) <= cross_epsilon) || (turn_sign == 0.0)) ? std::optional<flight::String>{flight::String("degenerate-shape")} : std::nullopt);

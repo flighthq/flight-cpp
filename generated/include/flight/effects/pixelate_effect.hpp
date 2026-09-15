@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct PixelateEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/pixelate_effect.hpp>
@@ -22,7 +25,7 @@ struct size_c502e1dd3f87fed9 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C502E1DD3F87FED9
 
 inline void initialize_pixelate_effect(flight::types::EntityConstruction<flight::Ref<flight::types::PixelateEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<size_c502e1dd3f87fed9>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("PixelateEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::PixelateEffect>>(out, flight::String("PixelateEffect"));
   flight::row_set<flight::RowKey<"size">>(out, flight::row_get<flight::RowKey<"size">>(options));
 }
 
@@ -30,7 +33,7 @@ inline flight::Ref<flight::types::PixelateEffect> create_pixelate_effect(std::op
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<size_c502e1dd3f87fed9>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::PixelateEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::PixelateEffect>>();
   initialize_pixelate_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::PixelateEffect>>(out);
 }
 
 } // namespace flight::effects

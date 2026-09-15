@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct VignetteEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/vignette_effect.hpp>
@@ -25,7 +28,7 @@ struct intensity_color_radius_softness_1d6a85131eb44867 : public flight::Referen
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_1D6A85131EB44867
 
 inline void initialize_vignette_effect(flight::types::EntityConstruction<flight::Ref<flight::types::VignetteEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_color_radius_softness_1d6a85131eb44867>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("VignetteEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::VignetteEffect>>(out, flight::String("VignetteEffect"));
   flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
   flight::row_set<flight::RowKey<"radius">>(out, flight::row_get<flight::RowKey<"radius">>(options));
   flight::row_set<flight::RowKey<"softness">>(out, flight::row_get<flight::RowKey<"softness">>(options));
@@ -36,7 +39,7 @@ inline flight::Ref<flight::types::VignetteEffect> create_vignette_effect(std::op
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_color_radius_softness_1d6a85131eb44867>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::VignetteEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::VignetteEffect>>();
   initialize_vignette_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::VignetteEffect>>(out);
 }
 
 } // namespace flight::effects

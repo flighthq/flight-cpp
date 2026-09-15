@@ -5,6 +5,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct RenderEffectPadding; }
+
 #include <flight/types/matrix.hpp>
 #include <flight/types/rectangle.hpp>
 #include <flight/types/render_effect_padding.hpp>
@@ -14,8 +16,8 @@ namespace flight::types {
 struct RenderEffectCaptureGeometry;
 
 struct RenderEffectCaptureGeometry : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::RectangleLike> bounds;
-  flight::Ref<flight::types::MatrixLike> capture_transform;
+  flight::types::RectangleLike bounds;
+  flight::types::MatrixLike capture_transform;
   flight::Ref<flight::types::RenderEffectPadding> padding;
   double target_height;
   double target_width;

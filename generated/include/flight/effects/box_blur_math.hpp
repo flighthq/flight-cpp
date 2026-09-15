@@ -28,7 +28,7 @@ inline double compute_gaussian_sigma_for_blur_radius(double radius, double passe
 inline double compute_box_blur_lower_width(double sigma, double passes) {
   auto width = std::floor(std::sqrt(((((12.0 * sigma) * sigma) / passes) + 1.0)));
   if ((std::fmod(width, 2.0) == 0.0)) {
-    width -= 1.0;
+    (width -= 1.0);
   }
   return width;
 }

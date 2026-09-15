@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Clock; }
+namespace flight::types { template <typename T> struct Signal; }
+
 #include <flight/signals/signal.hpp>
 #include <flight/types/clock.hpp>
 #include <flight/types/signal.hpp>
@@ -15,9 +18,9 @@ namespace flight::clock {
 
 inline flight::Ref<flight::types::Signal<std::function<void(double)>>> enable_clock_signals(flight::Ref<flight::types::Clock> clock) {
   if (!clock->on_tick.has_value()) {
-    clock->on_tick = std::optional<flight::Ref<flight::types::Signal<std::function<void(double)>>>>{flight::signals::create_signal<std::function<void(double)>>()};
+    (clock->on_tick = std::optional<flight::Ref<flight::types::Signal<std::function<void(double)>>>>{flight::signals::create_signal<std::function<void(double)>>()});
   }
-  return clock->on_tick;
+  return clock->on_tick.value();
 }
 
 } // namespace flight::clock

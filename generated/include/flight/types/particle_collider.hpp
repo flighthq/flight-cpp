@@ -6,6 +6,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CircleCollider; }
+namespace flight::types { struct PlaneCollider; }
+namespace flight::types { struct RectangleCollider; }
+namespace flight::types { struct SphereCollider; }
+
 #include <flight/types/circle_collider.hpp>
 #include <flight/types/plane_collider.hpp>
 #include <flight/types/rectangle_collider.hpp>

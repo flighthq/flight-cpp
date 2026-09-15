@@ -7,6 +7,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct GlyphAtlas; }
+namespace flight::types { struct GlyphAtlasRuntime; }
+namespace flight::types { struct GlyphAtlasShelf; }
+namespace flight::types { struct GlyphEntry; }
+namespace flight::types { struct GlyphMetrics; }
+namespace flight::types { struct GlyphRasterizeOptions; }
+namespace flight::types { struct GlyphRasterizedBitmap; }
+namespace flight::types { struct GlyphRasterizerBackend; }
+namespace flight::types { struct Rectangle; }
+
 #include <flight/geometry/rectangle.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/glyph_source.hpp>
@@ -15,7 +26,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::glyphatlas {
 
 inline void clear_glyph_atlas_dirty(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphAtlas>>>> atlas) {
-  flight::row_get<flight::RowKey<"runtime">>(atlas)->dirty = false;
+  (flight::row_get<flight::RowKey<"runtime">>(atlas)->dirty = false);
 }
 
 inline std::optional<flight::Ref<flight::types::Rectangle>> get_glyph_atlas_dirty_region(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphAtlas>>>> atlas) {

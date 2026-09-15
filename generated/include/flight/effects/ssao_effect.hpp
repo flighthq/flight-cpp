@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct SsaoEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/ssao_effect.hpp>
@@ -25,7 +28,7 @@ struct samples_intensity_bias_radius_2e396971c457aff5 : public flight::Reference
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_2E396971C457AFF5
 
 inline void initialize_ssao_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SsaoEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity_bias_radius_2e396971c457aff5>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("SsaoEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::SsaoEffect>>(out, flight::String("SsaoEffect"));
   flight::row_set<flight::RowKey<"radius">>(out, flight::row_get<flight::RowKey<"radius">>(options));
   flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
   flight::row_set<flight::RowKey<"bias">>(out, flight::row_get<flight::RowKey<"bias">>(options));
@@ -36,7 +39,7 @@ inline flight::Ref<flight::types::SsaoEffect> create_ssao_effect(std::optional<f
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity_bias_radius_2e396971c457aff5>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::SsaoEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SsaoEffect>>();
   initialize_ssao_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SsaoEffect>>(out);
 }
 
 } // namespace flight::effects

@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct SepiaAdjustment; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/adjustment_kind.hpp>
 #include <flight/types/entity.hpp>
@@ -21,7 +24,7 @@ inline void initialize_sepia_adjustment(flight::types::EntityConstruction<flight
   const double k = intensity;
   const double j = (1.0 - k);
   flight::Array<double> color_matrix = flight::Array<double>{(j + (0.393 * k)), (0.769 * k), (0.189 * k), 0.0, 0.0, (0.349 * k), (j + (0.686 * k)), (0.168 * k), 0.0, 0.0, (0.272 * k), (0.534 * k), (j + (0.131 * k)), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
-  flight::adjustments::initialize_color_matrix_adjustment(out, flight::String("SepiaAdjustment"), color_matrix);
+  flight::adjustments::initialize_color_matrix_adjustment<flight::Ref<flight::types::SepiaAdjustment>>(out, flight::String("SepiaAdjustment"), color_matrix);
   flight::row_set<flight::RowKey<"intensity">>(out, std::optional<double>{intensity});
 }
 
@@ -29,7 +32,7 @@ inline flight::Ref<flight::types::SepiaAdjustment> create_sepia_adjustment(std::
   options = options.value_or(flight::make_ref<flight::types::SepiaAdjustment>(flight::types::SepiaAdjustment{}));
   flight::types::EntityConstruction<flight::Ref<flight::types::SepiaAdjustment>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SepiaAdjustment>>();
   initialize_sepia_adjustment(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SepiaAdjustment>>(out);
 }
 
 } // namespace flight::adjustments

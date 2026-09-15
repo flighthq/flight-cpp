@@ -8,6 +8,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct TextMarkupIssue; }
+
 #include <flight/types/text_markup_explanation.hpp>
 
 namespace flight::text_markup {
@@ -19,7 +21,7 @@ inline void report_text_markup_issue(flight::StructuralRef<flight::RowReadonly<f
 }
 
 inline void set_text_markup_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextMarkupIssue>>>>)>> guard) {
-  guard = guard;
+  (guard = guard);
 }
 
 } // namespace flight::text_markup

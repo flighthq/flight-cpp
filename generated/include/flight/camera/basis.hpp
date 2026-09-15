@@ -6,6 +6,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Camera3D; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Vector2; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/types/camera3_d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
@@ -14,14 +20,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::camera {
 
-inline void get_camera3_dforward(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
+inline void get_camera3_dforward(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"view">>(camera)->m;
-  out->x = -m.element(2.0);
-  out->y = -m.element(6.0);
-  out->z = -m.element(10.0);
+  (out->x = -m.element(2.0));
+  (out->y = -m.element(6.0));
+  (out->z = -m.element(10.0));
 }
 
-inline void get_camera3_dposition(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
+inline void get_camera3_dposition(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"view">>(camera)->m;
   const double m00 = m.element(0.0);
   const double m01 = m.element(1.0);
@@ -35,23 +41,23 @@ inline void get_camera3_dposition(flight::Ref<flight::types::Vector3Like> out, f
   const double tx = m.element(12.0);
   const double ty = m.element(13.0);
   const double tz = m.element(14.0);
-  out->x = -(((m00 * tx) + (m01 * ty)) + (m02 * tz));
-  out->y = -(((m10 * tx) + (m11 * ty)) + (m12 * tz));
-  out->z = -(((m20 * tx) + (m21 * ty)) + (m22 * tz));
+  (out->x = -(((m00 * tx) + (m01 * ty)) + (m02 * tz)));
+  (out->y = -(((m10 * tx) + (m11 * ty)) + (m12 * tz)));
+  (out->z = -(((m20 * tx) + (m21 * ty)) + (m22 * tz)));
 }
 
-inline void get_camera3_dright(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
+inline void get_camera3_dright(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"view">>(camera)->m;
-  out->x = m.element(0.0);
-  out->y = m.element(4.0);
-  out->z = m.element(8.0);
+  (out->x = m.element(0.0));
+  (out->y = m.element(4.0));
+  (out->z = m.element(8.0));
 }
 
-inline void get_camera3_dup(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
+inline void get_camera3_dup(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"view">>(camera)->m;
-  out->x = m.element(1.0);
-  out->y = m.element(5.0);
-  out->z = m.element(9.0);
+  (out->x = m.element(1.0));
+  (out->y = m.element(5.0));
+  (out->z = m.element(9.0));
 }
 
 } // namespace flight::camera

@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+
 #include <flight/types/entity.hpp>
 
 namespace flight::entity {
@@ -16,7 +19,7 @@ inline flight::Ref<flight::types::EntityRuntime> create_entity_runtime() {
 }
 
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EntityRuntime>>>> get_entity_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Entity>>>> source) {
-  return flight::row_get<std::optional<flight::Ref<flight::types::EntityRuntime>>>(source, flight::types::entity_runtime_key);
+  return flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EntityRuntime>>>>(flight::row_get<std::optional<flight::Ref<flight::types::EntityRuntime>>>(source, flight::types::entity_runtime_key).value());
 }
 
 inline bool has_entity_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Entity>>>> source) {

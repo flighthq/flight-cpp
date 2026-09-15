@@ -10,6 +10,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct SpotLight; }
+namespace flight::types { struct SpotLightConeAngles; }
+namespace flight::types { struct SpotLightOptions; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/geometry/vector3.hpp>
 #include <flight/types/entity.hpp>
@@ -46,26 +52,26 @@ inline flight::Ref<flight::types::SpotLight> clone_spot_light(flight::Structural
   flight::row_set<flight::RowKey<"shadowNear">>(out, flight::row_get<flight::RowKey<"shadowNear">>(source));
   flight::row_set<flight::RowKey<"shadowStrength">>(out, flight::row_get<flight::RowKey<"shadowStrength">>(source));
   flight::row_set<flight::RowKey<"spotBlend">>(out, flight::row_get<flight::RowKey<"spotBlend">>(source));
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpotLight>>(out);
 }
 
 inline void get_spot_light_cone_degrees(flight::Ref<flight::types::SpotLightConeAngles> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLight>>>> source) {
-  out->inner_degrees = ((std::acos(flight::row_get<flight::RowKey<"innerConeCos">>(source)) * 180.0) / flight::pi);
-  out->outer_degrees = ((std::acos(flight::row_get<flight::RowKey<"outerConeCos">>(source)) * 180.0) / flight::pi);
+  (out->inner_degrees = ((std::acos(flight::row_get<flight::RowKey<"innerConeCos">>(source)) * 180.0) / flight::pi));
+  (out->outer_degrees = ((std::acos(flight::row_get<flight::RowKey<"outerConeCos">>(source)) * 180.0) / flight::pi));
 }
 
 inline void set_spot_light_blend(flight::Ref<flight::types::SpotLight> out, double blend) {
-  out->spot_blend = flight::maximum(0.0, flight::minimum(1.0, blend));
+  (out->spot_blend = flight::maximum(0.0, flight::minimum(1.0, blend)));
 }
 
 inline void set_spot_light_cone(flight::Ref<flight::types::SpotLight> out, double inner_degrees, double outer_degrees) {
-  out->inner_cone_cos = std::cos(((inner_degrees * flight::pi) / 180.0));
-  out->outer_cone_cos = std::cos(((outer_degrees * flight::pi) / 180.0));
+  (out->inner_cone_cos = std::cos(((inner_degrees * flight::pi) / 180.0)));
+  (out->outer_cone_cos = std::cos(((outer_degrees * flight::pi) / 180.0)));
 }
 
 inline void initialize_spot_light(flight::types::EntityConstruction<flight::Ref<flight::types::SpotLight>> light, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLightOptions>>>>> options = std::nullopt) {
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> position = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->position; }());
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> direction = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->direction; }());
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> position = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->position; }());
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> direction = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->direction; }());
   flight::row_set<flight::RowKey<"castsShadow">>(light, ([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->casts_shadow; }()).value_or(false));
   flight::row_set<flight::RowKey<"color">>(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->color; }()).value_or(4294967295.0));
   flight::row_set<flight::RowKey<"decay">>(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->decay; }()).value_or(2.0));
@@ -88,14 +94,14 @@ inline void initialize_spot_light(flight::types::EntityConstruction<flight::Ref<
   flight::row_set<flight::RowKey<"shadowNear">>(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->shadow_near; }()).value_or(0.5));
   flight::row_set<flight::RowKey<"shadowStrength">>(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->shadow_strength; }()).value_or(1.0));
   flight::row_set<flight::RowKey<"spotBlend">>(light, 0.0);
-  set_spot_light_cone(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->inner_cone_degrees; }()).value_or(0.0), ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->outer_cone_degrees; }()).value_or(45.0));
-  set_spot_light_blend(light, ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->spot_blend; }()).value_or(0.0));
+  set_spot_light_cone(flight::structural_ref_cast<flight::Ref<flight::types::SpotLight>>(light), ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->inner_cone_degrees; }()).value_or(0.0), ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->outer_cone_degrees; }()).value_or(45.0));
+  set_spot_light_blend(flight::structural_ref_cast<flight::Ref<flight::types::SpotLight>>(light), ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->spot_blend; }()).value_or(0.0));
 }
 
 inline flight::Ref<flight::types::SpotLight> create_spot_light(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLightOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpotLight>> light = flight::entity::allocate_entity<flight::Ref<flight::types::SpotLight>>();
   initialize_spot_light(light, options);
-  return light;
+  return flight::structural_ref_cast<flight::Ref<flight::types::SpotLight>>(light);
 }
 
 inline void set_spot_light_direction(flight::Ref<flight::types::SpotLight> out, double x, double y, double z) {

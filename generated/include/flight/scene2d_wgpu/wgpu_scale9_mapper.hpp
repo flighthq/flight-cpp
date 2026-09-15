@@ -8,6 +8,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct Scale9Mapper; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/rectangle.hpp>
 #include <flight/types/scale9_mapper.hpp>
@@ -36,7 +40,7 @@ inline double to_scale9_position(double pos, double scale9_start, double scale9_
   return (scale9_start + ((center * (pos - scale9_start)) / scale9_center));
 }
 
-inline std::optional<flight::Ref<flight::types::Scale9Mapper>> build_wgpu_scale9_mapper(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>> bounds, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RectangleLike>>>> scale9_grid, double scale_x, double scale_y) {
+inline std::optional<flight::Ref<flight::types::Scale9Mapper>> build_wgpu_scale9_mapper(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>> bounds, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>> scale9_grid, double scale_x, double scale_y) {
   if (((((scale_x <= 0.0) || (scale_y <= 0.0)) || (flight::row_get<flight::RowKey<"width">>(bounds) <= 0.0)) || (flight::row_get<flight::RowKey<"height">>(bounds) <= 0.0))) {
     return std::nullopt;
   }

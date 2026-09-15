@@ -9,6 +9,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/entity.hpp>
 
@@ -33,14 +36,14 @@ struct HapticsBackend : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::function<bool()> cancel;
   std::function<flight::Ref<HapticsCapabilities>(flight::Ref<HapticsCapabilities>)> capabilities;
-  std::function<bool(HapticImpactStyle, double)> impact;
+  std::function<bool(HapticImpactStyle, std::optional<double>)> impact;
   std::function<bool()> is_supported;
   std::function<bool(HapticNotificationType)> notification;
   std::optional<std::function<void()>> prepare;
   std::function<bool()> selection;
   std::function<bool(double)> vibrate;
   std::function<bool(flight::Array<double>)> vibrate_pattern;
-  std::optional<std::function<bool(flight::Array<double>, flight::Array<double>, double)>> vibrate_waveform;
+  std::optional<std::function<bool(flight::Array<double>, flight::Array<double>, std::optional<double>)>> vibrate_waveform;
 };
 
 using HapticsOperation = std::variant<flight::String, flight::Symbol>;

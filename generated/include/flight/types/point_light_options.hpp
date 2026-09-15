@@ -25,7 +25,7 @@ struct PointLightOptions : public flight::ReferenceEnabled {
   std::optional<flight::types::LightUnit> intensity_unit;
   std::optional<double> normal_bias;
   std::optional<double> pcf_radius;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> position;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> position;
   std::optional<double> range;
   std::optional<double> shadow_bias;
   std::optional<double> shadow_far;

@@ -2,7 +2,7 @@
   "schema": "flight-generated-sdk/1",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
-    "revision": "a6895ee00994bce116c9fdff6c3503462437eee8",
+    "revision": "9f6ce1cad0d5cfcb047ccb2237995bca39161acc",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
@@ -31,9 +31,9 @@
     {
       "cppIncludePrefix": "flight/adjustments",
       "cppNamespace": "flight::adjustments",
-      "emittedModules": 12,
+      "emittedModules": 13,
       "package": "@flighthq/adjustments",
-      "refusedModules": 10,
+      "refusedModules": 9,
       "sourceModules": 22
     },
     {
@@ -87,9 +87,9 @@
     {
       "cppIncludePrefix": "flight/binpack",
       "cppNamespace": "flight::binpack",
-      "emittedModules": 0,
+      "emittedModules": 4,
       "package": "@flighthq/binpack",
-      "refusedModules": 4,
+      "refusedModules": 0,
       "sourceModules": 4
     },
     {
@@ -119,9 +119,9 @@
     {
       "cppIncludePrefix": "flight/bitmaptext",
       "cppNamespace": "flight::bitmaptext",
-      "emittedModules": 1,
+      "emittedModules": 0,
       "package": "@flighthq/bitmaptext",
-      "refusedModules": 5,
+      "refusedModules": 6,
       "sourceModules": 6
     },
     {
@@ -487,9 +487,9 @@
     {
       "cppIncludePrefix": "flight/math",
       "cppNamespace": "flight::math",
-      "emittedModules": 14,
+      "emittedModules": 17,
       "package": "@flighthq/math",
-      "refusedModules": 3,
+      "refusedModules": 0,
       "sourceModules": 17
     },
     {
@@ -583,17 +583,17 @@
     {
       "cppIncludePrefix": "flight/particles",
       "cppNamespace": "flight::particles",
-      "emittedModules": 3,
+      "emittedModules": 4,
       "package": "@flighthq/particles",
-      "refusedModules": 10,
+      "refusedModules": 9,
       "sourceModules": 13
     },
     {
       "cppIncludePrefix": "flight/particles_formats",
       "cppNamespace": "flight::particles_formats",
-      "emittedModules": 1,
+      "emittedModules": 2,
       "package": "@flighthq/particles-formats",
-      "refusedModules": 16,
+      "refusedModules": 15,
       "sourceModules": 17
     },
     {
@@ -887,9 +887,9 @@
     {
       "cppIncludePrefix": "flight/shading",
       "cppNamespace": "flight::shading",
-      "emittedModules": 3,
+      "emittedModules": 0,
       "package": "@flighthq/shading",
-      "refusedModules": 16,
+      "refusedModules": 19,
       "sourceModules": 19
     },
     {
@@ -927,9 +927,9 @@
     {
       "cppIncludePrefix": "flight/shortcut",
       "cppNamespace": "flight::shortcut",
-      "emittedModules": 0,
+      "emittedModules": 1,
       "package": "@flighthq/shortcut",
-      "refusedModules": 4,
+      "refusedModules": 3,
       "sourceModules": 4
     },
     {
@@ -1055,9 +1055,9 @@
     {
       "cppIncludePrefix": "flight/text_markup",
       "cppNamespace": "flight::text_markup",
-      "emittedModules": 2,
+      "emittedModules": 1,
       "package": "@flighthq/text-markup",
-      "refusedModules": 6,
+      "refusedModules": 7,
       "sourceModules": 8
     },
     {
@@ -1119,9 +1119,9 @@
     {
       "cppIncludePrefix": "flight/texture_formats",
       "cppNamespace": "flight::texture_formats",
-      "emittedModules": 7,
+      "emittedModules": 5,
       "package": "@flighthq/texture-formats",
-      "refusedModules": 4,
+      "refusedModules": 6,
       "sourceModules": 11
     },
     {
@@ -1191,9 +1191,9 @@
     {
       "cppIncludePrefix": "flight/types",
       "cppNamespace": "flight::types",
-      "emittedModules": 667,
+      "emittedModules": 666,
       "package": "@flighthq/types",
-      "refusedModules": 310,
+      "refusedModules": 311,
       "sourceModules": 977
     },
     {
@@ -1253,8 +1253,8 @@
   },
   "summary": {
     "packages": 154,
-    "emittedModules": 947,
-    "refusedModules": 1904,
+    "emittedModules": 950,
+    "refusedModules": 1901,
     "sourceModules": 2851
   }
 }

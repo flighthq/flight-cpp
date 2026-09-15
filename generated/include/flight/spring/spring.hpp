@@ -12,6 +12,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Spring; }
+namespace flight::types { struct SpringConfig; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/math/comparison.hpp>
 #include <flight/math/constants.hpp>
@@ -21,7 +25,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::spring {
 
 inline void add_spring_impulse(flight::Ref<flight::types::Spring> spring, double velocity) {
-  spring->velocity += velocity;
+  (spring->velocity += velocity);
 }
 
 inline void initialize_spring(flight::types::EntityConstruction<flight::Ref<flight::types::Spring>> out, std::optional<double> value = std::nullopt, std::optional<double> velocity = std::nullopt) {
@@ -36,7 +40,7 @@ inline flight::Ref<flight::types::Spring> create_spring(std::optional<double> va
   velocity = velocity.value_or(0.0);
   flight::types::EntityConstruction<flight::Ref<flight::types::Spring>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Spring>>();
   initialize_spring(out, value.value(), velocity.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Spring>>(out);
 }
 
 inline const double spring_settle_epsilon = 0.001;
@@ -49,8 +53,8 @@ inline bool is_spring_settled(flight::StructuralRef<flight::RowReadonly<flight::
 
 inline void reset_spring(flight::Ref<flight::types::Spring> spring, double value, std::optional<double> velocity = std::nullopt) {
   velocity = velocity.value_or(0.0);
-  spring->value = value;
-  spring->velocity = velocity.value();
+  (spring->value = value);
+  (spring->velocity = velocity.value());
 }
 
 inline const double critical_band = 0.0001;
@@ -80,10 +84,10 @@ inline void update_spring(flight::Ref<flight::types::Spring> spring, double targ
     auto e1 = std::exp((z1 * delta_time));
     auto e2 = std::exp((z2 * delta_time));
     const double inv_denominator = (1.0 / (z2 - z1));
-    pos_pos_coef = (((z2 * e1) - (z1 * e2)) * inv_denominator);
-    pos_vel_coef = ((e2 - e1) * inv_denominator);
-    vel_pos_coef = (((z1 * z2) * (e1 - e2)) * inv_denominator);
-    vel_vel_coef = (((z2 * e2) - (z1 * e1)) * inv_denominator);
+    (pos_pos_coef = (((z2 * e1) - (z1 * e2)) * inv_denominator));
+    (pos_vel_coef = ((e2 - e1) * inv_denominator));
+    (vel_pos_coef = (((z1 * z2) * (e1 - e2)) * inv_denominator));
+    (vel_vel_coef = (((z2 * e2) - (z1 * e1)) * inv_denominator));
   }
   else {
     if ((damping_ratio < (1.0 - critical_band))) {
@@ -93,22 +97,22 @@ inline void update_spring(flight::Ref<flight::types::Spring> spring, double targ
       auto cosine = std::cos((beta * delta_time));
       auto sine = std::sin((beta * delta_time));
       const double inv_beta = (1.0 / beta);
-      pos_pos_coef = (envelope * (cosine + ((alpha * inv_beta) * sine)));
-      pos_vel_coef = ((envelope * inv_beta) * sine);
-      vel_pos_coef = ((((-envelope * omega) * omega) * inv_beta) * sine);
-      vel_vel_coef = (envelope * (cosine - ((alpha * inv_beta) * sine)));
+      (pos_pos_coef = (envelope * (cosine + ((alpha * inv_beta) * sine))));
+      (pos_vel_coef = ((envelope * inv_beta) * sine));
+      (vel_pos_coef = ((((-envelope * omega) * omega) * inv_beta) * sine));
+      (vel_vel_coef = (envelope * (cosine - ((alpha * inv_beta) * sine))));
     }
     else {
       auto envelope_2 = std::exp((-omega * delta_time));
       const double omega_dt = (omega * delta_time);
-      pos_pos_coef = (envelope_2 * (1.0 + omega_dt));
-      pos_vel_coef = (envelope_2 * delta_time);
-      vel_pos_coef = (((-envelope_2 * omega) * omega) * delta_time);
-      vel_vel_coef = (envelope_2 * (1.0 - omega_dt));
+      (pos_pos_coef = (envelope_2 * (1.0 + omega_dt)));
+      (pos_vel_coef = (envelope_2 * delta_time));
+      (vel_pos_coef = (((-envelope_2 * omega) * omega) * delta_time));
+      (vel_vel_coef = (envelope_2 * (1.0 - omega_dt)));
     }
   }
-  spring->value = ((target + (pos_pos_coef * c0)) + (pos_vel_coef * velocity));
-  spring->velocity = ((vel_pos_coef * c0) + (vel_vel_coef * velocity));
+  (spring->value = ((target + (pos_pos_coef * c0)) + (pos_vel_coef * velocity)));
+  (spring->velocity = ((vel_pos_coef * c0) + (vel_vel_coef * velocity)));
 }
 
 inline void update_spring_angle(flight::Ref<flight::types::Spring> spring, double target, double full_turn, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpringConfig>>>> config, double delta_time) {

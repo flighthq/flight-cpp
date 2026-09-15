@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct SketchEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/sketch_effect.hpp>
@@ -22,7 +25,7 @@ struct strength_51319a496401e295 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_51319A496401E295
 
 inline void initialize_sketch_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SketchEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_51319a496401e295>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("SketchEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::SketchEffect>>(out, flight::String("SketchEffect"));
   flight::row_set<flight::RowKey<"strength">>(out, flight::row_get<flight::RowKey<"strength">>(options));
 }
 
@@ -30,7 +33,7 @@ inline flight::Ref<flight::types::SketchEffect> create_sketch_effect(std::option
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_51319a496401e295>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::SketchEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SketchEffect>>();
   initialize_sketch_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SketchEffect>>(out);
 }
 
 } // namespace flight::effects

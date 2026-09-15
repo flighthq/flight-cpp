@@ -11,9 +11,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::color {
 
 inline void clamp_linear_rgb(flight::Array<double> out, double r, double g, double b) {
-  out.element(0.0) = flight::maximum(0.0, flight::minimum(1.0, r));
-  out.element(1.0) = flight::maximum(0.0, flight::minimum(1.0, g));
-  out.element(2.0) = flight::maximum(0.0, flight::minimum(1.0, b));
+  (out.element(0.0) = flight::maximum(0.0, flight::minimum(1.0, r)));
+  (out.element(1.0) = flight::maximum(0.0, flight::minimum(1.0, g)));
+  (out.element(2.0) = flight::maximum(0.0, flight::minimum(1.0, b)));
 }
 
 inline void linear_rgb_to_oklab(flight::Array<double> out, double r, double g, double b) {
@@ -23,9 +23,9 @@ inline void linear_rgb_to_oklab(flight::Array<double> out, double r, double g, d
   const double lc = std::cbrt(flight::maximum(0.0, l));
   const double mc = std::cbrt(flight::maximum(0.0, m));
   const double sc = std::cbrt(flight::maximum(0.0, s));
-  out.element(0.0) = (((0.2104542553 * lc) + (0.793617785 * mc)) - (0.0040720468 * sc));
-  out.element(1.0) = (((1.9779984951 * lc) - (2.428592205 * mc)) + (0.4505937099 * sc));
-  out.element(2.0) = (((0.0259040371 * lc) + (0.7827717662 * mc)) - (0.808675766 * sc));
+  (out.element(0.0) = (((0.2104542553 * lc) + (0.793617785 * mc)) - (0.0040720468 * sc)));
+  (out.element(1.0) = (((1.9779984951 * lc) - (2.428592205 * mc)) + (0.4505937099 * sc)));
+  (out.element(2.0) = (((0.0259040371 * lc) + (0.7827717662 * mc)) - (0.808675766 * sc)));
 }
 
 inline void oklab_to_linear_rgb(flight::Array<double> out, double l, double a, double b) {
@@ -35,9 +35,9 @@ inline void oklab_to_linear_rgb(flight::Array<double> out, double l, double a, d
   const double l_2 = ((lc * lc) * lc);
   const double m = ((mc * mc) * mc);
   const double s = ((sc * sc) * sc);
-  out.element(0.0) = (((4.0767416621 * l_2) - (3.3077115913 * m)) + (0.2309699292 * s));
-  out.element(1.0) = (((-1.2684380046 * l_2) + (2.6097574011 * m)) - (0.3413193965 * s));
-  out.element(2.0) = (((-0.0041960863 * l_2) - (0.7034186147 * m)) + (1.707614701 * s));
+  (out.element(0.0) = (((4.0767416621 * l_2) - (3.3077115913 * m)) + (0.2309699292 * s)));
+  (out.element(1.0) = (((-1.2684380046 * l_2) + (2.6097574011 * m)) - (0.3413193965 * s)));
+  (out.element(2.0) = (((-0.0041960863 * l_2) - (0.7034186147 * m)) + (1.707614701 * s)));
 }
 
 } // namespace flight::color

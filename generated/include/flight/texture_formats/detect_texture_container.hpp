@@ -21,7 +21,7 @@ inline bool is_ktx2_magic(flight::Uint8Array bytes) {
           return false;
         }
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   return true;

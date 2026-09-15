@@ -8,6 +8,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Skeleton2DCoercedInterpolation; }
+namespace flight::types { struct Skeleton2DDeformLengthMismatch; }
+
 #include <flight/types/skeleton2_dguards.hpp>
 
 namespace flight::skeleton2d {
@@ -22,7 +25,7 @@ inline void report_skeleton2_dcoerced_interpolation(flight::String subject, flig
 }
 
 inline void set_skeleton2_dcoerced_interpolation_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DCoercedInterpolation>>>>)>> guard) {
-  coerced_interpolation_guard = guard;
+  (coerced_interpolation_guard = guard);
 }
 
 inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DDeformLengthMismatch>>>>)>> deform_length_guard = std::nullopt;
@@ -35,7 +38,7 @@ inline void report_skeleton2_ddeform_length_mismatch(flight::String subject, dou
 }
 
 inline void set_skeleton2_ddeform_length_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DDeformLengthMismatch>>>>)>> guard) {
-  deform_length_guard = guard;
+  (deform_length_guard = guard);
 }
 
 } // namespace flight::skeleton2d

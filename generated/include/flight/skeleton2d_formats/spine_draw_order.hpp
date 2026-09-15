@@ -40,8 +40,8 @@ inline std::optional<flight::Array<double>> resolve_spine_draw_ordering(flight::
     if (((occupants.element(destination) != unclaimed_position) || moved.element(slot_index))) {
       return std::nullopt;
     }
-    occupants.element(destination) = slot_index;
-    moved.element(slot_index) = true;
+    (occupants.element(destination) = slot_index);
+    (moved.element(slot_index) = true);
   }
   double next = 0.0;
   {
@@ -49,7 +49,7 @@ inline std::optional<flight::Array<double>> resolve_spine_draw_ordering(flight::
     while ((position < slot_count)) {
       {
         if ((occupants.element(position) != unclaimed_position)) {
-          position += 1.0;
+          (position += 1.0);
           continue;
         }
         while (((next < slot_count) && moved.element(next))) {
@@ -58,18 +58,18 @@ inline std::optional<flight::Array<double>> resolve_spine_draw_ordering(flight::
         if ((next >= slot_count)) {
           return std::nullopt;
         }
-        occupants.element(position) = next;
+        (occupants.element(position) = next);
         next++;
       }
-      position += 1.0;
+      (position += 1.0);
     }
   }
   flight::Array<double> sort_keys = flight::Array<double>(slot_count).fill(0.0);
   {
     double position_2 = 0.0;
     while ((position_2 < slot_count)) {
-      sort_keys.element(occupants.element(position_2)) = position_2;
-      position_2 += 1.0;
+      (sort_keys.element(occupants.element(position_2)) = position_2);
+      (position_2 += 1.0);
     }
   }
   return std::optional<flight::Array<double>>{sort_keys};

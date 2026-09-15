@@ -2,13 +2,18 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/boolean.hpp>
+#include <flight/record.hpp>
 #include <optional>
 #include <random>
-#include <unordered_map>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
+
+namespace flight::types { struct ByteReader; }
+namespace flight::types { struct TextureContainer; }
+namespace flight::types { struct TextureContainerLevel; }
 
 #include <flight/types/byte_reader.hpp>
 #include <flight/types/texture_container.hpp>
@@ -20,15 +25,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::texture_formats {
 
-struct ParseFailure;
+struct ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751;
 
-struct ParseFailure : public flight::ReferenceEnabled {
+struct ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751 : public flight::ReferenceEnabled {
   std::optional<flight::String> reason;
 };
 
-inline flight::Null reject(std::optional<flight::Ref<ParseFailure>> failure, flight::types::TextureContainerParseFailureReason reason) {
+inline flight::Null reject_flight_value_function_reject_flight_private_7401d55d6b747751(std::optional<flight::Ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751>> failure, flight::types::TextureContainerParseFailureReason reason) {
   if (failure.has_value()) {
-    failure.value()->reason = std::optional<flight::String>{reason};
+    (failure.value()->reason = std::optional<flight::String>{reason});
   }
   return flight::null;
 }
@@ -97,34 +102,34 @@ inline std::optional<flight::Ref<depth_faces_layers_967c927d5d51c181>> get_basis
   return std::nullopt;
 }
 
-inline std::unordered_map<double, flight::types::TextureContainerFormat> basis_tex_format = {{0.0, flight::String("etc1s")}, {1.0, flight::String("uastc")}};
+inline flight::Record<double, flight::types::TextureContainerFormat> basis_tex_format = {{0.0, flight::String("etc1s")}, {1.0, flight::String("uastc")}};
 
-inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_basis_internal(flight::Uint8Array bytes, std::optional<flight::Ref<ParseFailure>> failure = std::nullopt) {
+inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_basis_internal(flight::Uint8Array bytes, std::optional<flight::Ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751>> failure = std::nullopt) {
   if (!has_basis_signature(bytes)) {
-    return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject(std::optional<flight::Ref<ParseFailure>>{failure}, flight::String("container-unrecognized")); return std::nullopt; }());
+    return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject_flight_value_function_reject_flight_private_7401d55d6b747751(std::optional<flight::Ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751>>{failure}, flight::String("container-unrecognized")); return std::nullopt; }());
   }
   if ((bytes.byte_length < basis_header_min_size)) {
-    return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject(std::optional<flight::Ref<ParseFailure>>{failure}, flight::String("header-truncated")); return std::nullopt; }());
+    return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject_flight_value_function_reject_flight_private_7401d55d6b747751(std::optional<flight::Ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751>>{failure}, flight::String("header-truncated")); return std::nullopt; }());
   }
   flight::Ref<flight::types::ByteReader> header = flight::texture_formats::create_byte_reader(bytes, basis_total_slices_offset);
   const double total_slices = flight::texture_formats::read_byte_reader_u24(header);
   const double total_images = flight::texture_formats::read_byte_reader_u24(header);
-  flight::types::TextureContainerFormat format = basis_tex_format[bytes.element(basis_tex_format_offset)];
+  std::optional<flight::types::TextureContainerFormat> format = basis_tex_format.get(bytes.element(basis_tex_format_offset));
   if (!format.has_value()) {
-    return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject(std::optional<flight::Ref<ParseFailure>>{failure}, flight::String("format-unsupported")); return std::nullopt; }());
+    return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject_flight_value_function_reject_flight_private_7401d55d6b747751(std::optional<flight::Ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751>>{failure}, flight::String("format-unsupported")); return std::nullopt; }());
   }
   if ((total_slices == 0.0)) {
-    return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject(std::optional<flight::Ref<ParseFailure>>{failure}, flight::String("structure-invalid")); return std::nullopt; }());
+    return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject_flight_value_function_reject_flight_private_7401d55d6b747751(std::optional<flight::Ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751>>{failure}, flight::String("structure-invalid")); return std::nullopt; }());
   }
   auto shape = get_basis_texture_shape(bytes.element(basis_tex_type_offset), total_images);
   if (!shape.has_value()) {
-    return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject(std::optional<flight::Ref<ParseFailure>>{failure}, flight::String("format-unsupported")); return std::nullopt; }());
+    return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject_flight_value_function_reject_flight_private_7401d55d6b747751(std::optional<flight::Ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751>>{failure}, flight::String("format-unsupported")); return std::nullopt; }());
   }
   flight::Ref<flight::types::ByteReader> slice_desc_reader = flight::texture_formats::create_byte_reader(bytes, basis_slice_desc_offset_field);
   const double slice_desc_offset = flight::texture_formats::read_byte_reader_u32(slice_desc_reader);
   flight::Ref<flight::types::ByteReader> table = flight::texture_formats::create_byte_reader(bytes, slice_desc_offset);
   if (!flight::texture_formats::has_byte_reader_bytes(table, (total_slices * basis_slice_desc_size))) {
-    return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject(std::optional<flight::Ref<ParseFailure>>{failure}, flight::String("level-range-out-of-bounds")); return std::nullopt; }());
+    return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject_flight_value_function_reject_flight_private_7401d55d6b747751(std::optional<flight::Ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751>>{failure}, flight::String("level-range-out-of-bounds")); return std::nullopt; }());
   }
   flight::Array<flight::Ref<flight::types::TextureContainerLevel>> levels = flight::Array<flight::Ref<flight::types::TextureContainerLevel>>{};
   double base_width = 0.0;
@@ -145,31 +150,31 @@ inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_basis_i
         const double byte_length = flight::texture_formats::read_byte_reader_u32(table);
         flight::texture_formats::read_byte_reader_u16(table);
         if (((byte_offset + byte_length) > bytes.byte_length)) {
-          return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject(std::optional<flight::Ref<ParseFailure>>{failure}, flight::String("level-range-out-of-bounds")); return std::nullopt; }());
+          return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject_flight_value_function_reject_flight_private_7401d55d6b747751(std::optional<flight::Ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751>>{failure}, flight::String("level-range-out-of-bounds")); return std::nullopt; }());
         }
         if (((image_index == 0.0) && (level_index == 0.0))) {
-          base_width = width;
-          base_height = height;
+          (base_width = width);
+          (base_height = height);
         }
         if (((level_index + 1.0) > max_level)) {
-          max_level = (level_index + 1.0);
+          (max_level = (level_index + 1.0));
         }
         levels.push(([&]() { auto object_member_byte_length = byte_length; auto object_member_byte_offset = byte_offset; auto object_member_height = height; auto object_member_width = width; return flight::make_ref<flight::types::TextureContainerLevel>(flight::types::TextureContainerLevel{.byte_offset = object_member_byte_offset, .byte_length = object_member_byte_length, .width = object_member_width, .height = object_member_height}); }()));
       }
-      slice += 1.0;
+      (slice += 1.0);
     }
   }
-  return {.depth = shape.value()->depth, .faces = shape.value()->faces, .format = format, .height = (base_height || ([&]() -> std::optional<double> { auto optional_chain_receiver = levels.get(0.0); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }())), .layers = shape.value()->layers, .levels = levels, .mip_levels = flight::maximum(1.0, max_level), .supercompression = flight::String("None"), .width = (base_width || ([&]() -> std::optional<double> { auto optional_chain_receiver = levels.get(0.0); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()))};
+  return std::optional<flight::Ref<flight::types::TextureContainer>>{([&]() { auto object_member_depth = shape.value()->depth; auto object_member_faces = shape.value()->faces; auto object_member_format = format.value(); auto object_member_height_2 = ([&]() -> double { auto logical_or_value = base_height; if (flight::to_boolean(logical_or_value)) return logical_or_value; return ([&]() -> std::optional<double> { auto optional_chain_receiver = levels.get(0.0); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()).value_or(0.0); }()); auto object_member_layers = shape.value()->layers; auto object_member_levels = levels; auto object_member_mip_levels = flight::maximum(1.0, max_level); auto object_member_supercompression = flight::String("None"); auto object_member_width_2 = ([&]() -> double { auto logical_or_value_2 = base_width; if (flight::to_boolean(logical_or_value_2)) return logical_or_value_2; return ([&]() -> std::optional<double> { auto optional_chain_receiver = levels.get(0.0); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()).value_or(0.0); }()); return flight::make_ref<flight::types::TextureContainer>(flight::types::TextureContainer{.format = object_member_format, .width = object_member_width_2, .height = object_member_height_2, .depth = object_member_depth, .mip_levels = object_member_mip_levels, .layers = object_member_layers, .faces = object_member_faces, .supercompression = object_member_supercompression, .levels = object_member_levels}); }())};
 }
 
 inline std::optional<flight::String> get_basis_parse_failure_reason(flight::Uint8Array bytes) {
-  flight::Ref<ParseFailure> failure = flight::make_ref<ParseFailure>(ParseFailure{.reason = std::nullopt});
+  flight::Ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751> failure = flight::make_ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751>(ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751{.reason = std::nullopt});
   auto container = parse_basis_internal(bytes, failure);
   return (!container.has_value() ? failure->reason : std::nullopt);
 }
 
 inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_basis(flight::Uint8Array bytes) {
-  return parse_basis_internal(bytes);
+  return parse_basis_internal(bytes, std::nullopt);
 }
 
 } // namespace flight::texture_formats

@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct ColorMatrixAdjustment; }
+namespace flight::types { struct EntityRuntime; }
+
 #include <flight/types/color_matrix_adjustment.hpp>
 #include <flight/types/color_scale_bias.hpp>
 #include <flight/types/entity.hpp>
@@ -19,7 +22,7 @@ struct ColorScaleBiasAdjustment : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
   flight::Array<double> color_matrix;
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBiasLike>>>> color_scale_bias;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> color_scale_bias;
 };
 
 } // namespace flight::types

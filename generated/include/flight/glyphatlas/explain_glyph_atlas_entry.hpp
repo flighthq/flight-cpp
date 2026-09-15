@@ -7,6 +7,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct GlyphAtlas; }
+namespace flight::types { struct GlyphAtlasEntryExplanation; }
+namespace flight::types { struct GlyphAtlasRuntime; }
+namespace flight::types { struct GlyphAtlasShelf; }
+namespace flight::types { struct GlyphEntry; }
+namespace flight::types { struct GlyphMetrics; }
+namespace flight::types { struct GlyphRasterizeOptions; }
+namespace flight::types { struct GlyphRasterizedBitmap; }
+namespace flight::types { struct GlyphRasterizerBackend; }
+
 #include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/glyph_atlas_entry_explanation.hpp>
@@ -22,7 +33,7 @@ inline flight::Ref<flight::types::GlyphAtlasEntryExplanation> explain_glyph_atla
   const double usable_width = (runtime->bitmap->width - (2.0 * padding));
   const double usable_height = (runtime->bitmap->height - (2.0 * padding));
   if (runtime->entries.has(codepoint)) {
-    flight::Ref<flight::types::GlyphEntry> entry = runtime->entries.get(codepoint);
+    flight::Ref<flight::types::GlyphEntry> entry = runtime->entries.get(codepoint).value();
     return flight::make_ref<flight::types::GlyphAtlasEntryExplanation>(flight::types::GlyphAtlasEntryExplanation{.renderable = true, .reason = flight::String("ok"), .glyph_width = entry->width, .glyph_height = entry->height, .usable_width = usable_width, .usable_height = usable_height});
   }
   auto bitmap = runtime->rasterizer_backend->rasterize(codepoint, runtime->rasterize_options);

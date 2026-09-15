@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct SmaaEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/smaa_effect.hpp>
@@ -22,7 +25,7 @@ struct threshold_4294c099aad73e75 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_4294C099AAD73E75
 
 inline void initialize_smaa_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SmaaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<threshold_4294c099aad73e75>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("SmaaEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::SmaaEffect>>(out, flight::String("SmaaEffect"));
   flight::row_set<flight::RowKey<"threshold">>(out, flight::row_get<flight::RowKey<"threshold">>(options));
 }
 
@@ -30,7 +33,7 @@ inline flight::Ref<flight::types::SmaaEffect> create_smaa_effect(std::optional<f
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<threshold_4294c099aad73e75>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::SmaaEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SmaaEffect>>();
   initialize_smaa_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SmaaEffect>>(out);
 }
 
 } // namespace flight::effects

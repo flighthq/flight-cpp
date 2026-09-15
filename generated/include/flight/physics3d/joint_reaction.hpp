@@ -11,6 +11,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Physics3DContact; }
+namespace flight::types { struct Physics3DContactEvents; }
+namespace flight::types { struct Physics3DContactHooks; }
+namespace flight::types { struct Physics3DJoint; }
+namespace flight::types { struct Physics3DJointEvents; }
+namespace flight::types { struct Physics3DJointReaction; }
+namespace flight::types { struct Physics3DJointSolver; }
+namespace flight::types { struct Physics3DSequentialImpulseState; }
+namespace flight::types { struct Physics3DSolverConfig; }
+namespace flight::types { struct Physics3DWorld; }
+namespace flight::types { struct RigidBody3D; }
+namespace flight::types { struct SpatialIndexBackend3D; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
@@ -26,24 +40,24 @@ inline void accumulate_physics3_djoint_row_reaction(flight::StructuralRef<flight
   const double direction_x = state.element(offset);
   const double direction_y = state.element((offset + 1.0));
   const double direction_z = state.element((offset + 2.0));
-  out->force_x += (direction_x * impulse);
-  out->force_y += (direction_y * impulse);
-  out->force_z += (direction_z * impulse);
+  (out->force_x += (direction_x * impulse));
+  (out->force_y += (direction_y * impulse));
+  (out->force_z += (direction_z * impulse));
   const double lever_x = ((flight::row_get<flight::RowKey<"rBY">>(joint) * direction_z) - (flight::row_get<flight::RowKey<"rBZ">>(joint) * direction_y));
   const double lever_y = ((flight::row_get<flight::RowKey<"rBZ">>(joint) * direction_x) - (flight::row_get<flight::RowKey<"rBX">>(joint) * direction_z));
   const double lever_z = ((flight::row_get<flight::RowKey<"rBX">>(joint) * direction_y) - (flight::row_get<flight::RowKey<"rBY">>(joint) * direction_x));
-  out->torque_x += ((state.element((offset + 6.0)) - lever_x) * impulse);
-  out->torque_y += ((state.element((offset + 7.0)) - lever_y) * impulse);
-  out->torque_z += ((state.element((offset + 8.0)) - lever_z) * impulse);
+  (out->torque_x += ((state.element((offset + 6.0)) - lever_x) * impulse));
+  (out->torque_y += ((state.element((offset + 7.0)) - lever_y) * impulse));
+  (out->torque_z += ((state.element((offset + 8.0)) - lever_z) * impulse));
 }
 
 inline void clear_physics3_djoint_reaction(flight::Ref<flight::types::Physics3DJointReaction> out) {
-  out->force_x = 0.0;
-  out->force_y = 0.0;
-  out->force_z = 0.0;
-  out->torque_x = 0.0;
-  out->torque_y = 0.0;
-  out->torque_z = 0.0;
+  (out->force_x = 0.0);
+  (out->force_y = 0.0);
+  (out->force_z = 0.0);
+  (out->torque_x = 0.0);
+  (out->torque_y = 0.0);
+  (out->torque_z = 0.0);
 }
 
 inline double get_physics3_djoint_reaction_force(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>> reaction) {
@@ -66,7 +80,7 @@ inline void initialize_physics3_djoint_reaction(flight::types::EntityConstructio
 inline flight::Ref<flight::types::Physics3DJointReaction> create_physics3_djoint_reaction() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DJointReaction>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DJointReaction>>();
   initialize_physics3_djoint_reaction(out);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DJointReaction>>(out);
 }
 
 inline bool write_physics3_djoint_reaction(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>> joint, double dt, flight::Ref<flight::types::Physics3DJointReaction> out) {

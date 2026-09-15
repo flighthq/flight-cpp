@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct HalftoneEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/halftone_effect.hpp>
@@ -23,7 +26,7 @@ struct angle_scale_72cfbead857dbfe9 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_72CFBEAD857DBFE9
 
 inline void initialize_halftone_effect(flight::types::EntityConstruction<flight::Ref<flight::types::HalftoneEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<angle_scale_72cfbead857dbfe9>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("HalftoneEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::HalftoneEffect>>(out, flight::String("HalftoneEffect"));
   flight::row_set<flight::RowKey<"scale">>(out, flight::row_get<flight::RowKey<"scale">>(options));
   flight::row_set<flight::RowKey<"angle">>(out, flight::row_get<flight::RowKey<"angle">>(options));
 }
@@ -32,7 +35,7 @@ inline flight::Ref<flight::types::HalftoneEffect> create_halftone_effect(std::op
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<angle_scale_72cfbead857dbfe9>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::HalftoneEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::HalftoneEffect>>();
   initialize_halftone_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::HalftoneEffect>>(out);
 }
 
 } // namespace flight::effects

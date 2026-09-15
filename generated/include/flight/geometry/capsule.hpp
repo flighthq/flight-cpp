@@ -11,6 +11,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BoundingSphere; }
+namespace flight::types { struct Capsule; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Ray3D; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/aabb.hpp>
 #include <flight/types/bounding_sphere.hpp>
@@ -34,10 +40,10 @@ inline void initialize_capsule(flight::types::EntityConstruction<flight::Ref<fli
 inline flight::Ref<flight::types::Capsule> create_capsule(double start_x, double start_y, double start_z, double end_x, double end_y, double end_z, double radius) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Capsule>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Capsule>>();
   initialize_capsule(out, start_x, start_y, start_z, end_x, end_y, end_z, radius);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Capsule>>(out);
 }
 
-inline double intersect_ray3_dcapsule(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3DLike>>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CapsuleLike>>>> capsule) {
+inline double intersect_ray3_dcapsule(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CapsuleLike>>> capsule) {
   const double ox = flight::row_get<flight::RowKey<"origin">>(ray)->x;
   const double oy = flight::row_get<flight::RowKey<"origin">>(ray)->y;
   const double oz = flight::row_get<flight::RowKey<"origin">>(ray)->z;
@@ -106,7 +112,7 @@ inline double intersect_ray3_dcapsule(flight::StructuralRef<flight::RowReadonly<
       const double t1 = ((-qb - sqrt_d) / qa);
       const double s1 = ((aoab + (t1 * dab)) * inv_ab2);
       if ((((t1 >= 0.0) && (s1 >= 0.0)) && (s1 <= 1.0))) {
-        t_best = t1;
+        (t_best = t1);
       }
       else {
         if ((t1 < 0.0)) {
@@ -123,23 +129,23 @@ inline double intersect_ray3_dcapsule(flight::StructuralRef<flight::RowReadonly<
   }
   const double t_a = sphere_hit(ax, ay, az);
   if (((t_a >= 0.0) && ((t_best < 0.0) || (t_a < t_best)))) {
-    t_best = t_a;
+    (t_best = t_a);
   }
   const double t_b = sphere_hit(bx, by, bz);
   if (((t_b >= 0.0) && ((t_best < 0.0) || (t_b < t_best)))) {
-    t_best = t_b;
+    (t_best = t_b);
   }
   return t_best;
 }
 
-inline void set_capsule(flight::Ref<flight::types::CapsuleLike> out, double start_x, double start_y, double start_z, double end_x, double end_y, double end_z, double radius) {
-  out->start_x = start_x;
-  out->start_y = start_y;
-  out->start_z = start_z;
-  out->end_x = end_x;
-  out->end_y = end_y;
-  out->end_z = end_z;
-  out->radius = radius;
+inline void set_capsule(flight::types::CapsuleLike out, double start_x, double start_y, double start_z, double end_x, double end_y, double end_z, double radius) {
+  (out->start_x = start_x);
+  (out->start_y = start_y);
+  (out->start_z = start_z);
+  (out->end_x = end_x);
+  (out->end_y = end_y);
+  (out->end_z = end_z);
+  (out->radius = radius);
 }
 
 inline flight::Array<double> axis_perpendicular(double abx, double aby, double abz, double ab_len2) {
@@ -159,7 +165,7 @@ inline flight::Array<double> axis_perpendicular(double abx, double aby, double a
   return flight::Array<double>{(px / length), (py / length), (pz / length)};
 }
 
-inline void get_closest_point_on_capsule(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CapsuleLike>>>> capsule, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline void get_closest_point_on_capsule(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CapsuleLike>>> capsule, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   const double ax = flight::row_get<flight::RowKey<"startX">>(capsule);
   const double ay = flight::row_get<flight::RowKey<"startY">>(capsule);
   const double az = flight::row_get<flight::RowKey<"startZ">>(capsule);
@@ -178,15 +184,15 @@ inline void get_closest_point_on_capsule(flight::Ref<flight::types::Vector3Like>
   double closest_y;
   double closest_z;
   if ((ab_len2 < 1e-20)) {
-    closest_x = ax;
-    closest_y = ay;
-    closest_z = az;
+    (closest_x = ax);
+    (closest_y = ay);
+    (closest_z = az);
   }
   else {
     auto t = flight::minimum(flight::maximum((((((px - ax) * abx) + ((py - ay) * aby)) + ((pz - az) * abz)) / ab_len2), 0.0), 1.0);
-    closest_x = (ax + (t * abx));
-    closest_y = (ay + (t * aby));
-    closest_z = (az + (t * abz));
+    (closest_x = (ax + (t * abx)));
+    (closest_y = (ay + (t * aby)));
+    (closest_z = (az + (t * abz)));
   }
   const double dx = (px - closest_x);
   const double dy = (py - closest_y);
@@ -197,15 +203,15 @@ inline void get_closest_point_on_capsule(flight::Ref<flight::types::Vector3Like>
     const double perp_x = array_pattern_value.element(0.0);
     const double perp_y = array_pattern_value.element(1.0);
     const double perp_z = array_pattern_value.element(2.0);
-    out->x = (closest_x + (r * perp_x));
-    out->y = (closest_y + (r * perp_y));
-    out->z = (closest_z + (r * perp_z));
+    (out->x = (closest_x + (r * perp_x)));
+    (out->y = (closest_y + (r * perp_y)));
+    (out->z = (closest_z + (r * perp_z)));
   }
   else {
     const double inv = (r / dist);
-    out->x = (closest_x + (dx * inv));
-    out->y = (closest_y + (dy * inv));
-    out->z = (closest_z + (dz * inv));
+    (out->x = (closest_x + (dx * inv)));
+    (out->y = (closest_y + (dy * inv)));
+    (out->z = (closest_z + (dz * inv)));
   }
 }
 
@@ -218,14 +224,14 @@ inline double point_to_segment_distance_sq(double px, double py, double pz, doub
   const double apz = (pz - az);
   const double len2 = (((abx * abx) + (aby * aby)) + (abz * abz));
   double t = ((len2 > 0.0) ? ((((apx * abx) + (apy * aby)) + (apz * abz)) / len2) : 0.0);
-  t = flight::minimum(flight::maximum(t, 0.0), 1.0);
+  (t = flight::minimum(flight::maximum(t, 0.0), 1.0));
   const double cx = ((ax + (t * abx)) - px);
   const double cy = ((ay + (t * aby)) - py);
   const double cz = ((az + (t * abz)) - pz);
   return (((cx * cx) + (cy * cy)) + (cz * cz));
 }
 
-inline bool is_capsule_intersecting_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CapsuleLike>>>> capsule, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> sphere) {
+inline bool is_capsule_intersecting_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CapsuleLike>>> capsule, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere) {
   if (((flight::row_get<flight::RowKey<"radius">>(capsule) < 0.0) || (flight::row_get<flight::RowKey<"radius">>(sphere) < 0.0))) {
     return false;
   }
@@ -250,38 +256,38 @@ inline double segment_to_segment_distance_sq(double ax, double ay, double az, do
   double s;
   double t;
   if (((a < 1e-20) && (e < 1e-20))) {
-    s = 0.0;
-    t = 0.0;
+    (s = 0.0);
+    (t = 0.0);
   }
   else {
     if ((a < 1e-20)) {
-      s = 0.0;
-      t = flight::minimum(flight::maximum((f / e), 0.0), 1.0);
+      (s = 0.0);
+      (t = flight::minimum(flight::maximum((f / e), 0.0), 1.0));
     }
     else {
       const double c = (((d1x * rx) + (d1y * ry)) + (d1z * rz));
       if ((e < 1e-20)) {
-        t = 0.0;
-        s = flight::minimum(flight::maximum((-c / a), 0.0), 1.0);
+        (t = 0.0);
+        (s = flight::minimum(flight::maximum((-c / a), 0.0), 1.0));
       }
       else {
         const double b = (((d1x * d2x) + (d1y * d2y)) + (d1z * d2z));
         const double denom = ((a * e) - (b * b));
         if ((denom > 1e-20)) {
-          s = flight::minimum(flight::maximum((((b * f) - (c * e)) / denom), 0.0), 1.0);
+          (s = flight::minimum(flight::maximum((((b * f) - (c * e)) / denom), 0.0), 1.0));
         }
         else {
-          s = 0.0;
+          (s = 0.0);
         }
-        t = (((b * s) + f) / e);
+        (t = (((b * s) + f) / e));
         if ((t < 0.0)) {
-          t = 0.0;
-          s = flight::minimum(flight::maximum((-c / a), 0.0), 1.0);
+          (t = 0.0);
+          (s = flight::minimum(flight::maximum((-c / a), 0.0), 1.0));
         }
         else {
           if ((t > 1.0)) {
-            t = 1.0;
-            s = flight::minimum(flight::maximum(((b - c) / a), 0.0), 1.0);
+            (t = 1.0);
+            (s = flight::minimum(flight::maximum(((b - c) / a), 0.0), 1.0));
           }
         }
       }
@@ -293,7 +299,7 @@ inline double segment_to_segment_distance_sq(double ax, double ay, double az, do
   return (((qx * qx) + (qy * qy)) + (qz * qz));
 }
 
-inline bool is_capsule_intersecting_capsule(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CapsuleLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CapsuleLike>>>> b) {
+inline bool is_capsule_intersecting_capsule(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CapsuleLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CapsuleLike>>> b) {
   if (((flight::row_get<flight::RowKey<"radius">>(a) < 0.0) || (flight::row_get<flight::RowKey<"radius">>(b) < 0.0))) {
     return false;
   }
@@ -318,19 +324,19 @@ inline double segment_to_aabb_distance_sq(double ax, double ay, double az, doubl
   double best_dist2 = std::numeric_limits<double>::infinity();
   flight::Array<double> candidates = seg_candidates;
   double count = 2.0;
-  candidates.element(0.0) = 0.0;
-  candidates.element(1.0) = 1.0;
+  (candidates.element(0.0) = 0.0);
+  (candidates.element(1.0) = 1.0);
   if ((std::abs(dx) > 1e-20)) {
-    candidates.element(count++) = flight::minimum(flight::maximum(((min_x - ax) / dx), 0.0), 1.0);
-    candidates.element(count++) = flight::minimum(flight::maximum(((max_x - ax) / dx), 0.0), 1.0);
+    (candidates.element(count++) = flight::minimum(flight::maximum(((min_x - ax) / dx), 0.0), 1.0));
+    (candidates.element(count++) = flight::minimum(flight::maximum(((max_x - ax) / dx), 0.0), 1.0));
   }
   if ((std::abs(dy) > 1e-20)) {
-    candidates.element(count++) = flight::minimum(flight::maximum(((min_y - ay) / dy), 0.0), 1.0);
-    candidates.element(count++) = flight::minimum(flight::maximum(((max_y - ay) / dy), 0.0), 1.0);
+    (candidates.element(count++) = flight::minimum(flight::maximum(((min_y - ay) / dy), 0.0), 1.0));
+    (candidates.element(count++) = flight::minimum(flight::maximum(((max_y - ay) / dy), 0.0), 1.0));
   }
   if ((std::abs(dz) > 1e-20)) {
-    candidates.element(count++) = flight::minimum(flight::maximum(((min_z - az) / dz), 0.0), 1.0);
-    candidates.element(count++) = flight::minimum(flight::maximum(((max_z - az) / dz), 0.0), 1.0);
+    (candidates.element(count++) = flight::minimum(flight::maximum(((min_z - az) / dz), 0.0), 1.0));
+    (candidates.element(count++) = flight::minimum(flight::maximum(((max_z - az) / dz), 0.0), 1.0));
   }
   {
     double i = 0.0;
@@ -345,10 +351,10 @@ inline double segment_to_aabb_distance_sq(double ax, double ay, double az, doubl
         auto ez_2 = flight::maximum((min_z - pz), 0.0, (pz - max_z));
         const double d2 = (((ex_2 * ex_2) + (ey_2 * ey_2)) + (ez_2 * ez_2));
         if ((d2 < best_dist2)) {
-          best_dist2 = d2;
+          (best_dist2 = d2);
         }
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   const double cx = ((min_x + max_x) * 0.5);
@@ -364,13 +370,13 @@ inline double segment_to_aabb_distance_sq(double ax, double ay, double az, doubl
     auto ez_3 = flight::maximum((min_z - pz_2), 0.0, (pz_2 - max_z));
     const double d2_2 = (((ex_3 * ex_3) + (ey_3 * ey_3)) + (ez_3 * ez_3));
     if ((d2_2 < best_dist2)) {
-      best_dist2 = d2_2;
+      (best_dist2 = d2_2);
     }
   }
   return best_dist2;
 }
 
-inline bool is_capsule_intersecting_aabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CapsuleLike>>>> capsule, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
+inline bool is_capsule_intersecting_aabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CapsuleLike>>> capsule, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
   if ((flight::row_get<flight::RowKey<"radius">>(capsule) < 0.0)) {
     return false;
   }

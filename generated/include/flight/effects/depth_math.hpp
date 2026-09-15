@@ -27,9 +27,9 @@ inline double halton(double index, double base) {
   double f = 1.0;
   double i = index;
   while ((i > 0.0)) {
-    f /= base;
-    result += (f * std::fmod(i, base));
-    i = std::floor((i / base));
+    (f /= base);
+    (result += (f * std::fmod(i, base)));
+    (i = std::floor((i / base)));
   }
   return result;
 }
@@ -46,11 +46,11 @@ inline double compute_ssao_sample_kernel(double samples, flight::Float32Array ou
         const double phi = std::acos((1.0 - h3));
         const double scale = (i / n);
         const double dist = (0.1 + ((0.9 * scale) * scale));
-        out.element(((i * 3.0) + 0.0)) = ((std::sin(phi) * std::cos(theta)) * dist);
-        out.element(((i * 3.0) + 1.0)) = ((std::sin(phi) * std::sin(theta)) * dist);
-        out.element(((i * 3.0) + 2.0)) = (std::cos(phi) * dist);
+        (out.element(((i * 3.0) + 0.0)) = ((std::sin(phi) * std::cos(theta)) * dist));
+        (out.element(((i * 3.0) + 1.0)) = ((std::sin(phi) * std::sin(theta)) * dist));
+        (out.element(((i * 3.0) + 2.0)) = (std::cos(phi) * dist));
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   return n;

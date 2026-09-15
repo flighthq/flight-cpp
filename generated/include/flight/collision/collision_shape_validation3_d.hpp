@@ -12,6 +12,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CollisionAabb3D; }
+namespace flight::types { struct CollisionBox3D; }
+namespace flight::types { struct CollisionCapsule3D; }
+namespace flight::types { struct CollisionCone3D; }
+namespace flight::types { struct CollisionConvex3D; }
+namespace flight::types { struct CollisionCylinder3D; }
+namespace flight::types { struct CollisionSphere3D; }
+namespace flight::types { struct CollisionVendorShape3D; }
+
 #include <flight/types/collision.hpp>
 
 namespace flight::collision {
@@ -37,25 +46,25 @@ inline std::optional<flight::String> get_collision_convex_validation_status3_d(f
           return std::optional<flight::String>{flight::String("degenerate-shape")};
         }
         if ((x < min_x)) {
-          min_x = x;
+          (min_x = x);
         }
         if ((x > max_x)) {
-          max_x = x;
+          (max_x = x);
         }
         if ((y < min_y)) {
-          min_y = y;
+          (min_y = y);
         }
         if ((y > max_y)) {
-          max_y = y;
+          (max_y = y);
         }
         if ((z < min_z)) {
-          min_z = z;
+          (min_z = z);
         }
         if ((z > max_z)) {
-          max_z = z;
+          (max_z = z);
         }
       }
-      i += 3.0;
+      (i += 3.0);
     }
   }
   return ((flight::maximum((max_x - min_x), (max_y - min_y), (max_z - min_z)) > 0.0) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});

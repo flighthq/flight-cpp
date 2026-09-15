@@ -18,8 +18,8 @@ inline const double tau = (flight::pi * 2.0);
 
 inline const double half_pi = (flight::pi / 2.0);
 
-inline const double deg_to_rad = (flight::pi / 180.0);
+inline const double deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3 = (flight::pi / 180.0);
 
-inline const double rad_to_deg = (180.0 / flight::pi);
+inline const double rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3 = (180.0 / flight::pi);
 
 } // namespace flight::math

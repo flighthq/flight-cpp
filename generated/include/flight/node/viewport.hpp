@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Viewport; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/viewport.hpp>
@@ -17,7 +20,7 @@ inline double get_viewport_aspect(flight::StructuralRef<flight::RowReadonly<flig
   return ((flight::row_get<flight::RowKey<"height">>(viewport) != 0.0) ? (flight::row_get<flight::RowKey<"width">>(viewport) / flight::row_get<flight::RowKey<"height">>(viewport)) : 1.0);
 }
 
-inline void initialize_viewport(flight::types::EntityConstruction<flight::Ref<flight::types::Viewport>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ViewportLike>>>>> obj = std::nullopt) {
+inline void initialize_viewport(flight::types::EntityConstruction<flight::Ref<flight::types::Viewport>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ViewportLike>>>> obj = std::nullopt) {
   flight::row_set<flight::RowKey<"devicePixelRatio">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->device_pixel_ratio; }()).value_or(1.0));
   flight::row_set<flight::RowKey<"height">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()).value_or(0.0));
   flight::row_set<flight::RowKey<"width">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()).value_or(0.0));
@@ -25,10 +28,10 @@ inline void initialize_viewport(flight::types::EntityConstruction<flight::Ref<fl
   flight::row_set<flight::RowKey<"y">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->y; }()).value_or(0.0));
 }
 
-inline flight::Ref<flight::types::Viewport> create_viewport(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ViewportLike>>>>> obj = std::nullopt) {
+inline flight::Ref<flight::types::Viewport> create_viewport(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ViewportLike>>>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Viewport>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Viewport>>();
   initialize_viewport(out, obj);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Viewport>>(out);
 }
 
 } // namespace flight::node

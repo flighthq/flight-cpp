@@ -8,6 +8,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct EasingSegment; }
+
 #include <flight/types/easing_function.hpp>
 #include <flight/types/easing_segment.hpp>
 
@@ -23,7 +25,7 @@ struct ease_end_start_9367e63245dfd72e : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EASING_9367E63245DFD72E
 
 inline flight::types::EasingFunction ease_piecewise(flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EasingSegment>>>>> segments) {
-  if ((segments.length == 0.0)) {
+  if ((static_cast<double>(segments.size()) == 0.0)) {
     throw flight::Error(flight::String("easePiecewise: segments array must not be empty"));
   }
   const double total_weight = segments.reduce([=](double sum, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EasingSegment>>>> seg) { return (sum + flight::row_get<flight::RowKey<"weight">>(seg).value_or(1.0)); }, 0.0);
@@ -35,7 +37,7 @@ inline flight::types::EasingFunction ease_piecewise(flight::Array<flight::Struct
   for (auto seg : segments) {
     const double weight = flight::row_get<flight::RowKey<"weight">>(seg).value_or(1.0);
     const double start = (accumulated / total_weight);
-    accumulated += weight;
+    (accumulated += weight);
     const double end = (accumulated / total_weight);
     breakpoints.push(flight::make_ref<ease_end_start_9367e63245dfd72e>(ease_end_start_9367e63245dfd72e{.ease = flight::row_get<flight::RowKey<"ease">>(seg), .end = end, .start = start}));
   }
@@ -52,10 +54,10 @@ inline flight::types::EasingFunction ease_piecewise(flight::Array<flight::Struct
           return bp->ease(clamped_t);
         }
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
-  return flight::row_get<flight::RowKey<"ease">>(segments.element((segments.length - 1.0)))(1.0);
+  return flight::row_get<flight::RowKey<"ease">>(segments.element((static_cast<double>(segments.size()) - 1.0)))(1.0);
 };
 }
 

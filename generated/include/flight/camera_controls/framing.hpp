@@ -12,6 +12,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BoundingSphere; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct OrbitCameraController; }
+namespace flight::types { struct OrthographicProjection; }
+namespace flight::types { struct PerspectiveProjection; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/math/clamp.hpp>
 #include <flight/types/bounding_sphere.hpp>
 #include <flight/types/camera3_d.hpp>
@@ -33,16 +40,16 @@ inline void set_orthographic_projection_frame_to_sphere(flight::Ref<flight::type
   padding = padding.value_or(1.0);
   const double padded_radius = (radius * padding.value());
   if ((aspect >= 1.0)) {
-    projection->half_height = padded_radius;
-    projection->half_width = (padded_radius * aspect);
+    (projection->half_height = padded_radius);
+    (projection->half_width = (padded_radius * aspect));
   }
   else {
-    projection->half_height = (padded_radius / aspect);
-    projection->half_width = padded_radius;
+    (projection->half_height = (padded_radius / aspect));
+    (projection->half_width = padded_radius);
   }
 }
 
-inline bool frame_orbit_camera_controller_to_sphere(flight::Ref<flight::types::OrbitCameraController> controller, flight::types::Projection projection, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> sphere, double aspect, std::optional<double> padding = std::nullopt) {
+inline bool frame_orbit_camera_controller_to_sphere(flight::Ref<flight::types::OrbitCameraController> controller, flight::types::Projection projection, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere, double aspect, std::optional<double> padding = std::nullopt) {
   padding = padding.value_or(1.0);
   if (((!(flight::row_get<flight::RowKey<"radius">>(sphere) >= 0.0) || !(aspect > 0.0)) || !(padding.value() > 0.0))) {
     return false;
@@ -52,14 +59,14 @@ inline bool frame_orbit_camera_controller_to_sphere(flight::Ref<flight::types::O
     if (!std::isfinite(distance)) {
       return false;
     }
-    controller->goal_distance = flight::math::clamp(distance, controller->min_distance, controller->max_distance);
+    (controller->goal_distance = flight::math::clamp(distance, controller->min_distance, controller->max_distance));
   }
   else {
     set_orthographic_projection_frame_to_sphere(std::get<0>(projection), flight::row_get<flight::RowKey<"radius">>(sphere), aspect, padding.value());
   }
-  controller->target->x = flight::row_get<flight::RowKey<"center">>(sphere)->x;
-  controller->target->y = flight::row_get<flight::RowKey<"center">>(sphere)->y;
-  controller->target->z = flight::row_get<flight::RowKey<"center">>(sphere)->z;
+  (controller->target->x = flight::row_get<flight::RowKey<"center">>(sphere)->x);
+  (controller->target->y = flight::row_get<flight::RowKey<"center">>(sphere)->y);
+  (controller->target->z = flight::row_get<flight::RowKey<"center">>(sphere)->z);
   return true;
 }
 

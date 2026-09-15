@@ -28,15 +28,15 @@ inline double get_color_contrast_ratio(double a, double b) {
 }
 
 inline void get_rec2020_luminance_weights(flight::Array<double> out) {
-  out.element(0.0) = 0.2627;
-  out.element(1.0) = 0.678;
-  out.element(2.0) = 0.0593;
+  (out.element(0.0) = 0.2627);
+  (out.element(1.0) = 0.678);
+  (out.element(2.0) = 0.0593);
 }
 
 inline void get_rec709_luminance_weights(flight::Array<double> out) {
-  out.element(0.0) = 0.2126;
-  out.element(1.0) = 0.7152;
-  out.element(2.0) = 0.0722;
+  (out.element(0.0) = 0.2126);
+  (out.element(1.0) = 0.7152);
+  (out.element(2.0) = 0.0722);
 }
 
 } // namespace flight::color

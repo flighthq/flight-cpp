@@ -24,8 +24,8 @@ inline double factorial(double n) {
   {
     double i = 2.0;
     while ((i <= n)) {
-      result *= i;
-      i += 1.0;
+      (result *= i);
+      (i += 1.0);
     }
   }
   return result;
@@ -35,15 +35,15 @@ inline double gcd(double a, double b) {
   if ((!std::isfinite(a) || !std::isfinite(b))) {
     throw flight::RangeError(flight::String("gcd: arguments must be finite"));
   }
-  a = std::abs(std::trunc(a));
-  b = std::abs(std::trunc(b));
+  (a = std::abs(std::trunc(a)));
+  (b = std::abs(std::trunc(b)));
   if (((a == 0.0) && (b == 0.0))) {
     throw flight::RangeError(flight::String("gcd: both arguments must not be 0"));
   }
   while ((b != 0.0)) {
     const double t = b;
-    b = std::fmod(a, b);
-    a = t;
+    (b = std::fmod(a, b));
+    (a = t);
   }
   return a;
 }

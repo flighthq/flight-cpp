@@ -8,6 +8,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct BitmapRegion; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Rectangle; }
+
 #include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_region.hpp>
@@ -18,7 +23,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::bitmap {
 
-inline std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::Rectangle>>>> get_bitmap_color_bounds_rectangle(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> source, double mask, double color, std::optional<bool> find_color = std::nullopt) {
+inline std::optional<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::Rectangle>>> get_bitmap_color_bounds_rectangle(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> source, double mask, double color, std::optional<bool> find_color = std::nullopt) {
   find_color = find_color.value_or(true);
   flight::Uint8ClampedArray data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
   const double bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
@@ -33,7 +38,7 @@ inline std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref
       {
         const double y = (flight::row_get<flight::RowKey<"y">>(source) + py);
         if (((y < 0.0) || (y >= flight::row_get<flight::RowKey<"bitmap">>(source)->height))) {
-          py += 1.0;
+          (py += 1.0);
           continue;
         }
         {
@@ -42,7 +47,7 @@ inline std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref
             {
               const double x = (flight::row_get<flight::RowKey<"x">>(source) + px);
               if (((x < 0.0) || (x >= bitmap_width))) {
-                px += 1.0;
+                (px += 1.0);
                 continue;
               }
               const double i = (((y * bitmap_width) + x) * 4.0);
@@ -50,30 +55,30 @@ inline std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref
               const bool matches = (pixel == masked_color);
               if ((matches == find_color.value())) {
                 if ((x < min_x)) {
-                  min_x = x;
+                  (min_x = x);
                 }
                 if ((x > max_x)) {
-                  max_x = x;
+                  (max_x = x);
                 }
                 if ((y < min_y)) {
-                  min_y = y;
+                  (min_y = y);
                 }
                 if ((y > max_y)) {
-                  max_y = y;
+                  (max_y = y);
                 }
               }
             }
-            px += 1.0;
+            (px += 1.0);
           }
         }
       }
-      py += 1.0;
+      (py += 1.0);
     }
   }
   if ((max_x == -1.0)) {
     return std::nullopt;
   }
-  return std::optional<flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::Rectangle>>>>{([&]() { auto object_member_x = min_x; auto object_member_y = min_y; auto object_member_width = ((max_x - min_x) + 1.0); auto object_member_height = ((max_y - min_y) + 1.0); return flight::make_ref<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::Rectangle>>>(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::Rectangle>>{.height = object_member_height, .width = object_member_width, .x = object_member_x, .y = object_member_y}); }())};
+  return std::optional<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::Rectangle>>>{([&]() { auto object_member_x = min_x; auto object_member_y = min_y; auto object_member_width = ((max_x - min_x) + 1.0); auto object_member_height = ((max_y - min_y) + 1.0); return flight::make_ref<flight::types::Rectangle>(flight::types::Rectangle{.height = object_member_height, .width = object_member_width, .x = object_member_x, .y = object_member_y}); }())};
 }
 
 } // namespace flight::bitmap

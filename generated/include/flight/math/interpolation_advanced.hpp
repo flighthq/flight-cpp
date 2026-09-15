@@ -21,7 +21,7 @@ inline double lerp_angle(double a, double b, double t) {
   const double tau = (flight::pi * 2.0);
   double diff = std::fmod((std::fmod((b - a), tau) + tau), tau);
   if ((diff > flight::pi)) {
-    diff -= tau;
+    (diff -= tau);
   }
   return (a + (diff * t));
 }

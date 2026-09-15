@@ -6,6 +6,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+
 #include <flight/types/entity.hpp>
 #include <flight/entity/runtime.hpp>
 
@@ -13,14 +16,14 @@ namespace flight::entity {
 
 inline flight::Ref<flight::types::EntityRuntime> ensure_entity_runtime(flight::Ref<flight::types::Entity> source) {
   if (!source->entity_runtime_key.has_value()) {
-    source->entity_runtime_key = std::optional<flight::Ref<flight::types::EntityRuntime>>{flight::entity::create_entity_runtime()};
+    (source->entity_runtime_key = std::optional<flight::Ref<flight::types::EntityRuntime>>{flight::entity::create_entity_runtime()});
   }
-  return source->entity_runtime_key;
+  return source->entity_runtime_key.value();
 }
 
 inline void set_entity_uid(flight::Ref<flight::types::Entity> source, flight::String uid) {
   flight::Ref<flight::types::EntityRuntime> runtime = ensure_entity_runtime(source);
-  runtime->uid = std::optional<flight::String>{uid};
+  (runtime->uid = std::optional<flight::String>{uid});
 }
 
 inline double next_entity_uid_counter = 1.0;
@@ -32,10 +35,10 @@ inline flight::String generate_entity_uid() {
 inline flight::String get_entity_uid(flight::Ref<flight::types::Entity> source) {
   flight::Ref<flight::types::EntityRuntime> runtime = ensure_entity_runtime(source);
   if (runtime->uid.has_value()) {
-    return runtime->uid;
+    return runtime->uid.value();
   }
   const flight::String uid = generate_entity_uid();
-  runtime->uid = std::optional<flight::String>{uid};
+  (runtime->uid = std::optional<flight::String>{uid});
   return uid;
 }
 

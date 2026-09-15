@@ -7,6 +7,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AmbientLight; }
+namespace flight::types { struct DirectionalLight; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct HemisphereLight; }
+namespace flight::types { struct PointLight; }
+namespace flight::types { struct SpotLight; }
+
 #include <flight/types/ambient_light.hpp>
 #include <flight/types/directional_light.hpp>
 #include <flight/types/entity.hpp>
@@ -28,6 +36,6 @@ struct Scene3DLights : public flight::ReferenceEnabled {
   std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLight>>>>>> spot;
 };
 
-using Scene3DLightsLike = flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<Scene3DLights>>>;
+using Scene3DLightsLike = flight::types::EntityWithoutRuntime<flight::Ref<Scene3DLights>>;
 
 } // namespace flight::types

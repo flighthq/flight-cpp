@@ -10,6 +10,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct ParticleEmitterConfig; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/particle_curve.hpp>
@@ -134,7 +137,7 @@ inline void initialize_particle_emitter_config(flight::types::EntityConstruction
 inline flight::Ref<flight::types::ParticleEmitterConfig> create_particle_emitter_config(std::optional<flight::Ref<entity_runtime_key_alpha_end_alpha_start_blend_mode_color_end_b_color_end_g_color_end_r_color_end_variance_b_color_end_variance_g_color_end_variance_r_color_start_b_color_start_g_color_start_r_color_start_variance_b_color_start_variance_g_color_start_variance_r_direction_x_direction_y_direction_z_gravity_x_gravity_y_gravity_z_emitter_cone_angle_emitter_depth_emitter_height_emitter_radius_emitter_shape_emitter_width_burst_count_burst_interval_duration_loop_frame_count_frame_rate_lifetime_max_lifetime_min_max_particles_region_id_max_region_id_min_scale_end_scale_max_scale_min_speed_max_speed_min_spawn_rate_spread_rotation_speed_max_rotation_speed_min_velocity_inheritance_alpha_curve_color_curve_scale_curve_world_space_a3d8bd7aab2f28f6>> config = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::ParticleEmitterConfig>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ParticleEmitterConfig>>();
   initialize_particle_emitter_config(out, config);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::ParticleEmitterConfig>>(out);
 }
 
 } // namespace flight::particles

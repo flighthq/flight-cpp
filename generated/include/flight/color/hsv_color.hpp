@@ -18,9 +18,9 @@ inline flight::types::HsvColor allocate_hsv_color() {
 
 inline void hsv_to_rgb(flight::Array<double> out, double h, double s, double v) {
   if ((s == 0.0)) {
-    out.element(0.0) = v;
-    out.element(1.0) = v;
-    out.element(2.0) = v;
+    (out.element(0.0) = v);
+    (out.element(1.0) = v);
+    (out.element(2.0) = v);
     return;
   }
   const double hn = std::fmod((std::fmod(h, 360.0) + 360.0), 360.0);
@@ -32,34 +32,34 @@ inline void hsv_to_rgb(flight::Array<double> out, double h, double s, double v) 
   {
     auto switch_value = i;
     if (switch_value == 0.0) {
-      out.element(0.0) = v;
-      out.element(1.0) = t;
-      out.element(2.0) = p;
+      (out.element(0.0) = v);
+      (out.element(1.0) = t);
+      (out.element(2.0) = p);
     }
     else if (switch_value == 1.0) {
-      out.element(0.0) = q;
-      out.element(1.0) = v;
-      out.element(2.0) = p;
+      (out.element(0.0) = q);
+      (out.element(1.0) = v);
+      (out.element(2.0) = p);
     }
     else if (switch_value == 2.0) {
-      out.element(0.0) = p;
-      out.element(1.0) = v;
-      out.element(2.0) = t;
+      (out.element(0.0) = p);
+      (out.element(1.0) = v);
+      (out.element(2.0) = t);
     }
     else if (switch_value == 3.0) {
-      out.element(0.0) = p;
-      out.element(1.0) = q;
-      out.element(2.0) = v;
+      (out.element(0.0) = p);
+      (out.element(1.0) = q);
+      (out.element(2.0) = v);
     }
     else if (switch_value == 4.0) {
-      out.element(0.0) = t;
-      out.element(1.0) = p;
-      out.element(2.0) = v;
+      (out.element(0.0) = t);
+      (out.element(1.0) = p);
+      (out.element(2.0) = v);
     }
     else {
-      out.element(0.0) = v;
-      out.element(1.0) = p;
-      out.element(2.0) = q;
+      (out.element(0.0) = v);
+      (out.element(1.0) = p);
+      (out.element(2.0) = q);
     }
   }
 }
@@ -75,24 +75,24 @@ inline flight::types::HsvColor rgb_to_hsv(flight::types::HsvColor out, double co
   const double s = ((max == 0.0) ? 0.0 : (d / max));
   double h;
   if ((d == 0.0)) {
-    h = 0.0;
+    (h = 0.0);
   }
   else {
     if ((max == r)) {
-      h = ((((g - b) / d) + ((g < b) ? 6.0 : 0.0)) / 6.0);
+      (h = ((((g - b) / d) + ((g < b) ? 6.0 : 0.0)) / 6.0));
     }
     else {
       if ((max == g)) {
-        h = ((((b - r) / d) + 2.0) / 6.0);
+        (h = ((((b - r) / d) + 2.0) / 6.0));
       }
       else {
-        h = ((((r - g) / d) + 4.0) / 6.0);
+        (h = ((((r - g) / d) + 4.0) / 6.0));
       }
     }
   }
-  out.element(0.0) = (h * 360.0);
-  out.element(1.0) = s;
-  out.element(2.0) = v;
+  (out.element(0.0) = (h * 360.0));
+  (out.element(1.0) = s);
+  (out.element(2.0) = v);
   return out;
 }
 

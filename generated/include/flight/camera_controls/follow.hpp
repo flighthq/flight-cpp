@@ -7,6 +7,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Camera2D; }
+namespace flight::types { struct Camera2DFollowOptions; }
+namespace flight::types { struct Rectangle; }
+
 #include <flight/camera/visible_bounds.hpp>
 #include <flight/geometry/rectangle.hpp>
 #include <flight/math/clamp.hpp>
@@ -16,7 +20,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::camera_controls {
 
-inline flight::Ref<flight::types::Rectangle> scratch_bounds = flight::geometry::create_rectangle();
+inline flight::Ref<flight::types::Rectangle> scratch_bounds = flight::geometry::create_rectangle(std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
 inline void update_camera2_dfollow(flight::Ref<flight::types::Camera2D> camera, double target_x, double target_y, double delta_time, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2DFollowOptions>>>>> options = std::nullopt) {
   const double cam_x = camera->x;
@@ -28,53 +32,53 @@ inline void update_camera2_dfollow(flight::Ref<flight::types::Camera2D> camera, 
   const double dx = (target_x - cam_x);
   double goal_x = cam_x;
   if ((dx > dead_half_w)) {
-    goal_x = (target_x - dead_half_w);
+    (goal_x = (target_x - dead_half_w));
   }
   else {
     if ((dx < -dead_half_w)) {
-      goal_x = (target_x + dead_half_w);
+      (goal_x = (target_x + dead_half_w));
     }
   }
   const double dy = (target_y - cam_y);
   double goal_y = cam_y;
   if ((dy > dead_half_h)) {
-    goal_y = (target_y - dead_half_h);
+    (goal_y = (target_y - dead_half_h));
   }
   else {
     if ((dy < -dead_half_h)) {
-      goal_y = (target_y + dead_half_h);
+      (goal_y = (target_y + dead_half_h));
     }
   }
   double next_x;
   double next_y;
   if (((smooth_time > 0.0) && (delta_time > 0.0))) {
     const double lambda = (1.0 / smooth_time);
-    next_x = flight::math::damp(cam_x, goal_x, lambda, delta_time);
-    next_y = flight::math::damp(cam_y, goal_y, lambda, delta_time);
+    (next_x = flight::math::damp(cam_x, goal_x, lambda, delta_time));
+    (next_y = flight::math::damp(cam_y, goal_y, lambda, delta_time));
   }
   else {
-    next_x = goal_x;
-    next_y = goal_y;
+    (next_x = goal_x);
+    (next_y = goal_y);
   }
   if (world_bounds) {
     flight::camera::get_camera2_dvisible_bounds(camera, scratch_bounds);
     const double half_vis_w = (scratch_bounds->width * 0.5);
     const double half_vis_h = (scratch_bounds->height * 0.5);
     if ((flight::row_get<flight::RowKey<"width">>(world_bounds.value()) <= scratch_bounds->width)) {
-      next_x = (flight::row_get<flight::RowKey<"x">>(world_bounds.value()) + (flight::row_get<flight::RowKey<"width">>(world_bounds.value()) * 0.5));
+      (next_x = (flight::row_get<flight::RowKey<"x">>(world_bounds.value()) + (flight::row_get<flight::RowKey<"width">>(world_bounds.value()) * 0.5)));
     }
     else {
-      next_x = flight::math::clamp(next_x, (flight::row_get<flight::RowKey<"x">>(world_bounds.value()) + half_vis_w), ((flight::row_get<flight::RowKey<"x">>(world_bounds.value()) + flight::row_get<flight::RowKey<"width">>(world_bounds.value())) - half_vis_w));
+      (next_x = flight::math::clamp(next_x, (flight::row_get<flight::RowKey<"x">>(world_bounds.value()) + half_vis_w), ((flight::row_get<flight::RowKey<"x">>(world_bounds.value()) + flight::row_get<flight::RowKey<"width">>(world_bounds.value())) - half_vis_w)));
     }
     if ((flight::row_get<flight::RowKey<"height">>(world_bounds.value()) <= scratch_bounds->height)) {
-      next_y = (flight::row_get<flight::RowKey<"y">>(world_bounds.value()) + (flight::row_get<flight::RowKey<"height">>(world_bounds.value()) * 0.5));
+      (next_y = (flight::row_get<flight::RowKey<"y">>(world_bounds.value()) + (flight::row_get<flight::RowKey<"height">>(world_bounds.value()) * 0.5)));
     }
     else {
-      next_y = flight::math::clamp(next_y, (flight::row_get<flight::RowKey<"y">>(world_bounds.value()) + half_vis_h), ((flight::row_get<flight::RowKey<"y">>(world_bounds.value()) + flight::row_get<flight::RowKey<"height">>(world_bounds.value())) - half_vis_h));
+      (next_y = flight::math::clamp(next_y, (flight::row_get<flight::RowKey<"y">>(world_bounds.value()) + half_vis_h), ((flight::row_get<flight::RowKey<"y">>(world_bounds.value()) + flight::row_get<flight::RowKey<"height">>(world_bounds.value())) - half_vis_h)));
     }
   }
-  camera->x = next_x;
-  camera->y = next_y;
+  (camera->x = next_x);
+  (camera->y = next_y);
 }
 
 } // namespace flight::camera_controls

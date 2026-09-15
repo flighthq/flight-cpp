@@ -10,6 +10,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+
 #include <flight/types/alpha_type.hpp>
 #include <flight/types/bitmap.hpp>
 #include <flight/types/pixel_format.hpp>
@@ -37,7 +39,7 @@ inline double get_bitmap_coverage(flight::StructuralRef<flight::RowReadonly<flig
           covered++;
         }
       }
-      i += 4.0;
+      (i += 4.0);
     }
   }
   return (covered / total_pixels);

@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/number.hpp>
 #include <random>
 #include <flight/runtime.hpp>
 
@@ -27,7 +28,7 @@ inline flight::String compute_rgba_css_string(double color) {
 }
 
 inline flight::String compute_rgb_hex_string(double color) {
-  return flight::String("#") + flight::to_string(flight::bitwise_and(color, 16777215.0).to_string(16.0).pad_start(6.0, flight::String("0"))) + flight::String("");
+  return flight::String("#") + flight::to_string(flight::number_to_string(flight::bitwise_and(color, 16777215.0), 16.0).pad_start(6.0, flight::String("0"))) + flight::String("");
 }
 
 inline double get_color_alpha(double color) {
@@ -64,17 +65,17 @@ inline double set_color_alpha(double color, double alpha) {
 }
 
 inline void unpack_color_rgba(flight::Array<double> out, double color) {
-  out.element(0.0) = (flight::bitwise_and(flight::unsigned_right_shift(color, 24.0), 255.0) / 255.0);
-  out.element(1.0) = (flight::bitwise_and(flight::unsigned_right_shift(color, 16.0), 255.0) / 255.0);
-  out.element(2.0) = (flight::bitwise_and(flight::unsigned_right_shift(color, 8.0), 255.0) / 255.0);
-  out.element(3.0) = (flight::bitwise_and(color, 255.0) / 255.0);
+  (out.element(0.0) = (flight::bitwise_and(flight::unsigned_right_shift(color, 24.0), 255.0) / 255.0));
+  (out.element(1.0) = (flight::bitwise_and(flight::unsigned_right_shift(color, 16.0), 255.0) / 255.0));
+  (out.element(2.0) = (flight::bitwise_and(flight::unsigned_right_shift(color, 8.0), 255.0) / 255.0));
+  (out.element(3.0) = (flight::bitwise_and(color, 255.0) / 255.0));
 }
 
 inline flight::types::LinearColor unpack_color_to_linear(flight::types::LinearColor out, double color) {
-  out.element(0.0) = flight::color::srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 24.0), 255.0) / 255.0));
-  out.element(1.0) = flight::color::srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 16.0), 255.0) / 255.0));
-  out.element(2.0) = flight::color::srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 8.0), 255.0) / 255.0));
-  out.element(3.0) = (flight::bitwise_and(color, 255.0) / 255.0);
+  (out.element(0.0) = flight::color::srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 24.0), 255.0) / 255.0)));
+  (out.element(1.0) = flight::color::srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 16.0), 255.0) / 255.0)));
+  (out.element(2.0) = flight::color::srgb_channel_to_linear((flight::bitwise_and(flight::unsigned_right_shift(color, 8.0), 255.0) / 255.0)));
+  (out.element(3.0) = (flight::bitwise_and(color, 255.0) / 255.0));
   return out;
 }
 

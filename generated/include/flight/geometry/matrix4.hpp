@@ -14,6 +14,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix3; }
+namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Quaternion; }
+namespace flight::types { struct Vector3; }
+namespace flight::types { struct Vector4; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix.hpp>
@@ -24,20 +31,24 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/vector4.hpp>
 #include <flight/geometry/matrix4_pool.hpp>
 
+namespace flight::geometry { inline flight::Ref<flight::types::Matrix4> acquire_identity_matrix4(); }
+namespace flight::geometry { inline flight::Ref<flight::types::Matrix4> acquire_matrix4(); }
+namespace flight::geometry { inline void release_matrix4(flight::Ref<flight::types::Matrix4> m); }
+
 namespace flight::geometry {
 
-inline void append_translation_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double x, double y, double z) {
+inline void append_translation_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, double x, double y, double z) {
   flight::Float32Array out_2 = out->m;
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
-  if ((flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>(out) != source)) {
+  if ((flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>(out) != source)) {
     out->m.set(flight::row_get<flight::RowKey<"m">>(source));
   }
-  out_2.element(12.0) = (source_2.element(12.0) + x);
-  out_2.element(13.0) = (source_2.element(13.0) + y);
-  out_2.element(14.0) = (source_2.element(14.0) + z);
+  (out_2.element(12.0) = (source_2.element(12.0) + x));
+  (out_2.element(13.0) = (source_2.element(13.0) + y));
+  (out_2.element(14.0) = (source_2.element(14.0) + z));
 }
 
-inline void compose_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> position, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> rotation, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> scale) {
+inline void compose_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> position, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> rotation, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> scale) {
   const double x = flight::row_get<flight::RowKey<"x">>(rotation);
   const double y = flight::row_get<flight::RowKey<"y">>(rotation);
   const double z = flight::row_get<flight::RowKey<"z">>(rotation);
@@ -58,55 +69,55 @@ inline void compose_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight:
   const double sy = flight::row_get<flight::RowKey<"y">>(scale);
   const double sz = flight::row_get<flight::RowKey<"z">>(scale);
   flight::Float32Array out_2 = out->m;
-  out_2.element(0.0) = ((1.0 - (yy + zz)) * sx);
-  out_2.element(1.0) = ((xy + wz) * sx);
-  out_2.element(2.0) = ((xz - wy) * sx);
-  out_2.element(3.0) = 0.0;
-  out_2.element(4.0) = ((xy - wz) * sy);
-  out_2.element(5.0) = ((1.0 - (xx + zz)) * sy);
-  out_2.element(6.0) = ((yz + wx) * sy);
-  out_2.element(7.0) = 0.0;
-  out_2.element(8.0) = ((xz + wy) * sz);
-  out_2.element(9.0) = ((yz - wx) * sz);
-  out_2.element(10.0) = ((1.0 - (xx + yy)) * sz);
-  out_2.element(11.0) = 0.0;
-  out_2.element(12.0) = flight::row_get<flight::RowKey<"x">>(position);
-  out_2.element(13.0) = flight::row_get<flight::RowKey<"y">>(position);
-  out_2.element(14.0) = flight::row_get<flight::RowKey<"z">>(position);
-  out_2.element(15.0) = 1.0;
+  (out_2.element(0.0) = ((1.0 - (yy + zz)) * sx));
+  (out_2.element(1.0) = ((xy + wz) * sx));
+  (out_2.element(2.0) = ((xz - wy) * sx));
+  (out_2.element(3.0) = 0.0);
+  (out_2.element(4.0) = ((xy - wz) * sy));
+  (out_2.element(5.0) = ((1.0 - (xx + zz)) * sy));
+  (out_2.element(6.0) = ((yz + wx) * sy));
+  (out_2.element(7.0) = 0.0);
+  (out_2.element(8.0) = ((xz + wy) * sz));
+  (out_2.element(9.0) = ((yz - wx) * sz));
+  (out_2.element(10.0) = ((1.0 - (xx + yy)) * sz));
+  (out_2.element(11.0) = 0.0);
+  (out_2.element(12.0) = flight::row_get<flight::RowKey<"x">>(position));
+  (out_2.element(13.0) = flight::row_get<flight::RowKey<"y">>(position));
+  (out_2.element(14.0) = flight::row_get<flight::RowKey<"z">>(position));
+  (out_2.element(15.0) = 1.0);
 }
 
-inline void copy_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
+inline void copy_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
   out->m.set(flight::row_get<flight::RowKey<"m">>(source));
 }
 
-inline void copy_matrix4_column_from_vector4(flight::Ref<flight::types::Matrix4Like> out, double column, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>> source) {
+inline void copy_matrix4_column_from_vector4(flight::types::Matrix4Like out, double column, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> source) {
   flight::Float32Array out_2 = out->m;
   {
     auto switch_value = column;
     if (switch_value == 0.0) {
-      out_2.element(0.0) = flight::row_get<flight::RowKey<"x">>(source);
-      out_2.element(1.0) = flight::row_get<flight::RowKey<"y">>(source);
-      out_2.element(2.0) = flight::row_get<flight::RowKey<"z">>(source);
-      out_2.element(3.0) = flight::row_get<flight::RowKey<"w">>(source);
+      (out_2.element(0.0) = flight::row_get<flight::RowKey<"x">>(source));
+      (out_2.element(1.0) = flight::row_get<flight::RowKey<"y">>(source));
+      (out_2.element(2.0) = flight::row_get<flight::RowKey<"z">>(source));
+      (out_2.element(3.0) = flight::row_get<flight::RowKey<"w">>(source));
     }
     else if (switch_value == 1.0) {
-      out_2.element(4.0) = flight::row_get<flight::RowKey<"x">>(source);
-      out_2.element(5.0) = flight::row_get<flight::RowKey<"y">>(source);
-      out_2.element(6.0) = flight::row_get<flight::RowKey<"z">>(source);
-      out_2.element(7.0) = flight::row_get<flight::RowKey<"w">>(source);
+      (out_2.element(4.0) = flight::row_get<flight::RowKey<"x">>(source));
+      (out_2.element(5.0) = flight::row_get<flight::RowKey<"y">>(source));
+      (out_2.element(6.0) = flight::row_get<flight::RowKey<"z">>(source));
+      (out_2.element(7.0) = flight::row_get<flight::RowKey<"w">>(source));
     }
     else if (switch_value == 2.0) {
-      out_2.element(8.0) = flight::row_get<flight::RowKey<"x">>(source);
-      out_2.element(9.0) = flight::row_get<flight::RowKey<"y">>(source);
-      out_2.element(10.0) = flight::row_get<flight::RowKey<"z">>(source);
-      out_2.element(11.0) = flight::row_get<flight::RowKey<"w">>(source);
+      (out_2.element(8.0) = flight::row_get<flight::RowKey<"x">>(source));
+      (out_2.element(9.0) = flight::row_get<flight::RowKey<"y">>(source));
+      (out_2.element(10.0) = flight::row_get<flight::RowKey<"z">>(source));
+      (out_2.element(11.0) = flight::row_get<flight::RowKey<"w">>(source));
     }
     else if (switch_value == 3.0) {
-      out_2.element(12.0) = flight::row_get<flight::RowKey<"x">>(source);
-      out_2.element(13.0) = flight::row_get<flight::RowKey<"y">>(source);
-      out_2.element(14.0) = flight::row_get<flight::RowKey<"z">>(source);
-      out_2.element(15.0) = flight::row_get<flight::RowKey<"w">>(source);
+      (out_2.element(12.0) = flight::row_get<flight::RowKey<"x">>(source));
+      (out_2.element(13.0) = flight::row_get<flight::RowKey<"y">>(source));
+      (out_2.element(14.0) = flight::row_get<flight::RowKey<"z">>(source));
+      (out_2.element(15.0) = flight::row_get<flight::RowKey<"w">>(source));
     }
     else {
       throw flight::RangeError((flight::String("Column ") + column) + flight::String(" out of bounds [0, ..., 3]"));
@@ -114,33 +125,33 @@ inline void copy_matrix4_column_from_vector4(flight::Ref<flight::types::Matrix4L
   }
 }
 
-inline void copy_matrix4_column_to_vector4(flight::Ref<flight::types::Vector4Like> out, double column, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
+inline void copy_matrix4_column_to_vector4(flight::types::Vector4Like out, double column, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
   {
     auto switch_value_2 = column;
     if (switch_value_2 == 0.0) {
-      out->x = source_2.element(0.0);
-      out->y = source_2.element(1.0);
-      out->z = source_2.element(2.0);
-      out->w = source_2.element(3.0);
+      (out->x = source_2.element(0.0));
+      (out->y = source_2.element(1.0));
+      (out->z = source_2.element(2.0));
+      (out->w = source_2.element(3.0));
     }
     else if (switch_value_2 == 1.0) {
-      out->x = source_2.element(4.0);
-      out->y = source_2.element(5.0);
-      out->z = source_2.element(6.0);
-      out->w = source_2.element(7.0);
+      (out->x = source_2.element(4.0));
+      (out->y = source_2.element(5.0));
+      (out->z = source_2.element(6.0));
+      (out->w = source_2.element(7.0));
     }
     else if (switch_value_2 == 2.0) {
-      out->x = source_2.element(8.0);
-      out->y = source_2.element(9.0);
-      out->z = source_2.element(10.0);
-      out->w = source_2.element(11.0);
+      (out->x = source_2.element(8.0));
+      (out->y = source_2.element(9.0));
+      (out->z = source_2.element(10.0));
+      (out->w = source_2.element(11.0));
     }
     else if (switch_value_2 == 3.0) {
-      out->x = source_2.element(12.0);
-      out->y = source_2.element(13.0);
-      out->z = source_2.element(14.0);
-      out->w = source_2.element(15.0);
+      (out->x = source_2.element(12.0));
+      (out->y = source_2.element(13.0));
+      (out->z = source_2.element(14.0));
+      (out->w = source_2.element(15.0));
     }
     else {
       throw flight::RangeError((flight::String("Column ") + column) + flight::String(" out of bounds [0, ..., 3]"));
@@ -148,33 +159,33 @@ inline void copy_matrix4_column_to_vector4(flight::Ref<flight::types::Vector4Lik
   }
 }
 
-inline void copy_matrix4_row_from_vector4(flight::Ref<flight::types::Matrix4Like> out, double row, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>> source) {
+inline void copy_matrix4_row_from_vector4(flight::types::Matrix4Like out, double row, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> source) {
   flight::Float32Array out_2 = out->m;
   {
     auto switch_value_3 = row;
     if (switch_value_3 == 0.0) {
-      out_2.element(0.0) = flight::row_get<flight::RowKey<"x">>(source);
-      out_2.element(4.0) = flight::row_get<flight::RowKey<"y">>(source);
-      out_2.element(8.0) = flight::row_get<flight::RowKey<"z">>(source);
-      out_2.element(12.0) = flight::row_get<flight::RowKey<"w">>(source);
+      (out_2.element(0.0) = flight::row_get<flight::RowKey<"x">>(source));
+      (out_2.element(4.0) = flight::row_get<flight::RowKey<"y">>(source));
+      (out_2.element(8.0) = flight::row_get<flight::RowKey<"z">>(source));
+      (out_2.element(12.0) = flight::row_get<flight::RowKey<"w">>(source));
     }
     else if (switch_value_3 == 1.0) {
-      out_2.element(1.0) = flight::row_get<flight::RowKey<"x">>(source);
-      out_2.element(5.0) = flight::row_get<flight::RowKey<"y">>(source);
-      out_2.element(9.0) = flight::row_get<flight::RowKey<"z">>(source);
-      out_2.element(13.0) = flight::row_get<flight::RowKey<"w">>(source);
+      (out_2.element(1.0) = flight::row_get<flight::RowKey<"x">>(source));
+      (out_2.element(5.0) = flight::row_get<flight::RowKey<"y">>(source));
+      (out_2.element(9.0) = flight::row_get<flight::RowKey<"z">>(source));
+      (out_2.element(13.0) = flight::row_get<flight::RowKey<"w">>(source));
     }
     else if (switch_value_3 == 2.0) {
-      out_2.element(2.0) = flight::row_get<flight::RowKey<"x">>(source);
-      out_2.element(6.0) = flight::row_get<flight::RowKey<"y">>(source);
-      out_2.element(10.0) = flight::row_get<flight::RowKey<"z">>(source);
-      out_2.element(14.0) = flight::row_get<flight::RowKey<"w">>(source);
+      (out_2.element(2.0) = flight::row_get<flight::RowKey<"x">>(source));
+      (out_2.element(6.0) = flight::row_get<flight::RowKey<"y">>(source));
+      (out_2.element(10.0) = flight::row_get<flight::RowKey<"z">>(source));
+      (out_2.element(14.0) = flight::row_get<flight::RowKey<"w">>(source));
     }
     else if (switch_value_3 == 3.0) {
-      out_2.element(3.0) = flight::row_get<flight::RowKey<"x">>(source);
-      out_2.element(7.0) = flight::row_get<flight::RowKey<"y">>(source);
-      out_2.element(11.0) = flight::row_get<flight::RowKey<"z">>(source);
-      out_2.element(15.0) = flight::row_get<flight::RowKey<"w">>(source);
+      (out_2.element(3.0) = flight::row_get<flight::RowKey<"x">>(source));
+      (out_2.element(7.0) = flight::row_get<flight::RowKey<"y">>(source));
+      (out_2.element(11.0) = flight::row_get<flight::RowKey<"z">>(source));
+      (out_2.element(15.0) = flight::row_get<flight::RowKey<"w">>(source));
     }
     else {
       throw flight::RangeError((flight::String("Row ") + row) + flight::String(" out of bounds [0, ..., 3]"));
@@ -182,33 +193,33 @@ inline void copy_matrix4_row_from_vector4(flight::Ref<flight::types::Matrix4Like
   }
 }
 
-inline void copy_matrix4_row_to_vector4(flight::Ref<flight::types::Vector4Like> out, double row, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
+inline void copy_matrix4_row_to_vector4(flight::types::Vector4Like out, double row, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
   {
     auto switch_value_4 = row;
     if (switch_value_4 == 0.0) {
-      out->x = source_2.element(0.0);
-      out->y = source_2.element(4.0);
-      out->z = source_2.element(8.0);
-      out->w = source_2.element(12.0);
+      (out->x = source_2.element(0.0));
+      (out->y = source_2.element(4.0));
+      (out->z = source_2.element(8.0));
+      (out->w = source_2.element(12.0));
     }
     else if (switch_value_4 == 1.0) {
-      out->x = source_2.element(1.0);
-      out->y = source_2.element(5.0);
-      out->z = source_2.element(9.0);
-      out->w = source_2.element(13.0);
+      (out->x = source_2.element(1.0));
+      (out->y = source_2.element(5.0));
+      (out->z = source_2.element(9.0));
+      (out->w = source_2.element(13.0));
     }
     else if (switch_value_4 == 2.0) {
-      out->x = source_2.element(2.0);
-      out->y = source_2.element(6.0);
-      out->z = source_2.element(10.0);
-      out->w = source_2.element(14.0);
+      (out->x = source_2.element(2.0));
+      (out->y = source_2.element(6.0));
+      (out->z = source_2.element(10.0));
+      (out->w = source_2.element(14.0));
     }
     else if (switch_value_4 == 3.0) {
-      out->x = source_2.element(3.0);
-      out->y = source_2.element(7.0);
-      out->z = source_2.element(11.0);
-      out->w = source_2.element(15.0);
+      (out->x = source_2.element(3.0));
+      (out->y = source_2.element(7.0));
+      (out->z = source_2.element(11.0));
+      (out->w = source_2.element(15.0));
     }
     else {
       throw flight::RangeError((flight::String("Row ") + row) + flight::String(" out of bounds [0, ..., 3]"));
@@ -216,7 +227,7 @@ inline void copy_matrix4_row_to_vector4(flight::Ref<flight::types::Vector4Like> 
   }
 }
 
-inline void decompose_matrix4(flight::Ref<flight::types::Vector3Like> out_position, flight::Ref<flight::types::QuaternionLike> out_rotation, flight::Ref<flight::types::Vector3Like> out_scale, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> m) {
+inline void decompose_matrix4(flight::types::Vector3Like out_position, flight::types::QuaternionLike out_rotation, flight::types::Vector3Like out_scale, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> m) {
   flight::Float32Array m_2 = flight::row_get<flight::RowKey<"m">>(m);
   const double m00 = m_2.element(0.0);
   const double m01 = m_2.element(1.0);
@@ -235,14 +246,14 @@ inline void decompose_matrix4(flight::Ref<flight::types::Vector3Like> out_positi
   auto sz = std::sqrt((((m20 * m20) + (m21 * m21)) + (m22 * m22)));
   const double det = (((m00 * ((m11 * m22) - (m12 * m21))) - (m10 * ((m01 * m22) - (m02 * m21)))) + (m20 * ((m01 * m12) - (m02 * m11))));
   if ((det < 0.0)) {
-    sx = -sx;
+    (sx = -sx);
   }
-  out_position->x = tx;
-  out_position->y = ty;
-  out_position->z = tz;
-  out_scale->x = sx;
-  out_scale->y = sy;
-  out_scale->z = sz;
+  (out_position->x = tx);
+  (out_position->y = ty);
+  (out_position->z = tz);
+  (out_scale->x = sx);
+  (out_scale->y = sy);
+  (out_scale->z = sz);
   const double inv_sx = ((sx != 0.0) ? (1.0 / sx) : 0.0);
   const double inv_sy = ((sy != 0.0) ? (1.0 / sy) : 0.0);
   const double inv_sz = ((sz != 0.0) ? (1.0 / sz) : 0.0);
@@ -258,39 +269,39 @@ inline void decompose_matrix4(flight::Ref<flight::types::Vector3Like> out_positi
   const double trace = ((r00 + r11) + r22);
   if ((trace > 0.0)) {
     const double s = (0.5 / std::sqrt((trace + 1.0)));
-    out_rotation->w = (0.25 / s);
-    out_rotation->x = ((r12 - r21) * s);
-    out_rotation->y = ((r20 - r02) * s);
-    out_rotation->z = ((r01 - r10) * s);
+    (out_rotation->w = (0.25 / s));
+    (out_rotation->x = ((r12 - r21) * s));
+    (out_rotation->y = ((r20 - r02) * s));
+    (out_rotation->z = ((r01 - r10) * s));
   }
   else {
     if (((r00 > r11) && (r00 > r22))) {
       const double s_2 = (2.0 * std::sqrt((((1.0 + r00) - r11) - r22)));
-      out_rotation->w = ((r12 - r21) / s_2);
-      out_rotation->x = (0.25 * s_2);
-      out_rotation->y = ((r10 + r01) / s_2);
-      out_rotation->z = ((r20 + r02) / s_2);
+      (out_rotation->w = ((r12 - r21) / s_2));
+      (out_rotation->x = (0.25 * s_2));
+      (out_rotation->y = ((r10 + r01) / s_2));
+      (out_rotation->z = ((r20 + r02) / s_2));
     }
     else {
       if ((r11 > r22)) {
         const double s_3 = (2.0 * std::sqrt((((1.0 + r11) - r00) - r22)));
-        out_rotation->w = ((r20 - r02) / s_3);
-        out_rotation->x = ((r10 + r01) / s_3);
-        out_rotation->y = (0.25 * s_3);
-        out_rotation->z = ((r21 + r12) / s_3);
+        (out_rotation->w = ((r20 - r02) / s_3));
+        (out_rotation->x = ((r10 + r01) / s_3));
+        (out_rotation->y = (0.25 * s_3));
+        (out_rotation->z = ((r21 + r12) / s_3));
       }
       else {
         const double s_4 = (2.0 * std::sqrt((((1.0 + r22) - r00) - r11)));
-        out_rotation->w = ((r01 - r10) / s_4);
-        out_rotation->x = ((r20 + r02) / s_4);
-        out_rotation->y = ((r21 + r12) / s_4);
-        out_rotation->z = (0.25 * s_4);
+        (out_rotation->w = ((r01 - r10) / s_4));
+        (out_rotation->x = ((r20 + r02) / s_4));
+        (out_rotation->y = ((r21 + r12) / s_4));
+        (out_rotation->z = (0.25 * s_4));
       }
     }
   }
 }
 
-inline bool equals_matrix4(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>, flight::Null, flight::Undefined> b) {
+inline bool equals_matrix4(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>, flight::Null, flight::Undefined> a, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>, flight::Null, flight::Undefined> b) {
   if ((a == b)) {
     return true;
   }
@@ -301,37 +312,37 @@ inline bool equals_matrix4(std::variant<flight::StructuralRef<flight::RowReadonl
     double i = 0.0;
     while ((i < 16.0)) {
       {
-        if ((flight::row_get<flight::RowKey<"m">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>>(a)).element(i) != flight::row_get<flight::RowKey<"m">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>>(b)).element(i))) {
+        if ((flight::row_get<flight::RowKey<"m">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(a)).element(i) != flight::row_get<flight::RowKey<"m">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(b)).element(i))) {
           return false;
         }
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   return true;
 }
 
-inline double get_matrix4_determinant(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
+inline double get_matrix4_determinant(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
   return (1.0 * ((((((((source_2.element(0.0) * source_2.element(5.0)) - (source_2.element(4.0) * source_2.element(1.0))) * ((source_2.element(10.0) * source_2.element(15.0)) - (source_2.element(14.0) * source_2.element(11.0)))) - (((source_2.element(0.0) * source_2.element(9.0)) - (source_2.element(8.0) * source_2.element(1.0))) * ((source_2.element(6.0) * source_2.element(15.0)) - (source_2.element(14.0) * source_2.element(7.0))))) + (((source_2.element(0.0) * source_2.element(13.0)) - (source_2.element(12.0) * source_2.element(1.0))) * ((source_2.element(6.0) * source_2.element(11.0)) - (source_2.element(10.0) * source_2.element(7.0))))) + (((source_2.element(4.0) * source_2.element(9.0)) - (source_2.element(8.0) * source_2.element(5.0))) * ((source_2.element(2.0) * source_2.element(15.0)) - (source_2.element(14.0) * source_2.element(3.0))))) - (((source_2.element(4.0) * source_2.element(13.0)) - (source_2.element(12.0) * source_2.element(5.0))) * ((source_2.element(2.0) * source_2.element(11.0)) - (source_2.element(10.0) * source_2.element(3.0))))) + (((source_2.element(8.0) * source_2.element(13.0)) - (source_2.element(12.0) * source_2.element(9.0))) * ((source_2.element(2.0) * source_2.element(7.0)) - (source_2.element(6.0) * source_2.element(3.0))))));
 }
 
-inline double get_matrix4_element(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double row, double column) {
+inline double get_matrix4_element(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, double row, double column) {
   return flight::row_get<flight::RowKey<"m">>(source).element(((column * 4.0) + row));
 }
 
-inline void get_matrix4_position(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
+inline void get_matrix4_position(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
-  out->x = source_2.element(12.0);
-  out->y = source_2.element(13.0);
-  out->z = source_2.element(14.0);
+  (out->x = source_2.element(12.0));
+  (out->y = source_2.element(13.0));
+  (out->z = source_2.element(14.0));
 }
 
 inline void initialize_matrix4(flight::types::EntityConstruction<flight::Ref<flight::types::Matrix4>> out, flight::Float32Array m) {
   flight::row_set<flight::RowKey<"m">>(out, m);
 }
 
-inline void interpolate_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> b, double t) {
+inline void interpolate_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> b, double t) {
   flight::Float32Array out_2 = out->m;
   flight::Float32Array a_2 = flight::row_get<flight::RowKey<"m">>(a);
   flight::Float32Array b_2 = flight::row_get<flight::RowKey<"m">>(b);
@@ -339,14 +350,14 @@ inline void interpolate_matrix4(flight::Ref<flight::types::Matrix4Like> out, fli
     double i = 0.0;
     while ((i < 16.0)) {
       {
-        out_2.element(i) = (a_2.element(i) + ((b_2.element(i) - a_2.element(i)) * t));
+        (out_2.element(i) = (a_2.element(i) + ((b_2.element(i) - a_2.element(i)) * t)));
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
 }
 
-inline bool inverse_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
+inline bool inverse_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
   flight::Float32Array out_2 = out->m;
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
   double d = get_matrix4_determinant(source);
@@ -356,7 +367,7 @@ inline bool inverse_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight:
     out_2.fill(std::numeric_limits<double>::quiet_NaN());
     return false;
   }
-  d = (1.0 / d);
+  (d = (1.0 / d));
   const double m11 = source_2.element(0.0);
   const double m21 = source_2.element(4.0);
   const double m31 = source_2.element(8.0);
@@ -373,70 +384,70 @@ inline bool inverse_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight:
   const double m24 = source_2.element(7.0);
   const double m34 = source_2.element(11.0);
   const double m44 = source_2.element(15.0);
-  out_2.element(0.0) = (d * (((m22 * ((m33 * m44) - (m43 * m34))) - (m32 * ((m23 * m44) - (m43 * m24)))) + (m42 * ((m23 * m34) - (m33 * m24)))));
-  out_2.element(1.0) = (-d * (((m12 * ((m33 * m44) - (m43 * m34))) - (m32 * ((m13 * m44) - (m43 * m14)))) + (m42 * ((m13 * m34) - (m33 * m14)))));
-  out_2.element(2.0) = (d * (((m12 * ((m23 * m44) - (m43 * m24))) - (m22 * ((m13 * m44) - (m43 * m14)))) + (m42 * ((m13 * m24) - (m23 * m14)))));
-  out_2.element(3.0) = (-d * (((m12 * ((m23 * m34) - (m33 * m24))) - (m22 * ((m13 * m34) - (m33 * m14)))) + (m32 * ((m13 * m24) - (m23 * m14)))));
-  out_2.element(4.0) = (-d * (((m21 * ((m33 * m44) - (m43 * m34))) - (m31 * ((m23 * m44) - (m43 * m24)))) + (m41 * ((m23 * m34) - (m33 * m24)))));
-  out_2.element(5.0) = (d * (((m11 * ((m33 * m44) - (m43 * m34))) - (m31 * ((m13 * m44) - (m43 * m14)))) + (m41 * ((m13 * m34) - (m33 * m14)))));
-  out_2.element(6.0) = (-d * (((m11 * ((m23 * m44) - (m43 * m24))) - (m21 * ((m13 * m44) - (m43 * m14)))) + (m41 * ((m13 * m24) - (m23 * m14)))));
-  out_2.element(7.0) = (d * (((m11 * ((m23 * m34) - (m33 * m24))) - (m21 * ((m13 * m34) - (m33 * m14)))) + (m31 * ((m13 * m24) - (m23 * m14)))));
-  out_2.element(8.0) = (d * (((m21 * ((m32 * m44) - (m42 * m34))) - (m31 * ((m22 * m44) - (m42 * m24)))) + (m41 * ((m22 * m34) - (m32 * m24)))));
-  out_2.element(9.0) = (-d * (((m11 * ((m32 * m44) - (m42 * m34))) - (m31 * ((m12 * m44) - (m42 * m14)))) + (m41 * ((m12 * m34) - (m32 * m14)))));
-  out_2.element(10.0) = (d * (((m11 * ((m22 * m44) - (m42 * m24))) - (m21 * ((m12 * m44) - (m42 * m14)))) + (m41 * ((m12 * m24) - (m22 * m14)))));
-  out_2.element(11.0) = (-d * (((m11 * ((m22 * m34) - (m32 * m24))) - (m21 * ((m12 * m34) - (m32 * m14)))) + (m31 * ((m12 * m24) - (m22 * m14)))));
-  out_2.element(12.0) = (-d * (((m21 * ((m32 * m43) - (m42 * m33))) - (m31 * ((m22 * m43) - (m42 * m23)))) + (m41 * ((m22 * m33) - (m32 * m23)))));
-  out_2.element(13.0) = (d * (((m11 * ((m32 * m43) - (m42 * m33))) - (m31 * ((m12 * m43) - (m42 * m13)))) + (m41 * ((m12 * m33) - (m32 * m13)))));
-  out_2.element(14.0) = (-d * (((m11 * ((m22 * m43) - (m42 * m23))) - (m21 * ((m12 * m43) - (m42 * m13)))) + (m41 * ((m12 * m23) - (m22 * m13)))));
-  out_2.element(15.0) = (d * (((m11 * ((m22 * m33) - (m32 * m23))) - (m21 * ((m12 * m33) - (m32 * m13)))) + (m31 * ((m12 * m23) - (m22 * m13)))));
+  (out_2.element(0.0) = (d * (((m22 * ((m33 * m44) - (m43 * m34))) - (m32 * ((m23 * m44) - (m43 * m24)))) + (m42 * ((m23 * m34) - (m33 * m24))))));
+  (out_2.element(1.0) = (-d * (((m12 * ((m33 * m44) - (m43 * m34))) - (m32 * ((m13 * m44) - (m43 * m14)))) + (m42 * ((m13 * m34) - (m33 * m14))))));
+  (out_2.element(2.0) = (d * (((m12 * ((m23 * m44) - (m43 * m24))) - (m22 * ((m13 * m44) - (m43 * m14)))) + (m42 * ((m13 * m24) - (m23 * m14))))));
+  (out_2.element(3.0) = (-d * (((m12 * ((m23 * m34) - (m33 * m24))) - (m22 * ((m13 * m34) - (m33 * m14)))) + (m32 * ((m13 * m24) - (m23 * m14))))));
+  (out_2.element(4.0) = (-d * (((m21 * ((m33 * m44) - (m43 * m34))) - (m31 * ((m23 * m44) - (m43 * m24)))) + (m41 * ((m23 * m34) - (m33 * m24))))));
+  (out_2.element(5.0) = (d * (((m11 * ((m33 * m44) - (m43 * m34))) - (m31 * ((m13 * m44) - (m43 * m14)))) + (m41 * ((m13 * m34) - (m33 * m14))))));
+  (out_2.element(6.0) = (-d * (((m11 * ((m23 * m44) - (m43 * m24))) - (m21 * ((m13 * m44) - (m43 * m14)))) + (m41 * ((m13 * m24) - (m23 * m14))))));
+  (out_2.element(7.0) = (d * (((m11 * ((m23 * m34) - (m33 * m24))) - (m21 * ((m13 * m34) - (m33 * m14)))) + (m31 * ((m13 * m24) - (m23 * m14))))));
+  (out_2.element(8.0) = (d * (((m21 * ((m32 * m44) - (m42 * m34))) - (m31 * ((m22 * m44) - (m42 * m24)))) + (m41 * ((m22 * m34) - (m32 * m24))))));
+  (out_2.element(9.0) = (-d * (((m11 * ((m32 * m44) - (m42 * m34))) - (m31 * ((m12 * m44) - (m42 * m14)))) + (m41 * ((m12 * m34) - (m32 * m14))))));
+  (out_2.element(10.0) = (d * (((m11 * ((m22 * m44) - (m42 * m24))) - (m21 * ((m12 * m44) - (m42 * m14)))) + (m41 * ((m12 * m24) - (m22 * m14))))));
+  (out_2.element(11.0) = (-d * (((m11 * ((m22 * m34) - (m32 * m24))) - (m21 * ((m12 * m34) - (m32 * m14)))) + (m31 * ((m12 * m24) - (m22 * m14))))));
+  (out_2.element(12.0) = (-d * (((m21 * ((m32 * m43) - (m42 * m33))) - (m31 * ((m22 * m43) - (m42 * m23)))) + (m41 * ((m22 * m33) - (m32 * m23))))));
+  (out_2.element(13.0) = (d * (((m11 * ((m32 * m43) - (m42 * m33))) - (m31 * ((m12 * m43) - (m42 * m13)))) + (m41 * ((m12 * m33) - (m32 * m13))))));
+  (out_2.element(14.0) = (-d * (((m11 * ((m22 * m43) - (m42 * m23))) - (m21 * ((m12 * m43) - (m42 * m13)))) + (m41 * ((m12 * m23) - (m22 * m13))))));
+  (out_2.element(15.0) = (d * (((m11 * ((m22 * m33) - (m32 * m23))) - (m21 * ((m12 * m33) - (m32 * m13)))) + (m31 * ((m12 * m23) - (m22 * m13))))));
   return invertable;
 }
 
-inline bool is_affine_matrix4(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
+inline bool is_affine_matrix4(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
   return ((((source_2.element(3.0) == 0.0) && (source_2.element(7.0) == 0.0)) && (source_2.element(11.0) == 0.0)) && (source_2.element(15.0) == 1.0));
 }
 
-inline void matrix4_transform_point(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline void matrix4_transform_point(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
   const double x = flight::row_get<flight::RowKey<"x">>(point);
   const double y = flight::row_get<flight::RowKey<"y">>(point);
   const double z = flight::row_get<flight::RowKey<"z">>(point);
-  out->x = ((((x * source_2.element(0.0)) + (y * source_2.element(4.0))) + (z * source_2.element(8.0))) + source_2.element(12.0));
-  out->y = ((((x * source_2.element(1.0)) + (y * source_2.element(5.0))) + (z * source_2.element(9.0))) + source_2.element(13.0));
-  out->z = ((((x * source_2.element(2.0)) + (y * source_2.element(6.0))) + (z * source_2.element(10.0))) + source_2.element(14.0));
+  (out->x = ((((x * source_2.element(0.0)) + (y * source_2.element(4.0))) + (z * source_2.element(8.0))) + source_2.element(12.0)));
+  (out->y = ((((x * source_2.element(1.0)) + (y * source_2.element(5.0))) + (z * source_2.element(9.0))) + source_2.element(13.0)));
+  (out->z = ((((x * source_2.element(2.0)) + (y * source_2.element(6.0))) + (z * source_2.element(10.0))) + source_2.element(14.0)));
 }
 
-inline void matrix4_transform_vector(flight::Ref<flight::types::Vector4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>> vector) {
+inline void matrix4_transform_vector(flight::types::Vector4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> vector) {
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
   const double x = flight::row_get<flight::RowKey<"x">>(vector);
   const double y = flight::row_get<flight::RowKey<"y">>(vector);
   const double z = flight::row_get<flight::RowKey<"z">>(vector);
   const double w = flight::row_get<flight::RowKey<"w">>(vector);
-  out->x = ((((x * source_2.element(0.0)) + (y * source_2.element(4.0))) + (z * source_2.element(8.0))) + (w * source_2.element(12.0)));
-  out->y = ((((x * source_2.element(1.0)) + (y * source_2.element(5.0))) + (z * source_2.element(9.0))) + (w * source_2.element(13.0)));
-  out->z = ((((x * source_2.element(2.0)) + (y * source_2.element(6.0))) + (z * source_2.element(10.0))) + (w * source_2.element(14.0)));
-  out->w = ((((x * source_2.element(3.0)) + (y * source_2.element(7.0))) + (z * source_2.element(11.0))) + (w * source_2.element(15.0)));
+  (out->x = ((((x * source_2.element(0.0)) + (y * source_2.element(4.0))) + (z * source_2.element(8.0))) + (w * source_2.element(12.0))));
+  (out->y = ((((x * source_2.element(1.0)) + (y * source_2.element(5.0))) + (z * source_2.element(9.0))) + (w * source_2.element(13.0))));
+  (out->z = ((((x * source_2.element(2.0)) + (y * source_2.element(6.0))) + (z * source_2.element(10.0))) + (w * source_2.element(14.0))));
+  (out->w = ((((x * source_2.element(3.0)) + (y * source_2.element(7.0))) + (z * source_2.element(11.0))) + (w * source_2.element(15.0))));
 }
 
-inline void matrix4_transform_vectors(flight::Float32Array out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, flight::Float32Array vectors) {
+inline void matrix4_transform_vectors(flight::Float32Array out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, flight::Float32Array vectors) {
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
   double i = 0.0;
   double x;
   double y;
   double z;
   while (((i + 3.0) <= vectors.length)) {
-    x = vectors.element(i);
-    y = vectors.element((i + 1.0));
-    z = vectors.element((i + 2.0));
-    out.element(i) = ((((x * source_2.element(0.0)) + (y * source_2.element(4.0))) + (z * source_2.element(8.0))) + source_2.element(12.0));
-    out.element((i + 1.0)) = ((((x * source_2.element(1.0)) + (y * source_2.element(5.0))) + (z * source_2.element(9.0))) + source_2.element(13.0));
-    out.element((i + 2.0)) = ((((x * source_2.element(2.0)) + (y * source_2.element(6.0))) + (z * source_2.element(10.0))) + source_2.element(14.0));
-    i += 3.0;
+    (x = vectors.element(i));
+    (y = vectors.element((i + 1.0)));
+    (z = vectors.element((i + 2.0)));
+    (out.element(i) = ((((x * source_2.element(0.0)) + (y * source_2.element(4.0))) + (z * source_2.element(8.0))) + source_2.element(12.0)));
+    (out.element((i + 1.0)) = ((((x * source_2.element(1.0)) + (y * source_2.element(5.0))) + (z * source_2.element(9.0))) + source_2.element(13.0)));
+    (out.element((i + 2.0)) = ((((x * source_2.element(2.0)) + (y * source_2.element(6.0))) + (z * source_2.element(10.0))) + source_2.element(14.0)));
+    (i += 3.0);
   }
 }
 
-inline void multiply_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> b) {
+inline void multiply_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> b) {
   flight::Float32Array a_2 = flight::row_get<flight::RowKey<"m">>(a);
   flight::Float32Array b_2 = flight::row_get<flight::RowKey<"m">>(b);
   flight::Float32Array out_2 = out->m;
@@ -472,131 +483,131 @@ inline void multiply_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight
   const double m224 = b_2.element(7.0);
   const double m234 = b_2.element(11.0);
   const double m244 = b_2.element(15.0);
-  out_2.element(0.0) = ((((m211 * m111) + (m212 * m121)) + (m213 * m131)) + (m214 * m141));
-  out_2.element(1.0) = ((((m211 * m112) + (m212 * m122)) + (m213 * m132)) + (m214 * m142));
-  out_2.element(2.0) = ((((m211 * m113) + (m212 * m123)) + (m213 * m133)) + (m214 * m143));
-  out_2.element(3.0) = ((((m211 * m114) + (m212 * m124)) + (m213 * m134)) + (m214 * m144));
-  out_2.element(4.0) = ((((m221 * m111) + (m222 * m121)) + (m223 * m131)) + (m224 * m141));
-  out_2.element(5.0) = ((((m221 * m112) + (m222 * m122)) + (m223 * m132)) + (m224 * m142));
-  out_2.element(6.0) = ((((m221 * m113) + (m222 * m123)) + (m223 * m133)) + (m224 * m143));
-  out_2.element(7.0) = ((((m221 * m114) + (m222 * m124)) + (m223 * m134)) + (m224 * m144));
-  out_2.element(8.0) = ((((m231 * m111) + (m232 * m121)) + (m233 * m131)) + (m234 * m141));
-  out_2.element(9.0) = ((((m231 * m112) + (m232 * m122)) + (m233 * m132)) + (m234 * m142));
-  out_2.element(10.0) = ((((m231 * m113) + (m232 * m123)) + (m233 * m133)) + (m234 * m143));
-  out_2.element(11.0) = ((((m231 * m114) + (m232 * m124)) + (m233 * m134)) + (m234 * m144));
-  out_2.element(12.0) = ((((m241 * m111) + (m242 * m121)) + (m243 * m131)) + (m244 * m141));
-  out_2.element(13.0) = ((((m241 * m112) + (m242 * m122)) + (m243 * m132)) + (m244 * m142));
-  out_2.element(14.0) = ((((m241 * m113) + (m242 * m123)) + (m243 * m133)) + (m244 * m143));
-  out_2.element(15.0) = ((((m241 * m114) + (m242 * m124)) + (m243 * m134)) + (m244 * m144));
+  (out_2.element(0.0) = ((((m211 * m111) + (m212 * m121)) + (m213 * m131)) + (m214 * m141)));
+  (out_2.element(1.0) = ((((m211 * m112) + (m212 * m122)) + (m213 * m132)) + (m214 * m142)));
+  (out_2.element(2.0) = ((((m211 * m113) + (m212 * m123)) + (m213 * m133)) + (m214 * m143)));
+  (out_2.element(3.0) = ((((m211 * m114) + (m212 * m124)) + (m213 * m134)) + (m214 * m144)));
+  (out_2.element(4.0) = ((((m221 * m111) + (m222 * m121)) + (m223 * m131)) + (m224 * m141)));
+  (out_2.element(5.0) = ((((m221 * m112) + (m222 * m122)) + (m223 * m132)) + (m224 * m142)));
+  (out_2.element(6.0) = ((((m221 * m113) + (m222 * m123)) + (m223 * m133)) + (m224 * m143)));
+  (out_2.element(7.0) = ((((m221 * m114) + (m222 * m124)) + (m223 * m134)) + (m224 * m144)));
+  (out_2.element(8.0) = ((((m231 * m111) + (m232 * m121)) + (m233 * m131)) + (m234 * m141)));
+  (out_2.element(9.0) = ((((m231 * m112) + (m232 * m122)) + (m233 * m132)) + (m234 * m142)));
+  (out_2.element(10.0) = ((((m231 * m113) + (m232 * m123)) + (m233 * m133)) + (m234 * m143)));
+  (out_2.element(11.0) = ((((m231 * m114) + (m232 * m124)) + (m233 * m134)) + (m234 * m144)));
+  (out_2.element(12.0) = ((((m241 * m111) + (m242 * m121)) + (m243 * m131)) + (m244 * m141)));
+  (out_2.element(13.0) = ((((m241 * m112) + (m242 * m122)) + (m243 * m132)) + (m244 * m142)));
+  (out_2.element(14.0) = ((((m241 * m113) + (m242 * m123)) + (m243 * m133)) + (m244 * m143)));
+  (out_2.element(15.0) = ((((m241 * m114) + (m242 * m124)) + (m243 * m134)) + (m244 * m144)));
 }
 
-inline void append_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> other) {
+inline void append_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> other) {
   multiply_matrix4(out, other, source);
 }
 
-inline void prepend_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> other) {
+inline void prepend_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> other) {
   multiply_matrix4(out, source, other);
 }
 
-inline void scale_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double sx, double sy, double sz) {
+inline void scale_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, double sx, double sy, double sz) {
   flight::Float32Array a = flight::row_get<flight::RowKey<"m">>(source);
   flight::Float32Array o = out->m;
-  o.element(0.0) = (a.element(0.0) * sx);
-  o.element(1.0) = (a.element(1.0) * sx);
-  o.element(2.0) = (a.element(2.0) * sx);
-  o.element(3.0) = (a.element(3.0) * sx);
-  o.element(4.0) = (a.element(4.0) * sy);
-  o.element(5.0) = (a.element(5.0) * sy);
-  o.element(6.0) = (a.element(6.0) * sy);
-  o.element(7.0) = (a.element(7.0) * sy);
-  o.element(8.0) = (a.element(8.0) * sz);
-  o.element(9.0) = (a.element(9.0) * sz);
-  o.element(10.0) = (a.element(10.0) * sz);
-  o.element(11.0) = (a.element(11.0) * sz);
-  o.element(12.0) = a.element(12.0);
-  o.element(13.0) = a.element(13.0);
-  o.element(14.0) = a.element(14.0);
-  o.element(15.0) = a.element(15.0);
+  (o.element(0.0) = (a.element(0.0) * sx));
+  (o.element(1.0) = (a.element(1.0) * sx));
+  (o.element(2.0) = (a.element(2.0) * sx));
+  (o.element(3.0) = (a.element(3.0) * sx));
+  (o.element(4.0) = (a.element(4.0) * sy));
+  (o.element(5.0) = (a.element(5.0) * sy));
+  (o.element(6.0) = (a.element(6.0) * sy));
+  (o.element(7.0) = (a.element(7.0) * sy));
+  (o.element(8.0) = (a.element(8.0) * sz));
+  (o.element(9.0) = (a.element(9.0) * sz));
+  (o.element(10.0) = (a.element(10.0) * sz));
+  (o.element(11.0) = (a.element(11.0) * sz));
+  (o.element(12.0) = a.element(12.0));
+  (o.element(13.0) = a.element(13.0));
+  (o.element(14.0) = a.element(14.0));
+  (o.element(15.0) = a.element(15.0));
 }
 
-inline void set_matrix4(flight::Ref<flight::types::Matrix4Like> out, double m00, double m01, double m02, double m03, double m10, double m11, double m12, double m13, double m20, double m21, double m22, double m23, double m30, double m31, double m32, double m33) {
+inline void set_matrix4(flight::types::Matrix4Like out, double m00, double m01, double m02, double m03, double m10, double m11, double m12, double m13, double m20, double m21, double m22, double m23, double m30, double m31, double m32, double m33) {
   flight::Float32Array out_2 = out->m;
-  out_2.element(0.0) = m00;
-  out_2.element(1.0) = m01;
-  out_2.element(2.0) = m02;
-  out_2.element(3.0) = m03;
-  out_2.element(4.0) = m10;
-  out_2.element(5.0) = m11;
-  out_2.element(6.0) = m12;
-  out_2.element(7.0) = m13;
-  out_2.element(8.0) = m20;
-  out_2.element(9.0) = m21;
-  out_2.element(10.0) = m22;
-  out_2.element(11.0) = m23;
-  out_2.element(12.0) = m30;
-  out_2.element(13.0) = m31;
-  out_2.element(14.0) = m32;
-  out_2.element(15.0) = m33;
+  (out_2.element(0.0) = m00);
+  (out_2.element(1.0) = m01);
+  (out_2.element(2.0) = m02);
+  (out_2.element(3.0) = m03);
+  (out_2.element(4.0) = m10);
+  (out_2.element(5.0) = m11);
+  (out_2.element(6.0) = m12);
+  (out_2.element(7.0) = m13);
+  (out_2.element(8.0) = m20);
+  (out_2.element(9.0) = m21);
+  (out_2.element(10.0) = m22);
+  (out_2.element(11.0) = m23);
+  (out_2.element(12.0) = m30);
+  (out_2.element(13.0) = m31);
+  (out_2.element(14.0) = m32);
+  (out_2.element(15.0) = m33);
 }
 
-inline void append_scale_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double x_scale, double y_scale, double z_scale) {
+inline void append_scale_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, double x_scale, double y_scale, double z_scale) {
   flight::Ref<flight::types::Matrix4> m = flight::geometry::acquire_matrix4();
   set_matrix4(m, x_scale, 0.0, 0.0, 0.0, 0.0, y_scale, 0.0, 0.0, 0.0, 0.0, z_scale, 0.0, 0.0, 0.0, 0.0, 1.0);
   append_matrix4(out, source, m);
   flight::geometry::release_matrix4(m);
 }
 
-inline void prepend_scale_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double x_scale, double y_scale, double z_scale) {
+inline void prepend_scale_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, double x_scale, double y_scale, double z_scale) {
   flight::Ref<flight::types::Matrix4> m = flight::geometry::acquire_matrix4();
   set_matrix4(m, x_scale, 0.0, 0.0, 0.0, 0.0, y_scale, 0.0, 0.0, 0.0, 0.0, z_scale, 0.0, 0.0, 0.0, 0.0, 1.0);
   prepend_matrix4(out, source, m);
   flight::geometry::release_matrix4(m);
 }
 
-inline void set_matrix4_element(flight::Ref<flight::types::Matrix4Like> out, double row, double column, double value) {
-  out->m.element(((column * 4.0) + row)) = value;
+inline void set_matrix4_element(flight::types::Matrix4Like out, double row, double column, double value) {
+  (out->m.element(((column * 4.0) + row)) = value);
 }
 
-inline void set_matrix4_from2_d(flight::Ref<flight::types::Matrix4Like> out, double a, double b, double c, double d, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
+inline void set_matrix4_from2_d(flight::types::Matrix4Like out, double a, double b, double c, double d, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
   flight::Float32Array out_2 = out->m;
-  tx = tx.value_or(0.0);
-  ty = ty.value_or(0.0);
-  out_2.element(0.0) = a;
-  out_2.element(1.0) = b;
-  out_2.element(2.0) = 0.0;
-  out_2.element(3.0) = 0.0;
-  out_2.element(4.0) = c;
-  out_2.element(5.0) = d;
-  out_2.element(6.0) = 0.0;
-  out_2.element(7.0) = 0.0;
-  out_2.element(8.0) = 0.0;
-  out_2.element(9.0) = 0.0;
-  out_2.element(10.0) = 1.0;
-  out_2.element(11.0) = 0.0;
-  out_2.element(12.0) = tx.value();
-  out_2.element(13.0) = ty.value();
-  out_2.element(14.0) = 0.0;
-  out_2.element(15.0) = 1.0;
+  (tx = tx.value_or(0.0));
+  (ty = ty.value_or(0.0));
+  (out_2.element(0.0) = a);
+  (out_2.element(1.0) = b);
+  (out_2.element(2.0) = 0.0);
+  (out_2.element(3.0) = 0.0);
+  (out_2.element(4.0) = c);
+  (out_2.element(5.0) = d);
+  (out_2.element(6.0) = 0.0);
+  (out_2.element(7.0) = 0.0);
+  (out_2.element(8.0) = 0.0);
+  (out_2.element(9.0) = 0.0);
+  (out_2.element(10.0) = 1.0);
+  (out_2.element(11.0) = 0.0);
+  (out_2.element(12.0) = tx.value());
+  (out_2.element(13.0) = ty.value());
+  (out_2.element(14.0) = 0.0);
+  (out_2.element(15.0) = 1.0);
 }
 
-inline void set_matrix4_from_float32_array(flight::Ref<flight::types::Matrix4Like> out, double offset, flight::Float32Array source) {
+inline void set_matrix4_from_float32_array(flight::types::Matrix4Like out, double offset, flight::Float32Array source) {
   out->m.set(source.subarray(offset, (offset + 16.0)));
 }
 
-inline void set_matrix4_from_matrix(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source) {
+inline void set_matrix4_from_matrix(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
   set_matrix4_from2_d(out, flight::row_get<flight::RowKey<"a">>(source), flight::row_get<flight::RowKey<"b">>(source), flight::row_get<flight::RowKey<"c">>(source), flight::row_get<flight::RowKey<"d">>(source), flight::row_get<flight::RowKey<"tx">>(source), flight::row_get<flight::RowKey<"ty">>(source));
 }
 
-inline void set_matrix4_from_matrix3(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3Like>>>> source) {
+inline void set_matrix4_from_matrix3(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix3Like>>> source) {
   flight::Float32Array out_2 = out->m;
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
   set_matrix4_from2_d(out, source_2.element(0.0), source_2.element(3.0), source_2.element(1.0), source_2.element(4.0), source_2.element(6.0), source_2.element(7.0));
-  out_2.element(2.0) = source_2.element(2.0);
-  out_2.element(6.0) = source_2.element(5.0);
-  out_2.element(10.0) = source_2.element(8.0);
+  (out_2.element(2.0) = source_2.element(2.0));
+  (out_2.element(6.0) = source_2.element(5.0));
+  (out_2.element(10.0) = source_2.element(8.0));
 }
 
-inline void set_matrix4_from_quaternion(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionLike>>>> source) {
+inline void set_matrix4_from_quaternion(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>> source) {
   const double x = flight::row_get<flight::RowKey<"x">>(source);
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
@@ -614,29 +625,29 @@ inline void set_matrix4_from_quaternion(flight::Ref<flight::types::Matrix4Like> 
   const double wy = (w * y2);
   const double wz = (w * z2);
   flight::Float32Array out_2 = out->m;
-  out_2.element(0.0) = (1.0 - (yy + zz));
-  out_2.element(1.0) = (xy + wz);
-  out_2.element(2.0) = (xz - wy);
-  out_2.element(3.0) = 0.0;
-  out_2.element(4.0) = (xy - wz);
-  out_2.element(5.0) = (1.0 - (xx + zz));
-  out_2.element(6.0) = (yz + wx);
-  out_2.element(7.0) = 0.0;
-  out_2.element(8.0) = (xz + wy);
-  out_2.element(9.0) = (yz - wx);
-  out_2.element(10.0) = (1.0 - (xx + yy));
-  out_2.element(11.0) = 0.0;
-  out_2.element(12.0) = 0.0;
-  out_2.element(13.0) = 0.0;
-  out_2.element(14.0) = 0.0;
-  out_2.element(15.0) = 1.0;
+  (out_2.element(0.0) = (1.0 - (yy + zz)));
+  (out_2.element(1.0) = (xy + wz));
+  (out_2.element(2.0) = (xz - wy));
+  (out_2.element(3.0) = 0.0);
+  (out_2.element(4.0) = (xy - wz));
+  (out_2.element(5.0) = (1.0 - (xx + zz)));
+  (out_2.element(6.0) = (yz + wx));
+  (out_2.element(7.0) = 0.0);
+  (out_2.element(8.0) = (xz + wy));
+  (out_2.element(9.0) = (yz - wx));
+  (out_2.element(10.0) = (1.0 - (xx + yy)));
+  (out_2.element(11.0) = 0.0);
+  (out_2.element(12.0) = 0.0);
+  (out_2.element(13.0) = 0.0);
+  (out_2.element(14.0) = 0.0);
+  (out_2.element(15.0) = 1.0);
 }
 
-inline void set_matrix4_identity(flight::Ref<flight::types::Matrix4Like> out) {
+inline void set_matrix4_identity(flight::types::Matrix4Like out) {
   set_matrix4(out, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
 }
 
-inline void set_matrix4_look_at(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> eye, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> up) {
+inline void set_matrix4_look_at(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> eye, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> up) {
   const double eye_x = flight::row_get<flight::RowKey<"x">>(eye);
   const double eye_y = flight::row_get<flight::RowKey<"y">>(eye);
   const double eye_z = flight::row_get<flight::RowKey<"z">>(eye);
@@ -645,85 +656,85 @@ inline void set_matrix4_look_at(flight::Ref<flight::types::Matrix4Like> out, fli
   double zz = (eye_z - flight::row_get<flight::RowKey<"z">>(target));
   auto zl = std::sqrt((((zx * zx) + (zy * zy)) + (zz * zz)));
   if ((zl == 0.0)) {
-    zz = 1.0;
-    zl = 1.0;
+    (zz = 1.0);
+    (zl = 1.0);
   }
-  zx /= zl;
-  zy /= zl;
-  zz /= zl;
+  (zx /= zl);
+  (zy /= zl);
+  (zz /= zl);
   double xx = ((flight::row_get<flight::RowKey<"y">>(up) * zz) - (flight::row_get<flight::RowKey<"z">>(up) * zy));
   double xy = ((flight::row_get<flight::RowKey<"z">>(up) * zx) - (flight::row_get<flight::RowKey<"x">>(up) * zz));
   double xz = ((flight::row_get<flight::RowKey<"x">>(up) * zy) - (flight::row_get<flight::RowKey<"y">>(up) * zx));
   auto xl = std::sqrt((((xx * xx) + (xy * xy)) + (xz * xz)));
   if ((xl == 0.0)) {
     if ((std::abs(zz) < 0.9)) {
-      xx = -zy;
-      xy = zx;
-      xz = 0.0;
+      (xx = -zy);
+      (xy = zx);
+      (xz = 0.0);
     }
     else {
-      xx = 0.0;
-      xy = -zz;
-      xz = zy;
+      (xx = 0.0);
+      (xy = -zz);
+      (xz = zy);
     }
-    xl = std::sqrt((((xx * xx) + (xy * xy)) + (xz * xz)));
+    (xl = std::sqrt((((xx * xx) + (xy * xy)) + (xz * xz))));
   }
-  xx /= xl;
-  xy /= xl;
-  xz /= xl;
+  (xx /= xl);
+  (xy /= xl);
+  (xz /= xl);
   const double yx = ((zy * xz) - (zz * xy));
   const double yy = ((zz * xx) - (zx * xz));
   const double yz = ((zx * xy) - (zy * xx));
   flight::Float32Array out_2 = out->m;
-  out_2.element(0.0) = xx;
-  out_2.element(1.0) = yx;
-  out_2.element(2.0) = zx;
-  out_2.element(3.0) = 0.0;
-  out_2.element(4.0) = xy;
-  out_2.element(5.0) = yy;
-  out_2.element(6.0) = zy;
-  out_2.element(7.0) = 0.0;
-  out_2.element(8.0) = xz;
-  out_2.element(9.0) = yz;
-  out_2.element(10.0) = zz;
-  out_2.element(11.0) = 0.0;
-  out_2.element(12.0) = -(((xx * eye_x) + (xy * eye_y)) + (xz * eye_z));
-  out_2.element(13.0) = -(((yx * eye_x) + (yy * eye_y)) + (yz * eye_z));
-  out_2.element(14.0) = -(((zx * eye_x) + (zy * eye_y)) + (zz * eye_z));
-  out_2.element(15.0) = 1.0;
+  (out_2.element(0.0) = xx);
+  (out_2.element(1.0) = yx);
+  (out_2.element(2.0) = zx);
+  (out_2.element(3.0) = 0.0);
+  (out_2.element(4.0) = xy);
+  (out_2.element(5.0) = yy);
+  (out_2.element(6.0) = zy);
+  (out_2.element(7.0) = 0.0);
+  (out_2.element(8.0) = xz);
+  (out_2.element(9.0) = yz);
+  (out_2.element(10.0) = zz);
+  (out_2.element(11.0) = 0.0);
+  (out_2.element(12.0) = -(((xx * eye_x) + (xy * eye_y)) + (xz * eye_z)));
+  (out_2.element(13.0) = -(((yx * eye_x) + (yy * eye_y)) + (yz * eye_z)));
+  (out_2.element(14.0) = -(((zx * eye_x) + (zy * eye_y)) + (zz * eye_z)));
+  (out_2.element(15.0) = 1.0);
 }
 
-inline void set_matrix4_position(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> source) {
+inline void set_matrix4_position(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source) {
   flight::Float32Array out_2 = out->m;
-  out_2.element(12.0) = flight::row_get<flight::RowKey<"x">>(source);
-  out_2.element(13.0) = flight::row_get<flight::RowKey<"y">>(source);
-  out_2.element(14.0) = flight::row_get<flight::RowKey<"z">>(source);
+  (out_2.element(12.0) = flight::row_get<flight::RowKey<"x">>(source));
+  (out_2.element(13.0) = flight::row_get<flight::RowKey<"y">>(source));
+  (out_2.element(14.0) = flight::row_get<flight::RowKey<"z">>(source));
 }
 
-inline void set_orthographic_matrix4(flight::Ref<flight::types::Matrix4Like> out, double left, double right, double bottom, double top, double z_near, double z_far) {
+inline void set_orthographic_matrix4(flight::types::Matrix4Like out, double left, double right, double bottom, double top, double z_near, double z_far) {
   flight::Float32Array out_2 = out->m;
   const double sx = (1.0 / (right - left));
   const double sy = (1.0 / (top - bottom));
   const double sz = (1.0 / (z_far - z_near));
-  out_2.element(0.0) = (2.0 * sx);
-  out_2.element(1.0) = 0.0;
-  out_2.element(2.0) = 0.0;
-  out_2.element(3.0) = 0.0;
-  out_2.element(4.0) = 0.0;
-  out_2.element(5.0) = (2.0 * sy);
-  out_2.element(6.0) = 0.0;
-  out_2.element(7.0) = 0.0;
-  out_2.element(8.0) = 0.0;
-  out_2.element(9.0) = 0.0;
-  out_2.element(10.0) = (-2.0 * sz);
-  out_2.element(11.0) = 0.0;
-  out_2.element(12.0) = (-(left + right) * sx);
-  out_2.element(13.0) = (-(bottom + top) * sy);
-  out_2.element(14.0) = (-(z_near + z_far) * sz);
-  out_2.element(15.0) = 1.0;
+  (out_2.element(0.0) = (2.0 * sx));
+  (out_2.element(1.0) = 0.0);
+  (out_2.element(2.0) = 0.0);
+  (out_2.element(3.0) = 0.0);
+  (out_2.element(4.0) = 0.0);
+  (out_2.element(5.0) = (2.0 * sy));
+  (out_2.element(6.0) = 0.0);
+  (out_2.element(7.0) = 0.0);
+  (out_2.element(8.0) = 0.0);
+  (out_2.element(9.0) = 0.0);
+  (out_2.element(10.0) = (-2.0 * sz));
+  (out_2.element(11.0) = 0.0);
+  (out_2.element(12.0) = (-(left + right) * sx));
+  (out_2.element(13.0) = (-(bottom + top) * sy));
+  (out_2.element(14.0) = (-(z_near + z_far) * sz));
+  (out_2.element(15.0) = 1.0);
 }
 
-inline void set_perspective_matrix4(flight::Ref<flight::types::Matrix4Like> out, double tan_half_fov_y, double aspect, double z_near, double z_far) {
+inline void set_perspective_matrix4(flight::types::Matrix4Like out, double tan_half_fov_y, double aspect, double z_near, double z_far) {
   if (((aspect > -1e-7) && (aspect < 1e-7))) {
     throw flight::Error(flight::String("Aspect ratio may not be 0"));
   }
@@ -732,47 +743,47 @@ inline void set_perspective_matrix4(flight::Ref<flight::types::Matrix4Like> out,
   const double bottom = -top;
   const double right = (top * aspect);
   const double left = -right;
-  out_2.element(0.0) = ((2.0 * z_near) / (right - left));
-  out_2.element(1.0) = 0.0;
-  out_2.element(2.0) = 0.0;
-  out_2.element(3.0) = 0.0;
-  out_2.element(4.0) = 0.0;
-  out_2.element(5.0) = ((2.0 * z_near) / (top - bottom));
-  out_2.element(6.0) = 0.0;
-  out_2.element(7.0) = 0.0;
-  out_2.element(8.0) = ((right + left) / (right - left));
-  out_2.element(9.0) = ((top + bottom) / (top - bottom));
-  out_2.element(10.0) = ((z_far == std::numeric_limits<double>::infinity()) ? -1.0 : (-(z_far + z_near) / (z_far - z_near)));
-  out_2.element(11.0) = -1.0;
-  out_2.element(12.0) = 0.0;
-  out_2.element(13.0) = 0.0;
-  out_2.element(14.0) = ((z_far == std::numeric_limits<double>::infinity()) ? (-2.0 * z_near) : (((-2.0 * z_far) * z_near) / (z_far - z_near)));
-  out_2.element(15.0) = 0.0;
+  (out_2.element(0.0) = ((2.0 * z_near) / (right - left)));
+  (out_2.element(1.0) = 0.0);
+  (out_2.element(2.0) = 0.0);
+  (out_2.element(3.0) = 0.0);
+  (out_2.element(4.0) = 0.0);
+  (out_2.element(5.0) = ((2.0 * z_near) / (top - bottom)));
+  (out_2.element(6.0) = 0.0);
+  (out_2.element(7.0) = 0.0);
+  (out_2.element(8.0) = ((right + left) / (right - left)));
+  (out_2.element(9.0) = ((top + bottom) / (top - bottom)));
+  (out_2.element(10.0) = ((z_far == std::numeric_limits<double>::infinity()) ? -1.0 : (-(z_far + z_near) / (z_far - z_near))));
+  (out_2.element(11.0) = -1.0);
+  (out_2.element(12.0) = 0.0);
+  (out_2.element(13.0) = 0.0);
+  (out_2.element(14.0) = ((z_far == std::numeric_limits<double>::infinity()) ? (-2.0 * z_near) : (((-2.0 * z_far) * z_near) / (z_far - z_near))));
+  (out_2.element(15.0) = 0.0);
 }
 
-inline void translate_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double tx, double ty, double tz) {
+inline void translate_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, double tx, double ty, double tz) {
   flight::Float32Array a = flight::row_get<flight::RowKey<"m">>(source);
   flight::Float32Array o = out->m;
-  if ((flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>(out) != source)) {
+  if ((flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>(out) != source)) {
     out->m.set(flight::row_get<flight::RowKey<"m">>(source));
   }
-  o.element(12.0) = ((((a.element(0.0) * tx) + (a.element(4.0) * ty)) + (a.element(8.0) * tz)) + a.element(12.0));
-  o.element(13.0) = ((((a.element(1.0) * tx) + (a.element(5.0) * ty)) + (a.element(9.0) * tz)) + a.element(13.0));
-  o.element(14.0) = ((((a.element(2.0) * tx) + (a.element(6.0) * ty)) + (a.element(10.0) * tz)) + a.element(14.0));
+  (o.element(12.0) = ((((a.element(0.0) * tx) + (a.element(4.0) * ty)) + (a.element(8.0) * tz)) + a.element(12.0)));
+  (o.element(13.0) = ((((a.element(1.0) * tx) + (a.element(5.0) * ty)) + (a.element(9.0) * tz)) + a.element(13.0)));
+  (o.element(14.0) = ((((a.element(2.0) * tx) + (a.element(6.0) * ty)) + (a.element(10.0) * tz)) + a.element(14.0)));
 }
 
-inline void prepend_translation_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double x, double y, double z) {
+inline void prepend_translation_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, double x, double y, double z) {
   flight::Ref<flight::types::Matrix4> m = flight::geometry::acquire_identity_matrix4();
   translate_matrix4(m, m, x, y, z);
   prepend_matrix4(out, source, m);
   flight::geometry::release_matrix4(m);
 }
 
-inline void write_matrix4_to_float32_array(flight::Float32Array out, double offset, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
+inline void write_matrix4_to_float32_array(flight::Float32Array out, double offset, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
   out.set(flight::row_get<flight::RowKey<"m">>(source), offset);
 }
 
-inline void get_axis_rotation(flight::Ref<flight::types::Matrix4Like> out, double x, double y, double z, double radians) {
+inline void get_axis_rotation(flight::types::Matrix4Like out, double x, double y, double z, double radians) {
   flight::Float32Array out_2 = out->m;
   double ax = x;
   double ay = y;
@@ -781,28 +792,28 @@ inline void get_axis_rotation(flight::Ref<flight::types::Matrix4Like> out, doubl
   auto c = std::cos(rad);
   auto s = std::sin(rad);
   const double t = (1.0 - c);
-  out_2.element(0.0) = (c + ((ax * ax) * t));
-  out_2.element(5.0) = (c + ((ay * ay) * t));
-  out_2.element(10.0) = (c + ((az * az) * t));
+  (out_2.element(0.0) = (c + ((ax * ax) * t)));
+  (out_2.element(5.0) = (c + ((ay * ay) * t)));
+  (out_2.element(10.0) = (c + ((az * az) * t)));
   double tmp1 = ((ax * ay) * t);
   double tmp2 = (az * s);
-  out_2.element(4.0) = (tmp1 + tmp2);
-  out_2.element(1.0) = (tmp1 - tmp2);
-  tmp1 = ((ax * az) * t);
-  tmp2 = (ay * s);
-  out_2.element(8.0) = (tmp1 - tmp2);
-  out_2.element(2.0) = (tmp1 + tmp2);
-  tmp1 = ((ay * az) * t);
-  tmp2 = (ax * s);
-  out_2.element(9.0) = (tmp1 + tmp2);
-  out_2.element(6.0) = (tmp1 - tmp2);
+  (out_2.element(4.0) = (tmp1 + tmp2));
+  (out_2.element(1.0) = (tmp1 - tmp2));
+  (tmp1 = ((ax * az) * t));
+  (tmp2 = (ay * s));
+  (out_2.element(8.0) = (tmp1 - tmp2));
+  (out_2.element(2.0) = (tmp1 + tmp2));
+  (tmp1 = ((ay * az) * t));
+  (tmp2 = (ax * s));
+  (out_2.element(9.0) = (tmp1 + tmp2));
+  (out_2.element(6.0) = (tmp1 - tmp2));
 }
 
-inline void append_rotation_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double radians, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>> axis, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>> pivot_point = std::nullopt) {
+inline void append_rotation_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, double radians, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> axis, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>>> pivot_point = std::nullopt) {
   flight::Ref<flight::types::Matrix4> m = flight::geometry::acquire_identity_matrix4();
   get_axis_rotation(m, flight::row_get<flight::RowKey<"x">>(axis), flight::row_get<flight::RowKey<"y">>(axis), flight::row_get<flight::RowKey<"z">>(axis), radians);
   if (pivot_point.has_value()) {
-    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>> p = pivot_point.value();
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> p = pivot_point.value();
     flight::Ref<flight::types::Matrix4> t1 = flight::geometry::acquire_identity_matrix4();
     flight::Ref<flight::types::Matrix4> t2 = flight::geometry::acquire_identity_matrix4();
     append_translation_matrix4(t1, t1, -flight::row_get<flight::RowKey<"x">>(p), -flight::row_get<flight::RowKey<"y">>(p), -flight::row_get<flight::RowKey<"z">>(p));
@@ -816,11 +827,11 @@ inline void append_rotation_matrix4(flight::Ref<flight::types::Matrix4Like> out,
   flight::geometry::release_matrix4(m);
 }
 
-inline void prepend_rotation_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double radians, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>> axis, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>>> pivot_point = std::nullopt) {
+inline void prepend_rotation_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, double radians, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> axis, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>>> pivot_point = std::nullopt) {
   flight::Ref<flight::types::Matrix4> m = flight::geometry::acquire_identity_matrix4();
   get_axis_rotation(m, flight::row_get<flight::RowKey<"x">>(axis), flight::row_get<flight::RowKey<"y">>(axis), flight::row_get<flight::RowKey<"z">>(axis), radians);
   if (pivot_point.has_value()) {
-    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4Like>>>> p = pivot_point.value();
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> p = pivot_point.value();
     flight::Ref<flight::types::Matrix4> t1 = flight::geometry::acquire_identity_matrix4();
     flight::Ref<flight::types::Matrix4> t2 = flight::geometry::acquire_identity_matrix4();
     append_translation_matrix4(t1, t1, -flight::row_get<flight::RowKey<"x">>(p), -flight::row_get<flight::RowKey<"y">>(p), -flight::row_get<flight::RowKey<"z">>(p));
@@ -834,21 +845,21 @@ inline void prepend_rotation_matrix4(flight::Ref<flight::types::Matrix4Like> out
   flight::geometry::release_matrix4(m);
 }
 
-inline void rotate_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> axis, double radians) {
+inline void rotate_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> axis, double radians) {
   flight::Ref<flight::types::Matrix4> m = flight::geometry::acquire_identity_matrix4();
   get_axis_rotation(m, flight::row_get<flight::RowKey<"x">>(axis), flight::row_get<flight::RowKey<"y">>(axis), flight::row_get<flight::RowKey<"z">>(axis), radians);
   multiply_matrix4(out, source, m);
   flight::geometry::release_matrix4(m);
 }
 
-inline void swap(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source, double a, double b) {
+inline void swap(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source, double a, double b) {
   const double temp = flight::row_get<flight::RowKey<"m">>(source).element(a);
-  out->m.element(a) = flight::row_get<flight::RowKey<"m">>(source).element(b);
-  out->m.element(b) = temp;
+  (out->m.element(a) = flight::row_get<flight::RowKey<"m">>(source).element(b));
+  (out->m.element(b) = temp);
 }
 
-inline void transpose_matrix4(flight::Ref<flight::types::Matrix4Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
-  if ((flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>>(out) != source)) {
+inline void transpose_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
+  if ((flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>(out) != source)) {
     out->m.set(flight::row_get<flight::RowKey<"m">>(source));
   }
   swap(out, source, 1.0, 4.0);
@@ -859,83 +870,83 @@ inline void transpose_matrix4(flight::Ref<flight::types::Matrix4Like> out, fligh
   swap(out, source, 11.0, 14.0);
 }
 
-inline flight::Float32Array identity = flight::Float32Array(flight::Array{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0});
+inline flight::Float32Array identity_flight_value_variable__u00005f__u00005f_identity_flight_private_9a2bd1a340e90edf = flight::Float32Array(flight::Array{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0});
 
 inline flight::Ref<flight::types::Matrix4> create_matrix4(std::optional<double> m00 = std::nullopt, std::optional<double> m01 = std::nullopt, std::optional<double> m02 = std::nullopt, std::optional<double> m03 = std::nullopt, std::optional<double> m10 = std::nullopt, std::optional<double> m11 = std::nullopt, std::optional<double> m12 = std::nullopt, std::optional<double> m13 = std::nullopt, std::optional<double> m20 = std::nullopt, std::optional<double> m21 = std::nullopt, std::optional<double> m22 = std::nullopt, std::optional<double> m23 = std::nullopt, std::optional<double> m30 = std::nullopt, std::optional<double> m31 = std::nullopt, std::optional<double> m32 = std::nullopt, std::optional<double> m33 = std::nullopt) {
-  flight::Float32Array m = flight::Float32Array(identity);
+  flight::Float32Array m = flight::Float32Array(identity_flight_value_variable__u00005f__u00005f_identity_flight_private_9a2bd1a340e90edf);
   if (m00.has_value()) {
-    m.element(0.0) = m00.value();
+    (m.element(0.0) = m00.value());
   }
   if (m01.has_value()) {
-    m.element(1.0) = m01.value();
+    (m.element(1.0) = m01.value());
   }
   if (m02.has_value()) {
-    m.element(2.0) = m02.value();
+    (m.element(2.0) = m02.value());
   }
   if (m03.has_value()) {
-    m.element(3.0) = m03.value();
+    (m.element(3.0) = m03.value());
   }
   if (m10.has_value()) {
-    m.element(4.0) = m10.value();
+    (m.element(4.0) = m10.value());
   }
   if (m11.has_value()) {
-    m.element(5.0) = m11.value();
+    (m.element(5.0) = m11.value());
   }
   if (m12.has_value()) {
-    m.element(6.0) = m12.value();
+    (m.element(6.0) = m12.value());
   }
   if (m13.has_value()) {
-    m.element(7.0) = m13.value();
+    (m.element(7.0) = m13.value());
   }
   if (m20.has_value()) {
-    m.element(8.0) = m20.value();
+    (m.element(8.0) = m20.value());
   }
   if (m21.has_value()) {
-    m.element(9.0) = m21.value();
+    (m.element(9.0) = m21.value());
   }
   if (m22.has_value()) {
-    m.element(10.0) = m22.value();
+    (m.element(10.0) = m22.value());
   }
   if (m23.has_value()) {
-    m.element(11.0) = m23.value();
+    (m.element(11.0) = m23.value());
   }
   if (m30.has_value()) {
-    m.element(12.0) = m30.value();
+    (m.element(12.0) = m30.value());
   }
   if (m31.has_value()) {
-    m.element(13.0) = m31.value();
+    (m.element(13.0) = m31.value());
   }
   if (m32.has_value()) {
-    m.element(14.0) = m32.value();
+    (m.element(14.0) = m32.value());
   }
   if (m33.has_value()) {
-    m.element(15.0) = m33.value();
+    (m.element(15.0) = m33.value());
   }
   flight::types::EntityConstruction<flight::Ref<flight::types::Matrix4>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Matrix4>>();
   initialize_matrix4(out, m);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Matrix4>>(out);
 }
 
-inline flight::Ref<flight::types::Matrix4> clone_matrix4(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> source) {
-  flight::Ref<flight::types::Matrix4> m = create_matrix4();
+inline flight::Ref<flight::types::Matrix4> clone_matrix4(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
+  flight::Ref<flight::types::Matrix4> m = create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   copy_matrix4(m, source);
   return m;
 }
 
 inline flight::Ref<flight::types::Matrix4> create_matrix4_from2_d(double a, double b, double c, double d, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
-  flight::Ref<flight::types::Matrix4> out = create_matrix4();
+  flight::Ref<flight::types::Matrix4> out = create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   set_matrix4_from2_d(out, a, b, c, d, tx, ty);
   return out;
 }
 
 inline flight::Ref<flight::types::Matrix4> create_orthographic_matrix4(double left, double right, double bottom, double top, double z_near, double z_far) {
-  flight::Ref<flight::types::Matrix4> out = create_matrix4();
+  flight::Ref<flight::types::Matrix4> out = create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   set_orthographic_matrix4(out, left, right, bottom, top, z_near, z_far);
   return out;
 }
 
 inline flight::Ref<flight::types::Matrix4> create_perspective_matrix4(double tan_half_fov_y, double aspect, double z_near, double z_far) {
-  flight::Ref<flight::types::Matrix4> out = create_matrix4();
+  flight::Ref<flight::types::Matrix4> out = create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   set_perspective_matrix4(out, tan_half_fov_y, aspect, z_near, z_far);
   return out;
 }

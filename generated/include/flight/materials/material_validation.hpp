@@ -10,17 +10,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct StandardPbrMaterialProperties; }
+
 #include <flight/types/standard_pbr_material.hpp>
 #include <flight/types/texture.hpp>
 
 namespace flight::materials {
 
 inline flight::Ref<flight::types::StandardPbrMaterialProperties> clamp_standard_pbr_material_properties(flight::Ref<flight::types::StandardPbrMaterialProperties> out) {
-  out->metallic = flight::minimum(1.0, flight::maximum(0.0, out->metallic));
-  out->roughness = flight::minimum(1.0, flight::maximum(0.0, out->roughness));
-  out->occlusion_strength = flight::minimum(1.0, flight::maximum(0.0, out->occlusion_strength));
-  out->emissive_strength = flight::maximum(0.0, out->emissive_strength);
-  out->normal_scale = flight::maximum(0.0, out->normal_scale);
+  (out->metallic = flight::minimum(1.0, flight::maximum(0.0, out->metallic)));
+  (out->roughness = flight::minimum(1.0, flight::maximum(0.0, out->roughness)));
+  (out->occlusion_strength = flight::minimum(1.0, flight::maximum(0.0, out->occlusion_strength)));
+  (out->emissive_strength = flight::maximum(0.0, out->emissive_strength));
+  (out->normal_scale = flight::maximum(0.0, out->normal_scale));
   return out;
 }
 

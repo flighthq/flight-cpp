@@ -12,6 +12,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BoundingSphere; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Plane; }
+namespace flight::types { struct Ray3D; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/aabb.hpp>
 #include <flight/types/bounding_sphere.hpp>
@@ -24,7 +31,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::geometry {
 
-inline void get_closest_point_between_ray3_ds(flight::Ref<flight::types::Vector3Like> out_a, flight::Ref<flight::types::Vector3Like> out_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3DLike>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3DLike>>>> b) {
+inline void get_closest_point_between_ray3_ds(flight::types::Vector3Like out_a, flight::types::Vector3Like out_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> b) {
   const double aox = flight::row_get<flight::RowKey<"origin">>(a)->x;
   const double aoy = flight::row_get<flight::RowKey<"origin">>(a)->y;
   const double aoz = flight::row_get<flight::RowKey<"origin">>(a)->z;
@@ -49,31 +56,31 @@ inline void get_closest_point_between_ray3_ds(flight::Ref<flight::types::Vector3
   double ta;
   double tb;
   if ((denom != 0.0)) {
-    ta = (((ab * br) - (bb * ar)) / denom);
+    (ta = (((ab * br) - (bb * ar)) / denom));
   }
   else {
-    ta = 0.0;
+    (ta = 0.0);
   }
   if ((ta < 0.0)) {
-    ta = 0.0;
+    (ta = 0.0);
   }
-  tb = ((bb != 0.0) ? (((ab * ta) + br) / bb) : 0.0);
+  (tb = ((bb != 0.0) ? (((ab * ta) + br) / bb) : 0.0));
   if ((tb < 0.0)) {
-    tb = 0.0;
-    ta = ((aa != 0.0) ? (-ar / aa) : 0.0);
+    (tb = 0.0);
+    (ta = ((aa != 0.0) ? (-ar / aa) : 0.0));
     if ((ta < 0.0)) {
-      ta = 0.0;
+      (ta = 0.0);
     }
   }
-  out_a->x = (aox + (adx * ta));
-  out_a->y = (aoy + (ady * ta));
-  out_a->z = (aoz + (adz * ta));
-  out_b->x = (box + (bdx * tb));
-  out_b->y = (boy + (bdy * tb));
-  out_b->z = (boz + (bdz * tb));
+  (out_a->x = (aox + (adx * ta)));
+  (out_a->y = (aoy + (ady * ta)));
+  (out_a->z = (aoz + (adz * ta)));
+  (out_b->x = (box + (bdx * tb)));
+  (out_b->y = (boy + (bdy * tb)));
+  (out_b->z = (boz + (bdz * tb)));
 }
 
-inline void get_closest_point_on_ray3_d(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3DLike>>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline void get_closest_point_on_ray3_d(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   const double ox = flight::row_get<flight::RowKey<"origin">>(ray)->x;
   const double oy = flight::row_get<flight::RowKey<"origin">>(ray)->y;
   const double oz = flight::row_get<flight::RowKey<"origin">>(ray)->z;
@@ -86,23 +93,23 @@ inline void get_closest_point_on_ray3_d(flight::Ref<flight::types::Vector3Like> 
   const double len_sq = (((dx * dx) + (dy * dy)) + (dz * dz));
   double t = ((len_sq != 0.0) ? (((((px - ox) * dx) + ((py - oy) * dy)) + ((pz - oz) * dz)) / len_sq) : 0.0);
   if ((t < 0.0)) {
-    t = 0.0;
+    (t = 0.0);
   }
-  out->x = (ox + (dx * t));
-  out->y = (oy + (dy * t));
-  out->z = (oz + (dz * t));
+  (out->x = (ox + (dx * t)));
+  (out->y = (oy + (dy * t)));
+  (out->z = (oz + (dz * t)));
 }
 
-inline void get_ray3_dpoint_at(flight::Ref<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3DLike>>>> ray, double t) {
+inline void get_ray3_dpoint_at(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, double t) {
   const double ox = flight::row_get<flight::RowKey<"origin">>(ray)->x;
   const double oy = flight::row_get<flight::RowKey<"origin">>(ray)->y;
   const double oz = flight::row_get<flight::RowKey<"origin">>(ray)->z;
   const double dx = flight::row_get<flight::RowKey<"direction">>(ray)->x;
   const double dy = flight::row_get<flight::RowKey<"direction">>(ray)->y;
   const double dz = flight::row_get<flight::RowKey<"direction">>(ray)->z;
-  out->x = (ox + (dx * t));
-  out->y = (oy + (dy * t));
-  out->z = (oz + (dz * t));
+  (out->x = (ox + (dx * t)));
+  (out->y = (oy + (dy * t)));
+  (out->z = (oz + (dz * t)));
 }
 
 inline void initialize_ray3_d(flight::types::EntityConstruction<flight::Ref<flight::types::Ray3D>> out, flight::Ref<flight::types::Vector3> origin, flight::Ref<flight::types::Vector3> direction) {
@@ -115,10 +122,10 @@ inline flight::Ref<flight::types::Ray3D> create_ray3_d(std::optional<double> ori
   flight::Ref<flight::types::Vector3> direction = flight::geometry::create_vector3(direction_x.value_or(0.0), direction_y.value_or(0.0), direction_z.value_or(1.0));
   flight::types::EntityConstruction<flight::Ref<flight::types::Ray3D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Ray3D>>();
   initialize_ray3_d(out, origin, direction);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Ray3D>>(out);
 }
 
-inline double intersect_ray3_daabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3DLike>>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
+inline double intersect_ray3_daabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
   if ((((flight::row_get<flight::RowKey<"min">>(aabb)->x > flight::row_get<flight::RowKey<"max">>(aabb)->x) || (flight::row_get<flight::RowKey<"min">>(aabb)->y > flight::row_get<flight::RowKey<"max">>(aabb)->y)) || (flight::row_get<flight::RowKey<"min">>(aabb)->z > flight::row_get<flight::RowKey<"max">>(aabb)->z))) {
     return -1.0;
   }
@@ -139,11 +146,11 @@ inline double intersect_ray3_daabb(flight::StructuralRef<flight::RowReadonly<fli
     double t2 = ((flight::row_get<flight::RowKey<"max">>(aabb)->x - ox) * inv_dx);
     if ((t1 > t2)) {
       const double tmp = t1;
-      t1 = t2;
-      t2 = tmp;
+      (t1 = t2);
+      (t2 = tmp);
     }
-    t_min = flight::maximum(t_min, t1);
-    t_max = flight::minimum(t_max, t2);
+    (t_min = flight::maximum(t_min, t1));
+    (t_max = flight::minimum(t_max, t2));
     if ((t_min > t_max)) {
       return -1.0;
     }
@@ -159,11 +166,11 @@ inline double intersect_ray3_daabb(flight::StructuralRef<flight::RowReadonly<fli
     double t2_2 = ((flight::row_get<flight::RowKey<"max">>(aabb)->y - oy) * inv_dy);
     if ((t1_2 > t2_2)) {
       const double tmp_2 = t1_2;
-      t1_2 = t2_2;
-      t2_2 = tmp_2;
+      (t1_2 = t2_2);
+      (t2_2 = tmp_2);
     }
-    t_min = flight::maximum(t_min, t1_2);
-    t_max = flight::minimum(t_max, t2_2);
+    (t_min = flight::maximum(t_min, t1_2));
+    (t_max = flight::minimum(t_max, t2_2));
     if ((t_min > t_max)) {
       return -1.0;
     }
@@ -179,11 +186,11 @@ inline double intersect_ray3_daabb(flight::StructuralRef<flight::RowReadonly<fli
     double t2_3 = ((flight::row_get<flight::RowKey<"max">>(aabb)->z - oz) * inv_dz);
     if ((t1_3 > t2_3)) {
       const double tmp_3 = t1_3;
-      t1_3 = t2_3;
-      t2_3 = tmp_3;
+      (t1_3 = t2_3);
+      (t2_3 = tmp_3);
     }
-    t_min = flight::maximum(t_min, t1_3);
-    t_max = flight::minimum(t_max, t2_3);
+    (t_min = flight::maximum(t_min, t1_3));
+    (t_max = flight::minimum(t_max, t2_3));
     if ((t_min > t_max)) {
       return -1.0;
     }
@@ -196,7 +203,7 @@ inline double intersect_ray3_daabb(flight::StructuralRef<flight::RowReadonly<fli
   return t_min;
 }
 
-inline double intersect_ray3_dplane(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3DLike>>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> plane) {
+inline double intersect_ray3_dplane(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> plane) {
   const double dx = flight::row_get<flight::RowKey<"direction">>(ray)->x;
   const double dy = flight::row_get<flight::RowKey<"direction">>(ray)->y;
   const double dz = flight::row_get<flight::RowKey<"direction">>(ray)->z;
@@ -213,7 +220,7 @@ inline double intersect_ray3_dplane(flight::StructuralRef<flight::RowReadonly<fl
   return ((t >= 0.0) ? t : -1.0);
 }
 
-inline double intersect_ray3_dsphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3DLike>>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> sphere) {
+inline double intersect_ray3_dsphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere) {
   if ((flight::row_get<flight::RowKey<"radius">>(sphere) < 0.0)) {
     return -1.0;
   }
@@ -242,7 +249,7 @@ inline double intersect_ray3_dsphere(flight::StructuralRef<flight::RowReadonly<f
   return ((t2 >= 0.0) ? 0.0 : -1.0);
 }
 
-inline double intersect_ray3_dtriangle(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3DLike>>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> c) {
+inline double intersect_ray3_dtriangle(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> c) {
   const double e1x = (flight::row_get<flight::RowKey<"x">>(b) - flight::row_get<flight::RowKey<"x">>(a));
   const double e1y = (flight::row_get<flight::RowKey<"y">>(b) - flight::row_get<flight::RowKey<"y">>(a));
   const double e1z = (flight::row_get<flight::RowKey<"z">>(b) - flight::row_get<flight::RowKey<"z">>(a));
@@ -286,22 +293,22 @@ inline double intersect_ray3_dtriangle(flight::StructuralRef<flight::RowReadonly
   return ((t >= 0.0) ? t : -1.0);
 }
 
-inline void set_ray3_d(flight::Ref<flight::types::Ray3DLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> origin, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> direction) {
+inline void set_ray3_d(flight::types::Ray3DLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> origin, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> direction) {
   const double ox = flight::row_get<flight::RowKey<"x">>(origin);
   const double oy = flight::row_get<flight::RowKey<"y">>(origin);
   const double oz = flight::row_get<flight::RowKey<"z">>(origin);
   const double dx = flight::row_get<flight::RowKey<"x">>(direction);
   const double dy = flight::row_get<flight::RowKey<"y">>(direction);
   const double dz = flight::row_get<flight::RowKey<"z">>(direction);
-  out->origin->x = ox;
-  out->origin->y = oy;
-  out->origin->z = oz;
-  out->direction->x = dx;
-  out->direction->y = dy;
-  out->direction->z = dz;
+  (out->origin->x = ox);
+  (out->origin->y = oy);
+  (out->origin->z = oz);
+  (out->direction->x = dx);
+  (out->direction->y = dy);
+  (out->direction->z = dz);
 }
 
-inline void transform_ray3_dby_matrix4(flight::Ref<flight::types::Ray3DLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3DLike>>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> m) {
+inline void transform_ray3_dby_matrix4(flight::types::Ray3DLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> m) {
   flight::Float32Array mm = flight::row_get<flight::RowKey<"m">>(m);
   const double ox = flight::row_get<flight::RowKey<"origin">>(ray)->x;
   const double oy = flight::row_get<flight::RowKey<"origin">>(ray)->y;
@@ -309,23 +316,23 @@ inline void transform_ray3_dby_matrix4(flight::Ref<flight::types::Ray3DLike> out
   const double dx = flight::row_get<flight::RowKey<"direction">>(ray)->x;
   const double dy = flight::row_get<flight::RowKey<"direction">>(ray)->y;
   const double dz = flight::row_get<flight::RowKey<"direction">>(ray)->z;
-  out->origin->x = ((((mm.element(0.0) * ox) + (mm.element(4.0) * oy)) + (mm.element(8.0) * oz)) + mm.element(12.0));
-  out->origin->y = ((((mm.element(1.0) * ox) + (mm.element(5.0) * oy)) + (mm.element(9.0) * oz)) + mm.element(13.0));
-  out->origin->z = ((((mm.element(2.0) * ox) + (mm.element(6.0) * oy)) + (mm.element(10.0) * oz)) + mm.element(14.0));
+  (out->origin->x = ((((mm.element(0.0) * ox) + (mm.element(4.0) * oy)) + (mm.element(8.0) * oz)) + mm.element(12.0)));
+  (out->origin->y = ((((mm.element(1.0) * ox) + (mm.element(5.0) * oy)) + (mm.element(9.0) * oz)) + mm.element(13.0)));
+  (out->origin->z = ((((mm.element(2.0) * ox) + (mm.element(6.0) * oy)) + (mm.element(10.0) * oz)) + mm.element(14.0)));
   const double ndx = (((mm.element(0.0) * dx) + (mm.element(4.0) * dy)) + (mm.element(8.0) * dz));
   const double ndy = (((mm.element(1.0) * dx) + (mm.element(5.0) * dy)) + (mm.element(9.0) * dz));
   const double ndz = (((mm.element(2.0) * dx) + (mm.element(6.0) * dy)) + (mm.element(10.0) * dz));
   auto len = std::sqrt((((ndx * ndx) + (ndy * ndy)) + (ndz * ndz)));
   if ((len > 0.0)) {
     const double inv = (1.0 / len);
-    out->direction->x = (ndx * inv);
-    out->direction->y = (ndy * inv);
-    out->direction->z = (ndz * inv);
+    (out->direction->x = (ndx * inv));
+    (out->direction->y = (ndy * inv));
+    (out->direction->z = (ndz * inv));
   }
   else {
-    out->direction->x = 0.0;
-    out->direction->y = 0.0;
-    out->direction->z = 0.0;
+    (out->direction->x = 0.0);
+    (out->direction->y = 0.0);
+    (out->direction->z = 0.0);
   }
 }
 

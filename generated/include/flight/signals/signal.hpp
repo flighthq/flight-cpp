@@ -7,6 +7,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename T> struct SignalData; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/signal.hpp>
@@ -23,8 +27,8 @@ inline void initialize_signal(flight::types::EntityConstruction<flight::Ref<flig
 template <typename T>
 inline flight::Ref<flight::types::Signal<T>> create_signal() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Signal<T>>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Signal<T>>>();
-  initialize_signal(out);
-  return flight::entity::finish_entity(out);
+  initialize_signal<T>(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Signal<T>>>(out);
 }
 
 } // namespace flight::signals

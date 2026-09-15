@@ -7,6 +7,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Physics3DContact; }
+namespace flight::types { struct Physics3DContactPoint; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/physics3_d.hpp>
@@ -38,7 +42,7 @@ inline flight::Ref<flight::types::Physics3DContact> create_physics3_dcontact(dou
   collider_b = collider_b.value_or(0.0);
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContact>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DContact>>();
   initialize_physics3_dcontact(out, body_a, body_b, collider_a.value(), collider_b.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DContact>>(out);
 }
 
 inline void initialize_physics3_dcontact_point(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContactPoint>> out) {
@@ -58,7 +62,7 @@ inline void initialize_physics3_dcontact_point(flight::types::EntityConstruction
 inline flight::Ref<flight::types::Physics3DContactPoint> create_physics3_dcontact_point() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContactPoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DContactPoint>>();
   initialize_physics3_dcontact_point(out);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DContactPoint>>(out);
 }
 
 } // namespace flight::physics3d

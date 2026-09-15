@@ -6,6 +6,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct Vector3; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/vector3.hpp>
 #include <flight/types/entity.hpp>
@@ -20,6 +24,6 @@ struct Ray3D : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Vector3> origin;
 };
 
-using Ray3DLike = flight::Ref<flight::types::EntityWithoutRuntime<flight::Ref<Ray3D>>>;
+using Ray3DLike = flight::types::EntityWithoutRuntime<flight::Ref<Ray3D>>;
 
 } // namespace flight::types

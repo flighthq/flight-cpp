@@ -37,14 +37,14 @@ inline flight::types::EasingFunction ease_cubic_bezier(double x1, double y1, dou
         if ((std::abs(derivative) < 0.000001)) {
           break;
         }
-        s -= (x_error / derivative);
+        (s -= (x_error / derivative));
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   double low = 0.0;
   double high = 1.0;
-  s = x;
+  (s = x);
   if ((s < low)) {
     return low;
   }
@@ -57,12 +57,12 @@ inline flight::types::EasingFunction ease_cubic_bezier(double x1, double y1, dou
       return s;
     }
     if ((x > sampled)) {
-      low = s;
+      (low = s);
     }
     else {
-      high = s;
+      (high = s);
     }
-    s = (((high - low) * 0.5) + low);
+    (s = (((high - low) * 0.5) + low));
   }
   return s;
 };

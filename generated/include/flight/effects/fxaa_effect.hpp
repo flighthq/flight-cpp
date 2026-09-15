@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct FxaaEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/fxaa_effect.hpp>
@@ -23,7 +26,7 @@ struct edge_threshold_subpixel_9a6c8b06d978a242 : public flight::ReferenceEnable
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9A6C8B06D978A242
 
 inline void initialize_fxaa_effect(flight::types::EntityConstruction<flight::Ref<flight::types::FxaaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<edge_threshold_subpixel_9a6c8b06d978a242>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("FxaaEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::FxaaEffect>>(out, flight::String("FxaaEffect"));
   flight::row_set<flight::RowKey<"edgeThreshold">>(out, flight::row_get<flight::RowKey<"edgeThreshold">>(options));
   flight::row_set<flight::RowKey<"subpixel">>(out, flight::row_get<flight::RowKey<"subpixel">>(options));
 }
@@ -32,7 +35,7 @@ inline flight::Ref<flight::types::FxaaEffect> create_fxaa_effect(std::optional<f
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<edge_threshold_subpixel_9a6c8b06d978a242>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::FxaaEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::FxaaEffect>>();
   initialize_fxaa_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::FxaaEffect>>(out);
 }
 
 } // namespace flight::effects

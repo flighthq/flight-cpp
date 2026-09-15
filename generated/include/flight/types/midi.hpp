@@ -9,6 +9,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { template <typename T> struct Signal; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/permission.hpp>
 #include <flight/types/signal.hpp>
@@ -272,7 +276,7 @@ struct MidiOutputPortResourceOperations : public flight::ReferenceEnabled {
   std::function<MidiPortConnection()> get_connection;
   std::function<MidiPortState()> get_state;
   std::function<flight::Task<void>()> open;
-  std::function<void(flight::Array<double>, double)> send;
+  std::function<void(flight::Array<double>, std::optional<double>)> send;
 };
 
 struct WebMidiAccessCapabilities : public flight::ReferenceEnabled {

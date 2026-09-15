@@ -7,6 +7,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct GlPbrExtensionBindContext; }
+namespace flight::types { struct GlPbrExtensionShaderContext; }
+namespace flight::types { struct GlPbrExtensionShaderContribution; }
+namespace flight::types { struct PbrExtension; }
+
 #include <flight/types/gl_pbr_extension_bind_context.hpp>
 #include <flight/types/gl_pbr_extension_shader_context.hpp>
 #include <flight/types/gl_pbr_extension_shader_contribution.hpp>

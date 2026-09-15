@@ -6,6 +6,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct TiledProperty; }
+namespace flight::types { struct TiledTilesetRef; }
+
 #include <flight/types/tiled_layer.hpp>
 #include <flight/types/tiled_property.hpp>
 #include <flight/types/tiled_tileset.hpp>

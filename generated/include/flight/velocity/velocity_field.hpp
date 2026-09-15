@@ -11,6 +11,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Velocity2D; }
+namespace flight::types { struct VelocityExplanation; }
+namespace flight::types { struct VelocityField; }
+namespace flight::types { struct VelocitySample; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix.hpp>
@@ -21,8 +28,8 @@ namespace flight::velocity {
 inline flight::Ref<flight::types::Velocity2D> add_velocity(flight::Ref<flight::types::Velocity2D> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> b) {
   const double ax = flight::row_get<flight::RowKey<"x">>(a);
   const double ay = flight::row_get<flight::RowKey<"y">>(a);
-  out->x = (ax + flight::row_get<flight::RowKey<"x">>(b));
-  out->y = (ay + flight::row_get<flight::RowKey<"y">>(b));
+  (out->x = (ax + flight::row_get<flight::RowKey<"x">>(b)));
+  (out->y = (ay + flight::row_get<flight::RowKey<"y">>(b)));
   return out;
 }
 
@@ -37,12 +44,12 @@ inline flight::Ref<flight::types::Velocity2D> clamp_velocity(flight::Ref<flight:
   const double max_sq = (max_length * max_length);
   if (((len_sq > max_sq) && (len_sq > 0.0))) {
     const double scale = (max_length / std::sqrt(len_sq));
-    out->x = (vx * scale);
-    out->y = (vy * scale);
+    (out->x = (vx * scale));
+    (out->y = (vy * scale));
   }
   else {
-    out->x = vx;
-    out->y = vy;
+    (out->x = vx);
+    (out->y = vy);
   }
   return out;
 }
@@ -50,8 +57,8 @@ inline flight::Ref<flight::types::Velocity2D> clamp_velocity(flight::Ref<flight:
 inline flight::Ref<flight::types::Velocity2D> copy_velocity(flight::Ref<flight::types::Velocity2D> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> source) {
   const double sx = flight::row_get<flight::RowKey<"x">>(source);
   const double sy = flight::row_get<flight::RowKey<"y">>(source);
-  out->x = sx;
-  out->y = sy;
+  (out->x = sx);
+  (out->y = sy);
   return out;
 }
 
@@ -60,15 +67,15 @@ inline flight::Ref<flight::types::Velocity2D> damp_velocity(flight::Ref<flight::
   const double cy = flight::row_get<flight::RowKey<"y">>(current);
   const double px = flight::row_get<flight::RowKey<"x">>(previous);
   const double py = flight::row_get<flight::RowKey<"y">>(previous);
-  out->x = ((cx * factor) + (px * (1.0 - factor)));
-  out->y = ((cy * factor) + (py * (1.0 - factor)));
+  (out->x = ((cx * factor) + (px * (1.0 - factor))));
+  (out->y = ((cy * factor) + (py * (1.0 - factor))));
   return out;
 }
 
 inline flight::Ref<flight::types::VelocitySample> ensure_velocity_sample(flight::Ref<flight::types::VelocityField> field, flight::Ref<void> source) {
   std::optional<flight::Ref<flight::types::VelocitySample>> sample = field->samples.get(source);
   if (!sample.has_value()) {
-    sample = {.previous_world_transform = nullptr, .velocity = flight::make_ref<flight::types::Velocity2D>(flight::types::Velocity2D{.x = 0.0, .y = 0.0}), .last_frame_id = -1.0, .explicit_frame_id = -1.0};
+    (sample = flight::make_ref<flight::types::VelocitySample>(flight::types::VelocitySample{.previous_world_transform = std::nullopt, .velocity = flight::make_ref<flight::types::Velocity2D>(flight::types::Velocity2D{.x = 0.0, .y = 0.0}), .last_frame_id = -1.0, .explicit_frame_id = -1.0}));
     field->samples.set(source, sample.value());
   }
   return sample.value();
@@ -76,10 +83,10 @@ inline flight::Ref<flight::types::VelocitySample> ensure_velocity_sample(flight:
 
 inline void contribute_velocity(flight::Ref<flight::types::VelocityField> field, flight::Ref<void> source, double x, double y) {
   flight::Ref<flight::types::VelocitySample> sample = ensure_velocity_sample(field, source);
-  sample->velocity->x = x;
-  sample->velocity->y = y;
-  sample->last_frame_id = field->frame_id;
-  sample->explicit_frame_id = field->frame_id;
+  (sample->velocity->x = x);
+  (sample->velocity->y = y);
+  (sample->last_frame_id = field->frame_id);
+  (sample->explicit_frame_id = field->frame_id);
 }
 
 inline flight::Ref<flight::types::VelocityExplanation> explain_velocity(flight::Ref<flight::types::VelocityField> field, flight::Ref<void> source) {
@@ -104,12 +111,12 @@ inline flight::Ref<flight::types::VelocityExplanation> explain_velocity(flight::
 inline flight::Ref<flight::types::Velocity2D> get_velocity(flight::Ref<flight::types::VelocityField> field, flight::Ref<void> source, flight::Ref<flight::types::Velocity2D> out) {
   auto sample = field->samples.get(source);
   if ((!sample.has_value() || (sample.value()->last_frame_id != field->frame_id))) {
-    out->x = 0.0;
-    out->y = 0.0;
+    (out->x = 0.0);
+    (out->y = 0.0);
     return out;
   }
-  out->x = sample.value()->velocity->x;
-  out->y = sample.value()->velocity->y;
+  (out->x = sample.value()->velocity->x);
+  (out->y = sample.value()->velocity->y);
   return out;
 }
 
@@ -126,7 +133,7 @@ inline void initialize_velocity_field(flight::types::EntityConstruction<flight::
 inline flight::Ref<flight::types::VelocityField> create_velocity_field() {
   flight::types::EntityConstruction<flight::Ref<flight::types::VelocityField>> out = flight::entity::allocate_entity<flight::Ref<flight::types::VelocityField>>();
   initialize_velocity_field(out);
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::VelocityField>>(out);
 }
 
 inline bool is_velocity_zero(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> velocity, std::optional<double> epsilon = std::nullopt) {
@@ -141,8 +148,8 @@ inline double length_of_velocity(flight::StructuralRef<flight::RowReadonly<fligh
 inline flight::Ref<flight::types::Velocity2D> lerp_velocity(flight::Ref<flight::types::Velocity2D> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> b, double t) {
   const double ax = flight::row_get<flight::RowKey<"x">>(a);
   const double ay = flight::row_get<flight::RowKey<"y">>(a);
-  out->x = (ax + ((flight::row_get<flight::RowKey<"x">>(b) - ax) * t));
-  out->y = (ay + ((flight::row_get<flight::RowKey<"y">>(b) - ay) * t));
+  (out->x = (ax + ((flight::row_get<flight::RowKey<"x">>(b) - ax) * t)));
+  (out->y = (ay + ((flight::row_get<flight::RowKey<"y">>(b) - ay) * t)));
   return out;
 }
 
@@ -152,12 +159,12 @@ inline flight::Ref<flight::types::Velocity2D> normalize_velocity(flight::Ref<fli
   auto len = std::sqrt(((sx * sx) + (sy * sy)));
   if ((len > 0.0)) {
     const double inv = (1.0 / len);
-    out->x = (sx * inv);
-    out->y = (sy * inv);
+    (out->x = (sx * inv));
+    (out->y = (sy * inv));
   }
   else {
-    out->x = 0.0;
-    out->y = 0.0;
+    (out->x = 0.0);
+    (out->y = 0.0);
   }
   return out;
 }
@@ -165,16 +172,16 @@ inline flight::Ref<flight::types::Velocity2D> normalize_velocity(flight::Ref<fli
 inline flight::Ref<flight::types::Velocity2D> scale_velocity(flight::Ref<flight::types::Velocity2D> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> velocity, double scale) {
   const double vx = flight::row_get<flight::RowKey<"x">>(velocity);
   const double vy = flight::row_get<flight::RowKey<"y">>(velocity);
-  out->x = (vx * scale);
-  out->y = (vy * scale);
+  (out->x = (vx * scale));
+  (out->y = (vy * scale));
   return out;
 }
 
 inline flight::Ref<flight::types::Velocity2D> subtract_velocity(flight::Ref<flight::types::Velocity2D> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> b) {
   const double ax = flight::row_get<flight::RowKey<"x">>(a);
   const double ay = flight::row_get<flight::RowKey<"y">>(a);
-  out->x = (ax - flight::row_get<flight::RowKey<"x">>(b));
-  out->y = (ay - flight::row_get<flight::RowKey<"y">>(b));
+  (out->x = (ax - flight::row_get<flight::RowKey<"x">>(b)));
+  (out->y = (ay - flight::row_get<flight::RowKey<"y">>(b)));
   return out;
 }
 
@@ -183,8 +190,8 @@ inline void suppress_velocity(flight::Ref<flight::types::VelocityField> field, f
 }
 
 inline flight::Ref<flight::types::Velocity2D> zero_velocity(flight::Ref<flight::types::Velocity2D> out) {
-  out->x = 0.0;
-  out->y = 0.0;
+  (out->x = 0.0);
+  (out->y = 0.0);
   return out;
 }
 

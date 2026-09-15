@@ -18,7 +18,7 @@ inline void report_text_bidi_compact_table_miss(double codepoint) {
 }
 
 inline void set_text_bidi_guard(std::optional<std::function<void(double)>> guard) {
-  guard = guard;
+  (guard = guard);
 }
 
 } // namespace flight::textbidi

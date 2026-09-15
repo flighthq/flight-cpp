@@ -3,11 +3,20 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/structural_ref.hpp>
+#include <optional>
 #include <random>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
+
+namespace flight::types { struct BoundingSphere; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Frustum; }
+namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Obb; }
+namespace flight::types { struct Plane; }
+namespace flight::types { struct Vector3; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/types/aabb.hpp>
@@ -22,7 +31,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::geometry {
 
-inline void get_frustum_corners(flight::Array<flight::Ref<flight::types::Vector3Like>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> inverse_view_projection) {
+inline void get_frustum_corners(flight::Array<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> inverse_view_projection) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"m">>(inverse_view_projection);
   flight::Array<flight::Array<double>> ndc_corners = flight::Array<flight::Array<double>>{flight::Array<double>{-1.0, -1.0, -1.0}, flight::Array<double>{1.0, -1.0, -1.0}, flight::Array<double>{1.0, 1.0, -1.0}, flight::Array<double>{-1.0, 1.0, -1.0}, flight::Array<double>{-1.0, -1.0, 1.0}, flight::Array<double>{1.0, -1.0, 1.0}, flight::Array<double>{1.0, 1.0, 1.0}, flight::Array<double>{-1.0, 1.0, 1.0}};
   auto len = flight::minimum(static_cast<double>(out.size()), static_cast<double>(ndc_corners.size()));
@@ -39,12 +48,12 @@ inline void get_frustum_corners(flight::Array<flight::Ref<flight::types::Vector3
         const double z = ((((m.element(2.0) * nx) + (m.element(6.0) * ny)) + (m.element(10.0) * nz)) + m.element(14.0));
         const double w = ((((m.element(3.0) * nx) + (m.element(7.0) * ny)) + (m.element(11.0) * nz)) + m.element(15.0));
         const double inv_w = ((w != 0.0) ? (1.0 / w) : 1.0);
-        flight::Ref<flight::types::Vector3Like> corner = out.element(i);
-        corner->x = (x * inv_w);
-        corner->y = (y * inv_w);
-        corner->z = (z * inv_w);
+        flight::types::Vector3Like corner = out.element(i);
+        (corner->x = (x * inv_w));
+        (corner->y = (y * inv_w));
+        (corner->z = (z * inv_w));
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
 }
@@ -60,31 +69,31 @@ inline void initialize_frustum(flight::types::EntityConstruction<flight::Ref<fli
 
 inline flight::Ref<flight::types::Frustum> create_frustum() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Frustum>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Frustum>>();
-  initialize_frustum(out, flight::geometry::create_plane(), flight::geometry::create_plane(), flight::geometry::create_plane(), flight::geometry::create_plane(), flight::geometry::create_plane(), flight::geometry::create_plane());
-  return flight::entity::finish_entity(out);
+  initialize_frustum(out, flight::geometry::create_plane(std::nullopt, std::nullopt, std::nullopt, std::nullopt), flight::geometry::create_plane(std::nullopt, std::nullopt, std::nullopt, std::nullopt), flight::geometry::create_plane(std::nullopt, std::nullopt, std::nullopt, std::nullopt), flight::geometry::create_plane(std::nullopt, std::nullopt, std::nullopt, std::nullopt), flight::geometry::create_plane(std::nullopt, std::nullopt, std::nullopt, std::nullopt), flight::geometry::create_plane(std::nullopt, std::nullopt, std::nullopt, std::nullopt));
+  return flight::entity::finish_entity<flight::Ref<flight::types::Frustum>>(out);
 }
 
-inline bool plane_intersects_aabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> plane, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
+inline bool plane_intersects_aabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> plane, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
   const double px = ((flight::row_get<flight::RowKey<"a">>(plane) >= 0.0) ? flight::row_get<flight::RowKey<"max">>(aabb)->x : flight::row_get<flight::RowKey<"min">>(aabb)->x);
   const double py = ((flight::row_get<flight::RowKey<"b">>(plane) >= 0.0) ? flight::row_get<flight::RowKey<"max">>(aabb)->y : flight::row_get<flight::RowKey<"min">>(aabb)->y);
   const double pz = ((flight::row_get<flight::RowKey<"c">>(plane) >= 0.0) ? flight::row_get<flight::RowKey<"max">>(aabb)->z : flight::row_get<flight::RowKey<"min">>(aabb)->z);
   return (((((flight::row_get<flight::RowKey<"a">>(plane) * px) + (flight::row_get<flight::RowKey<"b">>(plane) * py)) + (flight::row_get<flight::RowKey<"c">>(plane) * pz)) + flight::row_get<flight::RowKey<"d">>(plane)) >= 0.0);
 }
 
-inline bool is_frustum_intersecting_aabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FrustumLike>>>> frustum, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
+inline bool is_frustum_intersecting_aabb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::FrustumLike>>> frustum, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb) {
   if ((((flight::row_get<flight::RowKey<"min">>(aabb)->x > flight::row_get<flight::RowKey<"max">>(aabb)->x) || (flight::row_get<flight::RowKey<"min">>(aabb)->y > flight::row_get<flight::RowKey<"max">>(aabb)->y)) || (flight::row_get<flight::RowKey<"min">>(aabb)->z > flight::row_get<flight::RowKey<"max">>(aabb)->z))) {
     return false;
   }
   return (((((plane_intersects_aabb(flight::row_get<flight::RowKey<"left">>(frustum), aabb) && plane_intersects_aabb(flight::row_get<flight::RowKey<"right">>(frustum), aabb)) && plane_intersects_aabb(flight::row_get<flight::RowKey<"bottom">>(frustum), aabb)) && plane_intersects_aabb(flight::row_get<flight::RowKey<"top">>(frustum), aabb)) && plane_intersects_aabb(flight::row_get<flight::RowKey<"near">>(frustum), aabb)) && plane_intersects_aabb(flight::row_get<flight::RowKey<"far">>(frustum), aabb));
 }
 
-inline bool plane_intersects_obb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> plane, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObbLike>>>> obb, double ax0, double ay0, double az0, double ax1, double ay1, double az1, double ax2, double ay2, double az2) {
+inline bool plane_intersects_obb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> plane, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ObbLike>>> obb, double ax0, double ay0, double az0, double ax1, double ay1, double az1, double ax2, double ay2, double az2) {
   const double dist = ((((flight::row_get<flight::RowKey<"a">>(plane) * flight::row_get<flight::RowKey<"centerX">>(obb)) + (flight::row_get<flight::RowKey<"b">>(plane) * flight::row_get<flight::RowKey<"centerY">>(obb))) + (flight::row_get<flight::RowKey<"c">>(plane) * flight::row_get<flight::RowKey<"centerZ">>(obb))) + flight::row_get<flight::RowKey<"d">>(plane));
   const double r = (((flight::row_get<flight::RowKey<"halfExtentX">>(obb) * std::abs((((flight::row_get<flight::RowKey<"a">>(plane) * ax0) + (flight::row_get<flight::RowKey<"b">>(plane) * ay0)) + (flight::row_get<flight::RowKey<"c">>(plane) * az0)))) + (flight::row_get<flight::RowKey<"halfExtentY">>(obb) * std::abs((((flight::row_get<flight::RowKey<"a">>(plane) * ax1) + (flight::row_get<flight::RowKey<"b">>(plane) * ay1)) + (flight::row_get<flight::RowKey<"c">>(plane) * az1))))) + (flight::row_get<flight::RowKey<"halfExtentZ">>(obb) * std::abs((((flight::row_get<flight::RowKey<"a">>(plane) * ax2) + (flight::row_get<flight::RowKey<"b">>(plane) * ay2)) + (flight::row_get<flight::RowKey<"c">>(plane) * az2)))));
   return (dist >= -r);
 }
 
-inline bool is_frustum_intersecting_obb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FrustumLike>>>> frustum, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObbLike>>>> obb) {
+inline bool is_frustum_intersecting_obb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::FrustumLike>>> frustum, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ObbLike>>> obb) {
   const double qx = flight::row_get<flight::RowKey<"orientationX">>(obb);
   const double qy = flight::row_get<flight::RowKey<"orientationY">>(obb);
   const double qz = flight::row_get<flight::RowKey<"orientationZ">>(obb);
@@ -110,15 +119,15 @@ inline bool is_frustum_intersecting_obb(flight::StructuralRef<flight::RowReadonl
   return (((((plane_intersects_obb(flight::row_get<flight::RowKey<"left">>(frustum), obb, ax0, ay0, az0, ax1, ay1, az1, ax2, ay2, az2) && plane_intersects_obb(flight::row_get<flight::RowKey<"right">>(frustum), obb, ax0, ay0, az0, ax1, ay1, az1, ax2, ay2, az2)) && plane_intersects_obb(flight::row_get<flight::RowKey<"bottom">>(frustum), obb, ax0, ay0, az0, ax1, ay1, az1, ax2, ay2, az2)) && plane_intersects_obb(flight::row_get<flight::RowKey<"top">>(frustum), obb, ax0, ay0, az0, ax1, ay1, az1, ax2, ay2, az2)) && plane_intersects_obb(flight::row_get<flight::RowKey<"near">>(frustum), obb, ax0, ay0, az0, ax1, ay1, az1, ax2, ay2, az2)) && plane_intersects_obb(flight::row_get<flight::RowKey<"far">>(frustum), obb, ax0, ay0, az0, ax1, ay1, az1, ax2, ay2, az2));
 }
 
-inline double plane_signed_distance(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PlaneLike>>>> plane, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline double plane_signed_distance(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> plane, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   return ((((flight::row_get<flight::RowKey<"a">>(plane) * flight::row_get<flight::RowKey<"x">>(point)) + (flight::row_get<flight::RowKey<"b">>(plane) * flight::row_get<flight::RowKey<"y">>(point))) + (flight::row_get<flight::RowKey<"c">>(plane) * flight::row_get<flight::RowKey<"z">>(point))) + flight::row_get<flight::RowKey<"d">>(plane));
 }
 
-inline bool is_frustum_containing_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FrustumLike>>>> frustum, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>> point) {
+inline bool is_frustum_containing_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::FrustumLike>>> frustum, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point) {
   return ((((((plane_signed_distance(flight::row_get<flight::RowKey<"left">>(frustum), point) >= 0.0) && (plane_signed_distance(flight::row_get<flight::RowKey<"right">>(frustum), point) >= 0.0)) && (plane_signed_distance(flight::row_get<flight::RowKey<"bottom">>(frustum), point) >= 0.0)) && (plane_signed_distance(flight::row_get<flight::RowKey<"top">>(frustum), point) >= 0.0)) && (plane_signed_distance(flight::row_get<flight::RowKey<"near">>(frustum), point) >= 0.0)) && (plane_signed_distance(flight::row_get<flight::RowKey<"far">>(frustum), point) >= 0.0));
 }
 
-inline bool is_frustum_intersecting_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FrustumLike>>>> frustum, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphereLike>>>> sphere) {
+inline bool is_frustum_intersecting_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::FrustumLike>>> frustum, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere) {
   if ((flight::row_get<flight::RowKey<"radius">>(sphere) < 0.0)) {
     return false;
   }
@@ -126,24 +135,24 @@ inline bool is_frustum_intersecting_sphere(flight::StructuralRef<flight::RowRead
   return ((((((plane_signed_distance(flight::row_get<flight::RowKey<"left">>(frustum), flight::row_get<flight::RowKey<"center">>(sphere)) >= -r) && (plane_signed_distance(flight::row_get<flight::RowKey<"right">>(frustum), flight::row_get<flight::RowKey<"center">>(sphere)) >= -r)) && (plane_signed_distance(flight::row_get<flight::RowKey<"bottom">>(frustum), flight::row_get<flight::RowKey<"center">>(sphere)) >= -r)) && (plane_signed_distance(flight::row_get<flight::RowKey<"top">>(frustum), flight::row_get<flight::RowKey<"center">>(sphere)) >= -r)) && (plane_signed_distance(flight::row_get<flight::RowKey<"near">>(frustum), flight::row_get<flight::RowKey<"center">>(sphere)) >= -r)) && (plane_signed_distance(flight::row_get<flight::RowKey<"far">>(frustum), flight::row_get<flight::RowKey<"center">>(sphere)) >= -r));
 }
 
-inline void set_plane(flight::Ref<flight::types::PlaneLike> out, double a, double b, double c, double d) {
+inline void set_plane_flight_value_function__u00005f__u00005f_set_u000050_lane_flight_private_9b1b711435ba69c8(flight::types::PlaneLike out, double a, double b, double c, double d) {
   auto l = std::sqrt((((a * a) + (b * b)) + (c * c)));
   if ((l != 0.0)) {
     const double inv = (1.0 / l);
-    out->a = (a * inv);
-    out->b = (b * inv);
-    out->c = (c * inv);
-    out->d = (d * inv);
+    (out->a = (a * inv));
+    (out->b = (b * inv));
+    (out->c = (c * inv));
+    (out->d = (d * inv));
   }
   else {
-    out->a = a;
-    out->b = b;
-    out->c = c;
-    out->d = d;
+    (out->a = a);
+    (out->b = b);
+    (out->c = c);
+    (out->d = d);
   }
 }
 
-inline void set_frustum_from_matrix4(flight::Ref<flight::types::FrustumLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4Like>>>> view_projection) {
+inline void set_frustum_from_matrix4(flight::types::FrustumLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> view_projection) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"m">>(view_projection);
   const double r00 = m.element(0.0);
   const double r01 = m.element(4.0);
@@ -161,12 +170,12 @@ inline void set_frustum_from_matrix4(flight::Ref<flight::types::FrustumLike> out
   const double r31 = m.element(7.0);
   const double r32 = m.element(11.0);
   const double r33 = m.element(15.0);
-  set_plane(out->left, (r30 + r00), (r31 + r01), (r32 + r02), (r33 + r03));
-  set_plane(out->right, (r30 - r00), (r31 - r01), (r32 - r02), (r33 - r03));
-  set_plane(out->bottom, (r30 + r10), (r31 + r11), (r32 + r12), (r33 + r13));
-  set_plane(out->top, (r30 - r10), (r31 - r11), (r32 - r12), (r33 - r13));
-  set_plane(out->near, (r30 + r20), (r31 + r21), (r32 + r22), (r33 + r23));
-  set_plane(out->far, (r30 - r20), (r31 - r21), (r32 - r22), (r33 - r23));
+  set_plane_flight_value_function__u00005f__u00005f_set_u000050_lane_flight_private_9b1b711435ba69c8(out->left, (r30 + r00), (r31 + r01), (r32 + r02), (r33 + r03));
+  set_plane_flight_value_function__u00005f__u00005f_set_u000050_lane_flight_private_9b1b711435ba69c8(out->right, (r30 - r00), (r31 - r01), (r32 - r02), (r33 - r03));
+  set_plane_flight_value_function__u00005f__u00005f_set_u000050_lane_flight_private_9b1b711435ba69c8(out->bottom, (r30 + r10), (r31 + r11), (r32 + r12), (r33 + r13));
+  set_plane_flight_value_function__u00005f__u00005f_set_u000050_lane_flight_private_9b1b711435ba69c8(out->top, (r30 - r10), (r31 - r11), (r32 - r12), (r33 - r13));
+  set_plane_flight_value_function__u00005f__u00005f_set_u000050_lane_flight_private_9b1b711435ba69c8(out->near, (r30 + r20), (r31 + r21), (r32 + r22), (r33 + r23));
+  set_plane_flight_value_function__u00005f__u00005f_set_u000050_lane_flight_private_9b1b711435ba69c8(out->far, (r30 - r20), (r31 - r21), (r32 - r22), (r33 - r23));
 }
 
 } // namespace flight::geometry

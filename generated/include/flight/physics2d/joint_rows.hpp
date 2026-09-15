@@ -14,9 +14,9 @@ inline const double tau = (2.0 * flight::pi);
 
 inline void write_physics2_dsoft_row_parameters(double mass, double frequency_hz, double damping_ratio, double dt, double hard_bias_factor, flight::Array<double> out) {
   if ((!(frequency_hz > 0.0) || !(dt > 0.0))) {
-    out.element(0.0) = mass;
-    out.element(1.0) = hard_bias_factor;
-    out.element(2.0) = 0.0;
+    (out.element(0.0) = mass);
+    (out.element(1.0) = hard_bias_factor);
+    (out.element(2.0) = 0.0);
     return;
   }
   const double angular = (tau * frequency_hz);
@@ -26,9 +26,9 @@ inline void write_physics2_dsoft_row_parameters(double mass, double frequency_hz
   const double gamma = ((gamma_denominator > 0.0) ? (1.0 / gamma_denominator) : 0.0);
   const double inverse_mass = ((mass > 0.0) ? (1.0 / mass) : 0.0);
   const double softened = (inverse_mass + gamma);
-  out.element(0.0) = ((softened > 0.0) ? (1.0 / softened) : 0.0);
-  out.element(1.0) = ((dt * stiffness) * gamma);
-  out.element(2.0) = gamma;
+  (out.element(0.0) = ((softened > 0.0) ? (1.0 / softened) : 0.0));
+  (out.element(1.0) = ((dt * stiffness) * gamma));
+  (out.element(2.0) = gamma);
 }
 
 } // namespace flight::physics2d

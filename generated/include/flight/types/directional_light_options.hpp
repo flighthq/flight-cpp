@@ -19,7 +19,7 @@ struct DirectionalLightOptions : public flight::ReferenceEnabled {
   std::optional<flight::Array<double>> cascade_splits;
   std::optional<bool> casts_shadow;
   std::optional<double> color;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3Like>>>>> direction;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>> direction;
   std::optional<bool> enabled;
   std::optional<double> intensity;
   std::optional<flight::types::LightUnit> intensity_unit;

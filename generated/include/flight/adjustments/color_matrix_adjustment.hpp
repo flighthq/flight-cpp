@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct ColorMatrixAdjustment; }
+namespace flight::types { struct Entity; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/adjustment_kind.hpp>
 #include <flight/types/color_matrix_adjustment.hpp>
@@ -39,7 +42,7 @@ inline std::optional<flight::Array<double>> get_adjustment_color_matrix(flight::
 
 template <typename T>
 inline void initialize_color_matrix_adjustment(flight::types::EntityConstruction<T> out, flight::String kind, flight::Array<double> color_matrix) {
-  flight::adjustments::initialize_adjustment(out, kind);
+  flight::adjustments::initialize_adjustment<T>(out, kind);
   flight::row_set<flight::RowKey<"colorMatrix">>(out, color_matrix);
 }
 
@@ -48,8 +51,8 @@ inline flight::Ref<flight::types::ColorMatrixAdjustment> create_color_matrix_adj
     throw flight::Error(flight::String("Color matrix must contain ") + flight::to_string(flight::adjustments::color_matrix_length) + flight::String(" values."));
   }
   flight::types::EntityConstruction<flight::Ref<flight::types::ColorMatrixAdjustment>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ColorMatrixAdjustment>>();
-  initialize_color_matrix_adjustment(out, flight::String("ColorMatrixAdjustment"), ([&]() { flight::Array<double> array_spread_result; for (const auto& array_spread_item : color_matrix) { array_spread_result.push(array_spread_item); } return array_spread_result; }()));
-  return flight::entity::finish_entity(out);
+  initialize_color_matrix_adjustment<flight::Ref<flight::types::ColorMatrixAdjustment>>(out, flight::String("ColorMatrixAdjustment"), ([&]() { flight::Array<double> array_spread_result; for (const auto& array_spread_item : color_matrix) { array_spread_result.push(array_spread_item); } return array_spread_result; }()));
+  return flight::entity::finish_entity<flight::Ref<flight::types::ColorMatrixAdjustment>>(out);
 }
 
 inline bool is_color_matrix_adjustment(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<kind_6fea82d7aa842443>>>> operation) {

@@ -9,6 +9,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Physics3DContact; }
+namespace flight::types { struct Physics3DContactEvents; }
+namespace flight::types { struct Physics3DContactHooks; }
+namespace flight::types { struct Physics3DJoint; }
+namespace flight::types { struct Physics3DJointEvents; }
+namespace flight::types { struct Physics3DJointReaction; }
+namespace flight::types { struct Physics3DJointSolver; }
+namespace flight::types { struct Physics3DSequentialImpulseState; }
+namespace flight::types { struct Physics3DSolverConfig; }
+namespace flight::types { struct Physics3DWorld; }
+namespace flight::types { struct RigidBody3D; }
+namespace flight::types { struct SpatialIndexBackend3D; }
+
 #include <flight/types/collision.hpp>
 #include <flight/types/physics3_d.hpp>
 #include <flight/types/spatial.hpp>
@@ -20,7 +33,7 @@ inline void break_physics3_djoint(flight::Ref<flight::types::Physics3DWorld> wor
   if (joint->broken) {
     return;
   }
-  joint->broken = true;
+  (joint->broken = true);
   world->joint_events->broke.push(joint);
 }
 

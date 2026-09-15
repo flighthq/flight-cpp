@@ -9,6 +9,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AttachmentSkin2D; }
+namespace flight::types { struct Bone2D; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct PointAttachment2D; }
+namespace flight::types { struct Skeleton2D; }
+namespace flight::types { struct Slot2D; }
+namespace flight::types { struct Vector2; }
+
 #include <flight/math/constants.hpp>
 #include <flight/types/attachment_skin2_d.hpp>
 #include <flight/types/bone2_d.hpp>
@@ -21,7 +29,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::skeleton2d {
 
-inline void compute_skeleton2_dpoint_attachment_position(flight::Ref<flight::types::Vector2Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointAttachment2D>>>> attachment, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index) {
+inline void compute_skeleton2_dpoint_attachment_position(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointAttachment2D>>>> attachment, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index) {
   flight::Float32Array world = flight::row_get<flight::RowKey<"worldMatrices">>(skeleton);
   if (((bone_index < 0.0) || ((bone_index * flight::skeleton2d::skeleton_2_d_matrix_stride) >= static_cast<double>(world.size())))) {
     return;
@@ -29,8 +37,8 @@ inline void compute_skeleton2_dpoint_attachment_position(flight::Ref<flight::typ
   const double b = (bone_index * flight::skeleton2d::skeleton_2_d_matrix_stride);
   const double x = flight::row_get<flight::RowKey<"x">>(attachment);
   const double y = flight::row_get<flight::RowKey<"y">>(attachment);
-  out->x = (((world.element(b) * x) + (world.element((b + 2.0)) * y)) + world.element((b + 4.0)));
-  out->y = (((world.element((b + 1.0)) * x) + (world.element((b + 3.0)) * y)) + world.element((b + 5.0)));
+  (out->x = (((world.element(b) * x) + (world.element((b + 2.0)) * y)) + world.element((b + 4.0))));
+  (out->y = (((world.element((b + 1.0)) * x) + (world.element((b + 3.0)) * y)) + world.element((b + 5.0))));
 }
 
 inline double compute_skeleton2_dpoint_attachment_rotation(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointAttachment2D>>>> attachment, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index) {
@@ -39,12 +47,12 @@ inline double compute_skeleton2_dpoint_attachment_rotation(flight::StructuralRef
     return flight::row_get<flight::RowKey<"rotation">>(attachment);
   }
   const double b = (bone_index * flight::skeleton2d::skeleton_2_d_matrix_stride);
-  const double radians = (flight::row_get<flight::RowKey<"rotation">>(attachment) * flight::math::deg_to_rad);
+  const double radians = (flight::row_get<flight::RowKey<"rotation">>(attachment) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3);
   auto cos = std::cos(radians);
   auto sin = std::sin(radians);
   const double x = ((world.element(b) * cos) + (world.element((b + 2.0)) * sin));
   const double y = ((world.element((b + 1.0)) * cos) + (world.element((b + 3.0)) * sin));
-  return (std::atan2(y, x) * flight::math::rad_to_deg);
+  return (std::atan2(y, x) * flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3);
 }
 
 } // namespace flight::skeleton2d

@@ -10,6 +10,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Transform2D; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/math/constants.hpp>
 #include <flight/types/entity.hpp>
@@ -18,7 +22,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::geometry {
 
-inline void decompose_matrix_to_transform2_d(flight::Ref<flight::types::Transform2DLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MatrixLike>>>> source) {
+inline void decompose_matrix_to_transform2_d(flight::types::Transform2DLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
   const double a = flight::row_get<flight::RowKey<"a">>(source);
   const double b = flight::row_get<flight::RowKey<"b">>(source);
   const double c = flight::row_get<flight::RowKey<"c">>(source);
@@ -26,24 +30,24 @@ inline void decompose_matrix_to_transform2_d(flight::Ref<flight::types::Transfor
   auto scale_x = std::sqrt(((a * a) + (b * b)));
   const bool reflected = (((a * d) - (b * c)) < 0.0);
   const double scale_y = (reflected ? -std::sqrt(((c * c) + (d * d))) : std::sqrt(((c * c) + (d * d))));
-  const double skew_xdegrees = ((reflected ? std::atan2(c, -d) : std::atan2(-c, d)) * flight::math::rad_to_deg);
-  const double skew_ydegrees = (std::atan2(b, a) * flight::math::rad_to_deg);
+  const double skew_xdegrees = ((reflected ? std::atan2(c, -d) : std::atan2(-c, d)) * flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3);
+  const double skew_ydegrees = (std::atan2(b, a) * flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3);
   if ((skew_xdegrees == skew_ydegrees)) {
-    out->rotation = skew_ydegrees;
-    out->skew_x = 0.0;
-    out->skew_y = 0.0;
+    (out->rotation = skew_ydegrees);
+    (out->skew_x = 0.0);
+    (out->skew_y = 0.0);
   }
   else {
-    out->rotation = 0.0;
-    out->skew_x = skew_xdegrees;
-    out->skew_y = skew_ydegrees;
+    (out->rotation = 0.0);
+    (out->skew_x = skew_xdegrees);
+    (out->skew_y = skew_ydegrees);
   }
-  out->pivot_x = 0.0;
-  out->pivot_y = 0.0;
-  out->scale_x = scale_x;
-  out->scale_y = scale_y;
-  out->x = flight::row_get<flight::RowKey<"tx">>(source);
-  out->y = flight::row_get<flight::RowKey<"ty">>(source);
+  (out->pivot_x = 0.0);
+  (out->pivot_y = 0.0);
+  (out->scale_x = scale_x);
+  (out->scale_y = scale_y);
+  (out->x = flight::row_get<flight::RowKey<"tx">>(source));
+  (out->y = flight::row_get<flight::RowKey<"ty">>(source));
 }
 
 inline void initialize_transform2_d(flight::types::EntityConstruction<flight::Ref<flight::types::Transform2D>> out, double x, double y, double rotation, double scale_x, double scale_y, double skew_x, double skew_y, double pivot_x, double pivot_y) {
@@ -61,7 +65,7 @@ inline void initialize_transform2_d(flight::types::EntityConstruction<flight::Re
 inline flight::Ref<flight::types::Transform2D> create_transform2_d(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> rotation = std::nullopt, std::optional<double> scale_x = std::nullopt, std::optional<double> scale_y = std::nullopt, std::optional<double> skew_x = std::nullopt, std::optional<double> skew_y = std::nullopt, std::optional<double> pivot_x = std::nullopt, std::optional<double> pivot_y = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Transform2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Transform2D>>();
   initialize_transform2_d(out, x.value_or(0.0), y.value_or(0.0), rotation.value_or(0.0), scale_x.value_or(1.0), scale_y.value_or(1.0), skew_x.value_or(0.0), skew_y.value_or(0.0), pivot_x.value_or(0.0), pivot_y.value_or(0.0));
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Transform2D>>(out);
 }
 
 } // namespace flight::geometry

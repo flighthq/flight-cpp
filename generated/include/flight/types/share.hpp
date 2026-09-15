@@ -10,6 +10,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct ShareFile; }
+
 #include <flight/types/entity.hpp>
 #include <flight/types/share_file.hpp>
 #include <flight/types/entity.hpp>
@@ -86,8 +90,8 @@ struct CapacitorShareContentOptions : public flight::ReferenceEnabled {
 struct CapacitorShareContentBackend : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::function<bool(ShareContent)> can_share_content;
-  std::function<flight::Task<bool>(ShareContent, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CapacitorShareContentOptions>>>>)> share_content;
-  std::function<flight::Task<flight::Ref<ShareResult>>(ShareContent, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CapacitorShareContentOptions>>>>)> share_content_with_result;
+  std::function<flight::Task<bool>(ShareContent, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CapacitorShareContentOptions>>>>>)> share_content;
+  std::function<flight::Task<flight::Ref<ShareResult>>(ShareContent, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CapacitorShareContentOptions>>>>>)> share_content_with_result;
 };
 
 } // namespace flight::types

@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct ToneMapEffect; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/tone_map_effect.hpp>
@@ -24,7 +27,7 @@ struct exposure_operator_white_974d6747a1009d4b : public flight::ReferenceEnable
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_974D6747A1009D4B
 
 inline void initialize_tone_map_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ToneMapEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_operator_white_974d6747a1009d4b>>>> options) {
-  flight::effects::initialize_render_effect(out, flight::String("ToneMapEffect"));
+  flight::effects::initialize_render_effect<flight::Ref<flight::types::ToneMapEffect>>(out, flight::String("ToneMapEffect"));
   flight::row_set<flight::RowKey<"operator">>(out, flight::row_get<flight::RowKey<"operator">>(options));
   flight::row_set<flight::RowKey<"exposure">>(out, flight::row_get<flight::RowKey<"exposure">>(options));
   flight::row_set<flight::RowKey<"white">>(out, flight::row_get<flight::RowKey<"white">>(options));
@@ -34,7 +37,7 @@ inline flight::Ref<flight::types::ToneMapEffect> create_tone_map_effect(std::opt
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_operator_white_974d6747a1009d4b>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::ToneMapEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ToneMapEffect>>();
   initialize_tone_map_effect(out, options.value());
-  return flight::entity::finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::ToneMapEffect>>(out);
 }
 
 } // namespace flight::effects
