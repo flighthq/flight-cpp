@@ -475,7 +475,7 @@ int main() {
   (*haptics_backend.prepare)();
   if (!haptics_supported) {
     expect(
-        !haptics_backend.cancel() && !haptics_backend.impact(flight::String("light"), 1.0) &&
+        !haptics_backend.cancel() && !haptics_backend.impact(flight::String("light"), std::nullopt) &&
             !haptics_backend.notification(flight::String("success")) &&
             !haptics_backend.selection() && !haptics_backend.vibrate(10.0),
         "SDL SDK haptics accepted an operation without a rumble device");

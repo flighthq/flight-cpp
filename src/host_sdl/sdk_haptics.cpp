@@ -110,12 +110,12 @@ flight::types::HapticsBackend SdkHapticsBackend::backend() const {
     output->supported = supported;
     return output;
   };
-  result.impact = [state = state_](flight::types::HapticImpactStyle style, double intensity) {
+  result.impact = [state = state_](flight::String style, std::optional<double> intensity) {
     double duration = 10.0;
     if (style == flight::String("medium")) duration = 20.0;
     else if (style == flight::String("heavy") || style == flight::String("rigid")) duration = 30.0;
     else if (style == flight::String("soft")) duration = 25.0;
-    return state->rumble(intensity, duration);
+    return state->rumble(intensity.value_or(1.0), duration);
   };
   result.is_supported = [state = state_] { return state->supported(); };
   result.notification = [state = state_](flight::types::HapticNotificationType type) {
