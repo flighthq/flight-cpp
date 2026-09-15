@@ -35,8 +35,9 @@ int main() {
   check(flighthq_cpp_conformance::observe_after_creation() == 7.0,
         "generated closures observe outer mutation after creation");
 
-  check(flighthq_cpp_conformance::select_first_key(flighthq_cpp_conformance::ForInValues{1.0}) ==
-            flight::String("value"),
+  const auto for_in_values = flight::make_ref<flighthq_cpp_conformance::ForInValues>();
+  for_in_values->value = 1.0;
+  check(flighthq_cpp_conformance::select_first_key(for_in_values) == flight::String("value"),
         "generated function-scoped for-in key retains string type evidence");
 
   check(flighthq_cpp_conformance::increment(flight::Task<double>::ready(4.0)).get() == 5.0,

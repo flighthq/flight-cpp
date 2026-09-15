@@ -2,7 +2,6 @@
 #pragma once
 #include <coroutine>
 #include <functional>
-#include <memory>
 #include <optional>
 #include <flight/runtime.hpp>
 
@@ -11,9 +10,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flighthq_cpp_conformance {
 
-struct ForInValues {
-  double value;
-};
+struct ForInValues;
 
 inline flight::String summarize(flight::Array<double> values) {
   flight::Array<double> indexed = values.map([=](double value, double index) { return (value + index); });
@@ -32,26 +29,30 @@ inline double overwrite(flight::Uint8Array values, flight::Array<double> source)
 }
 
 inline std::function<double()> create_counter(double initial) {
-  const auto value_capture = std::make_shared<double>(initial);
+  const auto value_capture = flight::make_binding_cell(double{initial});
   return [=]() {
-  (*value_capture) += 1.0;
-  return (*value_capture);
+  value_capture.update_binding([&](auto& binding_value) { binding_value += 1.0; return binding_value; });
+  return value_capture.read_binding();
 };
 }
 
 inline double observe_after_creation() {
-  const auto value_capture_1 = std::make_shared<double>(0.0);
-  std::function<double()> read = [=]() { return (*value_capture_1); };
-  (*value_capture_1) = 7.0;
+  const auto value_capture_1 = flight::make_binding_cell(double{0.0});
+  std::function<double()> read = [=]() { return value_capture_1.read_binding(); };
+  value_capture_1.rebind(7.0);
   return read();
 }
 
-inline flight::String select_first_key(ForInValues values) {
+struct ForInValues : public flight::ReferenceEnabled {
+  double value;
+};
+
+inline flight::String select_first_key(flight::Ref<ForInValues> values) {
   flight::String key;
   static_cast<void>(values);
   for (const flight::String& variable_hoisting_iteration_value : flight::Array<flight::String>{flight::String("value")}) {
     {
-      key = variable_hoisting_iteration_value;
+      (key = variable_hoisting_iteration_value);
       return key;
     }
   }
@@ -59,7 +60,10 @@ inline flight::String select_first_key(ForInValues values) {
 }
 
 inline flight::Task<double> increment(flight::Task<double> value) {
-  co_return (co_await value + 1.0);
+  {
+    auto await_value = co_await value;
+    co_return (await_value + 1.0);
+  }
 }
 
 } // namespace flighthq_cpp_conformance

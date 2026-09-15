@@ -4,18 +4,11 @@
   "target": "cpp",
   "exceptions": [
     {
-      "fixture": "nameCollision",
-      "phase": "emission",
-      "owner": "compiler-emission",
-      "rule": "public declarations share fixed C++ target name foo_bar",
-      "reason": "Public target-name disambiguation is intentionally refused until its ABI spelling is versioned."
-    },
-    {
       "fixture": "runtimeExternalTypeMissing",
       "phase": "emission",
-      "owner": "runtime-contract",
-      "rule": "runtime external symbol binding plan is incomplete (missing: WeakMap[type])",
-      "reason": "WeakMap has no elected ownership and lifetime contract for native targets."
+      "owner": "compiler-analysis",
+      "rule": "flight-cpp WeakMap key requires a proven Flight reference or external weak-key policy",
+      "reason": "The compiler must reject a string WeakMap key because it has neither weak Flight ownership nor a selected host policy."
     }
   ]
 }
