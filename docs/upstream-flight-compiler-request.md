@@ -2,9 +2,9 @@
 
 The maintained downstream checklist now lives in [flight-compiler adoption status](flight-compiler-adoption.md).
 
-The current checkout pins Flight `1274ec5` and flight-compiler `a6895ee`. Its portable sweep emits 947 of 2,851
-modules; GCC 15.2 compiles 881 of those headers and reports 66 generated-code failures. The complete SDL profile
-emits 1,088 modules, with 980 passing and 108 failing independent-header checks. All 33 upstream example packages
+The current checkout pins Flight `1274ec5` and flight-compiler `9f6ce1c`. Its portable sweep emits 950 of 2,851
+modules; GCC 15.2 compiles 921 of those headers and reports 29 generated-code failures. The complete SDL profile
+emits 1,093 modules, with 1,049 passing and 44 failing independent-header checks. All 33 upstream example packages
 still remain dependency-blocked: the selected graph and direct frontier each emit 0 of 100 modules. Their native
 renderer roots now reach the compiler's unrepresented optional `Raster2DSurfaceProvider` reference domain.
 
@@ -12,9 +12,9 @@ The detailed review below records the earlier `993c280` handoff that defined the
 Both current revisions are pinned in [`dependencies.lock.json`](../dependencies.lock.json), and the maintained status
 document records the active counts and remaining ownership.
 
-## Regression at a6895ee
+## Regression still present at 9f6ce1c
 
-`npm run facets:oracle` now emits an invalid declaration pair for the existing conditional-facet fixture:
+`npm run facets:oracle` still emits an invalid declaration pair for the existing conditional-facet fixture:
 
 ```cpp
 struct TrayWithImage;
@@ -23,15 +23,13 @@ using TrayWithImage = flight::FacetRef<TrayIcon, tray_with_image_facet>;
 
 The second declaration conflicts with the first, leaving the alias incomplete at every conversion and call site.
 The runtime ABI and fixture passed at `993c280`; the failure appears in the compiler's module-reference
-forward-declaration path added in this update. Alias targets must not receive record-style `struct` forward
-declarations. `npm run check` otherwise passes 26 of 27 gates at `a6895ee`, including 201 emitted C++ files across
-200 compiler fixtures. Keep this oracle red until the compiler emits a legal alias dependency order.
+forward-declaration path. Alias targets must not receive record-style `struct` forward declarations. The focused
+oracle reproduces the same failure at `9f6ce1c`; keep it red until the compiler emits a legal alias dependency order.
 
 ## Complete report sweep
 
-The full graph now finishes locally in about two and a half minutes. It processes all 154 SDK packages and 2,851
-source modules, emits 959 dependency-closed headers, and records 1,892 refused modules: 1,089 direct emission
-refusals and 803 propagated dependency refusals. The exact headers,
+The full graph processes all 154 SDK packages and 2,851 source modules, emits 950 dependency-closed portable
+headers, and records 1,901 refused modules: 1,105 direct emission refusals and 796 propagated dependency refusals. The exact headers,
 initialization order, package totals, and refusal diagnostics are committed under [`generated/`](../generated/).
 `npm run sdk:check` reproduces the tree from the two pins.
 
@@ -67,8 +65,9 @@ flight-cpp now supplies all runtime headers referenced by the emitted inventory:
   `PermissionDescriptor`, and `PositionOptions` values exercised by live compiler fixtures;
 - `TextEncoder` scalar UTF-8 and unpaired-surrogate replacement, whose newly admitted SWF helper compiles after
   shared runtime containers gained JavaScript-compatible logical constness;
-- numeric conversion and prefix parsing, safe-integer checks, object keys/values, symbols, URL protocol parsing,
-  regular expressions, and a deterministic Intl baseline;
+- numeric conversion and prefix parsing, ECMAScript radix number formatting, `String.padEnd`, safe-integer checks,
+  object keys/values, global and non-global symbols, URL protocol parsing, regular expressions, and a deterministic
+  Intl baseline;
 - idempotent `Ref<T>` projection, generated structural-row member access, writable entity construction, and
   structural reference casts;
 - weak identity maps and sets for Flight references, closed reference variants, and weakly recoverable Flight arrays,
@@ -90,22 +89,16 @@ development preset, and is declared in the Bazel graph.
 ## Remaining compiler-owned native failures
 
 The emitted set is dependency-closed in the TypeScript package graph, but dependency closure is not yet the same as
-C++ well-formedness. With GCC 15.2, 703 of the 959 headers compile independently and 256 fail. The composed SDL
-profile emits 1,098 modules, of which 756 compile and 342 fail. Compared with compiler `5649642`, the portable pass
-count is one lower while 72 malformed headers move behind explicit refusals; the SDL profile retains its previously
-compiling headers while moving 31 malformed headers behind refusals. The current native
-report is dominated by emission defects that cannot be repaired by adding a runtime symbol:
+C++ well-formedness. With GCC 15.2, 921 of the 950 portable headers compile independently and 29 fail. The composed
+SDL profile emits 1,093 modules, of which 1,049 compile and 44 fail. The new downstream `number_to_string`,
+`String::pad_end`, and `Symbol(String)` contracts remove every missing-runtime-symbol diagnostic. The current native
+report is entirely emission defects that cannot be repaired by adding another runtime symbol:
 
-- source module-private helpers are emitted into one package namespace, so package barrels encounter C++
-  redefinitions;
-- several ambient aliases are applied as templates even though their emitted C++ target is a concrete type;
-- some imported types are referenced by snake-case value spelling instead of their emitted PascalCase type name;
-- optional values are passed or assigned where their contained value is required;
-- discriminated unions represented by `std::variant` still receive direct member access;
-- several structurally equivalent anonymous records are emitted as distinct, non-convertible C++ structs;
-- mutually importing generated records can include one another before either side forward-declares its referenced
-  type (`Screen`, `ScreenChangeEvent`, and `ScreenSignals` currently demonstrate this cycle);
-- a few emitted tokens and type queries remain malformed, including `typeidel`.
+- 16 incompatible structural assertions across adjustments, image-codec, and spatial;
+- 21 nominal, structural, optional, and `Record` conversions across binpack, font-formats, materials, media, mesh,
+  particles, physics3d, scene2d-formats, and skeleton2d;
+- six recursive-alias declaration failures for `TiledLayer` and `FlightDocumentValue`; and
+- one incorrectly optionalized XML replacement-callback parameter.
 
 The stricter compiler newly refuses 16 direct roots that the previous portable sweep emitted. Five need equivalent
 source-union evidence, five expose generic typed-array backing domains that are not represented by the concrete C++
@@ -236,7 +229,10 @@ per-module evidence is committed in `examples/upstream/generated/refusals.json`.
 The separate frontier ledger deliberately compiles each selected example without its package dependencies, so its
 29 missing package-evaluation entries are boundary markers rather than claims that the full graph omitted those
 packages. It records 33 dependency and 38 direct emission boundaries, led by contextual optional construction,
-captured referent mutation, contextual typing for empty arrays, and package evaluation. The SDL
+captured referent mutation, contextual typing for empty arrays, and package evaluation. Seven application roots now
+report `runtime external symbol binding plan is incomplete (missing: R[type])`. No `R` external type exists in the
+pinned Flight sources, so this is synthesized generic evidence escaping into the external-binding plan and cannot be
+made sound by adding a downstream binding. The SDL
 application profile resolves every direct keyboard, pointer, wheel, gamepad-button, rectangle, DOM attachment,
 window, animation-frame, generic iterable, and concrete HTML control ambient in the chosen lane. Those HTML bindings
 expose intersection, `typeOf`, contextual union, multi-variant, optional construction, and empty-array compiler
@@ -279,7 +275,8 @@ platform identity; unavailable identity and environment fields retain the upstre
 needs no further compiler work and resolves its SDL window id on each dynamic read.
 
 `Flight::HostSdlSdkHaptics` populates the emitted `HapticsBackend` without compiler changes. It uses SDL gamepad
-rumble for the continuous and named feedback operations, dynamically tracks a capable connected device, and leaves
+rumble for the continuous and named feedback operations, accepts the emitted optional impact intensity, dynamically
+tracks a capable connected device, and leaves
 multi-step pattern/waveform capability absent because SDL has no corresponding timed primitive.
 
 `Flight::HostSdlSdkScreen` populates the dependency-closed `ScreenQueryBackend`, `ScreenDetailsBackend`, and
@@ -296,7 +293,7 @@ absent capabilities.
 
 The manifest-free generation remains the portable floor. Browser, media, Node, and graphics handles require explicit
 binding profiles. SDL owns lifecycle and GL, Vulkan, or WebGPU surface acquisition; generated Flight renderer
-packages own rendering behavior. These host bindings increase the emitted module set from 959 to 1,098, while the
+packages own rendering behavior. These host bindings increase the emitted module set from 950 to 1,093, while the
 portable compile gate remains useful and independent of platform SDKs.
 
 The SDL host now also implements the complete emitted `AudioDeviceBackend` operation record over SDL's device
