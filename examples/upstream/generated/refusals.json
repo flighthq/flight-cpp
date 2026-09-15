@@ -1,6 +1,6 @@
 {
   "schema": "flight-generated-upstream-example-refusals/1",
-  "compilerRevision": "a6895ee00994bce116c9fdff6c3503462437eee8",
+  "compilerRevision": "9f6ce1cad0d5cfcb047ccb2237995bca39161acc",
   "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
   "refusals": [
     {
@@ -203,7 +203,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/flowstates/src/app.ts",
       "package": "@flighthq/example-flowstates",
-      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/app.ts: contextual union value type std::function<auto()> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/app.ts: contextual union value type std::function<void()> is not a represented runtime domain",
       "stage": "emission"
     },
     {

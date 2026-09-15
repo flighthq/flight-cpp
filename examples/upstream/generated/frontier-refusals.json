@@ -1,13 +1,13 @@
 {
   "schema": "flight-generated-upstream-example-frontier-refusals/1",
-  "compilerRevision": "a6895ee00994bce116c9fdff6c3503462437eee8",
+  "compilerRevision": "9f6ce1cad0d5cfcb047ccb2237995bca39161acc",
   "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
   "refusals": [
     {
       "code": "unsupported-ir",
       "module": "examples/packages/adjustments/src/app.ts",
       "package": "@flighthq/example-adjustments",
-      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
       "stage": "emission"
     },
     {
@@ -119,7 +119,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/clock/src/app.ts",
       "package": "@flighthq/example-clock",
-      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
       "stage": "emission"
     },
     {
@@ -161,7 +161,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/cross-backend-embed/src/app.ts",
       "package": "@flighthq/example-cross-backend-embed",
-      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], R[type])",
       "stage": "emission"
     },
     {
@@ -203,7 +203,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/flowstates/src/app.ts",
       "package": "@flighthq/example-flowstates",
-      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
       "stage": "emission"
     },
     {
@@ -287,7 +287,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/motionpath/src/app.ts",
       "package": "@flighthq/example-motionpath",
-      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
       "stage": "emission"
     },
     {
@@ -308,7 +308,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/movieclip/src/app.ts",
       "package": "@flighthq/example-movieclip",
-      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
       "stage": "emission"
     },
     {
@@ -518,7 +518,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/sound/src/app.ts",
       "package": "@flighthq/example-sound",
-      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/app.ts: runtime external symbol binding plan is incomplete (missing: AudioContext[value], AudioContextOptions[type])",
+      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/app.ts: runtime external symbol binding plan is incomplete (missing: AudioContext[value], AudioContextOptions[type], R[type])",
       "stage": "emission"
     },
     {
@@ -623,7 +623,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/textinput/src/app.ts",
       "package": "@flighthq/example-textinput",
-      "reason": "cpp emission failed for @flighthq/example-textinput/examples/packages/textinput/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-textinput/examples/packages/textinput/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
       "stage": "emission"
     },
     {
@@ -665,7 +665,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/tween/src/app.ts",
       "package": "@flighthq/example-tween",
-      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
       "stage": "emission"
     },
     {
