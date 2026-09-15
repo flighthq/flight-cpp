@@ -130,6 +130,10 @@ pass count increased by 69 and its failure count fell by 64.
 - `npm run facets:oracle` remains red at `9f6ce1c`: the compiler forward-declares the
   `TrayWithImage` alias as a struct before defining it as `flight::FacetRef`. The downstream conditional-facet ABI
   still passes its native coverage; the generated declaration collision requires a compiler fix.
+- `npm run compile:check` finds one additional compiler-fixture failure at `9f6ce1c`. The nested array-binding default
+  `[1]` is emitted as `std::make_tuple(1.0)` and passed to
+  `std::optional<flight::Array<double>>::value_or`, which is not convertible. The compiler must emit a
+  `flight::Array<double>` default; flight-cpp must not make arbitrary tuples implicitly convertible to arrays.
 - `Flight::Sdk` remains blocked until every emitted header in the selected binding profile compiles. At that point it
   must be installed/exported through CMake and exposed through Bazel, then exercised as an installed consumer.
 - The reciprocal lock cannot be completed solely in this checkout: after these commits land, flight-compiler must pin

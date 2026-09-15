@@ -26,6 +26,18 @@ The runtime ABI and fixture passed at `993c280`; the failure appears in the comp
 forward-declaration path. Alias targets must not receive record-style `struct` forward declarations. The focused
 oracle reproduces the same failure at `9f6ce1c`; keep it red until the compiler emits a legal alias dependency order.
 
+The same pin adds a second compiler-owned regression to the downstream aggregate gate. The `arrayBinding` golden
+emits the nested tuple default `[1]` as:
+
+```cpp
+std::get<0>(array_pattern_value).value_or(std::make_tuple(1.0));
+```
+
+The optional contains `flight::Array<double>`, so GCC correctly rejects the tuple argument. This must emit the
+represented array value instead. Adding a general tuple-to-Array conversion in flight-cpp would accept unrelated
+target-shape errors and is not a valid runtime fix. `npm run compile:check` reproduces this as its sole failing
+compiler fixture.
+
 ## Complete report sweep
 
 The full graph processes all 154 SDK packages and 2,851 source modules, emits 950 dependency-closed portable
