@@ -21,7 +21,7 @@ inline flight::Array<double> generate_tone_samples(double frequency, double dura
         auto envelope = std::exp((-decay * t));
         samples.push((std::sin((((2.0 * flight::pi) * frequency) * t)) * envelope));
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   return samples;
@@ -39,9 +39,9 @@ inline flight::Array<double> generate_sweep_samples(double start_frequency, doub
         const double frequency = (start_frequency + ((end_frequency - start_frequency) * (t / duration)));
         auto envelope = std::exp((-decay * t));
         samples.push((std::sin(phase) * envelope));
-        phase += (((2.0 * flight::pi) * frequency) / sample_rate);
+        (phase += (((2.0 * flight::pi) * frequency) / sample_rate));
       }
-      i += 1.0;
+      (i += 1.0);
     }
   }
   return samples;

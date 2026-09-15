@@ -20,7 +20,7 @@ inline double ease_in_elastic(double t) {
   }
   const double period = 0.4;
   const double shift = (period / 4.0);
-  t -= 1.0;
+  (t -= 1.0);
   return -(flight::power(2.0, (10.0 * t)) * std::sin((((t - shift) * (2.0 * flight::pi)) / period)));
 }
 
@@ -60,14 +60,14 @@ inline double ease_out_bounce(double t) {
     return ((7.5625 * t) * t);
   }
   if ((t < (2.0 / 2.75))) {
-    t -= (1.5 / 2.75);
+    (t -= (1.5 / 2.75));
     return (((7.5625 * t) * t) + 0.75);
   }
   if ((t < (2.5 / 2.75))) {
-    t -= (2.25 / 2.75);
+    (t -= (2.25 / 2.75));
     return (((7.5625 * t) * t) + 0.9375);
   }
-  t -= (2.625 / 2.75);
+  (t -= (2.625 / 2.75));
   return (((7.5625 * t) * t) + 0.984375);
 }
 
