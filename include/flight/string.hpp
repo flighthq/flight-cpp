@@ -87,7 +87,8 @@ class String {
     if (value == 0.0) return String("0");
 
     std::array<char, 64> buffer{};
-    const auto conversion = std::to_chars(buffer.data(), buffer.data() + buffer.size(), value);
+    const auto conversion =
+        std::to_chars(buffer.data(), buffer.data() + buffer.size(), value, std::chars_format::general);
     if (conversion.ec != std::errc{}) throw std::runtime_error("flight::String number conversion failed");
     return String::from_utf8(format_number(std::string(buffer.data(), conversion.ptr)));
   }
@@ -199,6 +200,17 @@ class String {
     }
     padding.append(value_);
     return String(std::move(padding));
+  }
+
+  [[nodiscard]] String pad_end(std::ptrdiff_t target_length, const String& fill = String(" ")) const {
+    if (target_length <= 0 || static_cast<size_type>(target_length) <= size() || fill.empty()) return *this;
+    auto result = value_;
+    result.reserve(static_cast<size_type>(target_length));
+    while (result.size() < static_cast<size_type>(target_length)) {
+      const auto remaining = static_cast<size_type>(target_length) - result.size();
+      result.append(fill.value_, 0, std::min(remaining, fill.size()));
+    }
+    return String(std::move(result));
   }
 
   [[nodiscard]] String repeat(std::ptrdiff_t count) const {

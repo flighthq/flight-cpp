@@ -988,6 +988,19 @@ void test_new_runtime_services() {
             flight::to_number(flight::String("-1.25e2")) == -125.0 &&
             std::isnan(flight::to_number(flight::String("-0x10"))),
         "to_number handles empty, prefixed, decimal, and invalid signed-prefix inputs");
+  check(flight::number_to_string(255.0, 16.0) == flight::String("ff") &&
+            flight::number_to_string(-10.5, 2.0) == flight::String("-1010.1") &&
+            flight::number_to_string(0.1, 2.0) ==
+                flight::String("0.0001100110011001100110011001100110011001100110011001101") &&
+            flight::number_to_string(-0.0, 36.0) == flight::String("0"),
+        "number_to_string follows JavaScript radix conversion for integer and fractional numbers");
+  bool invalid_radix = false;
+  try {
+    static_cast<void>(flight::number_to_string(1.0, 1.0));
+  } catch (const std::range_error&) {
+    invalid_radix = true;
+  }
+  check(invalid_radix, "number_to_string rejects radices outside JavaScript's 2 through 36 range");
 
   flight::Map<flight::String, double> record{{"first", 1.0}, {"second", 2.0}};
   const auto keys = flight::object_keys(record);
@@ -1004,9 +1017,12 @@ void test_new_runtime_services() {
 
   const auto first_symbol = flight::Symbol::for_key("entity");
   const auto same_symbol = flight::Symbol::for_key("entity");
+  const flight::Symbol described_symbol("entity");
+  const flight::Symbol second_described_symbol("entity");
   check(first_symbol == same_symbol && first_symbol != flight::Symbol::for_key("other") &&
-            flight::Symbol() != flight::Symbol(),
-        "Symbol.for interns keys while direct symbols retain distinct identity");
+            described_symbol != second_described_symbol && described_symbol != first_symbol &&
+            described_symbol.key() == flight::String("entity") && flight::Symbol() != flight::Symbol(),
+        "Symbol.for interns keys while direct described and anonymous symbols retain distinct identity");
 
   check(flight::Url("HTTP://example.test/path").protocol == flight::String("http:") &&
             flight::Url("child", "https://example.test/base").protocol == flight::String("https:"),
@@ -1259,6 +1275,8 @@ void test_string() {
         "ASCII case conversion is deterministic without a provider");
   check(flight::String("ab").pad_start(5, "01") == flight::String("010ab"),
         "string pad_start truncates repeated fill at UTF-16 boundaries");
+  check(flight::String("ab").pad_end(5, "01") == flight::String("ab010"),
+        "string pad_end truncates repeated fill at UTF-16 boundaries");
   check(flight::String("ab").repeat(3) == flight::String("ababab"),
         "string repeat uses code-unit-preserving concatenation");
   check(flight::String("flight").substring(4, 1) == flight::String("lig"),

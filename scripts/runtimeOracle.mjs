@@ -89,6 +89,21 @@ const expected = JSON.stringify([
   Number.isSafeInteger(9007199254740992),
   Number('0b101'),
   Number('-0x10'),
+  [
+    (255).toString(16),
+    (-10.5).toString(2),
+    (0.2).toString(3),
+    (1.2184253536972378e19).toString(10),
+  ],
+  (() => {
+    try {
+      (1).toString(37);
+      return false;
+    } catch (error) {
+      return error instanceof RangeError;
+    }
+  })(),
+  'ab'.padEnd(5, '01'),
   Math.fround(1.337),
   Math.fround(16777217),
   Object.is(Math.fround(-0), -0),
@@ -114,6 +129,14 @@ const expected = JSON.stringify([
   Object.entries(record),
   Object.values(record),
   record.missing === undefined && Object.keys(record).length === 8,
+  (() => {
+    const described = Symbol('runtime-oracle-record');
+    return [
+      described !== Symbol('runtime-oracle-record'),
+      described !== recordSymbol,
+      described.description,
+    ];
+  })(),
   weakSetAddIdentity,
   weakSetDelete,
   JSON.stringify(JSON.parse('{"name":"Flight","values":[null,-1.5e2,"\\ud83d\\ude00"]}')),

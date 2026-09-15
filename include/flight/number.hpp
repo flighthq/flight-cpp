@@ -1,10 +1,13 @@
 #pragma once
 
+#include <algorithm>
+#include <bit>
 #include <charconv>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <limits>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 
@@ -55,7 +58,88 @@ inline double prefixed_integer(std::string_view value, int radix) noexcept {
   return result;
 }
 
+inline int number_exponent(double value) noexcept {
+  const auto stored = static_cast<int>((std::bit_cast<std::uint64_t>(value) >> 52) & 0x7FFU);
+  return stored == 0 ? -1074 : stored - 1023 - 52;
+}
+
+inline char radix_character(int digit) noexcept {
+  return digit < 10 ? static_cast<char>('0' + digit) : static_cast<char>('a' + digit - 10);
+}
+
+// ECMAScript's non-decimal Number string conversion is intentionally based on the input double's
+// precision rather than an exact expansion of its rational value. Fractional digits stop at half
+// the distance to the next representable double; large integer places beyond binary precision are
+// emitted as zeroes. This also supplies the specified round-to-even carry behavior.
+inline std::string finite_number_to_radix(double value, int radix) {
+  double integer = std::floor(value);
+  double fraction = value - integer;
+  double delta = 0.5 * (std::nextafter(value, std::numeric_limits<double>::infinity()) - value);
+  if (delta <= 0.0) delta = std::numeric_limits<double>::denorm_min();
+
+  std::string fractional_digits;
+  if (fraction >= delta) {
+    do {
+      fraction *= static_cast<double>(radix);
+      delta *= static_cast<double>(radix);
+      int digit = static_cast<int>(fraction);
+      fractional_digits.push_back(radix_character(digit));
+      fraction -= static_cast<double>(digit);
+      if ((fraction > 0.5 || (fraction == 0.5 && (digit & 1) != 0)) &&
+          fraction + delta > 1.0) {
+        while (!fractional_digits.empty()) {
+          const char character = fractional_digits.back();
+          digit = character > '9' ? character - 'a' + 10 : character - '0';
+          if (digit + 1 < radix) {
+            fractional_digits.back() = radix_character(digit + 1);
+            break;
+          }
+          fractional_digits.pop_back();
+        }
+        if (fractional_digits.empty()) integer += 1.0;
+        break;
+      }
+    } while (fraction >= delta);
+  }
+
+  std::size_t zero_suffix = 0;
+  while (number_exponent(integer / static_cast<double>(radix)) > 0) {
+    integer /= static_cast<double>(radix);
+    ++zero_suffix;
+  }
+  std::string integer_digits;
+  do {
+    const double remainder = std::fmod(integer, static_cast<double>(radix));
+    integer_digits.push_back(radix_character(static_cast<int>(remainder)));
+    integer = (integer - remainder) / static_cast<double>(radix);
+  } while (integer > 0.0);
+  std::reverse(integer_digits.begin(), integer_digits.end());
+  integer_digits.append(zero_suffix, '0');
+  if (!fractional_digits.empty()) {
+    integer_digits.push_back('.');
+    integer_digits.append(fractional_digits);
+  }
+  return integer_digits;
+}
+
 } // namespace detail
+
+inline String number_to_string(double value, double radix_value = 10.0) {
+  if (!std::isfinite(radix_value)) {
+    throw std::range_error("flight::number_to_string radix must be between 2 and 36");
+  }
+  const auto radix = static_cast<int>(std::trunc(radix_value));
+  if (radix < 2 || radix > 36) {
+    throw std::range_error("flight::number_to_string radix must be between 2 and 36");
+  }
+  if (radix == 10 || !std::isfinite(value) || value == 0.0) return String::from_number(value);
+
+  const bool negative = value < 0.0;
+  const double magnitude = negative ? -value : value;
+  std::string result = detail::finite_number_to_radix(magnitude, radix);
+  if (negative) result.insert(result.begin(), '-');
+  return String::from_utf8(result);
+}
 
 inline double parse_int(const String& input, double radix_value = 0.0) {
   const std::string encoded = input.to_utf8();

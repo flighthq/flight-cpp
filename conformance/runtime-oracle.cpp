@@ -59,6 +59,20 @@ int main() {
   observations.push(flight::is_safe_integer(9007199254740992.0));
   observations.push(flight::to_number("0b101"));
   observations.push(flight::to_number("-0x10"));
+  observations.push(flight::JsonArray{
+      flight::number_to_string(255.0, 16.0),
+      flight::number_to_string(-10.5, 2.0),
+      flight::number_to_string(0.2, 3.0),
+      flight::number_to_string(1.2184253536972378e19, 10.0),
+  });
+  bool rejected_radix = false;
+  try {
+    static_cast<void>(flight::number_to_string(1.0, 37.0));
+  } catch (const std::range_error&) {
+    rejected_radix = true;
+  }
+  observations.push(rejected_radix);
+  observations.push(flight::String("ab").pad_end(5, "01"));
   observations.push(flight::fround(1.337));
   observations.push(flight::fround(16777217.0));
   observations.push(std::signbit(flight::fround(-0.0)));
@@ -156,6 +170,14 @@ int main() {
   observations.push(std::move(record_values));
   observations.push(!record.get(flight::String("missing")).has_value() &&
                     flight::object_keys(record).size() == 8);
+
+  const flight::Symbol described_symbol("runtime-oracle-record");
+  const flight::Symbol second_described_symbol("runtime-oracle-record");
+  observations.push(flight::JsonArray{
+      described_symbol != second_described_symbol,
+      described_symbol != record_symbol,
+      described_symbol.key(),
+  });
 
   auto weak_set_key = flight::make_ref<flight::ReferenceEnabled>();
   flight::WeakSet<flight::Ref<flight::ReferenceEnabled>> weak_set;
