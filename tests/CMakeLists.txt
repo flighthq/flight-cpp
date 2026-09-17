@@ -30,6 +30,7 @@ add_test(NAME flight_cpp.c_api_threads COMMAND flight_cpp_c_api_thread_tests)
 set(
   flight_cpp_public_headers
   abort
+  any
   array
   array_buffer
   array_buffer_view
@@ -38,6 +39,7 @@ set(
   blob
   boolean
   callable
+  canvas_2d
   conditional_facet_ref
   contract
   data_view
@@ -66,6 +68,7 @@ set(
   string
   stream
   structural_ref
+  structured_clone
   symbol
   runtime
   task

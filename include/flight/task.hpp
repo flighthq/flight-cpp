@@ -11,12 +11,14 @@
 #include <mutex>
 #include <optional>
 #include <stdexcept>
+#include <string_view>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
 #include <flight/array.hpp>
 #include <flight/executor.hpp>
+#include <flight/string.hpp>
 #include <flight/rejection.hpp>
 
 namespace flight {
@@ -39,6 +41,49 @@ struct TaskSettlement<void> {
   TaskStatus status;
   std::optional<Rejection> rejection;
 };
+
+// The two arms of a settled result, separately. `TaskSettlement` is the union of both and carries
+// `value` and `rejection` together, which states something neither arm is: a fulfilled result has
+// no rejection and a rejected result has no value. `Promise.allSettled` hands out the arms, and
+// code that narrows on `status` reads the member the arm actually has, so the arms exist in their
+// own right rather than as views onto the union.
+//
+// `status` is a string rather than the `TaskStatus` enum because that is what the source narrows
+// on: `result.status === 'rejected'` is a string comparison in every module that consumes one.
+template <typename Value>
+struct TaskFulfillment {
+  String status{String("fulfilled")};
+  Value value;
+};
+
+template <>
+struct TaskFulfillment<void> {
+  String status{String("fulfilled")};
+};
+
+struct TaskRejectionResult {
+  String status{String("rejected")};
+  Rejection reason;
+};
+
+inline constexpr std::string_view task_fulfilled_status = "fulfilled";
+inline constexpr std::string_view task_rejected_status = "rejected";
+
+// Narrowing from the union to an arm. An empty result means the settlement is the other arm -- or
+// is still pending, which is neither -- so a caller selects rather than assuming.
+template <typename Value>
+[[nodiscard]] std::optional<TaskFulfillment<Value>> as_fulfilled(
+    const TaskSettlement<Value>& settlement) {
+  if (settlement.status != TaskStatus::fulfilled || !settlement.value) return std::nullopt;
+  return TaskFulfillment<Value>{String(task_fulfilled_status), *settlement.value};
+}
+
+template <typename Value>
+[[nodiscard]] std::optional<TaskRejectionResult> as_rejected(
+    const TaskSettlement<Value>& settlement) {
+  if (settlement.status != TaskStatus::rejected || !settlement.rejection) return std::nullopt;
+  return TaskRejectionResult{String(task_rejected_status), *settlement.rejection};
+}
 
 template <typename Value>
 class Task;

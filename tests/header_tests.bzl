@@ -73,4 +73,7 @@ _PUBLIC_HEADERS = [
     ("iterator", 47),
     ("dom_exception", 48),
     ("image_data", 49),
+    ("canvas_2d", 50),
+    ("any", 51),
+    ("structured_clone", 52),
 ]

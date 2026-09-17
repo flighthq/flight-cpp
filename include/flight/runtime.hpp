@@ -1,6 +1,7 @@
 #pragma once
 
 #include <flight/abort.hpp>
+#include <flight/any.hpp>
 #include <flight/array.hpp>
 #include <flight/array_buffer.hpp>
 #include <flight/array_buffer_view.hpp>
@@ -9,6 +10,7 @@
 #include <flight/blob.hpp>
 #include <flight/boolean.hpp>
 #include <flight/callable.hpp>
+#include <flight/canvas_2d.hpp>
 #include <flight/conditional_facet_ref.hpp>
 #include <flight/contract.hpp>
 #include <flight/date.hpp>
@@ -37,6 +39,7 @@
 #include <flight/string.hpp>
 #include <flight/stream.hpp>
 #include <flight/structural_ref.hpp>
+#include <flight/structured_clone.hpp>
 #include <flight/symbol.hpp>
 #include <flight/task.hpp>
 #include <flight/text_decoder.hpp>

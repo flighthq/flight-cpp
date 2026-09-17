@@ -98,6 +98,12 @@
 #include <flight/dom_exception.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 49
 #include <flight/image_data.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 50
+#include <flight/canvas_2d.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 51
+#include <flight/any.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 52
+#include <flight/structured_clone.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

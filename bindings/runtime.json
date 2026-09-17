@@ -274,6 +274,36 @@
     },
     {
       "headers": [
+        "flight/task.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "PromiseFulfilledResult",
+      "space": "type",
+      "targetName": "flight::TaskFulfillment"
+    },
+    {
+      "headers": [
+        "flight/task.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "PromiseRejectedResult",
+      "space": "type",
+      "targetName": "flight::TaskRejectionResult"
+    },
+    {
+      "headers": [
+        "flight/structured_clone.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "structuredClone",
+      "space": "value",
+      "targetName": "flight::structured_clone"
+    },
+    {
+      "headers": [
         "flight/stream.hpp"
       ],
       "nullability": "non-null",

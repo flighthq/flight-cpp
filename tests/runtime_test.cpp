@@ -12,6 +12,9 @@
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <typeindex>
+#include <utility>
+#include <variant>
 #include <vector>
 
 namespace {
@@ -476,6 +479,15 @@ void test_contract() {
         "binary storage capabilities are advertised after their implementation lands");
   check(flight::runtime_capability_status("blob") == flight::RuntimeCapabilityStatus::initial,
         "immutable Blob storage is advertised after its runtime implementation lands");
+  check(flight::runtime_capability_status("erased-value") == flight::RuntimeCapabilityStatus::initial &&
+            flight::runtime_capability_status("structured-clone") == flight::RuntimeCapabilityStatus::initial &&
+            flight::runtime_capability_status("attached-properties") == flight::RuntimeCapabilityStatus::initial &&
+            flight::runtime_capability_status("task-settlement-arms") == flight::RuntimeCapabilityStatus::initial,
+        "the erased value, structured clone, attached properties, and settled arms are advertised "
+        "only now that their semantic tests exist");
+  check(flight::runtime_capability_status("canvas-2d-state") == flight::RuntimeCapabilityStatus::initial &&
+            flight::runtime_capability_status("canvas-2d") == flight::RuntimeCapabilityStatus::unavailable,
+        "the Canvas 2D drawing state is advertised while a Canvas 2D implementation is not");
   check(flight::runtime_capability_status("readable-stream") == flight::RuntimeCapabilityStatus::initial &&
             flight::runtime_capability_status("writable-stream") == flight::RuntimeCapabilityStatus::initial &&
             flight::runtime_capability_status("async-iterable") == flight::RuntimeCapabilityStatus::initial,
@@ -519,6 +531,814 @@ void test_error() {
             dom_error.name == flight::String("IndexSizeError") && dom_error.code == 1.0 &&
             std::string(dom_error.what()) == "bad dimensions",
         "DOMException exposes its Web IDL name, message, and legacy code");
+}
+
+// A rasterizer that records the resolved commands it is handed, which is what lets the portable
+// half of the Canvas 2D contract be tested without a rasterizer existing.
+class RecordingRasterizer final : public flight::Canvas2DRasterizer {
+ public:
+  struct FillRecord final {
+    flight::String fill_rule;
+    std::size_t segments;
+    flight::CanvasStyle style;
+    double global_alpha;
+    flight::DomMatrix first_transform;
+  };
+
+  struct ImageRecord final {
+    flight::Canvas2DRect destination;
+    flight::Canvas2DRect source;
+    std::type_index source_type{typeid(void)};
+  };
+
+  void clear_rect(const flight::Canvas2DRect& rect, const flight::Canvas2DDrawingState&) override {
+    cleared.push_back(rect);
+  }
+
+  void fill_path(const flight::Canvas2DPath& path, const flight::String& fill_rule,
+                 const flight::Canvas2DDrawingState& state) override {
+    fills.push_back(FillRecord{
+        fill_rule, path.segments().size(), state.fill_style, state.global_alpha,
+        path.segments().empty() ? flight::DomMatrix() : path.segments().front().transform});
+  }
+
+  void stroke_path(const flight::Canvas2DPath& path,
+                   const flight::Canvas2DDrawingState& state) override {
+    strokes.push_back(FillRecord{flight::String("stroke"), path.segments().size(),
+                                 state.stroke_style, state.line_width,
+                                 state.transform});
+  }
+
+  void draw_image(const flight::Canvas2DImageSource& image, const flight::Canvas2DRect& source,
+                  const flight::Canvas2DRect& destination,
+                  const flight::Canvas2DDrawingState&) override {
+    images.push_back(ImageRecord{destination, source, image.source_type()});
+  }
+
+  void draw_text(const flight::String& text, double x, double y, std::optional<double> max_width,
+                 bool stroke, const flight::Canvas2DDrawingState& state) override {
+    texts.push_back(text);
+    text_positions.push_back({x, y});
+    text_stroked.push_back(stroke);
+    text_max_widths.push_back(max_width);
+    text_fonts.push_back(state.font);
+  }
+
+  [[nodiscard]] flight::WebTextMetrics measure_text(
+      const flight::String& text, const flight::Canvas2DDrawingState&) override {
+    flight::WebTextMetrics metrics;
+    metrics.width = static_cast<double>(text.length()) * 7.0;
+    return metrics;
+  }
+
+  [[nodiscard]] flight::ImageData read_image_data(
+      const flight::Canvas2DRect& rect, const flight::ImageDataSettings& settings) override {
+    reads.push_back(rect);
+    return flight::ImageData(rect.width, rect.height, settings);
+  }
+
+  void write_image_data(const flight::ImageData& image, double x, double y,
+                        const std::optional<flight::Canvas2DRect>& dirty) override {
+    writes.push_back({image.width, image.height, x, y});
+    dirty_rects.push_back(dirty);
+  }
+
+  [[nodiscard]] bool is_point_in_path(const flight::Canvas2DPath&, double, double,
+                                      const flight::String&,
+                                      const flight::Canvas2DDrawingState&) override {
+    return true;
+  }
+
+  [[nodiscard]] bool is_point_in_stroke(const flight::Canvas2DPath&, double, double,
+                                        const flight::Canvas2DDrawingState&) override {
+    return false;
+  }
+
+  std::vector<flight::Canvas2DRect> cleared;
+  std::vector<std::optional<flight::Canvas2DRect>> dirty_rects;
+  std::vector<FillRecord> fills;
+  std::vector<flight::String> text_fonts;
+  std::vector<ImageRecord> images;
+  std::vector<flight::Canvas2DRect> reads;
+  std::vector<FillRecord> strokes;
+  std::vector<flight::String> texts;
+  std::vector<std::optional<double>> text_max_widths;
+  std::vector<std::pair<double, double>> text_positions;
+  std::vector<bool> text_stroked;
+  std::vector<std::array<double, 4>> writes;
+};
+
+struct TestCanvasImage final {
+  int handle;
+};
+
+struct TestNativeHandle final {
+  int window;
+
+  [[nodiscard]] friend bool operator==(const TestNativeHandle&, const TestNativeHandle&) = default;
+};
+
+struct TestSnapshotNode final {
+  flight::Array<double> samples;
+  std::optional<flight::Ref<TestSnapshotNode>> next;
+};
+
+} // namespace
+
+namespace flight {
+
+template <>
+struct structured_clone_traits<TestSnapshotNode> {
+  [[nodiscard]] static TestSnapshotNode clone(const TestSnapshotNode& value,
+                                              detail::StructuredCloneMemo& memo) {
+    return TestSnapshotNode{structured_clone(value.samples, memo),
+                            structured_clone(value.next, memo)};
+  }
+};
+
+} // namespace flight
+
+namespace {
+
+void test_attached_properties() {
+  const auto object = flight::make_ref<TestReference>(TestReference{{}, 11});
+  const auto key = flight::Symbol::for_key(flight::String("ParticleEmitterSignals"));
+  const auto other = flight::Symbol::for_key(flight::String("Other"));
+
+  auto view = flight::attached_properties(object);
+  check(static_cast<bool>(view) && !view.has(key) && !view.get(key).has_value(),
+        "an object with nothing attached reports no entry for a key");
+
+  view.set(key, flight::Any());
+  check(view.has(key) && view.get(key).has_value() && view.get(key)->is_undefined(),
+        "an entry written with undefined is present, and is not the same as no entry");
+  check(!view.has(other) && !view.get(other).has_value(),
+        "a key that was never written still reports no entry");
+
+  view.set(key, flight::Any(7.0));
+  check(view.get(key)->as_number() == 7.0, "an attached entry is overwritten in place");
+
+  // The attachment is reachable from every projection of the same object, which is the property a
+  // per-type owner table did not have.
+  const auto second_view = flight::attached_properties(object);
+  check(second_view == view && second_view.get(key)->as_number() == 7.0,
+        "a second erased view of one object reaches the same attached entries");
+
+  const flight::StructuralRef<flight::RowOf<TestReference>> row(object);
+  check(flight::attached_properties(row) == view,
+        "a structural projection of the object shares its attached entries");
+  const flight::Ref<void> erased = std::static_pointer_cast<void>(object);
+  const auto erased_view = flight::attached_properties(erased);
+  check(erased_view == view && erased_view.get(key)->as_number() == 7.0,
+        "an erased Ref<void> reaches the same attached entries as the typed projection");
+  erased_view.set(key, flight::Any(8.0));
+  check(view.get(key)->as_number() == 8.0,
+        "a write through the erased view is visible through the typed projection");
+
+  // The attachment outlives the view that created it, because it belongs to the object.
+  {
+    auto transient = flight::attached_properties(object);
+    transient.set(other, flight::Any(flight::String("kept")));
+  }
+  check(flight::attached_properties(object).get(other)->as_string() == flight::String("kept"),
+        "an attachment survives the view that wrote it and belongs to the object");
+
+  check(!flight::attached_properties(flight::Ref<TestReference>()),
+        "an absent reference has no attached properties");
+
+  // A row keeps its object alive, and the owner does not: dropping every reference releases both.
+  const void* identity = nullptr;
+  {
+    const auto scoped = flight::make_ref<TestReference>(TestReference{{}, 1});
+    identity = flight::attached_properties(scoped).identity();
+    flight::attached_properties(scoped).set(key, flight::Any(1.0));
+  }
+  const auto replacement = flight::make_ref<TestReference>(TestReference{{}, 2});
+  const auto replacement_view = flight::attached_properties(replacement);
+  check(replacement_view.identity() != identity || !replacement_view.get(key).has_value(),
+        "a destroyed object never hands its attached entries to a later object");
+}
+
+void test_structured_clone() {
+  const flight::Array<double> samples{1.0, 2.0};
+  const auto cloned_samples = flight::structured_clone(samples);
+  check(cloned_samples.size() == 2 && cloned_samples[0] == 1.0,
+        "a cloned array carries the same contents");
+  cloned_samples.push(3.0);
+  check(samples.size() == 2,
+        "a cloned array has its own storage rather than sharing the source's");
+
+  flight::Map<flight::String, flight::Array<double>> source;
+  source.set(flight::String("a"), samples);
+  const auto cloned_map = flight::structured_clone(source);
+  check(cloned_map.size() == 1 &&
+            cloned_map.get(flight::String("a"))->size() == 2,
+        "a cloned map carries its entries");
+  cloned_map.get(flight::String("a"))->push(9.0);
+  check(samples.size() == 2, "a cloned map clones its values rather than aliasing them");
+
+  // Sharing is preserved: two members that pointed at one object still do.
+  const auto shared = flight::make_ref<TestSnapshotNode>(
+      TestSnapshotNode{flight::Array<double>{5.0}, std::nullopt});
+  const auto holder = flight::make_ref<TestSnapshotNode>(
+      TestSnapshotNode{flight::Array<double>{}, shared});
+  const flight::Array<flight::Ref<TestSnapshotNode>> graph{holder, shared};
+  const auto cloned_graph = flight::structured_clone(graph);
+  check(cloned_graph[0] != holder && cloned_graph[1] != shared,
+        "cloned references are new objects rather than the originals");
+  check(*cloned_graph[0]->next == cloned_graph[1],
+        "a reference reached twice is cloned once, so the clone keeps the source's sharing");
+
+  // Cycles terminate: the clone is recorded before its contents are copied.
+  const auto first = flight::make_ref<TestSnapshotNode>(
+      TestSnapshotNode{flight::Array<double>{1.0}, std::nullopt});
+  first->next = first;
+  const auto cloned_cycle = flight::structured_clone(first);
+  check(cloned_cycle != first && *cloned_cycle->next == cloned_cycle,
+        "a cyclic reference graph clones into an equally cyclic one");
+
+  bool symbol_refused = false;
+  bool function_refused = false;
+  bool erased_object_refused = false;
+  try {
+    static_cast<void>(flight::structured_clone(flight::Symbol(flight::String("s"))));
+  } catch (const flight::DataCloneError& error) {
+    symbol_refused = error.exception.name == flight::String("DataCloneError");
+  }
+  try {
+    static_cast<void>(flight::structured_clone(
+        flight::Any::function(flight::Function<void()>([] {}))));
+  } catch (const flight::DataCloneError&) {
+    function_refused = true;
+  }
+  try {
+    static_cast<void>(flight::structured_clone(flight::Any::object(shared)));
+  } catch (const flight::DataCloneError&) {
+    erased_object_refused = true;
+  }
+  check(symbol_refused && function_refused,
+        "structuredClone refuses symbols and functions, as JavaScript does");
+  check(erased_object_refused,
+        "an erased object with no clone definition is refused rather than shallow copied");
+
+  check(flight::structured_clone(flight::Any(2.5)).as_number() == 2.5 &&
+            flight::structured_clone(flight::Any(flight::String("x"))).as_string() ==
+                flight::String("x"),
+        "the primitive alternatives of an erased value clone exactly");
+}
+
+void test_settled_task_arms() {
+  const flight::TaskSettlement<double> fulfilled{
+      flight::TaskStatus::fulfilled, std::optional<double>(4.0), std::nullopt};
+  const flight::TaskSettlement<double> rejected{
+      flight::TaskStatus::rejected, std::nullopt,
+      std::optional<flight::Rejection>(flight::Rejection::from_value(flight::String("bad")))};
+
+  const auto fulfilled_arm = flight::as_fulfilled(fulfilled);
+  check(fulfilled_arm.has_value() && fulfilled_arm->status == flight::String("fulfilled") &&
+            fulfilled_arm->value == 4.0,
+        "a fulfilled settlement narrows to an arm that carries only a value");
+  check(!flight::as_rejected(fulfilled).has_value(),
+        "a fulfilled settlement does not narrow to the rejected arm");
+
+  const auto rejected_arm = flight::as_rejected(rejected);
+  check(rejected_arm.has_value() && rejected_arm->status == flight::String("rejected") &&
+            rejected_arm->reason.as<flight::String>() == flight::String("bad"),
+        "a rejected settlement narrows to an arm that carries only a reason");
+  check(!flight::as_fulfilled(rejected).has_value(),
+        "a rejected settlement does not narrow to the fulfilled arm");
+
+  const flight::TaskSettlement<double> pending{flight::TaskStatus::pending, std::nullopt,
+                                               std::nullopt};
+  check(!flight::as_fulfilled(pending).has_value() && !flight::as_rejected(pending).has_value(),
+        "a pending settlement is neither arm");
+}
+
+void test_any_domain() {
+  const flight::Any absent;
+  check(absent.is_undefined() && absent.type_of() == flight::String("undefined") &&
+            absent.is_nullish(),
+        "a default-constructed erased value is undefined");
+  check(flight::Any(flight::null).is_null() &&
+            flight::Any(flight::null).type_of() == flight::String("object"),
+        "null keeps the typeof result the language actually produces");
+  check(flight::Any(nullptr).is_null(), "a null pointer literal erases to null, not to undefined");
+
+  const flight::Any number(3.5);
+  const flight::Any integer(7);
+  const flight::Any truth(true);
+  const flight::Any text(flight::String("hi"));
+  const flight::Any literal("hi");
+  check(number.type_of() == flight::String("number") && number.as_number() == 3.5,
+        "a number is represented as a number rather than as an object reference");
+  check(integer.as_number() == 7.0, "an integral value widens to the single number domain");
+  check(truth.type_of() == flight::String("boolean") && truth.as_boolean(),
+        "a boolean keeps its own domain and is not confused with a number");
+  check(text.type_of() == flight::String("string") && text.as_string() == flight::String("hi") &&
+            literal.as_string() == flight::String("hi"),
+        "a string keeps its own domain");
+
+  const auto symbol = flight::Symbol(flight::String("tag"));
+  const flight::Any symbolic(symbol);
+  check(symbolic.type_of() == flight::String("symbol") && symbolic.as_symbol() == symbol,
+        "a symbol keeps its own domain and its identity");
+
+  bool wrong_access_failed = false;
+  try {
+    static_cast<void>(text.as_number());
+  } catch (const flight::BadAnyAccess&) {
+    wrong_access_failed = true;
+  }
+  check(wrong_access_failed,
+        "reading a value out of the wrong domain throws rather than coercing silently");
+
+  const auto reference = flight::make_ref<TestReference>(TestReference{{}, 4});
+  const auto object = flight::Any::object(reference);
+  check(object.type_of() == flight::String("object") && object.identity() == reference.get(),
+        "an object reference keeps reference identity");
+  check(object.object_if<TestReference>() == reference,
+        "an object reference comes back at the type it went in as");
+  check(object.object_if<TestEntity>() == nullptr,
+        "an object reference refuses to be read as a type it does not hold");
+  check(flight::Any::object(flight::Ref<TestReference>()).is_null(),
+        "an object binding holding nothing erases to null rather than to an object");
+
+  const auto handle = flight::Any::external(TestNativeHandle{9});
+  check(handle.type_of() == flight::String("object"),
+        "an opaque host handle reports the typeof a host object has");
+  check(handle.external_if<TestNativeHandle>() != nullptr &&
+            handle.external_if<TestNativeHandle>()->window == 9,
+        "an opaque host handle hands the host back its own value");
+  check(handle.external_if<double>() == nullptr,
+        "an opaque host handle refuses to be read as a type it does not hold");
+  check(handle.held_type() == std::type_index(typeid(TestNativeHandle)),
+        "an erased value reports the concrete type it holds");
+  check(number.held_type() == std::type_index(typeid(void)),
+        "a primitive has no held object type");
+
+  const flight::Function<int(int)> callable([](int value) { return value + 1; });
+  const auto erased_callable = flight::Any::function(callable);
+  check(erased_callable.type_of() == flight::String("function"),
+        "a callable reports typeof function rather than typeof object");
+  const auto* recovered = erased_callable.external_if<flight::Function<int(int)>>();
+  check(recovered != nullptr && (*recovered)(1) == 2 && *recovered == callable,
+        "a callable comes back invocable and with the identity its copies share");
+}
+
+void test_any_equality_and_absence() {
+  const double nan = std::numeric_limits<double>::quiet_NaN();
+  const flight::Any not_a_number(nan);
+  check(!not_a_number.strict_equals(flight::Any(nan)),
+        "NaN is not strictly equal to itself, as the language defines it");
+  check(not_a_number.same_value_zero(flight::Any(nan)),
+        "SameValueZero matches NaN with NaN so it can be a Map key");
+  check(flight::Any(0.0).strict_equals(flight::Any(-0.0)) &&
+            flight::Any(0.0).same_value_zero(flight::Any(-0.0)),
+        "positive and negative zero are strictly equal");
+  check(!flight::Any(0.0).same_value(flight::Any(-0.0)),
+        "Object.is distinguishes positive from negative zero");
+  check(!flight::Any(0.0).strict_equals(flight::Any(false)),
+        "a number and a boolean are never strictly equal: there is no loose coercion");
+  check(!flight::Any().strict_equals(flight::Any(flight::null)),
+        "undefined and null are distinct values under strict equality");
+
+  const auto first = flight::make_ref<TestReference>(TestReference{{}, 1});
+  const auto second = flight::make_ref<TestReference>(TestReference{{}, 1});
+  check(flight::Any::object(first) == flight::Any::object(first) &&
+            !(flight::Any::object(first) == flight::Any::object(second)),
+        "object references compare by identity rather than by contents");
+
+  // The distinction the erased value exists to keep: a missing entry is not an entry whose value
+  // is absent.
+  flight::Record<flight::String, flight::Any> record;
+  record.set(flight::String("present"), flight::Any());
+  const flight::AnySlot missing = record.get(flight::String("absent"));
+  const flight::AnySlot present = record.get(flight::String("present"));
+  check(!missing.has_value(), "a key that was never written reports no entry at all");
+  check(present.has_value() && present->is_undefined(),
+        "a key written with undefined reports an entry whose value is undefined");
+  check(!record.has(flight::String("absent")) && record.has(flight::String("present")),
+        "the same distinction is visible through has");
+
+  flight::Map<flight::Any, flight::String> keyed;
+  keyed.set(flight::Any(nan), flight::String("nan"));
+  keyed.set(flight::Any(flight::String("k")), flight::String("string"));
+  check(keyed.get(flight::Any(nan)) == std::optional<flight::String>(flight::String("nan")),
+        "an erased NaN key is retrievable, because Map keys use SameValueZero");
+  check(keyed.get(flight::Any(flight::String("k"))) ==
+            std::optional<flight::String>(flight::String("string")),
+        "an erased string key matches by contents rather than by identity");
+  check(!keyed.get(flight::Any()).has_value(), "an absent erased key finds nothing");
+}
+
+void test_any_conversion_and_ordering() {
+  check(!flight::Any().to_boolean() && !flight::Any(flight::null).to_boolean() &&
+            !flight::Any(0.0).to_boolean() &&
+            !flight::Any(std::numeric_limits<double>::quiet_NaN()).to_boolean() &&
+            !flight::Any(flight::String()).to_boolean() && !flight::Any(false).to_boolean(),
+        "ToBoolean reports every falsy value as false");
+  check(flight::Any(1.0).to_boolean() && flight::Any(flight::String("0")).to_boolean() &&
+            flight::Any::external(TestNativeHandle{0}).to_boolean(),
+        "ToBoolean reports non-empty strings and host objects as true");
+
+  check(flight::relational_compare(flight::Any(1.0), flight::Any(2.0)) ==
+            std::partial_ordering::less,
+        "two numbers order numerically");
+  check(flight::relational_compare(flight::Any(flight::String("a")),
+                                   flight::Any(flight::String("b"))) == std::partial_ordering::less,
+        "two strings order by their code units, not by a numeric conversion");
+  check(flight::relational_compare(flight::Any(flight::String("10")), flight::Any(9.0)) ==
+            std::partial_ordering::greater,
+        "a string compared with a number converts to a number, as the language requires");
+  check(flight::relational_compare(flight::Any(std::numeric_limits<double>::quiet_NaN()),
+                                   flight::Any(1.0)) == std::partial_ordering::unordered,
+        "NaN is unordered against every value, which is what makes every comparison false");
+  check(flight::relational_compare(flight::Any(flight::null), flight::Any(0.0)) ==
+            std::partial_ordering::equivalent,
+        "null converts to zero in a relational comparison");
+
+  bool symbol_order_failed = false;
+  bool object_order_failed = false;
+  try {
+    static_cast<void>(
+        flight::relational_compare(flight::Any(flight::Symbol()), flight::Any(1.0)));
+  } catch (const flight::TypeError&) {
+    symbol_order_failed = true;
+  }
+  try {
+    static_cast<void>(flight::relational_compare(
+        flight::Any::external(TestNativeHandle{1}), flight::Any(1.0)));
+  } catch (const flight::TypeError&) {
+    object_order_failed = true;
+  }
+  check(symbol_order_failed, "ordering a symbol throws TypeError, as it does in JavaScript");
+  check(object_order_failed,
+        "ordering a non-primitive throws rather than inventing a ToPrimitive result");
+}
+
+void test_canvas_2d_state() {
+  auto rasterizer = std::make_shared<RecordingRasterizer>();
+  auto context = flight::CanvasRenderingContext2D::create(
+      rasterizer, flight::Canvas2DSurface::create(64.0, 32.0),
+      flight::CanvasRenderingContext2DSettings{.alpha = false,
+                                              .color_space = std::nullopt,
+                                              .desynchronized = std::nullopt,
+                                              .will_read_frequently = std::nullopt});
+
+  check(context.canvas.width == 64.0 && context.canvas.height == 32.0,
+        "a 2D context reports the dimensions of the surface it was created for");
+  check(context.get_context_attributes().alpha == std::optional<bool>(false) &&
+            !context.get_context_attributes().desynchronized.has_value(),
+        "getContextAttributes returns the settings the context was created with, and keeps an "
+        "omitted member distinct from an explicit false");
+  check(!context.is_context_lost(), "a context with a rasterizer attached is not lost");
+
+  context.global_alpha = 0.25;
+  context.fill_style = flight::String("#112233");
+  context.line_width = 4.0;
+  context.save();
+  check(context.saved_state_depth() == 1, "save pushes one drawing state");
+  context.global_alpha = 0.75;
+  context.fill_style = flight::String("#445566");
+  context.line_width = 9.0;
+  context.restore();
+  check(context.global_alpha == 0.25 && context.fill_style.color() == flight::String("#112233") &&
+            context.line_width == 4.0 && context.saved_state_depth() == 0,
+        "restore returns every drawing-state attribute to the saved values");
+
+  context.restore();
+  check(context.global_alpha == 0.25,
+        "restore with an empty state stack leaves the current state unchanged");
+
+  context.translate(10.0, 20.0);
+  context.scale(2.0, 4.0);
+  const auto transform = context.get_transform();
+  check(transform.a == 2.0 && transform.d == 4.0 && transform.e == 10.0 && transform.f == 20.0,
+        "translate and scale compose into the current transformation matrix");
+  const auto mapped = transform.transform_point(1.0, 1.0);
+  check(mapped.first == 12.0 && mapped.second == 24.0,
+        "the current transformation matrix maps a user-space point to device space");
+
+  context.save();
+  context.rotate(0.0);
+  context.set_transform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+  check(context.get_transform() == flight::DomMatrix(),
+        "setTransform replaces the current transformation matrix rather than composing with it");
+  context.restore();
+  check(context.get_transform().a == 2.0,
+        "restore returns the current transformation matrix with the rest of the state");
+
+  context.reset();
+  check(context.get_transform() == flight::DomMatrix() && context.global_alpha == 1.0 &&
+            context.current_path().empty(),
+        "reset returns the transform, the attributes, and the path to their initial values");
+}
+
+void test_canvas_2d_path() {
+  auto rasterizer = std::make_shared<RecordingRasterizer>();
+  auto context = flight::CanvasRenderingContext2D::create(
+      rasterizer, flight::Canvas2DSurface::create(8.0, 8.0));
+
+  context.begin_path();
+  context.translate(5.0, 0.0);
+  context.move_to(1.0, 1.0);
+  context.scale(2.0, 2.0);
+  context.line_to(3.0, 3.0);
+  const auto& segments = context.current_path().segments();
+  check(segments.size() == 2, "each path call appends one segment");
+  check(segments[0].transform.e == 5.0 && segments[0].transform.a == 1.0,
+        "a segment retains the transform in force when it was added");
+  check(segments[1].transform.a == 2.0,
+        "a later segment retains the later transform rather than being re-transformed");
+
+  context.begin_path();
+  context.line_to(4.0, 5.0);
+  check(context.current_path().segments().size() == 1 &&
+            std::holds_alternative<flight::Canvas2DMoveSegment>(
+                context.current_path().segments()[0].verb),
+        "lineTo with no subpath starts one instead of drawing from the origin");
+
+  context.begin_path();
+  context.move_to(0.0, 0.0);
+  context.quadratic_curve_to(1.0, 2.0, 3.0, 0.0);
+  const auto& cubic = std::get<flight::Canvas2DCubicSegment>(
+      context.current_path().segments()[1].verb);
+  check(std::abs(cubic.control1_x - 2.0 / 3.0) < 1e-12 &&
+            std::abs(cubic.control1_y - 4.0 / 3.0) < 1e-12 && cubic.x == 3.0 && cubic.y == 0.0,
+        "a quadratic curve is raised to the exact cubic with the same shape");
+
+  context.begin_path();
+  context.arc(2.0, 2.0, 3.0, 0.0, 1.5);
+  const auto& arc = std::get<flight::Canvas2DArcSegment>(
+      context.current_path().segments()[0].verb);
+  check(arc.radius_x == 3.0 && arc.radius_y == 3.0 && arc.start_angle == 0.0 &&
+            arc.end_angle == 1.5 && !arc.counterclockwise,
+        "an arc is retained as an arc rather than flattened at a tolerance the runtime picks");
+
+  bool negative_radius_failed = false;
+  try {
+    context.arc(0.0, 0.0, -1.0, 0.0, 1.0);
+  } catch (const flight::DOMException& error) {
+    negative_radius_failed = error.name == flight::String("IndexSizeError");
+  }
+  check(negative_radius_failed, "a negative arc radius throws IndexSizeError");
+
+  context.begin_path();
+  context.move_to(0.0, 0.0);
+  context.arc_to(10.0, 0.0, 10.0, 10.0, 0.0);
+  check(context.current_path().segments().size() == 2 &&
+            std::holds_alternative<flight::Canvas2DLineSegment>(
+                context.current_path().segments()[1].verb),
+        "arcTo with a zero radius degenerates to a straight line, as the specification requires");
+
+  context.begin_path();
+  context.rect(1.0, 2.0, 3.0, 4.0);
+  check(context.current_path().segments().size() == 5 &&
+            std::holds_alternative<flight::Canvas2DCloseSegment>(
+                context.current_path().segments()[4].verb),
+        "rect appends a closed four-sided subpath");
+
+  context.begin_path();
+  context.round_rect(0.0, 0.0, 10.0, 10.0, 2.0);
+  std::size_t corner_arcs = 0;
+  for (const auto& segment : context.current_path().segments()) {
+    if (std::holds_alternative<flight::Canvas2DArcSegment>(segment.verb)) ++corner_arcs;
+  }
+  check(corner_arcs == 4, "roundRect rounds all four corners when given one radius");
+
+  context.begin_path();
+  context.round_rect(0.0, 0.0, 10.0, 10.0, 0.0);
+  for (const auto& segment : context.current_path().segments()) {
+    check(!std::holds_alternative<flight::Canvas2DArcSegment>(segment.verb),
+          "roundRect with a zero radius emits no corner arc");
+  }
+
+  bool negative_corner_failed = false;
+  try {
+    context.round_rect(0.0, 0.0, 1.0, 1.0, -1.0);
+  } catch (const flight::RangeError&) {
+    negative_corner_failed = true;
+  }
+  check(negative_corner_failed, "a negative roundRect radius throws RangeError");
+
+  context.set_line_dash(flight::Array<double>{1.0, 2.0, 3.0});
+  check(context.get_line_dash().size() == 6,
+        "an odd dash list is repeated to an even length, as the specification requires");
+  context.set_line_dash(flight::Array<double>{1.0, -2.0});
+  check(context.get_line_dash().size() == 6,
+        "a dash list containing a negative segment is ignored rather than partly applied");
+}
+
+void test_canvas_2d_styles() {
+  auto rasterizer = std::make_shared<RecordingRasterizer>();
+  auto context = flight::CanvasRenderingContext2D::create(
+      rasterizer, flight::Canvas2DSurface::create(4.0, 4.0));
+
+  auto gradient = context.create_linear_gradient(0.0, 0.0, 1.0, 1.0);
+  gradient.add_color_stop(1.0, flight::String("#ffffff"));
+  gradient.add_color_stop(0.0, flight::String("#000000"));
+  gradient.add_color_stop(0.5, flight::String("#808080"));
+  const auto stops = gradient.color_stops();
+  check(stops.size() == 3 && stops[0].offset == 0.0 && stops[1].offset == 0.5 &&
+            stops[2].offset == 1.0,
+        "gradient color stops are retained in offset order regardless of insertion order");
+
+  const auto shared_gradient = gradient;
+  shared_gradient.add_color_stop(0.25, flight::String("#404040"));
+  check(gradient.color_stops().size() == 4 && gradient == shared_gradient &&
+            gradient.identity() == shared_gradient.identity(),
+        "gradient copies share one stop list and one identity");
+
+  bool out_of_range_failed = false;
+  try {
+    gradient.add_color_stop(1.5, flight::String("#ffffff"));
+  } catch (const flight::DOMException& error) {
+    out_of_range_failed = error.name == flight::String("IndexSizeError");
+  }
+  check(out_of_range_failed, "a color stop outside [0, 1] throws IndexSizeError");
+
+  bool negative_radius_failed = false;
+  try {
+    static_cast<void>(context.create_radial_gradient(0.0, 0.0, -1.0, 0.0, 0.0, 1.0));
+  } catch (const flight::DOMException& error) {
+    negative_radius_failed = error.name == flight::String("IndexSizeError");
+  }
+  check(negative_radius_failed, "a negative radial gradient radius throws IndexSizeError");
+
+  const auto pattern = context.create_pattern(TestCanvasImage{7}, flight::String("repeat-x"));
+  check(pattern.has_value() && pattern->repetition() == flight::String("repeat-x"),
+        "createPattern retains the repetition it was given");
+  check(pattern->source().source_if<TestCanvasImage>() != nullptr &&
+            pattern->source().source_if<TestCanvasImage>()->handle == 7,
+        "an erased image source hands the host back its own value with its own type");
+  check(pattern->source().source_if<flight::ImageData>() == nullptr,
+        "an erased image source refuses to be read as a type it does not hold");
+
+  check(!context.create_pattern(flight::Canvas2DImageSource(), flight::String("repeat")).has_value(),
+        "createPattern with no usable source returns an absent pattern");
+
+  bool bad_repetition_failed = false;
+  try {
+    static_cast<void>(context.create_pattern(TestCanvasImage{1}, flight::String("tile")));
+  } catch (const flight::DOMException& error) {
+    bad_repetition_failed = error.name == flight::String("SyntaxError");
+  }
+  check(bad_repetition_failed, "an unrecognized pattern repetition throws SyntaxError");
+
+  context.fill_style = gradient;
+  check(context.fill_style.is_gradient() && context.fill_style.gradient() == gradient,
+        "fillStyle accepts a gradient and retains its identity");
+  context.fill_style = *pattern;
+  check(context.fill_style.is_pattern(), "fillStyle accepts a pattern");
+  context.fill_style = std::optional<flight::CanvasPattern>();
+  check(context.fill_style.is_pattern(),
+        "assigning an absent pattern leaves the previous fillStyle in place");
+  context.fill_style = flight::String("#abcdef");
+  check(context.fill_style.is_color() && context.fill_style.color() == flight::String("#abcdef"),
+        "fillStyle accepts a color string");
+
+  const auto matrix = flight::DomMatrix::from_init(
+      flight::DomMatrix2DInit{2.0, std::nullopt, std::nullopt, 3.0, std::nullopt, std::nullopt,
+                              std::nullopt, std::nullopt, std::nullopt, std::nullopt,
+                              std::nullopt, std::nullopt});
+  check(matrix.a == 2.0 && matrix.b == 0.0 && matrix.d == 3.0,
+        "DOMMatrix2DInit fills unmentioned components with the identity matrix");
+  bool conflicting_alias_failed = false;
+  try {
+    static_cast<void>(
+        flight::DomMatrix::from_init(flight::DomMatrix2DInit{2.0, std::nullopt, std::nullopt, std::nullopt, std::nullopt,
+                                std::nullopt, 3.0, std::nullopt, std::nullopt,
+                                std::nullopt, std::nullopt, std::nullopt}));
+  } catch (const flight::TypeError&) {
+    conflicting_alias_failed = true;
+  }
+  check(conflicting_alias_failed,
+        "a DOMMatrix2DInit whose alias pair disagrees is a TypeError rather than a silent winner");
+}
+
+void test_canvas_2d_drawing() {
+  auto rasterizer = std::make_shared<RecordingRasterizer>();
+  auto context = flight::CanvasRenderingContext2D::create(
+      rasterizer, flight::Canvas2DSurface::create(16.0, 16.0));
+
+  context.global_alpha = 0.5;
+  context.fill_style = flight::String("#ff0000");
+  context.translate(3.0, 4.0);
+  context.fill_rect(0.0, 0.0, 2.0, 2.0);
+  check(rasterizer->fills.size() == 1 && rasterizer->fills[0].segments == 5 &&
+            rasterizer->fills[0].global_alpha == 0.5 &&
+            rasterizer->fills[0].style.color() == flight::String("#ff0000") &&
+            rasterizer->fills[0].first_transform.e == 3.0,
+        "fillRect hands the rasterizer a resolved rectangle with the current state and transform");
+
+  context.clear_rect(1.0, 2.0, 3.0, 4.0);
+  check(rasterizer->cleared.size() == 1 && rasterizer->cleared[0].x == 1.0 &&
+            rasterizer->cleared[0].height == 4.0,
+        "clearRect reaches the rasterizer with the requested rectangle");
+
+  context.line_width = 6.0;
+  context.stroke_rect(0.0, 0.0, 1.0, 1.0);
+  check(rasterizer->strokes.size() == 1 && rasterizer->strokes[0].global_alpha == 6.0,
+        "strokeRect reaches the rasterizer with the current line width");
+
+  context.draw_image(TestCanvasImage{3}, 1.0, 2.0);
+  check(rasterizer->images.size() == 1 &&
+            rasterizer->images[0].source_type == std::type_index(typeid(TestCanvasImage)) &&
+            rasterizer->images[0].destination.x == 1.0,
+        "drawImage carries the host's own source type through to the rasterizer");
+  context.draw_image(TestCanvasImage{3}, 0.0, 0.0, 4.0, 4.0, 1.0, 1.0, 2.0, 2.0);
+  check(rasterizer->images.size() == 2 && rasterizer->images[1].source.width == 4.0 &&
+            rasterizer->images[1].destination.width == 2.0,
+        "the nine-argument drawImage keeps the source and destination rectangles separate");
+
+  bool empty_source_failed = false;
+  try {
+    context.draw_image(TestCanvasImage{3}, 0.0, 0.0, 0.0, 4.0, 0.0, 0.0, 1.0, 1.0);
+  } catch (const flight::DOMException& error) {
+    empty_source_failed = error.name == flight::String("IndexSizeError");
+  }
+  check(empty_source_failed, "drawImage with an empty source rectangle throws IndexSizeError");
+
+  context.font = flight::String("16px serif");
+  context.fill_text(flight::String("hi"), 2.0, 3.0);
+  check(rasterizer->texts.size() == 1 && !rasterizer->text_stroked[0] &&
+            rasterizer->text_fonts[0] == flight::String("16px serif") &&
+            !rasterizer->text_max_widths[0].has_value(),
+        "fillText forwards the current font and keeps an omitted maxWidth absent");
+  context.stroke_text(flight::String("hi"), 0.0, 0.0, 12.0);
+  check(rasterizer->text_stroked[1] && rasterizer->text_max_widths[1] == std::optional<double>(12.0),
+        "strokeText is distinguished from fillText and forwards an explicit maxWidth");
+  check(context.measure_text(flight::String("abc")).width == 21.0,
+        "measureText returns the metrics the rasterizer produced");
+
+  const auto read = context.get_image_data(0.0, 0.0, 2.0, 3.0);
+  check(read.width == 2.0 && read.height == 3.0 && rasterizer->reads.size() == 1,
+        "getImageData reads through the rasterizer");
+  context.put_image_data(read, 1.0, 1.0);
+  check(rasterizer->writes.size() == 1 && !rasterizer->dirty_rects[0].has_value(),
+        "putImageData without a dirty rectangle reports none rather than the whole image");
+  context.put_image_data(read, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0);
+  check(rasterizer->dirty_rects[1].has_value() && rasterizer->dirty_rects[1]->width == 1.0,
+        "the seven-argument putImageData forwards its dirty rectangle");
+
+  bool empty_read_failed = false;
+  try {
+    static_cast<void>(context.get_image_data(0.0, 0.0, 0.0, 1.0));
+  } catch (const flight::DOMException& error) {
+    empty_read_failed = error.name == flight::String("IndexSizeError");
+  }
+  check(empty_read_failed, "getImageData with an empty rectangle throws IndexSizeError");
+
+  context.begin_path();
+  context.rect(0.0, 0.0, 1.0, 1.0);
+  context.clip(flight::String("evenodd"));
+  check(context.drawing_state().clip_regions.size() == 1 &&
+            context.drawing_state().clip_regions[0].fill_rule == flight::String("evenodd"),
+        "clip retains the fill rule it was applied under");
+
+  const auto shared_context = context;
+  check(shared_context == context && shared_context.identity() == context.identity(),
+        "context copies share one identity");
+  const auto fills_before_copy = rasterizer->fills.size();
+  shared_context.fill_rect(0.0, 0.0, 1.0, 1.0);
+  check(rasterizer->fills.size() == fills_before_copy + 1,
+        "a context copy draws through the same rasterizer");
+}
+
+void test_canvas_2d_unattached() {
+  flight::CanvasRenderingContext2D detached;
+  check(!static_cast<bool>(detached), "a default-constructed context holds no state");
+
+  bool save_failed = false;
+  bool fill_failed = false;
+  try {
+    detached.save();
+  } catch (const flight::Canvas2DUnattachedError&) {
+    save_failed = true;
+  }
+  try {
+    detached.fill();
+  } catch (const flight::Canvas2DUnattachedError&) {
+    fill_failed = true;
+  }
+  check(save_failed && fill_failed,
+        "a context with no state throws rather than silently accepting drawing");
+
+  auto lost = flight::CanvasRenderingContext2D::create(
+      nullptr, flight::Canvas2DSurface::create(1.0, 1.0));
+  check(lost.is_context_lost(), "a context created without a rasterizer reports itself lost");
+  bool lost_fill_failed = false;
+  try {
+    lost.fill_rect(0.0, 0.0, 1.0, 1.0);
+  } catch (const flight::Canvas2DUnattachedError&) {
+    lost_fill_failed = true;
+  }
+  check(lost_fill_failed,
+        "a lost context throws from a drawing call rather than reporting a silent success");
+  lost.save();
+  lost.translate(1.0, 1.0);
+  check(lost.get_transform().e == 1.0,
+        "a lost context still maintains the state and transform the runtime owns");
 }
 
 void test_image_data() {
@@ -1619,6 +2439,17 @@ int main() {
   test_date();
   test_error();
   test_host();
+  test_any_domain();
+  test_attached_properties();
+  test_structured_clone();
+  test_settled_task_arms();
+  test_any_equality_and_absence();
+  test_any_conversion_and_ordering();
+  test_canvas_2d_state();
+  test_canvas_2d_path();
+  test_canvas_2d_styles();
+  test_canvas_2d_drawing();
+  test_canvas_2d_unattached();
   test_image_data();
   test_map();
   test_new_runtime_services();

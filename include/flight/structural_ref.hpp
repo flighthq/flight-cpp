@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <utility>
 
+#include <flight/any.hpp>
 #include <flight/reference.hpp>
 #include <flight/symbol.hpp>
 
@@ -262,33 +263,72 @@ template <typename Field>
   return Symbol::for_key(String(Key::name.view()));
 }
 
+// Holds its object weakly. The attachment registry below keeps owners alive for as long as their
+// object lives, so an owner that also held the object strongly would keep it alive forever. The
+// reference that keeps the object alive is the caller's, and the StructuralRef that names it.
 template <typename Object>
 class NativeRowOwner final : public RowOwner {
  public:
-  explicit NativeRowOwner(std::shared_ptr<Object> object) : object_(std::move(object)) {}
+  explicit NativeRowOwner(const std::shared_ptr<Object>& object) : object_(object) {}
 
   [[nodiscard]] std::shared_ptr<void> native_object() const noexcept override {
-    return std::static_pointer_cast<void>(object_);
+    return std::static_pointer_cast<void>(object_.lock());
   }
 
   [[nodiscard]] std::type_index native_type() const noexcept override { return typeid(Object); }
 
  private:
-  std::shared_ptr<Object> object_;
+  std::weak_ptr<Object> object_;
 };
+
+// One owner per object identity, for the lifetime of the object.
+//
+// Both halves matter and both were wrong before. The registry is keyed on the erased address rather
+// than on a per-type table, so a typed projection, a structural projection and an erased
+// `Ref<void>` view of one object all reach the same owner and therefore the same attached symbol
+// properties. And the registry holds the owner strongly while holding the object weakly, so an
+// attachment outlives the transient view that created it and dies with the object rather than with
+// the last reference to a row.
+struct OwnerRegistryEntry final {
+  std::weak_ptr<void> object;
+  std::shared_ptr<RowOwner> owner;
+};
+
+struct OwnerRegistry final {
+  std::mutex mutex;
+  std::unordered_map<const void*, OwnerRegistryEntry> entries;
+  std::size_t sweep_threshold{64};
+};
+
+[[nodiscard]] inline OwnerRegistry& owner_registry() {
+  static OwnerRegistry registry;
+  return registry;
+}
+
+// Drops entries whose object has been destroyed. An address can be reused by a later object, so a
+// stale entry is never reused: expiry is checked on every lookup, and this sweep only keeps the
+// table from growing without bound.
+inline void sweep_owner_registry(OwnerRegistry& registry) {
+  if (registry.entries.size() < registry.sweep_threshold) return;
+  for (auto entry = registry.entries.begin(); entry != registry.entries.end();) {
+    entry = entry->second.object.expired() ? registry.entries.erase(entry) : std::next(entry);
+  }
+  registry.sweep_threshold = registry.entries.size() * 2 + 64;
+}
 
 template <typename Object>
 [[nodiscard]] std::shared_ptr<RowOwner> owner_for(const std::shared_ptr<Object>& object) {
-  static std::mutex mutex;
-  static std::unordered_map<const Object*, std::weak_ptr<RowOwner>> owners;
-  const std::lock_guard lock(mutex);
-  if (const auto found = owners.find(object.get()); found != owners.end()) {
-    if (auto owner = found->second.lock()) return owner;
-    owners.erase(found);
+  auto& registry = owner_registry();
+  const std::lock_guard lock(registry.mutex);
+  const auto key = static_cast<const void*>(object.get());
+  if (const auto found = registry.entries.find(key); found != registry.entries.end()) {
+    if (!found->second.object.expired()) return found->second.owner;
+    registry.entries.erase(found);
   }
+  sweep_owner_registry(registry);
   auto owner = std::make_shared<NativeRowOwner<Object>>(object);
   bind_generated_row_members(*owner, object);
-  owners.emplace(object.get(), owner);
+  registry.entries.emplace(key, OwnerRegistryEntry{std::static_pointer_cast<void>(object), owner});
   return owner;
 }
 
@@ -495,11 +535,15 @@ class StructuralRef {
     requires(!std::is_void_v<object_type>)
   StructuralRef(std::shared_ptr<Type> object) {
     auto flattened = detail::flatten_ref<object_type>(std::move(object));
-    if (flattened) owner_ = detail::owner_for(flattened);
+    if (flattened) {
+      owner_ = detail::owner_for(flattened);
+      object_ = std::static_pointer_cast<void>(flattened);
+    }
   }
 
   template <typename OtherSchema>
-  StructuralRef(const StructuralRef<OtherSchema>& other) : owner_(other.shared_owner()) {}
+  StructuralRef(const StructuralRef<OtherSchema>& other)
+      : object_(other.shared_native_object()), owner_(other.shared_owner()) {}
 
   [[nodiscard]] static StructuralRef from_owner(std::shared_ptr<RowOwner> owner) {
     StructuralRef result;
@@ -526,10 +570,18 @@ class StructuralRef {
     requires(!std::is_void_v<object_type>)
   {
     if (!owner_ || owner_->native_type() != typeid(object_type)) return {};
+    if (object_) return std::static_pointer_cast<object_type>(object_);
     return std::static_pointer_cast<object_type>(owner_->native_object());
   }
 
   [[nodiscard]] const std::shared_ptr<RowOwner>& shared_owner() const noexcept { return owner_; }
+
+  // The retained object, erased. A row that owns one keeps it alive; a proxy or a schema-only row
+  // has none.
+  [[nodiscard]] std::shared_ptr<void> shared_native_object() const noexcept {
+    if (object_) return object_;
+    return owner_ ? owner_->native_object() : nullptr;
+  }
 
   template <typename OtherSchema>
   [[nodiscard]] bool operator==(const StructuralRef<OtherSchema>& other) const noexcept {
@@ -537,6 +589,7 @@ class StructuralRef {
   }
 
  private:
+  std::shared_ptr<void> object_;
   std::shared_ptr<RowOwner> owner_;
 };
 
@@ -676,6 +729,74 @@ template <typename Target, typename Schema>
     static_assert(!std::is_void_v<Object>, "a merged structural row must be projected before native reference recovery");
     return detail::wrap_ref<Target>(source.shared_object());
   }
+}
+
+// Symbol-keyed properties attached to an object, reachable without knowing the object's type.
+//
+// This is the view `Record<symbol, T | undefined>` over an erased object needs. It attaches nothing
+// to the object's own storage and copies neither the object nor its properties: the entries live in
+// the one owner that object identity resolves to, so a typed projection, a structural projection
+// and this erased view all read and write the same entries. The attachment lasts as long as the
+// object does, not as long as the view that made it.
+//
+// A missing entry and an entry whose value is `undefined` stay distinct: `get` returns an empty
+// `AnySlot` for a key that was never written, and a present `flight::Any()` for one written with
+// `undefined`. `has` answers the same question without reading the value.
+class AttachedProperties final {
+ public:
+  AttachedProperties() = default;
+
+  AttachedProperties(std::shared_ptr<void> object, std::shared_ptr<RowOwner> owner)
+      : object_(std::move(object)), owner_(std::move(owner)) {}
+
+  [[nodiscard]] explicit operator bool() const noexcept { return owner_ != nullptr; }
+
+  [[nodiscard]] AnySlot get(const Symbol& key) const {
+    if (!owner_) return std::nullopt;
+    const auto* stored = owner_->dynamic_value(key);
+    if (!stored) return std::nullopt;
+    const auto* value = std::any_cast<Any>(stored);
+    if (!value) throw BadAnyAccess();
+    return *value;
+  }
+
+  [[nodiscard]] bool has(const Symbol& key) const {
+    return owner_ != nullptr && owner_->has_dynamic_value(key);
+  }
+
+  void set(const Symbol& key, Any value) const {
+    if (!owner_) throw std::bad_weak_ptr();
+    owner_->before_write(key);
+    owner_->set_dynamic_value(key, std::any(std::move(value)));
+  }
+
+  // The object these properties are attached to, which is what keeps them reachable.
+  [[nodiscard]] const std::shared_ptr<void>& object() const noexcept { return object_; }
+
+  [[nodiscard]] const void* identity() const noexcept { return owner_.get(); }
+
+  [[nodiscard]] friend bool operator==(const AttachedProperties& left,
+                                       const AttachedProperties& right) noexcept {
+    return left.owner_ == right.owner_;
+  }
+
+ private:
+  std::shared_ptr<void> object_;
+  std::shared_ptr<RowOwner> owner_;
+};
+
+// Resolves the one attached-property owner for an object, creating it on first use.
+template <typename Object>
+[[nodiscard]] AttachedProperties attached_properties(const std::shared_ptr<Object>& object) {
+  if (!object) return {};
+  return AttachedProperties(std::static_pointer_cast<void>(object), detail::owner_for(object));
+}
+
+// The same view over a row that already resolved an owner, so a structural projection and an
+// erased reference reach one set of entries.
+template <typename Schema>
+[[nodiscard]] AttachedProperties attached_properties(const StructuralRef<Schema>& source) {
+  return AttachedProperties(source.shared_native_object(), source.shared_owner());
 }
 
 template <typename Schema, typename BeforeWrite>
