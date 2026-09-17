@@ -59,9 +59,32 @@ modules, with refusals from 1,755 to 1,739 and direct refusals from 979 to 960. 
   `IrType { kind: 'unknown' }` to the literal `'auto'` for every `source` other than `this` and `object`
   (`packages/compiler-backend-cpp/src/cppCompilerBackend.ts`, the `case 'unknown':` arm), and
   `assertCppOutputHasNoUnresolvedTypePlaceholder` then refuses the module. There is no `sourceName` for `any` or
-  `unknown`, so `flight-cpp-external-bindings/1` has no way to reach that arm. Electing `flight::Any` there, with
-  `#include <flight/canvas_2d.hpp>`-style header tracking for `flight/any.hpp`, is the whole downstream half of the
-  corpus's largest family.
+  `unknown`, so `flight-cpp-external-bindings/1` has no way to reach that arm.
+
+  **The change is four lines and it works.** Verified here, not assumed: a local, never-committed patch to that arm --
+  `if (type.source === 'any' || type.source === 'unknown') { context.includes.add('flight/any.hpp'); return 'flight::Any'; }`,
+  left after the `this` and `object` cases so unresolved-alias residue still yields `auto` and stays refused --
+  turns a fixture carrying the corpus's three named blockers into an emitted header that compiles and runs against
+  this runtime:
+
+  ```cpp
+  struct AnimationChannel : public flight::ReferenceEnabled {
+    flight::Any target_ref;
+    flight::Array<double> values;
+  };
+
+  using NativeWindowHandle = flight::Any;
+
+  struct NodeInteractiveStateBinding : public flight::ReferenceEnabled {
+    flight::Any data;
+    NativeWindowHandle handle;
+  };
+  ```
+
+  The compiled fixture reads `42` back out of `targetRef` as a number with `typeof` `"number"`, reports a host window
+  handle as `"object"`, and reports an unwritten `any` member as `undefined`. The patched compiler was reverted and
+  rebuilt before this checkout's gates were run, so nothing here depends on it; what is recorded is that the
+  downstream half is ready and the upstream half is small.
 
 - **The erased-object symbol-keyed property view is `flight::AttachedProperties`**, with
   `flight::attached_properties(ref)` over a `Ref<Object>`, a `Ref<void>`, or a `StructuralRef`. It satisfies each
