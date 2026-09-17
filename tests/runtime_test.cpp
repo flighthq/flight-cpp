@@ -1017,6 +1017,11 @@ void test_canvas_2d_state() {
         "getContextAttributes returns the settings the context was created with, and keeps an "
         "omitted member distinct from an explicit false");
   check(!context.is_context_lost(), "a context with a rasterizer attached is not lost");
+  context.canvas.width = 80.0;
+  context.fill_rect(0.0, 0.0, 1.0, 1.0);
+  check(context.canvas.shared_width() == 80.0 && context.canvas.shared_height() == 32.0,
+        "a surface dimension written through a context copy is published to the shared surface "
+        "before the next operation that depends on it");
 
   context.global_alpha = 0.25;
   context.fill_style = flight::String("#112233");

@@ -91,12 +91,6 @@ struct AnyOpaque final {
   }
 };
 
-template <typename Type>
-inline constexpr bool is_any_shared_ptr = false;
-
-template <typename Type>
-inline constexpr bool is_any_shared_ptr<std::shared_ptr<Type>> = true;
-
 } // namespace detail
 
 class Any final {
