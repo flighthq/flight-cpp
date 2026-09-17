@@ -110,6 +110,12 @@ const source = api.parseTypeScriptSource(
    export function replaceNativeOverlay(div: HTMLDivElement): void {
      for (const element of div.querySelectorAll('[data-flight-overlay]')) element.remove();
      div.insertAdjacentHTML('beforeend', '<span data-flight-overlay>Flight</span>');
+   }
+   export function globalDocumentFocus(): boolean {
+     const canvas = globalThis.document.createElement('canvas');
+     canvas.width = 2;
+     canvas.height = 2;
+     return globalThis.document.hasFocus() === document.hasFocus();
    }`,
 );
 const lowered = api.lowerTypeScriptSource(source, {
@@ -155,6 +161,9 @@ for (const expected of [
   'auto controls = flight::host_sdl::document.create_element(flight::String("div"))',
   'controls.append_child(label)',
   'flight::host_sdl::WebGl2Context create_native_gl_context()',
+  // `globalThis` names the same host objects the bare bindings do, rather than a second set.
+  'flight::host_sdl::global_this.document.create_element(flight::String("canvas"))',
+  '(flight::host_sdl::global_this.document.has_focus() == flight::host_sdl::document.has_focus())',
   'canvas.get_context(flight::String("webgl2"))',
   'for (auto element : div.query_selector_all(flight::String("[data-flight-overlay]")))',
   'element.remove()',

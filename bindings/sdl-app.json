@@ -77,6 +77,19 @@
     },
     { "headers": ["flight/host_sdl/web_platform.hpp"], "nullability": "non-null", "ownership": "borrowed", "sourceName": "cancelAnimationFrame", "space": "value", "targetName": "flight::host_sdl::cancel_animation_frame" },
     {
+      "headers": ["flight/host_sdl/web_platform.hpp"],
+      "members": [
+        { "sourceMember": "document", "targetName": "flight::host_sdl::global_this.document" },
+        { "sourceMember": "navigator", "targetName": "flight::host_sdl::global_this.navigator" },
+        { "sourceMember": "window", "targetName": "flight::host_sdl::global_this.window" }
+      ],
+      "nullability": "non-null",
+      "ownership": "borrowed",
+      "sourceName": "globalThis",
+      "space": "value",
+      "targetName": "flight::host_sdl::global_this"
+    },
+    {
       "headers": ["flight/host_sdl/input.hpp"],
       "members": [
         { "sourceMember": "getGamepads", "targetName": "flight::host_sdl::navigator.get_gamepads" }

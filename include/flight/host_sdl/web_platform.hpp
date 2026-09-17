@@ -13,12 +13,14 @@
 #include <utility>
 #include <vector>
 
+#include <flight/any.hpp>
 #include <flight/array.hpp>
 #include <flight/callable.hpp>
 #include <flight/host_sdl/export.hpp>
 #include <flight/host_sdl/input.hpp>
 #include <flight/host_sdl/web_platform_types.hpp>
 #include <flight/host_sdl/webgl.hpp>
+#include <flight/record.hpp>
 #include <flight/string.hpp>
 
 namespace flight::host_sdl {
@@ -385,6 +387,35 @@ using AnimationFrameCallback = std::function<void(double)>;
 
 extern FLIGHT_HOST_SDL_GL_API Document document;
 extern FLIGHT_HOST_SDL_GL_API WindowFacade window;
+
+// The global scope Flight reaches as `globalThis`. It is a view onto the globals this host already
+// exposes rather than a second set of them: `global_this.document` is the same `Document` the
+// `document` binding names, so a listener registered through one is seen through the other.
+//
+// Source that writes `globalThis as Record<string, unknown>` gets `named_globals()`: one
+// process-wide store of erased named values, shared by every projection, which is what a global
+// scope is. It is deliberately separate from the members above -- those are host objects with
+// their own types, and flattening them into erased values would lose exactly what makes them
+// usable.
+class FLIGHT_HOST_SDL_GL_API GlobalScope final {
+ public:
+  GlobalScope() noexcept;
+
+  GlobalScope(const GlobalScope&) = delete;
+  GlobalScope& operator=(const GlobalScope&) = delete;
+
+  Document& document;
+  GamepadNavigator& navigator;
+  WindowFacade& window;
+
+  [[nodiscard]] flight::Record<flight::String, flight::Any> named_globals() const;
+
+  [[nodiscard]] explicit operator flight::Record<flight::String, flight::Any>() const {
+    return named_globals();
+  }
+};
+
+extern FLIGHT_HOST_SDL_GL_API GlobalScope global_this;
 
 [[nodiscard]] FLIGHT_HOST_SDL_GL_API AnimationFrameHandle request_animation_frame(
     AnimationFrameCallback callback);

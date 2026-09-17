@@ -311,6 +311,36 @@ int main() {
   flight::host_sdl::document.set_hidden(false);
   flight::host_sdl::document.set_focus(true);
 
+  // `globalThis` is a view onto the same host objects, not a second set of them.
+  expect(
+      &flight::host_sdl::global_this.document == &flight::host_sdl::document &&
+          &flight::host_sdl::global_this.window == &flight::host_sdl::window &&
+          &flight::host_sdl::global_this.navigator == &flight::host_sdl::navigator,
+      "SDL global scope did not name the host globals it exposes");
+  int global_visibility_calls = 0;
+  flight::host_sdl::global_this.document.add_event_listener(
+      flight::String("visibilitychange"), [&] { ++global_visibility_calls; });
+  flight::host_sdl::document.set_hidden(true);
+  flight::host_sdl::document.set_hidden(false);
+  expect(
+      global_visibility_calls == 2 && flight::host_sdl::global_this.document.has_focus(),
+      "a listener registered through globalThis did not observe both visibility changes of the "
+      "document it names");
+
+  const auto named_globals = flight::host_sdl::global_this.named_globals();
+  named_globals.set(flight::String("flightTestKey"), flight::Any(7.0));
+  expect(
+      static_cast<flight::Record<flight::String, flight::Any>>(flight::host_sdl::global_this)
+              .get(flight::String("flightTestKey"))
+              ->as_number() == 7.0,
+      "the erased global store is not shared across projections of globalThis");
+  expect(
+      !static_cast<flight::Record<flight::String, flight::Any>>(flight::host_sdl::global_this)
+           .get(flight::String("flightUnwritten"))
+           .has_value(),
+      "an unwritten global reported an entry");
+  named_globals.erase(flight::String("flightTestKey"));
+
   int removed_visibility_calls = 0;
   flight::Function<void()> visibility_listener = [&] { ++removed_visibility_calls; };
   flight::host_sdl::document.add_event_listener(

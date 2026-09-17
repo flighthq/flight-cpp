@@ -23,6 +23,20 @@ bool same_string(const String& left, const String& right) { return left == right
 Document document;
 WindowFacade window;
 
+GlobalScope::GlobalScope() noexcept
+    : document(::flight::host_sdl::document),
+      navigator(::flight::host_sdl::navigator),
+      window(::flight::host_sdl::window) {}
+
+flight::Record<flight::String, flight::Any> GlobalScope::named_globals() const {
+  // One store for the process, so a value written through one projection of `globalThis` is read
+  // back through the next rather than landing in a copy nobody else can see.
+  static const flight::Record<flight::String, flight::Any> globals;
+  return globals;
+}
+
+GlobalScope global_this;
+
 void DomElement::add_event_listener(
     const String& type,
     Function<void()> callback,
