@@ -1,7 +1,7 @@
 {
   "schema": "flight-generated-upstream-example-frontier-refusals/1",
-  "compilerRevision": "9f6ce1cad0d5cfcb047ccb2237995bca39161acc",
-  "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
+  "compilerRevision": "fbfcc1102d2afb5fa5ea942fcdad27d520f21408",
+  "sourceRevision": "903f3289590358eacc20698525e6982da2ab0e9d",
   "refusals": [
     {
       "code": "unsupported-ir",
@@ -56,7 +56,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/benchmark/src/app.ts",
       "package": "@flighthq/example-benchmark",
-      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -91,7 +91,7 @@
       "code": "missing-dependency",
       "module": "examples/packages/bitmapfont-generate/src/renderNative.ts",
       "package": "@flighthq/example-bitmapfont-generate",
-      "reason": "Module evaluation dependency is missing for @flighthq/sdk",
+      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
       "stage": "initialization"
     },
     {
@@ -161,7 +161,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/cross-backend-embed/src/app.ts",
       "package": "@flighthq/example-cross-backend-embed",
-      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], R[type])",
+      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
       "stage": "emission"
     },
     {
@@ -240,6 +240,27 @@
       "package": "@flighthq/example-formatloading",
       "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
       "stage": "initialization"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "examples/packages/instanced-mesh/src/app.ts",
+      "package": "@flighthq/example-instanced-mesh",
+      "reason": "cpp emission failed for @flighthq/example-instanced-mesh/examples/packages/instanced-mesh/src/app.ts: captured referent mutation of ground requires a shared C++ reference representation",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/instanced-mesh/src/render.ts",
+      "package": "@flighthq/example-instanced-mesh",
+      "reason": "dependency ./renderNative was refused for @flighthq/example-instanced-mesh/examples/packages/instanced-mesh/src/renderNative.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "examples/packages/instanced-mesh/src/renderNative.ts",
+      "package": "@flighthq/example-instanced-mesh",
+      "reason": "cpp emission failed for @flighthq/example-instanced-mesh/examples/packages/instanced-mesh/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -329,7 +350,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/particleeditor/src/app.ts",
       "package": "@flighthq/example-particleeditor",
-      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/app.ts: captured referent mutation of emitter requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -350,7 +371,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/particles/src/app.ts",
       "package": "@flighthq/example-particles",
-      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/app.ts: captured referent mutation of fireEmitter requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -392,7 +413,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/platformer/src/app.ts",
       "package": "@flighthq/example-platformer",
-      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -413,7 +434,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/scene-fire/src/app.ts",
       "package": "@flighthq/example-scene-fire",
-      "reason": "cpp emission failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/app.ts: captured referent mutation of ground requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -427,7 +448,7 @@
       "code": "missing-dependency",
       "module": "examples/packages/scene-fire/src/renderNative.ts",
       "package": "@flighthq/example-scene-fire",
-      "reason": "Module evaluation dependency is missing for @flighthq/sdk",
+      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
       "stage": "initialization"
     },
     {
@@ -518,7 +539,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/sound/src/app.ts",
       "package": "@flighthq/example-sound",
-      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/app.ts: runtime external symbol binding plan is incomplete (missing: AudioContext[value], AudioContextOptions[type], R[type])",
+      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
       "stage": "emission"
     },
     {
@@ -581,7 +602,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/spritesheet/src/app.ts",
       "package": "@flighthq/example-spritesheet",
-      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -595,7 +616,7 @@
       "code": "missing-dependency",
       "module": "examples/packages/spritesheet/src/renderNative.ts",
       "package": "@flighthq/example-spritesheet",
-      "reason": "Module evaluation dependency is missing for @flighthq/sdk",
+      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
       "stage": "initialization"
     },
     {
@@ -644,7 +665,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/tilemap/src/app.ts",
       "package": "@flighthq/example-tilemap",
-      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -658,7 +679,7 @@
       "code": "missing-dependency",
       "module": "examples/packages/tilemap/src/renderNative.ts",
       "package": "@flighthq/example-tilemap",
-      "reason": "Module evaluation dependency is missing for @flighthq/sdk",
+      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
       "stage": "initialization"
     },
     {
@@ -686,7 +707,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/video/src/app.ts",
       "package": "@flighthq/example-video",
-      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/app.ts: runtime external symbol binding plan is incomplete (missing: BlobEvent[type], CanvasRenderingContext2D[type], MediaRecorder[type], MediaRecorder[value], MediaRecorderOptions[type], MediaStream[type], PropertyDescriptor[type], R[type])",
+      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/app.ts: runtime external symbol binding plan is incomplete (missing: BlobEvent[type], MediaRecorder[type], MediaRecorder[value], MediaRecorderOptions[type], MediaStream[type], PropertyDescriptor[type], R[type])",
       "stage": "emission"
     },
     {
@@ -700,7 +721,7 @@
       "code": "missing-dependency",
       "module": "examples/packages/video/src/renderNative.ts",
       "package": "@flighthq/example-video",
-      "reason": "Module evaluation dependency is missing for @flighthq/sdk",
+      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
       "stage": "initialization"
     }
   ]

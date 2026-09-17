@@ -2,15 +2,123 @@
 
 The maintained downstream checklist now lives in [flight-compiler adoption status](flight-compiler-adoption.md).
 
-The current checkout pins Flight `1274ec5` and flight-compiler `9f6ce1c`. Its portable sweep emits 950 of 2,851
-modules; GCC 15.2 compiles 921 of those headers and reports 29 generated-code failures. The complete SDL profile
-emits 1,093 modules, with 1,049 passing and 44 failing independent-header checks. All 33 upstream example packages
-still remain dependency-blocked: the selected graph and direct frontier each emit 0 of 100 modules. Their native
-renderer roots now reach the compiler's unrepresented optional `Raster2DSurfaceProvider` reference domain.
+The current checkout pins Flight `903f328` and flight-compiler `fbfcc11`. Both revisions are recorded in
+[`dependencies.lock.json`](../dependencies.lock.json), and the maintained status document records the active counts
+and remaining ownership. The section immediately below is the current round; everything after it is the historical
+record of the earlier `993c280` and `9f6ce1c` handoffs.
 
-The detailed review below records the earlier `993c280` handoff that defined the downstream runtime and host work.
-Both current revisions are pinned in [`dependencies.lock.json`](../dependencies.lock.json), and the maintained status
-document records the active counts and remaining ownership.
+## Round of 2026-09-17: the four downstream asks are implemented
+
+`agents/flight-cpp-adoption.md` at `fbfcc11` named four items that could only land here. All four are in this
+checkout, with native tests and, where the compiler already spells them, a measured effect on the ledger.
+
+### Landed and already elected through a binding profile
+
+- **`CanvasRenderingContext2D`, `CanvasGradient`, `CanvasPattern`, `DOMMatrix`.** `flight/canvas_2d.hpp` implements
+  the half of the Canvas 2D contract that is device-independent -- the drawing-state stack, the current
+  transformation matrix, path construction, dash lists, gradient stops, pattern parameters, and the settings a
+  context was created with -- and delegates pixels to a `Canvas2DRasterizer` a host supplies. There is no rasterizer
+  in flight-cpp and no default no-op one: a context created without a rasterizer reports `isContextLost()` and
+  throws from every operation that would have produced or read pixels, while continuing to maintain the state the
+  runtime owns. Path segments retain the transform in force when each was added, so a transformed arc stays an exact
+  arc rather than being flattened at a tolerance the runtime cannot choose. `bindings/web-types.json` elects all four
+  types. **Measured: the `CanvasRenderingContext2D` direct refusal goes from 58 modules to 0.**
+- **`structuredClone`.** `flight/structured_clone.hpp` deep-copies the runtime's own value domain, preserving shared
+  references and cycles, and refusing symbols and callables with `DataCloneError` as JavaScript does. A type with no
+  clone definition is a compile-time refusal naming `structured_clone_traits`, not a shallow copy: C++20 cannot
+  enumerate an aggregate's members, so a permissive default would be a shallow copy wearing a deep copy's name.
+  Elected in `bindings/runtime.json`. **Measured: all three `@flighthq/snapshot` refusals clear.**
+- **Per-arm settled results.** `flight::TaskFulfillment<T>` and `flight::TaskRejectionResult` are the two arms
+  separately, with `status` spelled as the string the source narrows on and `as_fulfilled`/`as_rejected` to move from
+  the union without inventing the member the other arm has. Elected in `bindings/runtime.json` as
+  `PromiseFulfilledResult` and `PromiseRejectedResult`. **Measured: both modules clear.**
+
+The whole `runtime external symbol binding plan is incomplete` family falls from **96 modules to 36** on the complete
+SDL profile. Sixteen modules emit outright; the rest advance to their next blocker, which is the lower-bound property
+the coverage plan describes rather than a disappointment. The profile moves from 1,145 to **1,161 of 2,900** emitted
+modules, with refusals from 1,755 to 1,739 and direct refusals from 979 to 960. No module newly refuses.
+
+### Landed and waiting on compiler election
+
+- **The erased dynamic value is `flight::Any`** (`flight/any.hpp`). It is a closed variant over every ECMAScript
+  language type this runtime has -- `undefined`, `null`, boolean, number, string, symbol, object reference, callable,
+  and an opaque host value -- so a position written `unknown` that holds a number stays a number instead of being
+  misstated as `flight::Ref<void>`. An object reference retains its concrete type and comes back only at that type.
+  `typeof` reports the language's own answers, `===` never coerces, `SameValueZero` matches NaN with NaN so an erased
+  value can key a `Map`, and `Object.is` separates the zeroes. The relational comparison is implemented exactly over
+  the primitive domain and throws `TypeError` for a symbol, object, callable, or host operand rather than fabricating
+  a `ToPrimitive` result the runtime has no prototype chain to obtain. The one gap is stated rather than faked: there
+  is no `bigint` alternative, because the runtime has no arbitrary-precision integer.
+
+  **Missing and present-but-absent stay distinct**, which was the explicit requirement. `Any` holds `undefined` as a
+  present value; `flight::AnySlot` (`std::optional<Any>`) is the absence of an entry. `Record<K, Any>::get` returns
+  the latter, so a key written with `undefined` and a key never written are different results from the same call, and
+  `has` agrees. A native test asserts exactly that pair.
+
+  **This cannot be elected from a binding profile, so it needs a compiler change.** `emitTypeCpp` maps
+  `IrType { kind: 'unknown' }` to the literal `'auto'` for every `source` other than `this` and `object`
+  (`packages/compiler-backend-cpp/src/cppCompilerBackend.ts`, the `case 'unknown':` arm), and
+  `assertCppOutputHasNoUnresolvedTypePlaceholder` then refuses the module. There is no `sourceName` for `any` or
+  `unknown`, so `flight-cpp-external-bindings/1` has no way to reach that arm. Electing `flight::Any` there, with
+  `#include <flight/canvas_2d.hpp>`-style header tracking for `flight/any.hpp`, is the whole downstream half of the
+  corpus's largest family.
+
+- **The erased-object symbol-keyed property view is `flight::AttachedProperties`**, with
+  `flight::attached_properties(ref)` over a `Ref<Object>`, a `Ref<void>`, or a `StructuralRef`. It satisfies each
+  part of the ask, and two of them were previously broken rather than merely absent:
+  - *One owner per native object identity.* `detail::owner_for` kept a `static` registry **per object type**, so a
+    typed projection and an erased `Ref<void>` projection of one object resolved two different owners and therefore
+    two different sets of symbol properties. The registry is now one table keyed on the erased address.
+  - *Attachments live for the object's lifetime.* The registry held owners weakly, so attachments died with the last
+    transient row rather than with the object. It now holds the owner strongly and the object weakly; `NativeRowOwner`
+    holds its object weakly in turn, and `StructuralRef` retains the object itself, so lifetimes are unchanged for
+    existing callers while attachments now outlive the view that wrote them. An address reused by a later object
+    never inherits the earlier object's entries, because expiry is checked on every lookup.
+  - *A missing entry differs from a present `undefined`.* `get` returns `AnySlot`; `has` answers without reading.
+  - *No copying.* Entries live in the owner, not in the object's storage, and nothing copies the object or its
+    properties.
+
+  flight-compiler should elect the final spelling. `flight/particles/particle_emitter_signals.hpp` is the failing
+  header this exists for.
+
+### Checked against flight-cpp and deliberately not bound
+
+- **`Function[value]`** (`@flighthq/effects-gl/glShaderTestHelper.ts`) is `new Function(source)()` -- evaluating
+  JavaScript source text at runtime. flight-cpp has no evaluator and will not grow one to satisfy a test helper, so
+  there is no target to name. This is a deliberate absence, not an oversight; the coverage plan's "check each against
+  flight-cpp before adding a table entry" is answered "no target exists".
+- **`globalThis[value]`** (five modules) is only ever reached as `globalThis.document` and `globalThis.navigator`.
+  Those members are host-profile values -- `bindings/sdl-app.json` already binds `document` and `navigator` to
+  `flight::host_sdl` objects -- so `globalThis` belongs in that profile as an object whose members forward to them,
+  not in the portable runtime, which has no global scope to expose. It is not bound in this checkout because SDL 3
+  development files are not available in this working environment, so the host header could not be compiled or
+  tested here, and shipping an unverified host binding would be worse than naming the gap.
+
+### Compiler-side defects this round surfaced
+
+- **A local array literal over native-binding property reads loses its element type.**
+  `const restored = [ctx.globalAlpha, ctx.lineWidth];` emits `flight::Array<auto` and refuses with
+  `cpp-unresolved-type-placeholder`, although TypeScript types both properties `number` and the same expression
+  emits correctly when returned directly. Reproduced against the Canvas 2D binding at `fbfcc11`; the Canvas 2D
+  oracle works around it by returning the literal instead of binding it.
+- **`Math.fround` and `Math.SQRT2` have no ambient member binding**, and five modules now stop there.
+  `flight::fround` exists in `flight/math.hpp` and has since the numeric-conversion contract landed, so these are
+  two missing rows in `cppFlightRuntimeAmbientMemberBindings`, not missing runtime work.
+- **`captured referent mutation of ctx requires a shared C++ reference representation`** now blocks three
+  Canvas 2D modules. A bound context is emitted as a by-value parameter, so a closure that captures it and writes an
+  attribute cannot be represented. The runtime side is already shared -- copies of a context share one state stack,
+  one rasterizer, and one identity -- so what is needed is the compiler's reference representation for a captured
+  binding, not a different runtime carrier.
+- **Upstream examples import `@flighthq/host-web/contract` without declaring it.** At Flight `903f328` the example
+  package graph no longer validates: `examples/packages/awd2loading/src/render.webgl.ts` and its siblings import the
+  Web host package while their manifests declare only `@flighthq/sdk`, and the package graph rejects a module edge to
+  a package the owning package does not declare. `scripts/upstreamExampleGeneration.mjs` now records that one package
+  name as an explicit addition, closes over its declared dependencies, and adds it to the dependency list of every
+  example whose sources name it -- the same class of recorded remap as the existing `renderNative.ts` selector. The
+  example inventory grows from 33 examples and 100 selected modules to 34 and 103. This is a Flight-side manifest
+  gap rather than a compiler one; the downstream workaround is recorded so it can be removed when the manifests
+  declare the dependency.
+
 
 ## Regression still present at 9f6ce1c
 

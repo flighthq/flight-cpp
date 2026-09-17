@@ -11,14 +11,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flighthq_examples_sound {
 
 inline flight::Array<double> generate_tone_samples(double frequency, double duration, double decay, double sample_rate) {
-  auto length = std::floor((sample_rate * duration));
+  const double length = std::floor((sample_rate * duration));
   flight::Array<double> samples = flight::Array<double>{};
   {
     double i = 0.0;
     while ((i < length)) {
       {
         const double t = (i / sample_rate);
-        auto envelope = std::exp((-decay * t));
+        const double envelope = std::exp((-decay * t));
         samples.push((std::sin((((2.0 * flight::pi) * frequency) * t)) * envelope));
       }
       (i += 1.0);
@@ -28,7 +28,7 @@ inline flight::Array<double> generate_tone_samples(double frequency, double dura
 }
 
 inline flight::Array<double> generate_sweep_samples(double start_frequency, double end_frequency, double duration, double decay, double sample_rate) {
-  auto length = std::floor((sample_rate * duration));
+  const double length = std::floor((sample_rate * duration));
   flight::Array<double> samples = flight::Array<double>{};
   double phase = 0.0;
   {
@@ -37,7 +37,7 @@ inline flight::Array<double> generate_sweep_samples(double start_frequency, doub
       {
         const double t = (i / sample_rate);
         const double frequency = (start_frequency + ((end_frequency - start_frequency) * (t / duration)));
-        auto envelope = std::exp((-decay * t));
+        const double envelope = std::exp((-decay * t));
         samples.push((std::sin(phase) * envelope));
         (phase += (((2.0 * flight::pi) * frequency) / sample_rate));
       }

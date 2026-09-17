@@ -1,7 +1,7 @@
 {
   "schema": "flight-generated-upstream-example-refusals/1",
-  "compilerRevision": "9f6ce1cad0d5cfcb047ccb2237995bca39161acc",
-  "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
+  "compilerRevision": "fbfcc1102d2afb5fa5ea942fcdad27d520f21408",
+  "sourceRevision": "903f3289590358eacc20698525e6982da2ab0e9d",
   "refusals": [
     {
       "code": "unsupported-ir",
@@ -21,7 +21,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/adjustments/src/renderNative.ts",
       "package": "@flighthq/example-adjustments",
-      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
@@ -49,14 +49,14 @@
       "code": "unsupported-ir",
       "module": "examples/packages/awd2loading/src/renderNative.ts",
       "package": "@flighthq/example-awd2loading",
-      "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/benchmark/src/app.ts",
       "package": "@flighthq/example-benchmark",
-      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/app.ts: intersection types require C++ multiple-inheritance lowering",
       "stage": "emission"
     },
     {
@@ -70,7 +70,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/benchmark/src/renderNative.ts",
       "package": "@flighthq/example-benchmark",
-      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
@@ -88,11 +88,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/bitmapfont-generate/src/renderNative.ts",
       "package": "@flighthq/example-bitmapfont-generate",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-bitmapfont-generate/examples/packages/bitmapfont-generate/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -112,7 +112,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/camera2d/src/renderNative.ts",
       "package": "@flighthq/example-camera2d",
-      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
@@ -133,7 +133,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/clock/src/renderNative.ts",
       "package": "@flighthq/example-clock",
-      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
@@ -151,17 +151,17 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/collision/src/renderNative.ts",
       "package": "@flighthq/example-collision",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webCanvasRenderSurface.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-collision/examples/packages/collision/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/cross-backend-embed/src/app.ts",
       "package": "@flighthq/example-cross-backend-embed",
-      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: contextual union value type flight::Ref<flight::sdk::Texture2D> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -196,7 +196,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/crossfade/src/renderNative.ts",
       "package": "@flighthq/example-crossfade",
-      "reason": "cpp emission failed for @flighthq/example-crossfade/examples/packages/crossfade/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-crossfade/examples/packages/crossfade/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
@@ -217,7 +217,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/flowstates/src/renderNative.ts",
       "package": "@flighthq/example-flowstates",
-      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
@@ -238,14 +238,35 @@
       "code": "unsupported-ir",
       "module": "examples/packages/formatloading/src/renderNative.ts",
       "package": "@flighthq/example-formatloading",
-      "reason": "cpp emission failed for @flighthq/example-formatloading/examples/packages/formatloading/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-formatloading/examples/packages/formatloading/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "examples/packages/instanced-mesh/src/app.ts",
+      "package": "@flighthq/example-instanced-mesh",
+      "reason": "cpp emission failed for @flighthq/example-instanced-mesh/examples/packages/instanced-mesh/src/app.ts: missing required call argument at position 2",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "examples/packages/instanced-mesh/src/render.ts",
+      "package": "@flighthq/example-instanced-mesh",
+      "reason": "dependency ./renderNative was refused for @flighthq/example-instanced-mesh/examples/packages/instanced-mesh/src/renderNative.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "examples/packages/instanced-mesh/src/renderNative.ts",
+      "package": "@flighthq/example-instanced-mesh",
+      "reason": "cpp emission failed for @flighthq/example-instanced-mesh/examples/packages/instanced-mesh/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/interaction/src/app.ts",
       "package": "@flighthq/example-interaction",
-      "reason": "cpp emission failed for @flighthq/example-interaction/examples/packages/interaction/src/app.ts: contextual union value type flight::Ref<set_cursor_entity_runtime_key_3f4d7f57996d2acb> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-interaction/examples/packages/interaction/src/app.ts: contextual union value type flight::Ref<set_cursor_entity_runtime_key_d121b263b41ffa37> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -259,14 +280,14 @@
       "code": "unsupported-ir",
       "module": "examples/packages/interaction/src/renderNative.ts",
       "package": "@flighthq/example-interaction",
-      "reason": "cpp emission failed for @flighthq/example-interaction/examples/packages/interaction/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-interaction/examples/packages/interaction/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/materialshowcase/src/app.ts",
       "package": "@flighthq/example-materialshowcase",
-      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/app.ts: typeOf types require C++ type computation lowering",
+      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/app.ts: contextual union value type flight::Ref<flight::sdk::StandardPbrMaterialProperties> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -280,7 +301,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/materialshowcase/src/renderNative.ts",
       "package": "@flighthq/example-materialshowcase",
-      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
@@ -301,7 +322,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/motionpath/src/renderNative.ts",
       "package": "@flighthq/example-motionpath",
-      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
@@ -322,14 +343,14 @@
       "code": "unsupported-ir",
       "module": "examples/packages/movieclip/src/renderNative.ts",
       "package": "@flighthq/example-movieclip",
-      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/particleeditor/src/app.ts",
       "package": "@flighthq/example-particleeditor",
-      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/app.ts: captured referent mutation of editable requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -343,14 +364,14 @@
       "code": "unsupported-ir",
       "module": "examples/packages/particleeditor/src/renderNative.ts",
       "package": "@flighthq/example-particleeditor",
-      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/particles/src/app.ts",
       "package": "@flighthq/example-particles",
-      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/app.ts: intersection types require C++ multiple-inheritance lowering",
       "stage": "emission"
     },
     {
@@ -364,7 +385,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/particles/src/renderNative.ts",
       "package": "@flighthq/example-particles",
-      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
@@ -382,17 +403,17 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/pathboolean/src/renderNative.ts",
       "package": "@flighthq/example-pathboolean",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webCanvasRenderSurface.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-pathboolean/examples/packages/pathboolean/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/platformer/src/app.ts",
       "package": "@flighthq/example-platformer",
-      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/app.ts: intersection types require C++ multiple-inheritance lowering",
       "stage": "emission"
     },
     {
@@ -406,14 +427,14 @@
       "code": "unsupported-ir",
       "module": "examples/packages/platformer/src/renderNative.ts",
       "package": "@flighthq/example-platformer",
-      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/scene-fire/src/app.ts",
       "package": "@flighthq/example-scene-fire",
-      "reason": "cpp emission failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/app.ts: contextual union value type flight::Ref<flight::sdk::Texture2D> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -424,11 +445,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/scene-fire/src/renderNative.ts",
       "package": "@flighthq/example-scene-fire",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -448,14 +469,14 @@
       "code": "unsupported-ir",
       "module": "examples/packages/scene-picking/src/renderNative.ts",
       "package": "@flighthq/example-scene-picking",
-      "reason": "cpp emission failed for @flighthq/example-scene-picking/examples/packages/scene-picking/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "reason": "cpp emission failed for @flighthq/example-scene-picking/examples/packages/scene-picking/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/scene3d/src/app.ts",
       "package": "@flighthq/example-scene3d",
-      "reason": "cpp emission failed for @flighthq/example-scene3d/examples/packages/scene3d/src/app.ts: typeOf types require C++ type computation lowering",
+      "reason": "cpp emission failed for @flighthq/example-scene3d/examples/packages/scene3d/src/app.ts: missing required call argument at position 2",
       "stage": "emission"
     },
     {
@@ -469,14 +490,14 @@
       "code": "unsupported-ir",
       "module": "examples/packages/scene3d/src/renderNative.ts",
       "package": "@flighthq/example-scene3d",
-      "reason": "cpp emission failed for @flighthq/example-scene3d/examples/packages/scene3d/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "reason": "cpp emission failed for @flighthq/example-scene3d/examples/packages/scene3d/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
       "code": "dependency-refused",
       "module": "examples/packages/shapes/src/app.ts",
       "package": "@flighthq/example-shapes",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
+      "reason": "dependency ./render was refused for @flighthq/example-shapes/examples/packages/shapes/src/renderNative.ts",
       "stage": "dependency"
     },
     {
@@ -487,11 +508,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/shapes/src/renderNative.ts",
       "package": "@flighthq/example-shapes",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webCanvasRenderSurface.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-shapes/examples/packages/shapes/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -511,14 +532,14 @@
       "code": "unsupported-ir",
       "module": "examples/packages/snapshot/src/renderNative.ts",
       "package": "@flighthq/example-snapshot",
-      "reason": "cpp emission failed for @flighthq/example-snapshot/examples/packages/snapshot/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-snapshot/examples/packages/snapshot/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/sound/src/app.ts",
       "package": "@flighthq/example-sound",
-      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/app.ts: runtime external symbol binding plan is incomplete (missing: AudioContext[value], AudioContextOptions[type])",
+      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/app.ts: contextual union value type flight::Ref<set_cursor_entity_runtime_key_d121b263b41ffa37> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -532,7 +553,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/sound/src/renderNative.ts",
       "package": "@flighthq/example-sound",
-      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
@@ -553,7 +574,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/spatial/src/renderNative.ts",
       "package": "@flighthq/example-spatial",
-      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
@@ -571,17 +592,17 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/spring/src/renderNative.ts",
       "package": "@flighthq/example-spring",
-      "reason": "dependency @flighthq/host-web/contract was refused for @flighthq/host-web/packages/host-web/src/webCanvasRenderSurface.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-spring/examples/packages/spring/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/spritesheet/src/app.ts",
       "package": "@flighthq/example-spritesheet",
-      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasGradient[type], CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/app.ts: intersection types require C++ multiple-inheritance lowering",
       "stage": "emission"
     },
     {
@@ -592,11 +613,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/spritesheet/src/renderNative.ts",
       "package": "@flighthq/example-spritesheet",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -616,7 +637,7 @@
       "code": "unsupported-ir",
       "module": "examples/packages/text/src/renderNative.ts",
       "package": "@flighthq/example-text",
-      "reason": "cpp emission failed for @flighthq/example-text/examples/packages/text/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-text/examples/packages/text/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
@@ -637,14 +658,14 @@
       "code": "unsupported-ir",
       "module": "examples/packages/textinput/src/renderNative.ts",
       "package": "@flighthq/example-textinput",
-      "reason": "cpp emission failed for @flighthq/example-textinput/examples/packages/textinput/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-textinput/examples/packages/textinput/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/tilemap/src/app.ts",
       "package": "@flighthq/example-tilemap",
-      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/app.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
+      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/app.ts: captured referent mutation of hud requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -655,11 +676,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/tilemap/src/renderNative.ts",
       "package": "@flighthq/example-tilemap",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -679,14 +700,14 @@
       "code": "unsupported-ir",
       "module": "examples/packages/tween/src/renderNative.ts",
       "package": "@flighthq/example-tween",
-      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/renderNative.ts: contextual union value type flight::Ref<flight::types::Raster2DSurfaceProvider> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/video/src/app.ts",
       "package": "@flighthq/example-video",
-      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/app.ts: runtime external symbol binding plan is incomplete (missing: BlobEvent[type], CanvasRenderingContext2D[type], MediaRecorder[type], MediaRecorder[value], MediaRecorderOptions[type], MediaStream[type], PropertyDescriptor[type], const[type])",
+      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/app.ts: runtime external symbol binding plan is incomplete (missing: BlobEvent[type], MediaRecorder[type], MediaRecorder[value], MediaRecorderOptions[type], MediaStream[type], PropertyDescriptor[type], const[type])",
       "stage": "emission"
     },
     {
@@ -697,11 +718,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "examples/packages/video/src/renderNative.ts",
       "package": "@flighthq/example-video",
-      "reason": "dependency @flighthq/sdk was refused for @flighthq/sdk/packages/sdk/src/index.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/renderNative.ts: runtime external symbol binding plan is incomplete (missing: const[type])",
+      "stage": "emission"
     }
   ]
 }

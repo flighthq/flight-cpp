@@ -2,13 +2,13 @@
   "schema": "flight-generated-upstream-examples/1",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
-    "revision": "9f6ce1cad0d5cfcb047ccb2237995bca39161acc",
+    "revision": "fbfcc1102d2afb5fa5ea942fcdad27d520f21408",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
   "bindingProfiles": [
     {
-      "digest": "sha256:b0c061e662f3ad98cd23dba86bdcfd181cab6a095ba9aa68032b0f62633ffc9a",
+      "digest": "sha256:34cb604712f511c1da4d04fcb1751a46363cc65e26d5afb01e2adc430dd3d4ae",
       "identity": "flighthq/flight-cpp/runtime-carriers/1",
       "path": "bindings/runtime.json",
       "profile": "runtime-carriers",
@@ -22,7 +22,7 @@
       "schema": "flight-cpp-external-bindings/1"
     },
     {
-      "digest": "sha256:600162e2c8a67f5c9e52816e5cbcd320bad4969c1e9a379aef30620faa77730d",
+      "digest": "sha256:889945f1b894c702b8108147ec2eec3b08fe28aa0aa3371995014dae6ba747d0",
       "identity": "flighthq/flight-cpp/web-types/1",
       "path": "bindings/web-types.json",
       "profile": "web-types",
@@ -307,6 +307,29 @@
       "sourceModules": 3,
       "upstreamPackage": "formatloading",
       "upstreamSourceModules": 6
+    },
+    {
+      "cppIncludePrefix": "flight/examples/instanced_mesh",
+      "cppNamespace": "flight::examples::instanced_mesh",
+      "emittedModules": 0,
+      "frontierEmittedModules": 0,
+      "frontierRefusedModules": 3,
+      "package": "@flighthq/example-instanced-mesh",
+      "refusedModules": 3,
+      "renderer": "webgl",
+      "selectorRemap": {
+        "implementation": {
+          "source": "src/render.webgl.ts",
+          "target": "src/renderNative.ts"
+        },
+        "selector": {
+          "source": "src/render.ts",
+          "target": "./renderNative"
+        }
+      },
+      "sourceModules": 3,
+      "upstreamPackage": "instanced-mesh",
+      "upstreamSourceModules": 3
     },
     {
       "cppIncludePrefix": "flight/examples/interaction",
@@ -818,15 +841,15 @@
   "source": {
     "directory": "examples/packages",
     "repository": "https://github.com/flighthq/flight",
-    "revision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f"
+    "revision": "903f3289590358eacc20698525e6982da2ab0e9d"
   },
   "summary": {
-    "packages": 33,
+    "packages": 34,
     "frontierEmittedModules": 0,
-    "frontierRefusedModules": 100,
-    "upstreamSourceModules": 181,
+    "frontierRefusedModules": 103,
+    "upstreamSourceModules": 184,
     "emittedModules": 0,
-    "refusedModules": 100,
-    "sourceModules": 100
+    "refusedModules": 103,
+    "sourceModules": 103
   }
 }

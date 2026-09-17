@@ -73,7 +73,9 @@ for (const expected of [
   'flight::to_boolean(text)',
   'flight::to_boolean(nullable)',
   '.filter(flight::to_boolean)',
-  '!value',
+  // `value` is a union here, and a std::variant has no operator!, so negation has to go through the
+  // truthiness conversion rather than through the variant itself.
+  '!flight::to_boolean(value)',
 ]) {
   if (!emitted.includes(expected)) {
     process.stderr.write(`Boolean fixture did not emit ${expected}.\n${emitted}\n`);

@@ -5,18 +5,27 @@ This is flight-cpp's maintained view of the downstream work requested by
 adopted. Adoption also requires build packaging, compiler-emitted compilation, source differential behavior where
 observable, and a complete regenerated SDK closure.
 
-The current pins are Flight `1274ec5` and flight-compiler `9f6ce1c`. The portable sweep processes all 154 packages
-and 2,851 modules. It emits 950 dependency-closed headers and records 1,901 refusals: 1,105 direct emission refusals
-and 796 propagated dependency refusals. All emitted includes resolve; 921 headers compile independently with GCC
-15.2 and 29 stop at compiler-emitted C++ errors. The complete SDL profile emits 1,093 headers with 1,758 refusals:
-872 direct and 886 propagated. Of those emitted headers, 1,049 compile independently and 44 expose generated-code
-defects. Compared with `a6895ee`, the portable pass count increased by 40 and its failure count fell by 37; the SDL
-pass count increased by 69 and its failure count fell by 64.
+The current pins are Flight `903f328` and flight-compiler `fbfcc11`. The corpus grew with them, to 155 packages and
+2,900 modules. The portable floor -- no binding profile applied -- emits 985 dependency-closed headers and records
+1,915 refusals. The complete SDL profile emits **1,161** headers with 1,739 refusals: 960 direct emission refusals
+and 779 propagated dependency refusals. The upstream example inventory now covers 34 examples and 103 selected
+modules, none of them dependency-closed.
+
+Against the same pins before this round's downstream work, the SDL profile emitted 1,145 modules with 1,755
+refusals. The Canvas 2D contract, `structuredClone`, and the per-arm settled results took the
+`runtime external symbol binding plan is incomplete` family from 96 modules to 36; sixteen modules emit outright and
+the rest advanced to their next blocker, and none newly refuses. Independent-header compilation was not re-measured
+this round and its last recorded figures belong to the previous pin, so they are not restated here.
 
 ## Downstream implementation
 
 | Contract | State | Evidence and remaining work |
 | --- | --- | --- |
+| Erased dynamic value for `any` and `unknown` | Implemented runtime ABI, awaiting compiler election | `flight::Any` is a closed variant over `undefined`, `null`, boolean, number, string, symbol, object reference, callable, and opaque host value, so an unconstrained position holding a number is not misstated as `flight::Ref<void>`. Object references retain their concrete type and are recovered only at it. `typeof`, `===`, SameValueZero, `Object.is`, `ToBoolean`, and the abstract relational comparison are implemented exactly; ordering a symbol or a non-primitive throws `TypeError` rather than fabricating a `ToPrimitive` result. `AnySlot` keeps a missing entry distinct from an entry whose value is `undefined`, proved through `Record::get`. No `bigint` alternative exists and that gap is documented rather than approximated. Election is compiler-side: `emitTypeCpp` maps `kind: 'unknown'` to `auto` and no `sourceName` exists for `any`/`unknown`, so no binding profile can reach it. |
+| Symbol-keyed attached properties over an erased object | Implemented runtime ABI, awaiting compiler election | `flight::AttachedProperties` and `flight::attached_properties` project a `Ref<Object>`, a `Ref<void>`, or a `StructuralRef` onto one symbol-keyed store. Two defects behind the ask are fixed: the owner registry was keyed per object *type*, so typed and erased projections of one object saw different entries, and it held owners weakly, so attachments died with the last transient row. It is now one address-keyed table holding owners strongly and objects weakly, with `StructuralRef` retaining its object so existing lifetimes are unchanged. `get` returns `AnySlot`, so a missing entry and a present `undefined` stay distinct, and a reused address never inherits the previous object's entries. Nothing copies the object or its properties. `flight/particles/particle_emitter_signals.hpp` is the header this exists for; flight-compiler elects the final spelling. |
+| Canvas 2D contract | Implemented runtime ABI | `flight/canvas_2d.hpp` owns the drawing-state stack, the current transformation matrix, path construction, dash lists, gradient stops, pattern parameters, and context settings; a host supplies pixels through `Canvas2DRasterizer`. No rasterizer ships and none is faked: a context without one reports `isContextLost()` and throws from every pixel-producing or pixel-reading call while still maintaining the state the runtime owns. Path segments retain the transform in force when each was added, so a transformed arc stays exact instead of being flattened at a runtime-chosen tolerance. `Canvas2DImageSource` carries any host source type with its type intact. `bindings/web-types.json` elects `CanvasRenderingContext2D`, `CanvasGradient`, `CanvasPattern`, and `DOMMatrix`; the direct `CanvasRenderingContext2D` refusal goes from 58 modules to 0. Native tests and a compiler-emitted oracle that runs against a recording rasterizer cover state, transform, path, style, and drawing dispatch. `OffscreenCanvasRenderingContext2D` and the browser image constructor values remain explicit provider boundaries. |
+| `structuredClone` | Implemented runtime ABI | `flight::structured_clone` deep-copies the runtime's value domain, preserves shared references, and clones a cyclic reference graph into an equally cyclic one by recording each clone before copying its contents. Symbols and callables are refused with `DataCloneError`, as in JavaScript; a type with no clone definition is a compile-time refusal naming `structured_clone_traits`, because C++20 cannot enumerate an aggregate's members and a permissive default would be a shallow copy wearing a deep copy's name. Elected in `bindings/runtime.json`; all three `@flighthq/snapshot` refusals clear. |
+| Per-arm settled task results | Implemented runtime ABI | `flight::TaskFulfillment<T>` and `flight::TaskRejectionResult` carry only the member their arm has, with `status` spelled as the string the source narrows on, and `as_fulfilled`/`as_rejected` move from the union without inventing the other arm's member. Elected in `bindings/runtime.json` as `PromiseFulfilledResult` and `PromiseRejectedResult`; both affected modules clear. |
 | ArrayBuffer, typed arrays, DataView, text encoding, `String.fromCodePoint`, insertion `splice` | Implemented | Native tests cover shared backing, views, byte order, numeric edge cases, UTF-8 replacement, astral scalars, and insertion order. `TextEncoder` handles scalar UTF-8 and unpaired-surrogate replacement through a live compiler/Node differential. `TypedArray::from` applies JavaScript modulo or clamped element conversion after its optional mapper, and `is_array_buffer_view` recognizes typed and data views without treating their backing buffers as views. Array and Map `keys`, `values`, and `entries` expose shared live cursors that retain insertions until exhaustion and preserve the exhausted state. The runtime source differential exercises these behaviors against Node. Arrays, typed arrays, DataView, maps, sets, records, weak maps, and weak sets treat C++ `const` as constness of the shared handle; referent mutation remains available inside compiler-emitted value-capturing lambdas, matching JavaScript object bindings. |
 | `ArrayLike<T>` and `ArrayBufferView` carriers | Implemented downstream ABI | `SequenceView<T>` retains source ownership and identity while adapting `Array<T>`, typed arrays, and structurally compatible shared sources without copying. `ArrayBufferView` retains backing storage, byte range, source-view identity, and dynamic view kind. Native aliasing/lifetime tests and a live compiler-emitted binding oracle cover both. |
 | `Iterable<T>` carrier | Implemented downstream ABI | `Iterable<T>` type-erases synchronous traversal while retaining Flight Array, Map, or Set shared storage. Each traversal gets the source collection's iterator semantics; active Array, Map, and Set traversals observe additions before exhaustion. The runtime profile and live compiler fixture cover the generic parameter and all three collection paths. This removes `Iterable[type]` from 14 full-SDK roots and both selected example roots. Ten full-SDK roots advance directly to existing compiler emission failures, while the example snapshot reaches the compiler-owned `Array.from` member mapping. The dependency-closed totals do not change at this pin. |
@@ -77,9 +86,9 @@ pass count increased by 69 and its failure count fell by 64.
 - `npm run sdk:generate:sdl-wgpu` applies the Web string aliases and provider-owned WebGPU handle profile. It emits
   1,067 modules, 18 more than runtime/headless, and every added header compiles independently: 733 pass and 334 fail
   overall.
-- `npm run sdk:generate:sdl` composes the GL, WebGPU, and SDL application profiles. At `9f6ce1c` it emits 1,093
-  modules; 1,049 compile independently and 44 fail in generated C++. Its 1,758 refusals comprise 872 direct emission
-  and 886 propagated dependency refusals. Window, document, `HTMLElement`, animation-frame
+- `npm run sdk:generate:sdl` composes the GL, WebGPU, Canvas 2D, and SDL application profiles. At `fbfcc11` it emits
+  1,161 modules and records 1,739 refusals: 960 direct emission and 779 propagated dependency refusals. Independent
+  header compilation was not re-measured at this pin. Window, document, `HTMLElement`, animation-frame
   cancellation, and the represented input event types advance to their next compiler or dependency boundary. The
   runtime profile also maps the compiler's existing `PromiseLike<T>` task domain to `flight::Task<T>`; `dialog.ts`
   now reaches the compiler-owned async-closure coroutine blocker instead of stopping at that ambient type.
@@ -108,11 +117,16 @@ pass count increased by 69 and its failure count fell by 64.
   The GL profile also removes all direct standard extension-type refusals. `glCompressedTexture.ts` now stops at
   dual-sentinel optional-chain lowering, `glRenderTarget.ts` at nullish-coalescing presence lowering, and
   `glEnvironmentIblBake.ts` at an unrelated contextual `flight::Map` union conversion.
-  The portable dictionary mappings similarly clear those ambient names without admitting a fake 2D renderer:
-  Canvas render-state modules now stop solely at `CanvasRenderingContext2D`, and `canvasShapeCommands.ts` retains
-  only its concrete Canvas and media handle requirements.
-- `npm run examples:generate` selects 100 native modules from all 181 sources in all 33 pinned upstream example
-  packages, mirroring Flight's WebGL build selection with an explicit, recorded `renderNative.ts` remap. No example
+  The portable dictionary mappings similarly clear those ambient names, and `bindings/web-types.json` now also
+  elects the Canvas 2D contract itself, so the Canvas render-state modules no longer stop at
+  `CanvasRenderingContext2D` at all. They advance to variant-alternative, union-evidence, and optional-construction
+  failures that were invisible behind it. `OffscreenCanvasRenderingContext2D` and the browser image constructor
+  values remain explicit provider boundaries.
+- `npm run examples:generate` selects 103 native modules from all 34 pinned upstream example packages, mirroring
+  Flight's WebGL build selection with an explicit, recorded `renderNative.ts` remap. At Flight `903f328` the examples
+  also import `@flighthq/host-web/contract` without declaring it in their manifests, so the generator records that
+  one package name as a second explicit addition and closes over its declared dependencies; without it the package
+  graph rejects the module edge and no example inventory can be produced at all. No example
   module is dependency-closed yet. The SDL application profile removes every direct `window`, `document`, animation
   frame, keyboard, pointer, wheel, gamepad-button, and `DOMRect` refusal. The rectangle binding clears that ambient
   name from eleven selected roots; collision, scene-picking, shapes, and spatial now expose their next compiler or
@@ -127,13 +141,17 @@ pass count increased by 69 and its failure count fell by 64.
   runtime. It currently covers 54 cross-runtime observations.
 - `npm run structural:oracle` generates the exact generic Entity write proxy through the pinned compiler, compiles
   the emitted headers, and executes an intercepted write against the working runtime.
-- `npm run facets:oracle` remains red at `9f6ce1c`: the compiler forward-declares the
-  `TrayWithImage` alias as a struct before defining it as `flight::FacetRef`. The downstream conditional-facet ABI
-  still passes its native coverage; the generated declaration collision requires a compiler fix.
-- `npm run compile:check` finds one additional compiler-fixture failure at `9f6ce1c`. The nested array-binding default
-  `[1]` is emitted as `std::make_tuple(1.0)` and passed to
-  `std::optional<flight::Array<double>>::value_or`, which is not convertible. The compiler must emit a
-  `flight::Array<double>` default; flight-cpp must not make arbitrary tuples implicitly convertible to arrays.
+- `npm run facets:oracle` is green at `fbfcc11`. The alias forward-declaration collision that kept it red at
+  `9f6ce1c` -- `TrayWithImage` declared as a struct before being defined as `flight::FacetRef` -- is fixed upstream,
+  and the emitted facets compile and preserve their static capability gates.
+- `npm run compile:check` is green at `fbfcc11`: 202 emitted files across 201 fixtures compile. The nested
+  array-binding default that emitted `std::make_tuple(1.0)` into
+  `std::optional<flight::Array<double>>::value_or` at `9f6ce1c` is also fixed upstream. No downstream tuple-to-array
+  conversion was added, which was the point of keeping it red.
+- `npm run boolean:oracle` asserts the negation of a union through the truthiness conversion rather than through the
+  variant. At `fbfcc11` the compiler emits `!flight::to_boolean(value)` where it previously emitted `!value`; the
+  fixture expectation moved to the new spelling because a `std::variant` has no `operator!` and the new emission is
+  the one that can compile. Its compile-and-run half is unchanged and still passes.
 - `Flight::Sdk` remains blocked until every emitted header in the selected binding profile compiles. At that point it
   must be installed/exported through CMake and exposed through Bazel, then exercised as an installed consumer.
 - The reciprocal lock cannot be completed solely in this checkout: after these commits land, flight-compiler must pin
@@ -143,7 +161,10 @@ pass count increased by 69 and its failure count fell by 64.
 
 ## Compiler and host work still gating the SDK
 
-The current 29 portable and 44 SDL-profile native header failures contain no missing flight-cpp runtime symbol.
+Independent-header compilation was last measured at `9f6ce1c` and has not been re-run at `fbfcc11`; the paragraph
+below therefore describes the previous pin and its counts should not be read as this checkout's.
+
+The 29 portable and 44 SDL-profile native header failures recorded at `9f6ce1c` contain no missing flight-cpp runtime symbol.
 Across the SDL inventory they comprise 16 incompatible structural assertions in adjustments, image-codec, and
 spatial; 21 nominal, structural, optional, and `Record` conversions in binpack, font-formats, materials, media, mesh,
 particles, physics3d, scene2d-formats, and skeleton2d; six recursive-alias declaration failures for `TiledLayer` and
@@ -153,7 +174,7 @@ in flight-compiler rather than rewritten in the generated tree. `sfnt_assembly.h
 failures in this list.
 
 The detailed profile-frontier notes below record the earlier binding bring-up. Their intermediate counts are
-historical; the current aggregate figures above come from complete `9f6ce1c` regeneration and compilation.
+historical; the current aggregate figures above come from complete `fbfcc11` regeneration.
 
 The stricter compiler newly refuses 16 direct roots that the previous portable sweep emitted. Five need equivalent
 source-union evidence, five expose generic typed-array backing domains that are not represented by the concrete C++
