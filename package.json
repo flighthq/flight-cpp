@@ -17,6 +17,7 @@
     "blob:oracle": "node ./scripts/blobOracle.mjs",
     "boolean:oracle": "node ./scripts/booleanOracle.mjs",
     "build:check": "node ./scripts/buildHealth.mjs",
+    "canvas-2d:oracle": "node ./scripts/canvas2dProfileOracle.mjs",
     "check": "node ./scripts/check.mjs",
     "compile:check": "node ./scripts/emittedSourceCompile.mjs",
     "facets:oracle": "node ./scripts/conditionalFacetOracle.mjs",

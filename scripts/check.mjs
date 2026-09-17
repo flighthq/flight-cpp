@@ -21,6 +21,7 @@ const gates = [
   { arguments: [], name: 'blobOracle' },
   { arguments: [], name: 'booleanOracle' },
   { arguments: [], name: 'buildHealth' },
+  { arguments: [], name: 'canvas2dProfileOracle' },
   { arguments: [], name: 'releaseHealth' },
   { arguments: [], name: 'exampleHealth' },
   { arguments: [], name: 'conditionalFacetOracle' },
