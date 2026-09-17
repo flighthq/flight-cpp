@@ -17,6 +17,10 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolveDependency } from './dependencyLock.mjs';
 
+// Examples import the Web host through the upstream workspace rather than through their own
+// manifests; this is the one package name the example graph adds explicitly.
+const WEB_HOST_PACKAGE = '@flighthq/host-web';
+
 // Compiles every upstream example in one graph with the SDK packages it imports. Generated example
 // headers have their own tree; SDK headers continue to come from the canonical top-level generated/
 // inventory. Refused modules remain first-class output so each compiler or host improvement produces
@@ -106,8 +110,14 @@ async function generateExamples(outputRoot, flightDependency, compilerDependency
 
   const examples = readExamplePackages(flightDependency.directory);
   const sdkPackage = readJson(path.join(flightDependency.directory, 'packages', 'sdk', 'package.json'));
-  const packageNames = new Set([
+  // The examples import `@flighthq/host-web/contract` directly while declaring only `@flighthq/sdk`,
+  // because upstream they resolve through the workspace rather than through their own manifests. The
+  // graph builder reads manifests, so the Web host package is named here as an explicit recorded
+  // addition -- the same kind of entry as the `renderNative.ts` remap below -- and its own declared
+  // dependencies are then closed over so the added package does not arrive half-resolved.
+  const packageNames = closeOverWorkspaceDependencies(flightDependency.directory, [
     '@flighthq/sdk',
+    WEB_HOST_PACKAGE,
     ...Object.keys(sdkPackage.dependencies ?? {}),
     ...examples.flatMap((example) => example.dependencies),
   ]);
@@ -129,8 +139,15 @@ async function generateExamples(outputRoot, flightDependency, compilerDependency
     });
   const exampleDescriptors = examples.map((example) => {
     const selection = selectNativeExampleSources(example.directory);
+    // Examples that import the Web host name it only in their source, not in their manifest, so the
+    // recorded addition above has to reach the example's own dependency list as well: the package
+    // graph rejects a module edge to a package its own package does not declare.
+    const declared = new Set(example.dependencies);
+    if (selection.sources.some((source) => source.contents.includes(WEB_HOST_PACKAGE))) {
+      declared.add(WEB_HOST_PACKAGE);
+    }
     return {
-      dependencies: example.dependencies.filter((dependency) => packageNames.has(dependency)).sort(compareText),
+      dependencies: [...declared].filter((dependency) => packageNames.has(dependency)).sort(compareText),
       name: example.packageName,
       packageRoot: example.directory,
       renderer: selection.renderer,
@@ -429,6 +446,31 @@ function sdkTarget(packageName) {
 
 function safeCppName(name) {
   return name.replace(/[^A-Za-z0-9]+/gu, '_').replace(/^_+|_+$/gu, '').toLowerCase();
+}
+
+// Expands a seed set of workspace package names to the closure of their declared dependencies. Only
+// packages that exist in the pinned Flight workspace are added; anything else is left out so a
+// missing package stays a visible graph error rather than a silently dropped edge.
+function closeOverWorkspaceDependencies(upstreamDirectory, seeds) {
+  const packagesDirectory = path.join(upstreamDirectory, 'packages');
+  const manifestFor = (name) => {
+    if (!name.startsWith('@flighthq/')) return null;
+    const manifestFile = path.join(packagesDirectory, name.slice('@flighthq/'.length), 'package.json');
+    return existsSync(manifestFile) ? readJson(manifestFile) : null;
+  };
+  const closed = new Set();
+  const pending = [...seeds];
+  while (pending.length > 0) {
+    const name = pending.pop();
+    if (closed.has(name)) continue;
+    closed.add(name);
+    const manifest = manifestFor(name);
+    if (!manifest) continue;
+    for (const dependency of Object.keys(manifest.dependencies ?? {})) {
+      if (!closed.has(dependency)) pending.push(dependency);
+    }
+  }
+  return closed;
 }
 
 function readJson(filename) {

@@ -1,7 +1,7 @@
 {
   "schema": "flight-generated-sdk-refusals/2",
-  "compilerRevision": "9f6ce1cad0d5cfcb047ccb2237995bca39161acc",
-  "sourceRevision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
+  "compilerRevision": "fbfcc1102d2afb5fa5ea942fcdad27d520f21408",
+  "sourceRevision": "903f3289590358eacc20698525e6982da2ab0e9d",
   "refusals": [
     {
       "code": "unsupported-ir",
@@ -29,27 +29,6 @@
       "module": "packages/abc/src/index.ts",
       "package": "@flighthq/abc",
       "reason": "dependency ./abcFile was refused for @flighthq/abc/packages/abc/src/abcFile.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/accessibility/src/accessibility.ts",
-      "package": "@flighthq/accessibility",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Host.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/accessibility/src/contract.ts",
-      "package": "@flighthq/accessibility",
-      "reason": "dependency ./accessibility was refused for @flighthq/accessibility/packages/accessibility/src/accessibility.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/accessibility/src/index.ts",
-      "package": "@flighthq/accessibility",
-      "reason": "dependency ./contract was refused for @flighthq/accessibility/packages/accessibility/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -298,11 +277,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/assets/src/enableAssetGuards.ts",
       "package": "@flighthq/assets",
-      "reason": "dependency ./assetLibrary was refused for @flighthq/assets/packages/assets/src/assetLibrary.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/assets/packages/assets/src/enableAssetGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -453,13 +432,6 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/bitmap/src/bitmapDraw.ts",
-      "package": "@flighthq/bitmap",
-      "reason": "cpp emission failed for @flighthq/bitmap/packages/bitmap/src/bitmapDraw.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], HTMLCanvasElement[type], ImageData[type])",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
       "module": "packages/bitmap/src/bitmapEncode.ts",
       "package": "@flighthq/bitmap",
       "reason": "cpp emission failed for @flighthq/bitmap/packages/bitmap/src/bitmapEncode.ts: property reason on a C++ variant requires proven union member access",
@@ -490,7 +462,7 @@
       "code": "unsupported-ir",
       "module": "packages/bitmap/src/bitmapFrom.ts",
       "package": "@flighthq/bitmap",
-      "reason": "cpp emission failed for @flighthq/bitmap/packages/bitmap/src/bitmapFrom.ts: runtime external symbol binding plan is incomplete (missing: CanvasImageSource[type], CanvasRenderingContext2D[type], HTMLCanvasElement[type], ImageData[type])",
+      "reason": "cpp emission failed for @flighthq/bitmap/packages/bitmap/src/bitmapFrom.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -613,11 +585,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/bitmap/src/explainBitmapReadback.ts",
       "package": "@flighthq/bitmap",
-      "reason": "cpp emission failed for @flighthq/bitmap/packages/bitmap/src/explainBitmapReadback.ts: runtime external symbol binding plan is incomplete (missing: CanvasImageSource[type])",
-      "stage": "emission"
+      "reason": "dependency ./bitmapReadbackResolver was refused for @flighthq/bitmap/packages/bitmap/src/bitmapReadbackResolver.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -655,11 +627,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/bitmapfont/src/enableBitmapFontGuards.ts",
       "package": "@flighthq/bitmapfont",
-      "reason": "dependency ./bitmapFont was refused for @flighthq/bitmapfont/packages/bitmapfont/src/bitmapFont.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/bitmapfont/packages/bitmapfont/src/enableBitmapFontGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -697,11 +669,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/bitmapfont-formats/src/bitmapFontRecord.ts",
       "package": "@flighthq/bitmapfont-formats",
-      "reason": "dependency @flighthq/bitmapfont/contract was refused for @flighthq/bitmapfont/packages/bitmapfont/src/bitmapFont.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontRecord.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -746,11 +718,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/bitmaptext/src/enableBitmapTextGuards.ts",
       "package": "@flighthq/bitmaptext",
-      "reason": "dependency ./updateBitmapText was refused for @flighthq/bitmaptext/packages/bitmaptext/src/updateBitmapText.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/enableBitmapTextGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -774,11 +746,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/camera/src/camera.ts",
       "package": "@flighthq/camera",
-      "reason": "dependency ./projection was refused for @flighthq/camera/packages/camera/src/projection.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/camera/packages/camera/src/camera.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -795,11 +767,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/camera/src/enableCameraGuards.ts",
       "package": "@flighthq/camera",
-      "reason": "dependency ./camera was refused for @flighthq/camera/packages/camera/src/camera.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/camera/packages/camera/src/enableCameraGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -828,13 +800,6 @@
       "package": "@flighthq/camera",
       "reason": "dependency ./camera was refused for @flighthq/camera/packages/camera/src/camera.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/camera/src/projection.ts",
-      "package": "@flighthq/camera",
-      "reason": "cpp emission failed for @flighthq/camera/packages/camera/src/projection.ts: property fovY on a C++ variant requires proven union member access",
-      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -914,38 +879,17 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/clip/src/enableClipGuards.ts",
       "package": "@flighthq/clip",
-      "reason": "dependency ./clipRegion was refused for @flighthq/clip/packages/clip/src/clipRegion.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/clip/packages/clip/src/enableClipGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
       "module": "packages/clip/src/index.ts",
       "package": "@flighthq/clip",
       "reason": "dependency ./contract was refused for @flighthq/clip/packages/clip/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/clipboard/src/clipboard.ts",
-      "package": "@flighthq/clipboard",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Host.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/clipboard/src/contract.ts",
-      "package": "@flighthq/clipboard",
-      "reason": "dependency ./clipboard was refused for @flighthq/clipboard/packages/clipboard/src/clipboard.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/clipboard/src/index.ts",
-      "package": "@flighthq/clipboard",
-      "reason": "dependency ./contract was refused for @flighthq/clipboard/packages/clipboard/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -1075,11 +1019,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/collision/src/pointContainment3D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./gjk3D was refused for @flighthq/collision/packages/collision/src/gjk3D.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/collision/packages/collision/src/pointContainment3D.ts: contextual union value type flight::Ref<points_kind_7c41964e429d8f9a> is not a represented runtime domain",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -1176,7 +1120,7 @@
       "code": "unsupported-ir",
       "module": "packages/command/src/commandBinding.ts",
       "package": "@flighthq/command",
-      "reason": "cpp emission failed for @flighthq/command/packages/command/src/commandBinding.ts: contextual union value type std::function<std::optional<flight::Ref<flight::types::SetNodePropertyCommand>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Command>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Command>>>>)> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/command/packages/command/src/commandBinding.ts: contextual union value type flight::Ref<flight::types::CommandBindingTable> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -1260,7 +1204,7 @@
       "code": "dependency-refused",
       "module": "packages/connectivity/src/connectivity.ts",
       "package": "@flighthq/connectivity",
-      "reason": "dependency @flighthq/signals/contract was refused for @flighthq/signals/packages/signals/src/slot.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Connectivity.ts",
       "stage": "dependency"
     },
     {
@@ -1307,27 +1251,6 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/device/src/contract.ts",
-      "package": "@flighthq/device",
-      "reason": "dependency ./device was refused for @flighthq/device/packages/device/src/device.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/device/src/device.ts",
-      "package": "@flighthq/device",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Host.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/device/src/index.ts",
-      "package": "@flighthq/device",
-      "reason": "dependency ./contract was refused for @flighthq/device/packages/device/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/dialog/src/contract.ts",
       "package": "@flighthq/dialog",
       "reason": "dependency ./dialog was refused for @flighthq/dialog/packages/dialog/src/dialog.ts",
@@ -1337,7 +1260,7 @@
       "code": "unsupported-ir",
       "module": "packages/dialog/src/dialog.ts",
       "package": "@flighthq/dialog",
-      "reason": "cpp emission failed for @flighthq/dialog/packages/dialog/src/dialog.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type], window[value])",
+      "reason": "cpp emission failed for @flighthq/dialog/packages/dialog/src/dialog.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type])",
       "stage": "emission"
     },
     {
@@ -1376,11 +1299,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/easing/src/enableEasingGuards.ts",
       "package": "@flighthq/easing",
-      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/easing/packages/easing/src/enableEasingGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -1390,11 +1313,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/bevelEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/bevelEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -1418,25 +1341,25 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/bloomEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/bloomEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/blurEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/blurEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/bokehDepthOfFieldEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/bokehDepthOfFieldEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -1453,11 +1376,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/contactShadowsEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/contactShadowsEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -1467,53 +1390,53 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/convolutionEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/convolutionEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/directionalBlurEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/directionalBlurEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/displacementEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/displacementEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/dropShadowEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/dropShadowEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/glitchEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/glitchEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/gradientBevelEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/gradientBevelEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/gradientGlowEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/gradientGlowEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -1523,45 +1446,45 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/innerGlowEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/innerGlowEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/innerShadowEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/innerShadowEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/medianEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/medianEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/outerGlowEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/outerGlowEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/outlineEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/outlineEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/effects/src/renderEffectCaptureGeometry.ts",
       "package": "@flighthq/effects",
-      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/renderEffectCaptureGeometry.ts: contextual union value type flight::Ref<flight::types::RenderEffectPadding> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/renderEffectCaptureGeometry.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -1582,7 +1505,7 @@
       "code": "unsupported-ir",
       "module": "packages/effects/src/renderEffectPadding.ts",
       "package": "@flighthq/effects",
-      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/renderEffectPadding.ts: contextual union value type flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_832b11cd4f290751> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/renderEffectPadding.ts: contextual union value type flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_2939045828bfa094> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -1593,11 +1516,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects/src/tiltShiftEffect.ts",
       "package": "@flighthq/effects",
-      "reason": "dependency ./renderEffectPadding was refused for @flighthq/effects/packages/effects/src/renderEffectPadding.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects/packages/effects/src/tiltShiftEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -1950,11 +1873,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects-gl/src/glDropShadowEffect.ts",
       "package": "@flighthq/effects-gl",
-      "reason": "dependency ./glEffectBlitShader was refused for @flighthq/effects-gl/packages/effects-gl/src/glEffectBlitShader.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects-gl/packages/effects-gl/src/glDropShadowEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -2041,18 +1964,18 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects-gl/src/glInnerGlowEffect.ts",
       "package": "@flighthq/effects-gl",
-      "reason": "dependency ./glEffectBlitShader was refused for @flighthq/effects-gl/packages/effects-gl/src/glEffectBlitShader.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects-gl/packages/effects-gl/src/glInnerGlowEffect.ts: contextual union value type flight::Ref<flight::types::GlTextureRenderTarget> is not a represented runtime domain",
+      "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects-gl/src/glInnerShadowEffect.ts",
       "package": "@flighthq/effects-gl",
-      "reason": "dependency ./glEffectBlitShader was refused for @flighthq/effects-gl/packages/effects-gl/src/glEffectBlitShader.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects-gl/packages/effects-gl/src/glInnerShadowEffect.ts: contextual union value type flight::Ref<flight::types::GlTextureRenderTarget> is not a represented runtime domain",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -2097,11 +2020,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/effects-gl/src/glOuterGlowEffect.ts",
       "package": "@flighthq/effects-gl",
-      "reason": "dependency ./glEffectBlitShader was refused for @flighthq/effects-gl/packages/effects-gl/src/glEffectBlitShader.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/effects-gl/packages/effects-gl/src/glOuterGlowEffect.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -2415,7 +2338,7 @@
       "code": "dependency-refused",
       "module": "packages/effects-wgpu/src/wgpuEffectTexelScale.ts",
       "package": "@flighthq/effects-wgpu",
-      "reason": "dependency @flighthq/render-wgpu/contract was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuAntialias.ts",
+      "reason": "dependency @flighthq/render-wgpu/contract was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderPass.ts",
       "stage": "dependency"
     },
     {
@@ -2714,13 +2637,6 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/entity/src/host.ts",
-      "package": "@flighthq/entity",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/ApplicationWindow.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/entity/src/index.ts",
       "package": "@flighthq/entity",
       "reason": "dependency ./contract was refused for @flighthq/entity/packages/entity/src/contract.ts",
@@ -2952,45 +2868,17 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/geolocation/src/contract.ts",
-      "package": "@flighthq/geolocation",
-      "reason": "dependency ./geolocation was refused for @flighthq/geolocation/packages/geolocation/src/geolocation.ts",
+      "module": "packages/geometry/src/contract.ts",
+      "package": "@flighthq/geometry",
+      "reason": "dependency ./enableGeometryPoolGuards was refused for @flighthq/geometry/packages/geometry/src/enableGeometryPoolGuards.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/geolocation/src/geolocation.ts",
-      "package": "@flighthq/geolocation",
-      "reason": "cpp emission failed for @flighthq/geolocation/packages/geolocation/src/geolocation.ts: runtime external symbol binding plan is incomplete (missing: Geolocation[type], GeolocationCoordinates[type], GeolocationPosition[type], GeolocationPositionError[type], PositionErrorCallback[type], PositionOptions[type], navigator[value], window[value])",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/geolocation/src/geolocationAccess.ts",
-      "package": "@flighthq/geolocation",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/ApplicationWindow.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/geolocation/src/index.ts",
-      "package": "@flighthq/geolocation",
-      "reason": "dependency ./contract was refused for @flighthq/geolocation/packages/geolocation/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/geometry/src/contract.ts",
-      "package": "@flighthq/geometry",
-      "reason": "dependency ./typedarray was refused for @flighthq/geometry/packages/geometry/src/typedarray.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/geometry/src/enableGeometryPoolGuards.ts",
       "package": "@flighthq/geometry",
-      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/geometry/packages/geometry/src/enableGeometryPoolGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -3038,15 +2926,15 @@
       "code": "dependency-refused",
       "module": "packages/glyphatlas/src/contract.ts",
       "package": "@flighthq/glyphatlas",
-      "reason": "dependency ./glyphAtlasEntry was refused for @flighthq/glyphatlas/packages/glyphatlas/src/glyphAtlasEntry.ts",
+      "reason": "dependency ./enableGlyphAtlasGuards was refused for @flighthq/glyphatlas/packages/glyphatlas/src/enableGlyphAtlasGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/glyphatlas/src/enableGlyphAtlasGuards.ts",
       "package": "@flighthq/glyphatlas",
-      "reason": "dependency ./glyphAtlasEntry was refused for @flighthq/glyphatlas/packages/glyphatlas/src/glyphAtlasEntry.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/glyphatlas/packages/glyphatlas/src/enableGlyphAtlasGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -3115,7 +3003,7 @@
       "code": "unsupported-ir",
       "module": "packages/gui/src/guiDialog.ts",
       "package": "@flighthq/gui",
-      "reason": "cpp emission failed for @flighthq/gui/packages/gui/src/guiDialog.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/gui/packages/gui/src/guiDialog.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_20cf56ea611a36d6> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -3225,44 +3113,65 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/haptics/src/contract.ts",
-      "package": "@flighthq/haptics",
-      "reason": "dependency ./haptics was refused for @flighthq/haptics/packages/haptics/src/haptics.ts",
+      "module": "packages/host/src/contract.ts",
+      "package": "@flighthq/host",
+      "reason": "dependency ./hostExplain was refused for @flighthq/host/packages/host/src/hostExplain.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
-      "module": "packages/haptics/src/haptics.ts",
-      "package": "@flighthq/haptics",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Host.ts",
+      "module": "packages/host/src/enableHostGuards.ts",
+      "package": "@flighthq/host",
+      "reason": "dependency ./hostExplain was refused for @flighthq/host/packages/host/src/hostExplain.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
-      "module": "packages/haptics/src/index.ts",
-      "package": "@flighthq/haptics",
-      "reason": "dependency ./contract was refused for @flighthq/haptics/packages/haptics/src/contract.ts",
+      "module": "packages/host/src/host.ts",
+      "package": "@flighthq/host",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/ApplicationWindow.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/host/src/hostExplain.ts",
+      "package": "@flighthq/host",
+      "reason": "cpp emission failed for @flighthq/host/packages/host/src/hostExplain.ts: structural-row projection requires a represented object-reference target",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/host/src/hostQuery.ts",
+      "package": "@flighthq/host",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/ApplicationWindow.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/host/src/index.ts",
+      "package": "@flighthq/host",
+      "reason": "dependency ./contract was refused for @flighthq/host/packages/host/src/contract.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/image/src/contract.ts",
       "package": "@flighthq/image",
-      "reason": "dependency ./imageResource was refused for @flighthq/image/packages/image/src/imageResource.ts",
+      "reason": "dependency ./imageResourceFrom was refused for @flighthq/image/packages/image/src/imageResourceFrom.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/image/src/imageResource.ts",
       "package": "@flighthq/image",
-      "reason": "cpp emission failed for @flighthq/image/packages/image/src/imageResource.ts: runtime external symbol binding plan is incomplete (missing: CanvasImageSource[type], HTMLCanvasElement[type], HTMLImageElement[type], HTMLVideoElement[value], ImageBitmap[type])",
-      "stage": "emission"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/HostImageSource.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/image/src/imageResourceFrom.ts",
       "package": "@flighthq/image",
-      "reason": "cpp emission failed for @flighthq/image/packages/image/src/imageResourceFrom.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type], Blob[type], Blob[value], BlobPart[type], BlobPropertyBag[type], HTMLCanvasElement[type], HTMLImageElement[type], ImageBitmap[type], location[value])",
+      "reason": "cpp emission failed for @flighthq/image/packages/image/src/imageResourceFrom.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type], Blob[type], Blob[value], BlobPart[type], BlobPropertyBag[type], location[value])",
       "stage": "emission"
     },
     {
@@ -3270,6 +3179,20 @@
       "module": "packages/image/src/imageResourceReference.ts",
       "package": "@flighthq/image",
       "reason": "cpp emission failed for @flighthq/image/packages/image/src/imageResourceReference.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type])",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/image/src/imageSourceDimensions.ts",
+      "package": "@flighthq/image",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/HostImageSource.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/image/src/imageTestHelper.ts",
+      "package": "@flighthq/image",
+      "reason": "cpp emission failed for @flighthq/image/packages/image/src/imageTestHelper.ts: runtime external symbol binding plan is incomplete (missing: HTMLCanvasElement[type], HTMLImageElement[type], HTMLVideoElement[type], ImageBitmap[type], OffscreenCanvas[type], SVGImageElement[type], VideoFrame[type])",
       "stage": "emission"
     },
     {
@@ -3323,13 +3246,6 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/image-codec/src/imageBitmapComposerRegistry.ts",
-      "package": "@flighthq/image-codec",
-      "reason": "cpp emission failed for @flighthq/image-codec/packages/image-codec/src/imageBitmapComposerRegistry.ts: runtime external symbol binding plan is incomplete (missing: MapIterator[type])",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
       "module": "packages/image-codec/src/imageDecoderRegistry.ts",
       "package": "@flighthq/image-codec",
       "reason": "cpp emission failed for @flighthq/image-codec/packages/image-codec/src/imageDecoderRegistry.ts: runtime external symbol binding plan is incomplete (missing: MapIterator[type])",
@@ -3348,20 +3264,6 @@
       "package": "@flighthq/image-codec",
       "reason": "dependency ./contract was refused for @flighthq/image-codec/packages/image-codec/src/contract.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/image-codec/src/registerWebImageDecoders.ts",
-      "package": "@flighthq/image-codec",
-      "reason": "cpp emission failed for @flighthq/image-codec/packages/image-codec/src/registerWebImageDecoders.ts: runtime external symbol binding plan is incomplete (missing: Blob[value], BlobPart[type], ImageBitmap[type], ImageData[type], ImageDataArray[type], OffscreenCanvas[type], OffscreenCanvas[value], OffscreenCanvasRenderingContext2D[type], createImageBitmap[value])",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/image-codec/src/registerWebImageEncoders.ts",
-      "package": "@flighthq/image-codec",
-      "reason": "cpp emission failed for @flighthq/image-codec/packages/image-codec/src/registerWebImageEncoders.ts: runtime external symbol binding plan is incomplete (missing: Blob[type], ImageData[value], ImageEncodeOptions[type], OffscreenCanvas[type], OffscreenCanvas[value], OffscreenCanvasRenderingContext2D[type])",
-      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -3409,7 +3311,7 @@
       "code": "unsupported-ir",
       "module": "packages/input/src/inputManager.ts",
       "package": "@flighthq/input",
-      "reason": "cpp emission failed for @flighthq/input/packages/input/src/inputManager.ts: runtime external symbol binding plan is incomplete (missing: AddEventListenerOptions[type], CompositionEvent[type], DOMHighResTimeStamp[type], Event[type], EventTarget[type], Gamepad[type], GamepadButton[type], GamepadEvent[type], HTMLElement[type], InputEvent[type], KeyboardEvent[type], KeyboardEvent[value], MouseEvent[type], PointerEvent[type], WheelEvent[type], WheelEvent[value], cancelAnimationFrame[value], clearInterval[value], clearTimeout[value], navigator[value], performance[value], requestAnimationFrame[value], setInterval[value], setTimeout[value])",
+      "reason": "cpp emission failed for @flighthq/input/packages/input/src/inputManager.ts: runtime external symbol binding plan is incomplete (missing: clearInterval[value], clearTimeout[value], setInterval[value], setTimeout[value])",
       "stage": "emission"
     },
     {
@@ -3630,27 +3532,6 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
-      "module": "packages/keyboard/src/contract.ts",
-      "package": "@flighthq/keyboard",
-      "reason": "dependency ./keyboard was refused for @flighthq/keyboard/packages/keyboard/src/keyboard.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/keyboard/src/index.ts",
-      "package": "@flighthq/keyboard",
-      "reason": "dependency ./contract was refused for @flighthq/keyboard/packages/keyboard/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/keyboard/src/keyboard.ts",
-      "package": "@flighthq/keyboard",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Host.ts",
-      "stage": "dependency"
-    },
-    {
       "code": "unsupported-ir",
       "module": "packages/layout/src/anchorLayout.ts",
       "package": "@flighthq/layout",
@@ -3724,7 +3605,7 @@
       "code": "unsupported-ir",
       "module": "packages/lifecycle/src/lifecycle.ts",
       "package": "@flighthq/lifecycle",
-      "reason": "cpp emission failed for @flighthq/lifecycle/packages/lifecycle/src/lifecycle.ts: runtime external symbol binding plan is incomplete (missing: CustomEvent[type], Event[type], PerformanceEntryList[type], PerformanceNavigationTiming[type], document[value], performance[value], window[value])",
+      "reason": "cpp emission failed for @flighthq/lifecycle/packages/lifecycle/src/lifecycle.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -3771,6 +3652,13 @@
     },
     {
       "code": "unsupported-ir",
+      "module": "packages/lighting/src/lightProbe.ts",
+      "package": "@flighthq/lighting",
+      "reason": "cpp emission failed for @flighthq/lighting/packages/lighting/src/lightProbe.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type])",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
       "module": "packages/lighting/src/sceneForwardLights.ts",
       "package": "@flighthq/lighting",
       "reason": "cpp emission failed for @flighthq/lighting/packages/lighting/src/sceneForwardLights.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type])",
@@ -3787,7 +3675,7 @@
       "code": "dependency-refused",
       "module": "packages/loader/src/contract.ts",
       "package": "@flighthq/loader",
-      "reason": "dependency ./resourceLoader was refused for @flighthq/loader/packages/loader/src/resourceLoader.ts",
+      "reason": "dependency ./load was refused for @flighthq/loader/packages/loader/src/load.ts",
       "stage": "dependency"
     },
     {
@@ -3796,6 +3684,13 @@
       "package": "@flighthq/loader",
       "reason": "dependency ./contract was refused for @flighthq/loader/packages/loader/src/contract.ts",
       "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/loader/src/load.ts",
+      "package": "@flighthq/loader",
+      "reason": "cpp emission failed for @flighthq/loader/packages/loader/src/load.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type])",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -3826,17 +3721,17 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/materials/src/classicMaterials.ts",
       "package": "@flighthq/materials",
-      "reason": "cpp emission failed for @flighthq/materials/packages/materials/src/classicMaterials.ts: typeOf types require C++ type computation lowering",
-      "stage": "emission"
+      "reason": "dependency ./surfaceMaterial was refused for @flighthq/materials/packages/materials/src/surfaceMaterial.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/materials/src/contract.ts",
       "package": "@flighthq/materials",
-      "reason": "dependency ./classicMaterials was refused for @flighthq/materials/packages/materials/src/classicMaterials.ts",
+      "reason": "dependency ./customShaderMaterial was refused for @flighthq/materials/packages/materials/src/customShaderMaterial.ts",
       "stage": "dependency"
     },
     {
@@ -3847,11 +3742,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/materials/src/enableMaterialConversionGuards.ts",
       "package": "@flighthq/materials",
-      "reason": "dependency ./pbrMaterials was refused for @flighthq/materials/packages/materials/src/pbrMaterials.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/materials/packages/materials/src/enableMaterialConversionGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -3864,7 +3759,7 @@
       "code": "dependency-refused",
       "module": "packages/materials/src/extendedPbrMaterial.ts",
       "package": "@flighthq/materials",
-      "reason": "dependency ./pbrMaterials was refused for @flighthq/materials/packages/materials/src/pbrMaterials.ts",
+      "reason": "dependency ./surfaceMaterial was refused for @flighthq/materials/packages/materials/src/surfaceMaterial.ts",
       "stage": "dependency"
     },
     {
@@ -3885,21 +3780,21 @@
       "code": "unsupported-ir",
       "module": "packages/materials/src/materialPresets.ts",
       "package": "@flighthq/materials",
-      "reason": "cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: typeOf types require C++ type computation lowering",
+      "reason": "cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row construction requires explicit named properties",
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/materials/src/pbrMaterials.ts",
       "package": "@flighthq/materials",
-      "reason": "cpp emission failed for @flighthq/materials/packages/materials/src/pbrMaterials.ts: typeOf types require C++ type computation lowering",
-      "stage": "emission"
+      "reason": "dependency ./explainMaterialConversion was refused for @flighthq/materials/packages/materials/src/explainMaterialConversion.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/materials/src/phongToPbr.ts",
       "package": "@flighthq/materials",
-      "reason": "cpp emission failed for @flighthq/materials/packages/materials/src/phongToPbr.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/materials/packages/materials/src/phongToPbr.ts: structural-row construction requires explicit named properties",
       "stage": "emission"
     },
     {
@@ -3917,31 +3812,24 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/materials/src/unlitMaterials.ts",
       "package": "@flighthq/materials",
-      "reason": "cpp emission failed for @flighthq/materials/packages/materials/src/unlitMaterials.ts: typeOf types require C++ type computation lowering",
-      "stage": "emission"
+      "reason": "dependency ./surfaceMaterial was refused for @flighthq/materials/packages/materials/src/surfaceMaterial.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/media/src/audioChannel.ts",
       "package": "@flighthq/media",
-      "reason": "cpp emission failed for @flighthq/media/packages/media/src/audioChannel.ts: runtime external symbol binding plan is incomplete (missing: AudioBuffer[type], AudioBufferSourceNode[type], AudioNode[type], AudioParam[type], GainNode[type])",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/media/src/audioDeviceBackend.ts",
-      "package": "@flighthq/media",
-      "reason": "cpp emission failed for @flighthq/media/packages/media/src/audioDeviceBackend.ts: runtime external symbol binding plan is incomplete (missing: AudioBuffer[type], AudioBuffer[value], AudioBufferOptions[type], AudioBufferSourceNode[type], AudioContext[type], AudioContext[value], AudioContextOptions[type], AudioNode[type], GainNode[type], StereoPannerNode[type])",
+      "reason": "cpp emission failed for @flighthq/media/packages/media/src/audioChannel.ts: runtime external symbol binding plan is incomplete (missing: AudioBuffer[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/media/src/audioMixer.ts",
       "package": "@flighthq/media",
-      "reason": "cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: runtime external symbol binding plan is incomplete (missing: AudioContext[type], AudioNode[type], AudioParam[type], GainNode[type], MapIterator[type], StereoPannerNode[type])",
+      "reason": "cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: ambient value Array member from has no C++ binding",
       "stage": "emission"
     },
     {
@@ -3952,11 +3840,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/media/src/enableAudioMixerGuards.ts",
       "package": "@flighthq/media",
-      "reason": "dependency ./audioMixer was refused for @flighthq/media/packages/media/src/audioMixer.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/media/packages/media/src/enableAudioMixerGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -3976,7 +3864,7 @@
       "code": "unsupported-ir",
       "module": "packages/media/src/videoChannel.ts",
       "package": "@flighthq/media",
-      "reason": "cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: runtime external symbol binding plan is incomplete (missing: HTMLVideoElement[type])",
+      "reason": "cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: runtime external symbol binding plan is incomplete (missing: HTMLCanvasElement[type], HTMLImageElement[type], HTMLVideoElement[type], ImageBitmap[type], OffscreenCanvas[type], SVGImageElement[type], VideoFrame[type])",
       "stage": "emission"
     },
     {
@@ -4165,7 +4053,7 @@
       "code": "dependency-refused",
       "module": "packages/midi/src/midiPermission.ts",
       "package": "@flighthq/midi",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Host.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Permission.ts",
       "stage": "dependency"
     },
     {
@@ -4214,15 +4102,15 @@
       "code": "dependency-refused",
       "module": "packages/movieclip/src/contract.ts",
       "package": "@flighthq/movieclip",
-      "reason": "dependency ./movieClip was refused for @flighthq/movieclip/packages/movieclip/src/movieClip.ts",
+      "reason": "dependency ./enableMovieClipGuards was refused for @flighthq/movieclip/packages/movieclip/src/enableMovieClipGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/movieclip/src/enableMovieClipGuards.ts",
       "package": "@flighthq/movieclip",
-      "reason": "dependency ./spritesheetTimelineSource was refused for @flighthq/movieclip/packages/movieclip/src/spritesheetTimelineSource.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/movieclip/packages/movieclip/src/enableMovieClipGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -4295,11 +4183,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/node/src/enableNodeGuards.ts",
       "package": "@flighthq/node",
-      "reason": "dependency ./hierarchy was refused for @flighthq/node/packages/node/src/hierarchy.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/node/packages/node/src/enableNodeGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -4319,7 +4207,7 @@
       "code": "unsupported-ir",
       "module": "packages/node/src/hasBoundsRectangle.ts",
       "package": "@flighthq/node",
-      "reason": "cpp emission failed for @flighthq/node/packages/node/src/hasBoundsRectangle.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
+      "reason": "cpp emission failed for @flighthq/node/packages/node/src/hasBoundsRectangle.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -4340,7 +4228,7 @@
       "code": "dependency-refused",
       "module": "packages/node/src/hasTransform2d.ts",
       "package": "@flighthq/node",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/MethodsOf.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/HasTransform2D.ts",
       "stage": "dependency"
     },
     {
@@ -4368,7 +4256,7 @@
       "code": "unsupported-ir",
       "module": "packages/node/src/node.ts",
       "package": "@flighthq/node",
-      "reason": "cpp emission failed for @flighthq/node/packages/node/src/node.ts: Partial<T> requires a statically resolvable C++ object shape",
+      "reason": "cpp emission failed for @flighthq/node/packages/node/src/node.ts: structural-row construction requires explicit named properties",
       "stage": "emission"
     },
     {
@@ -4407,11 +4295,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/node/src/stageFit.ts",
       "package": "@flighthq/node",
-      "reason": "cpp emission failed for @flighthq/node/packages/node/src/stageFit.ts: property includes on a C++ variant requires proven union member access",
-      "stage": "emission"
+      "reason": "dependency ./node was refused for @flighthq/node/packages/node/src/node.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -4907,7 +4795,7 @@
       "code": "dependency-refused",
       "module": "packages/path-boolean/src/booleanPaths.ts",
       "package": "@flighthq/path-boolean",
-      "reason": "dependency ./pathBooleanBackend was refused for @flighthq/path-boolean/packages/path-boolean/src/pathBooleanBackend.ts",
+      "reason": "dependency @flighthq/path/contract was refused for @flighthq/path/packages/path/src/flattenPath.ts",
       "stage": "dependency"
     },
     {
@@ -4947,30 +4835,23 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/path-boolean/src/pathBooleanBackend.ts",
-      "package": "@flighthq/path-boolean",
-      "reason": "dependency ./martinezKernel was refused for @flighthq/path-boolean/packages/path-boolean/src/martinezKernel.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/path-boolean/src/resolvePathRegions.ts",
       "package": "@flighthq/path-boolean",
-      "reason": "dependency ./pathBooleanBackend was refused for @flighthq/path-boolean/packages/path-boolean/src/pathBooleanBackend.ts",
+      "reason": "dependency ./writePathBooleanContours was refused for @flighthq/path-boolean/packages/path-boolean/src/writePathBooleanContours.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/path-boolean/src/simplifyPath.ts",
       "package": "@flighthq/path-boolean",
-      "reason": "dependency ./resolvePathRegions was refused for @flighthq/path-boolean/packages/path-boolean/src/resolvePathRegions.ts",
+      "reason": "dependency @flighthq/path/contract was refused for @flighthq/path/packages/path/src/flattenPath.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/path-boolean/src/unionAllPaths.ts",
       "package": "@flighthq/path-boolean",
-      "reason": "dependency ./pathBooleanBackend was refused for @flighthq/path-boolean/packages/path-boolean/src/pathBooleanBackend.ts",
+      "reason": "dependency @flighthq/path/contract was refused for @flighthq/path/packages/path/src/flattenPath.ts",
       "stage": "dependency"
     },
     {
@@ -5019,7 +4900,7 @@
       "code": "unsupported-ir",
       "module": "packages/permissions/src/permission.ts",
       "package": "@flighthq/permissions",
-      "reason": "cpp emission failed for @flighthq/permissions/packages/permissions/src/permission.ts: runtime external symbol binding plan is incomplete (missing: MediaDevices[type], MediaStream[type], MediaStreamConstraints[type], MediaStreamTrack[type], PermissionDescriptor[type], PermissionStatus[type], Permissions[type], WakeLock[type], WakeLockSentinel[type], WakeLockType[type], navigator[value])",
+      "reason": "cpp emission failed for @flighthq/permissions/packages/permissions/src/permission.ts: contextual union value type flight::Ref<flight::types::HostNotificationPermissionProvider> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -5201,14 +5082,14 @@
       "code": "unsupported-ir",
       "module": "packages/physics2d-abi/src/physics2DAbiBuffer.ts",
       "package": "@flighthq/physics2d-abi",
-      "reason": "cpp emission failed for @flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiBuffer.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type])",
+      "reason": "cpp emission failed for @flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiBuffer.ts: runtime external symbol binding plan is incomplete (missing: ArrayBufferLike[type], SharedArrayBuffer[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/physics2d-abi/src/physics2DAbiCommand.ts",
       "package": "@flighthq/physics2d-abi",
-      "reason": "cpp emission failed for @flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiCommand.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type])",
+      "reason": "cpp emission failed for @flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiCommand.ts: runtime external symbol binding plan is incomplete (missing: ArrayBufferLike[type], SharedArrayBuffer[type])",
       "stage": "emission"
     },
     {
@@ -5233,11 +5114,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/physics3d/src/colliderCollision.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency @flighthq/collision/contract was refused for @flighthq/collision/packages/collision/src/collideContactManifold3D.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts: narrowed member CollisionTriangleMesh3D must identify one C++ variant alternative",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -5411,7 +5292,7 @@
       "code": "unsupported-ir",
       "module": "packages/physics3d/src/stepValidation.ts",
       "package": "@flighthq/physics3d",
-      "reason": "cpp emission failed for @flighthq/physics3d/packages/physics3d/src/stepValidation.ts: object key iteration requires closed key evidence",
+      "reason": "cpp emission failed for @flighthq/physics3d/packages/physics3d/src/stepValidation.ts: narrowed member CollisionTriangleMesh3D must identify one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -5460,14 +5341,14 @@
       "code": "unsupported-ir",
       "module": "packages/physics3d-abi/src/physics3DAbiBuffer.ts",
       "package": "@flighthq/physics3d-abi",
-      "reason": "cpp emission failed for @flighthq/physics3d-abi/packages/physics3d-abi/src/physics3DAbiBuffer.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type])",
+      "reason": "cpp emission failed for @flighthq/physics3d-abi/packages/physics3d-abi/src/physics3DAbiBuffer.ts: runtime external symbol binding plan is incomplete (missing: ArrayBufferLike[type], SharedArrayBuffer[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/physics3d-abi/src/physics3DAbiCommand.ts",
       "package": "@flighthq/physics3d-abi",
-      "reason": "cpp emission failed for @flighthq/physics3d-abi/packages/physics3d-abi/src/physics3DAbiCommand.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type])",
+      "reason": "cpp emission failed for @flighthq/physics3d-abi/packages/physics3d-abi/src/physics3DAbiCommand.ts: runtime external symbol binding plan is incomplete (missing: ArrayBufferLike[type], SharedArrayBuffer[type])",
       "stage": "emission"
     },
     {
@@ -5511,27 +5392,6 @@
       "package": "@flighthq/picking",
       "reason": "cpp emission failed for @flighthq/picking/packages/picking/src/sceneHitAttributes.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/platform/src/contract.ts",
-      "package": "@flighthq/platform",
-      "reason": "dependency ./platform was refused for @flighthq/platform/packages/platform/src/platform.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/platform/src/index.ts",
-      "package": "@flighthq/platform",
-      "reason": "dependency ./contract was refused for @flighthq/platform/packages/platform/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/platform/src/platform.ts",
-      "package": "@flighthq/platform",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Host.ts",
-      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -5614,7 +5474,7 @@
       "code": "unsupported-ir",
       "module": "packages/registry/src/registryTable.ts",
       "package": "@flighthq/registry",
-      "reason": "cpp emission failed for @flighthq/registry/packages/registry/src/registryTable.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/registry/packages/registry/src/registryTable.ts: union member test must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -5681,11 +5541,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/render/src/enableSceneRenderGuards.ts",
       "package": "@flighthq/render",
-      "reason": "dependency ./sceneRender was refused for @flighthq/render/packages/render/src/sceneRender.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/render/packages/render/src/enableSceneRenderGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -5706,6 +5566,13 @@
       "module": "packages/render/src/explainScene2DRender.ts",
       "package": "@flighthq/render",
       "reason": "cpp emission failed for @flighthq/render/packages/render/src/explainScene2DRender.ts: property kind on a C++ variant requires proven union member access",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/render/src/explainScene3DPipelineCoverage.ts",
+      "package": "@flighthq/render",
+      "reason": "cpp emission failed for @flighthq/render/packages/render/src/explainScene3DPipelineCoverage.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -5735,13 +5602,6 @@
       "package": "@flighthq/render",
       "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderCache.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/render/src/renderColor.ts",
-      "package": "@flighthq/render",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/RenderState.ts",
-      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -5864,13 +5724,6 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/render-gl/src/glBackground.ts",
-      "package": "@flighthq/render-gl",
-      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glBackground.ts: dual-sentinel optional chaining requires presence projection lowering",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
       "module": "packages/render-gl/src/glCompressedTexture.ts",
       "package": "@flighthq/render-gl",
       "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glCompressedTexture.ts: runtime external symbol binding plan is incomplete (missing: EXT_texture_compression_bptc[type], EXT_texture_compression_rgtc[type], SharedArrayBuffer[type], WEBGL_compressed_texture_astc[type], WEBGL_compressed_texture_etc[type], WEBGL_compressed_texture_pvrtc[type], WEBGL_compressed_texture_s3tc[type], WEBGL_compressed_texture_s3tc_srgb[type])",
@@ -5878,9 +5731,9 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/render-gl/src/glContext.ts",
+      "module": "packages/render-gl/src/glCubeRenderTarget.ts",
       "package": "@flighthq/render-gl",
-      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glContext.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], HTMLCanvasElement[type], WebGLContextAttributes[type])",
+      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glCubeRenderTarget.ts: runtime external symbol binding plan is incomplete (missing: ArrayLike[type], EXT_color_buffer_float[type], OES_texture_float_linear[type], SharedArrayBuffer[type], WebGLFramebuffer[type], WebGLRenderbuffer[type], WebGLTexture[type])",
       "stage": "emission"
     },
     {
@@ -5908,15 +5761,15 @@
       "code": "unsupported-ir",
       "module": "packages/render-gl/src/glFullscreenPass.ts",
       "package": "@flighthq/render-gl",
-      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glFullscreenPass.ts: runtime external symbol binding plan is incomplete (missing: WebGLFramebuffer[type], WebGLProgram[type], WebGLTexture[type], WebGLUniformLocation[type], WebGLVertexArrayObject[type])",
+      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glFullscreenPass.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type], WebGLFramebuffer[type], WebGLProgram[type], WebGLTexture[type], WebGLUniformLocation[type], WebGLVertexArrayObject[type])",
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/render-gl/src/glLinearToSrgbPass.ts",
       "package": "@flighthq/render-gl",
-      "reason": "dependency ./glFullscreenPass was refused for @flighthq/render-gl/packages/render-gl/src/glFullscreenPass.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glLinearToSrgbPass.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -5933,11 +5786,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/render-gl/src/glPresentRenderTarget.ts",
       "package": "@flighthq/render-gl",
-      "reason": "dependency ./glFullscreenPass was refused for @flighthq/render-gl/packages/render-gl/src/glFullscreenPass.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glPresentRenderTarget.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -5985,7 +5838,7 @@
       "code": "unsupported-ir",
       "module": "packages/render-gl/src/glRenderTargetPool.ts",
       "package": "@flighthq/render-gl",
-      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glRenderTargetPool.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glRenderTargetPool.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -6034,7 +5887,7 @@
       "code": "unsupported-ir",
       "module": "packages/render-gl/src/glTestHelper.ts",
       "package": "@flighthq/render-gl",
-      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glTestHelper.ts: runtime external symbol binding plan is incomplete (missing: CanvasImageSource[type], CanvasRenderingContext2D[type], HTMLCanvasElement[type], HTMLImageElement[type], HTMLVideoElement[type], ImageBitmap[type], OffscreenCanvas[type], PropertyDescriptorMap[type], SVGImageElement[type], SharedArrayBuffer[type], VideoFrame[type], WebGL2RenderingContext[type], WebGLBuffer[type], WebGLProgram[type], WebGLTexture[type], WebGLUniformLocation[type], document[value], vi[value])",
+      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glTestHelper.ts: runtime external symbol binding plan is incomplete (missing: CanvasImageSource[type], HTMLCanvasElement[type], HTMLImageElement[type], HTMLVideoElement[type], ImageBitmap[type], OffscreenCanvas[type], PropertyDescriptorMap[type], SVGImageElement[type], SharedArrayBuffer[type], VideoFrame[type], WebGL2RenderingContext[type], WebGLBuffer[type], WebGLProgram[type], WebGLTexture[type], WebGLUniformLocation[type], document[value], vi[value])",
       "stage": "emission"
     },
     {
@@ -6102,20 +5955,6 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/render-wgpu/src/wgpuAntialias.ts",
-      "package": "@flighthq/render-wgpu",
-      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuAntialias.ts: runtime external symbol binding plan is incomplete (missing: GPUBindGroup[type], GPUCommandEncoder[type], GPURenderPipeline[type], GPUSampler[type], GPUShaderStage[value], GPUTexture[type], GPUTextureFormat[type], GPUTextureUsage[value], GPUTextureView[type])",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/render-wgpu/src/wgpuBackground.ts",
-      "package": "@flighthq/render-wgpu",
-      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuBackground.ts: runtime external symbol binding plan is incomplete (missing: GPUBuffer[type], GPUCanvasContext[type], GPUColor[type], GPUCommandEncoder[type], GPUDevice[type], GPURenderPassEncoder[type], GPUTexture[type], GPUTextureUsage[value], GPUTextureView[type])",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
       "module": "packages/render-wgpu/src/wgpuCompressedTexture.ts",
       "package": "@flighthq/render-wgpu",
       "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuCompressedTexture.ts: runtime external symbol binding plan is incomplete (missing: GPUDevice[type], GPUTexture[type], GPUTextureFormat[type], GPUTextureUsage[value], SharedArrayBuffer[type])",
@@ -6137,13 +5976,6 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/render-wgpu/src/wgpuElement.ts",
-      "package": "@flighthq/render-wgpu",
-      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuElement.ts: runtime external symbol binding plan is incomplete (missing: HTMLCanvasElement[type])",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
       "module": "packages/render-wgpu/src/wgpuExternalImageSource.ts",
       "package": "@flighthq/render-wgpu",
       "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuExternalImageSource.ts: runtime external symbol binding plan is incomplete (missing: DOMException[value], GPUCopyExternalImageDestInfo[type], GPUCopyExternalImageSource[type], GPUCopyExternalImageSourceInfo[type], GPUQueue[type], HTMLCanvasElement[value], HTMLImageElement[value], HTMLVideoElement[value], ImageBitmap[value], OffscreenCanvas[value], VideoFrame[value])",
@@ -6158,6 +5990,13 @@
     },
     {
       "code": "unsupported-ir",
+      "module": "packages/render-wgpu/src/wgpuFrame.ts",
+      "package": "@flighthq/render-wgpu",
+      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuFrame.ts: runtime external symbol binding plan is incomplete (missing: GPUBuffer[type], GPUCommandEncoder[type], GPUDevice[type], GPUTexture[type])",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
       "module": "packages/render-wgpu/src/wgpuFullscreenPass.ts",
       "package": "@flighthq/render-wgpu",
       "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuFullscreenPass.ts: runtime external symbol binding plan is incomplete (missing: GPUBindGroup[type], GPUBindGroupLayout[type], GPUDevice[type], GPURenderPassEncoder[type], GPUShaderStage[value], GPUTextureFormat[type], GPUTextureView[type])",
@@ -6167,7 +6006,7 @@
       "code": "unsupported-ir",
       "module": "packages/render-wgpu/src/wgpuHost.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuHost.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], GPU[type], GPUCanvasContext[type], GPUDeviceDescriptor[type], GPUFeatureName[type], GPUTextureFormat[type], HTMLCanvasElement[type], navigator[value])",
+      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuHost.ts: runtime external symbol binding plan is incomplete (missing: GPU[type], GPUCanvasContext[type], GPUDeviceDescriptor[type], GPUFeatureName[type], GPUTextureFormat[type], GPUTextureUsage[value], navigator[value])",
       "stage": "emission"
     },
     {
@@ -6193,17 +6032,24 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/render-wgpu/src/wgpuRenderState.ts",
+      "module": "packages/render-wgpu/src/wgpuRenderPass.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts: runtime external symbol binding plan is incomplete (missing: GPUBindGroupLayout[type], GPUBuffer[type], GPUBufferUsage[value], GPUCanvasContext[type], GPUDevice[type], GPUDeviceLostInfo[type], GPUFilterMode[type], GPUMipmapFilterMode[type], GPUSampler[type], GPUSamplerDescriptor[type], GPUTexture[type], GPUTextureFormat[type], GPUTextureUsage[value], HTMLCanvasElement[type], SharedArrayBuffer[type], WeakSet[type], WeakSet[value])",
+      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderPass.ts: runtime external symbol binding plan is incomplete (missing: GPUColor[type], GPURenderPassEncoder[type], GPUTextureView[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
+      "module": "packages/render-wgpu/src/wgpuRenderState.ts",
+      "package": "@flighthq/render-wgpu",
+      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts: runtime external symbol binding plan is incomplete (missing: GPUBindGroupLayout[type], GPUBuffer[type], GPUBufferUsage[value], GPUCanvasContext[type], GPUDevice[type], GPUDeviceLostInfo[type], GPUFilterMode[type], GPUMipmapFilterMode[type], GPUSampler[type], GPUSamplerDescriptor[type], GPUTextureFormat[type], SharedArrayBuffer[type], WeakSet[type], WeakSet[value])",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/render-wgpu/src/wgpuRenderTarget.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderTarget.ts: runtime external symbol binding plan is incomplete (missing: GPUColor[type], GPUDevice[type], GPULoadOp[type], GPURenderPassEncoder[type], GPUTextureFormat[type], GPUTextureUsage[value], GPUTextureView[type])",
-      "stage": "emission"
+      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -6235,6 +6081,27 @@
     },
     {
       "code": "unsupported-ir",
+      "module": "packages/render-wgpu/src/wgpuScreenAntialias.ts",
+      "package": "@flighthq/render-wgpu",
+      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuScreenAntialias.ts: runtime external symbol binding plan is incomplete (missing: GPUBindGroup[type], GPUBindGroupLayout[type], GPUCommandEncoder[type], GPURenderPipeline[type], GPUSampler[type], GPUShaderStage[value], GPUTexture[type], GPUTextureFormat[type], GPUTextureUsage[value], GPUTextureView[type])",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/render-wgpu/src/wgpuScreenCapture.ts",
+      "package": "@flighthq/render-wgpu",
+      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuScreenCapture.ts: runtime external symbol binding plan is incomplete (missing: GPUBuffer[type], GPUBufferUsage[value], GPUCommandEncoder[type], GPUMapMode[value], GPUTexture[type], GPUTextureUsage[value], clearTimeout[value], setTimeout[value])",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/render-wgpu/src/wgpuScreenRenderTarget.ts",
+      "package": "@flighthq/render-wgpu",
+      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuScreenRenderTarget.ts: runtime external symbol binding plan is incomplete (missing: GPUBuffer[type], GPUCanvasContext[type], GPUDevice[type], GPUTexture[type], GPUTextureFormat[type], GPUTextureUsage[value], GPUTextureView[type])",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
       "module": "packages/render-wgpu/src/wgpuShader.ts",
       "package": "@flighthq/render-wgpu",
       "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuShader.ts: runtime external symbol binding plan is incomplete (missing: GPUBindGroupLayout[type], GPUBlendComponent[type], GPUBlendFactor[type], GPUBlendOperation[type], GPUBlendState[type], GPUColorWrite[value], GPUDevice[type], GPUPipelineLayout[type], GPURenderPipeline[type], GPUShaderStage[value], GPUStencilFaceState[type], GPUTextureFormat[type])",
@@ -6256,16 +6123,16 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/render-wgpu/src/wgpuSurface.ts",
+      "module": "packages/render-wgpu/src/wgpuTestHelper.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuSurface.ts: runtime external symbol binding plan is incomplete (missing: GPUBuffer[type], GPUBufferUsage[value], GPUCommandEncoder[type], GPUMapMode[value], GPUTexture[type], GPUTextureUsage[value], clearTimeout[value], setTimeout[value])",
+      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuTestHelper.ts: runtime external symbol binding plan is incomplete (missing: ArrayBufferView[type], CanvasRenderingContext2D[type], CanvasRenderingContext2DSettings[type], DOMException[value], GPU[type], GPUAdapter[type], GPUAllowSharedBufferSource[type], GPUBindGroup[type], GPUBindGroupLayout[type], GPUBuffer[type], GPUBufferDescriptor[type], GPUBufferUsage[value], GPUCanvasContext[type], GPUCommandBuffer[type], GPUCommandEncoder[type], GPUDevice[type], GPUExtent3D[type], GPUExtent3DDict[type], GPUPipelineLayout[type], GPURenderPassEncoder[type], GPURenderPipeline[type], GPURenderPipelineDescriptor[type], GPUSampler[type], GPUShaderModule[type], GPUTexelCopyBufferLayout[type], GPUTexelCopyTextureInfo[type], GPUTexture[type], GPUTextureDescriptor[type], GPUTextureFormat[type], GPUTextureUsage[value], GPUTextureView[type], HTMLCanvasElement[type], HTMLCanvasElement[value], HTMLImageElement[type], Iterable[type], Navigator[type], PropertyDescriptor[type], PropertyDescriptorMap[type], SharedArrayBuffer[value], document[value], globalThis[value])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/render-wgpu/src/wgpuTestHelper.ts",
+      "module": "packages/render-wgpu/src/wgpuTextureRenderTarget.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuTestHelper.ts: runtime external symbol binding plan is incomplete (missing: ArrayBufferView[type], CanvasRenderingContext2D[type], CanvasRenderingContext2DSettings[type], DOMException[value], GPU[type], GPUAdapter[type], GPUAllowSharedBufferSource[type], GPUBindGroup[type], GPUBindGroupLayout[type], GPUBuffer[type], GPUBufferDescriptor[type], GPUBufferUsage[value], GPUCanvasContext[type], GPUCommandBuffer[type], GPUCommandEncoder[type], GPUDevice[type], GPUExtent3D[type], GPUExtent3DDict[type], GPUPipelineLayout[type], GPURenderPassEncoder[type], GPURenderPipeline[type], GPURenderPipelineDescriptor[type], GPUSampler[type], GPUShaderModule[type], GPUTexelCopyBufferLayout[type], GPUTexelCopyTextureInfo[type], GPUTexture[type], GPUTextureDescriptor[type], GPUTextureFormat[type], GPUTextureUsage[value], GPUTextureView[type], HTMLCanvasElement[type], HTMLCanvasElement[value], HTMLImageElement[type], Iterable[type], Navigator[type], PropertyDescriptor[type], PropertyDescriptorMap[type], SharedArrayBuffer[value], document[value], globalThis[value])",
+      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuTextureRenderTarget.ts: runtime external symbol binding plan is incomplete (missing: GPUDevice[type], GPUTextureFormat[type], GPUTextureUsage[value])",
       "stage": "emission"
     },
     {
@@ -6321,14 +6188,14 @@
       "code": "unsupported-ir",
       "module": "packages/scene-document/src/flightDocumentResourceDependencies.ts",
       "package": "@flighthq/scene-document",
-      "reason": "cpp emission failed for @flighthq/scene-document/packages/scene-document/src/flightDocumentResourceDependencies.ts: contextual union value type flight::Array<flight::Ref<flight::types::FlightDocumentResourceDescriptor>> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene-document/packages/scene-document/src/flightDocumentResourceDependencies.ts: contextual union value type flight::Ref<flight::types::KeyedTable<flight::Ref<flight::types::FlightDocumentResourceSchema>>> is not a represented runtime domain",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/scene-document/src/flightDocumentText.ts",
       "package": "@flighthq/scene-document",
-      "reason": "cpp emission failed for @flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts: property halfHeight on a C++ variant requires proven union member access",
+      "reason": "cpp emission failed for @flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -6363,7 +6230,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene-document/src/sceneDocumentRefusal.ts",
       "package": "@flighthq/scene-document",
-      "reason": "cpp emission failed for @flighthq/scene-document/packages/scene-document/src/sceneDocumentRefusal.ts: typeof requires closed runtime type evidence",
+      "reason": "cpp emission failed for @flighthq/scene-document/packages/scene-document/src/sceneDocumentRefusal.ts: contextual union value type flight::Ref<flight::types::KeyedTable<flight::Ref<flight::types::FlightDocumentNodeSchema>>> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -6398,14 +6265,14 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d/src/displayContainer.ts",
       "package": "@flighthq/scene2d",
-      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayContainer.ts: imported type PartialNode has indeterminateIdentity",
+      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayContainer.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/scene2d/src/displayObject.ts",
       "package": "@flighthq/scene2d",
-      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
+      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -6419,7 +6286,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d/src/htmlView.ts",
       "package": "@flighthq/scene2d",
-      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
+      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -6433,7 +6300,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d/src/scale9Sprite.ts",
       "package": "@flighthq/scene2d",
-      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/scale9Sprite.ts: imported type PartialNode has indeterminateIdentity",
+      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/scale9Sprite.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -6454,7 +6321,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d/src/sprite.ts",
       "package": "@flighthq/scene2d",
-      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
+      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: type assertion target must identify exactly one C++ variant alternative",
       "stage": "emission"
     },
     {
@@ -6462,13 +6329,6 @@
       "module": "packages/scene2d-canvas/src/canvasAtlasRegion.ts",
       "package": "@flighthq/scene2d-canvas",
       "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasAtlasRegion.ts: runtime external symbol binding plan is incomplete (missing: CanvasImageSource[type], CanvasRenderingContext2D[type])",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/scene2d-canvas/src/canvasBackground.ts",
-      "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBackground.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -6559,7 +6419,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-canvas/src/canvasNode2D.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_936631377ff06ebb> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_20cf56ea611a36d6> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -6585,16 +6445,16 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/scene2d-canvas/src/canvasRenderState.ts",
+      "module": "packages/scene2d-canvas/src/canvasRenderPass.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], CanvasRenderingContext2DSettings[type], HTMLCanvasElement[type], WeakSet[type], WeakSet[value])",
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderPass.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/scene2d-canvas/src/canvasRenderStateHandles.ts",
+      "module": "packages/scene2d-canvas/src/canvasRenderState.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderStateHandles.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], HTMLCanvasElement[type])",
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts: runtime external symbol binding plan is incomplete (missing: WeakSet[type], WeakSet[value])",
       "stage": "emission"
     },
     {
@@ -6602,13 +6462,6 @@
       "module": "packages/scene2d-canvas/src/canvasRenderSurface.ts",
       "package": "@flighthq/scene2d-canvas",
       "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderSurface.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], CanvasRenderingContext2DSettings[type], HTMLCanvasElement[type])",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/scene2d-canvas/src/canvasRenderTarget.ts",
-      "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTarget.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], HTMLCanvasElement[type])",
       "stage": "emission"
     },
     {
@@ -6622,7 +6475,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasRenderTexturePool.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasRenderTarget was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTarget.ts",
+      "reason": "dependency ./canvasRenderTexture was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTexture.ts",
       "stage": "dependency"
     },
     {
@@ -6659,6 +6512,13 @@
       "package": "@flighthq/scene2d-canvas",
       "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9Sprite.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], HTMLCanvasElement[type], HTMLImageElement[type], HTMLVideoElement[type], ImageBitmap[type], OffscreenCanvas[type], SVGImageElement[type], VideoFrame[type])",
       "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-canvas/src/canvasScreenRenderTarget.ts",
+      "package": "@flighthq/scene2d-canvas",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/CanvasRenderSurface.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -6731,6 +6591,13 @@
       "stage": "emission"
     },
     {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-canvas/src/canvasTextureRenderTarget.ts",
+      "package": "@flighthq/scene2d-canvas",
+      "reason": "dependency ./canvasRenderSurface was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderSurface.ts",
+      "stage": "dependency"
+    },
+    {
       "code": "unsupported-ir",
       "module": "packages/scene2d-canvas/src/canvasTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
@@ -6769,7 +6636,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/contract.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasBackground was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBackground.ts",
+      "reason": "dependency ./canvasBitmapText was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapText.ts",
       "stage": "dependency"
     },
     {
@@ -6802,9 +6669,9 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/scene2d-canvas/src/scene2dCanvasPipeline.ts",
+      "module": "packages/scene2d-canvas/src/scene2DCanvasPipeline.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/scene2dCanvasPipeline.ts: structural-row construction requires explicit named properties",
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/scene2DCanvasPipeline.ts: structural-row construction requires explicit named properties",
       "stage": "emission"
     },
     {
@@ -6812,13 +6679,6 @@
       "module": "packages/scene2d-dom/src/contract.ts",
       "package": "@flighthq/scene2d-dom",
       "reason": "dependency ./domBitmapTextureResolver was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domBitmapTextureResolver.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/scene2d-dom/src/domBackground.ts",
-      "package": "@flighthq/scene2d-dom",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7061,6 +6921,13 @@
     },
     {
       "code": "unsupported-ir",
+      "module": "packages/scene2d-formats/src/riveAssetBinding.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts: flight-cpp WeakMap key requires a proven Flight reference or external weak-key policy",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/riveAssets.ts",
       "package": "@flighthq/scene2d-formats",
       "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type])",
@@ -7095,6 +6962,20 @@
       "stage": "emission"
     },
     {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/riveHandlers.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./riveAssets was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/scene2d-formats/src/riveImportRegistry.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts: runtime external symbol binding plan is incomplete (missing: MapIterator[type])",
+      "stage": "emission"
+    },
+    {
       "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/riveLayout.ts",
       "package": "@flighthq/scene2d-formats",
@@ -7102,25 +6983,32 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/riveObjectGraph.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency @flighthq/importdiagnostics/contract was refused for @flighthq/importdiagnostics/packages/importdiagnostics/src/importDiagnosticCollector.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveObjectGraph.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/riveScene2D.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts: runtime external symbol binding plan is incomplete (missing: MapIterator[type])",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene2d-formats/src/riveScene2DDocument.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./riveScene2D was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2DDocument.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/scene2d-formats/src/riveShapeNode.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts: runtime external symbol binding plan is incomplete (missing: MapIterator[type])",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -7266,7 +7154,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-gl/src/glNode2D.ts",
       "package": "@flighthq/scene2d-gl",
-      "reason": "cpp emission failed for @flighthq/scene2d-gl/packages/scene2d-gl/src/glNode2D.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_936631377ff06ebb> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene2d-gl/packages/scene2d-gl/src/glNode2D.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_20cf56ea611a36d6> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -7364,7 +7252,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-gl/src/glTestHelper.ts",
       "package": "@flighthq/scene2d-gl",
-      "reason": "cpp emission failed for @flighthq/scene2d-gl/packages/scene2d-gl/src/glTestHelper.ts: runtime external symbol binding plan is incomplete (missing: HTMLCanvasElement[type], PropertyDescriptorMap[type], document[value])",
+      "reason": "cpp emission failed for @flighthq/scene2d-gl/packages/scene2d-gl/src/glTestHelper.ts: runtime external symbol binding plan is incomplete (missing: HTMLCanvasElement[type], PropertyDescriptorMap[type], WebGL2RenderingContext[type], document[value])",
       "stage": "emission"
     },
     {
@@ -7404,17 +7292,17 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/scene2d-gl/src/scene2dGlPipeline.ts",
+      "module": "packages/scene2d-gl/src/scene2DGlPipeline.ts",
       "package": "@flighthq/scene2d-gl",
-      "reason": "cpp emission failed for @flighthq/scene2d-gl/packages/scene2d-gl/src/scene2dGlPipeline.ts: structural-row construction requires explicit named properties",
+      "reason": "cpp emission failed for @flighthq/scene2d-gl/packages/scene2d-gl/src/scene2DGlPipeline.ts: structural-row construction requires explicit named properties",
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts",
       "package": "@flighthq/scene2d-resources",
-      "reason": "dependency @flighthq/scene2d-formats/contract was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene2d-resources/packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -7424,11 +7312,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene2d-resources/src/enableScene2DResourceFailureGuards.ts",
       "package": "@flighthq/scene2d-resources",
-      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene2d-resources/packages/scene2d-resources/src/enableScene2DResourceFailureGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -7452,11 +7340,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene2d-resources/src/resolveScene2DResources.ts",
       "package": "@flighthq/scene2d-resources",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/AudioResourceReference.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene2d-resources/packages/scene2d-resources/src/resolveScene2DResources.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -7523,9 +7411,9 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/scene2d-wgpu/src/scene2dWgpuPipeline.ts",
+      "module": "packages/scene2d-wgpu/src/scene2DWgpuPipeline.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/scene2dWgpuPipeline.ts: structural-row construction requires explicit named properties",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/scene2DWgpuPipeline.ts: structural-row construction requires explicit named properties",
       "stage": "emission"
     },
     {
@@ -7581,7 +7469,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene2d-wgpu/src/wgpuNode2D.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuNode2D.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_936631377ff06ebb> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuNode2D.ts: contextual union value type flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_20cf56ea611a36d6> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -7749,7 +7637,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene3d/src/enableScene3DGuards.ts",
       "package": "@flighthq/scene3d",
-      "reason": "cpp emission failed for @flighthq/scene3d/packages/scene3d/src/enableScene3DGuards.ts: ambient value Array member from has no C++ binding",
+      "reason": "cpp emission failed for @flighthq/scene3d/packages/scene3d/src/enableScene3DGuards.ts: contextual union value type std::function<flight::Ref<message_view_b448e3bdbfda05e1>()> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -7872,11 +7760,32 @@
       "stage": "emission"
     },
     {
+      "code": "unsupported-ir",
+      "module": "packages/scene3d-formats/src/colladaMaterial.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterial.ts: runtime external symbol binding plan is incomplete (missing: MapIterator[type])",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/scene3d-formats/src/colladaParse.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts: runtime external symbol binding plan is incomplete (missing: ArrayLike[type], Boolean[value], MapIterator[type], SharedArrayBuffer[type])",
+      "stage": "emission"
+    },
+    {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/contract.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "dependency ./awd2Parse was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
       "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/scene3d-formats/src/gltfAnimations.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnimations.ts: runtime external symbol binding plan is incomplete (missing: ArrayLike[type])",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -7887,10 +7796,24 @@
     },
     {
       "code": "unsupported-ir",
+      "module": "packages/scene3d-formats/src/gltfCameras.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfCameras.ts: contextual multiVariant construction requires expression type evidence",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
       "module": "packages/scene3d-formats/src/gltfClearcoat.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfClearcoat.ts: contextual multiVariant construction requires expression type evidence",
       "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/gltfCoreFeatureRegistry.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -7898,6 +7821,13 @@
       "package": "@flighthq/scene3d-formats",
       "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfEmissiveStrength.ts: contextual multiVariant construction requires expression type evidence",
       "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/gltfExtensionHandlerRegistry.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/GltfExtension.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -7932,6 +7862,13 @@
       "module": "packages/scene3d-formats/src/gltfSheen.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSheen.ts: contextual multiVariant construction requires expression type evidence",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/scene3d-formats/src/gltfSkins.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSkins.ts: runtime external symbol binding plan is incomplete (missing: ArrayBufferLike[type], ArrayLike[type], SharedArrayBuffer[type])",
       "stage": "emission"
     },
     {
@@ -8003,6 +7940,48 @@
       "package": "@flighthq/scene3d-formats",
       "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts: runtime external symbol binding plan is incomplete (missing: MapIterator[type], parseFloat[value])",
       "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/registerAllGltfHandlers.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/GltfExtension.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/registerGltfAnimationHandlers.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./gltfAnimations was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnimations.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/registerGltfCameraHandlers.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./gltfCameras was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfCameras.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./gltfExtensionHandlerRegistry was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfExtensionHandlerRegistry.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/registerGltfMaterialExtensionHandlers.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./gltfAnisotropy was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnisotropy.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./gltfSkins was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSkins.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -8163,6 +8142,13 @@
       "module": "packages/scene3d-gl/src/glDebugPrelude.ts",
       "package": "@flighthq/scene3d-gl",
       "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glDebugPrelude.ts: runtime external symbol binding plan is incomplete (missing: WebGLProgram[type], WebGLTexture[type], WebGLUniformLocation[type])",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/scene3d-gl/src/glEnvironmentCapture.ts",
+      "package": "@flighthq/scene3d-gl",
+      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glEnvironmentCapture.ts: runtime external symbol binding plan is incomplete (missing: WebGLTexture[type])",
       "stage": "emission"
     },
     {
@@ -8397,11 +8383,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/scene3d-gl/src/presentGlScene3D.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "dependency ./drawGlScene3D was refused for @flighthq/scene3d-gl/packages/scene3d-gl/src/drawGlScene3D.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/presentGlScene3D.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -8409,6 +8395,13 @@
       "package": "@flighthq/scene3d-gl",
       "reason": "dependency ./glMeshMaterialRegistry was refused for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshMaterialRegistry.ts",
       "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/scene3d-gl/src/scene3DGlPipeline.ts",
+      "package": "@flighthq/scene3d-gl",
+      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/scene3DGlPipeline.ts: structural-row construction requires explicit named properties",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -8610,7 +8603,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene3d-resources/src/sceneDocumentSource.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts: narrowed member ExternalImageResourceReference must identify one C++ variant alternative",
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type], SharedArrayBuffer[type])",
       "stage": "emission"
     },
     {
@@ -8804,6 +8797,13 @@
     },
     {
       "code": "unsupported-ir",
+      "module": "packages/scene3d-wgpu/src/scene3DWgpuPipeline.ts",
+      "package": "@flighthq/scene3d-wgpu",
+      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/scene3DWgpuPipeline.ts: contextual union value type flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::KeyedTable<flight::types::WgpuTextureResolver>>>>> is not a represented runtime domain",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
       "module": "packages/scene3d-wgpu/src/shadedWgpuMeshMaterialRenderer.ts",
       "package": "@flighthq/scene3d-wgpu",
       "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/shadedWgpuMeshMaterialRenderer.ts: runtime external symbol binding plan is incomplete (missing: GPURenderPassEncoder[type], GPUTextureFormat[type])",
@@ -8939,7 +8939,7 @@
       "code": "unsupported-ir",
       "module": "packages/scene3d-wgpu/src/wgpuScene3DTestHelper.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuScene3DTestHelper.ts: runtime external symbol binding plan is incomplete (missing: ArrayBufferView[type], DOMException[value], GPUAllowSharedBufferSource[type], GPUBindGroupLayout[type], GPUBuffer[type], GPUBufferDescriptor[type], GPUCanvasContext[type], GPUCommandEncoder[type], GPUDevice[type], GPUExtent3D[type], GPUExtent3DDict[type], GPUIndexFormat[type], GPURenderPassEncoder[type], GPUSampler[type], GPUShaderModule[type], GPUTexelCopyBufferLayout[type], GPUTexelCopyTextureInfo[type], GPUTexture[type], GPUTextureDescriptor[type], GPUTextureFormat[type], GPUTextureView[type], HTMLCanvasElement[type], HTMLImageElement[type], HTMLVideoElement[type], ImageBitmap[type], Iterable[type], OffscreenCanvas[type], SVGImageElement[type], SharedArrayBuffer[type], SharedArrayBuffer[value], VideoFrame[type], globalThis[value])",
+      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuScene3DTestHelper.ts: runtime external symbol binding plan is incomplete (missing: ArrayBufferView[type], DOMException[value], GPUAllowSharedBufferSource[type], GPUBindGroupLayout[type], GPUBuffer[type], GPUBufferDescriptor[type], GPUCommandEncoder[type], GPUDevice[type], GPUExtent3D[type], GPUExtent3DDict[type], GPUIndexFormat[type], GPURenderPassEncoder[type], GPUSampler[type], GPUShaderModule[type], GPUTexelCopyBufferLayout[type], GPUTexelCopyTextureInfo[type], GPUTexture[type], GPUTextureDescriptor[type], GPUTextureFormat[type], GPUTextureView[type], HTMLCanvasElement[type], HTMLImageElement[type], HTMLVideoElement[type], ImageBitmap[type], Iterable[type], OffscreenCanvas[type], SVGImageElement[type], SharedArrayBuffer[type], SharedArrayBuffer[value], VideoFrame[type], globalThis[value])",
       "stage": "emission"
     },
     {
@@ -9077,27 +9077,6 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/sensors/src/contract.ts",
-      "package": "@flighthq/sensors",
-      "reason": "dependency ./sensors was refused for @flighthq/sensors/packages/sensors/src/sensors.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/sensors/src/index.ts",
-      "package": "@flighthq/sensors",
-      "reason": "dependency ./contract was refused for @flighthq/sensors/packages/sensors/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/sensors/src/sensors.ts",
-      "package": "@flighthq/sensors",
-      "reason": "cpp emission failed for @flighthq/sensors/packages/sensors/src/sensors.ts: runtime external symbol binding plan is incomplete (missing: DeviceMotionEvent[value], DeviceOrientationEvent[value], EventListener[type], Magnetometer[value], PermissionDescriptor[type], PermissionName[type], PermissionStatus[type], globalThis[value], navigator[value], window[value])",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/shading/src/contract.ts",
       "package": "@flighthq/shading",
       "reason": "dependency ./createAnimatedNormalModifier was refused for @flighthq/shading/packages/shading/src/createAnimatedNormalModifier.ts",
@@ -9121,7 +9100,7 @@
       "code": "unsupported-ir",
       "module": "packages/shading/src/createEmissiveModifier.ts",
       "package": "@flighthq/shading",
-      "reason": "cpp emission failed for @flighthq/shading/packages/shading/src/createEmissiveModifier.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/shading/packages/shading/src/createEmissiveModifier.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -9132,11 +9111,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/shading/src/createFogModifier.ts",
       "package": "@flighthq/shading",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/shading/packages/shading/src/createFogModifier.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -9240,15 +9219,15 @@
       "code": "dependency-refused",
       "module": "packages/shape/src/contract.ts",
       "package": "@flighthq/shape",
-      "reason": "dependency ./morphShape was refused for @flighthq/shape/packages/shape/src/morphShape.ts",
+      "reason": "dependency ./enableShapeBoundsGuards was refused for @flighthq/shape/packages/shape/src/enableShapeBoundsGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/shape/src/enableShapeBoundsGuards.ts",
       "package": "@flighthq/shape",
-      "reason": "dependency ./shapeBounds was refused for @flighthq/shape/packages/shape/src/shapeBounds.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/enableShapeBoundsGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -9293,17 +9272,17 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/shape/src/registerDefaultShapeBoundsCommands.ts",
       "package": "@flighthq/shape",
-      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/registerDefaultShapeBoundsCommands.ts: anonymous object property fill_bounds requires concrete C++ type evidence",
-      "stage": "emission"
+      "reason": "dependency ./shapeBounds was refused for @flighthq/shape/packages/shape/src/shapeBounds.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/shape/src/scale9Shape.ts",
       "package": "@flighthq/shape",
-      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/scale9Shape.ts: imported type PartialNode has indeterminateIdentity",
+      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/scale9Shape.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -9317,7 +9296,7 @@
       "code": "unsupported-ir",
       "module": "packages/shape/src/shape.ts",
       "package": "@flighthq/shape",
-      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
+      "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: structural-row projection requires a represented object-reference target",
       "stage": "emission"
     },
     {
@@ -9476,23 +9455,9 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/signals/src/safe.ts",
-      "package": "@flighthq/signals",
-      "reason": "cpp emission failed for @flighthq/signals/packages/signals/src/safe.ts: contextual C++ union conversion requires equivalent source union evidence",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
       "module": "packages/signals/src/scope.ts",
       "package": "@flighthq/signals",
       "reason": "cpp emission failed for @flighthq/signals/packages/signals/src/scope.ts: flight-cpp type position retains unresolved auto placeholder: flight::Array<flight::Ref<flight::types::SignalConnection<std::function<void(flight::Array<auto",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/signals/src/slot.ts",
-      "package": "@flighthq/signals",
-      "reason": "cpp emission failed for @flighthq/signals/packages/signals/src/slot.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -9552,11 +9517,11 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/skeleton2d/src/enableSkeleton2DGuards.ts",
       "package": "@flighthq/skeleton2d",
-      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/enableSkeleton2DGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -9667,8 +9632,22 @@
       "code": "unsupported-ir",
       "module": "packages/skeleton2d-formats/src/skeletonDetect.ts",
       "package": "@flighthq/skeleton2d-formats",
-      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts: contextual union value type flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_e9010d54418a8658> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts: contextual union value type flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_71a6db65ada8f561> is not a represented runtime domain",
       "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/skeleton2d-formats/src/spineBinaryFull.ts",
+      "package": "@flighthq/skeleton2d-formats",
+      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryFull.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/skeleton2d-formats/src/spineBinaryHandlers.ts",
+      "package": "@flighthq/skeleton2d-formats",
+      "reason": "dependency ./spineBinarySectionHandlers was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySectionHandlers.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -9686,17 +9665,38 @@
     },
     {
       "code": "dependency-refused",
+      "module": "packages/skeleton2d-formats/src/spineBinaryRegistry.ts",
+      "package": "@flighthq/skeleton2d-formats",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/contract.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/skeleton2d-formats/src/spineBinarySectionHandlers.ts",
+      "package": "@flighthq/skeleton2d-formats",
+      "reason": "dependency ./spineBinaryParse was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/skeleton2d-formats/src/spineBinaryTimelineHandlers.ts",
+      "package": "@flighthq/skeleton2d-formats",
+      "reason": "dependency ./spineBinaryParse was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/skeleton2d-formats/src/spineBinaryVersion.ts",
       "package": "@flighthq/skeleton2d-formats",
       "reason": "dependency ./spineBinaryReader was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryReader.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/skeleton2d-formats/src/spineBinaryVersioned.ts",
       "package": "@flighthq/skeleton2d-formats",
-      "reason": "dependency ./spineBinaryVersion was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryVersion.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryVersioned.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -9709,15 +9709,15 @@
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/contract.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./getMeshSkinBounds was refused for @flighthq/skeleton3d/packages/skeleton3d/src/getMeshSkinBounds.ts",
+      "reason": "dependency ./enableSkeleton3DGuards was refused for @flighthq/skeleton3d/packages/skeleton3d/src/enableSkeleton3DGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/skeleton3d/src/enableSkeleton3DGuards.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./skeleton3d was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/skeleton3d/packages/skeleton3d/src/enableSkeleton3DGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -9856,7 +9856,7 @@
       "code": "unsupported-ir",
       "module": "packages/socket/src/socket.ts",
       "package": "@flighthq/socket",
-      "reason": "cpp emission failed for @flighthq/socket/packages/socket/src/socket.ts: runtime external symbol binding plan is incomplete (missing: CloseEvent[type], MessageEvent[type], WebSocket[type], WebSocket[value])",
+      "reason": "cpp emission failed for @flighthq/socket/packages/socket/src/socket.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -9996,7 +9996,7 @@
       "code": "unsupported-ir",
       "module": "packages/spritesheet-formats/src/spritesheetDetect.ts",
       "package": "@flighthq/spritesheet-formats",
-      "reason": "cpp emission failed for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/spritesheetDetect.ts: contextual union value type flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_d665b5c2bd3a948e> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/spritesheetDetect.ts: contextual union value type flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_e46b6def18eed53b> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -10017,7 +10017,7 @@
       "code": "unsupported-ir",
       "module": "packages/spritesheet-formats/src/texturePackerSerialize.ts",
       "package": "@flighthq/spritesheet-formats",
-      "reason": "cpp emission failed for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/texturePackerSerialize.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/texturePackerSerialize.ts: contextual union value type flight::Array<flight::Ref<direction_from_name_to_fc17c84f5e5dc013>> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -10101,22 +10101,22 @@
       "code": "dependency-refused",
       "module": "packages/storage/src/storagePersistence.ts",
       "package": "@flighthq/storage",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Host.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/Permission.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/swf/src/contract.ts",
       "package": "@flighthq/swf",
-      "reason": "dependency ./swfBitmap was refused for @flighthq/swf/packages/swf/src/swfBitmap.ts",
+      "reason": "dependency ./enableSwfGuards was refused for @flighthq/swf/packages/swf/src/enableSwfGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/swf/src/enableSwfGuards.ts",
       "package": "@flighthq/swf",
-      "reason": "dependency ./swfFilter was refused for @flighthq/swf/packages/swf/src/swfFilter.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/enableSwfGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -10145,6 +10145,13 @@
       "package": "@flighthq/swf",
       "reason": "dependency @flighthq/text-markup/contract was refused for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts",
       "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/swf/src/swfExplain.ts",
+      "package": "@flighthq/swf",
+      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfExplain.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type])",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -10196,6 +10203,13 @@
       "stage": "emission"
     },
     {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfTagRegistry.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfDocument was refused for @flighthq/swf/packages/swf/src/swfDocument.ts",
+      "stage": "dependency"
+    },
+    {
       "code": "unsupported-ir",
       "module": "packages/swf/src/swfText.ts",
       "package": "@flighthq/swf",
@@ -10206,15 +10220,15 @@
       "code": "dependency-refused",
       "module": "packages/text/src/contract.ts",
       "package": "@flighthq/text",
-      "reason": "dependency ./nativeText was refused for @flighthq/text/packages/text/src/nativeText.ts",
+      "reason": "dependency ./enableTextLabelGuards was refused for @flighthq/text/packages/text/src/enableTextLabelGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/text/src/enableTextLabelGuards.ts",
       "package": "@flighthq/text",
-      "reason": "dependency ./textLabelLayout was refused for @flighthq/text/packages/text/src/textLabelLayout.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/text/packages/text/src/enableTextLabelGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -10234,7 +10248,7 @@
       "code": "unsupported-ir",
       "module": "packages/text/src/nativeText.ts",
       "package": "@flighthq/text",
-      "reason": "cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
+      "reason": "cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -10248,7 +10262,7 @@
       "code": "unsupported-ir",
       "module": "packages/text/src/textLabel.ts",
       "package": "@flighthq/text",
-      "reason": "cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: anonymous object property entity_runtime_key requires concrete C++ type evidence",
+      "reason": "cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -10262,15 +10276,15 @@
       "code": "dependency-refused",
       "module": "packages/text-markup/src/contract.ts",
       "package": "@flighthq/text-markup",
-      "reason": "dependency ./markupClassStyles was refused for @flighthq/text-markup/packages/text-markup/src/markupClassStyles.ts",
+      "reason": "dependency ./enableTextMarkupGuards was refused for @flighthq/text-markup/packages/text-markup/src/enableTextMarkupGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/text-markup/src/enableTextMarkupGuards.ts",
       "package": "@flighthq/text-markup",
-      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/text-markup/packages/text-markup/src/enableTextMarkupGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -10309,24 +10323,24 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/textbidi/src/bidiClassBackend.ts",
+      "module": "packages/textbidi/src/bidiClassKernel.ts",
       "package": "@flighthq/textbidi",
-      "reason": "cpp emission failed for @flighthq/textbidi/packages/textbidi/src/bidiClassBackend.ts: runtime external symbol binding plan is incomplete (missing: WeakSet[type], WeakSet[value])",
+      "reason": "cpp emission failed for @flighthq/textbidi/packages/textbidi/src/bidiClassKernel.ts: runtime external symbol binding plan is incomplete (missing: WeakSet[type], WeakSet[value])",
       "stage": "emission"
     },
     {
       "code": "dependency-refused",
       "module": "packages/textbidi/src/contract.ts",
       "package": "@flighthq/textbidi",
-      "reason": "dependency ./bidiClassBackend was refused for @flighthq/textbidi/packages/textbidi/src/bidiClassBackend.ts",
+      "reason": "dependency ./bidiClassKernel was refused for @flighthq/textbidi/packages/textbidi/src/bidiClassKernel.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/textbidi/src/enableTextBidiGuards.ts",
       "package": "@flighthq/textbidi",
-      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/textbidi/packages/textbidi/src/enableTextBidiGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -10448,11 +10462,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/textlayout/src/textLayoutMeasure.ts",
       "package": "@flighthq/textlayout",
-      "reason": "cpp emission failed for @flighthq/textlayout/packages/textlayout/src/textLayoutMeasure.ts: contextual optionalSingle construction requires expression type evidence",
-      "stage": "emission"
+      "reason": "dependency @flighthq/textshaper/contract was refused for @flighthq/textshaper/packages/textshaper/src/textShaper.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -10465,28 +10479,21 @@
       "code": "dependency-refused",
       "module": "packages/textsegment/src/contract.ts",
       "package": "@flighthq/textsegment",
-      "reason": "dependency ./textSegmentBoundary was refused for @flighthq/textsegment/packages/textsegment/src/textSegmentBoundary.ts",
+      "reason": "dependency ./enableTextSegmentGuards was refused for @flighthq/textsegment/packages/textsegment/src/enableTextSegmentGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/textsegment/src/enableTextSegmentGuards.ts",
       "package": "@flighthq/textsegment",
-      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/textsegment/packages/textsegment/src/enableTextSegmentGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
       "module": "packages/textsegment/src/index.ts",
       "package": "@flighthq/textsegment",
       "reason": "dependency ./contract was refused for @flighthq/textsegment/packages/textsegment/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/textsegment/src/textSegment.ts",
-      "package": "@flighthq/textsegment",
-      "reason": "dependency ./textSegmenterBackend was refused for @flighthq/textsegment/packages/textsegment/src/textSegmenterBackend.ts",
       "stage": "dependency"
     },
     {
@@ -10505,24 +10512,17 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/textshaper/src/_textShaperHooks.ts",
-      "package": "@flighthq/textshaper",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/TextShaper.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/textshaper/src/contract.ts",
       "package": "@flighthq/textshaper",
-      "reason": "dependency ./textShaper was refused for @flighthq/textshaper/packages/textshaper/src/textShaper.ts",
+      "reason": "dependency ./enableTextShaperGuards was refused for @flighthq/textshaper/packages/textshaper/src/enableTextShaperGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/textshaper/src/enableTextShaperGuards.ts",
       "package": "@flighthq/textshaper",
-      "reason": "dependency ./textShaperPool was refused for @flighthq/textshaper/packages/textshaper/src/textShaperPool.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/textshaper/packages/textshaper/src/enableTextShaperGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -10535,7 +10535,7 @@
       "code": "unsupported-ir",
       "module": "packages/textshaper/src/textShaper.ts",
       "package": "@flighthq/textshaper",
-      "reason": "cpp emission failed for @flighthq/textshaper/packages/textshaper/src/textShaper.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/textshaper/packages/textshaper/src/textShaper.ts: typeof requires closed runtime type evidence",
       "stage": "emission"
     },
     {
@@ -10570,14 +10570,14 @@
       "code": "dependency-refused",
       "module": "packages/textshaper/src/textShaperRun.ts",
       "package": "@flighthq/textshaper",
-      "reason": "dependency ./textShaper was refused for @flighthq/textshaper/packages/textshaper/src/textShaper.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/FontResource.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/textshaper/src/textShaperSignals.ts",
       "package": "@flighthq/textshaper",
-      "reason": "dependency @flighthq/signals/contract was refused for @flighthq/signals/packages/signals/src/slot.ts",
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/TextShaper.ts",
       "stage": "dependency"
     },
     {
@@ -10633,7 +10633,7 @@
       "code": "unsupported-ir",
       "module": "packages/texture/src/videoTexture.ts",
       "package": "@flighthq/texture",
-      "reason": "cpp emission failed for @flighthq/texture/packages/texture/src/videoTexture.ts: runtime external symbol binding plan is incomplete (missing: HTMLVideoElement[type])",
+      "reason": "cpp emission failed for @flighthq/texture/packages/texture/src/videoTexture.ts: Partial<T> requires a statically resolvable C++ object shape",
       "stage": "emission"
     },
     {
@@ -10682,15 +10682,15 @@
       "code": "dependency-refused",
       "module": "packages/textureatlas/src/contract.ts",
       "package": "@flighthq/textureatlas",
-      "reason": "dependency ./textureAtlas was refused for @flighthq/textureatlas/packages/textureatlas/src/textureAtlas.ts",
+      "reason": "dependency ./enableTextureAtlasGuards was refused for @flighthq/textureatlas/packages/textureatlas/src/enableTextureAtlasGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/textureatlas/src/enableTextureAtlasGuards.ts",
       "package": "@flighthq/textureatlas",
-      "reason": "dependency ./textureAtlasRegion was refused for @flighthq/textureatlas/packages/textureatlas/src/textureAtlasRegion.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/textureatlas/packages/textureatlas/src/enableTextureAtlasGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -10710,7 +10710,7 @@
       "code": "unsupported-ir",
       "module": "packages/textureatlas/src/textureAtlasFrom.ts",
       "package": "@flighthq/textureatlas",
-      "reason": "cpp emission failed for @flighthq/textureatlas/packages/textureatlas/src/textureAtlasFrom.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type], Blob[type], HTMLCanvasElement[type], HTMLImageElement[type], ImageBitmap[type])",
+      "reason": "cpp emission failed for @flighthq/textureatlas/packages/textureatlas/src/textureAtlasFrom.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type], Blob[type])",
       "stage": "emission"
     },
     {
@@ -10745,7 +10745,7 @@
       "code": "unsupported-ir",
       "module": "packages/textureatlas-formats/src/textureAtlasAsepriteParse.ts",
       "package": "@flighthq/textureatlas-formats",
-      "reason": "cpp emission failed for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasAsepriteParse.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasAsepriteParse.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -10773,7 +10773,7 @@
       "code": "unsupported-ir",
       "module": "packages/textureatlas-formats/src/texturePackerAtlasParse.ts",
       "package": "@flighthq/textureatlas-formats",
-      "reason": "cpp emission failed for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/texturePackerAtlasParse.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/texturePackerAtlasParse.ts: contextual C++ union conversion requires equivalent source union evidence",
       "stage": "emission"
     },
     {
@@ -10801,15 +10801,15 @@
       "code": "dependency-refused",
       "module": "packages/tilemap-formats/src/contract.ts",
       "package": "@flighthq/tilemap-formats",
-      "reason": "dependency ./tiledJsonParse was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledJsonParse.ts",
+      "reason": "dependency ./enableTilemapFormatsGuards was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/enableTilemapFormatsGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/tilemap-formats/src/enableTilemapFormatsGuards.ts",
       "package": "@flighthq/tilemap-formats",
-      "reason": "dependency ./tiledLayerData was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledLayerData.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/enableTilemapFormatsGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -10850,7 +10850,7 @@
       "code": "unsupported-ir",
       "module": "packages/tilemap-formats/src/tiledTmxFormat.ts",
       "package": "@flighthq/tilemap-formats",
-      "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmxFormat.ts: contextual multiVariant construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmxFormat.ts: ambient value Array member from has no C++ binding",
       "stage": "emission"
     },
     {
@@ -10920,15 +10920,15 @@
       "code": "dependency-refused",
       "module": "packages/tray/src/contract.ts",
       "package": "@flighthq/tray",
-      "reason": "dependency ./tray was refused for @flighthq/tray/packages/tray/src/tray.ts",
+      "reason": "dependency ./enableTrayGuards was refused for @flighthq/tray/packages/tray/src/enableTrayGuards.ts",
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/tray/src/enableTrayGuards.ts",
       "package": "@flighthq/tray",
-      "reason": "dependency ./tray was refused for @flighthq/tray/packages/tray/src/tray.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/tray/packages/tray/src/enableTrayGuards.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -10973,11 +10973,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/tween/src/timer.ts",
       "package": "@flighthq/tween",
-      "reason": "dependency ./tween was refused for @flighthq/tween/packages/tween/src/tween.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/tween/packages/tween/src/timer.ts: contextual union value type flight::Ref<anonymous_3e6b344a3b6bd77e> is not a represented runtime domain",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -11212,9 +11212,16 @@
     },
     {
       "code": "unsupported-ir",
+      "module": "packages/types/src/CanvasRenderPass.ts",
+      "package": "@flighthq/types",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/CanvasRenderPass.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], HTMLCanvasElement[type])",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
       "module": "packages/types/src/CanvasRenderState.ts",
       "package": "@flighthq/types",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/CanvasRenderState.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], CanvasRenderingContext2DSettings[type], HTMLCanvasElement[type], ImageSmoothingQuality[type])",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/CanvasRenderState.ts: runtime external symbol binding plan is incomplete (missing: CanvasRenderingContext2D[type], HTMLCanvasElement[type], ImageSmoothingQuality[type])",
       "stage": "emission"
     },
     {
@@ -11299,6 +11306,13 @@
       "module": "packages/types/src/CapacitorProtocolCapabilities.ts",
       "package": "@flighthq/types",
       "reason": "dependency ./Host was refused for @flighthq/types/packages/types/src/Host.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/types/src/ColladaParse.ts",
+      "package": "@flighthq/types",
+      "reason": "dependency ./Scene3DDocument was refused for @flighthq/types/packages/types/src/Scene3DDocument.ts",
       "stage": "dependency"
     },
     {
@@ -11393,10 +11407,17 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/types/src/ElectronHost.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./ElectronApi was refused for @flighthq/types/packages/types/src/ElectronApi.ts",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/ElectronHost.ts: anonymous object property data requires concrete C++ type evidence",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/types/src/ElectronHostOptions.ts",
+      "package": "@flighthq/types",
+      "reason": "dependency ./Tray was refused for @flighthq/types/packages/types/src/Tray.ts",
       "stage": "dependency"
     },
     {
@@ -11590,10 +11611,24 @@
     },
     {
       "code": "unsupported-ir",
+      "module": "packages/types/src/GlCubeRenderTarget.ts",
+      "package": "@flighthq/types",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/GlCubeRenderTarget.ts: runtime external symbol binding plan is incomplete (missing: WebGLFramebuffer[type], WebGLRenderbuffer[type], WebGLTexture[type])",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
       "module": "packages/types/src/GlDebugProgram.ts",
       "package": "@flighthq/types",
       "reason": "cpp emission failed for @flighthq/types/packages/types/src/GlDebugProgram.ts: runtime external symbol binding plan is incomplete (missing: WebGLProgram[type], WebGLUniformLocation[type])",
       "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/types/src/GlEnvironmentCaptureOptions.ts",
+      "package": "@flighthq/types",
+      "reason": "dependency ./Node3D was refused for @flighthq/types/packages/types/src/Node3D.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -11691,6 +11726,13 @@
       "module": "packages/types/src/GlRenderOptions.ts",
       "package": "@flighthq/types",
       "reason": "dependency ./Raster2DSurface was refused for @flighthq/types/packages/types/src/Raster2DSurface.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/types/src/GlRenderPass.ts",
+      "package": "@flighthq/types",
+      "reason": "dependency ./GlContext was refused for @flighthq/types/packages/types/src/GlContext.ts",
       "stage": "dependency"
     },
     {
@@ -11932,6 +11974,13 @@
       "stage": "dependency"
     },
     {
+      "code": "dependency-refused",
+      "module": "packages/types/src/HostImageDimensions.ts",
+      "package": "@flighthq/types",
+      "reason": "dependency ./HostImageSource was refused for @flighthq/types/packages/types/src/HostImageSource.ts",
+      "stage": "dependency"
+    },
+    {
       "code": "unsupported-ir",
       "module": "packages/types/src/HostImageSource.ts",
       "package": "@flighthq/types",
@@ -11943,6 +11992,13 @@
       "module": "packages/types/src/HtmlView.ts",
       "package": "@flighthq/types",
       "reason": "cpp emission failed for @flighthq/types/packages/types/src/HtmlView.ts: runtime external symbol binding plan is incomplete (missing: HTMLElement[type])",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "module": "packages/types/src/ImageBitmapComposition.ts",
+      "package": "@flighthq/types",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/ImageBitmapComposition.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type])",
       "stage": "emission"
     },
     {
@@ -12051,6 +12107,13 @@
       "stage": "dependency"
     },
     {
+      "code": "unsupported-ir",
+      "module": "packages/types/src/Load.ts",
+      "package": "@flighthq/types",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/Load.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type])",
+      "stage": "emission"
+    },
+    {
       "code": "dependency-refused",
       "module": "packages/types/src/LodMesh.ts",
       "package": "@flighthq/types",
@@ -12135,11 +12198,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "module": "packages/types/src/MethodsOf.ts",
+      "code": "dependency-refused",
+      "module": "packages/types/src/Midi.ts",
       "package": "@flighthq/types",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/MethodsOf.ts: flight-cpp type position retains unresolved auto placeholder: using MethodsOf = auto;",
-      "stage": "emission"
+      "reason": "dependency ./Permission was refused for @flighthq/types/packages/types/src/Permission.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -12268,13 +12331,6 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "module": "packages/types/src/PartialNode.ts",
-      "package": "@flighthq/types",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/PartialNode.ts: flight-cpp type position retains unresolved auto placeholder: using PartialNode = auto;",
-      "stage": "emission"
-    },
-    {
       "code": "dependency-refused",
       "module": "packages/types/src/ParticleEmitter2D.ts",
       "package": "@flighthq/types",
@@ -12293,6 +12349,13 @@
       "module": "packages/types/src/ParticleObject.ts",
       "package": "@flighthq/types",
       "reason": "dependency ./HasAppearance was refused for @flighthq/types/packages/types/src/HasAppearance.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/types/src/Permission.ts",
+      "package": "@flighthq/types",
+      "reason": "dependency ./Notification was refused for @flighthq/types/packages/types/src/Notification.ts",
       "stage": "dependency"
     },
     {
@@ -12475,6 +12538,13 @@
       "module": "packages/types/src/RiveDocument.ts",
       "package": "@flighthq/types",
       "reason": "dependency ./AnimationClip was refused for @flighthq/types/packages/types/src/AnimationClip.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/types/src/RiveImportRegistry.ts",
+      "package": "@flighthq/types",
+      "reason": "dependency ./RiveDocument was refused for @flighthq/types/packages/types/src/RiveDocument.ts",
       "stage": "dependency"
     },
     {
@@ -12724,6 +12794,13 @@
     },
     {
       "code": "dependency-refused",
+      "module": "packages/types/src/SpineBinaryRegistry.ts",
+      "package": "@flighthq/types",
+      "reason": "dependency ./AnimationChannel was refused for @flighthq/types/packages/types/src/AnimationChannel.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/types/src/SpineBinaryVersion.ts",
       "package": "@flighthq/types",
       "reason": "dependency ./Skeleton2DImport was refused for @flighthq/types/packages/types/src/Skeleton2DImport.ts",
@@ -12752,6 +12829,13 @@
     },
     {
       "code": "dependency-refused",
+      "module": "packages/types/src/Storage.ts",
+      "package": "@flighthq/types",
+      "reason": "dependency ./Permission was refused for @flighthq/types/packages/types/src/Permission.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/types/src/SvgDocumentImport.ts",
       "package": "@flighthq/types",
       "reason": "dependency ./ImageResource was refused for @flighthq/types/packages/types/src/ImageResource.ts",
@@ -12762,6 +12846,13 @@
       "module": "packages/types/src/SwfDocumentImport.ts",
       "package": "@flighthq/types",
       "reason": "dependency ./ImageResourceReference was refused for @flighthq/types/packages/types/src/ImageResourceReference.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/types/src/SwfTagHandler.ts",
+      "package": "@flighthq/types",
+      "reason": "dependency ./AudioResource was refused for @flighthq/types/packages/types/src/AudioResource.ts",
       "stage": "dependency"
     },
     {
@@ -12789,7 +12880,7 @@
       "code": "dependency-refused",
       "module": "packages/types/src/TauriHost.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./Host was refused for @flighthq/types/packages/types/src/Host.ts",
+      "reason": "dependency ./ApplicationWindow was refused for @flighthq/types/packages/types/src/ApplicationWindow.ts",
       "stage": "dependency"
     },
     {
@@ -12912,11 +13003,11 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
       "module": "packages/types/src/VideoCapabilityBackend.ts",
       "package": "@flighthq/types",
-      "reason": "dependency ./HostImageSource was refused for @flighthq/types/packages/types/src/HostImageSource.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/VideoCapabilityBackend.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type], Blob[type])",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -12930,6 +13021,13 @@
       "module": "packages/types/src/VideoResource.ts",
       "package": "@flighthq/types",
       "reason": "dependency ./HostImageSource was refused for @flighthq/types/packages/types/src/HostImageSource.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/types/src/WebHost.ts",
+      "package": "@flighthq/types",
+      "reason": "dependency ./ApplicationWindow was refused for @flighthq/types/packages/types/src/ApplicationWindow.ts",
       "stage": "dependency"
     },
     {
@@ -13006,7 +13104,7 @@
       "code": "unsupported-ir",
       "module": "packages/types/src/WgpuHost.ts",
       "package": "@flighthq/types",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/WgpuHost.ts: runtime external symbol binding plan is incomplete (missing: GPUCanvasContext[type], GPUDevice[type], GPUPowerPreference[type], GPUTextureFormat[type], HTMLCanvasElement[type])",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/WgpuHost.ts: runtime external symbol binding plan is incomplete (missing: GPUCanvasAlphaMode[type], GPUCanvasContext[type], GPUDevice[type], GPUPowerPreference[type], GPUTextureFormat[type])",
       "stage": "emission"
     },
     {
@@ -13081,23 +13179,23 @@
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/types/src/WgpuRenderState.ts",
+      "module": "packages/types/src/WgpuRenderPass.ts",
       "package": "@flighthq/types",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/WgpuRenderState.ts: runtime external symbol binding plan is incomplete (missing: CanvasImageSource[type], GPUBindGroup[type], GPUBindGroupLayout[type], GPUBuffer[type], GPUCanvasContext[type], GPUCommandEncoder[type], GPUDevice[type], GPUDeviceLostInfo[type], GPURenderPassEncoder[type], GPURenderPipeline[type], GPUSampler[type], GPUShaderModule[type], GPUTexture[type], GPUTextureFormat[type], GPUTextureView[type])",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/WgpuRenderPass.ts: runtime external symbol binding plan is incomplete (missing: GPURenderPassEncoder[type], GPUTextureFormat[type], GPUTextureView[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
-      "module": "packages/types/src/WgpuRenderSurfaceProvider.ts",
+      "module": "packages/types/src/WgpuRenderState.ts",
       "package": "@flighthq/types",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/WgpuRenderSurfaceProvider.ts: runtime external symbol binding plan is incomplete (missing: HTMLCanvasElement[type])",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/WgpuRenderState.ts: runtime external symbol binding plan is incomplete (missing: CanvasImageSource[type], GPUBindGroup[type], GPUBindGroupLayout[type], GPUBuffer[type], GPUCommandEncoder[type], GPUDevice[type], GPUDeviceLostInfo[type], GPURenderPassEncoder[type], GPURenderPipeline[type], GPUSampler[type], GPUShaderModule[type], GPUTexture[type], GPUTextureFormat[type], GPUTextureView[type])",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/types/src/WgpuRenderTarget.ts",
       "package": "@flighthq/types",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/WgpuRenderTarget.ts: runtime external symbol binding plan is incomplete (missing: GPUTexture[type], GPUTextureFormat[type], GPUTextureView[type])",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/WgpuRenderTarget.ts: runtime external symbol binding plan is incomplete (missing: GPUBindGroup[type], GPUBuffer[type], GPUCanvasAlphaMode[type], GPUCanvasContext[type], GPUCommandEncoder[type], GPUDevice[type], GPUTexture[type], GPUTextureFormat[type], GPUTextureView[type])",
       "stage": "emission"
     },
     {
@@ -13276,17 +13374,17 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/video/src/videoResource.ts",
       "package": "@flighthq/video",
-      "reason": "cpp emission failed for @flighthq/video/packages/video/src/videoResource.ts: runtime external symbol binding plan is incomplete (missing: HTMLVideoElement[type])",
-      "stage": "emission"
+      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/HostImageSource.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "module": "packages/video/src/videoResourceFrom.ts",
       "package": "@flighthq/video",
-      "reason": "cpp emission failed for @flighthq/video/packages/video/src/videoResourceFrom.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type], AddEventListenerOptions[type], Blob[type], HTMLVideoElement[type], MediaStream[type])",
+      "reason": "cpp emission failed for @flighthq/video/packages/video/src/videoResourceFrom.ts: runtime external symbol binding plan is incomplete (missing: AbortSignal[type], Blob[type], HTMLCanvasElement[type], HTMLImageElement[type], HTMLVideoElement[type], ImageBitmap[type], OffscreenCanvas[type], SVGImageElement[type], VideoFrame[type])",
       "stage": "emission"
     },
     {

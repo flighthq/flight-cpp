@@ -2,7 +2,7 @@
   "schema": "flight-generated-sdk/1",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
-    "revision": "9f6ce1cad0d5cfcb047ccb2237995bca39161acc",
+    "revision": "fbfcc1102d2afb5fa5ea942fcdad27d520f21408",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
@@ -23,9 +23,9 @@
     {
       "cppIncludePrefix": "flight/accessibility",
       "cppNamespace": "flight::accessibility",
-      "emittedModules": 0,
+      "emittedModules": 3,
       "package": "@flighthq/accessibility",
-      "refusedModules": 3,
+      "refusedModules": 0,
       "sourceModules": 3
     },
     {
@@ -97,8 +97,8 @@
       "cppNamespace": "flight::bitmap",
       "emittedModules": 9,
       "package": "@flighthq/bitmap",
-      "refusedModules": 36,
-      "sourceModules": 45
+      "refusedModules": 35,
+      "sourceModules": 44
     },
     {
       "cppIncludePrefix": "flight/bitmapfont",
@@ -127,10 +127,10 @@
     {
       "cppIncludePrefix": "flight/camera",
       "cppNamespace": "flight::camera",
-      "emittedModules": 9,
+      "emittedModules": 12,
       "package": "@flighthq/camera",
-      "refusedModules": 10,
-      "sourceModules": 19
+      "refusedModules": 9,
+      "sourceModules": 21
     },
     {
       "cppIncludePrefix": "flight/camera_controls",
@@ -159,9 +159,9 @@
     {
       "cppIncludePrefix": "flight/clipboard",
       "cppNamespace": "flight::clipboard",
-      "emittedModules": 0,
+      "emittedModules": 3,
       "package": "@flighthq/clipboard",
-      "refusedModules": 3,
+      "refusedModules": 0,
       "sourceModules": 3
     },
     {
@@ -223,9 +223,9 @@
     {
       "cppIncludePrefix": "flight/device",
       "cppNamespace": "flight::device",
-      "emittedModules": 0,
+      "emittedModules": 3,
       "package": "@flighthq/device",
-      "refusedModules": 3,
+      "refusedModules": 0,
       "sourceModules": 3
     },
     {
@@ -289,8 +289,8 @@
       "cppNamespace": "flight::entity",
       "emittedModules": 4,
       "package": "@flighthq/entity",
-      "refusedModules": 7,
-      "sourceModules": 11
+      "refusedModules": 6,
+      "sourceModules": 10
     },
     {
       "cppIncludePrefix": "flight/filesystem",
@@ -327,9 +327,9 @@
     {
       "cppIncludePrefix": "flight/geolocation",
       "cppNamespace": "flight::geolocation",
-      "emittedModules": 0,
+      "emittedModules": 4,
       "package": "@flighthq/geolocation",
-      "refusedModules": 4,
+      "refusedModules": 0,
       "sourceModules": 4
     },
     {
@@ -367,26 +367,34 @@
     {
       "cppIncludePrefix": "flight/haptics",
       "cppNamespace": "flight::haptics",
-      "emittedModules": 0,
+      "emittedModules": 3,
       "package": "@flighthq/haptics",
-      "refusedModules": 3,
+      "refusedModules": 0,
       "sourceModules": 3
+    },
+    {
+      "cppIncludePrefix": "flight/host",
+      "cppNamespace": "flight::host",
+      "emittedModules": 0,
+      "package": "@flighthq/host",
+      "refusedModules": 6,
+      "sourceModules": 6
     },
     {
       "cppIncludePrefix": "flight/image",
       "cppNamespace": "flight::image",
       "emittedModules": 0,
       "package": "@flighthq/image",
-      "refusedModules": 5,
-      "sourceModules": 5
+      "refusedModules": 7,
+      "sourceModules": 7
     },
     {
       "cppIncludePrefix": "flight/image_codec",
       "cppNamespace": "flight::image_codec",
       "emittedModules": 0,
       "package": "@flighthq/image-codec",
-      "refusedModules": 12,
-      "sourceModules": 12
+      "refusedModules": 9,
+      "sourceModules": 9
     },
     {
       "cppIncludePrefix": "flight/importdiagnostics",
@@ -431,9 +439,9 @@
     {
       "cppIncludePrefix": "flight/keyboard",
       "cppNamespace": "flight::keyboard",
-      "emittedModules": 0,
+      "emittedModules": 3,
       "package": "@flighthq/keyboard",
-      "refusedModules": 3,
+      "refusedModules": 0,
       "sourceModules": 3
     },
     {
@@ -457,16 +465,16 @@
       "cppNamespace": "flight::lighting",
       "emittedModules": 5,
       "package": "@flighthq/lighting",
-      "refusedModules": 8,
-      "sourceModules": 13
+      "refusedModules": 9,
+      "sourceModules": 14
     },
     {
       "cppIncludePrefix": "flight/loader",
       "cppNamespace": "flight::loader",
       "emittedModules": 0,
       "package": "@flighthq/loader",
-      "refusedModules": 3,
-      "sourceModules": 3
+      "refusedModules": 4,
+      "sourceModules": 4
     },
     {
       "cppIncludePrefix": "flight/log",
@@ -497,8 +505,8 @@
       "cppNamespace": "flight::media",
       "emittedModules": 0,
       "package": "@flighthq/media",
-      "refusedModules": 8,
-      "sourceModules": 8
+      "refusedModules": 7,
+      "sourceModules": 7
     },
     {
       "cppIncludePrefix": "flight/mediasession",
@@ -609,8 +617,8 @@
       "cppNamespace": "flight::path_boolean",
       "emittedModules": 0,
       "package": "@flighthq/path-boolean",
-      "refusedModules": 11,
-      "sourceModules": 11
+      "refusedModules": 10,
+      "sourceModules": 10
     },
     {
       "cppIncludePrefix": "flight/path_formats",
@@ -623,10 +631,10 @@
     {
       "cppIncludePrefix": "flight/permissions",
       "cppNamespace": "flight::permissions",
-      "emittedModules": 1,
+      "emittedModules": 0,
       "package": "@flighthq/permissions",
       "refusedModules": 3,
-      "sourceModules": 4
+      "sourceModules": 3
     },
     {
       "cppIncludePrefix": "flight/physics2d",
@@ -671,9 +679,9 @@
     {
       "cppIncludePrefix": "flight/platform",
       "cppNamespace": "flight::platform",
-      "emittedModules": 0,
+      "emittedModules": 3,
       "package": "@flighthq/platform",
-      "refusedModules": 3,
+      "refusedModules": 0,
       "sourceModules": 3
     },
     {
@@ -737,16 +745,16 @@
       "cppNamespace": "flight::render_gl",
       "emittedModules": 0,
       "package": "@flighthq/render-gl",
-      "refusedModules": 34,
-      "sourceModules": 34
+      "refusedModules": 33,
+      "sourceModules": 33
     },
     {
       "cppIncludePrefix": "flight/render_wgpu",
       "cppNamespace": "flight::render_wgpu",
       "emittedModules": 0,
       "package": "@flighthq/render-wgpu",
-      "refusedModules": 31,
-      "sourceModules": 31
+      "refusedModules": 33,
+      "sourceModules": 33
     },
     {
       "cppIncludePrefix": "flight/requirements",
@@ -785,16 +793,16 @@
       "cppNamespace": "flight::scene2d_dom",
       "emittedModules": 2,
       "package": "@flighthq/scene2d-dom",
-      "refusedModules": 32,
-      "sourceModules": 34
+      "refusedModules": 31,
+      "sourceModules": 33
     },
     {
       "cppIncludePrefix": "flight/scene2d_formats",
       "cppNamespace": "flight::scene2d_formats",
       "emittedModules": 1,
       "package": "@flighthq/scene2d-formats",
-      "refusedModules": 22,
-      "sourceModules": 23
+      "refusedModules": 26,
+      "sourceModules": 27
     },
     {
       "cppIncludePrefix": "flight/scene2d_gl",
@@ -833,16 +841,16 @@
       "cppNamespace": "flight::scene3d_formats",
       "emittedModules": 3,
       "package": "@flighthq/scene3d-formats",
-      "refusedModules": 24,
-      "sourceModules": 27
+      "refusedModules": 37,
+      "sourceModules": 40
     },
     {
       "cppIncludePrefix": "flight/scene3d_gl",
       "cppNamespace": "flight::scene3d_gl",
       "emittedModules": 1,
       "package": "@flighthq/scene3d-gl",
-      "refusedModules": 65,
-      "sourceModules": 66
+      "refusedModules": 67,
+      "sourceModules": 68
     },
     {
       "cppIncludePrefix": "flight/scene3d_resources",
@@ -857,8 +865,8 @@
       "cppNamespace": "flight::scene3d_wgpu",
       "emittedModules": 2,
       "package": "@flighthq/scene3d-wgpu",
-      "refusedModules": 47,
-      "sourceModules": 49
+      "refusedModules": 48,
+      "sourceModules": 50
     },
     {
       "cppIncludePrefix": "flight/screen",
@@ -879,9 +887,9 @@
     {
       "cppIncludePrefix": "flight/sensors",
       "cppNamespace": "flight::sensors",
-      "emittedModules": 0,
+      "emittedModules": 3,
       "package": "@flighthq/sensors",
-      "refusedModules": 3,
+      "refusedModules": 0,
       "sourceModules": 3
     },
     {
@@ -895,10 +903,10 @@
     {
       "cppIncludePrefix": "flight/shape",
       "cppNamespace": "flight::shape",
-      "emittedModules": 0,
+      "emittedModules": 1,
       "package": "@flighthq/shape",
       "refusedModules": 19,
-      "sourceModules": 19
+      "sourceModules": 20
     },
     {
       "cppIncludePrefix": "flight/shape_formats",
@@ -935,9 +943,9 @@
     {
       "cppIncludePrefix": "flight/signals",
       "cppNamespace": "flight::signals",
-      "emittedModules": 3,
+      "emittedModules": 5,
       "package": "@flighthq/signals",
-      "refusedModules": 7,
+      "refusedModules": 5,
       "sourceModules": 10
     },
     {
@@ -953,8 +961,8 @@
       "cppNamespace": "flight::skeleton2d_formats",
       "emittedModules": 1,
       "package": "@flighthq/skeleton2d-formats",
-      "refusedModules": 9,
-      "sourceModules": 10
+      "refusedModules": 14,
+      "sourceModules": 15
     },
     {
       "cppIncludePrefix": "flight/skeleton3d",
@@ -1039,10 +1047,10 @@
     {
       "cppIncludePrefix": "flight/swf",
       "cppNamespace": "flight::swf",
-      "emittedModules": 1,
+      "emittedModules": 3,
       "package": "@flighthq/swf",
-      "refusedModules": 14,
-      "sourceModules": 15
+      "refusedModules": 16,
+      "sourceModules": 19
     },
     {
       "cppIncludePrefix": "flight/text",
@@ -1087,9 +1095,9 @@
     {
       "cppIncludePrefix": "flight/textsegment",
       "cppNamespace": "flight::textsegment",
-      "emittedModules": 1,
+      "emittedModules": 2,
       "package": "@flighthq/textsegment",
-      "refusedModules": 6,
+      "refusedModules": 5,
       "sourceModules": 7
     },
     {
@@ -1097,8 +1105,8 @@
       "cppNamespace": "flight::textshaper",
       "emittedModules": 0,
       "package": "@flighthq/textshaper",
-      "refusedModules": 11,
-      "sourceModules": 11
+      "refusedModules": 10,
+      "sourceModules": 10
     },
     {
       "cppIncludePrefix": "flight/textshaper_canvas",
@@ -1191,10 +1199,10 @@
     {
       "cppIncludePrefix": "flight/types",
       "cppNamespace": "flight::types",
-      "emittedModules": 666,
+      "emittedModules": 668,
       "package": "@flighthq/types",
-      "refusedModules": 311,
-      "sourceModules": 977
+      "refusedModules": 325,
+      "sourceModules": 993
     },
     {
       "cppIncludePrefix": "flight/updater",
@@ -1248,13 +1256,13 @@
   "source": {
     "package": "@flighthq/sdk",
     "repository": "https://github.com/flighthq/flight",
-    "revision": "1274ec5c923947dc64d5ffedcbd8169fc758cd9f",
+    "revision": "903f3289590358eacc20698525e6982da2ab0e9d",
     "version": "0.5.0"
   },
   "summary": {
-    "packages": 154,
-    "emittedModules": 950,
-    "refusedModules": 1901,
-    "sourceModules": 2851
+    "packages": 155,
+    "emittedModules": 985,
+    "refusedModules": 1915,
+    "sourceModules": 2900
   }
 }
