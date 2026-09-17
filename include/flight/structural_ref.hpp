@@ -16,6 +16,7 @@
 #include <utility>
 
 #include <flight/any.hpp>
+#include <flight/attachment.hpp>
 #include <flight/reference.hpp>
 #include <flight/symbol.hpp>
 
@@ -162,22 +163,34 @@ class RowOwner {
     return named_cells_.contains(std::string(key));
   }
 
+  // Symbol-keyed properties live in the object's one attachment rather than in this owner, so a
+  // computed-symbol write through a row and a `Record<Symbol, T>` view of the same object are the
+  // same entry rather than two entries that happen to agree.
   [[nodiscard]] virtual const std::any* dynamic_value(const Symbol& key) const {
-    const auto found = dynamic_values_.find(key.identity());
-    return found == dynamic_values_.end() ? nullptr : &found->second;
+    return attachment_->find(key);
   }
 
   virtual void set_dynamic_value(const Symbol& key, std::any value) {
-    dynamic_values_.insert_or_assign(key.identity(), std::move(value));
+    attachment_->assign(key, std::move(value));
   }
 
   [[nodiscard]] virtual bool has_dynamic_value(const Symbol& key) const {
-    return dynamic_values_.contains(key.identity());
+    return attachment_->contains(key);
+  }
+
+  [[nodiscard]] const std::shared_ptr<SymbolAttachment>& attachment() const noexcept {
+    return attachment_;
+  }
+
+  // Adopts the attachment an object identity resolves to. A row with no object keeps the private
+  // one it was constructed with.
+  void adopt_attachment(std::shared_ptr<SymbolAttachment> attachment) {
+    if (attachment) attachment_ = std::move(attachment);
   }
 
  private:
+  std::shared_ptr<SymbolAttachment> attachment_{std::make_shared<SymbolAttachment>()};
   std::unordered_map<std::string, std::shared_ptr<RowCell>> named_cells_;
-  std::unordered_map<const void*, std::any> dynamic_values_;
 };
 
 namespace detail {
@@ -327,6 +340,7 @@ template <typename Object>
   }
   sweep_owner_registry(registry);
   auto owner = std::make_shared<NativeRowOwner<Object>>(object);
+  owner->adopt_attachment(attachment_for(std::static_pointer_cast<void>(object)));
   bind_generated_row_members(*owner, object);
   registry.entries.emplace(key, OwnerRegistryEntry{std::static_pointer_cast<void>(object), owner});
   return owner;

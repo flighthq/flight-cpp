@@ -15,6 +15,7 @@
 #include <vector>
 
 #include <flight/array.hpp>
+#include <flight/attachment.hpp>
 #include <flight/string.hpp>
 #include <flight/symbol.hpp>
 
@@ -135,6 +136,19 @@ class Record {
 
   Record() : storage_(std::make_shared<Storage>()) {}
 
+  // A view onto an object's attached symbol properties, resolved by object identity. This is what
+  // an erased `flight::Ref<void>` cast to `Record<Symbol, T>` means: nothing is copied, and every
+  // other view of the same object -- a typed row, a structural row, `flight::AttachedProperties` --
+  // reads and writes the same entries.
+  //
+  // A view is a keyed store rather than an enumerable collection. `begin()` and `end()` are empty,
+  // because symbol-keyed properties are not enumerable in JavaScript and `enumerable_keys` and
+  // `enumerable_entries` already exclude them from an ordinary record for the same reason;
+  // `size()` and `empty()` report what the store actually holds.
+  explicit Record(const std::shared_ptr<void>& object)
+    requires std::same_as<Key, Symbol>
+      : attachment_(attachment_for(object)), storage_(std::make_shared<Storage>()) {}
+
   Record(std::initializer_list<Entry> entries) : Record() {
     for (const auto& [key, value] : entries) set(key, value);
   }
@@ -156,18 +170,43 @@ class Record {
     return const_iterator(storage_->entries.cend());
   }
 
+  // A clone is always ordinary storage: cloning an attached view produces a detached copy of the
+  // entries rather than a second view onto the object.
   [[nodiscard]] Record clone() const {
     Record result;
+    if (attachment_) {
+      for (const auto& entry : attachment_->entries()) {
+        result.set(entry.key, std::any_cast<const Value&>(entry.value));
+      }
+      return result;
+    }
     *result.storage_ = *storage_;
     return result;
   }
 
-  [[nodiscard]] bool empty() const noexcept { return storage_->entries.empty(); }
-  [[nodiscard]] const void* identity() const noexcept { return storage_.get(); }
-  [[nodiscard]] size_type size() const noexcept { return storage_->entries.size(); }
+  [[nodiscard]] bool empty() const noexcept {
+    return attachment_ ? attachment_->empty() : storage_->entries.empty();
+  }
 
+  [[nodiscard]] const void* identity() const noexcept {
+    return attachment_ ? static_cast<const void*>(attachment_.get()) : storage_.get();
+  }
+
+  [[nodiscard]] size_type size() const noexcept {
+    return attachment_ ? attachment_->size() : storage_->entries.size();
+  }
+
+  // An absent result is "no such entry". A present entry whose value is itself absent -- an
+  // `std::optional<T>` holding nothing -- is a different answer, and both survive this call.
   template <typename LookupKey>
   [[nodiscard]] std::optional<Value> get(const LookupKey& key) const {
+    if constexpr (attachable) {
+      if (attachment_) {
+        const auto* stored = attachment_->find(attachment_key(key));
+        if (!stored) return std::nullopt;
+        return std::any_cast<const Value&>(*stored);
+      }
+    }
     const auto entry = find(detail::canonical_record_key(key));
     if (entry == storage_->entries.cend()) return std::nullopt;
     return entry->entry.second;
@@ -175,11 +214,17 @@ class Record {
 
   template <typename LookupKey>
   [[nodiscard]] bool has(const LookupKey& key) const {
+    if constexpr (attachable) {
+      if (attachment_) return attachment_->contains(attachment_key(key));
+    }
     return find(detail::canonical_record_key(key)) != storage_->entries.cend();
   }
 
   template <typename LookupKey>
   bool erase(const LookupKey& key) const {
+    if constexpr (attachable) {
+      if (attachment_) return attachment_->remove(attachment_key(key));
+    }
     const auto entry = find_mutable(detail::canonical_record_key(key));
     if (entry == storage_->entries.end()) return false;
     storage_->entries.erase(entry);
@@ -187,6 +232,12 @@ class Record {
   }
 
   Record& set(Key key, Value value) const {
+    if constexpr (attachable) {
+      if (attachment_) {
+        attachment_->assign(key, std::any(std::move(value)));
+        return const_cast<Record&>(*this);
+      }
+    }
     auto canonical = detail::canonical_record_key(key);
     const auto existing = find_mutable(canonical);
     if (existing != storage_->entries.end()) {
@@ -218,10 +269,22 @@ class Record {
   }
 
   [[nodiscard]] friend bool operator==(const Record& left, const Record& right) noexcept {
+    if (left.attachment_ || right.attachment_) return left.attachment_ == right.attachment_;
     return left.storage_ == right.storage_;
   }
 
  private:
+  // Only a symbol-keyed record can be a view onto an object's attached properties; every other key
+  // domain compiles the attachment branch out entirely.
+  static constexpr bool attachable = std::same_as<Key, Symbol>;
+
+  template <typename LookupKey>
+  [[nodiscard]] static const Symbol& attachment_key(const LookupKey& key) {
+    static_assert(std::same_as<std::remove_cvref_t<LookupKey>, Symbol>,
+                  "an attached symbol-property view is keyed by flight::Symbol");
+    return key;
+  }
+
   [[nodiscard]] auto find_mutable(const detail::CanonicalRecordKey& key) const {
     return std::find_if(storage_->entries.begin(), storage_->entries.end(), [&](const StoredEntry& entry) {
       return detail::same_record_key(entry.canonical_key, key);
@@ -248,6 +311,7 @@ class Record {
     return storage_->entries.end();
   }
 
+  std::shared_ptr<SymbolAttachment> attachment_;
   std::shared_ptr<Storage> storage_;
 };
 

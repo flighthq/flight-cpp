@@ -706,6 +706,31 @@ void test_attached_properties() {
   check(!flight::attached_properties(flight::Ref<TestReference>()),
         "an absent reference has no attached properties");
 
+  // The spelling the compiler already emits for `Record<symbol, T | undefined>` over an erased
+  // object, and the reason the three views must be one store rather than three that agree.
+  const flight::Record<flight::Symbol, std::optional<flight::Ref<TestReference>>> projected(erased);
+  projected.set(key, std::optional<flight::Ref<TestReference>>());
+  check(projected.has(key) && projected.get(key).has_value() && !projected.get(key)->has_value(),
+        "an entry present with an absent value is not the same as no entry at all");
+  projected.set(other, std::optional<flight::Ref<TestReference>>(object));
+  check(*projected.get(other) == object, "a record view stores and returns the object it was given");
+  check(flight::attached_properties(object).has(other),
+        "a write through the record view is visible through the attached-property view");
+  check(projected.begin() == projected.end(),
+        "an attached view is not enumerable, because symbol properties are not enumerable");
+  const auto detached = projected.clone();
+  check(detached.has(other) && detached.identity() != projected.identity(),
+        "cloning an attached view copies its entries into ordinary storage");
+  detached.erase(other);
+  check(projected.has(other), "a clone is detached: erasing from it does not touch the object");
+  check(projected.erase(other) && !projected.has(other),
+        "an entry removed through the record view is gone from the shared store");
+
+  const flight::StructuralRef<flight::RowOf<TestReference>> structural(object);
+  flight::row_set(structural, other, std::optional<flight::Ref<TestReference>>(object));
+  check(projected.has(other) && *projected.get(other) == object,
+        "a computed-symbol write through a structural row is the same entry the record view reads");
+
   // A row keeps its object alive, and the owner does not: dropping every reference releases both.
   const void* identity = nullptr;
   {

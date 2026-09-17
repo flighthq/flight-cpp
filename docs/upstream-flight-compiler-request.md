@@ -78,8 +78,17 @@ modules, with refusals from 1,755 to 1,739 and direct refusals from 979 to 960. 
   - *No copying.* Entries live in the owner, not in the object's storage, and nothing copies the object or its
     properties.
 
-  flight-compiler should elect the final spelling. `flight/particles/particle_emitter_signals.hpp` is the failing
-  header this exists for.
+  **The spelling this compiler already emits works as-is.** `particle_emitter_signals.hpp` casts an erased
+  `flight::Ref<void>` to `flight::Record<flight::Symbol, std::optional<flight::Ref<ParticleEmitterSignals>>>` and then
+  uses presence-bearing `get`/`set`. That construction is now supported: it produces a view onto the object's
+  attached properties rather than a copy, `get` returns `std::optional<Value>` so a missing entry and a present
+  `std::optional` holding nothing are different answers, and the view shares one store with `AttachedProperties` and
+  with a row's computed-symbol accessors because all three resolve the same attachment by object identity. **That
+  header compiles at this pin**, so the compiler need not change anything unless it prefers a different spelling.
+
+  Independent compilation of the complete SDL inventory is 1,088 of 1,161 headers. Of the 73 failures, 44 are only
+  `SDL3/SDL_video.h: No such file or directory` -- SDL 3 development files are absent from the environment this audit
+  ran in -- leaving 29 genuine generated-code defects, none of them in the contracts added this round.
 
 ### Checked against flight-cpp and deliberately not bound
 

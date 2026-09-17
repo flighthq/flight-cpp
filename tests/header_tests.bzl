@@ -76,4 +76,5 @@ _PUBLIC_HEADERS = [
     ("canvas_2d", 50),
     ("any", 51),
     ("structured_clone", 52),
+    ("attachment", 53),
 ]

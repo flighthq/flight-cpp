@@ -34,6 +34,7 @@ set(
   array
   array_buffer
   array_buffer_view
+  attachment
   audio_buffer
   base64
   blob
