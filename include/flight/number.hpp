@@ -4,6 +4,7 @@
 #include <bit>
 #include <charconv>
 #include <cmath>
+#include <cstdio>
 #include <cstddef>
 #include <cstdint>
 #include <limits>
@@ -139,6 +140,75 @@ inline String number_to_string(double value, double radix_value = 10.0) {
   std::string result = detail::finite_number_to_radix(magnitude, radix);
   if (negative) result.insert(result.begin(), '-');
   return String::from_utf8(result);
+}
+
+// Number.prototype.toFixed. The rounding is done on the double's exact decimal expansion rather
+// than by asking printf for the final precision, because the two disagree: printf rounds a tie to
+// even, and ECMAScript rounds it away from zero. `(2.5).toFixed(0)` is "3" here, as it is in
+// JavaScript, and `(1.005).toFixed(2)` is still "1.00" because 1.005 is really 1.00499999999999989.
+inline String number_to_fixed(double value, double digits_value = 0.0) {
+  const double digits = std::isnan(digits_value) ? 0.0 : std::trunc(digits_value);
+  if (!(digits >= 0.0) || digits > 100.0) {
+    throw std::range_error("flight::number_to_fixed digits must be between 0 and 100");
+  }
+  if (std::isnan(value)) return String("NaN");
+
+  // The sign comes from the comparison, not from the sign bit: negative zero has no sign here,
+  // while a negative value that rounds to zero keeps one, exactly as the specification states.
+  const bool negative = value < 0.0;
+  // fabs rather than negation: negative zero has no sign in this result, and printing it
+  // through the expansion below would reintroduce one.
+  const double magnitude = std::fabs(value);
+  if (!(magnitude < 1e21)) return number_to_string(value);
+
+  const auto fraction_digits = static_cast<std::size_t>(digits);
+
+  // A double under 1e21 has at most 1074 fractional digits, so this expansion is exact rather than
+  // rounded, which is what makes the tie above decidable.
+  std::string exact(1200, '\0');
+  const int written = std::snprintf(exact.data(), exact.size(), "%.*f", 1100, magnitude);
+  if (written <= 0) throw std::range_error("flight::number_to_fixed could not expand the value");
+  exact.resize(static_cast<std::size_t>(written));
+
+  const auto separator = exact.find('.');
+  std::string integer_text = exact.substr(0, separator);
+  std::string fraction_text =
+      separator == std::string::npos ? std::string() : exact.substr(separator + 1);
+
+  bool carry = false;
+  if (fraction_text.size() > fraction_digits) {
+    carry = fraction_text[fraction_digits] >= '5';
+    fraction_text.resize(fraction_digits);
+  } else {
+    fraction_text.append(fraction_digits - fraction_text.size(), '0');
+  }
+
+  for (auto digit = fraction_text.rbegin(); carry && digit != fraction_text.rend(); ++digit) {
+    if (*digit == '9') {
+      *digit = '0';
+    } else {
+      ++*digit;
+      carry = false;
+    }
+  }
+  for (auto digit = integer_text.rbegin(); carry && digit != integer_text.rend(); ++digit) {
+    if (*digit == '9') {
+      *digit = '0';
+    } else {
+      ++*digit;
+      carry = false;
+    }
+  }
+  if (carry) integer_text.insert(integer_text.begin(), '1');
+
+  std::string result;
+  if (negative) result.push_back('-');
+  result.append(integer_text);
+  if (!fraction_text.empty()) {
+    result.push_back('.');
+    result.append(fraction_text);
+  }
+  return String(result);
 }
 
 inline double parse_int(const String& input, double radix_value = 0.0) {

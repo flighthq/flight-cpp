@@ -839,6 +839,62 @@ void test_settled_task_arms() {
         "a pending settlement is neither arm");
 }
 
+void test_number_to_fixed() {
+  // Every expectation here was read out of Node, not derived from the implementation. The two that
+  // matter are the tie cases, where printf and ECMAScript disagree: printf rounds a tie to even and
+  // the language rounds it away from zero.
+  struct FixedCase final {
+    double value;
+    double digits;
+    const char* expected;
+  };
+  const std::array<FixedCase, 21> cases{{
+      {1.005, 2, "1.00"},          {2.5, 0, "3"},
+      {0.5, 0, "1"},               {1.45, 1, "1.4"},
+      {-1.5, 0, "-2"},             {0.0, 2, "0.00"},
+      {-0.0, 2, "0.00"},           {1e21, 2, "1e+21"},
+      {123.456, 2, "123.46"},      {0.000001, 2, "0.00"},
+      {1.25, 1, "1.3"},            {1.35, 1, "1.4"},
+      {-2.5, 0, "-3"},             {9.995, 2, "9.99"},
+      {1e-7, 3, "0.000"},          {1234.5678, 3, "1234.568"},
+      {100.0, 0, "100"},           {0.1, 20, "0.10000000000000000555"},
+      {-1e-7, 2, "-0.00"},         {9.99, 1, "10.0"},
+      {99.99, 1, "100.0"},
+  }};
+  bool all_match = true;
+  for (const auto& entry : cases) {
+    if (flight::number_to_fixed(entry.value, entry.digits) != flight::String(entry.expected)) {
+      all_match = false;
+      std::cerr << "  toFixed(" << entry.value << ", " << entry.digits
+                << ") = " << flight::number_to_fixed(entry.value, entry.digits).to_utf8()
+                << ", expected " << entry.expected << "\n";
+    }
+  }
+  check(all_match, "number_to_fixed matches Number.prototype.toFixed, ties included");
+
+  check(flight::number_to_fixed(std::numeric_limits<double>::quiet_NaN(), 2) ==
+            flight::String("NaN"),
+        "toFixed reports NaN as NaN rather than formatting it");
+  check(flight::number_to_fixed(std::numeric_limits<double>::infinity(), 2) ==
+            flight::String("Infinity"),
+        "toFixed falls back to the number's own string above the fixed-notation range");
+
+  bool digits_rejected = false;
+  bool negative_digits_rejected = false;
+  try {
+    static_cast<void>(flight::number_to_fixed(1.0, 101.0));
+  } catch (const std::range_error&) {
+    digits_rejected = true;
+  }
+  try {
+    static_cast<void>(flight::number_to_fixed(1.0, -1.0));
+  } catch (const std::range_error&) {
+    negative_digits_rejected = true;
+  }
+  check(digits_rejected && negative_digits_rejected,
+        "toFixed rejects a digit count outside the range the language permits");
+}
+
 void test_any_domain() {
   const flight::Any absent;
   check(absent.is_undefined() && absent.type_of() == flight::String("undefined") &&
@@ -2469,6 +2525,7 @@ int main() {
   test_date();
   test_error();
   test_host();
+  test_number_to_fixed();
   test_any_domain();
   test_attached_properties();
   test_structured_clone();

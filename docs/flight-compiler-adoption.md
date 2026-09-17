@@ -16,11 +16,10 @@ refusals. The Canvas 2D contract, `structuredClone`, and the per-arm settled res
 `runtime external symbol binding plan is incomplete` family from 96 modules to 36; sixteen modules emit outright and
 the rest advanced to their next blocker, and none newly refuses.
 
-GCC 15.2 compiles **1,088 of the 1,161** emitted headers independently. Of the 73 failures, **44 are not
-generated-code defects at all**: they include `SDL3/SDL_video.h`, which is absent from the environment this audit ran
-in, so they say nothing about the emitted code. That leaves **29 genuine generated-code defects**, none of which
-involves the contracts added this round. `flight/particles/particle_emitter_signals.hpp` -- the single failing header
-the compiler's own audit named -- now compiles, because an erased `flight::Ref<void>` cast to
+GCC 15.2 compiles **1,131 of the 1,161** emitted headers independently, with SDL 3.4.2 installed and its include
+flags supplied through `CXXFLAGS`. All **30** failures are genuine generated-code defects and none of them involves
+the contracts added this round. `flight/particles/particle_emitter_signals.hpp` -- the single failing header the
+compiler's own audit named -- now compiles, because an erased `flight::Ref<void>` cast to
 `Record<Symbol, T | undefined>` is a supported view onto the object's attached properties.
 
 ## Downstream implementation
@@ -53,6 +52,7 @@ the compiler's own audit named -- now compiles, because an erased `flight::Ref<v
 | Open structural rows and proxies | Partial | Structural views reuse one `RowOwner` per source object. The generated member table installs one typed, presence-bearing cell for each reachable named field, while computed symbols retain distinct canonical identities. Writable, readonly, partial, and compatible merged projections share those cells. `make_structural_write_proxy` provides distinct identity, forwarding, pre-write interception, exception ordering, nested composition, and projection identity; a live compiler-emitted generic Entity proxy compiles and runs. Construction still needs an all-required-fields check, casts need whole-schema compatibility constraints, and `RowMerge` must validate every collision at schema instantiation rather than when a field is accessed. |
 | Conditional capability facets | Runtime implemented; compiler regression | `FacetRef`, lambda-based required `MemberPath`, `RequiredMemberFacet`, `ConditionalFacetRef`, and explicit `assume_conditional_facets` preserve one base reference and statically reject absent or optional paths. Native coverage passes, but the live compiler fixture currently forward-declares a generated alias as a struct before its `using` declaration. |
 | WeakMap, WeakSet, and erased typed views | Implemented runtime ABI | Default Flight-reference, closed-variant, and weakly recoverable Flight value policies are weak and identity-based. External policies use the specified weaken/lock/identity/hash/equal contract. Tests cover expiry, shared views, wrong tags, overwrite, and deletion. Host weak-key policies remain host-profile work. |
+| SDL host build at the current pin | Implemented | Flight `903f328` renames every `XBackend` generated record to `HostXProvider`; `src/host_sdl` and its headers follow that rename, and the SDL host build and its test suite pass again against SDL 3.4.2 with warnings as errors. `bindings/sdl-app.json` also binds `globalThis` to `flight::host_sdl::global_this`, a view onto the `document`, `navigator`, and `window` the profile already binds -- asserted by address in the host test, so it cannot silently become a second set of globals -- plus a process-wide store of erased named globals for the `globalThis as Record<string, unknown>` form. |
 | SDL host mechanics | Implemented | SDL lifecycle, events, monotonic clock, windows, GL contexts, and callback-owned WebGPU surfaces are packaged by CMake and Bazel; Vulkan remains CMake-only. Bazel pins and builds SDL 3.4.10 and keeps the manual host targets out of the dependency-free core sweep. `InputDispatcher` translates keyboard, text/IME, pointer, wheel, and standard-layout gamepad events into records shaped for Flight's synchronous input-ingress seam; windows expose text-input and relative-pointer controls. `GlCanvas` and `WebGl2Context` share context/window lifetime and supply native procedure lookup and presentation. Connecting those records to generated `InputIngressSink` remains a thin adapter after its refused pointer dependency emits. |
 | SDL/OpenGL binding profile | Implemented host ABI | The versioned profile maps the canvas, WebGL2 context, GL objects, context options, active-uniform metadata, image sources, and the anisotropy, float-buffer/filtering, and compressed-texture extension domains to concrete `host_sdl` types. GL object and image carriers preserve shared identity; image sources supply the weak-key policy used by Flight texture caches. The context forwards Flight's buffer, texture, compressed-texture, framebuffer, readback, shader/program, state, query, draw, and uniform command surface. Its closed `getParameter` carrier preserves queried object identity, and its extension result handles feature detection without `any`. The live compiler fixture compiles exact calls in each category, and the SDL tween exercises resource allocation, texture upload, framebuffer readback, state queries, shader drawing, and presentation through the same canvas/context seam. Populating the generated Flight `GlContext` callable record remains blocked on compiler method-type emission. |
 | SDL native image-source profile | Implemented host ABI | `Flight::HostSdlImage` and `flighthq/flight-cpp/sdl-image/1` give GL and WebGPU one decoded-RGBA owner, source-kind metadata, and a cohesive weak-key policy. The DOM image/video/bitmap/offscreen/SVG/frame type names map to that carrier without adding a Canvas renderer. Browser constructor values and external `instanceof` lowering remain explicit compiler/provider boundaries. |
@@ -167,8 +167,10 @@ the compiler's own audit named -- now compiles, because an erased `flight::Ref<v
 
 ## Compiler and host work still gating the SDK
 
-At `fbfcc11` the SDL profile leaves 29 genuine generated-code failures out of 1,161 emitted headers, none of them a
-missing flight-cpp runtime symbol: five conversion failures, four unresolved calls, four unparsable expressions,
+At `fbfcc11` the SDL profile leaves 30 genuine generated-code failures out of 1,161 emitted headers. One of them was
+a missing flight-cpp runtime symbol and is now supplied: `canvas_source_mode_compositing.hpp` emits `a.to_fixed(3)`
+on a `double`, and `flight::number_to_fixed` now implements `Number.prototype.toFixed` exactly, tie behaviour
+included. The rest are compiler-owned: five conversion failures, four unresolved calls, four unparsable expressions,
 three undeclared `Pick` utilities, three non-scalar reference conversions, three uncallable signal subscriptions, two
 `auto` parameters in a context that does not permit them, and a tail of single defects in lighting, media, swf, and
 textbidi. The paragraph below records the earlier `9f6ce1c` breakdown and is historical.

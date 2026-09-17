@@ -109,9 +109,11 @@ modules, with refusals from 1,755 to 1,739 and direct refusals from 979 to 960. 
   with a row's computed-symbol accessors because all three resolve the same attachment by object identity. **That
   header compiles at this pin**, so the compiler need not change anything unless it prefers a different spelling.
 
-  Independent compilation of the complete SDL inventory is 1,088 of 1,161 headers. Of the 73 failures, 44 are only
-  `SDL3/SDL_video.h: No such file or directory` -- SDL 3 development files are absent from the environment this audit
-  ran in -- leaving 29 genuine generated-code defects, none of them in the contracts added this round.
+  Independent compilation of the complete SDL inventory is **1,131 of 1,161 headers** with SDL 3.4.2 present and its
+  include flags supplied through `CXXFLAGS`. All 30 failures are genuine generated-code defects and none is in the
+  contracts added this round: three each in clipboard, connectivity, geolocation, keyboard, sensors, and shell, two
+  each in bitmap and image, and one each in effects-canvas, lighting, media, scene2d-canvas, swf, textbidi, types,
+  and video.
 
 ### Checked against flight-cpp and deliberately not bound
 
@@ -119,12 +121,13 @@ modules, with refusals from 1,755 to 1,739 and direct refusals from 979 to 960. 
   JavaScript source text at runtime. flight-cpp has no evaluator and will not grow one to satisfy a test helper, so
   there is no target to name. This is a deliberate absence, not an oversight; the coverage plan's "check each against
   flight-cpp before adding a table entry" is answered "no target exists".
-- **`globalThis[value]`** (five modules) is only ever reached as `globalThis.document` and `globalThis.navigator`.
-  Those members are host-profile values -- `bindings/sdl-app.json` already binds `document` and `navigator` to
-  `flight::host_sdl` objects -- so `globalThis` belongs in that profile as an object whose members forward to them,
-  not in the portable runtime, which has no global scope to expose. It is not bound in this checkout because SDL 3
-  development files are not available in this working environment, so the host header could not be compiled or
-  tested here, and shipping an unverified host binding would be worse than naming the gap.
+- **`globalThis[value]` is now bound**, in `bindings/sdl-app.json`, where it belongs: its members are host values the
+  profile already binds, and the portable runtime has no global scope to expose. `flight::host_sdl::global_this` is a
+  view onto the globals this host already has rather than a second set of them -- `global_this.document` *is* the
+  `Document` the `document` binding names, asserted by address in the host test, so a listener registered through one
+  is seen through the other. Source that writes `globalThis as Record<string, unknown>` gets `named_globals()`, one
+  process-wide store of erased named values shared by every projection. Two of the five modules clear on this alone;
+  the other three also need the erased value or the browser-image constructor values.
 
 ### Compiler-side defects this round surfaced
 
@@ -133,9 +136,16 @@ modules, with refusals from 1,755 to 1,739 and direct refusals from 979 to 960. 
   `cpp-unresolved-type-placeholder`, although TypeScript types both properties `number` and the same expression
   emits correctly when returned directly. Reproduced against the Canvas 2D binding at `fbfcc11`; the Canvas 2D
   oracle works around it by returning the literal instead of binding it.
-- **`Math.fround` and `Math.SQRT2` have no ambient member binding**, and five modules now stop there.
-  `flight::fround` exists in `flight/math.hpp` and has since the numeric-conversion contract landed, so these are
-  two missing rows in `cppFlightRuntimeAmbientMemberBindings`, not missing runtime work.
+- **Three ambient members have no C++ binding row.** `Math.fround` and `Math.SQRT2` stop five modules, and
+  `flight::fround` has existed in `flight/math.hpp` since the numeric-conversion contract landed, so those are two
+  missing rows in `cppFlightRuntimeAmbientMemberBindings` rather than missing runtime work. `Number.prototype.toFixed`
+  was the third, and it did need runtime work: `flight/effects_canvas/canvas_source_mode_compositing.hpp` emits
+  `a.to_fixed(3)` on a `double`, which cannot compile. **`flight::number_to_fixed` now exists** and matches
+  `Number.prototype.toFixed` including the tie cases, where printf and the language disagree -- printf rounds a tie
+  to even and ECMAScript rounds it away from zero, so `(2.5).toFixed(0)` is `"3"` here as it is in JavaScript, while
+  `(1.005).toFixed(2)` is still `"1.00"` because 1.005 is really 1.00499999999999989. Every expectation in its test
+  was read out of Node. A `'number.toFixed': { kind: 'method', targetName: 'flight::number_to_fixed' }` row is all
+  that remains; three SDK modules call it.
 - **`captured referent mutation of ctx requires a shared C++ reference representation`** now blocks three
   Canvas 2D modules. A bound context is emitted as a by-value parameter, so a closure that captures it and writes an
   attribute cannot be represented. The runtime side is already shared -- copies of a context share one state stack,
