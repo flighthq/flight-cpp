@@ -36,7 +36,7 @@ struct Voice final {
 }
 
 void configure_voice(
-    flight::types::AudioDeviceBackend& backend,
+    flight::types::HostAudioDeviceProvider& backend,
     double device,
     const flight::AudioBuffer& decoded,
     Voice& voice,

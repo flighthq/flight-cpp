@@ -70,8 +70,8 @@ SdkAudioDeviceBackend::SdkAudioDeviceBackend(SdkAudioDeviceBackend&&) noexcept =
 
 SdkAudioDeviceBackend& SdkAudioDeviceBackend::operator=(SdkAudioDeviceBackend&&) noexcept = default;
 
-flight::types::AudioDeviceBackend SdkAudioDeviceBackend::backend() const {
-  flight::types::AudioDeviceBackend result;
+flight::types::HostAudioDeviceProvider SdkAudioDeviceBackend::backend() const {
+  flight::types::HostAudioDeviceProvider result;
   const auto state = state_;
   result.entity_runtime_key = std::nullopt;
   result.create_buffer = [state](

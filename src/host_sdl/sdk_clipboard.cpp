@@ -10,8 +10,8 @@
 
 namespace flight::host_sdl {
 
-flight::types::ClipboardTextBackend SdkClipboardTextBackend::backend() const {
-  flight::types::ClipboardTextBackend result;
+flight::types::HostClipboardTextProvider SdkClipboardTextBackend::backend() const {
+  flight::types::HostClipboardTextProvider result;
   result.entity_runtime_key = std::nullopt;
   result.clear = [] {
     return flight::Task<bool>::resolve(SDL_ClearClipboardData());

@@ -3,7 +3,7 @@
 #include <flight/host_sdl/export.hpp>
 
 namespace flight::types {
-struct PlatformBackend;
+struct HostPlatformProvider;
 }
 
 namespace flight::host_sdl {
@@ -12,7 +12,7 @@ namespace flight::host_sdl {
 // fields SDL cannot report retain the empty/unknown sentinels required by PlatformInfo.
 class FLIGHT_HOST_SDL_SDK_PLATFORM_API SdkPlatformBackend final {
  public:
-  [[nodiscard]] flight::types::PlatformBackend backend() const;
+  [[nodiscard]] flight::types::HostPlatformProvider backend() const;
 };
 
 } // namespace flight::host_sdl

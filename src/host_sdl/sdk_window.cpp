@@ -92,9 +92,9 @@ SdkWindowBackend::SdkWindowBackend(SdkWindowBackend&&) noexcept = default;
 
 SdkWindowBackend& SdkWindowBackend::operator=(SdkWindowBackend&&) noexcept = default;
 
-flight::types::ApplicationVisibilityBackend SdkWindowBackend::visibility_backend() const {
+flight::types::HostApplicationVisibilityProvider SdkWindowBackend::visibility_backend() const {
   if (state_ == nullptr) throw std::logic_error("moved-from SDL SDK window backend");
-  flight::types::ApplicationVisibilityBackend result;
+  flight::types::HostApplicationVisibilityProvider result;
   const auto state = state_;
   result.is_visible = [state] {
     SDL_Window* window = SDL_GetWindowFromID(state->window_id);
@@ -105,9 +105,9 @@ flight::types::ApplicationVisibilityBackend SdkWindowBackend::visibility_backend
   return result;
 }
 
-flight::types::FullscreenBackend SdkWindowBackend::fullscreen_backend() const {
+flight::types::HostFullscreenProvider SdkWindowBackend::fullscreen_backend() const {
   if (state_ == nullptr) throw std::logic_error("moved-from SDL SDK window backend");
-  flight::types::FullscreenBackend result;
+  flight::types::HostFullscreenProvider result;
   const auto state = state_;
   result.exit = [state] {
     const SDL_WindowID id = state->fullscreen_window_id.value_or(state->window_id);
@@ -138,9 +138,9 @@ flight::Ref<flight::types::FullscreenTargetHandle> SdkWindowBackend::fullscreen_
   return target;
 }
 
-flight::types::InputDropFileBackend SdkWindowBackend::input_drop_file_backend() const {
+flight::types::HostInputDropFileProvider SdkWindowBackend::input_drop_file_backend() const {
   if (state_ == nullptr) throw std::logic_error("moved-from SDL SDK window backend");
-  flight::types::InputDropFileBackend result;
+  flight::types::HostInputDropFileProvider result;
   result.entity_runtime_key = std::nullopt;
   const auto state = state_;
   result.subscribe = [state](
@@ -163,9 +163,9 @@ flight::types::InputDropFileBackend SdkWindowBackend::input_drop_file_backend() 
   return result;
 }
 
-flight::types::InputFocusBackend SdkWindowBackend::input_focus_backend() const {
+flight::types::HostInputFocusProvider SdkWindowBackend::input_focus_backend() const {
   if (state_ == nullptr) throw std::logic_error("moved-from SDL SDK window backend");
-  flight::types::InputFocusBackend result;
+  flight::types::HostInputFocusProvider result;
   result.entity_runtime_key = std::nullopt;
   const auto state = state_;
   result.subscribe = [state](
@@ -190,9 +190,9 @@ flight::types::InputFocusBackend SdkWindowBackend::input_focus_backend() const {
   return result;
 }
 
-flight::types::InputPointerLockBackend SdkWindowBackend::input_pointer_lock_backend() const {
+flight::types::HostInputPointerLockProvider SdkWindowBackend::input_pointer_lock_backend() const {
   if (state_ == nullptr) throw std::logic_error("moved-from SDL SDK window backend");
-  flight::types::InputPointerLockBackend result;
+  flight::types::HostInputPointerLockProvider result;
   result.entity_runtime_key = std::nullopt;
   const auto state = state_;
   result.exit = [state] {
@@ -236,9 +236,9 @@ flight::types::InputPointerLockBackend SdkWindowBackend::input_pointer_lock_back
   return result;
 }
 
-flight::types::InputTargetBackend SdkWindowBackend::input_target_backend() const {
+flight::types::HostInputTargetProvider SdkWindowBackend::input_target_backend() const {
   if (state_ == nullptr) throw std::logic_error("moved-from SDL SDK window backend");
-  flight::types::InputTargetBackend result;
+  flight::types::HostInputTargetProvider result;
   result.entity_runtime_key = std::nullopt;
   const auto state = state_;
   result.prepare = [state](flight::Ref<flight::types::InputTargetHandle> target) {

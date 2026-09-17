@@ -785,11 +785,11 @@ int main() {
       pointer_unlock->reason == flight::String("ok"),
       "SDL pointer-lock exit did not return the generated success outcome");
 
-  flight::types::ApplicationVisibilityBackend expired_visibility;
-  flight::types::DeviceBackend expired_device;
-  flight::types::FullscreenBackend expired_fullscreen;
-  flight::types::SoftKeyboardInfoBackend expired_keyboard_info;
-  flight::types::SoftKeyboardVisibilityBackend expired_keyboard_visibility;
+  flight::types::HostApplicationVisibilityProvider expired_visibility;
+  flight::types::HostDeviceProvider expired_device;
+  flight::types::HostFullscreenProvider expired_fullscreen;
+  flight::types::HostSoftKeyboardInfoProvider expired_keyboard_info;
+  flight::types::HostSoftKeyboardVisibilityProvider expired_keyboard_visibility;
   flight::Ref<flight::types::FullscreenTargetHandle> expired_target;
   {
     flight::host_sdl::WindowOptions transient_options = options;

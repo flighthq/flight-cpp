@@ -96,8 +96,8 @@ SdkHapticsBackend& SdkHapticsBackend::operator=(const SdkHapticsBackend&) noexce
 SdkHapticsBackend::SdkHapticsBackend(SdkHapticsBackend&&) noexcept = default;
 SdkHapticsBackend& SdkHapticsBackend::operator=(SdkHapticsBackend&&) noexcept = default;
 
-flight::types::HapticsBackend SdkHapticsBackend::backend() const {
-  flight::types::HapticsBackend result;
+flight::types::HostHapticsProvider SdkHapticsBackend::backend() const {
+  flight::types::HostHapticsProvider result;
   result.entity_runtime_key = std::nullopt;
   result.cancel = [state = state_] { return state->cancel(); };
   result.capabilities = [state = state_](flight::Ref<flight::types::HapticsCapabilities> output) {

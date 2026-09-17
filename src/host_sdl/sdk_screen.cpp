@@ -192,8 +192,8 @@ SdkScreenBackend& SdkScreenBackend::operator=(const SdkScreenBackend&) noexcept 
 SdkScreenBackend::SdkScreenBackend(SdkScreenBackend&&) noexcept = default;
 SdkScreenBackend& SdkScreenBackend::operator=(SdkScreenBackend&&) noexcept = default;
 
-flight::types::ScreenQueryBackend SdkScreenBackend::query_backend() const {
-  flight::types::ScreenQueryBackend result;
+flight::types::HostScreenQueryProvider SdkScreenBackend::query_backend() const {
+  flight::types::HostScreenQueryProvider result;
   result.entity_runtime_key = std::nullopt;
   result.destroy = std::nullopt;
   result.get_screens = [state = state_](
@@ -232,8 +232,8 @@ flight::types::ScreenQueryBackend SdkScreenBackend::query_backend() const {
   return result;
 }
 
-flight::types::ScreenChangeBackend SdkScreenBackend::change_backend() const {
-  flight::types::ScreenChangeBackend result;
+flight::types::HostScreenChangeProvider SdkScreenBackend::change_backend() const {
+  flight::types::HostScreenChangeProvider result;
   result.entity_runtime_key = std::nullopt;
   result.subscribe = [state = state_](ScreenChangeCallback callback) {
     auto subscription = std::make_shared<State::Subscription>();
@@ -248,8 +248,8 @@ flight::types::ScreenChangeBackend SdkScreenBackend::change_backend() const {
   return result;
 }
 
-flight::types::ScreenDetailsBackend SdkScreenBackend::details_backend() const {
-  flight::types::ScreenDetailsBackend result;
+flight::types::HostScreenDetailsProvider SdkScreenBackend::details_backend() const {
+  flight::types::HostScreenDetailsProvider result;
   result.entity_runtime_key = std::nullopt;
   result.query_permission = [] {
     return flight::Task<flight::types::ScreenPermissionState>::resolve(flight::String("granted"));

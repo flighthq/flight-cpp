@@ -49,8 +49,8 @@ SdkSoftKeyboardBackend& SdkSoftKeyboardBackend::operator=(
 SdkSoftKeyboardBackend::SdkSoftKeyboardBackend(SdkSoftKeyboardBackend&&) noexcept = default;
 SdkSoftKeyboardBackend& SdkSoftKeyboardBackend::operator=(SdkSoftKeyboardBackend&&) noexcept = default;
 
-flight::types::SoftKeyboardChangeBackend SdkSoftKeyboardBackend::change_backend() const {
-  flight::types::SoftKeyboardChangeBackend result;
+flight::types::HostSoftKeyboardChangeProvider SdkSoftKeyboardBackend::change_backend() const {
+  flight::types::HostSoftKeyboardChangeProvider result;
   result.entity_runtime_key = std::nullopt;
   result.subscribe = [state = state_](std::function<void()> callback) {
     auto output = flight::make_ref<flight::types::SoftKeyboardChangeSubscription>();
@@ -76,8 +76,8 @@ flight::types::SoftKeyboardChangeBackend SdkSoftKeyboardBackend::change_backend(
   return result;
 }
 
-flight::types::SoftKeyboardInfoBackend SdkSoftKeyboardBackend::info_backend() const {
-  flight::types::SoftKeyboardInfoBackend result;
+flight::types::HostSoftKeyboardInfoProvider SdkSoftKeyboardBackend::info_backend() const {
+  flight::types::HostSoftKeyboardInfoProvider result;
   result.entity_runtime_key = std::nullopt;
   result.get_info = [state = state_](flight::Ref<flight::types::SoftKeyboardInfo> output) {
     if (output == nullptr) return output;
@@ -93,8 +93,8 @@ flight::types::SoftKeyboardInfoBackend SdkSoftKeyboardBackend::info_backend() co
   return result;
 }
 
-flight::types::SoftKeyboardVisibilityBackend SdkSoftKeyboardBackend::visibility_backend() const {
-  flight::types::SoftKeyboardVisibilityBackend result;
+flight::types::HostSoftKeyboardVisibilityProvider SdkSoftKeyboardBackend::visibility_backend() const {
+  flight::types::HostSoftKeyboardVisibilityProvider result;
   result.entity_runtime_key = std::nullopt;
   result.show = [state = state_] {
     SDL_Window* window = state->window();

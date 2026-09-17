@@ -5,7 +5,7 @@
 #include <flight/host_sdl/export.hpp>
 
 namespace flight::types {
-struct HapticsBackend;
+struct HostHapticsProvider;
 }
 
 namespace flight::host_sdl {
@@ -23,7 +23,7 @@ class FLIGHT_HOST_SDL_SDK_HAPTICS_API SdkHapticsBackend final {
   SdkHapticsBackend(SdkHapticsBackend&&) noexcept;
   SdkHapticsBackend& operator=(SdkHapticsBackend&&) noexcept;
 
-  [[nodiscard]] flight::types::HapticsBackend backend() const;
+  [[nodiscard]] flight::types::HostHapticsProvider backend() const;
 
  private:
   struct State;

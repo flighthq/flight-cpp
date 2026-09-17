@@ -3,7 +3,7 @@
 #include <flight/host_sdl/export.hpp>
 
 namespace flight::types {
-struct ClipboardTextBackend;
+struct HostClipboardTextProvider;
 }
 
 namespace flight::host_sdl {
@@ -12,7 +12,7 @@ namespace flight::host_sdl {
 // API. Rich, image, bookmark, and change-notification capabilities remain absent.
 class FLIGHT_HOST_SDL_SDK_CLIPBOARD_API SdkClipboardTextBackend final {
  public:
-  [[nodiscard]] flight::types::ClipboardTextBackend backend() const;
+  [[nodiscard]] flight::types::HostClipboardTextProvider backend() const;
 };
 
 } // namespace flight::host_sdl

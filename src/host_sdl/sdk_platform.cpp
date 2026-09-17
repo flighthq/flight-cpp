@@ -82,8 +82,8 @@ namespace {
 
 } // namespace
 
-flight::types::PlatformBackend SdkPlatformBackend::backend() const {
-  flight::types::PlatformBackend result;
+flight::types::HostPlatformProvider SdkPlatformBackend::backend() const {
+  flight::types::HostPlatformProvider result;
   result.entity_runtime_key = std::nullopt;
   result.get_info = [](flight::Ref<flight::types::PlatformInfo> output) {
     if (output == nullptr) return output;

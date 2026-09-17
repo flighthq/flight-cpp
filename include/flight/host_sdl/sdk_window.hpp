@@ -6,13 +6,13 @@
 #include <flight/reference.hpp>
 
 namespace flight::types {
-struct ApplicationVisibilityBackend;
-struct FullscreenBackend;
+struct HostApplicationVisibilityProvider;
+struct HostFullscreenProvider;
 struct FullscreenTargetHandle;
-struct InputDropFileBackend;
-struct InputFocusBackend;
-struct InputPointerLockBackend;
-struct InputTargetBackend;
+struct HostInputDropFileProvider;
+struct HostInputFocusProvider;
+struct HostInputPointerLockProvider;
+struct HostInputTargetProvider;
 struct InputTargetHandle;
 }
 
@@ -35,13 +35,13 @@ class FLIGHT_HOST_SDL_SDK_WINDOW_API SdkWindowBackend final {
   SdkWindowBackend(SdkWindowBackend&&) noexcept;
   SdkWindowBackend& operator=(SdkWindowBackend&&) noexcept;
 
-  [[nodiscard]] flight::types::ApplicationVisibilityBackend visibility_backend() const;
-  [[nodiscard]] flight::types::FullscreenBackend fullscreen_backend() const;
+  [[nodiscard]] flight::types::HostApplicationVisibilityProvider visibility_backend() const;
+  [[nodiscard]] flight::types::HostFullscreenProvider fullscreen_backend() const;
   [[nodiscard]] flight::Ref<flight::types::FullscreenTargetHandle> fullscreen_target() const;
-  [[nodiscard]] flight::types::InputDropFileBackend input_drop_file_backend() const;
-  [[nodiscard]] flight::types::InputFocusBackend input_focus_backend() const;
-  [[nodiscard]] flight::types::InputPointerLockBackend input_pointer_lock_backend() const;
-  [[nodiscard]] flight::types::InputTargetBackend input_target_backend() const;
+  [[nodiscard]] flight::types::HostInputDropFileProvider input_drop_file_backend() const;
+  [[nodiscard]] flight::types::HostInputFocusProvider input_focus_backend() const;
+  [[nodiscard]] flight::types::HostInputPointerLockProvider input_pointer_lock_backend() const;
+  [[nodiscard]] flight::types::HostInputTargetProvider input_target_backend() const;
   [[nodiscard]] flight::Ref<flight::types::InputTargetHandle> input_target() const;
 
   // Routes focus and file-drop events to subscriptions made through the generated records.
