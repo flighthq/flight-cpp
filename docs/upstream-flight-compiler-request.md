@@ -129,6 +129,62 @@ modules, with refusals from 1,755 to 1,739 and direct refusals from 979 to 960. 
   process-wide store of erased named values shared by every projection. Two of the five modules clear on this alone;
   the other three also need the erased value or the browser-image constructor values.
 
+### Answering the two items handed back on 2026-09-18
+
+**The mutually recursive `Ref<NodeRuntime<...>>` failures are fixed downstream.** The diagnosis was
+right and the conclusion that no ordering, include, or forward declaration helps was right; the part
+worth adding is *why*, because it points at the fix. The cycle was not between the records. It was in
+`flight::Ref` itself: the completeness question lived in a partial specialization of a class template
+keyed on the type, deciding `Ref<Node<T>>` instantiated `Node<T>`, whose member asked for
+`Ref<NodeRuntime<T>>`, which instantiated `NodeRuntime<T>`, whose member asked for `Ref<Node<T>>`
+again -- and a class template specialization cannot be used while it is still being selected, so the
+inner question failed outright.
+
+A function template has no such state. `flight/reference.hpp` now asks completeness through overload
+resolution, and dispatches on the answer to a specialization keyed on `(type, bool)` rather than on
+the type alone, so the inner query re-runs cleanly, finds the type incomplete because it is
+mid-definition, and takes the fallback. The answer it lands on is the correct one rather than a lucky
+one: a record is owned through a shared pointer whether complete or not, so the inner and outer
+queries agree and the type has one meaning throughout the program.
+
+Verified rather than asserted: a fixture matching the reported shape exactly -- `Node<T>` holding
+`std::optional<Ref<NodeRuntime<T>>>` and `NodeRuntime<T>` holding
+`std::function<bool(Ref<Node<T>>, double)>` -- compiles, runs, and keeps record identity across the
+recursive reference, and the whole emitted corpus re-compiles to exactly the same result as before:
+1,131 of 1,161 headers, the same 30 failures, none of them new. `Ref` answers identically for
+records, forward-declared records, value shapes, `void`, and an already-reference-backed
+representation; all of that is now pinned by static assertions rather than left implicit.
+
+One thing the fix exposed that is worth stating, because it was latent before and silent: a type that
+names itself through `Ref` and is *not* marked `ReferenceEnabled` had two meanings for one spelling --
+a shared pointer inside its own definition and a value outside it -- and the old form hid that behind
+class-template instantiation caching. `make_ref` now refuses such a type with a message naming the
+fix. Nothing in the emitted corpus hits it; the one type in this repository that did was a test
+fixture, and it was wrong.
+
+**On the recurring defect shape: the audit is worth doing, and here is downstream evidence for it.**
+Three of the thirty remaining generated-code failures have exactly the signature described -- a lookup
+that needed "the declaration this reference names", got nothing, and emitted something anyway with no
+diagnostic. They are independent of each other and reproducible from the committed inventory:
+
+- `flight/clipboard/{clipboard,contract,_internal_index}.hpp` emit `Pick<...>` **verbatim** as a C++
+  name: `flight::Ref<Pick<flight::Ref<flight::types::HostClipboardChangeProvider>, flight::String>>`.
+  The ambient utility resolved to nothing and was printed rather than refused, and its key list
+  `'subscribe' | 'unsubscribe'` was lowered as `flight::String` -- a value type -- rather than as a key
+  selection. By this compiler's own `Omit` argument, a key projection over a reference-preserving
+  subject keeps the subject's row, so the spelling here should be
+  `flight::Ref<flight::types::HostClipboardChangeProvider>`.
+- `flight/lighting/light_probe.hpp` names `flight::types::max_min_aaa6a2ccb661fee8` in a
+  `make_ref` and an aggregate initializer, and that type is declared nowhere: the name appears in
+  exactly one file, only as a use. The anonymous-object record was named but never emitted.
+- `flight/geolocation/{geolocation_access,contract,_internal_index}.hpp` emit
+  `co_return co_await {.reason = flight::String("runtime-unavailable")};` -- a braced initializer with
+  no type in front of it, because the target type it should have been qualified with resolved to
+  nothing.
+
+All three fail loudly at the C++ compiler rather than at the point the lookup returned nothing, which
+is the property that makes the audit worth more than the individual fixes.
+
 ### Compiler-side defects this round surfaced
 
 - **A local array literal over native-binding property reads loses its element type.**

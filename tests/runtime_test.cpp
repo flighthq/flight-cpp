@@ -638,7 +638,9 @@ struct TestNativeHandle final {
   [[nodiscard]] friend bool operator==(const TestNativeHandle&, const TestNativeHandle&) = default;
 };
 
-struct TestSnapshotNode final {
+// A node that names itself through Ref is a record, not a value shape: `Ref` has to answer while the
+// type is still incomplete, and only a record has the same answer before and after.
+struct TestSnapshotNode final : public flight::ReferenceEnabled {
   flight::Array<double> samples;
   std::optional<flight::Ref<TestSnapshotNode>> next;
 };
@@ -651,7 +653,7 @@ template <>
 struct structured_clone_traits<TestSnapshotNode> {
   [[nodiscard]] static TestSnapshotNode clone(const TestSnapshotNode& value,
                                               detail::StructuredCloneMemo& memo) {
-    return TestSnapshotNode{structured_clone(value.samples, memo),
+    return TestSnapshotNode{{}, structured_clone(value.samples, memo),
                             structured_clone(value.next, memo)};
   }
 };
@@ -764,9 +766,9 @@ void test_structured_clone() {
 
   // Sharing is preserved: two members that pointed at one object still do.
   const auto shared = flight::make_ref<TestSnapshotNode>(
-      TestSnapshotNode{flight::Array<double>{5.0}, std::nullopt});
+      TestSnapshotNode{{}, flight::Array<double>{5.0}, std::nullopt});
   const auto holder = flight::make_ref<TestSnapshotNode>(
-      TestSnapshotNode{flight::Array<double>{}, shared});
+      TestSnapshotNode{{}, flight::Array<double>{}, shared});
   const flight::Array<flight::Ref<TestSnapshotNode>> graph{holder, shared};
   const auto cloned_graph = flight::structured_clone(graph);
   check(cloned_graph[0] != holder && cloned_graph[1] != shared,
@@ -776,7 +778,7 @@ void test_structured_clone() {
 
   // Cycles terminate: the clone is recorded before its contents are copied.
   const auto first = flight::make_ref<TestSnapshotNode>(
-      TestSnapshotNode{flight::Array<double>{1.0}, std::nullopt});
+      TestSnapshotNode{{}, flight::Array<double>{1.0}, std::nullopt});
   first->next = first;
   const auto cloned_cycle = flight::structured_clone(first);
   check(cloned_cycle != first && *cloned_cycle->next == cloned_cycle,
@@ -837,6 +839,67 @@ void test_settled_task_arms() {
                                                std::nullopt};
   check(!flight::as_fulfilled(pending).has_value() && !flight::as_rejected(pending).has_value(),
         "a pending settlement is neither arm");
+}
+
+// Two records that name each other. `Ref<RecursiveNode<T>>` has to be answered while the type is
+// still being defined, which is the shape that used to be unrepresentable: deciding it instantiated
+// the type, whose member asked the same question again before the first answer existed.
+template <typename Traits>
+struct RecursiveNode;
+
+template <typename Traits>
+struct RecursiveNodeRuntime final : public flight::ReferenceEnabled {
+  std::function<bool(flight::Ref<RecursiveNode<Traits>>, double)> attach;
+};
+
+template <typename Traits>
+struct RecursiveNode final : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<RecursiveNodeRuntime<Traits>>> runtime;
+  Traits data;
+};
+
+struct ForwardDeclaredRecord;
+struct PlainValueShape final {
+  int value;
+};
+
+// A record is owned through a shared pointer whether or not its definition is in scope, so the
+// answer inside a recursive definition and the answer outside it are the same type.
+static_assert(std::same_as<flight::Ref<RecursiveNode<double>>,
+                           std::shared_ptr<RecursiveNode<double>>>);
+static_assert(std::same_as<flight::Ref<RecursiveNodeRuntime<double>>,
+                           std::shared_ptr<RecursiveNodeRuntime<double>>>);
+static_assert(std::same_as<decltype(std::declval<RecursiveNodeRuntime<double>>().attach),
+                           std::function<bool(std::shared_ptr<RecursiveNode<double>>, double)>>);
+static_assert(std::same_as<decltype(std::declval<RecursiveNode<double>>().runtime),
+                           std::optional<std::shared_ptr<RecursiveNodeRuntime<double>>>>);
+static_assert(std::same_as<flight::Ref<ForwardDeclaredRecord>,
+                           std::shared_ptr<ForwardDeclaredRecord>>);
+static_assert(std::same_as<flight::Ref<TestReference>, std::shared_ptr<TestReference>>);
+static_assert(std::same_as<flight::Ref<PlainValueShape>, PlainValueShape>);
+static_assert(std::same_as<flight::Ref<flight::String>, flight::String>);
+static_assert(std::same_as<flight::Ref<double>, double>);
+static_assert(std::same_as<flight::Ref<void>, std::shared_ptr<void>>);
+static_assert(std::same_as<flight::Ref<flight::Ref<TestReference>>, flight::Ref<TestReference>>);
+
+void test_reference_projection() {
+  auto node = flight::make_ref<RecursiveNode<double>>();
+  auto runtime = flight::make_ref<RecursiveNodeRuntime<double>>();
+  int attached = 0;
+  runtime->attach = [&](flight::Ref<RecursiveNode<double>> target, double weight) {
+    attached += target ? static_cast<int>(weight) : 0;
+    return target != nullptr;
+  };
+  node->runtime = runtime;
+  node->data = 3.0;
+
+  check(static_cast<bool>(node->runtime) && *node->runtime == runtime,
+        "a record reached through a mutually recursive reference keeps its identity");
+  check((*node->runtime)->attach(node, 2.0) && attached == 2,
+        "a callable declared over the recursive reference invokes with the record");
+
+  const auto plain = flight::make_ref<PlainValueShape>(PlainValueShape{7});
+  check(plain.value == 7, "a value shape is its own reference");
 }
 
 void test_number_to_fixed() {
@@ -2525,6 +2588,7 @@ int main() {
   test_date();
   test_error();
   test_host();
+  test_reference_projection();
   test_number_to_fixed();
   test_any_domain();
   test_attached_properties();
