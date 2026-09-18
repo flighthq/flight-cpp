@@ -27,6 +27,18 @@ cc_test(
     deps = ["//:cpp"],
 )
 
+# Links the SDK preview for the generated structural member table; named row members do not resolve
+# against the runtime alone.
+cc_test(
+    name = "structural_row_test",
+    srcs = ["structural_row_test.cpp"],
+    size = "small",
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
+)
+
 cc_test(
     name = "c_api_test",
     srcs = ["c_api_test.c"],

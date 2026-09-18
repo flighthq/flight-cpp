@@ -10,6 +10,13 @@ flight_cpp_set_project_warnings(flight_cpp_generated_runtime_tests)
 
 add_test(NAME flight_cpp.generated_runtime COMMAND flight_cpp_generated_runtime_tests)
 
+# Needs the generated structural member table, so it links the SDK preview rather than the runtime
+# alone; named row members do not resolve without it.
+add_executable(flight_cpp_structural_row_tests structural_row_test.cpp)
+target_link_libraries(flight_cpp_structural_row_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+flight_cpp_set_project_warnings(flight_cpp_structural_row_tests)
+add_test(NAME flight_cpp.structural_row COMMAND flight_cpp_structural_row_tests)
+
 add_executable(flight_cpp_c_api_tests c_api_test.c)
 target_link_libraries(flight_cpp_c_api_tests PRIVATE Flight::C)
 flight_cpp_set_project_warnings(flight_cpp_c_api_tests)

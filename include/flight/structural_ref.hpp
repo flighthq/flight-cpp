@@ -53,6 +53,21 @@ struct RowPartial {
   using row_type = Row;
 };
 
+// The dual of RowPartial: every member the row names is present. TypeScript's `Required<T>` is not
+// the absence of `Partial<T>` but its inverse, and a row that only knows how to make members
+// optional cannot express it -- which is why `Required<Pick<Host, 'subscribe' | 'unsubscribe'>>`
+// had nothing to lower onto, and a caller ended up invoking an `std::optional` as if it were the
+// callable inside it.
+//
+// The subject's storage is unchanged: a member declared optional stays an `std::optional` in the
+// object. What this states is that reading it through this row yields the value rather than the
+// optional, and that a row which does not in fact hold one is a contract violation the reader is
+// told about rather than a silently empty optional it might call.
+template <typename Row>
+struct RowRequired {
+  using row_type = Row;
+};
+
 template <typename Row>
 struct RowReadonly {
   using row_type = Row;
@@ -140,6 +155,18 @@ class RowOwner {
     return &typed->get();
   }
 
+  // Reports absence for a cell held under a different type rather than throwing, so a reader that
+  // accepts more than one storage shape can ask about each in turn. `named_value` keeps throwing:
+  // asking for one shape and finding another is an error there, and only a reader that has a second
+  // shape to try should be tolerating it.
+  template <typename Value>
+  [[nodiscard]] Value* named_value_if(std::string_view key) const {
+    const auto cell = named_cell(key);
+    if (!cell) return nullptr;
+    const auto typed = std::dynamic_pointer_cast<TypedRowCell<Value>>(cell);
+    return typed ? &typed->get() : nullptr;
+  }
+
   template <typename Value>
   void set_named_value(std::string_view key, Value value) {
     using Stored = std::remove_cvref_t<Value>;
@@ -224,6 +251,9 @@ struct schema_source<RowMerge<Rows...>> {
 
 template <typename Row>
 struct schema_source<RowPartial<Row>> : schema_source<Row> {};
+
+template <typename Row>
+struct schema_source<RowRequired<Row>> : schema_source<Row> {};
 
 template <typename Row>
 struct schema_source<RowReadonly<Row>> : schema_source<Row> {};
@@ -451,6 +481,16 @@ struct partial_member<void> {
   using type = void;
 };
 
+template <typename Value>
+struct required_member {
+  using type = optional_value_t<Value>;
+};
+
+template <>
+struct required_member<void> {
+  using type = void;
+};
+
 template <typename Key, typename Schema>
 struct schema_member;
 
@@ -469,6 +509,12 @@ template <typename Key, typename Row>
 struct schema_member<Key, RowPartial<Row>> {
   using source_type = typename schema_member<Key, Row>::type;
   using type = typename partial_member<source_type>::type;
+};
+
+template <typename Key, typename Row>
+struct schema_member<Key, RowRequired<Row>> {
+  using source_type = typename schema_member<Key, Row>::type;
+  using type = typename required_member<source_type>::type;
 };
 
 template <typename Left, typename Right>
@@ -514,6 +560,11 @@ inline constexpr bool schema_partial = false;
 template <typename Row>
 inline constexpr bool schema_partial<RowPartial<Row>> = true;
 
+// Required is the inverse rather than the absence of partial, so it overrides an inner RowPartial
+// instead of inheriting from it: `Required<Partial<T>>` names every member of T as present.
+template <typename Row>
+inline constexpr bool schema_partial<RowRequired<Row>> = false;
+
 template <typename Row>
 inline constexpr bool schema_partial<RowReadonly<Row>> = schema_partial<Row>;
 
@@ -534,6 +585,21 @@ inline constexpr bool schema_readonly<RowWritable<Row>> = false;
 
 template <typename Row>
 inline constexpr bool schema_readonly<RowPartial<Row>> = schema_readonly<Row>;
+
+template <typename Row>
+inline constexpr bool schema_readonly<RowRequired<Row>> = schema_readonly<Row>;
+
+template <typename Schema>
+inline constexpr bool schema_required = false;
+
+template <typename Row>
+inline constexpr bool schema_required<RowRequired<Row>> = true;
+
+template <typename Row>
+inline constexpr bool schema_required<RowReadonly<Row>> = schema_required<Row>;
+
+template <typename Row>
+inline constexpr bool schema_required<RowWritable<Row>> = schema_required<Row>;
 
 } // namespace detail
 
@@ -624,12 +690,29 @@ decltype(auto) row_get(const StructuralRef<Schema>& source) {
   static_assert(!std::is_void_v<Value>, "structural row schema does not contain the requested property");
   if (!source.shared_owner()) throw std::bad_weak_ptr();
   if constexpr (detail::schema_partial<Schema>) {
-    if (auto* exact = source.shared_owner()->template named_value<Value>(Key::name.view())) return Value(*exact);
+    if (auto* exact = source.shared_owner()->template named_value_if<Value>(Key::name.view())) {
+      return Value(*exact);
+    }
     using Present = detail::optional_value_t<Value>;
-    if (auto* present = source.shared_owner()->template named_value<Present>(Key::name.view())) {
+    if (auto* present = source.shared_owner()->template named_value_if<Present>(Key::name.view())) {
       return Value(*present);
     }
     return Value{};
+  } else if constexpr (detail::schema_required<Schema>) {
+    // The member is read as its value. Storage may hold either the bare value or the optional the
+    // subject declared, and an optional that holds nothing is the case this row exists to catch:
+    // the reader is told, rather than handed an empty optional to invoke.
+    if (auto* exact = source.shared_owner()->template named_value_if<Value>(Key::name.view())) {
+      if constexpr (detail::schema_readonly<Schema>) return std::as_const(*exact);
+      else return *exact;
+    }
+    auto* stored = source.shared_owner()->template named_value_if<std::optional<Value>>(Key::name.view());
+    if (!stored) throw std::out_of_range("required structural row property is absent");
+    if (!stored->has_value()) {
+      throw std::out_of_range("structural row property is required by its schema but holds no value");
+    }
+    if constexpr (detail::schema_readonly<Schema>) return std::as_const(**stored);
+    else return **stored;
   } else {
     auto* value = source.shared_owner()->template named_value<Value>(Key::name.view());
     if (!value) throw std::out_of_range("required structural row property is absent");
@@ -646,6 +729,15 @@ void row_set(const StructuralRef<Schema>& target, Value&& value) {
   static_assert(std::constructible_from<Expected, Value&&>, "structural row write has an incompatible value type");
   if (!target.shared_owner()) throw std::bad_weak_ptr();
   target.shared_owner()->before_named_write(Key::name.view());
+  if constexpr (detail::schema_required<Schema>) {
+    // Writing through a required row keeps the subject's own storage shape: a member the subject
+    // declared optional stays an optional, now engaged.
+    if (auto* stored =
+            target.shared_owner()->template named_value_if<std::optional<Expected>>(Key::name.view())) {
+      *stored = Expected(std::forward<Value>(value));
+      return;
+    }
+  }
   target.shared_owner()->set_named_value(Key::name.view(), Expected(std::forward<Value>(value)));
 }
 
@@ -702,7 +794,15 @@ template <typename Schema>
 
 template <typename Key, typename Schema>
 [[nodiscard]] bool row_has(const StructuralRef<Schema>& source) {
-  return source.shared_owner() && source.shared_owner()->has_named_cell(Key::name.view());
+  if (!source.shared_owner()) return false;
+  if constexpr (detail::schema_required<Schema>) {
+    using Value = detail::schema_member_t<Key, Schema>;
+    if (source.shared_owner()->template named_value_if<Value>(Key::name.view())) return true;
+    const auto* stored =
+        source.shared_owner()->template named_value_if<std::optional<Value>>(Key::name.view());
+    return stored != nullptr && stored->has_value();
+  }
+  return source.shared_owner()->has_named_cell(Key::name.view());
 }
 
 namespace detail {

@@ -185,6 +185,55 @@ diagnostic. They are independent of each other and reproducible from the committ
 All three fail loudly at the C++ compiler rather than at the point the lookup returned nothing, which
 is the property that makes the audit worth more than the individual fixes.
 
+### Answering the clipboard hand-over of 2026-09-18: `Required` now has a representation
+
+The diagnosis was exactly right -- the row machinery could make members optional and had no way to
+make them required, so `Required<Pick<…>>` unwrapped to the subject and `change->subscribe(callback)`
+ended up invoking the `std::optional` rather than the callable inside it.
+
+`flight/structural_ref.hpp` now supplies **`flight::RowRequired<Row>`**, the dual of `RowPartial`.
+The spelling to emit for the clipboard case is
+
+```cpp
+flight::StructuralRef<flight::RowRequired<flight::RowOf<flight::Ref<flight::types::HostClipboardChangeProvider>>>>
+```
+
+with the `Pick<…>` layer collapsing into the subject's row by this compiler's own argument for
+`Omit`: a key projection over a reference-preserving subject keeps the subject's row.
+
+Three properties are worth knowing before electing it:
+
+- **The subject's storage does not change.** A member the subject declared optional stays an
+  `std::optional` in the object. What the row states is how it is *read*: `row_get` yields the value,
+  not the optional, and a write through the row lands back inside the optional the subject declared,
+  so a required projection and the object never disagree about where the value lives.
+- **A required member that holds nothing is reported, not returned.** `row_get` throws
+  `std::out_of_range`, and `row_has` answers false. That is the whole point of the marker: the
+  failure the original defect produced -- calling an empty optional -- is now the case that gets a
+  diagnostic.
+- **`Required` overrides an inner `RowPartial` rather than inheriting from it**, because it is the
+  inverse and not the absence of partial, so `Required<Partial<T>>` names every member present.
+  `RowReadonly` composes with it in both directions.
+
+Covered by `tests/structural_row_test.cpp`, which runs against the committed generated member table
+rather than a hand-made stand-in, so it resolves named members exactly the way emitted code does. One
+incidental finding from writing it: `"unsubscribe"` is not a key in that table, while `"subscribe"`
+is -- the table carries only the keys the emitted SDK actually projects, so a `Pick` naming both will
+need `unsubscribe` to become a projected key before the second member resolves.
+
+**A latent bug fixed on the way.** `RowOwner::named_value` throws `std::bad_cast` when a cell exists
+under a different type, which made the second step of the existing `RowPartial` lookup unreachable:
+it tries the exact optional-typed cell and then the bare-typed one, but the first call threw rather
+than reporting absence whenever storage held the other shape. There is now a non-throwing
+`named_value_if` for readers that genuinely accept more than one storage shape, and the partial path
+uses it. `named_value` still throws, because asking for one shape and finding another is an error for
+a reader with nothing else to try.
+
+The complete SDL inventory recompiles unchanged after both this and the `Ref` fix: 1,131 of 1,161
+headers, the same 30 failures, none new.
+
+I have left the braced-initializer question alone, as intended.
+
 ### Compiler-side defects this round surfaced
 
 - **A local array literal over native-binding property reads loses its element type.**
