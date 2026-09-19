@@ -64,6 +64,7 @@ const weakSet = new WeakSet();
 const weakSetAddIdentity = weakSet.add(weakSetKey) === weakSet && weakSet.has(weakSetKey);
 const weakSetDelete = weakSet.delete(weakSetKey) && !weakSet.has(weakSetKey);
 const settlements = await Promise.allSettled([Promise.resolve(3), Promise.reject('bad')]);
+const emptySettlements = await Promise.allSettled([]);
 const expected = JSON.stringify([
   dataView.getUint32(1, true),
   new TextDecoder().decode(new Uint8Array([0xe0, 0x80, 0x80])),
@@ -112,6 +113,18 @@ const expected = JSON.stringify([
   Uint16Array.BYTES_PER_ELEMENT,
   Uint32Array.BYTES_PER_ELEMENT,
   [Boolean(''), Boolean('0'), Boolean(0), Boolean(-0), Boolean(Number.NaN), Boolean(Infinity), Boolean(null), Boolean(undefined), Boolean([]), Boolean({})],
+  new Array(0).length,
+  new Array(3).length,
+  (() => {
+    try {
+      new Array(1.5);
+      return false;
+    } catch (error) {
+      return error instanceof RangeError;
+    }
+  })(),
+  Array.from(new Uint16Array([2, 4, 6])),
+  Array.from([]),
   Array.from(new Set([3, 1, 4]), (value, index) => value + index),
   Array.from(Uint32Array.from([-1, 4294967297, Number.NaN])),
   Array.from(Int8Array.from([127, 128, 255, 256, -129])),
@@ -124,6 +137,7 @@ const expected = JSON.stringify([
       ? [settlement.status, settlement.value]
       : [settlement.status, settlement.reason],
   ),
+  emptySettlements,
   Object.entries(Object.assign(target, source)),
   Object.keys(record),
   Object.entries(record),

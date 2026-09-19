@@ -73,6 +73,12 @@ static_assert(!std::convertible_to<TestOptionalCapabilities,
 static_assert(sizeof(flight::FacetRef<TestReference, TestImageFacet>) ==
               sizeof(flight::Ref<TestReference>));
 
+template <typename Key>
+concept SupportsWeakMapKey = requires { typename flight::WeakMap<Key, int>; };
+
+static_assert(!SupportsWeakMapKey<double>);
+static_assert(SupportsWeakMapKey<flight::Ref<TestReference>>);
+
 void check(bool condition, const char* message) {
   if (condition) return;
   std::cerr << "FAIL: " << message << '\n';
@@ -101,6 +107,41 @@ FlightTask<void> set_flag(bool& flag) {
 
 void test_array() {
   const auto nan = std::numeric_limits<double>::quiet_NaN();
+  const flight::Array<double> empty_length(0.0);
+  const flight::Array<double> dense_length(3.0);
+  check(empty_length.empty() && dense_length.size() == 3 && dense_length[0] == 0.0 &&
+            dense_length[2] == 0.0,
+        "array length construction materializes value-initialized dense elements");
+  bool invalid_length_failed = false;
+  try {
+    static_cast<void>(flight::Array<double>(4'294'967'296.0));
+  } catch (const std::range_error&) {
+    invalid_length_failed = true;
+  }
+  check(invalid_length_failed,
+        "array length construction rejects values beyond the JavaScript array boundary");
+  invalid_length_failed = false;
+  try {
+    static_cast<void>(flight::Array<double>(1.5));
+  } catch (const std::range_error&) {
+    invalid_length_failed = true;
+  }
+  check(invalid_length_failed, "array length construction rejects fractional lengths");
+  invalid_length_failed = false;
+  try {
+    static_cast<void>(flight::Array<double>(-1.0));
+  } catch (const std::range_error&) {
+    invalid_length_failed = true;
+  }
+  check(invalid_length_failed, "array length construction rejects negative lengths");
+  invalid_length_failed = false;
+  try {
+    static_cast<void>(flight::Array<double>(std::numeric_limits<double>::infinity()));
+  } catch (const std::range_error&) {
+    invalid_length_failed = true;
+  }
+  check(invalid_length_failed, "array length construction rejects infinite lengths");
+
   flight::Array<double> values{nan, -0.0};
   auto alias = values;
   check(alias.push(4.0) == 3, "push returns the new array length");
@@ -137,9 +178,13 @@ void test_array() {
   const auto transformed = flight::array_from(iterable, [](double value, double index) {
     return value + index;
   });
+  const auto copied_array_like = flight::array_from(flight::Uint16Array{2, 4, 6});
+  const auto empty_copy = flight::array_from(flight::Set<double>{});
   check(copied.size() == 3 && copied[0] == 3.0 && copied[2] == 4.0 &&
             transformed.size() == 3 && transformed[0] == 3.0 && transformed[2] == 6.0,
         "Array.from preserves iterable order and supplies numeric mapper indexes");
+  check(copied_array_like.size() == 3 && copied_array_like[1] == 4 && empty_copy.empty(),
+        "Array.from accepts represented array-like views and empty inputs");
   const auto tail = mapped.slice(-2);
   check(tail.size() == 2 && tail[0] == 1.0, "array slice normalizes negative boundaries");
   check(mapped.join(flight::String("|")) == flight::String("0|1|5"),
@@ -1765,6 +1810,17 @@ void test_new_runtime_services() {
   weak_map.set(key, "retained value");
   check(weak_map.get(key) == std::optional<flight::String>("retained value") && weak_map.has(key),
         "WeakMap retrieves values by reference identity");
+  struct WeakRowValue final {
+    double count;
+    flight::Ref<TestReference> owner;
+  };
+  flight::WeakMap<flight::Ref<TestReference>, WeakRowValue> row_values;
+  auto row_owner = flight::make_ref<TestReference>(TestReference{.value = 9});
+  row_values.set(key, WeakRowValue{.count = 1.0, .owner = row_owner});
+  row_values.set(key, WeakRowValue{.count = 2.0, .owner = row_owner});
+  const auto row_value = row_values.get(key);
+  check(row_value.has_value() && row_value->count == 2.0 && row_value->owner == row_owner,
+        "WeakMap preserves represented structural rows and references on replacement");
   key.reset();
   check(weak_key.expired(), "WeakMap does not retain its key");
 
@@ -2190,6 +2246,9 @@ void test_record() {
             object_values[0] == flight::String("zero") &&
             object_values[7] == flight::String("after"),
         "Object.values follows Record string-key order and excludes symbols");
+  check(flight::object_values(
+            flight::Record<flight::PropertyKey, flight::String>{}).empty(),
+        "Object.values preserves an empty input");
   check(entries.size() == expected_keys.size() && std::get<0>(entries[0]) == flight::String("0") &&
             std::get<1>(entries[0]) == flight::String("zero") &&
             std::get<0>(entries[7]) == flight::String("after"),
@@ -2399,6 +2458,8 @@ void test_typed_array() {
         "typed-array from applies JavaScript signed modulo conversion");
   check(transformed.size() == 2 && transformed[0] == 0 && transformed[1] == 2,
         "typed-array from invokes its mapper before element conversion");
+  check(flight::Uint32Array::from(flight::Array<double>{}).empty(),
+        "typed-array from preserves an empty input");
 
   const flight::ArrayBuffer buffer(8.0);
   const flight::DataView data_view(buffer);
@@ -2553,6 +2614,8 @@ void test_task() {
             all_settled_void[1].status == flight::TaskStatus::rejected &&
             all_settled_void[1].rejection->as<flight::String>() == flight::String("void bad"),
         "Promise allSettled supports void tasks without rejecting the aggregate");
+  check(flight::all_settled_tasks(flight::Array<FlightTask<int>>{}).get().empty(),
+        "Promise allSettled fulfills an empty input with an empty result");
 
   const auto preserved_rejection = value_rejection.finally([] {});
   const auto preserved_settlement = preserved_rejection.settle();

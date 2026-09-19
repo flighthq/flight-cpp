@@ -42,6 +42,13 @@
 
 namespace {
 
+static_assert(flight::WeakKeyPolicyFor<
+              flight::host_sdl::WebGlTextureWeakPolicy,
+              flight::host_sdl::WebGlTexture>);
+static_assert(flight::WeakKeyPolicyFor<
+              flight::host_sdl::WebGlBufferWeakPolicy,
+              flight::host_sdl::WebGlBuffer>);
+
 void expect(bool condition, const char* message) {
   if (!condition) throw std::runtime_error(message);
 }

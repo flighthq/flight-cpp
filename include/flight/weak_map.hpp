@@ -126,7 +126,21 @@ struct DefaultWeakKeyPolicy<std::variant<std::shared_ptr<Types>...>> {
 template <typename Key>
 using default_weak_key_policy_t = DefaultWeakKeyPolicy<Key>;
 
+template <typename Policy, typename Key>
+concept WeakKeyPolicyFor = requires(
+    const Key& key,
+    const typename Policy::weak_type& weak,
+    const typename Policy::identity_type& identity) {
+  requires std::same_as<typename Policy::key_type, Key>;
+  { Policy::weaken(key) } -> std::same_as<typename Policy::weak_type>;
+  { Policy::lock(weak) } -> std::same_as<std::optional<Key>>;
+  { Policy::identity(key) } -> std::same_as<typename Policy::identity_type>;
+  { Policy::hash(identity) } -> std::convertible_to<std::size_t>;
+  { Policy::equal(identity, identity) } -> std::convertible_to<bool>;
+};
+
 template <typename Key, typename Value, typename Policy = default_weak_key_policy_t<Key>>
+  requires WeakKeyPolicyFor<Policy, Key>
 class WeakMap {
  public:
   using key_type = Key;

@@ -94,6 +94,23 @@ int main() {
       flight::to_boolean(flight::Record<flight::String, double>{}),
   });
 
+  observations.push(static_cast<double>(flight::Array<double>(0.0).size()));
+  observations.push(static_cast<double>(flight::Array<double>(3.0).size()));
+  bool invalid_array_length = false;
+  try {
+    static_cast<void>(flight::Array<double>(1.5));
+  } catch (const std::range_error&) {
+    invalid_array_length = true;
+  }
+  observations.push(invalid_array_length);
+
+  flight::JsonArray array_like_values;
+  for (const auto value : flight::array_from(flight::Uint16Array{2, 4, 6})) {
+    array_like_values.push(static_cast<double>(value));
+  }
+  observations.push(std::move(array_like_values));
+  observations.push(flight::JsonArray{});
+
   const flight::Set<double> iterable{3.0, 1.0, 4.0};
   flight::JsonArray array_from_values;
   for (const auto value : flight::array_from(iterable, [](double value, double index) {
@@ -135,6 +152,14 @@ int main() {
   settlement_values.push(flight::JsonArray{
       flight::String("rejected"), settlements[1].rejection->as<flight::String>()});
   observations.push(std::move(settlement_values));
+  const auto empty_settlements =
+      flight::all_settled_tasks(flight::Array<flight::Task<double>>{}).get();
+  flight::JsonArray empty_settlement_values;
+  for (const auto& settlement : empty_settlements) {
+    static_cast<void>(settlement);
+    empty_settlement_values.push(flight::String("unexpected"));
+  }
+  observations.push(std::move(empty_settlement_values));
 
   flight::Map<flight::String, double> target{{"first", 0.0}, {"retained", 3.0}};
   const flight::Map<flight::String, double> source{{"first", 1.0}, {"second", 2.0}};

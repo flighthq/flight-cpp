@@ -145,7 +145,11 @@ class Array {
   Array() : values_(std::make_shared<std::vector<Value>>()) {}
 
   explicit Array(size_type length)
-      : values_(std::make_shared<std::vector<Value>>(length)) {}
+      : values_(std::make_shared<std::vector<Value>>(required_length(length))) {}
+
+  template <std::floating_point Number>
+  explicit Array(Number length)
+      : Array(array_length(static_cast<double>(length))) {}
 
   Array(std::initializer_list<Value> values)
       : values_(std::make_shared<std::vector<Value>>(values)) {}
@@ -470,6 +474,23 @@ class Array {
   }
 
  private:
+  static constexpr size_type maximum_array_length = 0xFFFF'FFFFULL;
+
+  [[nodiscard]] static size_type required_length(size_type value) {
+    if (value > maximum_array_length) {
+      throw std::range_error("flight::Array length is outside the JavaScript array range");
+    }
+    return value;
+  }
+
+  [[nodiscard]] static size_type array_length(double value) {
+    if (!std::isfinite(value) || value < 0.0 || std::trunc(value) != value ||
+        value > static_cast<double>(maximum_array_length)) {
+      throw std::range_error("flight::Array length is outside the JavaScript array range");
+    }
+    return static_cast<size_type>(value);
+  }
+
   struct SharedStorage {};
 
   explicit Array(std::shared_ptr<std::vector<Value>> values, SharedStorage)

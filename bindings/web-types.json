@@ -18,6 +18,7 @@
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUAddressMode", "space": "type", "targetName": "flight::String" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBlendFactor", "space": "type", "targetName": "flight::String" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUBlendOperation", "space": "type", "targetName": "flight::String" },
+    { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUCanvasAlphaMode", "space": "type", "targetName": "flight::String" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUCompareFunction", "space": "type", "targetName": "flight::String" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUFeatureName", "space": "type", "targetName": "flight::String" },
     { "headers": ["flight/string.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "GPUFilterMode", "space": "type", "targetName": "flight::String" },

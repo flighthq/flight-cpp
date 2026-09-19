@@ -94,6 +94,27 @@ class WebGlHandle final {
   std::shared_ptr<detail::WebGlObjectState> state_;
 };
 
+template <typename Tag>
+struct WebGlHandleWeakPolicy final {
+  using key_type = WebGlHandle<Tag>;
+  using weak_type = typename key_type::weak_type;
+  using identity_type = const void*;
+
+  [[nodiscard]] static weak_type weaken(const key_type& key) noexcept { return key.weaken(); }
+  [[nodiscard]] static std::optional<key_type> lock(const weak_type& key) noexcept {
+    return key_type::lock_weak(key);
+  }
+  [[nodiscard]] static identity_type identity(const key_type& key) noexcept {
+    return key.identity();
+  }
+  [[nodiscard]] static std::size_t hash(identity_type identity) noexcept {
+    return std::hash<const void*>{}(identity);
+  }
+  [[nodiscard]] static bool equal(identity_type left, identity_type right) noexcept {
+    return left == right;
+  }
+};
+
 struct WebGlBufferTag;
 struct WebGlFramebufferTag;
 struct WebGlProgramTag;
@@ -111,6 +132,15 @@ using WebGlShader = WebGlHandle<WebGlShaderTag>;
 using WebGlTexture = WebGlHandle<WebGlTextureTag>;
 using WebGlUniformLocation = WebGlHandle<WebGlUniformLocationTag>;
 using WebGlVertexArrayObject = WebGlHandle<WebGlVertexArrayObjectTag>;
+
+using WebGlBufferWeakPolicy = WebGlHandleWeakPolicy<WebGlBufferTag>;
+using WebGlFramebufferWeakPolicy = WebGlHandleWeakPolicy<WebGlFramebufferTag>;
+using WebGlProgramWeakPolicy = WebGlHandleWeakPolicy<WebGlProgramTag>;
+using WebGlRenderbufferWeakPolicy = WebGlHandleWeakPolicy<WebGlRenderbufferTag>;
+using WebGlShaderWeakPolicy = WebGlHandleWeakPolicy<WebGlShaderTag>;
+using WebGlTextureWeakPolicy = WebGlHandleWeakPolicy<WebGlTextureTag>;
+using WebGlUniformLocationWeakPolicy = WebGlHandleWeakPolicy<WebGlUniformLocationTag>;
+using WebGlVertexArrayObjectWeakPolicy = WebGlHandleWeakPolicy<WebGlVertexArrayObjectTag>;
 
 class FLIGHT_HOST_SDL_GL_API GlParameterValue final {
  public:

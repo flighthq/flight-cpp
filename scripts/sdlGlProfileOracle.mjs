@@ -78,7 +78,10 @@ const source = api.parseTypeScriptSource(
      attributes: WebGLContextAttributes;
      preference: WebGLPowerPreference;
      objectName: GLuint;
+     drawCount: GLsizei;
+     byteOffset: GLintptr;
      imageCache: WeakMap<CanvasImageSource, WebGLTexture>;
+     textureMetadata: WeakMap<WebGLTexture, number>;
      imageElement: HTMLImageElement;
      videoElement: HTMLVideoElement;
      imageBitmap: ImageBitmap;
@@ -258,6 +261,7 @@ for (const expected of [
   'flight::host_sdl::WebGlContextAttributes attributes;',
   '#include <flight/host_sdl/image.hpp>',
   'flight::host_sdl::ImageSourceWeakPolicy',
+  'flight::WeakMap<flight::host_sdl::WebGlTexture, double, flight::host_sdl::WebGlTextureWeakPolicy> texture_metadata;',
   'flight::host_sdl::ImageSource image_element;',
   'flight::host_sdl::ImageSource video_element;',
   'flight::host_sdl::ImageSource image_bitmap;',
@@ -265,6 +269,8 @@ for (const expected of [
   'flight::host_sdl::ImageSource svg_image_element;',
   'flight::host_sdl::ImageSource video_frame;',
   'double object_name;',
+  'double draw_count;',
+  'double byte_offset;',
 ]) {
   if (!emitted.includes(expected)) {
     process.stderr.write(`SDL/GL binding fixture did not emit ${expected}.\n`);

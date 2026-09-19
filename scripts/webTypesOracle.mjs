@@ -47,6 +47,7 @@ const names = [
   'GPUAddressMode',
   'GPUBlendFactor',
   'GPUBlendOperation',
+  'GPUCanvasAlphaMode',
   'GPUCompareFunction',
   'GPUFeatureName',
   'GPUFilterMode',
