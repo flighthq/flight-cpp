@@ -26,6 +26,22 @@ struct TestClipboardChangeProvider final : public flight::ReferenceEnabled {
   std::optional<std::function<double(double)>> subscribe;
 };
 
+// The compiler's entity-construction lane: an empty bag that is filled and then cast to the
+// nominal type it was standing in for. The bag has no members, which is exactly why the cast has to
+// mint the object rather than reinterpret one.
+struct TestConstructionBag final : public flight::ReferenceEnabled {};
+
+struct TestFinishedLight final : public flight::ReferenceEnabled {
+  double intensity{};
+  bool enabled{};
+};
+
+// A populated object is never replaced: two unrelated objects that both carry state are a different
+// question from a bag with none.
+struct TestPopulatedSource final : public flight::ReferenceEnabled {
+  double intensity{};
+};
+
 using Subject = flight::Ref<TestClipboardChangeProvider>;
 using SubjectRow = flight::RowOf<Subject>;
 using RequiredView = flight::StructuralRef<flight::RowRequired<SubjectRow>>;
@@ -156,6 +172,48 @@ int main() {
   flight::row_set(symbol_guarded, subscribe_symbol, 9);
   check(symbol_trap_calls == 1 && flight::row_get<int>(writable, subscribe_symbol) == 9,
         "the symbol interception fires for its own key and forwards the write");
+
+  // The materializing cast: `const out = {} as EntityConstruction<T>` filled and finished.
+  using BagRow = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestConstructionBag>>>>;
+  using LightRow = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestFinishedLight>>>>;
+  const BagRow bag(flight::make_ref<TestConstructionBag>());
+  const auto bag_symbol = flight::Symbol::for_key("EntityRuntime");
+  flight::row_set(bag, bag_symbol, 5);
+  // A named field cannot be written through the bag's own schema -- the bag declares none, and the
+  // emitted lane writes fields only after the cast. Writing the cell directly is how a value can
+  // already be in the row when the cast arrives, and it must not be dropped.
+  bag.shared_owner()->set_named_value("intensity", 3.0);
+
+  const auto finished_row = flight::structural_ref_cast<LightRow>(bag);
+  const auto finished = flight::structural_ref_cast<flight::Ref<TestFinishedLight>>(finished_row);
+  check(finished != nullptr,
+        "finishing a construction bag yields the object the row stood for, not a null reference");
+  check(finished->intensity == 3.0,
+        "a field written before the cast lands on the materialized object");
+  check(flight::row_get<int>(finished_row, bag_symbol) == 5,
+        "a symbol property written before the cast survives materialization");
+
+  flight::row_set<flight::RowKey<"enabled">>(finished_row, true);
+  check(finished->enabled,
+        "a field written after the cast goes to the object's own member");
+  flight::row_set<flight::RowKey<"intensity">>(finished_row, 4.0);
+  check(finished->intensity == 4.0 && flight::row_get<flight::RowKey<"intensity">>(finished_row) == 4.0,
+        "the row and the object are one value after materialization, not two that agree");
+
+  // Casting a row that already has an object of the target type is unchanged: no new object.
+  const auto same = flight::structural_ref_cast<LightRow>(finished_row);
+  check(same.shared_object() == finished,
+        "casting a row that already holds the target object returns that object");
+
+  // A populated source is not a bag, so nothing is minted: the cast is rejected outright rather
+  // than replacing an object that holds state or handing back a null reference.
+  using PopulatedRow = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestPopulatedSource>>>>;
+  static_assert(flight::detail::row_materializes_from<TestFinishedLight, TestConstructionBag>);
+  static_assert(!flight::detail::row_materializes_from<TestFinishedLight, TestPopulatedSource>);
+  static_assert(!flight::detail::row_materializes_from<TestFinishedLight, TestFinishedLight>);
+  const PopulatedRow populated(flight::make_ref<TestPopulatedSource>());
+  check(populated.shared_object() != nullptr,
+        "a row over a populated object keeps the object it was built from");
 
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
   return failures == 0 ? 0 : 1;

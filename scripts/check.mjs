@@ -24,6 +24,7 @@ const gates = [
   { arguments: [], name: 'canvas2dProfileOracle' },
   { arguments: [], name: 'releaseHealth' },
   { arguments: [], name: 'exampleHealth' },
+  { arguments: [], name: 'exampleRun' },
   { arguments: [], name: 'conditionalFacetOracle' },
   { arguments: [], name: 'headlessProfileOracle' },
   { arguments: [], name: 'imageDataOracle' },

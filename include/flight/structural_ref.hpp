@@ -88,6 +88,12 @@ class RowCell {
   virtual ~RowCell() = default;
 
   [[nodiscard]] virtual std::type_index value_type() const noexcept = 0;
+
+  // Copies another cell's value into this one when both hold the same type, and reports whether it
+  // did. The materializing cast uses it to move what a construction bag held onto the member the
+  // finished object answers for itself; a cell whose type does not match is left alone rather than
+  // reinterpreted.
+  virtual bool assign_from(RowCell& other) = 0;
 };
 
 template <typename Value>
@@ -96,6 +102,13 @@ class TypedRowCell : public RowCell {
   [[nodiscard]] std::type_index value_type() const noexcept final { return typeid(Value); }
   [[nodiscard]] virtual Value& get() = 0;
   virtual void set(Value value) = 0;
+
+  bool assign_from(RowCell& other) final {
+    auto* typed = dynamic_cast<TypedRowCell<Value>*>(&other);
+    if (!typed) return false;
+    set(typed->get());
+    return true;
+  }
 };
 
 template <typename Value>
@@ -207,6 +220,13 @@ class RowOwner {
 
   [[nodiscard]] const std::shared_ptr<SymbolAttachment>& attachment() const noexcept {
     return attachment_;
+  }
+
+  // This owner's own cell storage, for the one caller that has to move a row's contents onto a
+  // different object: the materializing cast below.
+  [[nodiscard]] const std::unordered_map<std::string, std::shared_ptr<RowCell>>& named_cells()
+      const noexcept {
+    return named_cells_;
   }
 
   // Adopts the attachment an object identity resolves to. A row with no object keeps the private
@@ -846,14 +866,73 @@ template <typename Schema, typename... Fields>
   }
 }
 
+namespace detail {
+
+// TypeScript builds an entity as `const out = {} as EntityConstruction<T>`: one empty object literal
+// that is filled field by field and then handed back as the `T` it became. There is one object in
+// that story, not two.
+//
+// C++ cannot start from the same place. The compiler emits the empty literal as an empty struct, so
+// the row has no members to write into and the field writes land in cell storage instead; the cast
+// that is supposed to hand back the finished `T` then finds no `T` behind the row and yields a null
+// reference, which the caller dereferences. Minting the `T` at the cast is what restores the source
+// semantics: the bag the row stood for becomes the object it was always going to be, carrying what
+// it already holds, and every later read and write goes to that object's own members.
+//
+// The rule is narrow on purpose. It applies only when the source row's object is an EMPTY type --
+// a bag with no state of its own to lose -- so it can never silently replace an object that holds
+// data. A row over a populated object is a different question, and structural widening answers it.
+template <typename To, typename From>
+concept row_materializes_from = !std::is_void_v<To> && !std::is_void_v<From> &&
+                                !std::same_as<To, From> && std::is_empty_v<From> &&
+                                std::default_initializable<To>;
+
+template <typename To, typename Schema>
+[[nodiscard]] StructuralRef<RowWritable<RowOf<Ref<To>>>> materialize_row(
+    const StructuralRef<Schema>& source) {
+  auto object = std::make_shared<To>();
+  auto owner = detail::owner_for(object);
+  if (const auto& from = source.shared_owner()) {
+    // A member the new object answers for itself wins the CELL -- it reads and writes the real
+    // member, where the bag's cell was only standing in for one -- but not the VALUE: whatever the
+    // bag already held is moved onto that member. A key the object does not declare keeps the bag's
+    // cell, because the row still has to answer for it.
+    for (const auto& [key, cell] : from->named_cells()) {
+      const auto existing = owner->named_cell(key);
+      if (!existing) {
+        owner->set_named_cell(key, cell);
+        continue;
+      }
+      if (cell) existing->assign_from(*cell);
+    }
+    if (const auto& attachment = from->attachment()) {
+      for (const auto& entry : attachment->entries()) owner->set_dynamic_value(entry.key, entry.value);
+    }
+  }
+  return StructuralRef<RowWritable<RowOf<Ref<To>>>>::from_owner(std::move(owner));
+}
+
+} // namespace detail
+
 template <typename Target, typename Schema>
 [[nodiscard]] Target structural_ref_cast(const StructuralRef<Schema>& source) {
   if constexpr (requires { typename Target::schema_type; }) {
-    return Target(source);
+    using To = typename Target::object_type;
+    using From = typename StructuralRef<Schema>::object_type;
+    if constexpr (detail::row_materializes_from<To, From>) {
+      return Target(detail::materialize_row<To>(source));
+    } else {
+      return Target(source);
+    }
   } else {
     using Object = typename StructuralRef<Schema>::object_type;
     static_assert(!std::is_void_v<Object>, "a merged structural row must be projected before native reference recovery");
-    return detail::wrap_ref<Target>(source.shared_object());
+    using To = detail::unwrap_ref_t<Target>;
+    if constexpr (detail::row_materializes_from<To, Object>) {
+      return detail::wrap_ref<Target>(detail::materialize_row<To>(source).shared_object());
+    } else {
+      return detail::wrap_ref<Target>(source.shared_object());
+    }
   }
 }
 
