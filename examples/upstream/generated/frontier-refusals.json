@@ -1,7 +1,7 @@
 {
   "schema": "flight-generated-upstream-example-frontier-refusals/1",
-  "compilerRevision": "fbfcc1102d2afb5fa5ea942fcdad27d520f21408",
-  "sourceRevision": "903f3289590358eacc20698525e6982da2ab0e9d",
+  "compilerRevision": "ef60fb6d3181ce5c12d5ce8d75c8ef6518c9b168",
+  "sourceRevision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
   "refusals": [
     {
       "code": "unsupported-ir",
@@ -26,6 +26,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 75,
       "module": "examples/packages/awd2loading/src/app.ts",
       "package": "@flighthq/example-awd2loading",
       "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/app.ts: array spread requires contextual or iterable element type evidence",
@@ -33,6 +35,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 108,
       "module": "examples/packages/awd2loading/src/createSyntheticAwd2.ts",
       "package": "@flighthq/example-awd2loading",
       "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/createSyntheticAwd2.ts: spreading an unbounded collection requires a fold or a variadic target",
@@ -47,6 +51,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 51,
       "module": "examples/packages/awd2loading/src/renderNative.ts",
       "package": "@flighthq/example-awd2loading",
       "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
@@ -257,6 +263,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 50,
       "module": "examples/packages/instanced-mesh/src/renderNative.ts",
       "package": "@flighthq/example-instanced-mesh",
       "reason": "cpp emission failed for @flighthq/example-instanced-mesh/examples/packages/instanced-mesh/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
@@ -299,6 +307,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 53,
       "module": "examples/packages/materialshowcase/src/renderNative.ts",
       "package": "@flighthq/example-materialshowcase",
       "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
@@ -467,6 +477,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 51,
       "module": "examples/packages/scene-picking/src/renderNative.ts",
       "package": "@flighthq/example-scene-picking",
       "reason": "cpp emission failed for @flighthq/example-scene-picking/examples/packages/scene-picking/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
@@ -488,6 +500,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 51,
       "module": "examples/packages/scene3d/src/renderNative.ts",
       "package": "@flighthq/example-scene3d",
       "reason": "cpp emission failed for @flighthq/example-scene3d/examples/packages/scene3d/src/renderNative.ts: an empty array requires contextual element type in C++ emission",

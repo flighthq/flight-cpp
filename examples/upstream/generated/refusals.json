@@ -1,13 +1,15 @@
 {
   "schema": "flight-generated-upstream-example-refusals/1",
-  "compilerRevision": "fbfcc1102d2afb5fa5ea942fcdad27d520f21408",
-  "sourceRevision": "903f3289590358eacc20698525e6982da2ab0e9d",
+  "compilerRevision": "ef60fb6d3181ce5c12d5ce8d75c8ef6518c9b168",
+  "sourceRevision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
   "refusals": [
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 49,
       "module": "examples/packages/adjustments/src/app.ts",
       "package": "@flighthq/example-adjustments",
-      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/app.ts: intersection types require C++ multiple-inheritance lowering",
+      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {
@@ -26,6 +28,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 57,
       "module": "examples/packages/awd2loading/src/app.ts",
       "package": "@flighthq/example-awd2loading",
       "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/app.ts: contextual union value type flight::Ref<flight::sdk::Vector3> is not a represented runtime domain",
@@ -33,6 +37,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 108,
       "module": "examples/packages/awd2loading/src/createSyntheticAwd2.ts",
       "package": "@flighthq/example-awd2loading",
       "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/createSyntheticAwd2.ts: spreading an unbounded collection requires a fold or a variadic target",
@@ -54,9 +60,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 24,
       "module": "examples/packages/benchmark/src/app.ts",
       "package": "@flighthq/example-benchmark",
-      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/app.ts: intersection types require C++ multiple-inheritance lowering",
+      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {
@@ -75,9 +83,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 35,
       "module": "examples/packages/bitmapfont-generate/src/app.ts",
       "package": "@flighthq/example-bitmapfont-generate",
-      "reason": "cpp emission failed for @flighthq/example-bitmapfont-generate/examples/packages/bitmapfont-generate/src/app.ts: intersection types require C++ multiple-inheritance lowering",
+      "reason": "cpp emission failed for @flighthq/example-bitmapfont-generate/examples/packages/bitmapfont-generate/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {
@@ -96,9 +106,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 352,
       "module": "examples/packages/camera2d/src/app.ts",
       "package": "@flighthq/example-camera2d",
-      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/app.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/app.ts: contextual C++ union conversion requires equivalent source union evidence: target multiVariant [object:{\"kind\"=string:\"named\",\"reference\"=object:{\"kind\"=string:\"ambient\",\"name\"=string:\"AddEventListenerOptions\"},\"typeArguments\"=array:[]}, object:{\"kind\"=string:\"primitive\",\"name\"=string:\"boolean\"}] from source optionalVariant [object:{\"kind\"=string:\"named\",\"reference\"=object:{\"kind\"=string:\"ambient\",\"name\"=string:\"AddEventListenerOptions\"},\"typeArguments\"=array:[]}, object:{\"kind\"=string:\"primitive\",\"name\"=string:\"boolean\"}]",
       "stage": "emission"
     },
     {
@@ -117,9 +129,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 40,
       "module": "examples/packages/clock/src/app.ts",
       "package": "@flighthq/example-clock",
-      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/app.ts: intersection types require C++ multiple-inheritance lowering",
+      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {
@@ -138,9 +152,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 332,
       "module": "examples/packages/collision/src/app.ts",
       "package": "@flighthq/example-collision",
-      "reason": "cpp emission failed for @flighthq/example-collision/examples/packages/collision/src/app.ts: contextual C++ union conversion requires equivalent source union evidence",
+      "reason": "cpp emission failed for @flighthq/example-collision/examples/packages/collision/src/app.ts: contextual C++ union conversion requires equivalent source union evidence: target multiVariant [object:{\"kind\"=string:\"named\",\"reference\"=object:{\"binding\"=object:{\"column\"=number:11,\"fingerprint\"=string:\"sha256:2b88e15dca59cb325249572a1b79ac2cfc0bc7414d868221a9693ae1773fd879\",\"id\"=string:\"type-binding:[\\\"@flighthq/example-collision\\\",\\\"examples/packages/collision/src/app.ts\\\",1320]\",\"kind\"=string:\"interface\",\"line\"=number:54,\"name\"=string:\"PolygonCollider\",\"packageName\"=string:\"@flighthq/example-collision\",\"scope\"=string:\"module\",\"source\"=string:\"examples/packages/collision/src/app.ts\",\"space\"=string:\"type\"},\"kind\"=string:\"binding\",\"path\"=array:[]},\"typeArguments\"=array:[]}, object:{\"kind\"=string:\"named\",\"reference\"=object:{\"binding\"=object:{\"column\"=number:11,\"fingerprint\"=string:\"sha256:41813cdd529e88b817f73115593c5d933b0c659d5855ec76d4bfbd516f668087\",\"id\"=string:\"type-binding:[\\\"@flighthq/example-collision\\\",\\\"examples/packages/collision/src/app.ts\\\",1231]\",\"kind\"=string:\"interface\",\"line\"=number:48,\"name\"=string:\"AabbCollider\",\"packageName\"=string:\"@flighthq/example-collision\",\"scope\"=string:\"module\",\"source\"=string:\"examples/packages/collision/src/app.ts\",\"space\"=string:\"type\"},\"kind\"=string:\"binding\",\"path\"=array:[]},\"typeArguments\"=array:[]}, object:{\"kind\"=string:\"named\",\"reference\"=object:{\"binding\"=object:{\"column\"=number:11,\"fingerprint\"=string:\"sha256:bfec2253a3ba8540a47bce52b82a55d91eefdc789113ff9d3d24fd52622735e4\",\"id\"=string:\"type-binding:[\\\"@flighthq/example-collision\\\",\\\"examples/packages/collision/src/app.ts\\\",1136]\",\"kind\"=string:\"interface\",\"line\"=number:42,\"name\"=string:\"CircleCollider\",\"packageName\"=string:\"@flighthq/example-collision\",\"scope\"=string:\"module\",\"source\"=string:\"examples/packages/collision/src/app.ts\",\"space\"=string:\"type\"},\"kind\"=string:\"binding\",\"path\"=array:[]},\"typeArguments\"=array:[]}] from source multiVariant [object:{\"kind\"=string:\"object\",\"properties\"=array:[object:{\"name\"=string:\"kind\",\"optional\"=boolean:false,\"readonly\"=boolean:false,\"type\"=object:{\"kind\"=string:\"primitive\",\"name\"=string:\"string\"}},object:{\"name\"=string:\"collider\",\"optional\"=boolean:false,\"readonly\"=boolean:false,\"type\"=object:{\"kind\"=string:\"named\",\"reference\"=object:{\"binding\"=object:{\"column\"=number:15,\"fingerprint\"=string:\"sha256:c5afa7f5159b2b3a9151cc194f3741df58efbf687bbbd6c62853920b16e73e81\",\"id\"=string:\"type-binding:[\\\"@flighthq/example-collision\\\",\\\"examples/packages/collision/src/app.ts\\\",14]\",\"kind\"=string:\"import\",\"line\"=number:1,\"name\"=string:\"CollisionAabb2D\",\"packageName\"=string:\"@flighthq/example-collision\",\"scope\"=string:\"module\",\"source\"=string:\"examples/packages/collision/src/app.ts\",\"space\"=string:\"type\"},\"kind\"=string:\"binding\",\"path\"=array:[]},\"typeArguments\"=array:[]}},object:{\"name\"=string:\"shape\",\"optional\"=boolean:false,\"readonly\"=boolean:false,\"type\"=object:{\"kind\"=string:\"named\",\"reference\"=object:{\"binding\"=object:{\"column\"=number:92,\"fingerprint\"=string:\"sha256:f70bd56ce627e9cab72b3d52847959f72cd8748c9cf8b317b4200aa1729ac68f\",\"id\"=string:\"type-binding:[\\\"@flighthq/example-collision\\\",\\\"examples/packages/collision/src/app.ts\\\",91]\",\"kind\"=string:\"import\",\"line\"=number:1,\"name\"=string:\"Shape\",\"packageName\"=string:\"@flighthq/example-collision\",\"scope\"=string:\"module\",\"source\"=string:\"examples/packages/collision/src/app.ts\",\"space\"=string:\"type\"},\"kind\"=string:\"binding\",\"path\"=array:[]},\"typeArguments\"=array:[]}}]}, object:{\"kind\"=string:\"object\",\"properties\"=array:[object:{\"name\"=string:\"kind\",\"optional\"=boolean:false,\"readonly\"=boolean:false,\"type\"=object:{\"kind\"=string:\"primitive\",\"name\"=string:\"string\"}},object:{\"name\"=string:\"collider\",\"optional\"=boolean:false,\"readonly\"=boolean:false,\"type\"=object:{\"kind\"=string:\"named\",\"reference\"=object:{\"binding\"=object:{\"column\"=number:32,\"fingerprint\"=string:\"sha256:025dafe201a3a7451a1de52840320df2bc9fe9ae35942a9ed6c0d813ad057a20\",\"id\"=string:\"type-binding:[\\\"@flighthq/example-collision\\\",\\\"examples/packages/collision/src/app.ts\\\",31]\",\"kind\"=string:\"import\",\"line\"=number:1,\"name\"=string:\"CollisionCircle2D\",\"packageName\"=string:\"@flighthq/example-collision\",\"scope\"=string:\"module\",\"source\"=string:\"examples/packages/collision/src/app.ts\",\"space\"=string:\"type\"},\"kind\"=string:\"binding\",\"path\"=array:[]},\"typeArguments\"=array:[]}},object:{\"name\"=string:\"shape\",\"optional\"=boolean:false,\"readonly\"=boolean:false,\"type\"=object:{\"kind\"=string:\"named\",\"reference\"=object:{\"binding\"=object:{\"column\"=number:92,\"fingerprint\"=string:\"sha256:f70bd56ce627e9cab72b3d52847959f72cd8748c9cf8b317b4200aa1729ac68f\",\"id\"=string:\"type-binding:[\\\"@flighthq/example-collision\\\",\\\"examples/packages/collision/src/app.ts\\\",91]\",\"kind\"=string:\"import\",\"line\"=number:1,\"name\"=string:\"Shape\",\"packageName\"=string:\"@flighthq/example-collision\",\"scope\"=string:\"module\",\"source\"=string:\"examples/packages/collision/src/app.ts\",\"space\"=string:\"type\"},\"kind\"=string:\"binding\",\"path\"=array:[]},\"typeArguments\"=array:[]}}]}, object:{\"kind\"=string:\"object\",\"properties\"=array:[object:{\"name\"=string:\"kind\",\"optional\"=boolean:false,\"readonly\"=boolean:false,\"type\"=object:{\"kind\"=string:\"primitive\",\"name\"=string:\"string\"}},object:{\"name\"=string:\"collider\",\"optional\"=boolean:false,\"readonly\"=boolean:false,\"type\"=object:{\"kind\"=string:\"named\",\"reference\"=object:{\"binding\"=object:{\"column\"=number:72,\"fingerprint\"=string:\"sha256:90bce73ba664c2fb4311ccca03d0c54163e54cf4daab442f9ef824bd3eb2c77f\",\"id\"=string:\"type-binding:[\\\"@flighthq/example-collision\\\",\\\"examples/packages/collision/src/app.ts\\\",71]\",\"kind\"=string:\"import\",\"line\"=number:1,\"name\"=string:\"CollisionPolygon2D\",\"packageName\"=string:\"@flighthq/example-collision\",\"scope\"=string:\"module\",\"source\"=string:\"examples/packages/collision/src/app.ts\",\"space\"=string:\"type\"},\"kind\"=string:\"binding\",\"path\"=array:[]},\"typeArguments\"=array:[]}},object:{\"name\"=string:\"centerX\",\"optional\"=boolean:false,\"readonly\"=boolean:false,\"type\"=object:{\"kind\"=string:\"primitive\",\"name\"=string:\"number\"}},object:{\"name\"=string:\"centerY\",\"optional\"=boolean:false,\"readonly\"=boolean:false,\"type\"=object:{\"kind\"=string:\"primitive\",\"name\"=string:\"number\"}},object:{\"name\"=string:\"shape\",\"optional\"=boolean:false,\"readonly\"=boolean:false,\"type\"=object:{\"kind\"=string:\"named\",\"reference\"=object:{\"binding\"=object:{\"column\"=number:92,\"fingerprint\"=string:\"sha256:f70bd56ce627e9cab72b3d52847959f72cd8748c9cf8b317b4200aa1729ac68f\",\"id\"=string:\"type-binding:[\\\"@flighthq/example-collision\\\",\\\"examples/packages/collision/src/app.ts\\\",91]\",\"kind\"=string:\"import\",\"line\"=number:1,\"name\"=string:\"Shape\",\"packageName\"=string:\"@flighthq/example-collision\",\"scope\"=string:\"module\",\"source\"=string:\"examples/packages/collision/src/app.ts\",\"space\"=string:\"type\"},\"kind\"=string:\"binding\",\"path\"=array:[]},\"typeArguments\"=array:[]}}]}]",
       "stage": "emission"
     },
     {
@@ -159,6 +175,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 72,
       "module": "examples/packages/cross-backend-embed/src/app.ts",
       "package": "@flighthq/example-cross-backend-embed",
       "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: contextual union value type flight::Ref<flight::sdk::Texture2D> is not a represented runtime domain",
@@ -201,6 +219,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 120,
       "module": "examples/packages/flowstates/src/app.ts",
       "package": "@flighthq/example-flowstates",
       "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/app.ts: contextual union value type std::function<void()> is not a represented runtime domain",
@@ -222,9 +242,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 241,
       "module": "examples/packages/formatloading/src/app.ts",
       "package": "@flighthq/example-formatloading",
-      "reason": "cpp emission failed for @flighthq/example-formatloading/examples/packages/formatloading/src/app.ts: anonymous object property byte_length requires concrete C++ type evidence",
+      "reason": "cpp emission failed for @flighthq/example-formatloading/examples/packages/formatloading/src/app.ts: optional chain receiver requires one concrete nullable union member",
       "stage": "emission"
     },
     {
@@ -243,6 +265,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 37,
       "module": "examples/packages/instanced-mesh/src/app.ts",
       "package": "@flighthq/example-instanced-mesh",
       "reason": "cpp emission failed for @flighthq/example-instanced-mesh/examples/packages/instanced-mesh/src/app.ts: missing required call argument at position 2",
@@ -263,11 +287,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "examples/packages/interaction/src/app.ts",
       "package": "@flighthq/example-interaction",
-      "reason": "cpp emission failed for @flighthq/example-interaction/examples/packages/interaction/src/app.ts: contextual union value type flight::Ref<set_cursor_entity_runtime_key_d121b263b41ffa37> is not a represented runtime domain",
-      "stage": "emission"
+      "reason": "dependency ./render was refused for @flighthq/example-interaction/examples/packages/interaction/src/renderNative.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -285,6 +309,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 152,
       "module": "examples/packages/materialshowcase/src/app.ts",
       "package": "@flighthq/example-materialshowcase",
       "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/app.ts: contextual union value type flight::Ref<flight::sdk::StandardPbrMaterialProperties> is not a represented runtime domain",
@@ -306,9 +332,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 44,
       "module": "examples/packages/motionpath/src/app.ts",
       "package": "@flighthq/example-motionpath",
-      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/app.ts: intersection types require C++ multiple-inheritance lowering",
+      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {
@@ -327,9 +355,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 140,
       "module": "examples/packages/movieclip/src/app.ts",
       "package": "@flighthq/example-movieclip",
-      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/app.ts: intersection types require C++ multiple-inheritance lowering",
+      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {
@@ -369,9 +399,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 29,
       "module": "examples/packages/particles/src/app.ts",
       "package": "@flighthq/example-particles",
-      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/app.ts: intersection types require C++ multiple-inheritance lowering",
+      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {
@@ -390,6 +422,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 102,
       "module": "examples/packages/pathboolean/src/app.ts",
       "package": "@flighthq/example-pathboolean",
       "reason": "cpp emission failed for @flighthq/example-pathboolean/examples/packages/pathboolean/src/app.ts: contextual multiVariant construction requires expression type evidence",
@@ -411,9 +445,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 69,
       "module": "examples/packages/platformer/src/app.ts",
       "package": "@flighthq/example-platformer",
-      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/app.ts: intersection types require C++ multiple-inheritance lowering",
+      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {
@@ -432,6 +468,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 77,
       "module": "examples/packages/scene-fire/src/app.ts",
       "package": "@flighthq/example-scene-fire",
       "reason": "cpp emission failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/app.ts: contextual union value type flight::Ref<flight::sdk::Texture2D> is not a represented runtime domain",
@@ -474,6 +512,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 62,
       "module": "examples/packages/scene3d/src/app.ts",
       "package": "@flighthq/example-scene3d",
       "reason": "cpp emission failed for @flighthq/example-scene3d/examples/packages/scene3d/src/app.ts: missing required call argument at position 2",
@@ -516,6 +556,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 75,
       "module": "examples/packages/snapshot/src/app.ts",
       "package": "@flighthq/example-snapshot",
       "reason": "cpp emission failed for @flighthq/example-snapshot/examples/packages/snapshot/src/app.ts: ambient value Array member from has no C++ binding",
@@ -536,11 +578,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "examples/packages/sound/src/app.ts",
       "package": "@flighthq/example-sound",
-      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/app.ts: contextual union value type flight::Ref<set_cursor_entity_runtime_key_d121b263b41ffa37> is not a represented runtime domain",
-      "stage": "emission"
+      "reason": "dependency ./render was refused for @flighthq/example-sound/examples/packages/sound/src/renderNative.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -558,9 +600,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 45,
       "module": "examples/packages/spatial/src/app.ts",
       "package": "@flighthq/example-spatial",
-      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/app.ts: intersection types require C++ multiple-inheritance lowering",
+      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {
@@ -579,6 +623,8 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 1,
+      "line": 78,
       "module": "examples/packages/spring/src/app.ts",
       "package": "@flighthq/example-spring",
       "reason": "cpp emission failed for @flighthq/example-spring/examples/packages/spring/src/app.ts: contextual optionalSingle construction requires expression type evidence",
@@ -600,9 +646,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 27,
       "module": "examples/packages/spritesheet/src/app.ts",
       "package": "@flighthq/example-spritesheet",
-      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/app.ts: intersection types require C++ multiple-inheritance lowering",
+      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {
@@ -684,9 +732,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 50,
       "module": "examples/packages/tween/src/app.ts",
       "package": "@flighthq/example-tween",
-      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/app.ts: intersection types require C++ multiple-inheritance lowering",
+      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {

@@ -2,13 +2,13 @@
   "schema": "flight-generated-upstream-examples/1",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
-    "revision": "fbfcc1102d2afb5fa5ea942fcdad27d520f21408",
+    "revision": "ef60fb6d3181ce5c12d5ce8d75c8ef6518c9b168",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
   "bindingProfiles": [
     {
-      "digest": "sha256:34cb604712f511c1da4d04fcb1751a46363cc65e26d5afb01e2adc430dd3d4ae",
+      "digest": "sha256:3c2e8c881595729626342a417283bd3bfcf1b353759c671fa6893b6a22e04440",
       "identity": "flighthq/flight-cpp/runtime-carriers/1",
       "path": "bindings/runtime.json",
       "profile": "runtime-carriers",
@@ -22,7 +22,7 @@
       "schema": "flight-cpp-external-bindings/1"
     },
     {
-      "digest": "sha256:889945f1b894c702b8108147ec2eec3b08fe28aa0aa3371995014dae6ba747d0",
+      "digest": "sha256:5bbaaf9c6dcacda0d2c9fe89eb9453af9726d417c15193e2e5016cce9930db71",
       "identity": "flighthq/flight-cpp/web-types/1",
       "path": "bindings/web-types.json",
       "profile": "web-types",
@@ -36,7 +36,7 @@
       "schema": "flight-cpp-external-bindings/1"
     },
     {
-      "digest": "sha256:9b133e774ebed47e77ce47d34639d5bd3446721ab05426f51999facd2fec864e",
+      "digest": "sha256:dc99cb21212cdd3ca4e1438011588a75db02b8d6792fda8f3f4587237fbeea74",
       "identity": "flighthq/flight-cpp/sdl-gl/1",
       "path": "bindings/sdl-gl.json",
       "profile": "sdl-gl",
@@ -841,7 +841,7 @@
   "source": {
     "directory": "examples/packages",
     "repository": "https://github.com/flighthq/flight",
-    "revision": "903f3289590358eacc20698525e6982da2ab0e9d"
+    "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad"
   },
   "summary": {
     "packages": 34,
