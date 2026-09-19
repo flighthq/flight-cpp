@@ -5,7 +5,7 @@
 #include <flight/host_sdl/export.hpp>
 
 namespace flight::types {
-struct HostDeviceProvider;
+struct HostDeviceCapability;
 }
 
 namespace flight::host_sdl {
@@ -19,7 +19,7 @@ class FLIGHT_HOST_SDL_SDK_DEVICE_API SdkDeviceBackend final {
  public:
   explicit SdkDeviceBackend(const Window& window);
 
-  [[nodiscard]] flight::types::HostDeviceProvider backend() const;
+  [[nodiscard]] flight::types::HostDeviceCapability backend() const;
 
  private:
   std::uint32_t window_id_{};

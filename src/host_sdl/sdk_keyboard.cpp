@@ -49,9 +49,8 @@ SdkSoftKeyboardBackend& SdkSoftKeyboardBackend::operator=(
 SdkSoftKeyboardBackend::SdkSoftKeyboardBackend(SdkSoftKeyboardBackend&&) noexcept = default;
 SdkSoftKeyboardBackend& SdkSoftKeyboardBackend::operator=(SdkSoftKeyboardBackend&&) noexcept = default;
 
-flight::types::HostSoftKeyboardChangeProvider SdkSoftKeyboardBackend::change_backend() const {
-  flight::types::HostSoftKeyboardChangeProvider result;
-  result.entity_runtime_key = std::nullopt;
+flight::types::HostSoftKeyboardChangeCapability SdkSoftKeyboardBackend::change_backend() const {
+  flight::types::HostSoftKeyboardChangeCapability result;
   result.subscribe = [state = state_](std::function<void()> callback) {
     auto output = flight::make_ref<flight::types::SoftKeyboardChangeSubscription>();
     output->result = flight::types::soft_keyboard_attach_acquisition_failed_kind;
@@ -76,9 +75,8 @@ flight::types::HostSoftKeyboardChangeProvider SdkSoftKeyboardBackend::change_bac
   return result;
 }
 
-flight::types::HostSoftKeyboardInfoProvider SdkSoftKeyboardBackend::info_backend() const {
-  flight::types::HostSoftKeyboardInfoProvider result;
-  result.entity_runtime_key = std::nullopt;
+flight::types::HostSoftKeyboardInfoCapability SdkSoftKeyboardBackend::info_backend() const {
+  flight::types::HostSoftKeyboardInfoCapability result;
   result.get_info = [state = state_](flight::Ref<flight::types::SoftKeyboardInfo> output) {
     if (output == nullptr) return output;
     SDL_Window* window = state->window();
@@ -93,9 +91,8 @@ flight::types::HostSoftKeyboardInfoProvider SdkSoftKeyboardBackend::info_backend
   return result;
 }
 
-flight::types::HostSoftKeyboardVisibilityProvider SdkSoftKeyboardBackend::visibility_backend() const {
-  flight::types::HostSoftKeyboardVisibilityProvider result;
-  result.entity_runtime_key = std::nullopt;
+flight::types::HostSoftKeyboardVisibilityCapability SdkSoftKeyboardBackend::visibility_backend() const {
+  flight::types::HostSoftKeyboardVisibilityCapability result;
   result.show = [state = state_] {
     SDL_Window* window = state->window();
     const bool succeeded =

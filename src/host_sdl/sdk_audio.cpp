@@ -1,7 +1,7 @@
 #include <flight/host_sdl/sdk_audio.hpp>
 
 #include <flight/host_sdl/audio.hpp>
-#include <flight/types/audio_device_backend.hpp>
+#include <flight/types/host_audio_device.hpp>
 
 #include <cmath>
 #include <cstdint>
@@ -70,10 +70,9 @@ SdkAudioDeviceBackend::SdkAudioDeviceBackend(SdkAudioDeviceBackend&&) noexcept =
 
 SdkAudioDeviceBackend& SdkAudioDeviceBackend::operator=(SdkAudioDeviceBackend&&) noexcept = default;
 
-flight::types::HostAudioDeviceProvider SdkAudioDeviceBackend::backend() const {
-  flight::types::HostAudioDeviceProvider result;
+flight::types::HostAudioDeviceCapability SdkAudioDeviceBackend::backend() const {
+  flight::types::HostAudioDeviceCapability result;
   const auto state = state_;
-  result.entity_runtime_key = std::nullopt;
   result.create_buffer = [state](
                              double device,
                              double channels,

@@ -82,9 +82,8 @@ namespace {
 
 } // namespace
 
-flight::types::HostPlatformProvider SdkPlatformBackend::backend() const {
-  flight::types::HostPlatformProvider result;
-  result.entity_runtime_key = std::nullopt;
+flight::types::HostPlatformCapability SdkPlatformBackend::backend() const {
+  flight::types::HostPlatformCapability result;
   result.get_info = [](flight::Ref<flight::types::PlatformInfo> output) {
     if (output == nullptr) return output;
     const char* raw_platform = SDL_GetPlatform();

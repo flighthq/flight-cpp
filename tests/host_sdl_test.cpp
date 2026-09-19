@@ -17,15 +17,14 @@
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/host_sdl/window.hpp>
 #include <flight/weak_map.hpp>
-#include <flight/types/audio_device_backend.hpp>
-#include <flight/types/application_visibility_backend.hpp>
-#include <flight/types/application_window_target_backend.hpp>
+#include <flight/types/host_audio_device.hpp>
 #include <flight/types/clipboard.hpp>
 #include <flight/types/cursor.hpp>
 #include <flight/types/device.hpp>
-#include <flight/types/fullscreen_backend.hpp>
+#include <flight/types/host_fullscreen.hpp>
 #include <flight/types/haptics.hpp>
-#include <flight/types/input_target_backend.hpp>
+#include <flight/types/host_input.hpp>
+#include <flight/types/host_input_target.hpp>
 #include <flight/types/keyboard.hpp>
 #include <flight/types/platform.hpp>
 #include <flight/types/screen.hpp>
@@ -720,14 +719,10 @@ int main() {
 
   flight::host_sdl::SdkWindowBackend sdk_window(window);
   const auto sdk_window_copy = sdk_window;
-  auto visibility_backend = sdk_window.visibility_backend();
-  expect(!visibility_backend.is_visible(), "hidden SDL window reported visible to Flight");
-  window.show();
-  expect(
-      sdk_window_copy.visibility_backend().is_visible(),
-      "SDL SDK window copies did not share a visible window");
-  window.hide();
-  expect(!visibility_backend.is_visible(), "hidden SDL window remained visible to Flight");
+  // Visibility is no longer part of the generated contract this adapter binds: upstream removed
+  // HostApplicationVisibilityProvider, whose isVisible() these lines used to exercise. That copies
+  // of the adapter address one SDL window is still covered below, where a target minted from the
+  // copy is resolved by the original's fullscreen capability.
   window.show();
 
   auto fullscreen_backend = sdk_window.fullscreen_backend();
@@ -822,11 +817,10 @@ int main() {
       pointer_unlock->reason == flight::String("ok"),
       "SDL pointer-lock exit did not return the generated success outcome");
 
-  flight::types::HostApplicationVisibilityProvider expired_visibility;
-  flight::types::HostDeviceProvider expired_device;
-  flight::types::HostFullscreenProvider expired_fullscreen;
-  flight::types::HostSoftKeyboardInfoProvider expired_keyboard_info;
-  flight::types::HostSoftKeyboardVisibilityProvider expired_keyboard_visibility;
+  flight::types::HostDeviceCapability expired_device;
+  flight::types::HostElementFullscreenCapability expired_fullscreen;
+  flight::types::HostSoftKeyboardInfoCapability expired_keyboard_info;
+  flight::types::HostSoftKeyboardVisibilityCapability expired_keyboard_visibility;
   flight::Ref<flight::types::FullscreenTargetHandle> expired_target;
   {
     flight::host_sdl::WindowOptions transient_options = options;
@@ -836,13 +830,11 @@ int main() {
     flight::host_sdl::SdkSoftKeyboardBackend transient_sdk_keyboard(transient_window);
     flight::host_sdl::SdkWindowBackend transient_sdk_window(transient_window);
     expired_device = transient_sdk_device.backend();
-    expired_visibility = transient_sdk_window.visibility_backend();
     expired_fullscreen = transient_sdk_window.fullscreen_backend();
     expired_keyboard_info = transient_sdk_keyboard.info_backend();
     expired_keyboard_visibility = transient_sdk_keyboard.visibility_backend();
     expired_target = transient_sdk_window.fullscreen_target();
   }
-  expect(!expired_visibility.is_visible(), "destroyed SDL window remained visible to Flight");
   auto expired_soft_keyboard = flight::make_ref<flight::types::SoftKeyboardInfo>();
   expired_keyboard_info.get_info(expired_soft_keyboard);
   expect(

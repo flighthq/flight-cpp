@@ -6,7 +6,7 @@
 #include <flight/host_sdl/export.hpp>
 
 namespace flight::types {
-struct HostAudioDeviceProvider;
+struct HostAudioDeviceCapability;
 }
 
 namespace flight::host_sdl {
@@ -24,7 +24,7 @@ class FLIGHT_HOST_SDL_SDK_AUDIO_API SdkAudioDeviceBackend final {
   SdkAudioDeviceBackend(SdkAudioDeviceBackend&&) noexcept;
   SdkAudioDeviceBackend& operator=(SdkAudioDeviceBackend&&) noexcept;
 
-  [[nodiscard]] flight::types::HostAudioDeviceProvider backend() const;
+  [[nodiscard]] flight::types::HostAudioDeviceCapability backend() const;
   [[nodiscard]] std::size_t pump() const;
 
  private:

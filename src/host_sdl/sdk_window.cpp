@@ -1,10 +1,9 @@
 #include <flight/host_sdl/sdk_window.hpp>
 
 #include <flight/host_sdl/window.hpp>
-#include <flight/types/application_visibility_backend.hpp>
-#include <flight/types/application_window_target_backend.hpp>
-#include <flight/types/fullscreen_backend.hpp>
-#include <flight/types/input_target_backend.hpp>
+#include <flight/types/host_fullscreen.hpp>
+#include <flight/types/host_input.hpp>
+#include <flight/types/host_input_target.hpp>
 #include <flight/weak_map.hpp>
 
 #include <algorithm>
@@ -92,22 +91,9 @@ SdkWindowBackend::SdkWindowBackend(SdkWindowBackend&&) noexcept = default;
 
 SdkWindowBackend& SdkWindowBackend::operator=(SdkWindowBackend&&) noexcept = default;
 
-flight::types::HostApplicationVisibilityProvider SdkWindowBackend::visibility_backend() const {
+flight::types::HostElementFullscreenCapability SdkWindowBackend::fullscreen_backend() const {
   if (state_ == nullptr) throw std::logic_error("moved-from SDL SDK window backend");
-  flight::types::HostApplicationVisibilityProvider result;
-  const auto state = state_;
-  result.is_visible = [state] {
-    SDL_Window* window = SDL_GetWindowFromID(state->window_id);
-    if (window == nullptr) return false;
-    constexpr SDL_WindowFlags invisible = SDL_WINDOW_HIDDEN | SDL_WINDOW_MINIMIZED;
-    return (SDL_GetWindowFlags(window) & invisible) == 0;
-  };
-  return result;
-}
-
-flight::types::HostFullscreenProvider SdkWindowBackend::fullscreen_backend() const {
-  if (state_ == nullptr) throw std::logic_error("moved-from SDL SDK window backend");
-  flight::types::HostFullscreenProvider result;
+  flight::types::HostElementFullscreenCapability result;
   const auto state = state_;
   result.exit = [state] {
     const SDL_WindowID id = state->fullscreen_window_id.value_or(state->window_id);
@@ -138,10 +124,9 @@ flight::Ref<flight::types::FullscreenTargetHandle> SdkWindowBackend::fullscreen_
   return target;
 }
 
-flight::types::HostInputDropFileProvider SdkWindowBackend::input_drop_file_backend() const {
+flight::types::HostInputDropFileCapability SdkWindowBackend::input_drop_file_backend() const {
   if (state_ == nullptr) throw std::logic_error("moved-from SDL SDK window backend");
-  flight::types::HostInputDropFileProvider result;
-  result.entity_runtime_key = std::nullopt;
+  flight::types::HostInputDropFileCapability result;
   const auto state = state_;
   result.subscribe = [state](
                          flight::Ref<flight::types::InputTargetHandle> target,
@@ -163,10 +148,9 @@ flight::types::HostInputDropFileProvider SdkWindowBackend::input_drop_file_backe
   return result;
 }
 
-flight::types::HostInputFocusProvider SdkWindowBackend::input_focus_backend() const {
+flight::types::HostInputFocusCapability SdkWindowBackend::input_focus_backend() const {
   if (state_ == nullptr) throw std::logic_error("moved-from SDL SDK window backend");
-  flight::types::HostInputFocusProvider result;
-  result.entity_runtime_key = std::nullopt;
+  flight::types::HostInputFocusCapability result;
   const auto state = state_;
   result.subscribe = [state](
                          flight::Ref<flight::types::InputTargetHandle> target,
@@ -190,10 +174,9 @@ flight::types::HostInputFocusProvider SdkWindowBackend::input_focus_backend() co
   return result;
 }
 
-flight::types::HostInputPointerLockProvider SdkWindowBackend::input_pointer_lock_backend() const {
+flight::types::HostInputPointerLockCapability SdkWindowBackend::input_pointer_lock_backend() const {
   if (state_ == nullptr) throw std::logic_error("moved-from SDL SDK window backend");
-  flight::types::HostInputPointerLockProvider result;
-  result.entity_runtime_key = std::nullopt;
+  flight::types::HostInputPointerLockCapability result;
   const auto state = state_;
   result.exit = [state] {
     if (!state->relative_pointer_window_id.has_value()) {
@@ -236,10 +219,9 @@ flight::types::HostInputPointerLockProvider SdkWindowBackend::input_pointer_lock
   return result;
 }
 
-flight::types::HostInputTargetProvider SdkWindowBackend::input_target_backend() const {
+flight::types::HostInputTargetCapability SdkWindowBackend::input_target_backend() const {
   if (state_ == nullptr) throw std::logic_error("moved-from SDL SDK window backend");
-  flight::types::HostInputTargetProvider result;
-  result.entity_runtime_key = std::nullopt;
+  flight::types::HostInputTargetCapability result;
   const auto state = state_;
   result.prepare = [state](flight::Ref<flight::types::InputTargetHandle> target) {
     if (target != nullptr) static_cast<void>(state->input_targets.get(target));

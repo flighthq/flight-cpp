@@ -5,10 +5,10 @@
 #include <flight/host_sdl/export.hpp>
 
 namespace flight::types {
-struct HostScreenChangeProvider;
-struct HostScreenDetailsProvider;
+struct HostScreenChangeCapability;
+struct HostScreenDetailsCapability;
 struct ScreenInfo;
-struct HostScreenQueryProvider;
+struct HostScreenQueryCapability;
 }
 
 union SDL_Event;
@@ -28,9 +28,9 @@ class FLIGHT_HOST_SDL_SDK_SCREEN_API SdkScreenBackend final {
   SdkScreenBackend(SdkScreenBackend&&) noexcept;
   SdkScreenBackend& operator=(SdkScreenBackend&&) noexcept;
 
-  [[nodiscard]] flight::types::HostScreenQueryProvider query_backend() const;
-  [[nodiscard]] flight::types::HostScreenDetailsProvider details_backend() const;
-  [[nodiscard]] flight::types::HostScreenChangeProvider change_backend() const;
+  [[nodiscard]] flight::types::HostScreenQueryCapability query_backend() const;
+  [[nodiscard]] flight::types::HostScreenDetailsCapability details_backend() const;
+  [[nodiscard]] flight::types::HostScreenChangeCapability change_backend() const;
 
   // Routes SDL display add/remove/metrics events to generated subscriptions and refreshes the
   // adapter's last-known snapshot. Other events remain owned by the caller.

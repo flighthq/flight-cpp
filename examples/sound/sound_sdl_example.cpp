@@ -2,7 +2,7 @@
 
 #include <flight/audio_buffer.hpp>
 #include <flight/host_sdl/sdk_audio.hpp>
-#include <flight/types/audio_device_backend.hpp>
+#include <flight/types/host_audio_device.hpp>
 
 #include <array>
 #include <chrono>
@@ -36,7 +36,7 @@ struct Voice final {
 }
 
 void configure_voice(
-    flight::types::HostAudioDeviceProvider& backend,
+    flight::types::HostAudioDeviceCapability& backend,
     double device,
     const flight::AudioBuffer& decoded,
     Voice& voice,

@@ -5,9 +5,9 @@
 #include <flight/host_sdl/export.hpp>
 
 namespace flight::types {
-struct HostSoftKeyboardChangeProvider;
-struct HostSoftKeyboardInfoProvider;
-struct HostSoftKeyboardVisibilityProvider;
+struct HostSoftKeyboardChangeCapability;
+struct HostSoftKeyboardInfoCapability;
+struct HostSoftKeyboardVisibilityCapability;
 }
 
 union SDL_Event;
@@ -29,9 +29,9 @@ class FLIGHT_HOST_SDL_SDK_KEYBOARD_API SdkSoftKeyboardBackend final {
   SdkSoftKeyboardBackend(SdkSoftKeyboardBackend&&) noexcept;
   SdkSoftKeyboardBackend& operator=(SdkSoftKeyboardBackend&&) noexcept;
 
-  [[nodiscard]] flight::types::HostSoftKeyboardChangeProvider change_backend() const;
-  [[nodiscard]] flight::types::HostSoftKeyboardInfoProvider info_backend() const;
-  [[nodiscard]] flight::types::HostSoftKeyboardVisibilityProvider visibility_backend() const;
+  [[nodiscard]] flight::types::HostSoftKeyboardChangeCapability change_backend() const;
+  [[nodiscard]] flight::types::HostSoftKeyboardInfoCapability info_backend() const;
+  [[nodiscard]] flight::types::HostSoftKeyboardVisibilityCapability visibility_backend() const;
 
   // Routes SDL's global screen-keyboard shown/hidden events to subscriptions for a still-live
   // bound window. Other events are ignored and remain owned by the caller.

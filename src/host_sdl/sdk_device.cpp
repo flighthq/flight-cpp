@@ -111,9 +111,8 @@ void initialize_device_info(flight::types::DeviceInfo& output) {
 SdkDeviceBackend::SdkDeviceBackend(const Window& window)
     : window_id_(static_cast<std::uint32_t>(window.id())) {}
 
-flight::types::HostDeviceProvider SdkDeviceBackend::backend() const {
-  flight::types::HostDeviceProvider result;
-  result.entity_runtime_key = std::nullopt;
+flight::types::HostDeviceCapability SdkDeviceBackend::backend() const {
+  flight::types::HostDeviceCapability result;
   result.get_capabilities = [](flight::Ref<flight::types::DeviceCapabilities> output) {
     if (output == nullptr) return output;
     output->has_keyboard = has_device<SDL_KeyboardID>(SDL_GetKeyboards);
