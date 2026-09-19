@@ -26,6 +26,7 @@
     "examples:run": "node ./scripts/exampleRun.mjs",
     "facets:oracle": "node ./scripts/conditionalFacetOracle.mjs",
     "headless:oracle": "node ./scripts/headlessProfileOracle.mjs",
+    "host-capability:oracle": "node ./scripts/hostCapabilityOracle.mjs",
     "image-data:oracle": "node ./scripts/imageDataOracle.mjs",
     "promise-like:oracle": "node ./scripts/promiseLikeOracle.mjs",
     "regexp:oracle": "node ./scripts/regexpOracle.mjs",

@@ -27,6 +27,7 @@ const gates = [
   { arguments: [], name: 'exampleRun' },
   { arguments: [], name: 'conditionalFacetOracle' },
   { arguments: [], name: 'headlessProfileOracle' },
+  { arguments: [], name: 'hostCapabilityOracle' },
   { arguments: [], name: 'imageDataOracle' },
   { arguments: [], name: 'promiseLikeOracle' },
   { arguments: [], name: 'regexpOracle' },
