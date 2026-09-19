@@ -56,6 +56,7 @@ set(
   equality
   error
   executor
+  font_face
   host
   image_data
   intl

@@ -328,6 +328,78 @@ void test_audio_buffer() {
         "AudioBuffer rejects invalid channels, offsets, and construction options");
 }
 
+void test_font_face() {
+  const auto previous_executor = flight::current_executor();
+  const auto executor = std::make_shared<flight::QueueExecutor>();
+  const flight::HostScope scope({.executor = executor, .unicode = nullptr});
+
+  const flight::FontFace face(flight::String("Inter"), flight::String("url(inter.woff2)"));
+  check(face.family() == flight::String("Inter"), "a font face retains the family it was constructed with");
+  check(std::holds_alternative<flight::String>(face.source()) &&
+            std::get<flight::String>(face.source()) == flight::String("url(inter.woff2)"),
+        "a font face retains a CSS source descriptor as the string arm");
+  check(face.status() == flight::String("unloaded"), "a new font face is unloaded");
+
+  const auto copy = face;
+  check(copy == face && copy.identity() == face.identity(),
+        "copies of a font face are the same face, as they are in JavaScript");
+
+  // No loader installed: loading must report the missing capability rather than pretend it worked.
+  auto unavailable = face.load();
+  executor->run_until_idle();
+  check(unavailable.status() == flight::TaskStatus::rejected,
+        "loading a font face with no loader installed rejects");
+  check(face.status() == flight::String("error"),
+        "a face whose load could not even be attempted is in error, not loaded");
+
+  int loader_calls = 0;
+  flight::String loaded_family;
+  const auto restore = flight::set_font_face_loader(
+      [&](const flight::String& family, const flight::FontFaceSource&) {
+        ++loader_calls;
+        loaded_family = family;
+        return flight::Task<void>::ready();
+      });
+
+  const flight::FontFace resolving(flight::String("Inter"), flight::String("url(inter.woff2)"));
+  auto loading = resolving.load();
+  check(resolving.status() == flight::String("loading"), "a face reports that it is loading while it is");
+  executor->run_until_idle();
+  check(loading.status() == flight::TaskStatus::fulfilled && loading.get() == resolving,
+        "load resolves with the face itself, as the specification says");
+  check(resolving.status() == flight::String("loaded") && loader_calls == 1 &&
+            loaded_family == flight::String("Inter"),
+        "a loaded face records that it loaded, and the loader saw the family");
+
+  auto again = resolving.load();
+  executor->run_until_idle();
+  check(again.status() == flight::TaskStatus::fulfilled && loader_calls == 1,
+        "loading an already loaded face resolves without asking the loader a second time");
+
+  static_cast<void>(flight::set_font_face_loader([&](const flight::String&, const flight::FontFaceSource&) {
+    return flight::Task<void>::reject(flight::String("no such font"));
+  }));
+  const auto bytes = flight::ArrayBuffer(4);
+  const flight::FontFace failing(flight::String("Missing"), bytes);
+  check(std::holds_alternative<flight::ArrayBuffer>(failing.source()),
+        "a font face constructed from bytes retains the ArrayBuffer arm");
+  auto rejected = failing.load();
+  executor->run_until_idle();
+  check(rejected.status() == flight::TaskStatus::rejected &&
+            rejected.settle().rejection->as<flight::String>() == flight::String("no such font"),
+        "a rejected load carries the host's own reason rather than one this runtime invented");
+  check(failing.status() == flight::String("error"), "a face whose load was refused is in error");
+
+  const auto weak = resolving.weaken();
+  const auto recovered = flight::FontFace::lock_weak(weak);
+  check(recovered.has_value() && *recovered == resolving,
+        "a weakly held font face recovers the same face while it is alive");
+
+  static_cast<void>(flight::set_font_face_loader(restore));
+  check(flight::current_executor() == executor, "the font face test runs inside its own host scope");
+  static_cast<void>(previous_executor);
+}
+
 void test_blob() {
   const flight::Blob text_blob(
       flight::Array<flight::String>{"Flight ", flight::String::from_utf8("\xF0\x9F\x98\x80")},
@@ -2659,6 +2731,7 @@ int main() {
   test_binary_data();
   test_base64();
   test_blob();
+  test_font_face();
   test_boolean_conversion();
   test_contract();
   test_date();

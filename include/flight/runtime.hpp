@@ -20,6 +20,7 @@
 #include <flight/equality.hpp>
 #include <flight/error.hpp>
 #include <flight/executor.hpp>
+#include <flight/font_face.hpp>
 #include <flight/host.hpp>
 #include <flight/image_data.hpp>
 #include <flight/intl.hpp>

@@ -144,6 +144,30 @@
       "targetName": "flight::Blob"
     },
     {
+      "headers": [
+        "flight/font_face.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "FontFace",
+      "space": "type",
+      "targetName": "flight::FontFace"
+    },
+    {
+      "construction": {
+        "kind": "constructor",
+        "targetName": "flight::FontFace"
+      },
+      "headers": [
+        "flight/font_face.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "FontFace",
+      "space": "value",
+      "targetName": "flight::FontFace"
+    },
+    {
       "callResultType": "bool",
       "headers": [
         "flight/boolean.hpp"
