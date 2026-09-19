@@ -294,6 +294,16 @@
     },
     {
       "headers": [
+        "flight/structural_ref.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "ProxyHandler",
+      "space": "type",
+      "targetName": "flight::ProxyHandler"
+    },
+    {
+      "headers": [
         "flight/structured_clone.hpp"
       ],
       "nullability": "non-null",

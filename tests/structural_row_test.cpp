@@ -31,6 +31,7 @@ using SubjectRow = flight::RowOf<Subject>;
 using RequiredView = flight::StructuralRef<flight::RowRequired<SubjectRow>>;
 using PartialView = flight::StructuralRef<flight::RowPartial<SubjectRow>>;
 using ReadonlyRequiredView = flight::StructuralRef<flight::RowReadonly<flight::RowRequired<SubjectRow>>>;
+using WritableView = flight::StructuralRef<flight::RowWritable<SubjectRow>>;
 
 using SubscribeKey = flight::RowKey<"subscribe">;
 
@@ -109,6 +110,52 @@ int main() {
 
   const auto recovered = required.shared_object();
   check(recovered == provider, "a required row recovers the subject it projects");
+
+  // A `set` trap over a plain named key. The Entity runtime slot is a computed symbol, but a guard
+  // over a declared field -- `prop === 'binding'` in createGuardedEntityRuntime -- names the key
+  // directly, and that is a separate property space from a symbol of the same spelling.
+  auto guarded_subject = flight::make_ref<TestClipboardChangeProvider>();
+  const WritableView writable(guarded_subject);
+  int named_trap_calls = 0;
+  const auto named_guarded = flight::make_structural_write_proxy<WritableView::schema_type>(
+      writable, std::string("subscribe"), [&] { ++named_trap_calls; });
+
+  check(named_guarded != writable,
+        "a named-key write proxy is its own reference, as a JavaScript Proxy is its own object");
+  check(named_guarded.shared_object() == guarded_subject &&
+            writable.shared_object() == guarded_subject,
+        "the proxy reaches the very object it proxies rather than minting a second one");
+
+  flight::row_set<SubscribeKey>(named_guarded, std::function<double(double)>([](double weight) {
+                                  return weight * 3.0;
+                                }));
+  check(named_trap_calls == 1,
+        "a named-key write proxy reports the write it intercepts");
+  check(guarded_subject->subscribe.has_value() && (*guarded_subject->subscribe)(2.0) == 6.0,
+        "the intercepted write is forwarded to the subject unchanged");
+  const auto forwarded = flight::row_get<SubscribeKey>(writable);
+  check(forwarded.has_value() && (*forwarded)(2.0) == 6.0,
+        "the write is visible through the unproxied projection of the same subject");
+
+  // The two key spaces stay separate in both directions.
+  const auto subscribe_symbol = flight::Symbol::for_key("subscribe");
+  flight::row_set(named_guarded, subscribe_symbol, 7);
+  check(named_trap_calls == 1,
+        "a named interception does not fire for a symbol key of the same spelling");
+  check(flight::row_get<int>(writable, subscribe_symbol) == 7,
+        "the symbol write still reaches the shared row storage");
+
+  int symbol_trap_calls = 0;
+  const auto symbol_guarded = flight::make_structural_write_proxy<WritableView::schema_type>(
+      writable, subscribe_symbol, [&] { ++symbol_trap_calls; });
+  flight::row_set<SubscribeKey>(symbol_guarded, std::function<double(double)>([](double weight) {
+                                  return weight;
+                                }));
+  check(symbol_trap_calls == 0,
+        "a symbol interception does not fire for a named key of the same spelling");
+  flight::row_set(symbol_guarded, subscribe_symbol, 9);
+  check(symbol_trap_calls == 1 && flight::row_get<int>(writable, subscribe_symbol) == 9,
+        "the symbol interception fires for its own key and forwards the write");
 
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
   return failures == 0 ? 0 : 1;

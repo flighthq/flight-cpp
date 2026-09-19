@@ -1898,10 +1898,23 @@ void test_new_runtime_services() {
   check(flight::row_has(entity_view, entity_runtime_symbol),
         "computed structural slots expose presence without changing the value");
 
+  // `ProxyHandler` is the declared type of a `set` trap table, and it is deliberately not
+  // constructible: the compiler consumes the handler literal and lowers it to the call below, so a
+  // handler never reaches C++ as a value. A trap table assembled by hand would be a table this
+  // runtime never runs, so it fails to compile instead.
+  static_assert(!std::is_default_constructible_v<flight::ProxyHandler<flight::Ref<TestEntity>>>);
+  static_assert(!std::is_copy_constructible_v<flight::ProxyHandler<flight::Ref<TestEntity>>>);
+  static_assert(!std::is_move_constructible_v<flight::ProxyHandler<flight::Ref<TestEntity>>>);
+  static_assert(!std::is_destructible_v<flight::ProxyHandler<flight::Ref<TestEntity>>>);
+  static_assert(std::same_as<flight::ProxyHandler<flight::Ref<TestEntity>>::target_type,
+                             flight::Ref<TestEntity>>);
+
   int guard_calls = 0;
   auto guarded = flight::make_structural_write_proxy<EntityView::schema_type>(
       entity_view, entity_runtime_symbol, [&] { ++guard_calls; });
   check(guarded != entity_view, "a structural write proxy has distinct reference identity");
+  check(guarded.shared_native_object() == entity_view.shared_native_object(),
+        "a structural write proxy reaches the proxied object rather than giving it a second one");
   const auto arbitrary_field = flight::Symbol::for_key("caller-field");
   flight::row_set(guarded, arbitrary_field, 12);
   check(flight::row_get<int>(entity_view, arbitrary_field) == 12 && guard_calls == 0,

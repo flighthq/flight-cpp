@@ -376,6 +376,11 @@ template <typename Object>
   return owner;
 }
 
+// A JavaScript `set` trap over one row. It intercepts exactly one property -- a computed symbol
+// key or a plain named key, never both -- and forwards everything else to the proxied owner
+// untouched. Both key spaces are represented because TypeScript writes both: the Entity runtime
+// slot is a `Symbol.for` key, while a guard over a declared field such as `EntityRuntime.binding`
+// names it directly.
 class ProxyRowOwner final : public RowOwner {
  public:
   ProxyRowOwner(std::shared_ptr<RowOwner> target, Symbol intercepted_key, std::function<void()> before_write)
@@ -383,12 +388,18 @@ class ProxyRowOwner final : public RowOwner {
         intercepted_key_(std::move(intercepted_key)),
         before_write_(std::move(before_write)) {}
 
+  ProxyRowOwner(std::shared_ptr<RowOwner> target, std::string intercepted_name, std::function<void()> before_write)
+      : target_(std::move(target)),
+        intercepted_name_(std::move(intercepted_name)),
+        before_write_(std::move(before_write)) {}
+
   void before_write(const Symbol& key) const override {
-    if (key == intercepted_key_) before_write_();
+    if (intercepted_key_ && key == *intercepted_key_) before_write_();
     target_->before_write(key);
   }
 
   void before_named_write(std::string_view key) const override {
+    if (intercepted_name_ && key == *intercepted_name_) before_write_();
     target_->before_named_write(key);
   }
 
@@ -424,7 +435,8 @@ class ProxyRowOwner final : public RowOwner {
 
  private:
   std::shared_ptr<RowOwner> target_;
-  Symbol intercepted_key_;
+  std::optional<Symbol> intercepted_key_;
+  std::optional<std::string> intercepted_name_;
   std::function<void()> before_write_;
 };
 
@@ -913,6 +925,36 @@ template <typename Schema>
   return AttachedProperties(source.shared_native_object(), source.shared_owner());
 }
 
+// The declared type of a `new Proxy(target, handler)` trap table.
+//
+// This runtime has no prototype chain and no general property-access interception, so it does not
+// implement `Proxy`. What it implements is the one proxy shape Flight actually writes: a handler
+// whose single `set` trap reports a write to one known key and then forwards the write unchanged.
+// The compiler pattern-matches that exact shape and lowers it to `make_structural_write_proxy`
+// below, so the handler object is consumed at emission and never reaches C++ as a value.
+//
+// `ProxyHandler` therefore exists to give that argument position a real declared type, and it is
+// deliberately not constructible. A handler the compiler cannot lower is refused at emission rather
+// than silently becoming an object that accepts traps this runtime would never run, and C++ code
+// that tries to assemble a trap table by hand fails to compile instead of building one that is
+// quietly ignored. The type parameter is the proxied target, mirroring TypeScript's
+// `ProxyHandler<T>`; it is carried so a handler position stays type-checked, not stored.
+template <typename Target>
+class ProxyHandler final {
+ public:
+  using target_type = Target;
+
+  ProxyHandler() = delete;
+  ProxyHandler(const ProxyHandler&) = delete;
+  ProxyHandler(ProxyHandler&&) = delete;
+  ProxyHandler& operator=(const ProxyHandler&) = delete;
+  ProxyHandler& operator=(ProxyHandler&&) = delete;
+  ~ProxyHandler() = delete;
+};
+
+// `new Proxy(target, { set(t, key, value) { if (key === K) report(); t[key] = value; return true; } })`
+// for a computed symbol key K. The result is a distinct reference -- JavaScript's proxy is its own
+// object -- over the same row storage, so the proxied object gains no second copy of its state.
 template <typename Schema, typename BeforeWrite>
   requires std::invocable<BeforeWrite&>
 [[nodiscard]] StructuralRef<Schema> make_structural_write_proxy(
@@ -923,6 +965,22 @@ template <typename Schema, typename BeforeWrite>
   auto callback = std::function<void()>(std::forward<BeforeWrite>(before_write));
   return StructuralRef<Schema>::from_owner(std::make_shared<detail::ProxyRowOwner>(
       target.shared_owner(), std::move(intercepted_key), std::move(callback)));
+}
+
+// The same trap for a plain named key, which is what a guard over a declared field compares
+// against -- `prop === 'binding'` rather than `prop === EntityRuntimeKey`. The two key spaces stay
+// separate: a named interception never fires for a symbol of the same spelling, and vice versa,
+// because ECMAScript property keys are not interchangeable across those spaces.
+template <typename Schema, typename BeforeWrite>
+  requires std::invocable<BeforeWrite&>
+[[nodiscard]] StructuralRef<Schema> make_structural_write_proxy(
+    StructuralRef<Schema> target,
+    std::string intercepted_name,
+    BeforeWrite&& before_write) {
+  if (!target.shared_owner()) return {};
+  auto callback = std::function<void()>(std::forward<BeforeWrite>(before_write));
+  return StructuralRef<Schema>::from_owner(std::make_shared<detail::ProxyRowOwner>(
+      target.shared_owner(), std::move(intercepted_name), std::move(callback)));
 }
 
 } // namespace flight
