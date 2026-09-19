@@ -478,6 +478,13 @@ using generated_row_member_t = void;
 
 template <typename Object>
 void bind_generated_row_members(RowOwner&, const std::shared_ptr<Object>&) {}
+
+// With no generated member table there is nothing to prove a widening against, so none is
+// provable. Failing closed is the point: an unproven conversion is rejected rather than allowed.
+template <typename Base, typename Derived>
+consteval bool generated_row_widening_proven() {
+  return false;
+}
 } // namespace flight::detail
 #endif
 
@@ -633,6 +640,30 @@ inline constexpr bool schema_required<RowReadonly<Row>> = schema_required<Row>;
 template <typename Row>
 inline constexpr bool schema_required<RowWritable<Row>> = schema_required<Row>;
 
+// When one row may be read as another.
+//
+// Three cases are allowed and everything else is rejected:
+//
+//  * the same subject, which is every projection the compiler already emits -- writable to
+//    readonly, whole to partial, a row to a merge that has no single subject of its own;
+//  * a row with no subject at all on either side, where there is no object relationship to prove;
+//  * a proven structural widening: the source's subject declares every row key the target's
+//    subject declares, at the same type, so nothing the target row can ask for is missing.
+//
+// Direction is preserved in both dimensions. A readonly row never becomes writable, because the
+// source said its subject must not be mutated through it and a conversion is not a place to
+// change that answer. And widening goes one way only: a base row may be satisfied by a derived
+// subject, never the reverse, because the derived row can ask for keys the base does not have.
+template <typename From, typename To>
+concept row_objects_convertible =
+    std::is_void_v<schema_object_t<From>> || std::is_void_v<schema_object_t<To>> ||
+    std::same_as<schema_object_t<From>, schema_object_t<To>> ||
+    generated_row_widening_proven<schema_object_t<To>, schema_object_t<From>>();
+
+template <typename From, typename To>
+concept row_convertible_to = row_objects_convertible<From, To> &&
+                             (!schema_readonly<From> || schema_readonly<To>);
+
 } // namespace detail
 
 template <typename Schema>
@@ -653,7 +684,17 @@ class StructuralRef {
     }
   }
 
+  // A row may be read as another row when the two describe the same subject, or when the source's
+  // subject provably answers everything this schema names -- `Readonly<GlTextureRenderTarget>` read
+  // as `Readonly<GlRenderTarget>`. The conversion keeps the SOURCE object and the source's one row
+  // owner, so a widened read reaches the real derived object's members rather than a copy or a
+  // reinterpretation of them; there is no second object and no second identity.
+  //
+  // It is deliberately not a free conversion. Before this constraint any row converted to any
+  // other, so two unrelated rows compiled and then threw at the first read, and a readonly row
+  // converted to a writable one and granted mutation the source had refused.
   template <typename OtherSchema>
+    requires detail::row_convertible_to<OtherSchema, Schema>
   StructuralRef(const StructuralRef<OtherSchema>& other)
       : object_(other.shared_native_object()), owner_(other.shared_owner()) {}
 

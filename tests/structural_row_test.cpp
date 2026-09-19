@@ -3,8 +3,10 @@
 // alone, so `generated_row_member_t` is void there and no named member resolves.
 #include <flight/runtime.hpp>
 
+#include <concepts>
 #include <functional>
 #include <iostream>
+#include <memory>
 #include <optional>
 #include <stdexcept>
 
@@ -41,6 +43,62 @@ struct TestFinishedLight final : public flight::ReferenceEnabled {
 struct TestPopulatedSource final : public flight::ReferenceEnabled {
   double intensity{};
 };
+
+// The widening pair, in the shape the SDK has it: `GlTextureRenderTarget extends GlRenderTarget`
+// flattens to two separate C++ structs, so the relationship has to be proven from the members
+// rather than read off a base class.
+struct TestBaseTarget final : public flight::ReferenceEnabled {
+  double width{};
+  double height{};
+};
+
+struct TestDerivedTarget final : public flight::ReferenceEnabled {
+  double width{};
+  double height{};
+  double intensity{};
+};
+
+struct TestUnrelatedTarget final : public flight::ReferenceEnabled {
+  double color{};
+};
+
+// Same key names, different types: a match by spelling alone is not assignability.
+struct TestRetypedTarget final : public flight::ReferenceEnabled {
+  flight::String width;
+  double height{};
+};
+
+using BaseTargetRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestBaseTarget>>>>;
+using DerivedTargetRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestDerivedTarget>>>>;
+using WritableBaseTargetRow = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestBaseTarget>>>>;
+using WritableDerivedTargetRow = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestDerivedTarget>>>>;
+using UnrelatedTargetRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestUnrelatedTarget>>>>;
+using RetypedTargetRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestRetypedTarget>>>>;
+
+// Derived to base, and nothing else.
+static_assert(flight::detail::generated_row_widening_proven<TestBaseTarget, TestDerivedTarget>());
+static_assert(!flight::detail::generated_row_widening_proven<TestDerivedTarget, TestBaseTarget>());
+static_assert(!flight::detail::generated_row_widening_proven<TestBaseTarget, TestUnrelatedTarget>());
+static_assert(!flight::detail::generated_row_widening_proven<TestUnrelatedTarget, TestBaseTarget>());
+static_assert(!flight::detail::generated_row_widening_proven<TestBaseTarget, TestRetypedTarget>());
+
+static_assert(std::convertible_to<DerivedTargetRow, BaseTargetRow>,
+              "a derived subject satisfies the base row");
+static_assert(!std::convertible_to<BaseTargetRow, DerivedTargetRow>,
+              "a base subject cannot satisfy the derived row, which asks for more");
+static_assert(!std::convertible_to<UnrelatedTargetRow, BaseTargetRow>,
+              "unrelated rows are not convertible in either direction");
+static_assert(!std::convertible_to<BaseTargetRow, UnrelatedTargetRow>);
+static_assert(!std::convertible_to<RetypedTargetRow, BaseTargetRow>,
+              "matching key names at different types is not assignability");
+
+// Readonly widening must not grant mutation the source refused.
+static_assert(std::convertible_to<WritableDerivedTargetRow, BaseTargetRow>,
+              "a writable derived row may be read as a readonly base row");
+static_assert(!std::convertible_to<DerivedTargetRow, WritableBaseTargetRow>,
+              "a readonly row does not become writable by widening");
+static_assert(!std::convertible_to<BaseTargetRow, WritableBaseTargetRow>,
+              "nor by projecting the same subject");
 
 using Subject = flight::Ref<TestClipboardChangeProvider>;
 using SubjectRow = flight::RowOf<Subject>;
@@ -214,6 +272,50 @@ int main() {
   const PopulatedRow populated(flight::make_ref<TestPopulatedSource>());
   check(populated.shared_object() != nullptr,
         "a row over a populated object keeps the object it was built from");
+
+  // A widened row reads the REAL derived object, not a copy of it.
+  auto derived_target = flight::make_ref<TestDerivedTarget>();
+  derived_target->width = 1920.0;
+  derived_target->height = 1080.0;
+  derived_target->intensity = 0.5;
+  const WritableDerivedTargetRow derived_row(derived_target);
+  const BaseTargetRow widened = derived_row;
+
+  check(flight::row_get<flight::RowKey<"width">>(widened) == 1920.0 &&
+            flight::row_get<flight::RowKey<"height">>(widened) == 1080.0,
+        "a widened base row reads the derived subject's own properties");
+  derived_target->width = 2560.0;
+  check(flight::row_get<flight::RowKey<"width">>(widened) == 2560.0,
+        "the widened row is a view of the derived object, not a snapshot of it");
+  flight::row_set<flight::RowKey<"width">>(derived_row, 3840.0);
+  check(derived_target->width == 3840.0 && flight::row_get<flight::RowKey<"width">>(widened) == 3840.0,
+        "a write through the derived row is seen through the widened base row");
+  check(widened == derived_row && widened.shared_owner() == derived_row.shared_owner(),
+        "widening keeps one row owner, so the two rows are one subject");
+  check(widened.shared_object() == nullptr,
+        "a widened base row does not claim to hold a base object, because there is none");
+
+  // Optional wrapping: absence stays absence, and a present row still widens.
+  const std::optional<DerivedTargetRow> absent_target;
+  const std::optional<BaseTargetRow> widened_absent =
+      absent_target.has_value() ? std::optional<BaseTargetRow>(*absent_target) : std::nullopt;
+  check(!widened_absent.has_value(), "widening an absent optional row preserves absence");
+  const std::optional<DerivedTargetRow> present_target(derived_row);
+  const std::optional<BaseTargetRow> widened_present =
+      present_target.has_value() ? std::optional<BaseTargetRow>(*present_target) : std::nullopt;
+  check(widened_present.has_value() && flight::row_get<flight::RowKey<"width">>(*widened_present) == 3840.0,
+        "widening a present optional row keeps the subject and its values");
+
+  // The widened reference keeps the subject alive on its own.
+  std::weak_ptr<TestDerivedTarget> observer = derived_target;
+  {
+    const BaseTargetRow only_reference = derived_row;
+    derived_target.reset();
+    check(!observer.expired(),
+          "a widened reference keeps the derived subject alive for its own lifetime");
+    check(flight::row_get<flight::RowKey<"height">>(only_reference) == 1080.0,
+          "and the subject is still readable through it");
+  }
 
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
   return failures == 0 ? 0 : 1;

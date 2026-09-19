@@ -35,7 +35,9 @@ int main() {
   using MergedOptions = flight::StructuralRef<flight::RowMerge<
       flight::RowOf<flight::Ref<flight::types::AmbientLightOptions>>,
       flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLightOptions>>>>>;
-  const MergedOptions merged_options = readonly_options;
+  // Sourced from the writable projection: a merge whose arms are not all readonly permits writes,
+  // and a readonly row must not acquire that by being converted into one.
+  const MergedOptions merged_options = writable_options;
   if (flight::row_get<flight::RowKey<"intensity">>(merged_options) != std::optional<double>{3.0}) return 1;
 
   auto light = flight::lighting::create_ambient_light(readonly_options);

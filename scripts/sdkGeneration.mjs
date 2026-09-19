@@ -337,6 +337,10 @@ function writeStructuralMemberTable(outputRoot, files) {
     const member = safeCppMemberName(name);
     return `  if constexpr (requires { object->${member}; }) owner.bind_named(${JSON.stringify(name)}, [object]() -> decltype(auto) { return (object->${member}); });`;
   });
+  // One line per key for the widening proof. A macro keeps it to one line: the alternative spells
+  // the same three checks out 600-odd times and adds a quarter of a megabyte that every translation
+  // unit including the SDK would have to parse.
+  const wideningKeys = sortedNames.map((name) => `  FLIGHT_SDK_ROW_WIDENS(${safeCppMemberName(name)})`);
   if (cases.length === 0) {
     throw new Error('compiler output uses no structural row keys');
   }
@@ -346,8 +350,40 @@ function writeStructuralMemberTable(outputRoot, files) {
   mkdirSync(path.dirname(target), { recursive: true });
   writeFileSync(
     target,
-    `// Generated from the structural keys used by the emitted Flight SDK. Do not edit.\n#pragma once\n\n#include <flight/structural_ref.hpp>\n\n#include <memory>\n#include <string_view>\n#include <type_traits>\n#include <utility>\n\nnamespace flight::detail {\n\ntemplate <typename Key, typename Object>\ndecltype(auto) generated_row_member(Object& object) {\n${cases.join('\n')}\n  else static_assert(dependent_false<Key>, "Flight SDK row key has no compatible generated C++ member");\n}\n\ntemplate <typename Key, typename Object>\nconsteval auto generated_row_member_type_identity() {\n${typeCases.join('\n')}\n  else return std::type_identity<void>{};\n}\n\ntemplate <typename Key, typename Object>\nusing generated_row_member_t = typename decltype(generated_row_member_type_identity<Key, Object>())::type;\n\ntemplate <typename Object>\nvoid bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& object) {\n${bindings.join('\n')}\n}\n\n} // namespace flight::detail\n`,
+    `// Generated from the structural keys used by the emitted Flight SDK. Do not edit.\n#pragma once\n\n#include <flight/structural_ref.hpp>\n\n#include <concepts>\n#include <cstddef>\n#include <memory>\n#include <string_view>\n#include <type_traits>\n#include <utility>\n\nnamespace flight::detail {\n\ntemplate <typename Key, typename Object>\ndecltype(auto) generated_row_member(Object& object) {\n${cases.join('\n')}\n  else static_assert(dependent_false<Key>, "Flight SDK row key has no compatible generated C++ member");\n}\n\ntemplate <typename Key, typename Object>\nconsteval auto generated_row_member_type_identity() {\n${typeCases.join('\n')}\n  else return std::type_identity<void>{};\n}\n\ntemplate <typename Key, typename Object>\nusing generated_row_member_t = typename decltype(generated_row_member_type_identity<Key, Object>())::type;\n\ntemplate <typename Object>\nvoid bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& object) {\n${bindings.join('\n')}\n}\n\n${wideningPredicate(wideningKeys)}\n} // namespace flight::detail\n`,
   );
+}
+
+// The structural assignability proof behind row widening.
+//
+// `Derived` may be read through `Base`'s row when every key `Base` declares is a key `Derived`
+// declares at the same type. Only keys the emitted SDK actually uses as row keys are checked,
+// because only those can be asked for: a member no `RowKey` ever names cannot be read through a
+// row, so it cannot make a widened read fail.
+//
+// At least one key must match. Without that a type that declares none of these keys would "prove"
+// against anything, which is the unrelated-row conversion this proof exists to reject.
+function wideningPredicate(keys) {
+  return [
+    '#define FLIGHT_SDK_ROW_WIDENS(member)                                                          \\',
+    '  if constexpr (requires(Base& base) { base.member; }) {                                       \\',
+    '    if constexpr (!requires(Derived& derived) { derived.member; }) return false;                \\',
+    '    else if constexpr (!std::same_as<std::remove_cvref_t<decltype(std::declval<Base&>().member)>, \\',
+    '                                     std::remove_cvref_t<decltype(std::declval<Derived&>().member)>>) \\',
+    '      return false;                                                                            \\',
+    '    else ++matched;                                                                            \\',
+    '  }',
+    '',
+    'template <typename Base, typename Derived>',
+    'consteval bool generated_row_widening_proven() {',
+    '  std::size_t matched = 0;',
+    ...keys,
+    '  return matched > 0;',
+    '}',
+    '',
+    '#undef FLIGHT_SDK_ROW_WIDENS',
+    '',
+  ].join('\n');
 }
 
 function safeCppMemberName(name) {
