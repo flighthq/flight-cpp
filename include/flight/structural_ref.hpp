@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <any>
 #include <concepts>
 #include <cstddef>
@@ -14,6 +15,7 @@
 #include <typeindex>
 #include <unordered_map>
 #include <utility>
+#include <vector>
 
 #include <flight/any.hpp>
 #include <flight/attachment.hpp>
@@ -89,6 +91,16 @@ class RowCell {
 
   [[nodiscard]] virtual std::type_index value_type() const noexcept = 0;
 
+  // The address of the member this cell reads, for a cell that reads one, and null for a cell whose
+  // value it owns itself. It is the only thing a C++20 runtime can use to recover SOURCE
+  // DECLARATION ORDER: [class.mem] guarantees that later non-static data members with the same
+  // access control are allocated at higher addresses, and every generated struct declares all of
+  // its members public, so ordering the members by address orders them as they were written.
+  [[nodiscard]] virtual const void* storage_address() const noexcept { return nullptr; }
+
+  // The erased reading of this cell's value, or nothing when the runtime has none for its type.
+  [[nodiscard]] virtual std::optional<Any> as_any() const = 0;
+
   // Copies another cell's value into this one when both hold the same type, and reports whether it
   // did. The materializing cast uses it to move what a construction bag held onto the member the
   // finished object answers for itself; a cell whose type does not match is left alone rather than
@@ -109,6 +121,10 @@ class TypedRowCell : public RowCell {
     set(typed->get());
     return true;
   }
+
+  [[nodiscard]] std::optional<Any> as_any() const final {
+    return detail::any_from(const_cast<TypedRowCell<Value>*>(this)->get());
+  }
 };
 
 template <typename Value>
@@ -126,13 +142,19 @@ class OwnedRowCell final : public TypedRowCell<Value> {
 template <typename Value, typename Getter>
 class NativeRowCell final : public TypedRowCell<Value> {
  public:
-  explicit NativeRowCell(Getter getter) : getter_(std::move(getter)) {}
+  explicit NativeRowCell(Getter getter)
+      : getter_(std::move(getter)), address_(std::addressof(std::invoke(getter_))) {}
 
   [[nodiscard]] Value& get() override { return std::invoke(getter_); }
   void set(Value value) override { std::invoke(getter_) = std::move(value); }
 
+  // The member's own address, taken once when the cell is bound. The object is heap-allocated and
+  // owned by a shared pointer, so it does not move for as long as any cell over it is alive.
+  [[nodiscard]] const void* storage_address() const noexcept override { return address_; }
+
  private:
   Getter getter_;
+  const void* address_;
 };
 
 class RowOwner {
@@ -196,12 +218,21 @@ class RowOwner {
   }
 
   virtual void set_named_cell(std::string_view key, std::shared_ptr<RowCell> cell) {
-    named_cells_.insert_or_assign(std::string(key), std::move(cell));
+    auto name = std::string(key);
+    if (named_cells_.insert_or_assign(name, std::move(cell)).second) {
+      named_order_.push_back(std::move(name));
+    }
   }
 
   [[nodiscard]] virtual bool has_named_cell(std::string_view key) const {
     return named_cells_.contains(std::string(key));
   }
+
+  // Every named key this owner answers, in the order the keys were first bound. The generated
+  // member table binds in its own sorted order, so this is NOT declaration order on its own -- the
+  // dynamic view reorders the object's own members by address and keeps the rest in this order,
+  // which is where a key written after construction belongs.
+  [[nodiscard]] virtual const std::vector<std::string>& named_keys() const { return named_order_; }
 
   // Symbol-keyed properties live in the object's one attachment rather than in this owner, so a
   // computed-symbol write through a row and a `Record<Symbol, T>` view of the same object are the
@@ -238,6 +269,7 @@ class RowOwner {
  private:
   std::shared_ptr<SymbolAttachment> attachment_{std::make_shared<SymbolAttachment>()};
   std::unordered_map<std::string, std::shared_ptr<RowCell>> named_cells_;
+  std::vector<std::string> named_order_;
 };
 
 namespace detail {
@@ -439,6 +471,10 @@ class ProxyRowOwner final : public RowOwner {
 
   [[nodiscard]] bool has_named_cell(std::string_view key) const override {
     return target_->has_named_cell(key);
+  }
+
+  [[nodiscard]] const std::vector<std::string>& named_keys() const override {
+    return target_->named_keys();
   }
 
   [[nodiscard]] const std::any* dynamic_value(const Symbol& key) const override {
@@ -987,6 +1023,127 @@ template <typename Target, typename Schema>
       return detail::wrap_ref<Target>(source.shared_object());
     }
   }
+}
+
+// A property whose value this runtime has no erased reading of.
+//
+// It is raised rather than papered over: the alternative is inventing an `Any` for a value the
+// runtime cannot represent, and a dynamic read that returned the wrong object would be worse than
+// one that says it cannot answer. The key and the C++ type are both named so the caller can see
+// what it asked for.
+class UnrepresentedProperty final : public std::runtime_error {
+ public:
+  UnrepresentedProperty(std::string key, std::type_index type)
+      : std::runtime_error("flight::NamedProperties has no erased reading of property '" + key +
+                           "'"),
+        key_(std::move(key)),
+        type_(type) {}
+
+  [[nodiscard]] const std::string& key() const noexcept { return key_; }
+  [[nodiscard]] std::type_index type() const noexcept { return type_; }
+
+ private:
+  std::string key_;
+  std::type_index type_;
+};
+
+// A read-only dynamic view of an object's own enumerable STRING properties.
+//
+// This is what `Object.keys`, `Object.entries` and a computed `value[name]` read need over a
+// generated object or a structural row -- `explainHost` enumerates a host and then enumerates each
+// capability group it finds, without knowing either type.
+//
+// Three things are deliberate.
+//
+// Keys come back in SOURCE DECLARATION ORDER, which is the order `Object.keys` reports for string
+// keys. The object's own members are ordered by address, which [class.mem] ties to declaration
+// order for members sharing access control, and every generated struct is a `struct`. A key written
+// into the row after construction has no member to order against, so it follows the declared ones
+// in the order it was written -- again what JavaScript does with a property added later.
+//
+// Named string properties and Symbol attachments stay SEPARATE. A symbol-keyed property is not an
+// own enumerable string key, and `Object.keys` does not report one; this view reports only the
+// named space, and `flight::AttachedProperties` reports only the symbol space. A name and a symbol
+// that happen to share a spelling are two different properties, and neither view sees the other.
+//
+// The view is READ-ONLY. It answers what is there and never writes, so handing one to a caller
+// cannot become a way to mutate an object through a name that was never declared.
+class NamedProperties final {
+ public:
+  NamedProperties() = default;
+
+  explicit NamedProperties(std::shared_ptr<RowOwner> owner) : owner_(std::move(owner)) {}
+
+  [[nodiscard]] explicit operator bool() const noexcept { return owner_ != nullptr; }
+
+  // Own enumerable string keys, in source declaration order.
+  [[nodiscard]] std::vector<String> keys() const {
+    if (!owner_) return {};
+    std::vector<std::pair<const void*, const std::string*>> declared;
+    std::vector<const std::string*> written;
+    for (const auto& key : owner_->named_keys()) {
+      const auto cell = owner_->named_cell(key);
+      if (!cell) continue;
+      if (const auto* address = cell->storage_address()) declared.emplace_back(address, &key);
+      else written.push_back(&key);
+    }
+    std::stable_sort(declared.begin(), declared.end(),
+                     [](const auto& left, const auto& right) { return left.first < right.first; });
+    std::vector<String> result;
+    result.reserve(declared.size() + written.size());
+    for (const auto& entry : declared) result.push_back(String::from_utf8(*entry.second));
+    for (const auto* key : written) result.push_back(String::from_utf8(*key));
+    return result;
+  }
+
+  // `name in value` for own string keys, and nothing else: a symbol attachment of the same
+  // spelling is a different property and is not reported here.
+  [[nodiscard]] bool has(const String& key) const {
+    const auto name = key.to_utf8();
+    return owner_ != nullptr && owner_->named_cell(name) != nullptr;
+  }
+
+  // `value[name]`. An absent key reads as `undefined`, which is what reading a missing property
+  // yields in JavaScript -- `has` is the question that separates absence from a stored `undefined`.
+  // A present property whose type has no erased reading throws `UnrepresentedProperty` rather than
+  // inventing one; `is_represented` asks that in advance.
+  [[nodiscard]] Any get(const String& key) const {
+    const auto name = key.to_utf8();
+    if (!owner_) return Any(undefined);
+    const auto cell = owner_->named_cell(name);
+    if (!cell) return Any(undefined);
+    auto value = cell->as_any();
+    if (!value) throw UnrepresentedProperty(name, cell->value_type());
+    return *std::move(value);
+  }
+
+  // Whether `get` will answer this key without raising. An absent key is representable: it reads
+  // as `undefined`.
+  [[nodiscard]] bool is_represented(const String& key) const {
+    const auto name = key.to_utf8();
+    if (!owner_) return true;
+    const auto cell = owner_->named_cell(name);
+    return !cell || cell->as_any().has_value();
+  }
+
+  [[nodiscard]] const std::shared_ptr<RowOwner>& shared_owner() const noexcept { return owner_; }
+
+ private:
+  std::shared_ptr<RowOwner> owner_;
+};
+
+// The dynamic named view of an object, creating its one row owner on first use -- the same owner a
+// structural projection of that object resolves to, so the two read one set of properties.
+template <typename Object>
+[[nodiscard]] NamedProperties named_properties(const std::shared_ptr<Object>& object) {
+  if (!object) return {};
+  return NamedProperties(detail::owner_for(object));
+}
+
+// The dynamic named view of a row that already resolved an owner.
+template <typename Schema>
+[[nodiscard]] NamedProperties named_properties(const StructuralRef<Schema>& source) {
+  return NamedProperties(source.shared_owner());
 }
 
 // Symbol-keyed properties attached to an object, reachable without knowing the object's type.

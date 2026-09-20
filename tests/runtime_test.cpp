@@ -417,6 +417,68 @@ void test_font_face() {
   static_cast<void>(previous_executor);
 }
 
+void test_erased_ref() {
+  // The entity binding slot: `attachEntityBinding` stores an arbitrary object, and
+  // `getEntityBindingAs<Type>` reads it back at one type or not at all.
+  auto binding = flight::make_ref<TestReference>(TestReference{.value = 5});
+  auto other = flight::make_ref<TestEntity>();
+
+  const flight::ErasedRef erased(binding);
+  check(erased.has_value() && static_cast<bool>(erased),
+        "an erased reference holds the object it was given");
+  check(erased.as<TestReference>() == binding,
+        "and hands it back at the type it was erased from");
+  check(erased.as<TestEntity>() == nullptr,
+        "reading it at another type answers nothing rather than reinterpreting the object");
+  check(erased.holds<TestReference>() && !erased.holds<TestEntity>(),
+        "and the same question can be asked without producing the reference");
+  check(erased.held_type() == std::type_index(typeid(TestReference)),
+        "the type it went in as is the type it reports");
+
+  // The empty slot: `binding` is `object | null`, so holding nothing is an ordinary state.
+  const flight::ErasedRef empty;
+  check(!empty.has_value() && empty == nullptr && empty.as<TestReference>() == nullptr,
+        "an empty erased reference holds nothing of any type");
+  const flight::ErasedRef null_source(flight::Ref<TestReference>{});
+  check(!null_source.has_value() && null_source.held_type() == std::type_index(typeid(void)),
+        "erasing a null reference yields an empty one rather than a typed null");
+
+  // Identity, which is what `getEntityBinding` compares and what `hasEntityBinding` tests.
+  const flight::ErasedRef same(binding);
+  check(same == erased && same.identity() == erased.identity(),
+        "two erasures of one object are one binding");
+  check(!(flight::ErasedRef(other) == erased),
+        "erasures of different objects are different bindings");
+
+  // getEntityBindingAs over the slot as the compiler spells it.
+  std::optional<flight::ErasedRef> slot;
+  check(flight::erased_ref_as<TestReference>(slot) == nullptr,
+        "an unfilled binding slot reads as nothing at every type");
+  slot = flight::ErasedRef(binding);
+  check(flight::erased_ref_as<TestReference>(slot) == binding &&
+            flight::erased_ref_as<TestReference>(slot)->value == 5,
+        "a filled slot reads back at its own type, and the object is the one that was stored");
+  check(flight::erased_ref_as<TestEntity>(slot) == nullptr,
+        "and reads as nothing at any other type");
+
+  // Detaching sets the slot to null rather than removing it; both read as nothing.
+  slot = flight::ErasedRef();
+  check(flight::erased_ref_as<TestReference>(slot) == nullptr,
+        "a detached binding reads as nothing");
+
+  // The erased reference keeps its object alive, as any reference does. A fresh object, so that
+  // the erasures made above are not what is holding it.
+  auto owned = flight::make_ref<TestReference>(TestReference{.value = 6});
+  std::weak_ptr<TestReference> observer = owned;
+  {
+    const flight::ErasedRef only_holder(owned);
+    owned.reset();
+    check(!observer.expired() && only_holder.as<TestReference>()->value == 6,
+          "an erased reference owns its object for its own lifetime");
+  }
+  check(observer.expired(), "and releases it when the last erasure goes");
+}
+
 void test_blob() {
   const flight::Blob text_blob(
       flight::Array<flight::String>{"Flight ", flight::String::from_utf8("\xF0\x9F\x98\x80")},
@@ -2790,6 +2852,7 @@ int main() {
   test_audio_buffer();
   test_binary_data();
   test_base64();
+  test_erased_ref();
   test_blob();
   test_font_face();
   test_boolean_conversion();

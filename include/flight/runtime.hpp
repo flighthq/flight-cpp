@@ -18,6 +18,7 @@
 #include <flight/data_view.hpp>
 #include <flight/dom_exception.hpp>
 #include <flight/equality.hpp>
+#include <flight/erased_ref.hpp>
 #include <flight/error.hpp>
 #include <flight/executor.hpp>
 #include <flight/font_face.hpp>

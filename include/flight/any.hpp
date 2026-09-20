@@ -411,6 +411,63 @@ struct SameValueZero<Any> {
 // `AnySlot(Any())` is "an entry whose value is undefined"; nothing in the runtime conflates them.
 using AnySlot = std::optional<Any>;
 
+
+namespace detail {
+
+template <typename Value>
+struct is_std_function : std::false_type {};
+
+template <typename Result, typename... Parameters>
+struct is_std_function<std::function<Result(Parameters...)>> : std::true_type {};
+
+template <typename Value>
+struct is_std_optional : std::false_type {};
+
+template <typename Value>
+struct is_std_optional<std::optional<Value>> : std::true_type {};
+
+template <typename Value>
+struct is_shared_reference : std::false_type {};
+
+template <typename Value>
+struct is_shared_reference<std::shared_ptr<Value>> : std::true_type {};
+
+// The erased reading of one stored value, or nothing when this runtime has no honest erased
+// reading of it.
+//
+// `Any` represents the ECMAScript language types, so a stored value maps when it IS one of them: a
+// primitive, an object reference, a callable, or an optional wrapping one of those -- an empty
+// optional reads as `undefined`, because that is what an absent TypeScript property is.
+//
+// Everything else returns nothing rather than an approximation. `flight::Array`, a structural row
+// and a variant are all objects in the source language, but none of them can be handed to `Any`
+// without inventing an identity or reinterpreting storage, and a dynamic read that quietly returned
+// the wrong object would be worse than one that reports it cannot answer.
+template <typename Value>
+[[nodiscard]] std::optional<Any> any_from(const Value& value) {
+  using Stored = std::remove_cvref_t<Value>;
+  if constexpr (std::same_as<Stored, Any>) {
+    return value;
+  } else if constexpr (std::same_as<Stored, Undefined> || std::same_as<Stored, Null> ||
+                       std::same_as<Stored, bool> || std::same_as<Stored, String> ||
+                       std::same_as<Stored, Symbol> ||
+                       (std::is_arithmetic_v<Stored> && !std::same_as<Stored, bool>)) {
+    return Any(value);
+  } else if constexpr (is_shared_reference<Stored>::value) {
+    return Any::object(value);
+  } else if constexpr (is_std_function<Stored>::value) {
+    // An unset callable member is `null` rather than a function nobody can call.
+    return value ? std::optional<Any>(Any::function(value)) : std::optional<Any>(Any(null));
+  } else if constexpr (is_std_optional<Stored>::value) {
+    if (!value.has_value()) return Any(undefined);
+    return any_from(*value);
+  } else {
+    return std::nullopt;
+  }
+}
+
+} // namespace detail
+
 } // namespace flight
 
 namespace std {

@@ -54,6 +54,7 @@ set(
   date
   dom_exception
   equality
+  erased_ref
   error
   executor
   font_face

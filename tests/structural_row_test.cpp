@@ -5,6 +5,7 @@
 
 #include <concepts>
 #include <functional>
+#include <vector>
 #include <iostream>
 #include <memory>
 #include <optional>
@@ -112,6 +113,38 @@ static_assert(std::convertible_to<UnrelatedTargetRow, ReadonlyPartialTargetRow>,
               "an unrelated subject may still be probed through a readonly partial row");
 static_assert(!std::convertible_to<UnrelatedTargetRow, WritablePartialTargetRow>,
               "but never through a writable one");
+
+// hostExplain-style capability objects. `explainHost` enumerates a host, keeps the members that are
+// objects, and then enumerates each of those for its filled slots -- all without knowing either
+// type. These stand in for that shape.
+//
+// The slot names are declared width, color, alpha on purpose: alphabetically they are alpha, color,
+// width, so a view that reported binding order rather than declaration order would be caught here.
+struct TestExplainCapability final : public flight::ReferenceEnabled {
+  std::optional<std::function<double(double)>> subscribe;
+};
+
+struct TestExplainSlots final : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<TestExplainCapability>> width;
+  std::optional<flight::Ref<TestExplainCapability>> color;
+  std::optional<flight::Ref<TestExplainCapability>> alpha;
+};
+
+struct TestExplainHost final : public flight::ReferenceEnabled {
+  flight::Ref<TestExplainSlots> slots;
+  double intensity{};
+};
+
+// A member whose type the runtime has no erased reading of.
+struct TestUnrepresentedMember final : public flight::ReferenceEnabled {
+  flight::Array<double> value;
+  double height{};
+};
+
+// Asked as a template so the answer is a constraint rather than a hard error on a known type.
+template <typename View>
+concept writes_named_properties =
+    requires(View& view, flight::String key) { view.set(key, flight::Any()); };
 
 using Subject = flight::Ref<TestClipboardChangeProvider>;
 using SubjectRow = flight::RowOf<Subject>;
@@ -338,6 +371,100 @@ int main() {
   const ReadonlyPartialTargetRow present_probe = derived_row;
   check(flight::row_get<flight::RowKey<"width">>(present_probe).value_or(0.0) == 3840.0,
         "and reads the value when the subject does declare it");
+
+  // ---- the read-only dynamic named-property view ----
+
+  auto explain_present = flight::make_ref<TestExplainCapability>();
+  auto explain_slots = flight::make_ref<TestExplainSlots>();
+  explain_slots->width = explain_present;
+  explain_slots->alpha = explain_present;
+  auto explain_host = flight::make_ref<TestExplainHost>();
+  explain_host->slots = explain_slots;
+  explain_host->intensity = 4.0;
+
+  const auto host_view = flight::named_properties(explain_host);
+  check(host_view.keys() == std::vector<flight::String>({flight::String("slots"),
+                                                         flight::String("intensity")}),
+        "own string keys come back in source declaration order");
+
+  const auto slot_view = flight::named_properties(explain_slots);
+  check(slot_view.keys() == std::vector<flight::String>({flight::String("width"),
+                                                         flight::String("color"),
+                                                         flight::String("alpha")}),
+        "declaration order is reported even where it disagrees with alphabetical binding order");
+
+  // The explainHost walk itself: keep the members that are objects, then report each group's
+  // filled slots.
+  std::vector<flight::String> filled;
+  for (const auto& group_key : host_view.keys()) {
+    const auto group = host_view.get(group_key);
+    if (group.kind() != flight::AnyKind::object) continue;
+    const auto group_slots = flight::named_properties(group.object_if<TestExplainSlots>());
+    for (const auto& slot_key : group_slots.keys()) {
+      const auto slot = group_slots.get(slot_key);
+      if (slot.kind() == flight::AnyKind::undefined || slot.kind() == flight::AnyKind::null) continue;
+      filled.push_back(slot_key);
+    }
+  }
+  check(filled == std::vector<flight::String>({flight::String("width"), flight::String("alpha")}),
+        "a hostExplain-style walk reaches the filled slots of an enumerated capability group");
+
+  check(slot_view.get(flight::String("color")).kind() == flight::AnyKind::undefined,
+        "an empty optional slot reads as undefined, which is what an absent property is");
+  check(slot_view.has(flight::String("color")),
+        "and the key is still present, which is the question `has` answers");
+  check(slot_view.get(flight::String("width")).object_if<TestExplainCapability>() == explain_present,
+        "a filled slot reads back as the very capability object it holds");
+  check(host_view.get(flight::String("intensity")).kind() == flight::AnyKind::number,
+        "a number member reads as a number, so the typeof test can skip it");
+
+  check(!host_view.has(flight::String("absent")) &&
+            host_view.get(flight::String("absent")).kind() == flight::AnyKind::undefined,
+        "a key that is not there reads as undefined and reports absent");
+
+  // Named string properties and symbol attachments are separate spaces.
+  const auto width_symbol = flight::Symbol::for_key("width");
+  const flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestExplainSlots>>>>
+      slot_row(explain_slots);
+  flight::row_set(slot_row, width_symbol, 11);
+  check(slot_view.keys().size() == 3,
+        "a symbol property does not become an own enumerable string key");
+  check(slot_view.get(flight::String("width")).object_if<TestExplainCapability>() == explain_present,
+        "and it does not shadow the named property that shares its spelling");
+  check(flight::row_has(slot_row, width_symbol) &&
+            flight::row_get<int>(slot_row, width_symbol) == 11,
+        "while the symbol space still holds its own property under that spelling");
+
+  // A key written after construction has no member to order against, so it follows the declared
+  // ones -- as a property added later does in JavaScript.
+  slot_row.shared_owner()->set_named_value("caller-added", flight::String("late"));
+  check(slot_view.keys() == std::vector<flight::String>({flight::String("width"),
+                                                         flight::String("color"),
+                                                         flight::String("alpha"),
+                                                         flight::String("caller-added")}),
+        "a later-written key follows the declared members");
+  check(slot_view.get(flight::String("caller-added")) == flight::Any(flight::String("late")),
+        "and reads back the value it was written with");
+
+  // A member the runtime has no erased reading of is reported, not invented.
+  auto unrepresented = flight::make_ref<TestUnrepresentedMember>();
+  const auto unrepresented_view = flight::named_properties(unrepresented);
+  check(unrepresented_view.has(flight::String("value")) &&
+            !unrepresented_view.is_represented(flight::String("value")),
+        "a member with no erased reading is present but not representable");
+  check(unrepresented_view.is_represented(flight::String("height")),
+        "while a member beside it still reads");
+  bool unrepresented_reported = false;
+  try {
+    static_cast<void>(unrepresented_view.get(flight::String("value")));
+  } catch (const flight::UnrepresentedProperty& reported) {
+    unrepresented_reported = reported.key() == "value";
+  }
+  check(unrepresented_reported, "reading it reports the property rather than inventing a value");
+
+  // The view is read-only: it has no way to write a property back.
+  static_assert(!writes_named_properties<flight::NamedProperties>,
+                "the dynamic named view never writes");
 
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
   return failures == 0 ? 0 : 1;
