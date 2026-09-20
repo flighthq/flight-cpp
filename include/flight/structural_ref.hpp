@@ -481,6 +481,10 @@ void bind_generated_row_members(RowOwner&, const std::shared_ptr<Object>&) {}
 
 // With no generated member table there is nothing to prove a widening against, so none is
 // provable. Failing closed is the point: an unproven conversion is rejected rather than allowed.
+//
+// This fallback is reached only when NO table is present. A table that is present must define this
+// itself -- `sdkGeneration` emits it key by key -- because a table which omits it leaves the name
+// undeclared where the conversion concept below needs it.
 template <typename Base, typename Derived>
 consteval bool generated_row_widening_proven() {
   return false;

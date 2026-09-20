@@ -191,7 +191,13 @@ function memberTable(keys) {
     (name) =>
       `  if constexpr (requires { object->${member(name)}; }) owner.bind_named("${name}", [object]() -> decltype(auto) { return (object->${member(name)}); });`,
   );
-  return `#pragma once\n\n#include <flight/structural_ref.hpp>\n\n#include <memory>\n#include <string_view>\n#include <type_traits>\n#include <utility>\n\nnamespace flight::detail {\n\ntemplate <typename Key, typename Object>\ndecltype(auto) generated_row_member(Object& object) {\n${cases.join('\n')}\n  else static_assert(dependent_false<Key>, "no generated member");\n}\n\ntemplate <typename Key, typename Object>\nconsteval auto generated_row_member_type_identity() {\n${typeCases.join('\n')}\n  else return std::type_identity<void>{};\n}\n\ntemplate <typename Key, typename Object>\nusing generated_row_member_t = typename decltype(generated_row_member_type_identity<Key, Object>())::type;\n\ntemplate <typename Object>\nvoid bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& object) {\n${bindings.join('\n')}\n}\n\n} // namespace flight::detail\n`;
+  // A member table has to answer the widening proof too: flight/structural_ref.hpp defines its own
+  // "nothing is provable" fallback only when no table is present at all, so a table that omits this
+  // leaves the name undeclared. sdkGeneration emits the real one, key by key; this fixture proves no
+  // widening, which is the safe answer and all it needs.
+  const widening =
+    'template <typename Base, typename Derived>\nconsteval bool generated_row_widening_proven() {\n  return false;\n}\n';
+  return `#pragma once\n\n#include <flight/structural_ref.hpp>\n\n#include <memory>\n#include <string_view>\n#include <type_traits>\n#include <utility>\n\nnamespace flight::detail {\n\n${widening}\n\ntemplate <typename Key, typename Object>\ndecltype(auto) generated_row_member(Object& object) {\n${cases.join('\n')}\n  else static_assert(dependent_false<Key>, "no generated member");\n}\n\ntemplate <typename Key, typename Object>\nconsteval auto generated_row_member_type_identity() {\n${typeCases.join('\n')}\n  else return std::type_identity<void>{};\n}\n\ntemplate <typename Key, typename Object>\nusing generated_row_member_t = typename decltype(generated_row_member_type_identity<Key, Object>())::type;\n\ntemplate <typename Object>\nvoid bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& object) {\n${bindings.join('\n')}\n}\n\n} // namespace flight::detail\n`;
 }
 
 function fixture() {
