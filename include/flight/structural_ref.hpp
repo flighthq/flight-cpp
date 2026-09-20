@@ -648,7 +648,14 @@ inline constexpr bool schema_required<RowWritable<Row>> = schema_required<Row>;
 //    readonly, whole to partial, a row to a merge that has no single subject of its own;
 //  * a row with no subject at all on either side, where there is no object relationship to prove;
 //  * a proven structural widening: the source's subject declares every row key the target's
-//    subject declares, at the same type, so nothing the target row can ask for is missing.
+//    subject declares, at the same type, so nothing the target row can ask for is missing;
+//  * a READONLY PARTIAL target, which is `Partial<T>` and therefore asks nothing of its subject.
+//    Every member of a partial row reads as an optional, and a key the subject does not declare
+//    reads as an empty one rather than throwing -- so this is the runtime honouring
+//    `operation as Partial<ColorMatrixAdjustment>`, the duck-typed probe the SDK writes to ask
+//    whether an adjustment happens to carry a colour matrix. It is restricted to readonly targets:
+//    a WRITABLE partial row over an unrelated subject would accept writes for members that subject
+//    does not have, and those would land in cell storage the object never reads.
 //
 // Direction is preserved in both dimensions. A readonly row never becomes writable, because the
 // source said its subject must not be mutated through it and a conversion is not a place to
@@ -658,6 +665,7 @@ template <typename From, typename To>
 concept row_objects_convertible =
     std::is_void_v<schema_object_t<From>> || std::is_void_v<schema_object_t<To>> ||
     std::same_as<schema_object_t<From>, schema_object_t<To>> ||
+    (schema_partial<To> && schema_readonly<To>) ||
     generated_row_widening_proven<schema_object_t<To>, schema_object_t<From>>();
 
 template <typename From, typename To>

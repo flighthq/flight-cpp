@@ -100,6 +100,19 @@ static_assert(!std::convertible_to<DerivedTargetRow, WritableBaseTargetRow>,
 static_assert(!std::convertible_to<BaseTargetRow, WritableBaseTargetRow>,
               "nor by projecting the same subject");
 
+// `x as Partial<T>` asks nothing of x: a readonly partial row reads every member as an optional and
+// answers an absent one for a key the subject does not declare. A writable partial row is a
+// different claim and stays rejected -- a write for a member the subject lacks would land in cell
+// storage the object never reads.
+using ReadonlyPartialTargetRow =
+    flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<TestBaseTarget>>>>>;
+using WritablePartialTargetRow =
+    flight::StructuralRef<flight::RowWritable<flight::RowPartial<flight::RowOf<flight::Ref<TestBaseTarget>>>>>;
+static_assert(std::convertible_to<UnrelatedTargetRow, ReadonlyPartialTargetRow>,
+              "an unrelated subject may still be probed through a readonly partial row");
+static_assert(!std::convertible_to<UnrelatedTargetRow, WritablePartialTargetRow>,
+              "but never through a writable one");
+
 using Subject = flight::Ref<TestClipboardChangeProvider>;
 using SubjectRow = flight::RowOf<Subject>;
 using RequiredView = flight::StructuralRef<flight::RowRequired<SubjectRow>>;
@@ -316,6 +329,15 @@ int main() {
     check(flight::row_get<flight::RowKey<"height">>(only_reference) == 1080.0,
           "and the subject is still readable through it");
   }
+
+  // Probing an unrelated subject through a readonly partial row answers absence, not an exception.
+  const UnrelatedTargetRow unrelated_row(flight::make_ref<TestUnrelatedTarget>());
+  const ReadonlyPartialTargetRow probed = unrelated_row;
+  check(!flight::row_get<flight::RowKey<"width">>(probed).has_value(),
+        "a partial probe of a subject without the key reads absent rather than throwing");
+  const ReadonlyPartialTargetRow present_probe = derived_row;
+  check(flight::row_get<flight::RowKey<"width">>(present_probe).value_or(0.0) == 3840.0,
+        "and reads the value when the subject does declare it");
 
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
   return failures == 0 ? 0 : 1;
