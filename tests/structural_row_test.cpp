@@ -3,8 +3,10 @@
 // alone, so `generated_row_member_t` is void there and no named member resolves.
 #include <flight/runtime.hpp>
 
+#include <flight/types/ambient_light.hpp>
 #include <flight/types/ambient_light_options.hpp>
 
+#include <algorithm>
 #include <concepts>
 #include <functional>
 #include <vector>
@@ -484,6 +486,20 @@ int main() {
   check(generated_view.get(flight::String("intensity")).kind() == flight::AnyKind::number &&
             generated_view.get(flight::String("color")).kind() == flight::AnyKind::undefined,
         "and its optional members read as their value or as undefined");
+
+  // The entity runtime slot is a SYMBOL key in the source, and the generated struct spells it as a
+  // member named entity_runtime_key. It must not surface as an own enumerable string key, because
+  // Object.keys does not report a symbol-keyed property. It does not, because the compiler never
+  // reaches it through a RowKey -- it writes it through the symbol -- so nothing binds it as a
+  // named cell. This asserts that invariant on a real generated entity rather than trusting it.
+  auto generated_entity = flight::make_ref<flight::types::AmbientLight>();
+  const auto entity_keys = flight::named_properties(generated_entity).keys();
+  check(std::find(entity_keys.begin(), entity_keys.end(), flight::String("entityRuntimeKey")) ==
+            entity_keys.end(),
+        "the entity runtime slot is a symbol property and is not an own enumerable string key");
+  check(std::find(entity_keys.begin(), entity_keys.end(), flight::String("kind")) !=
+            entity_keys.end(),
+        "while the entity's own string properties are enumerated");
 
   // The view is read-only: it has no way to write a property back.
   static_assert(!writes_named_properties<flight::NamedProperties>,
