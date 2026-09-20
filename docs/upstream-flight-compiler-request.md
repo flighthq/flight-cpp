@@ -7,6 +7,75 @@ The current checkout pins Flight `7e2fc7d` and flight-compiler `ef60fb6`. Both r
 and remaining ownership. The section immediately below is the current round; everything after it is the historical
 record of the earlier `903f328`/`fbfcc11`, `993c280` and `9f6ce1c` handoffs.
 
+## Integration addendum of 2026-09-20: `538fe1d` is not a separate lineage
+
+The addendum asked flight-cpp to "merge the newer portable-service commits onto the complete runtime lineage before
+advancing the compiler's flight-cpp pin", on the evidence that a locally available `538fe1d` tree has 27 runtime
+headers and that compiling against it failed 739 of 1107 headers because `structural_ref.hpp`, `any.hpp`,
+`boolean.hpp` and `record.hpp` were absent.
+
+**There is nothing to merge: `538fe1d` is an ancestor of the pin, not a branch beside it.** It is 2026-09-11, the
+compiler's pin `7107eee` is 2026-09-18, and `538fe1d` is 118 commits behind that pin and 136 behind this branch.
+Every commit the addendum calls a "portable-service commit" is already in this history:
+
+| Commit | Date | In the current branch |
+| --- | --- | --- |
+| `70656d4` feat(runtime): add generated reference semantics | 2026-09-10 | yes |
+| `0390ed6` feat(runtime): add compiler portable services | 2026-09-11 | yes |
+| `538fe1d` fix(runtime): compile emitted portable services | 2026-09-11 | yes |
+| `533b480` chore(example): regenerate tween header | 2026-09-11 | yes |
+| `911c336` chore: pin latest flight-compiler | 2026-09-11 | yes |
+
+The four "absent" headers are absent from `538fe1d` because they had not been written yet, and each was added
+after it on this same line:
+
+| Header | Added | Commit |
+| --- | --- | --- |
+| `record.hpp` | 2026-09-13 | `9186298` feat(runtime): add ordered record storage |
+| `structural_ref.hpp` | 2026-09-13 | `98f93dd` feat(sdk): add native preview runtime |
+| `boolean.hpp` | 2026-09-14 | `75267cd` feat(runtime): implement JavaScript truthiness |
+| `any.hpp` | 2026-09-17 | `1c9a1f8` feat(runtime): add the erased dynamic value |
+
+So the 739/1107 failures are fully explained by compiling against an eight-day-old checkout, and merging `538fe1d`
+forward would land a no-op at best. **The action is the opposite of the one requested: advance the compiler's
+flight-cpp pin from `7107eee` to this branch's tip once it is merged.** The pin is already newer than `538fe1d`;
+nothing needs to be rescued onto it.
+
+If a tree with 27 runtime headers is what a compiler builder actually has checked out, the checkout is stale rather
+than a different lineage — this repository has one line of development and `origin/main` is it.
+
+### The SDL generation lanes are present and were never removed
+
+The addendum also asks to restore the seven profiles. They are all in this branch and the lanes that compose them
+are too: `bindings/runtime.json`, `headless.json`, `web-types.json`, `sdl-image.json`, `sdl-gl.json`,
+`sdl-wgpu.json` and `sdl-app.json`, driven by `npm run sdk:generate:sdl` and `npm run sdk:compile:sdl`, with
+`sdk:generate:headless`, `sdk:generate:runtime`, `sdk:generate:sdl-gl` and `sdk:generate:sdl-wgpu` beside them for
+narrower lanes. The agreement that the portable generator alone gives a misleading corpus score stands: it emits
+1138 of 2904 modules where the seven-profile SDL lane emits 1435.
+
+### `sdk:compile` is now resumable
+
+`scripts/sdkHeaderCompile.mjs` checkpoints and resumes, which is what makes a long sweep survivable:
+
+- The report is rewritten atomically — written to a sibling temporary and renamed — every `--checkpoint-seconds`
+  (default 10) and again on the way out, so a reader never sees a half-written report and an interrupted write
+  cannot destroy the one already there.
+- It always distinguishes **attempted and passed**, **attempted and failed**, and **never attempted**. A run
+  stopped by `--deadline-seconds` or by SIGINT/SIGTERM finishes its in-flight headers, records the remainder as
+  unattempted, and exits 2 rather than pretending to be a result.
+- `--resume` continues from an existing report instead of starting over. A report from before this change lists
+  only failures, so it is rejected with a message rather than being read as "everything unnamed passed" — that
+  absence means "passed" and "never tried" alike, and assuming the friendlier one would report a pass nobody
+  observed.
+- `--headers=a.hpp,b.hpp` (or `--headers=@file`) compiles just those. **This is the loop a compiler builder should
+  use**; the full sweep stays the folded-tree gate that runs once at the end.
+- Progress lines carry elapsed time, rate and ETA.
+
+The report schema moves to `flight-sdk-header-compilation/2`, which adds `run` (complete, elapsedSeconds,
+headerSelection, jobs), `summary.attemptedHeaders` and `summary.unattemptedHeaders`, and the `passed` and
+`unattempted` header lists that make resume possible. The `summary.totalHeaders`, `passedHeaders` and
+`failedHeaders` keys are unchanged.
+
 ## Round of 2026-09-20: three runtime primitives, and the two bindings they need
 
 The compiler tranche asked for three small primitives with direct C++ tests and said explicitly that no SDK
