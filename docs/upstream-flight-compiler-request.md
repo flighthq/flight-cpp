@@ -2,10 +2,104 @@
 
 The maintained downstream checklist now lives in [flight-compiler adoption status](flight-compiler-adoption.md).
 
-The current checkout pins Flight `903f328` and flight-compiler `fbfcc11`. Both revisions are recorded in
+The current checkout pins Flight `7e2fc7d` and flight-compiler `ef60fb6`. Both revisions are recorded in
 [`dependencies.lock.json`](../dependencies.lock.json), and the maintained status document records the active counts
 and remaining ownership. The section immediately below is the current round; everything after it is the historical
-record of the earlier `993c280` and `9f6ce1c` handoffs.
+record of the earlier `903f328`/`fbfcc11`, `993c280` and `9f6ce1c` handoffs.
+
+## Round of 2026-09-20: three runtime primitives, and the two bindings they need
+
+The compiler tranche asked for three small primitives with direct C++ tests and said explicitly that no SDK
+regeneration was needed, because the combined corpus measurement runs on the compiler side after the work is
+folded. All three are in this checkout. Two of them need a compiler-side binding before emitted code can reach
+them, and those are the asks below.
+
+### 1. A read-only dynamic named-property view — `flight::NamedProperties`
+
+`flight/structural_ref.hpp` now carries the view that `Object.keys`, `Object.entries` and a computed `value[name]`
+read need over a generated object or a structural row. `explainHost` is the shape it was built against: it
+enumerates a host, keeps the members that are objects, and then enumerates each capability group it finds, knowing
+neither type.
+
+```cpp
+flight::NamedProperties view = flight::named_properties(ref);   // or (structural_row)
+std::vector<flight::String> keys = view.keys();                 // source declaration order
+bool present = view.has(key);                                   // own string keys only
+flight::Any value = view.get(key);                              // absent reads as undefined
+bool answerable = view.is_represented(key);                     // does get() raise?
+```
+
+Four things are worth stating because they are decisions rather than mechanics.
+
+**Keys come back in source declaration order.** They are recovered from member addresses: [class.mem] ties address
+order to declaration order for members sharing access control, and every generated struct declares all of its
+members public. A key written into the row after construction has no member to order against and follows the
+declared ones, which is where JavaScript puts a property added later. This needs nothing new from the emitter.
+
+**Named string properties and symbol attachments stay separate.** A symbol-keyed property is not an own enumerable
+string key and `Object.keys` does not report one. The view reports only names; `flight::AttachedProperties` reports
+only symbols; a name and a symbol of the same spelling are two properties and neither view sees the other. This
+holds today only because the emitter never reaches a symbol-keyed slot through a `RowKey` — the entity runtime slot
+is written through its symbol — so nothing binds it as a named cell. A regression test asserts it on a real
+generated entity, because the invariant is the emitter's to keep.
+
+**A read is a sound `Any` or an honest refusal.** `flight::detail::any_from` maps a stored value when it is one of
+the ECMAScript language types: a primitive, an object reference, a callable, or an optional wrapping one of those,
+where an empty optional reads as `undefined`. `flight::Array`, a structural row and a variant are objects in the
+source language but cannot be handed to `Any` without inventing an identity or reinterpreting storage, so `get`
+raises `flight::UnrepresentedProperty` naming the key and the C++ type rather than fabricating a value.
+`is_represented` asks the same question in advance.
+
+**The view never writes.** It is the read side only, so handing one to a caller cannot become a way to mutate an
+object through a name that was never declared.
+
+**The ask:** bind `Object.keys`, `Object.entries` and a computed string-key read over a structural object to these
+operations. They are compiler built-ins rather than external profile symbols, so this is not a downstream binding
+profile change.
+
+### 2. A checked erased reference — `flight::ErasedRef`
+
+**`flight::Ref<void>` cannot carry a checked binding, and no runtime operation can rescue it.** A
+`std::shared_ptr<void>` has already forgotten what it pointed at by the time it is stored, so the only conversion
+out of it is `std::static_pointer_cast`: it always "succeeds", and a binding read at the wrong type hands the caller
+a pointer to an object of another type. The type has to be captured where it is still known — at the call that
+erases it.
+
+`flight/erased_ref.hpp` does exactly that:
+
+```cpp
+flight::ErasedRef erased = typedRef;              // implicit; records typeid(T)
+flight::Ref<T> recovered = erased.as<T>();        // the stored type only; null otherwise
+bool matches = erased.holds<T>();                 // the same question, no reference produced
+flight::Ref<T> bound = flight::erased_ref_as<T>(slot);   // over std::optional<ErasedRef>
+```
+
+Nothing here is a side table: the type travels inside the value, so there is no registry keyed on object identity,
+nothing keeping entries alive, and nothing to go stale. An erasure of a null reference is empty rather than a typed
+null, and two erasures of one object compare equal.
+
+**The ask:** emit `flight::ErasedRef` where `flight::Ref<void>` is emitted today for TypeScript `object`.
+`ErasedRef` is implicitly constructible from any `Ref<T>`, so `attachEntityBinding(entity, typedRef)` captures the
+type at the call site with no other change; `EntityRuntime.binding` becomes `std::optional<flight::ErasedRef>` and
+`getEntityBindingAs<Type>` becomes `flight::erased_ref_as<Type>(binding)`. The refusal this clears, at the current
+pins, is on `packages/entity/src/binding.ts`: *type assertion target must identify exactly one C++ variant
+alternative: target `std::optional<Type>` against `[flight::Ref<void>]`*.
+
+### 3. Host capability seams — audited, and already aligned
+
+No SDL capability is minted through `allocate_entity`/`finish_entity`, given an `entity_runtime_key`, or registered
+by capability identity; compile-time assertions now hold that for every capability record the SDL adapters return.
+Capabilities are default-constructed generated records populated through callable members, and stateful callables
+capture their adapter's explicit shared state; window adapters take their `Window` in the constructor and callers
+pass `SDL_Event` explicitly to each `dispatch()` seam.
+
+The only `flight::WeakMap` uses in the SDL host are `SdkWindowBackend`'s `fullscreen_targets` and `input_targets`.
+They are provider-owned handle registries, not hidden capability state: the adapter mints opaque target handles and
+resolves their identity back to a stable `SDL_WindowID`, weak keys do not retain the handles, and the registry
+belongs to one explicitly constructed backend state — separately constructed backends reject each other's handles,
+which is now covered by a test. The runtime's structural-row owner registry and attached-symbol registry are
+untouched: they are the documented identity-resolution mechanism for rows and symbol properties, not host state.
+
 
 ## Round of 2026-09-17: the four downstream asks are implemented
 
