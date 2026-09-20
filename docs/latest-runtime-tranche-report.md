@@ -162,11 +162,21 @@ Three findings are worth carrying upstream with their exact evidence.
 
 ## Verification
 
+- `npm run check`: **30 of 30 gates pass**, including two added by this tranche —
+  `hostCapabilityOracle` and `examples:run`.
 - `cmake --build --preset development` + `ctest --preset development`: 8/8.
 - SDL host build (`FLIGHT_CPP_BUILD_HOST_SDL=ON`, warnings as errors, SDL 3.4.2) + `ctest`: 10/10,
   with `SDL_VIDEODRIVER=offscreen` and `SDL_AUDIODRIVER=dummy`.
-- `npm run sdk:generate:sdl` then `npm run sdk:compile:sdl` once each, at the end.
+- `npm run sdk:generate:sdl` then `npm run sdk:compile:sdl` once each, at the end, with
+  `FLIGHT_CPP_COMPILE_JOBS=14` on a 16-thread machine.
 - `out/sdk-sdl-header-compilation.json` is preserved.
+
+Two gates are new because two things could previously pass without being true. `examples:run` builds
+**and runs** the portable examples: `sdk_math` had been segfaulting at `main` — `finish_entity`
+returned a null reference that the example dereferenced — while every gate stayed green, because
+`examples:check` only diffs generated headers against the compiler and `npm run check` never built
+the runtime at all. `hostCapabilityOracle` compiles and runs the pinned compiler's own output for
+the plain-capability shape, so that contract is held by a test rather than by assertion.
 
 ## Left undone, and why
 
