@@ -28,6 +28,8 @@ struct DomStyle final {
   String margin;
   String position;
   String top;
+  // The SDK's DOM scene writes a CSS `matrix(...)` here from set_dom_transform.
+  String transform;
   String width;
 };
 

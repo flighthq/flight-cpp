@@ -97,6 +97,27 @@ class Function<Result(Parameters...)> {
   std::shared_ptr<State> state_;
 };
 
+// Whether one argument satisfies one callback parameter.
+//
+// The rule is exact-match, with a single deliberate exception: a parameter that is a STRUCTURAL ROW
+// over an object accepts a reference to that very object. That is the runtime's own projection of a
+// subject into its row -- the same object, no conversion of any value, no second identity, and no
+// widening, because the argument's type must be exactly the row's own object type.
+//
+// It is admitted because the compiler emits both halves of that seam: a signal whose listener takes
+// `Readonly<T>` and an emitter that holds the `T`. Refusing it would be the runtime declining a
+// projection it defines. Nothing else is relaxed -- an `int` still does not satisfy a `double`
+// parameter, because that conversion loses information and ECMAScript does not perform it here.
+template <typename Argument, typename Parameter>
+concept callable_argument_v1 =
+    std::same_as<std::remove_cvref_t<Argument>, Parameter> ||
+    (requires {
+       typename Parameter::schema_type;
+       typename Parameter::object_type;
+     } &&
+     std::same_as<std::remove_cvref_t<Argument>, std::shared_ptr<typename Parameter::object_type>> &&
+     std::constructible_from<Parameter, std::remove_cvref_t<Argument>>);
+
 template <typename Callable>
 struct callable_signature_v1;
 
@@ -113,8 +134,8 @@ struct callable_signature_v1<std::function<Result(Parameters...)>> {
     } else {
       return []<std::size_t... Index>(std::index_sequence<Index...>) {
         using ArgumentsTuple = std::tuple<std::remove_cvref_t<Arguments>...>;
-        return (std::same_as<std::tuple_element_t<Index, ArgumentsTuple>,
-                             std::tuple_element_t<Index, parameter_types>> && ...);
+        return (callable_argument_v1<std::tuple_element_t<Index, ArgumentsTuple>,
+                                     std::tuple_element_t<Index, parameter_types>> && ...);
       }(std::make_index_sequence<sizeof...(Parameters)>{});
     }
   }();
@@ -148,8 +169,8 @@ struct callable_signature_v1<Function<Result(Parameters...)>> {
     } else {
       return []<std::size_t... Index>(std::index_sequence<Index...>) {
         using ArgumentsTuple = std::tuple<std::remove_cvref_t<Arguments>...>;
-        return (std::same_as<std::tuple_element_t<Index, ArgumentsTuple>,
-                             std::tuple_element_t<Index, parameter_types>> && ...);
+        return (callable_argument_v1<std::tuple_element_t<Index, ArgumentsTuple>,
+                                     std::tuple_element_t<Index, parameter_types>> && ...);
       }(std::make_index_sequence<sizeof...(Parameters)>{});
     }
   }();

@@ -2002,6 +2002,30 @@ void test_new_runtime_services() {
   static_assert(!flight::callable_signature_v1<flight::Function<void(double)>>::accepts<int>);
   static_assert(flight::callable_signature_v1<flight::Function<void(double)>>::arity == 1);
 
+  // A callback whose parameter is a structural row accepts a reference to that very object: the
+  // runtime's own projection of one subject, which is the seam a compiler-emitted signal sits on.
+  // Nothing wider is admitted -- not a reference to a different object, and not a row over one.
+  using EntityRowParameter =
+      flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestEntity>>>>;
+  using RowListener = std::function<void(EntityRowParameter)>;
+  static_assert(flight::callable_signature_v1<RowListener>::accepts<flight::Ref<TestEntity>>,
+                "a row parameter accepts a reference to its own object");
+  static_assert(flight::callable_signature_v1<RowListener>::accepts<EntityRowParameter>,
+                "and still accepts the row itself");
+  static_assert(!flight::callable_signature_v1<RowListener>::accepts<flight::Ref<TestReference>>,
+                "but not a reference to a different object");
+  static_assert(!flight::callable_signature_v1<std::function<void(double)>>::accepts<int>,
+                "and nothing else is relaxed");
+
+  int row_listener_calls = 0;
+  const RowListener row_listener = [&](EntityRowParameter row) {
+    ++row_listener_calls;
+    check(static_cast<bool>(row), "a projected row argument reaches the listener populated");
+  };
+  auto listened_entity = flight::make_ref<TestEntity>();
+  row_listener(listened_entity);
+  check(row_listener_calls == 1, "the projection happens at the call, with no extra object");
+
   auto facet_source = flight::make_ref<TestReference>(TestReference{.value = 7});
   auto conditional = flight::assume_conditional_facets<TestImageCapabilities>(facet_source);
   flight::FacetRef<TestReference, TestImageFacet> image_facet = conditional;
@@ -2371,6 +2395,25 @@ void test_set() {
 }
 
 void test_string() {
+  // codePointAt: a surrogate pair reads as one code point, a lone surrogate reads as itself, and an
+  // index off the end is undefined rather than NaN. charCodeAt keeps answering in code units.
+  const flight::String astral(std::u16string(u"a\U0001F600b"));
+  check(astral.code_point_at(0) == std::optional<double>(97.0),
+        "codePointAt reads a plain unit as its code point");
+  check(astral.code_point_at(1) == std::optional<double>(128512.0),
+        "codePointAt reads a well-formed surrogate pair as one code point");
+  check(astral.char_code_at(1) == 55357.0,
+        "charCodeAt still reads the leading code unit of that pair");
+  check(astral.code_point_at(2) == std::optional<double>(56832.0),
+        "codePointAt at the trailing unit reads that unit, unpaired");
+  check(astral.code_point_at(3) == std::optional<double>(98.0),
+        "codePointAt reads the unit after the pair");
+  check(!astral.code_point_at(4).has_value() && !astral.code_point_at(-1).has_value(),
+        "codePointAt is undefined off either end, where charCodeAt is NaN");
+  const flight::String lone(std::u16string(1, u'\xD83D'));
+  check(lone.code_point_at(0) == std::optional<double>(55357.0),
+        "a lone leading surrogate is reported as itself rather than repaired");
+
   const auto emoji = flight::String::from_utf8("\xF0\x9F\x98\x80");
   check(emoji.length() == 2, "string length counts UTF-16 code units");
   check(emoji.to_utf8() == "\xF0\x9F\x98\x80", "valid supplementary code points round-trip through UTF-8");

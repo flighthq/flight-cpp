@@ -147,6 +147,22 @@ class String {
     return static_cast<double>(value_[static_cast<size_type>(index)]);
   }
 
+  // `String.prototype.codePointAt`. It differs from `char_code_at` in two ways the specification is
+  // explicit about, and both are observable: an index that starts a well-formed surrogate PAIR
+  // yields the whole code point rather than the leading unit, and an index outside the string
+  // yields `undefined` rather than NaN -- which is why this returns an optional and the other
+  // returns a double. A lone surrogate is returned as itself, unpaired, rather than repaired.
+  [[nodiscard]] std::optional<double> code_point_at(std::ptrdiff_t index) const noexcept {
+    if (index < 0 || static_cast<size_type>(index) >= size()) return std::nullopt;
+    const auto position = static_cast<size_type>(index);
+    const char16_t first = value_[position];
+    if (first < 0xD800 || first > 0xDBFF || position + 1 >= size()) return static_cast<double>(first);
+    const char16_t second = value_[position + 1];
+    if (second < 0xDC00 || second > 0xDFFF) return static_cast<double>(first);
+    return static_cast<double>((static_cast<std::uint32_t>(first - 0xD800) << 10) +
+                               static_cast<std::uint32_t>(second - 0xDC00) + 0x10000U);
+  }
+
   template <typename... Values>
     requires(std::same_as<std::remove_cvref_t<Values>, String> && ...)
   [[nodiscard]] String concat(const Values&... values) const {
