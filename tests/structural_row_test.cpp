@@ -3,6 +3,8 @@
 // alone, so `generated_row_member_t` is void there and no named member resolves.
 #include <flight/runtime.hpp>
 
+#include <flight/types/ambient_light_options.hpp>
+
 #include <concepts>
 #include <functional>
 #include <vector>
@@ -435,6 +437,12 @@ int main() {
             flight::row_get<int>(slot_row, width_symbol) == 11,
         "while the symbol space still holds its own property under that spelling");
 
+  // The same view, reached from a structural row rather than from the object: one owner, so one set
+  // of properties.
+  const auto row_view = flight::named_properties(slot_row);
+  check(row_view.keys() == slot_view.keys() && row_view.shared_owner() == slot_view.shared_owner(),
+        "the view of a row and the view of its subject are the same view");
+
   // A key written after construction has no member to order against, so it follows the declared
   // ones -- as a property added later does in JavaScript.
   slot_row.shared_owner()->set_named_value("caller-added", flight::String("late"));
@@ -461,6 +469,21 @@ int main() {
     unrepresented_reported = reported.key() == "value";
   }
   check(unrepresented_reported, "reading it reports the property rather than inventing a value");
+
+  // The same walk over a REAL generated type, so this is not only exercising hand-written fixtures:
+  // AmbientLightOptions is emitted from AmbientLightOptions.ts, whose properties are declared
+  // color, enabled, intensity, intensityUnit.
+  auto generated_options = flight::make_ref<flight::types::AmbientLightOptions>();
+  generated_options->intensity = 2.0;
+  const auto generated_view = flight::named_properties(generated_options);
+  check(generated_view.keys() == std::vector<flight::String>({flight::String("color"),
+                                                              flight::String("enabled"),
+                                                              flight::String("intensity"),
+                                                              flight::String("intensityUnit")}),
+        "a real generated type enumerates in the order its source declares");
+  check(generated_view.get(flight::String("intensity")).kind() == flight::AnyKind::number &&
+            generated_view.get(flight::String("color")).kind() == flight::AnyKind::undefined,
+        "and its optional members read as their value or as undefined");
 
   // The view is read-only: it has no way to write a property back.
   static_assert(!writes_named_properties<flight::NamedProperties>,
