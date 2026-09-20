@@ -231,6 +231,15 @@ class Array {
 
   [[nodiscard]] const void* identity() const noexcept { return values_.get(); }
 
+  // An array is an object, so `a === b` asks whether they are the SAME array -- never whether they
+  // hold equal elements. Copies of a `flight::Array` share one storage and are therefore one array,
+  // which is what makes this the JavaScript answer rather than a C++ container's answer. Deep
+  // comparison is deliberately absent: JavaScript has none for arrays, and a container-style
+  // `operator==` here would silently give `!==` the wrong answer wherever the compiler emits it.
+  [[nodiscard]] friend bool operator==(const Array& left, const Array& right) noexcept {
+    return left.values_ == right.values_;
+  }
+
   [[nodiscard]] weak_type weaken() const noexcept { return values_; }
 
   [[nodiscard]] static std::optional<Array> lock_weak(const weak_type& weak) {

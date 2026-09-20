@@ -106,6 +106,23 @@ FlightTask<void> set_flag(bool& flag) {
 }
 
 void test_array() {
+  // An array is an object: `===` asks whether two names denote the SAME array, never whether they
+  // hold equal elements. Copies share one storage and are therefore one array.
+  flight::Array<double> same_array;
+  same_array.push(1.0);
+  auto same_array_alias = same_array;
+  flight::Array<double> equal_elements;
+  equal_elements.push(1.0);
+  check(same_array_alias == same_array, "copies of an array are the same array");
+  check(!(equal_elements == same_array) && equal_elements != same_array,
+        "two arrays holding equal elements are still two arrays");
+  same_array_alias.push(2.0);
+  check(same_array.size() == 2 && same_array_alias == same_array,
+        "a write through one name is seen through the other, because there is one array");
+  check(same_array.identity() == same_array_alias.identity() &&
+            equal_elements.identity() != same_array.identity(),
+        "array equality agrees with array identity");
+
   const auto nan = std::numeric_limits<double>::quiet_NaN();
   const flight::Array<double> empty_length(0.0);
   const flight::Array<double> dense_length(3.0);
