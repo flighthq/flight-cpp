@@ -21,6 +21,7 @@
 #include <flight/types/clipboard.hpp>
 #include <flight/types/cursor.hpp>
 #include <flight/types/device.hpp>
+#include <flight/types/entity.hpp>
 #include <flight/types/host_fullscreen.hpp>
 #include <flight/types/haptics.hpp>
 #include <flight/types/host_input.hpp>
@@ -34,6 +35,7 @@
 
 #include <array>
 #include <chrono>
+#include <concepts>
 #include <limits>
 #include <stdexcept>
 #include <thread>
@@ -47,6 +49,29 @@ static_assert(flight::WeakKeyPolicyFor<
 static_assert(flight::WeakKeyPolicyFor<
               flight::host_sdl::WebGlBufferWeakPolicy,
               flight::host_sdl::WebGlBuffer>);
+
+template <typename Type>
+concept EntityCapability =
+    std::derived_from<Type, flight::types::Entity> ||
+    requires(Type& value) { value.entity_runtime_key; };
+
+static_assert(!EntityCapability<flight::types::HostAudioDeviceCapability>);
+static_assert(!EntityCapability<flight::types::HostClipboardTextCapability>);
+static_assert(!EntityCapability<flight::types::CursorBackend>);
+static_assert(!EntityCapability<flight::types::HostDeviceCapability>);
+static_assert(!EntityCapability<flight::types::HostElementFullscreenCapability>);
+static_assert(!EntityCapability<flight::types::HostHapticsCapability>);
+static_assert(!EntityCapability<flight::types::HostInputDropFileCapability>);
+static_assert(!EntityCapability<flight::types::HostInputFocusCapability>);
+static_assert(!EntityCapability<flight::types::HostInputPointerLockCapability>);
+static_assert(!EntityCapability<flight::types::HostInputTargetCapability>);
+static_assert(!EntityCapability<flight::types::HostPlatformCapability>);
+static_assert(!EntityCapability<flight::types::HostScreenChangeCapability>);
+static_assert(!EntityCapability<flight::types::HostScreenDetailsCapability>);
+static_assert(!EntityCapability<flight::types::HostScreenQueryCapability>);
+static_assert(!EntityCapability<flight::types::HostSoftKeyboardChangeCapability>);
+static_assert(!EntityCapability<flight::types::HostSoftKeyboardInfoCapability>);
+static_assert(!EntityCapability<flight::types::HostSoftKeyboardVisibilityCapability>);
 
 void expect(bool condition, const char* message) {
   if (!condition) throw std::runtime_error(message);
@@ -736,6 +761,10 @@ int main() {
   expect(
       !fullscreen_backend.request(foreign_fullscreen_target).get(),
       "SDL fullscreen accepted an unregistered Flight target");
+  flight::host_sdl::SdkWindowBackend isolated_sdk_window(window);
+  expect(
+      !isolated_sdk_window.fullscreen_backend().request(fullscreen_target).get(),
+      "SDL fullscreen target registry escaped its explicit backend seam");
   const bool entered_fullscreen = fullscreen_backend.request(fullscreen_target).get();
   if (entered_fullscreen) {
     expect(
@@ -774,6 +803,16 @@ int main() {
   release_focus();
   expect(sdk_window.dispatch(sdk_focus_event), "released SDL focus event was not recognized");
   expect(sdk_blur_calls == 1, "released SDL focus subscription was invoked");
+
+  int isolated_focus_calls = 0;
+  auto release_isolated_focus = isolated_sdk_window.input_focus_backend().subscribe(
+      input_target,
+      [&] { ++isolated_focus_calls; },
+      [&] { ++isolated_focus_calls; });
+  expect(
+      isolated_sdk_window.dispatch(sdk_focus_event) && isolated_focus_calls == 0,
+      "SDL input target registry escaped its explicit backend seam");
+  release_isolated_focus();
 
   flight::String dropped_path;
   auto drop_file_backend = sdk_window.input_drop_file_backend();

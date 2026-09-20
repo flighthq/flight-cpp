@@ -59,6 +59,8 @@ struct SdkWindowBackend::State final {
   SDL_WindowID window_id{};
   std::optional<SDL_WindowID> fullscreen_window_id;
   std::optional<SDL_WindowID> relative_pointer_window_id;
+  // These maps resolve only opaque target handles minted by this State. They are provider-owned
+  // handle registries, not storage for either capability record or its operational state.
   flight::WeakMap<flight::Ref<flight::types::FullscreenTargetHandle>, SDL_WindowID>
       fullscreen_targets;
   flight::WeakMap<flight::Ref<flight::types::InputTargetHandle>, SDL_WindowID> input_targets;

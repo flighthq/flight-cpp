@@ -248,14 +248,32 @@ without on-screen keyboard support return Flight's acquisition/operation failure
 keyboard rectangle, so geometry remains zero; platform-specific style and layout controls are separate capabilities.
 
 `Flight::HostSdlSdkWindow` and Bazel `//:host_sdl_sdk_window` bind an SDL window id to the committed generated
-`ApplicationVisibilityBackend` and `FullscreenBackend` records. Generated fullscreen target handles are registered
-weakly, unknown handles return `false`, and records retained after native window destruction fail closed. The
-fullscreen event callbacks remain absent from the optional fields because the current emitted `std::function`
-carrier cannot satisfy callback-identity removal; the same issue gates the non-optional `ApplicationExitBackend`.
-The adapter also creates weakly registered generated `InputTargetHandle` values and populates
+`HostElementFullscreenCapability`. Generated fullscreen target handles are registered weakly, unknown handles
+return `false`, and capability records retained after native window destruction fail closed. The optional fullscreen
+subscription remains absent because the current emitted `std::function` carrier cannot satisfy callback-identity
+removal. The adapter intentionally does not bind the newer `HostWindowVisibilityCapability`: that contract takes an
+`AppWindow`, and this adapter has no `AppWindow`-to-SDL-window registry. It also creates weakly registered generated
+`InputTargetHandle` values and populates
 `InputTargetBackend`, `InputFocusBackend`, `InputDropFileBackend`, and `InputPointerLockBackend`. Pass each polled
 event to `SdkWindowBackend::dispatch()` as well as other host dispatchers to deliver focus and file paths. The
 returned release closures remove the exact subscription, and pointer lock maps to SDL relative mouse mode.
+
+### Capability ownership seams
+
+Every `Host*Capability` above is populated as a plain generated object literal: the adapter default-constructs the
+record and assigns its callable members. No SDL capability is allocated or finished as an Entity, carries an Entity
+runtime key, or is entered in an identity registry. Stateful callables capture the adapter's shared state directly;
+window-specific adapters receive a `Window` explicitly, and application event loops pass each `SDL_Event` explicitly
+to `dispatch()`. Stateless clipboard and platform capabilities call SDL's process APIs directly and retain no hidden
+Flight state.
+
+The two `WeakMap`s in `SdkWindowBackend::State` are deliberate handle registries, not capability storage. The adapter
+mints `FullscreenTargetHandle` and `InputTargetHandle` objects, and the maps resolve those opaque identities back to
+the stable SDL window ID without retaining the handles. Registry ownership is scoped to the explicitly constructed
+`SdkWindowBackend`: copies share that seam, while a distinct backend rejects even a branded target minted by another
+one. Focus/file-drop subscriptions and active fullscreen/pointer-lock IDs are ordinary members of the same explicit
+state. The WebGL weak-object table likewise canonicalizes provider-owned native GL handles and does not store a host
+capability.
 
 ## Generated SDK wiring lane
 
