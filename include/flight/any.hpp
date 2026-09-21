@@ -70,12 +70,43 @@ class Any;
 
 namespace detail {
 
+// Recovers the structural row owner of an erased object reference.
+//
+// An `Any` keeps its object as a `shared_ptr<void>` plus a `type_index`, which is enough to hand
+// the reference back to a caller who names the type again, and not enough to enumerate the
+// object's properties: that needs the concrete type, and by then it is gone. This factory closes
+// over the type at the one place it is still known -- the `Any::object<Object>` call -- and stores
+// a plain function pointer, so an `Any` that never meets the row machinery costs nothing.
+//
+// The primary answers "no owner", which is the honest answer for a translation unit that has only
+// this header: `flight/any.hpp` knows nothing about `RowOwner` and must not. `structural_ref.hpp`
+// supplies the real one through a constrained partial specialization, the same shape the generated
+// widening table and the computed-cell table use. The owner comes back erased for the same reason
+// -- naming it here would invert the include graph.
+//
+// CONSISTENCY REQUIREMENT, and it is the same one the generated structural member table already
+// imposes: every translation unit in a program must be compiled against the same runtime header
+// set. A program that boxes a `Ref<Widget>` into an `Any` from a unit that included only this
+// header, and enumerates it from a unit that included `structural_ref.hpp`, has two definitions of
+// this factory for one type and the linker picks one. Reaching the runtime through
+// `flight/runtime.hpp`, which is the public boundary and includes both, satisfies this without
+// anyone having to think about it.
+template <typename Object>
+struct AnyRowOwnerFactory {
+  [[nodiscard]] static std::shared_ptr<void> make(const std::shared_ptr<void>&) { return nullptr; }
+};
+
 // An object reference with its concrete type retained, so a value that went in as `Ref<Widget>`
 // comes back as `Ref<Widget>` and never as a reinterpreted `Ref<void>`.
 struct AnyObject final {
+  using RowOwnerFactory = std::shared_ptr<void> (*)(const std::shared_ptr<void>&);
+
   std::shared_ptr<void> object;
   std::type_index type{typeid(void)};
+  RowOwnerFactory row_owner{nullptr};
 
+  // Identity only, as before. Two references to one object are one value whatever either of them
+  // knows how to do with it.
   [[nodiscard]] friend bool operator==(const AnyObject& left, const AnyObject& right) noexcept {
     return left.object == right.object;
   }
@@ -118,7 +149,8 @@ class Any final {
     if (!reference) return Any(null);
     Any result;
     result.value_ = detail::AnyObject{std::static_pointer_cast<void>(std::move(reference)),
-                                      std::type_index(typeid(Object))};
+                                      std::type_index(typeid(Object)),
+                                      &detail::AnyRowOwnerFactory<Object>::make};
     return result;
   }
 
@@ -245,6 +277,14 @@ class Any final {
   }
 
   // The type a non-primitive went in as. `typeid(void)` for every primitive.
+  // The erased row owner of a held object, or null for every other kind and for an object whose
+  // type never reached the row machinery. Callers go through `flight::named_properties`.
+  [[nodiscard]] std::shared_ptr<void> erased_row_owner() const {
+    const auto* stored = std::get_if<detail::AnyObject>(&value_);
+    if (stored == nullptr || !stored->object || stored->row_owner == nullptr) return nullptr;
+    return stored->row_owner(stored->object);
+  }
+
   [[nodiscard]] std::type_index held_type() const noexcept {
     if (const auto* stored = std::get_if<detail::AnyObject>(&value_)) return stored->type;
     if (const auto* opaque = std::get_if<detail::AnyOpaque>(&value_)) {

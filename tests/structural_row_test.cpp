@@ -637,6 +637,35 @@ int main() {
   check(cell_subject->entity_runtime_key.value() == replacement,
         "a computed-symbol write lands on the subject's member, not beside it");
 
+  // THE ERASED NAMED VIEW. An erased-member probe -- `'width' in value` followed by a read of
+  // `value.width`, with nothing static saying what `value` is -- is answered through the object's
+  // one row owner, so it reports the object's own members rather than a copy of them.
+  auto erased_subject = flight::make_ref<flight::types::AmbientLightOptions>();
+  const flight::Any erased = flight::Any::object(erased_subject);
+  const auto erased_view = flight::named_properties(erased);
+  check(static_cast<bool>(erased_view), "an Any holding an object yields a named view");
+  check(erased_view.keys() == flight::named_properties(erased_subject).keys(),
+        "reporting exactly what the typed view of the same object reports");
+  check(erased_view.has(flight::String("intensity")) &&
+            !erased_view.has(flight::String("notAKeyOfThis")),
+        "and answering `in` over its own string keys only");
+  check(erased_view.get(flight::String("intensity")).kind() == flight::AnyKind::undefined,
+        "an optional member that holds nothing reads as undefined, not as a missing key");
+
+  // One owner, not two: a write through the typed row is visible through the erased view, and the
+  // read that was undefined a moment ago is now the value the object actually holds.
+  const flight::StructuralRef<
+      flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AmbientLightOptions>>>>
+      erased_writable(erased_subject);
+  flight::row_set<flight::RowKey<"intensity">>(erased_writable, 3.5);
+  const auto after_write = erased_view.get(flight::String("intensity"));
+  check(after_write.kind() == flight::AnyKind::number && after_write.same_value(flight::Any(3.5)),
+        "and the erased view reads the object's own member, not a snapshot of it");
+
+  check(!flight::named_properties(flight::Any(42.0)),
+        "a primitive Any has no own string keys and reports an empty view rather than throwing");
+  check(!flight::named_properties(flight::Any()), "and so does undefined");
+
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
   return failures == 0 ? 0 : 1;
 }

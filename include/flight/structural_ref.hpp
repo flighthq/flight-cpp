@@ -505,6 +505,20 @@ template <typename Object>
   return owner;
 }
 
+// Supplies the real answer to `AnyRowOwnerFactory`, whose primary in `flight/any.hpp` reports no
+// owner because that header must not know what one is. A constrained partial specialization with
+// the primary's own argument list is more specialized than the primary, so this wins wherever this
+// header has been included -- the same shape `GeneratedRowWidening` and `RowComputedCells` use.
+// The owner is returned erased; `named_properties(const Any&)` casts it back.
+template <typename Object>
+  requires(!std::is_void_v<Object>)
+struct AnyRowOwnerFactory<Object> {
+  [[nodiscard]] static std::shared_ptr<void> make(const std::shared_ptr<void>& object) {
+    if (!object) return nullptr;
+    return std::static_pointer_cast<void>(owner_for(std::static_pointer_cast<Object>(object)));
+  }
+};
+
 // A JavaScript `set` trap over one row. It intercepts exactly one property -- a computed symbol
 // key or a plain named key, never both -- and forwards everything else to the proxied owner
 // untouched. Both key spaces are represented because TypeScript writes both: the Entity runtime
@@ -1313,6 +1327,24 @@ template <typename Object>
 template <typename Schema>
 [[nodiscard]] NamedProperties named_properties(const StructuralRef<Schema>& source) {
   return NamedProperties(source.shared_owner());
+}
+
+// The erased named view: own enumerable string keys of whatever object an `Any` is holding, read
+// as `Any`.
+//
+// This is the view an ERASED MEMBER PROBE needs -- `typeof value === 'object' && 'width' in value`
+// followed by a read of `value.width`, where nothing static says what `value` is. It is answered
+// through the object's one row owner, so the keys and values are the object's own members and not
+// a copy: the same owner a typed projection of that object resolves to, reporting the same
+// properties, with no second identity and no materialised row.
+//
+// An `Any` that is not holding an object, or is holding one whose type never reached the row
+// machinery, has no own string keys to report and answers an empty view rather than throwing.
+// Callers distinguish the two with `operator bool`, exactly as they do for the other overloads.
+[[nodiscard]] inline NamedProperties named_properties(const Any& value) {
+  auto owner = value.erased_row_owner();
+  if (!owner) return {};
+  return NamedProperties(std::static_pointer_cast<RowOwner>(std::move(owner)));
 }
 
 // Symbol-keyed properties attached to an object, reachable without knowing the object's type.
