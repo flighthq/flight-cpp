@@ -91,6 +91,7 @@ const source = api.parseTypeScriptSource(
    }
    export interface NativeGlParameters {
      maxSamples: number;
+     maxTextureSize: number;
      depthWrite: boolean;
      texture: WebGLTexture | null;
      framebuffer: WebGLFramebuffer | null;
@@ -175,6 +176,7 @@ const source = api.parseTypeScriptSource(
    export function nativeGlParameters(context: WebGL2RenderingContext): NativeGlParameters {
      return {
        maxSamples: context.getParameter(context.MAX_SAMPLES) as number,
+       maxTextureSize: context.getParameter(context.MAX_TEXTURE_SIZE) as number,
        depthWrite: context.getParameter(context.DEPTH_WRITEMASK) as boolean,
        texture: context.getParameter(context.TEXTURE_BINDING_2D) as WebGLTexture | null,
        framebuffer: context.getParameter(context.FRAMEBUFFER_BINDING) as WebGLFramebuffer | null,
@@ -254,6 +256,7 @@ for (const expected of [
   'context.blit_framebuffer(',
   'context.read_pixels(',
   'static_cast<double>(context.get_parameter(context.max_samples))',
+  'static_cast<double>(context.get_parameter(context.max_texture_size))',
   'static_cast<bool>(context.get_parameter(context.depth_writemask))',
   'static_cast<std::optional<flight::host_sdl::WebGlTexture>>(context.get_parameter(context.texture_binding_2_d))',
   'static_cast<flight::Array<bool>>(context.get_parameter(context.color_writemask))',

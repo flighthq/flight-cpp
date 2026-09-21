@@ -303,6 +303,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   static constexpr std::uint32_t max = 32776;
   static constexpr std::uint32_t max_samples = 36183;
   static constexpr std::uint32_t max_texture_image_units = 34930;
+  static constexpr std::uint32_t max_texture_size = 3379; // GL_MAX_TEXTURE_SIZE
   static constexpr std::uint32_t min = 32775;
   static constexpr std::uint32_t mirrored_repeat = 33648;
   static constexpr std::uint32_t nearest = 9728;

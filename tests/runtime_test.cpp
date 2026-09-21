@@ -1107,9 +1107,10 @@ void test_number_to_fixed() {
     double digits;
     const char* expected;
   };
-  const std::array<FixedCase, 21> cases{{
+  const std::array<FixedCase, 25> cases{{
       {1.005, 2, "1.00"},          {2.5, 0, "3"},
       {0.5, 0, "1"},               {1.45, 1, "1.4"},
+      {8.575, 2, "8.57"},          {-0.0001, 2, "-0.00"},
       {-1.5, 0, "-2"},             {0.0, 2, "0.00"},
       {-0.0, 2, "0.00"},           {1e21, 2, "1e+21"},
       {123.456, 2, "123.46"},      {0.000001, 2, "0.00"},
@@ -1119,6 +1120,8 @@ void test_number_to_fixed() {
       {100.0, 0, "100"},           {0.1, 20, "0.10000000000000000555"},
       {-1e-7, 2, "-0.00"},         {9.99, 1, "10.0"},
       {99.99, 1, "100.0"},
+      {999999999999999868928.0, 0, "999999999999999868928"},
+      {1000000000000000128.0, 0, "1000000000000000128"},
   }};
   bool all_match = true;
   for (const auto& entry : cases) {
@@ -1137,9 +1140,20 @@ void test_number_to_fixed() {
   check(flight::number_to_fixed(std::numeric_limits<double>::infinity(), 2) ==
             flight::String("Infinity"),
         "toFixed falls back to the number's own string above the fixed-notation range");
+  check(flight::number_to_fixed(-std::numeric_limits<double>::infinity(), 2) ==
+            flight::String("-Infinity"),
+        "toFixed preserves negative infinity");
+  check(flight::number_to_fixed(1.25, std::numeric_limits<double>::quiet_NaN()) ==
+                flight::String("1") &&
+            flight::number_to_fixed(1.25, 2.9) == flight::String("1.25") &&
+            flight::number_to_fixed(1.25, -0.9) == flight::String("1"),
+        "toFixed applies ToIntegerOrInfinity digit normalization");
+  check(flight::number_to_fixed(1.0, 100.9).length() == 102,
+        "toFixed accepts the normalized upper digit bound");
 
   bool digits_rejected = false;
   bool negative_digits_rejected = false;
+  bool infinite_digits_rejected = false;
   try {
     static_cast<void>(flight::number_to_fixed(1.0, 101.0));
   } catch (const std::range_error&) {
@@ -1150,7 +1164,13 @@ void test_number_to_fixed() {
   } catch (const std::range_error&) {
     negative_digits_rejected = true;
   }
-  check(digits_rejected && negative_digits_rejected,
+  try {
+    static_cast<void>(flight::number_to_fixed(
+        1.0, std::numeric_limits<double>::infinity()));
+  } catch (const std::range_error&) {
+    infinite_digits_rejected = true;
+  }
+  check(digits_rejected && negative_digits_rejected && infinite_digits_rejected,
         "toFixed rejects a digit count outside the range the language permits");
 }
 

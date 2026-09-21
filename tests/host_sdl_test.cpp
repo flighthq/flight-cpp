@@ -436,6 +436,7 @@ int main() {
          "GL anisotropy texture parameter changed");
   expect(anisotropy.max_texture_max_anisotropy_ext == 0x84FF,
          "GL anisotropy maximum query changed");
+  static_assert(flight::host_sdl::WebGl2Context::max_texture_size == 3379);
 
   auto pixels = flight::Uint8ClampedArray{255, 0, 0, 255, 0, 255, 0, 255};
   auto image = flight::host_sdl::ImageSource::rgba8(
