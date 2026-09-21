@@ -492,6 +492,24 @@ int main() {
     }
   }
 
+  // The record conversion carries the null lane, because Flight stores the record rather than
+  // querying through the object. Three distinct answers, and collapsing any two of them is the
+  // bug the boolean-valued GlExtension had.
+  expect(!flight::host_sdl::gl_extension_record(std::nullopt).has_value(),
+         "an extension the context does not expose converts to no record at all");
+  const auto empty_record = flight::host_sdl::gl_extension_record(
+      flight::host_sdl::GlExtension(flight::String("EXT_color_buffer_float")));
+  expect(empty_record.has_value() && empty_record->size() == 0,
+         "an extension that is present but declares no enums converts to an EMPTY record, which "
+         "is not the same answer as an absent one");
+  const auto filled_record = flight::host_sdl::gl_extension_record(
+      flight::host_sdl::GlExtension(flight::String("WEBGL_compressed_texture_s3tc")));
+  expect(filled_record.has_value() &&
+             filled_record->get(flight::String("COMPRESSED_RGBA_S3TC_DXT5_EXT")) == 0x83F3,
+         "and an extension with enums converts to the exact record for that extension");
+  expect(filled_record->size() != empty_record->size(),
+         "two different extensions do not convert to the same record");
+
   const flight::host_sdl::GlExtension s3tc(flight::String("WEBGL_compressed_texture_s3tc"));
   const flight::host_sdl::GlExtension rgtc(flight::String("EXT_texture_compression_rgtc"));
   const auto s3tc_keys = s3tc.keys();

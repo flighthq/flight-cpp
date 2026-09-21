@@ -220,6 +220,24 @@ class FLIGHT_HOST_SDL_GL_API GlExtension final {
   String name_;
 };
 
+// `gl.getExtension('X') as Record<string, number> | null` in one step.
+//
+// Flight STORES the resulting record rather than querying through the extension object, so the
+// conversion has to carry the null lane with it: an extension the context does not expose is
+// `nullopt`, and is a different answer from an extension that is present and simply declares no
+// numeric enums. `EXT_color_buffer_float` is the second kind -- available, empty -- and collapsing
+// the two would make a supported extension indistinguishable from a missing one, which is the bug
+// the boolean-valued `GlExtension` had in the first place.
+//
+// The checked property view is not a substitute for this and does not replace it: `get(String)`
+// answers one property at a time against a live object, while this hands over an owned record the
+// caller keeps.
+[[nodiscard]] inline std::optional<Record<String, double>> gl_extension_record(
+    const std::optional<GlExtension>& extension) {
+  if (!extension.has_value()) return std::nullopt;
+  return extension->to_record();
+}
+
 struct WebGlActiveInfo final {
   String name;
   double size{0.0};
