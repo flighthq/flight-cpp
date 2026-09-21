@@ -146,7 +146,9 @@ That single line is two separate gaps and both are yours:
 The gate was briefly made green by deleting the property read from its source. That was reverted:
 the case is the only coverage anywhere of an extension-object property read, and a suite that got
 quiet by asking less is worth less than one red case with a named owner. It stays red until the
-compiler lowers it.
+compiler lowers it, and it is neither skipped nor allowlisted — the failure prints its own ownership
+and points back to this section, so the next person to run `npm run check` reads "known gap, owned
+upstream" rather than "something I just broke".
 
 ### 3. The native-conformance artifact was stale
 
@@ -174,26 +176,6 @@ the same capture pattern deliberately, so it adds no new class of leak, but the 
 wants its own change: either a weak capture that locks per read, or binding by member pointer
 against the owner's existing weak object. Flagged rather than fixed, because it is a lifetime
 decision that belongs in its own commit with its own test.
-
-## Round of 2026-09-21: WebGL extension objects expose two compiler gaps
-
-The SDL runtime now represents `getExtension` honestly: it returns
-`std::optional<flight::host_sdl::GlExtension>`, and each present object carries its extension name
-plus checked `get(String)`, `has(String)`, declaration-order `keys()`, and `to_record()` operations
-over only that extension's numeric enum properties. This exposes two independent compiler tasks:
-
-1. **Null-guard narrowing.** After TypeScript proves `anisotropy !== null`, compiler `ef60fb6`
-   still emits `anisotropy.max_texture_max_anisotropy_ext` where `anisotropy` is
-   `std::optional<GlExtension>`. The guard must narrow and unwrap the optional before subsequent
-   member access.
-2. **External dynamic-property lowering.** Once unwrapped, a numeric property read on this bound
-   external value must lower onto `GlExtension::get(String)`, not a static C++ member. The optional
-   numeric result is also the representation needed for the source's
-   `typeof ext?.[key] === 'number'` check; absent properties must remain distinct from numeric zero.
-
-`scripts/sdlGlProfileOracle.mjs` deliberately retains the original anisotropy property read and is
-red against `ef60fb6` until those compiler-owned gaps are implemented. Its failure prints this
-ownership and points back here; it is not skipped or allowlisted.
 
 ## Round of 2026-09-21: the four integration follow-ups
 
