@@ -30,7 +30,7 @@ inline void clear_glyph_atlas_dirty(flight::StructuralRef<flight::RowReadonly<fl
 }
 
 inline std::optional<flight::Ref<flight::types::Rectangle>> get_glyph_atlas_dirty_region(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphAtlas>>>> atlas) {
-  flight::Ref<flight::types::GlyphAtlasRuntime> runtime = flight::row_get<flight::RowKey<"runtime">>(atlas);
+  auto runtime = flight::row_get<flight::RowKey<"runtime">>(atlas);
   if (!runtime->dirty) {
     return std::nullopt;
   }

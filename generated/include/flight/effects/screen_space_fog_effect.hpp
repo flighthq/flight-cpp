@@ -17,15 +17,15 @@ namespace flight::types { struct ScreenSpaceFogEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_8A44E18A319168A6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_8A44E18A319168A6
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_COLOR_FAR_NEAR_DENSITY_8A44E18A319168A6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_COLOR_FAR_NEAR_DENSITY_8A44E18A319168A6
 struct color_far_near_density_8a44e18a319168a6 : public flight::ReferenceEnabled {
   std::optional<double> color;
   std::optional<double> far;
   std::optional<double> near;
   std::optional<double> density;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_8A44E18A319168A6
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_COLOR_FAR_NEAR_DENSITY_8A44E18A319168A6
 
 inline void initialize_screen_space_fog_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ScreenSpaceFogEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<color_far_near_density_8a44e18a319168a6>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::ScreenSpaceFogEffect>>(out, flight::String("ScreenSpaceFogEffect"));

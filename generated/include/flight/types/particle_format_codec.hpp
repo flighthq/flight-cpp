@@ -24,13 +24,13 @@ struct ParticleFormatCodec;
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_18590BE0AE0A7BC4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_18590BE0AE0A7BC4
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CONFIG_DIAGNOSTICS_18590BE0AE0A7BC4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CONFIG_DIAGNOSTICS_18590BE0AE0A7BC4
 struct config_diagnostics_18590be0ae0a7bc4 : public flight::ReferenceEnabled {
   flight::Ref<flight::types::ParticleEmitterConfig> config;
   flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_18590BE0AE0A7BC4
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CONFIG_DIAGNOSTICS_18590BE0AE0A7BC4
 
 struct ParticleFormatCodec : public flight::ReferenceEnabled {
   std::function<bool(flight::String)> detect;

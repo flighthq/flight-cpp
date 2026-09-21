@@ -12,6 +12,7 @@ namespace flight::types { struct Plane; }
 
 namespace flight::types {
 struct Frustum;
+using FrustumLike = flight::Ref<Frustum>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -29,7 +30,5 @@ struct Frustum : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Plane> right;
   flight::Ref<flight::types::Plane> top;
 };
-
-using FrustumLike = flight::types::EntityWithoutRuntime<flight::Ref<Frustum>>;
 
 } // namespace flight::types

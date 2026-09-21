@@ -118,8 +118,8 @@ inline void initialize_ray3_d(flight::types::EntityConstruction<flight::Ref<flig
 }
 
 inline flight::Ref<flight::types::Ray3D> create_ray3_d(std::optional<double> origin_x = std::nullopt, std::optional<double> origin_y = std::nullopt, std::optional<double> origin_z = std::nullopt, std::optional<double> direction_x = std::nullopt, std::optional<double> direction_y = std::nullopt, std::optional<double> direction_z = std::nullopt) {
-  flight::Ref<flight::types::Vector3> origin = flight::geometry::create_vector3(origin_x.value_or(0.0), origin_y.value_or(0.0), origin_z.value_or(0.0));
-  flight::Ref<flight::types::Vector3> direction = flight::geometry::create_vector3(direction_x.value_or(0.0), direction_y.value_or(0.0), direction_z.value_or(1.0));
+  auto origin = flight::geometry::create_vector3((origin_x.has_value() ? origin_x.value() : 0.0), (origin_y.has_value() ? origin_y.value() : 0.0), (origin_z.has_value() ? origin_z.value() : 0.0));
+  auto direction = flight::geometry::create_vector3((direction_x.has_value() ? direction_x.value() : 0.0), (direction_y.has_value() ? direction_y.value() : 0.0), (direction_z.has_value() ? direction_z.value() : 1.0));
   flight::types::EntityConstruction<flight::Ref<flight::types::Ray3D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Ray3D>>();
   initialize_ray3_d(out, origin, direction);
   return flight::entity::finish_entity<flight::Ref<flight::types::Ray3D>>(out);

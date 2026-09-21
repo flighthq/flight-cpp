@@ -17,8 +17,8 @@ inline void report_text_segmenter_unavailable() {
   ([&]() { auto optional_chain_receiver = guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(); }());
 }
 
-inline void set_text_segment_guard(std::optional<std::function<void()>> guard) {
-  (guard = guard);
+inline void set_text_segment_guard(std::optional<std::function<void()>> guard_2) {
+  (guard = guard_2);
 }
 
 } // namespace flight::textsegment

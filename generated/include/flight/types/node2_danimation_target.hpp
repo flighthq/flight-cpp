@@ -17,7 +17,7 @@ struct Node2DAnimationTarget;
 namespace flight::types {
 
 struct Node2DAnimationTarget : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Node2D> node;
+  flight::types::Node2D node;
   flight::types::Node2DAnimationPath path;
 };
 

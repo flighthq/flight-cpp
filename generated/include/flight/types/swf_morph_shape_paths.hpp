@@ -16,13 +16,13 @@ struct SwfMorphShapePaths;
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_97B3A2515EDA198D
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_97B3A2515EDA198D
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_END_START_97B3A2515EDA198D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_END_START_97B3A2515EDA198D
 struct end_start_97b3a2515eda198d : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Path> end;
   flight::Ref<flight::types::Path> start;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_97B3A2515EDA198D
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_END_START_97B3A2515EDA198D
 
 struct SwfMorphShapePaths : public flight::ReferenceEnabled {
   flight::Map<double, flight::Ref<end_start_97b3a2515eda198d>> fills;

@@ -1,6 +1,6 @@
 {
   "schema": "flight-generated-upstream-example-refusals/1",
-  "compilerRevision": "ef60fb6d3181ce5c12d5ce8d75c8ef6518c9b168",
+  "compilerRevision": "7e2f6b02114c9f39bfe8674397b1b162581edf74",
   "sourceRevision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
   "refusals": [
     {
@@ -27,12 +27,10 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 7,
-      "line": 57,
+      "code": "internal-error",
       "module": "examples/packages/awd2loading/src/app.ts",
       "package": "@flighthq/example-awd2loading",
-      "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/app.ts: contextual union value type flight::Ref<flight::sdk::Vector3> is not a represented runtime domain",
+      "reason": "Compiler lowering pass lowering-plan failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/app.ts: dangling-binding-reference at $.declarations[5].initializer.callee.body[0].variable.type.types[0].properties[4].type.types[0].properties[10].type.types[0].element.typeArguments[0].reference.binding: binding type-binding:[\"@flighthq/example-awd2loading\",\"examples/packages/awd2loading/src/app.ts\",3131] has no introduction in the module; dangling-binding-reference at $.declarations[5].initializer.callee.body[0].variable.type.types[0].properties[4].type.types[0].properties[12].type.types[1].properties[0].type.reference.binding: binding type-binding:[\"@flighthq/example-awd2loading\",\"examples/packages/awd2loading/src/app.ts\",3131] has no introduction in the module; dangling-binding-reference at $.declarations[5].initializer.callee.body[0].variable.type.types[0].properties[4].type.types[0].properties[21].type.types[0].typeArguments[0].reference.binding: binding type-binding:[\"@flighthq/example-awd2loading\",\"examples/packages/awd2loading/src/app.ts\",3131] has no introduction in the module; dangling-binding-reference at $.declarations[5].initializer.callee.body[0].variable.type.types[1].typeArguments[0].reference.binding: binding type-binding:[\"@flighthq/example-awd2loading\",\"examples/packages/awd2loading/src/app.ts\",3131] has no introduction in the module",
       "stage": "emission"
     },
     {
@@ -175,11 +173,11 @@
     },
     {
       "code": "unsupported-ir",
-      "column": 7,
-      "line": 72,
+      "column": 1,
+      "line": 99,
       "module": "examples/packages/cross-backend-embed/src/app.ts",
       "package": "@flighthq/example-cross-backend-embed",
-      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: contextual union value type flight::Ref<flight::sdk::Texture2D> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: contextual union value type flight::host_sdl::GlCanvas is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -220,10 +218,10 @@
     {
       "code": "unsupported-ir",
       "column": 7,
-      "line": 120,
+      "line": 253,
       "module": "examples/packages/flowstates/src/app.ts",
       "package": "@flighthq/example-flowstates",
-      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/app.ts: contextual union value type std::function<void()> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {
@@ -243,10 +241,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 241,
+      "line": 230,
       "module": "examples/packages/formatloading/src/app.ts",
       "package": "@flighthq/example-formatloading",
-      "reason": "cpp emission failed for @flighthq/example-formatloading/examples/packages/formatloading/src/app.ts: optional chain receiver requires one concrete nullable union member",
+      "reason": "cpp emission failed for @flighthq/example-formatloading/examples/packages/formatloading/src/app.ts: property height on C++ absence-carrying storage requires narrowed access",
       "stage": "emission"
     },
     {
@@ -310,10 +308,10 @@
     {
       "code": "unsupported-ir",
       "column": 7,
-      "line": 152,
+      "line": 261,
       "module": "examples/packages/materialshowcase/src/app.ts",
       "package": "@flighthq/example-materialshowcase",
-      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/app.ts: contextual union value type flight::Ref<flight::sdk::StandardPbrMaterialProperties> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/app.ts: contextual union value type std::function<double(double)> is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -356,10 +354,10 @@
     {
       "code": "unsupported-ir",
       "column": 7,
-      "line": 140,
+      "line": 46,
       "module": "examples/packages/movieclip/src/app.ts",
       "package": "@flighthq/example-movieclip",
-      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
+      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/app.ts: flight-cpp WeakMap key requires a proven Flight reference or external weak-key policy",
       "stage": "emission"
     },
     {
@@ -468,11 +466,11 @@
     },
     {
       "code": "unsupported-ir",
-      "column": 1,
-      "line": 77,
+      "column": 7,
+      "line": 126,
       "module": "examples/packages/scene-fire/src/app.ts",
       "package": "@flighthq/example-scene-fire",
-      "reason": "cpp emission failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/app.ts: contextual union value type flight::Ref<flight::sdk::Texture2D> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/app.ts: missing required call argument at position 2",
       "stage": "emission"
     },
     {
@@ -623,11 +621,11 @@
     },
     {
       "code": "unsupported-ir",
-      "column": 1,
-      "line": 78,
+      "column": 7,
+      "line": 166,
       "module": "examples/packages/spring/src/app.ts",
       "package": "@flighthq/example-spring",
-      "reason": "cpp emission failed for @flighthq/example-spring/examples/packages/spring/src/app.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/example-spring/examples/packages/spring/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {
@@ -711,9 +709,11 @@
     },
     {
       "code": "unsupported-ir",
+      "column": 7,
+      "line": 224,
       "module": "examples/packages/tilemap/src/app.ts",
       "package": "@flighthq/example-tilemap",
-      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/app.ts: captured referent mutation of hud requires a shared C++ reference representation",
+      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/app.ts: intersection types require C++ multiple-inheritance lowering: no shape for typeOf",
       "stage": "emission"
     },
     {

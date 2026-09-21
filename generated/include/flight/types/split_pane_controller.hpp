@@ -34,14 +34,14 @@ struct SplitPaneController : public flight::ReferenceEnabled {
 
 struct SplitPaneControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
-  flight::Ref<flight::types::Node2D> divider;
-  flight::Ref<flight::types::Node2D> first_region;
+  flight::types::Node2D divider;
+  flight::types::Node2D first_region;
   std::optional<double> maximum_first;
   std::optional<double> minimum_first;
   std::optional<double> minimum_second;
   std::optional<flight::types::GuiOrientation> orientation;
   std::optional<double> position;
-  flight::Ref<flight::types::Node2D> second_region;
+  flight::types::Node2D second_region;
   std::optional<double> total_size;
 };
 

@@ -20,7 +20,7 @@ inline double compute_gaussian_sigma_from_radius(double radius) {
 }
 
 inline double compute_separable_blur_pass_count(std::optional<double> samples) {
-  return flight::maximum(1.0, flight::round(samples.value_or(1.0)));
+  return flight::maximum(1.0, flight::round((samples.has_value() ? samples.value() : 1.0)));
 }
 
 inline double create_gaussian_kernel_weights(double radius, double sigma, flight::Float32Array out) {

@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/boolean.hpp>
 #include <flight/number.hpp>
 #include <flight/structural_ref.hpp>
 #include <limits>
@@ -117,7 +116,7 @@ inline void update_spring(flight::Ref<flight::types::Spring> spring, double targ
 }
 
 inline void update_spring_angle(flight::Ref<flight::types::Spring> spring, double target, double full_turn, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpringConfig>>>> config, double delta_time) {
-  if ((!(full_turn > 0.0) || !flight::to_boolean(std::isfinite(full_turn)))) {
+  if ((!(full_turn > 0.0) || !std::isfinite(full_turn))) {
     return;
   }
   const double value = spring->value;

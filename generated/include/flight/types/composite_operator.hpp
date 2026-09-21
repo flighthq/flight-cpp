@@ -7,8 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E636FF5AECD57BC6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E636FF5AECD57BC6
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CLEAR_COPY_DESTINATION_ATOP_DESTINATION_IN_DESTINATION_OUT_DESTINATION_OVER_SOURCE_ATOP_SOURCE_IN_SOURCE_OUT_SOURCE_OVER_XOR_E636FF5AECD57BC6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CLEAR_COPY_DESTINATION_ATOP_DESTINATION_IN_DESTINATION_OUT_DESTINATION_OVER_SOURCE_ATOP_SOURCE_IN_SOURCE_OUT_SOURCE_OVER_XOR_E636FF5AECD57BC6
 struct clear_copy_destination_atop_destination_in_destination_out_destination_over_source_atop_source_in_source_out_source_over_xor_e636ff5aecd57bc6 : public flight::ReferenceEnabled {
   flight::String clear;
   flight::String copy;
@@ -22,7 +22,7 @@ struct clear_copy_destination_atop_destination_in_destination_out_destination_ov
   flight::String source_over;
   flight::String xor_;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E636FF5AECD57BC6
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CLEAR_COPY_DESTINATION_ATOP_DESTINATION_IN_DESTINATION_OUT_DESTINATION_OVER_SOURCE_ATOP_SOURCE_IN_SOURCE_OUT_SOURCE_OVER_XOR_E636FF5AECD57BC6
 
 inline flight::Ref<clear_copy_destination_atop_destination_in_destination_out_destination_over_source_atop_source_in_source_out_source_over_xor_e636ff5aecd57bc6> composite_operator = flight::make_ref<clear_copy_destination_atop_destination_in_destination_out_destination_over_source_atop_source_in_source_out_source_over_xor_e636ff5aecd57bc6>(clear_copy_destination_atop_destination_in_destination_out_destination_over_source_atop_source_in_source_out_source_over_xor_e636ff5aecd57bc6{.clear = flight::String("Clear"), .copy = flight::String("Copy"), .destination_atop = flight::String("DestinationAtop"), .destination_in = flight::String("DestinationIn"), .destination_out = flight::String("DestinationOut"), .destination_over = flight::String("DestinationOver"), .source_atop = flight::String("SourceAtop"), .source_in = flight::String("SourceIn"), .source_out = flight::String("SourceOut"), .source_over = flight::String("SourceOver"), .xor_ = flight::String("Xor")});
 

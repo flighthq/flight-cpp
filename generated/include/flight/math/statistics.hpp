@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/boolean.hpp>
 #include <flight/error.hpp>
 #include <flight/number.hpp>
 #include <flight/object.hpp>
@@ -30,10 +29,10 @@ inline double finite_absolute_scale(flight::Array<double> values) {
 }
 
 inline double midpoint(double a, double b) {
-  if ((!flight::to_boolean(std::isfinite(a)) || !flight::to_boolean(std::isfinite(b)))) {
+  if ((!std::isfinite(a) || !std::isfinite(b))) {
     return ((a + b) / 2.0);
   }
-  if (flight::to_boolean(([](const auto& left, const auto& right) { using Left = std::remove_cvref_t<decltype(left)>; using Right = std::remove_cvref_t<decltype(right)>; if constexpr (!std::is_same_v<Left, Right>) { return false; } else if constexpr (std::is_floating_point_v<Left>) { if (std::isnan(left) && std::isnan(right)) return true; if (left == 0.0 && right == 0.0) return std::signbit(left) == std::signbit(right); return left == right; } else { return left == right; } })(a, b))) {
+  if (([](const auto& left, const auto& right) { using Left = std::remove_cvref_t<decltype(left)>; using Right = std::remove_cvref_t<decltype(right)>; if constexpr (!std::is_same_v<Left, Right>) { return false; } else if constexpr (std::is_floating_point_v<Left>) { if (std::isnan(left) && std::isnan(right)) return true; if (left == 0.0 && right == 0.0) return std::signbit(left) == std::signbit(right); return left == right; } else { return left == right; } })(a, b)) {
     return a;
   }
   if ((((a >= 0.0) && (b >= 0.0)) || ((a <= 0.0) && (b <= 0.0)))) {
@@ -106,7 +105,7 @@ inline double mean(flight::Array<double> values) {
     return std::numeric_limits<double>::quiet_NaN();
   }
   const double scale = finite_absolute_scale(values);
-  if (!flight::to_boolean(std::isfinite(scale))) {
+  if (!std::isfinite(scale)) {
     return unscaled_mean(values);
   }
   if ((scale == 0.0)) {
@@ -136,7 +135,7 @@ inline double standard_deviation(flight::Array<double> values) {
     return std::numeric_limits<double>::quiet_NaN();
   }
   const double scale = finite_absolute_scale(values);
-  if (!flight::to_boolean(std::isfinite(scale))) {
+  if (!std::isfinite(scale)) {
     return std::sqrt(unscaled_variance(values));
   }
   if ((scale == 0.0)) {
@@ -150,7 +149,7 @@ inline double variance(flight::Array<double> values) {
     return std::numeric_limits<double>::quiet_NaN();
   }
   const double scale = finite_absolute_scale(values);
-  if (!flight::to_boolean(std::isfinite(scale))) {
+  if (!std::isfinite(scale)) {
     return unscaled_variance(values);
   }
   if ((scale == 0.0)) {
@@ -188,7 +187,7 @@ inline double weighted_average(flight::Array<double> values, flight::Array<doubl
   }
   const double value_scale = finite_absolute_scale(values);
   const double weight_scale = finite_absolute_scale(weights);
-  if ((!flight::to_boolean(std::isfinite(value_scale)) || !flight::to_boolean(std::isfinite(weight_scale)))) {
+  if ((!std::isfinite(value_scale) || !std::isfinite(weight_scale))) {
     return unscaled_weighted_average(values, weights);
   }
   if ((weight_scale == 0.0)) {

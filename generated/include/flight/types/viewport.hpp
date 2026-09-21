@@ -27,17 +27,17 @@ struct Viewport : public flight::ReferenceEnabled {
   double y;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_981DD77A7E38DF0E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_981DD77A7E38DF0E
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_DEVICE_PIXEL_RATIO_HEIGHT_WIDTH_X_Y_981DD77A7E38DF0E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_DEVICE_PIXEL_RATIO_HEIGHT_WIDTH_X_Y_981DD77A7E38DF0E
 struct entity_runtime_key_device_pixel_ratio_height_width_x_y_981dd77a7e38df0e : public flight::ReferenceEnabled {
-  std::optional<std::optional<flight::Ref<flight::types::EntityRuntime>>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::optional<double> device_pixel_ratio;
   std::optional<double> height;
   std::optional<double> width;
   std::optional<double> x;
   std::optional<double> y;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_981DD77A7E38DF0E
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_DEVICE_PIXEL_RATIO_HEIGHT_WIDTH_X_Y_981DD77A7E38DF0E
 
 using ViewportLike = flight::Ref<entity_runtime_key_device_pixel_ratio_height_width_x_y_981dd77a7e38df0e>;
 

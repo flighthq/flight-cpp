@@ -20,9 +20,9 @@ namespace flight::types { struct SketchEffect; }
 namespace flight::effects {
 
 inline void compute_outline_edge_params(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OutlineEffect>>>> effect, flight::Array<double> out) {
-  const double threshold = flight::maximum(0.0, flight::row_get<flight::RowKey<"threshold">>(effect).value_or(0.1));
+  const double threshold = flight::maximum(0.0, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"threshold">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.1; }()));
   const double feather = (threshold * 0.5);
-  const double color = flight::row_get<flight::RowKey<"color">>(effect).value_or(255.0);
+  const double color = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"color">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 255.0; }());
   const double r = (flight::bitwise_and(flight::unsigned_right_shift(color, 24.0), 255.0) / 255.0);
   const double g = (flight::bitwise_and(flight::unsigned_right_shift(color, 16.0), 255.0) / 255.0);
   const double b = (flight::bitwise_and(flight::unsigned_right_shift(color, 8.0), 255.0) / 255.0);
@@ -36,11 +36,11 @@ inline void compute_outline_edge_params(flight::StructuralRef<flight::RowReadonl
 }
 
 inline double compute_outline_thickness_px(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OutlineEffect>>>> effect) {
-  return flight::maximum(0.0, flight::round(flight::row_get<flight::RowKey<"thickness">>(effect).value_or(1.0)));
+  return flight::maximum(0.0, flight::round(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"thickness">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }())));
 }
 
 inline void compute_sketch_edge_params(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SketchEffect>>>> effect, flight::Array<double> out) {
-  const double strength = flight::maximum(0.0, flight::minimum(1.0, flight::row_get<flight::RowKey<"strength">>(effect).value_or(1.0)));
+  const double strength = flight::maximum(0.0, flight::minimum(1.0, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"strength">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }())));
   const double threshold = flight::maximum(0.01, flight::minimum(1.0, (1.0 - (strength * 0.95))));
   (out.element(0.0) = threshold);
   (out.element(1.0) = strength);

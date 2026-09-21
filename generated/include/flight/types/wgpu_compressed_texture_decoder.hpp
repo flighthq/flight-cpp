@@ -7,10 +7,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types {
+using WgpuCompressedTextureDecoder = std::function<std::optional<flight::Uint8ClampedArray>(flight::String, double, double, flight::Uint8Array)>;
+} // namespace flight::types
+
 #include <flight/types/texture_container_format.hpp>
 
 namespace flight::types {
-
-using WgpuCompressedTextureDecoder = std::function<std::optional<flight::Uint8ClampedArray>(flight::types::TextureContainerFormat, double, double, flight::Uint8Array)>;
 
 } // namespace flight::types

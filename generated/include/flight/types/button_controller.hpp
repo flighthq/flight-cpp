@@ -36,11 +36,11 @@ struct ButtonController : public flight::ReferenceEnabled {
 struct ButtonControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
   std::optional<bool> disabled;
-  std::optional<flight::Ref<flight::types::Node2D>> down_state;
-  std::optional<flight::Ref<flight::types::Node2D>> hit_area;
+  std::optional<flight::types::Node2D> down_state;
+  std::optional<flight::types::Node2D> hit_area;
   std::optional<flight::types::NodeInteractiveStateBinding> interactive_state_binding;
-  std::optional<flight::Ref<flight::types::Node2D>> over_state;
-  flight::Ref<flight::types::Node2D> up_state;
+  std::optional<flight::types::Node2D> over_state;
+  flight::types::Node2D up_state;
 };
 
 struct ButtonControllerSignals : public flight::ReferenceEnabled {

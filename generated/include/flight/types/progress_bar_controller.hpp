@@ -30,11 +30,11 @@ struct ProgressBarController : public flight::ReferenceEnabled {
 
 struct ProgressBarControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
-  flight::Ref<flight::types::Node2D> fill;
+  flight::types::Node2D fill;
   std::optional<double> maximum;
   std::optional<double> minimum;
   std::optional<flight::types::GuiOrientation> orientation;
-  flight::Ref<flight::types::Node2D> track;
+  flight::types::Node2D track;
   std::optional<double> value;
 };
 

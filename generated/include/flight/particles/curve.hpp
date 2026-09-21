@@ -136,13 +136,13 @@ inline flight::Array<double> hsv_to_rgb(double h, double s, double v) {
   return flight::Array<double>{(r + m), (g + m), (b + m)};
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_686B9AC5421786D1
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_686B9AC5421786D1
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_F_I_686B9AC5421786D1
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_F_I_686B9AC5421786D1
 struct f_i_686b9ac5421786d1 : public flight::ReferenceEnabled {
   double f;
   double i;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_686B9AC5421786D1
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_F_I_686B9AC5421786D1
 
 inline flight::Ref<f_i_686b9ac5421786d1> locate_keyframe(auto sorted, double t) {
   const double n = static_cast<double>(sorted.size());
@@ -178,18 +178,18 @@ inline flight::Array<double> particle_color_curve_from_keyframes(flight::Array<f
   return (a->time - b->time);
 });
   return build_particle_color_curve([=](double t) {
-  flight::Ref<f_i_686b9ac5421786d1> seg = locate_keyframe(sorted, t);
+  auto seg = locate_keyframe(sorted, t);
   if ((seg->f == 0.0)) {
     return flight::Array<double>{sorted.element(seg->i)->r, sorted.element(seg->i)->g, sorted.element(seg->i)->b};
   }
-  flight::Ref<flight::types::ColorKeyframe> a = sorted.element(seg->i);
-  flight::Ref<flight::types::ColorKeyframe> b = sorted.element((seg->i + 1.0));
+  auto a = sorted.element(seg->i);
+  auto b = sorted.element((seg->i + 1.0));
   return flight::Array<double>{(a->r + ((b->r - a->r) * seg->f)), (a->g + ((b->g - a->g) * seg->f)), (a->b + ((b->b - a->b) * seg->f))};
 }, samples.value());
 }
 
 inline double interp_keyframe(flight::Array<flight::Ref<flight::types::CurveKeyframe>> sorted, double t) {
-  flight::Ref<f_i_686b9ac5421786d1> seg = locate_keyframe(sorted, t);
+  auto seg = locate_keyframe(sorted, t);
   if ((seg->f == 0.0)) {
     return sorted.element(seg->i)->value;
   }

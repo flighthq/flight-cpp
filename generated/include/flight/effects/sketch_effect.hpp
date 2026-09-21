@@ -17,12 +17,12 @@ namespace flight::types { struct SketchEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_51319A496401E295
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_51319A496401E295
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_51319A496401E295
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_51319A496401E295
 struct strength_51319a496401e295 : public flight::ReferenceEnabled {
   std::optional<double> strength;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_51319A496401E295
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_51319A496401E295
 
 inline void initialize_sketch_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SketchEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_51319a496401e295>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::SketchEffect>>(out, flight::String("SketchEffect"));

@@ -7,8 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_29F8F61FD676907B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_29F8F61FD676907B
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ADD_CLEAR_COLOR_BURN_COLOR_DODGE_COPY_DARKEN_DESTINATION_ATOP_DESTINATION_IN_DESTINATION_OUT_DESTINATION_OVER_DIFFERENCE_EXCLUSION_HARD_LIGHT_INVERT_LIGHTEN_MULTIPLY_NORMAL_OVERLAY_SCREEN_SOFT_LIGHT_SOURCE_ATOP_SOURCE_IN_SOURCE_OUT_SOURCE_OVER_SUBTRACT_XOR_29F8F61FD676907B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ADD_CLEAR_COLOR_BURN_COLOR_DODGE_COPY_DARKEN_DESTINATION_ATOP_DESTINATION_IN_DESTINATION_OUT_DESTINATION_OVER_DIFFERENCE_EXCLUSION_HARD_LIGHT_INVERT_LIGHTEN_MULTIPLY_NORMAL_OVERLAY_SCREEN_SOFT_LIGHT_SOURCE_ATOP_SOURCE_IN_SOURCE_OUT_SOURCE_OVER_SUBTRACT_XOR_29F8F61FD676907B
 struct add_clear_color_burn_color_dodge_copy_darken_destination_atop_destination_in_destination_out_destination_over_difference_exclusion_hard_light_invert_lighten_multiply_normal_overlay_screen_soft_light_source_atop_source_in_source_out_source_over_subtract_xor_29f8f61fd676907b : public flight::ReferenceEnabled {
   flight::String add;
   flight::String clear;
@@ -37,7 +37,7 @@ struct add_clear_color_burn_color_dodge_copy_darken_destination_atop_destination
   flight::String subtract;
   flight::String xor_;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_29F8F61FD676907B
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ADD_CLEAR_COLOR_BURN_COLOR_DODGE_COPY_DARKEN_DESTINATION_ATOP_DESTINATION_IN_DESTINATION_OUT_DESTINATION_OVER_DIFFERENCE_EXCLUSION_HARD_LIGHT_INVERT_LIGHTEN_MULTIPLY_NORMAL_OVERLAY_SCREEN_SOFT_LIGHT_SOURCE_ATOP_SOURCE_IN_SOURCE_OUT_SOURCE_OVER_SUBTRACT_XOR_29F8F61FD676907B
 
 inline flight::Ref<add_clear_color_burn_color_dodge_copy_darken_destination_atop_destination_in_destination_out_destination_over_difference_exclusion_hard_light_invert_lighten_multiply_normal_overlay_screen_soft_light_source_atop_source_in_source_out_source_over_subtract_xor_29f8f61fd676907b> bitmap_composite_mode = flight::make_ref<add_clear_color_burn_color_dodge_copy_darken_destination_atop_destination_in_destination_out_destination_over_difference_exclusion_hard_light_invert_lighten_multiply_normal_overlay_screen_soft_light_source_atop_source_in_source_out_source_over_subtract_xor_29f8f61fd676907b>(add_clear_color_burn_color_dodge_copy_darken_destination_atop_destination_in_destination_out_destination_over_difference_exclusion_hard_light_invert_lighten_multiply_normal_overlay_screen_soft_light_source_atop_source_in_source_out_source_over_subtract_xor_29f8f61fd676907b{.add = flight::String("Add"), .clear = flight::String("Clear"), .color_burn = flight::String("ColorBurn"), .color_dodge = flight::String("ColorDodge"), .copy = flight::String("Copy"), .darken = flight::String("Darken"), .destination_atop = flight::String("DestinationAtop"), .destination_in = flight::String("DestinationIn"), .destination_out = flight::String("DestinationOut"), .destination_over = flight::String("DestinationOver"), .difference = flight::String("Difference"), .exclusion = flight::String("Exclusion"), .hard_light = flight::String("HardLight"), .invert = flight::String("Invert"), .lighten = flight::String("Lighten"), .multiply = flight::String("Multiply"), .normal = flight::String("Normal"), .overlay = flight::String("Overlay"), .screen = flight::String("Screen"), .soft_light = flight::String("SoftLight"), .source_atop = flight::String("SourceAtop"), .source_in = flight::String("SourceIn"), .source_out = flight::String("SourceOut"), .source_over = flight::String("SourceOver"), .subtract = flight::String("Subtract"), .xor_ = flight::String("Xor")});
 

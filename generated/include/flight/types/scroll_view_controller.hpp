@@ -36,10 +36,10 @@ struct ScrollViewController : public flight::ReferenceEnabled {
 
 struct ScrollViewControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
-  flight::Ref<flight::types::Node2D> content;
+  flight::types::Node2D content;
   std::optional<flight::Ref<flight::types::ScrollBarController>> horizontal_scroll_bar;
   std::optional<bool> mouse_wheel_enabled;
-  flight::Ref<flight::types::Node2D> viewport;
+  flight::types::Node2D viewport;
   std::optional<flight::Ref<flight::types::ScrollBarController>> vertical_scroll_bar;
 };
 

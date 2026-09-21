@@ -35,8 +35,8 @@ struct TabBarController : public flight::ReferenceEnabled {
 };
 
 struct TabBarControllerItem : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Node2D> selected_state;
-  flight::Ref<flight::types::Node2D> unselected_state;
+  flight::types::Node2D selected_state;
+  flight::types::Node2D unselected_state;
 };
 
 struct TabBarControllerOptions : public flight::ReferenceEnabled {

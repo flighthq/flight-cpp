@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -21,30 +22,30 @@ namespace flight::types { struct SpritesheetFrameData; }
 
 namespace flight::spritesheet {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_2DE998EDB64E8039
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_2DE998EDB64E8039
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_DIRECTION_FRAME_DURATION_FRAME_DURATIONS_FRAME_NAMES_REPEAT_COUNT_NAME_ORIGIN_X_ORIGIN_Y_2DE998EDB64E8039
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_DIRECTION_FRAME_DURATION_FRAME_DURATIONS_FRAME_NAMES_REPEAT_COUNT_NAME_ORIGIN_X_ORIGIN_Y_2DE998EDB64E8039
 struct entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_2de998edb64e8039 : public flight::ReferenceEnabled {
-  std::optional<std::optional<flight::Ref<flight::types::EntityRuntime>>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::optional<flight::types::SpritesheetAnimationDirection> direction;
   std::optional<double> frame_duration;
-  std::optional<std::optional<flight::Array<double>>> frame_durations;
+  std::variant<flight::Array<double>, flight::Null, flight::Undefined> frame_durations;
   std::optional<flight::Array<flight::String>> frame_names;
   std::optional<double> repeat_count;
   std::optional<flight::String> name;
   std::optional<double> origin_x;
   std::optional<double> origin_y;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_2DE998EDB64E8039
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_DIRECTION_FRAME_DURATION_FRAME_DURATIONS_FRAME_NAMES_REPEAT_COUNT_NAME_ORIGIN_X_ORIGIN_Y_2DE998EDB64E8039
 
 inline void initialize_spritesheet_animation_data(flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetAnimationData>> out, std::optional<flight::Ref<entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_2de998edb64e8039>> obj = std::nullopt) {
-  flight::row_set<flight::RowKey<"direction">>(out, ([&]() -> std::optional<flight::types::SpritesheetAnimationDirection> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->direction; }()).value_or(flight::String("forward")));
-  flight::row_set<flight::RowKey<"frameDuration">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->frame_duration; }()).value_or(100.0));
-  flight::row_set<flight::RowKey<"frameDurations">>(out, ([&]() -> std::optional<flight::Array<double>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->frame_durations.value_or(std::nullopt); }()));
-  flight::row_set<flight::RowKey<"frameNames">>(out, ([&]() -> std::optional<flight::Array<flight::String>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->frame_names; }()).value_or(flight::Array<flight::String>{}));
-  flight::row_set<flight::RowKey<"name">>(out, ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->name; }()).value_or(flight::String("")));
-  flight::row_set<flight::RowKey<"originX">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->origin_x; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"originY">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->origin_y; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"repeatCount">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->repeat_count; }()).value_or(-1.0));
+  flight::row_set<flight::RowKey<"direction">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::SpritesheetAnimationDirection> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->direction; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("forward"); }()));
+  flight::row_set<flight::RowKey<"frameDuration">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->frame_duration; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }()));
+  flight::row_set<flight::RowKey<"frameDurations">>(out, ([&]() -> std::optional<flight::Array<double>> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::Array<double>, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return optional_chain_receiver.value()->frame_durations; }()); if (std::holds_alternative<flight::Array<double>>(nullish_coalesce_left)) return std::optional<flight::Array<double>>{std::get<flight::Array<double>>(nullish_coalesce_left)}; return std::nullopt; }()));
+  flight::row_set<flight::RowKey<"frameNames">>(out, ([&]() -> flight::Array<flight::String> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::String>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->frame_names; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::String>{}; }()));
+  flight::row_set<flight::RowKey<"name">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->name; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
+  flight::row_set<flight::RowKey<"originX">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->origin_x; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"originY">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->origin_y; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"repeatCount">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->repeat_count; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return -1.0; }()));
 }
 
 inline flight::Ref<flight::types::SpritesheetAnimationData> create_spritesheet_animation_data(std::optional<flight::Ref<entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_2de998edb64e8039>> obj = std::nullopt) {
@@ -53,10 +54,10 @@ inline flight::Ref<flight::types::SpritesheetAnimationData> create_spritesheet_a
   return flight::entity::finish_entity<flight::Ref<flight::types::SpritesheetAnimationData>>(out);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_7834B920F8A7D194
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_7834B920F8A7D194
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ANIMATIONS_FRAMES_IMAGE_FILE_IMAGE_HEIGHT_IMAGE_WIDTH_SCALE_7834B920F8A7D194
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ANIMATIONS_FRAMES_IMAGE_FILE_IMAGE_HEIGHT_IMAGE_WIDTH_SCALE_7834B920F8A7D194
 struct entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_7834b920f8a7d194 : public flight::ReferenceEnabled {
-  std::optional<std::optional<flight::Ref<flight::types::EntityRuntime>>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::optional<flight::Array<flight::Ref<flight::types::SpritesheetAnimationData>>> animations;
   std::optional<flight::Array<flight::Ref<flight::types::SpritesheetFrameData>>> frames;
   std::optional<flight::String> image_file;
@@ -64,15 +65,15 @@ struct entity_runtime_key_animations_frames_image_file_image_height_image_width_
   std::optional<double> image_width;
   std::optional<double> scale;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_7834B920F8A7D194
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ANIMATIONS_FRAMES_IMAGE_FILE_IMAGE_HEIGHT_IMAGE_WIDTH_SCALE_7834B920F8A7D194
 
 inline void initialize_spritesheet_data(flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetData>> out, std::optional<flight::Ref<entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_7834b920f8a7d194>> obj = std::nullopt) {
-  flight::row_set<flight::RowKey<"animations">>(out, ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::SpritesheetAnimationData>>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->animations; }()).value_or(flight::Array<flight::Ref<flight::types::SpritesheetAnimationData>>{}));
-  flight::row_set<flight::RowKey<"frames">>(out, ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::SpritesheetFrameData>>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->frames; }()).value_or(flight::Array<flight::Ref<flight::types::SpritesheetFrameData>>{}));
-  flight::row_set<flight::RowKey<"imageFile">>(out, ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->image_file; }()).value_or(flight::String("")));
-  flight::row_set<flight::RowKey<"imageHeight">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->image_height; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"imageWidth">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->image_width; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"scale">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->scale; }()).value_or(1.0));
+  flight::row_set<flight::RowKey<"animations">>(out, ([&]() -> flight::Array<flight::Ref<flight::types::SpritesheetAnimationData>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::SpritesheetAnimationData>>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->animations; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::Ref<flight::types::SpritesheetAnimationData>>{}; }()));
+  flight::row_set<flight::RowKey<"frames">>(out, ([&]() -> flight::Array<flight::Ref<flight::types::SpritesheetFrameData>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::SpritesheetFrameData>>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->frames; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::Ref<flight::types::SpritesheetFrameData>>{}; }()));
+  flight::row_set<flight::RowKey<"imageFile">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->image_file; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
+  flight::row_set<flight::RowKey<"imageHeight">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->image_height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"imageWidth">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->image_width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"scale">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->scale; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()));
 }
 
 inline flight::Ref<flight::types::SpritesheetData> create_spritesheet_data(std::optional<flight::Ref<entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_7834b920f8a7d194>> obj = std::nullopt) {
@@ -81,16 +82,16 @@ inline flight::Ref<flight::types::SpritesheetData> create_spritesheet_data(std::
   return flight::entity::finish_entity<flight::Ref<flight::types::SpritesheetData>>(out);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_764BE38B43135437
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_764BE38B43135437
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_HEIGHT_NAME_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_SOURCE_HEIGHT_SOURCE_WIDTH_WIDTH_X_Y_764BE38B43135437
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_HEIGHT_NAME_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_SOURCE_HEIGHT_SOURCE_WIDTH_WIDTH_X_Y_764BE38B43135437
 struct entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437 : public flight::ReferenceEnabled {
-  std::optional<std::optional<flight::Ref<flight::types::EntityRuntime>>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::optional<double> height;
   std::optional<flight::String> name;
   std::optional<double> offset_x;
   std::optional<double> offset_y;
-  std::optional<std::optional<double>> pivot_x;
-  std::optional<std::optional<double>> pivot_y;
+  std::variant<double, flight::Null, flight::Undefined> pivot_x;
+  std::variant<double, flight::Null, flight::Undefined> pivot_y;
   std::optional<bool> rotated;
   std::optional<double> source_height;
   std::optional<double> source_width;
@@ -98,21 +99,21 @@ struct entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_
   std::optional<double> x;
   std::optional<double> y;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_764BE38B43135437
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_HEIGHT_NAME_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_SOURCE_HEIGHT_SOURCE_WIDTH_WIDTH_X_Y_764BE38B43135437
 
 inline void initialize_spritesheet_frame_data(flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetFrameData>> out, std::optional<flight::Ref<entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437>> obj = std::nullopt) {
-  flight::row_set<flight::RowKey<"height">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"name">>(out, ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->name; }()).value_or(flight::String("")));
-  flight::row_set<flight::RowKey<"offsetX">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->offset_x; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"offsetY">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->offset_y; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"pivotX">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pivot_x.value_or(std::nullopt); }()));
-  flight::row_set<flight::RowKey<"pivotY">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pivot_y.value_or(std::nullopt); }()));
-  flight::row_set<flight::RowKey<"rotated">>(out, ([&]() -> std::optional<bool> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->rotated; }()).value_or(false));
-  flight::row_set<flight::RowKey<"sourceHeight">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->source_height; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"sourceWidth">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->source_width; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"width">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"x">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->x; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"y">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->y; }()).value_or(0.0));
+  flight::row_set<flight::RowKey<"height">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"name">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->name; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
+  flight::row_set<flight::RowKey<"offsetX">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->offset_x; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"offsetY">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->offset_y; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"pivotX">>(out, ([&]() -> std::optional<double> { auto nullish_coalesce_left_2 = ([&]() -> std::variant<double, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return optional_chain_receiver.value()->pivot_x; }()); if (std::holds_alternative<double>(nullish_coalesce_left_2)) return std::optional<double>{std::get<double>(nullish_coalesce_left_2)}; return std::nullopt; }()));
+  flight::row_set<flight::RowKey<"pivotY">>(out, ([&]() -> std::optional<double> { auto nullish_coalesce_left_3 = ([&]() -> std::variant<double, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return optional_chain_receiver.value()->pivot_y; }()); if (std::holds_alternative<double>(nullish_coalesce_left_3)) return std::optional<double>{std::get<double>(nullish_coalesce_left_3)}; return std::nullopt; }()));
+  flight::row_set<flight::RowKey<"rotated">>(out, ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->rotated; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }()));
+  flight::row_set<flight::RowKey<"sourceHeight">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->source_height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"sourceWidth">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->source_width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"width">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"x">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->x; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"y">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->y; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
 }
 
 inline flight::Ref<flight::types::SpritesheetFrameData> create_spritesheet_frame_data(std::optional<flight::Ref<entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437>> obj = std::nullopt) {

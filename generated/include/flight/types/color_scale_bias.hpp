@@ -11,6 +11,7 @@ namespace flight::types { struct EntityRuntime; }
 
 namespace flight::types {
 struct ColorScaleBias;
+using ColorScaleBiasLike = flight::Ref<ColorScaleBias>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -29,7 +30,5 @@ struct ColorScaleBias : public flight::ReferenceEnabled {
   double red_scale;
   double red_bias;
 };
-
-using ColorScaleBiasLike = flight::types::EntityWithoutRuntime<flight::Ref<ColorScaleBias>>;
 
 } // namespace flight::types

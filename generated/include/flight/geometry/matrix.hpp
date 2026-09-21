@@ -174,7 +174,7 @@ inline void initialize_matrix(flight::types::EntityConstruction<flight::Ref<flig
 
 inline flight::Ref<flight::types::Matrix> create_matrix(std::optional<double> a = std::nullopt, std::optional<double> b = std::nullopt, std::optional<double> c = std::nullopt, std::optional<double> d = std::nullopt, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Matrix>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Matrix>>();
-  initialize_matrix(out, a.value_or(1.0), b.value_or(0.0), c.value_or(0.0), d.value_or(1.0), tx.value_or(0.0), ty.value_or(0.0));
+  initialize_matrix(out, (a.has_value() ? a.value() : 1.0), (b.has_value() ? b.value() : 0.0), (c.has_value() ? c.value() : 0.0), (d.has_value() ? d.value() : 1.0), (tx.has_value() ? tx.value() : 0.0), (ty.has_value() ? ty.value() : 0.0));
   return flight::entity::finish_entity<flight::Ref<flight::types::Matrix>>(out);
 }
 
@@ -417,7 +417,7 @@ inline flight::Ref<flight::types::Matrix> create_gradient_transform_matrix(doubl
   rotation = rotation.value_or(0.0);
   tx = tx.value_or(0.0);
   ty = ty.value_or(0.0);
-  flight::Ref<flight::types::Matrix> out = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
+  auto out = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   set_gradient_transform_matrix(out, width, height, rotation.value(), tx.value(), ty.value());
   return out;
 }
@@ -443,7 +443,7 @@ inline void copy_matrix(flight::types::MatrixLike out, flight::StructuralRef<fli
 }
 
 inline flight::Ref<flight::types::Matrix> clone_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
-  flight::Ref<flight::types::Matrix> m = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
+  auto m = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   copy_matrix(m, source);
   return m;
 }
@@ -502,7 +502,7 @@ inline flight::Ref<flight::types::Matrix> create_transform_matrix(double scale_x
   rotation = rotation.value_or(0.0);
   tx = tx.value_or(0.0);
   ty = ty.value_or(0.0);
-  flight::Ref<flight::types::Matrix> out = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
+  auto out = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   set_transform_matrix(out, scale_x, scale_y, rotation.value(), tx.value(), ty.value());
   return out;
 }

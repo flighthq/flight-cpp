@@ -11,6 +11,7 @@ namespace flight::types { struct EntityRuntime; }
 
 namespace flight::types {
 struct Obb;
+using ObbLike = flight::Ref<Obb>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -31,7 +32,5 @@ struct Obb : public flight::ReferenceEnabled {
   double orientation_y;
   double orientation_z;
 };
-
-using ObbLike = flight::types::EntityWithoutRuntime<flight::Ref<Obb>>;
 
 } // namespace flight::types

@@ -319,12 +319,12 @@ struct LottieTextDocument : public flight::ReferenceEnabled {
   std::optional<double> j;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4676B95D8BF2F899
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4676B95D8BF2F899
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_K_4676B95D8BF2F899
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_K_4676B95D8BF2F899
 struct k_4676b95d8bf2f899 : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<LottieKeyframe<flight::Ref<LottieTextDocument>>>> k;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4676B95D8BF2F899
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_K_4676B95D8BF2F899
 
 struct LottieTextData : public flight::ReferenceEnabled {
   flight::Ref<k_4676b95d8bf2f899> d;
@@ -417,12 +417,12 @@ struct LottiePrecompositionAsset : public flight::ReferenceEnabled {
 
 using LottieAsset = std::variant<flight::Ref<LottiePrecompositionAsset>, flight::Ref<LottieImageAsset>>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3ED1A5518C519655
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3ED1A5518C519655
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_LIST_3ED1A5518C519655
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_LIST_3ED1A5518C519655
 struct list_3ed1a5518c519655 : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<LottieFont>> list;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3ED1A5518C519655
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_LIST_3ED1A5518C519655
 
 struct LottieDocument : public flight::ReferenceEnabled {
   std::optional<flight::Array<LottieAsset>> assets;

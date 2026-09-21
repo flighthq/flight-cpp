@@ -33,10 +33,10 @@ struct TooltipController : public flight::ReferenceEnabled {
 
 struct TooltipControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
-  flight::Ref<flight::types::Node2D> content;
+  flight::types::Node2D content;
   std::optional<double> delay;
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>>> offset;
-  flight::Ref<flight::types::Node2D> target;
+  flight::types::Node2D target;
 };
 
 } // namespace flight::types

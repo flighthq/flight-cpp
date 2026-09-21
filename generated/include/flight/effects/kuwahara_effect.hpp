@@ -17,12 +17,12 @@ namespace flight::types { struct KuwaharaEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D9BE18DEA3AB105A
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D9BE18DEA3AB105A
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_RADIUS_D9BE18DEA3AB105A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_RADIUS_D9BE18DEA3AB105A
 struct radius_d9be18dea3ab105a : public flight::ReferenceEnabled {
   std::optional<double> radius;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D9BE18DEA3AB105A
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_RADIUS_D9BE18DEA3AB105A
 
 inline void initialize_kuwahara_effect(flight::types::EntityConstruction<flight::Ref<flight::types::KuwaharaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<radius_d9be18dea3ab105a>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::KuwaharaEffect>>(out, flight::String("KuwaharaEffect"));

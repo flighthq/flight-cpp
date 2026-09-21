@@ -17,14 +17,14 @@ namespace flight::types { struct SsrEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_CF8E1BEA54DCDBB6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_CF8E1BEA54DCDBB6
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_MAX_DISTANCE_RESOLUTION_STEPS_CF8E1BEA54DCDBB6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_MAX_DISTANCE_RESOLUTION_STEPS_CF8E1BEA54DCDBB6
 struct max_distance_resolution_steps_cf8e1bea54dcdbb6 : public flight::ReferenceEnabled {
   std::optional<double> max_distance;
   std::optional<double> resolution;
   std::optional<double> steps;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_CF8E1BEA54DCDBB6
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_MAX_DISTANCE_RESOLUTION_STEPS_CF8E1BEA54DCDBB6
 
 inline void initialize_ssr_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SsrEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<max_distance_resolution_steps_cf8e1bea54dcdbb6>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::SsrEffect>>(out, flight::String("SsrEffect"));

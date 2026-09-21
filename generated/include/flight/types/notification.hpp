@@ -157,77 +157,77 @@ struct ScheduledNotification : public flight::ReferenceEnabled {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<NotificationSchedule>>>> schedule;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4D4AF1AE7E1D918A
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4D4AF1AE7E1D918A
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_PERMISSION_REASON_4D4AF1AE7E1D918A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_PERMISSION_REASON_4D4AF1AE7E1D918A
 struct permission_reason_4d4af1ae7e1d918a : public flight::ReferenceEnabled {
   NotificationPermission permission;
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4D4AF1AE7E1D918A
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_PERMISSION_REASON_4D4AF1AE7E1D918A
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_43A745D20647BFB6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_43A745D20647BFB6
 struct reason_43a745d20647bfb6 : public flight::ReferenceEnabled {
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_43A745D20647BFB6
 
 using NotificationPermissionQueryOutcome = std::variant<flight::Ref<permission_reason_4d4af1ae7e1d918a>, flight::Ref<reason_43a745d20647bfb6>>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_77F766FBE9B542A7
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_77F766FBE9B542A7
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NOTIFICATION_REASON_77F766FBE9B542A7
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NOTIFICATION_REASON_77F766FBE9B542A7
 struct notification_reason_77f766fbe9b542a7 : public flight::ReferenceEnabled {
   flight::Ref<Notification> notification;
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_77F766FBE9B542A7
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NOTIFICATION_REASON_77F766FBE9B542A7
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3999766267F1AFD6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3999766267F1AFD6
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FIELDS_REASON_3999766267F1AFD6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FIELDS_REASON_3999766267F1AFD6
 struct fields_reason_3999766267f1afd6 : public flight::ReferenceEnabled {
   flight::Array<NotificationRequestField> fields;
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3999766267F1AFD6
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FIELDS_REASON_3999766267F1AFD6
 
 using NotificationDeliveryOutcome = std::variant<flight::Ref<fields_reason_3999766267f1afd6>, flight::Ref<notification_reason_77f766fbe9b542a7>, flight::Ref<reason_43a745d20647bfb6>>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_95FC3E7662C33DAA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_95FC3E7662C33DAA
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_PRECISION_REASON_SCHEDULED_95FC3E7662C33DAA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_PRECISION_REASON_SCHEDULED_95FC3E7662C33DAA
 struct precision_reason_scheduled_95fc3e7662c33daa : public flight::ReferenceEnabled {
   flight::String precision;
   flight::String reason;
   flight::Ref<ScheduledNotification> scheduled;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_95FC3E7662C33DAA
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_PRECISION_REASON_SCHEDULED_95FC3E7662C33DAA
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B9595F39D4AA5D25
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B9595F39D4AA5D25
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FIELDS_REASON_B9595F39D4AA5D25
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FIELDS_REASON_B9595F39D4AA5D25
 struct fields_reason_b9595f39d4aa5d25 : public flight::ReferenceEnabled {
   flight::Array<flight::String> fields;
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B9595F39D4AA5D25
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FIELDS_REASON_B9595F39D4AA5D25
 
 using NotificationScheduleOutcome = std::variant<flight::Ref<fields_reason_b9595f39d4aa5d25>, flight::Ref<precision_reason_scheduled_95fc3e7662c33daa>, flight::Ref<reason_43a745d20647bfb6>>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_78BD979EF196A43A
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_78BD979EF196A43A
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NOTIFICATIONS_REASON_78BD979EF196A43A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NOTIFICATIONS_REASON_78BD979EF196A43A
 struct notifications_reason_78bd979ef196a43a : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<Notification>> notifications;
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_78BD979EF196A43A
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NOTIFICATIONS_REASON_78BD979EF196A43A
 
 using NotificationActiveListOutcome = std::variant<flight::Ref<notifications_reason_78bd979ef196a43a>, flight::Ref<reason_43a745d20647bfb6>>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D557AE6908302585
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D557AE6908302585
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NOTIFICATIONS_REASON_D557AE6908302585
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NOTIFICATIONS_REASON_D557AE6908302585
 struct notifications_reason_d557ae6908302585 : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<ScheduledNotification>> notifications;
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D557AE6908302585
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NOTIFICATIONS_REASON_D557AE6908302585
 
 using NotificationPendingListOutcome = std::variant<flight::Ref<notifications_reason_d557ae6908302585>, flight::Ref<reason_43a745d20647bfb6>>;
 
@@ -236,13 +236,13 @@ struct NotificationLifecycleFailure : public flight::ReferenceEnabled {
   flight::String operation;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F5EB64993ECFD24D
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F5EB64993ECFD24D
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILURES_REASON_F5EB64993ECFD24D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILURES_REASON_F5EB64993ECFD24D
 struct failures_reason_f5eb64993ecfd24d : public flight::ReferenceEnabled {
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<NotificationLifecycleFailure>>>>> failures;
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F5EB64993ECFD24D
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILURES_REASON_F5EB64993ECFD24D
 
 using NotificationLifecycleOutcome = std::variant<flight::Ref<failures_reason_f5eb64993ecfd24d>, flight::Ref<reason_43a745d20647bfb6>>;
 
@@ -250,32 +250,32 @@ struct NotificationEventAttachment : public flight::ReferenceEnabled {
   std::function<flight::Task<flight::Ref<NotificationEventReleaseOutcome>>()> release;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9A644A4A31596726
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9A644A4A31596726
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACHMENT_REASON_9A644A4A31596726
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACHMENT_REASON_9A644A4A31596726
 struct attachment_reason_9a644a4a31596726 : public flight::ReferenceEnabled {
   flight::Ref<NotificationEventAttachment> attachment;
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9A644A4A31596726
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACHMENT_REASON_9A644A4A31596726
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DF3BBA2DE4A03669
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DF3BBA2DE4A03669
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_RELEASE_FAILED_DF3BBA2DE4A03669
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_RELEASE_FAILED_DF3BBA2DE4A03669
 struct reason_release_failed_df3bba2de4a03669 : public flight::ReferenceEnabled {
   flight::String reason;
   bool release_failed;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DF3BBA2DE4A03669
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_RELEASE_FAILED_DF3BBA2DE4A03669
 
 using NotificationEventBackendAttachOutcome = std::variant<flight::Ref<attachment_reason_9a644a4a31596726>, flight::Ref<reason_release_failed_df3bba2de4a03669>>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_A670BAC8BA62EF94
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_A670BAC8BA62EF94
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_FAILED_REASON_RELEASE_FAILED_A670BAC8BA62EF94
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_FAILED_REASON_RELEASE_FAILED_A670BAC8BA62EF94
 struct attach_failed_reason_release_failed_a670bac8ba62ef94 : public flight::ReferenceEnabled {
   bool attach_failed;
   flight::String reason;
   bool release_failed;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_A670BAC8BA62EF94
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_FAILED_REASON_RELEASE_FAILED_A670BAC8BA62EF94
 
 using NotificationSubscriptionAttachOutcome = std::variant<flight::Ref<attach_failed_reason_release_failed_a670bac8ba62ef94>, flight::Ref<reason_43a745d20647bfb6>>;
 
@@ -355,47 +355,47 @@ struct HostNotificationLifecycleCapability : public flight::ReferenceEnabled {
   std::function<flight::Task<NotificationLifecycleOutcome>()> destroy;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_1D5139670FDD21DB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_1D5139670FDD21DB
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_1D5139670FDD21DB
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_1D5139670FDD21DB
 struct attach_entity_runtime_key_1d5139670fdd21db : public flight::types::Entity {
   std::function<flight::Task<NotificationEventBackendAttachOutcome>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Notification>>>>)>)> attach;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_1D5139670FDD21DB
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_1D5139670FDD21DB
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3A989AFBE7C321F7
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3A989AFBE7C321F7
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CLOSE_ALL_NOTIFICATIONS_ENTITY_RUNTIME_KEY_3A989AFBE7C321F7
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CLOSE_ALL_NOTIFICATIONS_ENTITY_RUNTIME_KEY_3A989AFBE7C321F7
 struct close_all_notifications_entity_runtime_key_3a989afbe7c321f7 : public flight::types::Entity {
   std::function<flight::Task<NotificationLifecycleOutcome>()> close_all_notifications;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3A989AFBE7C321F7
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CLOSE_ALL_NOTIFICATIONS_ENTITY_RUNTIME_KEY_3A989AFBE7C321F7
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_140E7C7D934E5C19
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_140E7C7D934E5C19
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NOTIFY_ENTITY_RUNTIME_KEY_140E7C7D934E5C19
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NOTIFY_ENTITY_RUNTIME_KEY_140E7C7D934E5C19
 struct notify_entity_runtime_key_140e7c7d934e5c19 : public flight::types::Entity {
   std::function<flight::Task<NotificationDeliveryOutcome>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<NotificationRequest>>>>)> notify;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_140E7C7D934E5C19
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NOTIFY_ENTITY_RUNTIME_KEY_140E7C7D934E5C19
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_65B7B5A622CCF3B2
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_65B7B5A622CCF3B2
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_65B7B5A622CCF3B2
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_65B7B5A622CCF3B2
 struct attach_entity_runtime_key_65b7b5a622ccf3b2 : public flight::types::Entity {
   std::function<flight::Task<NotificationEventBackendAttachOutcome>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Notification>>>>)>)> attach;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_65B7B5A622CCF3B2
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_65B7B5A622CCF3B2
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0F4C500C10516750
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0F4C500C10516750
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DESTROY_ENTITY_RUNTIME_KEY_0F4C500C10516750
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DESTROY_ENTITY_RUNTIME_KEY_0F4C500C10516750
 struct destroy_entity_runtime_key_0f4c500c10516750 : public flight::types::Entity {
   std::function<flight::Task<NotificationLifecycleOutcome>()> destroy;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0F4C500C10516750
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DESTROY_ENTITY_RUNTIME_KEY_0F4C500C10516750
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_14CFD2B64D973C62
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_14CFD2B64D973C62
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_14CFD2B64D973C62
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_14CFD2B64D973C62
 struct attach_entity_runtime_key_14cfd2b64d973c62 : public flight::types::Entity {
   std::function<flight::Task<NotificationEventBackendAttachOutcome>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Notification>>>>)>)> attach;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_14CFD2B64D973C62
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_14CFD2B64D973C62
 
 struct ElectronNotificationCapabilities : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
@@ -407,19 +407,19 @@ struct ElectronNotificationCapabilities : public flight::ReferenceEnabled {
   flight::Ref<attach_entity_runtime_key_14cfd2b64d973c62> received;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3817F6382DEFB65C
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3817F6382DEFB65C
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_3817F6382DEFB65C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_3817F6382DEFB65C
 struct attach_entity_runtime_key_3817f6382defb65c : public flight::types::Entity {
   std::function<flight::Task<NotificationEventBackendAttachOutcome>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Notification>>>>, flight::String)>)> attach;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_3817F6382DEFB65C
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_3817F6382DEFB65C
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B96E18CD7BC368A9
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B96E18CD7BC368A9
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_B96E18CD7BC368A9
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_B96E18CD7BC368A9
 struct attach_entity_runtime_key_b96e18cd7bc368a9 : public flight::types::Entity {
   std::function<flight::Task<NotificationEventBackendAttachOutcome>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Notification>>>>, flight::String, flight::String)>)> attach;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B96E18CD7BC368A9
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ATTACH_ENTITY_RUNTIME_KEY_B96E18CD7BC368A9
 
 struct ElectronMacosNotificationCapabilities : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
@@ -433,14 +433,14 @@ struct ElectronMacosNotificationCapabilities : public flight::ReferenceEnabled {
   flight::Ref<attach_entity_runtime_key_b96e18cd7bc368a9> reply;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_7B0D785324A3A42F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_7B0D785324A3A42F
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ACTION_ICON_TITLE_7B0D785324A3A42F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ACTION_ICON_TITLE_7B0D785324A3A42F
 struct action_icon_title_7b0d785324a3a42f : public flight::ReferenceEnabled {
   flight::String action;
   std::optional<flight::String> icon;
   flight::String title;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_7B0D785324A3A42F
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ACTION_ICON_TITLE_7B0D785324A3A42F
 
 struct WebNotificationOptions : public flight::ReferenceEnabled {
   std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<action_icon_title_7b0d785324a3a42f>>>>>> actions;
@@ -467,12 +467,12 @@ struct WebPageNotificationInstance : public flight::ReferenceEnabled {
   std::optional<std::function<void()>> onshow;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DA8100B70D4F5003
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DA8100B70D4F5003
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CONSTRUCT_DA8100B70D4F5003
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CONSTRUCT_DA8100B70D4F5003
 struct construct_da8100b70d4f5003 : public flight::ReferenceEnabled {
   std::function<flight::Ref<WebPageNotificationInstance>(flight::String, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<WebNotificationOptions>>>>>)> construct;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DA8100B70D4F5003
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CONSTRUCT_DA8100B70D4F5003
 
 struct WebPageNotificationApi : public flight::ReferenceEnabled {
   flight::Ref<construct_da8100b70d4f5003> notification;
@@ -485,25 +485,25 @@ struct WebServiceWorkerNotificationInstance : public flight::ReferenceEnabled {
   std::function<void()> close;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0D56B17662B2FB72
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0D56B17662B2FB72
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_TAG_0D56B17662B2FB72
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_TAG_0D56B17662B2FB72
 struct tag_0d56b17662b2fb72 : public flight::ReferenceEnabled {
   std::optional<flight::String> tag;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_0D56B17662B2FB72
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_TAG_0D56B17662B2FB72
 
 struct WebServiceWorkerNotificationRegistration : public flight::ReferenceEnabled {
   std::function<flight::Task<flight::Array<flight::Ref<WebServiceWorkerNotificationInstance>>>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<tag_0d56b17662b2fb72>>>>>)> get_notifications;
   std::function<flight::Task<void>(flight::String, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<WebNotificationOptions>>>>>)> show_notification;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_118358367ED974D2
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_118358367ED974D2
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_GET_PERMISSION_REQUEST_PERMISSION_118358367ED974D2
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_GET_PERMISSION_REQUEST_PERMISSION_118358367ED974D2
 struct get_permission_request_permission_118358367ed974d2 : public flight::ReferenceEnabled {
   std::function<NotificationPermission()> get_permission;
   std::function<flight::Task<NotificationPermission>()> request_permission;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_118358367ED974D2
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_GET_PERMISSION_REQUEST_PERMISSION_118358367ED974D2
 
 struct WebServiceWorkerNotificationApi : public flight::ReferenceEnabled {
   flight::Ref<get_permission_request_permission_118358367ed974d2> permission;

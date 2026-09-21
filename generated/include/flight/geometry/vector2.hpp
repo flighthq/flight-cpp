@@ -118,7 +118,7 @@ inline void initialize_vector2(flight::types::EntityConstruction<flight::Ref<fli
 
 inline flight::Ref<flight::types::Vector2> create_vector2(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Vector2>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Vector2>>();
-  initialize_vector2(out, x.value_or(0.0), y.value_or(0.0));
+  initialize_vector2(out, (x.has_value() ? x.value() : 0.0), (y.has_value() ? y.value() : 0.0));
   return flight::entity::finish_entity<flight::Ref<flight::types::Vector2>>(out);
 }
 
@@ -253,7 +253,7 @@ inline void set_vector2_from_polar(flight::types::Vector2Like out, double length
 }
 
 inline flight::Ref<flight::types::Vector2> create_vector2_from_polar(double length, double angle) {
-  flight::Ref<flight::types::Vector2> out = create_vector2(std::nullopt, std::nullopt);
+  auto out = create_vector2(std::nullopt, std::nullopt);
   set_vector2_from_polar(out, length, angle);
   return out;
 }

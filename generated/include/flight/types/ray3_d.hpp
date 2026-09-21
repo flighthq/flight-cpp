@@ -12,6 +12,7 @@ namespace flight::types { struct Vector3; }
 
 namespace flight::types {
 struct Ray3D;
+using Ray3DLike = flight::Ref<Ray3D>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -25,7 +26,5 @@ struct Ray3D : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Vector3> direction;
   flight::Ref<flight::types::Vector3> origin;
 };
-
-using Ray3DLike = flight::types::EntityWithoutRuntime<flight::Ref<Ray3D>>;
 
 } // namespace flight::types

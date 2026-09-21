@@ -17,14 +17,14 @@ namespace flight::types { struct LensDirtEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9B8823D114125F65
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9B8823D114125F65
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_THRESHOLD_SEED_9B8823D114125F65
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_THRESHOLD_SEED_9B8823D114125F65
 struct intensity_threshold_seed_9b8823d114125f65 : public flight::ReferenceEnabled {
   std::optional<double> intensity;
   std::optional<double> threshold;
   std::optional<double> seed;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9B8823D114125F65
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_THRESHOLD_SEED_9B8823D114125F65
 
 inline void initialize_lens_dirt_effect(flight::types::EntityConstruction<flight::Ref<flight::types::LensDirtEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_threshold_seed_9b8823d114125f65>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::LensDirtEffect>>(out, flight::String("LensDirtEffect"));

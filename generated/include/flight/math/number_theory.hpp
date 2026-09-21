@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/boolean.hpp>
 #include <flight/error.hpp>
 #include <flight/number.hpp>
 #include <limits>
@@ -15,7 +14,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::math {
 
 inline double factorial(double n) {
-  if ((!flight::to_boolean(flight::is_integer(n)) || (n < 0.0))) {
+  if ((!flight::is_integer(n) || (n < 0.0))) {
     throw flight::RangeError(flight::String("factorial: n must be a non-negative integer"));
   }
   if (((n == 0.0) || (n == 1.0))) {
@@ -33,7 +32,7 @@ inline double factorial(double n) {
 }
 
 inline double gcd(double a, double b) {
-  if ((!flight::to_boolean(std::isfinite(a)) || !flight::to_boolean(std::isfinite(b)))) {
+  if ((!std::isfinite(a) || !std::isfinite(b))) {
     throw flight::RangeError(flight::String("gcd: arguments must be finite"));
   }
   (a = std::abs(std::trunc(a)));

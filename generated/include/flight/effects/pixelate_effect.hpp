@@ -17,12 +17,12 @@ namespace flight::types { struct PixelateEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C502E1DD3F87FED9
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C502E1DD3F87FED9
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SIZE_C502E1DD3F87FED9
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SIZE_C502E1DD3F87FED9
 struct size_c502e1dd3f87fed9 : public flight::ReferenceEnabled {
   std::optional<double> size;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C502E1DD3F87FED9
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SIZE_C502E1DD3F87FED9
 
 inline void initialize_pixelate_effect(flight::types::EntityConstruction<flight::Ref<flight::types::PixelateEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<size_c502e1dd3f87fed9>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::PixelateEffect>>(out, flight::String("PixelateEffect"));

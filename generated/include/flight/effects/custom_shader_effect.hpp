@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
+#include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -18,13 +19,21 @@ namespace flight::types { struct Entity; }
 
 namespace flight::effects {
 
-inline void initialize_custom_shader_effect(flight::types::EntityConstruction<flight::Ref<flight::types::CustomShaderEffect>> out, flight::types::EntityWithoutRuntime<flight::Ref<flight::types::CustomShaderEffect>> options) {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SHADER_KEY_UNIFORMS_D1F2B99D0B50C7C1
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SHADER_KEY_UNIFORMS_D1F2B99D0B50C7C1
+struct shader_key_uniforms_d1f2b99d0b50c7c1 : public flight::ReferenceEnabled {
+  flight::String shader_key;
+  std::optional<flight::Record<flight::String, std::variant<flight::Array<double>, double>>> uniforms;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SHADER_KEY_UNIFORMS_D1F2B99D0B50C7C1
+
+inline void initialize_custom_shader_effect(flight::types::EntityConstruction<flight::Ref<flight::types::CustomShaderEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<shader_key_uniforms_d1f2b99d0b50c7c1>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::CustomShaderEffect>>(out, flight::String("CustomShaderEffect"));
-  flight::row_set<flight::RowKey<"shaderKey">>(out, options->shader_key);
-  flight::row_set<flight::RowKey<"uniforms">>(out, options->uniforms);
+  flight::row_set<flight::RowKey<"shaderKey">>(out, flight::row_get<flight::RowKey<"shaderKey">>(options));
+  flight::row_set<flight::RowKey<"uniforms">>(out, flight::row_get<flight::RowKey<"uniforms">>(options));
 }
 
-inline flight::Ref<flight::types::CustomShaderEffect> create_custom_shader_effect(flight::types::EntityWithoutRuntime<flight::Ref<flight::types::CustomShaderEffect>> options) {
+inline flight::Ref<flight::types::CustomShaderEffect> create_custom_shader_effect(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<shader_key_uniforms_d1f2b99d0b50c7c1>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::CustomShaderEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::CustomShaderEffect>>();
   initialize_custom_shader_effect(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::CustomShaderEffect>>(out);

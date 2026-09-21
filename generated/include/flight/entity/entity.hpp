@@ -13,12 +13,12 @@ namespace flight::types { struct Entity; }
 
 namespace flight::entity {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ENTITY_AF57427CC9D99FF0
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ENTITY_AF57427CC9D99FF0
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ENTITY_ANONYMOUS_AF57427CC9D99FF0
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ENTITY_ANONYMOUS_AF57427CC9D99FF0
 template <typename Type>
 struct anonymous_af57427cc9d99ff0 : public flight::ReferenceEnabled {
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ENTITY_AF57427CC9D99FF0
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ENTITY_ANONYMOUS_AF57427CC9D99FF0
 
 template <typename Type>
 inline flight::types::EntityConstruction<Type> allocate_entity() {

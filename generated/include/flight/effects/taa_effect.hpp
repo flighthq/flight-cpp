@@ -17,12 +17,12 @@ namespace flight::types { struct TaaEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C00EB6C334D4EB2F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C00EB6C334D4EB2F
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_FEEDBACK_C00EB6C334D4EB2F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_FEEDBACK_C00EB6C334D4EB2F
 struct feedback_c00eb6c334d4eb2f : public flight::ReferenceEnabled {
   std::optional<double> feedback;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C00EB6C334D4EB2F
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_FEEDBACK_C00EB6C334D4EB2F
 
 inline void initialize_taa_effect(flight::types::EntityConstruction<flight::Ref<flight::types::TaaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<feedback_c00eb6c334d4eb2f>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::TaaEffect>>(out, flight::String("TaaEffect"));

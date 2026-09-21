@@ -17,15 +17,15 @@ namespace flight::types { struct RadialBlurEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_327F7653C2EF7EBF
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_327F7653C2EF7EBF
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_STRENGTH_CENTER_X_CENTER_Y_327F7653C2EF7EBF
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_STRENGTH_CENTER_X_CENTER_Y_327F7653C2EF7EBF
 struct samples_strength_center_x_center_y_327f7653c2ef7ebf : public flight::ReferenceEnabled {
   std::optional<double> samples;
   std::optional<double> strength;
   std::optional<double> center_x;
   std::optional<double> center_y;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_327F7653C2EF7EBF
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_STRENGTH_CENTER_X_CENTER_Y_327F7653C2EF7EBF
 
 inline void initialize_radial_blur_effect(flight::types::EntityConstruction<flight::Ref<flight::types::RadialBlurEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_strength_center_x_center_y_327f7653c2ef7ebf>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::RadialBlurEffect>>(out, flight::String("RadialBlurEffect"));

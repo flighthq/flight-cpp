@@ -190,7 +190,7 @@ inline void initialize_quaternion(flight::types::EntityConstruction<flight::Ref<
 
 inline flight::Ref<flight::types::Quaternion> create_quaternion(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> z = std::nullopt, std::optional<double> w = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Quaternion>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Quaternion>>();
-  initialize_quaternion(out, x.value_or(0.0), y.value_or(0.0), z.value_or(0.0), w.value_or(1.0));
+  initialize_quaternion(out, (x.has_value() ? x.value() : 0.0), (y.has_value() ? y.value() : 0.0), (z.has_value() ? z.value() : 0.0), (w.has_value() ? w.value() : 1.0));
   return flight::entity::finish_entity<flight::Ref<flight::types::Quaternion>>(out);
 }
 

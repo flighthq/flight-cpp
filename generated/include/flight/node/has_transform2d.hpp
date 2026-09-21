@@ -17,11 +17,11 @@ namespace flight::types { struct Matrix; }
 
 namespace flight::node {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_3E6B344A3B6BD77E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_3E6B344A3B6BD77E
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_ANONYMOUS_3E6B344A3B6BD77E
 struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_3E6B344A3B6BD77E
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_ANONYMOUS_3E6B344A3B6BD77E
 
 inline void init_transform2_druntime_trait(flight::Ref<flight::types::HasTransform2DRuntime> target, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<anonymous_3e6b344a3b6bd77e>>>>>> methods = std::nullopt) {
   (target->local_matrix = std::nullopt);
@@ -32,15 +32,15 @@ inline void init_transform2_druntime_trait(flight::Ref<flight::types::HasTransfo
 }
 
 inline void init_transform2_dtrait(flight::Ref<flight::types::HasTransform2D> target, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::HasTransform2D>>>>>> obj = std::nullopt) {
-  (target->pivot_x = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"pivotX">>(optional_chain_receiver.value()); }()).value_or(0.0));
-  (target->pivot_y = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"pivotY">>(optional_chain_receiver.value()); }()).value_or(0.0));
-  (target->rotation = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"rotation">>(optional_chain_receiver.value()); }()).value_or(0.0));
-  (target->scale_x = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"scaleX">>(optional_chain_receiver.value()); }()).value_or(1.0));
-  (target->scale_y = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"scaleY">>(optional_chain_receiver.value()); }()).value_or(1.0));
-  (target->skew_x = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"skewX">>(optional_chain_receiver.value()); }()).value_or(0.0));
-  (target->skew_y = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"skewY">>(optional_chain_receiver.value()); }()).value_or(0.0));
-  (target->x = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"x">>(optional_chain_receiver.value()); }()).value_or(0.0));
-  (target->y = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"y">>(optional_chain_receiver.value()); }()).value_or(0.0));
+  (target->pivot_x = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"pivotX">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  (target->pivot_y = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"pivotY">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  (target->rotation = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"rotation">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  (target->scale_x = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"scaleX">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()));
+  (target->scale_y = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"scaleY">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()));
+  (target->skew_x = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"skewX">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  (target->skew_y = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"skewY">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  (target->x = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"x">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  (target->y = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"y">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
 }
 
 } // namespace flight::node

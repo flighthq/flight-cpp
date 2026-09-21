@@ -12,84 +12,29 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct ClearcoatPbrExtension; }
 namespace flight::types { struct Entity; }
-namespace flight::types { struct Sampler; }
 namespace flight::types { struct Texture2D; }
 namespace flight::types { struct TextureCommon; }
-namespace flight::types { struct VoxelGrid; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/types/clearcoat_pbr_extension.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/pbr_extension.hpp>
-#include <flight/types/sampler.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/types/voxel_grid.hpp>
 #include <flight/materials/material_validation.hpp>
 #include <flight/materials/pbr_extension.hpp>
 
 namespace flight::materials {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_95B8B467441EC19B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_95B8B467441EC19B
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>> sources;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_95B8B467441EC19B
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_B54DC1BFFA369663
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_B54DC1BFFA369663
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  std::optional<flight::Ref<flight::types::VoxelGrid>> source;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_B54DC1BFFA369663
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_AE19201647327EBA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_AE19201647327EBA
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  flight::types::TextureSourceCubeFaces sources;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MATERIALS_AE19201647327EBA
-
 inline void initialize_clearcoat_pbr_extension(flight::types::EntityConstruction<flight::Ref<flight::types::ClearcoatPbrExtension>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::ClearcoatPbrExtension>>>>>> opts = std::nullopt) {
-  flight::row_set<flight::RowKey<"clearcoat">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoat">>(optional_chain_receiver.value()); }()).value_or(0.0));
+  flight::row_set<flight::RowKey<"clearcoat">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoat">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   flight::row_set<flight::RowKey<"clearcoatMap">>(out, ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatMap">>(optional_chain_receiver.value()); }()));
-  flight::row_set<flight::RowKey<"clearcoatMapUvSet">>(out, ([&]() -> std::optional<flight::types::PbrUvSet> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatMapUvSet">>(optional_chain_receiver.value()); }()).value_or(0.0));
+  flight::row_set<flight::RowKey<"clearcoatMapUvSet">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::PbrUvSet> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatMapUvSet">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   flight::row_set<flight::RowKey<"clearcoatNormalMap">>(out, ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatNormalMap">>(optional_chain_receiver.value()); }()));
-  flight::row_set<flight::RowKey<"clearcoatNormalMapUvSet">>(out, ([&]() -> std::optional<flight::types::PbrUvSet> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatNormalMapUvSet">>(optional_chain_receiver.value()); }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"clearcoatNormalScale">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatNormalScale">>(optional_chain_receiver.value()); }()).value_or(1.0));
-  flight::row_set<flight::RowKey<"clearcoatRoughness">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatRoughness">>(optional_chain_receiver.value()); }()).value_or(0.0));
+  flight::row_set<flight::RowKey<"clearcoatNormalMapUvSet">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::PbrUvSet> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatNormalMapUvSet">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"clearcoatNormalScale">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatNormalScale">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()));
+  flight::row_set<flight::RowKey<"clearcoatRoughness">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatRoughness">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   flight::row_set<flight::RowKey<"clearcoatRoughnessMap">>(out, ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatRoughnessMap">>(optional_chain_receiver.value()); }()));
-  flight::row_set<flight::RowKey<"clearcoatRoughnessMapUvSet">>(out, ([&]() -> std::optional<flight::types::PbrUvSet> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatRoughnessMapUvSet">>(optional_chain_receiver.value()); }()).value_or(0.0));
+  flight::row_set<flight::RowKey<"clearcoatRoughnessMapUvSet">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::PbrUvSet> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clearcoatRoughnessMapUvSet">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   flight::row_set<flight::RowKey<"kind">>(out, flight::types::clearcoat_pbr_extension_kind);
 }
 

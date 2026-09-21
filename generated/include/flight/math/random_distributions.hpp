@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/boolean.hpp>
 #include <flight/error.hpp>
 #include <flight/number.hpp>
 #include <limits>
@@ -34,7 +33,7 @@ inline std::optional<T> pick(flight::types::RandomSource random, flight::Array<T
 
 inline double random_exponential(flight::types::RandomSource random, std::optional<double> rate = std::nullopt) {
   rate = rate.value_or(1.0);
-  if ((!flight::to_boolean(std::isfinite(rate.value())) || (rate.value() <= 0.0))) {
+  if ((!std::isfinite(rate.value()) || (rate.value() <= 0.0))) {
     throw flight::RangeError(flight::String("randomExponential: rate must be finite and > 0"));
   }
   const double u = random();
@@ -115,7 +114,7 @@ inline void random_on_unit_sphere(flight::types::RandomSource random, flight::ty
 
 inline double random_poisson(flight::types::RandomSource random, std::optional<double> lambda = std::nullopt) {
   lambda = lambda.value_or(1.0);
-  if ((!flight::to_boolean(std::isfinite(lambda.value())) || (lambda.value() <= 0.0))) {
+  if ((!std::isfinite(lambda.value()) || (lambda.value() <= 0.0))) {
     throw flight::RangeError(flight::String("randomPoisson: lambda must be finite and > 0"));
   }
   const double limit = std::exp(-lambda.value());

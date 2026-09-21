@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/boolean.hpp>
 #include <flight/number.hpp>
 #include <flight/structural_ref.hpp>
 #include <limits>
@@ -60,7 +59,7 @@ inline bool frame_orbit_camera_controller_to_sphere(flight::Ref<flight::types::O
   }
   if (projection.index() == 1) {
     const double distance = get_perspective_projection_frame_distance_to_sphere(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PerspectiveProjection>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::PerspectiveProjection>>>>(std::get<1>(projection))), flight::row_get<flight::RowKey<"radius">>(sphere), aspect, padding.value());
-    if (!flight::to_boolean(std::isfinite(distance))) {
+    if (!std::isfinite(distance)) {
       return false;
     }
     (controller->goal_distance = flight::math::clamp(distance, controller->min_distance, controller->max_distance));

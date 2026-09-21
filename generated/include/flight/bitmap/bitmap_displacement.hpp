@@ -63,14 +63,14 @@ inline double sample_map_channel(flight::StructuralRef<flight::RowReadonly<fligh
 inline void displace_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapDisplacementMapOptions>>>> options) {
   const double w = flight::row_get<flight::RowKey<"width">>(source);
   const double h = flight::row_get<flight::RowKey<"height">>(source);
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> map = flight::row_get<flight::RowKey<"map">>(options);
-  const double component_x = flight::row_get<flight::RowKey<"componentX">>(options).value_or(0.0);
-  const double component_y = flight::row_get<flight::RowKey<"componentY">>(options).value_or(1.0);
-  const double scale_x = flight::row_get<flight::RowKey<"scaleX">>(options).value_or(0.0);
-  const double scale_y = flight::row_get<flight::RowKey<"scaleY">>(options).value_or(0.0);
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> map = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>>>(flight::row_get<flight::RowKey<"map">>(options));
+  const double component_x = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"componentX">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
+  const double component_y = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"componentY">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
+  const double scale_x = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"scaleX">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
+  const double scale_y = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"scaleY">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
   std::optional<flight::String> edge_mode = flight::row_get<flight::RowKey<"edgeMode">>(options);
-  flight::String mode = flight::row_get<flight::RowKey<"mode">>(options).value_or(flight::String("wrap"));
-  const double fill_color = flight::row_get<flight::RowKey<"fillColor">>(options).value_or(0.0);
+  flight::String mode = ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"mode">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("wrap"); }());
+  const double fill_color = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"fillColor">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
   const double fill_r = flight::bitwise_and(flight::unsigned_right_shift(fill_color, 24.0), 255.0);
   const double fill_g = flight::bitwise_and(flight::signed_right_shift(fill_color, 16.0), 255.0);
   const double fill_b = flight::bitwise_and(flight::signed_right_shift(fill_color, 8.0), 255.0);

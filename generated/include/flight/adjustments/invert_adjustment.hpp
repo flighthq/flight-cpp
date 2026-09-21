@@ -20,7 +20,7 @@ namespace flight::adjustments {
 
 inline void initialize_invert_adjustment(flight::types::EntityConstruction<flight::Ref<flight::types::InvertAdjustment>> out, std::optional<flight::Ref<flight::types::InvertAdjustment>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<flight::types::InvertAdjustment>(flight::types::InvertAdjustment{}));
-  const double intensity = options.value()->intensity.value_or(1.0);
+  const double intensity = ([&]() -> double { auto nullish_coalesce_left = options.value()->intensity; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
   const double s = (1.0 - (2.0 * intensity));
   const double o = intensity;
   flight::Array<double> color_matrix = flight::Array<double>{s, 0.0, 0.0, 0.0, o, 0.0, s, 0.0, 0.0, o, 0.0, 0.0, s, 0.0, o, 0.0, 0.0, 0.0, 1.0, 0.0};

@@ -36,12 +36,12 @@ struct ListController : public flight::ReferenceEnabled {
 
 struct ListControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
-  flight::Ref<flight::types::Node2D> content;
-  flight::Array<flight::Ref<flight::types::Node2D>> items;
+  flight::types::Node2D content;
+  flight::Array<flight::types::Node2D> items;
   std::optional<flight::Ref<flight::types::ScrollBarController>> scroll_bar;
   std::optional<bool> selectable;
   std::optional<double> selected_index;
-  flight::Ref<flight::types::Node2D> viewport;
+  flight::types::Node2D viewport;
 };
 
 struct ListControllerSignals : public flight::ReferenceEnabled {

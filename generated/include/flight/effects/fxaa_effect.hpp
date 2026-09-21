@@ -17,13 +17,13 @@ namespace flight::types { struct FxaaEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9A6C8B06D978A242
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9A6C8B06D978A242
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_EDGE_THRESHOLD_SUBPIXEL_9A6C8B06D978A242
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_EDGE_THRESHOLD_SUBPIXEL_9A6C8B06D978A242
 struct edge_threshold_subpixel_9a6c8b06d978a242 : public flight::ReferenceEnabled {
   std::optional<double> edge_threshold;
   std::optional<double> subpixel;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_9A6C8B06D978A242
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_EDGE_THRESHOLD_SUBPIXEL_9A6C8B06D978A242
 
 inline void initialize_fxaa_effect(flight::types::EntityConstruction<flight::Ref<flight::types::FxaaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<edge_threshold_subpixel_9a6c8b06d978a242>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::FxaaEffect>>(out, flight::String("FxaaEffect"));

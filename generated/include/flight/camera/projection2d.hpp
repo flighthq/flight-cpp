@@ -24,12 +24,12 @@ namespace flight::camera {
 inline flight::Ref<flight::types::Matrix> scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_d7c1bbd60b6c207a = flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
 inline void project_camera2_dpoint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera, double world_x, double world_y, flight::types::Vector2Like out) {
-  flight::camera::get_camera2_dview_matrix(camera, scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_d7c1bbd60b6c207a);
+  flight::camera::get_camera2_dview_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(camera), scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_d7c1bbd60b6c207a);
   flight::geometry::matrix_transform_point_xy(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_d7c1bbd60b6c207a)), world_x, world_y);
 }
 
 inline void unproject_camera2_dpoint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera, double screen_x, double screen_y, flight::types::Vector2Like out) {
-  flight::camera::get_camera2_dview_matrix(camera, scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_d7c1bbd60b6c207a);
+  flight::camera::get_camera2_dview_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(camera), scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_d7c1bbd60b6c207a);
   flight::geometry::inverse_matrix_transform_point_xy(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_d7c1bbd60b6c207a)), screen_x, screen_y);
 }
 

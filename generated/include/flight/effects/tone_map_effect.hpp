@@ -17,14 +17,14 @@ namespace flight::types { struct ToneMapEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_974D6747A1009D4B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_974D6747A1009D4B
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_EXPOSURE_OPERATOR_WHITE_974D6747A1009D4B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_EXPOSURE_OPERATOR_WHITE_974D6747A1009D4B
 struct exposure_operator_white_974d6747a1009d4b : public flight::ReferenceEnabled {
   std::optional<double> exposure;
   std::optional<flight::String> operator_;
   std::optional<double> white;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_974D6747A1009D4B
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_EXPOSURE_OPERATOR_WHITE_974D6747A1009D4B
 
 inline void initialize_tone_map_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ToneMapEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_operator_white_974d6747a1009d4b>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::ToneMapEffect>>(out, flight::String("ToneMapEffect"));

@@ -13,6 +13,7 @@ namespace flight::types {
 struct Sampler;
 using TextureWrap = flight::String;
 using TextureFilter = flight::String;
+using SamplerLike = flight::Ref<Sampler>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -29,7 +30,5 @@ struct Sampler : public flight::ReferenceEnabled {
   TextureWrap wrap_u;
   TextureWrap wrap_v;
 };
-
-using SamplerLike = flight::types::EntityWithoutRuntime<flight::Ref<Sampler>>;
 
 } // namespace flight::types

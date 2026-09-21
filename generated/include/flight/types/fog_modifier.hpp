@@ -19,14 +19,14 @@ using FogModifierMode = flight::String;
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E0EDF2E00F1A208C
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E0EDF2E00F1A208C
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EXPONENTIAL_EXPONENTIAL2_LINEAR_E0EDF2E00F1A208C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EXPONENTIAL_EXPONENTIAL2_LINEAR_E0EDF2E00F1A208C
 struct exponential_exponential2_linear_e0edf2e00f1a208c : public flight::ReferenceEnabled {
   flight::String exponential;
   flight::String exponential2;
   flight::String linear;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E0EDF2E00F1A208C
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EXPONENTIAL_EXPONENTIAL2_LINEAR_E0EDF2E00F1A208C
 
 inline flight::Ref<exponential_exponential2_linear_e0edf2e00f1a208c> fog_modifier_mode = flight::make_ref<exponential_exponential2_linear_e0edf2e00f1a208c>(exponential_exponential2_linear_e0edf2e00f1a208c{.exponential = flight::String("Exponential"), .exponential2 = flight::String("Exponential2"), .linear = flight::String("Linear")});
 

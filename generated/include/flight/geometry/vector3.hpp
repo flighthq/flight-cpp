@@ -151,7 +151,7 @@ inline void initialize_vector3(flight::types::EntityConstruction<flight::Ref<fli
 
 inline flight::Ref<flight::types::Vector3> create_vector3(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> z = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Vector3>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Vector3>>();
-  initialize_vector3(out, x.value_or(0.0), y.value_or(0.0), z.value_or(0.0));
+  initialize_vector3(out, (x.has_value() ? x.value() : 0.0), (y.has_value() ? y.value() : 0.0), (z.has_value() ? z.value() : 0.0));
   return flight::entity::finish_entity<flight::Ref<flight::types::Vector3>>(out);
 }
 
@@ -295,7 +295,7 @@ inline void set_vector3_from_spherical(flight::types::Vector3Like out, double ra
 }
 
 inline flight::Ref<flight::types::Vector3> create_vector3_from_spherical(double radius, double theta, double phi) {
-  flight::Ref<flight::types::Vector3> out = create_vector3(std::nullopt, std::nullopt, std::nullopt);
+  auto out = create_vector3(std::nullopt, std::nullopt, std::nullopt);
   set_vector3_from_spherical(out, radius, theta, phi);
   return out;
 }

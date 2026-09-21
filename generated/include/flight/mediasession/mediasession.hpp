@@ -2,10 +2,9 @@
 #pragma once
 #include <cmath>
 #include <exception>
-#include <flight/any.hpp>
-#include <flight/boolean.hpp>
 #include <flight/error.hpp>
 #include <flight/number.hpp>
+#include <flight/presence.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
 #include <functional>
@@ -68,27 +67,20 @@ inline flight::types::MediaSessionSetPlaybackStateOutcome set_media_session_play
   return flight::row_get<flight::RowKey<"setPlaybackState">>(host_media_session)(state);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MEDIASESSION_63B92FE9D951DF25
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MEDIASESSION_63B92FE9D951DF25
-struct reason_63b92fe9d951df25 : public flight::ReferenceEnabled {
-  flight::String reason;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MEDIASESSION_63B92FE9D951DF25
+inline flight::Ref<flight::types::MediaSessionOperationOutcome<flight::String>> invalid_duration = flight::make_ref<flight::types::MediaSessionOperationOutcome<flight::String>>(flight::types::MediaSessionOperationOutcome<flight::String>{.reason = flight::String("invalid-duration")});
 
-inline flight::Ref<reason_63b92fe9d951df25> invalid_duration = flight::make_ref<reason_63b92fe9d951df25>(reason_63b92fe9d951df25{.reason = flight::String("invalid-duration")});
+inline flight::Ref<flight::types::MediaSessionOperationOutcome<flight::String>> invalid_playback_rate = flight::make_ref<flight::types::MediaSessionOperationOutcome<flight::String>>(flight::types::MediaSessionOperationOutcome<flight::String>{.reason = flight::String("invalid-playback-rate")});
 
-inline flight::Ref<reason_63b92fe9d951df25> invalid_playback_rate = flight::make_ref<reason_63b92fe9d951df25>(reason_63b92fe9d951df25{.reason = flight::String("invalid-playback-rate")});
-
-inline flight::Ref<reason_63b92fe9d951df25> invalid_position = flight::make_ref<reason_63b92fe9d951df25>(reason_63b92fe9d951df25{.reason = flight::String("invalid-position")});
+inline flight::Ref<flight::types::MediaSessionOperationOutcome<flight::String>> invalid_position = flight::make_ref<flight::types::MediaSessionOperationOutcome<flight::String>>(flight::types::MediaSessionOperationOutcome<flight::String>{.reason = flight::String("invalid-position")});
 
 inline flight::types::MediaSessionSetPositionStateOutcome set_media_session_position_state(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionCapability>>>> host_media_session, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MediaSessionPositionState>>>> state) {
-  if ((!flight::to_boolean(std::isfinite(flight::row_get<flight::RowKey<"duration">>(state))) || (flight::row_get<flight::RowKey<"duration">>(state) <= 0.0))) {
+  if ((!std::isfinite(flight::row_get<flight::RowKey<"duration">>(state)) || (flight::row_get<flight::RowKey<"duration">>(state) <= 0.0))) {
     return invalid_duration;
   }
-  if (((!flight::to_boolean(std::isfinite(flight::row_get<flight::RowKey<"position">>(state))) || (flight::row_get<flight::RowKey<"position">>(state) < 0.0)) || (flight::row_get<flight::RowKey<"position">>(state) > flight::row_get<flight::RowKey<"duration">>(state)))) {
+  if (((!std::isfinite(flight::row_get<flight::RowKey<"position">>(state)) || (flight::row_get<flight::RowKey<"position">>(state) < 0.0)) || (flight::row_get<flight::RowKey<"position">>(state) > flight::row_get<flight::RowKey<"duration">>(state)))) {
     return invalid_position;
   }
-  if ((!flight::to_boolean(std::isfinite(flight::row_get<flight::RowKey<"playbackRate">>(state))) || (flight::row_get<flight::RowKey<"playbackRate">>(state) == 0.0))) {
+  if ((!std::isfinite(flight::row_get<flight::RowKey<"playbackRate">>(state)) || (flight::row_get<flight::RowKey<"playbackRate">>(state) == 0.0))) {
     return invalid_playback_rate;
   }
   return flight::row_get<flight::RowKey<"setPositionState">>(host_media_session)(state);
@@ -139,21 +131,21 @@ inline void assert_sync_void(T value) {
 
 inline void destroy_media_session(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionCapability>>>> host_media_session, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionActionCapability>>>> host_media_session_action) {
   flight::Set<std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionCapability>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionActionCapability>>>>>> providers = flight::Set<std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionCapability>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionActionCapability>>>>>>(flight::Array<std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionCapability>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionActionCapability>>>>>>{std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionCapability>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionActionCapability>>>>>{std::in_place_type<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionCapability>>>>>, host_media_session}, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionCapability>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionActionCapability>>>>>{std::in_place_type<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMediaSessionActionCapability>>>>>, host_media_session_action}});
-  flight::Any first_error;
+  std::exception_ptr first_error;
   bool has_error = false;
   for (auto provider : providers) {
     try {
-      assert_sync_void<void>(std::visit([](const auto& value) { return value->destroy; }, provider)());
+      assert_sync_void<flight::Undefined>((std::visit([](const auto& value) { return value->destroy; }, provider)(), flight::undefined));
     }
     catch (const std::exception& error) {
       if (!has_error) {
-        (first_error = error);
+        first_error = std::current_exception();
       }
       (has_error = true);
     }
   }
   if (has_error) {
-    throw first_error;
+    std::rethrow_exception(first_error);
   }
 }
 

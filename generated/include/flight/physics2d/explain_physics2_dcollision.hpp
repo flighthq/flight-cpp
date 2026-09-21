@@ -35,7 +35,7 @@ namespace flight::types { struct SpatialIndexBackend2D; }
 
 namespace flight::physics2d {
 
-inline bool is_physics2_dcontact_supported_kind(flight::types::CollisionShapeKind2D kind) {
+inline bool is_physics2_dcontact_supported_kind(flight::String kind) {
   return (((((kind == flight::String("circle")) || (kind == flight::String("capsule"))) || (kind == flight::String("aabb"))) || (kind == flight::String("obb"))) || (kind == flight::String("polygon")));
 }
 

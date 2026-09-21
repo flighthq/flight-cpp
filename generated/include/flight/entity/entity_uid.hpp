@@ -22,7 +22,7 @@ inline flight::Ref<flight::types::EntityRuntime> ensure_entity_runtime(flight::R
 }
 
 inline void set_entity_uid(flight::Ref<flight::types::Entity> source, flight::String uid) {
-  flight::Ref<flight::types::EntityRuntime> runtime = ensure_entity_runtime(source);
+  auto runtime = ensure_entity_runtime(source);
   (runtime->uid = std::optional<flight::String>{uid});
 }
 
@@ -33,7 +33,7 @@ inline flight::String generate_entity_uid() {
 }
 
 inline flight::String get_entity_uid(flight::Ref<flight::types::Entity> source) {
-  flight::Ref<flight::types::EntityRuntime> runtime = ensure_entity_runtime(source);
+  auto runtime = ensure_entity_runtime(source);
   if (runtime->uid.has_value()) {
     return runtime->uid.value();
   }

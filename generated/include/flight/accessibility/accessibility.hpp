@@ -16,12 +16,12 @@ namespace flight::types { struct Rectangle; }
 
 namespace flight::accessibility {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ACCESSIBILITY_43A745D20647BFB6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ACCESSIBILITY_43A745D20647BFB6
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ACCESSIBILITY_REASON_43A745D20647BFB6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ACCESSIBILITY_REASON_43A745D20647BFB6
 struct reason_43a745d20647bfb6 : public flight::ReferenceEnabled {
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ACCESSIBILITY_43A745D20647BFB6
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ACCESSIBILITY_REASON_43A745D20647BFB6
 
 inline flight::types::AccessibilityOperationOutcome<flight::String> announce_accessibility(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAccessibilityCapability>>>> host_accessibility, flight::String message, std::optional<flight::types::AccessibilityLiveness> liveness = std::nullopt) {
   liveness = liveness.value_or(flight::String("polite"));

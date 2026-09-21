@@ -38,8 +38,8 @@ struct SliderControllerOptions : public flight::ReferenceEnabled {
   std::optional<double> minimum;
   std::optional<flight::types::GuiOrientation> orientation;
   std::optional<double> step;
-  flight::Ref<flight::types::Node2D> thumb;
-  flight::Ref<flight::types::Node2D> track;
+  flight::types::Node2D thumb;
+  flight::types::Node2D track;
   std::optional<double> value;
 };
 

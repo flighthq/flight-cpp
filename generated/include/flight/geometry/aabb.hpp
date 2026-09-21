@@ -141,8 +141,8 @@ inline void initialize_aabb(flight::types::EntityConstruction<flight::Ref<flight
 }
 
 inline flight::Ref<flight::types::Aabb> create_aabb(std::optional<double> min_x = std::nullopt, std::optional<double> min_y = std::nullopt, std::optional<double> min_z = std::nullopt, std::optional<double> max_x = std::nullopt, std::optional<double> max_y = std::nullopt, std::optional<double> max_z = std::nullopt) {
-  flight::Ref<flight::types::Vector3> min = flight::geometry::create_vector3(min_x.value_or(std::numeric_limits<double>::infinity()), min_y.value_or(std::numeric_limits<double>::infinity()), min_z.value_or(std::numeric_limits<double>::infinity()));
-  flight::Ref<flight::types::Vector3> max = flight::geometry::create_vector3(max_x.value_or(-std::numeric_limits<double>::infinity()), max_y.value_or(-std::numeric_limits<double>::infinity()), max_z.value_or(-std::numeric_limits<double>::infinity()));
+  auto min = flight::geometry::create_vector3((min_x.has_value() ? min_x.value() : std::numeric_limits<double>::infinity()), (min_y.has_value() ? min_y.value() : std::numeric_limits<double>::infinity()), (min_z.has_value() ? min_z.value() : std::numeric_limits<double>::infinity()));
+  auto max = flight::geometry::create_vector3((max_x.has_value() ? max_x.value() : -std::numeric_limits<double>::infinity()), (max_y.has_value() ? max_y.value() : -std::numeric_limits<double>::infinity()), (max_z.has_value() ? max_z.value() : -std::numeric_limits<double>::infinity()));
   flight::types::EntityConstruction<flight::Ref<flight::types::Aabb>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Aabb>>();
   initialize_aabb(out, min, max);
   return flight::entity::finish_entity<flight::Ref<flight::types::Aabb>>(out);

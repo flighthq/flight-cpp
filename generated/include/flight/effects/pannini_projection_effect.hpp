@@ -17,13 +17,13 @@ namespace flight::types { struct PanniniProjectionEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_4B4DCF64B88DC788
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_4B4DCF64B88DC788
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_COMPRESSION_CROP_4B4DCF64B88DC788
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_COMPRESSION_CROP_4B4DCF64B88DC788
 struct compression_crop_4b4dcf64b88dc788 : public flight::ReferenceEnabled {
   std::optional<double> compression;
   std::optional<double> crop;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_4B4DCF64B88DC788
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_COMPRESSION_CROP_4B4DCF64B88DC788
 
 inline void initialize_pannini_projection_effect(flight::types::EntityConstruction<flight::Ref<flight::types::PanniniProjectionEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<compression_crop_4b4dcf64b88dc788>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::PanniniProjectionEffect>>(out, flight::String("PanniniProjectionEffect"));

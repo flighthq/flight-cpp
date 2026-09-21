@@ -43,8 +43,8 @@ struct TextInputController : public flight::ReferenceEnabled {
 
 struct TextInputControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
-  std::optional<flight::Ref<flight::types::Node2D>> background;
-  std::optional<flight::Ref<flight::types::Node2D>> caret;
+  std::optional<flight::types::Node2D> background;
+  std::optional<flight::types::Node2D> caret;
   std::optional<flight::Ref<flight::types::TextInputSource>> input;
   std::optional<flight::Ref<flight::types::TextInputManager>> manager;
   flight::Ref<flight::types::RichText> text_field;

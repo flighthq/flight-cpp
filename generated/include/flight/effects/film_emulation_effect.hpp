@@ -17,15 +17,15 @@ namespace flight::types { struct FilmEmulationEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_0BDBC530CB9EE804
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_0BDBC530CB9EE804
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_GATE_WEAVE_GRAIN_INTENSITY_HALATION_RADIUS_HALATION_STRENGTH_0BDBC530CB9EE804
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_GATE_WEAVE_GRAIN_INTENSITY_HALATION_RADIUS_HALATION_STRENGTH_0BDBC530CB9EE804
 struct gate_weave_grain_intensity_halation_radius_halation_strength_0bdbc530cb9ee804 : public flight::ReferenceEnabled {
   std::optional<double> gate_weave;
   std::optional<double> grain_intensity;
   std::optional<double> halation_radius;
   std::optional<double> halation_strength;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_0BDBC530CB9EE804
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_GATE_WEAVE_GRAIN_INTENSITY_HALATION_RADIUS_HALATION_STRENGTH_0BDBC530CB9EE804
 
 inline void initialize_film_emulation_effect(flight::types::EntityConstruction<flight::Ref<flight::types::FilmEmulationEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<gate_weave_grain_intensity_halation_radius_halation_strength_0bdbc530cb9ee804>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::FilmEmulationEffect>>(out, flight::String("FilmEmulationEffect"));

@@ -20,7 +20,7 @@ namespace flight::adjustments {
 
 inline void initialize_sepia_adjustment(flight::types::EntityConstruction<flight::Ref<flight::types::SepiaAdjustment>> out, std::optional<flight::Ref<flight::types::SepiaAdjustment>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<flight::types::SepiaAdjustment>(flight::types::SepiaAdjustment{}));
-  const double intensity = options.value()->intensity.value_or(1.0);
+  const double intensity = ([&]() -> double { auto nullish_coalesce_left = options.value()->intensity; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
   const double k = intensity;
   const double j = (1.0 - k);
   flight::Array<double> color_matrix = flight::Array<double>{(j + (0.393 * k)), (0.769 * k), (0.189 * k), 0.0, 0.0, (0.349 * k), (j + (0.686 * k)), (0.168 * k), 0.0, 0.0, (0.272 * k), (0.534 * k), (j + (0.131 * k)), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};

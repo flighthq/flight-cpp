@@ -48,14 +48,14 @@ struct GuiDialogCloseResult : public flight::ReferenceEnabled {
 struct GuiDialogEntry : public flight::ReferenceEnabled {
   std::optional<bool> dismiss_on_backdrop;
   flight::String id;
-  std::optional<flight::Ref<flight::types::Node2D>> initial_focus;
-  flight::Ref<flight::types::Node2D> root;
+  std::optional<flight::types::Node2D> initial_focus;
+  flight::types::Node2D root;
 };
 
 struct GuiDialogOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
-  std::optional<flight::Ref<flight::types::Node2D>> backdrop;
-  std::optional<flight::Ref<flight::types::FocusManager<flight::Ref<flight::types::Node2D>>>> focus_manager;
+  std::optional<flight::types::Node2D> backdrop;
+  std::optional<flight::Ref<flight::types::FocusManager<flight::types::Node2D>>> focus_manager;
 };
 
 struct GuiDialogSignals : public flight::ReferenceEnabled {

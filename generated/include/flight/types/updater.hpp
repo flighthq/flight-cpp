@@ -39,20 +39,20 @@ struct DownloadedUpdate : public flight::ReferenceEnabled {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<UpdateInfo>>>> info;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_938ED6A0D2DA8E0C
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_938ED6A0D2DA8E0C
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_UPDATE_938ED6A0D2DA8E0C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_UPDATE_938ED6A0D2DA8E0C
 struct reason_update_938ed6a0d2da8e0c : public flight::ReferenceEnabled {
   flight::String reason;
   flight::Ref<DownloadedUpdate> update;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_938ED6A0D2DA8E0C
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_UPDATE_938ED6A0D2DA8E0C
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_01523507F7B21613
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_01523507F7B21613
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_01523507F7B21613
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_01523507F7B21613
 struct reason_01523507f7b21613 : public flight::ReferenceEnabled {
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_01523507F7B21613
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_01523507F7B21613
 
 using AppUpdateCheckOutcome = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_update_938ed6a0d2da8e0c>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_01523507f7b21613>>>>>;
 

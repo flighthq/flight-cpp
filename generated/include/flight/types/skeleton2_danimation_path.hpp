@@ -7,8 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_194B00F7864E174B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_194B00F7864E174B
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_TRANSLATION_TRANSLATION_X_TRANSLATION_Y_ROTATION_SCALE_SCALE_X_SCALE_Y_SHEAR_SHEAR_X_SHEAR_Y_194B00F7864E174B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_TRANSLATION_TRANSLATION_X_TRANSLATION_Y_ROTATION_SCALE_SCALE_X_SCALE_Y_SHEAR_SHEAR_X_SHEAR_Y_194B00F7864E174B
 struct translation_translation_x_translation_y_rotation_scale_scale_x_scale_y_shear_shear_x_shear_y_194b00f7864e174b : public flight::ReferenceEnabled {
   flight::String translation;
   flight::String translation_x;
@@ -21,7 +21,7 @@ struct translation_translation_x_translation_y_rotation_scale_scale_x_scale_y_sh
   flight::String shear_x;
   flight::String shear_y;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_194B00F7864E174B
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_TRANSLATION_TRANSLATION_X_TRANSLATION_Y_ROTATION_SCALE_SCALE_X_SCALE_Y_SHEAR_SHEAR_X_SHEAR_Y_194B00F7864E174B
 
 inline flight::Ref<translation_translation_x_translation_y_rotation_scale_scale_x_scale_y_shear_shear_x_shear_y_194b00f7864e174b> skeleton2_danimation_path = flight::make_ref<translation_translation_x_translation_y_rotation_scale_scale_x_scale_y_shear_shear_x_shear_y_194b00f7864e174b>(translation_translation_x_translation_y_rotation_scale_scale_x_scale_y_shear_shear_x_shear_y_194b00f7864e174b{.translation = flight::String("Translation"), .translation_x = flight::String("TranslationX"), .translation_y = flight::String("TranslationY"), .rotation = flight::String("Rotation"), .scale = flight::String("Scale"), .scale_x = flight::String("ScaleX"), .scale_y = flight::String("ScaleY"), .shear = flight::String("Shear"), .shear_x = flight::String("ShearX"), .shear_y = flight::String("ShearY")});
 

@@ -35,32 +35,26 @@ namespace flight::types { struct Vector2; }
 namespace flight::bitmapfont {
 
 inline void initialize_glyph_source_from_bitmap_font(flight::types::EntityConstruction<flight::Ref<flight::types::GlyphSource>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>> font) {
-  flight::row_set<flight::RowKey<"getGlyphAtlasImage">>(out, [=](std::optional<double> page = std::nullopt) {
+  flight::row_set<flight::RowKey<"getGlyphAtlasImage">>(out, [=](std::optional<double> page = std::nullopt) -> std::optional<flight::Ref<flight::types::TextureSource>> {
   page = page.value_or(0.0);
-  auto texture = ([&]() -> std::optional<flight::Ref<flight::types::Texture2D>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"pages">>(font).get(page.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->texture; }());
+  auto texture = ([&]() -> std::optional<flight::Ref<flight::types::Texture2D>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"pages">>(font).get(page); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->texture; }());
   return ((([&]() -> std::optional<flight::String> { auto optional_chain_receiver = texture; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->dimension; }()) == flight::String("2d")) ? texture.value()->source : std::nullopt);
 });
-  flight::row_set<flight::RowKey<"getGlyphEntry">>(out, [=](double codepoint) {
-  return flight::bitmapfont::get_bitmap_font_glyph(font, codepoint);
+  flight::row_set<flight::RowKey<"getGlyphEntry">>(out, [=](double codepoint) -> std::optional<flight::Ref<flight::types::GlyphEntry>> {
+  return flight::bitmapfont::get_bitmap_font_glyph(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>>>(font), codepoint);
 });
   flight::row_set<flight::RowKey<"getGlyphKerning">>(out, [=](double left, double right) {
-  return flight::bitmapfont::get_bitmap_font_kerning(font, left, right);
+  return flight::bitmapfont::get_bitmap_font_kerning(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>>>(font), left, right);
 });
   flight::row_set<flight::RowKey<"getGlyphLayoutVersion">>(out, [=]() {
   return 0.0;
 });
   flight::row_set<flight::RowKey<"getGlyphMetrics">>(out, [=]() {
-  return flight::bitmapfont::get_bitmap_font_metrics(font);
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphMetrics>>>>>(flight::bitmapfont::get_bitmap_font_metrics(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>>>(font)));
 });
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_02EBEB9F5A8CC6EB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_02EBEB9F5A8CC6EB
-struct entity_runtime_key_get_glyph_atlas_image_get_glyph_entry_get_glyph_kerning_get_glyph_layout_version_get_glyph_metrics_02ebeb9f5a8cc6eb : public flight::types::GlyphSource {
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_02EBEB9F5A8CC6EB
-
-inline flight::Ref<entity_runtime_key_get_glyph_atlas_image_get_glyph_entry_get_glyph_kerning_get_glyph_layout_version_get_glyph_metrics_02ebeb9f5a8cc6eb> create_glyph_source_from_bitmap_font(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>> font) {
+inline flight::Ref<flight::types::GlyphSource> create_glyph_source_from_bitmap_font(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>> font) {
   flight::types::EntityConstruction<flight::Ref<flight::types::GlyphSource>> out = flight::entity::allocate_entity<flight::Ref<flight::types::GlyphSource>>();
   initialize_glyph_source_from_bitmap_font(out, font);
   return flight::entity::finish_entity<flight::Ref<flight::types::GlyphSource>>(out);

@@ -17,6 +17,7 @@ struct AudioBusOptions;
 struct AudioMixer;
 struct AudioMixerOptions;
 using AudioBusMixerOperation = flight::String;
+using AudioBusMixerGuard = std::function<void(flight::String, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AudioBus>>>>)>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -49,7 +50,5 @@ struct AudioMixerOptions : public flight::ReferenceEnabled {
   std::optional<double> master_gain;
   std::optional<bool> master_muted;
 };
-
-using AudioBusMixerGuard = std::function<void(AudioBusMixerOperation, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AudioBus>>>>)>;
 
 } // namespace flight::types

@@ -75,17 +75,17 @@ inline flight::String decode_xml_entities(flight::String s) {
     }
     return flight::String::from_code_point(codepoint);
   }
-  return xml_entities.get(name.value()).value_or(reference);
+  return ([&]() -> flight::String { auto nullish_coalesce_left = xml_entities.get(name.value()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return reference; }());
 });
 }
 
 inline flight::Record<flight::String, flight::String> parse_xml_attributes(flight::String attrs) {
-  flight::Record<flight::String, flight::String> result = {};
+  flight::Record<flight::String, flight::String> result = flight::Record<flight::String, flight::String>{};
   flight::RegExp re = flight::RegExp(flight::String("([\\w:.-]+)\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)')"), flight::String("g"));
   std::optional<flight::RegExpExecArray> m;
   while ((m = re.exec(attrs)).has_value()) {
     const flight::String attr_name = m.value().element(1.0);
-    const flight::String value = (m.value().capture(2.0).has_value() ? m.value().element(2.0) : m.value().capture(3.0).value_or(flight::String("")));
+    const flight::String value = (m.value().capture(2.0).has_value() ? m.value().element(2.0) : ([&]() -> flight::String { auto nullish_coalesce_left = m.value().capture(3.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
     ([&]() { auto assignment_value = decode_xml_entities(value); result.set(attr_name, assignment_value); return assignment_value; }());
   }
   return result;
@@ -162,7 +162,7 @@ inline std::optional<flight::Ref<flight::types::XmlElement>> parse_element(fligh
         const flight::String decoded = decode_xml_entities(src.slice(text_start, state->pos));
         (text += decoded.trim());
         if ((decoded != flight::String(""))) {
-          content.push(decoded);
+          content.push(std::variant<flight::Ref<flight::types::XmlElement>, flight::String>{std::in_place_type<flight::String>, decoded});
         }
         continue;
       }
@@ -173,7 +173,7 @@ inline std::optional<flight::Ref<flight::types::XmlElement>> parse_element(fligh
         const flight::String cdata = src.slice(cdata_start, content_end);
         (text += cdata.trim());
         if ((cdata != flight::String(""))) {
-          content.push(cdata);
+          content.push(std::variant<flight::Ref<flight::types::XmlElement>, flight::String>{std::in_place_type<flight::String>, cdata});
         }
         (state->pos = ((cdata_end >= 0.0) ? (cdata_end + 3.0) : static_cast<double>(src.length())));
         continue;
@@ -193,7 +193,7 @@ inline std::optional<flight::Ref<flight::types::XmlElement>> parse_element(fligh
       }
       if (flight::to_boolean(child)) {
         children.push(child.value());
-        content.push(child.value());
+        content.push(std::variant<flight::Ref<flight::types::XmlElement>, flight::String>{std::in_place_type<flight::Ref<flight::types::XmlElement>>, child.value()});
       }
     }
   }
@@ -226,7 +226,7 @@ inline void collect_xml_entity_declarations(flight::String doctype, flight::Reco
   flight::RegExp declaration = flight::RegExp(flight::String("<!ENTITY\\s+([\\w:.-]+)\\s*(?:\"([^\"]*)\"|'([^']*)')\\s*>"), flight::String("g"));
   std::optional<flight::RegExpExecArray> match;
   while ((match = declaration.exec(doctype)).has_value()) {
-    ([&]() { auto assignment_value = match.value().capture(2.0).value_or(match.value().element(3.0)); out.set(match.value().element(1.0), assignment_value); return assignment_value; }());
+    ([&]() { auto assignment_value = ([&]() -> flight::String { auto nullish_coalesce_left = match.value().capture(2.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return match.value().element(3.0); }()); out.set(match.value().element(1.0), assignment_value); return assignment_value; }());
   }
 }
 
@@ -282,7 +282,7 @@ inline flight::String strip_xml_doctypes(flight::String xml, flight::Record<flig
 
 inline std::optional<flight::Ref<flight::types::XmlElement>> parse_xml_document(flight::String xml) {
   flight::String src = strip_xml_comments(xml).replace(flight::RegExp(flight::String("\\r\\n?"), flight::String("g")), flight::String("\n"));
-  flight::Record<flight::String, flight::String> entities = {};
+  flight::Record<flight::String, flight::String> entities = flight::Record<flight::String, flight::String>{};
   (src = strip_xml_doctypes(src.replace(flight::RegExp(flight::String("<\\?[\\s\\S]*?\\?>"), flight::String("g")), flight::String("")), entities).trim());
   return parse_element(expand_xml_entities(src, entities), flight::make_ref<ParseState>(ParseState{.depth = 0.0, .depth_exceeded = false, .pos = 0.0}));
 }

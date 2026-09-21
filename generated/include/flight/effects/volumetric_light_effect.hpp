@@ -17,8 +17,8 @@ namespace flight::types { struct VolumetricLightEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_21019199062E7F35
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_21019199062E7F35
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_DENSITY_LIGHT_COLOR_LIGHT_X_LIGHT_Y_SCATTERING_21019199062E7F35
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_DENSITY_LIGHT_COLOR_LIGHT_X_LIGHT_Y_SCATTERING_21019199062E7F35
 struct samples_density_light_color_light_x_light_y_scattering_21019199062e7f35 : public flight::ReferenceEnabled {
   std::optional<double> samples;
   std::optional<double> density;
@@ -27,7 +27,7 @@ struct samples_density_light_color_light_x_light_y_scattering_21019199062e7f35 :
   std::optional<double> light_y;
   std::optional<double> scattering;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_21019199062E7F35
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_DENSITY_LIGHT_COLOR_LIGHT_X_LIGHT_Y_SCATTERING_21019199062E7F35
 
 inline void initialize_volumetric_light_effect(flight::types::EntityConstruction<flight::Ref<flight::types::VolumetricLightEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_density_light_color_light_x_light_y_scattering_21019199062e7f35>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::VolumetricLightEffect>>(out, flight::String("VolumetricLightEffect"));

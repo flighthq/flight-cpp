@@ -35,10 +35,10 @@ struct ToggleController : public flight::ReferenceEnabled {
 struct ToggleControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
   std::optional<bool> checked;
-  flight::Ref<flight::types::Node2D> checked_state;
-  std::optional<flight::Ref<flight::types::Node2D>> label;
-  std::optional<flight::Ref<flight::types::Node2D>> over_state;
-  flight::Ref<flight::types::Node2D> unchecked_state;
+  flight::types::Node2D checked_state;
+  std::optional<flight::types::Node2D> label;
+  std::optional<flight::types::Node2D> over_state;
+  flight::types::Node2D unchecked_state;
 };
 
 struct ToggleControllerSignals : public flight::ReferenceEnabled {

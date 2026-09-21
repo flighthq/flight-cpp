@@ -28,7 +28,7 @@ namespace flight::types {
 struct CustomShaderMaterial : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
-  std::optional<std::optional<flight::String>> name;
+  std::variant<flight::String, flight::Null, flight::Undefined> name;
   double alpha_cutoff;
   flight::Ref<flight::types::MaterialAlphaMode> alpha_mode;
   flight::Ref<flight::types::BlendMode> blend_mode;

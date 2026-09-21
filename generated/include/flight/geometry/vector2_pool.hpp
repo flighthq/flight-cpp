@@ -26,7 +26,7 @@ inline flight::Ref<flight::types::Vector2> acquire_vector2() {
 }
 
 inline flight::Ref<flight::types::Vector2> acquire_empty_vector2() {
-  flight::Ref<flight::types::Vector2> v = acquire_vector2();
+  auto v = acquire_vector2();
   (v->x = 0.0);
   (v->y = 0.0);
   return v;

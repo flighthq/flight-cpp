@@ -33,7 +33,7 @@ inline flight::Ref<flight::types::Vector4> acquire_vector4() {
 }
 
 inline flight::Ref<flight::types::Vector4> acquire_empty_vector4() {
-  flight::Ref<flight::types::Vector4> v = acquire_vector4();
+  auto v = acquire_vector4();
   (v->x = 0.0);
   (v->y = 0.0);
   (v->z = 0.0);

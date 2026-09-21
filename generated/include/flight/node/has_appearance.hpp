@@ -22,8 +22,8 @@ inline void init_appearance_runtime_trait(flight::Ref<flight::types::HasAppearan
 }
 
 inline void init_appearance_trait(flight::Ref<flight::types::HasAppearance> target, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::HasAppearance>>>>>> obj = std::nullopt) {
-  (target->alpha = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"alpha">>(optional_chain_receiver.value()); }()).value_or(1.0));
-  (target->visible = ([&]() -> std::optional<bool> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"visible">>(optional_chain_receiver.value()); }()).value_or(true));
+  (target->alpha = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"alpha">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()));
+  (target->visible = ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"visible">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return true; }()));
 }
 
 } // namespace flight::node

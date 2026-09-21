@@ -19,6 +19,7 @@ struct FlightDocumentInteractiveStates;
 struct FlightDocumentInteractiveStateTransitionDescriptor;
 template <typename N = flight::Ref<Node<flight::Any>>>
 struct FlightDocumentInteractiveStateBinding;
+using FlightDocumentInteractiveStateProperty = flight::String;
 using FlightDocumentInteractiveStateValue = std::variant<bool, double>;
 } // namespace flight::types
 
@@ -28,8 +29,6 @@ using FlightDocumentInteractiveStateValue = std::variant<bool, double>;
 #include <flight/types/node_interactive_state_binding.hpp>
 
 namespace flight::types {
-
-using FlightDocumentInteractiveStateProperty = flight::types::NodeInteractiveStateProperty;
 
 struct FlightDocumentInteractiveStateExtensionDescriptor : public flight::ReferenceEnabled {
   flight::Ref<flight::types::FlightDocumentFields> fields;

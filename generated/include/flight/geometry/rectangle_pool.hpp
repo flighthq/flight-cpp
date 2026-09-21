@@ -33,7 +33,7 @@ inline flight::Ref<flight::types::Rectangle> acquire_rectangle() {
 }
 
 inline flight::Ref<flight::types::Rectangle> acquire_empty_rectangle() {
-  flight::Ref<flight::types::Rectangle> r = acquire_rectangle();
+  auto r = acquire_rectangle();
   (r->x = 0.0);
   (r->y = 0.0);
   (r->width = 0.0);

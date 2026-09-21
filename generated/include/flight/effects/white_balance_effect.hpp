@@ -17,13 +17,13 @@ namespace flight::types { struct WhiteBalanceEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_6DB947F7962B26FB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_6DB947F7962B26FB
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_TEMPERATURE_TINT_6DB947F7962B26FB
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_TEMPERATURE_TINT_6DB947F7962B26FB
 struct temperature_tint_6db947f7962b26fb : public flight::ReferenceEnabled {
   std::optional<double> temperature;
   std::optional<double> tint;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_6DB947F7962B26FB
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_TEMPERATURE_TINT_6DB947F7962B26FB
 
 inline void initialize_white_balance_effect(flight::types::EntityConstruction<flight::Ref<flight::types::WhiteBalanceEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<temperature_tint_6db947f7962b26fb>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::WhiteBalanceEffect>>(out, flight::String("WhiteBalanceEffect"));

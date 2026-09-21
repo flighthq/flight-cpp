@@ -17,15 +17,15 @@ namespace flight::types { struct Entity; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_DD435B0BABCBF29F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_DD435B0BABCBF29F
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ADAPTATION_SPEED_EXPOSURE_COMPENSATION_MAX_EXPOSURE_MIN_EXPOSURE_DD435B0BABCBF29F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ADAPTATION_SPEED_EXPOSURE_COMPENSATION_MAX_EXPOSURE_MIN_EXPOSURE_DD435B0BABCBF29F
 struct adaptation_speed_exposure_compensation_max_exposure_min_exposure_dd435b0babcbf29f : public flight::ReferenceEnabled {
   std::optional<double> adaptation_speed;
   std::optional<double> exposure_compensation;
   std::optional<double> max_exposure;
   std::optional<double> min_exposure;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_DD435B0BABCBF29F
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ADAPTATION_SPEED_EXPOSURE_COMPENSATION_MAX_EXPOSURE_MIN_EXPOSURE_DD435B0BABCBF29F
 
 inline void initialize_auto_exposure_effect(flight::types::EntityConstruction<flight::Ref<flight::types::AutoExposureEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<adaptation_speed_exposure_compensation_max_exposure_min_exposure_dd435b0babcbf29f>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::AutoExposureEffect>>(out, flight::String("AutoExposureEffect"));

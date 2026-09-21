@@ -17,8 +17,8 @@ inline void report_text_bidi_compact_table_miss(double codepoint) {
   ([&]() { auto optional_chain_receiver = guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(codepoint); }());
 }
 
-inline void set_text_bidi_guard(std::optional<std::function<void(double)>> guard) {
-  (guard = guard);
+inline void set_text_bidi_guard(std::optional<std::function<void(double)>> guard_2) {
+  (guard = guard_2);
 }
 
 } // namespace flight::textbidi

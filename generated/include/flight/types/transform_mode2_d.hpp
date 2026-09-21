@@ -11,18 +11,18 @@ namespace flight::types { struct TransformInherit2D; }
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9DFF6858EECB0EB4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9DFF6858EECB0EB4
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REFLECTION_ROTATION_SCALE_TRANSLATION_9DFF6858EECB0EB4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REFLECTION_ROTATION_SCALE_TRANSLATION_9DFF6858EECB0EB4
 struct reflection_rotation_scale_translation_9dff6858eecb0eb4 : public flight::ReferenceEnabled {
   bool reflection;
   bool rotation;
   bool scale;
   bool translation;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_9DFF6858EECB0EB4
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REFLECTION_ROTATION_SCALE_TRANSLATION_9DFF6858EECB0EB4
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DF57D19D6B6026C1
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DF57D19D6B6026C1
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NORMAL_ONLY_TRANSLATION_NO_ROTATION_OR_REFLECTION_NO_SCALE_NO_SCALE_OR_REFLECTION_DF57D19D6B6026C1
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NORMAL_ONLY_TRANSLATION_NO_ROTATION_OR_REFLECTION_NO_SCALE_NO_SCALE_OR_REFLECTION_DF57D19D6B6026C1
 struct normal_only_translation_no_rotation_or_reflection_no_scale_no_scale_or_reflection_df57d19d6b6026c1 : public flight::ReferenceEnabled {
   flight::Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4> normal;
   flight::Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4> only_translation;
@@ -30,7 +30,7 @@ struct normal_only_translation_no_rotation_or_reflection_no_scale_no_scale_or_re
   flight::Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4> no_scale;
   flight::Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4> no_scale_or_reflection;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DF57D19D6B6026C1
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NORMAL_ONLY_TRANSLATION_NO_ROTATION_OR_REFLECTION_NO_SCALE_NO_SCALE_OR_REFLECTION_DF57D19D6B6026C1
 
 inline flight::Ref<normal_only_translation_no_rotation_or_reflection_no_scale_no_scale_or_reflection_df57d19d6b6026c1> transform_mode2_d = flight::make_ref<normal_only_translation_no_rotation_or_reflection_no_scale_no_scale_or_reflection_df57d19d6b6026c1>(normal_only_translation_no_rotation_or_reflection_no_scale_no_scale_or_reflection_df57d19d6b6026c1{.normal = flight::make_ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>(reflection_rotation_scale_translation_9dff6858eecb0eb4{.reflection = true, .rotation = true, .scale = true, .translation = true}), .only_translation = flight::make_ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>(reflection_rotation_scale_translation_9dff6858eecb0eb4{.reflection = false, .rotation = false, .scale = false, .translation = true}), .no_rotation_or_reflection = flight::make_ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>(reflection_rotation_scale_translation_9dff6858eecb0eb4{.reflection = false, .rotation = false, .scale = true, .translation = true}), .no_scale = flight::make_ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>(reflection_rotation_scale_translation_9dff6858eecb0eb4{.reflection = true, .rotation = true, .scale = false, .translation = true}), .no_scale_or_reflection = flight::make_ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>(reflection_rotation_scale_translation_9dff6858eecb0eb4{.reflection = false, .rotation = true, .scale = false, .translation = true})});
 

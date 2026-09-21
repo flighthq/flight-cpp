@@ -20,8 +20,8 @@ using PathCommand = double;
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_87BDC487628CABB3
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_87BDC487628CABB3
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NO_OP_MOVE_TO_LINE_TO_QUADRATIC_CURVE_TO_WIDE_MOVE_TO_WIDE_LINE_TO_CUBIC_CURVE_TO_CLOSE_87BDC487628CABB3
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NO_OP_MOVE_TO_LINE_TO_QUADRATIC_CURVE_TO_WIDE_MOVE_TO_WIDE_LINE_TO_CUBIC_CURVE_TO_CLOSE_87BDC487628CABB3
 struct no_op_move_to_line_to_quadratic_curve_to_wide_move_to_wide_line_to_cubic_curve_to_close_87bdc487628cabb3 : public flight::ReferenceEnabled {
   double no_op;
   double move_to;
@@ -32,7 +32,7 @@ struct no_op_move_to_line_to_quadratic_curve_to_wide_move_to_wide_line_to_cubic_
   double cubic_curve_to;
   double close;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_87BDC487628CABB3
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_NO_OP_MOVE_TO_LINE_TO_QUADRATIC_CURVE_TO_WIDE_MOVE_TO_WIDE_LINE_TO_CUBIC_CURVE_TO_CLOSE_87BDC487628CABB3
 
 inline flight::Ref<no_op_move_to_line_to_quadratic_curve_to_wide_move_to_wide_line_to_cubic_curve_to_close_87bdc487628cabb3> path_command = flight::make_ref<no_op_move_to_line_to_quadratic_curve_to_wide_move_to_wide_line_to_cubic_curve_to_close_87bdc487628cabb3>(no_op_move_to_line_to_quadratic_curve_to_wide_move_to_wide_line_to_cubic_curve_to_close_87bdc487628cabb3{.no_op = 0.0, .move_to = 1.0, .line_to = 2.0, .quadratic_curve_to = 3.0, .wide_move_to = 4.0, .wide_line_to = 5.0, .cubic_curve_to = 6.0, .close = 7.0});
 

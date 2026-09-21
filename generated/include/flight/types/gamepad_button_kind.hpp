@@ -7,8 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DB25E048649730E4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DB25E048649730E4
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BUTTON_EAST_BUTTON_NORTH_BUTTON_SOUTH_BUTTON_WEST_DPAD_DOWN_DPAD_LEFT_DPAD_RIGHT_DPAD_UP_HOME_SELECT_SHOULDER_LEFT_SHOULDER_RIGHT_START_STICK_LEFT_STICK_RIGHT_TOUCHPAD_TRIGGER_LEFT_TRIGGER_RIGHT_DB25E048649730E4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BUTTON_EAST_BUTTON_NORTH_BUTTON_SOUTH_BUTTON_WEST_DPAD_DOWN_DPAD_LEFT_DPAD_RIGHT_DPAD_UP_HOME_SELECT_SHOULDER_LEFT_SHOULDER_RIGHT_START_STICK_LEFT_STICK_RIGHT_TOUCHPAD_TRIGGER_LEFT_TRIGGER_RIGHT_DB25E048649730E4
 struct button_east_button_north_button_south_button_west_dpad_down_dpad_left_dpad_right_dpad_up_home_select_shoulder_left_shoulder_right_start_stick_left_stick_right_touchpad_trigger_left_trigger_right_db25e048649730e4 : public flight::ReferenceEnabled {
   flight::String button_east;
   flight::String button_north;
@@ -29,7 +29,7 @@ struct button_east_button_north_button_south_button_west_dpad_down_dpad_left_dpa
   flight::String trigger_left;
   flight::String trigger_right;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DB25E048649730E4
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BUTTON_EAST_BUTTON_NORTH_BUTTON_SOUTH_BUTTON_WEST_DPAD_DOWN_DPAD_LEFT_DPAD_RIGHT_DPAD_UP_HOME_SELECT_SHOULDER_LEFT_SHOULDER_RIGHT_START_STICK_LEFT_STICK_RIGHT_TOUCHPAD_TRIGGER_LEFT_TRIGGER_RIGHT_DB25E048649730E4
 
 inline flight::Ref<button_east_button_north_button_south_button_west_dpad_down_dpad_left_dpad_right_dpad_up_home_select_shoulder_left_shoulder_right_start_stick_left_stick_right_touchpad_trigger_left_trigger_right_db25e048649730e4> gamepad_button_kind = flight::make_ref<button_east_button_north_button_south_button_west_dpad_down_dpad_left_dpad_right_dpad_up_home_select_shoulder_left_shoulder_right_start_stick_left_stick_right_touchpad_trigger_left_trigger_right_db25e048649730e4>(button_east_button_north_button_south_button_west_dpad_down_dpad_left_dpad_right_dpad_up_home_select_shoulder_left_shoulder_right_start_stick_left_stick_right_touchpad_trigger_left_trigger_right_db25e048649730e4{.button_east = flight::String("ButtonEast"), .button_north = flight::String("ButtonNorth"), .button_south = flight::String("ButtonSouth"), .button_west = flight::String("ButtonWest"), .dpad_down = flight::String("DpadDown"), .dpad_left = flight::String("DpadLeft"), .dpad_right = flight::String("DpadRight"), .dpad_up = flight::String("DpadUp"), .home = flight::String("Home"), .select = flight::String("Select"), .shoulder_left = flight::String("ShoulderLeft"), .shoulder_right = flight::String("ShoulderRight"), .start = flight::String("Start"), .stick_left = flight::String("StickLeft"), .stick_right = flight::String("StickRight"), .touchpad = flight::String("Touchpad"), .trigger_left = flight::String("TriggerLeft"), .trigger_right = flight::String("TriggerRight")});
 

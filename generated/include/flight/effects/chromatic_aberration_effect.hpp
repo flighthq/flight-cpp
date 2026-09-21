@@ -17,13 +17,13 @@ namespace flight::types { struct Entity; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_7D6C22D32D8A950F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_7D6C22D32D8A950F
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_RADIAL_7D6C22D32D8A950F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_RADIAL_7D6C22D32D8A950F
 struct intensity_radial_7d6c22d32d8a950f : public flight::ReferenceEnabled {
   std::optional<double> intensity;
   std::optional<bool> radial;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_7D6C22D32D8A950F
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_RADIAL_7D6C22D32D8A950F
 
 inline void initialize_chromatic_aberration_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ChromaticAberrationEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_radial_7d6c22d32d8a950f>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::ChromaticAberrationEffect>>(out, flight::String("ChromaticAberrationEffect"));

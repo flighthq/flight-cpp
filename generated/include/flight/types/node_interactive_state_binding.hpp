@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/any.hpp>
 #include <flight/conditional_facet_ref.hpp>
+#include <flight/erased_ref.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/types/node.hpp>
 #include <functional>
@@ -42,7 +43,7 @@ struct node_interactive_state_binding_facet final {};
 using NodeInteractiveStateBinding = flight::FacetRef<flight::types::Entity, node_interactive_state_binding_facet>;
 
 struct NodeInteractiveStateBindingRuntime : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<void>> binding;
+  std::optional<flight::ErasedRef> binding;
   std::optional<flight::String> uid;
   bool disposed;
 };
@@ -73,8 +74,8 @@ struct NodeInteractiveStateExtensionRuntime : public flight::ReferenceEnabled {
   std::function<void()> dispose;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B87267F66EDB6EB2
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B87267F66EDB6EB2
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EXTENSION_CREATION_FAILED_EXTENSION_KIND_UNREGISTERED_EXTENSION_TARGET_UNSUPPORTED_PROPERTY_TARGET_UNSUPPORTED_TRANSITION_CREATION_FAILED_TRANSITION_KIND_UNREGISTERED_B87267F66EDB6EB2
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EXTENSION_CREATION_FAILED_EXTENSION_KIND_UNREGISTERED_EXTENSION_TARGET_UNSUPPORTED_PROPERTY_TARGET_UNSUPPORTED_TRANSITION_CREATION_FAILED_TRANSITION_KIND_UNREGISTERED_B87267F66EDB6EB2
 struct extension_creation_failed_extension_kind_unregistered_extension_target_unsupported_property_target_unsupported_transition_creation_failed_transition_kind_unregistered_b87267f66edb6eb2 : public flight::ReferenceEnabled {
   flight::String extension_creation_failed;
   flight::String extension_kind_unregistered;
@@ -83,7 +84,7 @@ struct extension_creation_failed_extension_kind_unregistered_extension_target_un
   flight::String transition_creation_failed;
   flight::String transition_kind_unregistered;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B87267F66EDB6EB2
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EXTENSION_CREATION_FAILED_EXTENSION_KIND_UNREGISTERED_EXTENSION_TARGET_UNSUPPORTED_PROPERTY_TARGET_UNSUPPORTED_TRANSITION_CREATION_FAILED_TRANSITION_KIND_UNREGISTERED_B87267F66EDB6EB2
 
 inline flight::Ref<extension_creation_failed_extension_kind_unregistered_extension_target_unsupported_property_target_unsupported_transition_creation_failed_transition_kind_unregistered_b87267f66edb6eb2> node_interactive_state_refusal_reason = flight::make_ref<extension_creation_failed_extension_kind_unregistered_extension_target_unsupported_property_target_unsupported_transition_creation_failed_transition_kind_unregistered_b87267f66edb6eb2>(extension_creation_failed_extension_kind_unregistered_extension_target_unsupported_property_target_unsupported_transition_creation_failed_transition_kind_unregistered_b87267f66edb6eb2{.extension_creation_failed = flight::String("node-interactive-state.extension.creation-failed"), .extension_kind_unregistered = flight::String("node-interactive-state.extension-kind.unregistered"), .extension_target_unsupported = flight::String("node-interactive-state.extension.target-unsupported"), .property_target_unsupported = flight::String("node-interactive-state.property.target-unsupported"), .transition_creation_failed = flight::String("node-interactive-state.transition.creation-failed"), .transition_kind_unregistered = flight::String("node-interactive-state.transition-kind.unregistered")});
 

@@ -19,13 +19,13 @@ namespace flight::geolocation {
 
 inline flight::Task<flight::Ref<flight::types::GeolocationAccessOutcome>> prompt_for_geolocation_access(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostGeolocationCapability>>>>> host_geolocation) {
   if ((!host_geolocation.has_value() || (flight::String("function") != flight::String("function")))) {
-    co_return co_await {.reason = flight::String("runtime-unavailable")};
+    co_return flight::make_ref<flight::types::GeolocationAccessOutcome>(flight::types::GeolocationAccessOutcome{.reason = flight::String("runtime-unavailable")});
   }
   try {
     co_return co_await flight::row_get<flight::RowKey<"promptForAccess">>(host_geolocation.value())();
   }
   catch (...) {
-    co_return co_await {.reason = flight::String("operation-failed")};
+    co_return flight::make_ref<flight::types::GeolocationAccessOutcome>(flight::types::GeolocationAccessOutcome{.reason = flight::String("operation-failed")});
   }
 }
 

@@ -137,7 +137,7 @@ inline void initialize_vector4(flight::types::EntityConstruction<flight::Ref<fli
 
 inline flight::Ref<flight::types::Vector4> create_vector4(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> z = std::nullopt, std::optional<double> w = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Vector4>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Vector4>>();
-  initialize_vector4(out, x.value_or(0.0), y.value_or(0.0), z.value_or(0.0), w.value_or(0.0));
+  initialize_vector4(out, (x.has_value() ? x.value() : 0.0), (y.has_value() ? y.value() : 0.0), (z.has_value() ? z.value() : 0.0), (w.has_value() ? w.value() : 0.0));
   return flight::entity::finish_entity<flight::Ref<flight::types::Vector4>>(out);
 }
 

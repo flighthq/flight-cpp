@@ -11,6 +11,7 @@ namespace flight::types { struct EntityRuntime; }
 
 namespace flight::types {
 struct Plane;
+using PlaneLike = flight::Ref<Plane>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -25,7 +26,5 @@ struct Plane : public flight::ReferenceEnabled {
   double c;
   double d;
 };
-
-using PlaneLike = flight::types::EntityWithoutRuntime<flight::Ref<Plane>>;
 
 } // namespace flight::types

@@ -17,13 +17,13 @@ namespace flight::types { struct ScanlinesEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_1982FDA6A055FCD2
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_1982FDA6A055FCD2
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_COUNT_1982FDA6A055FCD2
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_COUNT_1982FDA6A055FCD2
 struct intensity_count_1982fda6a055fcd2 : public flight::ReferenceEnabled {
   std::optional<double> intensity;
   std::optional<double> count;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_1982FDA6A055FCD2
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_COUNT_1982FDA6A055FCD2
 
 inline void initialize_scanlines_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ScanlinesEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_count_1982fda6a055fcd2>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::ScanlinesEffect>>(out, flight::String("ScanlinesEffect"));

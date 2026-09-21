@@ -59,11 +59,11 @@ inline void convolve_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
   if ((static_cast<double>(matrix.size()) < (matrix_x * matrix_y))) {
     throw flight::Error(flight::String("Convolution filter matrix does not match its dimensions"));
   }
-  const double raw_divisor = flight::row_get<flight::RowKey<"divisor">>(options).value_or(get_convolution_divisor(matrix, (matrix_x * matrix_y)));
+  const double raw_divisor = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"divisor">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return get_convolution_divisor(matrix, (matrix_x * matrix_y)); }());
   const double divisor = ((raw_divisor == 0.0) ? 1.0 : raw_divisor);
-  const double bias = flight::row_get<flight::RowKey<"bias">>(options).value_or(0.0);
-  flight::String edge = flight::row_get<flight::RowKey<"edge">>(options).value_or(flight::String("clamp"));
-  const bool preserve_alpha = flight::row_get<flight::RowKey<"preserveAlpha">>(options).value_or(true);
+  const double bias = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"bias">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
+  flight::String edge = ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"edge">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("clamp"); }());
+  const bool preserve_alpha = ([&]() -> bool { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"preserveAlpha">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return true; }());
   const double offset_x = std::floor((matrix_x / 2.0));
   const double offset_y = std::floor((matrix_y / 2.0));
   const double bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;

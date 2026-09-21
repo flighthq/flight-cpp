@@ -55,8 +55,8 @@ inline void reset_spring2_d(flight::Ref<flight::types::Spring2D> spring2_d, doub
 }
 
 inline void update_spring2_d(flight::Ref<flight::types::Spring2D> spring2_d, double target_x, double target_y, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpringConfig>>>> config, double delta_time) {
-  flight::spring::update_spring(spring2_d->x, target_x, config, delta_time);
-  flight::spring::update_spring(spring2_d->y, target_y, config, delta_time);
+  flight::spring::update_spring(spring2_d->x, target_x, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpringConfig>>>>>(config), delta_time);
+  flight::spring::update_spring(spring2_d->y, target_y, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpringConfig>>>>>(config), delta_time);
 }
 
 } // namespace flight::spring

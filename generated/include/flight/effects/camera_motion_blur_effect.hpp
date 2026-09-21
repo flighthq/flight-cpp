@@ -17,13 +17,13 @@ namespace flight::types { struct Entity; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D75EBFC642DD8412
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D75EBFC642DD8412
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_INTENSITY_D75EBFC642DD8412
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_INTENSITY_D75EBFC642DD8412
 struct samples_intensity_d75ebfc642dd8412 : public flight::ReferenceEnabled {
   std::optional<double> samples;
   std::optional<double> intensity;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_D75EBFC642DD8412
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_INTENSITY_D75EBFC642DD8412
 
 inline void initialize_camera_motion_blur_effect(flight::types::EntityConstruction<flight::Ref<flight::types::CameraMotionBlurEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity_d75ebfc642dd8412>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::CameraMotionBlurEffect>>(out, flight::String("CameraMotionBlurEffect"));

@@ -40,12 +40,12 @@ inline flight::Task<flight::types::SoftKeyboardVisibilityResult> hide_soft_keybo
   return flight::row_get<flight::RowKey<"hide">>(host_soft_keyboard_visibility)();
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_KEYBOARD_F46C8B330EF4564F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_KEYBOARD_F46C8B330EF4564F
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_KEYBOARD_ON_SHOW_ON_HIDE_ON_RESIZE_ENTITY_RUNTIME_KEY_F46C8B330EF4564F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_KEYBOARD_ON_SHOW_ON_HIDE_ON_RESIZE_ENTITY_RUNTIME_KEY_F46C8B330EF4564F
 struct on_show_on_hide_on_resize_entity_runtime_key_f46c8b330ef4564f : public flight::types::SoftKeyboard {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_KEYBOARD_F46C8B330EF4564F
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_KEYBOARD_ON_SHOW_ON_HIDE_ON_RESIZE_ENTITY_RUNTIME_KEY_F46C8B330EF4564F
 
 inline void initialize_soft_keyboard(flight::types::EntityConstruction<flight::Ref<on_show_on_hide_on_resize_entity_runtime_key_f46c8b330ef4564f>> out) {
   flight::row_set<flight::RowKey<"onHide">>(out, flight::signals::create_signal<std::function<void()>>());
@@ -99,21 +99,13 @@ inline void detach_soft_keyboard(flight::Ref<flight::types::SoftKeyboard> keyboa
   }
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_KEYBOARD_54528721DDC6C195
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_KEYBOARD_54528721DDC6C195
-struct result_unsubscribe_54528721ddc6c195 : public flight::ReferenceEnabled {
-  flight::String result;
-  std::optional<std::function<void()>> unsubscribe;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_KEYBOARD_54528721DDC6C195
-
 inline flight::Task<flight::types::SoftKeyboardAttachResult> attach_soft_keyboard(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostSoftKeyboardChangeCapability>>>> host_soft_keyboard_change, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostSoftKeyboardInfoCapability>>>> host_soft_keyboard_info, flight::Ref<flight::types::SoftKeyboard> keyboard) {
   detach_soft_keyboard(keyboard);
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostSoftKeyboardChangeCapability>>>> change = host_soft_keyboard_change;
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostSoftKeyboardInfoCapability>>>> info = host_soft_keyboard_info;
   const auto prev_height_capture = flight::make_binding_cell(double{flight::row_get<flight::RowKey<"getInfo">>(info)(scratch)->height});
-  flight::Ref<result_unsubscribe_54528721ddc6c195> subscription = co_await flight::row_get<flight::RowKey<"subscribe">>(change)([=]() {
-  flight::Ref<flight::types::SoftKeyboardInfo> now_info = flight::row_get<flight::RowKey<"getInfo">>(info)(scratch);
+  auto subscription = co_await flight::row_get<flight::RowKey<"subscribe">>(change)([=]() {
+  auto now_info = flight::row_get<flight::RowKey<"getInfo">>(info)(scratch);
   const double now_height = now_info->height;
   const bool was_visible = (prev_height_capture.read_binding() > 0.0);
   const bool now_visible = (now_height > 0.0);

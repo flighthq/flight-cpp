@@ -51,21 +51,21 @@ struct AccessibilityNode : public flight::ReferenceEnabled {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AccessibilityState>>>>> states;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D891938D652DC019
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D891938D652DC019
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_D891938D652DC019
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_D891938D652DC019
 template <typename BlockReason>
 struct reason_d891938d652dc019 : public flight::ReferenceEnabled {
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D891938D652DC019
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_D891938D652DC019
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_17F19CD7F28AA073
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_17F19CD7F28AA073
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_17F19CD7F28AA073
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_17F19CD7F28AA073
 template <typename BlockReason>
 struct reason_17f19cd7f28aa073 : public flight::ReferenceEnabled {
   BlockReason reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_17F19CD7F28AA073
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_17F19CD7F28AA073
 
 template <typename BlockReason = flight::String>
 using AccessibilityOperationOutcome = std::variant<flight::Ref<reason_17f19cd7f28aa073<BlockReason>>, flight::Ref<reason_d891938d652dc019<BlockReason>>>;

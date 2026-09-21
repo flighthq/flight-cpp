@@ -15,27 +15,27 @@ namespace flight::types { struct EasingSegment; }
 
 namespace flight::easing {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EASING_9367E63245DFD72E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EASING_9367E63245DFD72E
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EASING_EASE_END_START_9367E63245DFD72E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EASING_EASE_END_START_9367E63245DFD72E
 struct ease_end_start_9367e63245dfd72e : public flight::ReferenceEnabled {
   flight::types::EasingFunction ease;
   double end;
   double start;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EASING_9367E63245DFD72E
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EASING_EASE_END_START_9367E63245DFD72E
 
 inline flight::types::EasingFunction ease_piecewise(flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EasingSegment>>>>> segments) {
   if ((static_cast<double>(segments.size()) == 0.0)) {
     throw flight::Error(flight::String("easePiecewise: segments array must not be empty"));
   }
-  const double total_weight = segments.reduce([=](double sum, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EasingSegment>>>> seg) { return (sum + flight::row_get<flight::RowKey<"weight">>(seg).value_or(1.0)); }, 0.0);
+  const double total_weight = segments.reduce([=](double sum, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EasingSegment>>>> seg) { return (sum + ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"weight">>(seg); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }())); }, 0.0);
   if ((total_weight <= 0.0)) {
     throw flight::Error(flight::String("easePiecewise: total segment weight must be greater than zero"));
   }
   flight::Array<flight::Ref<ease_end_start_9367e63245dfd72e>> breakpoints = flight::Array<flight::Ref<ease_end_start_9367e63245dfd72e>>{};
   double accumulated = 0.0;
   for (auto seg : segments) {
-    const double weight = flight::row_get<flight::RowKey<"weight">>(seg).value_or(1.0);
+    const double weight = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"weight">>(seg); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
     const double start = (accumulated / total_weight);
     (accumulated += weight);
     const double end = (accumulated / total_weight);
@@ -46,7 +46,7 @@ inline flight::types::EasingFunction ease_piecewise(flight::Array<flight::Struct
     double i = 0.0;
     while ((i < static_cast<double>(breakpoints.size()))) {
       {
-        flight::Ref<ease_end_start_9367e63245dfd72e> bp = breakpoints.element(i);
+        auto bp = breakpoints.element(i);
         if (((t <= bp->end) || (i == (static_cast<double>(breakpoints.size()) - 1.0)))) {
           const double span = (bp->end - bp->start);
           const double local_t = ((span > 0.0) ? ((t - bp->start) / span) : 1.0);

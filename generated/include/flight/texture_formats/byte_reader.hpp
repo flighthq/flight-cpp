@@ -16,11 +16,11 @@ namespace flight::texture_formats {
 
 inline flight::Ref<flight::types::ByteReader> create_byte_reader(flight::Uint8Array bytes, std::optional<double> offset = std::nullopt) {
   offset = offset.value_or(0.0);
-  return flight::make_ref<flight::types::ByteReader>(flight::types::ByteReader{.view = flight::DataView(bytes.buffer, bytes.byte_offset, bytes.byte_length), .offset = offset.value()});
+  return flight::make_ref<flight::types::ByteReader>(flight::types::ByteReader{.view = flight::DataView(bytes.buffer, static_cast<double>(bytes.byte_offset), static_cast<double>(bytes.byte_length)), .offset = offset.value()});
 }
 
 inline bool has_byte_reader_bytes(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>> reader, double count) {
-  return ((count >= 0.0) && ((flight::row_get<flight::RowKey<"offset">>(reader) + count) <= flight::row_get<flight::RowKey<"view">>(reader).byte_length));
+  return ((count >= 0.0) && ((flight::row_get<flight::RowKey<"offset">>(reader) + count) <= static_cast<double>(flight::row_get<flight::RowKey<"view">>(reader).byte_length)));
 }
 
 inline double read_byte_reader_u16(flight::Ref<flight::types::ByteReader> reader) {

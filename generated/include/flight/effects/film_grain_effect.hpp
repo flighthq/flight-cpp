@@ -17,14 +17,14 @@ namespace flight::types { struct FilmGrainEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_7A43A9A5C99619D9
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_7A43A9A5C99619D9
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SIZE_INTENSITY_SEED_7A43A9A5C99619D9
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SIZE_INTENSITY_SEED_7A43A9A5C99619D9
 struct size_intensity_seed_7a43a9a5c99619d9 : public flight::ReferenceEnabled {
   std::optional<double> size;
   std::optional<double> intensity;
   std::optional<double> seed;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_7A43A9A5C99619D9
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SIZE_INTENSITY_SEED_7A43A9A5C99619D9
 
 inline void initialize_film_grain_effect(flight::types::EntityConstruction<flight::Ref<flight::types::FilmGrainEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<size_intensity_seed_7a43a9a5c99619d9>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::FilmGrainEffect>>(out, flight::String("FilmGrainEffect"));

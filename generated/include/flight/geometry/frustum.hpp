@@ -48,7 +48,7 @@ inline void get_frustum_corners(flight::Array<flight::types::Vector3Like> out, f
         const double z = ((((m.element(2.0) * nx) + (m.element(6.0) * ny)) + (m.element(10.0) * nz)) + m.element(14.0));
         const double w = ((((m.element(3.0) * nx) + (m.element(7.0) * ny)) + (m.element(11.0) * nz)) + m.element(15.0));
         const double inv_w = ((w != 0.0) ? (1.0 / w) : 1.0);
-        flight::types::Vector3Like corner = out.element(i);
+        auto corner = out.element(i);
         (corner->x = (x * inv_w));
         (corner->y = (y * inv_w));
         (corner->z = (z * inv_w));

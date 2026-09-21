@@ -57,7 +57,7 @@ inline void initialize_plane(flight::types::EntityConstruction<flight::Ref<fligh
 
 inline flight::Ref<flight::types::Plane> create_plane(std::optional<double> a = std::nullopt, std::optional<double> b = std::nullopt, std::optional<double> c = std::nullopt, std::optional<double> d = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Plane>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Plane>>();
-  initialize_plane(out, a.value_or(0.0), b.value_or(0.0), c.value_or(0.0), d.value_or(0.0));
+  initialize_plane(out, (a.has_value() ? a.value() : 0.0), (b.has_value() ? b.value() : 0.0), (c.has_value() ? c.value() : 0.0), (d.has_value() ? d.value() : 0.0));
   return flight::entity::finish_entity<flight::Ref<flight::types::Plane>>(out);
 }
 

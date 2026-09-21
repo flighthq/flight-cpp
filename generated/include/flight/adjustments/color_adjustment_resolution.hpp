@@ -27,12 +27,12 @@ inline bool is_affine_color_matrix(flight::Array<double> matrix) {
   return ((((((((((((matrix.element(1.0) == 0.0) && (matrix.element(2.0) == 0.0)) && (matrix.element(3.0) == 0.0)) && (matrix.element(5.0) == 0.0)) && (matrix.element(7.0) == 0.0)) && (matrix.element(8.0) == 0.0)) && (matrix.element(10.0) == 0.0)) && (matrix.element(11.0) == 0.0)) && (matrix.element(13.0) == 0.0)) && (matrix.element(15.0) == 0.0)) && (matrix.element(16.0) == 0.0)) && (matrix.element(17.0) == 0.0));
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_6FEA82D7AA842443
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_6FEA82D7AA842443
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_KIND_6FEA82D7AA842443
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_KIND_6FEA82D7AA842443
 struct kind_6fea82d7aa842443 : public flight::ReferenceEnabled {
   flight::String kind;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_6FEA82D7AA842443
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_KIND_6FEA82D7AA842443
 
 inline std::optional<flight::Array<double>> resolve_color_adjustments_color_matrix(std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>> adjustments) {
   if ((!adjustments.has_value() || (static_cast<double>(adjustments.value().size()) == 0.0))) {

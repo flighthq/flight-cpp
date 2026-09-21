@@ -9,13 +9,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_750BBEAA2EFA936E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_750BBEAA2EFA936E
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_RAW_RFC1950_750BBEAA2EFA936E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_RAW_RFC1950_750BBEAA2EFA936E
 struct raw_rfc1950_750bbeaa2efa936e : public flight::ReferenceEnabled {
   flight::String raw;
   flight::String rfc1950;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_750BBEAA2EFA936E
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_RAW_RFC1950_750BBEAA2EFA936E
 
 inline flight::Ref<raw_rfc1950_750bbeaa2efa936e> compression_framing = flight::make_ref<raw_rfc1950_750bbeaa2efa936e>(raw_rfc1950_750bbeaa2efa936e{.raw = flight::String("Raw"), .rfc1950 = flight::String("Rfc1950")});
 
@@ -23,14 +23,14 @@ using CompressionFraming = flight::String;
 
 using Decompressor = std::function<std::optional<flight::Uint8Array>(flight::Uint8Array, double, CompressionFraming)>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_629E6FAC3E7D6FA8
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_629E6FAC3E7D6FA8
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BROTLI_DEFLATE_LZMA_629E6FAC3E7D6FA8
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BROTLI_DEFLATE_LZMA_629E6FAC3E7D6FA8
 struct brotli_deflate_lzma_629e6fac3e7d6fa8 : public flight::ReferenceEnabled {
   flight::String brotli;
   flight::String deflate;
   flight::String lzma;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_629E6FAC3E7D6FA8
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BROTLI_DEFLATE_LZMA_629E6FAC3E7D6FA8
 
 inline flight::Ref<brotli_deflate_lzma_629e6fac3e7d6fa8> compression = flight::make_ref<brotli_deflate_lzma_629e6fac3e7d6fa8>(brotli_deflate_lzma_629e6fac3e7d6fa8{.brotli = flight::String("brotli"), .deflate = flight::String("deflate"), .lzma = flight::String("lzma")});
 

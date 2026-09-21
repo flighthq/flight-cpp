@@ -19,12 +19,12 @@ namespace flight::types { struct Entity; }
 
 namespace flight::adjustments {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_6FEA82D7AA842443
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_6FEA82D7AA842443
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_KIND_6FEA82D7AA842443
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_KIND_6FEA82D7AA842443
 struct kind_6fea82d7aa842443 : public flight::ReferenceEnabled {
   flight::String kind;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_6FEA82D7AA842443
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_KIND_6FEA82D7AA842443
 
 inline std::optional<flight::Array<double>> get_adjustment_color_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<kind_6fea82d7aa842443>>>> operation) {
   std::optional<flight::Array<double>> matrix = flight::row_get<flight::RowKey<"colorMatrix">>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::ColorMatrixAdjustment>>>>>>(operation));

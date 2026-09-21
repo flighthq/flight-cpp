@@ -17,15 +17,15 @@ namespace flight::types { struct SsaoEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_2E396971C457AFF5
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_2E396971C457AFF5
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_INTENSITY_BIAS_RADIUS_2E396971C457AFF5
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_INTENSITY_BIAS_RADIUS_2E396971C457AFF5
 struct samples_intensity_bias_radius_2e396971c457aff5 : public flight::ReferenceEnabled {
   std::optional<double> samples;
   std::optional<double> intensity;
   std::optional<double> bias;
   std::optional<double> radius;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_2E396971C457AFF5
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_INTENSITY_BIAS_RADIUS_2E396971C457AFF5
 
 inline void initialize_ssao_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SsaoEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_intensity_bias_radius_2e396971c457aff5>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::SsaoEffect>>(out, flight::String("SsaoEffect"));

@@ -3,6 +3,7 @@
 #include <coroutine>
 #include <flight/structural_ref.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -15,35 +16,12 @@ namespace flight::types { struct HostMidiPermissionCapability; }
 
 namespace flight::midi {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_04283969300F4D75
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_04283969300F4D75
-struct reason_state_04283969300f4d75 : public flight::ReferenceEnabled {
-  flight::String reason;
-  flight::types::PermissionState state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_04283969300F4D75
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_CB1644DADD3DF85E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_CB1644DADD3DF85E
-struct reason_state_cb1644dadd3df85e : public flight::ReferenceEnabled {
-  flight::String reason;
-  std::optional<flight::String> state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_CB1644DADD3DF85E
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_601E8879DBDC359D
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_601E8879DBDC359D
-struct reason_601e8879dbdc359d : public flight::ReferenceEnabled {
-  flight::types::PermissionQueryFailureReason reason;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_601E8879DBDC359D
-
 inline flight::Task<flight::types::PermissionQueryOutcome> get_midi_permission(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMidiPermissionCapability>>>> host_midi_permission) {
   try {
     co_return co_await flight::row_get<flight::RowKey<"getPermission">>(host_midi_permission)();
   }
   catch (...) {
-    co_return co_await {.reason = flight::String("operation-failed")};
+    co_return std::variant<flight::Ref<flight::types::reason_601e8879dbdc359d>, flight::Ref<flight::types::reason_state_04283969300f4d75>, flight::Ref<flight::types::reason_state_cb1644dadd3df85e>>{std::in_place_type<flight::Ref<flight::types::reason_601e8879dbdc359d>>, flight::make_ref<flight::types::reason_601e8879dbdc359d>(flight::types::reason_601e8879dbdc359d{.reason = flight::String("operation-failed")})};
   }
 }
 

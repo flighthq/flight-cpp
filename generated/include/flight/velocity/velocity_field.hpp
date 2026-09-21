@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/erased_ref.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
 #include <optional>
@@ -82,7 +83,7 @@ inline flight::Ref<flight::types::VelocitySample> ensure_velocity_sample(flight:
 }
 
 inline void contribute_velocity(flight::Ref<flight::types::VelocityField> field, flight::Ref<void> source, double x, double y) {
-  flight::Ref<flight::types::VelocitySample> sample = ensure_velocity_sample(field, source);
+  auto sample = ensure_velocity_sample(field, source);
   (sample->velocity->x = x);
   (sample->velocity->y = y);
   (sample->last_frame_id = field->frame_id);
@@ -137,7 +138,7 @@ inline flight::Ref<flight::types::VelocityField> create_velocity_field() {
 }
 
 inline bool is_velocity_zero(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> velocity, std::optional<double> epsilon = std::nullopt) {
-  const double e = epsilon.value_or(0.0);
+  const double e = (epsilon.has_value() ? epsilon.value() : 0.0);
   return ((std::abs(flight::row_get<flight::RowKey<"x">>(velocity)) <= e) && (std::abs(flight::row_get<flight::RowKey<"y">>(velocity)) <= e));
 }
 

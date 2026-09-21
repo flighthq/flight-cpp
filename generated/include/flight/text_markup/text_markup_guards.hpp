@@ -20,8 +20,8 @@ inline void report_text_markup_issue(flight::StructuralRef<flight::RowReadonly<f
   ([&]() { auto optional_chain_receiver = guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(issue); }());
 }
 
-inline void set_text_markup_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextMarkupIssue>>>>)>> guard) {
-  (guard = guard);
+inline void set_text_markup_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextMarkupIssue>>>>)>> guard_2) {
+  (guard = guard_2);
 }
 
 } // namespace flight::text_markup

@@ -30,59 +30,8 @@ struct ShapeJsonFormatOptions : public flight::ReferenceEnabled {
   std::optional<std::variant<double, flight::String>> space;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_95B8B467441EC19B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_95B8B467441EC19B
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>> sources;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_95B8B467441EC19B
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B54DC1BFFA369663
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B54DC1BFFA369663
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  std::optional<flight::Ref<flight::types::VoxelGrid>> source;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B54DC1BFFA369663
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_AE19201647327EBA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_AE19201647327EBA
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  TextureSourceCubeFaces sources;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_AE19201647327EBA
-
 struct ShapeJsonParseOptions : public flight::ReferenceEnabled {
-  std::optional<std::function<std::optional<std::variant<flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<Texture2D>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ShapeTextureReference>>>>)>> resolve_texture;
+  std::optional<std::function<std::optional<flight::types::Texture>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ShapeTextureReference>>>>)>> resolve_texture;
 };
 
 } // namespace flight::types

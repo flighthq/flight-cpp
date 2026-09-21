@@ -344,34 +344,34 @@ inline void attach_sensors(flight::StructuralRef<flight::RowReadonly<flight::Row
   std::function<void()> unsubscribe_motion = flight::row_get<flight::RowKey<"subscribeMotion">>(backend)([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MotionReading>>>> acceleration, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RotationRateReading>>>> rotation_rate) {
   flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MotionReading>>>>)>>(sensors->on_accelerometer, acceleration);
   flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RotationRateReading>>>>)>>(sensors->on_gyroscope, rotation_rate);
-});
+}, std::nullopt);
   std::function<void()> unsubscribe_linear_acceleration = flight::row_get<flight::RowKey<"subscribeLinearAcceleration">>(backend)([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MotionReading>>>> reading) {
   flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MotionReading>>>>)>>(sensors->on_linear_acceleration, reading);
-});
+}, std::nullopt);
   std::function<void()> unsubscribe_gravity = flight::row_get<flight::RowKey<"subscribeGravity">>(backend)([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MotionReading>>>> reading) {
   flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MotionReading>>>>)>>(sensors->on_gravity, reading);
-});
+}, std::nullopt);
   std::function<void()> unsubscribe_orientation = flight::row_get<flight::RowKey<"subscribeOrientation">>(backend)([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrientationReading>>>> orientation) {
   flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrientationReading>>>>)>>(sensors->on_orientation, orientation);
-});
+}, std::nullopt);
   std::function<void()> unsubscribe_absolute_orientation = flight::row_get<flight::RowKey<"subscribeAbsoluteOrientation">>(backend)([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrientationReading>>>> orientation) {
   flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrientationReading>>>>)>>(sensors->on_absolute_orientation, orientation);
-});
+}, std::nullopt);
   std::function<void()> unsubscribe_magnetometer = flight::row_get<flight::RowKey<"subscribeMagnetometer">>(backend)([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MotionReading>>>> reading) {
   flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MotionReading>>>>)>>(sensors->on_magnetometer, reading);
-});
+}, std::nullopt);
   std::function<void()> unsubscribe_ambient_light = flight::row_get<flight::RowKey<"subscribeAmbientLight">>(backend)([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLightReading>>>> reading) {
   flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLightReading>>>>)>>(sensors->on_ambient_light, reading);
-});
+}, std::nullopt);
   std::function<void()> unsubscribe_barometer = flight::row_get<flight::RowKey<"subscribeBarometer">>(backend)([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PressureReading>>>> reading) {
   flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PressureReading>>>>)>>(sensors->on_barometer, reading);
-});
+}, std::nullopt);
   std::function<void()> unsubscribe_proximity = flight::row_get<flight::RowKey<"subscribeProximity">>(backend)([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ProximityReading>>>> reading) {
   flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ProximityReading>>>>)>>(sensors->on_proximity, reading);
-});
+}, std::nullopt);
   std::function<void()> unsubscribe_quaternion = flight::row_get<flight::RowKey<"subscribeQuaternion">>(backend)([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionReading>>>> reading) {
   flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::QuaternionReading>>>>)>>(sensors->on_quaternion, reading);
-});
+}, std::nullopt);
   subscriptions.set(sensors, [=]() {
   unsubscribe_absolute_orientation();
   unsubscribe_ambient_light();

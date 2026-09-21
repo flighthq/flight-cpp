@@ -3,7 +3,6 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
-#include <flight/boolean.hpp>
 #include <flight/number.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -59,9 +58,9 @@ struct Bvh3D : public flight::ReferenceEnabled {
 inline flight::Ref<flight::types::SpatialIndexingExplanation> explain_bvh3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Bvh3D>>>> tree, double id) {
   const std::optional<flight::String> reason = flight::row_get<flight::RowKey<"declined">>(tree).get(id);
   if (reason.has_value()) {
-    return ([&]() { auto object_member_bucket_count = 0.0; auto object_member_id = id; auto object_member_mode = flight::String("declined"); auto object_member_reason = reason; return flight::make_ref<flight::types::SpatialIndexingExplanation>(flight::types::SpatialIndexingExplanation{.id = object_member_id, .mode = object_member_mode, .bucket_count = object_member_bucket_count, .reason = object_member_reason}); }());
+    return ([&]() { auto object_member_bucket_count = 0.0; auto object_member_id = id; auto object_member_mode = flight::String("declined"); auto object_member_reason = reason.value(); return flight::make_ref<flight::types::SpatialIndexingExplanation>(flight::types::SpatialIndexingExplanation{.id = object_member_id, .mode = object_member_mode, .bucket_count = object_member_bucket_count, .reason = object_member_reason}); }());
   }
-  if (!flight::to_boolean(flight::row_get<flight::RowKey<"leafByObject">>(tree).has(id))) {
+  if (!flight::row_get<flight::RowKey<"leafByObject">>(tree).has(id)) {
     return ([&]() { auto object_member_bucket_count_2 = 0.0; auto object_member_id_2 = id; auto object_member_mode_2 = flight::String("absent"); auto object_member_reason_2 = std::nullopt; return flight::make_ref<flight::types::SpatialIndexingExplanation>(flight::types::SpatialIndexingExplanation{.id = object_member_id_2, .mode = object_member_mode_2, .bucket_count = object_member_bucket_count_2, .reason = object_member_reason_2}); }());
   }
   return ([&]() { auto object_member_bucket_count_3 = 0.0; auto object_member_id_3 = id; auto object_member_mode_3 = flight::String("cells"); auto object_member_reason_3 = std::nullopt; return flight::make_ref<flight::types::SpatialIndexingExplanation>(flight::types::SpatialIndexingExplanation{.id = object_member_id_3, .mode = object_member_mode_3, .bucket_count = object_member_bucket_count_3, .reason = object_member_reason_3}); }());
@@ -151,7 +150,7 @@ inline bool ray_slabs_hit(double x, double y, double z, double dx, double dy, do
 }
 
 inline void report_bvh3_dindexing(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Bvh3D>>>> tree, double id, flight::types::SpatialIndexingMode mode, flight::types::SpatialIndexingOperation operation, std::optional<flight::String> reason) {
-  flight::spatial::report_spatial_indexing(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndexingNotice>>>>(flight::row_field<flight::RowKey<"cellSize">>(flight::row_get<flight::RowKey<"margin">>(tree)), flight::row_field<flight::RowKey<"id">>(id), flight::row_field<flight::RowKey<"mode">>(mode), flight::row_field<flight::RowKey<"operation">>(operation), flight::row_field<flight::RowKey<"reason">>(reason), flight::row_field<flight::RowKey<"wouldOccupyBucketCount">>(0.0)));
+  flight::spatial::report_spatial_indexing(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndexingNotice>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndexingNotice>>>>(flight::row_field<flight::RowKey<"cellSize">>(flight::row_get<flight::RowKey<"margin">>(tree)), flight::row_field<flight::RowKey<"id">>(id), flight::row_field<flight::RowKey<"mode">>(mode), flight::row_field<flight::RowKey<"operation">>(operation), flight::row_field<flight::RowKey<"reason">>(reason), flight::row_field<flight::RowKey<"wouldOccupyBucketCount">>(0.0))));
 }
 
 inline void union_bounds(flight::Ref<Bvh3D> tree, double target, double a, double b) {
@@ -501,7 +500,7 @@ inline void remove_bvh3_d(flight::Ref<Bvh3D> tree, double id) {
 }
 
 inline bool insert_bvh3_d(flight::Ref<Bvh3D> tree, double id, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb3D>>>> bounds, flight::types::SpatialIndexingOperation operation) {
-  if ((((((!flight::to_boolean(std::isfinite(flight::row_get<flight::RowKey<"minX">>(bounds))) || !flight::to_boolean(std::isfinite(flight::row_get<flight::RowKey<"minY">>(bounds)))) || !flight::to_boolean(std::isfinite(flight::row_get<flight::RowKey<"minZ">>(bounds)))) || !flight::to_boolean(std::isfinite(flight::row_get<flight::RowKey<"maxX">>(bounds)))) || !flight::to_boolean(std::isfinite(flight::row_get<flight::RowKey<"maxY">>(bounds)))) || !flight::to_boolean(std::isfinite(flight::row_get<flight::RowKey<"maxZ">>(bounds))))) {
+  if ((((((!std::isfinite(flight::row_get<flight::RowKey<"minX">>(bounds)) || !std::isfinite(flight::row_get<flight::RowKey<"minY">>(bounds))) || !std::isfinite(flight::row_get<flight::RowKey<"minZ">>(bounds))) || !std::isfinite(flight::row_get<flight::RowKey<"maxX">>(bounds))) || !std::isfinite(flight::row_get<flight::RowKey<"maxY">>(bounds))) || !std::isfinite(flight::row_get<flight::RowKey<"maxZ">>(bounds)))) {
     remove_bvh3_d(tree, id);
     tree->declined.set(id, flight::String("non-finite-bounds"));
     report_bvh3_dindexing(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Bvh3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Bvh3D>>>>(tree)), id, flight::String("declined"), operation, std::optional<flight::String>{flight::String("non-finite-bounds")});
@@ -543,16 +542,16 @@ inline bool insert_bvh3_d(flight::Ref<Bvh3D> tree, double id, flight::Structural
 
 inline const double default_bvh_margin_3_d = 2.0;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPATIAL_F76A4CA94EE7746D
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPATIAL_F76A4CA94EE7746D
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPATIAL_INSERT_SPATIAL_OBJECT_UPDATE_SPATIAL_OBJECT_REMOVE_SPATIAL_OBJECT_CLEAR_SPATIAL_INDEX_EXPLAIN_SPATIAL_INDEXING_QUERY_SPATIAL_PAIRS_QUERY_SPATIAL_REGION_QUERY_SPATIAL_POINT_QUERY_SPATIAL_RAY_ENTITY_RUNTIME_KEY_F76A4CA94EE7746D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPATIAL_INSERT_SPATIAL_OBJECT_UPDATE_SPATIAL_OBJECT_REMOVE_SPATIAL_OBJECT_CLEAR_SPATIAL_INDEX_EXPLAIN_SPATIAL_INDEXING_QUERY_SPATIAL_PAIRS_QUERY_SPATIAL_REGION_QUERY_SPATIAL_POINT_QUERY_SPATIAL_RAY_ENTITY_RUNTIME_KEY_F76A4CA94EE7746D
 struct insert_spatial_object_update_spatial_object_remove_spatial_object_clear_spatial_index_explain_spatial_indexing_query_spatial_pairs_query_spatial_region_query_spatial_point_query_spatial_ray_entity_runtime_key_f76a4ca94ee7746d : public flight::types::SpatialIndexBackend3D {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPATIAL_F76A4CA94EE7746D
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPATIAL_INSERT_SPATIAL_OBJECT_UPDATE_SPATIAL_OBJECT_REMOVE_SPATIAL_OBJECT_CLEAR_SPATIAL_INDEX_EXPLAIN_SPATIAL_INDEXING_QUERY_SPATIAL_PAIRS_QUERY_SPATIAL_REGION_QUERY_SPATIAL_POINT_QUERY_SPATIAL_RAY_ENTITY_RUNTIME_KEY_F76A4CA94EE7746D
 
 inline void initialize_bvh_spatial_backend3_d(flight::types::EntityConstruction<flight::Ref<insert_spatial_object_update_spatial_object_remove_spatial_object_clear_spatial_index_explain_spatial_indexing_query_spatial_pairs_query_spatial_region_query_spatial_point_query_spatial_ray_entity_runtime_key_f76a4ca94ee7746d>> out, std::optional<double> margin = std::nullopt) {
   margin = margin.value_or(default_bvh_margin_3_d);
-  flight::Ref<Bvh3D> tree = create_bvh3_d(margin.value());
+  auto tree = create_bvh3_d(margin.value());
   flight::row_set<flight::RowKey<"clearSpatialIndex">>(out, [=]() {
   return clear_bvh3_d(tree);
 });
@@ -575,14 +574,14 @@ inline void initialize_bvh_spatial_backend3_d(flight::types::EntityConstruction<
   return query_bvh3_dregion(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Bvh3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Bvh3D>>>>(tree)), region, out);
 });
   flight::row_set<flight::RowKey<"removeSpatialObject">>(out, [=](double id) {
-  const bool was_missing = (!flight::to_boolean(tree->leaf_by_object.has(id)) && !flight::to_boolean(tree->declined.has(id)));
+  const bool was_missing = (!tree->leaf_by_object.has(id) && !tree->declined.has(id));
   remove_bvh3_d(tree, id);
   if (was_missing) {
     report_bvh3_dindexing(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Bvh3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Bvh3D>>>>(tree)), id, flight::String("absent"), flight::String("remove"), std::optional<flight::String>{flight::String("missing-id")});
   }
 });
   flight::row_set<flight::RowKey<"updateSpatialObject">>(out, [=](double id, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb3D>>>> bounds) {
-  const bool was_missing = (!flight::to_boolean(tree->leaf_by_object.has(id)) && !flight::to_boolean(tree->declined.has(id)));
+  const bool was_missing = (!tree->leaf_by_object.has(id) && !tree->declined.has(id));
   const bool inserted = insert_bvh3_d(tree, id, bounds, flight::String("update"));
   if (was_missing) {
     report_bvh3_dindexing(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Bvh3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Bvh3D>>>>(tree)), id, explain_bvh3_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Bvh3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Bvh3D>>>>(tree)), id)->mode, flight::String("update"), std::optional<flight::String>{flight::String("missing-id")});

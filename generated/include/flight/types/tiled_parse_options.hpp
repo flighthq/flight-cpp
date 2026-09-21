@@ -16,6 +16,7 @@ namespace flight::types { struct TilemapData; }
 namespace flight::types {
 struct TiledParseOptions;
 using TiledCompression = flight::String;
+using TiledInflate = std::function<std::optional<flight::Uint8Array>(flight::Uint8Array, flight::String)>;
 using TiledTilesetResolver = std::function<std::optional<flight::Ref<flight::types::TilemapData>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TiledTilesetRef>>>>)>;
 } // namespace flight::types
 
@@ -25,8 +26,6 @@ using TiledTilesetResolver = std::function<std::optional<flight::Ref<flight::typ
 #include <flight/types/material.hpp>
 
 namespace flight::types {
-
-using TiledInflate = std::function<std::optional<flight::Uint8Array>(flight::Uint8Array, TiledCompression)>;
 
 struct TiledParseOptions : public flight::ReferenceEnabled {
   std::optional<TiledInflate> inflate;

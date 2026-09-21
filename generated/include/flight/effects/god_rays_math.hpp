@@ -18,29 +18,29 @@ namespace flight::types { struct GodRaysEffect; }
 namespace flight::effects {
 
 inline double compute_god_rays_accumulation_scale(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GodRaysEffect>>>> effect) {
-  const double samples = flight::maximum(1.0, flight::row_get<flight::RowKey<"samples">>(effect).value_or(100.0));
-  const double weight = flight::maximum(0.000001, flight::row_get<flight::RowKey<"weight">>(effect).value_or(0.4));
-  const double exposure = flight::maximum(0.000001, flight::row_get<flight::RowKey<"exposure">>(effect).value_or(0.1));
+  const double samples = flight::maximum(1.0, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"samples">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }()));
+  const double weight = flight::maximum(0.000001, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"weight">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.4; }()));
+  const double exposure = flight::maximum(0.000001, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"exposure">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.1; }()));
   return (1.0 / ((samples * weight) * exposure));
 }
 
 inline void compute_god_rays_light_center(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GodRaysEffect>>>> effect, flight::Array<double> out) {
-  (out.element(0.0) = flight::maximum(0.0, flight::minimum(1.0, flight::row_get<flight::RowKey<"centerX">>(effect).value_or(0.5))));
-  (out.element(1.0) = flight::maximum(0.0, flight::minimum(1.0, flight::row_get<flight::RowKey<"centerY">>(effect).value_or(0.5))));
+  (out.element(0.0) = flight::maximum(0.0, flight::minimum(1.0, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"centerX">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.5; }()))));
+  (out.element(1.0) = flight::maximum(0.0, flight::minimum(1.0, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"centerY">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.5; }()))));
 }
 
 inline double compute_god_rays_sample_weight(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GodRaysEffect>>>> effect, double sample_index) {
-  const double decay = flight::row_get<flight::RowKey<"decay">>(effect).value_or(0.96);
-  const double weight = flight::row_get<flight::RowKey<"weight">>(effect).value_or(0.4);
-  const double exposure = flight::row_get<flight::RowKey<"exposure">>(effect).value_or(0.1);
+  const double decay = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"decay">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.96; }());
+  const double weight = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"weight">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.4; }());
+  const double exposure = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"exposure">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.1; }());
   return ((flight::power(decay, sample_index) * weight) * exposure);
 }
 
 inline void compute_god_rays_step_size(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GodRaysEffect>>>> effect, double px, double py, flight::Array<double> out) {
-  const double cx = flight::row_get<flight::RowKey<"centerX">>(effect).value_or(0.5);
-  const double cy = flight::row_get<flight::RowKey<"centerY">>(effect).value_or(0.5);
-  const double density = flight::row_get<flight::RowKey<"density">>(effect).value_or(0.96);
-  const double samples = flight::maximum(1.0, flight::row_get<flight::RowKey<"samples">>(effect).value_or(100.0));
+  const double cx = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"centerX">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.5; }());
+  const double cy = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"centerY">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.5; }());
+  const double density = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"density">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.96; }());
+  const double samples = flight::maximum(1.0, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"samples">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }()));
   const double dx = (((cx - px) * density) / samples);
   const double dy = (((cy - py) * density) / samples);
   (out.element(0.0) = dx);

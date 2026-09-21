@@ -17,15 +17,15 @@ namespace flight::types { struct VignetteEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_1D6A85131EB44867
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_1D6A85131EB44867
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_COLOR_RADIUS_SOFTNESS_1D6A85131EB44867
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_COLOR_RADIUS_SOFTNESS_1D6A85131EB44867
 struct intensity_color_radius_softness_1d6a85131eb44867 : public flight::ReferenceEnabled {
   std::optional<double> intensity;
   std::optional<double> color;
   std::optional<double> radius;
   std::optional<double> softness;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_1D6A85131EB44867
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_COLOR_RADIUS_SOFTNESS_1D6A85131EB44867
 
 inline void initialize_vignette_effect(flight::types::EntityConstruction<flight::Ref<flight::types::VignetteEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_color_radius_softness_1d6a85131eb44867>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::VignetteEffect>>(out, flight::String("VignetteEffect"));

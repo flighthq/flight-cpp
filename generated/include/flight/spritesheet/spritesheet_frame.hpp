@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -16,26 +17,26 @@ namespace flight::types { struct SpritesheetFrame; }
 
 namespace flight::spritesheet {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_CC00688A45C5FE5E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_CC00688A45C5FE5E
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ID_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_CC00688A45C5FE5E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ID_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_CC00688A45C5FE5E
 struct entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated_cc00688a45c5fe5e : public flight::ReferenceEnabled {
-  std::optional<std::optional<flight::Ref<flight::types::EntityRuntime>>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::optional<double> id;
   std::optional<double> offset_x;
   std::optional<double> offset_y;
-  std::optional<std::optional<double>> pivot_x;
-  std::optional<std::optional<double>> pivot_y;
+  std::variant<double, flight::Null, flight::Undefined> pivot_x;
+  std::variant<double, flight::Null, flight::Undefined> pivot_y;
   std::optional<bool> rotated;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_CC00688A45C5FE5E
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ID_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_CC00688A45C5FE5E
 
 inline void initialize_spritesheet_frame(flight::types::EntityConstruction<flight::Ref<flight::types::SpritesheetFrame>> out, std::optional<flight::Ref<entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated_cc00688a45c5fe5e>> obj = std::nullopt) {
-  flight::row_set<flight::RowKey<"id">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->id; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"offsetX">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->offset_x; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"offsetY">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->offset_y; }()).value_or(0.0));
-  flight::row_set<flight::RowKey<"pivotX">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pivot_x.value_or(std::nullopt); }()));
-  flight::row_set<flight::RowKey<"pivotY">>(out, ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pivot_y.value_or(std::nullopt); }()));
-  flight::row_set<flight::RowKey<"rotated">>(out, ([&]() -> std::optional<bool> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->rotated; }()).value_or(false));
+  flight::row_set<flight::RowKey<"id">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->id; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"offsetX">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->offset_x; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"offsetY">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->offset_y; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  flight::row_set<flight::RowKey<"pivotX">>(out, ([&]() -> std::optional<double> { auto nullish_coalesce_left = ([&]() -> std::variant<double, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return optional_chain_receiver.value()->pivot_x; }()); if (std::holds_alternative<double>(nullish_coalesce_left)) return std::optional<double>{std::get<double>(nullish_coalesce_left)}; return std::nullopt; }()));
+  flight::row_set<flight::RowKey<"pivotY">>(out, ([&]() -> std::optional<double> { auto nullish_coalesce_left_2 = ([&]() -> std::variant<double, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return optional_chain_receiver.value()->pivot_y; }()); if (std::holds_alternative<double>(nullish_coalesce_left_2)) return std::optional<double>{std::get<double>(nullish_coalesce_left_2)}; return std::nullopt; }()));
+  flight::row_set<flight::RowKey<"rotated">>(out, ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->rotated; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }()));
 }
 
 inline flight::Ref<flight::types::SpritesheetFrame> create_spritesheet_frame(std::optional<flight::Ref<entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated_cc00688a45c5fe5e>> obj = std::nullopt) {

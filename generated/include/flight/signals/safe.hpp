@@ -2,6 +2,8 @@
 #pragma once
 #include <cstddef>
 #include <exception>
+#include <flight/any.hpp>
+#include <functional>
 #include <optional>
 #include <utility>
 #include <flight/runtime.hpp>
@@ -75,7 +77,7 @@ inline void emit_signal_safe(flight::Ref<flight::types::Signal<T>> signal, ArgsP
   if (!data.has_value()) {
     return;
   }
-  flight::Array<std::optional<T>> slots = data.value()->slots.slice();
+  flight::Array<std::optional<std::function<void(flight::Array<flight::Any>)>>> slots = data.value()->slots.slice();
   flight::Array<double> priorities = data.value()->priorities.slice();
   flight::Array<bool> repeat = data.value()->repeat.slice();
   (data.value()->cancelled = false);
@@ -86,7 +88,7 @@ inline void emit_signal_safe(flight::Ref<flight::types::Signal<T>> signal, ArgsP
       double i = 0.0;
       while ((i < static_cast<double>(slots.size()))) {
         {
-          std::optional<std::optional<T>> slot = slots.get(i);
+          std::optional<std::optional<std::function<void(flight::Array<flight::Any>)>>> slot = slots.get(i);
           if (!slot.has_value()) {
             (i += 1.0);
             continue;
@@ -94,7 +96,7 @@ inline void emit_signal_safe(flight::Ref<flight::types::Signal<T>> signal, ArgsP
           if (!repeat.element(i)) {
             tombstone_once_slot<T>(data.value(), slot.value(), priorities.element(i));
           }
-          slot(std::forward<ArgsPack>(args)...);
+          slot.value()(std::forward<ArgsPack>(args)...);
           if (data.value()->cancelled) {
             break;
           }

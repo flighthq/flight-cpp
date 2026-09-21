@@ -58,13 +58,13 @@ struct ScreenInfo : public flight::ReferenceEnabled {
   bool monochrome;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_8365950BD60F783F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_8365950BD60F783F
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_X_Y_8365950BD60F783F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_X_Y_8365950BD60F783F
 struct x_y_8365950bd60f783f : public flight::ReferenceEnabled {
   double x;
   double y;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_8365950BD60F783F
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_X_Y_8365950BD60F783F
 
 struct HostScreenQueryCapability : public flight::ReferenceEnabled {
   std::optional<std::function<void()>> destroy;

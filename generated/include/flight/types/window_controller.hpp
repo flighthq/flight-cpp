@@ -37,14 +37,14 @@ struct WindowController : public flight::ReferenceEnabled {
 struct WindowControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
   std::optional<flight::Ref<flight::types::ButtonController>> close_button;
-  std::optional<flight::Ref<flight::types::Node2D>> content;
+  std::optional<flight::types::Node2D> content;
   std::optional<bool> draggable;
-  flight::Ref<flight::types::Node2D> frame;
+  flight::types::Node2D frame;
   std::optional<double> minimum_height;
   std::optional<double> minimum_width;
   std::optional<bool> resizable;
-  std::optional<flight::Ref<flight::types::Node2D>> resize_handle;
-  std::optional<flight::Ref<flight::types::Node2D>> title_bar;
+  std::optional<flight::types::Node2D> resize_handle;
+  std::optional<flight::types::Node2D> title_bar;
 };
 
 struct WindowControllerSignals : public flight::ReferenceEnabled {

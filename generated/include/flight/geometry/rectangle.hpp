@@ -162,7 +162,7 @@ inline void initialize_rectangle(flight::types::EntityConstruction<flight::Ref<f
 
 inline flight::Ref<flight::types::Rectangle> create_rectangle(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> width = std::nullopt, std::optional<double> height = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Rectangle>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Rectangle>>();
-  initialize_rectangle(out, x.value_or(0.0), y.value_or(0.0), width.value_or(0.0), height.value_or(0.0));
+  initialize_rectangle(out, (x.has_value() ? x.value() : 0.0), (y.has_value() ? y.value() : 0.0), (width.has_value() ? width.value() : 0.0), (height.has_value() ? height.value() : 0.0));
   return flight::entity::finish_entity<flight::Ref<flight::types::Rectangle>>(out);
 }
 

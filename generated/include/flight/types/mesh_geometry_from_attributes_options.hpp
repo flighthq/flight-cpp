@@ -12,10 +12,10 @@ namespace flight::types {
 struct MeshGeometryFromAttributesOptions;
 
 struct MeshGeometryFromAttributesOptions : public flight::ReferenceEnabled {
-  std::optional<std::optional<std::variant<flight::Array<double>, flight::Uint16Array, flight::Uint32Array>>> indices;
-  std::optional<std::optional<flight::Array<double>>> normals;
+  std::variant<flight::Array<double>, flight::Uint16Array, flight::Uint32Array, flight::Null, flight::Undefined> indices;
+  std::variant<flight::Array<double>, flight::Null, flight::Undefined> normals;
   flight::Array<double> positions;
-  std::optional<std::optional<flight::Array<double>>> uvs;
+  std::variant<flight::Array<double>, flight::Null, flight::Undefined> uvs;
 };
 
 } // namespace flight::types

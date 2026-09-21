@@ -17,15 +17,15 @@ namespace flight::types { struct Entity; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_3F748AFC0E544F98
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_3F748AFC0E544F98
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_CURVATURE_SCANLINE_INTENSITY_VIGNETTE_ABERRATION_3F748AFC0E544F98
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_CURVATURE_SCANLINE_INTENSITY_VIGNETTE_ABERRATION_3F748AFC0E544F98
 struct curvature_scanline_intensity_vignette_aberration_3f748afc0e544f98 : public flight::ReferenceEnabled {
   std::optional<double> curvature;
   std::optional<double> scanline_intensity;
   std::optional<double> vignette;
   std::optional<double> aberration;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_3F748AFC0E544F98
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_CURVATURE_SCANLINE_INTENSITY_VIGNETTE_ABERRATION_3F748AFC0E544F98
 
 inline void initialize_crt_effect(flight::types::EntityConstruction<flight::Ref<flight::types::CrtEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<curvature_scanline_intensity_vignette_aberration_3f748afc0e544f98>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::CrtEffect>>(out, flight::String("CrtEffect"));

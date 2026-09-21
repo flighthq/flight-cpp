@@ -11,6 +11,7 @@ namespace flight::types { struct EntityRuntime; }
 
 namespace flight::types {
 struct Matrix3;
+using Matrix3Like = flight::Ref<Matrix3>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -22,7 +23,5 @@ struct Matrix3 : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::Float32Array m;
 };
-
-using Matrix3Like = flight::types::EntityWithoutRuntime<flight::Ref<Matrix3>>;
 
 } // namespace flight::types

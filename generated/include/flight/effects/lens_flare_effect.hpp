@@ -17,15 +17,15 @@ namespace flight::types { struct LensFlareEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C903D604DB77B3A0
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C903D604DB77B3A0
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_THRESHOLD_GHOSTS_HALO_C903D604DB77B3A0
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_THRESHOLD_GHOSTS_HALO_C903D604DB77B3A0
 struct intensity_threshold_ghosts_halo_c903d604db77b3a0 : public flight::ReferenceEnabled {
   std::optional<double> intensity;
   std::optional<double> threshold;
   std::optional<double> ghosts;
   std::optional<double> halo;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C903D604DB77B3A0
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_THRESHOLD_GHOSTS_HALO_C903D604DB77B3A0
 
 inline void initialize_lens_flare_effect(flight::types::EntityConstruction<flight::Ref<flight::types::LensFlareEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_threshold_ghosts_halo_c903d604db77b3a0>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::LensFlareEffect>>(out, flight::String("LensFlareEffect"));

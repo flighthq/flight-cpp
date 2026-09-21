@@ -40,7 +40,7 @@ inline flight::Ref<flight::types::Matrix> scratch_inverse_flight_value_variable_
 inline flight::Ref<flight::types::Matrix> scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_638d665e2480a6d2 = flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
 inline void get_camera2_dvisible_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera, flight::types::RectangleLike out) {
-  flight::camera::get_camera2_dview_matrix(camera, scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_638d665e2480a6d2);
+  flight::camera::get_camera2_dview_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(camera), scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_638d665e2480a6d2);
   if (!flight::geometry::inverse_matrix(scratch_inverse_flight_value_variable_scratch_u000049_nverse_flight_private_638d665e2480a6d2, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_638d665e2480a6d2)))) {
     (out->x = unbounded_origin);
     (out->y = unbounded_origin);

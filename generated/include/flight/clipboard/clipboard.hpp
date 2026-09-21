@@ -145,12 +145,12 @@ inline void detach_clipboard_watch(flight::Ref<flight::types::ClipboardWatch> wa
   unsubscribe.value()();
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CLIPBOARD_93EBD993676CA20F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CLIPBOARD_93EBD993676CA20F
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CLIPBOARD_SUBSCRIBE_93EBD993676CA20F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CLIPBOARD_SUBSCRIBE_93EBD993676CA20F
 struct subscribe_93ebd993676ca20f : public flight::ReferenceEnabled {
   std::optional<std::function<std::function<void()>(std::function<void()>)>> subscribe;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CLIPBOARD_93EBD993676CA20F
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CLIPBOARD_SUBSCRIBE_93EBD993676CA20F
 
 inline void attach_clipboard_watch(flight::StructuralRef<flight::RowReadonly<flight::RowRequired<flight::RowOf<flight::Ref<subscribe_93ebd993676ca20f>>>>> host_clipboard_change, flight::Ref<flight::types::ClipboardWatch> watch) {
   detach_clipboard_watch(watch);

@@ -17,7 +17,7 @@ struct Scene3DAnimationTarget;
 namespace flight::types {
 
 struct Scene3DAnimationTarget : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Node3D> node;
+  flight::types::Node3D node;
   flight::types::Scene3DAnimationPath path;
 };
 

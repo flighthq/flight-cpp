@@ -63,9 +63,9 @@ inline void reset_spring3_d(flight::Ref<flight::types::Spring3D> spring3_d, doub
 }
 
 inline void update_spring3_d(flight::Ref<flight::types::Spring3D> spring3_d, double target_x, double target_y, double target_z, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpringConfig>>>> config, double delta_time) {
-  flight::spring::update_spring(spring3_d->x, target_x, config, delta_time);
-  flight::spring::update_spring(spring3_d->y, target_y, config, delta_time);
-  flight::spring::update_spring(spring3_d->z, target_z, config, delta_time);
+  flight::spring::update_spring(spring3_d->x, target_x, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpringConfig>>>>>(config), delta_time);
+  flight::spring::update_spring(spring3_d->y, target_y, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpringConfig>>>>>(config), delta_time);
+  flight::spring::update_spring(spring3_d->z, target_z, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpringConfig>>>>>(config), delta_time);
 }
 
 } // namespace flight::spring

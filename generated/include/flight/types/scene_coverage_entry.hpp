@@ -24,8 +24,8 @@ using SceneCoverageEntry = std::variant<flight::Ref<FallbackUnavailableSceneCove
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E6F21D6E5CDF4DB2
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E6F21D6E5CDF4DB2
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FALLBACK_REMEDIABLE_FALLBACK_UNAVAILABLE_SATISFIED_UNAVAILABLE_UNREGISTERED_E6F21D6E5CDF4DB2
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FALLBACK_REMEDIABLE_FALLBACK_UNAVAILABLE_SATISFIED_UNAVAILABLE_UNREGISTERED_E6F21D6E5CDF4DB2
 struct fallback_remediable_fallback_unavailable_satisfied_unavailable_unregistered_e6f21d6e5cdf4db2 : public flight::ReferenceEnabled {
   flight::String fallback_remediable;
   flight::String fallback_unavailable;
@@ -33,7 +33,7 @@ struct fallback_remediable_fallback_unavailable_satisfied_unavailable_unregister
   flight::String unavailable;
   flight::String unregistered;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_E6F21D6E5CDF4DB2
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FALLBACK_REMEDIABLE_FALLBACK_UNAVAILABLE_SATISFIED_UNAVAILABLE_UNREGISTERED_E6F21D6E5CDF4DB2
 
 inline flight::Ref<fallback_remediable_fallback_unavailable_satisfied_unavailable_unregistered_e6f21d6e5cdf4db2> scene_coverage = flight::make_ref<fallback_remediable_fallback_unavailable_satisfied_unavailable_unregistered_e6f21d6e5cdf4db2>(fallback_remediable_fallback_unavailable_satisfied_unavailable_unregistered_e6f21d6e5cdf4db2{.fallback_remediable = flight::String("FallbackRemediable"), .fallback_unavailable = flight::String("FallbackUnavailable"), .satisfied = flight::String("Satisfied"), .unavailable = flight::String("Unavailable"), .unregistered = flight::String("Unregistered")});
 

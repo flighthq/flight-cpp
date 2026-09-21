@@ -21,34 +21,34 @@ using Skeleton2DPathSpacingMode = flight::String;
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_08825A6B3B2F1E97
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_08825A6B3B2F1E97
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FIXED_PERCENT_08825A6B3B2F1E97
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FIXED_PERCENT_08825A6B3B2F1E97
 struct fixed_percent_08825a6b3b2f1e97 : public flight::ReferenceEnabled {
   flight::String fixed;
   flight::String percent;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_08825A6B3B2F1E97
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FIXED_PERCENT_08825A6B3B2F1E97
 
 inline flight::Ref<fixed_percent_08825a6b3b2f1e97> skeleton2_dpath_position_mode = flight::make_ref<fixed_percent_08825a6b3b2f1e97>(fixed_percent_08825a6b3b2f1e97{.fixed = flight::String("Fixed"), .percent = flight::String("Percent")});
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B90D121E2D474162
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B90D121E2D474162
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CHAIN_TANGENT_B90D121E2D474162
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CHAIN_TANGENT_B90D121E2D474162
 struct chain_tangent_b90d121e2d474162 : public flight::ReferenceEnabled {
   flight::String chain;
   flight::String tangent;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B90D121E2D474162
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CHAIN_TANGENT_B90D121E2D474162
 
 inline flight::Ref<chain_tangent_b90d121e2d474162> skeleton2_dpath_rotate_mode = flight::make_ref<chain_tangent_b90d121e2d474162>(chain_tangent_b90d121e2d474162{.chain = flight::String("Chain"), .tangent = flight::String("Tangent")});
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_45D993AA5D58D2B6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_45D993AA5D58D2B6
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FIXED_LENGTH_PERCENT_45D993AA5D58D2B6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FIXED_LENGTH_PERCENT_45D993AA5D58D2B6
 struct fixed_length_percent_45d993aa5d58d2b6 : public flight::ReferenceEnabled {
   flight::String fixed;
   flight::String length;
   flight::String percent;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_45D993AA5D58D2B6
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FIXED_LENGTH_PERCENT_45D993AA5D58D2B6
 
 inline flight::Ref<fixed_length_percent_45d993aa5d58d2b6> skeleton2_dpath_spacing_mode = flight::make_ref<fixed_length_percent_45d993aa5d58d2b6>(fixed_length_percent_45d993aa5d58d2b6{.fixed = flight::String("Fixed"), .length = flight::String("Length"), .percent = flight::String("Percent")});
 

@@ -17,6 +17,7 @@ namespace flight::types { struct SpotLight; }
 
 namespace flight::types {
 struct Scene3DLights;
+using Scene3DLightsLike = flight::Ref<Scene3DLights>;
 } // namespace flight::types
 
 #include <flight/types/ambient_light.hpp>
@@ -37,7 +38,5 @@ struct Scene3DLights : public flight::ReferenceEnabled {
   std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointLight>>>>>> point;
   std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLight>>>>>> spot;
 };
-
-using Scene3DLightsLike = flight::types::EntityWithoutRuntime<flight::Ref<Scene3DLights>>;
 
 } // namespace flight::types

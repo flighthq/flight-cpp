@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/boolean.hpp>
 #include <flight/number.hpp>
 #include <limits>
 #include <optional>
@@ -43,7 +42,7 @@ inline std::optional<flight::String> get_collision_convex_validation_status3_d(f
         const double x = points.element(i);
         const double y = points.element((i + 1.0));
         const double z = points.element((i + 2.0));
-        if (((!flight::to_boolean(std::isfinite(x)) || !flight::to_boolean(std::isfinite(y))) || !flight::to_boolean(std::isfinite(z)))) {
+        if (((!std::isfinite(x) || !std::isfinite(y)) || !std::isfinite(z))) {
           return std::optional<flight::String>{flight::String("degenerate-shape")};
         }
         if ((x < min_x)) {
@@ -70,97 +69,6 @@ inline std::optional<flight::String> get_collision_convex_validation_status3_d(f
   }
   return ((flight::maximum((max_x - min_x), (max_y - min_y), (max_z - min_z)) > 0.0) ? std::nullopt : std::optional<flight::String>{flight::String("degenerate-shape")});
 }
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_B0BC53CA3F0E8006
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_B0BC53CA3F0E8006
-struct x_y_z_radius_kind_b0bc53ca3f0e8006_1 : public flight::ReferenceEnabled {
-  double x;
-  double y;
-  double z;
-  double radius;
-  flight::String kind;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_B0BC53CA3F0E8006
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_748C675E8E0CF88A
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_748C675E8E0CF88A
-struct min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a_1 : public flight::ReferenceEnabled {
-  double min_x;
-  double min_y;
-  double min_z;
-  double max_x;
-  double max_y;
-  double max_z;
-  flight::String kind;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_748C675E8E0CF88A
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_BDD50A8E154D5A6A
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_BDD50A8E154D5A6A
-struct x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a_1 : public flight::ReferenceEnabled {
-  double x;
-  double y;
-  double z;
-  double half_x;
-  double half_y;
-  double half_z;
-  double rotation_x;
-  double rotation_y;
-  double rotation_z;
-  double rotation_w;
-  flight::String kind;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_BDD50A8E154D5A6A
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_3CA9ADA7B527E64B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_3CA9ADA7B527E64B
-struct x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b_1 : public flight::ReferenceEnabled {
-  double x0;
-  double y0;
-  double z0;
-  double x1;
-  double y1;
-  double z1;
-  double radius;
-  flight::String kind;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_3CA9ADA7B527E64B
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_AEF60734FA17CFF8
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_AEF60734FA17CFF8
-struct x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8_1 : public flight::ReferenceEnabled {
-  double x0;
-  double y0;
-  double z0;
-  double x1;
-  double y1;
-  double z1;
-  double radius;
-  flight::String kind;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_AEF60734FA17CFF8
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_21C650AD310BF539
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_21C650AD310BF539
-struct apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539_1 : public flight::ReferenceEnabled {
-  double apex_x;
-  double apex_y;
-  double apex_z;
-  double base_x;
-  double base_y;
-  double base_z;
-  double radius;
-  flight::String kind;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_21C650AD310BF539
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_35A8F5F2A3A8BD66
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_35A8F5F2A3A8BD66
-struct points_kind_35a8f5f2a3a8bd66_1 : public flight::ReferenceEnabled {
-  flight::Array<double> points;
-  flight::String kind;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_35A8F5F2A3A8BD66
 
 inline std::optional<flight::String> get_collision_shape_validation_status3_d(flight::types::CollisionShape3D shape) {
   {

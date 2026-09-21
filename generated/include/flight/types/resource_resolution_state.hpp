@@ -7,15 +7,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_844A36A487074D88
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_844A36A487074D88
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_LOADING_RESOLVED_UNRESOLVED_844A36A487074D88
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_LOADING_RESOLVED_UNRESOLVED_844A36A487074D88
 struct failed_loading_resolved_unresolved_844a36a487074d88 : public flight::ReferenceEnabled {
   flight::String failed;
   flight::String loading;
   flight::String resolved;
   flight::String unresolved;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_844A36A487074D88
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_LOADING_RESOLVED_UNRESOLVED_844A36A487074D88
 
 inline flight::Ref<failed_loading_resolved_unresolved_844a36a487074d88> resource_resolution_state = flight::make_ref<failed_loading_resolved_unresolved_844a36a487074d88>(failed_loading_resolved_unresolved_844a36a487074d88{.failed = flight::String("Failed"), .loading = flight::String("Loading"), .resolved = flight::String("Resolved"), .unresolved = flight::String("Unresolved")});
 

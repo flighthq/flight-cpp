@@ -29,6 +29,7 @@ struct StorageNamespace;
 struct StorageSignals;
 using StorageClearFailureReason = flight::String;
 using StorageGetItemFailureReason = flight::String;
+using StorageKeysFailureReason = flight::String;
 using StorageRemoveItemFailureReason = flight::String;
 using StorageSetItemFailureReason = flight::String;
 using StorageReadFailureReason = flight::String;
@@ -42,23 +43,21 @@ using StorageWriteFailureReason = flight::String;
 
 namespace flight::types {
 
-using StorageKeysFailureReason = StorageGetItemFailureReason;
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_616C41AE7D6F54FA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_616C41AE7D6F54FA
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_616C41AE7D6F54FA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_616C41AE7D6F54FA
 template <typename FailureReason>
 struct reason_616c41ae7d6f54fa : public flight::ReferenceEnabled {
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_616C41AE7D6F54FA
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_616C41AE7D6F54FA
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_8E810136907A417A
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_8E810136907A417A
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_8E810136907A417A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_8E810136907A417A
 template <typename FailureReason>
 struct reason_8e810136907a417a : public flight::ReferenceEnabled {
   FailureReason reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_8E810136907A417A
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_8E810136907A417A
 
 template <typename FailureReason>
 using StorageMutationOutcome = std::variant<flight::Ref<reason_8e810136907a417a<FailureReason>>, flight::Ref<reason_616c41ae7d6f54fa<FailureReason>>>;
@@ -71,23 +70,23 @@ using StorageSetItemResult = StorageMutationOutcome<StorageSetItemFailureReason>
 
 using StorageJsonWriteResult = StorageMutationOutcome<StorageWriteFailureReason>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F712EFE4DBAE4920
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F712EFE4DBAE4920
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_VALUE_F712EFE4DBAE4920
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_VALUE_F712EFE4DBAE4920
 template <typename Value, typename FailureReason>
 struct reason_value_f712efe4dbae4920 : public flight::ReferenceEnabled {
   flight::String reason;
   Value value;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F712EFE4DBAE4920
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_VALUE_F712EFE4DBAE4920
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_727A2C811B004A2D
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_727A2C811B004A2D
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_VALUE_727A2C811B004A2D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_VALUE_727A2C811B004A2D
 template <typename Value, typename FailureReason>
 struct reason_value_727a2c811b004a2d : public flight::ReferenceEnabled {
   FailureReason reason;
   flight::Null value;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_727A2C811B004A2D
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_VALUE_727A2C811B004A2D
 
 template <typename Value, typename FailureReason>
 using StorageValueOutcome = std::variant<flight::Ref<reason_value_727a2c811b004a2d<Value, FailureReason>>, flight::Ref<reason_value_f712efe4dbae4920<Value, FailureReason>>>;
@@ -106,23 +105,23 @@ using StorageNumberResult = StorageValueOutcome<std::optional<double>, StorageRe
 
 using StoragePresenceResult = StorageValueOutcome<bool, StorageGetItemFailureReason>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B35871D74590D42B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B35871D74590D42B
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_VALUE_B35871D74590D42B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_VALUE_B35871D74590D42B
 template <typename Value>
 struct reason_value_b35871d74590d42b : public flight::ReferenceEnabled {
   flight::String reason;
   Value value;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_B35871D74590D42B
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_VALUE_B35871D74590D42B
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_62D46DEB8E31EF97
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_62D46DEB8E31EF97
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_VALUE_62D46DEB8E31EF97
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_VALUE_62D46DEB8E31EF97
 template <typename Value>
 struct reason_value_62d46deb8e31ef97 : public flight::ReferenceEnabled {
   StorageGetItemFailureReason reason;
   flight::Null value;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_62D46DEB8E31EF97
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_VALUE_62D46DEB8E31EF97
 
 template <typename Value>
 using StorageFallbackResult = std::variant<flight::Ref<reason_value_62d46deb8e31ef97<Value>>, flight::Ref<reason_value_b35871d74590d42b<Value>>>;
@@ -172,25 +171,25 @@ struct WebWindowStoragePersistenceCapabilities : public flight::ReferenceEnabled
   flight::Ref<HostPreferencesPersistenceRequestCapability> persistence_request;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4229ED67FDB4C63B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4229ED67FDB4C63B
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_KEY_REASON_VALUE_4229ED67FDB4C63B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_KEY_REASON_VALUE_4229ED67FDB4C63B
 template <typename Value>
 struct failed_key_reason_value_4229ed67fdb4c63b : public flight::ReferenceEnabled {
   flight::Null failed_key;
   flight::String reason;
   Value value;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4229ED67FDB4C63B
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_KEY_REASON_VALUE_4229ED67FDB4C63B
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_A0D541170A20100B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_A0D541170A20100B
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_KEY_REASON_VALUE_A0D541170A20100B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_KEY_REASON_VALUE_A0D541170A20100B
 template <typename Value>
 struct failed_key_reason_value_a0d541170a20100b : public flight::ReferenceEnabled {
   std::optional<flight::String> failed_key;
   StorageGetItemFailureReason reason;
   flight::Null value;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_A0D541170A20100B
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_KEY_REASON_VALUE_A0D541170A20100B
 
 template <typename Value>
 using StorageQueryResult = std::variant<flight::Ref<failed_key_reason_value_4229ed67fdb4c63b<Value>>, flight::Ref<failed_key_reason_value_a0d541170a20100b<Value>>>;
@@ -201,25 +200,25 @@ using StorageEntriesResult = StorageQueryResult<flight::Array<flight::Array<flig
 
 using StorageItemsResult = StorageQueryResult<flight::Array<std::optional<flight::String>>>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_A68AB2B69EFA1712
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_A68AB2B69EFA1712
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COMPLETED_FAILED_KEY_REASON_A68AB2B69EFA1712
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COMPLETED_FAILED_KEY_REASON_A68AB2B69EFA1712
 template <typename FailureReason>
 struct completed_failed_key_reason_a68ab2b69efa1712 : public flight::ReferenceEnabled {
   double completed;
   flight::Null failed_key;
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_A68AB2B69EFA1712
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COMPLETED_FAILED_KEY_REASON_A68AB2B69EFA1712
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_6604213F2B105203
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_6604213F2B105203
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COMPLETED_FAILED_KEY_REASON_6604213F2B105203
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COMPLETED_FAILED_KEY_REASON_6604213F2B105203
 template <typename FailureReason>
 struct completed_failed_key_reason_6604213f2b105203 : public flight::ReferenceEnabled {
   double completed;
   std::optional<flight::String> failed_key;
   FailureReason reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_6604213F2B105203
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COMPLETED_FAILED_KEY_REASON_6604213F2B105203
 
 template <typename FailureReason>
 using StorageBatchMutationResult = std::variant<flight::Ref<completed_failed_key_reason_a68ab2b69efa1712<FailureReason>>, flight::Ref<completed_failed_key_reason_6604213f2b105203<FailureReason>>>;
@@ -254,35 +253,35 @@ struct StorageMigration : public flight::ReferenceEnabled {
   double version;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_20CB3475F69EE321
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_20CB3475F69EE321
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_VERSION_REASON_STAGE_VERSION_20CB3475F69EE321
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_VERSION_REASON_STAGE_VERSION_20CB3475F69EE321
 struct failed_version_reason_stage_version_20cb3475f69ee321 : public flight::ReferenceEnabled {
   flight::Null failed_version;
   flight::String reason;
   flight::Null stage;
   double version;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_20CB3475F69EE321
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_VERSION_REASON_STAGE_VERSION_20CB3475F69EE321
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EB4F9E7DEB7FFA61
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EB4F9E7DEB7FFA61
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_VERSION_REASON_STAGE_VERSION_EB4F9E7DEB7FFA61
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_VERSION_REASON_STAGE_VERSION_EB4F9E7DEB7FFA61
 struct failed_version_reason_stage_version_eb4f9e7deb7ffa61 : public flight::ReferenceEnabled {
   flight::Null failed_version;
   flight::String reason;
   flight::String stage;
   flight::Null version;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_EB4F9E7DEB7FFA61
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_VERSION_REASON_STAGE_VERSION_EB4F9E7DEB7FFA61
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_46C9A28CA395D3F8
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_46C9A28CA395D3F8
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_VERSION_REASON_STAGE_VERSION_46C9A28CA395D3F8
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_VERSION_REASON_STAGE_VERSION_46C9A28CA395D3F8
 struct failed_version_reason_stage_version_46c9a28ca395d3f8 : public flight::ReferenceEnabled {
   double failed_version;
   StorageSetItemFailureReason reason;
   flight::String stage;
   double version;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_46C9A28CA395D3F8
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILED_VERSION_REASON_STAGE_VERSION_46C9A28CA395D3F8
 
 using StorageMigrationResult = std::variant<flight::Ref<failed_version_reason_stage_version_20cb3475f69ee321>, flight::Ref<failed_version_reason_stage_version_eb4f9e7deb7ffa61>, flight::Ref<failed_version_reason_stage_version_46c9a28ca395d3f8>>;
 

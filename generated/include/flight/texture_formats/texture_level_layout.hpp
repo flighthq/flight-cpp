@@ -51,13 +51,13 @@ inline double get_texture_container_level_byte_length(flight::types::TextureCont
   return ((blocks_wide * blocks_high) * block.value()->bytes_per_block);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_FDDF0B752B0F2901
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_FDDF0B752B0F2901
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_LEVELS_END_OFFSET_FDDF0B752B0F2901
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_LEVELS_END_OFFSET_FDDF0B752B0F2901
 struct levels_end_offset_fddf0b752b0f2901 : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<flight::types::TextureContainerLevel>> levels;
   double end_offset;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_FDDF0B752B0F2901
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_FORMATS_LEVELS_END_OFFSET_FDDF0B752B0F2901
 
 inline std::optional<flight::Ref<levels_end_offset_fddf0b752b0f2901>> compute_texture_container_levels(flight::types::TextureContainerFormat format, double base_width, double base_height, double mip_levels, double layers, double faces, double start_offset) {
   if (!get_texture_container_format_block_info(format).has_value()) {

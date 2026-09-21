@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -16,7 +17,7 @@ namespace flight::types { struct HasClip; }
 namespace flight::node {
 
 inline void init_clip_trait(flight::Ref<flight::types::HasClip> target, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::HasClip>>>>>> obj = std::nullopt) {
-  (target->clip = ([&]() -> std::optional<flight::Ref<flight::types::ClipRegion>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clip">>(optional_chain_receiver.value()); }()));
+  (target->clip = ([&]() -> std::optional<flight::Ref<flight::types::ClipRegion>> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return flight::row_get<flight::RowKey<"clip">>(optional_chain_receiver.value()); }()); if (std::holds_alternative<flight::Ref<flight::types::ClipRegion>>(nullish_coalesce_left)) return std::optional<flight::Ref<flight::types::ClipRegion>>{std::get<flight::Ref<flight::types::ClipRegion>>(nullish_coalesce_left)}; return std::nullopt; }()));
 }
 
 } // namespace flight::node

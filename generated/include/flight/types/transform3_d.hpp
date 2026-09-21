@@ -13,6 +13,7 @@ namespace flight::types { struct Vector3; }
 
 namespace flight::types {
 struct Transform3D;
+using Transform3DLike = flight::Ref<Transform3D>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -28,7 +29,5 @@ struct Transform3D : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Quaternion> rotation;
   flight::Ref<flight::types::Vector3> scale;
 };
-
-using Transform3DLike = flight::types::EntityWithoutRuntime<flight::Ref<Transform3D>>;
 
 } // namespace flight::types

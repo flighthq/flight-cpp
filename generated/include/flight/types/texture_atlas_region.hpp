@@ -11,6 +11,7 @@ namespace flight::types { struct EntityRuntime; }
 
 namespace flight::types {
 struct TextureAtlasRegion;
+using TextureAtlasRegionLike = flight::Ref<TextureAtlasRegion>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -42,7 +43,5 @@ struct TextureAtlasRegion : public flight::ReferenceEnabled {
   double y;
   double width;
 };
-
-using TextureAtlasRegionLike = flight::types::EntityWithoutRuntime<flight::Ref<TextureAtlasRegion>>;
 
 } // namespace flight::types

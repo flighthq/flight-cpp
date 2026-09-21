@@ -19,6 +19,7 @@ struct PerspectiveProjection;
 struct OrthographicProjection;
 struct RawProjection;
 using Projection = std::variant<flight::Ref<OrthographicProjection>, flight::Ref<PerspectiveProjection>, flight::Ref<RawProjection>>;
+using Camera3DLike = flight::Ref<Camera3D>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -59,7 +60,5 @@ struct Camera3D : public flight::ReferenceEnabled {
   Projection projection;
   flight::Ref<flight::types::Matrix4> view;
 };
-
-using Camera3DLike = flight::types::EntityWithoutRuntime<flight::Ref<Camera3D>>;
 
 } // namespace flight::types

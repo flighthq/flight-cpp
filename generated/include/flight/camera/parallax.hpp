@@ -24,7 +24,7 @@ namespace flight::camera {
 inline flight::Ref<flight::types::Matrix> scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_56e331fa27728e8e = flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
 inline void get_camera2_dparallax_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera, double factor, flight::types::Vector2Like out) {
-  flight::camera::get_camera2_dview_matrix(camera, scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_56e331fa27728e8e);
+  flight::camera::get_camera2_dview_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(camera), scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_56e331fa27728e8e);
   (out->x = ((scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_56e331fa27728e8e->tx - (flight::row_get<flight::RowKey<"viewportWidth">>(camera) * 0.5)) * factor));
   (out->y = ((scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_56e331fa27728e8e->ty - (flight::row_get<flight::RowKey<"viewportHeight">>(camera) * 0.5)) * factor));
 }

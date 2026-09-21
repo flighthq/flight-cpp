@@ -39,7 +39,7 @@ struct ComboBoxController : public flight::ReferenceEnabled {
 struct ComboBoxControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
   flight::Ref<flight::types::ButtonController> button;
-  std::optional<flight::Ref<flight::types::Node2D>> display;
+  std::optional<flight::types::Node2D> display;
   flight::Ref<flight::types::ListController> list;
   std::optional<bool> open;
 };

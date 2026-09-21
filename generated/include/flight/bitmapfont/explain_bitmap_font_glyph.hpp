@@ -20,15 +20,15 @@ namespace flight::types { struct TextureAtlas; }
 
 namespace flight::bitmapfont {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_CA3DD572B8B129EE
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_CA3DD572B8B129EE
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_GLYPH_HEIGHT_GLYPH_WIDTH_PAGE_PAGE_COUNT_CA3DD572B8B129EE
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_GLYPH_HEIGHT_GLYPH_WIDTH_PAGE_PAGE_COUNT_CA3DD572B8B129EE
 struct glyph_height_glyph_width_page_page_count_ca3dd572b8b129ee : public flight::ReferenceEnabled {
   double glyph_height;
   double glyph_width;
   double page;
   double page_count;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_CA3DD572B8B129EE
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_GLYPH_HEIGHT_GLYPH_WIDTH_PAGE_PAGE_COUNT_CA3DD572B8B129EE
 
 inline flight::Ref<flight::types::BitmapFontGlyphExplanation> explain_bitmap_font_glyph(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>> font, double codepoint) {
   const double page_count = static_cast<double>(flight::row_get<flight::RowKey<"pages">>(font).size());
@@ -36,7 +36,7 @@ inline flight::Ref<flight::types::BitmapFontGlyphExplanation> explain_bitmap_fon
   if (!glyph.has_value()) {
     return ([&]() { auto object_member_glyph_height = 0.0; auto object_member_glyph_width = 0.0; auto object_member_page = -1.0; auto object_member_page_count = page_count; auto object_member_reason = flight::String("no-glyph"); auto object_member_renderable = false; return flight::make_ref<flight::types::BitmapFontGlyphExplanation>(flight::types::BitmapFontGlyphExplanation{.renderable = object_member_renderable, .reason = object_member_reason, .page = object_member_page, .page_count = object_member_page_count, .glyph_width = object_member_glyph_width, .glyph_height = object_member_glyph_height}); }());
   }
-  flight::Ref<glyph_height_glyph_width_page_page_count_ca3dd572b8b129ee> shared = flight::make_ref<glyph_height_glyph_width_page_page_count_ca3dd572b8b129ee>(glyph_height_glyph_width_page_page_count_ca3dd572b8b129ee{.glyph_height = glyph.value()->height, .glyph_width = glyph.value()->width, .page = glyph.value()->page, .page_count = page_count});
+  auto shared = flight::make_ref<glyph_height_glyph_width_page_page_count_ca3dd572b8b129ee>(glyph_height_glyph_width_page_page_count_ca3dd572b8b129ee{.glyph_height = glyph.value()->height, .glyph_width = glyph.value()->width, .page = glyph.value()->page, .page_count = page_count});
   if ((page_count == 0.0)) {
     return ([&]() { auto object_member_reason_2 = flight::String("no-pages"); auto object_member_renderable_2 = false; return flight::make_ref<flight::types::BitmapFontGlyphExplanation>(flight::types::BitmapFontGlyphExplanation{.renderable = object_member_renderable_2, .reason = object_member_reason_2}); }());
   }

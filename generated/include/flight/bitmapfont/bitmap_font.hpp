@@ -57,7 +57,7 @@ inline double pack_bitmap_font_kerning_key(double left, double right) {
 }
 
 inline double get_bitmap_font_kerning(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>> font, double left, double right) {
-  return flight::row_get<flight::RowKey<"kerning">>(font).get(pack_bitmap_font_kerning_key(left, right)).value_or(0.0);
+  return ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"kerning">>(font).get(pack_bitmap_font_kerning_key(left, right)); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
 }
 
 inline flight::Ref<flight::types::BitmapFontKerningPair> unpack_bitmap_font_kerning_key(double key, flight::Ref<flight::types::BitmapFontKerningPair> out) {
@@ -68,8 +68,8 @@ inline flight::Ref<flight::types::BitmapFontKerningPair> unpack_bitmap_font_kern
 
 inline std::optional<std::function<void(flight::String, double, double)>> guard = std::nullopt;
 
-inline void set_bitmap_font_guard(std::optional<std::function<void(flight::String, double, double)>> guard) {
-  (guard = guard);
+inline void set_bitmap_font_guard(std::optional<std::function<void(flight::String, double, double)>> guard_2) {
+  (guard = guard_2);
 }
 
 inline double resolve_bitmap_font_glyph_page(double codepoint, double page, double page_count) {
@@ -84,7 +84,7 @@ inline void initialize_bitmap_font(flight::types::EntityConstruction<flight::Ref
   const double page_count = static_cast<double>(flight::row_get<flight::RowKey<"pages">>(data).size());
   auto glyphs = flight::Map<double, flight::Ref<flight::types::GlyphEntry>>();
   for (auto glyph : flight::row_get<flight::RowKey<"glyphs">>(data)) {
-    const double page = glyph->page.value_or(0.0);
+    const double page = ([&]() -> double { auto nullish_coalesce_left = glyph->page; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
     glyphs.set(glyph->codepoint, flight::make_ref<flight::types::GlyphEntry>(flight::types::GlyphEntry{.advance = glyph->advance, .bearing_x = glyph->bearing_x, .bearing_y = glyph->bearing_y, .height = glyph->height, .page = resolve_bitmap_font_glyph_page(glyph->codepoint, page, page_count), .width = glyph->width, .x = glyph->x, .y = glyph->y}));
   }
   auto kerning = flight::Map<double, double>();
@@ -93,7 +93,7 @@ inline void initialize_bitmap_font(flight::types::EntityConstruction<flight::Ref
       kerning.set(pack_bitmap_font_kerning_key(pair->left, pair->right), pair->amount);
     }
   }
-  flight::row_set<flight::RowKey<"encoding">>(out, flight::row_get<flight::RowKey<"encoding">>(data).value_or(flight::String("raster")));
+  flight::row_set<flight::RowKey<"encoding">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"encoding">>(data); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("raster"); }()));
   flight::row_set<flight::RowKey<"glyphs">>(out, glyphs);
   flight::row_set<flight::RowKey<"kerning">>(out, kerning);
   flight::row_set<flight::RowKey<"metrics">>(out, flight::make_ref<flight::types::GlyphMetrics>(flight::types::GlyphMetrics{.ascent = flight::row_get<flight::RowKey<"metrics">>(data)->ascent, .descent = flight::row_get<flight::RowKey<"metrics">>(data)->descent, .line_gap = flight::row_get<flight::RowKey<"metrics">>(data)->line_gap}));

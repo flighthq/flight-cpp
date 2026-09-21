@@ -26,12 +26,12 @@ struct HostInputFocusCapability : public flight::ReferenceEnabled {
   std::function<std::function<void()>(flight::Ref<flight::types::InputTargetHandle>, std::function<void()>, std::function<void()>)> subscribe;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_43A745D20647BFB6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_43A745D20647BFB6
 struct reason_43a745d20647bfb6 : public flight::ReferenceEnabled {
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_43A745D20647BFB6
 
 using InputPointerLockExitOutcome = flight::Ref<reason_43a745d20647bfb6>;
 

@@ -26,7 +26,7 @@ inline void initialize_channel_mixer_adjustment(flight::types::EntityConstructio
   options = options.value_or(flight::make_ref<flight::types::ChannelMixerAdjustment>(flight::types::ChannelMixerAdjustment{.matrix = identity_channel_mixer}));
   flight::Array<double> matrix = options.value()->matrix;
   std::function<double(double)> m = [=](double i) {
-  return matrix.get(i).value_or(identity_channel_mixer.element(i));
+  return ([&]() -> double { auto nullish_coalesce_left = matrix.get(i); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return identity_channel_mixer.element(i); }());
 };
   flight::Array<double> color_matrix = flight::adjustments::create_channel_mixer_color_matrix(flight::Array{m(0.0), m(1.0), m(2.0)}, flight::Array{m(4.0), m(5.0), m(6.0)}, flight::Array{m(8.0), m(9.0), m(10.0)});
   (color_matrix.element(4.0) = m(3.0));

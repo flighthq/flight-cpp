@@ -7,8 +7,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_7624067E7AEE4F92
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_7624067E7AEE4F92
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ADD_DARKEN_LIGHTEN_MULTIPLY_NORMAL_SCREEN_7624067E7AEE4F92
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ADD_DARKEN_LIGHTEN_MULTIPLY_NORMAL_SCREEN_7624067E7AEE4F92
 struct add_darken_lighten_multiply_normal_screen_7624067e7aee4f92 : public flight::ReferenceEnabled {
   flight::String add;
   flight::String darken;
@@ -17,7 +17,7 @@ struct add_darken_lighten_multiply_normal_screen_7624067e7aee4f92 : public fligh
   flight::String normal;
   flight::String screen;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_7624067E7AEE4F92
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ADD_DARKEN_LIGHTEN_MULTIPLY_NORMAL_SCREEN_7624067E7AEE4F92
 
 inline flight::Ref<add_darken_lighten_multiply_normal_screen_7624067e7aee4f92> blend_mode = flight::make_ref<add_darken_lighten_multiply_normal_screen_7624067e7aee4f92>(add_darken_lighten_multiply_normal_screen_7624067e7aee4f92{.add = flight::String("Add"), .darken = flight::String("Darken"), .lighten = flight::String("Lighten"), .multiply = flight::String("Multiply"), .normal = flight::String("Normal"), .screen = flight::String("Screen")});
 

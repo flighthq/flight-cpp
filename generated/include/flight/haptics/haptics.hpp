@@ -32,7 +32,7 @@ inline void prepare_haptics(flight::StructuralRef<flight::RowReadonly<flight::Ro
 }
 
 inline bool trigger_haptic_impact(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostHapticsCapability>>>> host_haptics, flight::types::HapticImpactStyle style, std::optional<double> intensity = std::nullopt) {
-  return flight::row_get<flight::RowKey<"impact">>(host_haptics)(style, intensity.value_or(1.0));
+  return flight::row_get<flight::RowKey<"impact">>(host_haptics)(style, (intensity.has_value() ? intensity.value() : 1.0));
 }
 
 inline bool trigger_haptic_notification(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostHapticsCapability>>>> host_haptics, flight::types::HapticNotificationType type) {

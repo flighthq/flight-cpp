@@ -18,8 +18,8 @@ namespace flight::text {
 inline flight::String compute_text_format_font_string(flight::Ref<flight::types::TextFormat> format) {
   const flight::String style = (flight::to_boolean(format->italic) ? flight::String("italic") : flight::String("normal"));
   const flight::String weight = (flight::to_boolean(format->bold) ? flight::String("bold") : flight::String("normal"));
-  const double size = format->size.value_or(12.0);
-  const flight::String family = format->font.value_or(flight::String("sans-serif"));
+  const double size = ([&]() -> double { auto nullish_coalesce_left = format->size; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 12.0; }());
+  const flight::String family = ([&]() -> flight::String { auto nullish_coalesce_left = format->font; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("sans-serif"); }());
   return flight::String("") + flight::to_string(style) + flight::String(" ") + flight::to_string(weight) + flight::String(" ") + flight::to_string(size) + flight::String("px ") + flight::to_string(family) + flight::String("");
 }
 

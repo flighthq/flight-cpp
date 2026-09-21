@@ -17,13 +17,13 @@ namespace flight::types { struct Entity; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C48C9692A2C7F0F6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C48C9692A2C7F0F6
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_AMOUNT_SCALE_C48C9692A2C7F0F6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_AMOUNT_SCALE_C48C9692A2C7F0F6
 struct amount_scale_c48c9692a2c7f0f6 : public flight::ReferenceEnabled {
   std::optional<double> amount;
   std::optional<double> scale;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_C48C9692A2C7F0F6
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_AMOUNT_SCALE_C48C9692A2C7F0F6
 
 inline void initialize_barrel_distortion_effect(flight::types::EntityConstruction<flight::Ref<flight::types::BarrelDistortionEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount_scale_c48c9692a2c7f0f6>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::BarrelDistortionEffect>>(out, flight::String("BarrelDistortionEffect"));

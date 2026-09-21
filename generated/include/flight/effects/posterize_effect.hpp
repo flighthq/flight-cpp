@@ -17,12 +17,12 @@ namespace flight::types { struct PosterizeEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_31429C2310D17CD7
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_31429C2310D17CD7
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_LEVELS_31429C2310D17CD7
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_LEVELS_31429C2310D17CD7
 struct levels_31429c2310d17cd7 : public flight::ReferenceEnabled {
   std::optional<double> levels;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_31429C2310D17CD7
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_LEVELS_31429C2310D17CD7
 
 inline void initialize_posterize_effect(flight::types::EntityConstruction<flight::Ref<flight::types::PosterizeEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<levels_31429c2310d17cd7>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::PosterizeEffect>>(out, flight::String("PosterizeEffect"));

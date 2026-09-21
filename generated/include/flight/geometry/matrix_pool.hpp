@@ -33,7 +33,7 @@ inline flight::Ref<flight::types::Matrix> acquire_matrix() {
 }
 
 inline flight::Ref<flight::types::Matrix> acquire_identity_matrix() {
-  flight::Ref<flight::types::Matrix> m = acquire_matrix();
+  auto m = acquire_matrix();
   flight::geometry::set_matrix_identity(m);
   return m;
 }

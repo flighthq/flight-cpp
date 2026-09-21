@@ -17,13 +17,13 @@ namespace flight::types { struct HalftoneEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_72CFBEAD857DBFE9
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_72CFBEAD857DBFE9
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ANGLE_SCALE_72CFBEAD857DBFE9
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ANGLE_SCALE_72CFBEAD857DBFE9
 struct angle_scale_72cfbead857dbfe9 : public flight::ReferenceEnabled {
   std::optional<double> angle;
   std::optional<double> scale;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_72CFBEAD857DBFE9
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ANGLE_SCALE_72CFBEAD857DBFE9
 
 inline void initialize_halftone_effect(flight::types::EntityConstruction<flight::Ref<flight::types::HalftoneEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<angle_scale_72cfbead857dbfe9>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::HalftoneEffect>>(out, flight::String("HalftoneEffect"));

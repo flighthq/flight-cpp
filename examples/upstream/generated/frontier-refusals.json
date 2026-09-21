@@ -1,13 +1,13 @@
 {
   "schema": "flight-generated-upstream-example-frontier-refusals/1",
-  "compilerRevision": "ef60fb6d3181ce5c12d5ce8d75c8ef6518c9b168",
+  "compilerRevision": "7e2f6b02114c9f39bfe8674397b1b162581edf74",
   "sourceRevision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
   "refusals": [
     {
       "code": "unsupported-ir",
       "module": "examples/packages/adjustments/src/app.ts",
       "package": "@flighthq/example-adjustments",
-      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
+      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -18,11 +18,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 48,
       "module": "examples/packages/adjustments/src/renderNative.ts",
       "package": "@flighthq/example-adjustments",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-adjustments/examples/packages/adjustments/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -52,10 +54,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 51,
+      "line": 31,
       "module": "examples/packages/awd2loading/src/renderNative.ts",
       "package": "@flighthq/example-awd2loading",
-      "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "reason": "cpp emission failed for @flighthq/example-awd2loading/examples/packages/awd2loading/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
       "stage": "emission"
     },
     {
@@ -73,11 +75,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 37,
       "module": "examples/packages/benchmark/src/renderNative.ts",
       "package": "@flighthq/example-benchmark",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-benchmark/examples/packages/benchmark/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -94,11 +98,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 36,
       "module": "examples/packages/bitmapfont-generate/src/renderNative.ts",
       "package": "@flighthq/example-bitmapfont-generate",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-bitmapfont-generate/examples/packages/bitmapfont-generate/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -115,17 +121,19 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 52,
       "module": "examples/packages/camera2d/src/renderNative.ts",
       "package": "@flighthq/example-camera2d",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-camera2d/examples/packages/camera2d/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/clock/src/app.ts",
       "package": "@flighthq/example-clock",
-      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
+      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -136,11 +144,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 48,
       "module": "examples/packages/clock/src/renderNative.ts",
       "package": "@flighthq/example-clock",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-clock/examples/packages/clock/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -157,17 +167,19 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 45,
       "module": "examples/packages/collision/src/renderNative.ts",
       "package": "@flighthq/example-collision",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-collision/examples/packages/collision/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/cross-backend-embed/src/app.ts",
       "package": "@flighthq/example-cross-backend-embed",
-      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
+      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: captured referent mutation of batch requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -199,17 +211,19 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 48,
       "module": "examples/packages/crossfade/src/renderNative.ts",
       "package": "@flighthq/example-crossfade",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-crossfade/examples/packages/crossfade/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/flowstates/src/app.ts",
       "package": "@flighthq/example-flowstates",
-      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
+      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -220,11 +234,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 48,
       "module": "examples/packages/flowstates/src/renderNative.ts",
       "package": "@flighthq/example-flowstates",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-flowstates/examples/packages/flowstates/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -241,11 +257,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 48,
       "module": "examples/packages/formatloading/src/renderNative.ts",
       "package": "@flighthq/example-formatloading",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-formatloading/examples/packages/formatloading/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -264,10 +282,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 50,
+      "line": 31,
       "module": "examples/packages/instanced-mesh/src/renderNative.ts",
       "package": "@flighthq/example-instanced-mesh",
-      "reason": "cpp emission failed for @flighthq/example-instanced-mesh/examples/packages/instanced-mesh/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "reason": "cpp emission failed for @flighthq/example-instanced-mesh/examples/packages/instanced-mesh/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
       "stage": "emission"
     },
     {
@@ -285,11 +303,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 48,
       "module": "examples/packages/interaction/src/renderNative.ts",
       "package": "@flighthq/example-interaction",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-interaction/examples/packages/interaction/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -308,17 +328,17 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 53,
+      "line": 31,
       "module": "examples/packages/materialshowcase/src/renderNative.ts",
       "package": "@flighthq/example-materialshowcase",
-      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "reason": "cpp emission failed for @flighthq/example-materialshowcase/examples/packages/materialshowcase/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/motionpath/src/app.ts",
       "package": "@flighthq/example-motionpath",
-      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
+      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -329,17 +349,19 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 48,
       "module": "examples/packages/motionpath/src/renderNative.ts",
       "package": "@flighthq/example-motionpath",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-motionpath/examples/packages/motionpath/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/movieclip/src/app.ts",
       "package": "@flighthq/example-movieclip",
-      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
+      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -350,11 +372,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 48,
       "module": "examples/packages/movieclip/src/renderNative.ts",
       "package": "@flighthq/example-movieclip",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-movieclip/examples/packages/movieclip/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -371,11 +395,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 38,
       "module": "examples/packages/particleeditor/src/renderNative.ts",
       "package": "@flighthq/example-particleeditor",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-particleeditor/examples/packages/particleeditor/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -392,11 +418,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 38,
       "module": "examples/packages/particles/src/renderNative.ts",
       "package": "@flighthq/example-particles",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-particles/examples/packages/particles/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -413,11 +441,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 45,
       "module": "examples/packages/pathboolean/src/renderNative.ts",
       "package": "@flighthq/example-pathboolean",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-pathboolean/examples/packages/pathboolean/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -434,11 +464,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 50,
       "module": "examples/packages/platformer/src/renderNative.ts",
       "package": "@flighthq/example-platformer",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-platformer/examples/packages/platformer/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -455,11 +487,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 36,
       "module": "examples/packages/scene-fire/src/renderNative.ts",
       "package": "@flighthq/example-scene-fire",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-scene-fire/examples/packages/scene-fire/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -478,10 +512,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 51,
+      "line": 33,
       "module": "examples/packages/scene-picking/src/renderNative.ts",
       "package": "@flighthq/example-scene-picking",
-      "reason": "cpp emission failed for @flighthq/example-scene-picking/examples/packages/scene-picking/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "reason": "cpp emission failed for @flighthq/example-scene-picking/examples/packages/scene-picking/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
       "stage": "emission"
     },
     {
@@ -501,10 +535,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 51,
+      "line": 31,
       "module": "examples/packages/scene3d/src/renderNative.ts",
       "package": "@flighthq/example-scene3d",
-      "reason": "cpp emission failed for @flighthq/example-scene3d/examples/packages/scene3d/src/renderNative.ts: an empty array requires contextual element type in C++ emission",
+      "reason": "cpp emission failed for @flighthq/example-scene3d/examples/packages/scene3d/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
       "stage": "emission"
     },
     {
@@ -522,11 +556,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 44,
       "module": "examples/packages/shapes/src/renderNative.ts",
       "package": "@flighthq/example-shapes",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-shapes/examples/packages/shapes/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -543,17 +579,19 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 48,
       "module": "examples/packages/snapshot/src/renderNative.ts",
       "package": "@flighthq/example-snapshot",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-snapshot/examples/packages/snapshot/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/sound/src/app.ts",
       "package": "@flighthq/example-sound",
-      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
+      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -564,11 +602,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 48,
       "module": "examples/packages/sound/src/renderNative.ts",
       "package": "@flighthq/example-sound",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-sound/examples/packages/sound/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -585,11 +625,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 48,
       "module": "examples/packages/spatial/src/renderNative.ts",
       "package": "@flighthq/example-spatial",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-spatial/examples/packages/spatial/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -606,11 +648,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 45,
       "module": "examples/packages/spring/src/renderNative.ts",
       "package": "@flighthq/example-spring",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-spring/examples/packages/spring/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -627,11 +671,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 34,
       "module": "examples/packages/spritesheet/src/renderNative.ts",
       "package": "@flighthq/example-spritesheet",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-spritesheet/examples/packages/spritesheet/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -648,17 +694,19 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 50,
       "module": "examples/packages/text/src/renderNative.ts",
       "package": "@flighthq/example-text",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-text/examples/packages/text/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/textinput/src/app.ts",
       "package": "@flighthq/example-textinput",
-      "reason": "cpp emission failed for @flighthq/example-textinput/examples/packages/textinput/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
+      "reason": "cpp emission failed for @flighthq/example-textinput/examples/packages/textinput/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -669,11 +717,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 51,
       "module": "examples/packages/textinput/src/renderNative.ts",
       "package": "@flighthq/example-textinput",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-textinput/examples/packages/textinput/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -690,17 +740,19 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 36,
       "module": "examples/packages/tilemap/src/renderNative.ts",
       "package": "@flighthq/example-tilemap",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-tilemap/examples/packages/tilemap/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/tween/src/app.ts",
       "package": "@flighthq/example-tween",
-      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/app.ts: runtime external symbol binding plan is incomplete (missing: R[type])",
+      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/app.ts: captured referent mutation of root requires a shared C++ reference representation",
       "stage": "emission"
     },
     {
@@ -711,17 +763,19 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 48,
       "module": "examples/packages/tween/src/renderNative.ts",
       "package": "@flighthq/example-tween",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-tween/examples/packages/tween/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "module": "examples/packages/video/src/app.ts",
       "package": "@flighthq/example-video",
-      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/app.ts: runtime external symbol binding plan is incomplete (missing: BlobEvent[type], MediaRecorder[type], MediaRecorder[value], MediaRecorderOptions[type], MediaStream[type], PropertyDescriptor[type], R[type])",
+      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/app.ts: runtime external symbol binding plan is incomplete (missing: BlobEvent[type], MediaRecorder[type], MediaRecorder[value], MediaRecorderOptions[type], MediaStream[type], PropertyDescriptor[type])",
       "stage": "emission"
     },
     {
@@ -732,11 +786,13 @@
       "stage": "dependency"
     },
     {
-      "code": "missing-dependency",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 34,
       "module": "examples/packages/video/src/renderNative.ts",
       "package": "@flighthq/example-video",
-      "reason": "Module evaluation dependency is missing for @flighthq/host-web/contract",
-      "stage": "initialization"
+      "reason": "cpp emission failed for @flighthq/example-video/examples/packages/video/src/renderNative.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
     }
   ]
 }

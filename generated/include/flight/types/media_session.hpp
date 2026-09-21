@@ -3,7 +3,6 @@
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
-#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -67,7 +66,7 @@ struct MediaSessionPositionState : public flight::ReferenceEnabled {
 
 template <typename BlockReason>
 struct MediaSessionOperationOutcome : public flight::ReferenceEnabled {
-  std::variant<BlockReason, flight::String> reason;
+  flight::String reason;
 };
 
 struct HostMediaSessionCapability : public flight::ReferenceEnabled {

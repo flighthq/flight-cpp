@@ -11,6 +11,7 @@ namespace flight::types { struct EntityRuntime; }
 
 namespace flight::types {
 struct Rectangle;
+using RectangleLike = flight::Ref<Rectangle>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -25,7 +26,5 @@ struct Rectangle : public flight::ReferenceEnabled {
   double x;
   double y;
 };
-
-using RectangleLike = flight::types::EntityWithoutRuntime<flight::Ref<Rectangle>>;
 
 } // namespace flight::types

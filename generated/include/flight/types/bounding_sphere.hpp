@@ -12,6 +12,7 @@ namespace flight::types { struct Vector3; }
 
 namespace flight::types {
 struct BoundingSphere;
+using BoundingSphereLike = flight::Ref<BoundingSphere>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -25,7 +26,5 @@ struct BoundingSphere : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Vector3> center;
   double radius;
 };
-
-using BoundingSphereLike = flight::types::EntityWithoutRuntime<flight::Ref<BoundingSphere>>;
 
 } // namespace flight::types

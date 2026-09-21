@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -17,8 +18,8 @@ namespace flight::types { struct MaterialData; }
 namespace flight::node {
 
 inline void init_material_trait(flight::Ref<flight::types::HasMaterial> target, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::HasMaterial>>>>>> obj = std::nullopt) {
-  (target->material = ([&]() -> std::optional<flight::Ref<flight::types::Material>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"material">>(optional_chain_receiver.value()); }()));
-  (target->material_data = ([&]() -> std::optional<flight::Ref<flight::types::MaterialData>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"materialData">>(optional_chain_receiver.value()); }()));
+  (target->material = ([&]() -> std::optional<flight::Ref<flight::types::Material>> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::Ref<flight::types::Material>, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<flight::Ref<flight::types::Material>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return flight::row_get<flight::RowKey<"material">>(optional_chain_receiver.value()); }()); if (std::holds_alternative<flight::Ref<flight::types::Material>>(nullish_coalesce_left)) return std::optional<flight::Ref<flight::types::Material>>{std::get<flight::Ref<flight::types::Material>>(nullish_coalesce_left)}; return std::nullopt; }()));
+  (target->material_data = ([&]() -> std::optional<flight::Ref<flight::types::MaterialData>> { auto nullish_coalesce_left_2 = ([&]() -> std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return flight::row_get<flight::RowKey<"materialData">>(optional_chain_receiver.value()); }()); if (std::holds_alternative<flight::Ref<flight::types::MaterialData>>(nullish_coalesce_left_2)) return std::optional<flight::Ref<flight::types::MaterialData>>{std::get<flight::Ref<flight::types::MaterialData>>(nullish_coalesce_left_2)}; return std::nullopt; }()));
 }
 
 } // namespace flight::node

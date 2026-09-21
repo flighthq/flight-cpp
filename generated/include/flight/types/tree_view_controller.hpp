@@ -3,6 +3,7 @@
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -37,13 +38,13 @@ struct TreeViewController : public flight::ReferenceEnabled {
 struct TreeViewControllerItem : public flight::ReferenceEnabled {
   std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TreeViewControllerItem>>>>>> children;
   std::optional<bool> expanded;
-  flight::Ref<flight::types::Node2D> visual;
+  flight::types::Node2D visual;
 };
 
 struct TreeViewControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TreeViewControllerItem>>>>> items;
-  std::optional<std::optional<flight::Ref<TreeViewControllerItem>>> selected_item;
+  std::variant<flight::Ref<TreeViewControllerItem>, flight::Null, flight::Undefined> selected_item;
 };
 
 struct TreeViewControllerSignals : public flight::ReferenceEnabled {

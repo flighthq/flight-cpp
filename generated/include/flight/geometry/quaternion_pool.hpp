@@ -33,7 +33,7 @@ inline flight::Ref<flight::types::Quaternion> acquire_quaternion() {
 }
 
 inline flight::Ref<flight::types::Quaternion> acquire_identity_quaternion() {
-  flight::Ref<flight::types::Quaternion> q = acquire_quaternion();
+  auto q = acquire_quaternion();
   (q->x = 0.0);
   (q->y = 0.0);
   (q->z = 0.0);

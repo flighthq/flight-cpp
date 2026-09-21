@@ -20,7 +20,7 @@ namespace flight::types {
 
 struct GlEnvironmentCaptureOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::Environment>> environment;
-  std::optional<flight::Ref<flight::types::Node3D>> exclude_node;
+  std::optional<flight::types::Node3D> exclude_node;
   std::optional<double> far;
   std::optional<double> near;
 };

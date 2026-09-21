@@ -3,6 +3,7 @@
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -27,7 +28,7 @@ struct HandleTextInputKeyboardOptions : public flight::ReferenceEnabled {
 
 struct ReplaceTextInputOptions : public flight::ReferenceEnabled {
   std::optional<bool> apply_input_rules;
-  std::optional<std::optional<flight::String>> merge_kind;
+  std::variant<flight::String, flight::Null, flight::Undefined> merge_kind;
   std::optional<bool> skip_history;
 };
 

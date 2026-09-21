@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -14,20 +15,16 @@ namespace flight::types { template <typename N, typename P> struct NodeInteracti
 namespace flight::types {
 struct GuiControllerOptions;
 using GuiOrientation = flight::String;
+using GuiTransitionProperty = flight::String;
+using GuiTransitionValue = std::variant<bool, double>;
+using GuiTransitionRequest = flight::Ref<flight::types::NodeInteractiveStateTransitionRequest<flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>>, flight::String>>;
+using GuiTransitionDescriptor = flight::Ref<flight::types::NodeInteractiveStateTransition<flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>>, flight::String>>;
 } // namespace flight::types
 
 #include <flight/types/node2_d.hpp>
 #include <flight/types/node_interactive_state_binding.hpp>
 
 namespace flight::types {
-
-using GuiTransitionProperty = flight::types::NodeInteractiveStateProperty;
-
-using GuiTransitionValue = flight::types::NodeInteractiveStateTransitionValue;
-
-using GuiTransitionRequest = flight::Ref<flight::types::NodeInteractiveStateTransitionRequest<flight::Ref<flight::types::Node2D>, GuiTransitionProperty>>;
-
-using GuiTransitionDescriptor = flight::Ref<flight::types::NodeInteractiveStateTransition<flight::Ref<flight::types::Node2D>, GuiTransitionProperty>>;
 
 struct GuiControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<GuiTransitionDescriptor>>>> transition;

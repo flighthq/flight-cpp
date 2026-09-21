@@ -2,13 +2,13 @@
   "schema": "flight-generated-upstream-examples/1",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
-    "revision": "ef60fb6d3181ce5c12d5ce8d75c8ef6518c9b168",
+    "revision": "7e2f6b02114c9f39bfe8674397b1b162581edf74",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
   "bindingProfiles": [
     {
-      "digest": "sha256:acf9d307048a729a0ccbe67e18fb635e2c33fec933a51c207ac8b8cb8e67e8d2",
+      "digest": "sha256:9948fa8435da6627e6636a071696d16432e5edebbd84d40dbde645d202f1a051",
       "identity": "flighthq/flight-cpp/runtime-carriers/1",
       "path": "bindings/runtime.json",
       "profile": "runtime-carriers",

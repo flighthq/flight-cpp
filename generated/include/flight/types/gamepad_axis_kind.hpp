@@ -7,15 +7,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F65CE866626C6E7A
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F65CE866626C6E7A
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STICK_LEFT_X_STICK_LEFT_Y_STICK_RIGHT_X_STICK_RIGHT_Y_F65CE866626C6E7A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STICK_LEFT_X_STICK_LEFT_Y_STICK_RIGHT_X_STICK_RIGHT_Y_F65CE866626C6E7A
 struct stick_left_x_stick_left_y_stick_right_x_stick_right_y_f65ce866626c6e7a : public flight::ReferenceEnabled {
   flight::String stick_left_x;
   flight::String stick_left_y;
   flight::String stick_right_x;
   flight::String stick_right_y;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_F65CE866626C6E7A
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STICK_LEFT_X_STICK_LEFT_Y_STICK_RIGHT_X_STICK_RIGHT_Y_F65CE866626C6E7A
 
 inline flight::Ref<stick_left_x_stick_left_y_stick_right_x_stick_right_y_f65ce866626c6e7a> gamepad_axis_kind = flight::make_ref<stick_left_x_stick_left_y_stick_right_x_stick_right_y_f65ce866626c6e7a>(stick_left_x_stick_left_y_stick_right_x_stick_right_y_f65ce866626c6e7a{.stick_left_x = flight::String("StickLeftX"), .stick_left_y = flight::String("StickLeftY"), .stick_right_x = flight::String("StickRightX"), .stick_right_y = flight::String("StickRightY")});
 

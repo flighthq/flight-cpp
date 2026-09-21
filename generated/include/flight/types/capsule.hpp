@@ -11,6 +11,7 @@ namespace flight::types { struct EntityRuntime; }
 
 namespace flight::types {
 struct Capsule;
+using CapsuleLike = flight::Ref<Capsule>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -28,7 +29,5 @@ struct Capsule : public flight::ReferenceEnabled {
   double start_y;
   double start_z;
 };
-
-using CapsuleLike = flight::types::EntityWithoutRuntime<flight::Ref<Capsule>>;
 
 } // namespace flight::types

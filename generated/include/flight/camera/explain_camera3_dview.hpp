@@ -25,20 +25,20 @@ namespace flight::camera {
 
 inline const double orthonormal_tolerance = 0.001;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CAMERA_82615FD0DF8619C4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CAMERA_82615FD0DF8619C4
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CAMERA_X_Y_Z_82615FD0DF8619C4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CAMERA_X_Y_Z_82615FD0DF8619C4
 struct x_y_z_82615fd0df8619c4 : public flight::ReferenceEnabled {
   double x;
   double y;
   double z;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CAMERA_82615FD0DF8619C4
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CAMERA_X_Y_Z_82615FD0DF8619C4
 
 inline flight::Ref<flight::types::Camera3DViewExplanation> explain_camera3_dview(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"view">>(camera)->m;
-  flight::Ref<x_y_z_82615fd0df8619c4> x = flight::make_ref<x_y_z_82615fd0df8619c4>(x_y_z_82615fd0df8619c4{.x = m.element(0.0), .y = m.element(1.0), .z = m.element(2.0)});
-  flight::Ref<x_y_z_82615fd0df8619c4> y = flight::make_ref<x_y_z_82615fd0df8619c4>(x_y_z_82615fd0df8619c4{.x = m.element(4.0), .y = m.element(5.0), .z = m.element(6.0)});
-  flight::Ref<x_y_z_82615fd0df8619c4> z = flight::make_ref<x_y_z_82615fd0df8619c4>(x_y_z_82615fd0df8619c4{.x = m.element(8.0), .y = m.element(9.0), .z = m.element(10.0)});
+  auto x = flight::make_ref<x_y_z_82615fd0df8619c4>(x_y_z_82615fd0df8619c4{.x = m.element(0.0), .y = m.element(1.0), .z = m.element(2.0)});
+  auto y = flight::make_ref<x_y_z_82615fd0df8619c4>(x_y_z_82615fd0df8619c4{.x = m.element(4.0), .y = m.element(5.0), .z = m.element(6.0)});
+  auto z = flight::make_ref<x_y_z_82615fd0df8619c4>(x_y_z_82615fd0df8619c4{.x = m.element(8.0), .y = m.element(9.0), .z = m.element(10.0)});
   const double length_x = std::hypot(x->x, x->y, x->z);
   const double length_y = std::hypot(y->x, y->y, y->z);
   const double length_z = std::hypot(z->x, z->y, z->z);

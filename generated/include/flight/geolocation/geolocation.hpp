@@ -49,15 +49,15 @@ inline bool is_geolocation_available(flight::StructuralRef<flight::RowReadonly<f
 inline flight::Ref<flight::types::GeolocationRequestOptions> empty_options = flight::make_ref<flight::types::GeolocationRequestOptions>(flight::types::GeolocationRequestOptions{});
 
 inline flight::Task<std::optional<flight::Ref<flight::types::GeolocationPosition>>> get_current_geolocation_position(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostGeolocationCapability>>>> host_geolocation, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GeolocationRequestOptions>>>>> options = std::nullopt) {
-  return flight::row_get<flight::RowKey<"getCurrentPosition">>(host_geolocation)(options.value_or(empty_options));
+  return flight::row_get<flight::RowKey<"getCurrentPosition">>(host_geolocation)((options.has_value() ? options.value() : flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GeolocationRequestOptions>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GeolocationRequestOptions>>>>(empty_options))));
 }
 
 inline flight::Task<flight::Ref<flight::types::GeolocationPositionResult>> get_current_geolocation_position_result(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostGeolocationCapability>>>> host_geolocation, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GeolocationRequestOptions>>>>> options = std::nullopt) {
-  return flight::row_get<flight::RowKey<"getCurrentPositionResult">>(host_geolocation)(options.value_or(empty_options));
+  return flight::row_get<flight::RowKey<"getCurrentPositionResult">>(host_geolocation)((options.has_value() ? options.value() : flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GeolocationRequestOptions>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GeolocationRequestOptions>>>>(empty_options))));
 }
 
 inline double watch_geolocation_position(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostGeolocationCapability>>>> host_geolocation, std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GeolocationPosition>>>>)> handler, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GeolocationRequestOptions>>>>> options = std::nullopt, std::optional<std::function<void(flight::types::GeolocationErrorReason)>> on_error = std::nullopt) {
-  return flight::row_get<flight::RowKey<"watchPosition">>(host_geolocation)(handler, options.value_or(empty_options), on_error);
+  return flight::row_get<flight::RowKey<"watchPosition">>(host_geolocation)(handler, (options.has_value() ? options.value() : flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GeolocationRequestOptions>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GeolocationRequestOptions>>>>(empty_options))), on_error);
 }
 
 } // namespace flight::geolocation

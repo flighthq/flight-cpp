@@ -17,6 +17,8 @@ namespace flight::types { template <typename Traits> struct Node; }
 namespace flight::types {
 struct FlightDocumentNodeSchema;
 using FlightDocumentResourceLookup = flight::Record<flight::String, flight::Any>;
+using FlightDocumentNodeFactory = std::function<std::optional<flight::Ref<Node<flight::Any>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlightDocumentFields>>>>, flight::Record<flight::String, flight::Any>)>;
+using FlightDocumentNodeFieldWriter = std::function<bool(flight::Ref<flight::types::FlightDocumentFields>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Node<flight::Any>>>>>, flight::Record<flight::String, flight::Any>)>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -24,10 +26,6 @@ using FlightDocumentResourceLookup = flight::Record<flight::String, flight::Any>
 #include <flight/types/node.hpp>
 
 namespace flight::types {
-
-using FlightDocumentNodeFactory = std::function<std::optional<flight::Ref<Node<flight::Any>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlightDocumentFields>>>>, FlightDocumentResourceLookup)>;
-
-using FlightDocumentNodeFieldWriter = std::function<bool(flight::Ref<flight::types::FlightDocumentFields>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>>, FlightDocumentResourceLookup)>;
 
 struct FlightDocumentNodeSchema : public flight::ReferenceEnabled {
   FlightDocumentNodeFactory create_node;

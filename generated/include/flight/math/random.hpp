@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-#include <flight/boolean.hpp>
 #include <flight/number.hpp>
 #include <functional>
 #include <limits>
@@ -17,7 +16,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::math {
 
 inline flight::types::RandomSource create_random_source(double seed) {
-  const auto a_capture = flight::make_binding_cell(double{(flight::to_boolean(std::isfinite(seed)) ? flight::unsigned_right_shift(seed, 0.0) : 0.0)});
+  const auto a_capture = flight::make_binding_cell(double{(std::isfinite(seed) ? flight::unsigned_right_shift(seed, 0.0) : 0.0)});
   return [=]() {
   a_capture.rebind(flight::bitwise_or((a_capture.read_binding() + 1831565813.0), 0.0));
   double t = ([](double left, double right) noexcept { const auto to_uint32 = [](double value) noexcept { if (!std::isfinite(value) || value == 0.0) return std::uint32_t{0}; constexpr double modulus = 4294967296.0; double remainder = std::fmod(std::trunc(value), modulus); if (remainder < 0.0) remainder += modulus; return static_cast<std::uint32_t>(remainder); }; const std::uint32_t product = to_uint32(left) * to_uint32(right); return product < 0x80000000U ? static_cast<double>(product) : static_cast<double>(static_cast<std::int64_t>(product) - 0x100000000LL); })(flight::bitwise_xor(a_capture.read_binding(), flight::unsigned_right_shift(a_capture.read_binding(), 15.0)), flight::bitwise_or(1.0, a_capture.read_binding()));

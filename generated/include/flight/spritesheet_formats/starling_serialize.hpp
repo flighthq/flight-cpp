@@ -83,13 +83,13 @@ inline flight::String document_to_xml_flight_value_function_document_u000054_o_u
   return lines.join(flight::String("\n"));
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_B451C3F23FC567A6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_B451C3F23FC567A6
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_IMAGE_PATH_SUB_TEXTURES_B451C3F23FC567A6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_IMAGE_PATH_SUB_TEXTURES_B451C3F23FC567A6
 struct image_path_sub_textures_b451c3f23fc567a6 : public flight::ReferenceEnabled {
   std::optional<flight::String> image_path;
   std::optional<flight::Array<flight::Ref<flight::types::StarlingSubTexture>>> sub_textures;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_B451C3F23FC567A6
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_IMAGE_PATH_SUB_TEXTURES_B451C3F23FC567A6
 
 inline flight::String serialize_starling_spritesheet(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpritesheetData>>>> data, std::optional<flight::Ref<image_path_sub_textures_b451c3f23fc567a6>> existing = std::nullopt) {
   flight::Ref<flight::types::StarlingDocument> doc = flight::make_ref<flight::types::StarlingDocument>(flight::types::StarlingDocument{.image_path = ([&]() -> flight::String { auto logical_or_value = flight::row_get<flight::RowKey<"imageFile">>(data); if (flight::to_boolean(logical_or_value)) return logical_or_value; auto logical_or_value_2 = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = existing; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->image_path; }()); if (flight::to_boolean(logical_or_value_2)) return logical_or_value_2.value(); return flight::String(""); }()), .sub_textures = flight::row_get<flight::RowKey<"frames">>(data).map(frame_to_sub_texture)});

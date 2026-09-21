@@ -11,6 +11,7 @@ namespace flight::types { struct EntityRuntime; }
 
 namespace flight::types {
 struct Transform2D;
+using Transform2DLike = flight::Ref<Transform2D>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -30,7 +31,5 @@ struct Transform2D : public flight::ReferenceEnabled {
   double x;
   double y;
 };
-
-using Transform2DLike = flight::types::EntityWithoutRuntime<flight::Ref<Transform2D>>;
 
 } // namespace flight::types

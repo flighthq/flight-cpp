@@ -13,9 +13,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::math {
 
-inline bool approx_equal(double a, double b, std::optional<double> epsilon = std::nullopt) {
-  epsilon = epsilon.value_or(flight::math::epsilon);
-  return (std::abs((a - b)) <= epsilon.value());
+inline bool approx_equal(double a, double b, std::optional<double> epsilon_2 = std::nullopt) {
+  epsilon_2 = epsilon_2.value_or(flight::math::epsilon);
+  return (std::abs((a - b)) <= epsilon_2.value());
 }
 
 inline bool approx_equal_relative(double a, double b, std::optional<double> relative_epsilon = std::nullopt) {
@@ -25,9 +25,9 @@ inline bool approx_equal_relative(double a, double b, std::optional<double> rela
   return (diff <= flight::maximum((relative_epsilon.value() * largest), flight::math::epsilon));
 }
 
-inline bool approx_zero(double value, std::optional<double> epsilon = std::nullopt) {
-  epsilon = epsilon.value_or(flight::math::epsilon);
-  return (std::abs(value) <= epsilon.value());
+inline bool approx_zero(double value, std::optional<double> epsilon_2 = std::nullopt) {
+  epsilon_2 = epsilon_2.value_or(flight::math::epsilon);
+  return (std::abs(value) <= epsilon_2.value());
 }
 
 } // namespace flight::math

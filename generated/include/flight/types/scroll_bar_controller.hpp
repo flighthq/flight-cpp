@@ -34,16 +34,16 @@ struct ScrollBarController : public flight::ReferenceEnabled {
 
 struct ScrollBarControllerOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
-  std::optional<flight::Ref<flight::types::Node2D>> down_button;
+  std::optional<flight::types::Node2D> down_button;
   std::optional<double> line_size;
   std::optional<double> maximum;
   std::optional<double> minimum;
   std::optional<flight::types::GuiOrientation> orientation;
   std::optional<double> page_size;
   std::optional<double> repeat_interval;
-  flight::Ref<flight::types::Node2D> thumb;
-  flight::Ref<flight::types::Node2D> track;
-  std::optional<flight::Ref<flight::types::Node2D>> up_button;
+  flight::types::Node2D thumb;
+  flight::types::Node2D track;
+  std::optional<flight::types::Node2D> up_button;
   std::optional<double> value;
 };
 

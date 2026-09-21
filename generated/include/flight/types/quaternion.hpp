@@ -11,6 +11,7 @@ namespace flight::types { struct EntityRuntime; }
 
 namespace flight::types {
 struct Quaternion;
+using QuaternionLike = flight::Ref<Quaternion>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -25,7 +26,5 @@ struct Quaternion : public flight::ReferenceEnabled {
   double z;
   double w;
 };
-
-using QuaternionLike = flight::types::EntityWithoutRuntime<flight::Ref<Quaternion>>;
 
 } // namespace flight::types

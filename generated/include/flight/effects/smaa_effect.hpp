@@ -17,12 +17,12 @@ namespace flight::types { struct SmaaEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_4294C099AAD73E75
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_4294C099AAD73E75
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_THRESHOLD_4294C099AAD73E75
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_THRESHOLD_4294C099AAD73E75
 struct threshold_4294c099aad73e75 : public flight::ReferenceEnabled {
   std::optional<double> threshold;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_4294C099AAD73E75
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_THRESHOLD_4294C099AAD73E75
 
 inline void initialize_smaa_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SmaaEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<threshold_4294c099aad73e75>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::SmaaEffect>>(out, flight::String("SmaaEffect"));

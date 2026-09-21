@@ -62,14 +62,14 @@ struct UnityEmission : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<UnityBurst>> bursts;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_82615FD0DF8619C4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_82615FD0DF8619C4
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_X_Y_Z_82615FD0DF8619C4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_X_Y_Z_82615FD0DF8619C4
 struct x_y_z_82615fd0df8619c4 : public flight::ReferenceEnabled {
   double x;
   double y;
   double z;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_82615FD0DF8619C4
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_X_Y_Z_82615FD0DF8619C4
 
 struct UnityShape : public flight::ReferenceEnabled {
   bool enabled;
@@ -79,14 +79,14 @@ struct UnityShape : public flight::ReferenceEnabled {
   flight::Ref<x_y_z_82615fd0df8619c4> scale;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_120AF2A4CBE78290
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_120AF2A4CBE78290
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_R_G_B_120AF2A4CBE78290
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_R_G_B_120AF2A4CBE78290
 struct r_g_b_120af2a4cbe78290 : public flight::ReferenceEnabled {
   double r;
   double g;
   double b;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_120AF2A4CBE78290
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_R_G_B_120AF2A4CBE78290
 
 struct UnityGradientColorKey : public flight::ReferenceEnabled {
   double time;

@@ -77,7 +77,7 @@ inline void compute_kuwahara_sector_offsets(double radius, flight::Array<double>
 }
 
 inline double compute_kuwahara_sector_size(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::KuwaharaEffect>>>> effect) {
-  return (flight::maximum(1.0, std::floor(flight::row_get<flight::RowKey<"radius">>(effect).value_or(3.0))) + 1.0);
+  return (flight::maximum(1.0, std::floor(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"radius">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 3.0; }()))) + 1.0);
 }
 
 inline double compute_kuwahara_sector_pixel_count(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::KuwaharaEffect>>>> effect) {

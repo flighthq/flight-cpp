@@ -21,6 +21,7 @@ struct LogTimer;
 struct LogTransport;
 struct LogEntry;
 using LogData = std::variant<flight::Record<flight::String, flight::Any>, flight::String>;
+using LogDataProvider = std::function<std::variant<flight::Record<flight::String, flight::Any>, flight::String>()>;
 using LogTransportDeliveryBoundary = flight::String;
 using LogFormatter = std::function<flight::String(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<LogEntry>>>>)>;
 using LogSink = std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<LogEntry>>>>)>;
@@ -46,8 +47,6 @@ struct LogContext : public flight::ReferenceEnabled {
   flight::Record<flight::String, flight::Any> fields;
 };
 
-using LogDataProvider = std::function<LogData()>;
-
 struct LogSpan : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String name;
@@ -61,38 +60,38 @@ struct LogTimer : public flight::ReferenceEnabled {
   double started_at;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_43A745D20647BFB6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_43A745D20647BFB6
 struct reason_43a745d20647bfb6 : public flight::ReferenceEnabled {
   flight::String reason;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_43A745D20647BFB6
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_43A745D20647BFB6
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4F1357516B9748FD
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4F1357516B9748FD
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_RETRY_AFTER_MS_4F1357516B9748FD
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_RETRY_AFTER_MS_4F1357516B9748FD
 struct reason_retry_after_ms_4f1357516b9748fd : public flight::ReferenceEnabled {
   flight::String reason;
   std::optional<double> retry_after_ms;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4F1357516B9748FD
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_RETRY_AFTER_MS_4F1357516B9748FD
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D46086B32265B61F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D46086B32265B61F
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_MESSAGE_D46086B32265B61F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_MESSAGE_D46086B32265B61F
 struct reason_message_d46086b32265b61f : public flight::ReferenceEnabled {
   flight::String reason;
   flight::String message;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_D46086B32265B61F
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_MESSAGE_D46086B32265B61F
 
 using LogTransportWriteOutcome = std::variant<flight::Ref<reason_message_d46086b32265b61f>, flight::Ref<reason_retry_after_ms_4f1357516b9748fd>, flight::Ref<reason_43a745d20647bfb6>>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4260AD7333F3D0C7
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4260AD7333F3D0C7
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_DELIVERY_4260AD7333F3D0C7
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_DELIVERY_4260AD7333F3D0C7
 struct reason_delivery_4260ad7333f3d0c7 : public flight::ReferenceEnabled {
   flight::String reason;
   LogTransportDeliveryBoundary delivery;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_4260AD7333F3D0C7
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_DELIVERY_4260AD7333F3D0C7
 
 using LogTransportFlushOutcome = std::variant<flight::Ref<reason_delivery_4260ad7333f3d0c7>, flight::Ref<reason_message_d46086b32265b61f>, flight::Ref<reason_43a745d20647bfb6>>;
 

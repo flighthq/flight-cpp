@@ -17,12 +17,12 @@ namespace flight::types { struct SharpenEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_F4CF56F49935CC00
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_F4CF56F49935CC00
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_AMOUNT_F4CF56F49935CC00
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_AMOUNT_F4CF56F49935CC00
 struct amount_f4cf56f49935cc00 : public flight::ReferenceEnabled {
   std::optional<double> amount;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_F4CF56F49935CC00
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_AMOUNT_F4CF56F49935CC00
 
 inline void initialize_sharpen_effect(flight::types::EntityConstruction<flight::Ref<flight::types::SharpenEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<amount_f4cf56f49935cc00>>>> options) {
   flight::effects::initialize_render_effect<flight::Ref<flight::types::SharpenEffect>>(out, flight::String("SharpenEffect"));

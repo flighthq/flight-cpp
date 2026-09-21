@@ -24,13 +24,13 @@ using VertexDisplaceModifierSource = flight::String;
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_06A0264A98B6176E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_06A0264A98B6176E
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_HEIGHT_MAP_SINE_06A0264A98B6176E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_HEIGHT_MAP_SINE_06A0264A98B6176E
 struct height_map_sine_06a0264a98b6176e : public flight::ReferenceEnabled {
   flight::String height_map;
   flight::String sine;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_06A0264A98B6176E
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_HEIGHT_MAP_SINE_06A0264A98B6176E
 
 inline flight::Ref<height_map_sine_06a0264a98b6176e> vertex_displace_modifier_source = flight::make_ref<height_map_sine_06a0264a98b6176e>(height_map_sine_06a0264a98b6176e{.height_map = flight::String("HeightMap"), .sine = flight::String("Sine")});
 
