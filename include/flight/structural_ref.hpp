@@ -496,6 +496,28 @@ class ProxyRowOwner final : public RowOwner {
   std::function<void()> before_write_;
 };
 
+// Whether a derived subject may be read through a base subject's row.
+//
+// The primary answers NO, and it is declared here -- before `StructuralRef`, and before the
+// generated table is included -- for two reasons. It is the conservative answer, so an unproven
+// conversion is rejected rather than allowed. And it is always declared, so the name the conversion
+// concept needs exists whether the generated table is absent, current, or older than this contract.
+// An earlier arrangement put the definition inside the table and left the name undeclared for any
+// table that predated it, which is a compile error in a consumer that did nothing wrong.
+//
+// The generated table specializes this to YES, and only for the pairs it can prove: every row key
+// the base declares is a key the derived declares at the same type. Nothing else specializes it,
+// and a conversion between the SAME subject never consults it at all -- exact-owner projections,
+// including a readonly view of the owner's own type, are answered before this is reached.
+//
+// Include order is therefore: these runtime declarations, then the generated structural table with
+// its specializations, then the module that instantiates a conversion.
+template <typename Base, typename Derived>
+struct GeneratedRowWidening : std::false_type {};
+
+template <typename Base, typename Derived>
+inline constexpr bool generated_row_widening_proven_v = GeneratedRowWidening<Base, Derived>::value;
+
 } // namespace detail
 
 } // namespace flight
@@ -514,17 +536,6 @@ using generated_row_member_t = void;
 
 template <typename Object>
 void bind_generated_row_members(RowOwner&, const std::shared_ptr<Object>&) {}
-
-// With no generated member table there is nothing to prove a widening against, so none is
-// provable. Failing closed is the point: an unproven conversion is rejected rather than allowed.
-//
-// This fallback is reached only when NO table is present. A table that is present must define this
-// itself -- `sdkGeneration` emits it key by key -- because a table which omits it leaves the name
-// undeclared where the conversion concept below needs it.
-template <typename Base, typename Derived>
-consteval bool generated_row_widening_proven() {
-  return false;
-}
 } // namespace flight::detail
 #endif
 
@@ -706,7 +717,7 @@ concept row_objects_convertible =
     std::is_void_v<schema_object_t<From>> || std::is_void_v<schema_object_t<To>> ||
     std::same_as<schema_object_t<From>, schema_object_t<To>> ||
     (schema_partial<To> && schema_readonly<To>) ||
-    generated_row_widening_proven<schema_object_t<To>, schema_object_t<From>>();
+    generated_row_widening_proven_v<schema_object_t<To>, schema_object_t<From>>;
 
 template <typename From, typename To>
 concept row_convertible_to = row_objects_convertible<From, To> &&

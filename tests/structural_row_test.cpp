@@ -80,12 +80,36 @@ using WritableDerivedTargetRow = flight::StructuralRef<flight::RowWritable<fligh
 using UnrelatedTargetRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestUnrelatedTarget>>>>;
 using RetypedTargetRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestRetypedTarget>>>>;
 
-// Derived to base, and nothing else.
-static_assert(flight::detail::generated_row_widening_proven<TestBaseTarget, TestDerivedTarget>());
-static_assert(!flight::detail::generated_row_widening_proven<TestDerivedTarget, TestBaseTarget>());
-static_assert(!flight::detail::generated_row_widening_proven<TestBaseTarget, TestUnrelatedTarget>());
-static_assert(!flight::detail::generated_row_widening_proven<TestUnrelatedTarget, TestBaseTarget>());
-static_assert(!flight::detail::generated_row_widening_proven<TestBaseTarget, TestRetypedTarget>());
+// Derived to base, and nothing else. The trait the runtime declares answers no by default and the
+// generated table specializes it to yes only where the proof holds, so each of these is a statement
+// about which half answered.
+static_assert(flight::detail::generated_row_widening_proven_v<TestBaseTarget, TestDerivedTarget>);
+static_assert(!flight::detail::generated_row_widening_proven_v<TestDerivedTarget, TestBaseTarget>);
+static_assert(!flight::detail::generated_row_widening_proven_v<TestBaseTarget, TestUnrelatedTarget>);
+static_assert(!flight::detail::generated_row_widening_proven_v<TestUnrelatedTarget, TestBaseTarget>);
+static_assert(!flight::detail::generated_row_widening_proven_v<TestBaseTarget, TestRetypedTarget>);
+
+// A type the generated table has no keys for falls to the conservative primary rather than failing
+// to compile, which is what makes an absent or older table safe rather than fatal. `width` is a key
+// the SDK uses; `only_owner_knows_this` is not, so this subject proves nothing against anything --
+// including itself, because the proof requires at least one matching key.
+struct TestOutsideTheKeySet final : public flight::ReferenceEnabled {
+  double only_owner_knows_this{};
+};
+static_assert(!flight::detail::GeneratedRowWidening<TestBaseTarget, int>::value);
+static_assert(!flight::detail::generated_row_widening_proven_v<int, double>);
+static_assert(!flight::detail::generated_row_widening_proven_v<TestOutsideTheKeySet, TestOutsideTheKeySet>,
+              "a subject with no key in the table proves nothing, not even against itself");
+
+// EXACT-OWNER views are answered by the same-subject rule before the trait is reached, so a
+// readonly view of the owner's own type works on the DEFAULT-FALSE path -- which the subject above
+// is chosen to sit on.
+using ExactWritable = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestOutsideTheKeySet>>>>;
+using ExactReadonly = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestOutsideTheKeySet>>>>;
+static_assert(std::convertible_to<ExactWritable, ExactReadonly>,
+              "the exact-owner readonly view converts without any widening proof");
+static_assert(!std::convertible_to<ExactReadonly, ExactWritable>,
+              "and still does not gain mutation by doing so");
 
 static_assert(std::convertible_to<DerivedTargetRow, BaseTargetRow>,
               "a derived subject satisfies the base row");
@@ -500,6 +524,15 @@ int main() {
   check(std::find(entity_keys.begin(), entity_keys.end(), flight::String("kind")) !=
             entity_keys.end(),
         "while the entity's own string properties are enumerated");
+
+  // The exact-owner readonly view reaches its subject, having taken the default-false path.
+  auto exact_subject = flight::make_ref<TestOutsideTheKeySet>();
+  exact_subject->only_owner_knows_this = 64.0;
+  const ExactWritable exact_writable(exact_subject);
+  const ExactReadonly exact_readonly = exact_writable;
+  check(exact_readonly.shared_object() == exact_subject &&
+            exact_readonly.shared_owner() == exact_writable.shared_owner(),
+        "an exact-owner readonly view reaches its own subject without any widening proof");
 
   // The view is read-only: it has no way to write a property back.
   static_assert(!writes_named_properties<flight::NamedProperties>,

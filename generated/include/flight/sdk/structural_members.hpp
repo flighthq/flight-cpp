@@ -1917,7 +1917,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   }
 
 template <typename Base, typename Derived>
-consteval bool generated_row_widening_proven() {
+consteval bool generated_row_widening_matches() {
   std::size_t matched = 0;
   FLIGHT_SDK_ROW_WIDENS(brand)
   FLIGHT_SDK_ROW_WIDENS(a)
@@ -2549,5 +2549,10 @@ consteval bool generated_row_widening_proven() {
 }
 
 #undef FLIGHT_SDK_ROW_WIDENS
+
+// The only specialization of the runtime trait: yes, for the pairs proven above.
+template <typename Base, typename Derived>
+  requires(generated_row_widening_matches<Base, Derived>())
+struct GeneratedRowWidening<Base, Derived> : std::true_type {};
 
 } // namespace flight::detail

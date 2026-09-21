@@ -363,6 +363,12 @@ function writeStructuralMemberTable(outputRoot, files) {
 //
 // At least one key must match. Without that a type that declares none of these keys would "prove"
 // against anything, which is the unrelated-row conversion this proof exists to reject.
+//
+// The proof is published as a CONSTRAINED PARTIAL SPECIALIZATION of the runtime's
+// `flight::detail::GeneratedRowWidening`, whose primary answers no. That is what keeps the two
+// halves of the contract separable: the runtime always declares the trait, this table only ever
+// adds the yes cases, and a table older than the contract simply contributes none instead of
+// leaving the name undeclared.
 function wideningPredicate(keys) {
   return [
     '#define FLIGHT_SDK_ROW_WIDENS(member)                                                          \\',
@@ -375,13 +381,18 @@ function wideningPredicate(keys) {
     '  }',
     '',
     'template <typename Base, typename Derived>',
-    'consteval bool generated_row_widening_proven() {',
+    'consteval bool generated_row_widening_matches() {',
     '  std::size_t matched = 0;',
     ...keys,
     '  return matched > 0;',
     '}',
     '',
     '#undef FLIGHT_SDK_ROW_WIDENS',
+    '',
+    '// The only specialization of the runtime trait: yes, for the pairs proven above.',
+    'template <typename Base, typename Derived>',
+    '  requires(generated_row_widening_matches<Base, Derived>())',
+    'struct GeneratedRowWidening<Base, Derived> : std::true_type {};',
     '',
   ].join('\n');
 }
