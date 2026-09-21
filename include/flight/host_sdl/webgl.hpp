@@ -10,6 +10,7 @@
 #include <string_view>
 #include <utility>
 #include <variant>
+#include <vector>
 
 #include <SDL3/SDL_video.h>
 
@@ -21,6 +22,7 @@
 #include <flight/host_sdl/web_platform_types.hpp>
 #include <flight/host_sdl/window.hpp>
 #include <flight/presence.hpp>
+#include <flight/record.hpp>
 #include <flight/sequence_view.hpp>
 #include <flight/string.hpp>
 #include <flight/typed_array.hpp>
@@ -201,24 +203,21 @@ struct GlAnisotropyExtension final {
   static constexpr double max_texture_max_anisotropy_ext = 0x84FF;
 };
 
-// Presence-bearing result for WebGL getExtension calls. Flight currently uses extension objects
-// either as availability tokens or for the anisotropy enums; compressed-format member lookup remains
-// a compiler-owned Record<String, number> conversion.
+// Identity-bearing, readonly numeric-property view for WebGL extension objects. Availability is
+// represented by the optional returned from WebGl2Context::get_extension; a present object exposes
+// only the enumerable enum properties declared by its own extension interface.
 class FLIGHT_HOST_SDL_GL_API GlExtension final {
  public:
-  static constexpr double texture_max_anisotropy_ext =
-      GlAnisotropyExtension::texture_max_anisotropy_ext;
-  static constexpr double max_texture_max_anisotropy_ext =
-      GlAnisotropyExtension::max_texture_max_anisotropy_ext;
+  explicit GlExtension(String name) noexcept : name_(std::move(name)) {}
 
-  [[nodiscard]] bool has_value() const noexcept { return available_; }
-  [[nodiscard]] explicit operator bool() const noexcept { return available_; }
+  [[nodiscard]] const String& name() const noexcept { return name_; }
+  [[nodiscard]] std::optional<double> get(const String& property) const;
+  [[nodiscard]] bool has(const String& property) const;
+  [[nodiscard]] std::vector<String> keys() const;
+  [[nodiscard]] Record<String, double> to_record() const;
 
  private:
-  friend class WebGl2Context;
-  explicit GlExtension(bool available) noexcept : available_(available) {}
-
-  bool available_;
+  String name_;
 };
 
 struct WebGlActiveInfo final {
@@ -529,7 +528,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       const WebGlProgram& program,
       int index) const;
   [[nodiscard]] int get_attrib_location(const WebGlProgram& program, const String& name) const;
-  [[nodiscard]] GlExtension get_extension(const String& name) const;
+  [[nodiscard]] std::optional<GlExtension> get_extension(const String& name) const;
   [[nodiscard]] GlParameterValue get_parameter(std::uint32_t parameter) const;
   [[nodiscard]] std::optional<String> get_program_info_log(const WebGlProgram& program) const;
   [[nodiscard]] double get_program_parameter(

@@ -37,6 +37,7 @@
 #include <chrono>
 #include <concepts>
 #include <limits>
+#include <optional>
 #include <stdexcept>
 #include <thread>
 #include <utility>
@@ -437,6 +438,145 @@ int main() {
   expect(anisotropy.max_texture_max_anisotropy_ext == 0x84FF,
          "GL anisotropy maximum query changed");
   static_assert(flight::host_sdl::WebGl2Context::max_texture_size == 3379);
+
+  const flight::host_sdl::WebGl2Context no_gl_context;
+  expect(
+      !no_gl_context.get_extension(flight::String("NOT_A_WEBGL_EXTENSION")).has_value(),
+      "unsupported WebGL extension did not return nullopt");
+
+  struct ExtensionShapeCase final {
+    const char* name;
+    std::size_t size;
+    const char* first;
+    const char* last;
+  };
+  const ExtensionShapeCase extension_shapes[]{
+      {"EXT_color_buffer_float", 0, nullptr, nullptr},
+      {"EXT_texture_compression_bptc", 4, "COMPRESSED_RGBA_BPTC_UNORM_EXT",
+       "COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT"},
+      {"EXT_texture_compression_rgtc", 4, "COMPRESSED_RED_RGTC1_EXT",
+       "COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT"},
+      {"EXT_texture_filter_anisotropic", 2, "TEXTURE_MAX_ANISOTROPY_EXT",
+       "MAX_TEXTURE_MAX_ANISOTROPY_EXT"},
+      {"OES_texture_float_linear", 0, nullptr, nullptr},
+      {"WEBGL_compressed_texture_astc", 28, "COMPRESSED_RGBA_ASTC_4x4_KHR",
+       "COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR"},
+      {"WEBGL_compressed_texture_etc", 10, "COMPRESSED_R11_EAC",
+       "COMPRESSED_SRGB8_ALPHA8_ETC2_EAC"},
+      {"WEBGL_compressed_texture_pvrtc", 4, "COMPRESSED_RGB_PVRTC_4BPPV1_IMG",
+       "COMPRESSED_RGBA_PVRTC_2BPPV1_IMG"},
+      {"WEBGL_compressed_texture_s3tc", 4, "COMPRESSED_RGB_S3TC_DXT1_EXT",
+       "COMPRESSED_RGBA_S3TC_DXT5_EXT"},
+      {"WEBGL_compressed_texture_s3tc_srgb", 4, "COMPRESSED_SRGB_S3TC_DXT1_EXT",
+       "COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT"},
+  };
+  for (const auto& shape : extension_shapes) {
+    const flight::host_sdl::GlExtension extension(flight::String(shape.name));
+    expect(extension.name() == flight::String(shape.name), "WebGL extension lost its identity");
+    const auto keys = extension.keys();
+    expect(keys.size() == shape.size, "WebGL extension exposed the wrong key count");
+    expect(keys == extension.keys(), "WebGL extension key order was not stable");
+    if (!keys.empty()) {
+      expect(
+          keys.front() == flight::String(shape.first) && keys.back() == flight::String(shape.last),
+          "WebGL extension keys did not retain registry declaration order");
+    }
+    const auto record = extension.to_record();
+    expect(record.size() == keys.size(), "WebGL extension record changed the key set");
+    for (const auto& key : keys) {
+      const auto direct = extension.get(key);
+      const auto copied = record.get(key);
+      expect(
+          direct.has_value() && copied.has_value() && *direct == *copied,
+          "WebGL extension record did not round-trip a numeric property");
+    }
+  }
+
+  const flight::host_sdl::GlExtension s3tc(flight::String("WEBGL_compressed_texture_s3tc"));
+  const flight::host_sdl::GlExtension rgtc(flight::String("EXT_texture_compression_rgtc"));
+  const auto s3tc_keys = s3tc.keys();
+  expect(s3tc_keys != rgtc.keys(), "different WebGL extensions exposed the same key set");
+  const std::array<const char*, 4> expected_s3tc_keys{
+      "COMPRESSED_RGB_S3TC_DXT1_EXT",
+      "COMPRESSED_RGBA_S3TC_DXT1_EXT",
+      "COMPRESSED_RGBA_S3TC_DXT3_EXT",
+      "COMPRESSED_RGBA_S3TC_DXT5_EXT",
+  };
+  for (std::size_t index = 0; index < expected_s3tc_keys.size(); ++index) {
+    expect(
+        s3tc_keys[index] == flight::String(expected_s3tc_keys[index]),
+        "S3TC keys changed registry declaration order");
+  }
+  const flight::host_sdl::GlExtension color_buffer_float(
+      flight::String("EXT_color_buffer_float"));
+  expect(
+      color_buffer_float.keys().empty() &&
+          !color_buffer_float.get(flight::String("TEXTURE_MAX_ANISOTROPY_EXT")).has_value(),
+      "enum-free WebGL extension leaked another extension's property");
+  const auto absent = s3tc.get(flight::String("NOT_AN_ENUM"));
+  expect(
+      !absent.has_value() && absent != std::optional<double>{0.0},
+      "absent WebGL extension property collapsed to numeric zero");
+
+  struct ExtensionPropertyCase final {
+    const char* extension;
+    const char* property;
+    double value;
+  };
+  const ExtensionPropertyCase source_properties[]{
+      {"EXT_texture_filter_anisotropic", "TEXTURE_MAX_ANISOTROPY_EXT", 0x84FE},
+      {"EXT_texture_filter_anisotropic", "MAX_TEXTURE_MAX_ANISOTROPY_EXT", 0x84FF},
+      {"WEBGL_compressed_texture_s3tc", "COMPRESSED_RGBA_S3TC_DXT1_EXT", 0x83F1},
+      {"WEBGL_compressed_texture_s3tc", "COMPRESSED_RGBA_S3TC_DXT3_EXT", 0x83F2},
+      {"WEBGL_compressed_texture_s3tc", "COMPRESSED_RGBA_S3TC_DXT5_EXT", 0x83F3},
+      {"WEBGL_compressed_texture_s3tc_srgb", "COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT", 0x8C4D},
+      {"WEBGL_compressed_texture_s3tc_srgb", "COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT", 0x8C4E},
+      {"WEBGL_compressed_texture_s3tc_srgb", "COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT", 0x8C4F},
+      {"EXT_texture_compression_rgtc", "COMPRESSED_RED_RGTC1_EXT", 0x8DBB},
+      {"EXT_texture_compression_rgtc", "COMPRESSED_SIGNED_RED_RGTC1_EXT", 0x8DBC},
+      {"EXT_texture_compression_rgtc", "COMPRESSED_RED_GREEN_RGTC2_EXT", 0x8DBD},
+      {"EXT_texture_compression_rgtc", "COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT", 0x8DBE},
+      {"EXT_texture_compression_bptc", "COMPRESSED_RGBA_BPTC_UNORM_EXT", 0x8E8C},
+      {"EXT_texture_compression_bptc", "COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT", 0x8E8D},
+      {"EXT_texture_compression_bptc", "COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT", 0x8E8E},
+      {"EXT_texture_compression_bptc", "COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT", 0x8E8F},
+      {"WEBGL_compressed_texture_etc", "COMPRESSED_R11_EAC", 0x9270},
+      {"WEBGL_compressed_texture_etc", "COMPRESSED_SIGNED_R11_EAC", 0x9271},
+      {"WEBGL_compressed_texture_etc", "COMPRESSED_RG11_EAC", 0x9272},
+      {"WEBGL_compressed_texture_etc", "COMPRESSED_SIGNED_RG11_EAC", 0x9273},
+      {"WEBGL_compressed_texture_etc", "COMPRESSED_RGB8_ETC2", 0x9274},
+      {"WEBGL_compressed_texture_etc", "COMPRESSED_SRGB8_ETC2", 0x9275},
+      {"WEBGL_compressed_texture_etc", "COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2", 0x9276},
+      {"WEBGL_compressed_texture_etc", "COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2", 0x9277},
+      {"WEBGL_compressed_texture_etc", "COMPRESSED_RGBA8_ETC2_EAC", 0x9278},
+      {"WEBGL_compressed_texture_etc", "COMPRESSED_SRGB8_ALPHA8_ETC2_EAC", 0x9279},
+      {"WEBGL_compressed_texture_pvrtc", "COMPRESSED_RGB_PVRTC_2BPPV1_IMG", 0x8C01},
+      {"WEBGL_compressed_texture_pvrtc", "COMPRESSED_RGBA_PVRTC_2BPPV1_IMG", 0x8C03},
+      {"WEBGL_compressed_texture_pvrtc", "COMPRESSED_RGB_PVRTC_4BPPV1_IMG", 0x8C00},
+      {"WEBGL_compressed_texture_pvrtc", "COMPRESSED_RGBA_PVRTC_4BPPV1_IMG", 0x8C02},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_4x4_KHR", 0x93B0},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_5x4_KHR", 0x93B1},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_5x5_KHR", 0x93B2},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_6x5_KHR", 0x93B3},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_6x6_KHR", 0x93B4},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_8x5_KHR", 0x93B5},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_8x6_KHR", 0x93B6},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_8x8_KHR", 0x93B7},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_10x5_KHR", 0x93B8},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_10x6_KHR", 0x93B9},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_10x8_KHR", 0x93BA},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_10x10_KHR", 0x93BB},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_12x10_KHR", 0x93BC},
+      {"WEBGL_compressed_texture_astc", "COMPRESSED_RGBA_ASTC_12x12_KHR", 0x93BD},
+  };
+  for (const auto& expected : source_properties) {
+    const flight::host_sdl::GlExtension extension(flight::String(expected.extension));
+    const auto actual = extension.get(flight::String(expected.property));
+    expect(
+        actual.has_value() && *actual == expected.value &&
+            extension.has(flight::String(expected.property)),
+        "WebGL extension returned the wrong registry enum");
+  }
 
   auto pixels = flight::Uint8ClampedArray{255, 0, 0, 255, 0, 255, 0, 255};
   auto image = flight::host_sdl::ImageSource::rgba8(

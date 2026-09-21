@@ -117,6 +117,117 @@ using TexStorage3DFunction =
     void(GL_APIENTRYP)(GLenum, GLsizei, GLenum, GLsizei, GLsizei, GLsizei);
 using VertexAttribDivisorFunction = void(GL_APIENTRYP)(GLuint, GLuint);
 
+struct GlExtensionProperty final {
+  std::string_view name;
+  double value;
+};
+
+// Names, values, and order follow each extension's Web IDL in the Khronos WebGL registry:
+// https://registry.khronos.org/webgl/extensions/. Values were also cross-checked against the
+// installed Khronos headers /usr/include/GL/glext.h and /usr/include/GLES2/gl2ext.h.
+constexpr GlExtensionProperty anisotropy_properties[]{
+    {"TEXTURE_MAX_ANISOTROPY_EXT", 0x84FE},
+    {"MAX_TEXTURE_MAX_ANISOTROPY_EXT", 0x84FF},
+};
+constexpr GlExtensionProperty bptc_properties[]{
+    {"COMPRESSED_RGBA_BPTC_UNORM_EXT", 0x8E8C},
+    {"COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT", 0x8E8D},
+    {"COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT", 0x8E8E},
+    {"COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT", 0x8E8F},
+};
+constexpr GlExtensionProperty rgtc_properties[]{
+    {"COMPRESSED_RED_RGTC1_EXT", 0x8DBB},
+    {"COMPRESSED_SIGNED_RED_RGTC1_EXT", 0x8DBC},
+    {"COMPRESSED_RED_GREEN_RGTC2_EXT", 0x8DBD},
+    {"COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT", 0x8DBE},
+};
+constexpr GlExtensionProperty astc_properties[]{
+    {"COMPRESSED_RGBA_ASTC_4x4_KHR", 0x93B0},
+    {"COMPRESSED_RGBA_ASTC_5x4_KHR", 0x93B1},
+    {"COMPRESSED_RGBA_ASTC_5x5_KHR", 0x93B2},
+    {"COMPRESSED_RGBA_ASTC_6x5_KHR", 0x93B3},
+    {"COMPRESSED_RGBA_ASTC_6x6_KHR", 0x93B4},
+    {"COMPRESSED_RGBA_ASTC_8x5_KHR", 0x93B5},
+    {"COMPRESSED_RGBA_ASTC_8x6_KHR", 0x93B6},
+    {"COMPRESSED_RGBA_ASTC_8x8_KHR", 0x93B7},
+    {"COMPRESSED_RGBA_ASTC_10x5_KHR", 0x93B8},
+    {"COMPRESSED_RGBA_ASTC_10x6_KHR", 0x93B9},
+    {"COMPRESSED_RGBA_ASTC_10x8_KHR", 0x93BA},
+    {"COMPRESSED_RGBA_ASTC_10x10_KHR", 0x93BB},
+    {"COMPRESSED_RGBA_ASTC_12x10_KHR", 0x93BC},
+    {"COMPRESSED_RGBA_ASTC_12x12_KHR", 0x93BD},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR", 0x93D0},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR", 0x93D1},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR", 0x93D2},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR", 0x93D3},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR", 0x93D4},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR", 0x93D5},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR", 0x93D6},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR", 0x93D7},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR", 0x93D8},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR", 0x93D9},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR", 0x93DA},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR", 0x93DB},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR", 0x93DC},
+    {"COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR", 0x93DD},
+};
+constexpr GlExtensionProperty etc_properties[]{
+    {"COMPRESSED_R11_EAC", 0x9270},
+    {"COMPRESSED_SIGNED_R11_EAC", 0x9271},
+    {"COMPRESSED_RG11_EAC", 0x9272},
+    {"COMPRESSED_SIGNED_RG11_EAC", 0x9273},
+    {"COMPRESSED_RGB8_ETC2", 0x9274},
+    {"COMPRESSED_SRGB8_ETC2", 0x9275},
+    {"COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2", 0x9276},
+    {"COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2", 0x9277},
+    {"COMPRESSED_RGBA8_ETC2_EAC", 0x9278},
+    {"COMPRESSED_SRGB8_ALPHA8_ETC2_EAC", 0x9279},
+};
+constexpr GlExtensionProperty pvrtc_properties[]{
+    {"COMPRESSED_RGB_PVRTC_4BPPV1_IMG", 0x8C00},
+    {"COMPRESSED_RGB_PVRTC_2BPPV1_IMG", 0x8C01},
+    {"COMPRESSED_RGBA_PVRTC_4BPPV1_IMG", 0x8C02},
+    {"COMPRESSED_RGBA_PVRTC_2BPPV1_IMG", 0x8C03},
+};
+constexpr GlExtensionProperty s3tc_properties[]{
+    {"COMPRESSED_RGB_S3TC_DXT1_EXT", 0x83F0},
+    {"COMPRESSED_RGBA_S3TC_DXT1_EXT", 0x83F1},
+    {"COMPRESSED_RGBA_S3TC_DXT3_EXT", 0x83F2},
+    {"COMPRESSED_RGBA_S3TC_DXT5_EXT", 0x83F3},
+};
+constexpr GlExtensionProperty s3tc_srgb_properties[]{
+    {"COMPRESSED_SRGB_S3TC_DXT1_EXT", 0x8C4C},
+    {"COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT", 0x8C4D},
+    {"COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT", 0x8C4E},
+    {"COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT", 0x8C4F},
+};
+
+std::span<const GlExtensionProperty> gl_extension_properties(
+    std::string_view extension) noexcept {
+  if (extension == "EXT_texture_filter_anisotropic") return anisotropy_properties;
+  if (extension == "EXT_texture_compression_bptc") return bptc_properties;
+  if (extension == "EXT_texture_compression_rgtc") return rgtc_properties;
+  if (extension == "WEBGL_compressed_texture_astc") return astc_properties;
+  if (extension == "WEBGL_compressed_texture_etc") return etc_properties;
+  if (extension == "WEBGL_compressed_texture_pvrtc") return pvrtc_properties;
+  if (extension == "WEBGL_compressed_texture_s3tc") return s3tc_properties;
+  if (extension == "WEBGL_compressed_texture_s3tc_srgb") return s3tc_srgb_properties;
+  return {};
+}
+
+bool is_bound_gl_extension(std::string_view extension) noexcept {
+  return extension == "EXT_color_buffer_float" ||
+         extension == "EXT_texture_compression_bptc" ||
+         extension == "EXT_texture_compression_rgtc" ||
+         extension == "EXT_texture_filter_anisotropic" ||
+         extension == "OES_texture_float_linear" ||
+         extension == "WEBGL_compressed_texture_astc" ||
+         extension == "WEBGL_compressed_texture_etc" ||
+         extension == "WEBGL_compressed_texture_pvrtc" ||
+         extension == "WEBGL_compressed_texture_s3tc" ||
+         extension == "WEBGL_compressed_texture_s3tc_srgb";
+}
+
 struct GlByteRange final {
   const std::byte* data;
   GLsizei size;
@@ -218,6 +329,34 @@ Function gl_function(const WebGl2Context& context, std::string_view name) {
 }
 
 } // namespace
+
+std::optional<double> GlExtension::get(const String& property) const {
+  const auto requested = property.to_utf8();
+  for (const auto& entry : gl_extension_properties(name_.to_utf8())) {
+    if (entry.name == requested) return entry.value;
+  }
+  return std::nullopt;
+}
+
+bool GlExtension::has(const String& property) const {
+  return get(property).has_value();
+}
+
+std::vector<String> GlExtension::keys() const {
+  const auto properties = gl_extension_properties(name_.to_utf8());
+  std::vector<String> result;
+  result.reserve(properties.size());
+  for (const auto& property : properties) result.emplace_back(property.name);
+  return result;
+}
+
+Record<String, double> GlExtension::to_record() const {
+  Record<String, double> result;
+  for (const auto& property : gl_extension_properties(name_.to_utf8())) {
+    result.set(String(property.name), property.value);
+  }
+  return result;
+}
 
 GlParameterValue::operator double() const {
   const auto* value = std::get_if<double>(&value_);
@@ -832,8 +971,9 @@ int WebGl2Context::get_attrib_location(const WebGlProgram& program, const String
       require_object(program.state_, detail::WebGlObjectKind::program), encoded.c_str());
 }
 
-GlExtension WebGl2Context::get_extension(const String& name) const {
+std::optional<GlExtension> WebGl2Context::get_extension(const String& name) const {
   const auto requested = name.to_utf8();
+  if (!is_bound_gl_extension(requested)) return std::nullopt;
   bool available = false;
   if (requested == "EXT_texture_filter_anisotropic") {
     available =
@@ -841,6 +981,8 @@ GlExtension WebGl2Context::get_extension(const String& name) const {
         supports_extension("GL_ARB_texture_filter_anisotropic");
   } else if (requested == "EXT_color_buffer_float") {
     available = supports_extension("GL_EXT_color_buffer_float");
+  } else if (requested == "OES_texture_float_linear") {
+    available = supports_extension("GL_OES_texture_float_linear");
   } else if (requested == "WEBGL_compressed_texture_astc") {
     available =
         supports_extension("GL_KHR_texture_compression_astc_ldr") ||
@@ -858,13 +1000,9 @@ GlExtension WebGl2Context::get_extension(const String& name) const {
     available = supports_extension("GL_EXT_texture_compression_s3tc");
   } else if (requested == "WEBGL_compressed_texture_s3tc_srgb") {
     available = supports_extension("GL_EXT_texture_compression_s3tc_srgb");
-  } else {
-    available = supports_extension(requested);
-    if (!available && !requested.starts_with("GL_")) {
-      available = supports_extension("GL_" + requested);
-    }
   }
-  return GlExtension(available);
+  if (!available) return std::nullopt;
+  return GlExtension(name);
 }
 
 GlParameterValue WebGl2Context::get_parameter(std::uint32_t parameter) const {
