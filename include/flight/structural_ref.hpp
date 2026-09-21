@@ -249,33 +249,33 @@ class RowOwner {
   // present when it is engaged, which is not a question a type-erased cell can answer, and it is
   // the question `row_has` asks.
   template <typename Getter, typename Presence>
-  void bind_computed(const Symbol& key, Getter getter, Presence present) {
+  void bind_symbol(const Symbol& key, Getter getter, Presence present) {
     using Reference = std::invoke_result_t<Getter&>;
     static_assert(std::is_lvalue_reference_v<Reference>);
     using Value = std::remove_reference_t<Reference>;
-    if (computed_cells_.contains(key.identity())) return;
-    computed_cells_.insert_or_assign(
+    if (symbol_cells_.contains(key.identity())) return;
+    symbol_cells_.insert_or_assign(
         key.identity(),
-        ComputedCell{std::make_shared<NativeRowCell<Value, Getter>>(std::move(getter)),
+        SymbolCell{std::make_shared<NativeRowCell<Value, Getter>>(std::move(getter)),
                      std::function<bool()>(std::move(present))});
   }
 
-  [[nodiscard]] virtual std::shared_ptr<RowCell> computed_cell(const Symbol& key) const {
-    const auto found = computed_cells_.find(key.identity());
-    return found == computed_cells_.end() ? nullptr : found->second.cell;
+  [[nodiscard]] virtual std::shared_ptr<RowCell> symbol_cell(const Symbol& key) const {
+    const auto found = symbol_cells_.find(key.identity());
+    return found == symbol_cells_.end() ? nullptr : found->second.cell;
   }
 
   // Empty when this owner has no computed cell under the key at all, which is a different answer
   // from a cell that is present but disengaged.
-  [[nodiscard]] virtual std::optional<bool> computed_present(const Symbol& key) const {
-    const auto found = computed_cells_.find(key.identity());
-    if (found == computed_cells_.end()) return std::nullopt;
+  [[nodiscard]] virtual std::optional<bool> symbol_present(const Symbol& key) const {
+    const auto found = symbol_cells_.find(key.identity());
+    if (found == symbol_cells_.end()) return std::nullopt;
     return found->second.present();
   }
 
   template <typename Value>
-  [[nodiscard]] Value* computed_value_if(const Symbol& key) const {
-    const auto cell = computed_cell(key);
+  [[nodiscard]] Value* symbol_value_if(const Symbol& key) const {
+    const auto cell = symbol_cell(key);
     if (!cell) return nullptr;
     const auto typed = std::dynamic_pointer_cast<TypedRowCell<Value>>(cell);
     return typed ? &typed->get() : nullptr;
@@ -314,7 +314,7 @@ class RowOwner {
   }
 
  private:
-  struct ComputedCell final {
+  struct SymbolCell final {
     std::shared_ptr<RowCell> cell;
     std::function<bool()> present;
   };
@@ -323,7 +323,7 @@ class RowOwner {
   std::unordered_map<std::string, std::shared_ptr<RowCell>> named_cells_;
   std::vector<std::string> named_order_;
   // Keyed on symbol identity, not on the description: two `Symbol(String("X"))` are two symbols.
-  std::unordered_map<const void*, ComputedCell> computed_cells_;
+  std::unordered_map<const void*, SymbolCell> symbol_cells_;
 };
 
 namespace detail {
@@ -465,16 +465,38 @@ inline void sweep_owner_registry(OwnerRegistry& registry) {
   registry.sweep_threshold = registry.entries.size() * 2 + 64;
 }
 
-// Binds the subject's computed cells on its owner. This list is the runtime's own and it is the
-// counterpart of `RowComputedCells` below and of the three `Symbol` overloads at the end of this
-// header: a cell is added to all three together or to none of them.
+// The GENERATED SYMBOL-BINDING HOOK.
 //
-// Presence for an `std::optional` member is engagement; a member that is not an optional is always
-// present, the way a declared non-optional property is in the source.
+// A subject's symbol-keyed members are bound on its owner, under the symbol's IDENTITY. Two halves
+// supply them and they fail differently, which is why they are separate.
+//
+// The runtime binds what it can name for itself: `Symbol.for('EntityRuntime')` is a REGISTERED
+// symbol, so `Symbol::for_key` reconstructs the same identity here that the source reached, and no
+// generated evidence is needed. Note that this is not a description-based special case in the
+// access path -- `row_get`, `row_set` and `row_has` no longer compare descriptions at all. The
+// description is used once, at binding time, to obtain an interned identity; every lookup after
+// that is by identity.
+//
+// The generated table supplies the rest through `GeneratedSymbolBindings`, whose primary here
+// binds nothing. A UNIQUE symbol -- `Symbol(String("Scene3DResourceResolverRuntime"))` -- cannot be
+// reconstructed from its description, because its identity is the one `inline const` constant the
+// emitted module declares. Only something that can name that constant can bind its member, and
+// that is the table's job, not the runtime's.
+//
+// The primary is declared HERE, before any use, for the reason the widening trait is: a table
+// older than this contract then contributes no bindings instead of leaving the name undeclared,
+// which is a compile error in a consumer that did nothing wrong.
 template <typename Object>
-void bind_computed_row_cells(RowOwner& owner, const std::shared_ptr<Object>& object) {
+struct GeneratedSymbolBindings {
+  static void bind(RowOwner&, const std::shared_ptr<Object>&) {}
+};
+
+template <typename Object>
+void bind_generated_symbol_members(RowOwner& owner, const std::shared_ptr<Object>& object) {
+  // Presence for an `std::optional` member is engagement; a member that is not an optional is
+  // always present, the way a declared non-optional property is in the source.
   if constexpr (requires { object->entity_runtime_key; }) {
-    owner.bind_computed(
+    owner.bind_symbol(
         Symbol::for_key(String("EntityRuntime")),
         [object]() -> decltype(auto) { return (object->entity_runtime_key); },
         [object]() -> bool {
@@ -485,6 +507,7 @@ void bind_computed_row_cells(RowOwner& owner, const std::shared_ptr<Object>& obj
           }
         });
   }
+  GeneratedSymbolBindings<Object>::bind(owner, object);
 }
 
 template <typename Object>
@@ -500,7 +523,7 @@ template <typename Object>
   auto owner = std::make_shared<NativeRowOwner<Object>>(object);
   owner->adopt_attachment(attachment_for(std::static_pointer_cast<void>(object)));
   bind_generated_row_members(*owner, object);
-  bind_computed_row_cells(*owner, object);
+  bind_generated_symbol_members(*owner, object);
   registry.entries.emplace(key, OwnerRegistryEntry{std::static_pointer_cast<void>(object), owner});
   return owner;
 }
@@ -568,12 +591,12 @@ class ProxyRowOwner final : public RowOwner {
     return target_->named_keys();
   }
 
-  [[nodiscard]] std::shared_ptr<RowCell> computed_cell(const Symbol& key) const override {
-    return target_->computed_cell(key);
+  [[nodiscard]] std::shared_ptr<RowCell> symbol_cell(const Symbol& key) const override {
+    return target_->symbol_cell(key);
   }
 
-  [[nodiscard]] std::optional<bool> computed_present(const Symbol& key) const override {
-    return target_->computed_present(key);
+  [[nodiscard]] std::optional<bool> symbol_present(const Symbol& key) const override {
+    return target_->symbol_present(key);
   }
 
   [[nodiscard]] const std::any* dynamic_value(const Symbol& key) const override {
@@ -1037,15 +1060,7 @@ void row_set(const StructuralRef<Schema>& target, Value&& value) {
 template <typename Value, typename Schema>
 [[nodiscard]] Value row_get(const StructuralRef<Schema>& source, const Symbol& key) {
   if (source.shared_owner()) {
-    if (auto* cell = source.shared_owner()->template computed_value_if<Value>(key)) return *cell;
-  }
-  using Object = typename StructuralRef<Schema>::object_type;
-  if constexpr (!std::is_void_v<Object>) {
-    if (auto object = source.shared_object()) {
-      if constexpr (requires { Value{object->entity_runtime_key}; }) {
-        if (key.key() == String("EntityRuntime")) return Value{object->entity_runtime_key};
-      }
-    }
+    if (auto* cell = source.shared_owner()->template symbol_value_if<Value>(key)) return *cell;
   }
   if (source.shared_owner()) {
     if (const auto* value = source.shared_owner()->dynamic_value(key)) {
@@ -1061,19 +1076,34 @@ void row_set(const StructuralRef<Schema>& target, const Symbol& key, Value&& val
   static_assert(!detail::schema_readonly<Schema>, "a readonly structural row cannot be written");
   if (!target.shared_owner()) throw std::bad_weak_ptr();
   target.shared_owner()->before_write(key);
-  if (auto* cell =
-          target.shared_owner()->template computed_value_if<std::remove_cvref_t<Value>>(key)) {
+  using Stored = std::remove_cvref_t<Value>;
+  if (auto* cell = target.shared_owner()->template symbol_value_if<Stored>(key)) {
     *cell = std::forward<Value>(value);
     return;
   }
-  using Object = typename StructuralRef<Schema>::object_type;
-  if constexpr (!std::is_void_v<Object>) {
-    if (auto object = target.shared_object()) {
-      if constexpr (requires { object->entity_runtime_key = std::forward<Value>(value); }) {
-        if (key.key() == String("EntityRuntime")) {
-          object->entity_runtime_key = std::forward<Value>(value);
-          return;
-        }
+  // A member the subject declared optional accepts the bare value, which is the same courtesy
+  // `row_set<Key>` extends to a named key on a required row. Without it a write of `Ref<T>` to a
+  // cell holding `std::optional<Ref<T>>` would miss the cell and land in the attachment instead,
+  // leaving the object's own member untouched and two answers to one question.
+  // `std::optional<Stored>` must be spelled only once it is known to be a legal specialisation.
+  // Naming it for a type <optional> forbids is a hard error inside that header, not a substitution
+  // failure, so the guard has to come first and cannot be folded into the requires-expression. The
+  // exclusions are exactly the ones <optional> asserts: non-object types, arrays, non-destructible
+  // types, and `nullopt_t`/`in_place_t`. The last is not hypothetical -- generated entity
+  // construction writes `row_set(out, entity_runtime_key, std::nullopt)` to clear the slot.
+  if constexpr (std::is_object_v<Stored> && !std::is_array_v<Stored> &&
+                std::is_destructible_v<Stored> && !std::same_as<Stored, std::nullopt_t> &&
+                !std::same_as<Stored, std::in_place_t>) {
+    // NESTED deliberately. `&&` short-circuits evaluation, not instantiation: naming
+    // `std::optional<Stored>` in the same condition as its own guard instantiates it anyway, and
+    // for a forbidden `Stored` that is a hard error before the guard is ever consulted. A
+    // discarded `if constexpr` branch inside a template is not instantiated, which is the only
+    // arrangement that actually defers it.
+    if constexpr (requires(std::optional<Stored>& slot) { slot = std::declval<Value>(); }) {
+      if (auto* optional_cell =
+              target.shared_owner()->template symbol_value_if<std::optional<Stored>>(key)) {
+        *optional_cell = std::forward<Value>(value);
+        return;
       }
     }
   }
@@ -1083,15 +1113,7 @@ void row_set(const StructuralRef<Schema>& target, const Symbol& key, Value&& val
 template <typename Schema>
 [[nodiscard]] bool row_has(const StructuralRef<Schema>& source, const Symbol& key) {
   if (source.shared_owner()) {
-    if (const auto present = source.shared_owner()->computed_present(key)) return *present;
-  }
-  using Object = typename StructuralRef<Schema>::object_type;
-  if constexpr (!std::is_void_v<Object>) {
-    if (auto object = source.shared_object()) {
-      if constexpr (requires { object->entity_runtime_key.has_value(); }) {
-        if (key.key() == String("EntityRuntime")) return object->entity_runtime_key.has_value();
-      }
-    }
+    if (const auto present = source.shared_owner()->symbol_present(key)) return *present;
   }
   return source.shared_owner() && source.shared_owner()->has_dynamic_value(key);
 }
