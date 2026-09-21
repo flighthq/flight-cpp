@@ -7,6 +7,98 @@ The current checkout pins Flight `7e2fc7d` and flight-compiler `ef60fb6`. Both r
 and remaining ownership. The section immediately below is the current round; everything after it is the historical
 record of the earlier `903f328`/`fbfcc11`, `993c280` and `9f6ce1c` handoffs.
 
+## Round of 2026-09-21: the four integration follow-ups
+
+Two of the four were already satisfied here and needed verifying rather than changing; two were
+real. Taken in the order they were sent.
+
+### 1. The native semantic conformance oracle — already correct, verified
+
+`tests/generated_runtime_test.cpp` already reads exactly what was asked for:
+
+```cpp
+const auto for_in_values = flight::make_ref<flighthq_cpp_conformance::ForInValues>();
+for_in_values->value = 1.0;
+check(flighthq_cpp_conformance::select_first_key(for_in_values) == flight::String("value"), …);
+```
+
+and `tests/generated/semantic_runtime.hpp` already declares `struct ForInValues : public
+flight::ReferenceEnabled` with `select_first_key(flight::Ref<ForInValues>)`. No brace-initialisation
+of `ForInValues` survives anywhere in the repository. It was fixed on 2026-09-14 in `7f5474d` and
+the header refreshed on 2026-09-17 in `c4cb9ec`, both before the pin the compiler is holding.
+
+Verified rather than assumed: a strict compile with `-Wall -Wextra -Wpedantic -Wconversion -Werror`
+succeeds and the executable oracle exits 0. `Ref` semantics are untouched. The header cannot be
+regenerated from this checkout because `@flighthq/cpp-conformance` is not part of the pinned
+compiler tree — and it does not need to be.
+
+### 2. The structural-row widening hook — the diagnosis was right, the contract is now implemented
+
+The symbol did exist here, but the failure mode reported was real and the proposed contract is the
+correct fix. The old arrangement defined `generated_row_widening_proven` **inside the generated
+table** and gave the runtime a fallback only in the no-table branch, so any table predating the
+predicate left the name undeclared — a compile error in a consumer that did nothing wrong. That is
+exactly what integration hit.
+
+Implemented as specified:
+
+- `flight::detail::GeneratedRowWidening<Base, Derived>` has a conservative `std::false_type`
+  primary, declared **before** `StructuralRef` uses it and before the generated table is included,
+  with `generated_row_widening_proven_v` as the value alias.
+- The generated table adds exactly one **constrained partial specialization** —
+  `requires(generated_row_widening_matches<Base, Derived>())` — answering true only for pairs it can
+  prove. Nothing else specializes it.
+- Include order is runtime declarations, then the generated structural table, then the module that
+  instantiates a conversion.
+- **Exact-owner readonly views work through the default-false path.** Same-subject conversions are
+  answered by the same-subject rule before the trait is consulted, so a readonly view of the owner's
+  own type never needs a proof. This is covered by a test whose subject declares only a member that
+  is not an SDK row key, so it proves nothing even against itself and must still convert.
+
+The regression test for the original failure is that `hostCapabilityOracle`'s hand-written member
+table now emits **no widening code at all** and still compiles — which is the property that makes a
+table older than this contract safe.
+
+Measured: `generated/` regenerated at 1138/2904 and the seven-profile SDL lane at 1435/2904, both
+unchanged, and the folded-tree sweep is **1368/1435 with 67 failures — identical to before the
+change**. Changing how every widening is decided should not ship unmeasured, so it did not.
+
+### 3. The missing WebGL constant — added
+
+`WebGl2Context::max_texture_size = 3379` is in the alphabetized GLenum block, with native SDL
+coverage and compiler-emission coverage in the SDL/GL profile oracle. The rest of the `GL_MAX_*`
+family the current SDL corpus reaches was audited at the same time: `MAX_SAMPLES` and the extension
+`MAX_TEXTURE_MAX_ANISOTROPY_EXT` were already present, and `MAX_TEXTURE_SIZE` was the only reached
+standard constant missing. Nothing unreached was bulk-added.
+
+### 4. `Number.prototype.toFixed` — already implemented, and now proven; **fa18c9da can be unparked**
+
+`flight::number_to_fixed(double value, double digits = 0.0)` has been in `flight/number.hpp` since
+an earlier tranche. It was not changed, because it already satisfies the contract; what it lacked
+was proof, which it now has. A live Node/native differential passes identical double bit patterns
+through 28 cases: default, zero, fractional, negative, NaN, 100, 100.9, out-of-range and infinite
+digits; NaN and both infinities as values; both neighbours of the 1e21 cutoff and the cutoff itself;
+the tie-sensitive cases that separate ECMAScript from `printf` — `(2.5).toFixed(0)`,
+`(1.005).toFixed(2)`, `(0.5).toFixed(0)`, `(1.45).toFixed(1)`, `(8.575).toFixed(2)`; negative zero
+and `-0.0001`; large values below the cutoff; and validation precedence. It is wired into
+`npm run check` as `numberToFixedOracle`.
+
+The rounding is done on the double's exact decimal expansion rather than by asking `printf` for the
+final precision, because the two disagree on ties — `printf` rounds to even, ECMAScript rounds away
+from zero — and the sign comes from the comparison rather than the sign bit, so negative zero has no
+sign while a negative value that rounds to zero keeps one.
+
+### On the larger follow-ups
+
+Non-copying native-reference-to-structural-row views, computed-symbol row metadata and owner-bound
+access, WeakMap platform key policy, and existential structural owners are not in this round. The
+constraint attached to them — no unchecked casts, no copied or materialized rows — is already how
+the adjacent machinery is built, and is worth stating so the follow-ups start from it: a widened row
+keeps the source object and the source's single row owner rather than copying anything,
+`structural_ref_cast`'s materializing path is gated to a source whose object type is EMPTY so it can
+never replace an object that holds state, and `ErasedRef::as<T>()` answers only for the type the
+reference was erased from.
+
 ## Integration addendum of 2026-09-20: `538fe1d` is not a separate lineage
 
 The addendum asked flight-cpp to "merge the newer portable-service commits onto the complete runtime lineage before
