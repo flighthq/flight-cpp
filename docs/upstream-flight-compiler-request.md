@@ -7,6 +7,26 @@ The current checkout pins Flight `7e2fc7d` and flight-compiler `ef60fb6`. Both r
 and remaining ownership. The section immediately below is the current round; everything after it is the historical
 record of the earlier `903f328`/`fbfcc11`, `993c280` and `9f6ce1c` handoffs.
 
+## Round of 2026-09-21: WebGL extension objects expose two compiler gaps
+
+The SDL runtime now represents `getExtension` honestly: it returns
+`std::optional<flight::host_sdl::GlExtension>`, and each present object carries its extension name
+plus checked `get(String)`, `has(String)`, declaration-order `keys()`, and `to_record()` operations
+over only that extension's numeric enum properties. This exposes two independent compiler tasks:
+
+1. **Null-guard narrowing.** After TypeScript proves `anisotropy !== null`, compiler `ef60fb6`
+   still emits `anisotropy.max_texture_max_anisotropy_ext` where `anisotropy` is
+   `std::optional<GlExtension>`. The guard must narrow and unwrap the optional before subsequent
+   member access.
+2. **External dynamic-property lowering.** Once unwrapped, a numeric property read on this bound
+   external value must lower onto `GlExtension::get(String)`, not a static C++ member. The optional
+   numeric result is also the representation needed for the source's
+   `typeof ext?.[key] === 'number'` check; absent properties must remain distinct from numeric zero.
+
+`scripts/sdlGlProfileOracle.mjs` deliberately retains the original anisotropy property read and is
+red against `ef60fb6` until those compiler-owned gaps are implemented. Its failure prints this
+ownership and points back here; it is not skipped or allowlisted.
+
 ## Round of 2026-09-21: the four integration follow-ups
 
 Two of the four were already satisfied here and needed verifying rather than changing; two were

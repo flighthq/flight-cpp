@@ -300,7 +300,18 @@ try {
     { cwd: root, encoding: 'utf8' },
   );
   if (compilation.status !== 0) {
-    process.stderr.write(`${compilation.stdout}${compilation.stderr}`);
+    const diagnostic = `${compilation.stdout}${compilation.stderr}`;
+    process.stderr.write(diagnostic);
+    if (
+      diagnostic.includes('std::optional<flight::host_sdl::GlExtension>') &&
+      diagnostic.includes('max_texture_max_anisotropy_ext')
+    ) {
+      process.stderr.write(
+        'Known flight-compiler gaps: a null guard does not narrow/unwrap the optional extension, ' +
+          'and an external extension enum read does not lower to GlExtension::get(String). ' +
+          'Owned upstream; see docs/upstream-flight-compiler-request.md.\n',
+      );
+    }
     process.exit(1);
   }
 } finally {
