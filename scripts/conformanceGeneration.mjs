@@ -62,10 +62,11 @@ if (lowered.diagnostics.length > 0) {
   process.exit(1);
 }
 const emitted = api.emitIrModuleCpp(lowered.module, { runtimeProfile: 'flight-cpp' }).contents;
+const normalizedEmission = normalizeHeader(emitted);
 
 if (!check) {
   mkdirSync(path.dirname(headerPath), { recursive: true });
-  writeFileSync(headerPath, emitted);
+  writeFileSync(headerPath, normalizedEmission);
   process.stdout.write(
     `Native conformance header regenerated with flight-compiler ${compiler.commit.slice(0, 7)}.\n`,
   );
@@ -75,8 +76,11 @@ if (!check) {
 const temporary = mkdtempSync(path.join(tmpdir(), 'flight-cpp-native-conformance-'));
 try {
   const candidatePath = path.join(temporary, 'semantic_runtime.hpp');
-  writeFileSync(candidatePath, emitted);
-  if (!existsSync(headerPath) || readFileSync(headerPath, 'utf8') !== emitted) {
+  writeFileSync(candidatePath, normalizedEmission);
+  const checkedIn = existsSync(headerPath)
+    ? normalizeHeader(readFileSync(headerPath, 'utf8'))
+    : undefined;
+  if (checkedIn === undefined || checkedIn !== normalizedEmission) {
     if (!existsSync(headerPath)) {
       process.stderr.write(`Native conformance header is missing: ${headerPath}\n`);
     } else {
@@ -96,4 +100,8 @@ try {
   }
 } finally {
   rmSync(temporary, { force: true, recursive: true });
+}
+
+function normalizeHeader(contents) {
+  return contents.replace(/\n*$/u, '\n');
 }
