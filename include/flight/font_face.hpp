@@ -47,7 +47,15 @@ enum class FontFaceStatus : std::uint8_t { unloaded, loading, loaded, error };
 
 // `new FontFace(family, source)` takes `string | ArrayBuffer`: a CSS `src` descriptor such as
 // `url(...) format('woff2')`, or the face's bytes.
-using FontFaceSource = std::variant<String, ArrayBuffer>;
+//
+// The ALTERNATIVE ORDER is the compiler's, not the source declaration's. A union's C++ spelling is
+// part of the external binding contract: emitted code calls this constructor with the variant it
+// built, and a variant whose alternatives are the same set in a different order is a different
+// type, so the call simply does not match. The compiler canonicalises `string | ArrayBuffer` to
+// `std::variant<flight::ArrayBuffer, flight::String>`; spelling it the other way round here cost
+// seven headers. Nothing reaches these alternatives positionally -- every access is by type -- so
+// following the compiler costs nothing and is the only spelling that links.
+using FontFaceSource = std::variant<ArrayBuffer, String>;
 
 class FontFace;
 

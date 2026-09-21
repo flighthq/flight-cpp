@@ -145,6 +145,30 @@
     },
     {
       "headers": [
+        "flight/dom_exception.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "DOMException",
+      "space": "type",
+      "targetName": "flight::DOMException"
+    },
+    {
+      "construction": {
+        "kind": "constructor",
+        "targetName": "flight::DOMException"
+      },
+      "headers": [
+        "flight/dom_exception.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "DOMException",
+      "space": "value",
+      "targetName": "flight::DOMException"
+    },
+    {
+      "headers": [
         "flight/font_face.hpp"
       ],
       "nullability": "non-null",
