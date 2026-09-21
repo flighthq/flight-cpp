@@ -440,6 +440,26 @@ int main() {
   static_assert(flight::host_sdl::WebGl2Context::max_texture_size == 3379);
 
   const flight::host_sdl::WebGl2Context no_gl_context;
+
+  // THE WEAK-KEY CONTRACT for `new WeakMap<GlContext, ...>`, which is the most common weak map in
+  // Flight -- per-context caches of programs, uniform locations and render state. A live GL
+  // context cannot be made under the offscreen driver, so this asserts the half that does not need
+  // one: the policy's shape, and that weakening never resurrects.
+  using GlContextWeak = flight::host_sdl::WebGl2ContextWeakPolicy;
+  static_assert(std::is_same_v<GlContextWeak::key_type, flight::host_sdl::WebGl2Context>,
+                "the GlContext weak-key policy must key on the context itself");
+  static_assert(std::is_same_v<GlContextWeak::identity_type, const void*>,
+                "and identify it by address, not by contents");
+
+  flight::WeakMap<flight::host_sdl::WebGl2Context, int, flight::host_sdl::WebGl2ContextWeakPolicy>
+      context_cache;
+  expect(!context_cache.has(no_gl_context),
+         "a weak context cache reported an entry it was never given");
+  expect(!GlContextWeak::lock(GlContextWeak::weaken(no_gl_context)).has_value(),
+         "weakening a context with no state produced a live context out of nothing");
+  expect(no_gl_context == flight::host_sdl::WebGl2Context(),
+         "two contexts holding no state are one key, not two");
+
   expect(
       !no_gl_context.get_extension(flight::String("NOT_A_WEBGL_EXTENSION")).has_value(),
       "unsupported WebGL extension did not return nullopt");

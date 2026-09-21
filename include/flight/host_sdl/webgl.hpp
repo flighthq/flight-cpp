@@ -728,6 +728,29 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   void present() const;
   void set_swap_interval(int interval) const;
 
+  // WEAK-KEY SURFACE. `new WeakMap<GlContext, ...>` is the most common weak map in Flight -- a
+  // per-context cache of programs, uniform locations or render state, which must not be the thing
+  // keeping the context alive. The context already has exactly one owner, shared with its window,
+  // so its identity IS that owner and weakening it is holding that owner weakly. This is the same
+  // shape `WebGlHandle` and `WgpuObject` already carry. `identity()` was already here; what was
+  // missing is the weakening half, which is why the `GlContext` binding had no weak-key policy to
+  // name and twenty-two modules were refused.
+  using weak_type = std::weak_ptr<detail::GlSurfaceState>;
+
+  [[nodiscard]] weak_type weaken() const noexcept { return state_; }
+
+  [[nodiscard]] static std::optional<WebGl2Context> lock_weak(const weak_type& weak) noexcept {
+    auto state = weak.lock();
+    if (!state) return std::nullopt;
+    return WebGl2Context(std::move(state));
+  }
+
+  // Identity, not contents: two copies of one context are one key.
+  [[nodiscard]] friend bool operator==(const WebGl2Context& left,
+                                       const WebGl2Context& right) noexcept {
+    return left.state_ == right.state_;
+  }
+
  private:
   friend class GlCanvas;
 
@@ -752,6 +775,30 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
 
   std::shared_ptr<detail::GlSurfaceState> state_;
 };
+
+// The weak-key policy the `GlContext` binding names. Keyed on the context's owner address, so a
+// context that has been destroyed drops out of every weak map that mentioned it instead of being
+// resurrected by one.
+struct WebGl2ContextWeakPolicy final {
+  using key_type = WebGl2Context;
+  using weak_type = typename key_type::weak_type;
+  using identity_type = const void*;
+
+  [[nodiscard]] static weak_type weaken(const key_type& key) noexcept { return key.weaken(); }
+  [[nodiscard]] static std::optional<key_type> lock(const weak_type& key) noexcept {
+    return key_type::lock_weak(key);
+  }
+  [[nodiscard]] static identity_type identity(const key_type& key) noexcept {
+    return key.identity();
+  }
+  [[nodiscard]] static std::size_t hash(identity_type identity) noexcept {
+    return std::hash<const void*>{}(identity);
+  }
+  [[nodiscard]] static bool equal(identity_type left, identity_type right) noexcept {
+    return left == right;
+  }
+};
+
 
 // Native replacement for the HTMLCanvasElement returned by GlRenderSurfaceProvider. Logical size
 // and drawable pixel size stay separate, matching Flight's width/height/pixelRatio contract.

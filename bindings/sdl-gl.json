@@ -4,7 +4,7 @@
   "profile": "sdl-gl",
   "bindings": [
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "HTMLCanvasElement", "space": "type", "targetName": "flight::host_sdl::GlCanvas" },
-    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGL2RenderingContext", "space": "type", "targetName": "flight::host_sdl::WebGl2Context" },
+    { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGL2RenderingContext", "space": "type", "targetName": "flight::host_sdl::WebGl2Context", "weakKeyPolicyTargetName": "flight::host_sdl::WebGl2ContextWeakPolicy" },
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLBuffer", "space": "type", "targetName": "flight::host_sdl::WebGlBuffer", "weakKeyPolicyTargetName": "flight::host_sdl::WebGlBufferWeakPolicy" },
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLFramebuffer", "space": "type", "targetName": "flight::host_sdl::WebGlFramebuffer", "weakKeyPolicyTargetName": "flight::host_sdl::WebGlFramebufferWeakPolicy" },
     { "headers": ["flight/host_sdl/webgl.hpp"], "nullability": "non-null", "ownership": "shared", "sourceName": "WebGLProgram", "space": "type", "targetName": "flight::host_sdl::WebGlProgram", "weakKeyPolicyTargetName": "flight::host_sdl::WebGlProgramWeakPolicy" },
