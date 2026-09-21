@@ -22,6 +22,7 @@ const gates = [
   { arguments: [], name: 'booleanOracle' },
   { arguments: [], name: 'buildHealth' },
   { arguments: [], name: 'canvas2dProfileOracle' },
+  { arguments: ['--check'], name: 'conformanceGeneration' },
   { arguments: [], name: 'releaseHealth' },
   { arguments: [], name: 'exampleHealth' },
   { arguments: [], name: 'exampleRun' },
