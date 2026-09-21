@@ -5,7 +5,175 @@ The maintained downstream checklist now lives in [flight-compiler adoption statu
 The current checkout pins Flight `7e2fc7d` and flight-compiler `ef60fb6`. Both revisions are recorded in
 [`dependencies.lock.json`](../dependencies.lock.json), and the maintained status document records the active counts
 and remaining ownership. The section immediately below is the current round; everything after it is the historical
-record of the earlier `903f328`/`fbfcc11`, `993c280` and `9f6ce1c` handoffs.
+record of the earlier `903f328`/`fbfcc11`, `993c280` and `9f6ce1c` handoffs. There were two rounds on
+2026-09-21; the second one is first.
+
+## Round of 2026-09-21 (second): computed cells, GlExtension, and the conformance artifact
+
+Three needs arrived in priority order. All three are answered. The second one is answered by
+leaving a gate red on purpose, which is explained below rather than buried.
+
+### 1. Computed cells were invisible to the widening proof
+
+Reproduced before anything was changed. Four subjects that agree on every string key at the same
+type and differ only behind `Symbol.for('EntityRuntime')`:
+
+```cpp
+struct Base   { double value; std::optional<flight::Ref<RuntimeA>> entity_runtime_key; };
+struct Peer   { double value; std::optional<flight::Ref<RuntimeA>> entity_runtime_key; };
+struct Widest { double value; };
+struct Deriv  { double value; std::optional<flight::Ref<RuntimeB>> entity_runtime_key; };
+```
+
+Every pair widened onto every other pair, and the consequence was observable rather than
+theoretical: with the cell engaged on the object, `row_has(widened, EntityRuntime)` answered
+**false**. Same object, same owner, opposite answer from the two rows.
+
+Two things were wrong, and fixing either alone leaves a hole.
+
+**The proof could not see the cell.** A computed cell is not a row key. No `RowKey` ever names it,
+so nothing in the generated key table compares it, and the proof's verdict was decided entirely by
+members that happened to agree. The fix is a second, separate question asked alongside the proof:
+
+- `flight::detail::RowComputedCells<Object>` reports the cell's type, or `void` when the subject
+  does not declare it.
+- `flight::detail::computed_cells_agree<Base, Derived>` is conjoined onto the widening branch of
+  `row_objects_convertible`. It is the **runtime's own** list, deliberately not derived from the
+  generated table: a table older than this contract contributes no widening and is safe, but no
+  table of any age may approve a pair the runtime itself can tell apart.
+- The generated table adds `FLIGHT_SDK_ROW_COMPUTED(member)` for every computed cell the emitted
+  SDK declares — including ones the runtime cannot reach. A disagreement there is fatal to the
+  proof rather than merely uncounted.
+
+The rule is narrower than "the cells must match", and the corpus is what narrowed it. Refusing a
+cell that only ONE subject declares costs five headers and is wrong: a computed cell is declared
+`EntityRuntime | undefined`, so `binpack::FreeRectangle` — a plain `{x, y, width, height}` — really
+is a `Readonly<types::Rectangle>` in TypeScript, and `types::Adjustment` really is readable as its
+own anonymous `{kind}` bag. Both now read honestly in both directions, because of the owner-bound
+cell below. What is refused is two subjects that **both** declare the cell at **different** types:
+the owner holds one cell of one type, so the other row's read misses the typed lookup and is handed
+a default instead of the value sitting on the object. That one is silent, which is why it is a
+compile error.
+
+**Even a permitted widening could not reach the cell.** `shared_object()` is type-checked against
+the row's own subject, so over a derived object a base-typed row answered null and the symbol read
+fell through to the attachment. Computed cells are now bound on the `RowOwner` — the one thing
+every row over an object shares — through `bind_computed`, and `row_get`, `row_set` and `row_has`
+over a `Symbol` consult the owner first. A widened row now reads and writes the subject's real
+member.
+
+The two halves are complementary rather than redundant. The owner serves the read; the comparison
+catches what the owner cannot serve — a read asking for the base's type when the object holds the
+derived one, and any cell the runtime's `Symbol` overloads cannot reach at all.
+
+#### How computed cells are found, and the one the runtime cannot reach
+
+The generator finds them from the only evidence the emitted output carries: the compiler declares a
+computed key as an `inline const flight::Symbol` constant and names the member it produces after
+that constant. A symbol constant whose spelling also appears as a member declaration is a computed
+cell; anything spelled like a string row key is excluded, because the two key spaces are separate
+and `altKey` is an ordinary string property.
+
+On the SDL corpus that finds exactly two:
+
+| cell | symbol | reachable by the runtime's `Symbol` overloads |
+| --- | --- | --- |
+| `entity_runtime_key` | `Symbol.for('EntityRuntime')` | yes |
+| `scene3_dresource_resolver_runtime_key` | `Symbol(String("Scene3DResourceResolverRuntime"))` | **no** |
+
+The second one is a live read-side hole and is worth stating plainly. The emitted SDK contains
+
+```cpp
+flight::row_get<flight::Ref<flight::types::Scene3DResourceResolverRuntime>>(
+    row, flight::types::scene3_dresource_resolver_runtime_key)
+```
+
+and the runtime cannot serve it. `Symbol::for_key` interns by description, but
+`Symbol(String("X"))` is a *unique* symbol whose identity is the specific constant, so the runtime
+has no way to recognise it: the read falls through to the attachment and hands back a default. The
+widening proof fails closed across a disagreement about this cell, so nothing unsound is approved,
+but the read itself is wrong today.
+
+Closing it needs the compiler, not the runtime. The generated table knows both the symbol constant
+and the member name and could bind the pair the way `bind_generated_row_members` binds string keys
+— but it would have to name the constant, which lives in a generated module header the table cannot
+include. **The ask**: emit the computed-key bindings into `flight/sdk/structural_members.hpp`
+itself, or emit the symbol constants somewhere the table can reach, and the runtime will consume
+them through the same conservative-primary-plus-generated-specialization shape the widening trait
+already uses.
+
+### 2. GlExtension, and the two compiler gaps it exposes
+
+`GlExtension` reduced every WebGL extension object to a bool with two static anisotropy enums
+hanging off it, so `EXT_color_buffer_float` answered `TEXTURE_MAX_ANISOTROPY_EXT`, `getExtension`
+never returned null, and no extension could be told from another. The shape is now determined by
+what the real Flight sources actually do with these objects
+(`render-gl/src/glCompressedTexture.ts`): test the result against `null`, then read numeric enums
+off it by name with a `typeof … === 'number'` guard.
+
+- `WebGl2Context::get_extension` returns `std::optional<GlExtension>`; the nine `sdl-gl` bindings
+  are now `nullable`.
+- `GlExtension` carries the queried `name()` and exposes `get(String) -> std::optional<double>`,
+  `has`, declaration-order `keys()`, and `to_record()`. `get` returning an empty optional **is**
+  the `typeof` check: a property the extension does not define answers nothing, never `0` and never
+  `-1`.
+- Per-extension enum tables for S3TC, S3TC sRGB, RGTC, BPTC, ETC/EAC, ASTC, PVRTC and anisotropy,
+  cross-checked against the Khronos registry and the installed GL headers.
+  `EXT_color_buffer_float` and `OES_texture_float_linear` expose deliberately empty key sets, which
+  is the case that proves identity is real.
+
+**`npm run sdl-gl:oracle` is red, on purpose.** Its TypeScript reads
+`anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT` after a `!== null` guard. Against the corrected header
+the pinned compiler `ef60fb6` emits, verbatim:
+
+```cpp
+return (anisotropy.max_texture_max_anisotropy_ext + (color_buffer_float ? 1.0 : 0.0));
+```
+
+```
+error: 'class std::optional<flight::host_sdl::GlExtension>' has no member named
+       'max_texture_max_anisotropy_ext'
+```
+
+That single line is two separate gaps and both are yours:
+
+1. **Narrowing.** `anisotropy` is an `std::optional` and the `!== null` guard is not being used to
+   unwrap it. This is independent of extensions and would bite any nullable external binding.
+2. **Lowering.** Even unwrapped, the member does not exist, because the enums are per-extension
+   data now rather than static members on a type shared by every extension. A property read on a
+   bound external value type needs to lower onto `GlExtension::get(String)`.
+
+The gate was briefly made green by deleting the property read from its source. That was reverted:
+the case is the only coverage anywhere of an extension-object property read, and a suite that got
+quiet by asking less is worth less than one red case with a named owner. It stays red until the
+compiler lowers it.
+
+### 3. The native-conformance artifact was stale
+
+Regenerated `tests/generated/semantic_runtime.hpp` from the vendored
+`tests/generated/semantic_runtime.ts` through the pinned compiler; the drift was two lines, which
+matches the recurring backend mismatch that was reported. `scripts/conformanceGeneration.mjs` now
+regenerates into a temporary directory and diffs against the checked-in header, and
+`conformance:check` is wired into `npm run check`, so the artifact cannot rot silently again. It
+skips cleanly when `.dependencies/` is absent, like every other gate that needs a checkout.
+
+### Not asked for, found on the way: a row keeps its subject alive forever
+
+Any object that acquires a `RowOwner` is never collected. The generated member binding captures the
+object **strongly** in its getter; the owner registry holds the owner strongly and the object
+weakly; the cycle keeps both alive and the weak entry never expires, so it is never swept.
+
+```
+alive while a row names it:                       yes
+alive after both the ref and the row are gone:    YES (leaked)
+```
+
+Confirmed pre-existing — it reproduces at `HEAD` with this tranche's changes stashed, and a subject
+that binds no member at all is collected correctly. The computed-cell binding added here follows
+the same capture pattern deliberately, so it adds no new class of leak, but the underlying defect
+wants its own change: either a weak capture that locks per read, or binding by member pointer
+against the owner's existing weak object. Flagged rather than fixed, because it is a lifetime
+decision that belongs in its own commit with its own test.
 
 ## Round of 2026-09-21: WebGL extension objects expose two compiler gaps
 

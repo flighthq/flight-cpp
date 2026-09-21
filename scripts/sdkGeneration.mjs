@@ -341,6 +341,9 @@ function writeStructuralMemberTable(outputRoot, files) {
   // the same three checks out 600-odd times and adds a quarter of a megabyte that every translation
   // unit including the SDK would have to parse.
   const wideningKeys = sortedNames.map((name) => `  FLIGHT_SDK_ROW_WIDENS(${safeCppMemberName(name)})`);
+  const computedNames = computedCellNames(files, new Set(sortedNames.map(safeCppMemberName)));
+  const computedCells = computedNames.map((name) => `  FLIGHT_SDK_ROW_COMPUTED(${name})`);
+  reportComputedCells(computedNames);
   if (cases.length === 0) {
     throw new Error('compiler output uses no structural row keys');
   }
@@ -350,8 +353,59 @@ function writeStructuralMemberTable(outputRoot, files) {
   mkdirSync(path.dirname(target), { recursive: true });
   writeFileSync(
     target,
-    `// Generated from the structural keys used by the emitted Flight SDK. Do not edit.\n#pragma once\n\n#include <flight/structural_ref.hpp>\n\n#include <concepts>\n#include <cstddef>\n#include <memory>\n#include <string_view>\n#include <type_traits>\n#include <utility>\n\nnamespace flight::detail {\n\ntemplate <typename Key, typename Object>\ndecltype(auto) generated_row_member(Object& object) {\n${cases.join('\n')}\n  else static_assert(dependent_false<Key>, "Flight SDK row key has no compatible generated C++ member");\n}\n\ntemplate <typename Key, typename Object>\nconsteval auto generated_row_member_type_identity() {\n${typeCases.join('\n')}\n  else return std::type_identity<void>{};\n}\n\ntemplate <typename Key, typename Object>\nusing generated_row_member_t = typename decltype(generated_row_member_type_identity<Key, Object>())::type;\n\ntemplate <typename Object>\nvoid bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& object) {\n${bindings.join('\n')}\n}\n\n${wideningPredicate(wideningKeys)}\n} // namespace flight::detail\n`,
+    `// Generated from the structural keys used by the emitted Flight SDK. Do not edit.\n#pragma once\n\n#include <flight/structural_ref.hpp>\n\n#include <concepts>\n#include <cstddef>\n#include <memory>\n#include <string_view>\n#include <type_traits>\n#include <utility>\n\nnamespace flight::detail {\n\ntemplate <typename Key, typename Object>\ndecltype(auto) generated_row_member(Object& object) {\n${cases.join('\n')}\n  else static_assert(dependent_false<Key>, "Flight SDK row key has no compatible generated C++ member");\n}\n\ntemplate <typename Key, typename Object>\nconsteval auto generated_row_member_type_identity() {\n${typeCases.join('\n')}\n  else return std::type_identity<void>{};\n}\n\ntemplate <typename Key, typename Object>\nusing generated_row_member_t = typename decltype(generated_row_member_type_identity<Key, Object>())::type;\n\ntemplate <typename Object>\nvoid bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& object) {\n${bindings.join('\n')}\n}\n\n${wideningPredicate(wideningKeys, computedCells)}\n} // namespace flight::detail\n`,
   );
+}
+
+// The subject members the emitted SDK reaches through a `Symbol` rather than through a string row
+// key -- `[EntityRuntimeKey]: EntityRuntime | undefined` and its kin.
+//
+// They are found by the only evidence the emitted output carries: the compiler declares a computed
+// key as an `inline const flight::Symbol` constant and names the member it produces after that same
+// constant, so a symbol constant whose spelling also appears as a member declaration IS a computed
+// cell. Anything spelled like a string row key is excluded -- the two key spaces are separate, and a
+// property called `altKey` is a string property that happens to end in the same three letters.
+//
+// This matters to the widening proof because no `RowKey` ever names a computed cell, so the key
+// table below cannot see one. Two subjects that agree on every string key but disagree about a
+// computed cell are not interchangeable, and before these lines existed the proof approved them.
+function computedCellNames(files, rowKeyMembers) {
+  const symbols = new Set();
+  const declaration = /\binline const flight::Symbol (?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=/gu;
+  for (const file of files) {
+    for (const match of file.contents.matchAll(declaration)) {
+      if (match.groups?.name !== undefined) symbols.add(match.groups.name);
+    }
+  }
+  const found = [];
+  for (const name of [...symbols].sort(compareText)) {
+    if (rowKeyMembers.has(name)) continue;
+    const member = new RegExp(`^[ \\t]+[A-Za-z_][^;=()]*[ \\t*&]${name};[ \\t]*$`, 'mu');
+    if (files.some((file) => member.test(file.contents))) found.push(name);
+  }
+  return found;
+}
+
+// The runtime reaches a computed cell through `row_get`/`row_set`/`row_has` over a `Symbol` only for
+// the cells its own `bind_computed_row_cells` knows. The proof below compares every cell the emitted
+// SDK declares, known or not, so a disagreement always fails closed -- but a cell the runtime cannot
+// reach is still a hole on the READ side, and that is a compiler/runtime contract gap worth naming
+// out loud rather than leaving for someone to discover as a null.
+function reportComputedCells(names) {
+  const reachable = new Set(['entity_runtime_key']);
+  if (names.length === 0) {
+    process.stdout.write('Computed cells: none declared by the emitted SDK.\n');
+    return;
+  }
+  process.stdout.write(`Computed cells compared by the widening proof: ${names.join(', ')}\n`);
+  const unreachable = names.filter((name) => !reachable.has(name));
+  if (unreachable.length > 0) {
+    process.stdout.write(
+      `Computed cells the runtime's Symbol overloads cannot read: ${unreachable.join(', ')}\n` +
+        '  Widening across a disagreement about these is refused, but a symbol read of one returns\n' +
+        "  the attachment's answer rather than the member. See docs/upstream-flight-compiler-request.md.\n",
+    );
+  }
 }
 
 // The structural assignability proof behind row widening.
@@ -369,8 +423,25 @@ function writeStructuralMemberTable(outputRoot, files) {
 // halves of the contract separable: the runtime always declares the trait, this table only ever
 // adds the yes cases, and a table older than the contract simply contributes none instead of
 // leaving the name undeclared.
-function wideningPredicate(keys) {
+function wideningPredicate(keys, computedCells) {
   return [
+    '// A computed cell that BOTH subjects declare must be declared at the same type, and unlike a row',
+    '// key a disagreement is fatal to the proof rather than merely uncounted. The owner holds one',
+    '// cell of one type, so a read through the other row asks for a type the typed lookup cannot',
+    '// find and is handed a default instead of the value sitting on the object -- silently.',
+    '//',
+    '// A cell only ONE subject declares is not a disagreement. Computed cells are declared optional',
+    '// in the source, so an object without one is assignable to a row that names it, and both cases',
+    '// read honestly: the subject that has the member answers from it, the one that does not answers',
+    '// from its attachment.',
+    '#define FLIGHT_SDK_ROW_COMPUTED(member)                                                        \\',
+    '  if constexpr (requires(Base& base) { base.member; } &&                                       \\',
+    '                requires(Derived& derived) { derived.member; }) {                              \\',
+    '    if constexpr (!std::same_as<std::remove_cvref_t<decltype(std::declval<Base&>().member)>,   \\',
+    '                               std::remove_cvref_t<decltype(std::declval<Derived&>().member)>>) \\',
+    '      return false;                                                                            \\',
+    '  }',
+    '',
     '#define FLIGHT_SDK_ROW_WIDENS(member)                                                          \\',
     '  if constexpr (requires(Base& base) { base.member; }) {                                       \\',
     '    if constexpr (!requires(Derived& derived) { derived.member; }) return false;                \\',
@@ -382,12 +453,14 @@ function wideningPredicate(keys) {
     '',
     'template <typename Base, typename Derived>',
     'consteval bool generated_row_widening_matches() {',
+    ...(computedCells.length > 0 ? computedCells : ['  // The emitted SDK declares no computed cells.']),
     '  std::size_t matched = 0;',
     ...keys,
     '  return matched > 0;',
     '}',
     '',
     '#undef FLIGHT_SDK_ROW_WIDENS',
+    '#undef FLIGHT_SDK_ROW_COMPUTED',
     '',
     '// The only specialization of the runtime trait: yes, for the pairs proven above.',
     'template <typename Base, typename Derived>',

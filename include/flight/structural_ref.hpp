@@ -234,6 +234,53 @@ class RowOwner {
   // which is where a key written after construction belongs.
   [[nodiscard]] virtual const std::vector<std::string>& named_keys() const { return named_order_; }
 
+  // COMPUTED CELLS: the subject's own members that are reached through a `Symbol` rather than
+  // through a string key -- `[EntityRuntimeKey]: EntityRuntime | undefined` and its kin.
+  //
+  // They are bound on the OWNER, beside the named cells and for the same reason. The owner is the
+  // one thing every row over an object shares, so a row that has been widened to a base subject
+  // reaches the real member through it. Reaching the member through the row's own static subject
+  // instead -- which is what the `Symbol` overloads used to do, and still do as a fallback for a
+  // convertible value type -- cannot work for a widened row: `shared_object()` is type-checked
+  // against the row's subject, so over a derived object it answers null and the read falls through
+  // to the attachment, reporting a cell absent that is sitting engaged on the object.
+  //
+  // Presence is carried beside the cell rather than inferred from it. An `std::optional` member is
+  // present when it is engaged, which is not a question a type-erased cell can answer, and it is
+  // the question `row_has` asks.
+  template <typename Getter, typename Presence>
+  void bind_computed(const Symbol& key, Getter getter, Presence present) {
+    using Reference = std::invoke_result_t<Getter&>;
+    static_assert(std::is_lvalue_reference_v<Reference>);
+    using Value = std::remove_reference_t<Reference>;
+    if (computed_cells_.contains(key.identity())) return;
+    computed_cells_.insert_or_assign(
+        key.identity(),
+        ComputedCell{std::make_shared<NativeRowCell<Value, Getter>>(std::move(getter)),
+                     std::function<bool()>(std::move(present))});
+  }
+
+  [[nodiscard]] virtual std::shared_ptr<RowCell> computed_cell(const Symbol& key) const {
+    const auto found = computed_cells_.find(key.identity());
+    return found == computed_cells_.end() ? nullptr : found->second.cell;
+  }
+
+  // Empty when this owner has no computed cell under the key at all, which is a different answer
+  // from a cell that is present but disengaged.
+  [[nodiscard]] virtual std::optional<bool> computed_present(const Symbol& key) const {
+    const auto found = computed_cells_.find(key.identity());
+    if (found == computed_cells_.end()) return std::nullopt;
+    return found->second.present();
+  }
+
+  template <typename Value>
+  [[nodiscard]] Value* computed_value_if(const Symbol& key) const {
+    const auto cell = computed_cell(key);
+    if (!cell) return nullptr;
+    const auto typed = std::dynamic_pointer_cast<TypedRowCell<Value>>(cell);
+    return typed ? &typed->get() : nullptr;
+  }
+
   // Symbol-keyed properties live in the object's one attachment rather than in this owner, so a
   // computed-symbol write through a row and a `Record<Symbol, T>` view of the same object are the
   // same entry rather than two entries that happen to agree.
@@ -267,9 +314,16 @@ class RowOwner {
   }
 
  private:
+  struct ComputedCell final {
+    std::shared_ptr<RowCell> cell;
+    std::function<bool()> present;
+  };
+
   std::shared_ptr<SymbolAttachment> attachment_{std::make_shared<SymbolAttachment>()};
   std::unordered_map<std::string, std::shared_ptr<RowCell>> named_cells_;
   std::vector<std::string> named_order_;
+  // Keyed on symbol identity, not on the description: two `Symbol(String("X"))` are two symbols.
+  std::unordered_map<const void*, ComputedCell> computed_cells_;
 };
 
 namespace detail {
@@ -411,6 +465,28 @@ inline void sweep_owner_registry(OwnerRegistry& registry) {
   registry.sweep_threshold = registry.entries.size() * 2 + 64;
 }
 
+// Binds the subject's computed cells on its owner. This list is the runtime's own and it is the
+// counterpart of `RowComputedCells` below and of the three `Symbol` overloads at the end of this
+// header: a cell is added to all three together or to none of them.
+//
+// Presence for an `std::optional` member is engagement; a member that is not an optional is always
+// present, the way a declared non-optional property is in the source.
+template <typename Object>
+void bind_computed_row_cells(RowOwner& owner, const std::shared_ptr<Object>& object) {
+  if constexpr (requires { object->entity_runtime_key; }) {
+    owner.bind_computed(
+        Symbol::for_key(String("EntityRuntime")),
+        [object]() -> decltype(auto) { return (object->entity_runtime_key); },
+        [object]() -> bool {
+          if constexpr (requires { object->entity_runtime_key.has_value(); }) {
+            return object->entity_runtime_key.has_value();
+          } else {
+            return true;
+          }
+        });
+  }
+}
+
 template <typename Object>
 [[nodiscard]] std::shared_ptr<RowOwner> owner_for(const std::shared_ptr<Object>& object) {
   auto& registry = owner_registry();
@@ -424,6 +500,7 @@ template <typename Object>
   auto owner = std::make_shared<NativeRowOwner<Object>>(object);
   owner->adopt_attachment(attachment_for(std::static_pointer_cast<void>(object)));
   bind_generated_row_members(*owner, object);
+  bind_computed_row_cells(*owner, object);
   registry.entries.emplace(key, OwnerRegistryEntry{std::static_pointer_cast<void>(object), owner});
   return owner;
 }
@@ -477,6 +554,14 @@ class ProxyRowOwner final : public RowOwner {
     return target_->named_keys();
   }
 
+  [[nodiscard]] std::shared_ptr<RowCell> computed_cell(const Symbol& key) const override {
+    return target_->computed_cell(key);
+  }
+
+  [[nodiscard]] std::optional<bool> computed_present(const Symbol& key) const override {
+    return target_->computed_present(key);
+  }
+
   [[nodiscard]] const std::any* dynamic_value(const Symbol& key) const override {
     return target_->dynamic_value(key);
   }
@@ -495,6 +580,60 @@ class ProxyRowOwner final : public RowOwner {
   std::optional<std::string> intercepted_name_;
   std::function<void()> before_write_;
 };
+
+// The COMPUTED CELLS of a subject: the object members the runtime reaches through a `Symbol` key
+// rather than through a string row key. `row_get`, `row_set` and `row_has` over a `Symbol` read and
+// write these directly on the native object, so two subjects that disagree about one cannot answer
+// the same questions, and a row over the first must not be interchangeable with a row over the
+// second.
+//
+// This is a separate question from the string-key widening proof below, and it is asked separately
+// because the proof cannot see the answer: a computed cell is not a row key, so no `RowKey` ever
+// names it and nothing in the generated key table compares it. Before this trait existed, two
+// subjects that agreed on every string key widened even when one carried an `EntityRuntime` the
+// other did not -- and because a widened row's `shared_object()` is type-checked against the
+// TARGET's subject, the widened row then answered `row_has(EntityRuntime)` with false over an
+// object whose cell was engaged. Same object, same owner, opposite answer.
+//
+// `void` is the answer for a subject that does not declare the cell at all, and a `void` on either
+// side AGREES. That is deliberate and it is what the source says: a computed cell is declared
+// `EntityRuntime | undefined`, so an object without one is assignable to a row that names it, and
+// a plain `{x, y, width, height}` really is a `Readonly<Rectangle>` in TypeScript. Both directions
+// are now served honestly, because the cell is bound on the shared owner: a subject that has the
+// member answers from it, and one that does not answers from its attachment, which is where a
+// symbol property on a plain object lives anyway.
+//
+// What cannot be served, and is therefore what this refuses, is two subjects that BOTH declare the
+// cell at DIFFERENT types. The owner holds one cell of one type; a read through the other row asks
+// for the other type, the typed lookup misses, and the reader is handed a default instead of the
+// value that is sitting right there. That one is silent, which is why it is a compile error here.
+//
+// The list is the runtime's own, deliberately kept here rather than derived from the generated
+// table, because the two halves fail differently. A table older than this contract contributes no
+// widening at all and is therefore safe; but no table, of any age, may approve a pair that the
+// runtime itself can tell apart. Adding a cell means adding it here AND to the three `Symbol`
+// overloads below, together. The generated table compares every computed cell the emitted SDK
+// declares, including ones the runtime's `Symbol` overloads cannot yet reach.
+template <typename Object>
+struct RowComputedCells {
+  using entity_runtime = void;
+};
+
+template <typename Object>
+  requires(!std::is_void_v<Object> && requires(Object& object) { object.entity_runtime_key; })
+struct RowComputedCells<Object> {
+  using entity_runtime =
+      std::remove_cvref_t<decltype(std::declval<Object&>().entity_runtime_key)>;
+};
+
+template <typename Left, typename Right>
+concept computed_cell_agrees =
+    std::is_void_v<Left> || std::is_void_v<Right> || std::same_as<Left, Right>;
+
+template <typename Base, typename Derived>
+concept computed_cells_agree =
+    computed_cell_agrees<typename RowComputedCells<Base>::entity_runtime,
+                         typename RowComputedCells<Derived>::entity_runtime>;
 
 // Whether a derived subject may be read through a base subject's row.
 //
@@ -699,7 +838,10 @@ inline constexpr bool schema_required<RowWritable<Row>> = schema_required<Row>;
 //    readonly, whole to partial, a row to a merge that has no single subject of its own;
 //  * a row with no subject at all on either side, where there is no object relationship to prove;
 //  * a proven structural widening: the source's subject declares every row key the target's
-//    subject declares, at the same type, so nothing the target row can ask for is missing;
+//    subject declares, at the same type, so nothing the target row can ask for is missing, AND no
+//    computed cell is declared by both subjects at two different types -- the proof and the cells
+//    are two separate questions and a widening has to pass both, because the key table cannot see
+//    a cell no `RowKey` names;
 //  * a READONLY PARTIAL target, which is `Partial<T>` and therefore asks nothing of its subject.
 //    Every member of a partial row reads as an optional, and a key the subject does not declare
 //    reads as an empty one rather than throwing -- so this is the runtime honouring
@@ -717,7 +859,8 @@ concept row_objects_convertible =
     std::is_void_v<schema_object_t<From>> || std::is_void_v<schema_object_t<To>> ||
     std::same_as<schema_object_t<From>, schema_object_t<To>> ||
     (schema_partial<To> && schema_readonly<To>) ||
-    generated_row_widening_proven_v<schema_object_t<To>, schema_object_t<From>>;
+    (generated_row_widening_proven_v<schema_object_t<To>, schema_object_t<From>> &&
+     computed_cells_agree<schema_object_t<To>, schema_object_t<From>>);
 
 template <typename From, typename To>
 concept row_convertible_to = row_objects_convertible<From, To> &&
@@ -873,8 +1016,15 @@ void row_set(const StructuralRef<Schema>& target, Value&& value) {
   target.shared_owner()->set_named_value(Key::name.view(), Expected(std::forward<Value>(value)));
 }
 
+// Computed-symbol read. The owner's computed cell is consulted FIRST, because it is the only one of
+// the three sources that reaches the subject's real member from a row whose static subject is not
+// the object's own type -- a widened row. The subject-typed path after it stays for the case the
+// cell cannot serve: a `Value` that is convertible from the member rather than equal to it.
 template <typename Value, typename Schema>
 [[nodiscard]] Value row_get(const StructuralRef<Schema>& source, const Symbol& key) {
+  if (source.shared_owner()) {
+    if (auto* cell = source.shared_owner()->template computed_value_if<Value>(key)) return *cell;
+  }
   using Object = typename StructuralRef<Schema>::object_type;
   if constexpr (!std::is_void_v<Object>) {
     if (auto object = source.shared_object()) {
@@ -897,6 +1047,11 @@ void row_set(const StructuralRef<Schema>& target, const Symbol& key, Value&& val
   static_assert(!detail::schema_readonly<Schema>, "a readonly structural row cannot be written");
   if (!target.shared_owner()) throw std::bad_weak_ptr();
   target.shared_owner()->before_write(key);
+  if (auto* cell =
+          target.shared_owner()->template computed_value_if<std::remove_cvref_t<Value>>(key)) {
+    *cell = std::forward<Value>(value);
+    return;
+  }
   using Object = typename StructuralRef<Schema>::object_type;
   if constexpr (!std::is_void_v<Object>) {
     if (auto object = target.shared_object()) {
@@ -913,6 +1068,9 @@ void row_set(const StructuralRef<Schema>& target, const Symbol& key, Value&& val
 
 template <typename Schema>
 [[nodiscard]] bool row_has(const StructuralRef<Schema>& source, const Symbol& key) {
+  if (source.shared_owner()) {
+    if (const auto present = source.shared_owner()->computed_present(key)) return *present;
+  }
   using Object = typename StructuralRef<Schema>::object_type;
   if constexpr (!std::is_void_v<Object>) {
     if (auto object = source.shared_object()) {

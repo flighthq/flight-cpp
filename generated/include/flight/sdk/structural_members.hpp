@@ -1907,6 +1907,23 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->zoom; }) owner.bind_named("zoom", [object]() -> decltype(auto) { return (object->zoom); });
 }
 
+// A computed cell that BOTH subjects declare must be declared at the same type, and unlike a row
+// key a disagreement is fatal to the proof rather than merely uncounted. The owner holds one
+// cell of one type, so a read through the other row asks for a type the typed lookup cannot
+// find and is handed a default instead of the value sitting on the object -- silently.
+//
+// A cell only ONE subject declares is not a disagreement. Computed cells are declared optional
+// in the source, so an object without one is assignable to a row that names it, and both cases
+// read honestly: the subject that has the member answers from it, the one that does not answers
+// from its attachment.
+#define FLIGHT_SDK_ROW_COMPUTED(member)                                                        \
+  if constexpr (requires(Base& base) { base.member; } &&                                       \
+                requires(Derived& derived) { derived.member; }) {                              \
+    if constexpr (!std::same_as<std::remove_cvref_t<decltype(std::declval<Base&>().member)>,   \
+                               std::remove_cvref_t<decltype(std::declval<Derived&>().member)>>) \
+      return false;                                                                            \
+  }
+
 #define FLIGHT_SDK_ROW_WIDENS(member)                                                          \
   if constexpr (requires(Base& base) { base.member; }) {                                       \
     if constexpr (!requires(Derived& derived) { derived.member; }) return false;                \
@@ -1918,6 +1935,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
 
 template <typename Base, typename Derived>
 consteval bool generated_row_widening_matches() {
+  FLIGHT_SDK_ROW_COMPUTED(entity_runtime_key)
   std::size_t matched = 0;
   FLIGHT_SDK_ROW_WIDENS(brand)
   FLIGHT_SDK_ROW_WIDENS(a)
@@ -2549,6 +2567,7 @@ consteval bool generated_row_widening_matches() {
 }
 
 #undef FLIGHT_SDK_ROW_WIDENS
+#undef FLIGHT_SDK_ROW_COMPUTED
 
 // The only specialization of the runtime trait: yes, for the pairs proven above.
 template <typename Base, typename Derived>

@@ -121,6 +121,77 @@ static_assert(!std::convertible_to<BaseTargetRow, UnrelatedTargetRow>);
 static_assert(!std::convertible_to<RetypedTargetRow, BaseTargetRow>,
               "matching key names at different types is not assignability");
 
+// COMPUTED CELLS. A cell is a member reached through a `Symbol` rather than through a string key,
+// so no `RowKey` names it and the generated key table cannot see it. These four subjects agree on
+// `width` and `height` at the same type -- everything the key table looks at -- and differ only
+// behind `Symbol.for('EntityRuntime')`. Before this, all of them widened onto each other, and the
+// widened row then answered `row_has(EntityRuntime)` with false over an object whose cell was
+// engaged: same object, same owner, opposite answer.
+//
+// Two different fixes, for two different halves of that. A cell only one subject declares is FINE
+// and still widens -- the cell is declared optional in the source, `{x, y, width, height}` really
+// is a `Readonly<Rectangle>`, and the owner-bound cell now answers honestly either way. A cell
+// both subjects declare at DIFFERENT types is refused, because the owner holds one cell of one
+// type and the other row's read would be handed a default instead of the value on the object.
+struct TestRuntimeSlotA final : public flight::ReferenceEnabled {
+  double tag{};
+};
+
+struct TestRuntimeSlotB final : public flight::ReferenceEnabled {
+  double tag{};
+};
+
+struct TestCellBearing final : public flight::ReferenceEnabled {
+  double width{};
+  double height{};
+  std::optional<flight::Ref<TestRuntimeSlotA>> entity_runtime_key;
+};
+
+struct TestCellBearingPeer final : public flight::ReferenceEnabled {
+  double width{};
+  double height{};
+  std::optional<flight::Ref<TestRuntimeSlotA>> entity_runtime_key;
+};
+
+struct TestCellRetyped final : public flight::ReferenceEnabled {
+  double width{};
+  double height{};
+  std::optional<flight::Ref<TestRuntimeSlotB>> entity_runtime_key;
+};
+
+template <typename Subject>
+using CellRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Subject>>>>;
+
+// Both halves of the contract refuse independently, and each is asserted on its own so a
+// regression in one cannot hide behind the other. The runtime compares the cells it can reach
+// through a Symbol; the generated table compares every cell the emitted SDK declares, including
+// ones the runtime cannot yet reach.
+// Both halves of the contract refuse the type disagreement independently, and each is asserted on
+// its own so a regression in one cannot hide behind the other. The runtime compares the cells it
+// can reach through a Symbol; the generated table compares every cell the emitted SDK declares,
+// including ones the runtime cannot yet reach.
+static_assert(!flight::detail::computed_cells_agree<TestCellBearing, TestCellRetyped>,
+              "the runtime's own comparison refuses two cells at different types");
+static_assert(!flight::detail::generated_row_widening_proven_v<TestCellRetyped, TestCellBearing>,
+              "and so does the generated table");
+static_assert(!std::convertible_to<CellRow<TestCellBearing>, CellRow<TestCellRetyped>>,
+              "so the conversion is refused");
+static_assert(!std::convertible_to<CellRow<TestCellRetyped>, CellRow<TestCellBearing>>,
+              "in both directions");
+
+static_assert(flight::detail::computed_cells_agree<TestBaseTarget, TestCellBearing>,
+              "a cell only one subject declares is not a disagreement");
+static_assert(std::convertible_to<CellRow<TestCellBearing>, BaseTargetRow>,
+              "so it still widens -- this is Adjustment read as its own anonymous {kind} bag");
+static_assert(std::convertible_to<CellRow<TestCellBearing>, CellRow<TestCellBearingPeer>>,
+              "and subjects that agree about the cell widen as before");
+
+// The exact-owner path is answered before the cells are consulted, so a cell-bearing subject keeps
+// its own readonly view.
+static_assert(std::convertible_to<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestCellBearing>>>>,
+                                  CellRow<TestCellBearing>>,
+              "a cell-bearing subject still has a readonly view of itself");
+
 // Readonly widening must not grant mutation the source refused.
 static_assert(std::convertible_to<WritableDerivedTargetRow, BaseTargetRow>,
               "a writable derived row may be read as a readonly base row");
@@ -537,6 +608,34 @@ int main() {
   // The view is read-only: it has no way to write a property back.
   static_assert(!writes_named_properties<flight::NamedProperties>,
                 "the dynamic named view never writes");
+
+  // A permitted widening reaches the computed cell. The cell is bound on the OWNER, which the
+  // conversion keeps, so the read does not depend on the widened row's static subject matching the
+  // object's type -- which it does not, and which is why the subject-typed path alone answered
+  // false here.
+  const auto entity_runtime = flight::Symbol::for_key(flight::String("EntityRuntime"));
+  auto cell_subject = flight::make_ref<TestCellBearing>();
+  const CellRow<TestCellBearing> own_row(cell_subject);
+  const CellRow<TestCellBearingPeer> widened_row = own_row;
+  check(!flight::row_has(own_row, entity_runtime) && !flight::row_has(widened_row, entity_runtime),
+        "a disengaged computed cell is absent through both rows");
+
+  auto slot = flight::make_ref<TestRuntimeSlotA>();
+  slot->tag = 7.0;
+  cell_subject->entity_runtime_key = slot;
+  check(flight::row_has(own_row, entity_runtime) && flight::row_has(widened_row, entity_runtime),
+        "engaging it makes it present through both rows, because there is one object and one owner");
+  check(flight::row_get<std::optional<flight::Ref<TestRuntimeSlotA>>>(widened_row, entity_runtime)
+                .value() == slot,
+        "and the widened row reads the subject's own member rather than an attachment entry");
+
+  const flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestCellBearing>>>>
+      writable_cell_row(cell_subject);
+  auto replacement = flight::make_ref<TestRuntimeSlotA>();
+  flight::row_set(writable_cell_row, entity_runtime,
+                  std::optional<flight::Ref<TestRuntimeSlotA>>(replacement));
+  check(cell_subject->entity_runtime_key.value() == replacement,
+        "a computed-symbol write lands on the subject's member, not beside it");
 
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
   return failures == 0 ? 0 : 1;
