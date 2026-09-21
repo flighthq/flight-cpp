@@ -177,6 +177,73 @@ wants its own change: either a weak capture that locks per read, or binding by m
 against the owner's existing weak object. Flagged rather than fixed, because it is a lifetime
 decision that belongs in its own commit with its own test.
 
+### Answering the review of this release
+
+Three things came back. One is yours and already tracked; the other two need something from you
+before we can move, and both are stated here rather than left implicit.
+
+**The conformance artifact is not behind — the pin is.** It was regenerated with `ef60fb6` because
+that is what [`dependencies.lock.json`](../dependencies.lock.json) names, and the whole point of
+`npm run conformance:check` is that the artifact tracks the pin exactly. Regenerating it against a
+compiler this checkout does not pin would produce a file matching no revision either repository can
+name, and our own new gate would fail it immediately — correctly.
+
+So this is a pin move, not an artifact refresh, and it needs two things we do not have:
+
+1. **The commit.** Name the flight-compiler SHA to pin. "Our folded compiler" is not resolvable
+   from here; `.dependencies/` is materialised from the lock and nothing else.
+2. **A re-measurement budget.** Moving the pin means regenerating the committed SDK inventory and
+   re-running the emission and header sweep, because every number in this document is stated
+   against `ef60fb6`. Per `AGENTS.md` that lands as its own commit carrying the gate result that
+   motivated it.
+
+Send the SHA and it is a contained piece of work. Until then the artifact is correct for the pin,
+and `conformance:check` will flag it the moment the pin moves — which is the behaviour that was
+asked for.
+
+**The WGPU device/queue/texture callable surface was never requested of this repository.** It has
+not appeared in any of the handoffs relayed here — the 2026-09-19 tranche, the 2026-09-20 primitives
+and integration addendum, or either 2026-09-21 round. That is worth saying plainly so it is
+diagnosed as a lost relay rather than as work that was received and skipped.
+
+What exists today, so the gap is concrete rather than a shrug. `bindings/sdl-wgpu.json` carries 66
+entries across 18 WebGPU object domains — 61 type bindings and 5 value bindings — and `GPUDevice`,
+`GPUQueue`, `GPUTexture` and `GPUCommandEncoder` are among them. They are bound as **opaque identity
+handles**: `WgpuObject` gives provider-owned lifetime, release callbacks that run exactly once,
+stable identity, and weak policies for generated caches. What none of them has is **operations**.
+There is nothing for `device.createBuffer` to lower onto, which is the same shape of gap
+`GlExtension` had before this release and was fixed by giving the handle real operations.
+
+Measured against the pinned Flight sources, the surface is 34 distinct methods and 505 call sites.
+The dense end of it:
+
+| calls | method | | calls | method |
+| ---: | --- | --- | ---: | --- |
+| 60 | `pass.setBindGroup` | | 25 | `device.createRenderPipeline` |
+| 50 | `device.createBindGroup` | | 21 | `pass.setPipeline` |
+| 39 | `device.createBindGroupLayout` | | 19 | `pass.draw` |
+| 37 | `device.createShaderModule` | | 17 | `texture.createView` |
+| 37 | `queue.writeBuffer` | | 13 | `texture.destroy` |
+| 36 | `device.createBuffer` | | 12 | `pass.end` |
+| 29 | `device.createTexture` | | 10 | `queue.writeTexture` |
+| 25 | `device.createPipelineLayout` | | 10 | `device.createSampler` |
+
+Note that a third of the weight is the **render-pass encoder**, not device/queue/texture — a
+device/queue/texture-only surface would leave `pass.*` with nothing to lower onto and the modules
+still refused.
+
+The reason this has not simply been built is a decision that is not ours and not yours. Every one of
+those methods has to reach a real WebGPU implementation, and this repository has deliberately not
+selected one: the adoption record states that Dawn or wgpu-native supplies device operations and
+that the package does not choose between them. Implementing the callable surface means taking that
+dependency, in a runtime whose contract is to be dependency-free outside the optional SDL host.
+That is the repository owner's call. Say which implementation you are targeting and whether the
+render-pass encoder is in scope, and it becomes a scoped piece of work rather than an open one.
+
+**Guarded-optional narrowing and `GlExtension::get` lowering** are yours, unchanged, and
+`scripts/sdlGlProfileOracle.mjs` stays red until they land. See the section above for the verbatim
+emission and diagnostic.
+
 ## Round of 2026-09-21: the four integration follow-ups
 
 Two of the four were already satisfied here and needed verifying rather than changing; two were
