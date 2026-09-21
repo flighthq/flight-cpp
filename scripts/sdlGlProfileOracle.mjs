@@ -107,7 +107,7 @@ const source = api.parseTypeScriptSource(
      const anisotropy = context.getExtension('EXT_texture_filter_anisotropic');
      if (anisotropy === null) return 0;
      const colorBufferFloat = context.getExtension('EXT_color_buffer_float') !== null;
-     return colorBufferFloat ? 1 : 0;
+     return anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT + (colorBufferFloat ? 1 : 0);
    }
    export function nativeGlSmoke(context: WebGL2RenderingContext, data: Float32Array): void {
      const buffer = context.createBuffer();
@@ -218,6 +218,7 @@ for (const expected of [
   'extension.texture_max_anisotropy_ext',
   'extension.max_texture_max_anisotropy_ext',
   'context.get_extension(flight::String("EXT_texture_filter_anisotropic"))',
+  'anisotropy.max_texture_max_anisotropy_ext',
   'context.create_buffer()',
   'context.bind_buffer(context.array_buffer, buffer)',
   'context.buffer_data(context.array_buffer, data, context.static_draw)',
