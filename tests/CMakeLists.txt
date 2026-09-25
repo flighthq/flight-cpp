@@ -49,6 +49,7 @@ set(
   array_buffer_view
   attachment
   audio_buffer
+  audio_context
   base64
   blob
   boolean

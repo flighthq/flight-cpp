@@ -1,3 +1,4 @@
+#include <flight/audio_context.hpp>
 #include <flight/runtime.hpp>
 #include <flight/host/console.hpp>
 #include <flight/host/performance.hpp>
@@ -2988,6 +2989,50 @@ static void test_ambient_statics() {
   check(flight::array_buffer_is_view(data), "and so is a DataView");
 }
 
+// `AudioContext` is a carrier for a host decode seam, not a decoder. The surface is one method,
+// because across the whole SDK the only member reached on a context is `decodeAudioData`.
+static void test_audio_context() {
+  // No decoder installed: a decode REJECTS. It must not resolve with an empty buffer -- silence is
+  // indistinguishable from a correctly decoded quiet passage, so a missing codec would surface as
+  // an audio bug far from here instead of as a failed decode at the call site.
+  const flight::AudioContext without;
+  check(!without.has_decoder(), "a default context carries no decoder");
+  auto refused = without.decode_audio_data(flight::ArrayBuffer::allocate(8));
+  const auto refused_settlement = refused.settle();
+  check(refused_settlement.rejection.has_value(),
+        "decoding without a decoder rejects rather than handing back silence");
+
+  // The host's own settlement is passed through unchanged, reason included.
+  const auto reason = flight::String("host codec said no");
+  const flight::AudioContext failing([reason](flight::ArrayBuffer) {
+    return flight::Task<flight::AudioBuffer>::reject(flight::Error(reason));
+  });
+  auto failed = failing.decode_audio_data(flight::ArrayBuffer::allocate(8));
+  const auto failed_settlement = failed.settle();
+  check(failed_settlement.rejection.has_value(),
+        "a host decoder's rejection reaches the caller");
+
+  // A real decoder resolves with what the host produced.
+  flight::AudioBufferOptions options;
+  options.length = 4;
+  options.sample_rate = 48000;
+  options.number_of_channels = 1;
+  const flight::AudioBuffer decoded(options);
+  const flight::AudioContext working([decoded](flight::ArrayBuffer) {
+    return flight::Task<flight::AudioBuffer>::ready(decoded);
+  });
+  check(working.has_decoder(), "an installed decoder is reported present");
+  auto ok = working.decode_audio_data(flight::ArrayBuffer::allocate(8));
+  const auto ok_settlement = ok.settle();
+  check(ok_settlement.value.has_value() && ok_settlement.value.value() == decoded,
+        "and a decode resolves with the buffer the host produced");
+
+  // Reference identity: copies of one context are one context.
+  const flight::AudioContext alias = working;
+  check(alias == working && !(alias == failing),
+        "a context has reference identity, not structural equality");
+}
+
 int main() {
   test_array();
   test_array_buffer_like();
@@ -2997,6 +3042,7 @@ int main() {
   test_base64();
   test_erased_ref();
   test_ambient_statics();
+  test_audio_context();
   test_blob();
   test_font_face();
   test_boolean_conversion();

@@ -143,6 +143,7 @@
       "space": "type",
       "targetName": "flight::Blob"
     },
+    { "headers": ["flight/audio_context.hpp"], "nullability": "non-null", "ownership": "value", "sourceName": "AudioContext", "space": "type", "targetName": "flight::AudioContext" },
     {
       "headers": [
         "flight/dom_exception.hpp"
