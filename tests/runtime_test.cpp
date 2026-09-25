@@ -3033,6 +3033,55 @@ static void test_audio_context() {
         "a context has reference identity, not structural equality");
 }
 
+// `bytes.buffer as ArrayBuffer` -- the assertion the SDK writes over a typed array's backing
+// store. TypeScript does not check it; this does, because a shared buffer is not interchangeable
+// with an owned one at run time.
+static void test_array_buffer_assertion() {
+  const auto owned = flight::ArrayBuffer::allocate(8);
+  const flight::ArrayBufferLike like = owned;
+  const flight::ArrayBuffer asserted(like);
+  check(asserted.byte_length() == 8, "asserting an owned backing store keeps its bytes");
+  // Shared, not copied: the assertion adopts the same store rather than duplicating it.
+  check(asserted.byte_length() == owned.byte_length(),
+        "and adopts the store rather than copying it");
+
+  const auto shared = flight::SharedArrayBuffer::allocate(8);
+  const flight::ArrayBufferLike shared_like = shared;
+  bool refused = false;
+  try {
+    const flight::ArrayBuffer wrong(shared_like);
+    static_cast<void>(wrong);
+  } catch (const flight::TypeError&) {
+    refused = true;
+  }
+  check(refused,
+        "asserting a SharedArrayBuffer as an ArrayBuffer is refused, because accepting it would "
+        "hand a caller that believes it owns its bytes a store another agent can write");
+
+  // `.slice()` COPIES. The SDK calls it precisely so a later decode cannot detach the caller's
+  // view, so sharing the store would defeat the reason the call is written.
+  auto original = flight::ArrayBuffer::allocate(8);
+  auto* bytes = static_cast<std::byte*>(static_cast<void*>(original.writable_data()));
+  for (std::size_t index = 0; index < 8; ++index) bytes[index] = static_cast<std::byte>(index);
+
+  const auto middle = original.slice(2.0, 5.0);
+  check(middle.byte_length() == 3, "slice takes the requested range");
+  const auto* copied = middle.data();
+  check(copied != nullptr && copied[0] == static_cast<std::byte>(2),
+        "and starts at the requested offset");
+  check(copied != original.data(), "the slice owns its own store rather than viewing the original");
+
+  bytes[2] = static_cast<std::byte>(99);
+  check(middle.data()[0] == static_cast<std::byte>(2),
+        "so writing the original after slicing does not change the copy");
+
+  // ECMAScript index conventions.
+  check(original.slice(-3.0).byte_length() == 3, "a negative begin counts back from the end");
+  check(original.slice(5.0, 2.0).byte_length() == 0, "an inverted range is empty, not an error");
+  check(original.slice(100.0).byte_length() == 0, "a begin past the end clamps to empty");
+  check(original.slice(0.0, 100.0).byte_length() == 8, "and an end past the end clamps to length");
+}
+
 int main() {
   test_array();
   test_array_buffer_like();
@@ -3043,6 +3092,7 @@ int main() {
   test_erased_ref();
   test_ambient_statics();
   test_audio_context();
+  test_array_buffer_assertion();
   test_blob();
   test_font_face();
   test_boolean_conversion();

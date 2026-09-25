@@ -11,6 +11,9 @@
 #include <type_traits>
 #include <utility>
 
+#include <flight/error.hpp>
+#include <flight/string.hpp>
+
 namespace flight {
 
 namespace detail {
@@ -187,8 +190,64 @@ class ArrayBuffer : public ArrayBufferLike {
     return ArrayBuffer(byte_length, OwnedTag{});
   }
 
+  // `ArrayBuffer.prototype.slice(begin, end)`: a NEW buffer holding a COPY of the range.
+  //
+  // Copying is the whole point of the call at the sites that use it. `decodeAudioResourceBytes`
+  // says so -- "copy the viewed region so decodeAudioData cannot detach the caller's Uint8Array" --
+  // so returning a view over the original store would defeat the reason the source wrote
+  // `.slice()` and reintroduce exactly the detachment it is guarding against.
+  //
+  // Indices follow the ECMAScript convention: negative counts back from the end, both ends clamp
+  // into range, and an empty or inverted range yields an empty buffer rather than throwing.
+  [[nodiscard]] ArrayBuffer slice(double begin_index, double end_index) const {
+    const auto length = static_cast<double>(byte_length());
+    const auto first = clamp_boundary(begin_index, length);
+    const auto last = clamp_boundary(end_index, length);
+    if (last <= first) return ArrayBuffer::allocate(0);
+    const auto count = static_cast<size_type>(last - first);
+    auto result = ArrayBuffer::allocate(count);
+    const auto* source = data();
+    if (source != nullptr && count > 0) {
+      std::memcpy(result.writable_data(), source + static_cast<std::ptrdiff_t>(first), count);
+    }
+    return result;
+  }
+
+  [[nodiscard]] ArrayBuffer slice(double begin_index) const {
+    return slice(begin_index, static_cast<double>(byte_length()));
+  }
+
+  // `bytes.buffer as ArrayBuffer` -- the assertion the SDK writes when it takes a typed array's
+  // backing store. A `TypedArray` carries an `ArrayBufferLike`, which is either an `ArrayBuffer`
+  // or a `SharedArrayBuffer`, and the source asserts the first.
+  //
+  // TypeScript does not check that assertion. This DOES, because the two are not interchangeable
+  // at run time: a shared buffer can be mutated by another agent while it is read, so quietly
+  // accepting one here would hand code that believes it owns its bytes a store that someone else
+  // is writing. A wrong answer would be a data race, not a type error, and it would surface far
+  // from this line. Refusing loudly at the assertion is the only honest reading.
+  //
+  // The bytes are NOT copied: the backing store is shared, which is what the assertion means. The
+  // caller's own `.slice()` is what copies, when it wants a copy.
+  explicit ArrayBuffer(const ArrayBufferLike& source) : ArrayBufferLike(source) {
+    if (source.kind() == ArrayBufferKind::shared_array_buffer) {
+      throw TypeError(String(
+          "flight::ArrayBuffer cannot adopt a SharedArrayBuffer: the assertion `as ArrayBuffer` is "
+          "false for a shared backing store"));
+    }
+  }
+
  private:
   struct OwnedTag {};
+
+  // ECMAScript relative-index clamping: negative counts from the end, everything clamps into
+  // [0, length], and NaN is treated as 0 the way `ToIntegerOrInfinity` does.
+  [[nodiscard]] static double clamp_boundary(double index, double length) {
+    if (std::isnan(index)) return 0.0;
+    const auto relative = index < 0.0 ? length + index : index;
+    if (relative < 0.0) return 0.0;
+    return relative > length ? length : relative;
+  }
 
   ArrayBuffer(size_type byte_length, OwnedTag)
       : ArrayBufferLike(byte_length, ArrayBufferKind::array_buffer,
