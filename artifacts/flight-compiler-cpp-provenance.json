@@ -1,0 +1,27 @@
+{
+  "schema": "flight-cpp-compiler-check-provenance/1",
+  "flight": {
+    "repository": "https://github.com/flighthq/flight.git",
+    "ref": "develop",
+    "revision": "cefb2f9914270340afd4cc39e407f1202bcf8fc5"
+  },
+  "compiler": {
+    "repository": "https://github.com/flighthq/flight-compiler.git",
+    "ref": "main",
+    "revision": "839d91eb9f9f3b66681443bb53b861dd2a7f2774",
+    "build": [
+      "npm ci",
+      "npm run build"
+    ]
+  },
+  "target": {
+    "name": "flight-cpp",
+    "reportRevision": "unversioned",
+    "downstreamBindingComparisonRevision": "0b135b890378e9299a4d94ec900fcd13dc522384"
+  },
+  "commands": {
+    "default": "flight-compile check . --target cpp --format json --report out/flight-compiler-cpp-default.json",
+    "web": "flight-compile check . --target cpp --environment web --format json --report out/flight-compiler-cpp-web.json"
+  },
+  "workingDirectory": "Flight checkout root"
+}

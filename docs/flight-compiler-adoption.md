@@ -5,7 +5,14 @@ This is flight-cpp's maintained view of the downstream work requested by
 adopted. Adoption also requires build packaging, compiler-emitted compilation, source differential behavior where
 observable, and a complete regenerated SDK closure.
 
-The current pins are Flight `903f328` and flight-compiler `fbfcc11`. The corpus grew with them, to 155 packages and
+The latest whole-workspace Default/Web check baseline and the two ranked worklists now live in
+[Latest Flight C++ check worklists](flight-compiler-corpus-worklists.md). They are generated from Flight `develop`
+at `cefb2f9` and flight-compiler `839d91e`; the raw reports reproduce the 511/745 target-runtime corpus and compare
+every required API with this checkout's maintained binding manifests. That report is the current corpus register.
+The profile-specific generation history below remains the evidence for implemented runtime behavior and compiled
+headers at its stated pins.
+
+The earlier profile-generation baseline used Flight `903f328` and flight-compiler `fbfcc11`. The corpus grew with them, to 155 packages and
 2,900 modules. The portable floor -- no binding profile applied -- emits 985 dependency-closed headers and records
 1,915 refusals. The complete SDL profile emits **1,161** headers with 1,739 refusals: 960 direct emission refusals
 and 779 propagated dependency refusals. The upstream example inventory now covers 34 examples and 103 selected

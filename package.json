@@ -20,6 +20,7 @@
     "canvas-2d:oracle": "node ./scripts/canvas2dProfileOracle.mjs",
     "check": "node ./scripts/check.mjs",
     "compile:check": "node ./scripts/emittedSourceCompile.mjs",
+    "compiler-reports:summary": "node ./scripts/compilerCheckReports.mjs",
     "conformance:check": "node ./scripts/conformanceGeneration.mjs --check",
     "conformance:generate": "node ./scripts/conformanceGeneration.mjs",
     "examples:check": "node ./scripts/exampleHealth.mjs",
