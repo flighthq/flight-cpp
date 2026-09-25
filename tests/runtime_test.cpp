@@ -2967,6 +2967,27 @@ void test_task() {
 
 } // namespace
 
+// `Object.hasOwn` and `ArrayBuffer.isView`: the two ambient statics the SDK reaches that the
+// runtime did not answer. The rest of the cluster -- Array.from, the typed-array froms,
+// Object.values, Promise.allSettled -- already existed and needed only declaring.
+static void test_ambient_statics() {
+  flight::Record<flight::String, double> fields;
+  fields.set(flight::String("albedo"), 1.0);
+  check(flight::object_has_own(fields, flight::String("albedo")),
+        "hasOwn reports a key the target declares");
+  check(!flight::object_has_own(fields, flight::String("absent")),
+        "and refuses one it does not, which is what makes two field bags comparable");
+
+  // A view is not its buffer. The SDK asks this to decide how to reach the bytes, so collapsing
+  // the two would send it down the wrong path rather than merely mislabel a value.
+  const auto buffer = flight::ArrayBuffer::allocate(16);
+  const flight::Uint8Array typed(buffer, 0);
+  const flight::DataView data(buffer);
+  check(!flight::array_buffer_is_view(buffer), "a buffer is not a view of itself");
+  check(flight::array_buffer_is_view(typed), "a typed array is a view");
+  check(flight::array_buffer_is_view(data), "and so is a DataView");
+}
+
 int main() {
   test_array();
   test_array_buffer_like();
@@ -2975,6 +2996,7 @@ int main() {
   test_binary_data();
   test_base64();
   test_erased_ref();
+  test_ambient_statics();
   test_blob();
   test_font_face();
   test_boolean_conversion();

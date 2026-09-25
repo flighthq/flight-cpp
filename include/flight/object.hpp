@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tuple>
+#include <concepts>
 #include <type_traits>
 #include <utility>
 
@@ -78,6 +79,28 @@ template <typename Target, typename... Sources>
 [[nodiscard]] Target& object_assign(Target& target, const Sources&... sources) {
   (detail::assign_object_source(target, sources), ...);
   return target;
+}
+
+// `Object.hasOwn(target, key)`: whether the target carries the key as its OWN property.
+//
+// Own, not inherited and not merely readable: a record answers from its own entries. This is the
+// membership test the SDK writes when comparing two field bags key by key -- `material.ts` walks
+// one bag's keys and asks whether the other declares each one -- so answering true for a key the
+// target does not have would make two different materials compare equal.
+template <typename Key, typename Value, typename LookupKey>
+[[nodiscard]] bool object_has_own(const Record<Key, Value>& target, const LookupKey& key) {
+  return target.has(key);
+}
+
+// The same question for anything else that answers membership for itself. A structural subject is
+// reached through `flight::named_properties`, which lives with the row machinery rather than here
+// -- this header must not depend on it.
+template <typename Target, typename LookupKey>
+  requires requires(const Target& target, const LookupKey& key) {
+    { target.has(key) } -> std::convertible_to<bool>;
+  }
+[[nodiscard]] bool object_has_own(const Target& target, const LookupKey& key) {
+  return target.has(key);
 }
 
 } // namespace flight

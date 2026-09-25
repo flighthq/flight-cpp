@@ -143,6 +143,9 @@
       "space": "type",
       "targetName": "flight::Blob"
     },
+    { "headers": ["flight/array.hpp"], "members": [{ "sourceMember": "from", "targetName": "flight::array_from" }], "nullability": "non-null", "ownership": "value", "sourceName": "Array", "space": "value", "targetName": "flight::Array" },
+    { "headers": ["flight/object.hpp"], "members": [{ "sourceMember": "hasOwn", "targetName": "flight::object_has_own" }, { "sourceMember": "values", "targetName": "flight::object_values" }, { "sourceMember": "keys", "targetName": "flight::object_keys" }, { "sourceMember": "entries", "targetName": "flight::object_entries" }], "nullability": "non-null", "ownership": "value", "sourceName": "Object", "space": "value", "targetName": "flight::Object" },
+    { "headers": ["flight/array_buffer_view.hpp"], "members": [{ "sourceMember": "isView", "targetName": "flight::array_buffer_is_view" }], "nullability": "non-null", "ownership": "value", "sourceName": "ArrayBuffer", "space": "value", "targetName": "flight::ArrayBuffer" },
     {
       "headers": [
         "flight/dom_exception.hpp"

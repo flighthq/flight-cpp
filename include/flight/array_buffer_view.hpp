@@ -149,4 +149,24 @@ template <typename... Values>
       [](const auto& alternative) { return is_array_buffer_view(alternative); }, value);
 }
 
+// `ArrayBuffer.isView(value)`: whether the value is a VIEW over a buffer rather than a buffer.
+//
+// The distinction is the whole point of the call and the SDK uses it to decide how to reach the
+// bytes: a view carries an offset and a length into someone else's storage, a buffer IS the
+// storage. Answering it structurally -- does this type present as a view -- rather than by a
+// runtime tag keeps it correct for every typed array and for `DataView` without this header
+// having to enumerate them.
+template <typename Value>
+[[nodiscard]] constexpr bool array_buffer_is_view(const Value&) noexcept {
+  // A view carries its buffer, offset and length as DATA MEMBERS -- `TypedArray` and `DataView`
+  // both do. `ArrayBuffer` has neither a `buffer` member nor a `byte_offset`; its `byte_length` is
+  // a method. So plain member access separates the two exactly, and adding a third view type gets
+  // the right answer without touching this.
+  return requires(const Value& value) {
+    value.buffer;
+    value.byte_offset;
+    value.byte_length;
+  };
+}
+
 } // namespace flight
