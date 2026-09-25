@@ -258,13 +258,13 @@ inline void lerp_hsv_direct(std::variant<flight::Array<double>, flight::Float32A
   const double r = array_pattern_value_3.element(0.0);
   const double g = array_pattern_value_3.element(1.0);
   const double b = array_pattern_value_3.element(2.0);
-  ([&]() { auto&& indexed_source = out; const auto indexed_index = offset; const auto indexed_value = r; std::visit([&](auto& indexed_receiver) { indexed_receiver.element(indexed_index) = indexed_value; }, indexed_source); return indexed_value; }());
-  ([&]() { auto&& indexed_source_2 = out; const auto indexed_index_2 = (offset + 1.0); const auto indexed_value_2 = g; std::visit([&](auto& indexed_receiver_2) { indexed_receiver_2.element(indexed_index_2) = indexed_value_2; }, indexed_source_2); return indexed_value_2; }());
-  ([&]() { auto&& indexed_source_3 = out; const auto indexed_index_3 = (offset + 2.0); const auto indexed_value_3 = b; std::visit([&](auto& indexed_receiver_3) { indexed_receiver_3.element(indexed_index_3) = indexed_value_3; }, indexed_source_3); return indexed_value_3; }());
+  ([&]() { auto&& indexed_source = out; const auto indexed_index = offset; const auto indexed_value = r; std::visit([&](auto& indexed_receiver) { if constexpr (requires { indexed_receiver.set_index(indexed_index, indexed_value); }) indexed_receiver.set_index(indexed_index, indexed_value); else indexed_receiver.element(indexed_index) = indexed_value; }, indexed_source); return indexed_value; }());
+  ([&]() { auto&& indexed_source_2 = out; const auto indexed_index_2 = (offset + 1.0); const auto indexed_value_2 = g; std::visit([&](auto& indexed_receiver_2) { if constexpr (requires { indexed_receiver_2.set_index(indexed_index_2, indexed_value_2); }) indexed_receiver_2.set_index(indexed_index_2, indexed_value_2); else indexed_receiver_2.element(indexed_index_2) = indexed_value_2; }, indexed_source_2); return indexed_value_2; }());
+  ([&]() { auto&& indexed_source_3 = out; const auto indexed_index_3 = (offset + 2.0); const auto indexed_value_3 = b; std::visit([&](auto& indexed_receiver_3) { if constexpr (requires { indexed_receiver_3.set_index(indexed_index_3, indexed_value_3); }) indexed_receiver_3.set_index(indexed_index_3, indexed_value_3); else indexed_receiver_3.element(indexed_index_3) = indexed_value_3; }, indexed_source_3); return indexed_value_3; }());
 }
 
 inline void lerp_hsv_in_place(std::variant<flight::Array<double>, flight::Float32Array> colors_out, double offset, flight::Float32Array birth, flight::Float32Array death, double t) {
-  lerp_hsv_direct(colors_out, offset, birth.element(offset), birth.element((offset + 1.0)), birth.element((offset + 2.0)), death.element(offset), death.element((offset + 1.0)), death.element((offset + 2.0)), t);
+  lerp_hsv_direct(colors_out, offset, birth.get_index(offset), birth.get_index((offset + 1.0)), birth.get_index((offset + 2.0)), death.get_index(offset), death.get_index((offset + 1.0)), death.get_index((offset + 2.0)), t);
 }
 
 inline void sample_particle_color_curve(auto out, double offset, flight::types::ParticleCurve lut, double t) {

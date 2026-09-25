@@ -71,7 +71,6 @@ struct GizmoSignals : public flight::ReferenceEnabled {
 template <typename NodeType>
 struct GizmoState : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<NodeType> gizmo_state_node_type_key;
 };
 
 } // namespace flight::types

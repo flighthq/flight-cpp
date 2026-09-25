@@ -33,7 +33,7 @@ inline double create_gaussian_kernel_weights(double radius, double sigma, flight
     while ((i <= r)) {
       {
         const double w = std::exp((-(i * i) / two_sigma_sq));
-        (out.element(i) = w);
+        ([&]() { auto&& typed_array = out; const auto typed_index = i; const auto typed_value = w; return typed_array.set_index(typed_index, typed_value); }());
         (sum += ((i == 0.0) ? w : (2.0 * w)));
       }
       (i += 1.0);
@@ -44,7 +44,7 @@ inline double create_gaussian_kernel_weights(double radius, double sigma, flight
     double i_2 = 0.0;
     while ((i_2 <= r)) {
       {
-        (out.element(i_2) *= inv_sum);
+        ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = i_2; const auto typed_current = typed_array_2.get_index(typed_index_2); const auto typed_right = inv_sum; const auto typed_value_2 = typed_current * typed_right; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
       }
       (i_2 += 1.0);
     }

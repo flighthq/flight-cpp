@@ -136,6 +136,11 @@
       "source": "packages/bitmap/src/bitmapDisplacement.ts"
     },
     {
+      "name": "BitmapFormat",
+      "packageName": "@flighthq/bitmap",
+      "source": "packages/bitmap/src/bitmapFormat.ts"
+    },
+    {
       "name": "BitmapMorphological",
       "packageName": "@flighthq/bitmap",
       "source": "packages/bitmap/src/bitmapMorphological.ts"
@@ -6049,6 +6054,16 @@
           "name": "BitmapDisplacement",
           "packageName": "@flighthq/bitmap",
           "source": "packages/bitmap/src/bitmapDisplacement.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "BitmapFormat",
+          "packageName": "@flighthq/bitmap",
+          "source": "packages/bitmap/src/bitmapFormat.ts"
         }
       ]
     },
@@ -27883,6 +27898,116 @@
         "name": "BitmapFontSummary",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/BitmapFontSummary.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:854993c3d9777c7973c6cc9d3466e6493514e458120edecd73c7659450954667",
+            "line": 8,
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapFormat.ts",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFormat.ts\",275]",
+            "kind": "function",
+            "name": "convertBitmapPixelOrder",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a1d252f15ccdcf477d070fbed4ff2b32aaa3896c1c360a0ef520b7b3bc13a8ea",
+            "line": 41,
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapFormat.ts",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFormat.ts\",1275]",
+            "kind": "function",
+            "name": "premultiplyBitmapPixels",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ca9244d708139035c043b44609f0bd3a0ca494c1543bcd7078c574c55c24c85b",
+            "line": 63,
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapFormat.ts",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFormat.ts\",2014]",
+            "kind": "function",
+            "name": "unpremultiplyBitmapPixels",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:cd719b1cbeeacd8882da11e39047e4023d52ce2695d886fec1e617bf6d99085c",
+            "line": 85,
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapFormat.ts",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFormat.ts\",2583]",
+            "kind": "function",
+            "name": "channelOffsets",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "BitmapFormat",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapFormat.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "PixelOrder",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/PixelOrder.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "BitmapFormat",
+        "packageName": "@flighthq/bitmap",
+        "source": "packages/bitmap/src/bitmapFormat.ts"
       },
       "steps": []
     },

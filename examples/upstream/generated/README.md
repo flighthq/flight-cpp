@@ -1,7 +1,7 @@
 # Generated upstream Flight examples
 
 This directory is generated from every package under Flight `examples/packages` at
-`7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad` by `flight-compiler` at `7e2f6b02114c9f39bfe8674397b1b162581edf74`. Do not edit it by hand.
+`7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad` by `flight-compiler` at `839d91eb9f9f3b66681443bb53b861dd2a7f2774`. Do not edit it by hand.
 
 The SDL/GL native profile selected 103 of 184
 upstream modules across 34 example packages and emitted 0.

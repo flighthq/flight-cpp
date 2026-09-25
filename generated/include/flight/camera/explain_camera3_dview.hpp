@@ -36,13 +36,13 @@ struct x_y_z_82615fd0df8619c4 : public flight::ReferenceEnabled {
 
 inline flight::Ref<flight::types::Camera3DViewExplanation> explain_camera3_dview(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"view">>(camera)->m;
-  auto x = flight::make_ref<x_y_z_82615fd0df8619c4>(x_y_z_82615fd0df8619c4{.x = m.element(0.0), .y = m.element(1.0), .z = m.element(2.0)});
-  auto y = flight::make_ref<x_y_z_82615fd0df8619c4>(x_y_z_82615fd0df8619c4{.x = m.element(4.0), .y = m.element(5.0), .z = m.element(6.0)});
-  auto z = flight::make_ref<x_y_z_82615fd0df8619c4>(x_y_z_82615fd0df8619c4{.x = m.element(8.0), .y = m.element(9.0), .z = m.element(10.0)});
+  auto x = flight::make_ref<x_y_z_82615fd0df8619c4>(x_y_z_82615fd0df8619c4{.x = m.get_index(0.0), .y = m.get_index(1.0), .z = m.get_index(2.0)});
+  auto y = flight::make_ref<x_y_z_82615fd0df8619c4>(x_y_z_82615fd0df8619c4{.x = m.get_index(4.0), .y = m.get_index(5.0), .z = m.get_index(6.0)});
+  auto z = flight::make_ref<x_y_z_82615fd0df8619c4>(x_y_z_82615fd0df8619c4{.x = m.get_index(8.0), .y = m.get_index(9.0), .z = m.get_index(10.0)});
   const double length_x = std::hypot(x->x, x->y, x->z);
   const double length_y = std::hypot(y->x, y->y, y->z);
   const double length_z = std::hypot(z->x, z->y, z->z);
-  const double determinant = (((m.element(0.0) * ((m.element(5.0) * m.element(10.0)) - (m.element(6.0) * m.element(9.0)))) - (m.element(4.0) * ((m.element(1.0) * m.element(10.0)) - (m.element(2.0) * m.element(9.0))))) + (m.element(8.0) * ((m.element(1.0) * m.element(6.0)) - (m.element(2.0) * m.element(5.0)))));
+  const double determinant = (((m.get_index(0.0) * ((m.get_index(5.0) * m.get_index(10.0)) - (m.get_index(6.0) * m.get_index(9.0)))) - (m.get_index(4.0) * ((m.get_index(1.0) * m.get_index(10.0)) - (m.get_index(2.0) * m.get_index(9.0))))) + (m.get_index(8.0) * ((m.get_index(1.0) * m.get_index(6.0)) - (m.get_index(2.0) * m.get_index(5.0)))));
   const double scale_deviation = flight::maximum(std::abs((length_x - 1.0)), std::abs((length_y - 1.0)), std::abs((length_z - 1.0)));
   const double shear_deviation = flight::maximum(std::abs((((x->x * y->x) + (x->y * y->y)) + (x->z * y->z))), std::abs((((x->x * z->x) + (x->y * z->y)) + (x->z * z->z))), std::abs((((y->x * z->x) + (y->y * z->y)) + (y->z * z->z))));
   return flight::make_ref<flight::types::Camera3DViewExplanation>(flight::types::Camera3DViewExplanation{.determinant = determinant, .is_orthonormal = ((scale_deviation <= orthonormal_tolerance) && (shear_deviation <= orthonormal_tolerance)), .is_reflection = (determinant < 0.0), .scale_deviation = scale_deviation, .shear_deviation = shear_deviation});

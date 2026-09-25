@@ -50,7 +50,7 @@ inline bool has_ktx2_identifier(flight::Uint8Array bytes) {
     double i = 0.0;
     while ((i < 12.0)) {
       {
-        if ((bytes.element(i) != ktx2_identifier.element(i))) {
+        if ((bytes.get_index(i) != ktx2_identifier.element(i))) {
           return false;
         }
       }

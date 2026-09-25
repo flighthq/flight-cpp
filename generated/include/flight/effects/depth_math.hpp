@@ -46,9 +46,9 @@ inline double compute_ssao_sample_kernel(double samples, flight::Float32Array ou
         const double phi = std::acos((1.0 - h3));
         const double scale = (i / n);
         const double dist = (0.1 + ((0.9 * scale) * scale));
-        (out.element(((i * 3.0) + 0.0)) = ((std::sin(phi) * std::cos(theta)) * dist));
-        (out.element(((i * 3.0) + 1.0)) = ((std::sin(phi) * std::sin(theta)) * dist));
-        (out.element(((i * 3.0) + 2.0)) = (std::cos(phi) * dist));
+        ([&]() { auto&& typed_array = out; const auto typed_index = ((i * 3.0) + 0.0); const auto typed_value = ((std::sin(phi) * std::cos(theta)) * dist); return typed_array.set_index(typed_index, typed_value); }());
+        ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = ((i * 3.0) + 1.0); const auto typed_value_2 = ((std::sin(phi) * std::sin(theta)) * dist); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+        ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = ((i * 3.0) + 2.0); const auto typed_value_3 = (std::cos(phi) * dist); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
       }
       (i += 1.0);
     }

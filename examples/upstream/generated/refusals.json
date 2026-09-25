@@ -1,6 +1,6 @@
 {
   "schema": "flight-generated-upstream-example-refusals/1",
-  "compilerRevision": "7e2f6b02114c9f39bfe8674397b1b162581edf74",
+  "compilerRevision": "839d91eb9f9f3b66681443bb53b861dd2a7f2774",
   "sourceRevision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
   "refusals": [
     {
@@ -173,11 +173,11 @@
     },
     {
       "code": "unsupported-ir",
-      "column": 1,
-      "line": 99,
+      "column": 7,
+      "line": 51,
       "module": "examples/packages/cross-backend-embed/src/app.ts",
       "package": "@flighthq/example-cross-backend-embed",
-      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: contextual union value type flight::host_sdl::GlCanvas is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/example-cross-backend-embed/examples/packages/cross-backend-embed/src/app.ts: external object WebGLContextAttributes construction requires an exact field contract",
       "stage": "emission"
     },
     {

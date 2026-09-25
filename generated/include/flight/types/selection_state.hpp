@@ -44,7 +44,6 @@ struct SelectionSignals : public flight::ReferenceEnabled {
 template <typename NodeType>
 struct SelectionState : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<NodeType> selection_state_node_type_key;
 };
 
 } // namespace flight::types

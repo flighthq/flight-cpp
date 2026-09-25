@@ -294,10 +294,10 @@ inline void set_vector4(flight::types::Vector4Like out, double x, double y, doub
 }
 
 inline void set_vector4_from_float32_array(flight::types::Vector4Like out, double offset, flight::Float32Array source) {
-  (out->x = source.element(offset));
-  (out->y = source.element((offset + 1.0)));
-  (out->z = source.element((offset + 2.0)));
-  (out->w = source.element((offset + 3.0)));
+  (out->x = source.get_index(offset));
+  (out->y = source.get_index((offset + 1.0)));
+  (out->z = source.get_index((offset + 2.0)));
+  (out->w = source.get_index((offset + 3.0)));
 }
 
 inline void set_vector4_from_vector3(flight::types::Vector4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> source, std::optional<double> w = std::nullopt) {
@@ -327,10 +327,10 @@ inline void subtract_vector4(flight::types::Vector4Like out, flight::StructuralR
 }
 
 inline void write_vector4_to_float32_array(flight::Float32Array out, double offset, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> source) {
-  (out.element(offset) = flight::row_get<flight::RowKey<"x">>(source));
-  (out.element((offset + 1.0)) = flight::row_get<flight::RowKey<"y">>(source));
-  (out.element((offset + 2.0)) = flight::row_get<flight::RowKey<"z">>(source));
-  (out.element((offset + 3.0)) = flight::row_get<flight::RowKey<"w">>(source));
+  ([&]() { auto&& typed_array = out; const auto typed_index = offset; const auto typed_value = flight::row_get<flight::RowKey<"x">>(source); return typed_array.set_index(typed_index, typed_value); }());
+  ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = (offset + 1.0); const auto typed_value_2 = flight::row_get<flight::RowKey<"y">>(source); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+  ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = (offset + 2.0); const auto typed_value_3 = flight::row_get<flight::RowKey<"z">>(source); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+  ([&]() { auto&& typed_array_4 = out; const auto typed_index_4 = (offset + 3.0); const auto typed_value_4 = flight::row_get<flight::RowKey<"w">>(source); return typed_array_4.set_index(typed_index_4, typed_value_4); }());
 }
 
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4>>>> vector4_w_unit = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector4>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector4>>>>(create_vector4(0.0, 0.0, 0.0, 1.0)));

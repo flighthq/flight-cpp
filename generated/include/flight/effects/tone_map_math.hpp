@@ -51,27 +51,27 @@ inline double compute_uncharted2_tone_map(double x) {
 }
 
 inline void get_aces_input_matrix(flight::Float32Array out) {
-  (out.element(0.0) = 0.59719);
-  (out.element(1.0) = 0.076);
-  (out.element(2.0) = 0.0284);
-  (out.element(3.0) = 0.35458);
-  (out.element(4.0) = 0.90834);
-  (out.element(5.0) = 0.13383);
-  (out.element(6.0) = 0.04823);
-  (out.element(7.0) = 0.01566);
-  (out.element(8.0) = 0.83777);
+  ([&]() { auto&& typed_array = out; const auto typed_index = 0.0; const auto typed_value = 0.59719; return typed_array.set_index(typed_index, typed_value); }());
+  ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = 1.0; const auto typed_value_2 = 0.076; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+  ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = 2.0; const auto typed_value_3 = 0.0284; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+  ([&]() { auto&& typed_array_4 = out; const auto typed_index_4 = 3.0; const auto typed_value_4 = 0.35458; return typed_array_4.set_index(typed_index_4, typed_value_4); }());
+  ([&]() { auto&& typed_array_5 = out; const auto typed_index_5 = 4.0; const auto typed_value_5 = 0.90834; return typed_array_5.set_index(typed_index_5, typed_value_5); }());
+  ([&]() { auto&& typed_array_6 = out; const auto typed_index_6 = 5.0; const auto typed_value_6 = 0.13383; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
+  ([&]() { auto&& typed_array_7 = out; const auto typed_index_7 = 6.0; const auto typed_value_7 = 0.04823; return typed_array_7.set_index(typed_index_7, typed_value_7); }());
+  ([&]() { auto&& typed_array_8 = out; const auto typed_index_8 = 7.0; const auto typed_value_8 = 0.01566; return typed_array_8.set_index(typed_index_8, typed_value_8); }());
+  ([&]() { auto&& typed_array_9 = out; const auto typed_index_9 = 8.0; const auto typed_value_9 = 0.83777; return typed_array_9.set_index(typed_index_9, typed_value_9); }());
 }
 
 inline void get_aces_output_matrix(flight::Float32Array out) {
-  (out.element(0.0) = 1.60475);
-  (out.element(1.0) = -0.10208);
-  (out.element(2.0) = -0.00327);
-  (out.element(3.0) = -0.53108);
-  (out.element(4.0) = 1.10813);
-  (out.element(5.0) = -0.07276);
-  (out.element(6.0) = -0.07367);
-  (out.element(7.0) = -0.00605);
-  (out.element(8.0) = 1.07602);
+  ([&]() { auto&& typed_array_10 = out; const auto typed_index_10 = 0.0; const auto typed_value_10 = 1.60475; return typed_array_10.set_index(typed_index_10, typed_value_10); }());
+  ([&]() { auto&& typed_array_11 = out; const auto typed_index_11 = 1.0; const auto typed_value_11 = -0.10208; return typed_array_11.set_index(typed_index_11, typed_value_11); }());
+  ([&]() { auto&& typed_array_12 = out; const auto typed_index_12 = 2.0; const auto typed_value_12 = -0.00327; return typed_array_12.set_index(typed_index_12, typed_value_12); }());
+  ([&]() { auto&& typed_array_13 = out; const auto typed_index_13 = 3.0; const auto typed_value_13 = -0.53108; return typed_array_13.set_index(typed_index_13, typed_value_13); }());
+  ([&]() { auto&& typed_array_14 = out; const auto typed_index_14 = 4.0; const auto typed_value_14 = 1.10813; return typed_array_14.set_index(typed_index_14, typed_value_14); }());
+  ([&]() { auto&& typed_array_15 = out; const auto typed_index_15 = 5.0; const auto typed_value_15 = -0.07276; return typed_array_15.set_index(typed_index_15, typed_value_15); }());
+  ([&]() { auto&& typed_array_16 = out; const auto typed_index_16 = 6.0; const auto typed_value_16 = -0.07367; return typed_array_16.set_index(typed_index_16, typed_value_16); }());
+  ([&]() { auto&& typed_array_17 = out; const auto typed_index_17 = 7.0; const auto typed_value_17 = -0.00605; return typed_array_17.set_index(typed_index_17, typed_value_17); }());
+  ([&]() { auto&& typed_array_18 = out; const auto typed_index_18 = 8.0; const auto typed_value_18 = 1.07602; return typed_array_18.set_index(typed_index_18, typed_value_18); }());
 }
 
 inline double agx_default_contrast_approx(double x) {

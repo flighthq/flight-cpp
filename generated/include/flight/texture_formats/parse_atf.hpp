@@ -40,7 +40,7 @@ inline flight::Null reject_flight_value_function_reject_flight_private_d299e698d
 }
 
 inline bool has_atf_signature(flight::Uint8Array bytes) {
-  return ((((static_cast<double>(bytes.byte_length) >= 3.0) && (bytes.element(0.0) == 65.0)) && (bytes.element(1.0) == 84.0)) && (bytes.element(2.0) == 70.0));
+  return ((((static_cast<double>(bytes.byte_length) >= 3.0) && (bytes.get_index(0.0) == 65.0)) && (bytes.get_index(1.0) == 84.0)) && (bytes.get_index(2.0) == 70.0));
 }
 
 inline const double atf_cube_flag = 128.0;
@@ -71,21 +71,21 @@ inline std::optional<flight::Array<flight::Ref<flight::types::TextureContainer>>
   if (!has_atf_signature(bytes)) {
     return ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::TextureContainer>>> { (void)reject_flight_value_function_reject_flight_private_d299e698d0b1475c(failure, flight::String("container-unrecognized")); return std::nullopt; }());
   }
-  const bool versioned = (bytes.element(6.0) == atf_new_version_marker);
+  const bool versioned = (bytes.get_index(6.0) == atf_new_version_marker);
   const double header_offset = (versioned ? atf_new_header_offset : atf_legacy_header_offset);
   if ((static_cast<double>(bytes.byte_length) < (header_offset + 4.0))) {
     return ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::TextureContainer>>> { (void)reject_flight_value_function_reject_flight_private_d299e698d0b1475c(failure, flight::String("header-truncated")); return std::nullopt; }());
   }
-  const double version = (versioned ? bytes.element(7.0) : 0.0);
+  const double version = (versioned ? bytes.get_index(7.0) : 0.0);
   auto length_reader = flight::texture_formats::create_byte_reader(bytes, (versioned ? 8.0 : 3.0));
   const double payload_length = (versioned ? flight::texture_formats::read_byte_reader_u32_big_endian(length_reader) : flight::texture_formats::read_byte_reader_u24_big_endian(length_reader));
   if (((header_offset + payload_length) > static_cast<double>(bytes.byte_length))) {
     return ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::TextureContainer>>> { (void)reject_flight_value_function_reject_flight_private_d299e698d0b1475c(failure, flight::String("level-range-out-of-bounds")); return std::nullopt; }());
   }
-  const double type_format_byte = bytes.element(header_offset);
-  const double log2_width = bytes.element((header_offset + 1.0));
-  const double log2_height = bytes.element((header_offset + 2.0));
-  const double mip_count = bytes.element((header_offset + 3.0));
+  const double type_format_byte = bytes.get_index(header_offset);
+  const double log2_width = bytes.get_index((header_offset + 1.0));
+  const double log2_height = bytes.get_index((header_offset + 2.0));
+  const double mip_count = bytes.get_index((header_offset + 3.0));
   const double format_code = flight::bitwise_and(type_format_byte, atf_format_code_mask);
   const bool alpha = atf_alpha_format_codes.has(format_code);
   if ((!alpha && !atf_opaque_format_codes.has(format_code))) {

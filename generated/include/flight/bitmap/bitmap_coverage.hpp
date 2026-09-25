@@ -35,7 +35,7 @@ inline double get_bitmap_coverage(flight::StructuralRef<flight::RowReadonly<flig
     double i = 0.0;
     while ((i < static_cast<double>(data.size()))) {
       {
-        if (((((std::abs((static_cast<double>(data.element(i)) - br)) > channel_tolerance.value()) || (std::abs((static_cast<double>(data.element((i + 1.0))) - bg)) > channel_tolerance.value())) || (std::abs((static_cast<double>(data.element((i + 2.0))) - bb)) > channel_tolerance.value())) || (std::abs((static_cast<double>(data.element((i + 3.0))) - ba)) > channel_tolerance.value()))) {
+        if (((((std::abs((data.get_index(i) - br)) > channel_tolerance.value()) || (std::abs((data.get_index((i + 1.0)) - bg)) > channel_tolerance.value())) || (std::abs((data.get_index((i + 2.0)) - bb)) > channel_tolerance.value())) || (std::abs((data.get_index((i + 3.0)) - ba)) > channel_tolerance.value()))) {
           covered++;
         }
       }

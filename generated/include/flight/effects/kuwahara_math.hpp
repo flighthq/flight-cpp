@@ -32,8 +32,8 @@ inline double compute_kuwahara_gaussian_weights(double radius, flight::Float32Ar
           while ((x < size)) {
             {
               const double d = ((x * x) + (y * y));
-              (out.element(((y * size) + x)) = std::exp((-d / two_sigma_sq)));
-              (sum += out.element(((y * size) + x)));
+              ([&]() { auto&& typed_array = out; const auto typed_index = ((y * size) + x); const auto typed_value = std::exp((-d / two_sigma_sq)); return typed_array.set_index(typed_index, typed_value); }());
+              (sum += out.get_index(((y * size) + x)));
             }
             (x += 1.0);
           }
@@ -47,7 +47,7 @@ inline double compute_kuwahara_gaussian_weights(double radius, flight::Float32Ar
     double i = 0.0;
     while ((i < (size * size))) {
       {
-        (out.element(i) *= inv_sum);
+        ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = i; const auto typed_current = typed_array_2.get_index(typed_index_2); const auto typed_right = inv_sum; const auto typed_value_2 = typed_current * typed_right; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
       }
       (i += 1.0);
     }

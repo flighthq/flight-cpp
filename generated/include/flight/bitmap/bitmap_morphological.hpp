@@ -52,31 +52,31 @@ inline void apply_morphological(flight::Uint8ClampedArray out, flight::Structura
                           const double sx = flight::maximum(0.0, flight::minimum((bitmap_width - 1.0), ((flight::row_get<flight::RowKey<"x">>(source) + px) + kx)));
                           const double si = (((sy * bitmap_width) + sx) * 4.0);
                           if (dilate) {
-                            if ((static_cast<double>(data.element(si)) > v_r)) {
-                              (v_r = static_cast<double>(data.element(si)));
+                            if ((data.get_index(si) > v_r)) {
+                              (v_r = data.get_index(si));
                             }
-                            if ((static_cast<double>(data.element((si + 1.0))) > v_g)) {
-                              (v_g = static_cast<double>(data.element((si + 1.0))));
+                            if ((data.get_index((si + 1.0)) > v_g)) {
+                              (v_g = data.get_index((si + 1.0)));
                             }
-                            if ((static_cast<double>(data.element((si + 2.0))) > v_b)) {
-                              (v_b = static_cast<double>(data.element((si + 2.0))));
+                            if ((data.get_index((si + 2.0)) > v_b)) {
+                              (v_b = data.get_index((si + 2.0)));
                             }
-                            if ((static_cast<double>(data.element((si + 3.0))) > v_a)) {
-                              (v_a = static_cast<double>(data.element((si + 3.0))));
+                            if ((data.get_index((si + 3.0)) > v_a)) {
+                              (v_a = data.get_index((si + 3.0)));
                             }
                           }
                           else {
-                            if ((static_cast<double>(data.element(si)) < v_r)) {
-                              (v_r = static_cast<double>(data.element(si)));
+                            if ((data.get_index(si) < v_r)) {
+                              (v_r = data.get_index(si));
                             }
-                            if ((static_cast<double>(data.element((si + 1.0))) < v_g)) {
-                              (v_g = static_cast<double>(data.element((si + 1.0))));
+                            if ((data.get_index((si + 1.0)) < v_g)) {
+                              (v_g = data.get_index((si + 1.0)));
                             }
-                            if ((static_cast<double>(data.element((si + 2.0))) < v_b)) {
-                              (v_b = static_cast<double>(data.element((si + 2.0))));
+                            if ((data.get_index((si + 2.0)) < v_b)) {
+                              (v_b = data.get_index((si + 2.0)));
                             }
-                            if ((static_cast<double>(data.element((si + 3.0))) < v_a)) {
-                              (v_a = static_cast<double>(data.element((si + 3.0))));
+                            if ((data.get_index((si + 3.0)) < v_a)) {
+                              (v_a = data.get_index((si + 3.0)));
                             }
                           }
                         }
@@ -88,10 +88,10 @@ inline void apply_morphological(flight::Uint8ClampedArray out, flight::Structura
                 }
               }
               const double di = (((py * w) + px) * 4.0);
-              (out.element(di) = v_r);
-              (out.element((di + 1.0)) = v_g);
-              (out.element((di + 2.0)) = v_b);
-              (out.element((di + 3.0)) = v_a);
+              ([&]() { auto&& typed_array = out; const auto typed_index = di; const auto typed_value = v_r; return typed_array.set_index(typed_index, typed_value); }());
+              ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = (di + 1.0); const auto typed_value_2 = v_g; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+              ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = (di + 2.0); const auto typed_value_3 = v_b; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+              ([&]() { auto&& typed_array_4 = out; const auto typed_index_4 = (di + 3.0); const auto typed_value_4 = v_a; return typed_array_4.set_index(typed_index_4, typed_value_4); }());
             }
             (px += 1.0);
           }

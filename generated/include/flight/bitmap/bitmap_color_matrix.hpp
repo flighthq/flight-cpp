@@ -84,14 +84,14 @@ inline void color_matrix_bitmap(flight::Uint8ClampedArray out, flight::Structura
               }
               const double si = (((source_y * flight::row_get<flight::RowKey<"bitmap">>(source)->width) + source_x) * 4.0);
               const double di = (((py * flight::row_get<flight::RowKey<"width">>(source)) + px) * 4.0);
-              const double r = static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(source)->data.element(si));
-              const double g = static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 1.0)));
-              const double b = static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 2.0)));
-              const double a = static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(source)->data.element((si + 3.0)));
-              (out.element(di) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526((((((r * matrix.element(0.0)) + (g * matrix.element(1.0))) + (b * matrix.element(2.0))) + (a * matrix.element(3.0))) + matrix.element(4.0))));
-              (out.element((di + 1.0)) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526((((((r * matrix.element(5.0)) + (g * matrix.element(6.0))) + (b * matrix.element(7.0))) + (a * matrix.element(8.0))) + matrix.element(9.0))));
-              (out.element((di + 2.0)) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526((((((r * matrix.element(10.0)) + (g * matrix.element(11.0))) + (b * matrix.element(12.0))) + (a * matrix.element(13.0))) + matrix.element(14.0))));
-              (out.element((di + 3.0)) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526((((((r * matrix.element(15.0)) + (g * matrix.element(16.0))) + (b * matrix.element(17.0))) + (a * matrix.element(18.0))) + matrix.element(19.0))));
+              const double r = flight::row_get<flight::RowKey<"bitmap">>(source)->data.get_index(si);
+              const double g = flight::row_get<flight::RowKey<"bitmap">>(source)->data.get_index((si + 1.0));
+              const double b = flight::row_get<flight::RowKey<"bitmap">>(source)->data.get_index((si + 2.0));
+              const double a = flight::row_get<flight::RowKey<"bitmap">>(source)->data.get_index((si + 3.0));
+              ([&]() { auto&& typed_array = out; const auto typed_index = di; const auto typed_value = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526((((((r * matrix.element(0.0)) + (g * matrix.element(1.0))) + (b * matrix.element(2.0))) + (a * matrix.element(3.0))) + matrix.element(4.0))); return typed_array.set_index(typed_index, typed_value); }());
+              ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = (di + 1.0); const auto typed_value_2 = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526((((((r * matrix.element(5.0)) + (g * matrix.element(6.0))) + (b * matrix.element(7.0))) + (a * matrix.element(8.0))) + matrix.element(9.0))); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+              ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = (di + 2.0); const auto typed_value_3 = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526((((((r * matrix.element(10.0)) + (g * matrix.element(11.0))) + (b * matrix.element(12.0))) + (a * matrix.element(13.0))) + matrix.element(14.0))); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+              ([&]() { auto&& typed_array_4 = out; const auto typed_index_4 = (di + 3.0); const auto typed_value_4 = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_ac066552cc0a5526((((((r * matrix.element(15.0)) + (g * matrix.element(16.0))) + (b * matrix.element(17.0))) + (a * matrix.element(18.0))) + matrix.element(19.0))); return typed_array_4.set_index(typed_index_4, typed_value_4); }());
             }
             (px += 1.0);
           }

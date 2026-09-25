@@ -50,8 +50,8 @@ inline void write_particle_spawn_offset(std::variant<flight::Array<double>, flig
       }
     }
   }
-  ([&]() { auto&& indexed_source = out; const auto indexed_index = offset; const auto indexed_value = x; std::visit([&](auto& indexed_receiver) { indexed_receiver.element(indexed_index) = indexed_value; }, indexed_source); return indexed_value; }());
-  ([&]() { auto&& indexed_source_2 = out; const auto indexed_index_2 = (offset + 1.0); const auto indexed_value_2 = y; std::visit([&](auto& indexed_receiver_2) { indexed_receiver_2.element(indexed_index_2) = indexed_value_2; }, indexed_source_2); return indexed_value_2; }());
+  ([&]() { auto&& indexed_source = out; const auto indexed_index = offset; const auto indexed_value = x; std::visit([&](auto& indexed_receiver) { if constexpr (requires { indexed_receiver.set_index(indexed_index, indexed_value); }) indexed_receiver.set_index(indexed_index, indexed_value); else indexed_receiver.element(indexed_index) = indexed_value; }, indexed_source); return indexed_value; }());
+  ([&]() { auto&& indexed_source_2 = out; const auto indexed_index_2 = (offset + 1.0); const auto indexed_value_2 = y; std::visit([&](auto& indexed_receiver_2) { if constexpr (requires { indexed_receiver_2.set_index(indexed_index_2, indexed_value_2); }) indexed_receiver_2.set_index(indexed_index_2, indexed_value_2); else indexed_receiver_2.element(indexed_index_2) = indexed_value_2; }, indexed_source_2); return indexed_value_2; }());
 }
 
 } // namespace flight::particles

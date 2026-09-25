@@ -51,7 +51,7 @@ inline std::optional<flight::types::EntityWithoutRuntime<flight::Ref<flight::typ
                 continue;
               }
               const double i = (((y * bitmap_width) + x) * 4.0);
-              const double pixel = flight::bitwise_and(flight::unsigned_right_shift(flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::left_shift(static_cast<double>(data.element(i)), 24.0), flight::left_shift(static_cast<double>(data.element((i + 1.0))), 16.0)), flight::left_shift(static_cast<double>(data.element((i + 2.0))), 8.0)), static_cast<double>(data.element((i + 3.0)))), 0.0), flight::unsigned_right_shift(mask, 0.0));
+              const double pixel = flight::bitwise_and(flight::unsigned_right_shift(flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::left_shift(data.get_index(i), 24.0), flight::left_shift(data.get_index((i + 1.0)), 16.0)), flight::left_shift(data.get_index((i + 2.0)), 8.0)), data.get_index((i + 3.0))), 0.0), flight::unsigned_right_shift(mask, 0.0));
               const bool matches = (pixel == masked_color);
               if ((matches == find_color.value())) {
                 if ((x < min_x)) {

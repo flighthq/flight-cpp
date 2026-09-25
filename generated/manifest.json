@@ -2,7 +2,7 @@
   "schema": "flight-generated-sdk/1",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
-    "revision": "7e2f6b02114c9f39bfe8674397b1b162581edf74",
+    "revision": "839d91eb9f9f3b66681443bb53b861dd2a7f2774",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
@@ -79,9 +79,9 @@
     {
       "cppIncludePrefix": "flight/bitmap",
       "cppNamespace": "flight::bitmap",
-      "emittedModules": 8,
+      "emittedModules": 9,
       "package": "@flighthq/bitmap",
-      "refusedModules": 36,
+      "refusedModules": 35,
       "sourceModules": 44
     },
     {
@@ -1253,8 +1253,8 @@
   },
   "summary": {
     "packages": 154,
-    "emittedModules": 1152,
-    "refusedModules": 1752,
+    "emittedModules": 1153,
+    "refusedModules": 1751,
     "sourceModules": 2904
   }
 }

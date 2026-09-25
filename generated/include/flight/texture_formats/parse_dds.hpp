@@ -42,7 +42,7 @@ inline flight::Null reject_flight_value_function_reject_flight_private_1150c5909
 }
 
 inline bool has_dds_magic(flight::Uint8Array bytes) {
-  return (((((static_cast<double>(bytes.byte_length) >= 4.0) && (bytes.element(0.0) == 68.0)) && (bytes.element(1.0) == 68.0)) && (bytes.element(2.0) == 83.0)) && (bytes.element(3.0) == 32.0));
+  return (((((static_cast<double>(bytes.byte_length) >= 4.0) && (bytes.get_index(0.0) == 68.0)) && (bytes.get_index(1.0) == 68.0)) && (bytes.get_index(2.0) == 83.0)) && (bytes.get_index(3.0) == 32.0));
 }
 
 inline std::optional<flight::String> map_dds_uncompressed(double rgb_bit_count, double r_mask, double g_mask, double b_mask, double a_mask) {

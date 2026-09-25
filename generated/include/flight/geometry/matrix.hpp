@@ -449,27 +449,27 @@ inline flight::Ref<flight::types::Matrix> clone_matrix(flight::StructuralRef<fli
 }
 
 inline void set_matrix_from_float32_array(flight::types::MatrixLike out, double offset, flight::Float32Array source) {
-  (out->a = source.element(offset));
-  (out->b = source.element((offset + 1.0)));
-  (out->c = source.element((offset + 2.0)));
-  (out->d = source.element((offset + 3.0)));
-  (out->tx = source.element((offset + 4.0)));
-  (out->ty = source.element((offset + 5.0)));
+  (out->a = source.get_index(offset));
+  (out->b = source.get_index((offset + 1.0)));
+  (out->c = source.get_index((offset + 2.0)));
+  (out->d = source.get_index((offset + 3.0)));
+  (out->tx = source.get_index((offset + 4.0)));
+  (out->ty = source.get_index((offset + 5.0)));
 }
 
 inline void set_matrix_from_matrix3(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix3Like>>> source) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"m">>(source);
-  set_matrix(out, m.element(0.0), m.element(3.0), m.element(1.0), m.element(4.0), m.element(6.0), m.element(7.0));
+  set_matrix(out, m.get_index(0.0), m.get_index(3.0), m.get_index(1.0), m.get_index(4.0), m.get_index(6.0), m.get_index(7.0));
 }
 
 inline void set_matrix_from_matrix4(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
   flight::Float32Array s = flight::row_get<flight::RowKey<"m">>(source);
-  (out->a = s.element(0.0));
-  (out->b = s.element(4.0));
-  (out->tx = s.element(12.0));
-  (out->c = s.element(1.0));
-  (out->d = s.element(5.0));
-  (out->ty = s.element(13.0));
+  (out->a = s.get_index(0.0));
+  (out->b = s.get_index(4.0));
+  (out->tx = s.get_index(12.0));
+  (out->c = s.get_index(1.0));
+  (out->d = s.get_index(5.0));
+  (out->ty = s.get_index(13.0));
 }
 
 inline void set_matrix_identity(flight::types::MatrixLike out) {
@@ -534,12 +534,12 @@ inline void translate_matrix_by_vector(flight::types::MatrixLike out, flight::St
 }
 
 inline void write_matrix_to_float32_array(flight::Float32Array out, double offset, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
-  (out.element(offset) = flight::row_get<flight::RowKey<"a">>(source));
-  (out.element((offset + 1.0)) = flight::row_get<flight::RowKey<"b">>(source));
-  (out.element((offset + 2.0)) = flight::row_get<flight::RowKey<"c">>(source));
-  (out.element((offset + 3.0)) = flight::row_get<flight::RowKey<"d">>(source));
-  (out.element((offset + 4.0)) = flight::row_get<flight::RowKey<"tx">>(source));
-  (out.element((offset + 5.0)) = flight::row_get<flight::RowKey<"ty">>(source));
+  ([&]() { auto&& typed_array = out; const auto typed_index = offset; const auto typed_value = flight::row_get<flight::RowKey<"a">>(source); return typed_array.set_index(typed_index, typed_value); }());
+  ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = (offset + 1.0); const auto typed_value_2 = flight::row_get<flight::RowKey<"b">>(source); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+  ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = (offset + 2.0); const auto typed_value_3 = flight::row_get<flight::RowKey<"c">>(source); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+  ([&]() { auto&& typed_array_4 = out; const auto typed_index_4 = (offset + 3.0); const auto typed_value_4 = flight::row_get<flight::RowKey<"d">>(source); return typed_array_4.set_index(typed_index_4, typed_value_4); }());
+  ([&]() { auto&& typed_array_5 = out; const auto typed_index_5 = (offset + 4.0); const auto typed_value_5 = flight::row_get<flight::RowKey<"tx">>(source); return typed_array_5.set_index(typed_index_5, typed_value_5); }());
+  ([&]() { auto&& typed_array_6 = out; const auto typed_index_6 = (offset + 5.0); const auto typed_value_6 = flight::row_get<flight::RowKey<"ty">>(source); return typed_array_6.set_index(typed_index_6, typed_value_6); }());
 }
 
 } // namespace flight::geometry

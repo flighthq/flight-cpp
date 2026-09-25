@@ -338,15 +338,15 @@ inline void set_quaternion_from_euler(flight::types::QuaternionLike out, double 
 
 inline void set_quaternion_from_matrix4(flight::types::QuaternionLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> source) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"m">>(source);
-  const double m00 = m.element(0.0);
-  const double m10 = m.element(4.0);
-  const double m20 = m.element(8.0);
-  const double m01 = m.element(1.0);
-  const double m11 = m.element(5.0);
-  const double m21 = m.element(9.0);
-  const double m02 = m.element(2.0);
-  const double m12 = m.element(6.0);
-  const double m22 = m.element(10.0);
+  const double m00 = m.get_index(0.0);
+  const double m10 = m.get_index(4.0);
+  const double m20 = m.get_index(8.0);
+  const double m01 = m.get_index(1.0);
+  const double m11 = m.get_index(5.0);
+  const double m21 = m.get_index(9.0);
+  const double m02 = m.get_index(2.0);
+  const double m12 = m.get_index(6.0);
+  const double m22 = m.get_index(10.0);
   const double trace = ((m00 + m11) + m22);
   if ((trace > 0.0)) {
     const double s = (0.5 / std::sqrt((trace + 1.0)));

@@ -47,24 +47,24 @@ inline void compute_sketch_edge_params(flight::StructuralRef<flight::RowReadonly
 }
 
 inline void get_sobel_kernel_coefficients(flight::Float32Array out) {
-  (out.element(0.0) = -1.0);
-  (out.element(1.0) = 0.0);
-  (out.element(2.0) = 1.0);
-  (out.element(3.0) = -2.0);
-  (out.element(4.0) = 0.0);
-  (out.element(5.0) = 2.0);
-  (out.element(6.0) = -1.0);
-  (out.element(7.0) = 0.0);
-  (out.element(8.0) = 1.0);
-  (out.element(9.0) = -1.0);
-  (out.element(10.0) = -2.0);
-  (out.element(11.0) = -1.0);
-  (out.element(12.0) = 0.0);
-  (out.element(13.0) = 0.0);
-  (out.element(14.0) = 0.0);
-  (out.element(15.0) = 1.0);
-  (out.element(16.0) = 2.0);
-  (out.element(17.0) = 1.0);
+  ([&]() { auto&& typed_array = out; const auto typed_index = 0.0; const auto typed_value = -1.0; return typed_array.set_index(typed_index, typed_value); }());
+  ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = 1.0; const auto typed_value_2 = 0.0; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+  ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = 2.0; const auto typed_value_3 = 1.0; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+  ([&]() { auto&& typed_array_4 = out; const auto typed_index_4 = 3.0; const auto typed_value_4 = -2.0; return typed_array_4.set_index(typed_index_4, typed_value_4); }());
+  ([&]() { auto&& typed_array_5 = out; const auto typed_index_5 = 4.0; const auto typed_value_5 = 0.0; return typed_array_5.set_index(typed_index_5, typed_value_5); }());
+  ([&]() { auto&& typed_array_6 = out; const auto typed_index_6 = 5.0; const auto typed_value_6 = 2.0; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
+  ([&]() { auto&& typed_array_7 = out; const auto typed_index_7 = 6.0; const auto typed_value_7 = -1.0; return typed_array_7.set_index(typed_index_7, typed_value_7); }());
+  ([&]() { auto&& typed_array_8 = out; const auto typed_index_8 = 7.0; const auto typed_value_8 = 0.0; return typed_array_8.set_index(typed_index_8, typed_value_8); }());
+  ([&]() { auto&& typed_array_9 = out; const auto typed_index_9 = 8.0; const auto typed_value_9 = 1.0; return typed_array_9.set_index(typed_index_9, typed_value_9); }());
+  ([&]() { auto&& typed_array_10 = out; const auto typed_index_10 = 9.0; const auto typed_value_10 = -1.0; return typed_array_10.set_index(typed_index_10, typed_value_10); }());
+  ([&]() { auto&& typed_array_11 = out; const auto typed_index_11 = 10.0; const auto typed_value_11 = -2.0; return typed_array_11.set_index(typed_index_11, typed_value_11); }());
+  ([&]() { auto&& typed_array_12 = out; const auto typed_index_12 = 11.0; const auto typed_value_12 = -1.0; return typed_array_12.set_index(typed_index_12, typed_value_12); }());
+  ([&]() { auto&& typed_array_13 = out; const auto typed_index_13 = 12.0; const auto typed_value_13 = 0.0; return typed_array_13.set_index(typed_index_13, typed_value_13); }());
+  ([&]() { auto&& typed_array_14 = out; const auto typed_index_14 = 13.0; const auto typed_value_14 = 0.0; return typed_array_14.set_index(typed_index_14, typed_value_14); }());
+  ([&]() { auto&& typed_array_15 = out; const auto typed_index_15 = 14.0; const auto typed_value_15 = 0.0; return typed_array_15.set_index(typed_index_15, typed_value_15); }());
+  ([&]() { auto&& typed_array_16 = out; const auto typed_index_16 = 15.0; const auto typed_value_16 = 1.0; return typed_array_16.set_index(typed_index_16, typed_value_16); }());
+  ([&]() { auto&& typed_array_17 = out; const auto typed_index_17 = 16.0; const auto typed_value_17 = 2.0; return typed_array_17.set_index(typed_index_17, typed_value_17); }());
+  ([&]() { auto&& typed_array_18 = out; const auto typed_index_18 = 17.0; const auto typed_value_18 = 1.0; return typed_array_18.set_index(typed_index_18, typed_value_18); }());
 }
 
 } // namespace flight::effects

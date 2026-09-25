@@ -2,13 +2,13 @@
   "schema": "flight-generated-upstream-examples/1",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
-    "revision": "7e2f6b02114c9f39bfe8674397b1b162581edf74",
+    "revision": "839d91eb9f9f3b66681443bb53b861dd2a7f2774",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
   "bindingProfiles": [
     {
-      "digest": "sha256:9948fa8435da6627e6636a071696d16432e5edebbd84d40dbde645d202f1a051",
+      "digest": "sha256:d19461e0eb6fc82d6866397ca5fba7ae6b8b68f2850c31a973d88a8f589d7649",
       "identity": "flighthq/flight-cpp/runtime-carriers/1",
       "path": "bindings/runtime.json",
       "profile": "runtime-carriers",
@@ -36,7 +36,7 @@
       "schema": "flight-cpp-external-bindings/1"
     },
     {
-      "digest": "sha256:3bc55bc31f9084136389e4f0ba492afb7d3150568836785e4c5026a5e55e6d9e",
+      "digest": "sha256:152599959a48d5d8eb1dada171cfd7139ce0bf6f007fe70ef59f88a2fc5f13bc",
       "identity": "flighthq/flight-cpp/sdl-gl/1",
       "path": "bindings/sdl-gl.json",
       "profile": "sdl-gl",

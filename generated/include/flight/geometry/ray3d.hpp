@@ -316,12 +316,12 @@ inline void transform_ray3_dby_matrix4(flight::types::Ray3DLike out, flight::Str
   const double dx = flight::row_get<flight::RowKey<"direction">>(ray)->x;
   const double dy = flight::row_get<flight::RowKey<"direction">>(ray)->y;
   const double dz = flight::row_get<flight::RowKey<"direction">>(ray)->z;
-  (out->origin->x = ((((mm.element(0.0) * ox) + (mm.element(4.0) * oy)) + (mm.element(8.0) * oz)) + mm.element(12.0)));
-  (out->origin->y = ((((mm.element(1.0) * ox) + (mm.element(5.0) * oy)) + (mm.element(9.0) * oz)) + mm.element(13.0)));
-  (out->origin->z = ((((mm.element(2.0) * ox) + (mm.element(6.0) * oy)) + (mm.element(10.0) * oz)) + mm.element(14.0)));
-  const double ndx = (((mm.element(0.0) * dx) + (mm.element(4.0) * dy)) + (mm.element(8.0) * dz));
-  const double ndy = (((mm.element(1.0) * dx) + (mm.element(5.0) * dy)) + (mm.element(9.0) * dz));
-  const double ndz = (((mm.element(2.0) * dx) + (mm.element(6.0) * dy)) + (mm.element(10.0) * dz));
+  (out->origin->x = ((((mm.get_index(0.0) * ox) + (mm.get_index(4.0) * oy)) + (mm.get_index(8.0) * oz)) + mm.get_index(12.0)));
+  (out->origin->y = ((((mm.get_index(1.0) * ox) + (mm.get_index(5.0) * oy)) + (mm.get_index(9.0) * oz)) + mm.get_index(13.0)));
+  (out->origin->z = ((((mm.get_index(2.0) * ox) + (mm.get_index(6.0) * oy)) + (mm.get_index(10.0) * oz)) + mm.get_index(14.0)));
+  const double ndx = (((mm.get_index(0.0) * dx) + (mm.get_index(4.0) * dy)) + (mm.get_index(8.0) * dz));
+  const double ndy = (((mm.get_index(1.0) * dx) + (mm.get_index(5.0) * dy)) + (mm.get_index(9.0) * dz));
+  const double ndz = (((mm.get_index(2.0) * dx) + (mm.get_index(6.0) * dy)) + (mm.get_index(10.0) * dz));
   const double len = std::sqrt((((ndx * ndx) + (ndy * ndy)) + (ndz * ndz)));
   if ((len > 0.0)) {
     const double inv = (1.0 / len);

@@ -124,10 +124,10 @@ inline void convolve_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                             (sample_y = raw_sample_y);
                           }
                           const double i = (((sample_y * bitmap_width) + sample_x) * 4.0);
-                          (r += (static_cast<double>(data.element(i)) * weight));
-                          (g += (static_cast<double>(data.element((i + 1.0))) * weight));
-                          (b += (static_cast<double>(data.element((i + 2.0))) * weight));
-                          (a += (static_cast<double>(data.element((i + 3.0))) * weight));
+                          (r += (data.get_index(i) * weight));
+                          (g += (data.get_index((i + 1.0)) * weight));
+                          (b += (data.get_index((i + 2.0)) * weight));
+                          (a += (data.get_index((i + 3.0)) * weight));
                         }
                         (kx += 1.0);
                       }
@@ -137,16 +137,16 @@ inline void convolve_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                 }
               }
               const double di = (((py * flight::row_get<flight::RowKey<"width">>(source)) + px) * 4.0);
-              (out.element(di) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(((r / divisor) + bias)));
-              (out.element((di + 1.0)) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(((g / divisor) + bias)));
-              (out.element((di + 2.0)) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(((b / divisor) + bias)));
+              ([&]() { auto&& typed_array = out; const auto typed_index = di; const auto typed_value = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(((r / divisor) + bias)); return typed_array.set_index(typed_index, typed_value); }());
+              ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = (di + 1.0); const auto typed_value_2 = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(((g / divisor) + bias)); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+              ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = (di + 2.0); const auto typed_value_3 = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(((b / divisor) + bias)); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
               if (preserve_alpha) {
                 const double cy = flight::maximum(0.0, flight::minimum((bitmap_height - 1.0), (flight::row_get<flight::RowKey<"y">>(source) + py)));
                 const double cx = flight::maximum(0.0, flight::minimum((bitmap_width - 1.0), (flight::row_get<flight::RowKey<"x">>(source) + px)));
-                (out.element((di + 3.0)) = static_cast<double>(data.element(((((cy * bitmap_width) + cx) * 4.0) + 3.0))));
+                ([&]() { auto&& typed_array_4 = out; const auto typed_index_4 = (di + 3.0); const auto typed_value_4 = data.get_index(((((cy * bitmap_width) + cx) * 4.0) + 3.0)); return typed_array_4.set_index(typed_index_4, typed_value_4); }());
               }
               else {
-                (out.element((di + 3.0)) = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(((a / divisor) + bias)));
+                ([&]() { auto&& typed_array_5 = out; const auto typed_index_5 = (di + 3.0); const auto typed_value_5 = clamp_byte_flight_value_function_clamp_u000042_yte_flight_private_cf07ac2645c5d04a(((a / divisor) + bias)); return typed_array_5.set_index(typed_index_5, typed_value_5); }());
               }
             }
             (px += 1.0);

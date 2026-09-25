@@ -57,7 +57,7 @@ inline double sample_map_channel(flight::StructuralRef<flight::RowReadonly<fligh
   if (((((mx < 0.0) || (mx >= flight::row_get<flight::RowKey<"bitmap">>(map)->width)) || (my < 0.0)) || (my >= flight::row_get<flight::RowKey<"bitmap">>(map)->height))) {
     return 128.0;
   }
-  return static_cast<double>(flight::row_get<flight::RowKey<"bitmap">>(map)->data.element(((((my * flight::row_get<flight::RowKey<"bitmap">>(map)->width) + mx) * 4.0) + component)));
+  return flight::row_get<flight::RowKey<"bitmap">>(map)->data.get_index(((((my * flight::row_get<flight::RowKey<"bitmap">>(map)->width) + mx) * 4.0) + component));
 }
 
 inline void displace_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapDisplacementMapOptions>>>> options) {
@@ -106,10 +106,10 @@ inline void displace_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                       (sample_y = py);
                     }
                     else {
-                      (out.element(di) = fill_r);
-                      (out.element((di + 1.0)) = fill_g);
-                      (out.element((di + 2.0)) = fill_b);
-                      (out.element((di + 3.0)) = fill_a);
+                      ([&]() { auto&& typed_array = out; const auto typed_index = di; const auto typed_value = fill_r; return typed_array.set_index(typed_index, typed_value); }());
+                      ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = (di + 1.0); const auto typed_value_2 = fill_g; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+                      ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = (di + 2.0); const auto typed_value_3 = fill_b; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+                      ([&]() { auto&& typed_array_4 = out; const auto typed_index_4 = (di + 3.0); const auto typed_value_4 = fill_a; return typed_array_4.set_index(typed_index_4, typed_value_4); }());
                       {
                         (px += 1.0);
                         continue;
@@ -136,9 +136,9 @@ inline void displace_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                 double c = 0.0;
                 while ((c < 4.0)) {
                   {
-                    const double top = ((((i00 < 0.0) ? 0.0 : static_cast<double>(s_data.element((i00 + c)))) * (1.0 - tx)) + (((i10 < 0.0) ? 0.0 : static_cast<double>(s_data.element((i10 + c)))) * tx));
-                    const double bottom = ((((i01 < 0.0) ? 0.0 : static_cast<double>(s_data.element((i01 + c)))) * (1.0 - tx)) + (((i11 < 0.0) ? 0.0 : static_cast<double>(s_data.element((i11 + c)))) * tx));
-                    (out.element((di + c)) = flight::round(((top * (1.0 - ty)) + (bottom * ty))));
+                    const double top = ((((i00 < 0.0) ? 0.0 : s_data.get_index((i00 + c))) * (1.0 - tx)) + (((i10 < 0.0) ? 0.0 : s_data.get_index((i10 + c))) * tx));
+                    const double bottom = ((((i01 < 0.0) ? 0.0 : s_data.get_index((i01 + c))) * (1.0 - tx)) + (((i11 < 0.0) ? 0.0 : s_data.get_index((i11 + c))) * tx));
+                    ([&]() { auto&& typed_array_5 = out; const auto typed_index_5 = (di + c); const auto typed_value_5 = flight::round(((top * (1.0 - ty)) + (bottom * ty))); return typed_array_5.set_index(typed_index_5, typed_value_5); }());
                   }
                   (c += 1.0);
                 }

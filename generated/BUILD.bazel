@@ -33,6 +33,7 @@ cc_library(
         "include/flight/bitmap/bitmap_convolution.hpp",
         "include/flight/bitmap/bitmap_coverage.hpp",
         "include/flight/bitmap/bitmap_displacement.hpp",
+        "include/flight/bitmap/bitmap_format.hpp",
         "include/flight/bitmap/bitmap_morphological.hpp",
         "include/flight/bitmap/bitmap_pixelate.hpp",
         "include/flight/bitmap/bitmap_query.hpp",

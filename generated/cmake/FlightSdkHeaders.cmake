@@ -27,6 +27,7 @@ set(FLIGHT_SDK_GENERATED_HEADERS
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/bitmap/bitmap_convolution.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/bitmap/bitmap_coverage.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/bitmap/bitmap_displacement.hpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../include/flight/bitmap/bitmap_format.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/bitmap/bitmap_morphological.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/bitmap/bitmap_pixelate.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/bitmap/bitmap_query.hpp"

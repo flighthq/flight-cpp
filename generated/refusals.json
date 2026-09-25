@@ -1,6 +1,6 @@
 {
   "schema": "flight-generated-sdk-refusals/2",
-  "compilerRevision": "7e2f6b02114c9f39bfe8674397b1b162581edf74",
+  "compilerRevision": "839d91eb9f9f3b66681443bb53b861dd2a7f2774",
   "sourceRevision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
   "refusals": [
     {
@@ -329,11 +329,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/bitmap/src/bitmapBevel.ts",
       "package": "@flighthq/bitmap",
-      "reason": "cpp emission failed for @flighthq/bitmap/packages/bitmap/src/bitmapBevel.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type])",
-      "stage": "emission"
+      "reason": "dependency ./bitmapBlur was refused for @flighthq/bitmap/packages/bitmap/src/bitmapBlur.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -413,13 +413,6 @@
       "package": "@flighthq/bitmap",
       "reason": "dependency ./bitmap was refused for @flighthq/bitmap/packages/bitmap/src/bitmap.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/bitmap/src/bitmapFormat.ts",
-      "package": "@flighthq/bitmap",
-      "reason": "cpp emission failed for @flighthq/bitmap/packages/bitmap/src/bitmapFormat.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type])",
-      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -508,11 +501,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/bitmap/src/bitmapShadow.ts",
       "package": "@flighthq/bitmap",
-      "reason": "cpp emission failed for @flighthq/bitmap/packages/bitmap/src/bitmapShadow.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type])",
-      "stage": "emission"
+      "reason": "dependency ./bitmapBlur was refused for @flighthq/bitmap/packages/bitmap/src/bitmapBlur.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -1640,13 +1633,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 13,
+      "code": "dependency-refused",
       "module": "packages/effects-canvas/src/canvasRenderEffectRegistry.ts",
       "package": "@flighthq/effects-canvas",
-      "reason": "cpp emission failed for @flighthq/effects-canvas/packages/effects-canvas/src/canvasRenderEffectRegistry.ts: contextual optionalSingle construction requires expression type evidence",
-      "stage": "emission"
+      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -2029,10 +2020,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 18,
+      "line": 34,
       "module": "packages/effects-gl/src/glRenderEffectRegistry.ts",
       "package": "@flighthq/effects-gl",
-      "reason": "cpp emission failed for @flighthq/effects-gl/packages/effects-gl/src/glRenderEffectRegistry.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/effects-gl/packages/effects-gl/src/glRenderEffectRegistry.ts: a presence test against undefined has no absence channel in the emitted C++ storage for property",
       "stage": "emission"
     },
     {
@@ -2467,10 +2458,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 19,
+      "line": 34,
       "module": "packages/effects-wgpu/src/wgpuRenderEffectRegistry.ts",
       "package": "@flighthq/effects-wgpu",
-      "reason": "cpp emission failed for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuRenderEffectRegistry.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuRenderEffectRegistry.ts: a presence test against undefined has no absence channel in the emitted C++ storage for property",
       "stage": "emission"
     },
     {
@@ -3995,13 +3986,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 53,
+      "code": "dependency-refused",
       "module": "packages/mesh/src/updateMeshMorph.ts",
       "package": "@flighthq/mesh",
-      "reason": "cpp emission failed for @flighthq/mesh/packages/mesh/src/updateMeshMorph.ts: nullish comparison admitting null and undefined requires dual-sentinel union evidence",
-      "stage": "emission"
+      "reason": "dependency ./meshGeometry was refused for @flighthq/mesh/packages/mesh/src/meshGeometry.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -5503,17 +5492,15 @@
       "code": "dependency-refused",
       "module": "packages/render/src/contract.ts",
       "package": "@flighthq/render",
-      "reason": "dependency ./enableColorAdjustmentGuards was refused for @flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
+      "reason": "dependency ./enableColorAdjustments was refused for @flighthq/render/packages/render/src/enableColorAdjustments.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 18,
+      "code": "dependency-refused",
       "module": "packages/render/src/enableColorAdjustmentGuards.ts",
       "package": "@flighthq/render",
-      "reason": "cpp emission failed for @flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts: optional chain receiver requires one concrete nullable union member",
-      "stage": "emission"
+      "reason": "dependency ./renderState was refused for @flighthq/render/packages/render/src/renderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -5530,13 +5517,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 43,
+      "code": "dependency-refused",
       "module": "packages/render/src/explainScene2DCoverage.ts",
       "package": "@flighthq/render",
-      "reason": "cpp emission failed for @flighthq/render/packages/render/src/explainScene2DCoverage.ts: optional chain receiver requires one concrete nullable union member",
-      "stage": "emission"
+      "reason": "dependency ./renderState was refused for @flighthq/render/packages/render/src/renderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -5553,7 +5538,7 @@
       "line": 29,
       "module": "packages/render/src/explainScene2DRender.ts",
       "package": "@flighthq/render",
-      "reason": "cpp emission failed for @flighthq/render/packages/render/src/explainScene2DRender.ts: optional chain receiver requires one concrete nullable union member",
+      "reason": "cpp emission failed for @flighthq/render/packages/render/src/explainScene2DRender.ts: type assertion target must identify exactly one C++ variant alternative: target flight::Any against [flight::Ref<flight::types::RenderCache>, flight::Ref<flight::types::Node<flight::Any>>]",
       "stage": "emission"
     },
     {
@@ -5726,13 +5711,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 7,
+      "code": "dependency-refused",
       "module": "packages/render-gl/src/explainGlTextureResolution.ts",
       "package": "@flighthq/render-gl",
-      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/explainGlTextureResolution.ts: optional chain receiver requires one concrete nullable union member",
-      "stage": "emission"
+      "reason": "dependency ./glRenderState was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -5777,13 +5760,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 7,
+      "code": "dependency-refused",
       "module": "packages/render-gl/src/glMaterialRegistry.ts",
       "package": "@flighthq/render-gl",
-      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glMaterialRegistry.ts: contextual optionalSingle construction requires expression type evidence",
-      "stage": "emission"
+      "reason": "dependency ./glRenderState was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -5898,7 +5879,7 @@
       "code": "unsupported-ir",
       "module": "packages/render-gl/src/glSkinPaletteTexture.ts",
       "package": "@flighthq/render-gl",
-      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glSkinPaletteTexture.ts: runtime external symbol binding plan is incomplete (missing: SharedArrayBuffer[type], WebGLTexture[type])",
+      "reason": "cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glSkinPaletteTexture.ts: runtime external symbol binding plan is incomplete (missing: WebGLTexture[type])",
       "stage": "emission"
     },
     {
@@ -5953,13 +5934,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 7,
+      "code": "dependency-refused",
       "module": "packages/render-wgpu/src/explainWgpuTextureResolution.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/explainWgpuTextureResolution.ts: optional chain receiver requires one concrete nullable union member",
-      "stage": "emission"
+      "reason": "dependency ./wgpuRenderState was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -6034,10 +6013,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 7,
+      "line": 12,
       "module": "packages/render-wgpu/src/wgpuMaterialRegistry.ts",
       "package": "@flighthq/render-wgpu",
-      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuMaterialRegistry.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuMaterialRegistry.ts: flight-cpp WeakMap key requires a proven Flight reference or external weak-key policy",
       "stage": "emission"
     },
     {
@@ -6438,11 +6417,13 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 6,
       "module": "packages/scene2d-canvas/src/canvasImageSource.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/ImageResource.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasImageSource.ts: union member test must identify exactly one C++ variant alternative",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -6798,11 +6779,13 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 6,
       "module": "packages/scene2d-dom/src/domImageSource.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "dependency @flighthq/types/contract was refused for @flighthq/types/packages/types/src/ImageResource.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domImageSource.ts: union member test must identify exactly one C++ variant alternative",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -6877,10 +6860,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 7,
+      "line": 15,
       "module": "packages/scene2d-dom/src/domShapeRasterizer.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domShapeRasterizer.ts: property value on a C++ variant requires proven union member access",
+      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domShapeRasterizer.ts: flight-cpp WeakMap value requires a proven C++ representation",
       "stage": "emission"
     },
     {
@@ -6940,13 +6923,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 7,
+      "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/explainDomTextureResolution.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/explainDomTextureResolution.ts: optional chain receiver requires one concrete nullable union member",
-      "stage": "emission"
+      "reason": "dependency ./domRenderState was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domRenderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -7159,13 +7140,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 17,
+      "code": "dependency-refused",
       "module": "packages/scene2d-gl/src/enableGlColorAdjustmentGuards.ts",
       "package": "@flighthq/scene2d-gl",
-      "reason": "cpp emission failed for @flighthq/scene2d-gl/packages/scene2d-gl/src/enableGlColorAdjustmentGuards.ts: optional chain receiver requires one concrete nullable union member",
-      "stage": "emission"
+      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -7177,13 +7156,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 45,
+      "code": "dependency-refused",
       "module": "packages/scene2d-gl/src/explainGlScene2DCoverage.ts",
       "package": "@flighthq/scene2d-gl",
-      "reason": "cpp emission failed for @flighthq/scene2d-gl/packages/scene2d-gl/src/explainGlScene2DCoverage.ts: optional chain receiver requires one concrete nullable union member",
-      "stage": "emission"
+      "reason": "dependency @flighthq/render-gl/contract was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -7316,13 +7293,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 6,
+      "code": "dependency-refused",
       "module": "packages/scene2d-gl/src/glShapeRasterizer.ts",
       "package": "@flighthq/scene2d-gl",
-      "reason": "cpp emission failed for @flighthq/scene2d-gl/packages/scene2d-gl/src/glShapeRasterizer.ts: property value on a C++ variant requires proven union member access",
-      "stage": "emission"
+      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -7669,10 +7644,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 6,
+      "line": 14,
       "module": "packages/scene2d-wgpu/src/wgpuShapeRasterizer.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuShapeRasterizer.ts: property value on a C++ variant requires proven union member access",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuShapeRasterizer.ts: flight-cpp WeakMap key requires a proven Flight reference or external weak-key policy",
       "stage": "emission"
     },
     {
@@ -8265,13 +8240,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 52,
+      "code": "dependency-refused",
       "module": "packages/scene3d-gl/src/explainGlScene3DCoverage.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/explainGlScene3DCoverage.ts: optional chain receiver requires one concrete nullable union member",
-      "stage": "emission"
+      "reason": "dependency @flighthq/render-gl/contract was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -8339,13 +8312,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 9,
+      "code": "dependency-refused",
       "module": "packages/scene3d-gl/src/glMeshMaterialRegistry.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshMaterialRegistry.ts: contextual optionalSingle construction requires expression type evidence",
-      "stage": "emission"
+      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -8432,13 +8403,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 18,
+      "code": "dependency-refused",
       "module": "packages/scene3d-gl/src/glShadedModifierSnippet.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glShadedModifierSnippet.ts: contextual optionalSingle construction requires expression type evidence",
-      "stage": "emission"
+      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -8907,13 +8876,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 45,
+      "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/explainWgpuScene3DCoverage.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/explainWgpuScene3DCoverage.ts: optional chain receiver requires one concrete nullable union member",
-      "stage": "emission"
+      "reason": "dependency @flighthq/render-wgpu/contract was refused for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -9067,10 +9034,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 9,
+      "line": 18,
       "module": "packages/scene3d-wgpu/src/wgpuMeshMaterialRegistry.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMeshMaterialRegistry.ts: contextual optionalSingle construction requires expression type evidence",
+      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMeshMaterialRegistry.ts: flight-cpp WeakMap key requires a proven Flight reference or external weak-key policy",
       "stage": "emission"
     },
     {
@@ -9132,13 +9099,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 14,
+      "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/wgpuShadedModifierSnippet.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedModifierSnippet.ts: contextual optionalSingle construction requires expression type evidence",
-      "stage": "emission"
+      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",

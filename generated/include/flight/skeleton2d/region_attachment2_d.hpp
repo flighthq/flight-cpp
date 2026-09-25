@@ -43,27 +43,27 @@ inline void compute_skeleton2_dregion_attachment_vertices(flight::Float32Array o
   }
   flight::geometry::set_transform_matrix(local, flight::row_get<flight::RowKey<"scaleX">>(attachment), flight::row_get<flight::RowKey<"scaleY">>(attachment), (flight::row_get<flight::RowKey<"rotation">>(attachment) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3), flight::row_get<flight::RowKey<"x">>(attachment), flight::row_get<flight::RowKey<"y">>(attachment));
   const double b = (bone_index * flight::skeleton2d::skeleton_2_d_matrix_stride);
-  (bone->a = world.element(b));
-  (bone->b = world.element((b + 1.0)));
-  (bone->c = world.element((b + 2.0)));
-  (bone->d = world.element((b + 3.0)));
-  (bone->tx = world.element((b + 4.0)));
-  (bone->ty = world.element((b + 5.0)));
+  (bone->a = world.get_index(b));
+  (bone->b = world.get_index((b + 1.0)));
+  (bone->c = world.get_index((b + 2.0)));
+  (bone->d = world.get_index((b + 3.0)));
+  (bone->tx = world.get_index((b + 4.0)));
+  (bone->ty = world.get_index((b + 5.0)));
   flight::geometry::multiply_matrix(combined, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(bone)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(local)));
   const double hw = (flight::row_get<flight::RowKey<"width">>(attachment) / 2.0);
   const double hh = (flight::row_get<flight::RowKey<"height">>(attachment) / 2.0);
   flight::geometry::matrix_transform_point_xy(corner, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(combined)), -hw, -hh);
-  (out.element(0.0) = corner->x);
-  (out.element(1.0) = corner->y);
+  ([&]() { auto&& typed_array = out; const auto typed_index = 0.0; const auto typed_value = corner->x; return typed_array.set_index(typed_index, typed_value); }());
+  ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = 1.0; const auto typed_value_2 = corner->y; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
   flight::geometry::matrix_transform_point_xy(corner, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(combined)), -hw, hh);
-  (out.element(2.0) = corner->x);
-  (out.element(3.0) = corner->y);
+  ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = 2.0; const auto typed_value_3 = corner->x; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+  ([&]() { auto&& typed_array_4 = out; const auto typed_index_4 = 3.0; const auto typed_value_4 = corner->y; return typed_array_4.set_index(typed_index_4, typed_value_4); }());
   flight::geometry::matrix_transform_point_xy(corner, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(combined)), hw, hh);
-  (out.element(4.0) = corner->x);
-  (out.element(5.0) = corner->y);
+  ([&]() { auto&& typed_array_5 = out; const auto typed_index_5 = 4.0; const auto typed_value_5 = corner->x; return typed_array_5.set_index(typed_index_5, typed_value_5); }());
+  ([&]() { auto&& typed_array_6 = out; const auto typed_index_6 = 5.0; const auto typed_value_6 = corner->y; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
   flight::geometry::matrix_transform_point_xy(corner, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(combined)), hw, -hh);
-  (out.element(6.0) = corner->x);
-  (out.element(7.0) = corner->y);
+  ([&]() { auto&& typed_array_7 = out; const auto typed_index_7 = 6.0; const auto typed_value_7 = corner->x; return typed_array_7.set_index(typed_index_7, typed_value_7); }());
+  ([&]() { auto&& typed_array_8 = out; const auto typed_index_8 = 7.0; const auto typed_value_8 = corner->y; return typed_array_8.set_index(typed_index_8, typed_value_8); }());
 }
 
 } // namespace flight::skeleton2d

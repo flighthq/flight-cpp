@@ -243,8 +243,8 @@ inline void set_vector2(flight::types::Vector2Like out, double x, double y) {
 }
 
 inline void set_vector2_from_float32_array(flight::types::Vector2Like out, double offset, flight::Float32Array source) {
-  (out->x = source.element(offset));
-  (out->y = source.element((offset + 1.0)));
+  (out->x = source.get_index(offset));
+  (out->y = source.get_index((offset + 1.0)));
 }
 
 inline void set_vector2_from_polar(flight::types::Vector2Like out, double length, double angle) {
@@ -273,8 +273,8 @@ inline void subtract_vector2(flight::types::Vector2Like out, flight::StructuralR
 }
 
 inline void write_vector2_to_float32_array(flight::Float32Array out, double offset, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>> source) {
-  (out.element(offset) = flight::row_get<flight::RowKey<"x">>(source));
-  (out.element((offset + 1.0)) = flight::row_get<flight::RowKey<"y">>(source));
+  ([&]() { auto&& typed_array = out; const auto typed_index = offset; const auto typed_value = flight::row_get<flight::RowKey<"x">>(source); return typed_array.set_index(typed_index, typed_value); }());
+  ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = (offset + 1.0); const auto typed_value_2 = flight::row_get<flight::RowKey<"y">>(source); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
 }
 
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2>>>> vector2_x_axis = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector2>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector2>>>>(create_vector2(1.0, 0.0)));

@@ -21,14 +21,14 @@ inline void write_aabb_vertices(flight::StructuralRef<flight::RowReadonly<flight
   const double min_y = flight::row_get<flight::RowKey<"minY">>(aabb);
   const double max_x = flight::row_get<flight::RowKey<"maxX">>(aabb);
   const double max_y = flight::row_get<flight::RowKey<"maxY">>(aabb);
-  (out.element(0.0) = min_x);
-  (out.element(1.0) = min_y);
-  (out.element(2.0) = max_x);
-  (out.element(3.0) = min_y);
-  (out.element(4.0) = max_x);
-  (out.element(5.0) = max_y);
-  (out.element(6.0) = min_x);
-  (out.element(7.0) = max_y);
+  ([&]() { auto&& typed_array = out; const auto typed_index = 0.0; const auto typed_value = min_x; return typed_array.set_index(typed_index, typed_value); }());
+  ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = 1.0; const auto typed_value_2 = min_y; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+  ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = 2.0; const auto typed_value_3 = max_x; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+  ([&]() { auto&& typed_array_4 = out; const auto typed_index_4 = 3.0; const auto typed_value_4 = min_y; return typed_array_4.set_index(typed_index_4, typed_value_4); }());
+  ([&]() { auto&& typed_array_5 = out; const auto typed_index_5 = 4.0; const auto typed_value_5 = max_x; return typed_array_5.set_index(typed_index_5, typed_value_5); }());
+  ([&]() { auto&& typed_array_6 = out; const auto typed_index_6 = 5.0; const auto typed_value_6 = max_y; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
+  ([&]() { auto&& typed_array_7 = out; const auto typed_index_7 = 6.0; const auto typed_value_7 = min_x; return typed_array_7.set_index(typed_index_7, typed_value_7); }());
+  ([&]() { auto&& typed_array_8 = out; const auto typed_index_8 = 7.0; const auto typed_value_8 = max_y; return typed_array_8.set_index(typed_index_8, typed_value_8); }());
 }
 
 inline void write_obb_vertices(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionObb2D>>>> obb, flight::Float64Array out) {
@@ -42,14 +42,14 @@ inline void write_obb_vertices(flight::StructuralRef<flight::RowReadonly<flight:
   const double wy = (sin * half_w);
   const double hx = (-sin * half_h);
   const double hy = (cos * half_h);
-  (out.element(0.0) = ((cx - wx) - hx));
-  (out.element(1.0) = ((cy - wy) - hy));
-  (out.element(2.0) = ((cx + wx) - hx));
-  (out.element(3.0) = ((cy + wy) - hy));
-  (out.element(4.0) = ((cx + wx) + hx));
-  (out.element(5.0) = ((cy + wy) + hy));
-  (out.element(6.0) = ((cx - wx) + hx));
-  (out.element(7.0) = ((cy - wy) + hy));
+  ([&]() { auto&& typed_array_9 = out; const auto typed_index_9 = 0.0; const auto typed_value_9 = ((cx - wx) - hx); return typed_array_9.set_index(typed_index_9, typed_value_9); }());
+  ([&]() { auto&& typed_array_10 = out; const auto typed_index_10 = 1.0; const auto typed_value_10 = ((cy - wy) - hy); return typed_array_10.set_index(typed_index_10, typed_value_10); }());
+  ([&]() { auto&& typed_array_11 = out; const auto typed_index_11 = 2.0; const auto typed_value_11 = ((cx + wx) - hx); return typed_array_11.set_index(typed_index_11, typed_value_11); }());
+  ([&]() { auto&& typed_array_12 = out; const auto typed_index_12 = 3.0; const auto typed_value_12 = ((cy + wy) - hy); return typed_array_12.set_index(typed_index_12, typed_value_12); }());
+  ([&]() { auto&& typed_array_13 = out; const auto typed_index_13 = 4.0; const auto typed_value_13 = ((cx + wx) + hx); return typed_array_13.set_index(typed_index_13, typed_value_13); }());
+  ([&]() { auto&& typed_array_14 = out; const auto typed_index_14 = 5.0; const auto typed_value_14 = ((cy + wy) + hy); return typed_array_14.set_index(typed_index_14, typed_value_14); }());
+  ([&]() { auto&& typed_array_15 = out; const auto typed_index_15 = 6.0; const auto typed_value_15 = ((cx - wx) + hx); return typed_array_15.set_index(typed_index_15, typed_value_15); }());
+  ([&]() { auto&& typed_array_16 = out; const auto typed_index_16 = 7.0; const auto typed_value_16 = ((cy - wy) + hy); return typed_array_16.set_index(typed_index_16, typed_value_16); }());
 }
 
 } // namespace flight::collision

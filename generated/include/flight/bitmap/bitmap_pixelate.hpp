@@ -61,10 +61,10 @@ inline void pixelate_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                             continue;
                           }
                           const double si = (((sy * bitmap_width) + sx) * 4.0);
-                          (r += static_cast<double>(data.element(si)));
-                          (g += static_cast<double>(data.element((si + 1.0))));
-                          (b += static_cast<double>(data.element((si + 2.0))));
-                          (a += static_cast<double>(data.element((si + 3.0))));
+                          (r += data.get_index(si));
+                          (g += data.get_index((si + 1.0)));
+                          (b += data.get_index((si + 2.0)));
+                          (a += data.get_index((si + 3.0)));
                           count++;
                         }
                         (px += 1.0);
@@ -91,10 +91,10 @@ inline void pixelate_bitmap(flight::Uint8ClampedArray out, flight::StructuralRef
                       while ((px_2 < x_end)) {
                         {
                           const double di = (((py_2 * w) + px_2) * 4.0);
-                          (out.element(di) = ar);
-                          (out.element((di + 1.0)) = ag);
-                          (out.element((di + 2.0)) = ab);
-                          (out.element((di + 3.0)) = aa);
+                          ([&]() { auto&& typed_array = out; const auto typed_index = di; const auto typed_value = ar; return typed_array.set_index(typed_index, typed_value); }());
+                          ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = (di + 1.0); const auto typed_value_2 = ag; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+                          ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = (di + 2.0); const auto typed_value_3 = ab; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+                          ([&]() { auto&& typed_array_4 = out; const auto typed_index_4 = (di + 3.0); const auto typed_value_4 = aa; return typed_array_4.set_index(typed_index_4, typed_value_4); }());
                         }
                         (px_2 += 1.0);
                       }

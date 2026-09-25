@@ -1,13 +1,13 @@
 # Generated Flight SDK inventory
 
 This directory is generated from `@flighthq/sdk` 0.5.0 at
-`7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad` by `flight-compiler` at `7e2f6b02114c9f39bfe8674397b1b162581edf74`.
+`7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad` by `flight-compiler` at `839d91eb9f9f3b66681443bb53b861dd2a7f2774`.
 Do not edit it by hand.
 
 No external binding profile is applied; this is the portable floor. Exact profile paths and SHA-256 digests are recorded in `manifest.json`.
 
-The current compiler emitted 1152 of 2904 source modules from
-154 SDK packages and refused 1752. Emitted headers live under
+The current compiler emitted 1153 of 2904 source modules from
+154 SDK packages and refused 1751. Emitted headers live under
 `include/flight/<package>/`; every refusal and its owning module is recorded in `refusals.json`.
 
 This is a bring-up inventory. It is intentionally committed before it forms a completely compilable SDK closure.

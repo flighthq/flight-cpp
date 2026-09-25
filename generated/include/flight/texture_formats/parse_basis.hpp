@@ -42,7 +42,7 @@ inline flight::Null reject_flight_value_function_reject_flight_private_7401d55d6
 }
 
 inline bool has_basis_signature(flight::Uint8Array bytes) {
-  return (((static_cast<double>(bytes.byte_length) >= 2.0) && (bytes.element(0.0) == 115.0)) && (bytes.element(1.0) == 66.0));
+  return (((static_cast<double>(bytes.byte_length) >= 2.0) && (bytes.get_index(0.0) == 115.0)) && (bytes.get_index(1.0) == 66.0));
 }
 
 inline const double basis_total_slices_offset = 14.0;
@@ -117,14 +117,14 @@ inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_basis_i
   auto header = flight::texture_formats::create_byte_reader(bytes, basis_total_slices_offset);
   const double total_slices = flight::texture_formats::read_byte_reader_u24(header);
   const double total_images = flight::texture_formats::read_byte_reader_u24(header);
-  std::optional<flight::types::TextureContainerFormat> format = basis_tex_format.get(bytes.element(basis_tex_format_offset));
+  std::optional<flight::types::TextureContainerFormat> format = basis_tex_format.get(bytes.get_index(basis_tex_format_offset));
   if (!format.has_value()) {
     return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject_flight_value_function_reject_flight_private_7401d55d6b747751(failure, flight::String("format-unsupported")); return std::nullopt; }());
   }
   if ((total_slices == 0.0)) {
     return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject_flight_value_function_reject_flight_private_7401d55d6b747751(failure, flight::String("structure-invalid")); return std::nullopt; }());
   }
-  auto shape = get_basis_texture_shape(bytes.element(basis_tex_type_offset), total_images);
+  auto shape = get_basis_texture_shape(bytes.get_index(basis_tex_type_offset), total_images);
   if (!shape.has_value()) {
     return ([&]() -> std::optional<flight::Ref<flight::types::TextureContainer>> { (void)reject_flight_value_function_reject_flight_private_7401d55d6b747751(failure, flight::String("format-unsupported")); return std::nullopt; }());
   }

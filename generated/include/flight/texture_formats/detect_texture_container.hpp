@@ -17,7 +17,7 @@ inline bool is_ktx2_magic(flight::Uint8Array bytes) {
     double i = 0.0;
     while ((i < 12.0)) {
       {
-        if ((bytes.element(i) != ktx2_magic.element(i))) {
+        if ((bytes.get_index(i) != ktx2_magic.element(i))) {
           return false;
         }
       }
@@ -31,13 +31,13 @@ inline std::optional<flight::String> detect_texture_container(flight::Uint8Array
   if (((static_cast<double>(bytes.byte_length) >= 12.0) && is_ktx2_magic(bytes))) {
     return std::optional<flight::String>{flight::String("ktx2")};
   }
-  if ((((((static_cast<double>(bytes.byte_length) >= 4.0) && (bytes.element(0.0) == 68.0)) && (bytes.element(1.0) == 68.0)) && (bytes.element(2.0) == 83.0)) && (bytes.element(3.0) == 32.0))) {
+  if ((((((static_cast<double>(bytes.byte_length) >= 4.0) && (bytes.get_index(0.0) == 68.0)) && (bytes.get_index(1.0) == 68.0)) && (bytes.get_index(2.0) == 83.0)) && (bytes.get_index(3.0) == 32.0))) {
     return std::optional<flight::String>{flight::String("dds")};
   }
-  if (((((static_cast<double>(bytes.byte_length) >= 3.0) && (bytes.element(0.0) == 65.0)) && (bytes.element(1.0) == 84.0)) && (bytes.element(2.0) == 70.0))) {
+  if (((((static_cast<double>(bytes.byte_length) >= 3.0) && (bytes.get_index(0.0) == 65.0)) && (bytes.get_index(1.0) == 84.0)) && (bytes.get_index(2.0) == 70.0))) {
     return std::optional<flight::String>{flight::String("atf")};
   }
-  if ((((static_cast<double>(bytes.byte_length) >= 2.0) && (bytes.element(0.0) == 115.0)) && (bytes.element(1.0) == 66.0))) {
+  if ((((static_cast<double>(bytes.byte_length) >= 2.0) && (bytes.get_index(0.0) == 115.0)) && (bytes.get_index(1.0) == 66.0))) {
     return std::optional<flight::String>{flight::String("basis")};
   }
   return std::nullopt;

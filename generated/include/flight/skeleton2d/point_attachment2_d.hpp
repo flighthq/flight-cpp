@@ -37,8 +37,8 @@ inline void compute_skeleton2_dpoint_attachment_position(flight::types::Vector2L
   const double b = (bone_index * flight::skeleton2d::skeleton_2_d_matrix_stride);
   const double x = flight::row_get<flight::RowKey<"x">>(attachment);
   const double y = flight::row_get<flight::RowKey<"y">>(attachment);
-  (out->x = (((world.element(b) * x) + (world.element((b + 2.0)) * y)) + world.element((b + 4.0))));
-  (out->y = (((world.element((b + 1.0)) * x) + (world.element((b + 3.0)) * y)) + world.element((b + 5.0))));
+  (out->x = (((world.get_index(b) * x) + (world.get_index((b + 2.0)) * y)) + world.get_index((b + 4.0))));
+  (out->y = (((world.get_index((b + 1.0)) * x) + (world.get_index((b + 3.0)) * y)) + world.get_index((b + 5.0))));
 }
 
 inline double compute_skeleton2_dpoint_attachment_rotation(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointAttachment2D>>>> attachment, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index) {
@@ -50,8 +50,8 @@ inline double compute_skeleton2_dpoint_attachment_rotation(flight::StructuralRef
   const double radians = (flight::row_get<flight::RowKey<"rotation">>(attachment) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3);
   const double cos = std::cos(radians);
   const double sin = std::sin(radians);
-  const double x = ((world.element(b) * cos) + (world.element((b + 2.0)) * sin));
-  const double y = ((world.element((b + 1.0)) * cos) + (world.element((b + 3.0)) * sin));
+  const double x = ((world.get_index(b) * cos) + (world.get_index((b + 2.0)) * sin));
+  const double y = ((world.get_index((b + 1.0)) * cos) + (world.get_index((b + 3.0)) * sin));
   return (std::atan2(y, x) * flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3);
 }
 
