@@ -21,63 +21,58 @@ class Date {
   [[nodiscard]] static double now() noexcept { return current_milliseconds(); }
 
   [[nodiscard]] double get_date() const noexcept {
-    if (!calendar_supported()) return invalid_number();
-    return static_cast<double>(static_cast<unsigned>(calendar_date().day()));
+    if (!valid()) return invalid_number();
+    return static_cast<double>(calendar_projection().day);
   }
 
   [[nodiscard]] double get_day() const noexcept {
-    if (!calendar_supported()) return invalid_number();
-    return static_cast<double>(std::chrono::weekday(calendar_day()).c_encoding());
+    if (!valid()) return invalid_number();
+    return static_cast<double>(calendar_projection().weekday);
   }
 
   [[nodiscard]] double get_full_year() const noexcept {
-    if (!calendar_supported()) return invalid_number();
-    return static_cast<double>(static_cast<int>(calendar_date().year()));
+    if (!valid()) return invalid_number();
+    return static_cast<double>(calendar_projection().year);
   }
 
   [[nodiscard]] double get_hours() const noexcept {
-    return calendar_supported() ? static_cast<double>(calendar_time().hours().count()) : invalid_number();
+    return valid() ? static_cast<double>(calendar_projection().hours) : invalid_number();
   }
 
   [[nodiscard]] double get_milliseconds() const noexcept {
-    return calendar_supported() ? static_cast<double>(calendar_time().subseconds().count()) : invalid_number();
+    return valid() ? static_cast<double>(calendar_projection().milliseconds) : invalid_number();
   }
 
   [[nodiscard]] double get_minutes() const noexcept {
-    return calendar_supported() ? static_cast<double>(calendar_time().minutes().count()) : invalid_number();
+    return valid() ? static_cast<double>(calendar_projection().minutes) : invalid_number();
   }
 
   [[nodiscard]] double get_month() const noexcept {
-    if (!calendar_supported()) return invalid_number();
-    return static_cast<double>(static_cast<unsigned>(calendar_date().month()) - 1);
+    if (!valid()) return invalid_number();
+    return static_cast<double>(calendar_projection().month - 1);
   }
 
   [[nodiscard]] double get_seconds() const noexcept {
-    return calendar_supported() ? static_cast<double>(calendar_time().seconds().count()) : invalid_number();
+    return valid() ? static_cast<double>(calendar_projection().seconds) : invalid_number();
   }
 
   [[nodiscard]] double get_time() const noexcept { return milliseconds_; }
 
   [[nodiscard]] String to_isostring() const {
-    if (!calendar_supported()) throw std::range_error("flight::Date is outside the supported calendar range");
+    if (!valid()) throw std::range_error("flight::Date is outside the supported calendar range");
 
-    const auto point = time_point();
-    const auto day = std::chrono::floor<std::chrono::days>(point);
-    const auto date = std::chrono::year_month_day(day);
-    const auto time = std::chrono::hh_mm_ss(point - day);
-
+    const auto date = calendar_projection();
     std::ostringstream output;
-    const auto year = static_cast<int>(date.year());
     output << std::setfill('0');
-    if (year >= 0 && year <= 9999) {
-      output << std::setw(4) << year;
+    if (date.year >= 0 && date.year <= 9999) {
+      output << std::setw(4) << date.year;
     } else {
-      output << (year < 0 ? '-' : '+') << std::setw(6) << std::abs(year);
+      output << (date.year < 0 ? '-' : '+') << std::setw(6)
+             << (date.year < 0 ? -date.year : date.year);
     }
-    output << '-' << std::setw(2) << static_cast<unsigned>(date.month()) << '-' << std::setw(2)
-           << static_cast<unsigned>(date.day()) << 'T' << std::setw(2) << time.hours().count() << ':'
-           << std::setw(2) << time.minutes().count() << ':' << std::setw(2) << time.seconds().count()
-           << '.' << std::setw(3) << time.subseconds().count() << 'Z';
+    output << '-' << std::setw(2) << date.month << '-' << std::setw(2) << date.day << 'T'
+           << std::setw(2) << date.hours << ':' << std::setw(2) << date.minutes << ':'
+           << std::setw(2) << date.seconds << '.' << std::setw(3) << date.milliseconds << 'Z';
     return String::from_utf8(output.str());
   }
 
@@ -86,27 +81,64 @@ class Date {
   [[nodiscard]] bool valid() const noexcept { return std::isfinite(milliseconds_); }
 
  private:
-  using Milliseconds = std::chrono::milliseconds;
-  using TimePoint = std::chrono::sys_time<Milliseconds>;
+  static constexpr std::int64_t milliseconds_per_second = 1000;
+  static constexpr std::int64_t milliseconds_per_minute = 60 * milliseconds_per_second;
+  static constexpr std::int64_t milliseconds_per_hour = 60 * milliseconds_per_minute;
+  static constexpr std::int64_t milliseconds_per_day = 24 * milliseconds_per_hour;
 
-  [[nodiscard]] std::chrono::year_month_day calendar_date() const noexcept {
-    return std::chrono::year_month_day(calendar_day());
+  struct CalendarProjection {
+    std::int64_t year;
+    unsigned month;
+    unsigned day;
+    unsigned weekday;
+    unsigned hours;
+    unsigned minutes;
+    unsigned seconds;
+    unsigned milliseconds;
+  };
+
+  // Converts a day count relative to 1970-01-01 into the proleptic Gregorian calendar. Unlike
+  // std::chrono::year_month_day, this remains defined across JavaScript's complete TimeClip range
+  // of plus or minus 100,000,000 days (years -271821 through +275760).
+  [[nodiscard]] static CalendarProjection calendar_date(std::int64_t epoch_days) noexcept {
+    const auto shifted_days = epoch_days + 719468;
+    const auto era =
+        (shifted_days >= 0 ? shifted_days : shifted_days - 146096) / 146097;
+    const auto day_of_era = static_cast<unsigned>(shifted_days - era * 146097);
+    const auto year_of_era = static_cast<unsigned>(
+        (day_of_era - day_of_era / 1460 + day_of_era / 36524 - day_of_era / 146096) /
+        365);
+    auto year = static_cast<std::int64_t>(year_of_era) + era * 400;
+    const auto day_of_year =
+        day_of_era - (365 * year_of_era + year_of_era / 4 - year_of_era / 100);
+    const auto month_prime = static_cast<unsigned>((5 * day_of_year + 2) / 153);
+    const auto day = static_cast<unsigned>(day_of_year - (153 * month_prime + 2) / 5 + 1);
+    const auto month =
+        static_cast<unsigned>(static_cast<int>(month_prime) + (month_prime < 10 ? 3 : -9));
+    year += month <= 2 ? 1 : 0;
+
+    auto weekday = (epoch_days + 4) % 7;
+    if (weekday < 0) weekday += 7;
+    return {year, month, day, static_cast<unsigned>(weekday), 0, 0, 0, 0};
   }
 
-  [[nodiscard]] std::chrono::sys_days calendar_day() const noexcept {
-    return std::chrono::floor<std::chrono::days>(time_point());
-  }
+  [[nodiscard]] CalendarProjection calendar_projection() const noexcept {
+    const auto total_milliseconds = static_cast<std::int64_t>(milliseconds_);
+    auto epoch_days = total_milliseconds / milliseconds_per_day;
+    auto day_milliseconds = total_milliseconds % milliseconds_per_day;
+    if (day_milliseconds < 0) {
+      --epoch_days;
+      day_milliseconds += milliseconds_per_day;
+    }
 
-  [[nodiscard]] std::chrono::hh_mm_ss<Milliseconds> calendar_time() const noexcept {
-    return std::chrono::hh_mm_ss<Milliseconds>(time_point() - calendar_day());
-  }
-
-  [[nodiscard]] bool calendar_supported() const noexcept {
-    if (!valid()) return false;
-    const auto day = std::chrono::floor<std::chrono::days>(time_point());
-    const auto first = std::chrono::sys_days(std::chrono::year::min() / std::chrono::January / 1);
-    const auto last = std::chrono::sys_days(std::chrono::year::max() / std::chrono::December / 31);
-    return day >= first && day <= last;
+    auto result = calendar_date(epoch_days);
+    result.hours = static_cast<unsigned>(day_milliseconds / milliseconds_per_hour);
+    day_milliseconds %= milliseconds_per_hour;
+    result.minutes = static_cast<unsigned>(day_milliseconds / milliseconds_per_minute);
+    day_milliseconds %= milliseconds_per_minute;
+    result.seconds = static_cast<unsigned>(day_milliseconds / milliseconds_per_second);
+    result.milliseconds = static_cast<unsigned>(day_milliseconds % milliseconds_per_second);
+    return result;
   }
 
   [[nodiscard]] static double current_milliseconds() noexcept {
@@ -124,10 +156,6 @@ class Date {
       return std::numeric_limits<double>::quiet_NaN();
     }
     return std::trunc(milliseconds);
-  }
-
-  [[nodiscard]] TimePoint time_point() const noexcept {
-    return TimePoint(Milliseconds(static_cast<std::int64_t>(std::floor(milliseconds_))));
   }
 
   double milliseconds_;

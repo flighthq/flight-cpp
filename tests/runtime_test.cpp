@@ -5,6 +5,7 @@
 
 #include <array>
 #include <cmath>
+#include <concepts>
 #include <exception>
 #include <iostream>
 #include <limits>
@@ -78,6 +79,10 @@ concept SupportsWeakMapKey = requires { typename flight::WeakMap<Key, int>; };
 
 static_assert(!SupportsWeakMapKey<double>);
 static_assert(SupportsWeakMapKey<flight::Ref<TestReference>>);
+static_assert(std::same_as<decltype(std::declval<const flight::Uint8Array&>().get_index(0.0)),
+                           double>);
+static_assert(std::same_as<decltype(std::declval<const flight::Uint8Array&>().set_index(0.0, 0.0)),
+                           double>);
 
 void check(bool condition, const char* message) {
   if (condition) return;
@@ -1848,7 +1853,48 @@ void test_date() {
   check(epoch.to_isostring() == "1970-01-01T00:00:00.000Z", "date formats an ISO UTC instant");
   check(std::isfinite(FlightDate::now()), "date now returns epoch milliseconds");
   check(FlightDate(1.9).get_time() == 1.0, "date applies integer TimeClip semantics");
-  check(std::isnan(FlightDate(8.64e15 + 1.0).get_time()), "date clips instants outside the valid range");
+
+  const FlightDate earliest(-8.64e15);
+  check(earliest.get_full_year() == -271821.0 && earliest.get_month() == 3.0 &&
+            earliest.get_date() == 20.0 && earliest.get_day() == 2.0 &&
+            earliest.get_hours() == 0.0 && earliest.get_minutes() == 0.0 &&
+            earliest.get_seconds() == 0.0 && earliest.get_milliseconds() == 0.0,
+        "date projects the earliest TimeClip instant onto every UTC calendar field");
+  check(earliest.to_isostring() == "-271821-04-20T00:00:00.000Z",
+        "date formats the earliest TimeClip instant with an extended year");
+
+  const FlightDate latest(8.64e15);
+  check(latest.get_full_year() == 275760.0 && latest.get_month() == 8.0 &&
+            latest.get_date() == 13.0 && latest.get_day() == 6.0,
+        "date projects the latest TimeClip instant onto the proleptic Gregorian calendar");
+  check(latest.to_isostring() == "+275760-09-13T00:00:00.000Z",
+        "date formats the latest TimeClip instant with a signed extended year");
+
+  const FlightDate before_epoch(-1.0);
+  check(before_epoch.get_full_year() == 1969.0 && before_epoch.get_month() == 11.0 &&
+            before_epoch.get_date() == 31.0 && before_epoch.get_day() == 3.0 &&
+            before_epoch.get_hours() == 23.0 && before_epoch.get_minutes() == 59.0 &&
+            before_epoch.get_seconds() == 59.0 && before_epoch.get_milliseconds() == 999.0,
+        "date uses floor-based day projection for negative instants");
+  check(FlightDate(-62167219200000.0).to_isostring() == "0000-01-01T00:00:00.000Z" &&
+            FlightDate(-62167219200001.0).to_isostring() ==
+                "-000001-12-31T23:59:59.999Z" &&
+            FlightDate(253402300800000.0).to_isostring() ==
+                "+010000-01-01T00:00:00.000Z",
+        "date crosses zero and extended-year formatting boundaries exactly");
+
+  const FlightDate too_early(-8.64e15 - 1.0);
+  const FlightDate too_late(8.64e15 + 1.0);
+  check(std::isnan(too_early.get_time()) && std::isnan(too_late.get_time()) &&
+            std::isnan(too_late.get_full_year()),
+        "date clips instants outside the complete valid range");
+  bool invalid_format_failed = false;
+  try {
+    static_cast<void>(too_late.to_isostring());
+  } catch (const std::range_error&) {
+    invalid_format_failed = true;
+  }
+  check(invalid_format_failed, "invalid dates reject ISO projection");
 }
 
 void test_map() {
@@ -2674,6 +2720,62 @@ void test_typed_array() {
         "typed-array from invokes its mapper before element conversion");
   check(flight::Uint32Array::from(flight::Array<double>{}).empty(),
         "typed-array from preserves an empty input");
+
+  const flight::Uint8Array indexed_unsigned(4);
+  const auto nan_assignment =
+      indexed_unsigned.set_index(2.0, std::numeric_limits<double>::quiet_NaN());
+  check(indexed_unsigned.set_index(0.0, 300.0) == 300.0 &&
+            indexed_unsigned.set_index(1.0, -1.0) == -1.0 &&
+            std::isnan(nan_assignment) &&
+            indexed_unsigned.get_index(0.0) == 44.0 &&
+            indexed_unsigned.get_index(1.0) == 255.0 && indexed_unsigned.get_index(2.0) == 0.0,
+        "typed-array indexed writes return the assignment value and apply unsigned conversion");
+
+  const flight::Int8Array indexed_signed(3);
+  static_cast<void>(indexed_signed.set_index(0.0, 128.0));
+  static_cast<void>(indexed_signed.set_index(1.0, 255.0));
+  static_cast<void>(indexed_signed.set_index(2.0, -129.0));
+  check(indexed_signed.get_index(0.0) == -128.0 && indexed_signed.get_index(1.0) == -1.0 &&
+            indexed_signed.get_index(2.0) == 127.0,
+        "typed-array indexed access converts signed integer elements in both directions");
+
+  const flight::Uint8ClampedArray indexed_clamped(4);
+  static_cast<void>(indexed_clamped.set_index(0.0, 0.5));
+  static_cast<void>(indexed_clamped.set_index(1.0, 1.5));
+  static_cast<void>(indexed_clamped.set_index(2.0, 2.5));
+  static_cast<void>(indexed_clamped.set_index(3.0, 255.5));
+  check(indexed_clamped.get_index(0.0) == 0.0 && indexed_clamped.get_index(1.0) == 2.0 &&
+            indexed_clamped.get_index(2.0) == 2.0 && indexed_clamped.get_index(3.0) == 255.0,
+        "typed-array indexed writes preserve Uint8Clamped ties-to-even conversion");
+
+  const flight::Uint32Array indexed_wide_unsigned(1);
+  const flight::Int32Array indexed_wide_signed(1);
+  const flight::Float32Array indexed_float32(1);
+  const flight::Float64Array indexed_float64(1);
+  indexed_wide_unsigned.set_index(0.0, -1.0);
+  indexed_wide_signed.set_index(0.0, 2147483648.0);
+  indexed_float32.set_index(0.0, 3.5e38);
+  indexed_float64.set_index(0.0, -0.0);
+  check(indexed_wide_unsigned.get_index(0.0) == 4294967295.0 &&
+            indexed_wide_signed.get_index(0.0) == -2147483648.0 &&
+            std::isinf(indexed_float32.get_index(0.0)) &&
+            std::signbit(indexed_float64.get_index(0.0)),
+        "typed-array indexed access preserves wide-integer and floating-point conversion");
+
+  const auto before_invalid_write = indexed_unsigned.slice(0);
+  check(indexed_unsigned.set_index(-1.0, 17.0) == 17.0 &&
+            indexed_unsigned.set_index(4.0, 18.0) == 18.0 &&
+            indexed_unsigned.set_index(1.5, 19.0) == 19.0 &&
+            indexed_unsigned.set_index(std::numeric_limits<double>::infinity(), 20.0) == 20.0 &&
+            indexed_unsigned.set_index(std::numeric_limits<double>::quiet_NaN(), 21.0) == 21.0 &&
+            std::equal(indexed_unsigned.begin(), indexed_unsigned.end(),
+                       before_invalid_write.begin(), before_invalid_write.end()) &&
+            std::isnan(indexed_unsigned.get_index(-1.0)) &&
+            std::isnan(indexed_unsigned.get_index(4.0)) &&
+            std::isnan(indexed_unsigned.get_index(1.5)) &&
+            std::isnan(indexed_unsigned.get_index(std::numeric_limits<double>::infinity())) &&
+            std::isnan(indexed_unsigned.get_index(std::numeric_limits<double>::quiet_NaN())),
+        "typed-array indexed access preserves invalid integer-indexed property semantics");
 
   const flight::ArrayBuffer buffer(8.0);
   const flight::DataView data_view(buffer);

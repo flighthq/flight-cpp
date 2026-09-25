@@ -216,6 +216,24 @@ class TypedArray {
     return normalized ? std::optional<Value>((*this)[*normalized]) : std::nullopt;
   }
 
+  // Compiler-facing numeric index access. Reads project every element representation back to a
+  // JavaScript number, while an invalid integer-indexed property has the backend's number-only
+  // absence sentinel.
+  [[nodiscard]] double get_index(double index) const noexcept {
+    const auto normalized = property_index(index);
+    if (!normalized) return std::numeric_limits<double>::quiet_NaN();
+    return static_cast<double>(data()[*normalized]);
+  }
+
+  // A typed-array assignment evaluates to its uncoerced right-hand value even though the stored
+  // element undergoes the target array's modulo, clamping, or floating-point conversion. Invalid
+  // integer-indexed properties ignore the write but preserve that assignment result.
+  double set_index(double index, double value) const {
+    const auto normalized = property_index(index);
+    if (normalized) mutable_data()[*normalized] = convert_element(value);
+    return value;
+  }
+
   [[nodiscard]] const_iterator begin() const noexcept { return data(); }
   [[nodiscard]] iterator begin() { return data(); }
   [[nodiscard]] const_iterator end() const noexcept { return data() + length_; }
