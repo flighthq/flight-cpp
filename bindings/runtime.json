@@ -192,6 +192,219 @@
       "targetName": "flight::FontFace"
     },
     {
+      "headers": [
+        "flight/intl.hpp"
+      ],
+      "nullability": "non-null",
+      "objectConstruction": {
+        "fields": [
+          {
+            "sourceField": "sensitivity",
+            "targetName": "sensitivity"
+          },
+          {
+            "sourceField": "numeric",
+            "targetName": "numeric"
+          },
+          {
+            "sourceField": "caseFirst",
+            "targetName": "case_first"
+          }
+        ],
+        "kind": "field-assignment"
+      },
+      "ownership": "value",
+      "sourceName": "CollatorOptions",
+      "space": "type",
+      "targetName": "flight::IntlCollatorOptions"
+    },
+    {
+      "headers": [
+        "flight/intl.hpp"
+      ],
+      "nullability": "non-null",
+      "objectConstruction": {
+        "fields": [
+          {
+            "sourceField": "year",
+            "targetName": "year"
+          },
+          {
+            "sourceField": "month",
+            "targetName": "month"
+          },
+          {
+            "sourceField": "day",
+            "targetName": "day"
+          },
+          {
+            "sourceField": "hour",
+            "targetName": "hour"
+          },
+          {
+            "sourceField": "minute",
+            "targetName": "minute"
+          }
+        ],
+        "kind": "field-assignment"
+      },
+      "ownership": "value",
+      "sourceName": "DateTimeFormatOptions",
+      "space": "type",
+      "targetName": "flight::IntlDateTimeFormatOptions"
+    },
+    {
+      "headers": [
+        "flight/intl.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "LocalesArgument",
+      "space": "type",
+      "targetName": "flight::IntlLocalesArgument"
+    },
+    {
+      "headers": [
+        "flight/intl.hpp"
+      ],
+      "nullability": "non-null",
+      "objectConstruction": {
+        "fields": [
+          {
+            "sourceField": "type",
+            "targetName": "type"
+          },
+          {
+            "sourceField": "style",
+            "targetName": "style"
+          }
+        ],
+        "kind": "field-assignment"
+      },
+      "ownership": "value",
+      "sourceName": "ListFormatOptions",
+      "space": "type",
+      "targetName": "flight::IntlListFormatOptions"
+    },
+    {
+      "headers": [
+        "flight/intl.hpp"
+      ],
+      "nullability": "non-null",
+      "objectConstruction": {
+        "fields": [
+          {
+            "sourceField": "notation",
+            "targetName": "notation"
+          },
+          {
+            "sourceField": "style",
+            "targetName": "style"
+          },
+          {
+            "sourceField": "currency",
+            "targetName": "currency"
+          },
+          {
+            "sourceField": "unit",
+            "targetName": "unit"
+          }
+        ],
+        "kind": "field-assignment"
+      },
+      "ownership": "value",
+      "sourceName": "NumberFormatOptions",
+      "space": "type",
+      "targetName": "flight::IntlNumberFormatOptions"
+    },
+    {
+      "headers": [
+        "flight/intl.hpp"
+      ],
+      "nullability": "non-null",
+      "objectConstruction": {
+        "fields": [
+          {
+            "sourceField": "type",
+            "targetName": "type"
+          }
+        ],
+        "kind": "field-assignment"
+      },
+      "ownership": "value",
+      "sourceName": "PluralRulesOptions",
+      "space": "type",
+      "targetName": "flight::IntlPluralRulesOptions"
+    },
+    {
+      "headers": [
+        "flight/intl.hpp"
+      ],
+      "nullability": "non-null",
+      "objectConstruction": {
+        "fields": [
+          {
+            "sourceField": "numeric",
+            "targetName": "numeric"
+          }
+        ],
+        "kind": "field-assignment"
+      },
+      "ownership": "value",
+      "sourceName": "RelativeTimeFormatOptions",
+      "space": "type",
+      "targetName": "flight::IntlRelativeTimeFormatOptions"
+    },
+    {
+      "headers": [
+        "flight/intl.hpp"
+      ],
+      "nullability": "non-null",
+      "objectConstruction": {
+        "fields": [
+          {
+            "sourceField": "granularity",
+            "targetName": "granularity"
+          }
+        ],
+        "kind": "field-assignment"
+      },
+      "ownership": "value",
+      "sourceName": "SegmenterOptions",
+      "space": "type",
+      "targetName": "flight::IntlSegmenterOptions"
+    },
+    {
+      "headers": [
+        "flight/intl.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "Intl.SegmentData",
+      "space": "type",
+      "targetName": "flight::IntlSegmentData"
+    },
+    {
+      "headers": [
+        "flight/intl.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "Intl.Segmenter",
+      "space": "type",
+      "targetName": "flight::IntlSegmenter"
+    },
+    {
+      "headers": [
+        "flight/intl.hpp"
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "Intl.Segments",
+      "space": "type",
+      "targetName": "flight::IntlSegments"
+    },
+    {
       "callResultType": "bool",
       "headers": [
         "flight/boolean.hpp"

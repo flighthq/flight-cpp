@@ -11,6 +11,13 @@ cc_test(
 )
 
 cc_test(
+    name = "intl_type_test",
+    srcs = ["intl_type_test.cpp"],
+    size = "small",
+    deps = ["//:cpp"],
+)
+
+cc_test(
     name = "runtime_conformance_test",
     srcs = ["runtime_conformance_test.cpp"],
     size = "small",

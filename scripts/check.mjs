@@ -30,6 +30,7 @@ const gates = [
   { arguments: [], name: 'headlessProfileOracle' },
   { arguments: [], name: 'hostCapabilityOracle' },
   { arguments: [], name: 'imageDataOracle' },
+  { arguments: [], name: 'intlSurfaceOracle' },
   { arguments: [], name: 'numberToFixedOracle' },
   { arguments: [], name: 'promiseLikeOracle' },
   { arguments: [], name: 'regexpOracle' },

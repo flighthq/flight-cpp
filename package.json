@@ -31,6 +31,7 @@
     "headless:oracle": "node ./scripts/headlessProfileOracle.mjs",
     "host-capability:oracle": "node ./scripts/hostCapabilityOracle.mjs",
     "image-data:oracle": "node ./scripts/imageDataOracle.mjs",
+    "intl:oracle": "node ./scripts/intlSurfaceOracle.mjs",
     "number-to-fixed:oracle": "node ./scripts/numberToFixedOracle.mjs",
     "promise-like:oracle": "node ./scripts/promiseLikeOracle.mjs",
     "regexp:oracle": "node ./scripts/regexpOracle.mjs",

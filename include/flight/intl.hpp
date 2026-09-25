@@ -3,7 +3,10 @@
 #include <cmath>
 #include <concepts>
 #include <cstddef>
+#include <functional>
+#include <optional>
 #include <utility>
+#include <variant>
 
 #include <flight/array.hpp>
 #include <flight/date.hpp>
@@ -11,14 +14,71 @@
 
 namespace flight {
 
-// This initial implementation is a deterministic, locale-neutral baseline. Locale-sensitive
-// collation and option records remain part of the planned internationalization capability.
-struct IntlCollatorOptions {};
-struct IntlDateTimeFormatOptions {};
-struct IntlListFormatOptions {};
-struct IntlNumberFormatOptions {};
-struct IntlPluralRulesOptions {};
-struct IntlRelativeTimeFormatOptions {};
+// This initial implementation is a deterministic, locale-neutral baseline. These dictionaries
+// preserve the options Flight currently transports without claiming that the baseline formatters
+// interpret them. A host-backed internationalization provider may use the same records.
+struct IntlCollatorOptions final {
+  std::optional<String> sensitivity;
+  std::optional<bool> numeric;
+  std::optional<String> case_first;
+};
+
+struct IntlDateTimeFormatOptions final {
+  std::optional<String> year;
+  std::optional<String> month;
+  std::optional<String> day;
+  std::optional<String> hour;
+  std::optional<String> minute;
+};
+
+struct IntlListFormatOptions final {
+  std::optional<String> type;
+  std::optional<String> style;
+};
+
+struct IntlNumberFormatOptions final {
+  std::optional<String> notation;
+  std::optional<String> style;
+  std::optional<String> currency;
+  std::optional<String> unit;
+};
+
+struct IntlPluralRulesOptions final {
+  std::optional<String> type;
+};
+
+struct IntlRelativeTimeFormatOptions final {
+  std::optional<String> numeric;
+};
+
+struct IntlSegmenterOptions final {
+  std::optional<String> granularity;
+};
+
+using IntlLocalesArgument = std::variant<String, Array<String>>;
+
+struct IntlSegmentData final {
+  String segment;
+  double index{};
+  std::optional<bool> is_word_like;
+};
+
+using IntlSegments = Array<IntlSegmentData>;
+
+// The portable runtime does not advertise the Intl.Segmenter constructor. This type-only carrier
+// lets a host provide real Unicode segmentation without making a dependency-free build pretend to
+// implement UAX #29. The compiler profile therefore binds the type, but no Intl.Segmenter value.
+class IntlSegmenter final {
+ public:
+  using Operation = std::function<IntlSegments(const String&)>;
+
+  explicit IntlSegmenter(Operation operation) : operation_(std::move(operation)) {}
+
+  [[nodiscard]] IntlSegments segment(const String& input) const { return operation_(input); }
+
+ private:
+  Operation operation_;
+};
 
 using IntlPluralRule = String;
 using IntlRelativeTimeFormatUnit = String;

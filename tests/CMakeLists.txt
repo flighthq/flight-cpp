@@ -4,6 +4,12 @@ flight_cpp_set_project_warnings(flight_cpp_runtime_tests)
 
 add_test(NAME flight_cpp.runtime COMMAND flight_cpp_runtime_tests)
 
+add_executable(flight_cpp_intl_type_tests intl_type_test.cpp)
+target_link_libraries(flight_cpp_intl_type_tests PRIVATE Flight::Cpp)
+flight_cpp_set_project_warnings(flight_cpp_intl_type_tests)
+
+add_test(NAME flight_cpp.intl_types COMMAND flight_cpp_intl_type_tests)
+
 add_executable(flight_cpp_generated_runtime_tests generated_runtime_test.cpp)
 target_link_libraries(flight_cpp_generated_runtime_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_generated_runtime_tests)
