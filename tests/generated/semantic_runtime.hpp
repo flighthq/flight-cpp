@@ -25,7 +25,7 @@ inline double update(flight::Map<flight::String, double> labels, flight::Set<fli
 
 inline double overwrite(flight::Uint8Array values, flight::Array<double> source) {
   values.set(source);
-  return values.element(0.0);
+  return values.get_index(0.0);
 }
 
 inline std::function<double()> create_counter(double initial) {
