@@ -106,6 +106,9 @@ class RowCell {
   // finished object answers for itself; a cell whose type does not match is left alone rather than
   // reinterpreted.
   virtual bool assign_from(RowCell& other) = 0;
+
+  // Erased write. False means the value is not of this cell's type and nothing was written.
+  virtual bool assign_any(const Any& value) = 0;
 };
 
 template <typename Value>
@@ -114,6 +117,16 @@ class TypedRowCell : public RowCell {
   [[nodiscard]] std::type_index value_type() const noexcept final { return typeid(Value); }
   [[nodiscard]] virtual Value& get() = 0;
   virtual void set(Value value) = 0;
+
+  // Writes an erased value into this cell, or refuses. The cell knows its own type, which is the
+  // only place that knowledge exists once the value has been erased -- so the check belongs here
+  // rather than at the call site guessing.
+  bool assign_any(const Any& value) final {
+    auto typed = detail::any_to<Value>(value);
+    if (!typed) return false;
+    set(std::move(*typed));
+    return true;
+  }
 
   bool assign_from(RowCell& other) final {
     auto* typed = dynamic_cast<TypedRowCell<Value>*>(&other);
@@ -1320,6 +1333,35 @@ class NamedProperties final {
     auto value = cell->as_any();
     if (!value) throw UnrepresentedProperty(name, cell->value_type());
     return *std::move(value);
+  }
+
+  // The dynamic keyed WRITE: `(target as Record<string, unknown>)[key] = value`.
+  //
+  // It goes through the same owner every other view of this object shares, so a write here is
+  // visible to a typed projection immediately -- there is no second copy to reconcile. The
+  // owner's write hook runs first, so a structural set-trap sees this exactly as it sees a
+  // statically-keyed write.
+  //
+  // CHECKED, and false rather than throwing, for two distinct refusals the caller handles the
+  // same way:
+  //
+  //  * the key is not one this subject declares. There is nowhere to put it: a native object's
+  //    members are fixed, and parking the value in owner-side storage would make it visible to
+  //    this view and invisible to every typed reader of the same object.
+  //  * the value is not of the member's type. Coercing would store something the member's typed
+  //    readers never expect, and JavaScript's own coercions are exactly the ones that would hide
+  //    the mistake -- `1` into a `String` member, `"1"` into a number.
+  //
+  // `mergeTextFormat` is the shape this exists for, and it passes both checks by construction: it
+  // walks `keyof TextFormat` and copies each value from one `TextFormat` into another, so key and
+  // type always agree.
+  bool set(const String& key, const Any& value) const {
+    if (!owner_) return false;
+    const auto name = key.to_utf8();
+    const auto cell = owner_->named_cell(name);
+    if (!cell) return false;
+    owner_->before_named_write(name);
+    return cell->assign_any(value);
   }
 
   // Whether `get` will answer this key without raising. An absent key is representable: it reads

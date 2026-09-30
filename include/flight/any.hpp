@@ -506,6 +506,52 @@ template <typename Value>
   }
 }
 
+// The inverse of `any_from`: recovers a stored member's own type from an erased value.
+//
+// It is CHECKED and it never coerces. `Any(1.0)` does not become a `String` and `Any(String("1"))`
+// does not become `1.0`, even though JavaScript would convert both -- because this is used to write
+// into a member whose type the subject fixed, and a coerced write would silently store something
+// the typed readers of that member never expect. An erased write that cannot be performed exactly
+// is refused, and the caller is told.
+//
+// `std::nullopt` therefore means two different things to two different callers, and both want the
+// same answer: the value is not of this type, so do not write it.
+template <typename Value>
+[[nodiscard]] std::optional<std::remove_cvref_t<Value>> any_to(const Any& value) {
+  using Stored = std::remove_cvref_t<Value>;
+  if constexpr (std::same_as<Stored, Any>) {
+    return value;
+  } else if constexpr (std::same_as<Stored, bool>) {
+    if (value.kind() == AnyKind::boolean) return value.as_boolean();
+    return std::nullopt;
+  } else if constexpr (std::is_arithmetic_v<Stored>) {
+    if (value.kind() == AnyKind::number) return static_cast<Stored>(value.as_number());
+    return std::nullopt;
+  } else if constexpr (std::same_as<Stored, String>) {
+    if (value.kind() == AnyKind::string) return value.as_string();
+    return std::nullopt;
+  } else if constexpr (std::same_as<Stored, Symbol>) {
+    if (value.kind() == AnyKind::symbol) return value.as_symbol();
+    return std::nullopt;
+  } else if constexpr (is_shared_reference<Stored>::value) {
+    // Object identity is preserved: this hands back the very reference the `Any` holds, not a copy.
+    auto reference = value.template object_if<typename Stored::element_type>();
+    if (reference) return reference;
+    return std::nullopt;
+  } else if constexpr (is_std_optional<Stored>::value) {
+    // `undefined` and `null` both write an absent optional, which is what assigning either to an
+    // optional-typed property means in the source.
+    if (value.kind() == AnyKind::undefined || value.kind() == AnyKind::null) return Stored{};
+    auto inner = any_to<typename Stored::value_type>(value);
+    if (!inner) return std::nullopt;
+    return Stored(std::move(*inner));
+  } else {
+    // Callables and everything else: refused rather than approximated, for the reason `any_from`
+    // refuses them in the other direction.
+    return std::nullopt;
+  }
+}
+
 } // namespace detail
 
 } // namespace flight

@@ -605,9 +605,38 @@ int main() {
             exact_readonly.shared_owner() == exact_writable.shared_owner(),
         "an exact-owner readonly view reaches its own subject without any widening proof");
 
-  // The view is read-only: it has no way to write a property back.
-  static_assert(!writes_named_properties<flight::NamedProperties>,
-                "the dynamic named view never writes");
+  // The view now WRITES, but only where it can do so exactly. `mergeTextFormat` walks
+  // `keyof TextFormat` copying each value from one TextFormat into another, which is the shape
+  // this exists for.
+  static_assert(writes_named_properties<flight::NamedProperties>,
+                "the dynamic named view supports a checked keyed write");
+
+  auto merge_target = flight::make_ref<flight::types::AmbientLightOptions>();
+  const auto merge_view = flight::named_properties(merge_target);
+  const flight::StructuralRef<
+      flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AmbientLightOptions>>>>
+      merge_typed(merge_target);
+
+  check(merge_view.set(flight::String("intensity"), flight::Any(2.5)),
+        "a keyed write of the member's own type succeeds");
+  check(flight::row_get<flight::RowKey<"intensity">>(merge_typed).value() == 2.5,
+        "and lands on the subject, visible to a typed projection through the shared owner");
+
+  // Refused, not coerced. JavaScript would happily turn "3" into 3 here, and that is exactly the
+  // conversion that would hide the mistake from the member's typed readers.
+  check(!merge_view.set(flight::String("intensity"), flight::Any(flight::String("3"))),
+        "a keyed write of the wrong type is refused rather than coerced");
+  check(flight::row_get<flight::RowKey<"intensity">>(merge_typed).value() == 2.5,
+        "and leaves the member exactly as it was");
+
+  // A key the subject does not declare has nowhere to go: accepting it would make the value
+  // visible to this view and invisible to every typed reader of the same object.
+  check(!merge_view.set(flight::String("noSuchProperty"), flight::Any(1.0)),
+        "a keyed write to an undeclared key is refused");
+  const auto merge_keys = merge_view.keys();
+  check(std::find(merge_keys.begin(), merge_keys.end(), flight::String("noSuchProperty")) ==
+            merge_keys.end(),
+        "and does not invent the key");
 
   // A permitted widening reaches the computed cell. The cell is bound on the OWNER, which the
   // conversion keeps, so the read does not depend on the widened row's static subject matching the

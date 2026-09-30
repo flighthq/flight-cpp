@@ -84,3 +84,25 @@ Capability status in `flight/contract.hpp` is machine-readable but intentionally
 | WebGPU | Concrete SDL handle/value implementation | Reference-counted GPU objects retain typed native handles with explicit weak policies. Closed WebGPU string domains such as `GPUCanvasAlphaMode` remain `flight::String`; represented descriptor records retain their typed fields. |
 
 The compiler's built-in flight-cpp symbols own static members of `Array`, typed arrays, `ArrayBuffer`, `Object`, and `Promise`. External profile manifests are appended after those symbols and therefore cannot augment their members. The runtime implements `array_from`, typed-array `from` and `bytes_per_element`, `is_array_buffer_view`, `object_values`, and `all_settled_tasks`; publishing those exact ambient members remains a compiler binding change rather than a permissive downstream duplicate.
+
+## The dynamic named view writes, but only exactly
+
+`flight::NamedProperties` answers `keys()`, `has()`, `get()` and now `set(String, Any)` — the
+dynamic keyed write the SDK spells `(target as Record<string, unknown>)[key] = value`.
+
+The write goes through the one owner every view of that object shares, so it is visible to a typed
+projection immediately, and the owner's write hook runs first so a structural set-trap sees it
+exactly as it sees a statically-keyed write. It returns `false` rather than throwing, for two
+refusals a caller handles the same way:
+
+* **the key is not one the subject declares.** A native object's members are fixed. Parking the
+  value in owner-side storage would make it visible through this view and invisible to every typed
+  reader of the same object — a half-write that looks like a success.
+* **the value is not the member's type.** Coercion is refused, and JavaScript's own coercions are
+  precisely the ones that would hide the mistake: `1` into a `String` member, `"1"` into a number.
+  `flight::detail::any_to` performs the check, because the cell is the only thing that still knows
+  its type once the value has been erased.
+
+`mergeTextFormat` is the shape this exists for, and it passes both checks by construction — it
+walks `keyof TextFormat` copying each value from one `TextFormat` into another, so key and type
+always agree.
