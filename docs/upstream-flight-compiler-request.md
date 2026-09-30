@@ -8,6 +8,37 @@ and remaining ownership. The section immediately below is the current round; eve
 record of the earlier `903f328`/`fbfcc11`, `993c280` and `9f6ce1c` handoffs. There were two rounds on
 2026-09-21; the second one is first.
 
+## BLOCKER at 2026-09-30: `ec8da2a` hangs SDK generation
+
+**The pin is held at `839d91e`.** `ec8da2a` does not complete an SDK generation, so no corpus
+measurement can be taken against it and no gate that needs generated output can run.
+
+Controlled, because I got this wrong once today and will not repeat it. Same working tree, same
+binding profiles, only `dependencies.lock.json` differing, and the compiler `dist` deleted and
+rebuilt from source at each pin before measuring:
+
+| flight-compiler | `npm run sdk:generate` |
+| --- | --- |
+| `839d91e` | completes in **5m36s** -- 1153/2904 modules, 1751 refusals |
+| `ec8da2a` | **timed out at 40 minutes**, twice, with no progress output at all |
+
+The portable lane is the clean isolate: `sdk:generate` passes no `--binding-profile` arguments, so
+none of our SDL binding edits can reach it. The pin is the only changed input. The SDL lane timed
+out the same way in the same run.
+
+It reads as a HANG rather than a slowdown. A healthy run prints progress throughout and finishes
+inside six minutes; both `ec8da2a` runs produced nothing beyond the npm banner in forty.
+
+The single commit between the two is `fix(cpp): refuse a keyed write through the read-only named
+view`, which touches the dynamic named-view machinery -- the surface `flight::named_properties`
+provides. A refusal path that loops rather than returns would produce exactly this shape. That is a
+suggestion of where to look, not a diagnosis: we cannot see inside your emitter and have not tried
+to guess further.
+
+What would help us confirm it from here: any progress output before the hang, or a way to run the
+emitter over a single module with a timeout, so we can name the module it stops on rather than
+reporting "generation does not finish".
+
 ## Round of 2026-09-30: the GL extension gap is down to one line, and most of it was ours
 
 Pinned at flight `7e2fc7d` + flight-compiler `ec8da2a`, with the compiler `dist` deleted and
