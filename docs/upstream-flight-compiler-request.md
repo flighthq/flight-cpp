@@ -88,6 +88,32 @@ one reading as `0` reaches the driver as a valid-looking enum instead of poisoni
 If you would rather the view target something else, say so -- but the returned type has to compose
 in arithmetic, which `std::optional<double>` does not.
 
+### Three narrowing forms, not one
+
+Correcting the four lying bindings measured as +3 headers and -1, and the -1 is the useful part.
+`render_gl/gl_program.hpp` now fails with
+
+```
+could not convert 'shader' from 'std::optional<WebGlHandle<WebGlShaderTag>>' to 'WebGlShader'
+```
+
+because `glProgram.ts` writes
+
+```ts
+const shader = gl.createShader(type)!;
+```
+
+That is the postfix NON-NULL ASSERTION, and it is not lowered as an unwrap. The header was
+previously "passing" only because our binding claimed `createShader` could not return null -- the
+lie masked the gap. Fixing the binding surfaced it, which is the right trade: one honestly-blocked
+header instead of one silently-wrong one.
+
+So there are three narrowing forms the emitter needs, and only the third currently works:
+
+1. `if (x === null) return ...;` then use `x`  -- guard narrowing, not applied to the local
+2. `x!`                                        -- non-null assertion, not lowered as an unwrap
+3. a parameter already declared non-optional   -- works today (`anisotropyEnums` lowers correctly)
+
 ### What is left is one line, and it is yours
 
 `sdlGlProfileOracle` now EMITS, where before it refused outright. One compile error remains:
