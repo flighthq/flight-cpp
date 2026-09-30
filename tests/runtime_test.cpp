@@ -3082,6 +3082,47 @@ static void test_array_buffer_assertion() {
   check(original.slice(0.0, 100.0).byte_length() == 8, "and an end past the end clamps to length");
 }
 
+// `this->add(this)`: a method passing its receiver on as an OWNING reference. A raw `this` is not
+// one, so the type opts in and `make_ref` remembers the owner it was built with.
+struct TestSelfAware final : public flight::ReferenceEnabled, public flight::SelfReferencing {
+  double tag{};
+};
+
+struct TestNotSelfAware final : public flight::ReferenceEnabled {
+  double tag{};
+};
+
+static void test_self_reference() {
+  // The marker is empty, so the aggregate stays an aggregate and costs no bytes. Both matter:
+  // emitted objects are designated-initialized, and the corpus has a great many of them.
+  static_assert(sizeof(TestSelfAware) == sizeof(TestNotSelfAware),
+                "the opt-in marker must not add storage");
+  const auto aggregate = TestSelfAware{.tag = 5.0};
+  check(aggregate.tag == 5.0, "designated aggregate initialization still works on an opted-in type");
+
+  auto owned = flight::make_ref<TestSelfAware>();
+  owned->tag = 11.0;
+  {
+    const auto recovered = flight::ref_from_this(owned.get());
+    check(recovered == owned, "ref_from_this recovers the very reference make_ref created");
+    check(recovered->tag == 11.0, "reaching the same object, not a copy of it");
+    check(owned.use_count() == 2, "and it is an OWNING reference, not a borrowed view");
+  }
+
+  // An object with no owner to recover answers empty rather than fabricating one. A made-up
+  // reference would be a second owner for an object that has none, and the double free would land
+  // far from here.
+  TestSelfAware on_stack{.tag = 1.0};
+  check(!flight::ref_from_this(&on_stack),
+        "an object built outside make_ref has no owner, and none is invented");
+
+  // The entry is weak: remembering an owner must not keep the object alive.
+  const auto* address = owned.get();
+  owned = {};
+  check(!flight::ref_from_this(static_cast<const TestSelfAware*>(address)),
+        "and the registry does not resurrect an object whose owner is gone");
+}
+
 int main() {
   test_array();
   test_array_buffer_like();
@@ -3091,6 +3132,7 @@ int main() {
   test_base64();
   test_erased_ref();
   test_ambient_statics();
+  test_self_reference();
   test_audio_context();
   test_array_buffer_assertion();
   test_blob();
