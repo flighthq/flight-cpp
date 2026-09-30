@@ -8,6 +8,81 @@ and remaining ownership. The section immediately below is the current round; eve
 record of the earlier `903f328`/`fbfcc11`, `993c280` and `9f6ce1c` handoffs. There were two rounds on
 2026-09-21; the second one is first.
 
+## Round of 2026-09-30: the GL extension gap is down to one line, and most of it was ours
+
+Pinned at flight `7e2fc7d` + flight-compiler `ec8da2a`, with the compiler `dist` deleted and
+rebuilt before measuring.
+
+### Most of what kept `sdlGlProfileOracle` red was our bindings lying about absence
+
+Auditing every `WebGL*` binding's declared nullability against the C++ it targets found three that
+claimed `non-null` while the function already returned `std::optional`:
+
+| binding | declared | C++ returns |
+| --- | --- | --- |
+| `WebGLShader` | non-null | `std::optional<WebGlShader> create_shader(...)` |
+| `WebGLUniformLocation` | non-null | `std::optional<WebGlUniformLocation> get_uniform_location(...)` |
+| `WebGLActiveInfo` | non-null | `std::optional<WebGlActiveInfo> get_active_uniform(...)` |
+
+So `if (vertex === null)` was refused with "a presence test against null has no absence channel"
+and the compiler was **right**: we had declared there was no absence channel. All three are now
+`nullable`, and their weak-key policies went with them -- a nullable binding cannot carry one,
+because an absent value has no identity to key on, and nothing in the corpus weak-keys a shader.
+
+`EXT_texture_filter_anisotropic` was a fourth: alone among ten extensions it claimed `non-null` and
+targeted `GlAnisotropyExtension`, while `get_extension` returns `std::optional<GlExtension>` for
+every one of them. Now uniform.
+
+We also added the three `callResultType`/`callResultAbsence` member contracts for `createShader`,
+`getUniformLocation` and `getActiveUniform`, in the shape you specified for `getExtension`.
+
+### One runtime addition, and the reason is a semantics question you should agree with
+
+With `numericPropertyView` engaged, the emission became
+
+```cpp
+return (extension.get(String("TEXTURE_MAX_ANISOTROPY_EXT")) +
+        extension.get(String("MAX_TEXTURE_MAX_ANISOTROPY_EXT")));
+```
+
+which does not compile: `get` returns `std::optional<double>`, because
+`typeof ext[k] === 'number'` has to remain answerable.
+
+JavaScript settles the conflict. Reading a property an object does not have yields `undefined`, and
+`undefined + 1` is `NaN`. So `GlExtension::get_number(String)` returns **NaN** for an absent
+property and the ten bindings now point `numericPropertyView` at it; `get`/`has` remain for the
+checked path. Zero would have been the dangerous choice: these are GL enum values, and a missing
+one reading as `0` reaches the driver as a valid-looking enum instead of poisoning the result.
+
+If you would rather the view target something else, say so -- but the returned type has to compose
+in arithmetic, which `std::optional<double>` does not.
+
+### What is left is one line, and it is yours
+
+`sdlGlProfileOracle` now EMITS, where before it refused outright. One compile error remains:
+
+```
+sdl_gl.hpp:78: 'class std::optional<flight::host_sdl::GlExtension>' has no member named
+               'max_texture_max_anisotropy_ext'
+```
+
+In `nativeGlExtensions`:
+
+```ts
+const anisotropy = context.getExtension('EXT_texture_filter_anisotropic');
+if (anisotropy === null) return 0;
+return anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT + (colorBufferFloat ? 1 : 0);
+```
+
+Two halves, both needed. The `=== null` guard does not narrow the local out of its
+`std::optional`, and the following property read is not lowered through `numericPropertyView`.
+The function directly above it, `anisotropyEnums`, lowers correctly onto `get_number` because its
+parameter is not optional -- so the view works, and it is specifically the NARROWED LOCAL path
+that misses it.
+
+The oracle's failure message now states exactly this, so whoever next runs `npm run check` reads
+the remaining gap rather than a bare diagnostic.
+
 ## Round of 2026-09-21 (second): computed cells, GlExtension, and the conformance artifact
 
 Three needs arrived in priority order. All three are answered. The second one is answered by
