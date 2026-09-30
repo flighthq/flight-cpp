@@ -338,6 +338,13 @@ std::optional<double> GlExtension::get(const String& property) const {
   return std::nullopt;
 }
 
+double GlExtension::get_number(const String& property) const {
+  // `undefined` in arithmetic is NaN, which is what an absent property must propagate as. Zero
+  // would be indistinguishable from a real enum whose value is zero.
+  const auto value = get(property);
+  return value.has_value() ? *value : std::numeric_limits<double>::quiet_NaN();
+}
+
 bool GlExtension::has(const String& property) const {
   return get(property).has_value();
 }

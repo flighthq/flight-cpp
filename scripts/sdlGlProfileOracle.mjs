@@ -204,7 +204,7 @@ for (const expected of [
   'flight::host_sdl::GlCanvas canvas;',
   'flight::host_sdl::WebGl2Context context;',
   'flight::host_sdl::WebGlProgram program;',
-  'flight::host_sdl::GlAnisotropyExtension anisotropy;',
+  'flight::host_sdl::GlExtension anisotropy;',
   'flight::host_sdl::GlExtension color_buffer_float;',
   'flight::host_sdl::GlExtension bptc;',
   'flight::host_sdl::GlExtension rgtc;',
@@ -215,8 +215,8 @@ for (const expected of [
   'flight::host_sdl::GlExtension s3tc;',
   'flight::host_sdl::GlExtension s3tc_srgb;',
   'flight::host_sdl::WebGlActiveInfo active_info;',
-  'extension.texture_max_anisotropy_ext',
-  'extension.max_texture_max_anisotropy_ext',
+  'extension.get_number(flight::String("TEXTURE_MAX_ANISOTROPY_EXT"))',
+  'extension.get_number(flight::String("MAX_TEXTURE_MAX_ANISOTROPY_EXT"))',
   'context.get_extension(flight::String("EXT_texture_filter_anisotropic"))',
   'anisotropy.max_texture_max_anisotropy_ext',
   'context.create_buffer()',
@@ -307,9 +307,13 @@ try {
       diagnostic.includes('max_texture_max_anisotropy_ext')
     ) {
       process.stderr.write(
-        'Known flight-compiler gaps: a null guard does not narrow/unwrap the optional extension, ' +
-          'and an external extension enum read does not lower to GlExtension::get(String). ' +
-          'Owned upstream; see docs/upstream-flight-compiler-request.md.\n',
+        'Known flight-compiler gap, now isolated to ONE site: in nativeGlExtensions the local ' +
+          'bound from getExtension is still std::optional<GlExtension> after `=== null` returns, ' +
+          'so the guard neither narrows it nor lowers the following property read through ' +
+          'numericPropertyView. Both halves are needed: unwrap the narrowed local, then lower ' +
+          '`anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT` onto GlExtension::get_number(String) the ' +
+          'way `anisotropyEnums` above it already does on a non-optional parameter. Owned ' +
+          'upstream; see docs/upstream-flight-compiler-request.md.\n',
       );
     }
     process.exit(1);

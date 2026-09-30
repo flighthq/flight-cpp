@@ -212,6 +212,19 @@ class FLIGHT_HOST_SDL_GL_API GlExtension final {
 
   [[nodiscard]] const String& name() const noexcept { return name_; }
   [[nodiscard]] std::optional<double> get(const String& property) const;
+
+  // The ARITHMETIC form of the same read, and the one a lowered property access needs.
+  //
+  // `get` preserves absence because `typeof ext[k] === 'number'` has to be answerable. But a
+  // lowered `ext.SOME_ENUM` lands in expressions -- `a.X + a.Y` -- and an `std::optional<double>`
+  // does not compose there. JavaScript already says what the answer should be: reading a property
+  // an object does not have yields `undefined`, and `undefined + 1` is `NaN`. So this returns NaN
+  // for an absent property, which makes the arithmetic propagate exactly as it does in the source
+  // rather than silently reading as zero.
+  //
+  // Zero would be the dangerous choice here: these are GL enum values, and a missing one reading
+  // as 0 would be passed to the driver as a valid-looking enum instead of poisoning the result.
+  [[nodiscard]] double get_number(const String& property) const;
   [[nodiscard]] bool has(const String& property) const;
   [[nodiscard]] std::vector<String> keys() const;
   [[nodiscard]] Record<String, double> to_record() const;
