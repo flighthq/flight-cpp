@@ -8,6 +8,63 @@ and remaining ownership. The section immediately below is the current round; eve
 record of the earlier `903f328`/`fbfcc11`, `993c280` and `9f6ce1c` handoffs. There were two rounds on
 2026-09-21; the second one is first.
 
+## BLOCKER, profiled: `lowerTypeScriptTypeNodeEvidence` recurses without terminating
+
+The pin is held at `839d91e`. Generation still spins at `2ac16f7`, so this is NOT the commit I
+originally blamed -- `main` was force-pushed and `ec8da2a` is no longer in history at all, yet the
+hang survives. That attribution is withdrawn.
+
+### Where it spins
+
+V8 tick profile, 150 seconds, 138,897 ticks, **90 MB of log** and zero progress output. Bottom-up,
+the hot stack is self-recursive:
+
+```
+22419  16.1%  Builtin: LoadIC_Megamorphic
+  575  65.5%    JS: *lowerTypeScriptTypeNodeEvidence  typeScriptSemanticLowering.js:4965
+  487  56.5%      JS: *lowerTypeScriptTypeNodeEvidence  typeScriptSemanticLowering.js:4965
+  594  79.2%        JS: *lowerTypeScriptTypeNodeEvidence  typeScriptSemanticLowering.js:4965
+```
+
+Each level spends most of its time inside the next, which is what unbounded recursion looks like
+rather than a bounded tree walk. The callers that enter it are
+`lowerTypeScriptInterfacePropertiesEvidence` (:5299),
+`lowerTypeScriptHeritageTypeNodeProperties` (:5417) and
+`lowerTypeScriptFunctionLocalTypeReference` (:3331).
+
+### Why we think it is a cycle, and why that is expected in this corpus
+
+Flight's type graph is mutually recursive by design. `include/flight/reference.hpp` documents the
+exact shape, because the runtime had to solve the same problem on its own side:
+
+> Two records that name each other -- `Node<T>` holding a `Ref<NodeRuntime<T>>` while
+> `NodeRuntime<T>` holds a callable taking `Ref<Node<T>>` -- make the question re-enter itself.
+
+A type-evidence walk over that graph without a visited set does not terminate. The runtime's fix
+was to make the query re-entrant safely; the lowering appears to need the equivalent guard.
+
+Supporting signals from the same profile, all consistent with repeating work rather than progressing
+through it:
+
+| ticks | frame | reading |
+| ---: | --- | --- |
+| 16.1% | `LoadIC_Megamorphic` | call sites gone megamorphic -- one routine hammered with many shapes |
+| 4.3% | `typescript.js resolveNameHelper` | name resolution re-entered constantly |
+| 0.9% | `getCannotFindNameDiagnosticForName` | the FAILING resolution path is hot, and it is the expensive one |
+| ~6% | `node:path` `normalizeString`/`resolve`/`relative` | module resolution recomputed rather than memoised |
+
+### What we cannot tell you
+
+Whether this is strictly infinite or merely super-linear. A 150-second window cannot separate "never
+terminates" from "would finish in a day". What is certain: a complete run takes **5m36s** at
+`839d91e`, and `2ac16f7` produced nothing in **25 minutes** while burning a full core.
+
+### How we established it, in case the shape matters
+
+`--cpu-prof` could not be used: the loop is SYNCHRONOUS, so an in-process timer never fires and the
+profile never flushes. `--prof` writes its log incrementally and survives a kill, which is what
+produced the data above. Worth knowing if you reproduce it.
+
 ## BLOCKER at 2026-09-30: `ec8da2a` hangs SDK generation
 
 **The pin is held at `839d91e`.** `ec8da2a` does not complete an SDK generation, so no corpus
