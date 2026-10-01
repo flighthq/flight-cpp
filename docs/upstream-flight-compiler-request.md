@@ -2,17 +2,132 @@
 
 The maintained downstream checklist now lives in [flight-compiler adoption status](flight-compiler-adoption.md).
 
-The current checkout pins Flight `7e2fc7d` and flight-compiler `ef60fb6`. Both revisions are recorded in
+The current checkout pins Flight `7e2fc7d` and flight-compiler `839d91e`. Both revisions are recorded in
 [`dependencies.lock.json`](../dependencies.lock.json), and the maintained status document records the active counts
 and remaining ownership. The section immediately below is the current round; everything after it is the historical
 record of the earlier `903f328`/`fbfcc11`, `993c280` and `9f6ce1c` handoffs. There were two rounds on
 2026-09-21; the second one is first.
 
+## REQUEST: the asserted-row proof refuses sites that never read a derived-only member
+
+This is the single highest-value refusal in the corpus for us. It holds `@flighthq/node` at 7 of 21
+modules, and with it `@flighthq/scene2d` (0/10), `@flighthq/scene3d` (0/21) and `@flighthq/render`
+(2/25) -- roughly 77 modules behind one rule.
+
+### The rule
+
+`cppCompilerBackend.ts:3567`, `cpp-structural-assertion-owner-unproven`:
+
+> the asserted row reads members the source type does not declare, and a structural owner binds the
+> members of the type the object was first reached as, so a derived-only read has no cell to answer it
+
+It fires when `getCppStructuralRowObjectWideningProofCpp` (`:4929`) returns anything but `'proven'`.
+That function compares **declared shapes**: every non-phantom property of the target must exist in the
+source with the same optionality and the same emitted type.
+
+### The gap between the message and the check
+
+The message says the asserted row *reads* members the source does not declare. The check asks only
+whether the source *declares* every member the target type has. Those are different questions, and in
+Flight's own source the answer differs.
+
+`packages/node/src/hierarchy.ts` asserts `Node<Traits>` to
+`NodeOf<Traits> = StructuralRef<RowMerge<RowOf<Ref<Node<Traits>>>, RowOf<Traits>>>` at five locals.
+Here is every use of every one of them, by line:
+
+```
+targetNode       37 = target as NodeOf<Traits>
+                 84   childRuntime.parent = targetNode          -- store into a slot of that type
+childNode        38 = child as NodeOf<Traits>
+                 64   children!.indexOf(childNode)              -- identity comparison
+                 68   return childNode                          -- declared return type
+                 77   children!.splice(index, 0, childNode)      -- store into Array<NodeOf<Traits>>
+                 91   return childNode
+childNode       270, 271 return / 280 indexOf / 292 return
+childNode       418, 422 indexOf / 426 splice
+aNode           212 = a as NodeOf<Traits>
+                213   aAncestors.add(aNode)                     -- store into a Set of that type
+                214   getNodeParent(aNode)                      -- parameter of that type
+firstChildNode  456, 460 indexOf / 464 children[index2] = ...
+secondChildNode 457, 461 indexOf / 463 children[index1] = ...
+```
+
+**Not one property access.** Every use stores the value in a slot already declared as that row type,
+compares it by identity, passes it to a parameter of that type, or returns it as the declared return
+type. `nodeOrderList.ts:102` is the same shape: `children[slot] = members[i] as NodeOf<Traits>` is a
+store into `Array<NodeOf<Traits>>`.
+
+So the hazard the rule exists to prevent -- a derived-only read reaching an owner that never bound a
+cell for it -- cannot occur at any of these sites, because no read occurs at all.
+
+### What we are asking for
+
+Gate the refusal on whether the asserted row is actually **read** for a member the source does not
+declare, rather than on whether the source declares the target's full shape. Where the asserted value
+is only moved, compared or returned, no cell is ever consulted and the emitted
+`flight::structural_ref_cast` is sound as written.
+
+We are not asking you to weaken the proof where a read does happen -- see immediately below, where one
+does, and where we accept the refusal.
+
+### One of the three is NOT this, and we are not asking you to relax it
+
+`packages/node/src/boundsRectangle.ts` refuses on the sibling rule, "a structural row can recover only
+the exact concrete reference retained by its `RowOf` owner", and that one is a real derived-only read:
+
+```ts
+return (getEntityRuntime(target) as HasBoundsRectangleRuntime).localBoundsRectangle!;   // :136
+return (getEntityRuntime(target) as HasBoundsRectangleRuntime).boundsRectangle!;        // :146
+const runtime = getEntityRuntime(target) as NodeRuntime<Traits> & HasBoundsRectangleRuntime;  // :82, :89
+```
+
+Here the asserted type's members genuinely are read, so the refusal is doing its job. Closing that one
+needs either a `RowOwner` that can bind cells for a derived view after the object was first reached, or
+a different shape in Flight's source. We raise it only so the two are not conflated: fixing the
+read-gating above would unblock `hierarchy.ts` and `nodeOrderList.ts` and leave `boundsRectangle.ts`
+correctly refused.
+
+### What we did on our side rather than wait
+
+`node.ts` was a fourth root refusal in this package, on the dual-sentinel rule (`:18888`). We cleared
+it downstream by rewriting its three optional chains to read through one non-optional local, which is
+the narrowing form your emitter already lowers:
+
+```ts
+const source: Readonly<PartialNode<Node<Traits>>> = obj ?? {};
+node.name = source.name ?? null;
+```
+
+`PartialNode<T>` makes every member optional, so `{}` inhabits the type and the rewrite agrees with
+`obj?.name ?? null` on every input. It is carried as a declared patch against the pinned checkout
+(`source-patches/`), applied after the pin integrity check and reverted when the run ends, with the
+equivalence argument recorded. Flight could simply be written this way, so treat it as a source
+suggestion as much as a workaround -- but the emitter projecting a dual-sentinel optional property
+result would retire it, which is the outcome we would prefer.
+
 ## BLOCKER, profiled: `lowerTypeScriptTypeNodeEvidence` recurses without terminating
 
-The pin is held at `839d91e`. Generation still spins at `2ac16f7`, so this is NOT the commit I
-originally blamed -- `main` was force-pushed and `ec8da2a` is no longer in history at all, yet the
-hang survives. That attribution is withdrawn.
+The pin is held at `839d91e`, which is the only revision we have found that completes generation:
+5m56s for 1153/2904 modules unbound, and 1506/2904 with the binding profiles applied. Three
+successive tips hang instead:
+
+| revision  | result                                    |
+|-----------|-------------------------------------------|
+| `ec8da2a` | no completion in 40 minutes, twice        |
+| `2ac16f7` | no completion, killed at `real 25m0.026s` |
+| `7de41a3` | no completion, exit 124 at 900s           |
+
+### Withdrawn: we claimed `main` had been force-pushed. That was wrong, twice.
+
+We reported that `ec8da2a` was no longer in `main`'s history and inferred a force-push. The inference
+was unfounded and we withdraw it along with every count derived from it.
+
+The cause was our own tooling. `scripts/rehydrate.mjs` fetches with `--depth 1`, so the materialized
+checkout is shallow -- `.git/shallow` exists and exactly one commit is reachable. `git merge-base
+--is-ancestor` can therefore never succeed against it, no matter what upstream history actually looks
+like, and "not an ancestor" reads identically to "rewritten". **Every "N commits between pins" figure
+we have sent you was computed this way and is unreliable.** Nothing about upstream history should be
+concluded from our reports; only the hang results above were measured directly.
 
 ### Where it spins
 
