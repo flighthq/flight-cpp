@@ -16,6 +16,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolveDependency } from './dependencyLock.mjs';
+import { applyEmissionRepairs, loadEmissionRepairs, obsoleteRepairs } from './emissionRepairs.mjs';
 
 // Materializes the part of the pinned Flight SDK the pinned compiler can emit today. Refusals are
 // output too: this tree is an honest compiler bring-up inventory, not a claim that Flight::Sdk can
@@ -88,10 +89,12 @@ try {
     } else {
       process.stdout.write(summary('Generated SDK inventory is current', result));
     }
+    if (reportObsoleteRepairs(result)) process.exitCode = 1;
   } else {
     rmSync(generatedRoot, { force: true, recursive: true });
     cpSync(candidateRoot, generatedRoot, { recursive: true });
     process.stdout.write(summary('Generated SDK inventory updated', result));
+    reportObsoleteRepairs(result);
   }
 } finally {
   rmSync(temporaryRoot, { force: true, recursive: true });
@@ -161,6 +164,10 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
     moduleResolution: createCompilerModuleResolutionPlan(inventory),
     sources,
   });
+  // Repairs run between emission and writing, so the committed inventory is what actually compiles
+  // and there is no second tree to keep in step. See scripts/emissionRepairs.mjs for the expiry rule.
+  const repairs = loadEmissionRepairs(root);
+  const appliedRepairs = applyEmissionRepairs(repairs, compilation.compilation.files);
   for (const file of compilation.compilation.files) {
     const target = path.join(outputRoot, 'include', file.path);
     mkdirSync(path.dirname(target), { recursive: true });
@@ -220,6 +227,10 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       desiredRoot: 'flight',
       status: 'applied',
     },
+    emissionRepairs: appliedRepairs.map((record) => ({
+      files: record.files,
+      id: record.id,
+    })),
     packages: packageResults,
     source: {
       package: String(sdkPackage.name),
@@ -247,7 +258,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
     `${JSON.stringify(compilation.report.initialization, undefined, 2)}\n`,
   );
   writeFileSync(path.join(outputRoot, 'README.md'), generatedReadme(manifest));
-  return manifest.summary;
+  return { ...manifest.summary, obsoleteRepairs: obsoleteRepairs(appliedRepairs), repairedFiles: appliedRepairs.reduce((total, record) => total + record.files.length, 0) };
 }
 
 function loadBindingProfiles(filenames) {
@@ -615,5 +626,20 @@ function compareText(left, right) {
 }
 
 function summary(prefix, result) {
-  return `${prefix}: ${String(result.emittedModules)}/${String(result.sourceModules)} modules emitted across ${String(result.packages)} packages; ${String(result.refusedModules)} refusals recorded.\n`;
+  const repaired =
+    result.repairedFiles > 0 ? `; ${String(result.repairedFiles)} header(s) repaired after emission` : '';
+  return `${prefix}: ${String(result.emittedModules)}/${String(result.sourceModules)} modules emitted across ${String(result.packages)} packages; ${String(result.refusedModules)} refusals recorded${repaired}.\n`;
+}
+
+// A repair that no longer matches any emitted header has outlived the emitter defect it answers.
+// Reporting that as a failure is the whole reason the repair mechanism is safe to have: carrying a
+// repair nobody needs is how a patched build becomes an unacknowledged fork of the generator.
+function reportObsoleteRepairs(result) {
+  if (result.obsoleteRepairs.length === 0) return false;
+  process.stderr.write(
+    `${String(result.obsoleteRepairs.length)} emission repair(s) no longer match any generated header:\n`,
+  );
+  for (const id of result.obsoleteRepairs) process.stderr.write(`- ${id}\n`);
+  process.stderr.write('Delete them from repairs/emission-repairs.json; the defect they stood in for is gone.\n');
+  return true;
 }

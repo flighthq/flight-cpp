@@ -1,0 +1,27 @@
+{
+  "schema": "flight-cpp-emission-repairs/1",
+  "identity": "flight-cpp emission repairs",
+  "note": "Mechanical repairs applied to compiler output so a package can ship before upstream fixes the emitter. A repair may only correct TEXT. It may never change absence, reference identity, equality, ordering, exception shape, or task settlement -- those are the contract in AGENTS.md, and a semantic repair is a lie that our own tests would then certify. Every repair declares the upstream defect it stands in for, and `npm run sdk:check` fails when a repair stops matching anything, so a repair cannot outlive the bug it answers.",
+  "repairs": [
+    {
+      "id": "types-node-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/types/",
+      "symbol": "Node",
+      "declaration": "namespace flight::types { template <typename Traits> struct Node; }",
+      "diagnostic": "'Node' is not a member of 'flight::types'",
+      "defect": "The emitter's forward-declaration collector walks the names a module references directly, but misses names it reaches only by expanding another package's type alias. flight::types::Node2D expands to flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Node<flight::Ref<Node2DTraits>>>>, ...>>, so a header using the Node2D alias names Node without ever declaring it.",
+      "expires": "when the forward-declaration collector follows alias expansion; sdk:check fails if this repair matches no file."
+    },
+    {
+      "id": "types-render-cache-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/types/",
+      "symbol": "RenderCache",
+      "declaration": "namespace flight::types { struct RenderCache; }",
+      "diagnostic": "'RenderCache' is not a member of 'flight::types'",
+      "defect": "Same collector defect as types-node-forward-declaration, reached through the render-options aliases.",
+      "expires": "when the forward-declaration collector follows alias expansion; sdk:check fails if this repair matches no file."
+    }
+  ]
+}

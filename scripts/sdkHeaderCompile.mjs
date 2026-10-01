@@ -4,6 +4,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { isDeferredHeader, loadDeferredPackages, refusedDeferrals } from './deferredPackages.mjs';
+
 // Compiles each generated SDK header on its own and records what happened.
 //
 // The full sweep is the FOLDED-TREE gate: it is what you run once, at the end, over a complete
@@ -113,7 +115,15 @@ await Promise.all(Array.from({ length: Math.min(concurrency, Math.max(pending.le
 const complete = writeReport();
 
 const passed = [...done.values()].filter((result) => result.passed).length;
-const failures = [...done.values()].filter((result) => !result.passed);
+// A deferred package's headers are still compiled and still reported; they just do not decide the
+// gate. See scripts/deferredPackages.mjs -- a deferral a required header still includes is refused.
+const deferredPackages = loadDeferredPackages(root);
+const refusedDeferral = refusedDeferrals(deferredPackages, selected, (header) =>
+  readFileSync(path.join(generatedInclude, header), 'utf8'),
+);
+const allFailures = [...done.values()].filter((result) => !result.passed);
+const deferredFailures = allFailures.filter((result) => isDeferredHeader(deferredPackages, result.header));
+const failures = allFailures.filter((result) => !isDeferredHeader(deferredPackages, result.header));
 const unattempted = selected.length - done.size;
 const summary =
   `${String(passed)}/${String(selected.length)} generated Flight SDK headers compile independently with ${compilerVersion.split(/\r?\n/u)[0]}`;
@@ -125,6 +135,7 @@ if (!complete) {
   process.exitCode = 2;
 } else if (failures.length === 0) {
   process.stdout.write(`${summary}.\n`);
+  reportDeferred();
 } else {
   process.stderr.write(
     `${summary}; ${String(failures.length)} fail. Report: ${portable(path.relative(root, reportFile))}\n`,
@@ -133,7 +144,27 @@ if (!complete) {
     process.stderr.write(`- ${failure.header}: ${failure.diagnostic}\n`);
   }
   if (failures.length > 20) process.stderr.write(`- … and ${String(failures.length - 20)} more\n`);
+  reportDeferred();
   process.exitCode = 1;
+}
+if (refusedDeferral.length > 0) {
+  process.stderr.write(`${String(refusedDeferral.length)} deferral(s) are refused: a required header includes them.\n`);
+  for (const entry of refusedDeferral) {
+    process.stderr.write(`- ${entry.package} is included by ${entry.consumers.slice(0, 4).join(', ')}`);
+    process.stderr.write(entry.consumers.length > 4 ? ` and ${String(entry.consumers.length - 4)} more\n` : '\n');
+  }
+  process.stderr.write('Remove them from deferred-packages.json, or defer their consumers too.\n');
+  process.exitCode = 1;
+}
+
+// Deferred failures are always printed. The point of the mechanism is that an irrelevant break stops
+// blocking the build, not that it stops being visible.
+function reportDeferred() {
+  if (deferredFailures.length === 0) return;
+  process.stdout.write(
+    `${String(deferredFailures.length)} failing header(s) are in deferred packages and do not fail this gate:\n`,
+  );
+  for (const failure of deferredFailures) process.stdout.write(`- ${failure.header}: ${failure.diagnostic}\n`);
 }
 
 function selectHeaders() {
