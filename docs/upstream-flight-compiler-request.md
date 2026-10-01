@@ -8,6 +8,86 @@ and remaining ownership. The section immediately below is the current round; eve
 record of the earlier `903f328`/`fbfcc11`, `993c280` and `9f6ce1c` handoffs. There were two rounds on
 2026-09-21; the second one is first.
 
+## REQUEST: `std::optional` is carrying both null and absence. `flight::Presence` already exists for this
+
+This is one root cause with three faces, and it is the largest single blocker in the corpus. We believe
+the runtime already ships the type that fixes it, and the emitter simply does not use it.
+
+### The representation
+
+A member declared `T | null` is emitted as `std::optional<Ref<T>>`, with `nullopt` standing for `null`:
+
+```cpp
+struct NodeData : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;   // T | null
+};
+```
+
+`RowPartial` then needs to make the same member *absent*-able -- and there is no second channel, because
+`optional` is already spent on null. One `std::optional` is being asked to carry two distinct source
+states, so a read cannot tell them apart and a presence test against null has nothing to test.
+
+### The three faces
+
+**1. Refused: the examples, 33 of 69 root refusals.** `examples/upstream/generated/frontier-refusals.json`
+at `839d91e`, the single largest class:
+
+> a presence test against null has no absence channel in the emitted C++ storage for identifier
+
+**2. Refused: dual-sentinel property results.** `cppCompilerBackend.ts:18888`, "dual-sentinel optional
+property result requires one represented member value domain" -- `obj?.name ?? null` over a `T | null`
+member, where the optional chain produces `T | null | undefined` and there is no projection for it.
+
+**3. Emitted but does not compile.** This is the worst of the three, because it is not refused at all.
+`flight/node/has_clip.hpp` in the profiled tree:
+
+```
+could not convert 'flight::row_get<RowKey<"clip">, RowReadonly<RowPartial<RowOf<types::HasClip>>>>(...)'
+  from 'std::optional<std::shared_ptr<flight::types::ClipRegion>>'
+  to   'std::variant<std::shared_ptr<flight::types::ClipRegion>, flight::Null, flight::Undefined>'
+```
+
+The emitter knows the target needs three states and builds a three-way variant for it, but the row read
+it feeds in has only two. The same shape accounts for roughly 17 of the 21 non-deferred header compile
+failures in the profiled tree -- `node/has_clip.hpp`, `node/has_material.hpp`, `lighting/scene_lights.hpp`,
+`loader/load.hpp`, `mesh/*` and others.
+
+We cannot close this one downstream. Writing a conversion from `std::optional<Ref<T>>` to that variant
+would have to *invent* the null-versus-absent distinction the representation already destroyed, and
+inventing it is exactly the kind of change our own tests would then certify as correct. So we are not
+patching around it.
+
+### What we are asking for
+
+`include/flight/presence.hpp` has shipped this since before the current pin:
+
+```cpp
+struct Undefined { constexpr auto operator<=>(const Undefined&) const noexcept = default; };
+struct Null      { constexpr auto operator<=>(const Null&) const noexcept = default; };
+
+template <typename Value>
+using Presence = std::variant<Undefined, Null, Value>;
+```
+
+It is referenced **0 times** in the generated SDK headers and **0 times** in
+`packages/compiler-backend-cpp/src/cppCompilerBackend.ts`. The emitter appears not to know it exists.
+
+Please emit `flight::Presence<T>` for a row member that needs both null and absence -- that is, a
+`RowPartial` (or otherwise optional) member whose declared type already includes `null`. `Undefined` and
+`Null` are distinct alternatives with defaulted three-way comparison, so a presence test gets a channel
+to test, `row_get` returns something that models all three source states, and the three-way variant in
+face 3 becomes constructible from what the read actually produces.
+
+Members that are only optional, or only nullable, should keep `std::optional` -- nothing above argues
+for widening the common case. This is specifically about the member that is both.
+
+### Why this is the one we would pick
+
+Counting only root causes: 33 of the 69 root example refusals, the dual-sentinel family, and ~17 of 21
+non-deferred compile failures. The examples are the part the user actually ships, and
+`frontierEmittedModules` is currently **0 of 103** across all 34 example packages. This is the largest
+single item standing between that number and a non-zero one.
+
 ## REQUEST: the asserted-row proof refuses sites that never read a derived-only member
 
 This is the single highest-value refusal in the corpus for us. It holds `@flighthq/node` at 7 of 21
