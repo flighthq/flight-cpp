@@ -1,0 +1,22 @@
+{
+  "schema": "flight-cpp-source-patches/1",
+  "identity": "flight-cpp pinned-source patches",
+  "note": "Patches applied to a pinned sibling checkout before generation, so a module the compiler refuses to lower today can still ship. A patch here may only rewrite an expression into an equivalent the compiler does lower. It may NEVER change observable behavior -- absence, reference identity, equality, ordering, exception shape, task settlement -- because the generated header is then tested against the patched source, so a behavioral patch is a lie our own tests would certify. Each patch states the equivalence that makes it safe and the refusal it answers. The patch is applied after the pin integrity check and reverted when generation ends, so the checkout is only ever dirty inside one run. `baseCommit` pins the patch to the revision it was written against: a pin move that breaks the patch fails loudly instead of silently applying to different code.",
+  "patches": [
+    {
+      "id": "node-initialize-node-non-optional-source",
+      "dependency": "flight",
+      "patch": "node-initialize-node-non-optional-source.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/node/src/node.ts",
+      "package": "@flighthq/node",
+      "refusal": "dual-sentinel optional property result requires one represented member value domain",
+      "rewrite": "Reads initializeNode's optional `obj` parameter through one non-optional local (`obj ?? {}`) instead of three optional chains.",
+      "equivalence": "PartialNode<T> declares every member optional, so `{}` inhabits Readonly<PartialNode<Node<Traits>>> and `obj ?? {}` yields an object whose every member read is undefined exactly when obj was undefined. `obj?.name ?? null` and `source.name ?? null` therefore agree on every input, as do the enabled and data reads. No member is written, no reference escapes, and the substituted object is unreachable after the call.",
+      "whyNotUpstreamFirst": "The refusal is in the emitter (cppCompilerBackend.ts:18888): an optional chain over a `T | null` member produces a dual-sentinel domain it cannot project. Member access on a non-optional binding is the one narrowing form it does lower. Flight could simply be written this way, so this patch is also the upstream suggestion.",
+      "unblocks": "node.ts stops being a root refusal. @flighthq/node, and the render/scene2d/scene3d tier behind it, remain blocked on the separate asserted-row refusal in hierarchy.ts.",
+      "expires": "when the emitter projects a dual-sentinel optional property result, or Flight adopts this form in its own source.",
+      "appliedOn": "2026-10-01"
+    }
+  ]
+}

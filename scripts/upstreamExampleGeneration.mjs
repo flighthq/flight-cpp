@@ -16,6 +16,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolveDependency } from './dependencyLock.mjs';
+import { applySourcePatches, loadSourcePatches, revertSourcePatches } from './sourcePatches.mjs';
 
 // Examples import the Web host through the upstream workspace rather than through their own
 // manifests; this is the one package name the example graph adds explicitly.
@@ -77,7 +78,12 @@ if (!existsSync(compilerEntry)) {
 const temporaryRoot = mkdtempSync(path.join(tmpdir(), 'flight-cpp-upstream-examples-'));
 const candidateRoot = path.join(temporaryRoot, 'generated');
 
+// The examples read the same pinned Flight checkout as the SDK inventory, so they must see the same
+// patched source or the two trees would disagree about what Flight is. Applied after the pin integrity
+// check above, reverted in the `finally` below.
+const sourcePatches = loadSourcePatches(root);
 try {
+  applySourcePatches(sourcePatches, flight);
   const result = await generateExamples(candidateRoot, flight, compiler, compilerEntry, bindingProfiles);
   if (check) {
     const drift = compareTrees(candidateRoot, generatedRoot);
@@ -96,6 +102,7 @@ try {
     process.stdout.write(summary('Generated upstream example inventory updated', result));
   }
 } finally {
+  revertSourcePatches(sourcePatches, flight);
   rmSync(temporaryRoot, { force: true, recursive: true });
 }
 

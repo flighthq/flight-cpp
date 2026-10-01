@@ -4185,13 +4185,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 148,
+      "code": "dependency-refused",
       "module": "packages/node/src/node.ts",
       "package": "@flighthq/node",
-      "reason": "cpp emission failed for @flighthq/node/packages/node/src/node.ts: dual-sentinel optional property result requires one represented member value domain",
-      "stage": "emission"
+      "reason": "dependency ./hierarchy was refused for @flighthq/node/packages/node/src/hierarchy.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",

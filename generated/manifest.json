@@ -11,6 +11,32 @@
     "desiredRoot": "flight",
     "status": "applied"
   },
+  "emissionRepairs": [
+    {
+      "files": [
+        "flight/types/frame_script.hpp",
+        "flight/types/group.hpp",
+        "flight/types/gui_controller.hpp",
+        "flight/types/node3_dvisitor.hpp",
+        "flight/types/selection_state.hpp",
+        "flight/types/selection_state_runtime.hpp",
+        "flight/types/skin.hpp"
+      ],
+      "id": "types-node-forward-declaration"
+    },
+    {
+      "files": [],
+      "id": "types-render-cache-forward-declaration"
+    }
+  ],
+  "sourcePatches": [
+    {
+      "dependency": "flight",
+      "digest": "ce4bffb331c4e80b0b9fba007b4e52636720082d81686ddf48de8eb63bed5979",
+      "id": "node-initialize-node-non-optional-source",
+      "module": "packages/node/src/node.ts"
+    }
+  ],
   "packages": [
     {
       "cppIncludePrefix": "flight/abc",

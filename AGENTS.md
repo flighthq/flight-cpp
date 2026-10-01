@@ -30,3 +30,31 @@ Nothing in `.dependencies/` is committed and no gate may treat it as a source of
 
 Move a pin deliberately, in its own commit, with the gate result that motivated it. Regenerate the SDK inventory when
 either the `flight` or `flight-compiler` pin moves and commit the changed output with that pin update.
+
+## Shipping a package before the compiler can emit it
+
+`flight-compiler` refuses rather than mislowers, and that is correct. It also means a package can be
+blocked by one expression. Three declared mechanisms let a package ship anyway without the runtime
+quietly forking from the generator. Each one is a debt instrument, and each one has an expiry check,
+because a workaround that outlives its defect is indistinguishable from a fork nobody chose.
+
+`source-patches/` rewrites an expression in a pinned sibling checkout into an equivalent the compiler
+does lower. A patch is applied only after the pin integrity check and reverted when the run ends, so a
+checkout is rewritten for the length of one run; `baseCommit` pins it to the revision it was written
+against, and a pin move that invalidates it fails loudly. Every patch states the equivalence that makes
+it safe, and generation reports a patch whose module is still refused for the reason the patch names.
+
+`repairs/emission-repairs.json` inserts a C++ declaration the emitter omitted. It may only add text with
+no behavior — a forward declaration — and `sdk:check` fails when a repair matches no generated header.
+
+`deferred-packages.json` lets a package's headers fail the compile gate without failing the build. The
+headers are still emitted, still compiled and always reported, and a deferral is refused when a
+non-deferred header still includes the deferred package.
+
+None of the three may change absence, reference identity, equality, ordering, exception shape, or task
+settlement. Those are the semantics this runtime exists to preserve, and a workaround that alters one is
+a claim our own tests would then certify as true. A gap of that kind is a runtime capability to build or
+a compiler request to file, never a patch.
+
+Prefer the fixes that leave no debt, in this order: extend the runtime so emitted code compiles; declare
+the external binding the compiler was missing; then, only for what neither can reach, patch or defer.

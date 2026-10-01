@@ -17,6 +17,12 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolveDependency } from './dependencyLock.mjs';
 import { applyEmissionRepairs, loadEmissionRepairs, obsoleteRepairs } from './emissionRepairs.mjs';
+import {
+  applySourcePatches,
+  ineffectivePatches,
+  loadSourcePatches,
+  revertSourcePatches,
+} from './sourcePatches.mjs';
 
 // Materializes the part of the pinned Flight SDK the pinned compiler can emit today. Refusals are
 // output too: this tree is an honest compiler bring-up inventory, not a claim that Flight::Sdk can
@@ -76,8 +82,13 @@ if (!existsSync(compilerEntry)) {
 const temporaryRoot = mkdtempSync(path.join(tmpdir(), 'flight-cpp-sdk-generation-'));
 const candidateRoot = path.join(temporaryRoot, 'generated');
 
+// Patches are applied only after validateInput has confirmed both checkouts are clean and at their
+// pinned revisions, and reverted in the `finally` below, so a pinned checkout is rewritten for the
+// length of one run and never longer.
+const sourcePatches = loadSourcePatches(root);
 try {
-  const result = await generateSdk(candidateRoot, flight, compiler, compilerEntry, bindingProfiles);
+  const appliedPatches = applySourcePatches(sourcePatches, flight);
+  const result = await generateSdk(candidateRoot, flight, compiler, compilerEntry, bindingProfiles, appliedPatches);
   if (check) {
     const drift = compareTrees(candidateRoot, generatedRoot);
     if (drift.length > 0) {
@@ -90,17 +101,20 @@ try {
       process.stdout.write(summary('Generated SDK inventory is current', result));
     }
     if (reportObsoleteRepairs(result)) process.exitCode = 1;
+    if (reportIneffectivePatches(result)) process.exitCode = 1;
   } else {
     rmSync(generatedRoot, { force: true, recursive: true });
     cpSync(candidateRoot, generatedRoot, { recursive: true });
     process.stdout.write(summary('Generated SDK inventory updated', result));
     reportObsoleteRepairs(result);
+    reportIneffectivePatches(result);
   }
 } finally {
+  revertSourcePatches(sourcePatches, flight);
   rmSync(temporaryRoot, { force: true, recursive: true });
 }
 
-async function generateSdk(outputRoot, flightDependency, compilerDependency, compilerModule, profiles) {
+async function generateSdk(outputRoot, flightDependency, compilerDependency, compilerModule, profiles, appliedPatches) {
   const {
     analyzeFlightWorkspace,
     compileTypeScriptPackageGraph,
@@ -231,6 +245,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       files: record.files,
       id: record.id,
     })),
+    sourcePatches: appliedPatches,
     packages: packageResults,
     source: {
       package: String(sdkPackage.name),
@@ -258,7 +273,17 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
     `${JSON.stringify(compilation.report.initialization, undefined, 2)}\n`,
   );
   writeFileSync(path.join(outputRoot, 'README.md'), generatedReadme(manifest));
-  return { ...manifest.summary, obsoleteRepairs: obsoleteRepairs(appliedRepairs), repairedFiles: appliedRepairs.reduce((total, record) => total + record.files.length, 0) };
+  return {
+    ...manifest.summary,
+    ineffectivePatches: ineffectivePatches(
+      appliedPatches,
+      new Map(sourcePatches.map((patch) => [patch.id, patch])),
+      refusals,
+    ),
+    obsoleteRepairs: obsoleteRepairs(appliedRepairs, profiles),
+    patchedModules: appliedPatches.length,
+    repairedFiles: appliedRepairs.reduce((total, record) => total + record.files.length, 0),
+  };
 }
 
 function loadBindingProfiles(filenames) {
@@ -626,14 +651,27 @@ function compareText(left, right) {
 }
 
 function summary(prefix, result) {
+  const patched = result.patchedModules > 0 ? `; ${String(result.patchedModules)} source patch(es) applied` : '';
   const repaired =
     result.repairedFiles > 0 ? `; ${String(result.repairedFiles)} header(s) repaired after emission` : '';
-  return `${prefix}: ${String(result.emittedModules)}/${String(result.sourceModules)} modules emitted across ${String(result.packages)} packages; ${String(result.refusedModules)} refusals recorded${repaired}.\n`;
+  return `${prefix}: ${String(result.emittedModules)}/${String(result.sourceModules)} modules emitted across ${String(result.packages)} packages; ${String(result.refusedModules)} refusals recorded${patched}${repaired}.\n`;
 }
 
 // A repair that no longer matches any emitted header has outlived the emitter defect it answers.
 // Reporting that as a failure is the whole reason the repair mechanism is safe to have: carrying a
 // repair nobody needs is how a patched build becomes an unacknowledged fork of the generator.
+// A patch whose module is still refused for the reason the patch names is not doing what it claims.
+// Saying so is the difference between a declared workaround and a forgotten one.
+function reportIneffectivePatches(result) {
+  if (result.ineffectivePatches.length === 0) return false;
+  process.stderr.write(
+    `${String(result.ineffectivePatches.length)} source patch(es) did not remove the refusal they name:\n`,
+  );
+  for (const id of result.ineffectivePatches) process.stderr.write(`- ${id}\n`);
+  process.stderr.write('Either the rewrite is wrong or the refusal has another cause; do not carry it unexamined.\n');
+  return true;
+}
+
 function reportObsoleteRepairs(result) {
   if (result.obsoleteRepairs.length === 0) return false;
   process.stderr.write(

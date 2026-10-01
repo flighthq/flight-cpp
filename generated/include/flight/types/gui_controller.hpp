@@ -8,6 +8,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { template <typename Traits> struct Node; }
+
 namespace flight::types { struct Node2DTraits; }
 namespace flight::types { template <typename N, typename P> struct NodeInteractiveStateTransition; }
 namespace flight::types { template <typename N, typename P> struct NodeInteractiveStateTransitionRequest; }

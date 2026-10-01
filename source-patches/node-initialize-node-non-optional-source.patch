@@ -1,0 +1,19 @@
+diff --git a/packages/node/src/node.ts b/packages/node/src/node.ts
+index 2d859fbc8..dcb551e02 100644
+--- a/packages/node/src/node.ts
++++ b/packages/node/src/node.ts
+@@ -159,10 +159,11 @@ export function initializeNode<
+   const runtimeFactory = createNodeRuntimeFactory ?? (createNodeRuntime as unknown as NodeRuntimeFactory<Runtime>);
+   const node = out as EntityConstruction<Node<Traits>>;
+   (node as { [EntityRuntimeKey]?: unknown })[EntityRuntimeKey] = runtimeFactory();
+-  node.data = createData !== undefined ? createData(obj?.data as Partial<Data>) : null;
+-  node.name = obj?.name ?? null;
++  const source: Readonly<PartialNode<Node<Traits>>> = obj ?? {};
++  node.data = createData !== undefined ? createData(source.data as Partial<Data>) : null;
++  node.name = source.name ?? null;
+   node.kind = nodeKind;
+-  node.enabled = obj?.enabled ?? true;
++  node.enabled = source.enabled ?? true;
+ }
+ 
+ export function initializeNodeSignals(out: EntityConstruction<NodeSignals>): void {

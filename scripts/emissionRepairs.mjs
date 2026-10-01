@@ -13,6 +13,10 @@ import path from 'node:path';
 
 const SCHEMA = 'flight-cpp-emission-repairs/1';
 const KINDS = new Set(['insert-forward-declaration']);
+// When a repair is expected to match. A module that only emits once external bindings are applied
+// cannot need its repair in the unbound inventory, so claiming the repair is obsolete there would be
+// wrong -- `withBindings` says to judge expiry only on a profiled run.
+const EXPECTATIONS = new Set(['always', 'withBindings']);
 
 export function loadEmissionRepairs(root) {
   const file = path.join(root, 'repairs', 'emission-repairs.json');
@@ -38,6 +42,10 @@ export function loadEmissionRepairs(root) {
     if (!KINDS.has(repair.kind)) {
       throw new Error(`Emission repair ${repair.id} has unknown kind ${repair.kind}`);
     }
+    repair.expectedWhen ??= 'always';
+    if (!EXPECTATIONS.has(repair.expectedWhen)) {
+      throw new Error(`Emission repair ${repair.id} has unknown expectedWhen ${repair.expectedWhen}`);
+    }
   }
   return parsed.repairs;
 }
@@ -45,7 +53,7 @@ export function loadEmissionRepairs(root) {
 // Rewrites `files` in place where a repair applies. Returns one record per repair naming the files it
 // touched, so the caller can record them in the manifest and fail when a repair matched nothing.
 export function applyEmissionRepairs(repairs, files) {
-  const applied = repairs.map((repair) => ({ files: [], id: repair.id }));
+  const applied = repairs.map((repair) => ({ expectedWhen: repair.expectedWhen, files: [], id: repair.id }));
   if (repairs.length === 0) return applied;
   for (const file of files) {
     for (const [index, repair] of repairs.entries()) {
@@ -66,7 +74,10 @@ export function applyEmissionRepairs(repairs, files) {
 // carries its own forward declaration.
 function insertForwardDeclaration(contents, repair) {
   const { symbol } = repair;
-  const names = new RegExp(`\\btypes::${symbol}\\b`).test(contents);
+  // The emitter writes the name both qualified and bare -- a header inside namespace flight::types
+  // says `Ref<Node<Any>>`, a sibling says `flight::types::Node<...>` -- so the reference test is
+  // unqualified. Word boundaries keep it off longer names: \bNode\b does not match Node2D or NodeData.
+  const names = new RegExp(`\\b${symbol}\\b`).test(contents);
   if (!names) return undefined;
   const declares = new RegExp(`\\bstruct ${symbol}\\s*[;:{]`).test(contents);
   if (declares) return undefined;
@@ -81,8 +92,12 @@ function insertForwardDeclaration(contents, repair) {
 
 // The expiry check. A repair that matched nothing is either fixed upstream or no longer reachable;
 // either way carrying it is how a patched build drifts into a fork.
-export function obsoleteRepairs(applied) {
-  return applied.filter((record) => record.files.length === 0).map((record) => record.id);
+export function obsoleteRepairs(applied, profiles) {
+  const bound = profiles.length > 0;
+  return applied
+    .filter((record) => record.files.length === 0)
+    .filter((record) => record.expectedWhen !== 'withBindings' || bound)
+    .map((record) => record.id);
 }
 
 function portable(filename) {

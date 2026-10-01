@@ -11,7 +11,8 @@
       "declaration": "namespace flight::types { template <typename Traits> struct Node; }",
       "diagnostic": "'Node' is not a member of 'flight::types'",
       "defect": "The emitter's forward-declaration collector walks the names a module references directly, but misses names it reaches only by expanding another package's type alias. flight::types::Node2D expands to flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Node<flight::Ref<Node2DTraits>>>>, ...>>, so a header using the Node2D alias names Node without ever declaring it.",
-      "expires": "when the forward-declaration collector follows alias expansion; sdk:check fails if this repair matches no file."
+      "expires": "when the forward-declaration collector follows alias expansion; sdk:check fails if this repair matches no file.",
+      "expectedWhen": "always"
     },
     {
       "id": "types-render-cache-forward-declaration",
@@ -21,7 +22,8 @@
       "declaration": "namespace flight::types { struct RenderCache; }",
       "diagnostic": "'RenderCache' is not a member of 'flight::types'",
       "defect": "Same collector defect as types-node-forward-declaration, reached through the render-options aliases.",
-      "expires": "when the forward-declaration collector follows alias expansion; sdk:check fails if this repair matches no file."
+      "expires": "when the forward-declaration collector follows alias expansion; sdk:check fails if this repair matches no header in a profiled run. RenderCache is only reachable once external bindings let @flighthq/render emit, so the unbound inventory is not evidence that this repair is unneeded.",
+      "expectedWhen": "withBindings"
     }
   ]
 }
