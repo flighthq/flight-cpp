@@ -70,15 +70,18 @@ const repairedByPrefix = new Map();
 for (const record of manifest.emissionRepairs ?? []) {
   for (const file of record.files) repairedByPrefix.set(file, record.id);
 }
-const patchedPackages = new Map((manifest.sourcePatches ?? []).map((patch) => [patch.package ?? patch.module, patch.id]));
-const patchedModulePackages = new Set((manifest.sourcePatches ?? []).map((patch) => patch.module));
+const patchedPackages = new Map();
+for (const patch of manifest.sourcePatches ?? []) {
+  if (patch.package === undefined) continue;
+  patchedPackages.set(patch.package, [...(patchedPackages.get(patch.package) ?? []), patch.id]);
+}
 
 const tiers = manifest.packages.map((package_) => {
   const prefix = `${package_.cppIncludePrefix}/`;
   const headers = [...attempted].filter((header) => header.startsWith(prefix));
   const failures = headers.filter((header) => failedPrefixes.has(header));
   const repairs = [...new Set([...repairedByPrefix].filter(([file]) => file.startsWith(prefix)).map(([, id]) => id))];
-  const patches = [...new Set([...patchedPackages].filter(([key]) => key === package_.package).map(([, id]) => id))];
+  const patches = patchedPackages.get(package_.package) ?? [];
   const isDeferred = deferred.some((entry) => entry.package === package_.package);
   const complete = package_.emittedModules === package_.sourceModules && package_.refusedModules === 0;
   const tier = isDeferred

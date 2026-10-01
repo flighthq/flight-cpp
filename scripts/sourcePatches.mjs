@@ -104,7 +104,16 @@ export function applySourcePatches(patches, dependency) {
     }
     const result = git(dependency.directory, ['apply', patch.file]);
     if (result.status !== 0) throw new Error(`Source patch ${patch.id} failed to apply: ${result.stderr}`);
-    applied.push({ dependency: patch.dependency, digest: patch.digest, id: patch.id, module: patch.module });
+    applied.push({
+      dependency: patch.dependency,
+      digest: patch.digest,
+      id: patch.id,
+      module: patch.module,
+      // Carried so a consumer of the manifest can attribute the patch to its PACKAGE. Without it a
+      // package that only works because of a patch reads as though it needed no help, which defeats
+      // the provenance the mechanism exists to keep.
+      package: patch.package,
+    });
   }
   return applied;
 }
