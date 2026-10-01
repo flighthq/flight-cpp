@@ -26,6 +26,11 @@ import path from 'node:path';
 //   patch the pin has outgrown, is how a pinned build turns into an unacknowledged fork.
 
 const SCHEMA = 'flight-cpp-source-patches/1';
+// What the patch's `refusal` field names. A patch can answer a compiler REFUSAL, in which case
+// generation can check the refusal is gone, or a C++ DIAGNOSTIC in emitted code, which only the header
+// compile gate can see. The distinction exists so the effectiveness check does not quietly pass a
+// patch it cannot actually evaluate.
+const ANSWERS = new Set(['refusal', 'diagnostic']);
 const REQUIRED = [
   'id',
   'dependency',
@@ -61,6 +66,10 @@ export function loadSourcePatches(root) {
       if (typeof patch[field] !== 'string' || patch[field].length === 0) {
         throw new Error(`Source patch ${patch.id ?? '<unnamed>'} is missing required field ${field}`);
       }
+    }
+    patch.answers ??= 'refusal';
+    if (!ANSWERS.has(patch.answers)) {
+      throw new Error(`Source patch ${patch.id} has unknown answers ${patch.answers}`);
     }
     const patchFile = path.join(directory, patch.patch);
     let contents;
@@ -116,6 +125,9 @@ export function ineffectivePatches(applied, patchesById, refusals) {
   for (const record of applied) {
     const patch = patchesById.get(record.id);
     if (!patch) continue;
+    // A patch answering a C++ diagnostic leaves no trace in the refusal ledger; the header compile
+    // gate is what judges it, so claiming anything here would be guessing.
+    if (patch.answers !== 'refusal') continue;
     const still = refusals.some(
       (refusal) => refusal.module === patch.module && refusal.reason.includes(patch.refusal),
     );

@@ -16,6 +16,23 @@
       "whyNotUpstreamFirst": "The refusal is in the emitter (cppCompilerBackend.ts:18888): an optional chain over a `T | null` member produces a dual-sentinel domain it cannot project. Member access on a non-optional binding is the one narrowing form it does lower. Flight could simply be written this way, so this patch is also the upstream suggestion.",
       "unblocks": "node.ts stops being a root refusal. @flighthq/node, and the render/scene2d/scene3d tier behind it, remain blocked on the separate asserted-row refusal in hierarchy.ts.",
       "expires": "when the emitter projects a dual-sentinel optional property result, or Flight adopts this form in its own source.",
+      "appliedOn": "2026-10-01",
+      "answers": "refusal"
+    },
+    {
+      "id": "timeline-noop-construct-frame-arity",
+      "dependency": "flight",
+      "patch": "timeline-noop-construct-frame-arity.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/timeline/src/timeline.ts",
+      "package": "@flighthq/timeline",
+      "answers": "diagnostic",
+      "refusal": "could not convert 'flight::timeline::noop_construct_frame' from 'void()' to 'std::function<void(flight::StructuralRef<...Node2DTraits...>, double)>'",
+      "rewrite": "Gives noopConstructFrame the two parameters its target type declares, instead of none.",
+      "equivalence": "TimelineSource.constructFrame is declared `(target: Node2D, frame: number) => void`, and TypeScript admits a shorter parameter list for a longer one, which is why the zero-arity form type-checked. The body is empty, so the named parameters are never read and no call site changes -- the function's only use is as the right operand of `obj.constructFrame ?? noopConstructFrame`. Underscore names keep noUnusedParameters quiet.",
+      "whyNotUpstreamFirst": "Parameter-count contravariance has no std::function equivalent: void() cannot construct std::function<void(A, B)>. The emitter would need to wrap the shorter function in an adapter that discards the extra arguments. Until it does, every TypeScript function assigned to a wider signature emits code that does not compile, and this is the instance that blocks @flighthq/timeline.",
+      "unblocks": "@flighthq/timeline's three headers compile. With this and statusbar deferred, every non-deferred fully-emitting package compiles together in one translation unit.",
+      "expires": "when the emitter adapts a narrower function to a wider std::function target, or Flight declares the parameters itself.",
       "appliedOn": "2026-10-01"
     }
   ]

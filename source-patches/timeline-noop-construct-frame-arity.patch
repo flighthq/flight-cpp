@@ -1,0 +1,13 @@
+diff --git a/packages/timeline/src/timeline.ts b/packages/timeline/src/timeline.ts
+index f83fe3e38..8ac1b679c 100644
+--- a/packages/timeline/src/timeline.ts
++++ b/packages/timeline/src/timeline.ts
+@@ -175,7 +175,7 @@ const EMPTY_CUES: readonly TimelineCue[] = [];
+ 
+ const EMPTY_LABELS: readonly TimelineLabel[] = [];
+ 
+-function noopConstructFrame(): void {}
++function noopConstructFrame(_target: Node2D, _frame: number): void {}
+ 
+ // Frame accounting matches Flash/OpenFL: when accumulated time spans multiple frames in one update,
+ // the playhead jumps straight to the landing frame (currentFrame + floor(timeElapsed / frameTime)).

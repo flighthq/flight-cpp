@@ -52,6 +52,7 @@
     "sdk:generate:sdl": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --binding-profile=bindings/headless.json --binding-profile=bindings/web-types.json --binding-profile=bindings/sdl-image.json --binding-profile=bindings/sdl-gl.json --binding-profile=bindings/sdl-wgpu.json --binding-profile=bindings/sdl-app.json --output=out/sdk-sdl",
     "sdk:generate:sdl-gl": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --binding-profile=bindings/headless.json --binding-profile=bindings/web-types.json --binding-profile=bindings/sdl-image.json --binding-profile=bindings/sdl-gl.json --output=out/sdk-sdl-gl",
     "sdk:generate:sdl-wgpu": "node ./scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --binding-profile=bindings/headless.json --binding-profile=bindings/web-types.json --binding-profile=bindings/sdl-image.json --binding-profile=bindings/sdl-wgpu.json --output=out/sdk-sdl-wgpu",
+    "sdk:tiers": "node ./scripts/sdkPackageTiers.mjs",
     "sdl-app:oracle": "node ./scripts/sdlAppProfileOracle.mjs",
     "sdl-gl:oracle": "node ./scripts/sdlGlProfileOracle.mjs",
     "sdl-wgpu:oracle": "node ./scripts/sdlWgpuProfileOracle.mjs",
