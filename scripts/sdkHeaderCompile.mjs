@@ -4,7 +4,12 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { isDeferredHeader, loadDeferredPackages, refusedDeferrals } from './deferredPackages.mjs';
+import {
+  isDeferredHeader,
+  loadApplicableEnvironments,
+  loadDeferredPackages,
+  refusedDeferrals,
+} from './deferredPackages.mjs';
 
 // Compiles each generated SDK header on its own and records what happened.
 //
@@ -117,7 +122,19 @@ const complete = writeReport();
 const passed = [...done.values()].filter((result) => result.passed).length;
 // A deferred package's headers are still compiled and still reported; they just do not decide the
 // gate. See scripts/deferredPackages.mjs -- a deferral a required header still includes is refused.
-const deferredPackages = loadDeferredPackages(root);
+// A package that declares a host environment this profile does not run is deferred on the same terms as
+// a declared one: its headers are compiled and reported, and they do not decide the gate. Derived from
+// the manifest so it tracks the pinned source instead of a list someone has to remember to update.
+const applicableEnvironments = loadApplicableEnvironments(root);
+const foreignEnvironmentPackages = (manifest.packages ?? [])
+  .filter((package_) => package_.environment !== undefined && !applicableEnvironments.has(package_.environment))
+  .map((package_) => ({
+    evidence: `declares flight.environment "${package_.environment}"`,
+    includePrefix: package_.cppIncludePrefix,
+    kind: 'not-applicable',
+    package: package_.package,
+  }));
+const deferredPackages = [...loadDeferredPackages(root), ...foreignEnvironmentPackages];
 const refusedDeferral = refusedDeferrals(deferredPackages, selected, (header) =>
   readFileSync(path.join(generatedInclude, header), 'utf8'),
 );

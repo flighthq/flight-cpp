@@ -298,6 +298,7 @@
       "cppIncludePrefix": "flight/effects_canvas",
       "cppNamespace": "flight::effects_canvas",
       "emittedModules": 1,
+      "environment": "web",
       "package": "@flighthq/effects-canvas",
       "refusedModules": 29,
       "sourceModules": 30
@@ -834,6 +835,7 @@
       "cppIncludePrefix": "flight/scene2d_canvas",
       "cppNamespace": "flight::scene2d_canvas",
       "emittedModules": 1,
+      "environment": "web",
       "package": "@flighthq/scene2d-canvas",
       "refusedModules": 50,
       "sourceModules": 51
@@ -842,6 +844,7 @@
       "cppIncludePrefix": "flight/scene2d_dom",
       "cppNamespace": "flight::scene2d_dom",
       "emittedModules": 2,
+      "environment": "web",
       "package": "@flighthq/scene2d-dom",
       "refusedModules": 31,
       "sourceModules": 33
@@ -1162,6 +1165,7 @@
       "cppIncludePrefix": "flight/textshaper_canvas",
       "cppNamespace": "flight::textshaper_canvas",
       "emittedModules": 1,
+      "environment": "web",
       "package": "@flighthq/textshaper-canvas",
       "refusedModules": 2,
       "sourceModules": 3

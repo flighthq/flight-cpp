@@ -49,6 +49,21 @@ export function loadDeferredPackages(root) {
   return parsed.deferred;
 }
 
+// The host environments this profile can actually run. A package declaring any other environment in its
+// own package.json is not applicable here. Returns a Set so the caller can ask directly.
+export function loadApplicableEnvironments(root) {
+  const file = path.join(root, 'deferred-packages.json');
+  try {
+    const parsed = JSON.parse(readFileSync(file, 'utf8'));
+    const declared = parsed.applicableEnvironments;
+    if (!Array.isArray(declared)) return new Set();
+    return new Set(declared.filter((entry) => typeof entry === 'string'));
+  } catch (error) {
+    if (error.code === 'ENOENT') return new Set();
+    throw error;
+  }
+}
+
 export function isDeferredHeader(deferred, header) {
   return deferred.some((entry) => header.startsWith(`${entry.includePrefix}/`));
 }

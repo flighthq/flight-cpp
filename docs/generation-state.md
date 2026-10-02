@@ -372,7 +372,18 @@ Each reaches for `document.createElement`, `HTMLCanvasElement` and `CanvasRender
 and for each the profile already uses a different sibling backend: `scene2d-gl` / `scene2d-wgpu`,
 `effects-gl` / `effects-wgpu`, and `textshaper`. There is nothing on an SDL host for these to bind to.
 
-The set was chosen on evidence, not on names, and the two directions of error are both real:
+**The set is derived, not listed.** Flight declares each package's host environment as
+`flight.environment` in its own `package.json`; generation records it per package in the manifest, and a
+package whose declared environment is not in `applicableEnvironments` (empty for this native profile) is
+excluded. Exactly four of the 154 inventory packages declare `environment: "web"`, and they are the four
+above. `host-web`, `host-electron`, `host-tauri`, `host-capacitor`, `tool-capture` and `tool-registry`
+declare non-native environments too but are not in `@flighthq/sdk`'s dependency closure, so they never
+appear in the inventory.
+
+Deriving it matters because the first version of this was a hand-written list, and a list has to be
+remembered. A package that gains or loses the declaration upstream is now reclassified with no edit here.
+
+The two directions of error are both real, which is why the declaration is the only acceptable source:
 
 - `@flighthq/webcam` matches a name filter for web packages and is **already shippable**. Deferring by
   name would have parked working code.

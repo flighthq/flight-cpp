@@ -1,6 +1,8 @@
 {
   "schema": "flight-cpp-deferred-packages/1",
   "identity": "flight-cpp deferred SDK packages",
+  "applicableEnvironments": [],
+  "applicableEnvironmentsNote": "Flight packages declare their host environment as `flight.environment` in their own package.json -- web, electron, tauri, capacitor, node. A package whose declared environment is not listed here cannot apply to this profile, is reported as not-applicable, and is excluded from the shippable denominator. flight-cpp targets a native SDL host, which is not one of Flight's declared environments, so the list is EMPTY and exactly the environment-agnostic packages are applicable. This is derived from the pinned source on every run rather than enumerated here, so a package that gains or loses the declaration is reclassified without anyone editing this file.",
   "note": "Packages this profile does not hold to the compile gate, with the REASON distinguished by `kind`. `not-applicable` means the profile cannot provide the capability the package exists to implement -- a Canvas 2D renderer has no meaning on a host with no canvas -- so the package is not broken and is not counted in the shippable denominator. `defect` means the package should work here and does not; it stays in the denominator and is a debt. Neither kind is a silent skip: every gate that honors this file reports what it deferred, and a deferral is REFUSED when a non-deferred header includes the deferred package, because deferring something still reachable hides a real break instead of parking an irrelevant one. Deferral changes no generated output -- headers are still emitted and still compiled, so progress stays visible and un-deferring is a one-line change.",
   "deferred": [
     {
@@ -12,46 +14,6 @@
       "unblockedBy": "A RowOwner recovery path that admits an applied-provider projection of a declared row, with the semantic test that proves it.",
       "deferredOn": "2026-10-01",
       "kind": "defect"
-    },
-    {
-      "package": "@flighthq/scene2d-canvas",
-      "includePrefix": "flight/scene2d_canvas",
-      "kind": "not-applicable",
-      "reason": "The package exists to implement a web rendering backend -- its own description is \"Canvas 2D renderer implementation\" -- and it reaches for document.createElement, HTMLCanvasElement and CanvasRenderingContext2D. An SDL host has no DOM and no Canvas 2D context, so there is nothing for this package to bind to and nothing honest to make it emit.",
-      "evidence": "packages/scene2d-canvas/package.json describes it as above, its sources use document.createElement and HTMLCanvasElement directly, and scene2d-gl and scene2d-wgpu are the renderers this profile uses.",
-      "owner": "not applicable to the SDL profile; applicable to a web host",
-      "unblockedBy": "Nothing in this profile. It would emit against a host that provides a DOM and a Canvas 2D context.",
-      "deferredOn": "2026-10-02"
-    },
-    {
-      "package": "@flighthq/scene2d-dom",
-      "includePrefix": "flight/scene2d_dom",
-      "kind": "not-applicable",
-      "reason": "The package exists to implement a web rendering backend -- its own description is \"DOM renderer implementation\" -- and it reaches for document.createElement, HTMLCanvasElement and CanvasRenderingContext2D. An SDL host has no DOM and no Canvas 2D context, so there is nothing for this package to bind to and nothing honest to make it emit.",
-      "evidence": "packages/scene2d-dom/package.json describes it as above, its sources use document.createElement and HTMLCanvasElement directly, and scene2d-gl and scene2d-wgpu are the renderers this profile uses.",
-      "owner": "not applicable to the SDL profile; applicable to a web host",
-      "unblockedBy": "Nothing in this profile. It would emit against a host that provides a DOM and a Canvas 2D context.",
-      "deferredOn": "2026-10-02"
-    },
-    {
-      "package": "@flighthq/effects-canvas",
-      "includePrefix": "flight/effects_canvas",
-      "kind": "not-applicable",
-      "reason": "The package exists to implement a web rendering backend -- its own description is \"Canvas 2D recipes for render effects (CSS-filter and draw-op compositing pipeline)\" -- and it reaches for document.createElement, HTMLCanvasElement and CanvasRenderingContext2D. An SDL host has no DOM and no Canvas 2D context, so there is nothing for this package to bind to and nothing honest to make it emit.",
-      "evidence": "packages/effects-canvas/package.json describes it as above, its sources use document.createElement and HTMLCanvasElement directly, and effects-gl and effects-wgpu are the effect backends this profile uses.",
-      "owner": "not applicable to the SDL profile; applicable to a web host",
-      "unblockedBy": "Nothing in this profile. It would emit against a host that provides a DOM and a Canvas 2D context.",
-      "deferredOn": "2026-10-02"
-    },
-    {
-      "package": "@flighthq/textshaper-canvas",
-      "includePrefix": "flight/textshaper_canvas",
-      "kind": "not-applicable",
-      "reason": "The package exists to implement a web rendering backend -- its own description is \"Canvas 2D text-shaper backend: advances-only shaping via measureText\" -- and it reaches for document.createElement, HTMLCanvasElement and CanvasRenderingContext2D. An SDL host has no DOM and no Canvas 2D context, so there is nothing for this package to bind to and nothing honest to make it emit.",
-      "evidence": "packages/textshaper-canvas/package.json describes it as above, its sources use document.createElement and HTMLCanvasElement directly, and textshaper is the shaper this profile uses.",
-      "owner": "not applicable to the SDL profile; applicable to a web host",
-      "unblockedBy": "Nothing in this profile. It would emit against a host that provides a DOM and a Canvas 2D context.",
-      "deferredOn": "2026-10-02"
     }
   ]
 }

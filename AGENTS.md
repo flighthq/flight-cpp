@@ -53,13 +53,20 @@ non-deferred header still includes the deferred package.
 
 Each deferral declares a `kind`, because "we owe this" and "this cannot apply here" are different claims
 and only one of them is debt. A `defect` is a package that should work on this profile and does not; it
-stays in the shippable denominator. A `not-applicable` package is one whose whole purpose is a capability
-the profile cannot provide -- a Canvas 2D renderer on a host with no canvas -- and it is excluded from the
-denominator, because counting it as outstanding work makes the fraction permanently unreachable and tells
-a reader nothing. Not-applicable is a claim about the host, so it needs evidence about the package's
-purpose rather than a guess from its name: `@flighthq/webcam` sounds web-only and is in fact shippable,
-while the four deferred as not-applicable each describe themselves as a Canvas 2D or DOM backend and
-reach for `document.createElement` directly.
+stays in the shippable denominator, and `deferred-packages.json` is where those are listed.
+
+Non-applicability is not listed, it is **derived**. Flight packages declare their own host environment as
+`flight.environment` in their `package.json` -- `web`, `electron`, `tauri`, `capacitor`, `node` -- and
+generation records that declaration per package in the manifest. A package whose declared environment is
+not in `applicableEnvironments` cannot run here, so it is reported as not applicable and excluded from the
+denominator; counting it as outstanding work would make the fraction permanently unreachable and tell a
+reader nothing. flight-cpp targets a native SDL host, which is not one of Flight's declared environments,
+so `applicableEnvironments` is empty and exactly the environment-agnostic packages are applicable.
+
+Read applicability from that declaration and never infer it. Inferring from a package name would have
+parked `@flighthq/webcam`, which is shippable; inferring from web symbols appearing in a refusal would
+have parked `@flighthq/render-wgpu`, which this profile needs -- its `HTMLImageElement[value]` refusals
+are `copyExternalImageToTexture` sources that come from `ImageSource` on SDL.
 
 None of the three may change absence, reference identity, equality, ordering, exception shape, or task
 settlement. Those are the semantics this runtime exists to preserve, and a workaround that alters one is

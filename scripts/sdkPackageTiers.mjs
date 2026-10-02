@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { loadDeferredPackages } from './deferredPackages.mjs';
+import { loadApplicableEnvironments, loadDeferredPackages } from './deferredPackages.mjs';
 
 // What of the SDK is actually usable, counted per package.
 //
@@ -21,8 +21,12 @@ import { loadDeferredPackages } from './deferredPackages.mjs';
 //   blocked     nothing emitted
 //   deferred    declared a DEFECT in deferred-packages.json; reported, never fails the build, and still
 //               counted in the denominator because it is work this profile owes
-//   n/a         declared NOT-APPLICABLE: the profile cannot provide the capability the package exists to
-//               implement, so it is excluded from the denominator entirely
+//   n/a         the package DECLARES a host environment this profile does not run -- `flight.environment`
+//               in its own package.json -- so it is excluded from the denominator entirely
+//
+// Applicability is read from the pinned source, never inferred. Guessing it from a package name would
+// have parked @flighthq/webcam, which is shippable; guessing it from web symbols in a refusal would have
+// parked @flighthq/render-wgpu, which this profile needs.
 //
 // The denominator matters. Counting a Canvas 2D renderer as outstanding work on a host with no canvas
 // makes the shippable fraction permanently unreachable and tells the reader nothing.
@@ -67,6 +71,7 @@ const compilationFile = path.resolve(
 const compilation = existsSync(compilationFile) ? JSON.parse(readFileSync(compilationFile, 'utf8')) : undefined;
 const reportFile = path.resolve(root, valueOf('--report=') ?? path.join('out', 'sdk-package-tiers.json'));
 const deferred = loadDeferredPackages(root);
+const applicableEnvironments = loadApplicableEnvironments(root);
 
 // A package is only `ready` if its headers were actually tried. An unattempted header is not a pass,
 // so a package nobody compiled is `assisted` at best and is reported as uncompiled either way.
@@ -90,11 +95,17 @@ const tiers = manifest.packages.map((package_) => {
   const patches = patchedPackages.get(package_.package) ?? [];
   const deferral = deferred.find((entry) => entry.package === package_.package);
   const isDeferred = deferral !== undefined;
+  const foreignEnvironment =
+    package_.environment !== undefined && !applicableEnvironments.has(package_.environment)
+      ? package_.environment
+      : undefined;
   const complete = package_.emittedModules === package_.sourceModules && package_.refusedModules === 0;
-  const tier = isDeferred
-    ? deferral.kind === 'not-applicable'
-      ? 'n/a'
-      : 'deferred'
+  const tier = foreignEnvironment !== undefined
+    ? 'n/a'
+    : isDeferred
+      ? deferral.kind === 'not-applicable'
+        ? 'n/a'
+        : 'deferred'
     : package_.emittedModules === 0
       ? 'blocked'
       : !complete || failures.length > 0
@@ -106,6 +117,7 @@ const tiers = manifest.packages.map((package_) => {
             : 'ready';
   return {
     emittedModules: package_.emittedModules,
+    ...(package_.environment === undefined ? {} : { environment: package_.environment }),
     failingHeaders: failures,
     headers: headers.length,
     package: package_.package,
@@ -184,7 +196,11 @@ if (notApplicableRows.length > 0) {
   process.stdout.write('\nnot applicable to this profile (excluded from the denominator):\n');
   for (const row of notApplicableRows) {
     const entry = deferred.find((candidate) => candidate.package === row.package);
-    process.stdout.write(`- ${row.package}: ${entry?.owner ?? ''}\n`);
+    const why =
+      row.environment !== undefined
+        ? `declares flight.environment "${row.environment}"`
+        : (entry?.owner ?? 'declared not applicable');
+    process.stdout.write(`- ${row.package}: ${why}\n`);
   }
 }
 process.stdout.write(`\nReport: ${portable(path.relative(root, reportFile))}\n`);

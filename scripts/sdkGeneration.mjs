@@ -141,6 +141,10 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
     const root = path.join(flightDependency.directory, package_.directory);
     return {
       dependencies: package_.dependencies.filter((dependency) => includedPackages.has(dependency)).sort(compareText),
+      // Flight declares a package's host environment itself, and that declaration -- not a guess from
+      // the package name or from which symbols its refusals mention -- is what decides whether a
+      // package can apply to this profile at all. Environment-agnostic packages declare nothing.
+      environment: declaredEnvironment(root),
       name: package_.name,
       root,
       sources: listSourceFiles(path.join(root, 'src')),
@@ -205,6 +209,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       cppIncludePrefix: descriptor.target.includePrefix,
       cppNamespace: descriptor.target.namespace,
       emittedModules: package_.modules.filter((module) => module.status === 'emitted').length,
+      ...(descriptor.environment === undefined ? {} : { environment: descriptor.environment }),
       package: package_.name,
       refusedModules: package_.modules.filter((module) => module.status === 'refused').length,
       sourceModules: package_.modules.length,
@@ -603,6 +608,14 @@ function listSourceFiles(directory) {
   return filesUnder(directory)
     .filter((filename) => filename.endsWith('.ts') && !filename.endsWith('.d.ts') && !filename.endsWith('.test.ts'))
     .map((sourcePath) => ({ contents: readFileSync(sourcePath, 'utf8'), sourcePath }));
+}
+
+// The `flight.environment` a package declares for itself, or undefined when it is environment-agnostic.
+function declaredEnvironment(packageRoot) {
+  const file = path.join(packageRoot, 'package.json');
+  if (!existsSync(file)) return undefined;
+  const environment = JSON.parse(readFileSync(file, 'utf8')).flight?.environment;
+  return typeof environment === 'string' && environment.length > 0 ? environment : undefined;
 }
 
 function cppPackageName(packageName) {
