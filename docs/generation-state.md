@@ -230,3 +230,33 @@ is what that check exists for. Whatever defeats the pack resolution here, passin
 non-nullable parameter does not restore it, and `@flighthq/signals`' own root refusal -- "dependent
 callable parameter pack args may only be used as a terminal …" -- is the same limitation seen from the
 declaring side. Closing this needs the declaration handled, not the call site.
+
+## The single-root list, and why it stops where it does
+
+Forty packages have exactly one root refusal, with the rest of their refusals pure cascade on it. That
+makes each one a candidate to complete off a single fix, and `@flighthq/screen` proved the pattern: one
+source patch took it from 0/3 blocked to 3/3 shippable. The rest of the list was worked through, and the
+remainder divides cleanly into three kinds, none of which is a call-site rewrite.
+
+**Needs a compiler change.** `@flighthq/adjustments` (19/22) refuses on
+`colorLutRunSignature(run, size)` where caller and callee declare the *identical* parameter type,
+`ReadonlyArray<Readonly<{ kind: string }>>`, and the callee's whole body is `JSON.stringify(run)`. There
+is no mismatch to align: the refusal is about representing a readonly array of anonymous structural
+objects as an owning array of nominal references. `@flighthq/geometry` (27/30) and `@flighthq/easing`
+(19/23) are the same shape, and both additionally cascade on `@flighthq/log`.
+
+**Needs runtime API we would be designing speculatively.** `@flighthq/input` refuses on
+`export type InputIngressSource = object` — a bare opaque handle with no shape, so no representation can
+be chosen. A binding would close it, but only by pointing at a flight-cpp opaque type that does not
+exist. `include/flight/host_sdl/sdk_window.hpp` declares `InputTargetHandle` inside
+`namespace flight::types`, which means it is generated from Flight's own type rather than a handle we
+own. `@flighthq/log`'s `Error.stack`/`Error.cause` is the same category, and the most valuable instance.
+
+**Needs a product decision, not an engineering one.** `@flighthq/textshaper-canvas` refuses on missing
+`OffscreenCanvas[value]` and `OffscreenCanvasRenderingContext2D[type]`. The *type* is already bound, to
+`flight::host_sdl::ImageSource`; what is missing is the constructor and the 2D context, and the SDL host
+has neither a canvas nor text measurement. There is nothing honest to bind them to. This package is not
+broken, it is **not applicable to this profile** — and the 154-package denominator currently counts
+web-only packages that will never ship on an SDL host. Separating "blocked by a defect" from "not
+applicable here" would make the shippable fraction mean something, but which packages are out of scope
+for a profile is a decision for the project, not something to infer from a refusal.
