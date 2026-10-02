@@ -42,6 +42,16 @@ const check = options.includes('--check');
 // placeholder, which consumers a hand-written replacement must satisfy, and the declaration fingerprints
 // an overlay watches to notice the module moving underneath it between pins.
 const bestEffort = options.includes('--best-effort');
+// Generate a subset of the SDK instead of the whole dependency closure. `analyzeFlightWorkspace`
+// resolves each named package's own closure, so naming one package still compiles what it needs. This
+// exists for two reasons that happen to coincide: the eventual shape of this repository is per-package
+// delivery, and the generation hang upstream cannot reproduce is only observed on the full 2904-module
+// graph, so a smaller graph is the cheapest way to find out whether it scales or simply does not
+// terminate.
+const requestedPackages = options
+  .filter((option) => option.startsWith('--package='))
+  .map((option) => option.slice('--package='.length))
+  .filter((name) => name.length > 0);
 const bindingProfileOptions = options
   .filter((option) => option.startsWith('--binding-profile='))
   .map((option) => option.slice('--binding-profile='.length));
@@ -50,6 +60,7 @@ const unknown = options.filter(
   (option) =>
     option !== '--check' &&
     option !== '--best-effort' &&
+    !option.startsWith('--package=') &&
     !option.startsWith('--binding-profile=') &&
     !option.startsWith('--output='),
 );
@@ -98,6 +109,16 @@ const candidateRoot = path.join(temporaryRoot, 'generated');
 // pinned revisions, and reverted in the `finally` below, so a pinned checkout is rewritten for the
 // length of one run and never longer.
 const sourcePatches = loadSourcePatches(root);
+// A `finally` does not run when the process is signalled, and a long generation run gets interrupted:
+// the first SIGTERM'd run left all three patches applied in the pinned checkout, and the next run
+// refused with "flight has uncommitted changes". Reverting on the way out of a signal keeps the
+// checkout clean whichever way the run ends.
+for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
+  process.on(signal, () => {
+    revertSourcePatches(sourcePatches, flight);
+    process.exit(signal === 'SIGINT' ? 130 : 143);
+  });
+}
 try {
   const appliedPatches = applySourcePatches(sourcePatches, flight);
   const result = await generateSdk(candidateRoot, flight, compiler, compilerEntry, bindingProfiles, appliedPatches);
@@ -136,9 +157,17 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   } = await import(pathToFileURL(compilerModule));
   const sdkPackageFile = path.join(flightDependency.directory, 'packages', 'sdk', 'package.json');
   const sdkPackage = JSON.parse(readFileSync(sdkPackageFile, 'utf8'));
-  const packageNames = Object.keys(sdkPackage.dependencies ?? {})
+  const sdkPackageNames = Object.keys(sdkPackage.dependencies ?? {})
     .filter((name) => name.startsWith('@flighthq/'))
     .sort();
+  const unknownRequested = requestedPackages.filter((name) => !sdkPackageNames.includes(name));
+  if (unknownRequested.length > 0) {
+    throw new Error(
+      `--package named ${unknownRequested.join(', ')}, which @flighthq/sdk does not depend on. ` +
+        'Name a package the SDK actually includes.',
+    );
+  }
+  const packageNames = requestedPackages.length > 0 ? [...requestedPackages].sort() : sdkPackageNames;
   const inventory = analyzeFlightWorkspace({
     targetPackageNames: packageNames,
     upstreamDirectory: flightDependency.directory,
@@ -297,6 +326,17 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
     path.join(outputRoot, 'initialization.json'),
     `${JSON.stringify(compilation.report.initialization, undefined, 2)}\n`,
   );
+  // The best-effort manifest is the compiler's own per-module verdict: which files are real output,
+  // which are replaceable stubs, which consumers a hand-written replacement must satisfy, and the
+  // declaration fingerprints an overlay watches to notice its module moving between pins. It is written
+  // beside the inventory rather than folded into it, because it describes a different thing: not what
+  // the SDK contains, but what still has to be written by hand and against what.
+  if (compilation.report.bestEffort !== undefined) {
+    writeFileSync(
+      path.join(outputRoot, 'best-effort.json'),
+      `${JSON.stringify(compilation.report.bestEffort, undefined, 2)}\n`,
+    );
+  }
   writeFileSync(path.join(outputRoot, 'README.md'), generatedReadme(manifest));
   return {
     ...manifest.summary,
@@ -408,6 +448,10 @@ function writeStructuralMemberTable(outputRoot, files) {
   const computedCells = computedNames.map((name) => `  FLIGHT_SDK_ROW_COMPUTED(${name})`);
   reportComputedCells(computedNames);
   if (cases.length === 0) {
+    // A SUBSET run legitimately reaches no structural row: @flighthq/math has none. Over the whole SDK
+    // an empty set means the emitter stopped producing rows, which is worth failing on, so the guard
+    // stays for a full run and only relaxes when a package filter narrowed the input.
+    if (requestedPackages.length > 0) return;
     throw new Error('compiler output uses no structural row keys');
   }
   cases[0] = cases[0].replace('  else if', '  if');
