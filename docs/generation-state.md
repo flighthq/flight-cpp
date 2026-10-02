@@ -200,3 +200,33 @@ A source patch that drops the two reads was considered and rejected. It would be
 target — flight-cpp captures no stack and has no `cause` — but `serializeLogError` exists to carry
 exactly that information, and silently returning less of it is a behavior change in a diagnostics path
 rather than a lowering workaround.
+
+### A rejected hypothesis, recorded so it is not retried
+
+`@flighthq/power` has one root refusal, `missing required call argument at position 2` in
+`attachPower`. `emitSignal` is declared
+
+```ts
+export function emitSignal<T extends (...args: any[]) => void>(signal: Signal<T>, ...args: Parameters<T>): void
+```
+
+and the failing calls pass no rest arguments. The obvious comparison is `@flighthq/keyboard`, which is
+already shippable and calls `emitSignal(keyboard.onHide)` with no rest arguments at all. The difference
+looked decisive: `keyboard.onHide` is `Signal<() => void>`, while power's signals are
+`Signal<() => void> | null` and every call site passes a local narrowed by a null check. So the
+hypothesis was that `T` does not resolve through the narrowing, leaving the variadic pack planned as one
+required argument.
+
+That predicted a fix: route the checked value through a **non-optional parameter**, the one narrowing
+form the emitter does resolve.
+
+```ts
+function emitVoidSignal(signal: Signal<() => void>): void { emitSignal(signal); }
+```
+
+**It did not work.** With the helper in place the refusal is unchanged, at the same site. The patch was
+removed rather than carried — `ineffectivePatches` reported it on the very run that produced it, which
+is what that check exists for. Whatever defeats the pack resolution here, passing through a
+non-nullable parameter does not restore it, and `@flighthq/signals`' own root refusal -- "dependent
+callable parameter pack args may only be used as a terminal …" -- is the same limitation seen from the
+declaring side. Closing this needs the declaration handled, not the call site.

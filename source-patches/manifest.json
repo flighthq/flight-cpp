@@ -50,22 +50,6 @@
       "unblocks": "@flighthq/screen's single root refusal. Its other two refusals are pure cascade on this module, so the package should reach 3/3.",
       "expires": "when the emitter accepts a non-literal Object.assign source. NOTE: this patch hard-codes ScreenInfo's field list, so a pin move that adds a field must re-derive it -- baseCommit forces that review.",
       "appliedOn": "2026-10-02"
-    },
-    {
-      "id": "power-emit-void-signal-non-nullable",
-      "dependency": "flight",
-      "patch": "power-emit-void-signal-non-nullable.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/power/src/power.ts",
-      "package": "@flighthq/power",
-      "answers": "refusal",
-      "refusal": "missing required call argument at position 2",
-      "rewrite": "Adds emitVoidSignal(signal: Signal<() => void>) and routes power.ts's three emitSignal calls on null-checked locals through it.",
-      "equivalence": "emitVoidSignal's body is exactly `emitSignal(signal)`, and every call site already held a value proven non-null by the check immediately above it, so the same signal is emitted with the same (empty) argument list at the same point. Nothing is reordered and no check is removed.",
-      "whyNotUpstreamFirst": "emitSignal is declared `<T extends (...args: any[]) => void>(signal: Signal<T>, ...args: Parameters<T>)`. Where the argument is a field typed `Signal<() => void>` -- @flighthq/keyboard's onHide, which emits fine -- T resolves and Parameters<T> is the empty tuple. Where it is a local narrowed from `Signal<() => void> | null`, T does not resolve through the narrowing and the variadic pack plans as one REQUIRED argument that a void signal can never supply. Passing the checked value into a non-optional parameter is the one narrowing form the emitter does resolve, so the helper restores the resolution rather than asking the emitter to grow a case.",
-      "unblocks": "@flighthq/power's single root refusal; its other two refusals are pure cascade on this module, so the package should reach 3/3.",
-      "expires": "when the emitter resolves a dependent parameter pack through a narrowed nullable local. @flighthq/signals' own root refusal, 'dependent callable parameter pack args may only be used as a terminal ...', is the same limitation seen from the declaring side.",
-      "appliedOn": "2026-10-02"
     }
   ]
 }
