@@ -93,6 +93,14 @@
       ],
       "nullability": "non-null",
       "ownership": "value",
+      "objectConstruction": {
+        "fields": [
+          { "sourceField": "length", "targetName": "length" },
+          { "sourceField": "numberOfChannels", "targetName": "number_of_channels" },
+          { "sourceField": "sampleRate", "targetName": "sample_rate" }
+        ],
+        "kind": "field-assignment"
+      },
       "sourceName": "AudioBufferOptions",
       "space": "type",
       "targetName": "flight::AudioBufferOptions"
