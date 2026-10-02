@@ -260,3 +260,59 @@ broken, it is **not applicable to this profile** — and the 154-package denomin
 web-only packages that will never ship on an SDL host. Separating "blocked by a defect" from "not
 applicable here" would make the shippable fraction mean something, but which packages are out of scope
 for a profile is a decision for the project, not something to infer from a refusal.
+
+## Two experiments in our own lane, one won and one lost
+
+### Won: external object field contracts for the WGPU profile
+
+`bindings/sdl-wgpu.json` bound 61 types but declared no `objectConstruction` for any of them, so every
+object literal the WGPU surface builds was refused:
+
+```
+external object GPUCopyExternalImageSourceInfo construction requires an exact field contract
+rule: cpp-external-object-field-contract-missing
+```
+
+The binding format carries the contract as `objectConstruction: { kind: 'field-assignment', fields: [
+{ sourceField, targetName } ] }`, where `sourceField` is the TypeScript dictionary key and `targetName`
+the C++ member it assigns. Contracts are now declared for all **37** bound types that resolve to a plain
+`struct … final` in `include/flight/host_sdl/wgpu.hpp`, with the field lists derived from those structs
+rather than hand-written, and the camelCase-to-snake_case mapping applied per field.
+
+The result: the fixture emits, and **the emitted header compiles clean** (`g++ -std=c++20
+-fsyntax-only`), where before the compiler refused outright. That is the capability gain, and it is
+verified rather than assumed.
+
+`npm run sdl-wgpu:oracle` is still red, for a reason worth stating precisely rather than papering over.
+The oracle asserts on emitted text and expects **designated-initializer** construction:
+
+```
+.src_factor = src_factor, .dst_factor = dst_factor, .operation = flight::String("add")
+```
+
+The compiler instead emits default-construct-then-assign inside an immediately-invoked lambda. Both are
+valid C++ and reach the same final field values — but `field-assignment` is the *only* kind the contract
+type admits (`kind: 'field-assignment'` is the whole union), so no `objectConstruction` declaration can
+ever produce designated initializers. The oracle's thirteen designated-initializer expectations describe
+these dictionaries being emitted through the **record** path, which does emit designated initializers,
+not through the external-object path.
+
+That is a modelling question — whether these WGPU dictionaries should be `ownership: value` externals at
+all, or plain records — and it is not resolved by editing the oracle to accept what the compiler
+currently does. The oracle stays red and says what it wants.
+
+### Lost: `Error.stack` is not reachable from the runtime side
+
+`@flighthq/log` blocks nineteen packages on one refusal, `value.stack !== undefined`. Since emitted code
+reads an object property as a plain C++ data member — every `.message` read in the generated tree is a
+member on a record struct, never an accessor call — the hypothesis was that `flight::Error` simply needs
+a readable `stack` member.
+
+A `std::optional<String> stack` member was added and the SDK regenerated. **The refusal is byte-for-byte
+unchanged**, still `a presence test against undefined has no absence channel in the emitted C++ storage
+for property` at `log.ts:568`. The compiler plans the property from the TypeScript declaration and never
+consults what the bound C++ type offers, so no member we add changes the outcome. The probe member was
+removed rather than left in place as decoration, which is what its own comment promised.
+
+`log` is therefore **not** reachable from the runtime side, and the `cause`/`any.hpp` include cycle is
+moot. This is the single highest-leverage blocker in the corpus and it is closed to us.
