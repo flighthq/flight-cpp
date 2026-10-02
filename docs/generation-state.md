@@ -491,3 +491,66 @@ The binding contract would need to carry the carrier type and the slot type sepa
 `immutable` presence record would need to cover a call result consumed directly in a union context — for
 both to work. Until then these ten refusals stay, and the declaration stays spelled for the carrier lane,
 which is the one the conformance oracle exercises.
+
+## `--best-effort` is the right mechanism and is currently unreachable
+
+flight-compiler gained a best-effort mode. Read against this repository's problem it is close to exactly
+what is needed, and `scripts/sdkGeneration.mjs` now accepts `--best-effort` and passes `bestEffort: true`
+through to `compileTypeScriptPackageGraph`, ready for the first revision that can run it.
+
+What the contract offers (`compilerPackageCompilationContract.ts`, schema `flight-compiler-best-effort/1`),
+per module:
+
+| status | meaning |
+|---|---|
+| `emitted` | real output |
+| `dependency-incomplete` | **the module emitted its own real output**; only an inherited refusal keeps it out of a dependency-closed set |
+| `refused-placeholder` | refused for its own reasons; the file at `path` is a replaceable stub |
+
+Two further fields matter more than the statuses for a repository that intends to hand-finish the output:
+
+- `consumers` — every module importing this one. The contract says it directly: "A hand-written
+  replacement has to satisfy these callers."
+- `declarationFingerprints` — present only while a module is a placeholder, and documented as "how an
+  overlay notices that the module it replaces has moved underneath it" between pins.
+
+That is drift detection for hand-written overlays across a pin move, which is the hardest part of the
+freeze-and-patch plan, supplied by the compiler rather than invented here.
+
+### The arithmetic, if it ran
+
+At this pin, 1394 modules do not emit: **599 root refusals and 795 cascade**. The cascade set is precisely
+what `dependency-incomplete` describes, so a best-effort run should turn those 795 into real output and
+leave the 599 as stubs. Emission would go from 1510 of 2904 (52%) to roughly 2305 (79%), and the
+hand-written burden from 1394 whole modules to about 599 stubs that arrive with their consumers and
+fingerprints attached.
+
+### Why it cannot be used yet
+
+The feature post-dates the only revision that generates. `839d91e` contains **zero** occurrences of
+`bestEffort`; it predates the mode entirely. And `d4287b4`, the current tip, **hangs like its three
+predecessors** — terminated at 1500s with no output, the fourth consecutive tip to do so:
+
+| revision | result |
+|---|---|
+| `839d91e` | completes; 5m56s unbound, ~12m profiled. No best-effort. |
+| `ec8da2a` | no completion in 40 minutes, twice |
+| `2ac16f7` | no completion, killed at `real 25m0.026s` |
+| `7de41a3` | no completion, exit 124 at 900s |
+| `d4287b4` | no completion, SIGTERM at 1500s. **Has best-effort.** |
+
+The hang was profiled at `2ac16f7` to `lowerTypeScriptTypeNodeEvidence` recursing into itself
+(`typeScriptSemanticLowering.js:4965`) with no progress output, over a type graph Flight makes mutually
+recursive by design. Whether `d4287b4` hangs in the same place is unconfirmed.
+
+So the single blocking issue for the freeze-and-patch plan is now the generation hang, not the emission
+coverage. Nothing in this repository can raise coverage past 52% while the only usable compiler predates
+the mode that would raise it.
+
+### One experiment worth running next
+
+The hang is observed on the full 2904-module graph. It is not known whether it is unbounded recursion or
+merely superlinear, and the discriminator is cheap in principle: run `d4287b4` over a single small package
+plus its closure instead of the whole SDK. If a small graph completes, the mode is usable package by
+package today — which is the granularity this repository wants anyway — and the hang becomes a scaling
+problem rather than a wall. `sdkGeneration.mjs` has no package filter, so this needs one.

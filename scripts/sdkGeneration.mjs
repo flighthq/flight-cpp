@@ -36,6 +36,12 @@ import {
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const options = process.argv.slice(2);
 const check = options.includes('--check');
+// Best-effort generation asks the compiler to emit everything it can, writing a replaceable stub where a
+// module is refused for its OWN reasons and real output where a module was only held back by an inherited
+// refusal. The compiler's report then names, per module, whether the file on disk is output or a
+// placeholder, which consumers a hand-written replacement must satisfy, and the declaration fingerprints
+// an overlay watches to notice the module moving underneath it between pins.
+const bestEffort = options.includes('--best-effort');
 const bindingProfileOptions = options
   .filter((option) => option.startsWith('--binding-profile='))
   .map((option) => option.slice('--binding-profile='.length));
@@ -43,6 +49,7 @@ const outputOption = options.find((option) => option.startsWith('--output='));
 const unknown = options.filter(
   (option) =>
     option !== '--check' &&
+    option !== '--best-effort' &&
     !option.startsWith('--binding-profile=') &&
     !option.startsWith('--output='),
 );
@@ -164,6 +171,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   );
   const compilation = compileTypeScriptPackageGraph({
     backend: createCppCompilerBackend(),
+    ...(bestEffort ? { bestEffort: true } : {}),
     backendOptions: {
       ...(profiles.length > 0
         ? {
