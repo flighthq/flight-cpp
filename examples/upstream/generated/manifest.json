@@ -8,7 +8,7 @@
   },
   "bindingProfiles": [
     {
-      "digest": "sha256:d19461e0eb6fc82d6866397ca5fba7ae6b8b68f2850c31a973d88a8f589d7649",
+      "digest": "sha256:23d8b54c0e33ad10d6cfb7004620f66ff4d0f68062dcc132fcca8fb7d4eabbf8",
       "identity": "flighthq/flight-cpp/runtime-carriers/1",
       "path": "bindings/runtime.json",
       "profile": "runtime-carriers",
