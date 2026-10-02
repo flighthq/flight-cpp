@@ -189,6 +189,12 @@ inline void append_json_indent(std::string& output, std::size_t depth, std::size
 template <typename Value>
 void append_json_value(std::string& output, const Value& value, std::size_t indentation, std::size_t depth);
 
+template <typename Owner>
+void append_json_row(std::string& output, const Owner& owner, std::size_t indentation, std::size_t depth);
+
+template <typename Erased>
+void append_json_erased(std::string& output, const Erased& value, std::size_t indentation, std::size_t depth);
+
 template <typename Range>
 void append_json_array(std::string& output, const Range& values, std::size_t indentation, std::size_t depth) {
   output.push_back('[');
@@ -276,8 +282,84 @@ void append_json_value(std::string& output, const Value& value, std::size_t inde
   } else if constexpr (requires { typename Type::element_type; value.get(); }) {
     if (value) append_json_value(output, *value, indentation, depth);
     else output.append("null");
+  } else if constexpr (requires { value.shared_owner(); }) {
+    append_json_row(output, value.shared_owner(), indentation, depth);
+  } else if constexpr (requires {
+                         value.kind();
+                         value.is_undefined();
+                         value.as_number();
+                         value.as_string();
+                         value.as_boolean();
+                       }) {
+    append_json_erased(output, value, indentation, depth);
   } else {
     output.append("{}");
+  }
+}
+
+// A structural row, serialized from its owner's own enumerable string keys in source declaration order,
+// which is the order JavaScript would enumerate them in.
+//
+// Two properties are OMITTED rather than written, matching `JSON.stringify` on an object: one whose
+// value is `undefined`, and one whose cell has no erased representation at all. The second is almost
+// always a function-valued member, and JavaScript omits those too, so the agreement is real rather than
+// convenient. `named_cell(...)->as_any()` returning nothing is how the runtime says "not representable",
+// and taking it as "omit" is what keeps this from throwing out of a cache-key computation.
+//
+// Reached by duck typing on `shared_owner()` so this header stays free of a dependency on
+// structural_ref.hpp: the branch only instantiates for a caller that already has the type.
+template <typename Owner>
+void append_json_row(std::string& output, const Owner& owner, std::size_t indentation, std::size_t depth) {
+  if (!owner) {
+    output.append("null");
+    return;
+  }
+  output.push_back('{');
+  bool first = true;
+  for (const auto& key : owner->named_keys()) {
+    const auto cell = owner->named_cell(key);
+    if (!cell) continue;
+    auto held = cell->as_any();
+    if (!held || held->is_undefined()) continue;
+    if (!first) output.push_back(',');
+    if (indentation > 0) {
+      output.push_back('\n');
+      append_json_indent(output, depth + 1, indentation);
+    }
+    append_json_string(output, String::from_utf8(key));
+    output.push_back(':');
+    if (indentation > 0) output.push_back(' ');
+    append_json_value(output, *held, indentation, depth + 1);
+    first = false;
+  }
+  if (!first && indentation > 0) {
+    output.push_back('\n');
+    append_json_indent(output, depth, indentation);
+  }
+  output.push_back('}');
+}
+
+// An erased dynamic value, dispatched on the kind tag it carries rather than on its C++ type.
+//
+// `symbol`, `function` and `external` become `null`. JavaScript omits a function-valued PROPERTY, which
+// append_json_row does, but a function reached any other way stringifies as null, and these three have
+// no JSON form of their own. An `object` has one, and this does not yet produce it: the erased row owner
+// an Any carries is a `shared_ptr<void>`, so its keys cannot be read back without the concrete type.
+// That case keeps the long-standing `{}` rather than inventing something.
+template <typename Erased>
+void append_json_erased(std::string& output, const Erased& value, std::size_t indentation, std::size_t depth) {
+  switch (value.kind()) {
+    case std::remove_cvref_t<decltype(value.kind())>::boolean:
+      append_json_value(output, value.as_boolean(), indentation, depth);
+      return;
+    case std::remove_cvref_t<decltype(value.kind())>::number:
+      append_json_value(output, value.as_number(), indentation, depth);
+      return;
+    case std::remove_cvref_t<decltype(value.kind())>::string:
+      append_json_string(output, value.as_string());
+      return;
+    case std::remove_cvref_t<decltype(value.kind())>::object: output.append("{}"); return;
+    default: output.append("null"); return;
   }
 }
 
@@ -485,13 +567,35 @@ class Json {
   }
 
   template <typename Value, typename Replacer>
-  [[nodiscard]] static String stringify(const Value& value, Replacer, double space = 0.0) {
-    const auto indentation = !std::isfinite(space) || space <= 0.0
-                                 ? std::size_t{0}
-                                 : std::min<std::size_t>(10, static_cast<std::size_t>(space));
+  [[nodiscard]] static String stringify(const Value& value, Replacer replacer) {
+    return stringify(value, replacer, 0.0);
+  }
+
+  // `space` is absent, a number, or an optional number. `JSON.stringify(value, replacer, undefined)`
+  // indents by nothing, and emitted code writes that third argument as `std::nullopt`, so a signature
+  // demanding `double` rejects a call the source was entitled to make.
+  template <typename Value, typename Replacer, typename Space>
+  [[nodiscard]] static String stringify(const Value& value, Replacer, const Space& space) {
     std::string output;
-    detail::append_json_value(output, value, indentation, 0);
+    detail::append_json_value(output, value, json_indentation(space), 0);
     return String::from_utf8(output);
+  }
+
+ private:
+  template <typename Space>
+  [[nodiscard]] static std::size_t json_indentation(const Space& space) {
+    using Type = std::remove_cvref_t<Space>;
+    if constexpr (std::same_as<Type, std::nullopt_t> || std::same_as<Type, std::nullptr_t> ||
+                  std::same_as<Type, Undefined> || std::same_as<Type, Null>) {
+      return 0;
+    } else if constexpr (requires { space.has_value(); *space; }) {
+      return space.has_value() ? json_indentation(*space) : std::size_t{0};
+    } else {
+      const auto width = static_cast<double>(space);
+      return !std::isfinite(width) || width <= 0.0
+                 ? std::size_t{0}
+                 : std::min<std::size_t>(10, static_cast<std::size_t>(width));
+    }
   }
 };
 

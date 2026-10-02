@@ -3,6 +3,7 @@
 // alone, so `generated_row_member_t` is void there and no named member resolves.
 #include <flight/runtime.hpp>
 
+#include <flight/json.hpp>
 #include <flight/types/ambient_light.hpp>
 #include <flight/types/ambient_light_options.hpp>
 
@@ -694,6 +695,46 @@ int main() {
   check(!flight::named_properties(flight::Any(42.0)),
         "a primitive Any has no own string keys and reports an empty view rather than throwing");
   check(!flight::named_properties(flight::Any()), "and so does undefined");
+
+  // JSON.stringify over a structural row. Emitted code reaches this through colorLutRunSignature,
+  // which builds a CACHE KEY from `JSON.stringify(run)`. Before the row branch existed every row
+  // serialized as `{}` through append_json_value's fallback, so two different runs produced the same
+  // signature and the cache returned the wrong baked LUT. That makes this a correctness property, not
+  // a formatting one, which is why distinct rows are asserted to give distinct text.
+  auto json_light = flight::make_ref<flight::types::AmbientLight>();
+  json_light->kind = flight::String("ambient");
+  json_light->color = 255.0;
+  json_light->enabled = true;
+  json_light->intensity = 0.5;
+  using AmbientRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>;
+  const auto light_json = flight::Json::stringify(AmbientRow(json_light));
+  check(light_json != flight::String("{}"), "a structural row serializes its members rather than an empty object");
+  check(light_json.index_of(flight::String("\"kind\":\"ambient\"")) >= 0,
+        "and names each own enumerable string key with its value");
+  check(light_json.index_of(flight::String("entityRuntimeKey")) < 0,
+        "while the entity runtime slot stays out, being a symbol property rather than a string key");
+
+  // `JSON.stringify(value, replacer, space)` with an absent space indents by nothing, and emitted code
+  // writes that third argument as std::nullopt.
+  check(flight::Json::stringify(AmbientRow(json_light), std::nullopt, std::nullopt) == light_json,
+        "an absent space argument means no indentation, the same as omitting it");
+  check(flight::Json::stringify(AmbientRow(json_light), std::nullopt, 2.0) != light_json,
+        "and a numeric space does indent");
+
+  auto other_light = flight::make_ref<flight::types::AmbientLight>();
+  other_light->kind = flight::String("ambient");
+  other_light->color = 128.0;
+  other_light->enabled = true;
+  other_light->intensity = 0.5;
+  check(flight::Json::stringify(AmbientRow(other_light)) != light_json,
+        "two rows differing in one member serialize differently, so a signature built from this cannot collide");
+
+  const flight::Array<AmbientRow> run{AmbientRow(json_light), AmbientRow(other_light)};
+  const flight::Array<AmbientRow> reversed{AmbientRow(other_light), AmbientRow(json_light)};
+  const auto run_json = flight::Json::stringify(run, std::nullopt, std::nullopt);
+  check(run_json.index_of(flight::String("[{")) == 0, "a sequence of rows serializes as an array of objects");
+  check(run_json != flight::Json::stringify(reversed, std::nullopt, std::nullopt),
+        "and order is preserved, so a reordered run is a different signature");
 
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
   return failures == 0 ? 0 : 1;
