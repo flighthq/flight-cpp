@@ -398,3 +398,47 @@ denominator as debt.
 **28 of 150 applicable packages are shippable**, with 4 of 154 not applicable. The `refusedDeferrals`
 check was run over all 1511 emitted headers and reports zero: no required header includes any deferred
 package, so nothing is being hidden by this.
+
+## WeakMap: the weak-key policy is only consulted for ambient types
+
+26 root refusals are WeakMap-related — 20 on the key, 6 on the value — and the key half concentrates
+hard. Counting key types across the refused modules:
+
+```
+16  GlContext            2  CollisionTriangleMesh3D   1  GlRenderState
+ 4  Node2D               2  GlLitProgram              1  Physics3DWorld
+ 2  CollisionHeightfield3D   2  TextureAtlas          1  GlFullscreenProgram  …
+```
+
+`GlContext` is the dominant one, and it looked like a one-line binding fix. `flight::host_sdl::WebGl2Context`
+already has a declared `weakKeyPolicyTargetName` (`WebGl2ContextWeakPolicy`), the profiled tree emits
+`using GlContext = flight::host_sdl::WebGl2Context;`, and the policy is looked up by source name — so
+adding a `GlContext` type binding carrying the same policy should have closed sixteen refusals.
+
+**It changed nothing.** Emitted modules, root refusals and WeakMap key refusals were identical to three
+figures before and after (1510 / 599 / 20), and the `GlContext` alias still emits with the entry removed,
+so nothing depended on it. The entry was deleted rather than carried.
+
+The reason is `getWeakMapKeyRepresentationCpp` at `cppCompilerBackend.ts:8526`. The external weak-key
+policy is consulted on exactly one branch:
+
+```ts
+if (type.kind === 'named' && type.reference.kind === 'ambient' && type.typeArguments.length === 0) {
+  const weakKeyPolicyTargetName = getCompilerExternalBindingWeakKeyPolicyTargetCpp(…);
+```
+
+`reference.kind === 'ambient'` is the gate. `GlContext` is declared in Flight's own source —
+`export interface GlContext extends Pick<WebGL2RenderingContext, GlContextMember> {}` — so its reference
+kind is `binding`, not `ambient`, and the policy branch is never reached however the binding is written.
+The fallbacks do not rescue it either: the representation plan does not report `flightReference` for a
+type a binding maps to an external shared value, and `resolveAlias` returns nothing because an interface
+is not an alias.
+
+So a Flight-owned interface that a binding maps to an external C++ type with a declared weak-key policy
+**cannot be a WeakMap key**, and no binding we write changes that. The remaining key types are Flight's
+own generated types, where `Node2D` is a structural row — a row view has no stable referent identity to
+weaken — and the 6 value-side refusals are a separate gap: `WeakMap<AppLifecycle, Record<string, unknown>>`
+needs an erased record as a weak value.
+
+This matters more than its count, because the project's position is that the SDK will always contain
+WeakMaps. The whole family is closed to the binding lane.
