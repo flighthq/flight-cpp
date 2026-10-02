@@ -442,3 +442,52 @@ needs an erased record as a weak value.
 
 This matters more than its count, because the project's position is that the SDK will always contain
 WeakMaps. The whole family is closed to the binding lane.
+
+## `callResultType` is overloaded between two emission lanes that want different values
+
+Ten root refusals read `external call result type <T> is not one represented contextual runtime domain`
+— eight of them `std::optional<flight::host_sdl::WebGlUniformLocation>` in `@flighthq/scene3d-gl`, two
+`flight::host::TimerHandle` in `@flighthq/gui`.
+
+`cppCompilerBackend.ts:11703` shows why. An external call result reaching a nullable context takes one
+of two paths:
+
+```ts
+if (externalPresence?.immutable && plan.kind === 'optionalSingle' && absentMembers.length === 1 && …) {
+  // "callResultType already names the complete carrier" -- emit the call directly
+  return emitExpression(expression, context, undefined, false);
+}
+const targetSlots = plan.valueSlots.filter((slot) => slot.targetType === externalValueTarget);
+if (targetSlots.length !== 1 && !unresolvedTargetSlot) { emissionError(…); }
+```
+
+`externalPresence.immutable` is only recorded for a call result bound to a non-mutable **variable**. The
+`scene3d-gl` sites bind nothing — `gl.getUniformLocation(program, 'u_alphaCutoff')` flows straight into
+an object-literal field — so there is no presence record, the carrier path is skipped, and the fallback
+compares the declared `callResultType` against the union's value **slot** target.
+
+Those two paths want different spellings of the same field:
+
+| where the result goes | path | wants `callResultType` |
+|---|---|---|
+| `const loc = gl.getUniformLocation(…)` | carrier | `std::optional<WebGlUniformLocation>` |
+| `{ locAlphaCutoff: gl.getUniformLocation(…) }` | slot | `WebGlUniformLocation` |
+
+Measured, not reasoned: changing that one member to the present type took external-call-result refusals
+from **10 to 2** and root refusals from 599 to 592 — and **regressed `sdl-gl:oracle` from one error to
+two**, with the oracle's own `const`-bound site now failing
+
+```
+conversion from 'std::optional<WebGlHandle<WebGlUniformLocationTag>>' to non-scalar type
+'flight::host_sdl::WebGlUniformLocation' requested
+```
+
+So one declaration cannot satisfy both lanes, and the change was **reverted**. Seven root refusals in a
+package sitting at 3/68 are not worth regressing a semantic conformance gate, and trading a gate for a
+refusal count in our own favour is exactly the move this repository should not make. The oracle is back
+at one error.
+
+The binding contract would need to carry the carrier type and the slot type separately — or the
+`immutable` presence record would need to cover a call result consumed directly in a union context — for
+both to work. Until then these ten refusals stay, and the declaration stays spelled for the carrier lane,
+which is the one the conformance oracle exercises.
