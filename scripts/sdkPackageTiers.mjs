@@ -19,7 +19,13 @@ import { loadDeferredPackages } from './deferredPackages.mjs';
 //   uncompiled  every module emitted, but no header of it was actually compiled
 //   partial     some modules emitted, some refused, or a header fails to compile
 //   blocked     nothing emitted
-//   deferred    declared in deferred-packages.json; reported, never counted against the build
+//   deferred    declared a DEFECT in deferred-packages.json; reported, never fails the build, and still
+//               counted in the denominator because it is work this profile owes
+//   n/a         declared NOT-APPLICABLE: the profile cannot provide the capability the package exists to
+//               implement, so it is excluded from the denominator entirely
+//
+// The denominator matters. Counting a Canvas 2D renderer as outstanding work on a host with no canvas
+// makes the shippable fraction permanently unreachable and tells the reader nothing.
 //
 // `uncompiled` exists because "we did not check" is not "it works", and an interrupted or partial
 // header sweep would otherwise promote a package that has never been compiled at all. It is also not
@@ -82,10 +88,13 @@ const tiers = manifest.packages.map((package_) => {
   const failures = headers.filter((header) => failedPrefixes.has(header));
   const repairs = [...new Set([...repairedByPrefix].filter(([file]) => file.startsWith(prefix)).map(([, id]) => id))];
   const patches = patchedPackages.get(package_.package) ?? [];
-  const isDeferred = deferred.some((entry) => entry.package === package_.package);
+  const deferral = deferred.find((entry) => entry.package === package_.package);
+  const isDeferred = deferral !== undefined;
   const complete = package_.emittedModules === package_.sourceModules && package_.refusedModules === 0;
   const tier = isDeferred
-    ? 'deferred'
+    ? deferral.kind === 'not-applicable'
+      ? 'n/a'
+      : 'deferred'
     : package_.emittedModules === 0
       ? 'blocked'
       : !complete || failures.length > 0
@@ -107,9 +116,10 @@ const tiers = manifest.packages.map((package_) => {
   };
 });
 
-const order = ['ready', 'assisted', 'uncompiled', 'partial', 'blocked', 'deferred'];
+const order = ['ready', 'assisted', 'uncompiled', 'partial', 'blocked', 'deferred', 'n/a'];
 const counts = Object.fromEntries(order.map((tier) => [tier, tiers.filter((row) => row.tier === tier).length]));
 const shippable = counts.ready + counts.assisted;
+const applicable = tiers.length - counts['n/a'];
 
 mkdirSync(path.dirname(reportFile), { recursive: true });
 writeFileSync(
@@ -118,6 +128,7 @@ writeFileSync(
     {
       schema: 'flight-cpp-sdk-package-tiers/1',
       compilation: compilation === undefined ? 'absent' : path.relative(root, compilationFile),
+      applicable,
       counts,
       generated: path.relative(root, generatedRoot),
       packages: tiers.sort((left, right) => order.indexOf(left.tier) - order.indexOf(right.tier) || left.package.localeCompare(right.package)),
@@ -130,10 +141,12 @@ writeFileSync(
 );
 
 process.stdout.write(
-  `${String(shippable)} of ${String(tiers.length)} SDK packages are shippable ` +
+  `${String(shippable)} of ${String(applicable)} applicable SDK packages are shippable ` +
     `(${String(counts.ready)} ready, ${String(counts.assisted)} assisted); ` +
     `${String(counts.uncompiled)} emitted but never compiled, ${String(counts.partial)} partial, ` +
-    `${String(counts.blocked)} blocked, ${String(counts.deferred)} deferred.\n`,
+    `${String(counts.blocked)} blocked, ${String(counts.deferred)} deferred. ` +
+    `${String(counts['n/a'])} of ${String(tiers.length)} package(s) are not applicable to this profile and ` +
+    'are excluded from that count.\n',
 );
 if (compilation === undefined) {
   process.stdout.write(
@@ -161,9 +174,17 @@ for (const tier of ['ready', 'assisted']) {
 }
 const deferredRows = tiers.filter((row) => row.tier === 'deferred');
 if (deferredRows.length > 0) {
-  process.stdout.write('\ndeferred (declared, not counted against the build):\n');
+  process.stdout.write('\ndeferred defects (still owed by this profile, do not fail the build):\n');
   for (const row of deferredRows) {
     process.stdout.write(`- ${row.package}: ${String(row.failingHeaders.length)} failing header(s)\n`);
+  }
+}
+const notApplicableRows = tiers.filter((row) => row.tier === 'n/a');
+if (notApplicableRows.length > 0) {
+  process.stdout.write('\nnot applicable to this profile (excluded from the denominator):\n');
+  for (const row of notApplicableRows) {
+    const entry = deferred.find((candidate) => candidate.package === row.package);
+    process.stdout.write(`- ${row.package}: ${entry?.owner ?? ''}\n`);
   }
 }
 process.stdout.write(`\nReport: ${portable(path.relative(root, reportFile))}\n`);

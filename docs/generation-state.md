@@ -354,3 +354,36 @@ whether a key was dropped. Insert into the existing line instead and the same ch
 both the top-level key set and the binding count after any programmatic edit — a previous incident in
 this repository silently deleted `identity` and `profile` from a profile, and a formatting-only
 comparison could not see it.
+
+## Profile applicability: four packages are not work this host owes
+
+The 154-package denominator counted packages that can never ship on an SDL host, which made the
+shippable fraction unreachable by construction. Four are now declared `kind: "not-applicable"` in
+`deferred-packages.json` and excluded from it:
+
+| package | its own description |
+|---|---|
+| `@flighthq/scene2d-canvas` | Canvas 2D renderer implementation |
+| `@flighthq/scene2d-dom` | DOM renderer implementation |
+| `@flighthq/effects-canvas` | Canvas 2D recipes for render effects |
+| `@flighthq/textshaper-canvas` | Canvas 2D text-shaper backend: advances-only shaping via measureText |
+
+Each reaches for `document.createElement`, `HTMLCanvasElement` and `CanvasRenderingContext2D` directly,
+and for each the profile already uses a different sibling backend: `scene2d-gl` / `scene2d-wgpu`,
+`effects-gl` / `effects-wgpu`, and `textshaper`. There is nothing on an SDL host for these to bind to.
+
+The set was chosen on evidence, not on names, and the two directions of error are both real:
+
+- `@flighthq/webcam` matches a name filter for web packages and is **already shippable**. Deferring by
+  name would have parked working code.
+- `@flighthq/render-wgpu` has web-only symbols in its refusals (`HTMLImageElement[value]`,
+  `ImageBitmap[value]`) but is the WGPU renderer this profile wants; those refusals are about
+  `copyExternalImageToTexture` sources, which on SDL come from `ImageSource`. Deferring on the presence
+  of a web symbol would have parked a renderer we need.
+
+`@flighthq/statusbar` keeps `kind: "defect"`: it should work here and does not, so it stays in the
+denominator as debt.
+
+**28 of 150 applicable packages are shippable**, with 4 of 154 not applicable. The `refusedDeferrals`
+check was run over all 1511 emitted headers and reports zero: no required header includes any deferred
+package, so nothing is being hidden by this.

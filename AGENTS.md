@@ -51,6 +51,16 @@ no behavior — a forward declaration — and `sdk:check` fails when a repair ma
 headers are still emitted, still compiled and always reported, and a deferral is refused when a
 non-deferred header still includes the deferred package.
 
+Each deferral declares a `kind`, because "we owe this" and "this cannot apply here" are different claims
+and only one of them is debt. A `defect` is a package that should work on this profile and does not; it
+stays in the shippable denominator. A `not-applicable` package is one whose whole purpose is a capability
+the profile cannot provide -- a Canvas 2D renderer on a host with no canvas -- and it is excluded from the
+denominator, because counting it as outstanding work makes the fraction permanently unreachable and tells
+a reader nothing. Not-applicable is a claim about the host, so it needs evidence about the package's
+purpose rather than a guess from its name: `@flighthq/webcam` sounds web-only and is in fact shippable,
+while the four deferred as not-applicable each describe themselves as a Canvas 2D or DOM backend and
+reach for `document.createElement` directly.
+
 None of the three may change absence, reference identity, equality, ordering, exception shape, or task
 settlement. Those are the semantics this runtime exists to preserve, and a workaround that alters one is
 a claim our own tests would then certify as true. A gap of that kind is a runtime capability to build or

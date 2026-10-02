@@ -11,6 +11,15 @@ import path from 'node:path';
 // anyway, and deferring it would only move the failure somewhere harder to read.
 
 const SCHEMA = 'flight-cpp-deferred-packages/1';
+// Why a package is deferred, which is a different question from whether it compiles.
+//
+//   not-applicable  the profile cannot provide the capability the package exists to implement, so the
+//                   package is not broken and does not belong in the shippable denominator
+//   defect          the package should work on this profile and does not; it stays in the denominator
+//
+// Keeping these apart is what makes the shippable fraction mean something. A Canvas 2D renderer counted
+// as "blocked" on a host with no canvas reads as outstanding work forever.
+const KINDS = new Set(['not-applicable', 'defect']);
 
 export function loadDeferredPackages(root) {
   const file = path.join(root, 'deferred-packages.json');
@@ -28,10 +37,13 @@ export function loadDeferredPackages(root) {
     throw new Error(`Deferred package declaration ${portable(file)} has no deferred array`);
   }
   for (const entry of parsed.deferred) {
-    for (const field of ['package', 'includePrefix', 'reason', 'evidence', 'owner', 'unblockedBy', 'deferredOn']) {
+    for (const field of ['package', 'includePrefix', 'kind', 'reason', 'evidence', 'owner', 'unblockedBy', 'deferredOn']) {
       if (typeof entry[field] !== 'string' || entry[field].length === 0) {
         throw new Error(`Deferred package ${entry.package ?? '<unnamed>'} is missing required field ${field}`);
       }
+    }
+    if (!KINDS.has(entry.kind)) {
+      throw new Error(`Deferred package ${entry.package} has unknown kind ${entry.kind}`);
     }
   }
   return parsed.deferred;
