@@ -16,7 +16,12 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolveDependency } from './dependencyLock.mjs';
-import { applyEmissionRepairs, loadEmissionRepairs, obsoleteRepairs } from './emissionRepairs.mjs';
+import {
+  aliasDuplicateStructuralStructs,
+  applyEmissionRepairs,
+  loadEmissionRepairs,
+  obsoleteRepairs,
+} from './emissionRepairs.mjs';
 import {
   applySourcePatches,
   ineffectivePatches,
@@ -182,6 +187,9 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   // and there is no second tree to keep in step. See scripts/emissionRepairs.mjs for the expiry rule.
   const repairs = loadEmissionRepairs(root);
   const appliedRepairs = applyEmissionRepairs(repairs, compilation.compilation.files);
+  // Needs the whole file set rather than one file at a time, because it has to find the canonical
+  // definition before it can alias a duplicate to it.
+  const aliasedStructs = aliasDuplicateStructuralStructs(compilation.compilation.files);
   for (const file of compilation.compilation.files) {
     const target = path.join(outputRoot, 'include', file.path);
     mkdirSync(path.dirname(target), { recursive: true });
@@ -246,6 +254,10 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       id: record.id,
     })),
     sourcePatches: appliedPatches,
+    duplicateStructuralStructAliases: {
+      files: aliasedStructs.files,
+      structs: aliasedStructs.structs,
+    },
     packages: packageResults,
     source: {
       package: String(sdkPackage.name),
@@ -282,7 +294,9 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
     ),
     obsoleteRepairs: obsoleteRepairs(appliedRepairs, profiles),
     patchedModules: appliedPatches.length,
-    repairedFiles: appliedRepairs.reduce((total, record) => total + record.files.length, 0),
+    aliasedStructs: aliasedStructs.structs.length,
+    repairedFiles:
+      appliedRepairs.reduce((total, record) => total + record.files.length, 0) + aliasedStructs.files.length,
   };
 }
 
@@ -654,7 +668,9 @@ function summary(prefix, result) {
   const patched = result.patchedModules > 0 ? `; ${String(result.patchedModules)} source patch(es) applied` : '';
   const repaired =
     result.repairedFiles > 0 ? `; ${String(result.repairedFiles)} header(s) repaired after emission` : '';
-  return `${prefix}: ${String(result.emittedModules)}/${String(result.sourceModules)} modules emitted across ${String(result.packages)} packages; ${String(result.refusedModules)} refusals recorded${patched}${repaired}.\n`;
+  const aliased =
+    result.aliasedStructs > 0 ? `; ${String(result.aliasedStructs)} duplicated structural struct(s) aliased` : '';
+  return `${prefix}: ${String(result.emittedModules)}/${String(result.sourceModules)} modules emitted across ${String(result.packages)} packages; ${String(result.refusedModules)} refusals recorded${patched}${repaired}${aliased}.\n`;
 }
 
 // A repair that no longer matches any emitted header has outlived the emitter defect it answers.

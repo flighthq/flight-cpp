@@ -34,6 +34,22 @@
       "unblocks": "@flighthq/timeline's three headers compile. With this and statusbar deferred, every non-deferred fully-emitting package compiles together in one translation unit.",
       "expires": "when the emitter adapts a narrower function to a wider std::function target, or Flight declares the parameters itself.",
       "appliedOn": "2026-10-01"
+    },
+    {
+      "id": "screen-copy-screen-info-explicit-fields",
+      "dependency": "flight",
+      "patch": "screen-copy-screen-info-explicit-fields.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/screen/src/screen.ts",
+      "package": "@flighthq/screen",
+      "answers": "refusal",
+      "refusal": "Object.assign requires one closed callable-object target and an exact compatible object literal source",
+      "rewrite": "copyScreenInfo assigns ScreenInfo's 25 declared fields one by one instead of calling Object.assign with a computed source.",
+      "equivalence": "Object.assign copies own enumerable STRING keys, and for a Flight entity those are exactly the fields the interface declares -- ScreenInfo declares 25. The entity runtime lives under a symbol key, which Object.assign would not copy and which stripEntityRuntime deletes anyway, so neither path moves it. The explicit writes therefore produce the identical destination state, and they drop the intermediate object stripEntityRuntime allocated. stripEntityRuntime becomes unused in this module and its import is removed with it.",
+      "whyNotUpstreamFirst": "The emitter supports Object.assign only with a closed callable-object target and an object LITERAL source; here the source is a call result, so there is no literal to check against. Enumerating the fields removes the construct rather than asking the emitter to grow a case for it.",
+      "unblocks": "@flighthq/screen's single root refusal. Its other two refusals are pure cascade on this module, so the package should reach 3/3.",
+      "expires": "when the emitter accepts a non-literal Object.assign source. NOTE: this patch hard-codes ScreenInfo's field list, so a pin move that adds a field must re-derive it -- baseCommit forces that review.",
+      "appliedOn": "2026-10-02"
     }
   ]
 }

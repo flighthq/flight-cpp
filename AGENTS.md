@@ -58,3 +58,23 @@ a compiler request to file, never a patch.
 
 Prefer the fixes that leave no debt, in this order: extend the runtime so emitted code compiles; declare
 the external binding the compiler was missing; then, only for what neither can reach, patch or defer.
+
+### The duplicate structural struct alias
+
+One emission repair is derived rather than declared, because the thing it fixes is visible only in the
+emitted tree as a whole. An anonymous object shape -- `{ x: number; y: number }` -- is emitted as a
+struct named by its members and a structural hash, once per package that mentions it, each behind its
+own include guard. `x_y_8365950bd60f783f` is defined five times at the current pin (collision, mesh,
+screen, shape, types) with byte-identical bodies, and C++ makes those five unrelated types, so a value
+one package produces does not convert where another consumes it.
+
+The repair keeps the `flight::types` definition and turns every other copy into a type alias to it,
+hoisting the canonical header's include to file scope. Two constraints make it safe, and both are
+checked rather than assumed: the bodies must be **byte-identical**, not merely hash-alike, and
+`flight::types` is the only canonical home, because every package already depends on it. An alias
+introduces no operation and no storage, so it stays within the rule that a repair may only add text
+with no behavior of its own.
+
+It needs no declaration and no expiry entry: it is computed from the tree, so when the emitter stops
+duplicating these it finds nothing and changes nothing. What it did is recorded in
+`manifest.duplicateStructuralStructAliases`.

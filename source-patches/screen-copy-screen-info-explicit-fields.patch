@@ -1,0 +1,47 @@
+diff --git a/packages/screen/src/screen.ts b/packages/screen/src/screen.ts
+index 0b77bf055..0921aabb4 100644
+--- a/packages/screen/src/screen.ts
++++ b/packages/screen/src/screen.ts
+@@ -1,4 +1,4 @@
+-import { allocateEntity, finishEntity, stripEntityRuntime } from '@flighthq/entity/contract';
++import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+ import { clearSignal, createSignal, emitSignal } from '@flighthq/signals/contract';
+ import type {
+   EntityConstruction,
+@@ -339,7 +339,35 @@ const _scratchPoint = { x: 0, y: 0 };
+ const _scratchScreens: ScreenInfo[] = [];
+ 
+ function copyScreenInfo(src: Readonly<ScreenInfo>, dst: ScreenInfo): void {
+-  Object.assign(dst, stripEntityRuntime(src));
++  // Field-by-field rather than Object.assign(dst, stripEntityRuntime(src)): the two agree exactly,
++  // because Object.assign copies own enumerable string keys and those are precisely ScreenInfo's
++  // declared fields, while the entity runtime lives under a symbol key that neither path copies.
++  // Writing them out also drops the intermediate copy stripEntityRuntime allocates.
++  dst.id = src.id;
++  dst.x = src.x;
++  dst.y = src.y;
++  dst.width = src.width;
++  dst.height = src.height;
++  dst.workWidth = src.workWidth;
++  dst.workHeight = src.workHeight;
++  dst.scaleFactor = src.scaleFactor;
++  dst.isPrimary = src.isPrimary;
++  dst.rotation = src.rotation;
++  dst.orientation = src.orientation;
++  dst.refreshRate = src.refreshRate;
++  dst.colorDepth = src.colorDepth;
++  dst.pixelDepth = src.pixelDepth;
++  dst.physicalWidth = src.physicalWidth;
++  dst.physicalHeight = src.physicalHeight;
++  dst.isHdr = src.isHdr;
++  dst.colorSpace = src.colorSpace;
++  dst.maxLuminance = src.maxLuminance;
++  dst.depthPerComponent = src.depthPerComponent;
++  dst.dpi = src.dpi;
++  dst.label = src.label;
++  dst.internal = src.internal;
++  dst.touchSupport = src.touchSupport;
++  dst.monochrome = src.monochrome;
+ }
+ 
+ function fillDefaultScreenInfo(out: ScreenInfo): ScreenInfo {

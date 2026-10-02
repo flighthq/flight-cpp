@@ -103,3 +103,110 @@ export function obsoleteRepairs(applied, profiles) {
 function portable(filename) {
   return filename.split(path.sep).join('/');
 }
+
+// ---------------------------------------------------------------------------------------------------
+// The duplicate structural struct repair.
+//
+// An anonymous object shape in the source -- `{ x: number; y: number }` -- is emitted as a struct named
+// by its members and a structural hash, and it is emitted ONCE PER PACKAGE that mentions it, each behind
+// its own include guard. `x_y_8365950bd60f783f` is defined five times at the current pin, under
+// flight::collision, flight::mesh, flight::screen, flight::shape and flight::types, with byte-identical
+// bodies. C++ makes those five unrelated types, so a value produced by one package and consumed by
+// another does not convert, and the emitted header does not compile:
+//
+//   no match for call to '(const std::function<shared_ptr<flight::types::x_y_8365950bd60f783f>(…)>)
+//                        (flight::Ref<flight::screen::x_y_8365950bd60f783f>&)'
+//
+// This repair makes the duplicates name one type: the definition in flight::types is kept and each
+// other package's copy becomes an alias to it. An alias introduces no operation and no storage -- it
+// makes two spellings denote the same type -- so it stays inside the rule that a repair may only add
+// text with no behavior of its own.
+//
+// The precondition is strict and checked, not assumed: the bodies must be BYTE-IDENTICAL. Two shapes
+// that merely hash alike would be a different claim entirely, and this repair does not make it.
+//
+// Only `flight::types` is used as the canonical home, because it is the package every other one already
+// depends on; aliasing toward any other package could introduce an include it does not have.
+
+const STRUCT_DEFINITION = /^(#ifndef (FLIGHT_COMPILER_ANONYMOUS__[A-Z0-9_]+)\n#define \2\n)(struct ([a-z0-9_]+_[0-9a-f]{16}) : public flight::ReferenceEnabled \{\n(?:[^}]*?)\n\};\n)(#endif \/\/ \2\n)/gmu;
+
+// Indexes every anonymous structural struct definition by name, recording the body text per package.
+function indexStructuralDefinitions(files) {
+  const index = new Map();
+  for (const file of files) {
+    const package_ = packageOf(file.path);
+    if (package_ === undefined) continue;
+    const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
+    for (const match of contents.matchAll(STRUCT_DEFINITION)) {
+      const [, , , body, name] = match;
+      if (!index.has(name)) index.set(name, new Map());
+      // The defining file is recorded too: an alias is only usable if the header that defines the
+      // canonical struct is included, and only this index knows which header that is.
+      index.get(name).set(package_, { body, path: file.path });
+    }
+  }
+  return index;
+}
+
+// Rewrites each non-canonical copy of a duplicated struct into an alias to the flight::types one.
+// Returns the files touched, for the manifest and for the expiry report.
+export function aliasDuplicateStructuralStructs(files) {
+  const index = indexStructuralDefinitions(files);
+  const canonical = new Map();
+  for (const [name, byPackage] of index) {
+    if (byPackage.size < 2) continue;
+    const types = byPackage.get('types');
+    if (types === undefined) continue;
+    // Every other copy must be byte-identical to the canonical one, or this struct is left alone
+    // entirely -- a partial alias would be worse than none.
+    if (![...byPackage].every(([, copy]) => copy.body === types.body)) continue;
+    canonical.set(name, types);
+  }
+  if (canonical.size === 0) return { files: [], structs: [] };
+  const touched = [];
+  const aliased = new Set();
+  for (const file of files) {
+    const package_ = packageOf(file.path);
+    if (package_ === undefined || package_ === 'types') continue;
+    const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
+    let changed = false;
+    const needed = new Set();
+    const repaired = contents.replaceAll(STRUCT_DEFINITION, (whole, open, _guard, body, name, close) => {
+      const target = canonical.get(name);
+      if (target === undefined || target.body !== body) return whole;
+      changed = true;
+      aliased.add(name);
+      // The include CANNOT go here. These guard blocks sit inside the package's `namespace flight::x`,
+      // and an include placed in one is parsed inside that namespace -- which makes every name in the
+      // included header resolve as flight::x::flight::… and nothing compiles. The include is collected
+      // and hoisted to file scope below; only the alias stays here.
+      needed.add(target.path);
+      return `${open}using ${name} = flight::types::${name};\n${close}`;
+    });
+    if (!changed) continue;
+    const hoisted = hoistIncludes(repaired, needed);
+    if (hoisted === undefined) continue;
+    file.contents = hoisted;
+    touched.push(file.path);
+  }
+  return { files: touched, structs: [...aliased].sort() };
+}
+
+// Puts the canonical headers at file scope, on the emitter's own boundary between the include prologue
+// and the declarations. Returns undefined when that boundary is not found, so a file whose shape this
+// repair does not recognize is left exactly as emitted.
+function hoistIncludes(contents, needed) {
+  if (needed.size === 0) return contents;
+  const anchor = /^static_assert\(flight::runtime_contract\.cpp_abi == \d+,[^\n]*\n/mu.exec(contents);
+  if (anchor === null) return undefined;
+  const absent = [...needed].filter((header) => !contents.includes(`#include <${header}>`)).sort();
+  if (absent.length === 0) return contents;
+  const at = anchor.index + anchor[0].length;
+  const block = `\n${absent.map((header) => `#include <${header}>`).join('\n')}\n`;
+  return `${contents.slice(0, at)}${block}${contents.slice(at)}`;
+}
+
+function packageOf(filePath) {
+  const parts = filePath.split('/');
+  return parts.length >= 3 && parts[0] === 'flight' ? parts[1] : undefined;
+}
