@@ -24,6 +24,50 @@
       "defect": "Same collector defect as types-node-forward-declaration, reached through the render-options aliases.",
       "expires": "when the forward-declaration collector follows alias expansion; sdk:check fails if this repair matches no header in a profiled run. RenderCache is only reachable once external bindings let @flighthq/render emit, so the unbound inventory is not evidence that this repair is unneeded.",
       "expectedWhen": "withBindings"
+    },
+    {
+      "id": "log-logentry-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/log/",
+      "symbol": "LogEntry",
+      "declaration": "using flight::types::LogEntry;",
+      "diagnostic": "'LogEntry' was not declared in this scope; did you mean 'flight::types::LogEntry'?",
+      "defect": "The emitter writes LogEntry unqualified inside namespace flight::log, where the type is flight::types::LogEntry. It is a type alias, so no forward declaration exists for it, and the defining header is already included -- only the qualification is missing. gcc names the fix in its own diagnostic.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a types-owned name used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "log-logsink-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/log/",
+      "symbol": "LogSink",
+      "declaration": "using flight::types::LogSink;",
+      "diagnostic": "'LogSink' was not declared in this scope; did you mean 'flight::types::LogSink'?",
+      "defect": "The emitter writes LogSink unqualified inside namespace flight::log, where the type is flight::types::LogSink. It is a type alias, so no forward declaration exists for it, and the defining header is already included -- only the qualification is missing. gcc names the fix in its own diagnostic.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a types-owned name used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "log-logspan-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/log/",
+      "symbol": "LogSpan",
+      "declaration": "using flight::types::LogSpan;",
+      "diagnostic": "'LogSpan' was not declared in this scope; did you mean 'flight::types::LogSpan'?",
+      "defect": "The emitter writes LogSpan unqualified inside namespace flight::log, where the type is flight::types::LogSpan. It is a type alias, so no forward declaration exists for it, and the defining header is already included -- only the qualification is missing. gcc names the fix in its own diagnostic.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a types-owned name used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "log-logtransport-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/log/",
+      "symbol": "LogTransport",
+      "declaration": "using flight::types::LogTransport;",
+      "diagnostic": "'LogTransport' was not declared in this scope; did you mean 'flight::types::LogTransport'?",
+      "defect": "The emitter writes LogTransport unqualified inside namespace flight::log, where the type is flight::types::LogTransport. It is a type alias, so no forward declaration exists for it, and the defining header is already included -- only the qualification is missing. gcc names the fix in its own diagnostic.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a types-owned name used from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }

@@ -610,3 +610,72 @@ measurement is what distinguishes them.
 - **`@flighthq/geometry`** (30/30 emitted, 3 headers) fails only inside `flight/log/log.hpp`, which is a
   **placeholder stub**. A stub is meant to be replaced, so hand-finishing that one file is the intended
   workflow rather than a workaround — and `log` is the package that blocks nineteen others.
+
+## Foundation, package by package: what actually landed
+
+### `@flighthq/adjustments` is complete
+
+22/22 modules, and all three headers compile. Two runtime changes in `include/flight/json.hpp`:
+
+**`JSON.stringify` accepts an absent `space`.** Emitted code writes
+`Json::stringify(run, std::nullopt, std::nullopt)`, and the signature demanded `double`, so a call the
+source was entitled to make did not compile. `space` is now resolved from absent, numeric, or optional.
+
+**A structural row serializes its members.** This is the part that matters. `append_json_value` ended in
+a fallback that appends `"{}"` for an unrecognized type, so a row stringified as an empty object — and
+`colorLutRunSignature` builds a **cache key** from `JSON.stringify(run)`. Two different adjustment runs
+therefore produced the same signature and the cache returned the wrong baked LUT. That is a silent
+correctness bug, not a missing feature.
+
+Rows are now serialized from the owner's own enumerable string keys in declaration order, which is
+JavaScript's enumeration order. A property whose value is `undefined`, and one whose cell has no erased
+representation at all, are both **omitted** — the second is almost always a function-valued member, and
+JavaScript omits those too, so the agreement is real rather than convenient. The branch is reached by
+duck typing on `shared_owner()`, so `json.hpp` gains no dependency on `structural_ref.hpp`.
+
+Proven against the committed member table in `tests/structural_row_test.cpp`: a row serializes
+`{"kind":"ambient",…}` rather than `{}`, the symbol-keyed entity runtime slot stays out, an absent space
+matches omitting it, and — the property the cache depends on — two rows differing in one member, and a
+run reordered, both produce different text. All 7 ctest targets pass.
+
+### `insert-using-declaration`, a second repair kind
+
+`flight/log/log.hpp` writes `LogSink`, `LogEntry`, `LogSpan` and `LogTransport` unqualified inside
+`namespace flight::log`, where all four live in `flight::types`. gcc names the fix in its own diagnostic:
+*"did you mean 'flight::types::LogSink'?"*. Neither existing tool reaches it — these are type aliases, so
+no forward declaration exists, and the defining header is already included, so no include helps. Only
+the qualification is missing, and a using-declaration introduces a name and nothing else.
+
+Four declared repairs now apply to `flight/log/log.hpp` on every regeneration.
+
+### Where `log` stops, and it is not a declaration
+
+With the qualification fixed, `log` reaches a different error entirely, and the stub is not the problem:
+best-effort emitted **1073 lines** of it, marking 22 declarations `NOT GENERATED` with their reasons and
+source lines. What fails now is a representation disagreement inside the emitted code:
+
+```
+LogSink  = std::function<void(StructuralRef<RowReadonly<RowOf<Ref<LogEntry>>>>)>   // the alias: a ROW
+create_fanout_log_sink's lambda takes flight::Ref<flight::types::LogEntry>          // the body: a REF
+```
+
+The same type appears as a row in the function-type alias and as a reference in the lambda the emitter
+wrote to satisfy it, across roughly 20 sites. That is not fixable by adding a declaration, and rewriting
+the lambda parameter types would be editing emitted *code* rather than adding text with no behavior —
+the line this repository's repair mechanism deliberately does not cross. It is an emitter fix or a
+hand-written replacement of log's sink constructors, and `log` blocks nineteen packages either way.
+
+### Foundation state
+
+| package | modules | headers |
+|---|---|---|
+| `entity` | 10 / 10 | all compile |
+| `math` | 17 / 17 | all compile |
+| `color` | 11 / 11 | all compile |
+| **`adjustments`** | 22 / 22 | **all compile** |
+| `types` | 995 / 995 | 5 fail (mutually dependent aliases) |
+| `geometry` | 30 / 30 | 3 fail (all inside log's header) |
+| `log` | 2 / 3 | 3 fail (row-versus-reference) |
+| `signals` | 8 / 10 | 5 fail |
+| `node` | 13 / 21 | 15 fail |
+| `materials` | 16 / 24 | 20 fail |

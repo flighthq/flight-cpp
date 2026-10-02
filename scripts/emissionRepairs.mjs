@@ -12,7 +12,7 @@ import path from 'node:path';
 // a patched build into a silent fork of the generator.
 
 const SCHEMA = 'flight-cpp-emission-repairs/1';
-const KINDS = new Set(['insert-forward-declaration']);
+const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration']);
 // When a repair is expected to match. A module that only emits once external bindings are applied
 // cannot need its repair in the unbound inventory, so claiming the repair is obsolete there would be
 // wrong -- `withBindings` says to judge expiry only on a profiled run.
@@ -59,13 +59,34 @@ export function applyEmissionRepairs(repairs, files) {
     for (const [index, repair] of repairs.entries()) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
-      const repaired = insertForwardDeclaration(contents, repair);
+      const repaired =
+        repair.kind === 'insert-using-declaration'
+          ? insertUsingDeclaration(contents, repair)
+          : insertForwardDeclaration(contents, repair);
       if (repaired === undefined) continue;
       file.contents = repaired;
       applied[index].files.push(file.path);
     }
   }
   return applied;
+}
+
+// Brings a name from flight::types into the package's own namespace, for a file that refers to it
+// UNQUALIFIED. `flight/log/log.hpp` says `LogSink` inside `namespace flight::log`, where the type is
+// `flight::types::LogSink`; gcc even names the fix in its diagnostic. A forward declaration cannot help
+// here, because these are type ALIASES and an alias has no forward declaration, and an include cannot
+// help either, because the name is already visible under a different qualification. A using-declaration
+// introduces the name and nothing else, so it stays inside the rule that a repair adds no behavior.
+function insertUsingDeclaration(contents, repair) {
+  const { symbol } = repair;
+  // Unqualified use only. A file that always writes types::X is already correct.
+  if (!new RegExp(`(?<!types::)\\b${symbol}\\b`, 'u').test(contents)) return undefined;
+  if (contents.includes(repair.declaration)) return undefined;
+  // Inside the package namespace, which is where the unqualified name is looked up.
+  const anchor = /^namespace flight::[a-z0-9_]+ \{\n/mu.exec(contents);
+  if (anchor === null) return undefined;
+  const at = anchor.index + anchor[0].length;
+  return `${contents.slice(0, at)}\n${repair.declaration}\n${contents.slice(at)}`;
 }
 
 // Returns the repaired text, or undefined when this file needs no repair. A file needs the
