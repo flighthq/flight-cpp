@@ -151,3 +151,52 @@ Ranked by what leaves no debt. The first two are ours and we exhaust them first.
 What we will not do is change absence, reference identity, equality, ordering, exception shape or task
 settlement to make something compile. Those are the semantics this runtime exists to preserve, and a
 workaround that alters one is a claim our own tests would certify as true.
+
+## Which refused packages block the most others
+
+Cascade is 795 of 1398 refusals, so the question that matters is not "how many modules does this package
+have" but "how many other packages wait on it". Counting distinct packages blocked by each refused
+cross-package dependency:
+
+| packages blocked | refused dependency |
+|-----------------:|--------------------|
+| 27 | `@flighthq/types/contract` |
+| **19** | **`@flighthq/log/contract`** |
+| 9 | `@flighthq/registry/contract` |
+| 9 | `@flighthq/node/contract` |
+| 5 | `@flighthq/path/contract` |
+| 5 | `@flighthq/importdiagnostics/contract` |
+| 3 | `@flighthq/render/contract` |
+
+`@flighthq/log` is the striking one: it blocks nineteen packages and has exactly **one** root refusal.
+
+### What blocks `log`, and why we have not fixed it yet
+
+`packages/log/src/log.ts:568`, in `serializeLogError`:
+
+```ts
+if (value.stack !== undefined) result.stack = value.stack;
+if (value.cause !== undefined) result.cause = serializeLogError(value.cause);
+```
+
+`flight::Error` has **neither member**. `include/flight/error.hpp` declares only `message()` and a
+static `name()`. So this is a genuine runtime gap on our side, not a compiler limitation — which makes
+it the most valuable thing in our own lane that is still open.
+
+Two things stand in the way of simply adding them, and both are real:
+
+**`cause` needs `Any`, and `any.hpp` already includes `error.hpp`.** The include is not incidental:
+`any.hpp` constructs and throws `TypeError` in three inline bodies, which needs the complete type. So
+adding `std::optional<Any> cause` to `Error` closes a cycle. Resolving it means a layering decision —
+type-erasing the cause behind a handle `error.hpp` can declare, or moving the throwing helpers out of
+`any.hpp` — not a local edit.
+
+**We do not know the member shape the emitter expects.** `flight::Error` appears in the emitted tree
+only as `throw flight::Error(flight::String("…"))`; no emitted code ever reads a member of one. So
+there is no precedent showing whether a read lowers to `stack`, `stack()`, or something else, and
+guessing costs a twelve-minute generation run per guess.
+
+A source patch that drops the two reads was considered and rejected. It would be truthful about *this*
+target — flight-cpp captures no stack and has no `cause` — but `serializeLogError` exists to carry
+exactly that information, and silently returning less of it is a behavior change in a diagnostics path
+rather than a lowering workaround.
