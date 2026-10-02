@@ -554,3 +554,59 @@ merely superlinear, and the discriminator is cheap in principle: run `d4287b4` o
 plus its closure instead of the whole SDK. If a small graph completes, the mode is usable package by
 package today — which is the granularity this repository wants anyway — and the hang becomes a scaling
 problem rather than a wall. `sdkGeneration.mjs` has no package filter, so this needs one.
+
+## The foundation slice, package by package
+
+Generated with `--package=@flighthq/entity --package=@flighthq/node --package=@flighthq/math
+--package=@flighthq/geometry --best-effort` at compiler `2b687ea`. Closure: 10 packages, 1143 modules,
+3m47s. Emission is near-total — the old pin's 52% is not the number to plan against:
+
+| package | modules | headers compile |
+|---|---|---|
+| `@flighthq/entity` | 10 / 10 | **all** |
+| `@flighthq/math` | 17 / 17 | **all** |
+| `@flighthq/color` | 11 / 11 | **all** |
+| `@flighthq/types` | 995 / 995 | 5 fail |
+| `@flighthq/adjustments` | 22 / 22 | 3 fail |
+| `@flighthq/geometry` | 30 / 30 | 3 fail |
+| `@flighthq/signals` | 8 / 10 | 5 fail |
+| `@flighthq/log` | 2 / 3 | 3 fail |
+| `@flighthq/node` | 13 / 21 | 15 fail |
+| `@flighthq/materials` | 16 / 24 | 20 fail |
+
+Across the slice: 1107 `emitted`, 17 `dependency-incomplete` (real output), 19 `refused-placeholder`.
+**17 of the 19 placeholders are classified `source-portability` by the compiler itself** — it is telling
+us these are source shapes it cannot port, not holes in its own lowering, which is what makes source
+patching the right tool rather than a workaround.
+
+### An automated include repair that did not work, and why
+
+The `types`, `signals`, `geometry` and `log` failures all read like a missing include: a symbol named but
+not in scope, where the symbol is defined in a sibling header. A repair was built to insert the defining
+header, driven by the compiler rather than by scanning names, and corrected once after the first version
+inserted into the translation unit rather than the file the diagnostic pointed at.
+
+**It fixed zero headers, twice, and was deleted.** The two shapes it targeted are not missing includes:
+
+- **Missing namespace qualification.** `flight/log/log.hpp:59` says `LogSink` inside
+  `namespace flight::log`, where the type is `flight::types::LogSink`. gcc names the fix in the
+  diagnostic: *"did you mean 'flight::types::LogSink'?"* The include was already present and irrelevant;
+  what is needed is a using-declaration or a qualified name.
+- **Mutually dependent aliases.** `flight/types/dom_render_state.hpp:103` names
+  `flight::types::DomTextureResolver`, defined in `dom_texture_resolver.hpp` — which includes
+  `dom_render_state.hpp` back. With `#pragma once` one of the two always sees the other incomplete, and a
+  `using` alias cannot be forward declared, so there is no include order that resolves it. This one is
+  emitter-side: the alias has to be emitted before its use, or declarations split from definitions.
+
+Worth recording because both shapes *look* like an include problem in the diagnostic text, and the
+measurement is what distinguishes them.
+
+### The two foundation wins actually available
+
+- **`@flighthq/adjustments`** (22/22 emitted, 3 headers) fails on
+  `Json::stringify(SequenceView<StructuralRef<RowReadonly<RowOf<…>>>>)`, and `include/flight/json.hpp`
+  declares only `stringify(const Value&)`. Serializing a sequence of structural rows is a genuine runtime
+  capability this SDK needs, it is permanent, and it owes nothing to the compiler.
+- **`@flighthq/geometry`** (30/30 emitted, 3 headers) fails only inside `flight/log/log.hpp`, which is a
+  **placeholder stub**. A stub is meant to be replaced, so hand-finishing that one file is the intended
+  workflow rather than a workaround — and `log` is the package that blocks nineteen others.

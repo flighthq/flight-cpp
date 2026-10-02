@@ -167,7 +167,14 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
         'Name a package the SDK actually includes.',
     );
   }
-  const packageNames = requestedPackages.length > 0 ? [...requestedPackages].sort() : sdkPackageNames;
+  // A named package is generated WITH ITS TRANSITIVE DEPENDENCIES. `analyzeFlightWorkspace` takes the
+  // target list literally and resolves no closure of its own, so naming @flighthq/math alone compiles
+  // math against nothing and turns four modules into placeholders purely because @flighthq/types was
+  // absent. A subset that omits a dependency does not measure the subset, it measures the omission.
+  const packageNames =
+    requestedPackages.length > 0
+      ? transitivePackageClosure(requestedPackages, flightDependency.directory, sdkPackageNames)
+      : sdkPackageNames;
   const inventory = analyzeFlightWorkspace({
     targetPackageNames: packageNames,
     upstreamDirectory: flightDependency.directory,
@@ -660,6 +667,25 @@ function listSourceFiles(directory) {
   return filesUnder(directory)
     .filter((filename) => filename.endsWith('.ts') && !filename.endsWith('.d.ts') && !filename.endsWith('.test.ts'))
     .map((sourcePath) => ({ contents: readFileSync(sourcePath, 'utf8'), sourcePath }));
+}
+
+// Every named package plus everything it depends on, transitively, restricted to packages the SDK
+// includes. Sorted, so a subset run is reproducible.
+function transitivePackageClosure(names, upstreamDirectory, available) {
+  const includable = new Set(available);
+  const closure = new Set();
+  const pending = [...names];
+  while (pending.length > 0) {
+    const name = pending.pop();
+    if (closure.has(name) || !includable.has(name)) continue;
+    closure.add(name);
+    const file = path.join(upstreamDirectory, 'packages', name.replace('@flighthq/', ''), 'package.json');
+    if (!existsSync(file)) continue;
+    for (const dependency of Object.keys(JSON.parse(readFileSync(file, 'utf8')).dependencies ?? {})) {
+      if (dependency.startsWith('@flighthq/')) pending.push(dependency);
+    }
+  }
+  return [...closure].sort(compareText);
 }
 
 // The `flight.environment` a package declares for itself, or undefined when it is environment-agnostic.
