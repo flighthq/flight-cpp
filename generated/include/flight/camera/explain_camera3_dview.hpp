@@ -9,6 +9,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/unity_schema.hpp>
+
 namespace flight::types { struct Camera3D; }
 namespace flight::types { struct Camera3DViewExplanation; }
 namespace flight::types { struct Matrix4; }
@@ -27,11 +29,7 @@ inline const double orthonormal_tolerance = 0.001;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CAMERA_X_Y_Z_82615FD0DF8619C4
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CAMERA_X_Y_Z_82615FD0DF8619C4
-struct x_y_z_82615fd0df8619c4 : public flight::ReferenceEnabled {
-  double x;
-  double y;
-  double z;
-};
+using x_y_z_82615fd0df8619c4 = flight::types::x_y_z_82615fd0df8619c4;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_CAMERA_X_Y_Z_82615FD0DF8619C4
 
 inline flight::Ref<flight::types::Camera3DViewExplanation> explain_camera3_dview(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {

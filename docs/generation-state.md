@@ -316,3 +316,41 @@ removed rather than left in place as decoration, which is what its own comment p
 
 `log` is therefore **not** reachable from the runtime side, and the `cause`/`any.hpp` include cycle is
 moot. This is the single highest-leverage blocker in the corpus and it is closed to us.
+
+### The field contracts cleared every refusal of their kind, and uncovered two more defects
+
+After declaring `objectConstruction` on 37 WGPU bindings and on `AudioBufferOptions`, field-contract
+refusals across the whole profiled SDK went **10 to 0**, root refusals 603 to 599, and emitted modules
+1509 to 1510. The affected packages (`effects-wgpu`, `render-wgpu`, `scene2d-wgpu`, `scene3d-wgpu`,
+`audio`) each have other refusals, so no package reached the shippable tier from this — real root-cause
+progress with no tier movement, which is worth stating plainly rather than rounding up.
+
+Unblocking `@flighthq/audio`'s `audioResourceFrom` module then revealed two defects the refusal had been
+masking, neither related to field assignment:
+
+```cpp
+// blob.type || undefined, lowered as a String-returning lambda that returns nullopt
+([&]() -> flight::String { auto logical_or_value = blob.type;
+  if (flight::to_boolean(logical_or_value)) return logical_or_value; return std::nullopt; }())
+
+// and TypeScript's operator emitted verbatim into C++
+if (!(response->body instanceof flight::ArrayBuffer)) {
+```
+
+The second is the notable one: `instanceof` reaches the output as source text, so the header can never
+compile. It appears in exactly two files at this pin — `flight/audio/audio_resource_from.hpp` and
+`flight/loader/load.hpp` — which is also why `@flighthq/loader` sits at 1/4.
+
+This is the expected shape of progress at this stage: closing a refusal does not produce a working
+package, it produces the next honest error. The header count moved 21 to 22 failures for exactly this
+reason, while three timeline failures were fixed, so the net is 24 to 22 against the earlier baseline.
+
+## A note on editing the binding profiles
+
+`bindings/*.json` keeps one binding per line in a compact object form. Rewriting a profile with
+`JSON.stringify(value, null, 2)` preserves the content and destroys the formatting: the first attempt at
+the WGPU contracts produced a 1514-insertion diff for 37 real changes, which is unreviewable and hides
+whether a key was dropped. Insert into the existing line instead and the same change is 37 lines. Verify
+both the top-level key set and the binding count after any programmatic edit — a previous incident in
+this repository silently deleted `identity` and `profile` from a profile, and a formatting-only
+comparison could not see it.

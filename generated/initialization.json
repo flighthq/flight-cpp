@@ -1422,6 +1422,21 @@
     },
     {
       "name": "Contract",
+      "packageName": "@flighthq/screen",
+      "source": "packages/screen/src/contract.ts"
+    },
+    {
+      "name": "Index",
+      "packageName": "@flighthq/screen",
+      "source": "packages/screen/src/index.ts"
+    },
+    {
+      "name": "Screen",
+      "packageName": "@flighthq/screen",
+      "source": "packages/screen/src/screen.ts"
+    },
+    {
+      "name": "Contract",
       "packageName": "@flighthq/sensors",
       "source": "packages/sensors/src/contract.ts"
     },
@@ -8844,6 +8859,36 @@
           "name": "WgpuMeshFragmentTail",
           "packageName": "@flighthq/scene3d-wgpu",
           "source": "packages/scene3d-wgpu/src/wgpuMeshFragmentTail.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Screen",
+          "packageName": "@flighthq/screen",
+          "source": "packages/screen/src/screen.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Contract",
+          "packageName": "@flighthq/screen",
+          "source": "packages/screen/src/contract.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Index",
+          "packageName": "@flighthq/screen",
+          "source": "packages/screen/src/index.ts"
         }
       ]
     },
@@ -44150,6 +44195,31 @@
           "evaluation": "runtime",
           "importer": {
             "name": "Contract",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/contract.ts"
+          },
+          "specifier": "./screen",
+          "target": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Contract",
+        "packageName": "@flighthq/screen",
+        "source": "packages/screen/src/contract.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
             "packageName": "@flighthq/sensors",
             "source": "packages/sensors/src/contract.ts"
           },
@@ -64554,6 +64624,31 @@
         "name": "Index",
         "packageName": "@flighthq/platform",
         "source": "packages/platform/src/index.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/index.ts"
+          },
+          "specifier": "./contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Index",
+        "packageName": "@flighthq/screen",
+        "source": "packages/screen/src/index.ts"
       },
       "steps": []
     },
@@ -104396,6 +104491,1286 @@
         "source": "packages/signals/src/scope.ts"
       },
       "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
+            "line": 1,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",9]",
+            "kind": "import",
+            "name": "allocateEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "allocateEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 26,
+            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
+            "line": 1,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",25]",
+            "kind": "import",
+            "name": "finishEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "finishEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0241fa56e43b8f3a3f1b0b5d5bbb498eaa70882b9c68fe294ac18e6db1d726ed",
+            "line": 2,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",83]",
+            "kind": "import",
+            "name": "clearSignal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "clearSignal",
+            "kind": "dependency",
+            "module": {
+              "name": "Slot",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/slot.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 23,
+            "fingerprint": "sha256:f695125ef15fca88aad4ca9f4017858873dc8acecca23873c3db6d3f8d8ac3da",
+            "line": 2,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",96]",
+            "kind": "import",
+            "name": "createSignal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createSignal",
+            "kind": "dependency",
+            "module": {
+              "name": "Signal",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/signal.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 37,
+            "fingerprint": "sha256:fa9bc748aa318de911894b591045e72bbc661d8809c2bf90f79bb60e7707dce8",
+            "line": 2,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",110]",
+            "kind": "import",
+            "name": "emitSignal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "emitSignal",
+            "kind": "dependency",
+            "module": {
+              "name": "Emitter",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/emitter.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:28a2dd1017afa3233ce1656ea5ebd6d807c6e989f683857743bb0e6192ab89fd",
+            "line": 18,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",504]",
+            "kind": "function",
+            "name": "attachScreenPermissionChange",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2df3e1d81243d175388942bd374320245a7d7ba2dd6a6bf24c98ce3732598d78",
+            "line": 27,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",915]",
+            "kind": "function",
+            "name": "attachScreenSignals",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:0332bac7560a9c55d5310096e8eac478b5fb9f113ec6be013b76bd29540c10a4",
+            "line": 40,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",1442]",
+            "kind": "function",
+            "name": "createScreenInfo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d375b97e6ffecf6e1f636dcbdada32e7d52d5e037eb45e6a04159040e818b9df",
+            "line": 46,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",1595]",
+            "kind": "function",
+            "name": "createScreenMode",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6420916a33762bc74e0d0006c29d320c47a52806c1f4826e82ad785b52d25688",
+            "line": 52,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",1748]",
+            "kind": "function",
+            "name": "createScreenPermissionChange",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:afd606532a136f2ffe184294b410dc2ec1c85137e5e67a45f6aa3dd9b3d8af9c",
+            "line": 58,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",1949]",
+            "kind": "function",
+            "name": "createScreenSignals",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:e770c017d20563592adb7124c405cd0a95285547ffddafc5aae5dc3e39f66ef6",
+            "line": 64,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",2114]",
+            "kind": "function",
+            "name": "detachScreenPermissionChange",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a93461fa6f05093a6e091c4c1ab98f1e324157dac6ad127241a6ad826a607008",
+            "line": 69,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",2319]",
+            "kind": "function",
+            "name": "detachScreenSignals",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:32bdec258ffe70cb0b7a463cbb3e79edcd590081611404234cccbecd0fcb0855",
+            "line": 74,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",2471]",
+            "kind": "function",
+            "name": "dipToScreenPoint",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:53ef74efb3bc6dcedf4398cfae197a81dfb0404b9d5428a0435e03bfd8a99de1",
+            "line": 84,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",2755]",
+            "kind": "function",
+            "name": "dipToScreenRect",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c107df0343b8fe7b6d53ebd12f8c1f3bc987996f8a99dbbe5c32281928831b57",
+            "line": 96,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",3195]",
+            "kind": "function",
+            "name": "disposeScreenPermissionChange",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8f9eca6af0264261efbf481d94bf40eabc297cfb9ac67104ac375e90581d0804",
+            "line": 101,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",3386]",
+            "kind": "function",
+            "name": "disposeScreenSignals",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:7d0d86a7d99766e46c74d8a1c7d80ed304b7fe585a89adab41a2c6d6bf69184e",
+            "line": 108,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",3615]",
+            "kind": "function",
+            "name": "getPrimaryScreen",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f5077829cfed97a5c3b01fedc6c5fbed1f0ded66d9a0a5e52e629dbcef9743bf",
+            "line": 112,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",3784]",
+            "kind": "function",
+            "name": "getScreenBounds",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:741c8721a1fad9c6a9d86f7156bb2d6f2b2f061fb4d1f1dcdf3f54ed82b7a2cf",
+            "line": 123,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",4089]",
+            "kind": "function",
+            "name": "getScreenById",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f5eb1b051edfebc96796f4e57d45232b39ff4771350182fa1895b54613467abc",
+            "line": 137,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",4476]",
+            "kind": "function",
+            "name": "getScreenContainingRect",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:234b935af9d83f3fd1332dec68344a48a9e8fbfd94b137d859fab1a64e92342b",
+            "line": 162,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",5398]",
+            "kind": "function",
+            "name": "getScreenCurrentMode",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:474ef3926998bfdfbc9d44385f587877a45cb7a5772dc1b8f3afe39dd96695ff",
+            "line": 171,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",5673]",
+            "kind": "function",
+            "name": "getScreenCursorPosition",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:5c4ae15aa363c50076d9f817dea8b812e68626c5e0d8e104b3bcee6364f77b5e",
+            "line": 178,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",5885]",
+            "kind": "function",
+            "name": "getScreenCursorScreen",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:40cbdf197d58ea5b497b27be26c6c46280b8c49198f2f46921391d969562823e",
+            "line": 186,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",6146]",
+            "kind": "function",
+            "name": "getScreenDetailPermission",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:0690dfda4f53582a279f18297ed46b6c9201212e46c855e43152740af02aab57",
+            "line": 192,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",6334]",
+            "kind": "function",
+            "name": "getScreenNearestPoint",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4872187df0381919eb1bb2276f9f5957022ba36ddf46030136971046c0b1673b",
+            "line": 227,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",7298]",
+            "kind": "function",
+            "name": "getScreenNearestRect",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:5d876e8041265ee67ce39e1ca8a303cd6a08506010a636a790fa699bdfd1d62c",
+            "line": 249,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",7947]",
+            "kind": "function",
+            "name": "getScreens",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d46032748e62c21d9b184bff217c664ed0fae4e03e6239d467043ad6d07d514c",
+            "line": 253,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",8108]",
+            "kind": "function",
+            "name": "getScreenWorkArea",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:02581ea0a0f7fba78fcf10e87a1cd1eb5f420696294159910585917fcc8ca035",
+            "line": 264,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",8423]",
+            "kind": "function",
+            "name": "initializeScreenInfo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ccba5f2490201bb1963b3e67236c4753c9057e446272095ac1807ad2a38af727",
+            "line": 292,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",9070]",
+            "kind": "function",
+            "name": "initializeScreenMode",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1a53ba8c600dfaf818058a8b82b53ab36184585df29b693fc78d6e321f4e7854",
+            "line": 300,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",9261]",
+            "kind": "function",
+            "name": "initializeScreenPermissionChange",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:b56c2cf37fe46a02df6e7d9f23ce9637d44c7f9295c68fc1e898c9e33b5268a9",
+            "line": 304,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",9403]",
+            "kind": "function",
+            "name": "initializeScreenSignals",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4cfe640d8cff4d635c82e9746520096074c8d2a9aa4d553d57276bcd5bb83bfe",
+            "line": 310,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",9619]",
+            "kind": "function",
+            "name": "requestScreenDetails",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c80866e397f822e1805a7d9e9b2025b576d391bfdc94910a3983f9ebb7197e4c",
+            "line": 314,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",9775]",
+            "kind": "function",
+            "name": "screenToDipPoint",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6dd2a1bb177fca8a36eed2961909ecb056ff54b8bc5222e0a44ac8876b26c0f4",
+            "line": 324,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",10055]",
+            "kind": "function",
+            "name": "screenToDipRect",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:fd95091e9e1c99c995e1c673c5f9b3b8db4e8dff8273c249b7a067406767aa95",
+            "line": 336,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",10481]",
+            "kind": "variable",
+            "name": "_permissionSubscriptions",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:1028982525a4dc896191c790a9b41f11465789557c1515a927f477cf94b9b042",
+            "line": 337,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",10565]",
+            "kind": "variable",
+            "name": "_signalSubscriptions",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:f4803afabbdfceb9f7a44c6f7a3eba9f13790954dc242737a7afcc32ce0e0e4e",
+            "line": 338,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",10636]",
+            "kind": "variable",
+            "name": "_scratchPoint",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:23cca140258e8ba462ddb63475f61c47a1d9aaa61a1acf0df52ae0ae5cfea5f6",
+            "line": 339,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",10674]",
+            "kind": "variable",
+            "name": "_scratchScreens",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 3
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:c3253a66a651f84bf29ca01a08a5eaa8edf3826cbbcf353239ee641a60c79e32",
+            "line": 341,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",10720]",
+            "kind": "function",
+            "name": "copyScreenInfo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:aef59760cd593671c50203aa3208c1d7cabf21db7cd070ff14b242b93acceb25",
+            "line": 373,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",11981]",
+            "kind": "function",
+            "name": "fillDefaultScreenInfo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:39baf23e47e8bbdb5fe2bd5a8f4f938b3db731082ca26435781a665d4e0f3f17",
+            "line": 378,
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts",
+            "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",12103]",
+            "kind": "function",
+            "name": "rectCenter",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "specifier": "@flighthq/entity/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/entity",
+            "source": "packages/entity/src/entity.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "emitSignal"
+          ],
+          "specifier": "@flighthq/signals/contract",
+          "target": {
+            "name": "Emitter",
+            "packageName": "@flighthq/signals",
+            "source": "packages/signals/src/emitter.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "createSignal"
+          ],
+          "specifier": "@flighthq/signals/contract",
+          "target": {
+            "name": "Signal",
+            "packageName": "@flighthq/signals",
+            "source": "packages/signals/src/signal.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "clearSignal"
+          ],
+          "specifier": "@flighthq/signals/contract",
+          "target": {
+            "name": "Slot",
+            "packageName": "@flighthq/signals",
+            "source": "packages/signals/src/slot.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "Entity",
+            "EntityConstruction",
+            "EntityWithoutRuntime"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "Rectangle",
+            "RectangleLike"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Rectangle",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Rectangle.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "HostScreenChangeCapability",
+            "HostScreenDetailsCapability",
+            "HostScreenPermissionChangeCapability",
+            "HostScreenQueryCapability",
+            "ScreenInfo",
+            "ScreenPermissionState"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Screen",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Screen.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "ScreenChangeEvent",
+            "ScreenChangeKind",
+            "ScreenChangedMetrics"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ScreenChangeEvent",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ScreenChangeEvent.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "ScreenColorSpace"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ScreenColorSpace",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ScreenColorSpace.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "ScreenMode"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ScreenMode",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ScreenMode.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "ScreenOrientation"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ScreenOrientation",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ScreenOrientation.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "ScreenPermissionChange",
+            "ScreenSignals"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ScreenSignals",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ScreenSignals.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "Signal"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Signal",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Signal.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Screen",
+            "packageName": "@flighthq/screen",
+            "source": "packages/screen/src/screen.ts"
+          },
+          "importedNames": [
+            "Vector2",
+            "Vector2Like"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Vector2",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Vector2.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Screen",
+        "packageName": "@flighthq/screen",
+        "source": "packages/screen/src/screen.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:fd95091e9e1c99c995e1c673c5f9b3b8db4e8dff8273c249b7a067406767aa95",
+              "line": 336,
+              "packageName": "@flighthq/screen",
+              "source": "packages/screen/src/screen.ts",
+              "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",10481]",
+              "kind": "variable",
+              "name": "_permissionSubscriptions",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            31
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:1028982525a4dc896191c790a9b41f11465789557c1515a927f477cf94b9b042",
+              "line": 337,
+              "packageName": "@flighthq/screen",
+              "source": "packages/screen/src/screen.ts",
+              "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",10565]",
+              "kind": "variable",
+              "name": "_signalSubscriptions",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            32
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:f4803afabbdfceb9f7a44c6f7a3eba9f13790954dc242737a7afcc32ce0e0e4e",
+              "line": 338,
+              "packageName": "@flighthq/screen",
+              "source": "packages/screen/src/screen.ts",
+              "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",10636]",
+              "kind": "variable",
+              "name": "_scratchPoint",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            33
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:23cca140258e8ba462ddb63475f61c47a1d9aaa61a1acf0df52ae0ae5cfea5f6",
+              "line": 339,
+              "packageName": "@flighthq/screen",
+              "source": "packages/screen/src/screen.ts",
+              "id": "binding:[\"@flighthq/screen\",\"packages/screen/src/screen.ts\",10674]",
+              "kind": "variable",
+              "name": "_scratchScreens",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            34
+          ]
+        }
+      ]
     },
     {
       "bindings": [],

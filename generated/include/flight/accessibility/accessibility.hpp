@@ -7,6 +7,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/notification.hpp>
+
 namespace flight::types { struct AccessibilityNode; }
 namespace flight::types { struct HostAccessibilityCapability; }
 namespace flight::types { struct Rectangle; }
@@ -18,9 +20,7 @@ namespace flight::accessibility {
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ACCESSIBILITY_REASON_43A745D20647BFB6
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ACCESSIBILITY_REASON_43A745D20647BFB6
-struct reason_43a745d20647bfb6 : public flight::ReferenceEnabled {
-  flight::String reason;
-};
+using reason_43a745d20647bfb6 = flight::types::reason_43a745d20647bfb6;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ACCESSIBILITY_REASON_43A745D20647BFB6
 
 inline flight::types::AccessibilityOperationOutcome<flight::String> announce_accessibility(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAccessibilityCapability>>>> host_accessibility, flight::String message, std::optional<flight::types::AccessibilityLiveness> liveness = std::nullopt) {

@@ -6,8 +6,8 @@ Do not edit it by hand.
 
 No external binding profile is applied; this is the portable floor. Exact profile paths and SHA-256 digests are recorded in `manifest.json`.
 
-The current compiler emitted 1153 of 2904 source modules from
-154 SDK packages and refused 1751. Emitted headers live under
+The current compiler emitted 1156 of 2904 source modules from
+154 SDK packages and refused 1748. Emitted headers live under
 `include/flight/<package>/`; every refusal and its owning module is recorded in `refusals.json`.
 
 This is a bring-up inventory. It is intentionally committed before it forms a completely compilable SDK closure.

@@ -9161,29 +9161,6 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/screen/src/contract.ts",
-      "package": "@flighthq/screen",
-      "reason": "dependency ./screen was refused for @flighthq/screen/packages/screen/src/screen.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/screen/src/index.ts",
-      "package": "@flighthq/screen",
-      "reason": "dependency ./contract was refused for @flighthq/screen/packages/screen/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 341,
-      "module": "packages/screen/src/screen.ts",
-      "package": "@flighthq/screen",
-      "reason": "cpp emission failed for @flighthq/screen/packages/screen/src/screen.ts: Object.assign requires one closed callable-object target and an exact compatible object literal source",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/selection/src/contract.ts",
       "package": "@flighthq/selection",
       "reason": "dependency ./lassoSelection was refused for @flighthq/selection/packages/selection/src/lassoSelection.ts",

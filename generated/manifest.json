@@ -34,9 +34,41 @@
       "dependency": "flight",
       "digest": "ce4bffb331c4e80b0b9fba007b4e52636720082d81686ddf48de8eb63bed5979",
       "id": "node-initialize-node-non-optional-source",
-      "module": "packages/node/src/node.ts"
+      "module": "packages/node/src/node.ts",
+      "package": "@flighthq/node"
+    },
+    {
+      "dependency": "flight",
+      "digest": "18620ad6c6102a93a1310056742125fd8580303831ae92fbf4d0866d39ca49b9",
+      "id": "timeline-noop-construct-frame-arity",
+      "module": "packages/timeline/src/timeline.ts",
+      "package": "@flighthq/timeline"
+    },
+    {
+      "dependency": "flight",
+      "digest": "dc2dc7e71be54536133b52684808e3277fe62a49d732191fc8836d72f0039620",
+      "id": "screen-copy-screen-info-explicit-fields",
+      "module": "packages/screen/src/screen.ts",
+      "package": "@flighthq/screen"
     }
   ],
+  "duplicateStructuralStructAliases": {
+    "files": [
+      "flight/accessibility/accessibility.hpp",
+      "flight/camera/explain_camera3_dview.hpp",
+      "flight/collision/raycast_collision_shape2_d.hpp",
+      "flight/particles_formats/libgdx_serialize.hpp",
+      "flight/screen/screen.hpp",
+      "flight/shape/shape_command_geometry.hpp"
+    ],
+    "structs": [
+      "colors_timeline_79cefceb3eed9427",
+      "reason_43a745d20647bfb6",
+      "shape_edges_side_ad397097fb67afdb",
+      "x_y_8365950bd60f783f",
+      "x_y_z_82615fd0df8619c4"
+    ]
+  },
   "packages": [
     {
       "cppIncludePrefix": "flight/abc",
@@ -889,9 +921,9 @@
     {
       "cppIncludePrefix": "flight/screen",
       "cppNamespace": "flight::screen",
-      "emittedModules": 0,
+      "emittedModules": 3,
       "package": "@flighthq/screen",
-      "refusedModules": 3,
+      "refusedModules": 0,
       "sourceModules": 3
     },
     {
@@ -1279,8 +1311,8 @@
   },
   "summary": {
     "packages": 154,
-    "emittedModules": 1153,
-    "refusedModules": 1751,
+    "emittedModules": 1156,
+    "refusedModules": 1748,
     "sourceModules": 2904
   }
 }

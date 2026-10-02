@@ -15,6 +15,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/screen.hpp>
+
 namespace flight::types { struct CollisionAabb2D; }
 namespace flight::types { struct CollisionCapsule2D; }
 namespace flight::types { struct CollisionCircle2D; }
@@ -63,10 +65,7 @@ inline void copy_raycast_hit(flight::StructuralRef<flight::RowReadonly<flight::R
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_X_Y_8365950BD60F783F
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_X_Y_8365950BD60F783F
-struct x_y_8365950bd60f783f : public flight::ReferenceEnabled {
-  double x;
-  double y;
-};
+using x_y_8365950bd60f783f = flight::types::x_y_8365950bd60f783f;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_X_Y_8365950BD60F783F
 
 inline void polygon_center(flight::Array<double> points, double count, flight::Ref<x_y_8365950bd60f783f> out) {

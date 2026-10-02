@@ -11,16 +11,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/screen.hpp>
+
 #include <flight/types/shape_command.hpp>
 
 namespace flight::shape {
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_X_Y_8365950BD60F783F
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_X_Y_8365950BD60F783F
-struct x_y_8365950bd60f783f : public flight::ReferenceEnabled {
-  double x;
-  double y;
-};
+using x_y_8365950bd60f783f = flight::types::x_y_8365950bd60f783f;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_X_Y_8365950BD60F783F
 
 inline void write_raw_path_end(flight::Ref<x_y_8365950bd60f783f> out, double current_x, double current_y, flight::Array<double> path_commands, flight::Array<double> data) {
