@@ -26,6 +26,24 @@ const EXPANSIONS = new Set(['shared-pointer', 'value']);
 // wrong -- `withBindings` says to judge expiry only on a profiled run.
 const EXPECTATIONS = new Set(['always', 'withBindings']);
 
+// What each kind must declare, beyond the fields every repair shares. A table rather than a ternary
+// chain: there are seven kinds now, and the chain had already grown past the point where a reader could
+// tell which branch a kind fell into.
+//
+// `insert-using-declaration` is the one kind with two shapes, so its required list holds only the shared
+// fields and the rest is checked below: either a single `symbol` with the `declaration` to insert, or a
+// `symbols` list with the `namespace` they come from.
+const SHARED_FIELDS = ['id', 'kind', 'appliesTo', 'diagnostic', 'defect', 'expires'];
+const REQUIRED_FIELDS = {
+  'deduce-call-argument-from-assignment': [...SHARED_FIELDS, 'symbol', 'sourceDeclaration'],
+  default: [...SHARED_FIELDS, 'symbol', 'declaration'],
+  'insert-using-declaration': SHARED_FIELDS,
+  'name-defaulted-template-argument': [...SHARED_FIELDS, 'symbol', 'defaultArgument', 'sourceDeclaration'],
+  'name-in-place-alternative': [...SHARED_FIELDS, 'symbol'],
+  'respell-flattened-union': [...SHARED_FIELDS, 'symbol', 'replacement', 'requiredSuffix', 'sourceDeclaration'],
+  'respell-reference-alias': [...SHARED_FIELDS, 'symbol', 'expansion', 'witness', 'witnessInclude'],
+};
+
 export function loadEmissionRepairs(root) {
   const file = path.join(root, 'repairs', 'emission-repairs.json');
   let parsed;
@@ -42,20 +60,7 @@ export function loadEmissionRepairs(root) {
     throw new Error(`Emission repair declaration ${portable(file)} has no repairs array`);
   }
   for (const repair of parsed.repairs) {
-    // A respell repair carries an `expansion` and a `witness` where the insertion kinds carry a
-    // `declaration`: it writes no declaration, it rewrites a type spelling to the type it already was.
-    const required =
-      repair.kind === 'respell-reference-alias'
-        ? ['id', 'kind', 'appliesTo', 'symbol', 'expansion', 'witness', 'witnessInclude', 'diagnostic', 'defect', 'expires']
-        : repair.kind === 'name-in-place-alternative'
-          ? ['id', 'kind', 'appliesTo', 'symbol', 'diagnostic', 'defect', 'expires']
-          : repair.kind === 'name-defaulted-template-argument'
-            ? ['id', 'kind', 'appliesTo', 'symbol', 'defaultArgument', 'sourceDeclaration', 'diagnostic', 'defect', 'expires']
-            : repair.kind === 'deduce-call-argument-from-assignment'
-              ? ['id', 'kind', 'appliesTo', 'symbol', 'sourceDeclaration', 'diagnostic', 'defect', 'expires']
-              : repair.kind === 'respell-flattened-union'
-                ? ['id', 'kind', 'appliesTo', 'symbol', 'replacement', 'requiredSuffix', 'sourceDeclaration', 'diagnostic', 'defect', 'expires']
-          : ['id', 'kind', 'appliesTo', 'symbol', 'declaration', 'diagnostic', 'defect', 'expires'];
+    const required = REQUIRED_FIELDS[repair.kind] ?? REQUIRED_FIELDS.default;
     for (const field of required) {
       if (typeof repair[field] !== 'string' || repair[field].length === 0) {
         throw new Error(`Emission repair ${repair.id ?? '<unnamed>'} is missing required field ${field}`);
@@ -63,6 +68,35 @@ export function loadEmissionRepairs(root) {
     }
     if (!KINDS.has(repair.kind)) {
       throw new Error(`Emission repair ${repair.id} has unknown kind ${repair.kind}`);
+    }
+    // One name or a list, never both and never neither. This defect -- a name owned by another package's
+    // namespace, written unqualified -- produces names by the DOZEN per package: 26 in @flighthq/texture
+    // alone, 56 across three packages. A row per name would put 56 entries in the expiry ledger for one
+    // defect, each repeating the same `defect` text, which makes the ledger unreadable and its signal
+    // worthless. The list keeps one row per (package, namespace) without wildcarding anything: every name
+    // is still written down, and each carries its OWN defining header.
+    if (repair.kind === 'insert-using-declaration') {
+      const listed = repair.symbols !== undefined;
+      if (listed === (repair.symbol !== undefined)) {
+        throw new Error(`Emission repair ${repair.id} must carry exactly one of symbol or symbols.`);
+      }
+      if (listed) {
+        if (!Array.isArray(repair.symbols) || repair.symbols.length === 0) {
+          throw new Error(`Emission repair ${repair.id} has an empty or non-array symbols list.`);
+        }
+        if (typeof repair.namespace !== 'string' || repair.namespace.length === 0) {
+          throw new Error(`Emission repair ${repair.id} uses symbols and must name their namespace.`);
+        }
+        for (const entry of repair.symbols) {
+          if (typeof entry?.name !== 'string' || typeof entry?.include !== 'string') {
+            throw new Error(
+              `Emission repair ${repair.id} has a symbols entry without both a name and an include.`,
+            );
+          }
+        }
+      } else if (typeof repair.declaration !== 'string' || repair.declaration.length === 0) {
+        throw new Error(`Emission repair ${repair.id} is missing required field declaration`);
+      }
     }
     if (repair.kind === 'respell-reference-alias' && !EXPANSIONS.has(repair.expansion)) {
       throw new Error(`Emission repair ${repair.id} has unknown expansion ${repair.expansion}`);
@@ -352,7 +386,48 @@ function flightIncludesFor(respells) {
 // here, because these are type ALIASES and an alias has no forward declaration, and an include cannot
 // help either, because the name is already visible under a different qualification. A using-declaration
 // introduces the name and nothing else, so it stays inside the rule that a repair adds no behavior.
+// The list form: one entry, many names, one source namespace. Each name carries ITS OWN defining header
+// and is tested and introduced INDIVIDUALLY, so a file gets a using-declaration only for the names it
+// actually uses unqualified, and only the headers those names need.
+//
+// The per-name header is not a detail. A first version of this carried one `include` per entry, taken
+// from the first name's header, and @flighthq/scene2d then got `flight/types/animation_interpolation.hpp`
+// for a group that also contained EntityConstruction -- so the using-declaration named something that was
+// not visible yet and a header that had been PASSING began to fail with "'EntityConstruction' has not
+// been declared in 'flight::types'". Measured on a scratch tree before declaring, which is the only
+// reason it never reached repairs/.
+//
+// Deliberately not a `using namespace flight::types;` directive, which would be shorter still: a
+// directive also pulls in every name the package did not ask for, so any future collision between a
+// package's own name and a types-owned one becomes an ambiguity error in generated code nobody edited.
+// This is a shorter declaration, not a broader edit.
+function insertUsingDeclarations(contents, repair) {
+  const qualifier = repair.namespace.split('::').pop();
+  const needed = repair.symbols.filter((entry) =>
+    new RegExp(`(?<!${qualifier}::)\\b${entry.name}\\b`, 'u').test(contents),
+  );
+  if (needed.length === 0) return undefined;
+  const declarations = needed
+    .map((entry) => `using ${repair.namespace}::${entry.name};`)
+    .filter((declaration) => !contents.includes(declaration));
+  if (declarations.length === 0) return undefined;
+  const headers = [...new Set(needed.map((entry) => entry.include))]
+    .filter((header) => !contents.includes(`#include <${header}>`))
+    .sort();
+  let withIncludes = contents;
+  for (const header of headers) {
+    const hoisted = hoistInclude(withIncludes, header);
+    if (hoisted === undefined) return undefined;
+    withIncludes = hoisted;
+  }
+  const anchor = /^namespace flight::[a-z0-9_]+ \{\n/mu.exec(withIncludes);
+  if (anchor === null) return undefined;
+  const at = anchor.index + anchor[0].length;
+  return `${withIncludes.slice(0, at)}\n${declarations.join('\n')}\n${withIncludes.slice(at)}`;
+}
+
 function insertUsingDeclaration(contents, repair) {
+  if (repair.symbols !== undefined) return insertUsingDeclarations(contents, repair);
   const { symbol } = repair;
   // Unqualified use only. A file that always writes types::X is already correct.
   if (!new RegExp(`(?<!types::)\\b${symbol}\\b`, 'u').test(contents)) return undefined;

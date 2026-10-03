@@ -621,6 +621,314 @@
       "defect": "geometryPoolGuards.ts declares GeometryPoolReleaseFunction as a string-literal union ('releaseMatrix' | 'releaseMatrix3' | ...), which the emitter lowers to flight::String behind a mangled module-private alias name. enableGeometryPoolGuards.ts declares its own alias for the SAME type computed as Parameters<NonNullable<typeof geometryPoolReleaseGuard>>[0]; the emitter does not lower that computed form, and writes the bare name with nothing declaring it. The declaration inserted here is the emitter's own answer for that union, taken from the module where it did lower it, so the parameter type std::function<void(GeometryPoolReleaseFunction)> becomes the std::function<void(flight::String)> that set_geometry_pool_release_guard expects.",
       "expectedWhen": "always",
       "expires": "when the emitter lowers an alias computed through Parameters<...>; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "animation-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/animation/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'finish_entity' was not declared in this scope; did you mean 'flight::entity::finish_entity'?",
+      "defect": "The emitter writes 1 name(s) owned by flight::entity unqualified inside namespace flight::animation, and without the headers that define them. Declared as one entry rather than one per name because this is a single emitter defect that produces names by the dozen per package; each name is still enumerated, carries its own defining header, and is introduced only into the files that use it unqualified.\\n\\nMEASURED GAIN TODAY: ZERO headers. Applied to a scratch tree and iterated to convergence, flight::animation and its two sibling packages stayed at 8 of 32 headers compiling. The chain terminates on twelve names with no declaration anywhere in the tree -- functions the compiler refused to generate -- so these packages need hand-written overrides as well. It is declared anyway because the names are necessary though not sufficient, because a using-declaration has no wrong-but-compiling outcome, and because otherwise whoever writes those overrides rediscovers all 56 names first. See docs/generation-state.md.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "animation-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/animation/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/animation_interpolation.hpp",
+          "name": "AnimationInterpolation"
+        },
+        {
+          "include": "flight/types/animation_track.hpp",
+          "name": "AnimationTrack"
+        },
+        {
+          "include": "flight/types/easing_function.hpp",
+          "name": "EasingFunction"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        }
+      ],
+      "diagnostic": "'AnimationInterpolation' was not declared in this scope; did you mean 'flight::types::AnimationInterpolation'?",
+      "defect": "The emitter writes 4 name(s) owned by flight::types unqualified inside namespace flight::animation, and without the headers that define them. Declared as one entry rather than one per name because this is a single emitter defect that produces names by the dozen per package; each name is still enumerated, carries its own defining header, and is introduced only into the files that use it unqualified.\\n\\nMEASURED GAIN TODAY: ZERO headers. Applied to a scratch tree and iterated to convergence, flight::animation and its two sibling packages stayed at 8 of 32 headers compiling. The chain terminates on twelve names with no declaration anywhere in the tree -- functions the compiler refused to generate -- so these packages need hand-written overrides as well. It is declared anyway because the names are necessary though not sufficient, because a using-declaration has no wrong-but-compiling outcome, and because otherwise whoever writes those overrides rediscovers all 56 names first. See docs/generation-state.md.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'finish_entity' was not declared in this scope; did you mean 'flight::entity::finish_entity'?",
+      "defect": "The emitter writes 1 name(s) owned by flight::entity unqualified inside namespace flight::scene2d, and without the headers that define them. Declared as one entry rather than one per name because this is a single emitter defect that produces names by the dozen per package; each name is still enumerated, carries its own defining header, and is introduced only into the files that use it unqualified.\\n\\nMEASURED GAIN TODAY: ZERO headers. Applied to a scratch tree and iterated to convergence, flight::scene2d and its two sibling packages stayed at 8 of 32 headers compiling. The chain terminates on twelve names with no declaration anywhere in the tree -- functions the compiler refused to generate -- so these packages need hand-written overrides as well. It is declared anyway because the names are necessary though not sufficient, because a using-declaration has no wrong-but-compiling outcome, and because otherwise whoever writes those overrides rediscovers all 56 names first. See docs/generation-state.md.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-unqualified-node-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d/",
+      "namespace": "flight::node",
+      "symbols": [
+        {
+          "include": "flight/node/revision.hpp",
+          "name": "invalidate_node_appearance"
+        },
+        {
+          "include": "flight/node/revision.hpp",
+          "name": "invalidate_node_local_bounds"
+        }
+      ],
+      "diagnostic": "'invalidate_node_appearance' was not declared in this scope; did you mean 'flight::node::invalidate_node_appearance'?",
+      "defect": "The emitter writes 2 name(s) owned by flight::node unqualified inside namespace flight::scene2d, and without the headers that define them. Declared as one entry rather than one per name because this is a single emitter defect that produces names by the dozen per package; each name is still enumerated, carries its own defining header, and is introduced only into the files that use it unqualified.\\n\\nMEASURED GAIN TODAY: ZERO headers. Applied to a scratch tree and iterated to convergence, flight::scene2d and its two sibling packages stayed at 8 of 32 headers compiling. The chain terminates on twelve names with no declaration anywhere in the tree -- functions the compiler refused to generate -- so these packages need hand-written overrides as well. It is declared anyway because the names are necessary though not sufficient, because a using-declaration has no wrong-but-compiling outcome, and because otherwise whoever writes those overrides rediscovers all 56 names first. See docs/generation-state.md.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/animation_interpolation.hpp",
+          "name": "AnimationInterpolation"
+        },
+        {
+          "include": "flight/types/animation_track.hpp",
+          "name": "AnimationTrack"
+        },
+        {
+          "include": "flight/types/has_bounds_rectangle.hpp",
+          "name": "BoundsNodeAny"
+        },
+        {
+          "include": "flight/types/clip_region.hpp",
+          "name": "ClipRegion"
+        },
+        {
+          "include": "flight/types/easing_function.hpp",
+          "name": "EasingFunction"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/html_view.hpp",
+          "name": "HtmlView"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "Node"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2D"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2DTraits"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "NodeAny"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        },
+        {
+          "include": "flight/types/render_state.hpp",
+          "name": "RenderState"
+        },
+        {
+          "include": "flight/types/renderable.hpp",
+          "name": "Renderable"
+        },
+        {
+          "include": "flight/types/scene2_d.hpp",
+          "name": "Scene2D"
+        },
+        {
+          "include": "flight/types/scene2_d.hpp",
+          "name": "Scene2DRuntime"
+        },
+        {
+          "include": "flight/types/scene2_dsignals.hpp",
+          "name": "Scene2DSignals"
+        },
+        {
+          "include": "flight/types/sprite_identity_renderer_data.hpp",
+          "name": "SpriteIdentityRendererData"
+        }
+      ],
+      "diagnostic": "'AnimationInterpolation' was not declared in this scope; did you mean 'flight::types::AnimationInterpolation'?",
+      "defect": "The emitter writes 18 name(s) owned by flight::types unqualified inside namespace flight::scene2d, and without the headers that define them. Declared as one entry rather than one per name because this is a single emitter defect that produces names by the dozen per package; each name is still enumerated, carries its own defining header, and is introduced only into the files that use it unqualified.\\n\\nMEASURED GAIN TODAY: ZERO headers. Applied to a scratch tree and iterated to convergence, flight::scene2d and its two sibling packages stayed at 8 of 32 headers compiling. The chain terminates on twelve names with no declaration anywhere in the tree -- functions the compiler refused to generate -- so these packages need hand-written overrides as well. It is declared anyway because the names are necessary though not sufficient, because a using-declaration has no wrong-but-compiling outcome, and because otherwise whoever writes those overrides rediscovers all 56 names first. See docs/generation-state.md.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "texture-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/texture/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/vector2.hpp",
+          "name": "clone_vector2"
+        },
+        {
+          "include": "flight/geometry/vector2.hpp",
+          "name": "copy_vector2"
+        },
+        {
+          "include": "flight/geometry/vector2.hpp",
+          "name": "create_vector2"
+        },
+        {
+          "include": "flight/geometry/matrix3.hpp",
+          "name": "inverse_matrix3"
+        }
+      ],
+      "diagnostic": "'clone_vector2' was not declared in this scope; did you mean 'flight::geometry::clone_vector2'?",
+      "defect": "The emitter writes 4 name(s) owned by flight::geometry unqualified inside namespace flight::texture, and without the headers that define them. Declared as one entry rather than one per name because this is a single emitter defect that produces names by the dozen per package; each name is still enumerated, carries its own defining header, and is introduced only into the files that use it unqualified.\\n\\nMEASURED GAIN TODAY: ZERO headers. Applied to a scratch tree and iterated to convergence, flight::texture and its two sibling packages stayed at 8 of 32 headers compiling. The chain terminates on twelve names with no declaration anywhere in the tree -- functions the compiler refused to generate -- so these packages need hand-written overrides as well. It is declared anyway because the names are necessary though not sufficient, because a using-declaration has no wrong-but-compiling outcome, and because otherwise whoever writes those overrides rediscovers all 56 names first. See docs/generation-state.md.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "texture-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/texture/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/create_render_texture_options.hpp",
+          "name": "CreateRenderTextureOptions"
+        },
+        {
+          "include": "flight/types/create_texture_options.hpp",
+          "name": "CreateTextureOptions"
+        },
+        {
+          "include": "flight/types/cube_texture.hpp",
+          "name": "CubeTexture"
+        },
+        {
+          "include": "flight/types/image_resource_reference.hpp",
+          "name": "EmbeddedImageResourceReference"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/image_resource_reference.hpp",
+          "name": "ExternalImageResourceReference"
+        },
+        {
+          "include": "flight/types/host_image_source.hpp",
+          "name": "HostImageSource"
+        },
+        {
+          "include": "flight/types/host_video.hpp",
+          "name": "HostVideoCapability"
+        },
+        {
+          "include": "flight/types/image_resource.hpp",
+          "name": "ImageResource"
+        },
+        {
+          "include": "flight/types/image_resource_reference.hpp",
+          "name": "ImageResourceReference"
+        },
+        {
+          "include": "flight/types/matrix3.hpp",
+          "name": "Matrix3Like"
+        },
+        {
+          "include": "flight/types/render_target.hpp",
+          "name": "RenderTarget"
+        },
+        {
+          "include": "flight/types/render_target.hpp",
+          "name": "RenderTargetColorSpace"
+        },
+        {
+          "include": "flight/types/sampler.hpp",
+          "name": "Sampler"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "Texture"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "Texture2D"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "TextureColorSpace"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "TextureLike"
+        },
+        {
+          "include": "flight/types/texture_source.hpp",
+          "name": "TextureSource"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "TextureSourceCubeFaces"
+        },
+        {
+          "include": "flight/types/texture_source_kind.hpp",
+          "name": "TextureSourceKind"
+        },
+        {
+          "include": "flight/types/texture_uv_transform.hpp",
+          "name": "TextureUvTransform"
+        },
+        {
+          "include": "flight/types/vector2.hpp",
+          "name": "Vector2"
+        },
+        {
+          "include": "flight/types/vector2.hpp",
+          "name": "Vector2Like"
+        },
+        {
+          "include": "flight/types/video_resource.hpp",
+          "name": "VideoResource"
+        },
+        {
+          "include": "flight/types/voxel_grid.hpp",
+          "name": "VoxelGrid"
+        }
+      ],
+      "diagnostic": "'CreateRenderTextureOptions' was not declared in this scope; did you mean 'flight::types::CreateRenderTextureOptions'?",
+      "defect": "The emitter writes 26 name(s) owned by flight::types unqualified inside namespace flight::texture, and without the headers that define them. Declared as one entry rather than one per name because this is a single emitter defect that produces names by the dozen per package; each name is still enumerated, carries its own defining header, and is introduced only into the files that use it unqualified.\\n\\nMEASURED GAIN TODAY: ZERO headers. Applied to a scratch tree and iterated to convergence, flight::texture and its two sibling packages stayed at 8 of 32 headers compiling. The chain terminates on twelve names with no declaration anywhere in the tree -- functions the compiler refused to generate -- so these packages need hand-written overrides as well. It is declared anyway because the names are necessary though not sufficient, because a using-declaration has no wrong-but-compiling outcome, and because otherwise whoever writes those overrides rediscovers all 56 names first. See docs/generation-state.md.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }

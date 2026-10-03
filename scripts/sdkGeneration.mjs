@@ -86,7 +86,36 @@ const compiler = resolveDependency(root, 'flight-compiler');
 const generatedRoot = outputOption
   ? path.resolve(root, outputOption.slice('--output='.length))
   : path.join(root, 'generated');
-const bindingProfiles = loadBindingProfiles(bindingProfileOptions);
+// The profile set the committed inventory is generated with, and the reason it is a DEFAULT rather than
+// something the npm scripts pass.
+//
+// flight-cpp targets a native SDL host, and without these profiles the compiler has no binding for
+// `console`, `performance`, `setInterval` or `clearInterval`, so it refuses whole modules that depend on
+// them. Measured: the unbound 150-package inventory emits 1907 of 2709 modules and refuses 802, and
+// @flighthq/log is refused ENTIRELY -- a 149-line placeholder reading "no part of it was generated".
+// Generated with these profiles, log.ts is 1081 lines of real output, and log's four-package closure is
+// 1015 of 1018 modules with THREE refusals.
+//
+// An unbound inventory can therefore never be a working SDK, and it is not what any of this repository's
+// repairs and overrides are measured against: both committed log overrides hash to the profiled file,
+// not the unbound one. Committing the unbound tree once already produced an inventory whose own
+// overrides did not match it.
+//
+// An explicit --binding-profile list still wins, so sdk:generate:headless and friends keep generating
+// their own narrower profiles into out/. The default exists so that the three call sites that must agree
+// -- sdk:generate, sdk:check and scripts/check.mjs's argument list -- cannot drift apart.
+const SDL_PROFILE_SET = [
+  'bindings/runtime.json',
+  'bindings/headless.json',
+  'bindings/web-types.json',
+  'bindings/sdl-image.json',
+  'bindings/sdl-gl.json',
+  'bindings/sdl-wgpu.json',
+  'bindings/sdl-app.json',
+];
+const bindingProfiles = loadBindingProfiles(
+  bindingProfileOptions.length > 0 ? bindingProfileOptions : SDL_PROFILE_SET,
+);
 // Before the integrity check, not after: a run killed with SIGKILL -- which the generation hang has to
 // be, since it ignores SIGTERM -- leaves its patches applied, and the integrity check would then refuse
 // with "flight has uncommitted changes" and no hint about the cause. Recovery reverts only dirt a
