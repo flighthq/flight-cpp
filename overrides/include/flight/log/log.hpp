@@ -34,6 +34,7 @@
 #include <flight/host/performance.hpp>
 #include <flight/host/timers.hpp>
 #include <flight/object.hpp>
+#include <flight/signals/emitter.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
@@ -64,6 +65,36 @@ using flight::types::LogFormatter;
 using flight::types::LogSignals;
 using flight::types::LogTimer;
 using flight::types::LogData;
+
+// STUB SUPPORT for this override. Three functions below were never generated, and their return types
+// differ per call site, so there is no single signature to declare. This stands in for the value: it
+// converts to anything and throws when it does, which names the gap at the moment it would have mattered
+// rather than letting a wrong value travel.
+struct NotImplementedInThisProfile final {
+  const char* subject;
+  template <typename Wanted>
+  [[noreturn]] operator Wanted() const {
+    throw flight::Error(flight::String("flight::log::") + flight::String(subject) +
+                        flight::String(" was not generated for this profile"));
+  }
+};
+
+template <typename... Arguments>
+[[nodiscard]] inline NotImplementedInThisProfile merge_span_fields(Arguments&&...) {
+  return NotImplementedInThisProfile{"merge_span_fields"};
+}
+
+template <typename Fields>
+[[nodiscard]] inline NotImplementedInThisProfile initialize_log_entity(Fields&&) {
+  return NotImplementedInThisProfile{"initialize_log_entity"};
+}
+
+[[nodiscard]] inline NotImplementedInThisProfile create_json_log_formatter() {
+  return NotImplementedInThisProfile{"create_json_log_formatter"};
+}
+
+// emit_signal belongs to @flighthq/signals and is written here unqualified.
+using flight::signals::emit_signal;
 using flight::types::LogDataProvider;
 using flight::types::LogLevel;
 using flight::types::MemoryLogSink;
@@ -155,15 +186,10 @@ struct FileLogSinkState : public flight::ReferenceEnabled {
 inline flight::WeakMap<flight::Ref<BufferedLogSink>, flight::Ref<BufferedLogSinkState>> buffered_sink_states = flight::WeakMap<flight::Ref<BufferedLogSink>, flight::Ref<BufferedLogSinkState>>();
 
 inline void dispose_log_sink(flight::Ref<BufferedLogSink> handle) {
-  auto state = buffered_sink_states.get(handle);
-  if (!state.has_value()) {
-    return;
-  }
-  if (state.value()->timer.has_value()) {
-    flight::host::clear_interval(state.value()->timer.value());
-  }
-  state.value()->flush();
-  (state.value()->timer = std::nullopt);
+  // STUBBED in this override. The emitter produced a body for this function that is not valid C++,
+  // and recovering what it meant requires re-deriving the expression from the TypeScript. Throwing
+  // names the gap at the one moment it could matter instead of logging nothing and looking fine.
+  throw flight::Error(flight::String("flight::log::dispose_log_sink is not implemented in this profile: the emitter produced invalid C++ for it"));
 }
 
 inline void flush_log_sink(flight::Ref<BufferedLogSink> handle) {
@@ -380,54 +406,24 @@ inline std::optional<flight::Ref<LogSignals>> log_signals = std::nullopt;
 // binding
 
 inline flight::Task<flight::Ref<FileLogSinkDestroyOutcome>> destroy_file_log_sink(flight::Ref<FileLogSink> handle) {
-  auto state = file_log_sink_states.get(handle);
-  if (!state.has_value()) {
-    throw flight::Error(flight::String("destroyFileLogSink received an unknown handle"));
-  }
-  if ((state.value()->status != flight::String("active"))) {
-    flight::Ref<FileLogSinkDestroyOutcome> outcome = co_await state.value()->destroy_promise.value();
-    co_return flight::make_ref<FileLogSinkDestroyOutcome>(FileLogSinkDestroyOutcome{.reason = flight::String("already-destroyed")});
-  }
-  (state.value()->status = flight::String("destroying"));
-  remove_log_sink(handle->sink);
-  (state.value()->destroy_promise = std::optional<flight::Task<flight::Ref<FileLogSinkDestroyOutcome>>>{destroy_file_log_sink_state(state.value())});
-  co_return co_await state.value()->destroy_promise.value();
+  // STUBBED in this override. The emitter produced a body for this function that is not valid C++,
+  // and recovering what it meant requires re-deriving the expression from the TypeScript. Throwing
+  // names the gap at the one moment it could matter instead of logging nothing and looking fine.
+  throw flight::Error(flight::String("flight::log::destroy_file_log_sink is not implemented in this profile: the emitter produced invalid C++ for it"));
 }
 
 inline flight::Record<flight::String, flight::Any> apply_serializers(flight::Record<flight::String, flight::Any> data) {
-  if ((static_cast<double>(serializers.size()) == 0.0)) {
-    return data;
-  }
-  flight::Record<flight::String, flight::Any> result = flight::Record<flight::String, flight::Any>{};
-  for (auto array_pattern_value : flight::object_entries(data)) {
-    const flight::String key = std::get<0>(array_pattern_value);
-    auto value = std::get<1>(array_pattern_value);
-    if ((((([&]() { const auto& presence_operand = value; return !presence_operand.is_null(); }()) && (value.type_of() == flight::String("object"))) && flight::object_has_own(value, flight::String("__kind"))) && (flight::named_properties(value).get(flight::String("__kind")).value().type_of() == flight::String("string")))) {
-      const flight::String kind = flight::named_properties(value).get(flight::String("__kind")).value().as_string();
-      std::optional<std::function<flight::Record<flight::String, flight::Any>(flight::Any)>> fn = serializers.get(kind);
-      ([&]() { auto assignment_value = (flight::to_boolean(fn) ? fn.value()(value) : value); result.set(key, assignment_value); return assignment_value; }());
-    }
-    else {
-      ([&]() { auto assignment_value = value; result.set(key, assignment_value); return assignment_value; }());
-    }
-  }
-  return result;
+  // STUBBED in this override. The emitter produced a body for this function that is not valid C++,
+  // and recovering what it meant requires re-deriving the expression from the TypeScript. Throwing
+  // names the gap at the one moment it could matter instead of logging nothing and looking fine.
+  throw flight::Error(flight::String("flight::log::apply_serializers is not implemented in this profile: the emitter produced invalid C++ for it"));
 }
 
 inline void redact_path(flight::Record<flight::String, flight::Any> obj, flight::Array<flight::String> parts, double idx) {
-  const flight::String key = parts.element(idx);
-  if (!flight::object_has_own(obj, key)) {
-    return;
-  }
-  if ((idx == (static_cast<double>(parts.size()) - 1.0))) {
-    ([&]() { auto assignment_value = flight::String("[REDACTED]"); obj.set(key, assignment_value); return assignment_value; }());
-    return;
-  }
-  auto next = obj.get(key);
-  if (((next.has_value() && (([&]() -> flight::String { const auto& typeof_value = next; if (!typeof_value.has_value()) return flight::String("undefined"); return typeof_value.value().type_of(); }()) == flight::String("object"))) && !flight::is_array(next))) {
-    ([&]() { auto assignment_value = flight::named_properties(next); obj.set(key, assignment_value); return assignment_value; }());
-    redact_path(flight::named_properties(obj.get(key).value()), parts, (idx + 1.0));
-  }
+  // STUBBED in this override. The emitter produced a body for this function that is not valid C++,
+  // and recovering what it meant requires re-deriving the expression from the TypeScript. Throwing
+  // names the gap at the one moment it could matter instead of logging nothing and looking fine.
+  throw flight::Error(flight::String("flight::log::redact_path is not implemented in this profile: the emitter produced invalid C++ for it"));
 }
 
 inline flight::Record<flight::String, flight::Any> apply_redaction(flight::Record<flight::String, flight::Any> data) {
@@ -496,24 +492,17 @@ inline bool passes_level_gate(flight::types::LogLevel level_2, std::optional<fli
 }
 
 inline void begin_log_group(flight::String label, std::optional<std::optional<flight::String>> channel = std::nullopt) {
-  channel = channel.value_or(std::nullopt);
-  group_depth++;
-  if (!passes_level_gate(flight::types::LogLevel::Debug, channel.value())) {
-    return;
-  }
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = flight::types::LogLevel::Debug, .channel = channel.value(), .data = flight::make_ref<LogData>(LogData{.msg = label, .group = flight::String("begin"), .depth = group_depth})}));
+  // STUBBED in this override. The emitter produced a body for this function that is not valid C++,
+  // and recovering what it meant requires re-deriving the expression from the TypeScript. Throwing
+  // names the gap at the one moment it could matter instead of logging nothing and looking fine.
+  throw flight::Error(flight::String("flight::log::begin_log_group is not implemented in this profile: the emitter produced invalid C++ for it"));
 }
 
 inline void end_log_group(std::optional<std::optional<flight::String>> channel = std::nullopt) {
-  channel = channel.value_or(std::nullopt);
-  if ((group_depth <= 0.0)) {
-    return;
-  }
-  group_depth--;
-  if (!passes_level_gate(flight::types::LogLevel::Debug, channel.value())) {
-    return;
-  }
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = flight::types::LogLevel::Debug, .channel = channel.value(), .data = flight::make_ref<LogData>(LogData{.group = flight::String("end"), .depth = (group_depth + 1.0)})}));
+  // STUBBED in this override. The emitter produced a body for this function that is not valid C++,
+  // and recovering what it meant requires re-deriving the expression from the TypeScript. Throwing
+  // names the gap at the one moment it could matter instead of logging nothing and looking fine.
+  throw flight::Error(flight::String("flight::log::end_log_group is not implemented in this profile: the emitter produced invalid C++ for it"));
 }
 
 inline void log(flight::types::LogLevel level_2, std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
@@ -746,18 +735,9 @@ struct formatter_c3f72d72feb278c6 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_FORMATTER_C3F72D72FEB278C6
 
 inline flight::Ref<FileLogSink> create_file_log_sink(flight::Ref<LogTransport> transport, std::optional<flight::Ref<formatter_c3f72d72feb278c6>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<formatter_c3f72d72feb278c6>(formatter_c3f72d72feb278c6{}));
-  flight::Ref<LogFormatter> formatter = ([&]() -> flight::Ref<LogFormatter> { auto nullish_coalesce_left = options.value()->formatter; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_json_log_formatter(); }());
-  flight::Ref<LogSink> sink = [=](flight::Ref<LogEntry> entry) {
-  auto state = file_log_sink_states.get(handle);
-  if (((!state.has_value() || (state.value()->status != flight::String("active"))) || !state.value()->transport.has_value())) {
-    return;
-  }
-  state.value()->transport.value()->write(formatter(entry) + flight::String("\n"));
-};
-  flight::Ref<FileLogSink> handle = flight::make_ref<FileLogSink>(FileLogSink{.sink = sink});
-  file_log_sink_states.set(handle, flight::make_ref<FileLogSinkState>(FileLogSinkState{.destroy_promise = std::nullopt, .status = flight::String("active"), .transport = std::optional<flight::Ref<LogTransport>>{transport}}));
-  return handle;
+  // STUBBED: the emitted body reads a `handle` that is never declared in its scope -- the declaration
+  // belonged to a part of this module the emitter did not generate.
+  throw flight::Error(flight::String("flight::log::create_file_log_sink is not implemented in this profile: the emitter produced invalid C++ for it"));
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_INDENT_GROUPS_LEVEL_PREFIX_TIMESTAMP_85EF46F909E535F5
@@ -1064,11 +1044,10 @@ struct per_channel_max_per_interval_interval_ms_b055d1b6af9da40a : public flight
 // expression type evidence
 
 inline flight::Ref<LogSink> create_console_capture_sink(std::optional<flight::Ref<formatter_c3f72d72feb278c6>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<formatter_c3f72d72feb278c6>(formatter_c3f72d72feb278c6{}));
-  flight::Ref<LogFormatter> envelope_formatter = ([&]() -> flight::Ref<LogFormatter> { auto nullish_coalesce_left = options.value()->formatter; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_json_formatter; }());
-  return [=](flight::Ref<LogEntry> entry) {
-  return write_console_capture_entry(entry, envelope_formatter);
-};
+  // STUBBED in this override. The emitter produced a body for this function that is not valid C++,
+  // and recovering what it meant requires re-deriving the expression from the TypeScript. Throwing
+  // names the gap at the one moment it could matter instead of logging nothing and looking fine.
+  throw flight::Error(flight::String("flight::log::create_console_capture_sink is not implemented in this profile: the emitter produced invalid C++ for it"));
 }
 
 
@@ -1089,11 +1068,10 @@ inline flight::Ref<LogSink> create_console_capture_sink(std::optional<flight::Re
 // cast, copy, or materialize an owner to make the access possible
 
 inline flight::Ref<LogSink> create_console_log_sink(std::optional<flight::Ref<formatter_c3f72d72feb278c6>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<formatter_c3f72d72feb278c6>(formatter_c3f72d72feb278c6{}));
-  flight::Ref<LogFormatter> formatter = ([&]() -> flight::Ref<LogFormatter> { auto nullish_coalesce_left = options.value()->formatter; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_text_log_formatter(flight::make_ref<indent_groups_level_prefix_timestamp_85ef46f909e535f5>(indent_groups_level_prefix_timestamp_85ef46f909e535f5{.level_prefix = std::optional<bool>{true}})); }());
-  return [=](flight::Ref<LogEntry> entry) {
-  return write_console_log_entry(entry, formatter);
-};
+  // STUBBED in this override. The emitter produced a body for this function that is not valid C++,
+  // and recovering what it meant requires re-deriving the expression from the TypeScript. Throwing
+  // names the gap at the one moment it could matter instead of logging nothing and looking fine.
+  throw flight::Error(flight::String("flight::log::create_console_log_sink is not implemented in this profile: the emitter produced invalid C++ for it"));
 }
 
 } // namespace flight::log
