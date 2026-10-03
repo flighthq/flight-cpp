@@ -679,3 +679,32 @@ hand-written replacement of log's sink constructors, and `log` blocks nineteen p
 | `signals` | 8 / 10 | 5 fail |
 | `node` | 13 / 21 | 15 fail |
 | `materials` | 16 / 24 | 20 fail |
+
+## `log`: a source patch that failed, and a repair that needed fixing
+
+Two attempts, both measured, one kept.
+
+**The source patch failed.** The emitter lowers the same spelling two ways: `Readonly<LogEntry>` becomes
+a readonly ROW in `type LogSink = (entry: Readonly<LogEntry>) => void` and a plain REFERENCE in an
+annotated lambda parameter written with identical text. Both spellings are in Flight's source and both
+are consistent there, so the hypothesis was that dropping the redundant annotation -- leaving the
+parameter contextually typed from `LogSink` -- would leave one source of truth.
+
+It did not change the lowering at all. The lambda still took `Ref<LogEntry>`. What it did change was a
+side effect: removing the annotations removed the only references that pulled
+`#include <flight/types/log.hpp>` into the emitted header, so the file then failed earlier with
+`'flight::types' has not been declared`. Ineffective and harmful, and reverted.
+
+**The repair needed fixing, and that was mine.** `insert-using-declaration` introduced four names into
+`namespace flight::log` without ensuring they existed: this tip emits `log.hpp` referencing four
+`flight::types` aliases and including none of them. A repair that introduces a name has to bring its
+definition with it, so the declaration now carries an optional `include`, hoisted to file scope on the
+ABI-assertion boundary -- not inside the namespace block, which is the mistake that cost three
+iterations on the struct alias.
+
+With that corrected, `log` is cleanly down to one class: roughly 200 diagnostics, all
+`could not convert '<lambda closure object>' to 'flight::Ref<std::function<void(StructuralRef<RowReadonly<RowOf<Ref<LogEntry>>>>)>>'`.
+Every one is the row-versus-reference disagreement. There is no declaration, include, or qualification
+that reconciles it, and rewriting ~20 lambda parameter types would be editing emitted code rather than
+adding text with no behavior. `log` is an emitter fix or a hand-written module, and it holds nineteen
+packages plus `@flighthq/geometry`, which is 30/30 emitted and fails only through log's header.
