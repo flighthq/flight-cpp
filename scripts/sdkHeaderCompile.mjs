@@ -10,6 +10,7 @@ import {
   loadDeferredPackages,
   refusedDeferrals,
 } from './deferredPackages.mjs';
+import { driftedOverrides, loadOverrides, overridesIncludeDirectory } from './overrides.mjs';
 
 // Compiles each generated SDK header on its own and records what happened.
 //
@@ -68,6 +69,10 @@ const concurrency = Math.max(
 const generatedRoot = path.resolve(root, valueOf('--generated=') ?? 'generated');
 const generatedInclude = path.join(generatedRoot, 'include');
 const runtimeInclude = path.join(root, 'include');
+// Hand-written overrides shadow the generated tree, so they go FIRST. The generated file is left
+// exactly as emitted and the override wins by include order alone; see scripts/overrides.mjs.
+const overrides = loadOverrides(root);
+const overrideInclude = overridesIncludeDirectory(root);
 const reportFile = path.resolve(root, valueOf('--report=') ?? path.join('out', 'sdk-header-compilation.json'));
 const resume = options.includes('--resume');
 const deadlineSeconds = numberOf('--deadline-seconds=', undefined);
@@ -163,6 +168,17 @@ if (!complete) {
   if (failures.length > 20) process.stderr.write(`- … and ${String(failures.length - 20)} more\n`);
   reportDeferred();
   process.exitCode = 1;
+}
+const drifted = driftedOverrides(overrides, generatedRoot);
+if (drifted.length > 0) {
+  process.stderr.write(`${String(drifted.length)} override(s) no longer match the file they were derived from:\n`);
+  for (const entry of drifted) process.stderr.write(`- ${entry.id}: ${entry.reason}\n`);
+  process.stderr.write('Re-derive the override from the current generated file, or drop it if it is no longer needed.\n');
+  process.exitCode = 1;
+}
+if (overrides.length > 0 && drifted.length === 0) {
+  process.stdout.write(`${String(overrides.length)} hand-written override(s) shadow the generated tree:\n`);
+  for (const entry of overrides) process.stdout.write(`- ${entry.path} (${entry.id})\n`);
 }
 if (refusedDeferral.length > 0) {
   process.stderr.write(`${String(refusedDeferral.length)} deferral(s) are refused: a required header includes them.\n`);
@@ -307,6 +323,7 @@ function compileHeader(header) {
         ...extraFlags,
         '-std=c++20',
         diagnosticLimit,
+        ...(overrides.length > 0 ? [`-I${overrideInclude}`] : []),
         `-I${generatedInclude}`,
         `-I${runtimeInclude}`,
         '-x',

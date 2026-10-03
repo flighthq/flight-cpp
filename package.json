@@ -33,6 +33,7 @@
     "image-data:oracle": "node ./scripts/imageDataOracle.mjs",
     "intl:oracle": "node ./scripts/intlSurfaceOracle.mjs",
     "number-to-fixed:oracle": "node ./scripts/numberToFixedOracle.mjs",
+    "overrides:check": "node ./scripts/overridesCheck.mjs",
     "promise-like:oracle": "node ./scripts/promiseLikeOracle.mjs",
     "regexp:oracle": "node ./scripts/regexpOracle.mjs",
     "rehydrate": "node ./scripts/rehydrate.mjs",

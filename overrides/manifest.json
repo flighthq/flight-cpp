@@ -1,0 +1,36 @@
+{
+  "schema": "flight-cpp-overrides/1",
+  "identity": "flight-cpp hand-written header overrides",
+  "note": "Hand-written headers that SHADOW the generated tree. An override is placed earlier on the include path than the generated include directory, so the generated file stays untouched and the override is the whole of the modification: the set of files under overrides/include is the diff, and no computation is needed to find it. Reserved for what the declared mechanisms cannot reach -- source-patches/ rewrites the pinned TypeScript, repairs/ adds text with no behavior to emitted output, and either is preferable because neither carries a copy. An override does carry a copy, so each entry records `derivedFrom`, the sha256 of the generated file it was produced from. When a pin move changes that file the digest stops matching and `npm run overrides:check` says so, which is the signal to re-derive the override or drop it. Each entry also carries a `status`: `complete` means the override compiles, `incomplete` means it is partway and says what remains, so nobody mistakes a half-finished override for a finished one.",
+  "overrides": [
+    {
+      "id": "types-log-sink-reference-parameter",
+      "path": "flight/types/log.hpp",
+      "package": "@flighthq/types",
+      "derivedFrom": "53d0632a259cf1125aaafaf89707ab52cb3afa40014aac0fd1df1196567e895a",
+      "reason": "The generated LogSink alias takes a readonly ROW while all ten LogSink lambdas in flight/log/log.hpp take a REFERENCE, so @flighthq/log cannot satisfy its own type. Roughly 200 diagnostics, all one class.",
+      "change": "One line: `using LogSink = std::function<void(flight::Ref<LogEntry>)>;` in place of the StructuralRef<RowReadonly<RowOf<Ref<LogEntry>>>> parameter.",
+      "equivalence": "The alias is brought into agreement with every use of it. The row spelling appears zero times in flight/log/log.hpp, and flight/types/log_signals.hpp -- the only other file naming a row of LogEntry -- declares Signal<std::function<void(row)>> handlers, a distinct type this does not touch. No declaration is added or removed and no body changes.",
+      "whyNotAPatchOrRepair": "A source patch cannot reach it: the TypeScript already says `(entry: Readonly<LogEntry>) => void` consistently in both the alias and the lambdas, and the emitter lowers that identical text two different ways -- a patch dropping the annotation was measured to leave the lowering unchanged. A repair cannot reach it either: this edits a type, which is behavior, not the text-only insertion repairs are limited to.",
+      "unblocks": "@flighthq/log's three headers, and @flighthq/geometry, which is 30/30 emitted and fails only inside log.hpp. log is the second-largest cascade root in the SDK at nineteen packages.",
+      "expires": "when the emitter lowers Readonly<LogEntry> the same way in a function-type alias and in an annotated lambda parameter.",
+      "authoredOn": "2026-10-03",
+      "status": "complete"
+    },
+    {
+      "id": "log-module-qualification-and-operators",
+      "path": "flight/log/log.hpp",
+      "package": "@flighthq/log",
+      "status": "incomplete",
+      "derivedFrom": "e2d3a2a71e1ef85c84a7bd490762677d8abd70ee3ce711dc0ac3eb3030c5c0e4",
+      "reason": "The emitted module had three mechanical defects on top of its un-generated functions: names left unqualified inside namespace flight::log, a TYPE emitted in snake_case (flight::Ref<log_level> for flight::types::LogLevel, 63 occurrences), and TypeScript's `in` operator emitted verbatim as C++ source text.",
+      "change": "Adds the defining includes and using-declarations for the unqualified types; renames log_level to flight::types::LogLevel; rewrites `flight::String(\"__kind\") in value` and `key in obj` to flight::object_has_own, which is exactly equivalent here because this runtime has no prototype chain and JavaScript's `in` would find only own properties.",
+      "equivalence": "Every edit is a name or an operator spelling. No declaration is added or removed, no body is restructured, and object_has_own answers the same question `in` asked.",
+      "whyNotAPatchOrRepair": "A using-declaration repair handles the qualification class and four such repairs are already declared, but a repair cannot RENAME a type the emitter mis-spelled, and cannot rewrite an operator -- that is editing code. The remaining work is writing functions, which no declared mechanism covers.",
+      "unblocks": "Took the module from roughly 200 diagnostics of a structural class to 69, all of which are now references to the functions best-effort marked NOT GENERATED. It does not yet compile.",
+      "remaining": "Eight un-generated functions must be written by hand: create_json_log_formatter, create_text_log_formatter, default_json_formatter, destroy_file_log_sink_state, initialize_log_entity, merge_span_fields, write_console_capture_entry, write_console_log_entry. Three names also still need resolving: emit_signal, handle, and the last log_level site.",
+      "expires": "when the emitter qualifies types-owned names from another namespace, spells type names in their declared case, and lowers the `in` operator.",
+      "authoredOn": "2026-10-03"
+    }
+  ]
+}
