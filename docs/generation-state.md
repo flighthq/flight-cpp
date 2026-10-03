@@ -1101,3 +1101,44 @@ What this does not change: the per-package and per-slice workaround is still rea
 actually measured, and `log`, `camera`, `geometry`, `node`, `registry` and `signals` were all repaired
 against a tree that generated in 6m6s. The open question is the size of the batch the committed
 inventory can be produced in, not whether the packages can be generated at all.
+
+## The unqualified-name class, swept to the bottom
+
+The report that drives `sdk:header-compile` keeps the FIRST diagnostic per header, which makes an
+iterative repair loop look like it has converged when it has only moved. Three rounds of
+repair-then-recompile over `node` and `registry` left the count at 6 of 24 compiling, because each round
+cleared one name and revealed the next. Compiling each header directly and collecting *every*
+`was not declared in this scope` in one pass names the whole class at once:
+
+```
+node      Matrix4  NodeAny  NodeOrderList  NodeOrderListEntryVisitor  NodeTraits  Rectangle
+          Transform3DLike  Transform3DNode  Vector3Like  ViewportAlign
+node      allocate_entity  finish_entity  create_signal  create_rectangle
+node      point  source  target
+registry  get_registry_table_entry_state  registry_entry_state
+```
+
+Three different things, and only the first two are repairable:
+
+1. **Ten types owned by `flight::types`**, used unqualified inside `namespace flight::node`. The existing
+   `insert-using-declaration` kind covers these exactly.
+2. **Four FUNCTIONS from other packages** — `allocate_entity` and `finish_entity` from
+   `flight::entity`, `create_signal` from `flight::signals`, `create_rectangle` from
+   `flight::geometry` — written unqualified. The same defect on a function rather than a type, and a
+   using-declaration introduces the name and nothing else, so it stays inside the rule.
+3. **`point`, `source` and `target` are not defects at all.** They are parameter names, and they failed
+   to resolve only because their own types (`Vector3Like`, `Transform3DNode`) were undeclared. They
+   disappear with group 1 and were never worth a repair. Worth saying because a sweep like this produces
+   exactly this kind of false positive, and counting them would have inflated the class by three.
+
+Fourteen repairs added; applied to the seventeen-package tree the full set now touches **256 files**.
+
+### Why `registry` is not finished by any of this
+
+`registry`'s two names look like the same class and are not. `registry_entry_state` is a TypeScript
+`const` object, not an enum, and the emitter lowered it correctly as a `flight::Ref<...>` in
+`flight::types` — so its uses need qualification *and* `->` instead of `.`, which is editing code.
+`get_registry_table_entry_state` is worse: it is one of **eleven refused functions** in that module,
+listed in the file's own `NOT GENERATED` header alongside `concatRegistryTable`, `createKeyedTable`,
+`withRegistryTableEntry` and eight more. Finishing `registry` means hand-writing most of a module, which
+is an override, not a repair, and it is not the cheapest thing left. Recorded rather than attempted.
