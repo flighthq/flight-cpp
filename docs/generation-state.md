@@ -1335,3 +1335,29 @@ two `double`s, which C++ has no `%` for and which `std::fmod` answers exactly �
 blocked by `disconnect_signal`'s function-reference identity and by a slot-storage type mismatch
 (`Array<optional<function<void(Array<Any>)>>>` against a signal whose `T` is `function<void(double)>`),
 so repairing one line would buy no package and add a maintenance obligation.
+
+## `camera` completes, and why its one-line fix is an override rather than a repair
+
+`camera` is now **21/21**. The whole modification is `.` to `->`, three times, in
+`get_camera3_dfrustum_corners`:
+
+```cpp
+(out.element(i_2)->x = results.element(i_2).element(0.0));
+```
+
+`out` is `Array<Vector3Like>` and `Vector3Like` is `flight::Ref<Vector3>`, a `shared_ptr`. The
+TypeScript is `out[i].x = results[i][0]` — a member assignment *through* a reference — and the emitter
+wrote a direct member access on the element, so the diagnostic is
+`'std::shared_ptr<flight::types::Vector3>' has no member named 'x'`. `Array::element` returns a
+reference to the stored pointer, so `->x = v` assigns through to the pointee: the same object the caller
+passed in, mutated in place, which is what the TypeScript does to the array it was given.
+
+It looks mechanical enough to be a repair, and it must not be one. Choosing between `.` and `->`
+requires knowing the element type is a pointer, which is type information no text rewrite has. There are
+eleven `.element(...).member` sites in the tree and `@flighthq/adjustments` **compiles** with its own,
+because there the element is a value — so a textual rule would break a complete package to fix this one.
+That is the test for whether something belongs in `repairs/`: not "is the edit small", but "is the
+condition under which it is correct visible in the text".
+
+Three overrides now, and all three are the same category — an operator or a name the emitter wrote as
+source text, which is the one thing the other three mechanisms cannot express.
