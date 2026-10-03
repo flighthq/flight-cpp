@@ -82,11 +82,30 @@ function insertUsingDeclaration(contents, repair) {
   // Unqualified use only. A file that always writes types::X is already correct.
   if (!new RegExp(`(?<!types::)\\b${symbol}\\b`, 'u').test(contents)) return undefined;
   if (contents.includes(repair.declaration)) return undefined;
+  // The declaration needs the name to EXIST, and the emitter does not always include the header that
+  // defines it -- flight/log/log.hpp names four flight::types aliases and includes none of them, so a
+  // bare using-declaration fails with "'flight::types' has not been declared". A repair that introduces
+  // a name has to bring its definition with it.
+  const withInclude =
+    repair.include === undefined || contents.includes(`#include <${repair.include}>`)
+      ? contents
+      : hoistInclude(contents, repair.include);
+  if (withInclude === undefined) return undefined;
   // Inside the package namespace, which is where the unqualified name is looked up.
-  const anchor = /^namespace flight::[a-z0-9_]+ \{\n/mu.exec(contents);
+  const anchor = /^namespace flight::[a-z0-9_]+ \{\n/mu.exec(withInclude);
   if (anchor === null) return undefined;
   const at = anchor.index + anchor[0].length;
-  return `${contents.slice(0, at)}\n${repair.declaration}\n${contents.slice(at)}`;
+  return `${withInclude.slice(0, at)}\n${repair.declaration}\n${withInclude.slice(at)}`;
+}
+
+// At file scope, on the emitter's own boundary between the include prologue and the declarations. It
+// cannot go inside the namespace block: an include parsed in there resolves every name it declares as
+// flight::<package>::flight::…, which is the mistake that cost three iterations on the struct alias.
+function hoistInclude(contents, header) {
+  const anchor = /^static_assert\(flight::runtime_contract\.cpp_abi == \d+,[^\n]*\n/mu.exec(contents);
+  if (anchor === null) return undefined;
+  const at = anchor.index + anchor[0].length;
+  return `${contents.slice(0, at)}\n#include <${header}>\n${contents.slice(at)}`;
 }
 
 // Returns the repaired text, or undefined when this file needs no repair. A file needs the
