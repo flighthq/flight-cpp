@@ -1238,3 +1238,100 @@ the semantics no workaround may change. So this is not repair work: it is a runt
 `flight::Presence<V>` already exists for it in `include/flight/presence.hpp`, though with its alternatives
 in the other order (`variant<Undefined, Null, V>` against the emitter's `variant<V, Null, Undefined>`),
 which is likely why it has never been used.
+
+## Half A terminates: the hang is `render-gl`, and the rest is wall clock
+
+The halving ran, and the first half settled the question the 145-package timeout had left open.
+
+**73 packages generate in 27 minutes.** The run then failed at the very end, for a reason that is its own
+lesson: `loadEmissionRepairs` was called *after* the compile, and the declaration file was edited while
+the run was in flight, so a 27-minute compile finished and then threw on a repair kind the
+already-loaded module did not recognise. Generation itself had completed. `loadEmissionRepairs` now runs
+before the compile so that mistake costs a second instead of half an hour.
+
+With 73 packages at 27 minutes, a 150-package run at more than 45 minutes is ordinary superlinear growth,
+not evidence of a second trigger. The ladder in full:
+
+| slice | packages | result |
+|---|---|---|
+| `types` alone | 1 | 1m40s |
+| `scene2d` closure | 13 | 3m59s |
+| `render` closure | 14 | completes |
+| `render-gl` closure **minus its own source** | 17 | 6m6s |
+| foundation-era closure | 38 | 6m59s |
+| **half A** | **73** | **27m7s** |
+| `render-gl` closure | 18 | hangs at 600s |
+| all applicable | 145 | no completion in 45m |
+
+Every row that excludes `render-gl` completes. Every row that includes it does not. Nothing in the
+timings needs a second explanation.
+
+## The committed inventory is now reproducible
+
+Several things had to be true before `generated/` could hold a best-effort tree, and none of them were:
+
+1. **Best-effort is now the default**, not a flag. The committed inventory has to be reproducible by
+   `npm run sdk:generate` with no arguments, and a flag would mean three call sites — that script,
+   `sdk:check`, and `scripts/check.mjs`'s own argument list — each remembering to pass it. `--best-effort`
+   is still accepted as a no-op so recorded command lines keep working; `--no-best-effort` asks for the
+   old strict behaviour.
+
+2. **The target set excludes what cannot be generated, by declaration.** A deferral normally changes no
+   generated output — headers are still emitted, still compiled, always reported — and that property is
+   why deferral is safe to have. The `render-gl` family is the one exception, and it is marked as such:
+   `generation: "does-not-terminate"` on the entry, refused by the loader on anything but a `kind` of
+   `defect`, because a package the generator cannot finish is debt we owe and never a capability this
+   profile lacks.
+
+   The *consequences* are computed, not listed: any package whose transitive closure reaches a
+   non-terminating one is excluded too, so a package that newly starts depending on `render-gl` is
+   excluded without anyone remembering to add it. That computation also corrected my own list — I had
+   been excluding seven packages, and only **four** are in `@flighthq/sdk`'s closure at all
+   (`render-gl`, `effects-gl`, `scene2d-gl`, `scene3d-gl`); `tool-capture` and `host-web` are workspace
+   packages outside the barrel, and `sdk` is not its own dependency. **150 of 154 packages are generable.**
+
+   I had also been excluding the five `web` packages from generation, which is wrong on the same
+   principle: applicability governs the compile gate and the shippable denominator, not whether a header
+   gets emitted.
+
+3. **Repair expiry is judged only on a full run.** A `--package=@flighthq/math` run reported ten repairs
+   as obsolete — five node ones, the geometry one, and four tree-wide ones whose constructs math does not
+   contain — which reads as an instruction to delete live repairs because of what the run did not ask
+   for. Scoping by `appliesTo` fixes the first group and provably cannot fix the last, since a repair
+   declared over `flight/` is in scope for every run and still only fires where its construct appears.
+   A full run is the only run where "matched nothing" and "no longer needed" are the same statement.
+
+## Where the foundation stands
+
+Measured against the repaired seventeen-package tree, 125 of 148 headers in the foundation slice compile,
+and the complete packages are no longer only the trivially independent ones:
+
+| package | headers | |
+|---|---|---|
+| `adjustments` | 22/22 | complete |
+| `geometry` | 30/30 | **complete** |
+| `math` | 17/17 | complete |
+| `color` | 11/11 | complete |
+| `entity` | 10/10 | complete |
+| `log` | 3/3 | **complete** |
+| `camera` | 18/21 | one file |
+| `node` | 12/21 | two causes |
+| `signals` | 6/10 | |
+| `registry` | 0/3 | eleven refused functions |
+
+`log` and `geometry` are the new ones, and they were the two that mattered: `log` is the second-largest
+cascade root in the SDK at nineteen packages, and `geometry` was 30/30 emitted and failing only inside
+`log`'s header and two `log_once` calls.
+
+`camera`'s remaining three failures are all the same single file, `frustum_corners.hpp`, which writes
+`out.element(i).x = ...` where the element is a `shared_ptr` — TypeScript's `out[i].x = v` through a
+reference, needing `->`. That is an operator emitted as source text, which `AGENTS.md` names as override
+territory rather than repair territory, and an override needs a `derivedFrom` digest from a `generated/`
+tree that actually contains the file. So `camera` completes once the inventory is promoted, not before.
+
+`signals` has one cheap item and two that are not. The cheap one is a single `binding_value %= period` on
+two `double`s, which C++ has no `%` for and which `std::fmod` answers exactly — JavaScript's `%` *is*
+`fmod`. It is deliberately left alone: it is the only such site in the tree, and behind it `signals` is
+blocked by `disconnect_signal`'s function-reference identity and by a slot-storage type mismatch
+(`Array<optional<function<void(Array<Any>)>>>` against a signal whose `T` is `function<void(double)>`),
+so repairing one line would buy no package and add a maintenance obligation.
