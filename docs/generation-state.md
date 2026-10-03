@@ -962,3 +962,111 @@ Those top three — 29 of 55 — are the asserted-row family already documented 
 have been measured at zero every time they were tried from this side. The next two are the anonymous
 variant family in `materials`. Nothing in the residual list is new; the value of this run is that the
 distribution is now measured across seventeen packages rather than inferred from four.
+
+## The largest single cause: `flight::Ref` is a non-deduced context
+
+This one is worth stating plainly because it had been mis-attributed for a long time, including by me.
+
+`flight::Ref<Value>` is not a transparent alias. It resolves through
+
+```cpp
+template <typename Value>
+using Ref = typename detail::reference_shape<Value,
+    decltype(detail::complete_probe<Value>(0))::value>::type;
+```
+
+— a computation. A template parameter that appears *only* inside that alias is therefore in a
+**non-deduced context**, and every generated signal and node helper is declared exactly that way:
+
+```cpp
+template <typename T, typename... ArgsPack>
+  requires flight::callable_signature_v1<T>::template accepts<ArgsPack...>
+inline void emit_signal(flight::Ref<flight::types::Signal<T>> signal, ArgsPack&&... args);
+```
+
+The declaration is well-formed, the file compiles alone, and **every call fails**:
+
+```
+error: no matching function for call to 'emit_signal(...)'
+note:   couldn't deduce template parameter 'T'
+```
+
+That is why packages which are 100% emitted still have failing headers. `@flighthq/camera` is 21/21
+emitted and three of its 21 headers fail for no reason of its own — they reach `flight/log/log.hpp`,
+whose two `emit_signal` calls cannot deduce. Measured over the seventeen-package slice, the shape
+appears in 13 files and 33 parameter positions, concentrated in `node`, `signals` and `registry`, which
+are three of the stuck packages and the dependencies of most of the rest.
+
+### What it is not
+
+Two earlier readings were wrong, and both cost real time:
+
+- **It is not the row-versus-reference seam.** The runtime already admits that deliberately:
+  `callable_argument_v1` accepts a `std::shared_ptr<T>` argument for a structural-row parameter over
+  `T`, with a comment explaining why. Probed directly, both
+  `accepts<Ref<LogEntry>&>` over a `Ref<LogEntry>` parameter and over a
+  `StructuralRef<RowReadonly<RowOf<Ref<LogEntry>>>>` parameter are **true**. An override rewriting
+  `LogSignals`' handler spelling to match the emit site was written, measured, and **deleted as
+  unnecessary** — the repair alone closes it.
+- **It is not function-reference identity.** The entry for the `log` override claimed the remaining ten
+  diagnostics came from `emit_signal` comparing a signal's slots. `emit_signal` compares nothing; it
+  forwards to `signal->emit`. That misreading is what made `log` look unfinishable.
+
+### The repair, and why its equivalence is compiled rather than argued
+
+`reference_shape` has exactly two answers: `std::shared_ptr<Value>` for a `Value` deriving from
+`flight::ReferenceEnabled`, and `Value` itself otherwise — and `make_ref` already `static_assert`s that
+correspondence. So writing the alias's own result in place of the alias is a **spelling** change, not a
+behavior change, and that is what keeps it inside the rule repairs live by. The only difference is that
+the result is deducible and the alias is not.
+
+A new repair kind, `respell-reference-alias`, does that. Twelve are declared, each naming the template
+and which of the two expansions it takes:
+
+| expansion | symbols |
+|---|---|
+| `shared-pointer` | `Signal`, `SignalData`, `SignalConnection`, `Node`, `NodeRuntime`, `NodeOrderList`, `OrdinalTable`, `KeyedTable`, `SlotTable` |
+| `value` | `Transform2DNode`, `Transform3DNode`, `RegistryTable` |
+
+The split is not cosmetic and getting it backwards is a type error: the first group are structs deriving
+from `ReferenceEnabled`, the second are aliases to a `StructuralRef` or a `std::variant`, for which
+`Ref<X>` collapses to `X`. So the repair does not *argue* its equivalence — generation emits
+`flight/repairs/reference_alias_identity.hpp`, one line per repair:
+
+```cpp
+static_assert(std::same_as<flight::Ref<flight::types::Signal<std::function<void()>>>,
+                           std::shared_ptr<flight::types::Signal<std::function<void()>>>>,
+              "respell-reference-alias respell-reference-alias-signal claims the wrong expansion for Signal");
+```
+
+compiled by the same gate that compiles the headers. A wrong expansion fails the build instead of
+quietly changing a signature. All twelve assertions compile.
+
+Applied to the seventeen-package tree the twelve repairs touch **205 files**, and every one of them
+matches something, so none is already obsolete.
+
+## `log` compiles
+
+With the deduction defect repaired, `flight/log/log.hpp` goes to **zero diagnostics**. Two further
+corrections were needed, both found only once the module got far enough to show them:
+
+1. **`Record<LogLevel, String>` rekeyed to `Record<double, String>`.** TypeScript's
+   `Record<LogLevel, string>` is keyed by a *number* at runtime — `LogLevel` is a numeric enum and
+   `_levelNames[level]` is a numeric index. The emitter kept the enum as the C++ key type, and
+   `flight::Record` admits only the PropertyKey domain, so the spelling failed its own `static_assert`:
+   *Flight Record key is not a PropertyKey domain*. Twelve enum keys and both lookups now convert at the
+   boundary. Same class of correction as the `LogLevel` work already in that override.
+2. **`remove_log_sink` stubbed to throw.**
+
+That second one is where the refusal is load-bearing, and the honest accounting is this: function
+reference identity was reachable from exactly **two lines** in `@flighthq/log`.
+
+- `add_log_sink`'s `sinks.includes(sink)` — a dedupe. Dropped, with the divergence named: registering
+  the same sink twice now appends twice. No caller in the SDK does.
+- `remove_log_sink`'s `sinks.index_of(sink)` — finding the sink by identity **is** the function. It
+  cannot be dropped and it cannot be faked, so it throws and says why.
+
+`@flighthq/signals` keeps the genuine blocker in `flight/signals/slot.hpp`: `disconnect_signal` and
+`is_slot_connected` compare a stored slot against a passed one, which is listener removal. Those are
+templates, so they fail only where instantiated — which is a materially better position than "log and
+signals are one blocker holding nineteen packages", the claim this section replaces.
