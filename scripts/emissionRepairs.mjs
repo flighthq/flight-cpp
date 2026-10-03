@@ -12,7 +12,7 @@ import path from 'node:path';
 // a patched build into a silent fork of the generator.
 
 const SCHEMA = 'flight-cpp-emission-repairs/1';
-const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias']);
+const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias', 'name-in-place-alternative']);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
 // variant). The two are not interchangeable and the wrong one is a type error, so each repair states
@@ -44,7 +44,9 @@ export function loadEmissionRepairs(root) {
     const required =
       repair.kind === 'respell-reference-alias'
         ? ['id', 'kind', 'appliesTo', 'symbol', 'expansion', 'witness', 'witnessInclude', 'diagnostic', 'defect', 'expires']
-        : ['id', 'kind', 'appliesTo', 'symbol', 'declaration', 'diagnostic', 'defect', 'expires'];
+        : repair.kind === 'name-in-place-alternative'
+          ? ['id', 'kind', 'appliesTo', 'symbol', 'diagnostic', 'defect', 'expires']
+          : ['id', 'kind', 'appliesTo', 'symbol', 'declaration', 'diagnostic', 'defect', 'expires'];
     for (const field of required) {
       if (typeof repair[field] !== 'string' || repair[field].length === 0) {
         throw new Error(`Emission repair ${repair.id ?? '<unnamed>'} is missing required field ${field}`);
@@ -74,8 +76,10 @@ export function applyEmissionRepairs(repairs, files) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
       const repaired =
-        repair.kind === 'respell-reference-alias'
-          ? respellReferenceAlias(contents, repair)
+        repair.kind === 'name-in-place-alternative'
+          ? nameInPlaceAlternative(contents, repair)
+          : repair.kind === 'respell-reference-alias'
+            ? respellReferenceAlias(contents, repair)
           : repair.kind === 'insert-using-declaration'
             ? insertUsingDeclaration(contents, repair)
             : insertForwardDeclaration(contents, repair);
@@ -85,6 +89,28 @@ export function applyEmissionRepairs(repairs, files) {
     }
   }
   return applied;
+}
+
+// Names the variant alternative the emitter left for deduction to find.
+//
+// The emitter writes `std::variant<A, B, C>{std::in_place_type<B>, {k1, v1, k2, v2}}`. There is no such
+// constructor: `variant(in_place_type_t<T>, Args&&...)` has to DEDUCE Args, and a brace-enclosed
+// initializer list is a non-deduced context, so the call fails with
+// "no matching function for call to 'std::variant<...>::variant(<brace-enclosed initializer list>)'".
+// The initializer-list overload cannot rescue it either, because `U` in
+// `variant(in_place_type_t<T>, initializer_list<U>, Args&&...)` is equally undeducible from `{k, v, k, v}`.
+//
+// Writing the type once more -- `std::in_place_type<B>, B{k1, v1, k2, v2}` -- selects
+// `variant(in_place_type_t<T>, T&&)`, which direct-initializes the B alternative from a B built out of
+// the identical initializer. The name inserted is the one already written inside `in_place_type<...>`,
+// so the repair introduces nothing the emitter had not already decided; it only spells the alternative
+// where the language cannot infer it. The alternative holds the same value, reached through one move of
+// a value type. That is the narrowest edit that compiles, and it is why this is a repair and not an
+// override: no declaration, no body, no type changes.
+function nameInPlaceAlternative(contents, repair) {
+  const marker = `std::in_place_type<${repair.symbol}>, {`;
+  if (!contents.includes(marker)) return undefined;
+  return contents.split(marker).join(`std::in_place_type<${repair.symbol}>, ${repair.symbol}{`);
 }
 
 // Writes the type `flight::Ref<X>` already IS, in place of the alias, so a function template can

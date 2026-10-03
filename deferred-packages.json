@@ -14,6 +14,76 @@
       "unblockedBy": "A RowOwner recovery path that admits an applied-provider projection of a declared row, with the semantic test that proves it.",
       "deferredOn": "2026-10-01",
       "kind": "defect"
+    },
+    {
+      "package": "@flighthq/render-gl",
+      "includePrefix": "flight/render_gl",
+      "reason": "Generation does not terminate over this package's own source.",
+      "evidence": "Bisected. @flighthq/render-gl's full 18-package closure does not finish in 600s. The SAME closure with render-gl's own 33 modules removed -- 17 packages, 1240 modules, including all four packages render-gl adds over the render slice -- completes in 6m6s and emits 1185. The render slice (14 packages, 1208 modules) and the scene2d slice (13 packages, 1175 modules) both complete. So the trigger is this package's own source, not graph size or module count, and `--package=@flighthq/render-gl` is a minimal reproduction. It also explains the full-graph hang that four consecutive compiler tips were blamed for: the full graph contains render-gl. See docs/generation-state.md.",
+      "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
+      "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
+      "deferredOn": "2026-10-03",
+      "kind": "defect"
+    },
+    {
+      "package": "@flighthq/effects-gl",
+      "includePrefix": "flight/effects_gl",
+      "reason": "Depends on @flighthq/render-gl, so its closure contains the module that does not terminate.",
+      "evidence": "Bisected. @flighthq/render-gl's full 18-package closure does not finish in 600s. The SAME closure with render-gl's own 33 modules removed -- 17 packages, 1240 modules, including all four packages render-gl adds over the render slice -- completes in 6m6s and emits 1185. The render slice (14 packages, 1208 modules) and the scene2d slice (13 packages, 1175 modules) both complete. So the trigger is this package's own source, not graph size or module count, and `--package=@flighthq/render-gl` is a minimal reproduction. It also explains the full-graph hang that four consecutive compiler tips were blamed for: the full graph contains render-gl. See docs/generation-state.md.",
+      "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
+      "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
+      "deferredOn": "2026-10-03",
+      "kind": "defect"
+    },
+    {
+      "package": "@flighthq/scene2d-gl",
+      "includePrefix": "flight/scene2d_gl",
+      "reason": "Depends on @flighthq/render-gl, so its closure contains the module that does not terminate.",
+      "evidence": "Bisected. @flighthq/render-gl's full 18-package closure does not finish in 600s. The SAME closure with render-gl's own 33 modules removed -- 17 packages, 1240 modules, including all four packages render-gl adds over the render slice -- completes in 6m6s and emits 1185. The render slice (14 packages, 1208 modules) and the scene2d slice (13 packages, 1175 modules) both complete. So the trigger is this package's own source, not graph size or module count, and `--package=@flighthq/render-gl` is a minimal reproduction. It also explains the full-graph hang that four consecutive compiler tips were blamed for: the full graph contains render-gl. See docs/generation-state.md.",
+      "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
+      "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
+      "deferredOn": "2026-10-03",
+      "kind": "defect"
+    },
+    {
+      "package": "@flighthq/scene3d-gl",
+      "includePrefix": "flight/scene3d_gl",
+      "reason": "Depends on @flighthq/render-gl, so its closure contains the module that does not terminate.",
+      "evidence": "Bisected. @flighthq/render-gl's full 18-package closure does not finish in 600s. The SAME closure with render-gl's own 33 modules removed -- 17 packages, 1240 modules, including all four packages render-gl adds over the render slice -- completes in 6m6s and emits 1185. The render slice (14 packages, 1208 modules) and the scene2d slice (13 packages, 1175 modules) both complete. So the trigger is this package's own source, not graph size or module count, and `--package=@flighthq/render-gl` is a minimal reproduction. It also explains the full-graph hang that four consecutive compiler tips were blamed for: the full graph contains render-gl. See docs/generation-state.md.",
+      "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
+      "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
+      "deferredOn": "2026-10-03",
+      "kind": "defect"
+    },
+    {
+      "package": "@flighthq/tool-capture",
+      "includePrefix": "flight/tool_capture",
+      "reason": "Depends on @flighthq/render-gl, so its closure contains the module that does not terminate.",
+      "evidence": "Bisected. @flighthq/render-gl's full 18-package closure does not finish in 600s. The SAME closure with render-gl's own 33 modules removed -- 17 packages, 1240 modules, including all four packages render-gl adds over the render slice -- completes in 6m6s and emits 1185. The render slice (14 packages, 1208 modules) and the scene2d slice (13 packages, 1175 modules) both complete. So the trigger is this package's own source, not graph size or module count, and `--package=@flighthq/render-gl` is a minimal reproduction. It also explains the full-graph hang that four consecutive compiler tips were blamed for: the full graph contains render-gl. See docs/generation-state.md.",
+      "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
+      "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
+      "deferredOn": "2026-10-03",
+      "kind": "defect"
+    },
+    {
+      "package": "@flighthq/host-web",
+      "includePrefix": "flight/host_web",
+      "reason": "Depends on @flighthq/render-gl, and separately declares flight.environment \"web\", which this profile does not provide.",
+      "evidence": "Bisected. @flighthq/render-gl's full 18-package closure does not finish in 600s. The SAME closure with render-gl's own 33 modules removed -- 17 packages, 1240 modules, including all four packages render-gl adds over the render slice -- completes in 6m6s and emits 1185. The render slice (14 packages, 1208 modules) and the scene2d slice (13 packages, 1175 modules) both complete. So the trigger is this package's own source, not graph size or module count, and `--package=@flighthq/render-gl` is a minimal reproduction. It also explains the full-graph hang that four consecutive compiler tips were blamed for: the full graph contains render-gl. See docs/generation-state.md.",
+      "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
+      "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
+      "deferredOn": "2026-10-03",
+      "kind": "defect"
+    },
+    {
+      "package": "@flighthq/sdk",
+      "includePrefix": "flight/sdk",
+      "reason": "The SDK barrel re-exports @flighthq/render-gl, so its closure contains the module that does not terminate. Every other package remains generable individually.",
+      "evidence": "Bisected. @flighthq/render-gl's full 18-package closure does not finish in 600s. The SAME closure with render-gl's own 33 modules removed -- 17 packages, 1240 modules, including all four packages render-gl adds over the render slice -- completes in 6m6s and emits 1185. The render slice (14 packages, 1208 modules) and the scene2d slice (13 packages, 1175 modules) both complete. So the trigger is this package's own source, not graph size or module count, and `--package=@flighthq/render-gl` is a minimal reproduction. It also explains the full-graph hang that four consecutive compiler tips were blamed for: the full graph contains render-gl. See docs/generation-state.md.",
+      "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
+      "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
+      "deferredOn": "2026-10-03",
+      "kind": "defect"
     }
   ]
 }
