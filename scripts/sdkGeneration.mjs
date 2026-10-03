@@ -15,13 +15,14 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { loadDeferredPackages, nonTerminatingPackages } from './deferredPackages.mjs';
 import { resolveDependency } from './dependencyLock.mjs';
 import {
   aliasDuplicateStructuralStructs,
   applyEmissionRepairs,
-  referenceAliasIdentityProof,
   loadEmissionRepairs,
   obsoleteRepairs,
+  referenceAliasIdentityProof,
 } from './emissionRepairs.mjs';
 import {
   applySourcePatches,
@@ -43,13 +44,19 @@ const check = options.includes('--check');
 // refusal. The compiler's report then names, per module, whether the file on disk is output or a
 // placeholder, which consumers a hand-written replacement must satisfy, and the declaration fingerprints
 // an overlay watches to notice the module moving underneath it between pins.
-const bestEffort = options.includes('--best-effort');
+//
+// It is the DEFAULT, because it is what the committed inventory is generated with, and the committed
+// inventory has to be reproducible by `npm run sdk:generate` with no arguments. Making it a flag instead
+// would mean three call sites -- that script, `sdk:check`, and scripts/check.mjs's own argument list --
+// each having to remember it, which is exactly the kind of agreement that silently stops holding.
+// `--no-best-effort` asks for the old strict behaviour, which is now only useful for comparing the two.
+const bestEffort = !options.includes('--no-best-effort');
 // Generate a subset of the SDK instead of the whole dependency closure. `analyzeFlightWorkspace`
 // resolves each named package's own closure, so naming one package still compiles what it needs. This
 // exists for two reasons that happen to coincide: the eventual shape of this repository is per-package
-// delivery, and the generation hang upstream cannot reproduce is only observed on the full 2904-module
-// graph, so a smaller graph is the cheapest way to find out whether it scales or simply does not
-// terminate.
+// delivery, and bisecting the generation hang needed exactly this. That bisection is done -- the trigger
+// is @flighthq/render-gl's own source, and the default target set now excludes it -- so naming a package
+// is how you reproduce the hang deliberately, which is the only way to tell whether it is fixed.
 const requestedPackages = options
   .filter((option) => option.startsWith('--package='))
   .map((option) => option.slice('--package='.length))
@@ -61,7 +68,10 @@ const outputOption = options.find((option) => option.startsWith('--output='));
 const unknown = options.filter(
   (option) =>
     option !== '--check' &&
+    // Still accepted, and now a no-op: it names the default. Rejecting it would break every command
+    // line recorded in docs/generation-state.md for no gain.
     option !== '--best-effort' &&
+    option !== '--no-best-effort' &&
     !option.startsWith('--package=') &&
     !option.startsWith('--binding-profile=') &&
     !option.startsWith('--output='),
@@ -87,6 +97,7 @@ const bindingProfiles = loadBindingProfiles(bindingProfileOptions);
 // threw on a declaration the already-loaded module did not recognise. Validating up front turns that
 // into an immediate error instead of a wasted half hour.
 const declaredRepairs = loadEmissionRepairs(root);
+const deferredPackages = loadDeferredPackages(root);
 const recovery = recoverStalePatches(loadSourcePatches(root), flight);
 if (recovery.recovered.length > 0) {
   process.stdout.write(
@@ -196,10 +207,29 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   // target list literally and resolves no closure of its own, so naming @flighthq/math alone compiles
   // math against nothing and turns four modules into placeholders purely because @flighthq/types was
   // absent. A subset that omits a dependency does not measure the subset, it measures the omission.
+  // The default target set is every SDK package EXCEPT those generation cannot finish, and every package
+  // whose closure reaches one. The exclusion is computed rather than read from the declaration list, so a
+  // package that newly starts depending on @flighthq/render-gl is excluded without anyone remembering to
+  // add it -- the list declares the triggers, not their consequences.
+  //
+  // A named --package set is honoured as given; naming an excluded package is how you reproduce the hang
+  // deliberately, which is the only way to tell whether it is fixed.
+  const nonTerminating = new Set(nonTerminatingPackages(deferredPackages));
+  const reaches = (name) =>
+    transitivePackageClosure([name], flightDependency.directory, sdkPackageNames).some((dependency) =>
+      nonTerminating.has(dependency),
+    );
+  const generable = sdkPackageNames.filter((name) => !reaches(name));
+  const excluded = sdkPackageNames.filter((name) => reaches(name));
+  if (requestedPackages.length === 0 && excluded.length > 0) {
+    process.stdout.write(
+      `Excluded ${String(excluded.length)} package(s) generation cannot finish: ${excluded.join(', ')}\n`,
+    );
+  }
   const packageNames =
     requestedPackages.length > 0
       ? transitivePackageClosure(requestedPackages, flightDependency.directory, sdkPackageNames)
-      : sdkPackageNames;
+      : generable;
   const inventory = analyzeFlightWorkspace({
     targetPackageNames: packageNames,
     upstreamDirectory: flightDependency.directory,
@@ -388,7 +418,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       new Map(sourcePatches.map((patch) => [patch.id, patch])),
       refusals,
     ),
-    obsoleteRepairs: obsoleteRepairs(appliedRepairs, profiles),
+    obsoleteRepairs: obsoleteRepairs(appliedRepairs, profiles, requestedPackages.length === 0),
     patchedModules: appliedPatches.length,
     aliasedStructs: aliasedStructs.structs.length,
     repairedFiles:

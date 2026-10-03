@@ -23,7 +23,8 @@
       "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
       "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
       "deferredOn": "2026-10-03",
-      "kind": "defect"
+      "kind": "defect",
+      "generation": "does-not-terminate"
     },
     {
       "package": "@flighthq/effects-gl",
@@ -33,7 +34,8 @@
       "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
       "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
       "deferredOn": "2026-10-03",
-      "kind": "defect"
+      "kind": "defect",
+      "generation": "does-not-terminate"
     },
     {
       "package": "@flighthq/scene2d-gl",
@@ -43,7 +45,8 @@
       "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
       "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
       "deferredOn": "2026-10-03",
-      "kind": "defect"
+      "kind": "defect",
+      "generation": "does-not-terminate"
     },
     {
       "package": "@flighthq/scene3d-gl",
@@ -53,7 +56,8 @@
       "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
       "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
       "deferredOn": "2026-10-03",
-      "kind": "defect"
+      "kind": "defect",
+      "generation": "does-not-terminate"
     },
     {
       "package": "@flighthq/tool-capture",
@@ -63,7 +67,8 @@
       "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
       "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
       "deferredOn": "2026-10-03",
-      "kind": "defect"
+      "kind": "defect",
+      "generation": "does-not-terminate"
     },
     {
       "package": "@flighthq/host-web",
@@ -73,7 +78,8 @@
       "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
       "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
       "deferredOn": "2026-10-03",
-      "kind": "defect"
+      "kind": "defect",
+      "generation": "does-not-terminate"
     },
     {
       "package": "@flighthq/sdk",
@@ -83,7 +89,9 @@
       "owner": "flight-compiler (lowerTypeScriptTypeNodeEvidence, typeScriptSemanticLowering.js)",
       "unblockedBy": "A generation run over @flighthq/render-gl that terminates. The hang was profiled to lowerTypeScriptTypeNodeEvidence recursing into itself with no progress output; the process ignores SIGTERM, which is what proves it is a synchronous spin rather than slow work.",
       "deferredOn": "2026-10-03",
-      "kind": "defect"
+      "kind": "defect",
+      "generation": "does-not-terminate"
     }
-  ]
+  ],
+  "generationNote": "A deferral normally changes no generated output: headers are still emitted, still compiled and always reported. The entries carrying `generation: \"does-not-terminate\"` are the exception, and the only one. Generation over @flighthq/render-gl does not finish -- its own 33 modules are the trigger, proven by generating its entire 18-package closure WITHOUT them in 6m6s -- so there is no output to emit or compile, and every package whose closure contains it inherits that. Generation excludes them and reports it, which is what makes the committed inventory reproducible at all. `kind` must be `defect` for these: a package the generator cannot finish is debt, never a capability this profile lacks."
 }

@@ -42,6 +42,18 @@ export function loadDeferredPackages(root) {
         throw new Error(`Deferred package ${entry.package ?? '<unnamed>'} is missing required field ${field}`);
       }
     }
+    if (entry.generation !== undefined && entry.generation !== 'does-not-terminate') {
+      throw new Error(
+        `Deferred package ${entry.package} has unknown generation value ${entry.generation}; the only ` +
+          'value is "does-not-terminate".',
+      );
+    }
+    if (entry.generation === 'does-not-terminate' && entry.kind !== 'defect') {
+      throw new Error(
+        `Deferred package ${entry.package} claims generation does-not-terminate but is kind ${entry.kind}. ` +
+          'A package the generator cannot finish is a defect we owe, never not-applicable.',
+      );
+    }
     if (!KINDS.has(entry.kind)) {
       throw new Error(`Deferred package ${entry.package} has unknown kind ${entry.kind}`);
     }
@@ -51,6 +63,21 @@ export function loadDeferredPackages(root) {
 
 // The host environments this profile can actually run. A package declaring any other environment in its
 // own package.json is not applicable here. Returns a Set so the caller can ask directly.
+// The packages generation cannot even attempt, because the compiler does not terminate over them.
+//
+// This is the ONE case where a deferral changes generated output, and it is worth being explicit that it
+// is an exception rather than how deferral works. Every other deferral still emits its headers and still
+// compiles them, so progress stays visible and un-deferring is a one-line change. These cannot: there is
+// no output to show, because the run that would produce it never ends. Excluding them is the difference
+// between a reproducible committed inventory and none at all.
+//
+// It is declared per entry rather than inferred, and `loadDeferredPackages` refuses the claim on anything
+// but a `defect`, because a package the generator cannot finish is debt we owe and never a capability
+// this profile lacks.
+export function nonTerminatingPackages(deferred) {
+  return deferred.filter((entry) => entry.generation === 'does-not-terminate').map((entry) => entry.package);
+}
+
 export function loadApplicableEnvironments(root) {
   const file = path.join(root, 'deferred-packages.json');
   try {

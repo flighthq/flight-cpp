@@ -78,7 +78,12 @@ export function loadEmissionRepairs(root) {
 // Rewrites `files` in place where a repair applies. Returns one record per repair naming the files it
 // touched, so the caller can record them in the manifest and fail when a repair matched nothing.
 export function applyEmissionRepairs(repairs, files) {
-  const applied = repairs.map((repair) => ({ expectedWhen: repair.expectedWhen, files: [], id: repair.id }));
+  const applied = repairs.map((repair) => ({
+    appliesTo: repair.appliesTo,
+    expectedWhen: repair.expectedWhen,
+    files: [],
+    id: repair.id,
+  }));
   if (repairs.length === 0) return applied;
   // To a FIXED POINT, because one repair can create the condition another answers: the bare-Node repair
   // writes a type argument, and if that argument needed a using-declaration the declaration repair had
@@ -402,8 +407,16 @@ function insertForwardDeclaration(contents, repair) {
 
 // The expiry check. A repair that matched nothing is either fixed upstream or no longer reachable;
 // either way carrying it is how a patched build drifts into a fork.
-export function obsoleteRepairs(applied, profiles) {
+export function obsoleteRepairs(applied, profiles, fullRun) {
   const bound = profiles.length > 0;
+  // Expiry is judged ONLY on a full run, the same way the structural-row-key guard is. On a subset run
+  // every repair outside the named packages matches nothing, and calling those obsolete is an instruction
+  // to delete live repairs because of what the run did not ask for: a `--package=@flighthq/math` run
+  // named five node repairs, the geometry one, and four tree-wide ones whose constructs math simply does
+  // not contain. Scoping by `appliesTo` fixes the first group and cannot fix the last, because a repair
+  // declared over `flight/` is in scope for every run and still only fires where its construct appears.
+  // A full run is the only run where "matched nothing" and "no longer needed" are the same statement.
+  if (!fullRun) return [];
   return applied
     .filter((record) => record.files.length === 0)
     .filter((record) => record.expectedWhen !== 'withBindings' || bound)
