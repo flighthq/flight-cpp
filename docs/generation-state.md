@@ -547,7 +547,7 @@ So the single blocking issue for the freeze-and-patch plan is now the generation
 coverage. Nothing in this repository can raise coverage past 52% while the only usable compiler predates
 the mode that would raise it.
 
-### One experiment worth running next
+### One experiment worth running next (answered below — see "The generation hang, bisected to one package")
 
 The hang is observed on the full 2904-module graph. It is not known whether it is unbounded recursion or
 merely superlinear, and the discriminator is cheap in principle: run `d4287b4` over a single small package
@@ -880,3 +880,85 @@ every `std::function` it writes, and the same blocker that stops `@flighthq/sign
 
 So `log` and `signals` are one blocker, not two, and it is the single highest-value thing left in the
 corpus: it holds nineteen packages plus `geometry` through log, and `signals` on its own account.
+
+## The generation hang, bisected to one package
+
+The experiment proposed above was run, and then run to a conclusion. The answer is not scaling.
+
+`sdkGeneration.mjs` now takes `--package=` (repeatable, resolving the transitive closure itself, because
+`analyzeFlightWorkspace` takes its target list literally and resolves no closure). With that filter the
+hang can be bisected, and it was:
+
+| slice | packages | modules | result |
+|---|---|---|---|
+| `types` alone | 1 | 995 | 1m40s ✓ |
+| foundation-era closure | 38 | — | 6m59s ✓ |
+| `scene2d` closure | 13 | 1175 | 3m59s ✓ 1144 emitted |
+| `render` closure | 14 | 1208 | ✓ 1165 emitted |
+| **`render-gl` closure** | **18** | — | **hangs; killed at 600s** |
+| `scene2d`+`scene2d-gl`+`render`+`render-gl` | — | — | hangs; killed at 1500s |
+| full graph | 154 | 2904 | >22m, ignored SIGTERM |
+| **`render-gl` closure *minus `render-gl` itself*** | **17** | **1240** | **6m6s ✓ 1185 emitted** |
+
+The last row is the result. `render-gl`'s closure is `render`'s plus `animation`, `scene2d`, `texture`,
+and `render-gl`'s own 33 modules. Generate all seventeen of those packages — 1240 modules, more than the
+`scene2d` and `render` slices that both completed, and all four of the packages `render-gl` adds — and it
+finishes in 6m6s. Add `render-gl`'s own source and it does not finish in 600s.
+
+So the trigger is **`@flighthq/render-gl`'s own modules**, not graph size, not module count, and not any
+package it depends on. `--package=@flighthq/render-gl` is a minimal reproduction, and it is minimal in the
+sense upstream said it needed: the difference between completing and hanging is 33 files, against a
+17-package closure that is proven to complete.
+
+That also explains why the full-graph hang looked like a scaling wall for four consecutive compiler tips.
+It never was. The full graph contains `render-gl`.
+
+Two consequences for this repository:
+
+1. **Per-package generation is unblocked today.** Every slice that excludes `render-gl` and `scene2d-gl`
+   (which pulls it in) completes, which covers the foundation and the whole `scene2d`/`render` target.
+2. **It is one package's shape, so it is probably one construct.** A 33-module reproduction is small
+   enough to bisect further by module if the trigger needs naming rather than avoiding.
+
+### What the seventeen-package slice actually emits
+
+The slice that completes is also the widest honest coverage measurement we have — 1185/1240 modules,
+17 packages, 55 refusals:
+
+| package | modules | placeholders |
+|---|---|---|
+| `types` | 995/995 | — |
+| `geometry` | 30/30 | — |
+| `adjustments` | 22/22 | — |
+| `camera` | 21/21 | — |
+| `math` | 17/17 | — |
+| `animation` | 12/13 | 1 |
+| `color` | 11/11 | — |
+| `entity` | 10/10 | — |
+| `signals` | 8/10 | 2 |
+| `materials` | 16/24 | 8 |
+| `node` | 13/21 | 8 |
+| `mesh` | 8/16 | 8 |
+| `texture` | 5/9 | 4 |
+| `render` | 10/25 | 15 |
+| `scene2d` | 3/10 | 7 |
+| `log` | 2/3 | 1 |
+| `registry` | 2/3 | 1 |
+
+Six packages are already whole at the emitter: `types`, `geometry`, `adjustments`, `camera`, `math`,
+`color`, `entity`. The 55 placeholders concentrate in the leaves — `render` 15, `materials`/`node`/`mesh`
+8 each, `scene2d` 7 — and they cluster under a short list of rules:
+
+```
+12  cpp-reference-assertion-without-heritage
+10  cpp-structural-assertion-writable-capability-unproven
+ 7  cpp-structural-assertion-owner-unproven
+ 5  cpp-contextual-union-value-type-unrepresented
+ 4  cpp-member-projection-multiple-present-domains
+ 3  cpp-type-assertion-unidentified
+```
+
+Those top three — 29 of 55 — are the asserted-row family already documented above, the one whose repairs
+have been measured at zero every time they were tried from this side. The next two are the anonymous
+variant family in `materials`. Nothing in the residual list is new; the value of this run is that the
+distribution is now measured across seventeen packages rather than inferred from four.
