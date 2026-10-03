@@ -72,6 +72,30 @@
       "expectedWhen": "always",
       "expires": "when the emitter qualifies a types-owned name used from another package's namespace; sdk:check fails if this repair matches no header.",
       "include": "flight/types/log.hpp"
+    },
+    {
+      "id": "signals-signal-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/signals/",
+      "symbol": "Signal",
+      "declaration": "using flight::types::Signal;",
+      "include": "flight/types/signal.hpp",
+      "diagnostic": "'Signal' was not declared in this scope; did you mean 'flight::types::Signal'?",
+      "defect": "The emitter writes Signal unqualified inside namespace flight::signals, where the type is flight::types::Signal. The same defect as the four in flight/log/: a types-owned name used from another package's namespace without qualification, and without the header that defines it.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "signals-signalconnection-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/signals/",
+      "symbol": "SignalConnection",
+      "declaration": "using flight::types::SignalConnection;",
+      "include": "flight/types/signal_connection.hpp",
+      "diagnostic": "'SignalConnection' was not declared in this scope; did you mean 'flight::types::SignalConnection'?",
+      "defect": "The emitter writes SignalConnection unqualified inside namespace flight::signals, where the type is flight::types::SignalConnection. The same defect as the four in flight/log/: a types-owned name used from another package's namespace without qualification, and without the header that defines it.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
