@@ -81,6 +81,12 @@ const bindingProfiles = loadBindingProfiles(bindingProfileOptions);
 // be, since it ignores SIGTERM -- leaves its patches applied, and the integrity check would then refuse
 // with "flight has uncommitted changes" and no hint about the cause. Recovery reverts only dirt a
 // declared patch provably put there; see recoverStalePatches.
+// Loaded HERE, before the long compile, rather than where it is used after it. Generation over 73
+// packages takes 27 minutes, and loadEmissionRepairs validates the declaration file from disk; editing
+// repairs/emission-repairs.json while a run is in flight meant a 27-minute compile finished and then
+// threw on a declaration the already-loaded module did not recognise. Validating up front turns that
+// into an immediate error instead of a wasted half hour.
+const declaredRepairs = loadEmissionRepairs(root);
 const recovery = recoverStalePatches(loadSourcePatches(root), flight);
 if (recovery.recovered.length > 0) {
   process.stdout.write(
@@ -252,7 +258,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   });
   // Repairs run between emission and writing, so the committed inventory is what actually compiles
   // and there is no second tree to keep in step. See scripts/emissionRepairs.mjs for the expiry rule.
-  const repairs = loadEmissionRepairs(root);
+  const repairs = declaredRepairs;
   const appliedRepairs = applyEmissionRepairs(repairs, compilation.compilation.files);
   // Needs the whole file set rather than one file at a time, because it has to find the canonical
   // definition before it can alias a duplicate to it.

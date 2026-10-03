@@ -597,6 +597,30 @@
       "defect": "createSignal<T>() takes its type argument from TypeScript's CONTEXTUAL TYPING -- T is read off the type being assigned to -- and C++ has no equivalent, so the emitted call has nothing to deduce from. Eight assignment-shaped calls across @flighthq/node (5) and @flighthq/scene2d (3); it was the sole remaining cause in twelve of node's 21 headers. The repair recovers the argument from the assignment target, which is the same rule TypeScript applies, and is self-checking: a wrong type would not compile.",
       "expectedWhen": "always",
       "expires": "when the emitter supplies the type argument it resolved from the assignment context; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "log-data-flattened-union-argument",
+      "kind": "respell-flattened-union",
+      "appliesTo": "flight/",
+      "symbol": "std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String>",
+      "replacement": "flight::types::LogData",
+      "requiredSuffix": "{std::in_place_type<flight::Record<flight::String, flight::Any>>,",
+      "sourceDeclaration": "packages/log/src/log.ts -- export function logOnce(key: string, level: LogLevel, data: LogData | (() => LogData), channel?: string): boolean; and packages/types/src/Log.ts -- export type LogData = Record<string, unknown> | string",
+      "diagnostic": "could not convert ... from 'variant<function<LogData()>, Record, String>' to 'variant<function<LogData()>, std::variant<Record, String>>'",
+      "defect": "log_once's parameter keeps LogData nested -- variant<function<LogData()>, LogData> -- while every call site spells the same union FLATTENED, pulling LogData's two alternatives up into the outer variant. The two are different types and the argument does not convert. Five occurrences, in @flighthq/camera (2), @flighthq/geometry, @flighthq/node and @flighthq/render. Together with name-in-place-record-alternative this is what stands between @flighthq/geometry and a complete package: it is 30/30 emitted and was failing only inside these calls.",
+      "expectedWhen": "always",
+      "expires": "when the emitter spells a union the same way at a parameter and at its call sites; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "geometry-release-function-alias",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/geometry/",
+      "symbol": "GeometryPoolReleaseFunction",
+      "declaration": "using GeometryPoolReleaseFunction = flight::String;",
+      "diagnostic": "'GeometryPoolReleaseFunction' was not declared in this scope; did you mean 'GeometryPoolReleaseGuard'?",
+      "defect": "geometryPoolGuards.ts declares GeometryPoolReleaseFunction as a string-literal union ('releaseMatrix' | 'releaseMatrix3' | ...), which the emitter lowers to flight::String behind a mangled module-private alias name. enableGeometryPoolGuards.ts declares its own alias for the SAME type computed as Parameters<NonNullable<typeof geometryPoolReleaseGuard>>[0]; the emitter does not lower that computed form, and writes the bare name with nothing declaring it. The declaration inserted here is the emitter's own answer for that union, taken from the module where it did lower it, so the parameter type std::function<void(GeometryPoolReleaseFunction)> becomes the std::function<void(flight::String)> that set_geometry_pool_release_guard expects.",
+      "expectedWhen": "always",
+      "expires": "when the emitter lowers an alias computed through Parameters<...>; sdk:check fails if this repair matches no header."
     }
   ]
 }

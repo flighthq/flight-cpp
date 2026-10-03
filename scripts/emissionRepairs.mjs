@@ -14,6 +14,7 @@ import path from 'node:path';
 const SCHEMA = 'flight-cpp-emission-repairs/1';
 const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias', 'name-in-place-alternative', 'name-defaulted-template-argument',
   'deduce-call-argument-from-assignment',
+  'respell-flattened-union',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -52,6 +53,8 @@ export function loadEmissionRepairs(root) {
             ? ['id', 'kind', 'appliesTo', 'symbol', 'defaultArgument', 'sourceDeclaration', 'diagnostic', 'defect', 'expires']
             : repair.kind === 'deduce-call-argument-from-assignment'
               ? ['id', 'kind', 'appliesTo', 'symbol', 'sourceDeclaration', 'diagnostic', 'defect', 'expires']
+              : repair.kind === 'respell-flattened-union'
+                ? ['id', 'kind', 'appliesTo', 'symbol', 'replacement', 'requiredSuffix', 'sourceDeclaration', 'diagnostic', 'defect', 'expires']
           : ['id', 'kind', 'appliesTo', 'symbol', 'declaration', 'diagnostic', 'defect', 'expires'];
     for (const field of required) {
       if (typeof repair[field] !== 'string' || repair[field].length === 0) {
@@ -103,12 +106,14 @@ function applyOneRound(repairs, files, applied) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
       const repaired =
-        repair.kind === 'deduce-call-argument-from-assignment'
-          ? deduceCallArgumentFromAssignment(contents, repair)
-          : repair.kind === 'name-defaulted-template-argument'
-            ? nameDefaultedTemplateArgument(contents, repair)
-            : repair.kind === 'name-in-place-alternative'
-              ? nameInPlaceAlternative(contents, repair)
+        repair.kind === 'respell-flattened-union'
+          ? respellFlattenedUnion(contents, repair)
+          : repair.kind === 'deduce-call-argument-from-assignment'
+            ? deduceCallArgumentFromAssignment(contents, repair)
+            : repair.kind === 'name-defaulted-template-argument'
+              ? nameDefaultedTemplateArgument(contents, repair)
+              : repair.kind === 'name-in-place-alternative'
+                ? nameInPlaceAlternative(contents, repair)
           : repair.kind === 'respell-reference-alias'
             ? respellReferenceAlias(contents, repair)
           : repair.kind === 'insert-using-declaration'
@@ -123,6 +128,33 @@ function applyOneRound(repairs, files, applied) {
     }
   }
   return changed;
+}
+
+// Writes a union back as the alias it is declared as, where the emitter flattened it.
+//
+// `logOnce(key, level, data: LogData | (() => LogData))` has a parameter the emitter lowers as
+// `std::variant<Ref<LogDataProvider>, Ref<LogData>>`, which collapses to
+// `variant<function<LogData()>, LogData>`. At the CALL sites it spells the same union flattened --
+// `variant<function<LogData()>, Record<String, Any>, String>` -- pulling LogData's own two alternatives
+// up into the outer variant. Those are different types, so the argument does not convert:
+//
+//   could not convert ... from 'variant<function<...>, Record, String>'
+//                       to   'variant<function<...>, std::variant<Record, String>>'
+//
+// Rewriting the argument's type to `flight::types::LogData` makes it the alias, which converts to the
+// parameter's second alternative exactly. The brace structure is untouched -- the same `in_place_type`
+// alternative holds the same Record -- so only the spelling of the surrounding union changes, and
+// `LogData` IS `variant<Record, String>` by its own declaration, which is what makes that a respelling
+// rather than a different value.
+//
+// `requiredSuffix` is what keeps this honest. The flattened spelling is rewritten only where the text
+// immediately after it proves a CONSTRUCTION, never a declaration whose type must stay as written. All
+// five occurrences in the tree are followed by `{std::in_place_type<flight::Re`, and a declaration
+// would not be.
+function respellFlattenedUnion(contents, repair) {
+  const marker = repair.symbol + repair.requiredSuffix;
+  if (!contents.includes(marker)) return undefined;
+  return contents.split(marker).join(repair.replacement + repair.requiredSuffix);
 }
 
 // Supplies the type argument TypeScript took from the assignment target.
