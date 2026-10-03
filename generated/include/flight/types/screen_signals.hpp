@@ -29,14 +29,14 @@ namespace flight::types {
 
 struct ScreenSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenInfo>>>>)>>> on_screen_added;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenChangeEvent>>>>)>>> on_screen_metrics_changed;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenInfo>>>>)>>> on_screen_removed;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenInfo>>>>)>>> on_screen_added;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenChangeEvent>>>>)>>> on_screen_metrics_changed;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenInfo>>>>)>>> on_screen_removed;
 };
 
 struct ScreenPermissionChange : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(flight::types::ScreenPermissionState)>>> on_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::types::ScreenPermissionState)>>> on_change;
 };
 
 } // namespace flight::types

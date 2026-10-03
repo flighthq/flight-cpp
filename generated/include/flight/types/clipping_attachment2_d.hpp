@@ -24,11 +24,11 @@ namespace flight::types {
 struct ClippingAttachment2D : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
-  std::variant<flight::String, flight::Null, flight::Undefined> name;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   double end_slot_index;
   double point_count;
-  std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined> skin;
-  std::variant<flight::Float32Array, flight::Null, flight::Undefined> vertices;
+  std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined> skin = std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Float32Array, flight::Null, flight::Undefined> vertices = std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
 inline const flight::String clipping_attachment2_dkind = flight::String("ClippingAttachment2D");

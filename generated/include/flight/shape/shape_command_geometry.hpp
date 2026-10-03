@@ -69,6 +69,57 @@ inline void write_raw_path_end(flight::Ref<x_y_8365950bd60f783f> out, double cur
   }
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
+struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  bool flip_x;
+  bool flip_y;
+  flight::Ref<flight::types::Vector2> uv_offset;
+  double uv_rotation;
+  flight::Ref<flight::types::Vector2> uv_scale;
+  flight::types::TextureColorSpace color_space;
+  flight::Ref<flight::types::Sampler> sampler;
+  double version;
+  flight::String dimension;
+  flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>> sources;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
+struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  bool flip_x;
+  bool flip_y;
+  flight::Ref<flight::types::Vector2> uv_offset;
+  double uv_rotation;
+  flight::Ref<flight::types::Vector2> uv_scale;
+  flight::types::TextureColorSpace color_space;
+  flight::Ref<flight::types::Sampler> sampler;
+  double version;
+  flight::String dimension;
+  std::optional<flight::Ref<flight::types::VoxelGrid>> source;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
+struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  bool flip_x;
+  bool flip_y;
+  flight::Ref<flight::types::Vector2> uv_offset;
+  double uv_rotation;
+  flight::Ref<flight::types::Vector2> uv_scale;
+  flight::types::TextureColorSpace color_space;
+  flight::Ref<flight::types::Sampler> sampler;
+  double version;
+  flight::String dimension;
+  flight::types::TextureSourceCubeFaces sources;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
+
 inline bool write_shape_geometry_command_end(flight::Ref<x_y_8365950bd60f783f> out, double current_x, double current_y, flight::String name, flight::Array<flight::types::ShapeCommandToken> commands, double argument_index) {
   {
     double switch_fallthrough_state = -1.0;

@@ -32,15 +32,15 @@ namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct InteractionDispatchLayerOptions;
-template <typename N = flight::Ref<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>
+template <typename N = std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>
 struct InteractionManager;
 struct InteractionManagerOptions;
 struct InteractionPointerOptions;
-template <typename N = flight::Ref<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>
+template <typename N = std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>
 struct InteractionPointerState;
 using InteractionSignalName = flight::String;
 using AnyInteractionSignalSlot = std::function<void(std::variant<flight::Ref<flight::types::KeyboardEventData>, flight::Ref<flight::types::FocusEventData>, flight::Ref<flight::types::PointerEventData>>)>;
-template <typename N = flight::Ref<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>
+template <typename N = std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>
 using InteractionDispatchLayer = std::function<bool(N, flight::String, std::variant<flight::Ref<flight::types::KeyboardEventData>, flight::Ref<flight::types::FocusEventData>, flight::Ref<flight::types::PointerEventData>>)>;
 using InteractionInputSource = flight::Ref<flight::types::InputSignals>;
 } // namespace flight::types
@@ -69,12 +69,12 @@ struct InteractionDispatchLayerOptions : public flight::ReferenceEnabled {
 };
 
 struct InteractionManagerOptions : public flight::ReferenceEnabled {
-  std::variant<flight::Ref<flight::types::CursorBackend>, flight::Null, flight::Undefined> cursor_backend;
+  std::variant<flight::Ref<flight::types::CursorBackend>, flight::Null, flight::Undefined> cursor_backend = std::variant<flight::Ref<flight::types::CursorBackend>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<double> double_click_delay;
   std::optional<double> double_click_distance;
   std::optional<bool> enabled;
   std::optional<bool> precise;
-  std::variant<flight::Ref<flight::types::SpatialIndex2D>, flight::Null, flight::Undefined> spatial_index;
+  std::variant<flight::Ref<flight::types::SpatialIndex2D>, flight::Null, flight::Undefined> spatial_index = std::variant<flight::Ref<flight::types::SpatialIndex2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<bool> suppress_touch_hover;
   std::optional<bool> tracked_subscribers_only;
 };
@@ -92,16 +92,16 @@ struct InteractionPointerOptions : public flight::ReferenceEnabled {
 
 template <typename N>
 struct InteractionPointerState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::Node<flight::Any>>> last_click_target;
+  std::optional<std::shared_ptr<flight::types::Node<flight::Any>>> last_click_target;
   double last_click_time;
   double last_pointer_click_button;
   std::optional<flight::Ref<flight::types::NodeInteractionState>> last_pointer_click_interaction_state;
-  std::optional<flight::Ref<flight::types::Node<flight::Any>>> last_pointer_click_target;
+  std::optional<std::shared_ptr<flight::types::Node<flight::Any>>> last_pointer_click_target;
   double last_pointer_click_time;
   double last_pointer_click_x;
   double last_pointer_click_y;
-  std::optional<flight::Ref<flight::types::Node<flight::Any>>> pointer_down_target;
-  std::optional<flight::Ref<flight::types::Node<flight::Any>>> pointer_over_target;
+  std::optional<std::shared_ptr<flight::types::Node<flight::Any>>> pointer_down_target;
+  std::optional<std::shared_ptr<flight::types::Node<flight::Any>>> pointer_over_target;
 };
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_LAYER_PRIORITY_31069D606938A3EC
@@ -117,7 +117,7 @@ template <typename N>
 struct InteractionManager : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::optional<flight::Ref<flight::types::CursorBackend>> cursor_backend;
-  std::optional<flight::Ref<flight::types::Node<flight::Any>>> cursor_target;
+  std::optional<std::shared_ptr<flight::types::Node<flight::Any>>> cursor_target;
   std::optional<flight::Array<flight::Ref<layer_priority_31069d606938a3ec<N>>>> dispatch_layers;
   double double_click_delay;
   double double_click_distance;

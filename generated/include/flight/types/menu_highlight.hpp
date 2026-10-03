@@ -23,7 +23,7 @@ namespace flight::types {
 
 struct MenuHighlight : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(flight::String)>>> on_menu_item_highlight;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::String)>>> on_menu_item_highlight;
 };
 
 } // namespace flight::types

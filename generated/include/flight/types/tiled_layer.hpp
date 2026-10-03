@@ -17,6 +17,7 @@ struct TiledObjectGroup;
 struct TiledImageLayer;
 struct TiledGroupLayer;
 struct TiledLayer;
+struct TiledLayer;
 } // namespace flight::types
 
 #include <flight/types/tiled_object.hpp>

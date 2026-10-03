@@ -70,22 +70,22 @@ struct AppWindow : public flight::ReferenceEnabled {
   double min_height;
   double max_width;
   double max_height;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_activate;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_close;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_close_request;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_deactivate;
-  flight::Ref<flight::types::Signal<std::function<void(flight::String)>>> on_drop_file;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_focus_in;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_focus_out;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_fullscreen_changed;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_maximize;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_minimize;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_move;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_orientation_changed;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_render_context_lost;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_render_context_restored;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_resize;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_restore;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_activate;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_close;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_close_request;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_deactivate;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::String)>>> on_drop_file;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_focus_in;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_focus_out;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_fullscreen_changed;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_maximize;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_minimize;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_move;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_orientation_changed;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_render_context_lost;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_render_context_restored;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_resize;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_restore;
 };
 
 struct WindowOptions : public flight::ReferenceEnabled {

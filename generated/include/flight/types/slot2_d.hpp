@@ -20,11 +20,11 @@ struct Slot2D;
 namespace flight::types {
 
 struct Slot2D : public flight::ReferenceEnabled {
-  std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined> attachment;
-  std::variant<flight::Ref<flight::types::Skeleton2DSlotDeform>, flight::Null, flight::Undefined> deform;
+  std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined> attachment = std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::Skeleton2DSlotDeform>, flight::Null, flight::Undefined> deform = std::variant<flight::Ref<flight::types::Skeleton2DSlotDeform>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   double bone_index;
   std::optional<double> color;
-  std::variant<flight::String, flight::Null, flight::Undefined> name;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
 } // namespace flight::types

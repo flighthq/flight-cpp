@@ -24,7 +24,7 @@ namespace flight::types {
 
 struct SignalScope : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Array<flight::Ref<flight::types::SignalConnection<std::function<void(flight::Array<flight::Any>)>>>> connections;
+  flight::Array<std::shared_ptr<flight::types::SignalConnection<std::function<void(flight::Array<flight::Any>)>>>> connections;
 };
 
 } // namespace flight::types

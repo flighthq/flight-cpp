@@ -23,7 +23,7 @@ namespace flight::types {
 
 struct ClipboardWatch : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_change;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_change;
 };
 
 } // namespace flight::types

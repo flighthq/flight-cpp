@@ -27,7 +27,7 @@ struct Skeleton3D : public flight::ReferenceEnabled {
   flight::Float32Array joint_matrices;
   flight::Float32Array normal_matrices;
   flight::Array<flight::types::Node3D> joints;
-  std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined> names;
+  std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined> names = std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
 } // namespace flight::types

@@ -22,6 +22,8 @@ namespace flight::types { struct Vector3; }
 
 namespace flight::node {
 
+using flight::types::Matrix4;
+
 inline void init_transform3_druntime_trait(flight::Ref<flight::types::HasTransform3DRuntime> target) {
   (target->local_matrix4 = std::nullopt);
   (target->local_matrix4_detached = false);

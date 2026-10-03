@@ -37,13 +37,13 @@ struct HostLifecycleCapability : public flight::ReferenceEnabled {
 
 struct AppLifecycle : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(AppLifecycleState)>>> on_state_change;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_resume;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_pause;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_back_button;
-  flight::Ref<flight::types::Signal<std::function<void(AppMemoryPressure)>>> on_memory_warning;
-  flight::Ref<flight::types::Signal<std::function<void(flight::Record<flight::String, flight::Any>)>>> on_save_state;
-  flight::Ref<flight::types::Signal<std::function<void(flight::Record<flight::String, flight::Any>)>>> on_restore_state;
+  std::shared_ptr<flight::types::Signal<std::function<void(AppLifecycleState)>>> on_state_change;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_resume;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_pause;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_back_button;
+  std::shared_ptr<flight::types::Signal<std::function<void(AppMemoryPressure)>>> on_memory_warning;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::Record<flight::String, flight::Any>)>>> on_save_state;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::Record<flight::String, flight::Any>)>>> on_restore_state;
 };
 
 } // namespace flight::types

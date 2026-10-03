@@ -24,10 +24,10 @@ namespace flight::types {
 
 struct ResourceLoaderItemSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(flight::String, flight::Any)>>> on_item_complete;
-  flight::Ref<flight::types::Signal<std::function<void(flight::String, flight::Any, double)>>> on_item_error;
-  flight::Ref<flight::types::Signal<std::function<void(flight::String, double, double)>>> on_item_retry;
-  flight::Ref<flight::types::Signal<std::function<void(flight::String)>>> on_item_start;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::String, flight::Any)>>> on_item_complete;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::String, flight::Any, double)>>> on_item_error;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::String, double, double)>>> on_item_retry;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::String)>>> on_item_start;
 };
 
 } // namespace flight::types

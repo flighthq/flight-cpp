@@ -291,7 +291,7 @@ struct StorageNamespace : public flight::ReferenceEnabled {
 
 struct StorageSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<StorageChange>>>>)>>> on_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<StorageChange>>>>)>>> on_change;
 };
 
 } // namespace flight::types

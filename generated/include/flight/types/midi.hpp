@@ -234,17 +234,17 @@ using MidiSubscriptionDisposeOutcome = std::variant<flight::Ref<attach_failed_re
 
 struct MidiAccessStateSubscription : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(MidiPort)>>> on_midi_access_state_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(MidiPort)>>> on_midi_access_state_change;
 };
 
 struct MidiInputMessageSubscription : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MidiInputMessage>>>>)>>> on_midi_input_message;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MidiInputMessage>>>>)>>> on_midi_input_message;
 };
 
 struct MidiPortStateSubscription : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(MidiPort)>>> on_midi_port_state_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(MidiPort)>>> on_midi_port_state_change;
 };
 
 struct HostMidiAccessCapability : public flight::ReferenceEnabled {

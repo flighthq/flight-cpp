@@ -16,6 +16,7 @@ namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct RichText; }
 namespace flight::types { struct TextInputManager; }
 namespace flight::types { struct TextInputSource; }
+namespace flight::types { template <typename N, typename P> struct NodeInteractiveStateTransition; }
 namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::types {
@@ -32,6 +33,7 @@ using TextInputControllerKeyboardData = flight::StructuralRef<flight::RowReadonl
 #include <flight/types/rich_text.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/types/text_input_manager.hpp>
+#include <flight/types/node_interactive_state_binding.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/gui_controller.hpp>
 
@@ -42,7 +44,7 @@ struct TextInputController : public flight::ReferenceEnabled {
 };
 
 struct TextInputControllerOptions : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::GuiTransitionDescriptor>>>> transition;
   std::optional<flight::types::Node2D> background;
   std::optional<flight::types::Node2D> caret;
   std::optional<flight::Ref<flight::types::TextInputSource>> input;
@@ -51,8 +53,8 @@ struct TextInputControllerOptions : public flight::ReferenceEnabled {
 };
 
 struct TextInputControllerSignals : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void(flight::String)>>> on_change;
-  flight::Ref<flight::types::Signal<std::function<void(flight::String)>>> on_submit;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::String)>>> on_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::String)>>> on_submit;
 };
 
 } // namespace flight::types

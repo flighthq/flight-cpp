@@ -14,6 +14,8 @@ namespace flight::types { struct VoxelGrid; }
 
 namespace flight::texture {
 
+using flight::types::VoxelGrid;
+
 inline void invalidate_voxel_grid(flight::Ref<flight::types::VoxelGrid> voxel_grid) {
   (voxel_grid->version = flight::unsigned_right_shift((voxel_grid->version + 1.0), 0.0));
 }

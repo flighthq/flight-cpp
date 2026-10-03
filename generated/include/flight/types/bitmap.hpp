@@ -16,8 +16,8 @@ struct Bitmap;
 #include <flight/types/pixel_format.hpp>
 #include <flight/types/texture_source.hpp>
 #include <flight/types/texture_source_kind.hpp>
-#include <flight/types/entity.hpp>
 #include <flight/types/alpha_type.hpp>
+#include <flight/types/entity.hpp>
 
 namespace flight::types {
 

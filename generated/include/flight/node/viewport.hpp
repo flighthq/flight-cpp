@@ -16,6 +16,10 @@ namespace flight::types { struct Viewport; }
 
 namespace flight::node {
 
+using flight::entity::finish_entity;
+
+using flight::entity::allocate_entity;
+
 inline double get_viewport_aspect(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Viewport>>>> viewport) {
   return ((flight::row_get<flight::RowKey<"height">>(viewport) != 0.0) ? (flight::row_get<flight::RowKey<"width">>(viewport) / flight::row_get<flight::RowKey<"height">>(viewport)) : 1.0);
 }

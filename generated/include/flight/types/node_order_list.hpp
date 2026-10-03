@@ -18,7 +18,7 @@ namespace flight::types {
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
 struct NodeOrderList;
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-using NodeOrderListEntryVisitor = std::function<std::variant<bool, void>(flight::Ref<flight::types::Node<Traits>>, double, double)>;
+using NodeOrderListEntryVisitor = std::function<std::variant<bool, void>(std::shared_ptr<flight::types::Node<Traits>>, double, double)>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -31,7 +31,7 @@ template <typename Traits>
 struct NodeOrderList : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   double entry_count;
-  flight::Array<flight::Ref<flight::types::Node<Traits>>> nodes;
+  flight::Array<std::shared_ptr<flight::types::Node<Traits>>> nodes;
   flight::Array<double> sort_keys;
 };
 

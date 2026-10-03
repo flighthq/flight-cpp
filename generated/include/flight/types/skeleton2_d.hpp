@@ -30,8 +30,8 @@ struct Skeleton2D : public flight::ReferenceEnabled {
   flight::Float32Array bone_matrices;
   flight::Array<flight::Ref<flight::types::Bone2D>> bones;
   flight::Float32Array inverse_bind_matrices;
-  std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined> skins;
-  std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined> slots;
+  std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined> skins = std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined> slots = std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   flight::Float32Array world_matrices;
 };
 

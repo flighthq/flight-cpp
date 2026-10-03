@@ -33,7 +33,7 @@ namespace flight::types {
 struct GlobalShortcut : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String accelerator;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_trigger;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_trigger;
 };
 
 struct ShortcutTriggerSubscription : public flight::ReferenceEnabled {

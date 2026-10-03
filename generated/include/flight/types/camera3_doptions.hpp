@@ -24,7 +24,7 @@ namespace flight::types {
 struct Camera3DOptions : public flight::ReferenceEnabled {
   double far;
   double near;
-  std::variant<flight::Ref<flight::types::Plane>, flight::Null, flight::Undefined> near_clip_plane;
+  std::variant<flight::Ref<flight::types::Plane>, flight::Null, flight::Undefined> near_clip_plane = std::variant<flight::Ref<flight::types::Plane>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   flight::types::Projection projection;
 };
 

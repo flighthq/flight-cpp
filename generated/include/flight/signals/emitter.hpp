@@ -14,8 +14,10 @@ namespace flight::types { template <typename T> struct SignalData; }
 
 namespace flight::signals {
 
+using flight::types::Signal;
+
 template <typename T>
-inline void cancel_signal(flight::Ref<flight::types::Signal<T>> signal) {
+inline void cancel_signal(std::shared_ptr<flight::types::Signal<T>> signal) {
   if (signal->data.has_value()) {
     (signal->data.value()->cancelled = true);
   }
@@ -23,7 +25,7 @@ inline void cancel_signal(flight::Ref<flight::types::Signal<T>> signal) {
 
 template <typename T, typename... ArgsPack>
   requires flight::callable_signature_v1<T>::template accepts<ArgsPack...>
-inline void emit_signal(flight::Ref<flight::types::Signal<T>> signal, ArgsPack&&... args) {
+inline void emit_signal(std::shared_ptr<flight::types::Signal<T>> signal, ArgsPack&&... args) {
   signal->emit(std::forward<ArgsPack>(args)...);
 }
 

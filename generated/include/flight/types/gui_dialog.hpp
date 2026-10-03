@@ -13,6 +13,7 @@ namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct GuiControllerOptions; }
 namespace flight::types { struct Node2DTraits; }
+namespace flight::types { template <typename N, typename P> struct NodeInteractiveStateTransition; }
 namespace flight::types { template <typename N> struct FocusManager; }
 namespace flight::types { template <typename T> struct Signal; }
 
@@ -30,6 +31,7 @@ using GuiDialogCloseReason = flight::String;
 #include <flight/types/gui_controller.hpp>
 #include <flight/types/node2_d.hpp>
 #include <flight/types/signal.hpp>
+#include <flight/types/node_interactive_state_binding.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/gui_controller.hpp>
 
@@ -53,15 +55,15 @@ struct GuiDialogEntry : public flight::ReferenceEnabled {
 };
 
 struct GuiDialogOptions : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::GuiTransitionDescriptor>>>> transition;
   std::optional<flight::types::Node2D> backdrop;
   std::optional<flight::Ref<flight::types::FocusManager<flight::types::Node2D>>> focus_manager;
 };
 
 struct GuiDialogSignals : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GuiDialogEntry>>>>>)>>> on_active_change;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GuiDialogCloseResult>>>>)>>> on_close;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_queue_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GuiDialogEntry>>>>>)>>> on_active_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GuiDialogCloseResult>>>>)>>> on_close;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_queue_change;
 };
 
 } // namespace flight::types

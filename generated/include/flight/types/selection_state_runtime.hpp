@@ -29,7 +29,7 @@ template <typename NodeType>
 struct SelectionStateRuntime : public flight::ReferenceEnabled {
   std::optional<flight::ErasedRef> binding;
   std::optional<flight::String> uid;
-  std::optional<flight::Ref<Node<flight::Any>>> active_node;
+  std::optional<std::shared_ptr<Node<flight::Any>>> active_node;
   flight::Set<NodeType> selected_node_set;
   flight::Array<NodeType> selected_nodes;
   flight::Ref<flight::types::SelectionSignals<NodeType>> signals;

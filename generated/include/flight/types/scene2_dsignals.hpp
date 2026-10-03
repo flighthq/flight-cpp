@@ -23,9 +23,9 @@ namespace flight::types {
 
 struct Scene2DSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_fullscreen_changed;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_orientation_changed;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_resize;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_fullscreen_changed;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_orientation_changed;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_resize;
 };
 
 } // namespace flight::types

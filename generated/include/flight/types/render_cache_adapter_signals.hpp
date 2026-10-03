@@ -11,7 +11,7 @@ namespace flight::types { template <typename T> struct Signal; }
 namespace flight::types {
 struct RenderCacheAdapterSignals;
 struct RenderCacheAdapterSignals : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_prepare;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_prepare;
 };
 } // namespace flight::types
 

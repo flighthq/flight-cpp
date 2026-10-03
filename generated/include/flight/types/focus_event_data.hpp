@@ -18,9 +18,9 @@ struct FocusEventData;
 namespace flight::types {
 
 struct FocusEventData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<Node<flight::Any>>> current_target;
-  std::optional<flight::Ref<Node<flight::Any>>> related_target;
-  std::optional<flight::Ref<Node<flight::Any>>> target;
+  std::optional<std::shared_ptr<Node<flight::Any>>> current_target;
+  std::optional<std::shared_ptr<Node<flight::Any>>> related_target;
+  std::optional<std::shared_ptr<Node<flight::Any>>> target;
 };
 
 } // namespace flight::types

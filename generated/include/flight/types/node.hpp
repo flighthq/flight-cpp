@@ -34,8 +34,8 @@ using NodeDataFactory = std::function<D(std::optional<flight::StructuralRef<flig
 template <typename R>
 using NodeRuntimeFactory = std::function<R(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<R>>>>>)>;
 template <typename Traits>
-using NodeOf = flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<Node<Traits>>>, flight::RowOf<Traits>>>;
-using NodeAny = flight::Ref<Node<flight::Any>>;
+using NodeOf = flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<Node<Traits>>>, flight::RowOf<Traits>>>;
+using NodeAny = std::shared_ptr<Node<flight::Any>>;
 } // namespace flight::types
 
 #include <flight/types/color_adjustment_runtime.hpp>
@@ -43,9 +43,9 @@ using NodeAny = flight::Ref<Node<flight::Any>>;
 #include <flight/types/interaction_signals.hpp>
 #include <flight/types/node_interaction_state.hpp>
 #include <flight/types/node_signals.hpp>
-#include <flight/types/entity.hpp>
 #include <flight/types/adjustment.hpp>
 #include <flight/types/color_scale_bias.hpp>
+#include <flight/types/entity.hpp>
 
 namespace flight::types {
 
@@ -70,7 +70,7 @@ struct Node : public flight::ReferenceEnabled {
   bool enabled;
   flight::String kind;
   std::optional<flight::String> name;
-  std::optional<flight::Ref<NodeRuntime<Traits>>> entity_runtime_key;
+  std::optional<std::shared_ptr<NodeRuntime<Traits>>> entity_runtime_key;
 };
 
 template <typename Traits>
@@ -84,7 +84,7 @@ struct NodeRuntime : public flight::ReferenceEnabled {
   double appearance_id;
   double bounds_using_local_bounds_id;
   double bounds_using_local_transform_id;
-  std::function<bool(flight::Ref<Node<Traits>>, flight::Ref<Node<Traits>>)> can_add_child;
+  std::function<bool(std::shared_ptr<Node<Traits>>, std::shared_ptr<Node<Traits>>)> can_add_child;
   std::optional<flight::Array<NodeOf<Traits>>> children;
   double children_id;
   std::optional<NodeTraitsKey<Traits>> traits;

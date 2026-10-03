@@ -35,7 +35,7 @@ struct RadioGroupControllerOptions : public flight::ReferenceEnabled {
 };
 
 struct RadioGroupControllerSignals : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void(double)>>> on_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(double)>>> on_change;
 };
 
 } // namespace flight::types

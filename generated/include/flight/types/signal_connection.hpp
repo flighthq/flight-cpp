@@ -20,7 +20,7 @@ namespace flight::types {
 
 template <typename T>
 struct SignalConnection : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<T>> signal;
+  std::shared_ptr<flight::types::Signal<T>> signal;
   T slot;
   bool connected;
   bool paused;

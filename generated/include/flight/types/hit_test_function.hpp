@@ -10,8 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
-using HitTestFunction = std::function<bool(flight::Ref<Node<flight::Any>>, double, double)>;
-using HitTestPreciseFunction = std::function<double(flight::Ref<Node<flight::Any>>, double, double)>;
+using HitTestFunction = std::function<bool(std::shared_ptr<Node<flight::Any>>, double, double)>;
+using HitTestPreciseFunction = std::function<double(std::shared_ptr<Node<flight::Any>>, double, double)>;
 } // namespace flight::types
 
 #include <flight/types/node.hpp>

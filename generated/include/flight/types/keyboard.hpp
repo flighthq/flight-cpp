@@ -48,9 +48,9 @@ struct SoftKeyboardInfo : public flight::ReferenceEnabled {
 };
 
 struct SoftKeyboard : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void(double)>>> on_show;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_hide;
-  flight::Ref<flight::types::Signal<std::function<void(double)>>> on_resize;
+  std::shared_ptr<flight::types::Signal<std::function<void(double)>>> on_show;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_hide;
+  std::shared_ptr<flight::types::Signal<std::function<void(double)>>> on_resize;
 };
 
 inline const flight::String soft_keyboard_visibility_ok_kind = flight::String("ok");

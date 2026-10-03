@@ -26,8 +26,8 @@ namespace flight::types {
 
 struct LogSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)>>> on_log_entry;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)>>> on_log_error;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)>>> on_log_entry;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)>>> on_log_error;
 };
 
 } // namespace flight::types

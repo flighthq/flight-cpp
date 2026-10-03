@@ -35,7 +35,7 @@ inline flight::Ref<attachment_color_46836ea6f2a2f33a> skeleton2_dslot_animation_
 
 struct Skeleton2DSlotAnimationTarget : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined> attachments;
+  std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined> attachments = std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   flight::String kind;
   Skeleton2DSlotAnimationPath path;
   double slot_index;

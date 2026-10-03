@@ -23,8 +23,8 @@ namespace flight::types {
 
 struct MenuSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_context_menu_close;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_context_menu_open;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_context_menu_close;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_context_menu_open;
 };
 
 } // namespace flight::types

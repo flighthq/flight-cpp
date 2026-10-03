@@ -19,8 +19,8 @@ struct GuiControllerOptions;
 using GuiOrientation = flight::String;
 using GuiTransitionProperty = flight::String;
 using GuiTransitionValue = std::variant<bool, double>;
-using GuiTransitionRequest = flight::Ref<flight::types::NodeInteractiveStateTransitionRequest<flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>>, flight::String>>;
-using GuiTransitionDescriptor = flight::Ref<flight::types::NodeInteractiveStateTransition<flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>>, flight::String>>;
+using GuiTransitionRequest = flight::Ref<flight::types::NodeInteractiveStateTransitionRequest<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>>, flight::String>>;
+using GuiTransitionDescriptor = flight::Ref<flight::types::NodeInteractiveStateTransition<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>>, flight::String>>;
 } // namespace flight::types
 
 #include <flight/types/node2_d.hpp>

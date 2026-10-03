@@ -14,14 +14,14 @@ struct ColorMatrixAdjustment;
 } // namespace flight::types
 
 #include <flight/types/adjustment.hpp>
-#include <flight/types/entity.hpp>
 #include <flight/types/adjustment_kind.hpp>
+#include <flight/types/entity.hpp>
 
 namespace flight::types {
 
 struct ColorMatrixAdjustment : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::AdjustmentKind> kind;
+  flight::String kind;
   flight::Array<double> color_matrix;
 };
 

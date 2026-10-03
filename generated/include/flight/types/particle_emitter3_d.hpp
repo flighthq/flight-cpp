@@ -30,9 +30,9 @@ namespace flight::types {
 struct ParticleEmitter3D : public flight::ReferenceEnabled {
   flight::Ref<flight::types::ParticleEmitterData> data;
   bool enabled;
-  flight::Ref<flight::types::Kind> kind;
+  flight::String kind;
   std::optional<flight::String> name;
-  std::optional<flight::Ref<flight::types::NodeRuntime<flight::Ref<flight::types::Node3DTraits>>>> entity_runtime_key;
+  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node3DTraits>>>> entity_runtime_key;
   double alpha;
   bool visible;
   flight::Ref<flight::types::Vector3> position;

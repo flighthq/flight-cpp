@@ -31,8 +31,8 @@ struct SpritesheetPlayer : public flight::ReferenceEnabled {
   bool paused;
   double speed;
   double frame_index;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_complete;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_loop;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_complete;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_loop;
   flight::Array<flight::Ref<flight::types::SpritesheetAnimation>> queue;
 };
 

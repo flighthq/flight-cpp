@@ -24,7 +24,7 @@ namespace flight::types {
 template <typename Traits>
 struct Scene2DFitContext : public flight::ReferenceEnabled {
   flight::types::ViewportAlign align;
-  std::optional<flight::Ref<flight::types::Node<Traits>>> root;
+  std::optional<std::shared_ptr<flight::types::Node<Traits>>> root;
   flight::types::ViewportScaleMode scale_mode;
 };
 

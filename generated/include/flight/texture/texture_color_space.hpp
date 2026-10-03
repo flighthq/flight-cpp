@@ -10,6 +10,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::texture {
 
+using flight::types::TextureColorSpace;
+
 inline bool should_decode_texture_on_sample(flight::types::TextureColorSpace source, flight::types::RenderTargetColorSpace working) {
   return ((source == flight::String("srgb")) && (working == flight::String("linear")));
 }

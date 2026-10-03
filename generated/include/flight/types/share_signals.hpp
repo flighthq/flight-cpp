@@ -26,7 +26,7 @@ namespace flight::types {
 
 struct ShareSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShareResult>>>>)>>> on_share_result;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShareResult>>>>)>>> on_share_result;
 };
 
 } // namespace flight::types

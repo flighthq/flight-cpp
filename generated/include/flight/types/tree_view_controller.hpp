@@ -13,6 +13,7 @@ namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct GuiControllerOptions; }
 namespace flight::types { struct Node2DTraits; }
+namespace flight::types { template <typename N, typename P> struct NodeInteractiveStateTransition; }
 namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::types {
@@ -26,6 +27,7 @@ struct TreeViewControllerSignals;
 #include <flight/types/gui_controller.hpp>
 #include <flight/types/node2_d.hpp>
 #include <flight/types/signal.hpp>
+#include <flight/types/node_interactive_state_binding.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/gui_controller.hpp>
 
@@ -42,15 +44,15 @@ struct TreeViewControllerItem : public flight::ReferenceEnabled {
 };
 
 struct TreeViewControllerOptions : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::GuiTransitionDescriptor>>>> transition;
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TreeViewControllerItem>>>>> items;
-  std::variant<flight::Ref<TreeViewControllerItem>, flight::Null, flight::Undefined> selected_item;
+  std::variant<flight::Ref<TreeViewControllerItem>, flight::Null, flight::Undefined> selected_item = std::variant<flight::Ref<TreeViewControllerItem>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
 struct TreeViewControllerSignals : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TreeViewControllerItem>>>>)>>> on_activate;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TreeViewControllerItem>>>>, bool)>>> on_expand_change;
-  flight::Ref<flight::types::Signal<std::function<void(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TreeViewControllerItem>>>>>)>>> on_select;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TreeViewControllerItem>>>>)>>> on_activate;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TreeViewControllerItem>>>>, bool)>>> on_expand_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TreeViewControllerItem>>>>>)>>> on_select;
 };
 
 } // namespace flight::types

@@ -15,7 +15,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 namespace flight::types {
 struct HasColorScaleBias;
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-using ColorScaleBiasNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<flight::Ref<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasColorScaleBias>>>>;
+using ColorScaleBiasNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasColorScaleBias>>>>;
 } // namespace flight::types
 
 #include <flight/types/color_scale_bias.hpp>

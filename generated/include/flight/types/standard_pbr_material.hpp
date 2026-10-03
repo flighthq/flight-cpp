@@ -19,9 +19,9 @@ struct StandardPbrMaterial;
 
 #include <flight/types/surface_material.hpp>
 #include <flight/types/texture.hpp>
+#include <flight/types/blend_mode.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/surface_material.hpp>
-#include <flight/types/blend_mode.hpp>
 
 namespace flight::types {
 
@@ -44,10 +44,10 @@ struct StandardPbrMaterialProperties : public flight::ReferenceEnabled {
 struct StandardPbrMaterial : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
-  std::variant<flight::String, flight::Null, flight::Undefined> name;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   double alpha_cutoff;
   flight::Ref<flight::types::MaterialAlphaMode> alpha_mode;
-  flight::Ref<flight::types::BlendMode> blend_mode;
+  flight::String blend_mode;
   bool double_sided;
   std::optional<flight::types::Texture> alpha_map;
   double base_color;

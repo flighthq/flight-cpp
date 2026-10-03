@@ -31,13 +31,13 @@ struct AppLoop : public flight::ReferenceEnabled {
   double frame_count;
   double interpolation_alpha;
   bool is_running;
-  std::optional<flight::Ref<flight::types::Signal<std::function<void()>>>> on_activate;
-  std::optional<flight::Ref<flight::types::Signal<std::function<void()>>>> on_deactivate;
-  std::optional<flight::Ref<flight::types::Signal<std::function<void(flight::Any)>>>> on_error;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_exit;
-  std::optional<flight::Ref<flight::types::Signal<std::function<void(double)>>>> on_fixed_update;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_render;
-  flight::Ref<flight::types::Signal<std::function<void(double)>>> on_update;
+  std::optional<std::shared_ptr<flight::types::Signal<std::function<void()>>>> on_activate;
+  std::optional<std::shared_ptr<flight::types::Signal<std::function<void()>>>> on_deactivate;
+  std::optional<std::shared_ptr<flight::types::Signal<std::function<void(flight::Any)>>>> on_error;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_exit;
+  std::optional<std::shared_ptr<flight::types::Signal<std::function<void(double)>>>> on_fixed_update;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_render;
+  std::shared_ptr<flight::types::Signal<std::function<void(double)>>> on_update;
   flight::Array<flight::Ref<flight::types::AppWindow>> windows;
 };
 

@@ -16,7 +16,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 namespace flight::types {
 struct HasMaterial;
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-using MaterialNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<flight::Ref<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasMaterial>>>>;
+using MaterialNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasMaterial>>>>;
 } // namespace flight::types
 
 #include <flight/types/material.hpp>

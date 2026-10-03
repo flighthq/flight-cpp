@@ -22,7 +22,7 @@ namespace flight::types { template <typename Traits> struct NodeRuntime; }
 namespace flight::types {
 struct Node3DTraits;
 struct Node3DRuntime;
-using Node3D = flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Node<flight::Ref<Node3DTraits>>>>, flight::RowOf<flight::Ref<Node3DTraits>>>>;
+using Node3D = flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<Node3DTraits>>>>, flight::RowOf<flight::Ref<Node3DTraits>>>>;
 } // namespace flight::types
 
 #include <flight/types/has_appearance.hpp>
@@ -43,6 +43,22 @@ struct Node3DTraits : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Vector3> scale;
 };
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_3F670A820ECDD29E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_3F670A820ECDD29E
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_3f670a820ecdd29e : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<NodeData>> data;
+  bool enabled;
+  flight::String kind;
+  std::optional<flight::String> name;
+  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<Node3DTraits>>>> entity_runtime_key;
+  double alpha;
+  bool visible;
+  flight::Ref<flight::types::Vector3> position;
+  flight::Ref<flight::types::Quaternion> rotation;
+  flight::Ref<flight::types::Vector3> scale;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_3F670A820ECDD29E
+
 struct Node3DRuntime : public flight::ReferenceEnabled {
   std::optional<flight::ErasedRef> binding;
   std::optional<flight::String> uid;
@@ -53,7 +69,7 @@ struct Node3DRuntime : public flight::ReferenceEnabled {
   double appearance_id;
   double bounds_using_local_bounds_id;
   double bounds_using_local_transform_id;
-  std::function<bool(flight::Ref<flight::types::Node<flight::Ref<Node3DTraits>>>, flight::Ref<flight::types::Node<flight::Ref<Node3DTraits>>>)> can_add_child;
+  std::function<bool(std::shared_ptr<flight::types::Node<flight::Ref<Node3DTraits>>>, std::shared_ptr<flight::types::Node<flight::Ref<Node3DTraits>>>)> can_add_child;
   std::optional<flight::Array<NodeOf<flight::Ref<Node3DTraits>>>> children;
   double children_id;
   std::optional<NodeTraitsKey<flight::Ref<Node3DTraits>>> traits;

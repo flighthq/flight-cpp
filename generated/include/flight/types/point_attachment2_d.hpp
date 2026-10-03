@@ -22,7 +22,7 @@ namespace flight::types {
 struct PointAttachment2D : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
-  std::variant<flight::String, flight::Null, flight::Undefined> name;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   double rotation;
   double x;
   double y;

@@ -19,6 +19,8 @@ namespace flight::types { struct Rectangle; }
 
 namespace flight::node {
 
+using flight::types::Rectangle;
+
 inline void default_compute_local_bounds_rectangle(flight::Ref<flight::types::Rectangle> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>> source) {
 }
 
@@ -26,7 +28,7 @@ inline void default_compute_local_bounds_rectangle(flight::Ref<flight::types::Re
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_COMPUTE_LOCAL_BOUNDS_RECTANGLE_IS_LOCAL_BOUNDS_RECTANGLE_VALID_EBF7A292E0B2BDF6
 struct compute_local_bounds_rectangle_is_local_bounds_rectangle_valid_ebf7a292e0b2bdf6 : public flight::ReferenceEnabled {
   std::optional<std::function<void(flight::Ref<flight::types::Rectangle>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>> compute_local_bounds_rectangle;
-  std::variant<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>, flight::Null, flight::Undefined> is_local_bounds_rectangle_valid;
+  std::variant<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>, flight::Null, flight::Undefined> is_local_bounds_rectangle_valid = std::variant<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_COMPUTE_LOCAL_BOUNDS_RECTANGLE_IS_LOCAL_BOUNDS_RECTANGLE_VALID_EBF7A292E0B2BDF6
 
@@ -35,7 +37,7 @@ inline void init_bounds_rectangle_runtime_trait(flight::Ref<flight::types::HasBo
   (target->local_bounds_rectangle = std::nullopt);
   (target->world_bounds_rectangle = std::nullopt);
   (target->compute_local_bounds_rectangle = ([&]() -> std::function<void(flight::Ref<flight::types::Rectangle>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)> { auto nullish_coalesce_left = ([&]() -> std::optional<std::function<void(flight::Ref<flight::types::Rectangle>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>> { auto optional_chain_receiver = methods; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->compute_local_bounds_rectangle; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_compute_local_bounds_rectangle; }()));
-  (target->is_local_bounds_rectangle_valid = ([&]() -> std::optional<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>> { auto nullish_coalesce_left = ([&]() -> std::variant<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>, flight::Null, flight::Undefined> { auto optional_chain_receiver = methods; if (!optional_chain_receiver.has_value()) return std::variant<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return optional_chain_receiver.value()->is_local_bounds_rectangle_valid; }()); if (std::holds_alternative<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>>(nullish_coalesce_left)) return std::optional<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>>{std::get<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>>(nullish_coalesce_left)}; return std::nullopt; }()));
+  (target->is_local_bounds_rectangle_valid = ([&]() -> std::optional<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>> { auto nullish_coalesce_left = ([&]() -> std::variant<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>, flight::Null, flight::Undefined> { auto optional_chain_receiver = methods; if (!optional_chain_receiver.has_value()) return std::variant<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return optional_chain_receiver.value()->is_local_bounds_rectangle_valid; }()); if (const auto* alternative = std::get_if<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>>(&nullish_coalesce_left)) return std::optional<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>>{*alternative}; return std::nullopt; }()));
 }
 
 inline void init_bounds_rectangle_trait(flight::Ref<flight::types::HasBoundsRectangle> target, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>>>>> obj = std::nullopt) {

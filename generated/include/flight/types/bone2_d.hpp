@@ -19,7 +19,7 @@ namespace flight::types {
 
 struct Bone2D : public flight::ReferenceEnabled {
   double length;
-  std::variant<flight::String, flight::Null, flight::Undefined> name;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   double parent_index;
   double rotation;
   double scale_x;

@@ -15,6 +15,7 @@ using ColorBlindType = flight::String;
 } // namespace flight::types
 
 #include <flight/types/color_matrix_adjustment.hpp>
+#include <flight/types/adjustment_kind.hpp>
 #include <flight/types/entity.hpp>
 
 namespace flight::types {

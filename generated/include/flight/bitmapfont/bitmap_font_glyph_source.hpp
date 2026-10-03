@@ -57,7 +57,7 @@ inline void initialize_glyph_source_from_bitmap_font(flight::types::EntityConstr
 inline flight::Ref<flight::types::GlyphSource> create_glyph_source_from_bitmap_font(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>> font) {
   flight::types::EntityConstruction<flight::Ref<flight::types::GlyphSource>> out = flight::entity::allocate_entity<flight::Ref<flight::types::GlyphSource>>();
   initialize_glyph_source_from_bitmap_font(out, font);
-  return flight::entity::finish_entity<flight::Ref<flight::types::GlyphSource>>(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::GlyphSource>>(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<flight::types::GlyphSource>>>(out));
 }
 
 } // namespace flight::bitmapfont

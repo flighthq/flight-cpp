@@ -14,6 +14,8 @@ struct EnvReflectModifier;
 } // namespace flight::types
 
 #include <flight/types/modifier.hpp>
+#include <flight/types/modifier_kind.hpp>
+#include <flight/types/modifier_slot.hpp>
 #include <flight/types/entity.hpp>
 
 namespace flight::types {

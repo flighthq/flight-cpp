@@ -27,11 +27,11 @@ struct FlightDocumentSchemaRegistry;
 namespace flight::types {
 
 struct FlightDocumentSchemaRegistry : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::KeyedTable<flight::Ref<flight::types::FlightDocumentInteractiveStateExtensionSchema>>> interactive_state_extension_schemas;
-  flight::Ref<flight::types::KeyedTable<flight::Ref<flight::types::FlightDocumentInteractiveStateTransitionSchema>>> interactive_state_transition_schemas;
-  flight::Ref<flight::types::KeyedTable<flight::Ref<flight::types::FlightDocumentNodeSchema>>> node_schemas;
-  flight::Ref<flight::types::KeyedTable<flight::Ref<flight::types::FlightDocumentResourceSchema>>> resource_schemas;
-  flight::Ref<flight::types::KeyedTable<flight::Ref<flight::types::ShapeCommandSchema<flight::types::ShapeCommandKey>>>> shape_command_schemas;
+  std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::FlightDocumentInteractiveStateExtensionSchema>>> interactive_state_extension_schemas;
+  std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::FlightDocumentInteractiveStateTransitionSchema>>> interactive_state_transition_schemas;
+  std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::FlightDocumentNodeSchema>>> node_schemas;
+  std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::FlightDocumentResourceSchema>>> resource_schemas;
+  std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::ShapeCommandSchema<flight::types::ShapeCommandKey>>>> shape_command_schemas;
 };
 
 } // namespace flight::types

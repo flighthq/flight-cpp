@@ -39,8 +39,8 @@ struct SelectionModifierState : public flight::ReferenceEnabled {
 
 template <typename NodeType>
 struct SelectionSignals : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void(std::optional<flight::Ref<Node<flight::Any>>>)>>> on_active_change;
-  flight::Ref<flight::types::Signal<std::function<void(flight::Array<NodeType>)>>> on_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(std::optional<std::shared_ptr<Node<flight::Any>>>)>>> on_active_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::Array<NodeType>)>>> on_change;
 };
 
 template <typename NodeType>

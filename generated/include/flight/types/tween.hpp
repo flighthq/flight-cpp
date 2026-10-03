@@ -37,10 +37,10 @@ struct Tween : public flight::ReferenceEnabled {
   flight::types::EasingFunction ease;
   double elapsed;
   bool initialized;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_complete;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_repeat;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_update;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_yoyo;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_complete;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_repeat;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_update;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_yoyo;
   bool paused;
   flight::Array<flight::Ref<flight::types::TweenPropertyDetail>> properties;
   NumericProps<T> property_map;

@@ -23,9 +23,9 @@ struct HasBoundsRectangle;
 struct HasBoundsRectangleRuntime;
 struct BoundsNodeAny;
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-using BoundsNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<flight::Ref<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasBoundsRectangle>>>>;
+using BoundsNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasBoundsRectangle>>>>;
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-using Spatial2DNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<flight::Ref<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasBoundsRectangle>>, flight::RowOf<flight::Ref<flight::types::HasTransform2D>>>>;
+using Spatial2DNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasBoundsRectangle>>, flight::RowOf<flight::Ref<flight::types::HasTransform2D>>>>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -45,7 +45,7 @@ struct BoundsNodeAny : public flight::ReferenceEnabled {
   bool enabled;
   flight::String kind;
   std::optional<flight::String> name;
-  std::optional<flight::Ref<NodeRuntime<flight::Any>>> entity_runtime_key;
+  std::optional<std::shared_ptr<NodeRuntime<flight::Any>>> entity_runtime_key;
 };
 
 struct HasBoundsRectangleRuntime : public flight::ReferenceEnabled {

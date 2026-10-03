@@ -19,11 +19,11 @@ struct TimelineSignals;
 namespace flight::types {
 
 struct TimelineSignals : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_complete;
-  flight::Ref<flight::types::Signal<std::function<void(flight::Ref<flight::types::TimelineFrameEvent>)>>> on_enter_frame;
-  flight::Ref<flight::types::Signal<std::function<void(flight::Ref<flight::types::TimelineFrameEvent>)>>> on_exit_frame;
-  flight::Ref<flight::types::Signal<std::function<void(flight::Ref<flight::types::TimelineFrameEvent>)>>> on_frame_constructed;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_loop;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_complete;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::Ref<flight::types::TimelineFrameEvent>)>>> on_enter_frame;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::Ref<flight::types::TimelineFrameEvent>)>>> on_exit_frame;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::Ref<flight::types::TimelineFrameEvent>)>>> on_frame_constructed;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_loop;
 };
 
 } // namespace flight::types

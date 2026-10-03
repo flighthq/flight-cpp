@@ -12,10 +12,10 @@ namespace flight::types {
 struct MeshGeometryFromAttributesOptions;
 
 struct MeshGeometryFromAttributesOptions : public flight::ReferenceEnabled {
-  std::variant<flight::Array<double>, flight::Uint16Array, flight::Uint32Array, flight::Null, flight::Undefined> indices;
-  std::variant<flight::Array<double>, flight::Null, flight::Undefined> normals;
+  std::variant<flight::Array<double>, flight::Uint16Array, flight::Uint32Array, flight::Null, flight::Undefined> indices = std::variant<flight::Array<double>, flight::Uint16Array, flight::Uint32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Array<double>, flight::Null, flight::Undefined> normals = std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   flight::Array<double> positions;
-  std::variant<flight::Array<double>, flight::Null, flight::Undefined> uvs;
+  std::variant<flight::Array<double>, flight::Null, flight::Undefined> uvs = std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
 } // namespace flight::types

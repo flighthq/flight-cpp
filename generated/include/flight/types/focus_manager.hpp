@@ -22,7 +22,7 @@ namespace flight::types { template <typename T> struct Signal; }
 namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
-template <typename N = flight::Ref<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>
+template <typename N = std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>
 struct FocusManager;
 struct FocusManagerOptions;
 struct FocusNavigationOptions;
@@ -45,7 +45,7 @@ namespace flight::types {
 template <typename N>
 struct FocusManager : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<flight::Ref<flight::types::Node<flight::Any>>> focused;
+  std::optional<std::shared_ptr<flight::types::Node<flight::Any>>> focused;
   N root;
   bool wrap;
 };

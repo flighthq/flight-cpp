@@ -20,7 +20,7 @@ namespace flight::types {
 struct HasTransform3D;
 struct HasTransform3DRuntime;
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-using Transform3DNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<flight::Ref<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasTransform3D>>>>;
+using Transform3DNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasTransform3D>>>>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>

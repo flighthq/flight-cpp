@@ -30,7 +30,7 @@ namespace flight::types {
 
 struct ShapeCommandArgumentCursor : public flight::ReferenceEnabled {
   double length;
-  std::function<std::variant<flight::Array<double>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<flight::types::Matrix>, flight::Ref<Texture2D>, bool, double, flight::String, flight::Null, flight::Undefined>(double)> get_argument;
+  std::function<std::variant<flight::Array<double>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<flight::types::Matrix>, flight::Ref<Texture2D>, bool, double, flight::String, flight::Null, flight::Undefined>(double)> get_argument;
 };
 
 struct ShapeBoundsContext : public flight::ReferenceEnabled {

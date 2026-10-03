@@ -12,6 +12,7 @@ namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct GuiControllerOptions; }
 namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct Vector2; }
+namespace flight::types { template <typename N, typename P> struct NodeInteractiveStateTransition; }
 
 namespace flight::types {
 struct TooltipController;
@@ -22,6 +23,7 @@ struct TooltipControllerOptions;
 #include <flight/types/gui_controller.hpp>
 #include <flight/types/node2_d.hpp>
 #include <flight/types/vector2.hpp>
+#include <flight/types/node_interactive_state_binding.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/gui_controller.hpp>
 
@@ -32,7 +34,7 @@ struct TooltipController : public flight::ReferenceEnabled {
 };
 
 struct TooltipControllerOptions : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::GuiTransitionDescriptor>>>> transition;
   flight::types::Node2D content;
   std::optional<double> delay;
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>>> offset;

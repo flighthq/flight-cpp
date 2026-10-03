@@ -18,17 +18,19 @@ namespace flight::types { template <typename T> struct SignalData; }
 
 namespace flight::signals {
 
+using flight::types::Signal;
+
 template <typename T>
-inline void initialize_signal(flight::types::EntityConstruction<flight::Ref<flight::types::Signal<T>>> out) {
+inline void initialize_signal(flight::types::EntityConstruction<std::shared_ptr<flight::types::Signal<T>>> out) {
   flight::row_set<flight::RowKey<"emit">>(out, flight::bind_callable_v1<T>(flight::signals::null_signal_emit));
   flight::row_set<flight::RowKey<"data">>(out, std::nullopt);
 }
 
 template <typename T>
-inline flight::Ref<flight::types::Signal<T>> create_signal() {
-  flight::types::EntityConstruction<flight::Ref<flight::types::Signal<T>>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Signal<T>>>();
+inline std::shared_ptr<flight::types::Signal<T>> create_signal() {
+  flight::types::EntityConstruction<std::shared_ptr<flight::types::Signal<T>>> out = flight::entity::allocate_entity<std::shared_ptr<flight::types::Signal<T>>>();
   initialize_signal<T>(out);
-  return flight::entity::finish_entity<flight::Ref<flight::types::Signal<T>>>(out);
+  return flight::entity::finish_entity<std::shared_ptr<flight::types::Signal<T>>>(out);
 }
 
 } // namespace flight::signals

@@ -23,7 +23,7 @@ namespace flight::types {
 
 struct MenuSelect : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(flight::String)>>> on_menu_item_select;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::String)>>> on_menu_item_select;
 };
 
 } // namespace flight::types

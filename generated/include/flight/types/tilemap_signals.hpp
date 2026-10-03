@@ -23,9 +23,9 @@ namespace flight::types {
 
 struct TilemapSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_cleared;
-  flight::Ref<flight::types::Signal<std::function<void(double, double, double)>>> on_tile_changed;
-  flight::Ref<flight::types::Signal<std::function<void(double, double, double, double)>>> on_tiles_changed;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_cleared;
+  std::shared_ptr<flight::types::Signal<std::function<void(double, double, double)>>> on_tile_changed;
+  std::shared_ptr<flight::types::Signal<std::function<void(double, double, double, double)>>> on_tiles_changed;
 };
 
 } // namespace flight::types

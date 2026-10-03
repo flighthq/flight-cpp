@@ -12,6 +12,7 @@ namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct GuiControllerOptions; }
 namespace flight::types { struct Node2DTraits; }
+namespace flight::types { template <typename N, typename P> struct NodeInteractiveStateTransition; }
 namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::types {
@@ -25,6 +26,7 @@ struct TabBarControllerSignals;
 #include <flight/types/gui_controller.hpp>
 #include <flight/types/node2_d.hpp>
 #include <flight/types/signal.hpp>
+#include <flight/types/node_interactive_state_binding.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/gui_controller.hpp>
 
@@ -40,13 +42,13 @@ struct TabBarControllerItem : public flight::ReferenceEnabled {
 };
 
 struct TabBarControllerOptions : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::GuiTransitionDescriptor>> transition;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::GuiTransitionDescriptor>>>> transition;
   std::optional<double> selected_index;
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TabBarControllerItem>>>>> tabs;
 };
 
 struct TabBarControllerSignals : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void(double)>>> on_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(double)>>> on_change;
 };
 
 } // namespace flight::types

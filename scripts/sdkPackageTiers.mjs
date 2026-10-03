@@ -37,7 +37,7 @@ import { loadApplicableEnvironments, loadDeferredPackages } from './deferredPack
 //
 // `ready` plus `assisted` is the shippable surface, and it is meant to be watched as it climbs.
 //
-//   --generated=DIR   the generated tree to read (default: out/sdk-sdl)
+//   --generated=DIR   the generated tree to read (default: generated)
 //   --report=FILE     where the tier report is written
 //   --compilation=FILE  the header compile report (default: alongside the generated tree)
 
@@ -54,7 +54,11 @@ const valueOf = (name) => {
   return hit?.slice(name.length);
 };
 
-const generatedRoot = path.resolve(root, valueOf('--generated=') ?? path.join('out', 'sdk-sdl'));
+// Default: `generated`, the COMMITTED inventory. It used to be `out/sdk-sdl`, which was the SDL-profiled
+// side output back when `generated/` held the unbound tree. `sdk:generate` now applies the SDL profile set
+// by default, so those two trees have identical content and `out/` is gitignored -- a default pointing
+// there fails on a fresh clone for no reason.
+const generatedRoot = path.resolve(root, valueOf('--generated=') ?? 'generated');
 const manifestFile = path.join(generatedRoot, 'manifest.json');
 if (!existsSync(manifestFile)) {
   process.stdout.write(

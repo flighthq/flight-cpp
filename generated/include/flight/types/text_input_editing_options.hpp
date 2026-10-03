@@ -28,7 +28,7 @@ struct HandleTextInputKeyboardOptions : public flight::ReferenceEnabled {
 
 struct ReplaceTextInputOptions : public flight::ReferenceEnabled {
   std::optional<bool> apply_input_rules;
-  std::variant<flight::String, flight::Null, flight::Undefined> merge_kind;
+  std::variant<flight::String, flight::Null, flight::Undefined> merge_kind = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<bool> skip_history;
 };
 

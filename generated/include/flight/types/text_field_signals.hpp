@@ -45,9 +45,9 @@ struct TextFieldScrollEvent : public flight::ReferenceEnabled {
 
 struct TextFieldSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TextFieldChangeEvent>>>>)>>> on_text_field_change;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TextFieldLinkEvent>>>>)>>> on_text_field_link;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TextFieldScrollEvent>>>>)>>> on_text_field_scroll;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TextFieldChangeEvent>>>>)>>> on_text_field_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TextFieldLinkEvent>>>>)>>> on_text_field_link;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TextFieldScrollEvent>>>>)>>> on_text_field_scroll;
 };
 
 } // namespace flight::types

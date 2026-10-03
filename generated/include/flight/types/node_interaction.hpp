@@ -13,7 +13,7 @@ namespace flight::types { struct Rectangle; }
 namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
-using HitArea = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Node<flight::Any>>>>>, flight::String>;
+using HitArea = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<Node<flight::Any>>>>>, flight::String>;
 } // namespace flight::types
 
 #include <flight/types/node.hpp>

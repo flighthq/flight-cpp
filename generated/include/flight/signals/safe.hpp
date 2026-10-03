@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <exception>
 #include <flight/any.hpp>
+#include <flight/boolean.hpp>
 #include <functional>
 #include <optional>
 #include <utility>
@@ -19,8 +20,10 @@ namespace flight::types { template <typename T> struct SignalData; }
 
 namespace flight::signals {
 
+using flight::types::Signal;
+
 template <typename T>
-inline void tombstone_once_slot(flight::Ref<flight::types::SignalData<T>> data, T slot, double priority) {
+inline void tombstone_once_slot(std::shared_ptr<flight::types::SignalData<T>> data, T slot, double priority) {
   {
     double i = 0.0;
     while ((i < static_cast<double>(data->slots.size()))) {
@@ -38,7 +41,7 @@ inline void tombstone_once_slot(flight::Ref<flight::types::SignalData<T>> data, 
 }
 
 template <typename T>
-inline void compact_signal_data_flight_value_function_compact_u000053_ignal_u000044_ata_flight_private_d3c18adc52f06ae0(flight::Ref<flight::types::Signal<T>> signal, flight::Ref<flight::types::SignalData<T>> data) {
+inline void compact_signal_data_flight_value_function_compact_u000053_ignal_u000044_ata_flight_private_d3c18adc52f06ae0(std::shared_ptr<flight::types::Signal<T>> signal, std::shared_ptr<flight::types::SignalData<T>> data) {
   double write = 0.0;
   {
     double read = 0.0;
@@ -72,7 +75,7 @@ inline void compact_signal_data_flight_value_function_compact_u000053_ignal_u000
 
 template <typename T, typename... ArgsPack>
   requires flight::callable_signature_v1<T>::template accepts<ArgsPack...>
-inline void emit_signal_safe(flight::Ref<flight::types::Signal<T>> signal, ArgsPack&&... args) {
+inline void emit_signal_safe(std::shared_ptr<flight::types::Signal<T>> signal, ArgsPack&&... args) {
   auto data = signal->data;
   if (!data.has_value()) {
     return;
@@ -97,7 +100,7 @@ inline void emit_signal_safe(flight::Ref<flight::types::Signal<T>> signal, ArgsP
             tombstone_once_slot<T>(data.value(), slot.value(), priorities.element(i));
           }
           slot.value()(std::forward<ArgsPack>(args)...);
-          if (data.value()->cancelled) {
+          if (flight::to_boolean(data.value()->cancelled)) {
             break;
           }
         }

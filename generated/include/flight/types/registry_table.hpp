@@ -20,7 +20,7 @@ using RegistryId = flight::String;
 using RegistryEntryState = flight::String;
 using RegistryMissPolicy = flight::String;
 template <typename T>
-using RegistryTable = std::variant<flight::Ref<KeyedTable<T>>, flight::Ref<OrdinalTable<T>>, flight::Ref<SlotTable<T>>>;
+using RegistryTable = std::variant<std::shared_ptr<KeyedTable<T>>, std::shared_ptr<OrdinalTable<T>>, std::shared_ptr<SlotTable<T>>>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -70,11 +70,28 @@ struct KeyedTable : public flight::ReferenceEnabled {
   flight::String shape;
 };
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_VALUE_835A3EAD37753719
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_VALUE_835A3EAD37753719
+template <typename T>
+struct state_value_835a3ead37753719 : public flight::ReferenceEnabled {
+  flight::String state;
+  T value;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_VALUE_835A3EAD37753719
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_3C8AA9FBFEC5B0C7
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_3C8AA9FBFEC5B0C7
+template <typename T>
+struct state_3c8aa9fbfec5b0c7 : public flight::ReferenceEnabled {
+  flight::String state;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_3C8AA9FBFEC5B0C7
+
 template <typename T>
 struct SlotTable : public flight::ReferenceEnabled {
   RegistryMissPolicy on_miss;
   RegistryId registry;
-  std::optional<RegistryTableEntry<T>> entry;
+  std::optional<std::variant<flight::Ref<state_value_835a3ead37753719<T>>, flight::Ref<state_3c8aa9fbfec5b0c7<T>>>> entry;
   flight::String shape;
 };
 

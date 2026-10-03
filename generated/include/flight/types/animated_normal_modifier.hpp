@@ -19,6 +19,8 @@ struct AnimatedNormalModifier;
 #include <flight/types/modifier.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/vector2.hpp>
+#include <flight/types/modifier_kind.hpp>
+#include <flight/types/modifier_slot.hpp>
 #include <flight/types/entity.hpp>
 
 namespace flight::types {

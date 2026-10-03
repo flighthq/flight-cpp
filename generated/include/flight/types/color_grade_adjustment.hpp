@@ -14,8 +14,9 @@ struct ColorGradeAdjustment;
 } // namespace flight::types
 
 #include <flight/types/color_lut_adjustment.hpp>
-#include <flight/types/entity.hpp>
 #include <flight/types/color_transform_function.hpp>
+#include <flight/types/adjustment_kind.hpp>
+#include <flight/types/entity.hpp>
 
 namespace flight::types {
 

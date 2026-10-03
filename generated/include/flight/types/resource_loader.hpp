@@ -26,12 +26,12 @@ namespace flight::types {
 
 struct ResourceLoader : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_cancel;
-  flight::Ref<flight::types::Signal<std::function<void(flight::Array<flight::Ref<flight::types::ResourceLoadReport>>)>>> on_complete;
-  flight::Ref<flight::types::Signal<std::function<void(flight::Any, flight::String)>>> on_error;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_pause;
-  flight::Ref<flight::types::Signal<std::function<void(double)>>> on_progress;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_resume;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_cancel;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::Array<flight::Ref<flight::types::ResourceLoadReport>>)>>> on_complete;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::Any, flight::String)>>> on_error;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_pause;
+  std::shared_ptr<flight::types::Signal<std::function<void(double)>>> on_progress;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_resume;
 };
 
 } // namespace flight::types

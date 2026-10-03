@@ -19,7 +19,7 @@ namespace flight::types {
 struct HasTransform2D;
 struct HasTransform2DRuntime;
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-using Transform2DNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<flight::Ref<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasTransform2D>>>>;
+using Transform2DNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasTransform2D>>>>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>

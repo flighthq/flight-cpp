@@ -5,20 +5,20 @@
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 namespace flight::types { struct FlightDocumentFieldSchema; }
-namespace flight::types { struct FlightDocumentFields; }
 namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct FlightDocumentNodeSchema;
 using FlightDocumentResourceLookup = flight::Record<flight::String, flight::Any>;
-using FlightDocumentNodeFactory = std::function<std::optional<flight::Ref<Node<flight::Any>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlightDocumentFields>>>>, flight::Record<flight::String, flight::Any>)>;
-using FlightDocumentNodeFieldWriter = std::function<bool(flight::Ref<flight::types::FlightDocumentFields>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Node<flight::Any>>>>>, flight::Record<flight::String, flight::Any>)>;
+using FlightDocumentNodeFactory = std::function<std::optional<std::shared_ptr<Node<flight::Any>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Record<flight::String, std::optional<std::variant<flight::Array<FlightDocumentValue>, flight::Record<flight::String, FlightDocumentValue>, bool, double, flight::String>>>>>>, flight::Record<flight::String, flight::Any>)>;
+using FlightDocumentNodeFieldWriter = std::function<bool(flight::Record<flight::String, std::optional<std::variant<flight::Array<FlightDocumentValue>, flight::Record<flight::String, FlightDocumentValue>, bool, double, flight::String>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<Node<flight::Any>>>>>, flight::Record<flight::String, flight::Any>)>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>

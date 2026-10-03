@@ -61,11 +61,11 @@ struct GizmoCreateOptions : public flight::ReferenceEnabled {
 };
 
 struct GizmoSignals : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void(double)>>> on_rotate;
-  flight::Ref<flight::types::Signal<std::function<void(double, double)>>> on_scale;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_transform_begin;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_transform_end;
-  flight::Ref<flight::types::Signal<std::function<void(double, double)>>> on_translate;
+  std::shared_ptr<flight::types::Signal<std::function<void(double)>>> on_rotate;
+  std::shared_ptr<flight::types::Signal<std::function<void(double, double)>>> on_scale;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_transform_begin;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_transform_end;
+  std::shared_ptr<flight::types::Signal<std::function<void(double, double)>>> on_translate;
 };
 
 template <typename NodeType>

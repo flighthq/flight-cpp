@@ -67,7 +67,7 @@ inline bool equals_vector2(std::variant<flight::StructuralRef<flight::RowReadonl
   if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
-  return ((std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>>>(a) == std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>>>(b)) || ((flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>>>(a)) == flight::row_get<flight::RowKey<"x">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>>>(b))) && (flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>>>(a)) == flight::row_get<flight::RowKey<"y">>(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>>>(b)))));
+  return ((std::get<0>(a) == std::get<0>(b)) || ((flight::row_get<flight::RowKey<"x">>(std::get<0>(a)) == flight::row_get<flight::RowKey<"x">>(std::get<0>(b))) && (flight::row_get<flight::RowKey<"y">>(std::get<0>(a)) == flight::row_get<flight::RowKey<"y">>(std::get<0>(b)))));
 }
 
 inline double get_vector2_angle(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>> source) {

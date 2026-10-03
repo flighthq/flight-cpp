@@ -26,7 +26,7 @@ namespace flight::types {
 struct GlassExtendedPbrMaterialOptions : public flight::ReferenceEnabled {
   std::optional<double> alpha_cutoff;
   std::optional<flight::Ref<flight::types::MaterialAlphaMode>> alpha_mode;
-  std::optional<flight::Ref<flight::types::BlendMode>> blend_mode;
+  std::optional<flight::String> blend_mode;
   std::optional<bool> double_sided;
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::StandardPbrMaterialProperties>>>>>> standard;
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::TransmissionVolumePbrExtension>>>>>> transmission_volume;

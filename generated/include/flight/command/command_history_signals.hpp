@@ -20,14 +20,14 @@ namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::command {
 
-inline flight::Ref<flight::types::Signal<std::function<void()>>> enable_command_history_signals(flight::Ref<flight::types::CommandHistory> history) {
+inline std::shared_ptr<flight::types::Signal<std::function<void()>>> enable_command_history_signals(flight::Ref<flight::types::CommandHistory> history) {
   if (!history->on_change.has_value()) {
-    (history->on_change = std::optional<flight::Ref<flight::types::Signal<std::function<void()>>>>{flight::signals::create_signal<std::function<void()>>()});
+    (history->on_change = std::optional<std::shared_ptr<flight::types::Signal<std::function<void()>>>>{flight::signals::create_signal<std::function<void()>>()});
   }
   return history->on_change.value();
 }
 
-inline std::optional<flight::Ref<flight::types::Signal<std::function<void()>>>> get_command_history_signals(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CommandHistory>>>> history) {
+inline std::optional<std::shared_ptr<flight::types::Signal<std::function<void()>>>> get_command_history_signals(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CommandHistory>>>> history) {
   return flight::row_get<flight::RowKey<"onChange">>(history);
 }
 

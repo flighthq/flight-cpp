@@ -8,6 +8,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/layout.hpp>
+
 namespace flight::types { struct ColorLutAdjustment; }
 namespace flight::types { struct Entity; }
 
@@ -28,9 +30,7 @@ inline void initialize_color_lut_adjustment(flight::types::EntityConstruction<T>
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_KIND_6FEA82D7AA842443
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_KIND_6FEA82D7AA842443
-struct kind_6fea82d7aa842443 : public flight::ReferenceEnabled {
-  flight::String kind;
-};
+using kind_6fea82d7aa842443 = flight::types::kind_6fea82d7aa842443;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_KIND_6FEA82D7AA842443
 
 inline bool is_color_lut_adjustment(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<kind_6fea82d7aa842443>>>> operation) {

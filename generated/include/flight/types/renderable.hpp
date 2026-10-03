@@ -11,7 +11,7 @@ namespace flight::types { struct RenderCache; }
 namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
-using Renderable = std::variant<flight::Ref<flight::types::RenderCache>, flight::Ref<Node<flight::Any>>>;
+using Renderable = std::variant<flight::Ref<flight::types::RenderCache>, std::shared_ptr<Node<flight::Any>>>;
 } // namespace flight::types
 
 #include <flight/types/node.hpp>

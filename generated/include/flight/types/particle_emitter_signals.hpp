@@ -23,9 +23,9 @@ namespace flight::types {
 
 struct ParticleEmitterSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(double, double, double, double, double, double)>>> on_particle_spawn;
-  flight::Ref<flight::types::Signal<std::function<void(double, double, double)>>> on_particle_death;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_emitter_complete;
+  std::shared_ptr<flight::types::Signal<std::function<void(double, double, double, double, double, double)>>> on_particle_spawn;
+  std::shared_ptr<flight::types::Signal<std::function<void(double, double, double)>>> on_particle_death;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_emitter_complete;
 };
 
 } // namespace flight::types

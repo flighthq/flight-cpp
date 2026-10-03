@@ -16,9 +16,9 @@ namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::clock {
 
-inline flight::Ref<flight::types::Signal<std::function<void(double)>>> enable_clock_signals(flight::Ref<flight::types::Clock> clock) {
+inline std::shared_ptr<flight::types::Signal<std::function<void(double)>>> enable_clock_signals(flight::Ref<flight::types::Clock> clock) {
   if (!clock->on_tick.has_value()) {
-    (clock->on_tick = std::optional<flight::Ref<flight::types::Signal<std::function<void(double)>>>>{flight::signals::create_signal<std::function<void(double)>>()});
+    (clock->on_tick = std::optional<std::shared_ptr<flight::types::Signal<std::function<void(double)>>>>{flight::signals::create_signal<std::function<void(double)>>()});
   }
   return clock->on_tick.value();
 }

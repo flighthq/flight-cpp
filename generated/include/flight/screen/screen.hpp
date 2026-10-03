@@ -14,6 +14,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/electron_api.hpp>
+
 namespace flight::types { struct Entity; }
 namespace flight::types { struct HostScreenChangeCapability; }
 namespace flight::types { struct HostScreenDetailsCapability; }
@@ -59,12 +61,7 @@ inline flight::Ref<x_y_8365950bd60f783f> dip_to_screen_point(flight::StructuralR
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCREEN_X_Y_WIDTH_HEIGHT_544099C876E1FBDC
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCREEN_X_Y_WIDTH_HEIGHT_544099C876E1FBDC
-struct x_y_width_height_544099c876e1fbdc : public flight::ReferenceEnabled {
-  double x;
-  double y;
-  double width;
-  double height;
-};
+using x_y_width_height_544099c876e1fbdc = flight::types::x_y_width_height_544099c876e1fbdc;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCREEN_X_Y_WIDTH_HEIGHT_544099C876E1FBDC
 
 inline flight::Ref<x_y_width_height_544099c876e1fbdc> dip_to_screen_rect(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenInfo>>>> screen, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>> rect, flight::Ref<x_y_width_height_544099c876e1fbdc> out) {

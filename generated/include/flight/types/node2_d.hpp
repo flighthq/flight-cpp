@@ -39,7 +39,7 @@ namespace flight::types {
 struct Node2DTraits;
 struct Node2DData;
 struct Node2DRuntime;
-using Node2D = flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>>;
+using Node2D = flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>>;
 using Node2DDataFactory = std::function<flight::Ref<Node2DData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<Node2DData>>>>>>)>;
 template <typename R>
 using Node2DRuntimeFactory = std::function<R(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<R>>>>>)>;
@@ -57,14 +57,14 @@ using Node2DRuntimeFactory = std::function<R(std::optional<flight::StructuralRef
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/clip_region.hpp>
 #include <flight/types/material.hpp>
+#include <flight/types/matrix.hpp>
+#include <flight/types/rectangle.hpp>
 #include <flight/types/adjustment.hpp>
 #include <flight/types/color_scale_bias.hpp>
 #include <flight/types/node.hpp>
 #include <flight/types/interaction_signals.hpp>
 #include <flight/types/node_signals.hpp>
 #include <flight/types/node_interaction_state.hpp>
-#include <flight/types/matrix.hpp>
-#include <flight/types/rectangle.hpp>
 #include <flight/types/has_bounds_rectangle.hpp>
 
 namespace flight::types {
@@ -76,11 +76,11 @@ struct Node2DData : public flight::ReferenceEnabled {
 struct Node2DTraits : public flight::ReferenceEnabled {
   std::optional<flight::Ref<Node2DData>> data;
   bool enabled;
-  flight::Ref<flight::types::Kind> kind;
+  flight::String kind;
   std::optional<flight::String> name;
   double alpha;
   bool visible;
-  std::optional<flight::Ref<flight::types::BlendMode>> blend_mode;
+  std::optional<flight::String> blend_mode;
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::optional<flight::Ref<flight::types::ClipRegion>> clip;
   std::optional<flight::Ref<flight::types::Material>> material;
@@ -100,6 +100,32 @@ inline const flight::String display_object_kind = flight::String("DisplayObject"
 
 inline const flight::Symbol node2_dtraits_key = flight::Symbol(flight::String("Node2DTraits"));
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_936631377FF06EBB
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_936631377FF06EBB
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_936631377ff06ebb : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<Node2DData>> data;
+  bool enabled;
+  flight::String kind;
+  std::optional<flight::String> name;
+  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<Node2DTraits>>>> entity_runtime_key;
+  double alpha;
+  bool visible;
+  std::optional<flight::String> blend_mode;
+  std::optional<flight::Ref<flight::types::ClipRegion>> clip;
+  std::optional<flight::Ref<flight::types::Material>> material;
+  std::optional<flight::Ref<flight::types::MaterialData>> material_data;
+  double pivot_x;
+  double pivot_y;
+  double rotation;
+  double scale_x;
+  double scale_y;
+  double skew_x;
+  double skew_y;
+  double x;
+  double y;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_936631377FF06EBB
+
 struct Node2DRuntime : public flight::ReferenceEnabled {
   std::optional<flight::ErasedRef> binding;
   std::optional<flight::String> uid;
@@ -110,8 +136,8 @@ struct Node2DRuntime : public flight::ReferenceEnabled {
   double appearance_id;
   double bounds_using_local_bounds_id;
   double bounds_using_local_transform_id;
-  std::function<bool(flight::Ref<flight::types::Node<flight::Ref<Node2DTraits>>>, flight::Ref<flight::types::Node<flight::Ref<Node2DTraits>>>)> can_add_child;
-  std::optional<flight::Array<flight::Ref<flight::types::NodeOf<flight::Ref<Node2DTraits>>>>> children;
+  std::function<bool(std::shared_ptr<flight::types::Node<flight::Ref<Node2DTraits>>>, std::shared_ptr<flight::types::Node<flight::Ref<Node2DTraits>>>)> can_add_child;
+  std::optional<flight::Array<flight::types::NodeOf<flight::Ref<Node2DTraits>>>> children;
   double children_id;
   std::optional<flight::Ref<flight::types::NodeTraitsKey<flight::Ref<Node2DTraits>>>> traits;
   std::optional<flight::Ref<flight::types::InteractionSignals>> interaction_signals;
@@ -122,7 +148,7 @@ struct Node2DRuntime : public flight::ReferenceEnabled {
   double local_transform_using_local_transform_id;
   std::optional<flight::Ref<flight::types::NodeSignals>> node_signals;
   std::optional<flight::Ref<flight::types::NodeInteractionState>> interaction_state;
-  std::optional<flight::Ref<flight::types::NodeOf<flight::Ref<Node2DTraits>>>> parent;
+  std::optional<flight::types::NodeOf<flight::Ref<Node2DTraits>>> parent;
   double parent_reference_id;
   double world_bounds_using_local_bounds_id;
   double world_bounds_using_world_transform_id;
@@ -135,8 +161,8 @@ struct Node2DRuntime : public flight::ReferenceEnabled {
   double rotation_sine;
   std::optional<flight::Ref<flight::types::Matrix>> world_matrix;
   std::optional<flight::Ref<flight::types::Rectangle>> bounds_rectangle;
-  std::function<void(flight::Ref<flight::types::Rectangle>, flight::Ref<flight::types::BoundsNodeAny>)> compute_local_bounds_rectangle;
-  std::optional<std::function<bool(flight::Ref<flight::types::BoundsNodeAny>)>> is_local_bounds_rectangle_valid;
+  std::function<void(flight::Ref<flight::types::Rectangle>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)> compute_local_bounds_rectangle;
+  std::optional<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>> is_local_bounds_rectangle_valid;
   std::optional<flight::Ref<flight::types::Rectangle>> local_bounds_rectangle;
   std::optional<flight::Ref<flight::types::Rectangle>> world_bounds_rectangle;
   std::optional<flight::Ref<flight::types::Scene2D>> scene2d;

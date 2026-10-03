@@ -15,14 +15,14 @@ struct ColorLutAdjustment;
 
 #include <flight/types/adjustment.hpp>
 #include <flight/types/color_transform_function.hpp>
-#include <flight/types/entity.hpp>
 #include <flight/types/adjustment_kind.hpp>
+#include <flight/types/entity.hpp>
 
 namespace flight::types {
 
 struct ColorLutAdjustment : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::AdjustmentKind> kind;
+  flight::String kind;
   flight::types::ColorTransformFunction transform;
 };
 

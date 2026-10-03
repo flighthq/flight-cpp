@@ -29,7 +29,7 @@ struct Clock : public flight::ReferenceEnabled {
   double elapsed;
   std::optional<flight::Ref<Clock>> parent;
   flight::Array<flight::Ref<Clock>> children;
-  std::optional<flight::Ref<flight::types::Signal<std::function<void(double)>>>> on_tick;
+  std::optional<std::shared_ptr<flight::types::Signal<std::function<void(double)>>>> on_tick;
 };
 
 } // namespace flight::types

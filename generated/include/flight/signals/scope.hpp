@@ -21,12 +21,14 @@ namespace flight::types { template <typename T> struct SignalConnection; }
 
 namespace flight::signals {
 
+using flight::types::SignalConnection;
+
 inline void disconnect_signal_scope(flight::Ref<flight::types::SignalScope> scope) {
-  flight::Array<flight::Ref<flight::types::SignalConnection<std::function<void(flight::Array<flight::Any>)>>>> members = scope->connections;
+  flight::Array<std::shared_ptr<flight::types::SignalConnection<std::function<void(flight::Array<flight::Any>)>>>> members = scope->connections;
   if ((static_cast<double>(members.size()) == 0.0)) {
     return;
   }
-  flight::Array<flight::Ref<flight::types::SignalConnection<std::function<void(flight::Array<flight::Any>)>>>> pending = members.slice();
+  flight::Array<std::shared_ptr<flight::types::SignalConnection<std::function<void(flight::Array<flight::Any>)>>>> pending = members.slice();
   ([&]() { auto&& assignment_receiver = members; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   {
     double i = 0.0;
@@ -40,7 +42,7 @@ inline void disconnect_signal_scope(flight::Ref<flight::types::SignalScope> scop
 }
 
 inline void initialize_signal_scope(flight::types::EntityConstruction<flight::Ref<flight::types::SignalScope>> out) {
-  flight::row_set<flight::RowKey<"connections">>(out, flight::Array<flight::Ref<flight::types::SignalConnection<std::function<void(flight::Array<flight::Any>)>>>>{});
+  flight::row_set<flight::RowKey<"connections">>(out, flight::Array<std::shared_ptr<flight::types::SignalConnection<std::function<void(flight::Array<flight::Any>)>>>>{});
 }
 
 inline flight::Ref<flight::types::SignalScope> create_signal_scope() {

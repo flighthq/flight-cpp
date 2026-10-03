@@ -33,7 +33,7 @@ namespace flight::types {
 struct ShadedMaterialOptions : public flight::ReferenceEnabled {
   std::optional<double> alpha_cutoff;
   std::optional<flight::Ref<flight::types::MaterialAlphaMode>> alpha_mode;
-  std::optional<flight::Ref<flight::types::BlendMode>> blend_mode;
+  std::optional<flight::String> blend_mode;
   std::optional<bool> double_sided;
   std::optional<double> diffuse;
   std::optional<std::optional<flight::types::Texture>> diffuse_map;

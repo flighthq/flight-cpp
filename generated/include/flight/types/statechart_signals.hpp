@@ -23,7 +23,7 @@ namespace flight::types {
 
 struct StatechartSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(double, double, double)>>> on_state_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(double, double, double)>>> on_state_change;
 };
 
 } // namespace flight::types

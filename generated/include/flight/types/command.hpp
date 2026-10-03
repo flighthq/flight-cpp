@@ -52,9 +52,9 @@ struct CommandBinding : public flight::ReferenceEnabled {
 };
 
 struct CommandBindingTable : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::RegistryMissPolicy> on_miss;
-  flight::Ref<flight::types::RegistryId> registry;
-  flight::Map<flight::Ref<flight::types::Kind>, flight::Ref<flight::types::RegistryTableEntry<flight::Ref<CommandBinding>>>> entries;
+  flight::String on_miss;
+  flight::String registry;
+  flight::Map<flight::String, flight::Ref<flight::types::RegistryTableEntry<flight::Ref<CommandBinding>>>> entries;
   flight::String shape;
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
 };
@@ -65,7 +65,7 @@ struct CommandHistory : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<Command>> entries;
   double index;
   double max_size;
-  std::optional<flight::Ref<flight::types::Signal<std::function<void()>>>> on_change;
+  std::optional<std::shared_ptr<flight::types::Signal<std::function<void()>>>> on_change;
   double transaction_depth;
   double transaction_index;
   std::optional<flight::String> transaction_label;

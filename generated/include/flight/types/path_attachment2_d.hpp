@@ -25,11 +25,11 @@ namespace flight::types {
 struct PathAttachment2D : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
-  std::variant<flight::String, flight::Null, flight::Undefined> name;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   flight::Array<double> commands;
   double point_count;
-  std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined> skin;
-  std::variant<flight::Float32Array, flight::Null, flight::Undefined> vertices;
+  std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined> skin = std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Float32Array, flight::Null, flight::Undefined> vertices = std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   flight::types::PathWinding winding;
 };
 

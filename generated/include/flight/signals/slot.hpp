@@ -2,6 +2,7 @@
 #pragma once
 #include <cstddef>
 #include <flight/any.hpp>
+#include <flight/boolean.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -21,14 +22,16 @@ namespace flight::types { template <typename T> struct SignalData; }
 
 namespace flight::signals {
 
+using flight::types::Signal;
+
 template <typename T>
-inline void clear_signal(flight::Ref<flight::types::Signal<T>> signal) {
+inline void clear_signal(std::shared_ptr<flight::types::Signal<T>> signal) {
   (signal->emit = flight::bind_callable_v1<T>(flight::signals::null_signal_emit));
   (signal->data = std::nullopt);
 }
 
 template <typename T>
-inline void disconnect_signal(flight::Ref<flight::types::Signal<T>> signal, T slot) {
+inline void disconnect_signal(std::shared_ptr<flight::types::Signal<T>> signal, T slot) {
   auto data = signal->data;
   if (!data.has_value()) {
     return;
@@ -54,12 +57,12 @@ inline void disconnect_signal(flight::Ref<flight::types::Signal<T>> signal, T sl
 }
 
 template <typename T>
-inline bool is_slot_connected(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Signal<T>>>>> signal, T slot) {
+inline bool is_slot_connected(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Signal<T>>>>> signal, T slot) {
   return (flight::row_get<flight::RowKey<"data">>(signal).has_value() && (flight::row_get<flight::RowKey<"data">>(signal).value()->slots.index_of(slot) != -1.0));
 }
 
 template <typename T>
-inline void compact_signal_data_flight_value_function_compact_u000053_ignal_u000044_ata_flight_private_b3cb17ef3e38d723(flight::Ref<flight::types::Signal<T>> signal, flight::Ref<flight::types::SignalData<T>> data) {
+inline void compact_signal_data_flight_value_function_compact_u000053_ignal_u000044_ata_flight_private_b3cb17ef3e38d723(std::shared_ptr<flight::types::Signal<T>> signal, std::shared_ptr<flight::types::SignalData<T>> data) {
   double write = 0.0;
   {
     double read = 0.0;
@@ -92,46 +95,45 @@ inline void compact_signal_data_flight_value_function_compact_u000053_ignal_u000
 }
 
 template <typename T>
-inline T make_dispatch(flight::Ref<flight::types::Signal<T>> signal, flight::Ref<flight::types::SignalData<T>> data) {
-  const auto data_capture = flight::make_binding_cell(flight::Ref<flight::types::SignalData<T>>{data});
+inline T make_dispatch(std::shared_ptr<flight::types::Signal<T>> signal, std::shared_ptr<flight::types::SignalData<T>> data) {
   return flight::bind_callable_v1<T>([=]<typename... ArgsPack>(ArgsPack&&... args) requires flight::callable_signature_v1<T>::template accepts<ArgsPack...> {
-  (data_capture.read_binding()->cancelled = false);
-  data_capture.read_binding()->depth++;
+  (data->cancelled = false);
+  data->depth++;
   double i = 0.0;
-  while ((i < static_cast<double>(data_capture.read_binding()->slots.size()))) {
-    std::optional<std::optional<std::function<void(flight::Array<flight::Any>)>>> slot = data_capture.read_binding()->slots.get(i);
+  while ((i < static_cast<double>(data->slots.size()))) {
+    std::optional<std::optional<std::function<void(flight::Array<flight::Any>)>>> slot = data->slots.get(i);
     if (!slot.has_value()) {
       i++;
       continue;
     }
     slot.value()(std::forward<ArgsPack>(args)...);
-    if (data_capture.read_binding()->cancelled) {
+    if (flight::to_boolean(data->cancelled)) {
       break;
     }
-    if (!data_capture.read_binding()->repeat.element(i)) {
-      (data_capture.read_binding()->slots.element(i) = std::nullopt);
+    if (!data->repeat.element(i)) {
+      (data->slots.element(i) = std::nullopt);
     }
     i++;
   }
-  data_capture.read_binding()->depth--;
-  if ((data_capture.read_binding()->depth == 0.0)) {
-    compact_signal_data_flight_value_function_compact_u000053_ignal_u000044_ata_flight_private_b3cb17ef3e38d723<T>(signal, data_capture.read_binding());
+  data->depth--;
+  if ((data->depth == 0.0)) {
+    compact_signal_data_flight_value_function_compact_u000053_ignal_u000044_ata_flight_private_b3cb17ef3e38d723<T>(signal, data);
   }
 });
 }
 
 template <typename T>
-inline void init_signal(flight::Ref<flight::types::Signal<T>> signal) {
+inline void init_signal(std::shared_ptr<flight::types::Signal<T>> signal) {
   if (signal->data.has_value()) {
     return;
   }
   auto data = flight::make_ref<flight::types::SignalData<T>>(flight::types::SignalData<T>{.slots = flight::Array<std::optional<std::function<void(flight::Array<flight::Any>)>>>{}, .priorities = flight::Array<double>{}, .repeat = flight::Array<bool>{}, .cancelled = false, .depth = 0.0});
-  (signal->data = std::optional<flight::Ref<flight::types::SignalData<T>>>{data});
+  (signal->data = std::optional<std::shared_ptr<flight::types::SignalData<T>>>{data});
   (signal->emit = make_dispatch<T>(signal, data));
 }
 
 template <typename T>
-inline void connect_signal(flight::Ref<flight::types::Signal<T>> signal, T slot, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SignalConnectOptions>>>>> options = std::nullopt) {
+inline void connect_signal(std::shared_ptr<flight::types::Signal<T>> signal, T slot, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SignalConnectOptions>>>>> options = std::nullopt) {
   const double priority = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"priority">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
   const bool repeat = !([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"once">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }());
   init_signal<T>(signal);
@@ -156,7 +158,7 @@ inline void connect_signal(flight::Ref<flight::types::Signal<T>> signal, T slot,
 }
 
 template <typename T>
-inline double count_live_slots(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SignalData<T>>>>> data) {
+inline double count_live_slots(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::SignalData<T>>>>> data) {
   double live = 0.0;
   {
     double i = 0.0;
@@ -173,7 +175,7 @@ inline double count_live_slots(flight::StructuralRef<flight::RowReadonly<flight:
 }
 
 template <typename T>
-inline bool has_signal_slots(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Signal<T>>>>> signal) {
+inline bool has_signal_slots(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Signal<T>>>>> signal) {
   auto data = flight::row_get<flight::RowKey<"data">>(signal);
   if (!data.has_value()) {
     return false;
@@ -181,7 +183,7 @@ inline bool has_signal_slots(flight::StructuralRef<flight::RowReadonly<flight::R
   if ((data.value()->depth == 0.0)) {
     return (static_cast<double>(data.value()->slots.size()) > 0.0);
   }
-  return (count_live_slots(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SignalData<T>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SignalData<T>>>>>(data.value()))) > 0.0);
+  return (count_live_slots(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::SignalData<T>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::SignalData<T>>>>>(data.value()))) > 0.0);
 }
 
 } // namespace flight::signals

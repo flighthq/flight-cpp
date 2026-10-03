@@ -3,6 +3,7 @@
 #include <flight/any.hpp>
 #include <flight/conditional_facet_ref.hpp>
 #include <flight/erased_ref.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/types/node.hpp>
 #include <functional>
@@ -15,15 +16,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
-namespace flight::types { struct FlightDocumentFields; }
 namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct NodeInteractiveStateBindingRuntime;
 struct NodeInteractiveStateFlags;
-template <typename N = flight::Ref<Node<flight::Any>>, typename P = flight::String>
+template <typename N = std::shared_ptr<Node<flight::Any>>, typename P = flight::String>
 struct NodeInteractiveStateTransitionRequest;
-template <typename N = flight::Ref<Node<flight::Any>>, typename P = flight::String>
+template <typename N = std::shared_ptr<Node<flight::Any>>, typename P = flight::String>
 struct NodeInteractiveStateTransition;
 struct NodeInteractiveStateExtensionRuntime;
 struct NodeInteractiveStateExplanation;
@@ -69,8 +69,8 @@ struct NodeInteractiveStateTransition : public flight::ReferenceEnabled {
 };
 
 struct NodeInteractiveStateExtensionRuntime : public flight::ReferenceEnabled {
-  std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlightDocumentFields>>>>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<NodeInteractiveStateTransition<>>>>>>)> apply;
-  std::function<bool(flight::Ref<flight::types::FlightDocumentFields>)> capture;
+  std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Record<flight::String, FlightDocumentValue>>>>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<NodeInteractiveStateTransition<>>>>>>)> apply;
+  std::function<bool(flight::Record<flight::String, FlightDocumentValue>)> capture;
   std::function<void()> dispose;
 };
 

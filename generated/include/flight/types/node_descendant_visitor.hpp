@@ -12,7 +12,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-using NodeDescendantVisitor = std::function<bool(flight::Ref<flight::types::Node<Traits>>)>;
+using NodeDescendantVisitor = std::function<bool(std::shared_ptr<flight::types::Node<Traits>>)>;
 } // namespace flight::types
 
 #include <flight/types/node.hpp>

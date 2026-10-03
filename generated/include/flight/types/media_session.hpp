@@ -86,7 +86,7 @@ struct HostMediaSessionActionCapability : public flight::ReferenceEnabled {
 struct MediaSessionActionSignal : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   MediaSessionAction action;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MediaSessionActionDetails>>>>)>>> on_action;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MediaSessionActionDetails>>>>)>>> on_action;
 };
 
 } // namespace flight::types

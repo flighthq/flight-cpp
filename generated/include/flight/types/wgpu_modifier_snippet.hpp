@@ -39,9 +39,9 @@ struct WgpuModifierContribution : public flight::ReferenceEnabled {
 };
 
 struct WgpuModifierSnippet : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::ModifierKind> kind;
-  flight::Ref<flight::types::ModifierSlot> slot;
-  std::optional<std::function<flight::String(flight::Ref<flight::types::Modifier>)>> get_define_signature;
+  flight::String kind;
+  flight::String slot;
+  std::optional<std::function<flight::String(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>)>> get_define_signature;
   std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>, flight::Float32Array, double)>> bind;
   std::function<flight::Ref<WgpuModifierContribution>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>, double, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<WgpuModifierCompileContext>>>>)> contribution;
   std::optional<std::function<double(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>, flight::Array<std::optional<flight::types::Texture>>, double)>> textures;

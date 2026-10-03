@@ -23,7 +23,7 @@ struct PointerEventData : public flight::ReferenceEnabled {
   double button;
   double buttons;
   bool ctrl_key;
-  std::optional<flight::Ref<Node<flight::Any>>> current_target;
+  std::optional<std::shared_ptr<Node<flight::Any>>> current_target;
   double delta_x;
   double delta_y;
   double local_x;
@@ -32,7 +32,7 @@ struct PointerEventData : public flight::ReferenceEnabled {
   double pointer_id;
   PointerType pointer_type;
   bool shift_key;
-  std::optional<flight::Ref<Node<flight::Any>>> target;
+  std::optional<std::shared_ptr<Node<flight::Any>>> target;
   double world_x;
   double world_y;
   double x;

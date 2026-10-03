@@ -17,6 +17,23 @@ namespace flight::types { struct TextureSource; }
 
 namespace flight::types {
 
-using CubeTexture = flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>;
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
+struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;
+  bool flip_x;
+  bool flip_y;
+  flight::Ref<flight::types::Vector2> uv_offset;
+  double uv_rotation;
+  flight::Ref<flight::types::Vector2> uv_scale;
+  flight::types::TextureColorSpace color_space;
+  flight::Ref<flight::types::Sampler> sampler;
+  double version;
+  flight::String dimension;
+  TextureSourceCubeFaces sources;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
+
+using CubeTexture = flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>;
 
 } // namespace flight::types

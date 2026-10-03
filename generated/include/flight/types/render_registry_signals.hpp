@@ -43,7 +43,7 @@ struct RenderRegistriesMissExplanation : public flight::ReferenceEnabled {
 };
 
 struct RenderRegistrySignals : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void(RenderRegistryTable, flight::String)>>> on_registry_miss;
+  std::shared_ptr<flight::types::Signal<std::function<void(RenderRegistryTable, flight::String)>>> on_registry_miss;
 };
 
 } // namespace flight::types

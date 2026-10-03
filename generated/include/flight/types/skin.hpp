@@ -8,8 +8,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { template <typename Traits> struct Node; }
-
 namespace flight::types { struct Node3DTraits; }
 namespace flight::types { struct Skeleton3D; }
 
@@ -24,7 +22,7 @@ namespace flight::types {
 
 struct Skin : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Skeleton3D> skeleton;
-  std::variant<flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Node<flight::Ref<Node3DTraits>>>>, flight::RowOf<flight::Ref<Node3DTraits>>>>, flight::Null, flight::Undefined> skeleton_root;
+  std::variant<flight::types::Node3D, flight::Null, flight::Undefined> skeleton_root = std::variant<flight::types::Node3D, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
 } // namespace flight::types

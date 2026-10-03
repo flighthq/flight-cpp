@@ -44,7 +44,7 @@
     "sdk:check": "node ./scripts/sdkGeneration.mjs --check",
     "sdk:compile": "node ./scripts/sdkHeaderCompile.mjs",
     "sdk:compile:headless": "node ./scripts/sdkHeaderCompile.mjs --generated=out/sdk-headless --report=out/sdk-headless-header-compilation.json",
-    "sdk:compile:sdl": "node ./scripts/sdkHeaderCompile.mjs --generated=out/sdk-sdl --report=out/sdk-sdl-header-compilation.json",
+    "sdk:compile:sdl": "node ./scripts/sdkHeaderCompile.mjs --generated=generated --report=out/sdk-sdl-header-compilation.json",
     "sdk:compile:sdl-gl": "node ./scripts/sdkHeaderCompile.mjs --generated=out/sdk-sdl-gl --report=out/sdk-sdl-gl-header-compilation.json",
     "sdk:compile:sdl-wgpu": "node ./scripts/sdkHeaderCompile.mjs --generated=out/sdk-sdl-wgpu --report=out/sdk-sdl-wgpu-header-compilation.json",
     "sdk:generate": "node ./scripts/sdkGeneration.mjs",

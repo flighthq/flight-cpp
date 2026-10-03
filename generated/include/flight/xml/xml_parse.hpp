@@ -54,7 +54,7 @@ inline flight::String expand_xml_entities(flight::String src, flight::Record<fli
   expanded_capture.rebind(true);
   return replacement.value();
 });
-        if ((!expanded_capture.read_binding() || (static_cast<double>(next.length()) > budget))) {
+        if ((!flight::to_boolean(expanded_capture.read_binding()) || (static_cast<double>(next.length()) > budget))) {
           return output;
         }
         (output = next);

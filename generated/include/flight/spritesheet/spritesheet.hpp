@@ -33,8 +33,8 @@ struct entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated_cc00688a4
   std::optional<double> id;
   std::optional<double> offset_x;
   std::optional<double> offset_y;
-  std::variant<double, flight::Null, flight::Undefined> pivot_x;
-  std::variant<double, flight::Null, flight::Undefined> pivot_y;
+  std::variant<double, flight::Null, flight::Undefined> pivot_x = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<double, flight::Null, flight::Undefined> pivot_y = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<bool> rotated;
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ID_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_CC00688A45C5FE5E
@@ -56,14 +56,14 @@ inline std::optional<flight::Ref<flight::types::SpritesheetAnimation>> get_sprit
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ATLAS_ANIMATIONS_FRAMES_7A8B9ACBA1FBC2F7
 struct entity_runtime_key_atlas_animations_frames_7a8b9acba1fbc2f7 : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::variant<flight::Ref<flight::types::TextureAtlas>, flight::Null, flight::Undefined> atlas;
+  std::variant<flight::Ref<flight::types::TextureAtlas>, flight::Null, flight::Undefined> atlas = std::variant<flight::Ref<flight::types::TextureAtlas>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<flight::Record<flight::String, flight::Ref<flight::types::SpritesheetAnimation>>> animations;
   std::optional<flight::Array<flight::Ref<flight::types::SpritesheetFrame>>> frames;
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ATLAS_ANIMATIONS_FRAMES_7A8B9ACBA1FBC2F7
 
 inline void initialize_spritesheet(flight::types::EntityConstruction<flight::Ref<flight::types::Spritesheet>> out, std::optional<flight::Ref<entity_runtime_key_atlas_animations_frames_7a8b9acba1fbc2f7>> obj = std::nullopt) {
-  flight::row_set<flight::RowKey<"atlas">>(out, ([&]() -> std::optional<flight::Ref<flight::types::TextureAtlas>> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::Ref<flight::types::TextureAtlas>, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<flight::Ref<flight::types::TextureAtlas>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return optional_chain_receiver.value()->atlas; }()); if (std::holds_alternative<flight::Ref<flight::types::TextureAtlas>>(nullish_coalesce_left)) return std::optional<flight::Ref<flight::types::TextureAtlas>>{std::get<flight::Ref<flight::types::TextureAtlas>>(nullish_coalesce_left)}; return std::nullopt; }()));
+  flight::row_set<flight::RowKey<"atlas">>(out, ([&]() -> std::optional<flight::Ref<flight::types::TextureAtlas>> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::Ref<flight::types::TextureAtlas>, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<flight::Ref<flight::types::TextureAtlas>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return optional_chain_receiver.value()->atlas; }()); if (const auto* alternative = std::get_if<flight::Ref<flight::types::TextureAtlas>>(&nullish_coalesce_left)) return std::optional<flight::Ref<flight::types::TextureAtlas>>{*alternative}; return std::nullopt; }()));
   flight::row_set<flight::RowKey<"animations">>(out, ([&]() -> flight::Record<flight::String, flight::Ref<flight::types::SpritesheetAnimation>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Record<flight::String, flight::Ref<flight::types::SpritesheetAnimation>>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->animations; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Record<flight::String, flight::Ref<flight::types::SpritesheetAnimation>>{}; }()));
   flight::row_set<flight::RowKey<"frames">>(out, ([&]() -> flight::Array<flight::Ref<flight::types::SpritesheetFrame>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::SpritesheetFrame>>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->frames; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::Ref<flight::types::SpritesheetFrame>>{}; }()));
 }

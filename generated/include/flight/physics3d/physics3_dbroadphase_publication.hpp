@@ -42,14 +42,6 @@ struct Physics3DBroadphasePublication : public flight::ReferenceEnabled {
 
 inline flight::WeakMap<flight::Ref<flight::types::Physics3DWorld>, flight::Ref<Physics3DBroadphasePublication>> physics3_dbroadphase_publication_by_world = flight::WeakMap<flight::Ref<flight::types::Physics3DWorld>, flight::Ref<Physics3DBroadphasePublication>>();
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_BODY_INDICES_INDEX_8D559030813F54D4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_BODY_INDICES_INDEX_8D559030813F54D4
-struct body_indices_index_8d559030813f54d4 : public flight::ReferenceEnabled {
-  flight::Set<double> body_indices;
-  flight::Ref<flight::types::SpatialIndexBackend3D> index;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_BODY_INDICES_INDEX_8D559030813F54D4
-
 inline flight::Set<double> get_physics3_dbroadphase_body_indices(flight::Ref<flight::types::Physics3DWorld> world) {
   auto existing = physics3_dbroadphase_publication_by_world.get(world);
   if ((existing.has_value() && (existing.value()->index == world->index))) {

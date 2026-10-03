@@ -10,12 +10,16 @@ import { driftedOverrides, loadOverrides } from './overrides.mjs';
 // against, so a pin move that rewrites that file is visible here instead of being discovered later as a
 // behavioral difference nobody can explain.
 //
-//   --generated=DIR   the generated tree to compare against (default: out/sdk-sdl)
+//   --generated=DIR   the generated tree to compare against (default: generated)
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const options = process.argv.slice(2);
 const generated = options.find((option) => option.startsWith('--generated='))?.slice('--generated='.length);
-const generatedRoot = path.resolve(root, generated ?? path.join('out', 'sdk-sdl'));
+// Default: `generated`, the COMMITTED inventory. It used to be `out/sdk-sdl`, which was the SDL-profiled
+// side output back when `generated/` held the unbound tree. `sdk:generate` now applies the SDL profile set
+// by default, so those two trees have identical content and `out/` is gitignored -- a default pointing
+// there fails on a fresh clone for no reason.
+const generatedRoot = path.resolve(root, generated ?? 'generated');
 
 const overrides = loadOverrides(root);
 if (overrides.length === 0) {

@@ -18,15 +18,15 @@ using MediaReadyState = flight::String;
 namespace flight::types {
 
 struct MediaChannelSignals : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_buffering;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_complete;
-  flight::Ref<flight::types::Signal<std::function<void(flight::String)>>> on_error;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_loop;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_pause;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_play;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_ready;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_seeked;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_stop;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_buffering;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_complete;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::String)>>> on_error;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_loop;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_pause;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_play;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_ready;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_seeked;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_stop;
 };
 
 } // namespace flight::types

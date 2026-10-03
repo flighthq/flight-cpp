@@ -12,12 +12,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
-namespace flight::types { struct FlightDocumentFields; }
 namespace flight::types { template <typename T> struct KeyedTable; }
 
 namespace flight::types {
 struct FlightDocumentToken;
-struct FlightDocumentTokenValues;
 struct FlightDocumentTokenResolution;
 struct FlightDocumentTokenResolverRegistry;
 } // namespace flight::types
@@ -29,13 +27,12 @@ struct FlightDocumentTokenResolverRegistry;
 
 namespace flight::types {
 
-struct FlightDocumentTokenValues : public flight::ReferenceEnabled {
-};
+using FlightDocumentTokenValues = flight::Record<flight::String, flight::types::FlightDocumentValue>;
 
 struct FlightDocumentToken : public flight::ReferenceEnabled {
   flight::String key;
   flight::String kind;
-  flight::Ref<FlightDocumentTokenValues> values;
+  flight::Record<flight::String, flight::types::FlightDocumentValue> values;
 };
 
 struct FlightDocumentTokenResolution : public flight::ReferenceEnabled {
@@ -47,7 +44,7 @@ using FlightDocumentTokenResolver = std::function<std::optional<flight::types::F
 
 struct FlightDocumentTokenResolverRegistry : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::KeyedTable<FlightDocumentTokenResolver>> resolvers;
+  std::shared_ptr<flight::types::KeyedTable<FlightDocumentTokenResolver>> resolvers;
 };
 
 } // namespace flight::types

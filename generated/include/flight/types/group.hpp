@@ -24,7 +24,7 @@ namespace flight::types { template <typename Traits> struct NodeRuntime; }
 
 namespace flight::types {
 
-using Group = flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node3DTraits>>>>;
+using Group = flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node3DTraits>>>>;
 
 using GroupRuntime = flight::Ref<flight::types::Node3DRuntime>;
 

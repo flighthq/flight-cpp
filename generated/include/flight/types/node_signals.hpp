@@ -25,11 +25,11 @@ namespace flight::types {
 
 struct NodeSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(flight::types::NodeAny)>>> on_child_added;
-  flight::Ref<flight::types::Signal<std::function<void(flight::types::NodeAny)>>> on_child_removed;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_children_changed;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_children_order_changed;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_parent_changed;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::types::NodeAny)>>> on_child_added;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::types::NodeAny)>>> on_child_removed;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_children_changed;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_children_order_changed;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_parent_changed;
 };
 
 } // namespace flight::types

@@ -18,83 +18,204 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("a") && requires { object.a; }) return (object.a);
   else if constexpr (Key::name.view() == std::string_view("aberration") && requires { object.aberration; }) return (object.aberration);
   else if constexpr (Key::name.view() == std::string_view("absolute") && requires { object.absolute; }) return (object.absolute);
+  else if constexpr (Key::name.view() == std::string_view("accessibility") && requires { object.accessibility; }) return (object.accessibility);
   else if constexpr (Key::name.view() == std::string_view("accuracy") && requires { object.accuracy; }) return (object.accuracy);
+  else if constexpr (Key::name.view() == std::string_view("acquire") && requires { object.acquire; }) return (object.acquire);
+  else if constexpr (Key::name.view() == std::string_view("acquisition") && requires { object.acquisition; }) return (object.acquisition);
   else if constexpr (Key::name.view() == std::string_view("action") && requires { object.action; }) return (object.action);
   else if constexpr (Key::name.view() == std::string_view("adaptationSpeed") && requires { object.adaptation_speed; }) return (object.adaptation_speed);
+  else if constexpr (Key::name.view() == std::string_view("addFontFace") && requires { object.add_font_face; }) return (object.add_font_face);
+  else if constexpr (Key::name.view() == std::string_view("addRecentDocument") && requires { object.add_recent_document; }) return (object.add_recent_document);
   else if constexpr (Key::name.view() == std::string_view("additive") && requires { object.additive; }) return (object.additive);
   else if constexpr (Key::name.view() == std::string_view("addressed") && requires { object.addressed; }) return (object.addressed);
+  else if constexpr (Key::name.view() == std::string_view("advanceScratch") && requires { object.advance_scratch; }) return (object.advance_scratch);
+  else if constexpr (Key::name.view() == std::string_view("advanceWidth") && requires { object.advance_width; }) return (object.advance_width);
+  else if constexpr (Key::name.view() == std::string_view("advances") && requires { object.advances; }) return (object.advances);
+  else if constexpr (Key::name.view() == std::string_view("align") && requires { object.align; }) return (object.align);
+  else if constexpr (Key::name.view() == std::string_view("allowRotation") && requires { object.allow_rotation; }) return (object.allow_rotation);
+  else if constexpr (Key::name.view() == std::string_view("allowedSchemes") && requires { object.allowed_schemes; }) return (object.allowed_schemes);
   else if constexpr (Key::name.view() == std::string_view("alpha") && requires { object.alpha; }) return (object.alpha);
   else if constexpr (Key::name.view() == std::string_view("alphaBias") && requires { object.alpha_bias; }) return (object.alpha_bias);
   else if constexpr (Key::name.view() == std::string_view("alphaCurve") && requires { object.alpha_curve; }) return (object.alpha_curve);
+  else if constexpr (Key::name.view() == std::string_view("alphaCutoff") && requires { object.alpha_cutoff; }) return (object.alpha_cutoff);
   else if constexpr (Key::name.view() == std::string_view("alphaEnd") && requires { object.alpha_end; }) return (object.alpha_end);
+  else if constexpr (Key::name.view() == std::string_view("alphaMap") && requires { object.alpha_map; }) return (object.alpha_map);
+  else if constexpr (Key::name.view() == std::string_view("alphaMaskEnabled") && requires { object.alpha_mask_enabled; }) return (object.alpha_mask_enabled);
+  else if constexpr (Key::name.view() == std::string_view("alphaMode") && requires { object.alpha_mode; }) return (object.alpha_mode);
   else if constexpr (Key::name.view() == std::string_view("alphaScale") && requires { object.alpha_scale; }) return (object.alpha_scale);
   else if constexpr (Key::name.view() == std::string_view("alphaStart") && requires { object.alpha_start; }) return (object.alpha_start);
+  else if constexpr (Key::name.view() == std::string_view("alphaType") && requires { object.alpha_type; }) return (object.alpha_type);
+  else if constexpr (Key::name.view() == std::string_view("alphas") && requires { object.alphas; }) return (object.alphas);
+  else if constexpr (Key::name.view() == std::string_view("altKey") && requires { object.alt_key; }) return (object.alt_key);
   else if constexpr (Key::name.view() == std::string_view("altitude") && requires { object.altitude; }) return (object.altitude);
   else if constexpr (Key::name.view() == std::string_view("altitudeAccuracy") && requires { object.altitude_accuracy; }) return (object.altitude_accuracy);
+  else if constexpr (Key::name.view() == std::string_view("alwaysOnTop") && requires { object.always_on_top; }) return (object.always_on_top);
+  else if constexpr (Key::name.view() == std::string_view("alwaysShowSelection") && requires { object.always_show_selection; }) return (object.always_show_selection);
   else if constexpr (Key::name.view() == std::string_view("ambient") && requires { object.ambient; }) return (object.ambient);
+  else if constexpr (Key::name.view() == std::string_view("ambientRgb") && requires { object.ambient_rgb; }) return (object.ambient_rgb);
   else if constexpr (Key::name.view() == std::string_view("amount") && requires { object.amount; }) return (object.amount);
+  else if constexpr (Key::name.view() == std::string_view("amplitude") && requires { object.amplitude; }) return (object.amplitude);
   else if constexpr (Key::name.view() == std::string_view("angle") && requires { object.angle; }) return (object.angle);
   else if constexpr (Key::name.view() == std::string_view("angleVariance") && requires { object.angle_variance; }) return (object.angle_variance);
-  else if constexpr (Key::name.view() == std::string_view("animation") && requires { object.animation; }) return (object.animation);
+  else if constexpr (Key::name.view() == std::string_view("angularVelocity") && requires { object.angular_velocity; }) return (object.angular_velocity);
+  else if constexpr (Key::name.view() == std::string_view("angularVelocityX") && requires { object.angular_velocity_x; }) return (object.angular_velocity_x);
+  else if constexpr (Key::name.view() == std::string_view("angularVelocityY") && requires { object.angular_velocity_y; }) return (object.angular_velocity_y);
+  else if constexpr (Key::name.view() == std::string_view("angularVelocityZ") && requires { object.angular_velocity_z; }) return (object.angular_velocity_z);
   else if constexpr (Key::name.view() == std::string_view("animations") && requires { object.animations; }) return (object.animations);
   else if constexpr (Key::name.view() == std::string_view("anisotropy") && requires { object.anisotropy; }) return (object.anisotropy);
+  else if constexpr (Key::name.view() == std::string_view("anisotropyEnabled") && requires { object.anisotropy_enabled; }) return (object.anisotropy_enabled);
   else if constexpr (Key::name.view() == std::string_view("anisotropyMap") && requires { object.anisotropy_map; }) return (object.anisotropy_map);
   else if constexpr (Key::name.view() == std::string_view("anisotropyMapUvSet") && requires { object.anisotropy_map_uv_set; }) return (object.anisotropy_map_uv_set);
   else if constexpr (Key::name.view() == std::string_view("anisotropyRotation") && requires { object.anisotropy_rotation; }) return (object.anisotropy_rotation);
   else if constexpr (Key::name.view() == std::string_view("anisotropyStrength") && requires { object.anisotropy_strength; }) return (object.anisotropy_strength);
   else if constexpr (Key::name.view() == std::string_view("announce") && requires { object.announce; }) return (object.announce);
+  else if constexpr (Key::name.view() == std::string_view("antialias") && requires { object.antialias; }) return (object.antialias);
+  else if constexpr (Key::name.view() == std::string_view("app") && requires { object.app; }) return (object.app);
+  else if constexpr (Key::name.view() == std::string_view("appearanceId") && requires { object.appearance_id; }) return (object.appearance_id);
   else if constexpr (Key::name.view() == std::string_view("applied") && requires { object.applied; }) return (object.applied);
+  else if constexpr (Key::name.view() == std::string_view("arcTolerance") && requires { object.arc_tolerance; }) return (object.arc_tolerance);
   else if constexpr (Key::name.view() == std::string_view("arch") && requires { object.arch; }) return (object.arch);
+  else if constexpr (Key::name.view() == std::string_view("artboards") && requires { object.artboards; }) return (object.artboards);
   else if constexpr (Key::name.view() == std::string_view("ascent") && requires { object.ascent; }) return (object.ascent);
+  else if constexpr (Key::name.view() == std::string_view("aspect") && requires { object.aspect; }) return (object.aspect);
+  else if constexpr (Key::name.view() == std::string_view("assets") && requires { object.assets; }) return (object.assets);
   else if constexpr (Key::name.view() == std::string_view("atlas") && requires { object.atlas; }) return (object.atlas);
+  else if constexpr (Key::name.view() == std::string_view("attach") && requires { object.attach; }) return (object.attach);
   else if constexpr (Key::name.view() == std::string_view("attenuationColor") && requires { object.attenuation_color; }) return (object.attenuation_color);
   else if constexpr (Key::name.view() == std::string_view("attenuationDistance") && requires { object.attenuation_distance; }) return (object.attenuation_distance);
   else if constexpr (Key::name.view() == std::string_view("attributes") && requires { object.attributes; }) return (object.attributes);
+  else if constexpr (Key::name.view() == std::string_view("audio") && requires { object.audio; }) return (object.audio);
+  else if constexpr (Key::name.view() == std::string_view("audioResources") && requires { object.audio_resources; }) return (object.audio_resources);
+  else if constexpr (Key::name.view() == std::string_view("autoSize") && requires { object.auto_size; }) return (object.auto_size);
   else if constexpr (Key::name.view() == std::string_view("availableMemory") && requires { object.available_memory; }) return (object.available_memory);
+  else if constexpr (Key::name.view() == std::string_view("axis") && requires { object.axis; }) return (object.axis);
+  else if constexpr (Key::name.view() == std::string_view("axisAX") && requires { object.axis_ax; }) return (object.axis_ax);
+  else if constexpr (Key::name.view() == std::string_view("axisAY") && requires { object.axis_ay; }) return (object.axis_ay);
+  else if constexpr (Key::name.view() == std::string_view("axisBX") && requires { object.axis_bx; }) return (object.axis_bx);
+  else if constexpr (Key::name.view() == std::string_view("axisBY") && requires { object.axis_by; }) return (object.axis_by);
+  else if constexpr (Key::name.view() == std::string_view("axisRotation") && requires { object.axis_rotation; }) return (object.axis_rotation);
+  else if constexpr (Key::name.view() == std::string_view("azimuth") && requires { object.azimuth; }) return (object.azimuth);
   else if constexpr (Key::name.view() == std::string_view("b") && requires { object.b; }) return (object.b);
+  else if constexpr (Key::name.view() == std::string_view("backdrop") && requires { object.backdrop; }) return (object.backdrop);
+  else if constexpr (Key::name.view() == std::string_view("backdropKey") && requires { object.backdrop_key; }) return (object.backdrop_key);
+  else if constexpr (Key::name.view() == std::string_view("backend") && requires { object.backend; }) return (object.backend);
+  else if constexpr (Key::name.view() == std::string_view("background") && requires { object.background; }) return (object.background);
+  else if constexpr (Key::name.view() == std::string_view("backgroundColor") && requires { object.background_color; }) return (object.background_color);
+  else if constexpr (Key::name.view() == std::string_view("base") && requires { object.base; }) return (object.base);
+  else if constexpr (Key::name.view() == std::string_view("baseColor") && requires { object.base_color; }) return (object.base_color);
+  else if constexpr (Key::name.view() == std::string_view("baseColorMap") && requires { object.base_color_map; }) return (object.base_color_map);
+  else if constexpr (Key::name.view() == std::string_view("bboxStream") && requires { object.bbox_stream; }) return (object.bbox_stream);
+  else if constexpr (Key::name.view() == std::string_view("beep") && requires { object.beep; }) return (object.beep);
   else if constexpr (Key::name.view() == std::string_view("beta") && requires { object.beta; }) return (object.beta);
+  else if constexpr (Key::name.view() == std::string_view("bevelType") && requires { object.bevel_type; }) return (object.bevel_type);
   else if constexpr (Key::name.view() == std::string_view("bias") && requires { object.bias; }) return (object.bias);
+  else if constexpr (Key::name.view() == std::string_view("bindings") && requires { object.bindings; }) return (object.bindings);
   else if constexpr (Key::name.view() == std::string_view("bitmap") && requires { object.bitmap; }) return (object.bitmap);
   else if constexpr (Key::name.view() == std::string_view("blackTighten") && requires { object.black_tighten; }) return (object.black_tighten);
+  else if constexpr (Key::name.view() == std::string_view("blend") && requires { object.blend; }) return (object.blend);
   else if constexpr (Key::name.view() == std::string_view("blendFuncDestination") && requires { object.blend_func_destination; }) return (object.blend_func_destination);
   else if constexpr (Key::name.view() == std::string_view("blendFuncSource") && requires { object.blend_func_source; }) return (object.blend_func_source);
   else if constexpr (Key::name.view() == std::string_view("blendMode") && requires { object.blend_mode; }) return (object.blend_mode);
+  else if constexpr (Key::name.view() == std::string_view("blendModeApplication") && requires { object.blend_mode_application; }) return (object.blend_mode_application);
+  else if constexpr (Key::name.view() == std::string_view("blendTree") && requires { object.blend_tree; }) return (object.blend_tree);
+  else if constexpr (Key::name.view() == std::string_view("blendTrees") && requires { object.blend_trees; }) return (object.blend_trees);
+  else if constexpr (Key::name.view() == std::string_view("blended") && requires { object.blended; }) return (object.blended);
+  else if constexpr (Key::name.view() == std::string_view("blendedNormals") && requires { object.blended_normals; }) return (object.blended_normals);
+  else if constexpr (Key::name.view() == std::string_view("blendedPositions") && requires { object.blended_positions; }) return (object.blended_positions);
+  else if constexpr (Key::name.view() == std::string_view("blendedTangents") && requires { object.blended_tangents; }) return (object.blended_tangents);
+  else if constexpr (Key::name.view() == std::string_view("blockCount") && requires { object.block_count; }) return (object.block_count);
+  else if constexpr (Key::name.view() == std::string_view("blockSize") && requires { object.block_size; }) return (object.block_size);
+  else if constexpr (Key::name.view() == std::string_view("blocks") && requires { object.blocks; }) return (object.blocks);
   else if constexpr (Key::name.view() == std::string_view("blue") && requires { object.blue; }) return (object.blue);
   else if constexpr (Key::name.view() == std::string_view("blueBias") && requires { object.blue_bias; }) return (object.blue_bias);
   else if constexpr (Key::name.view() == std::string_view("blueScale") && requires { object.blue_scale; }) return (object.blue_scale);
+  else if constexpr (Key::name.view() == std::string_view("blur") && requires { object.blur; }) return (object.blur);
   else if constexpr (Key::name.view() == std::string_view("blurX") && requires { object.blur_x; }) return (object.blur_x);
   else if constexpr (Key::name.view() == std::string_view("blurY") && requires { object.blur_y; }) return (object.blur_y);
   else if constexpr (Key::name.view() == std::string_view("boardName") && requires { object.board_name; }) return (object.board_name);
   else if constexpr (Key::name.view() == std::string_view("bodies") && requires { object.bodies; }) return (object.bodies);
+  else if constexpr (Key::name.view() == std::string_view("body") && requires { object.body; }) return (object.body);
   else if constexpr (Key::name.view() == std::string_view("bodyA") && requires { object.body_a; }) return (object.body_a);
   else if constexpr (Key::name.view() == std::string_view("bodyB") && requires { object.body_b; }) return (object.body_b);
+  else if constexpr (Key::name.view() == std::string_view("bodyByIndex") && requires { object.body_by_index; }) return (object.body_by_index);
+  else if constexpr (Key::name.view() == std::string_view("bodyIds") && requires { object.body_ids; }) return (object.body_ids);
+  else if constexpr (Key::name.view() == std::string_view("boneIndices") && requires { object.bone_indices; }) return (object.bone_indices);
+  else if constexpr (Key::name.view() == std::string_view("border") && requires { object.border; }) return (object.border);
   else if constexpr (Key::name.view() == std::string_view("bottom") && requires { object.bottom; }) return (object.bottom);
+  else if constexpr (Key::name.view() == std::string_view("bounceDock") && requires { object.bounce_dock; }) return (object.bounce_dock);
   else if constexpr (Key::name.view() == std::string_view("bounds") && requires { object.bounds; }) return (object.bounds);
+  else if constexpr (Key::name.view() == std::string_view("brdfPipeline") && requires { object.brdf_pipeline; }) return (object.brdf_pipeline);
   else if constexpr (Key::name.view() == std::string_view("breakForce") && requires { object.break_force; }) return (object.break_force);
   else if constexpr (Key::name.view() == std::string_view("breakTorque") && requires { object.break_torque; }) return (object.break_torque);
   else if constexpr (Key::name.view() == std::string_view("brightness") && requires { object.brightness; }) return (object.brightness);
+  else if constexpr (Key::name.view() == std::string_view("buffer") && requires { object.buffer; }) return (object.buffer);
+  else if constexpr (Key::name.view() == std::string_view("buildNodeTransform") && requires { object.build_node_transform; }) return (object.build_node_transform);
+  else if constexpr (Key::name.view() == std::string_view("bullet") && requires { object.bullet; }) return (object.bullet);
   else if constexpr (Key::name.view() == std::string_view("burstCount") && requires { object.burst_count; }) return (object.burst_count);
   else if constexpr (Key::name.view() == std::string_view("burstInterval") && requires { object.burst_interval; }) return (object.burst_interval);
+  else if constexpr (Key::name.view() == std::string_view("burstTimer") && requires { object.burst_timer; }) return (object.burst_timer);
+  else if constexpr (Key::name.view() == std::string_view("button") && requires { object.button; }) return (object.button);
+  else if constexpr (Key::name.view() == std::string_view("buttons") && requires { object.buttons; }) return (object.buttons);
+  else if constexpr (Key::name.view() == std::string_view("byteLength") && requires { object.byte_length; }) return (object.byte_length);
+  else if constexpr (Key::name.view() == std::string_view("byteOffset") && requires { object.byte_offset; }) return (object.byte_offset);
+  else if constexpr (Key::name.view() == std::string_view("bytes") && requires { object.bytes; }) return (object.bytes);
   else if constexpr (Key::name.view() == std::string_view("c") && requires { object.c; }) return (object.c);
+  else if constexpr (Key::name.view() == std::string_view("cameras") && requires { object.cameras; }) return (object.cameras);
   else if constexpr (Key::name.view() == std::string_view("cancel") && requires { object.cancel; }) return (object.cancel);
+  else if constexpr (Key::name.view() == std::string_view("cancelAttention") && requires { object.cancel_attention; }) return (object.cancel_attention);
+  else if constexpr (Key::name.view() == std::string_view("cancelDockBounce") && requires { object.cancel_dock_bounce; }) return (object.cancel_dock_bounce);
+  else if constexpr (Key::name.view() == std::string_view("cancelId") && requires { object.cancel_id; }) return (object.cancel_id);
+  else if constexpr (Key::name.view() == std::string_view("candidateCenterA") && requires { object.candidate_center_a; }) return (object.candidate_center_a);
+  else if constexpr (Key::name.view() == std::string_view("candidateCenterB") && requires { object.candidate_center_b; }) return (object.candidate_center_b);
+  else if constexpr (Key::name.view() == std::string_view("canvas") && requires { object.canvas; }) return (object.canvas);
+  else if constexpr (Key::name.view() == std::string_view("canvasShapeCommands") && requires { object.canvas_shape_commands; }) return (object.canvas_shape_commands);
+  else if constexpr (Key::name.view() == std::string_view("cap") && requires { object.cap; }) return (object.cap);
   else if constexpr (Key::name.view() == std::string_view("capabilities") && requires { object.capabilities; }) return (object.capabilities);
+  else if constexpr (Key::name.view() == std::string_view("capture") && requires { object.capture; }) return (object.capture);
+  else if constexpr (Key::name.view() == std::string_view("caret") && requires { object.caret; }) return (object.caret);
+  else if constexpr (Key::name.view() == std::string_view("caretColor") && requires { object.caret_color; }) return (object.caret_color);
+  else if constexpr (Key::name.view() == std::string_view("caretWidth") && requires { object.caret_width; }) return (object.caret_width);
   else if constexpr (Key::name.view() == std::string_view("cascadeCount") && requires { object.cascade_count; }) return (object.cascade_count);
   else if constexpr (Key::name.view() == std::string_view("cascadeSplits") && requires { object.cascade_splits; }) return (object.cascade_splits);
   else if constexpr (Key::name.view() == std::string_view("castsShadow") && requires { object.casts_shadow; }) return (object.casts_shadow);
   else if constexpr (Key::name.view() == std::string_view("cellSize") && requires { object.cell_size; }) return (object.cell_size);
+  else if constexpr (Key::name.view() == std::string_view("cellSizeX") && requires { object.cell_size_x; }) return (object.cell_size_x);
+  else if constexpr (Key::name.view() == std::string_view("cellSizeZ") && requires { object.cell_size_z; }) return (object.cell_size_z);
+  else if constexpr (Key::name.view() == std::string_view("cells") && requires { object.cells; }) return (object.cells);
   else if constexpr (Key::name.view() == std::string_view("center") && requires { object.center; }) return (object.center);
+  else if constexpr (Key::name.view() == std::string_view("centerOfMassRadius") && requires { object.center_of_mass_radius; }) return (object.center_of_mass_radius);
   else if constexpr (Key::name.view() == std::string_view("centerX") && requires { object.center_x; }) return (object.center_x);
   else if constexpr (Key::name.view() == std::string_view("centerY") && requires { object.center_y; }) return (object.center_y);
   else if constexpr (Key::name.view() == std::string_view("centerZ") && requires { object.center_z; }) return (object.center_z);
+  else if constexpr (Key::name.view() == std::string_view("cff") && requires { object.cff; }) return (object.cff);
+  else if constexpr (Key::name.view() == std::string_view("changedMetrics") && requires { object.changed_metrics; }) return (object.changed_metrics);
+  else if constexpr (Key::name.view() == std::string_view("channel") && requires { object.channel; }) return (object.channel);
+  else if constexpr (Key::name.view() == std::string_view("channelIndex") && requires { object.channel_index; }) return (object.channel_index);
+  else if constexpr (Key::name.view() == std::string_view("channelIndices") && requires { object.channel_indices; }) return (object.channel_indices);
+  else if constexpr (Key::name.view() == std::string_view("channels") && requires { object.channels; }) return (object.channels);
+  else if constexpr (Key::name.view() == std::string_view("charCount") && requires { object.char_count; }) return (object.char_count);
+  else if constexpr (Key::name.view() == std::string_view("chars") && requires { object.chars; }) return (object.chars);
+  else if constexpr (Key::name.view() == std::string_view("chart") && requires { object.chart; }) return (object.chart);
+  else if constexpr (Key::name.view() == std::string_view("checkFontFace") && requires { object.check_font_face; }) return (object.check_font_face);
+  else if constexpr (Key::name.view() == std::string_view("checkboxChecked") && requires { object.checkbox_checked; }) return (object.checkbox_checked);
+  else if constexpr (Key::name.view() == std::string_view("checkboxLabel") && requires { object.checkbox_label; }) return (object.checkbox_label);
+  else if constexpr (Key::name.view() == std::string_view("checked") && requires { object.checked; }) return (object.checked);
+  else if constexpr (Key::name.view() == std::string_view("checkedState") && requires { object.checked_state; }) return (object.checked_state);
   else if constexpr (Key::name.view() == std::string_view("child1") && requires { object.child1; }) return (object.child1);
   else if constexpr (Key::name.view() == std::string_view("child2") && requires { object.child2; }) return (object.child2);
+  else if constexpr (Key::name.view() == std::string_view("childCount") && requires { object.child_count; }) return (object.child_count);
   else if constexpr (Key::name.view() == std::string_view("children") && requires { object.children; }) return (object.children);
+  else if constexpr (Key::name.view() == std::string_view("childrenId") && requires { object.children_id; }) return (object.children_id);
+  else if constexpr (Key::name.view() == std::string_view("clamp") && requires { object.clamp; }) return (object.clamp);
   else if constexpr (Key::name.view() == std::string_view("clear") && requires { object.clear; }) return (object.clear);
+  else if constexpr (Key::name.view() == std::string_view("clearAccumulatedImpulses") && requires { object.clear_accumulated_impulses; }) return (object.clear_accumulated_impulses);
   else if constexpr (Key::name.view() == std::string_view("clearMetadata") && requires { object.clear_metadata; }) return (object.clear_metadata);
   else if constexpr (Key::name.view() == std::string_view("clearPositionState") && requires { object.clear_position_state; }) return (object.clear_position_state);
+  else if constexpr (Key::name.view() == std::string_view("clearRecentDocuments") && requires { object.clear_recent_documents; }) return (object.clear_recent_documents);
   else if constexpr (Key::name.view() == std::string_view("clearSpatialIndex") && requires { object.clear_spatial_index; }) return (object.clear_spatial_index);
   else if constexpr (Key::name.view() == std::string_view("clearWatch") && requires { object.clear_watch; }) return (object.clear_watch);
   else if constexpr (Key::name.view() == std::string_view("clearcoat") && requires { object.clearcoat; }) return (object.clearcoat);
+  else if constexpr (Key::name.view() == std::string_view("clearcoatEnabled") && requires { object.clearcoat_enabled; }) return (object.clearcoat_enabled);
   else if constexpr (Key::name.view() == std::string_view("clearcoatMap") && requires { object.clearcoat_map; }) return (object.clearcoat_map);
   else if constexpr (Key::name.view() == std::string_view("clearcoatMapUvSet") && requires { object.clearcoat_map_uv_set; }) return (object.clearcoat_map_uv_set);
   else if constexpr (Key::name.view() == std::string_view("clearcoatNormalMap") && requires { object.clearcoat_normal_map; }) return (object.clearcoat_normal_map);
@@ -104,10 +225,28 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("clearcoatRoughnessMap") && requires { object.clearcoat_roughness_map; }) return (object.clearcoat_roughness_map);
   else if constexpr (Key::name.view() == std::string_view("clearcoatRoughnessMapUvSet") && requires { object.clearcoat_roughness_map_uv_set; }) return (object.clearcoat_roughness_map_uv_set);
   else if constexpr (Key::name.view() == std::string_view("clip") && requires { object.clip; }) return (object.clip);
+  else if constexpr (Key::name.view() == std::string_view("clipMode") && requires { object.clip_mode; }) return (object.clip_mode);
+  else if constexpr (Key::name.view() == std::string_view("clipboard") && requires { object.clipboard; }) return (object.clipboard);
+  else if constexpr (Key::name.view() == std::string_view("clipboardText") && requires { object.clipboard_text; }) return (object.clipboard_text);
+  else if constexpr (Key::name.view() == std::string_view("closeButton") && requires { object.close_button; }) return (object.close_button);
+  else if constexpr (Key::name.view() == std::string_view("closed") && requires { object.closed; }) return (object.closed);
+  else if constexpr (Key::name.view() == std::string_view("codepoints") && requires { object.codepoints; }) return (object.codepoints);
+  else if constexpr (Key::name.view() == std::string_view("collideConnected") && requires { object.collide_connected; }) return (object.collide_connected);
+  else if constexpr (Key::name.view() == std::string_view("collider") && requires { object.collider; }) return (object.collider);
   else if constexpr (Key::name.view() == std::string_view("colliderA") && requires { object.collider_a; }) return (object.collider_a);
   else if constexpr (Key::name.view() == std::string_view("colliderB") && requires { object.collider_b; }) return (object.collider_b);
+  else if constexpr (Key::name.view() == std::string_view("colliderIds") && requires { object.collider_ids; }) return (object.collider_ids);
+  else if constexpr (Key::name.view() == std::string_view("colliderIndex") && requires { object.collider_index; }) return (object.collider_index);
+  else if constexpr (Key::name.view() == std::string_view("colliders") && requires { object.colliders; }) return (object.colliders);
   else if constexpr (Key::name.view() == std::string_view("color") && requires { object.color; }) return (object.color);
+  else if constexpr (Key::name.view() == std::string_view("colorAdjustmentFeature") && requires { object.color_adjustment_feature; }) return (object.color_adjustment_feature);
+  else if constexpr (Key::name.view() == std::string_view("colorAdjustmentFeatureGuard") && requires { object.color_adjustment_feature_guard; }) return (object.color_adjustment_feature_guard);
+  else if constexpr (Key::name.view() == std::string_view("colorAdjustmentUnsupportedGuard") && requires { object.color_adjustment_unsupported_guard; }) return (object.color_adjustment_unsupported_guard);
+  else if constexpr (Key::name.view() == std::string_view("colorAdjustments") && requires { object.color_adjustments; }) return (object.color_adjustments);
+  else if constexpr (Key::name.view() == std::string_view("colorAttachments") && requires { object.color_attachments; }) return (object.color_attachments);
+  else if constexpr (Key::name.view() == std::string_view("colorBirth") && requires { object.color_birth; }) return (object.color_birth);
   else if constexpr (Key::name.view() == std::string_view("colorCurve") && requires { object.color_curve; }) return (object.color_curve);
+  else if constexpr (Key::name.view() == std::string_view("colorDeath") && requires { object.color_death; }) return (object.color_death);
   else if constexpr (Key::name.view() == std::string_view("colorDepth") && requires { object.color_depth; }) return (object.color_depth);
   else if constexpr (Key::name.view() == std::string_view("colorEndB") && requires { object.color_end_b; }) return (object.color_end_b);
   else if constexpr (Key::name.view() == std::string_view("colorEndG") && requires { object.color_end_g; }) return (object.color_end_g);
@@ -115,9 +254,11 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("colorEndVarianceB") && requires { object.color_end_variance_b; }) return (object.color_end_variance_b);
   else if constexpr (Key::name.view() == std::string_view("colorEndVarianceG") && requires { object.color_end_variance_g; }) return (object.color_end_variance_g);
   else if constexpr (Key::name.view() == std::string_view("colorEndVarianceR") && requires { object.color_end_variance_r; }) return (object.color_end_variance_r);
+  else if constexpr (Key::name.view() == std::string_view("colorFormats") && requires { object.color_formats; }) return (object.color_formats);
   else if constexpr (Key::name.view() == std::string_view("colorGamut") && requires { object.color_gamut; }) return (object.color_gamut);
   else if constexpr (Key::name.view() == std::string_view("colorMatrix") && requires { object.color_matrix; }) return (object.color_matrix);
   else if constexpr (Key::name.view() == std::string_view("colorScaleBias") && requires { object.color_scale_bias; }) return (object.color_scale_bias);
+  else if constexpr (Key::name.view() == std::string_view("colorShift") && requires { object.color_shift; }) return (object.color_shift);
   else if constexpr (Key::name.view() == std::string_view("colorSpace") && requires { object.color_space; }) return (object.color_space);
   else if constexpr (Key::name.view() == std::string_view("colorStartB") && requires { object.color_start_b; }) return (object.color_start_b);
   else if constexpr (Key::name.view() == std::string_view("colorStartG") && requires { object.color_start_g; }) return (object.color_start_g);
@@ -125,51 +266,160 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("colorStartVarianceB") && requires { object.color_start_variance_b; }) return (object.color_start_variance_b);
   else if constexpr (Key::name.view() == std::string_view("colorStartVarianceG") && requires { object.color_start_variance_g; }) return (object.color_start_variance_g);
   else if constexpr (Key::name.view() == std::string_view("colorStartVarianceR") && requires { object.color_start_variance_r; }) return (object.color_start_variance_r);
+  else if constexpr (Key::name.view() == std::string_view("colors") && requires { object.colors; }) return (object.colors);
+  else if constexpr (Key::name.view() == std::string_view("columns") && requires { object.columns; }) return (object.columns);
+  else if constexpr (Key::name.view() == std::string_view("commandCount") && requires { object.command_count; }) return (object.command_count);
+  else if constexpr (Key::name.view() == std::string_view("commandIndex") && requires { object.command_index; }) return (object.command_index);
+  else if constexpr (Key::name.view() == std::string_view("commandKind") && requires { object.command_kind; }) return (object.command_kind);
   else if constexpr (Key::name.view() == std::string_view("commands") && requires { object.commands; }) return (object.commands);
+  else if constexpr (Key::name.view() == std::string_view("comparison") && requires { object.comparison; }) return (object.comparison);
+  else if constexpr (Key::name.view() == std::string_view("complete") && requires { object.complete; }) return (object.complete);
   else if constexpr (Key::name.view() == std::string_view("componentX") && requires { object.component_x; }) return (object.component_x);
   else if constexpr (Key::name.view() == std::string_view("componentY") && requires { object.component_y; }) return (object.component_y);
+  else if constexpr (Key::name.view() == std::string_view("components") && requires { object.components; }) return (object.components);
+  else if constexpr (Key::name.view() == std::string_view("compositeStream") && requires { object.composite_stream; }) return (object.composite_stream);
+  else if constexpr (Key::name.view() == std::string_view("compressed") && requires { object.compressed; }) return (object.compressed);
+  else if constexpr (Key::name.view() == std::string_view("compressedAlphaBytes") && requires { object.compressed_alpha_bytes; }) return (object.compressed_alpha_bytes);
+  else if constexpr (Key::name.view() == std::string_view("compressedTextureDecoder") && requires { object.compressed_texture_decoder; }) return (object.compressed_texture_decoder);
+  else if constexpr (Key::name.view() == std::string_view("compressedTextureUpload") && requires { object.compressed_texture_upload; }) return (object.compressed_texture_upload);
   else if constexpr (Key::name.view() == std::string_view("compression") && requires { object.compression; }) return (object.compression);
+  else if constexpr (Key::name.view() == std::string_view("computePathBoolean") && requires { object.compute_path_boolean; }) return (object.compute_path_boolean);
+  else if constexpr (Key::name.view() == std::string_view("conditionIndex") && requires { object.condition_index; }) return (object.condition_index);
+  else if constexpr (Key::name.view() == std::string_view("conditions") && requires { object.conditions; }) return (object.conditions);
+  else if constexpr (Key::name.view() == std::string_view("config") && requires { object.config; }) return (object.config);
+  else if constexpr (Key::name.view() == std::string_view("confirm") && requires { object.confirm; }) return (object.confirm);
   else if constexpr (Key::name.view() == std::string_view("connections") && requires { object.connections; }) return (object.connections);
+  else if constexpr (Key::name.view() == std::string_view("connectivity") && requires { object.connectivity; }) return (object.connectivity);
+  else if constexpr (Key::name.view() == std::string_view("constant") && requires { object.constant; }) return (object.constant);
+  else if constexpr (Key::name.view() == std::string_view("constantPool") && requires { object.constant_pool; }) return (object.constant_pool);
+  else if constexpr (Key::name.view() == std::string_view("constructFrame") && requires { object.construct_frame; }) return (object.construct_frame);
+  else if constexpr (Key::name.view() == std::string_view("contact") && requires { object.contact; }) return (object.contact);
+  else if constexpr (Key::name.view() == std::string_view("contactNormalLength") && requires { object.contact_normal_length; }) return (object.contact_normal_length);
+  else if constexpr (Key::name.view() == std::string_view("contacts") && requires { object.contacts; }) return (object.contacts);
+  else if constexpr (Key::name.view() == std::string_view("container") && requires { object.container; }) return (object.container);
+  else if constexpr (Key::name.view() == std::string_view("content") && requires { object.content; }) return (object.content);
+  else if constexpr (Key::name.view() == std::string_view("context") && requires { object.context; }) return (object.context);
+  else if constexpr (Key::name.view() == std::string_view("contourIndex") && requires { object.contour_index; }) return (object.contour_index);
   else if constexpr (Key::name.view() == std::string_view("contrast") && requires { object.contrast; }) return (object.contrast);
+  else if constexpr (Key::name.view() == std::string_view("controlX") && requires { object.control_x; }) return (object.control_x);
+  else if constexpr (Key::name.view() == std::string_view("controlX1") && requires { object.control_x1; }) return (object.control_x1);
+  else if constexpr (Key::name.view() == std::string_view("controlX2") && requires { object.control_x2; }) return (object.control_x2);
+  else if constexpr (Key::name.view() == std::string_view("controlY") && requires { object.control_y; }) return (object.control_y);
+  else if constexpr (Key::name.view() == std::string_view("controlY1") && requires { object.control_y1; }) return (object.control_y1);
+  else if constexpr (Key::name.view() == std::string_view("controlY2") && requires { object.control_y2; }) return (object.control_y2);
+  else if constexpr (Key::name.view() == std::string_view("coordinateA") && requires { object.coordinate_a; }) return (object.coordinate_a);
+  else if constexpr (Key::name.view() == std::string_view("coordinateB") && requires { object.coordinate_b; }) return (object.coordinate_b);
+  else if constexpr (Key::name.view() == std::string_view("coordinateCount") && requires { object.coordinate_count; }) return (object.coordinate_count);
+  else if constexpr (Key::name.view() == std::string_view("corner") && requires { object.corner; }) return (object.corner);
+  else if constexpr (Key::name.view() == std::string_view("corners") && requires { object.corners; }) return (object.corners);
   else if constexpr (Key::name.view() == std::string_view("count") && requires { object.count; }) return (object.count);
+  else if constexpr (Key::name.view() == std::string_view("covers") && requires { object.covers; }) return (object.covers);
   else if constexpr (Key::name.view() == std::string_view("cpuCores") && requires { object.cpu_cores; }) return (object.cpu_cores);
+  else if constexpr (Key::name.view() == std::string_view("create") && requires { object.create; }) return (object.create);
+  else if constexpr (Key::name.view() == std::string_view("createBuffer") && requires { object.create_buffer; }) return (object.create_buffer);
+  else if constexpr (Key::name.view() == std::string_view("createImageSurface") && requires { object.create_image_surface; }) return (object.create_image_surface);
+  else if constexpr (Key::name.view() == std::string_view("createRenderSurface") && requires { object.create_render_surface; }) return (object.create_render_surface);
+  else if constexpr (Key::name.view() == std::string_view("createSource") && requires { object.create_source; }) return (object.create_source);
+  else if constexpr (Key::name.view() == std::string_view("createWorld") && requires { object.create_world; }) return (object.create_world);
+  else if constexpr (Key::name.view() == std::string_view("creator") && requires { object.creator; }) return (object.creator);
   else if constexpr (Key::name.view() == std::string_view("crop") && requires { object.crop; }) return (object.crop);
+  else if constexpr (Key::name.view() == std::string_view("ctrlKey") && requires { object.ctrl_key; }) return (object.ctrl_key);
+  else if constexpr (Key::name.view() == std::string_view("cueRegistry") && requires { object.cue_registry; }) return (object.cue_registry);
+  else if constexpr (Key::name.view() == std::string_view("cues") && requires { object.cues; }) return (object.cues);
+  else if constexpr (Key::name.view() == std::string_view("currentFrame") && requires { object.current_frame; }) return (object.current_frame);
+  else if constexpr (Key::name.view() == std::string_view("currentStateIndex") && requires { object.current_state_index; }) return (object.current_state_index);
+  else if constexpr (Key::name.view() == std::string_view("currentTime") && requires { object.current_time; }) return (object.current_time);
   else if constexpr (Key::name.view() == std::string_view("curvature") && requires { object.curvature; }) return (object.curvature);
+  else if constexpr (Key::name.view() == std::string_view("curve") && requires { object.curve; }) return (object.curve);
+  else if constexpr (Key::name.view() == std::string_view("curved") && requires { object.curved; }) return (object.curved);
+  else if constexpr (Key::name.view() == std::string_view("customMaterialShaders") && requires { object.custom_material_shaders; }) return (object.custom_material_shaders);
+  else if constexpr (Key::name.view() == std::string_view("cx") && requires { object.cx; }) return (object.cx);
+  else if constexpr (Key::name.view() == std::string_view("cy") && requires { object.cy; }) return (object.cy);
+  else if constexpr (Key::name.view() == std::string_view("cycleDelta") && requires { object.cycle_delta; }) return (object.cycle_delta);
   else if constexpr (Key::name.view() == std::string_view("d") && requires { object.d; }) return (object.d);
   else if constexpr (Key::name.view() == std::string_view("dampingRatio") && requires { object.damping_ratio; }) return (object.damping_ratio);
+  else if constexpr (Key::name.view() == std::string_view("dash") && requires { object.dash; }) return (object.dash);
+  else if constexpr (Key::name.view() == std::string_view("dashOffset") && requires { object.dash_offset; }) return (object.dash_offset);
   else if constexpr (Key::name.view() == std::string_view("data") && requires { object.data; }) return (object.data);
   else if constexpr (Key::name.view() == std::string_view("deadzoneHalfHeight") && requires { object.deadzone_half_height; }) return (object.deadzone_half_height);
   else if constexpr (Key::name.view() == std::string_view("deadzoneHalfWidth") && requires { object.deadzone_half_width; }) return (object.deadzone_half_width);
   else if constexpr (Key::name.view() == std::string_view("decay") && requires { object.decay; }) return (object.decay);
   else if constexpr (Key::name.view() == std::string_view("declined") && requires { object.declined; }) return (object.declined);
+  else if constexpr (Key::name.view() == std::string_view("dedupe") && requires { object.dedupe; }) return (object.dedupe);
   else if constexpr (Key::name.view() == std::string_view("defaultEase") && requires { object.default_ease; }) return (object.default_ease);
+  else if constexpr (Key::name.view() == std::string_view("defaultId") && requires { object.default_id; }) return (object.default_id);
+  else if constexpr (Key::name.view() == std::string_view("definitions") && requires { object.definitions; }) return (object.definitions);
   else if constexpr (Key::name.view() == std::string_view("delay") && requires { object.delay; }) return (object.delay);
   else if constexpr (Key::name.view() == std::string_view("deltaTime") && requires { object.delta_time; }) return (object.delta_time);
+  else if constexpr (Key::name.view() == std::string_view("deltaX") && requires { object.delta_x; }) return (object.delta_x);
+  else if constexpr (Key::name.view() == std::string_view("deltaY") && requires { object.delta_y; }) return (object.delta_y);
   else if constexpr (Key::name.view() == std::string_view("density") && requires { object.density; }) return (object.density);
   else if constexpr (Key::name.view() == std::string_view("densityDpi") && requires { object.density_dpi; }) return (object.density_dpi);
   else if constexpr (Key::name.view() == std::string_view("depth") && requires { object.depth; }) return (object.depth);
   else if constexpr (Key::name.view() == std::string_view("depthPerComponent") && requires { object.depth_per_component; }) return (object.depth_per_component);
+  else if constexpr (Key::name.view() == std::string_view("depthStencilTexture") && requires { object.depth_stencil_texture; }) return (object.depth_stencil_texture);
+  else if constexpr (Key::name.view() == std::string_view("depthStencilView") && requires { object.depth_stencil_view; }) return (object.depth_stencil_view);
   else if constexpr (Key::name.view() == std::string_view("descent") && requires { object.descent; }) return (object.descent);
+  else if constexpr (Key::name.view() == std::string_view("dest") && requires { object.dest; }) return (object.dest);
   else if constexpr (Key::name.view() == std::string_view("destroy") && requires { object.destroy; }) return (object.destroy);
+  else if constexpr (Key::name.view() == std::string_view("destroyBuffer") && requires { object.destroy_buffer; }) return (object.destroy_buffer);
+  else if constexpr (Key::name.view() == std::string_view("destroyRenderSurface") && requires { object.destroy_render_surface; }) return (object.destroy_render_surface);
+  else if constexpr (Key::name.view() == std::string_view("destroySource") && requires { object.destroy_source; }) return (object.destroy_source);
+  else if constexpr (Key::name.view() == std::string_view("destroyWorld") && requires { object.destroy_world; }) return (object.destroy_world);
+  else if constexpr (Key::name.view() == std::string_view("destroyed") && requires { object.destroyed; }) return (object.destroyed);
+  else if constexpr (Key::name.view() == std::string_view("detail") && requires { object.detail; }) return (object.detail);
+  else if constexpr (Key::name.view() == std::string_view("device") && requires { object.device; }) return (object.device);
   else if constexpr (Key::name.view() == std::string_view("devicePixelRatio") && requires { object.device_pixel_ratio; }) return (object.device_pixel_ratio);
+  else if constexpr (Key::name.view() == std::string_view("diagnostics") && requires { object.diagnostics; }) return (object.diagnostics);
+  else if constexpr (Key::name.view() == std::string_view("dialog") && requires { object.dialog; }) return (object.dialog);
+  else if constexpr (Key::name.view() == std::string_view("diffuse") && requires { object.diffuse; }) return (object.diffuse);
+  else if constexpr (Key::name.view() == std::string_view("diffuseMap") && requires { object.diffuse_map; }) return (object.diffuse_map);
   else if constexpr (Key::name.view() == std::string_view("direction") && requires { object.direction; }) return (object.direction);
   else if constexpr (Key::name.view() == std::string_view("directionX") && requires { object.direction_x; }) return (object.direction_x);
   else if constexpr (Key::name.view() == std::string_view("directionY") && requires { object.direction_y; }) return (object.direction_y);
   else if constexpr (Key::name.view() == std::string_view("directionZ") && requires { object.direction_z; }) return (object.direction_z);
   else if constexpr (Key::name.view() == std::string_view("directional") && requires { object.directional; }) return (object.directional);
+  else if constexpr (Key::name.view() == std::string_view("directory") && requires { object.directory; }) return (object.directory);
+  else if constexpr (Key::name.view() == std::string_view("disabled") && requires { object.disabled; }) return (object.disabled);
+  else if constexpr (Key::name.view() == std::string_view("dismissOnBackdrop") && requires { object.dismiss_on_backdrop; }) return (object.dismiss_on_backdrop);
+  else if constexpr (Key::name.view() == std::string_view("display") && requires { object.display; }) return (object.display);
+  else if constexpr (Key::name.view() == std::string_view("displayAsPassword") && requires { object.display_as_password; }) return (object.display_as_password);
   else if constexpr (Key::name.view() == std::string_view("distance") && requires { object.distance; }) return (object.distance);
   else if constexpr (Key::name.view() == std::string_view("distro") && requires { object.distro; }) return (object.distro);
   else if constexpr (Key::name.view() == std::string_view("distroVersion") && requires { object.distro_version; }) return (object.distro_version);
+  else if constexpr (Key::name.view() == std::string_view("divider") && requires { object.divider; }) return (object.divider);
   else if constexpr (Key::name.view() == std::string_view("divisor") && requires { object.divisor; }) return (object.divisor);
+  else if constexpr (Key::name.view() == std::string_view("document") && requires { object.document; }) return (object.document);
+  else if constexpr (Key::name.view() == std::string_view("doubleSided") && requires { object.double_sided; }) return (object.double_sided);
+  else if constexpr (Key::name.view() == std::string_view("downState") && requires { object.down_state; }) return (object.down_state);
   else if constexpr (Key::name.view() == std::string_view("dpi") && requires { object.dpi; }) return (object.dpi);
+  else if constexpr (Key::name.view() == std::string_view("draggable") && requires { object.draggable; }) return (object.draggable);
+  else if constexpr (Key::name.view() == std::string_view("drawCentersOfMass") && requires { object.draw_centers_of_mass; }) return (object.draw_centers_of_mass);
+  else if constexpr (Key::name.view() == std::string_view("drawColliders") && requires { object.draw_colliders; }) return (object.draw_colliders);
+  else if constexpr (Key::name.view() == std::string_view("drawContacts") && requires { object.draw_contacts; }) return (object.draw_contacts);
+  else if constexpr (Key::name.view() == std::string_view("drawJoints") && requires { object.draw_joints; }) return (object.draw_joints);
+  else if constexpr (Key::name.view() == std::string_view("droppedMaps") && requires { object.dropped_maps; }) return (object.dropped_maps);
   else if constexpr (Key::name.view() == std::string_view("duration") && requires { object.duration; }) return (object.duration);
+  else if constexpr (Key::name.view() == std::string_view("durationGuard") && requires { object.duration_guard; }) return (object.duration_guard);
+  else if constexpr (Key::name.view() == std::string_view("durationMs") && requires { object.duration_ms; }) return (object.duration_ms);
   else if constexpr (Key::name.view() == std::string_view("ease") && requires { object.ease; }) return (object.ease);
   else if constexpr (Key::name.view() == std::string_view("edge") && requires { object.edge; }) return (object.edge);
+  else if constexpr (Key::name.view() == std::string_view("edgeColor") && requires { object.edge_color; }) return (object.edge_color);
   else if constexpr (Key::name.view() == std::string_view("edgeMode") && requires { object.edge_mode; }) return (object.edge_mode);
   else if constexpr (Key::name.view() == std::string_view("edgeThreshold") && requires { object.edge_threshold; }) return (object.edge_threshold);
+  else if constexpr (Key::name.view() == std::string_view("edgeWidth") && requires { object.edge_width; }) return (object.edge_width);
+  else if constexpr (Key::name.view() == std::string_view("edges") && requires { object.edges; }) return (object.edges);
+  else if constexpr (Key::name.view() == std::string_view("effect") && requires { object.effect; }) return (object.effect);
+  else if constexpr (Key::name.view() == std::string_view("effectPaddingResolvers") && requires { object.effect_padding_resolvers; }) return (object.effect_padding_resolvers);
+  else if constexpr (Key::name.view() == std::string_view("effectTargets") && requires { object.effect_targets; }) return (object.effect_targets);
   else if constexpr (Key::name.view() == std::string_view("elapsed") && requires { object.elapsed; }) return (object.elapsed);
+  else if constexpr (Key::name.view() == std::string_view("element") && requires { object.element; }) return (object.element);
   else if constexpr (Key::name.view() == std::string_view("emission") && requires { object.emission; }) return (object.emission);
+  else if constexpr (Key::name.view() == std::string_view("emissive") && requires { object.emissive; }) return (object.emissive);
+  else if constexpr (Key::name.view() == std::string_view("emissiveMap") && requires { object.emissive_map; }) return (object.emissive_map);
+  else if constexpr (Key::name.view() == std::string_view("emissiveStrength") && requires { object.emissive_strength; }) return (object.emissive_strength);
   else if constexpr (Key::name.view() == std::string_view("emit") && requires { object.emit; }) return (object.emit);
+  else if constexpr (Key::name.view() == std::string_view("emitterAge") && requires { object.emitter_age; }) return (object.emitter_age);
   else if constexpr (Key::name.view() == std::string_view("emitterConeAngle") && requires { object.emitter_cone_angle; }) return (object.emitter_cone_angle);
   else if constexpr (Key::name.view() == std::string_view("emitterDepth") && requires { object.emitter_depth; }) return (object.emitter_depth);
   else if constexpr (Key::name.view() == std::string_view("emitterHeight") && requires { object.emitter_height; }) return (object.emitter_height);
@@ -177,72 +427,188 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("emitterShape") && requires { object.emitter_shape; }) return (object.emitter_shape);
   else if constexpr (Key::name.view() == std::string_view("emitterType") && requires { object.emitter_type; }) return (object.emitter_type);
   else if constexpr (Key::name.view() == std::string_view("emitterWidth") && requires { object.emitter_width; }) return (object.emitter_width);
+  else if constexpr (Key::name.view() == std::string_view("enableLimit") && requires { object.enable_limit; }) return (object.enable_limit);
+  else if constexpr (Key::name.view() == std::string_view("enableLimitSpring") && requires { object.enable_limit_spring; }) return (object.enable_limit_spring);
+  else if constexpr (Key::name.view() == std::string_view("enableMotor") && requires { object.enable_motor; }) return (object.enable_motor);
+  else if constexpr (Key::name.view() == std::string_view("enableSpring") && requires { object.enable_spring; }) return (object.enable_spring);
+  else if constexpr (Key::name.view() == std::string_view("enableSwingLimit") && requires { object.enable_swing_limit; }) return (object.enable_swing_limit);
+  else if constexpr (Key::name.view() == std::string_view("enableTwistLimit") && requires { object.enable_twist_limit; }) return (object.enable_twist_limit);
   else if constexpr (Key::name.view() == std::string_view("enabled") && requires { object.enabled; }) return (object.enabled);
+  else if constexpr (Key::name.view() == std::string_view("encodeBitmap") && requires { object.encode_bitmap; }) return (object.encode_bitmap);
   else if constexpr (Key::name.view() == std::string_view("encoding") && requires { object.encoding; }) return (object.encoding);
   else if constexpr (Key::name.view() == std::string_view("end") && requires { object.end; }) return (object.end);
+  else if constexpr (Key::name.view() == std::string_view("endCap") && requires { object.end_cap; }) return (object.end_cap);
+  else if constexpr (Key::name.view() == std::string_view("endData") && requires { object.end_data; }) return (object.end_data);
   else if constexpr (Key::name.view() == std::string_view("endIndex") && requires { object.end_index; }) return (object.end_index);
+  else if constexpr (Key::name.view() == std::string_view("endPoints") && requires { object.end_points; }) return (object.end_points);
+  else if constexpr (Key::name.view() == std::string_view("endSlotIndex") && requires { object.end_slot_index; }) return (object.end_slot_index);
   else if constexpr (Key::name.view() == std::string_view("endX") && requires { object.end_x; }) return (object.end_x);
   else if constexpr (Key::name.view() == std::string_view("endY") && requires { object.end_y; }) return (object.end_y);
   else if constexpr (Key::name.view() == std::string_view("endZ") && requires { object.end_z; }) return (object.end_z);
   else if constexpr (Key::name.view() == std::string_view("endianness") && requires { object.endianness; }) return (object.endianness);
   else if constexpr (Key::name.view() == std::string_view("engine") && requires { object.engine; }) return (object.engine);
   else if constexpr (Key::name.view() == std::string_view("engineVersion") && requires { object.engine_version; }) return (object.engine_version);
+  else if constexpr (Key::name.view() == std::string_view("entries") && requires { object.entries; }) return (object.entries);
+  else if constexpr (Key::name.view() == std::string_view("entryId") && requires { object.entry_id; }) return (object.entry_id);
+  else if constexpr (Key::name.view() == std::string_view("environment") && requires { object.environment; }) return (object.environment);
+  else if constexpr (Key::name.view() == std::string_view("events") && requires { object.events; }) return (object.events);
+  else if constexpr (Key::name.view() == std::string_view("execute") && requires { object.execute; }) return (object.execute);
+  else if constexpr (Key::name.view() == std::string_view("exit") && requires { object.exit; }) return (object.exit);
+  else if constexpr (Key::name.view() == std::string_view("exitTimeRatio") && requires { object.exit_time_ratio; }) return (object.exit_time_ratio);
+  else if constexpr (Key::name.view() == std::string_view("exitX") && requires { object.exit_x; }) return (object.exit_x);
+  else if constexpr (Key::name.view() == std::string_view("exitY") && requires { object.exit_y; }) return (object.exit_y);
+  else if constexpr (Key::name.view() == std::string_view("expanded") && requires { object.expanded; }) return (object.expanded);
   else if constexpr (Key::name.view() == std::string_view("explainSpatialIndexing") && requires { object.explain_spatial_indexing; }) return (object.explain_spatial_indexing);
   else if constexpr (Key::name.view() == std::string_view("exposure") && requires { object.exposure; }) return (object.exposure);
   else if constexpr (Key::name.view() == std::string_view("exposureCompensation") && requires { object.exposure_compensation; }) return (object.exposure_compensation);
+  else if constexpr (Key::name.view() == std::string_view("extendMeshPrelude") && requires { object.extend_mesh_prelude; }) return (object.extend_mesh_prelude);
+  else if constexpr (Key::name.view() == std::string_view("extraBindGroupLayout") && requires { object.extra_bind_group_layout; }) return (object.extra_bind_group_layout);
+  else if constexpr (Key::name.view() == std::string_view("face") && requires { object.face; }) return (object.face);
+  else if constexpr (Key::name.view() == std::string_view("facet") && requires { object.facet; }) return (object.facet);
+  else if constexpr (Key::name.view() == std::string_view("facing") && requires { object.facing; }) return (object.facing);
+  else if constexpr (Key::name.view() == std::string_view("facingSoftness") && requires { object.facing_softness; }) return (object.facing_softness);
+  else if constexpr (Key::name.view() == std::string_view("fadeSourceGain") && requires { object.fade_source_gain; }) return (object.fade_source_gain);
+  else if constexpr (Key::name.view() == std::string_view("fallOff") && requires { object.fall_off; }) return (object.fall_off);
+  else if constexpr (Key::name.view() == std::string_view("family") && requires { object.family; }) return (object.family);
   else if constexpr (Key::name.view() == std::string_view("far") && requires { object.far; }) return (object.far);
   else if constexpr (Key::name.view() == std::string_view("featureId") && requires { object.feature_id; }) return (object.feature_id);
   else if constexpr (Key::name.view() == std::string_view("feedback") && requires { object.feedback; }) return (object.feedback);
+  else if constexpr (Key::name.view() == std::string_view("fetch") && requires { object.fetch; }) return (object.fetch);
+  else if constexpr (Key::name.view() == std::string_view("fileSystem") && requires { object.file_system; }) return (object.file_system);
+  else if constexpr (Key::name.view() == std::string_view("fill") && requires { object.fill; }) return (object.fill);
+  else if constexpr (Key::name.view() == std::string_view("fill0") && requires { object.fill0; }) return (object.fill0);
+  else if constexpr (Key::name.view() == std::string_view("fill1") && requires { object.fill1; }) return (object.fill1);
   else if constexpr (Key::name.view() == std::string_view("fillBounds") && requires { object.fill_bounds; }) return (object.fill_bounds);
   else if constexpr (Key::name.view() == std::string_view("fillColor") && requires { object.fill_color; }) return (object.fill_color);
+  else if constexpr (Key::name.view() == std::string_view("fillOpacity") && requires { object.fill_opacity; }) return (object.fill_opacity);
+  else if constexpr (Key::name.view() == std::string_view("fillRule") && requires { object.fill_rule; }) return (object.fill_rule);
+  else if constexpr (Key::name.view() == std::string_view("filter") && requires { object.filter; }) return (object.filter);
   else if constexpr (Key::name.view() == std::string_view("finishColor") && requires { object.finish_color; }) return (object.finish_color);
   else if constexpr (Key::name.view() == std::string_view("finishColorVariance") && requires { object.finish_color_variance; }) return (object.finish_color_variance);
   else if constexpr (Key::name.view() == std::string_view("finishParticleSize") && requires { object.finish_particle_size; }) return (object.finish_particle_size);
   else if constexpr (Key::name.view() == std::string_view("finishParticleSizeVariance") && requires { object.finish_particle_size_variance; }) return (object.finish_particle_size_variance);
+  else if constexpr (Key::name.view() == std::string_view("firstRegion") && requires { object.first_region; }) return (object.first_region);
+  else if constexpr (Key::name.view() == std::string_view("fixedStepState") && requires { object.fixed_step_state; }) return (object.fixed_step_state);
+  else if constexpr (Key::name.view() == std::string_view("flagStream") && requires { object.flag_stream; }) return (object.flag_stream);
+  else if constexpr (Key::name.view() == std::string_view("flags") && requires { object.flags; }) return (object.flags);
+  else if constexpr (Key::name.view() == std::string_view("flashWindowFrame") && requires { object.flash_window_frame; }) return (object.flash_window_frame);
+  else if constexpr (Key::name.view() == std::string_view("flipX") && requires { object.flip_x; }) return (object.flip_x);
+  else if constexpr (Key::name.view() == std::string_view("flipY") && requires { object.flip_y; }) return (object.flip_y);
   else if constexpr (Key::name.view() == std::string_view("floorLevel") && requires { object.floor_level; }) return (object.floor_level);
+  else if constexpr (Key::name.view() == std::string_view("focalPointRatio") && requires { object.focal_point_ratio; }) return (object.focal_point_ratio);
+  else if constexpr (Key::name.view() == std::string_view("focus") && requires { object.focus; }) return (object.focus);
+  else if constexpr (Key::name.view() == std::string_view("focusDistance") && requires { object.focus_distance; }) return (object.focus_distance);
+  else if constexpr (Key::name.view() == std::string_view("focusManager") && requires { object.focus_manager; }) return (object.focus_manager);
+  else if constexpr (Key::name.view() == std::string_view("focusRange") && requires { object.focus_range; }) return (object.focus_range);
+  else if constexpr (Key::name.view() == std::string_view("focused") && requires { object.focused; }) return (object.focused);
+  else if constexpr (Key::name.view() == std::string_view("font") && requires { object.font; }) return (object.font);
+  else if constexpr (Key::name.view() == std::string_view("fontFamily") && requires { object.font_family; }) return (object.font_family);
+  else if constexpr (Key::name.view() == std::string_view("fontHeight") && requires { object.font_height; }) return (object.font_height);
   else if constexpr (Key::name.view() == std::string_view("fontScale") && requires { object.font_scale; }) return (object.font_scale);
+  else if constexpr (Key::name.view() == std::string_view("fontSize") && requires { object.font_size; }) return (object.font_size);
+  else if constexpr (Key::name.view() == std::string_view("footprintHeight") && requires { object.footprint_height; }) return (object.footprint_height);
+  else if constexpr (Key::name.view() == std::string_view("footprintWidth") && requires { object.footprint_width; }) return (object.footprint_width);
   else if constexpr (Key::name.view() == std::string_view("forceX") && requires { object.force_x; }) return (object.force_x);
   else if constexpr (Key::name.view() == std::string_view("forceY") && requires { object.force_y; }) return (object.force_y);
   else if constexpr (Key::name.view() == std::string_view("forceZ") && requires { object.force_z; }) return (object.force_z);
   else if constexpr (Key::name.view() == std::string_view("formFactor") && requires { object.form_factor; }) return (object.form_factor);
   else if constexpr (Key::name.view() == std::string_view("format") && requires { object.format; }) return (object.format);
+  else if constexpr (Key::name.view() == std::string_view("fov") && requires { object.fov; }) return (object.fov);
   else if constexpr (Key::name.view() == std::string_view("fovY") && requires { object.fov_y; }) return (object.fov_y);
   else if constexpr (Key::name.view() == std::string_view("fraction") && requires { object.fraction; }) return (object.fraction);
+  else if constexpr (Key::name.view() == std::string_view("fragmentDeclarations") && requires { object.fragment_declarations; }) return (object.fragment_declarations);
+  else if constexpr (Key::name.view() == std::string_view("frame") && requires { object.frame; }) return (object.frame);
   else if constexpr (Key::name.view() == std::string_view("frameCount") && requires { object.frame_count; }) return (object.frame_count);
   else if constexpr (Key::name.view() == std::string_view("frameDuration") && requires { object.frame_duration; }) return (object.frame_duration);
   else if constexpr (Key::name.view() == std::string_view("frameDurations") && requires { object.frame_durations; }) return (object.frame_durations);
+  else if constexpr (Key::name.view() == std::string_view("frameHeight") && requires { object.frame_height; }) return (object.frame_height);
   else if constexpr (Key::name.view() == std::string_view("frameId") && requires { object.frame_id; }) return (object.frame_id);
   else if constexpr (Key::name.view() == std::string_view("frameNames") && requires { object.frame_names; }) return (object.frame_names);
+  else if constexpr (Key::name.view() == std::string_view("frameOffset") && requires { object.frame_offset; }) return (object.frame_offset);
   else if constexpr (Key::name.view() == std::string_view("frameRate") && requires { object.frame_rate; }) return (object.frame_rate);
+  else if constexpr (Key::name.view() == std::string_view("frameScale") && requires { object.frame_scale; }) return (object.frame_scale);
+  else if constexpr (Key::name.view() == std::string_view("frameScripts") && requires { object.frame_scripts; }) return (object.frame_scripts);
+  else if constexpr (Key::name.view() == std::string_view("frameWidth") && requires { object.frame_width; }) return (object.frame_width);
   else if constexpr (Key::name.view() == std::string_view("frames") && requires { object.frames; }) return (object.frames);
+  else if constexpr (Key::name.view() == std::string_view("free") && requires { object.free; }) return (object.free);
   else if constexpr (Key::name.view() == std::string_view("frequency") && requires { object.frequency; }) return (object.frequency);
+  else if constexpr (Key::name.view() == std::string_view("frequencyHz") && requires { object.frequency_hz; }) return (object.frequency_hz);
+  else if constexpr (Key::name.view() == std::string_view("fresnelBias") && requires { object.fresnel_bias; }) return (object.fresnel_bias);
   else if constexpr (Key::name.view() == std::string_view("friction") && requires { object.friction; }) return (object.friction);
+  else if constexpr (Key::name.view() == std::string_view("from") && requires { object.from; }) return (object.from);
+  else if constexpr (Key::name.view() == std::string_view("fromIndex") && requires { object.from_index; }) return (object.from_index);
+  else if constexpr (Key::name.view() == std::string_view("fromMotion") && requires { object.from_motion; }) return (object.from_motion);
+  else if constexpr (Key::name.view() == std::string_view("fromSample") && requires { object.from_sample; }) return (object.from_sample);
+  else if constexpr (Key::name.view() == std::string_view("fullscreen") && requires { object.fullscreen; }) return (object.fullscreen);
   else if constexpr (Key::name.view() == std::string_view("gain") && requires { object.gain; }) return (object.gain);
   else if constexpr (Key::name.view() == std::string_view("gamma") && requires { object.gamma; }) return (object.gamma);
+  else if constexpr (Key::name.view() == std::string_view("gamut") && requires { object.gamut; }) return (object.gamut);
   else if constexpr (Key::name.view() == std::string_view("gateWeave") && requires { object.gate_weave; }) return (object.gate_weave);
+  else if constexpr (Key::name.view() == std::string_view("geolocation") && requires { object.geolocation; }) return (object.geolocation);
+  else if constexpr (Key::name.view() == std::string_view("geometry") && requires { object.geometry; }) return (object.geometry);
+  else if constexpr (Key::name.view() == std::string_view("getAppDirectoryPath") && requires { object.get_app_directory_path; }) return (object.get_app_directory_path);
+  else if constexpr (Key::name.view() == std::string_view("getAppPath") && requires { object.get_app_path; }) return (object.get_app_path);
+  else if constexpr (Key::name.view() == std::string_view("getBidiClass") && requires { object.get_bidi_class; }) return (object.get_bidi_class);
+  else if constexpr (Key::name.view() == std::string_view("getBounds") && requires { object.get_bounds; }) return (object.get_bounds);
   else if constexpr (Key::name.view() == std::string_view("getCapabilities") && requires { object.get_capabilities; }) return (object.get_capabilities);
+  else if constexpr (Key::name.view() == std::string_view("getCodePointForGlyph") && requires { object.get_code_point_for_glyph; }) return (object.get_code_point_for_glyph);
   else if constexpr (Key::name.view() == std::string_view("getCurrentPosition") && requires { object.get_current_position; }) return (object.get_current_position);
   else if constexpr (Key::name.view() == std::string_view("getCurrentPositionResult") && requires { object.get_current_position_result; }) return (object.get_current_position_result);
   else if constexpr (Key::name.view() == std::string_view("getCursorPosition") && requires { object.get_cursor_position; }) return (object.get_cursor_position);
+  else if constexpr (Key::name.view() == std::string_view("getDeviceTime") && requires { object.get_device_time; }) return (object.get_device_time);
   else if constexpr (Key::name.view() == std::string_view("getDisplayMetrics") && requires { object.get_display_metrics; }) return (object.get_display_metrics);
+  else if constexpr (Key::name.view() == std::string_view("getDuration") && requires { object.get_duration; }) return (object.get_duration);
+  else if constexpr (Key::name.view() == std::string_view("getExecutablePath") && requires { object.get_executable_path; }) return (object.get_executable_path);
+  else if constexpr (Key::name.view() == std::string_view("getFontMetrics") && requires { object.get_font_metrics; }) return (object.get_font_metrics);
   else if constexpr (Key::name.view() == std::string_view("getFormats") && requires { object.get_formats; }) return (object.get_formats);
   else if constexpr (Key::name.view() == std::string_view("getGlyphAtlasImage") && requires { object.get_glyph_atlas_image; }) return (object.get_glyph_atlas_image);
   else if constexpr (Key::name.view() == std::string_view("getGlyphEntry") && requires { object.get_glyph_entry; }) return (object.get_glyph_entry);
+  else if constexpr (Key::name.view() == std::string_view("getGlyphExtents") && requires { object.get_glyph_extents; }) return (object.get_glyph_extents);
+  else if constexpr (Key::name.view() == std::string_view("getGlyphIndexForCodePoint") && requires { object.get_glyph_index_for_code_point; }) return (object.get_glyph_index_for_code_point);
   else if constexpr (Key::name.view() == std::string_view("getGlyphKerning") && requires { object.get_glyph_kerning; }) return (object.get_glyph_kerning);
   else if constexpr (Key::name.view() == std::string_view("getGlyphLayoutVersion") && requires { object.get_glyph_layout_version; }) return (object.get_glyph_layout_version);
   else if constexpr (Key::name.view() == std::string_view("getGlyphMetrics") && requires { object.get_glyph_metrics; }) return (object.get_glyph_metrics);
+  else if constexpr (Key::name.view() == std::string_view("getGlyphName") && requires { object.get_glyph_name; }) return (object.get_glyph_name);
+  else if constexpr (Key::name.view() == std::string_view("getGlyphOutline") && requires { object.get_glyph_outline; }) return (object.get_glyph_outline);
+  else if constexpr (Key::name.view() == std::string_view("getGlyphOutlineAdvance") && requires { object.get_glyph_outline_advance; }) return (object.get_glyph_outline_advance);
+  else if constexpr (Key::name.view() == std::string_view("getGlyphOutlineIndexForCodePoint") && requires { object.get_glyph_outline_index_for_code_point; }) return (object.get_glyph_outline_index_for_code_point);
+  else if constexpr (Key::name.view() == std::string_view("getGlyphOutlineMetrics") && requires { object.get_glyph_outline_metrics; }) return (object.get_glyph_outline_metrics);
+  else if constexpr (Key::name.view() == std::string_view("getHeight") && requires { object.get_height; }) return (object.get_height);
   else if constexpr (Key::name.view() == std::string_view("getId") && requires { object.get_id; }) return (object.get_id);
   else if constexpr (Key::name.view() == std::string_view("getInfo") && requires { object.get_info; }) return (object.get_info);
+  else if constexpr (Key::name.view() == std::string_view("getLaunchUrl") && requires { object.get_launch_url; }) return (object.get_launch_url);
+  else if constexpr (Key::name.view() == std::string_view("getLocale") && requires { object.get_locale; }) return (object.get_locale);
+  else if constexpr (Key::name.view() == std::string_view("getLoginItem") && requires { object.get_login_item; }) return (object.get_login_item);
+  else if constexpr (Key::name.view() == std::string_view("getName") && requires { object.get_name; }) return (object.get_name);
   else if constexpr (Key::name.view() == std::string_view("getPermission") && requires { object.get_permission; }) return (object.get_permission);
   else if constexpr (Key::name.view() == std::string_view("getPermissionState") && requires { object.get_permission_state; }) return (object.get_permission_state);
   else if constexpr (Key::name.view() == std::string_view("getPersistence") && requires { object.get_persistence; }) return (object.get_persistence);
+  else if constexpr (Key::name.view() == std::string_view("getPreferredSystemLanguages") && requires { object.get_preferred_system_languages; }) return (object.get_preferred_system_languages);
   else if constexpr (Key::name.view() == std::string_view("getPrimaryScreen") && requires { object.get_primary_screen; }) return (object.get_primary_screen);
+  else if constexpr (Key::name.view() == std::string_view("getRegisteredSchemes") && requires { object.get_registered_schemes; }) return (object.get_registered_schemes);
   else if constexpr (Key::name.view() == std::string_view("getSafeAreaInsets") && requires { object.get_safe_area_insets; }) return (object.get_safe_area_insets);
   else if constexpr (Key::name.view() == std::string_view("getScreens") && requires { object.get_screens; }) return (object.get_screens);
+  else if constexpr (Key::name.view() == std::string_view("getState") && requires { object.get_state; }) return (object.get_state);
+  else if constexpr (Key::name.view() == std::string_view("getSystemLocale") && requires { object.get_system_locale; }) return (object.get_system_locale);
+  else if constexpr (Key::name.view() == std::string_view("getVersion") && requires { object.get_version; }) return (object.get_version);
+  else if constexpr (Key::name.view() == std::string_view("getWidth") && requires { object.get_width; }) return (object.get_width);
+  else if constexpr (Key::name.view() == std::string_view("getWorldStatus") && requires { object.get_world_status; }) return (object.get_world_status);
   else if constexpr (Key::name.view() == std::string_view("ghosts") && requires { object.ghosts; }) return (object.ghosts);
+  else if constexpr (Key::name.view() == std::string_view("gl") && requires { object.gl; }) return (object.gl);
+  else if constexpr (Key::name.view() == std::string_view("glyph") && requires { object.glyph; }) return (object.glyph);
+  else if constexpr (Key::name.view() == std::string_view("glyphCount") && requires { object.glyph_count; }) return (object.glyph_count);
+  else if constexpr (Key::name.view() == std::string_view("glyphStream") && requires { object.glyph_stream; }) return (object.glyph_stream);
   else if constexpr (Key::name.view() == std::string_view("glyphs") && requires { object.glyphs; }) return (object.glyphs);
+  else if constexpr (Key::name.view() == std::string_view("goalAzimuth") && requires { object.goal_azimuth; }) return (object.goal_azimuth);
+  else if constexpr (Key::name.view() == std::string_view("goalDistance") && requires { object.goal_distance; }) return (object.goal_distance);
+  else if constexpr (Key::name.view() == std::string_view("goalPitch") && requires { object.goal_pitch; }) return (object.goal_pitch);
+  else if constexpr (Key::name.view() == std::string_view("goalPolar") && requires { object.goal_polar; }) return (object.goal_polar);
+  else if constexpr (Key::name.view() == std::string_view("goalYaw") && requires { object.goal_yaw; }) return (object.goal_yaw);
   else if constexpr (Key::name.view() == std::string_view("gpuRenderer") && requires { object.gpu_renderer; }) return (object.gpu_renderer);
+  else if constexpr (Key::name.view() == std::string_view("gpuSkinning") && requires { object.gpu_skinning; }) return (object.gpu_skinning);
   else if constexpr (Key::name.view() == std::string_view("gpuVendor") && requires { object.gpu_vendor; }) return (object.gpu_vendor);
+  else if constexpr (Key::name.view() == std::string_view("gradient") && requires { object.gradient; }) return (object.gradient);
+  else if constexpr (Key::name.view() == std::string_view("gradientsById") && requires { object.gradients_by_id; }) return (object.gradients_by_id);
   else if constexpr (Key::name.view() == std::string_view("grainIntensity") && requires { object.grain_intensity; }) return (object.grain_intensity);
   else if constexpr (Key::name.view() == std::string_view("gravity") && requires { object.gravity; }) return (object.gravity);
   else if constexpr (Key::name.view() == std::string_view("gravityX") && requires { object.gravity_x; }) return (object.gravity_x);
@@ -253,49 +619,135 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("green") && requires { object.green; }) return (object.green);
   else if constexpr (Key::name.view() == std::string_view("greenBias") && requires { object.green_bias; }) return (object.green_bias);
   else if constexpr (Key::name.view() == std::string_view("greenScale") && requires { object.green_scale; }) return (object.green_scale);
+  else if constexpr (Key::name.view() == std::string_view("gridSize") && requires { object.grid_size; }) return (object.grid_size);
+  else if constexpr (Key::name.view() == std::string_view("groundAnchorAX") && requires { object.ground_anchor_ax; }) return (object.ground_anchor_ax);
+  else if constexpr (Key::name.view() == std::string_view("groundAnchorAY") && requires { object.ground_anchor_ay; }) return (object.ground_anchor_ay);
+  else if constexpr (Key::name.view() == std::string_view("groundAnchorBX") && requires { object.ground_anchor_bx; }) return (object.ground_anchor_bx);
+  else if constexpr (Key::name.view() == std::string_view("groundAnchorBY") && requires { object.ground_anchor_by; }) return (object.ground_anchor_by);
   else if constexpr (Key::name.view() == std::string_view("groundColor") && requires { object.ground_color; }) return (object.ground_color);
+  else if constexpr (Key::name.view() == std::string_view("groups") && requires { object.groups; }) return (object.groups);
+  else if constexpr (Key::name.view() == std::string_view("growable") && requires { object.growable; }) return (object.growable);
+  else if constexpr (Key::name.view() == std::string_view("guard") && requires { object.guard; }) return (object.guard);
   else if constexpr (Key::name.view() == std::string_view("halationRadius") && requires { object.halation_radius; }) return (object.halation_radius);
   else if constexpr (Key::name.view() == std::string_view("halationStrength") && requires { object.halation_strength; }) return (object.halation_strength);
   else if constexpr (Key::name.view() == std::string_view("halfExtentX") && requires { object.half_extent_x; }) return (object.half_extent_x);
   else if constexpr (Key::name.view() == std::string_view("halfExtentY") && requires { object.half_extent_y; }) return (object.half_extent_y);
   else if constexpr (Key::name.view() == std::string_view("halfExtentZ") && requires { object.half_extent_z; }) return (object.half_extent_z);
   else if constexpr (Key::name.view() == std::string_view("halfH") && requires { object.half_h; }) return (object.half_h);
+  else if constexpr (Key::name.view() == std::string_view("halfHeight") && requires { object.half_height; }) return (object.half_height);
   else if constexpr (Key::name.view() == std::string_view("halfW") && requires { object.half_w; }) return (object.half_w);
+  else if constexpr (Key::name.view() == std::string_view("halfWidth") && requires { object.half_width; }) return (object.half_width);
+  else if constexpr (Key::name.view() == std::string_view("halfX") && requires { object.half_x; }) return (object.half_x);
+  else if constexpr (Key::name.view() == std::string_view("halfY") && requires { object.half_y; }) return (object.half_y);
+  else if constexpr (Key::name.view() == std::string_view("halfZ") && requires { object.half_z; }) return (object.half_z);
   else if constexpr (Key::name.view() == std::string_view("halo") && requires { object.halo; }) return (object.halo);
   else if constexpr (Key::name.view() == std::string_view("handle") && requires { object.handle; }) return (object.handle);
+  else if constexpr (Key::name.view() == std::string_view("haptics") && requires { object.haptics; }) return (object.haptics);
+  else if constexpr (Key::name.view() == std::string_view("hasAlphaMap") && requires { object.has_alpha_map; }) return (object.has_alpha_map);
+  else if constexpr (Key::name.view() == std::string_view("hasBaseColorMap") && requires { object.has_base_color_map; }) return (object.has_base_color_map);
+  else if constexpr (Key::name.view() == std::string_view("hasColor") && requires { object.has_color; }) return (object.has_color);
+  else if constexpr (Key::name.view() == std::string_view("hasColorAdjustment") && requires { object.has_color_adjustment; }) return (object.has_color_adjustment);
+  else if constexpr (Key::name.view() == std::string_view("hasColorMatrix") && requires { object.has_color_matrix; }) return (object.has_color_matrix);
+  else if constexpr (Key::name.view() == std::string_view("hasCommon") && requires { object.has_common; }) return (object.has_common);
+  else if constexpr (Key::name.view() == std::string_view("hasEmissiveMap") && requires { object.has_emissive_map; }) return (object.has_emissive_map);
   else if constexpr (Key::name.view() == std::string_view("hasFormat") && requires { object.has_format; }) return (object.has_format);
   else if constexpr (Key::name.view() == std::string_view("hasImage") && requires { object.has_image; }) return (object.has_image);
   else if constexpr (Key::name.view() == std::string_view("hasKeyboard") && requires { object.has_keyboard; }) return (object.has_keyboard);
+  else if constexpr (Key::name.view() == std::string_view("hasMetallicRoughnessMap") && requires { object.has_metallic_roughness_map; }) return (object.has_metallic_roughness_map);
   else if constexpr (Key::name.view() == std::string_view("hasMouse") && requires { object.has_mouse; }) return (object.has_mouse);
+  else if constexpr (Key::name.view() == std::string_view("hasNormalMap") && requires { object.has_normal_map; }) return (object.has_normal_map);
+  else if constexpr (Key::name.view() == std::string_view("hasOcclusionMap") && requires { object.has_occlusion_map; }) return (object.has_occlusion_map);
+  else if constexpr (Key::name.view() == std::string_view("hasRadius") && requires { object.has_radius; }) return (object.has_radius);
+  else if constexpr (Key::name.view() == std::string_view("hasSingleInstanceLock") && requires { object.has_single_instance_lock; }) return (object.has_single_instance_lock);
   else if constexpr (Key::name.view() == std::string_view("hasStylus") && requires { object.has_stylus; }) return (object.has_stylus);
   else if constexpr (Key::name.view() == std::string_view("hasText") && requires { object.has_text; }) return (object.has_text);
   else if constexpr (Key::name.view() == std::string_view("heading") && requires { object.heading; }) return (object.heading);
   else if constexpr (Key::name.view() == std::string_view("height") && requires { object.height; }) return (object.height);
+  else if constexpr (Key::name.view() == std::string_view("heights") && requires { object.heights; }) return (object.heights);
   else if constexpr (Key::name.view() == std::string_view("hemisphere") && requires { object.hemisphere; }) return (object.hemisphere);
+  else if constexpr (Key::name.view() == std::string_view("heuristic") && requires { object.heuristic; }) return (object.heuristic);
   else if constexpr (Key::name.view() == std::string_view("hide") && requires { object.hide; }) return (object.hide);
+  else if constexpr (Key::name.view() == std::string_view("hideApp") && requires { object.hide_app; }) return (object.hide_app);
   else if constexpr (Key::name.view() == std::string_view("highMax") && requires { object.high_max; }) return (object.high_max);
   else if constexpr (Key::name.view() == std::string_view("highMin") && requires { object.high_min; }) return (object.high_min);
+  else if constexpr (Key::name.view() == std::string_view("highlightAlpha") && requires { object.highlight_alpha; }) return (object.highlight_alpha);
+  else if constexpr (Key::name.view() == std::string_view("highlightColor") && requires { object.highlight_color; }) return (object.highlight_color);
+  else if constexpr (Key::name.view() == std::string_view("historyLimit") && requires { object.history_limit; }) return (object.history_limit);
+  else if constexpr (Key::name.view() == std::string_view("hit") && requires { object.hit; }) return (object.hit);
+  else if constexpr (Key::name.view() == std::string_view("hitArea") && requires { object.hit_area; }) return (object.hit_area);
+  else if constexpr (Key::name.view() == std::string_view("hitCount") && requires { object.hit_count; }) return (object.hit_count);
+  else if constexpr (Key::name.view() == std::string_view("hits") && requires { object.hits; }) return (object.hits);
+  else if constexpr (Key::name.view() == std::string_view("horizontalScrollBar") && requires { object.horizontal_scroll_bar; }) return (object.horizontal_scroll_bar);
+  else if constexpr (Key::name.view() == std::string_view("host") && requires { object.host; }) return (object.host);
+  else if constexpr (Key::name.view() == std::string_view("hovered") && requires { object.hovered; }) return (object.hovered);
+  else if constexpr (Key::name.view() == std::string_view("html") && requires { object.html; }) return (object.html);
   else if constexpr (Key::name.view() == std::string_view("hue") && requires { object.hue; }) return (object.hue);
+  else if constexpr (Key::name.view() == std::string_view("icon") && requires { object.icon; }) return (object.icon);
   else if constexpr (Key::name.view() == std::string_view("id") && requires { object.id; }) return (object.id);
+  else if constexpr (Key::name.view() == std::string_view("ids") && requires { object.ids; }) return (object.ids);
   else if constexpr (Key::name.view() == std::string_view("illuminance") && requires { object.illuminance; }) return (object.illuminance);
+  else if constexpr (Key::name.view() == std::string_view("image") && requires { object.image; }) return (object.image);
   else if constexpr (Key::name.view() == std::string_view("imageCount") && requires { object.image_count; }) return (object.image_count);
   else if constexpr (Key::name.view() == std::string_view("imageFile") && requires { object.image_file; }) return (object.image_file);
   else if constexpr (Key::name.view() == std::string_view("imageHeight") && requires { object.image_height; }) return (object.image_height);
   else if constexpr (Key::name.view() == std::string_view("imagePath") && requires { object.image_path; }) return (object.image_path);
+  else if constexpr (Key::name.view() == std::string_view("imageResources") && requires { object.image_resources; }) return (object.image_resources);
   else if constexpr (Key::name.view() == std::string_view("imageWidth") && requires { object.image_width; }) return (object.image_width);
   else if constexpr (Key::name.view() == std::string_view("impact") && requires { object.impact; }) return (object.impact);
+  else if constexpr (Key::name.view() == std::string_view("implementationImport") && requires { object.implementation_import; }) return (object.implementation_import);
+  else if constexpr (Key::name.view() == std::string_view("implementationSymbol") && requires { object.implementation_symbol; }) return (object.implementation_symbol);
+  else if constexpr (Key::name.view() == std::string_view("imported") && requires { object.imported; }) return (object.imported);
+  else if constexpr (Key::name.view() == std::string_view("impulse0") && requires { object.impulse0; }) return (object.impulse0);
+  else if constexpr (Key::name.view() == std::string_view("impulse1") && requires { object.impulse1; }) return (object.impulse1);
+  else if constexpr (Key::name.view() == std::string_view("impulse2") && requires { object.impulse2; }) return (object.impulse2);
+  else if constexpr (Key::name.view() == std::string_view("impulse3") && requires { object.impulse3; }) return (object.impulse3);
+  else if constexpr (Key::name.view() == std::string_view("impulse4") && requires { object.impulse4; }) return (object.impulse4);
+  else if constexpr (Key::name.view() == std::string_view("impulse5") && requires { object.impulse5; }) return (object.impulse5);
+  else if constexpr (Key::name.view() == std::string_view("inUse") && requires { object.in_use; }) return (object.in_use);
+  else if constexpr (Key::name.view() == std::string_view("indent") && requires { object.indent; }) return (object.indent);
+  else if constexpr (Key::name.view() == std::string_view("index") && requires { object.index; }) return (object.index);
+  else if constexpr (Key::name.view() == std::string_view("indexCount") && requires { object.index_count; }) return (object.index_count);
+  else if constexpr (Key::name.view() == std::string_view("indexFormat") && requires { object.index_format; }) return (object.index_format);
+  else if constexpr (Key::name.view() == std::string_view("indexOffset") && requires { object.index_offset; }) return (object.index_offset);
+  else if constexpr (Key::name.view() == std::string_view("indices") && requires { object.indices; }) return (object.indices);
+  else if constexpr (Key::name.view() == std::string_view("inertiaXX") && requires { object.inertia_xx; }) return (object.inertia_xx);
+  else if constexpr (Key::name.view() == std::string_view("inertiaXY") && requires { object.inertia_xy; }) return (object.inertia_xy);
+  else if constexpr (Key::name.view() == std::string_view("inertiaXZ") && requires { object.inertia_xz; }) return (object.inertia_xz);
+  else if constexpr (Key::name.view() == std::string_view("inertiaYY") && requires { object.inertia_yy; }) return (object.inertia_yy);
+  else if constexpr (Key::name.view() == std::string_view("inertiaYZ") && requires { object.inertia_yz; }) return (object.inertia_yz);
+  else if constexpr (Key::name.view() == std::string_view("inertiaZZ") && requires { object.inertia_zz; }) return (object.inertia_zz);
   else if constexpr (Key::name.view() == std::string_view("influenceCounts") && requires { object.influence_counts; }) return (object.influence_counts);
   else if constexpr (Key::name.view() == std::string_view("influences") && requires { object.influences; }) return (object.influences);
+  else if constexpr (Key::name.view() == std::string_view("initialFocus") && requires { object.initial_focus; }) return (object.initial_focus);
+  else if constexpr (Key::name.view() == std::string_view("initialStateIndex") && requires { object.initial_state_index; }) return (object.initial_state_index);
+  else if constexpr (Key::name.view() == std::string_view("initialValue") && requires { object.initial_value; }) return (object.initial_value);
+  else if constexpr (Key::name.view() == std::string_view("initialized") && requires { object.initialized; }) return (object.initialized);
   else if constexpr (Key::name.view() == std::string_view("innerConeCos") && requires { object.inner_cone_cos; }) return (object.inner_cone_cos);
   else if constexpr (Key::name.view() == std::string_view("innerConeDegrees") && requires { object.inner_cone_degrees; }) return (object.inner_cone_degrees);
+  else if constexpr (Key::name.view() == std::string_view("input") && requires { object.input; }) return (object.input);
+  else if constexpr (Key::name.view() == std::string_view("inputIndex") && requires { object.input_index; }) return (object.input_index);
+  else if constexpr (Key::name.view() == std::string_view("inputValues") && requires { object.input_values; }) return (object.input_values);
+  else if constexpr (Key::name.view() == std::string_view("inputs") && requires { object.inputs; }) return (object.inputs);
   else if constexpr (Key::name.view() == std::string_view("insertSpatialObject") && requires { object.insert_spatial_object; }) return (object.insert_spatial_object);
+  else if constexpr (Key::name.view() == std::string_view("instructionStream") && requires { object.instruction_stream; }) return (object.instruction_stream);
   else if constexpr (Key::name.view() == std::string_view("intensity") && requires { object.intensity; }) return (object.intensity);
   else if constexpr (Key::name.view() == std::string_view("intensityUnit") && requires { object.intensity_unit; }) return (object.intensity_unit);
+  else if constexpr (Key::name.view() == std::string_view("interactiveStateBinding") && requires { object.interactive_state_binding; }) return (object.interactive_state_binding);
   else if constexpr (Key::name.view() == std::string_view("internal") && requires { object.internal; }) return (object.internal);
   else if constexpr (Key::name.view() == std::string_view("interval") && requires { object.interval; }) return (object.interval);
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldXX") && requires { object.inverse_inertia_world_xx; }) return (object.inverse_inertia_world_xx);
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldXY") && requires { object.inverse_inertia_world_xy; }) return (object.inverse_inertia_world_xy);
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldXZ") && requires { object.inverse_inertia_world_xz; }) return (object.inverse_inertia_world_xz);
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldYY") && requires { object.inverse_inertia_world_yy; }) return (object.inverse_inertia_world_yy);
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldYZ") && requires { object.inverse_inertia_world_yz; }) return (object.inverse_inertia_world_yz);
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldZZ") && requires { object.inverse_inertia_world_zz; }) return (object.inverse_inertia_world_zz);
+  else if constexpr (Key::name.view() == std::string_view("inverseMass") && requires { object.inverse_mass; }) return (object.inverse_mass);
+  else if constexpr (Key::name.view() == std::string_view("inverseViewProjection") && requires { object.inverse_view_projection; }) return (object.inverse_view_projection);
   else if constexpr (Key::name.view() == std::string_view("invoke") && requires { object.invoke; }) return (object.invoke);
   else if constexpr (Key::name.view() == std::string_view("ior") && requires { object.ior; }) return (object.ior);
+  else if constexpr (Key::name.view() == std::string_view("ipc") && requires { object.ipc; }) return (object.ipc);
   else if constexpr (Key::name.view() == std::string_view("iridescence") && requires { object.iridescence; }) return (object.iridescence);
+  else if constexpr (Key::name.view() == std::string_view("iridescenceEnabled") && requires { object.iridescence_enabled; }) return (object.iridescence_enabled);
   else if constexpr (Key::name.view() == std::string_view("iridescenceIor") && requires { object.iridescence_ior; }) return (object.iridescence_ior);
   else if constexpr (Key::name.view() == std::string_view("iridescenceMap") && requires { object.iridescence_map; }) return (object.iridescence_map);
   else if constexpr (Key::name.view() == std::string_view("iridescenceMapUvSet") && requires { object.iridescence_map_uv_set; }) return (object.iridescence_map_uv_set);
@@ -303,9 +755,11 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("iridescenceThicknessMapUvSet") && requires { object.iridescence_thickness_map_uv_set; }) return (object.iridescence_thickness_map_uv_set);
   else if constexpr (Key::name.view() == std::string_view("iridescenceThicknessMax") && requires { object.iridescence_thickness_max; }) return (object.iridescence_thickness_max);
   else if constexpr (Key::name.view() == std::string_view("iridescenceThicknessMin") && requires { object.iridescence_thickness_min; }) return (object.iridescence_thickness_min);
+  else if constexpr (Key::name.view() == std::string_view("irradiancePipeline") && requires { object.irradiance_pipeline; }) return (object.irradiance_pipeline);
   else if constexpr (Key::name.view() == std::string_view("isAmbientLightSupported") && requires { object.is_ambient_light_supported; }) return (object.is_ambient_light_supported);
   else if constexpr (Key::name.view() == std::string_view("isAvailable") && requires { object.is_available; }) return (object.is_available);
   else if constexpr (Key::name.view() == std::string_view("isBarometerSupported") && requires { object.is_barometer_supported; }) return (object.is_barometer_supported);
+  else if constexpr (Key::name.view() == std::string_view("isDefault") && requires { object.is_default; }) return (object.is_default);
   else if constexpr (Key::name.view() == std::string_view("isGravitySupported") && requires { object.is_gravity_supported; }) return (object.is_gravity_supported);
   else if constexpr (Key::name.view() == std::string_view("isGyroscopeSupported") && requires { object.is_gyroscope_supported; }) return (object.is_gyroscope_supported);
   else if constexpr (Key::name.view() == std::string_view("isHdr") && requires { object.is_hdr; }) return (object.is_hdr);
@@ -315,94 +769,267 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("isMagnetometerSupported") && requires { object.is_magnetometer_supported; }) return (object.is_magnetometer_supported);
   else if constexpr (Key::name.view() == std::string_view("isMotionSupported") && requires { object.is_motion_supported; }) return (object.is_motion_supported);
   else if constexpr (Key::name.view() == std::string_view("isOrientationSupported") && requires { object.is_orientation_supported; }) return (object.is_orientation_supported);
+  else if constexpr (Key::name.view() == std::string_view("isPlaying") && requires { object.is_playing; }) return (object.is_playing);
   else if constexpr (Key::name.view() == std::string_view("isPrimary") && requires { object.is_primary; }) return (object.is_primary);
   else if constexpr (Key::name.view() == std::string_view("isProximitySupported") && requires { object.is_proximity_supported; }) return (object.is_proximity_supported);
+  else if constexpr (Key::name.view() == std::string_view("isReady") && requires { object.is_ready; }) return (object.is_ready);
+  else if constexpr (Key::name.view() == std::string_view("isRegistered") && requires { object.is_registered; }) return (object.is_registered);
   else if constexpr (Key::name.view() == std::string_view("isRooted") && requires { object.is_rooted; }) return (object.is_rooted);
   else if constexpr (Key::name.view() == std::string_view("isSupported") && requires { object.is_supported; }) return (object.is_supported);
   else if constexpr (Key::name.view() == std::string_view("isTouch") && requires { object.is_touch; }) return (object.is_touch);
   else if constexpr (Key::name.view() == std::string_view("isVirtual") && requires { object.is_virtual; }) return (object.is_virtual);
+  else if constexpr (Key::name.view() == std::string_view("items") && requires { object.items; }) return (object.items);
+  else if constexpr (Key::name.view() == std::string_view("jitter") && requires { object.jitter; }) return (object.jitter);
+  else if constexpr (Key::name.view() == std::string_view("join") && requires { object.join; }) return (object.join);
   else if constexpr (Key::name.view() == std::string_view("jointCollisionSuppressions") && requires { object.joint_collision_suppressions; }) return (object.joint_collision_suppressions);
+  else if constexpr (Key::name.view() == std::string_view("jointMatrices") && requires { object.joint_matrices; }) return (object.joint_matrices);
   else if constexpr (Key::name.view() == std::string_view("jointSolvers") && requires { object.joint_solvers; }) return (object.joint_solvers);
+  else if constexpr (Key::name.view() == std::string_view("joints") && requires { object.joints; }) return (object.joints);
   else if constexpr (Key::name.view() == std::string_view("kerning") && requires { object.kerning; }) return (object.kerning);
+  else if constexpr (Key::name.view() == std::string_view("kerningCount") && requires { object.kerning_count; }) return (object.kerning_count);
+  else if constexpr (Key::name.view() == std::string_view("kernings") && requires { object.kernings; }) return (object.kernings);
   else if constexpr (Key::name.view() == std::string_view("key") && requires { object.key; }) return (object.key);
+  else if constexpr (Key::name.view() == std::string_view("keyCode") && requires { object.key_code; }) return (object.key_code);
   else if constexpr (Key::name.view() == std::string_view("kind") && requires { object.kind; }) return (object.kind);
   else if constexpr (Key::name.view() == std::string_view("label") && requires { object.label; }) return (object.label);
+  else if constexpr (Key::name.view() == std::string_view("labels") && requires { object.labels; }) return (object.labels);
+  else if constexpr (Key::name.view() == std::string_view("lastFailureActualLength") && requires { object.last_failure_actual_length; }) return (object.last_failure_actual_length);
+  else if constexpr (Key::name.view() == std::string_view("lastFailureKind") && requires { object.last_failure_kind; }) return (object.last_failure_kind);
+  else if constexpr (Key::name.view() == std::string_view("lastFailureNodeIndex") && requires { object.last_failure_node_index; }) return (object.last_failure_node_index);
+  else if constexpr (Key::name.view() == std::string_view("lastFailureParentIndex") && requires { object.last_failure_parent_index; }) return (object.last_failure_parent_index);
+  else if constexpr (Key::name.view() == std::string_view("lastFailureRequiredLength") && requires { object.last_failure_required_length; }) return (object.last_failure_required_length);
+  else if constexpr (Key::name.view() == std::string_view("lastFailureResolverKind") && requires { object.last_failure_resolver_kind; }) return (object.last_failure_resolver_kind);
+  else if constexpr (Key::name.view() == std::string_view("lastFrameUpdate") && requires { object.last_frame_update; }) return (object.last_frame_update);
   else if constexpr (Key::name.view() == std::string_view("latitude") && requires { object.latitude; }) return (object.latitude);
+  else if constexpr (Key::name.view() == std::string_view("layerIndex") && requires { object.layer_index; }) return (object.layer_index);
   else if constexpr (Key::name.view() == std::string_view("layerMask") && requires { object.layer_mask; }) return (object.layer_mask);
+  else if constexpr (Key::name.view() == std::string_view("layers") && requires { object.layers; }) return (object.layers);
+  else if constexpr (Key::name.view() == std::string_view("layout") && requires { object.layout; }) return (object.layout);
+  else if constexpr (Key::name.view() == std::string_view("layoutType") && requires { object.layout_type; }) return (object.layout_type);
   else if constexpr (Key::name.view() == std::string_view("leading") && requires { object.leading; }) return (object.leading);
   else if constexpr (Key::name.view() == std::string_view("leafByObject") && requires { object.leaf_by_object; }) return (object.leaf_by_object);
+  else if constexpr (Key::name.view() == std::string_view("leased") && requires { object.leased; }) return (object.leased);
   else if constexpr (Key::name.view() == std::string_view("left") && requires { object.left; }) return (object.left);
+  else if constexpr (Key::name.view() == std::string_view("leftMargin") && requires { object.left_margin; }) return (object.left_margin);
+  else if constexpr (Key::name.view() == std::string_view("length") && requires { object.length; }) return (object.length);
+  else if constexpr (Key::name.view() == std::string_view("lengths") && requires { object.lengths; }) return (object.lengths);
   else if constexpr (Key::name.view() == std::string_view("levels") && requires { object.levels; }) return (object.levels);
   else if constexpr (Key::name.view() == std::string_view("life") && requires { object.life; }) return (object.life);
   else if constexpr (Key::name.view() == std::string_view("lifeOffset") && requires { object.life_offset; }) return (object.life_offset);
+  else if constexpr (Key::name.view() == std::string_view("lifecycle") && requires { object.lifecycle; }) return (object.lifecycle);
   else if constexpr (Key::name.view() == std::string_view("lifetimeMax") && requires { object.lifetime_max; }) return (object.lifetime_max);
   else if constexpr (Key::name.view() == std::string_view("lifetimeMin") && requires { object.lifetime_min; }) return (object.lifetime_min);
+  else if constexpr (Key::name.view() == std::string_view("lifetimes") && requires { object.lifetimes; }) return (object.lifetimes);
   else if constexpr (Key::name.view() == std::string_view("lift") && requires { object.lift; }) return (object.lift);
   else if constexpr (Key::name.view() == std::string_view("lightColor") && requires { object.light_color; }) return (object.light_color);
+  else if constexpr (Key::name.view() == std::string_view("lightType") && requires { object.light_type; }) return (object.light_type);
   else if constexpr (Key::name.view() == std::string_view("lightX") && requires { object.light_x; }) return (object.light_x);
   else if constexpr (Key::name.view() == std::string_view("lightY") && requires { object.light_y; }) return (object.light_y);
   else if constexpr (Key::name.view() == std::string_view("lightness") && requires { object.lightness; }) return (object.lightness);
+  else if constexpr (Key::name.view() == std::string_view("limitDampingRatio") && requires { object.limit_damping_ratio; }) return (object.limit_damping_ratio);
+  else if constexpr (Key::name.view() == std::string_view("limitFrequencyHz") && requires { object.limit_frequency_hz; }) return (object.limit_frequency_hz);
+  else if constexpr (Key::name.view() == std::string_view("line") && requires { object.line; }) return (object.line);
+  else if constexpr (Key::name.view() == std::string_view("lineAscents") && requires { object.line_ascents; }) return (object.line_ascents);
+  else if constexpr (Key::name.view() == std::string_view("lineCount") && requires { object.line_count; }) return (object.line_count);
+  else if constexpr (Key::name.view() == std::string_view("lineDescents") && requires { object.line_descents; }) return (object.line_descents);
+  else if constexpr (Key::name.view() == std::string_view("lineGap") && requires { object.line_gap; }) return (object.line_gap);
+  else if constexpr (Key::name.view() == std::string_view("lineHeight") && requires { object.line_height; }) return (object.line_height);
+  else if constexpr (Key::name.view() == std::string_view("lineHeights") && requires { object.line_heights; }) return (object.line_heights);
   else if constexpr (Key::name.view() == std::string_view("lineIndex") && requires { object.line_index; }) return (object.line_index);
+  else if constexpr (Key::name.view() == std::string_view("lineLeadings") && requires { object.line_leadings; }) return (object.line_leadings);
+  else if constexpr (Key::name.view() == std::string_view("lineWidths") && requires { object.line_widths; }) return (object.line_widths);
   else if constexpr (Key::name.view() == std::string_view("linearLength") && requires { object.linear_length; }) return (object.linear_length);
   else if constexpr (Key::name.view() == std::string_view("linearStart") && requires { object.linear_start; }) return (object.linear_start);
+  else if constexpr (Key::name.view() == std::string_view("lines") && requires { object.lines; }) return (object.lines);
+  else if constexpr (Key::name.view() == std::string_view("linkage") && requires { object.linkage; }) return (object.linkage);
+  else if constexpr (Key::name.view() == std::string_view("list") && requires { object.list; }) return (object.list);
+  else if constexpr (Key::name.view() == std::string_view("loadFontFaces") && requires { object.load_font_faces; }) return (object.load_font_faces);
+  else if constexpr (Key::name.view() == std::string_view("loaded") && requires { object.loaded; }) return (object.loaded);
+  else if constexpr (Key::name.view() == std::string_view("local") && requires { object.local; }) return (object.local);
+  else if constexpr (Key::name.view() == std::string_view("localAnchorAX") && requires { object.local_anchor_ax; }) return (object.local_anchor_ax);
+  else if constexpr (Key::name.view() == std::string_view("localAnchorAY") && requires { object.local_anchor_ay; }) return (object.local_anchor_ay);
+  else if constexpr (Key::name.view() == std::string_view("localAnchorAZ") && requires { object.local_anchor_az; }) return (object.local_anchor_az);
+  else if constexpr (Key::name.view() == std::string_view("localAnchorBX") && requires { object.local_anchor_bx; }) return (object.local_anchor_bx);
+  else if constexpr (Key::name.view() == std::string_view("localAnchorBY") && requires { object.local_anchor_by; }) return (object.local_anchor_by);
+  else if constexpr (Key::name.view() == std::string_view("localAnchorBZ") && requires { object.local_anchor_bz; }) return (object.local_anchor_bz);
+  else if constexpr (Key::name.view() == std::string_view("localAnchorX") && requires { object.local_anchor_x; }) return (object.local_anchor_x);
+  else if constexpr (Key::name.view() == std::string_view("localAnchorY") && requires { object.local_anchor_y; }) return (object.local_anchor_y);
+  else if constexpr (Key::name.view() == std::string_view("localAxisAX") && requires { object.local_axis_ax; }) return (object.local_axis_ax);
+  else if constexpr (Key::name.view() == std::string_view("localAxisAY") && requires { object.local_axis_ay; }) return (object.local_axis_ay);
+  else if constexpr (Key::name.view() == std::string_view("localBoundsId") && requires { object.local_bounds_id; }) return (object.local_bounds_id);
+  else if constexpr (Key::name.view() == std::string_view("localContentId") && requires { object.local_content_id; }) return (object.local_content_id);
+  else if constexpr (Key::name.view() == std::string_view("localRotationAW") && requires { object.local_rotation_aw; }) return (object.local_rotation_aw);
+  else if constexpr (Key::name.view() == std::string_view("localRotationAX") && requires { object.local_rotation_ax; }) return (object.local_rotation_ax);
+  else if constexpr (Key::name.view() == std::string_view("localRotationAY") && requires { object.local_rotation_ay; }) return (object.local_rotation_ay);
+  else if constexpr (Key::name.view() == std::string_view("localRotationAZ") && requires { object.local_rotation_az; }) return (object.local_rotation_az);
+  else if constexpr (Key::name.view() == std::string_view("localRotationBW") && requires { object.local_rotation_bw; }) return (object.local_rotation_bw);
+  else if constexpr (Key::name.view() == std::string_view("localRotationBX") && requires { object.local_rotation_bx; }) return (object.local_rotation_bx);
+  else if constexpr (Key::name.view() == std::string_view("localRotationBY") && requires { object.local_rotation_by; }) return (object.local_rotation_by);
+  else if constexpr (Key::name.view() == std::string_view("localRotationBZ") && requires { object.local_rotation_bz; }) return (object.local_rotation_bz);
+  else if constexpr (Key::name.view() == std::string_view("localTransformId") && requires { object.local_transform_id; }) return (object.local_transform_id);
+  else if constexpr (Key::name.view() == std::string_view("localX") && requires { object.local_x; }) return (object.local_x);
+  else if constexpr (Key::name.view() == std::string_view("localY") && requires { object.local_y; }) return (object.local_y);
   else if constexpr (Key::name.view() == std::string_view("locale") && requires { object.locale; }) return (object.locale);
   else if constexpr (Key::name.view() == std::string_view("logicalHeight") && requires { object.logical_height; }) return (object.logical_height);
   else if constexpr (Key::name.view() == std::string_view("logicalWidth") && requires { object.logical_width; }) return (object.logical_width);
   else if constexpr (Key::name.view() == std::string_view("longitude") && requires { object.longitude; }) return (object.longitude);
   else if constexpr (Key::name.view() == std::string_view("loop") && requires { object.loop; }) return (object.loop);
+  else if constexpr (Key::name.view() == std::string_view("loopMode") && requires { object.loop_mode; }) return (object.loop_mode);
+  else if constexpr (Key::name.view() == std::string_view("loops") && requires { object.loops; }) return (object.loops);
   else if constexpr (Key::name.view() == std::string_view("lowMax") && requires { object.low_max; }) return (object.low_max);
   else if constexpr (Key::name.view() == std::string_view("lowMin") && requires { object.low_min; }) return (object.low_min);
+  else if constexpr (Key::name.view() == std::string_view("lowerAngle") && requires { object.lower_angle; }) return (object.lower_angle);
+  else if constexpr (Key::name.view() == std::string_view("lowerAngularX") && requires { object.lower_angular_x; }) return (object.lower_angular_x);
+  else if constexpr (Key::name.view() == std::string_view("lowerAngularY") && requires { object.lower_angular_y; }) return (object.lower_angular_y);
+  else if constexpr (Key::name.view() == std::string_view("lowerAngularZ") && requires { object.lower_angular_z; }) return (object.lower_angular_z);
+  else if constexpr (Key::name.view() == std::string_view("lowerLimitImpulse") && requires { object.lower_limit_impulse; }) return (object.lower_limit_impulse);
+  else if constexpr (Key::name.view() == std::string_view("lowerLimitImpulses") && requires { object.lower_limit_impulses; }) return (object.lower_limit_impulses);
+  else if constexpr (Key::name.view() == std::string_view("lowerLinearX") && requires { object.lower_linear_x; }) return (object.lower_linear_x);
+  else if constexpr (Key::name.view() == std::string_view("lowerLinearY") && requires { object.lower_linear_y; }) return (object.lower_linear_y);
+  else if constexpr (Key::name.view() == std::string_view("lowerLinearZ") && requires { object.lower_linear_z; }) return (object.lower_linear_z);
+  else if constexpr (Key::name.view() == std::string_view("lowerTranslation") && requires { object.lower_translation; }) return (object.lower_translation);
+  else if constexpr (Key::name.view() == std::string_view("lowerTwistAngle") && requires { object.lower_twist_angle; }) return (object.lower_twist_angle);
+  else if constexpr (Key::name.view() == std::string_view("lowerTwistImpulse") && requires { object.lower_twist_impulse; }) return (object.lower_twist_impulse);
   else if constexpr (Key::name.view() == std::string_view("lut") && requires { object.lut; }) return (object.lut);
+  else if constexpr (Key::name.view() == std::string_view("lutCache") && requires { object.lut_cache; }) return (object.lut_cache);
   else if constexpr (Key::name.view() == std::string_view("m") && requires { object.m; }) return (object.m);
   else if constexpr (Key::name.view() == std::string_view("magFilter") && requires { object.mag_filter; }) return (object.mag_filter);
+  else if constexpr (Key::name.view() == std::string_view("manager") && requires { object.manager; }) return (object.manager);
   else if constexpr (Key::name.view() == std::string_view("manufacturer") && requires { object.manufacturer; }) return (object.manufacturer);
   else if constexpr (Key::name.view() == std::string_view("map") && requires { object.map; }) return (object.map);
   else if constexpr (Key::name.view() == std::string_view("margin") && requires { object.margin; }) return (object.margin);
+  else if constexpr (Key::name.view() == std::string_view("marginX") && requires { object.margin_x; }) return (object.margin_x);
+  else if constexpr (Key::name.view() == std::string_view("marginY") && requires { object.margin_y; }) return (object.margin_y);
   else if constexpr (Key::name.view() == std::string_view("marketingName") && requires { object.marketing_name; }) return (object.marketing_name);
+  else if constexpr (Key::name.view() == std::string_view("mask") && requires { object.mask; }) return (object.mask);
+  else if constexpr (Key::name.view() == std::string_view("mass") && requires { object.mass; }) return (object.mass);
   else if constexpr (Key::name.view() == std::string_view("material") && requires { object.material; }) return (object.material);
+  else if constexpr (Key::name.view() == std::string_view("materialBindGroupLayout") && requires { object.material_bind_group_layout; }) return (object.material_bind_group_layout);
   else if constexpr (Key::name.view() == std::string_view("materialData") && requires { object.material_data; }) return (object.material_data);
+  else if constexpr (Key::name.view() == std::string_view("materialKinds") && requires { object.material_kinds; }) return (object.material_kinds);
+  else if constexpr (Key::name.view() == std::string_view("materialRenderers") && requires { object.material_renderers; }) return (object.material_renderers);
+  else if constexpr (Key::name.view() == std::string_view("materials") && requires { object.materials; }) return (object.materials);
   else if constexpr (Key::name.view() == std::string_view("matrix") && requires { object.matrix; }) return (object.matrix);
   else if constexpr (Key::name.view() == std::string_view("matrixX") && requires { object.matrix_x; }) return (object.matrix_x);
   else if constexpr (Key::name.view() == std::string_view("matrixY") && requires { object.matrix_y; }) return (object.matrix_y);
   else if constexpr (Key::name.view() == std::string_view("max") && requires { object.max; }) return (object.max);
+  else if constexpr (Key::name.view() == std::string_view("maxArea") && requires { object.max_area; }) return (object.max_area);
+  else if constexpr (Key::name.view() == std::string_view("maxBlur") && requires { object.max_blur; }) return (object.max_blur);
   else if constexpr (Key::name.view() == std::string_view("maxBrightness") && requires { object.max_brightness; }) return (object.max_brightness);
+  else if constexpr (Key::name.view() == std::string_view("maxBytes") && requires { object.max_bytes; }) return (object.max_bytes);
+  else if constexpr (Key::name.view() == std::string_view("maxChars") && requires { object.max_chars; }) return (object.max_chars);
+  else if constexpr (Key::name.view() == std::string_view("maxConcurrent") && requires { object.max_concurrent; }) return (object.max_concurrent);
+  else if constexpr (Key::name.view() == std::string_view("maxDeltaTime") && requires { object.max_delta_time; }) return (object.max_delta_time);
   else if constexpr (Key::name.view() == std::string_view("maxDistance") && requires { object.max_distance; }) return (object.max_distance);
   else if constexpr (Key::name.view() == std::string_view("maxEv") && requires { object.max_ev; }) return (object.max_ev);
   else if constexpr (Key::name.view() == std::string_view("maxExposure") && requires { object.max_exposure; }) return (object.max_exposure);
+  else if constexpr (Key::name.view() == std::string_view("maxForce") && requires { object.max_force; }) return (object.max_force);
+  else if constexpr (Key::name.view() == std::string_view("maxGlyphs") && requires { object.max_glyphs; }) return (object.max_glyphs);
+  else if constexpr (Key::name.view() == std::string_view("maxHeight") && requires { object.max_height; }) return (object.max_height);
+  else if constexpr (Key::name.view() == std::string_view("maxLength") && requires { object.max_length; }) return (object.max_length);
+  else if constexpr (Key::name.view() == std::string_view("maxLines") && requires { object.max_lines; }) return (object.max_lines);
   else if constexpr (Key::name.view() == std::string_view("maxLuminance") && requires { object.max_luminance; }) return (object.max_luminance);
+  else if constexpr (Key::name.view() == std::string_view("maxMotorForce") && requires { object.max_motor_force; }) return (object.max_motor_force);
+  else if constexpr (Key::name.view() == std::string_view("maxMotorTorque") && requires { object.max_motor_torque; }) return (object.max_motor_torque);
   else if constexpr (Key::name.view() == std::string_view("maxParticleCount") && requires { object.max_particle_count; }) return (object.max_particle_count);
   else if constexpr (Key::name.view() == std::string_view("maxParticles") && requires { object.max_particles; }) return (object.max_particles);
-  else if constexpr (Key::name.view() == std::string_view("maxRadius") && requires { object.max_radius; }) return (object.max_radius);
-  else if constexpr (Key::name.view() == std::string_view("maxRadiusVariance") && requires { object.max_radius_variance; }) return (object.max_radius_variance);
+  else if constexpr (Key::name.view() == std::string_view("maxPitch") && requires { object.max_pitch; }) return (object.max_pitch);
+  else if constexpr (Key::name.view() == std::string_view("maxPolar") && requires { object.max_polar; }) return (object.max_polar);
+  else if constexpr (Key::name.view() == std::string_view("maxSize") && requires { object.max_size; }) return (object.max_size);
+  else if constexpr (Key::name.view() == std::string_view("maxWidth") && requires { object.max_width; }) return (object.max_width);
   else if constexpr (Key::name.view() == std::string_view("maxX") && requires { object.max_x; }) return (object.max_x);
   else if constexpr (Key::name.view() == std::string_view("maxY") && requires { object.max_y; }) return (object.max_y);
   else if constexpr (Key::name.view() == std::string_view("maxZ") && requires { object.max_z; }) return (object.max_z);
+  else if constexpr (Key::name.view() == std::string_view("maximize") && requires { object.maximize; }) return (object.maximize);
+  else if constexpr (Key::name.view() == std::string_view("maximized") && requires { object.maximized; }) return (object.maximized);
+  else if constexpr (Key::name.view() == std::string_view("maximum") && requires { object.maximum; }) return (object.maximum);
+  else if constexpr (Key::name.view() == std::string_view("maximumFirst") && requires { object.maximum_first; }) return (object.maximum_first);
+  else if constexpr (Key::name.view() == std::string_view("measureMetrics") && requires { object.measure_metrics; }) return (object.measure_metrics);
+  else if constexpr (Key::name.view() == std::string_view("measureText") && requires { object.measure_text; }) return (object.measure_text);
+  else if constexpr (Key::name.view() == std::string_view("mediaSession") && requires { object.media_session; }) return (object.media_session);
+  else if constexpr (Key::name.view() == std::string_view("menu") && requires { object.menu; }) return (object.menu);
+  else if constexpr (Key::name.view() == std::string_view("meshCount") && requires { object.mesh_count; }) return (object.mesh_count);
+  else if constexpr (Key::name.view() == std::string_view("meshMaterialRenderers") && requires { object.mesh_material_renderers; }) return (object.mesh_material_renderers);
+  else if constexpr (Key::name.view() == std::string_view("message") && requires { object.message; }) return (object.message);
+  else if constexpr (Key::name.view() == std::string_view("metaKey") && requires { object.meta_key; }) return (object.meta_key);
   else if constexpr (Key::name.view() == std::string_view("metadata") && requires { object.metadata; }) return (object.metadata);
+  else if constexpr (Key::name.view() == std::string_view("metallic") && requires { object.metallic; }) return (object.metallic);
+  else if constexpr (Key::name.view() == std::string_view("metallicRoughnessMap") && requires { object.metallic_roughness_map; }) return (object.metallic_roughness_map);
+  else if constexpr (Key::name.view() == std::string_view("method") && requires { object.method; }) return (object.method);
   else if constexpr (Key::name.view() == std::string_view("metrics") && requires { object.metrics; }) return (object.metrics);
+  else if constexpr (Key::name.view() == std::string_view("midi") && requires { object.midi; }) return (object.midi);
+  else if constexpr (Key::name.view() == std::string_view("mimeType") && requires { object.mime_type; }) return (object.mime_type);
   else if constexpr (Key::name.view() == std::string_view("min") && requires { object.min; }) return (object.min);
+  else if constexpr (Key::name.view() == std::string_view("minDistance") && requires { object.min_distance; }) return (object.min_distance);
   else if constexpr (Key::name.view() == std::string_view("minEv") && requires { object.min_ev; }) return (object.min_ev);
   else if constexpr (Key::name.view() == std::string_view("minExposure") && requires { object.min_exposure; }) return (object.min_exposure);
   else if constexpr (Key::name.view() == std::string_view("minFilter") && requires { object.min_filter; }) return (object.min_filter);
+  else if constexpr (Key::name.view() == std::string_view("minHeight") && requires { object.min_height; }) return (object.min_height);
+  else if constexpr (Key::name.view() == std::string_view("minLength") && requires { object.min_length; }) return (object.min_length);
   else if constexpr (Key::name.view() == std::string_view("minParticleCount") && requires { object.min_particle_count; }) return (object.min_particle_count);
-  else if constexpr (Key::name.view() == std::string_view("minRadius") && requires { object.min_radius; }) return (object.min_radius);
-  else if constexpr (Key::name.view() == std::string_view("minRadiusVariance") && requires { object.min_radius_variance; }) return (object.min_radius_variance);
+  else if constexpr (Key::name.view() == std::string_view("minPitch") && requires { object.min_pitch; }) return (object.min_pitch);
+  else if constexpr (Key::name.view() == std::string_view("minPolar") && requires { object.min_polar; }) return (object.min_polar);
+  else if constexpr (Key::name.view() == std::string_view("minWidth") && requires { object.min_width; }) return (object.min_width);
   else if constexpr (Key::name.view() == std::string_view("minX") && requires { object.min_x; }) return (object.min_x);
   else if constexpr (Key::name.view() == std::string_view("minY") && requires { object.min_y; }) return (object.min_y);
   else if constexpr (Key::name.view() == std::string_view("minZ") && requires { object.min_z; }) return (object.min_z);
+  else if constexpr (Key::name.view() == std::string_view("minimize") && requires { object.minimize; }) return (object.minimize);
+  else if constexpr (Key::name.view() == std::string_view("minimized") && requires { object.minimized; }) return (object.minimized);
+  else if constexpr (Key::name.view() == std::string_view("minimum") && requires { object.minimum; }) return (object.minimum);
+  else if constexpr (Key::name.view() == std::string_view("minimumFirst") && requires { object.minimum_first; }) return (object.minimum_first);
+  else if constexpr (Key::name.view() == std::string_view("minimumHeight") && requires { object.minimum_height; }) return (object.minimum_height);
+  else if constexpr (Key::name.view() == std::string_view("minimumSecond") && requires { object.minimum_second; }) return (object.minimum_second);
+  else if constexpr (Key::name.view() == std::string_view("minimumWidth") && requires { object.minimum_width; }) return (object.minimum_width);
+  else if constexpr (Key::name.view() == std::string_view("mipLevelCount") && requires { object.mip_level_count; }) return (object.mip_level_count);
   else if constexpr (Key::name.view() == std::string_view("mipmaps") && requires { object.mipmaps; }) return (object.mipmaps);
+  else if constexpr (Key::name.view() == std::string_view("miterLimit") && requires { object.miter_limit; }) return (object.miter_limit);
   else if constexpr (Key::name.view() == std::string_view("mode") && requires { object.mode; }) return (object.mode);
   else if constexpr (Key::name.view() == std::string_view("model") && requires { object.model; }) return (object.model);
+  else if constexpr (Key::name.view() == std::string_view("modifierKinds") && requires { object.modifier_kinds; }) return (object.modifier_kinds);
+  else if constexpr (Key::name.view() == std::string_view("modifierSnippetRevision") && requires { object.modifier_snippet_revision; }) return (object.modifier_snippet_revision);
+  else if constexpr (Key::name.view() == std::string_view("modifierSnippets") && requires { object.modifier_snippets; }) return (object.modifier_snippets);
   else if constexpr (Key::name.view() == std::string_view("modifiers") && requires { object.modifiers; }) return (object.modifiers);
+  else if constexpr (Key::name.view() == std::string_view("module") && requires { object.module; }) return (object.module);
   else if constexpr (Key::name.view() == std::string_view("monochrome") && requires { object.monochrome; }) return (object.monochrome);
+  else if constexpr (Key::name.view() == std::string_view("morph") && requires { object.morph; }) return (object.morph);
+  else if constexpr (Key::name.view() == std::string_view("motorImpulse") && requires { object.motor_impulse; }) return (object.motor_impulse);
+  else if constexpr (Key::name.view() == std::string_view("motorSpeed") && requires { object.motor_speed; }) return (object.motor_speed);
+  else if constexpr (Key::name.view() == std::string_view("mouseWheelEnabled") && requires { object.mouse_wheel_enabled; }) return (object.mouse_wheel_enabled);
+  else if constexpr (Key::name.view() == std::string_view("moveToTrash") && requires { object.move_to_trash; }) return (object.move_to_trash);
+  else if constexpr (Key::name.view() == std::string_view("moveToX") && requires { object.move_to_x; }) return (object.move_to_x);
+  else if constexpr (Key::name.view() == std::string_view("moveToY") && requires { object.move_to_y; }) return (object.move_to_y);
+  else if constexpr (Key::name.view() == std::string_view("multiline") && requires { object.multiline; }) return (object.multiline);
+  else if constexpr (Key::name.view() == std::string_view("muted") && requires { object.muted; }) return (object.muted);
+  else if constexpr (Key::name.view() == std::string_view("nContourStream") && requires { object.n_contour_stream; }) return (object.n_contour_stream);
+  else if constexpr (Key::name.view() == std::string_view("nPointsStream") && requires { object.n_points_stream; }) return (object.n_points_stream);
   else if constexpr (Key::name.view() == std::string_view("name") && requires { object.name; }) return (object.name);
+  else if constexpr (Key::name.view() == std::string_view("namePrefix") && requires { object.name_prefix; }) return (object.name_prefix);
   else if constexpr (Key::name.view() == std::string_view("near") && requires { object.near; }) return (object.near);
+  else if constexpr (Key::name.view() == std::string_view("nearClipPlane") && requires { object.near_clip_plane; }) return (object.near_clip_plane);
+  else if constexpr (Key::name.view() == std::string_view("net") && requires { object.net; }) return (object.net);
+  else if constexpr (Key::name.view() == std::string_view("node") && requires { object.node; }) return (object.node);
+  else if constexpr (Key::name.view() == std::string_view("nodeIndices") && requires { object.node_indices; }) return (object.node_indices);
+  else if constexpr (Key::name.view() == std::string_view("nodeKinds") && requires { object.node_kinds; }) return (object.node_kinds);
+  else if constexpr (Key::name.view() == std::string_view("nodes") && requires { object.nodes; }) return (object.nodes);
+  else if constexpr (Key::name.view() == std::string_view("normal") && requires { object.normal; }) return (object.normal);
   else if constexpr (Key::name.view() == std::string_view("normalBias") && requires { object.normal_bias; }) return (object.normal_bias);
+  else if constexpr (Key::name.view() == std::string_view("normalImpulse") && requires { object.normal_impulse; }) return (object.normal_impulse);
+  else if constexpr (Key::name.view() == std::string_view("normalMap") && requires { object.normal_map; }) return (object.normal_map);
+  else if constexpr (Key::name.view() == std::string_view("normalMass") && requires { object.normal_mass; }) return (object.normal_mass);
+  else if constexpr (Key::name.view() == std::string_view("normalMatrices") && requires { object.normal_matrices; }) return (object.normal_matrices);
+  else if constexpr (Key::name.view() == std::string_view("normalScale") && requires { object.normal_scale; }) return (object.normal_scale);
   else if constexpr (Key::name.view() == std::string_view("normalX") && requires { object.normal_x; }) return (object.normal_x);
   else if constexpr (Key::name.view() == std::string_view("normalY") && requires { object.normal_y; }) return (object.normal_y);
   else if constexpr (Key::name.view() == std::string_view("normalZ") && requires { object.normal_z; }) return (object.normal_z);
+  else if constexpr (Key::name.view() == std::string_view("normals") && requires { object.normals; }) return (object.normals);
   else if constexpr (Key::name.view() == std::string_view("notification") && requires { object.notification; }) return (object.notification);
   else if constexpr (Key::name.view() == std::string_view("numLines") && requires { object.num_lines; }) return (object.num_lines);
   else if constexpr (Key::name.view() == std::string_view("object") && requires { object.object; }) return (object.object);
+  else if constexpr (Key::name.view() == std::string_view("objectId") && requires { object.object_id; }) return (object.object_id);
+  else if constexpr (Key::name.view() == std::string_view("objectUrl") && requires { object.object_url; }) return (object.object_url);
+  else if constexpr (Key::name.view() == std::string_view("objects") && requires { object.objects; }) return (object.objects);
+  else if constexpr (Key::name.view() == std::string_view("occlusionMap") && requires { object.occlusion_map; }) return (object.occlusion_map);
+  else if constexpr (Key::name.view() == std::string_view("occlusionStrength") && requires { object.occlusion_strength; }) return (object.occlusion_strength);
   else if constexpr (Key::name.view() == std::string_view("offset") && requires { object.offset; }) return (object.offset);
   else if constexpr (Key::name.view() == std::string_view("offsetX") && requires { object.offset_x; }) return (object.offset_x);
   else if constexpr (Key::name.view() == std::string_view("offsetY") && requires { object.offset_y; }) return (object.offset_y);
@@ -410,29 +1037,78 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("onAbsoluteOrientation") && requires { object.on_absolute_orientation; }) return (object.on_absolute_orientation);
   else if constexpr (Key::name.view() == std::string_view("onAccelerometer") && requires { object.on_accelerometer; }) return (object.on_accelerometer);
   else if constexpr (Key::name.view() == std::string_view("onAction") && requires { object.on_action; }) return (object.on_action);
+  else if constexpr (Key::name.view() == std::string_view("onActivate") && requires { object.on_activate; }) return (object.on_activate);
+  else if constexpr (Key::name.view() == std::string_view("onAllWindowsClosed") && requires { object.on_all_windows_closed; }) return (object.on_all_windows_closed);
   else if constexpr (Key::name.view() == std::string_view("onAmbientLight") && requires { object.on_ambient_light; }) return (object.on_ambient_light);
+  else if constexpr (Key::name.view() == std::string_view("onBackendChanged") && requires { object.on_backend_changed; }) return (object.on_backend_changed);
   else if constexpr (Key::name.view() == std::string_view("onBarometer") && requires { object.on_barometer; }) return (object.on_barometer);
   else if constexpr (Key::name.view() == std::string_view("onChange") && requires { object.on_change; }) return (object.on_change);
+  else if constexpr (Key::name.view() == std::string_view("onClick") && requires { object.on_click; }) return (object.on_click);
+  else if constexpr (Key::name.view() == std::string_view("onClose") && requires { object.on_close; }) return (object.on_close);
+  else if constexpr (Key::name.view() == std::string_view("onCloseRequest") && requires { object.on_close_request; }) return (object.on_close_request);
+  else if constexpr (Key::name.view() == std::string_view("onComplete") && requires { object.on_complete; }) return (object.on_complete);
+  else if constexpr (Key::name.view() == std::string_view("onCopy") && requires { object.on_copy; }) return (object.on_copy);
+  else if constexpr (Key::name.view() == std::string_view("onDeactivate") && requires { object.on_deactivate; }) return (object.on_deactivate);
+  else if constexpr (Key::name.view() == std::string_view("onDropFile") && requires { object.on_drop_file; }) return (object.on_drop_file);
   else if constexpr (Key::name.view() == std::string_view("onEmitterComplete") && requires { object.on_emitter_complete; }) return (object.on_emitter_complete);
+  else if constexpr (Key::name.view() == std::string_view("onEnter") && requires { object.on_enter; }) return (object.on_enter);
+  else if constexpr (Key::name.view() == std::string_view("onEvent") && requires { object.on_event; }) return (object.on_event);
+  else if constexpr (Key::name.view() == std::string_view("onFinished") && requires { object.on_finished; }) return (object.on_finished);
+  else if constexpr (Key::name.view() == std::string_view("onFocusIn") && requires { object.on_focus_in; }) return (object.on_focus_in);
+  else if constexpr (Key::name.view() == std::string_view("onFocusOut") && requires { object.on_focus_out; }) return (object.on_focus_out);
+  else if constexpr (Key::name.view() == std::string_view("onFullscreenChanged") && requires { object.on_fullscreen_changed; }) return (object.on_fullscreen_changed);
   else if constexpr (Key::name.view() == std::string_view("onGravity") && requires { object.on_gravity; }) return (object.on_gravity);
   else if constexpr (Key::name.view() == std::string_view("onGyroscope") && requires { object.on_gyroscope; }) return (object.on_gyroscope);
   else if constexpr (Key::name.view() == std::string_view("onHide") && requires { object.on_hide; }) return (object.on_hide);
   else if constexpr (Key::name.view() == std::string_view("onLinearAcceleration") && requires { object.on_linear_acceleration; }) return (object.on_linear_acceleration);
+  else if constexpr (Key::name.view() == std::string_view("onLooped") && requires { object.on_looped; }) return (object.on_looped);
   else if constexpr (Key::name.view() == std::string_view("onMagnetometer") && requires { object.on_magnetometer; }) return (object.on_magnetometer);
+  else if constexpr (Key::name.view() == std::string_view("onMaximize") && requires { object.on_maximize; }) return (object.on_maximize);
+  else if constexpr (Key::name.view() == std::string_view("onMinimize") && requires { object.on_minimize; }) return (object.on_minimize);
+  else if constexpr (Key::name.view() == std::string_view("onMove") && requires { object.on_move; }) return (object.on_move);
+  else if constexpr (Key::name.view() == std::string_view("onOpenFile") && requires { object.on_open_file; }) return (object.on_open_file);
+  else if constexpr (Key::name.view() == std::string_view("onOpenUrl") && requires { object.on_open_url; }) return (object.on_open_url);
   else if constexpr (Key::name.view() == std::string_view("onOrientation") && requires { object.on_orientation; }) return (object.on_orientation);
+  else if constexpr (Key::name.view() == std::string_view("onOrientationChanged") && requires { object.on_orientation_changed; }) return (object.on_orientation_changed);
   else if constexpr (Key::name.view() == std::string_view("onParticleDeath") && requires { object.on_particle_death; }) return (object.on_particle_death);
   else if constexpr (Key::name.view() == std::string_view("onParticleSpawn") && requires { object.on_particle_spawn; }) return (object.on_particle_spawn);
   else if constexpr (Key::name.view() == std::string_view("onProximity") && requires { object.on_proximity; }) return (object.on_proximity);
   else if constexpr (Key::name.view() == std::string_view("onQuaternion") && requires { object.on_quaternion; }) return (object.on_quaternion);
+  else if constexpr (Key::name.view() == std::string_view("onQuitRequest") && requires { object.on_quit_request; }) return (object.on_quit_request);
+  else if constexpr (Key::name.view() == std::string_view("onReady") && requires { object.on_ready; }) return (object.on_ready);
+  else if constexpr (Key::name.view() == std::string_view("onRenderContextLost") && requires { object.on_render_context_lost; }) return (object.on_render_context_lost);
+  else if constexpr (Key::name.view() == std::string_view("onRenderContextRestored") && requires { object.on_render_context_restored; }) return (object.on_render_context_restored);
+  else if constexpr (Key::name.view() == std::string_view("onRepeat") && requires { object.on_repeat; }) return (object.on_repeat);
   else if constexpr (Key::name.view() == std::string_view("onResize") && requires { object.on_resize; }) return (object.on_resize);
+  else if constexpr (Key::name.view() == std::string_view("onResourceFailed") && requires { object.on_resource_failed; }) return (object.on_resource_failed);
+  else if constexpr (Key::name.view() == std::string_view("onResourceResolved") && requires { object.on_resource_resolved; }) return (object.on_resource_resolved);
+  else if constexpr (Key::name.view() == std::string_view("onRestore") && requires { object.on_restore; }) return (object.on_restore);
   else if constexpr (Key::name.view() == std::string_view("onScreenAdded") && requires { object.on_screen_added; }) return (object.on_screen_added);
   else if constexpr (Key::name.view() == std::string_view("onScreenMetricsChanged") && requires { object.on_screen_metrics_changed; }) return (object.on_screen_metrics_changed);
   else if constexpr (Key::name.view() == std::string_view("onScreenRemoved") && requires { object.on_screen_removed; }) return (object.on_screen_removed);
+  else if constexpr (Key::name.view() == std::string_view("onSecondInstance") && requires { object.on_second_instance; }) return (object.on_second_instance);
+  else if constexpr (Key::name.view() == std::string_view("onSelect") && requires { object.on_select; }) return (object.on_select);
   else if constexpr (Key::name.view() == std::string_view("onShow") && requires { object.on_show; }) return (object.on_show);
+  else if constexpr (Key::name.view() == std::string_view("onSocketClose") && requires { object.on_socket_close; }) return (object.on_socket_close);
+  else if constexpr (Key::name.view() == std::string_view("onSocketError") && requires { object.on_socket_error; }) return (object.on_socket_error);
+  else if constexpr (Key::name.view() == std::string_view("onSocketMessage") && requires { object.on_socket_message; }) return (object.on_socket_message);
+  else if constexpr (Key::name.view() == std::string_view("onSocketOpen") && requires { object.on_socket_open; }) return (object.on_socket_open);
+  else if constexpr (Key::name.view() == std::string_view("onSourceEnded") && requires { object.on_source_ended; }) return (object.on_source_ended);
+  else if constexpr (Key::name.view() == std::string_view("onStateChange") && requires { object.on_state_change; }) return (object.on_state_change);
   else if constexpr (Key::name.view() == std::string_view("onTick") && requires { object.on_tick; }) return (object.on_tick);
+  else if constexpr (Key::name.view() == std::string_view("onUpdate") && requires { object.on_update; }) return (object.on_update);
+  else if constexpr (Key::name.view() == std::string_view("onYoyo") && requires { object.on_yoyo; }) return (object.on_yoyo);
   else if constexpr (Key::name.view() == std::string_view("once") && requires { object.once; }) return (object.once);
+  else if constexpr (Key::name.view() == std::string_view("opacity") && requires { object.opacity; }) return (object.opacity);
+  else if constexpr (Key::name.view() == std::string_view("opcode") && requires { object.opcode; }) return (object.opcode);
+  else if constexpr (Key::name.view() == std::string_view("open") && requires { object.open; }) return (object.open);
+  else if constexpr (Key::name.view() == std::string_view("openSocket") && requires { object.open_socket; }) return (object.open_socket);
+  else if constexpr (Key::name.view() == std::string_view("openTcpSocket") && requires { object.open_tcp_socket; }) return (object.open_tcp_socket);
+  else if constexpr (Key::name.view() == std::string_view("operands") && requires { object.operands; }) return (object.operands);
   else if constexpr (Key::name.view() == std::string_view("operation") && requires { object.operation; }) return (object.operation);
   else if constexpr (Key::name.view() == std::string_view("operator") && requires { object.operator_; }) return (object.operator_);
+  else if constexpr (Key::name.view() == std::string_view("options") && requires { object.options; }) return (object.options);
+  else if constexpr (Key::name.view() == std::string_view("orderedModifiers") && requires { object.ordered_modifiers; }) return (object.ordered_modifiers);
   else if constexpr (Key::name.view() == std::string_view("orientation") && requires { object.orientation; }) return (object.orientation);
   else if constexpr (Key::name.view() == std::string_view("orientationW") && requires { object.orientation_w; }) return (object.orientation_w);
   else if constexpr (Key::name.view() == std::string_view("orientationX") && requires { object.orientation_x; }) return (object.orientation_x);
@@ -441,49 +1117,122 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("origin") && requires { object.origin; }) return (object.origin);
   else if constexpr (Key::name.view() == std::string_view("originX") && requires { object.origin_x; }) return (object.origin_x);
   else if constexpr (Key::name.view() == std::string_view("originY") && requires { object.origin_y; }) return (object.origin_y);
+  else if constexpr (Key::name.view() == std::string_view("originalHeight") && requires { object.original_height; }) return (object.original_height);
+  else if constexpr (Key::name.view() == std::string_view("originalWidth") && requires { object.original_width; }) return (object.original_width);
   else if constexpr (Key::name.view() == std::string_view("osBuild") && requires { object.os_build; }) return (object.os_build);
   else if constexpr (Key::name.view() == std::string_view("osName") && requires { object.os_name; }) return (object.os_name);
   else if constexpr (Key::name.view() == std::string_view("osVersion") && requires { object.os_version; }) return (object.os_version);
+  else if constexpr (Key::name.view() == std::string_view("outcome") && requires { object.outcome; }) return (object.outcome);
   else if constexpr (Key::name.view() == std::string_view("outerConeCos") && requires { object.outer_cone_cos; }) return (object.outer_cone_cos);
   else if constexpr (Key::name.view() == std::string_view("outerConeDegrees") && requires { object.outer_cone_degrees; }) return (object.outer_cone_degrees);
+  else if constexpr (Key::name.view() == std::string_view("overState") && requires { object.over_state; }) return (object.over_state);
   else if constexpr (Key::name.view() == std::string_view("overlapping") && requires { object.overlapping; }) return (object.overlapping);
-  else if constexpr (Key::name.view() == std::string_view("overlaysContent") && requires { object.overlays_content; }) return (object.overlays_content);
+  else if constexpr (Key::name.view() == std::string_view("overwrite") && requires { object.overwrite; }) return (object.overwrite);
+  else if constexpr (Key::name.view() == std::string_view("owner") && requires { object.owner; }) return (object.owner);
+  else if constexpr (Key::name.view() == std::string_view("ownsElement") && requires { object.owns_element; }) return (object.owns_element);
+  else if constexpr (Key::name.view() == std::string_view("padding") && requires { object.padding; }) return (object.padding);
+  else if constexpr (Key::name.view() == std::string_view("pageIds") && requires { object.page_ids; }) return (object.page_ids);
   else if constexpr (Key::name.view() == std::string_view("pages") && requires { object.pages; }) return (object.pages);
   else if constexpr (Key::name.view() == std::string_view("parent") && requires { object.parent; }) return (object.parent);
+  else if constexpr (Key::name.view() == std::string_view("parentIndices") && requires { object.parent_indices; }) return (object.parent_indices);
+  else if constexpr (Key::name.view() == std::string_view("parentReferenceId") && requires { object.parent_reference_id; }) return (object.parent_reference_id);
+  else if constexpr (Key::name.view() == std::string_view("parentWindow") && requires { object.parent_window; }) return (object.parent_window);
   else if constexpr (Key::name.view() == std::string_view("particleLifespan") && requires { object.particle_lifespan; }) return (object.particle_lifespan);
   else if constexpr (Key::name.view() == std::string_view("particleLifespanVariance") && requires { object.particle_lifespan_variance; }) return (object.particle_lifespan_variance);
+  else if constexpr (Key::name.view() == std::string_view("passes") && requires { object.passes; }) return (object.passes);
+  else if constexpr (Key::name.view() == std::string_view("passwordCharacter") && requires { object.password_character; }) return (object.password_character);
+  else if constexpr (Key::name.view() == std::string_view("path") && requires { object.path; }) return (object.path);
   else if constexpr (Key::name.view() == std::string_view("paused") && requires { object.paused; }) return (object.paused);
+  else if constexpr (Key::name.view() == std::string_view("payload") && requires { object.payload; }) return (object.payload);
+  else if constexpr (Key::name.view() == std::string_view("pbrSampleBindGroupLayout") && requires { object.pbr_sample_bind_group_layout; }) return (object.pbr_sample_bind_group_layout);
   else if constexpr (Key::name.view() == std::string_view("pcfRadius") && requires { object.pcf_radius; }) return (object.pcf_radius);
   else if constexpr (Key::name.view() == std::string_view("pedestal") && requires { object.pedestal; }) return (object.pedestal);
+  else if constexpr (Key::name.view() == std::string_view("percentage") && requires { object.percentage; }) return (object.percentage);
+  else if constexpr (Key::name.view() == std::string_view("permissionState") && requires { object.permission_state; }) return (object.permission_state);
+  else if constexpr (Key::name.view() == std::string_view("permissions") && requires { object.permissions; }) return (object.permissions);
+  else if constexpr (Key::name.view() == std::string_view("persistence") && requires { object.persistence; }) return (object.persistence);
+  else if constexpr (Key::name.view() == std::string_view("phase") && requires { object.phase; }) return (object.phase);
   else if constexpr (Key::name.view() == std::string_view("physicalHeight") && requires { object.physical_height; }) return (object.physical_height);
   else if constexpr (Key::name.view() == std::string_view("physicalWidth") && requires { object.physical_width; }) return (object.physical_width);
+  else if constexpr (Key::name.view() == std::string_view("pitch") && requires { object.pitch; }) return (object.pitch);
+  else if constexpr (Key::name.view() == std::string_view("pivotScreenX") && requires { object.pivot_screen_x; }) return (object.pivot_screen_x);
+  else if constexpr (Key::name.view() == std::string_view("pivotScreenY") && requires { object.pivot_screen_y; }) return (object.pivot_screen_y);
+  else if constexpr (Key::name.view() == std::string_view("pivotWorldX") && requires { object.pivot_world_x; }) return (object.pivot_world_x);
+  else if constexpr (Key::name.view() == std::string_view("pivotWorldY") && requires { object.pivot_world_y; }) return (object.pivot_world_y);
   else if constexpr (Key::name.view() == std::string_view("pivotX") && requires { object.pivot_x; }) return (object.pivot_x);
   else if constexpr (Key::name.view() == std::string_view("pivotY") && requires { object.pivot_y; }) return (object.pivot_y);
   else if constexpr (Key::name.view() == std::string_view("pixelDepth") && requires { object.pixel_depth; }) return (object.pixel_depth);
   else if constexpr (Key::name.view() == std::string_view("pixelFormat") && requires { object.pixel_format; }) return (object.pixel_format);
   else if constexpr (Key::name.view() == std::string_view("pixelRatio") && requires { object.pixel_ratio; }) return (object.pixel_ratio);
+  else if constexpr (Key::name.view() == std::string_view("placements") && requires { object.placements; }) return (object.placements);
+  else if constexpr (Key::name.view() == std::string_view("platform") && requires { object.platform; }) return (object.platform);
   else if constexpr (Key::name.view() == std::string_view("platformString") && requires { object.platform_string; }) return (object.platform_string);
+  else if constexpr (Key::name.view() == std::string_view("playMode") && requires { object.play_mode; }) return (object.play_mode);
   else if constexpr (Key::name.view() == std::string_view("playbackRate") && requires { object.playback_rate; }) return (object.playback_rate);
+  else if constexpr (Key::name.view() == std::string_view("player") && requires { object.player; }) return (object.player);
+  else if constexpr (Key::name.view() == std::string_view("players") && requires { object.players; }) return (object.players);
+  else if constexpr (Key::name.view() == std::string_view("playing") && requires { object.playing; }) return (object.playing);
   else if constexpr (Key::name.view() == std::string_view("point") && requires { object.point; }) return (object.point);
+  else if constexpr (Key::name.view() == std::string_view("pointAX") && requires { object.point_ax; }) return (object.point_ax);
+  else if constexpr (Key::name.view() == std::string_view("pointAY") && requires { object.point_ay; }) return (object.point_ay);
+  else if constexpr (Key::name.view() == std::string_view("pointAZ") && requires { object.point_az; }) return (object.point_az);
+  else if constexpr (Key::name.view() == std::string_view("pointBX") && requires { object.point_bx; }) return (object.point_bx);
+  else if constexpr (Key::name.view() == std::string_view("pointBY") && requires { object.point_by; }) return (object.point_by);
+  else if constexpr (Key::name.view() == std::string_view("pointBZ") && requires { object.point_bz; }) return (object.point_bz);
   else if constexpr (Key::name.view() == std::string_view("pointCount") && requires { object.point_count; }) return (object.point_count);
+  else if constexpr (Key::name.view() == std::string_view("pointCounts") && requires { object.point_counts; }) return (object.point_counts);
+  else if constexpr (Key::name.view() == std::string_view("pointFeatureIds") && requires { object.point_feature_ids; }) return (object.point_feature_ids);
+  else if constexpr (Key::name.view() == std::string_view("pointStarts") && requires { object.point_starts; }) return (object.point_starts);
+  else if constexpr (Key::name.view() == std::string_view("pointValues") && requires { object.point_values; }) return (object.point_values);
+  else if constexpr (Key::name.view() == std::string_view("pointerId") && requires { object.pointer_id; }) return (object.pointer_id);
   else if constexpr (Key::name.view() == std::string_view("pointerWidth") && requires { object.pointer_width; }) return (object.pointer_width);
   else if constexpr (Key::name.view() == std::string_view("points") && requires { object.points; }) return (object.points);
+  else if constexpr (Key::name.view() == std::string_view("polar") && requires { object.polar; }) return (object.polar);
+  else if constexpr (Key::name.view() == std::string_view("pool") && requires { object.pool; }) return (object.pool);
   else if constexpr (Key::name.view() == std::string_view("position") && requires { object.position; }) return (object.position);
   else if constexpr (Key::name.view() == std::string_view("positions") && requires { object.positions; }) return (object.positions);
+  else if constexpr (Key::name.view() == std::string_view("power") && requires { object.power; }) return (object.power);
+  else if constexpr (Key::name.view() == std::string_view("powerOfTwo") && requires { object.power_of_two; }) return (object.power_of_two);
+  else if constexpr (Key::name.view() == std::string_view("powerScratch") && requires { object.power_scratch; }) return (object.power_scratch);
+  else if constexpr (Key::name.view() == std::string_view("precision") && requires { object.precision; }) return (object.precision);
+  else if constexpr (Key::name.view() == std::string_view("preferences") && requires { object.preferences; }) return (object.preferences);
+  else if constexpr (Key::name.view() == std::string_view("prefilteredPipeline") && requires { object.prefiltered_pipeline; }) return (object.prefiltered_pipeline);
+  else if constexpr (Key::name.view() == std::string_view("premultiplied") && requires { object.premultiplied; }) return (object.premultiplied);
   else if constexpr (Key::name.view() == std::string_view("premultipliedAlpha") && requires { object.premultiplied_alpha; }) return (object.premultiplied_alpha);
+  else if constexpr (Key::name.view() == std::string_view("premultiplyAlpha") && requires { object.premultiply_alpha; }) return (object.premultiply_alpha);
   else if constexpr (Key::name.view() == std::string_view("prepare") && requires { object.prepare; }) return (object.prepare);
   else if constexpr (Key::name.view() == std::string_view("preserveAlpha") && requires { object.preserve_alpha; }) return (object.preserve_alpha);
+  else if constexpr (Key::name.view() == std::string_view("pressed") && requires { object.pressed; }) return (object.pressed);
   else if constexpr (Key::name.view() == std::string_view("pressure") && requires { object.pressure; }) return (object.pressure);
+  else if constexpr (Key::name.view() == std::string_view("prevX") && requires { object.prev_x; }) return (object.prev_x);
+  else if constexpr (Key::name.view() == std::string_view("prevY") && requires { object.prev_y; }) return (object.prev_y);
+  else if constexpr (Key::name.view() == std::string_view("prevZ") && requires { object.prev_z; }) return (object.prev_z);
   else if constexpr (Key::name.view() == std::string_view("previousWorldTransform") && requires { object.previous_world_transform; }) return (object.previous_world_transform);
   else if constexpr (Key::name.view() == std::string_view("priority") && requires { object.priority; }) return (object.priority);
+  else if constexpr (Key::name.view() == std::string_view("probes") && requires { object.probes; }) return (object.probes);
   else if constexpr (Key::name.view() == std::string_view("productName") && requires { object.product_name; }) return (object.product_name);
+  else if constexpr (Key::name.view() == std::string_view("progress") && requires { object.progress; }) return (object.progress);
   else if constexpr (Key::name.view() == std::string_view("projection") && requires { object.projection; }) return (object.projection);
+  else if constexpr (Key::name.view() == std::string_view("projectionType") && requires { object.projection_type; }) return (object.projection_type);
+  else if constexpr (Key::name.view() == std::string_view("prompt") && requires { object.prompt; }) return (object.prompt);
   else if constexpr (Key::name.view() == std::string_view("promptForAccess") && requires { object.prompt_for_access; }) return (object.prompt_for_access);
+  else if constexpr (Key::name.view() == std::string_view("properties") && requires { object.properties; }) return (object.properties);
+  else if constexpr (Key::name.view() == std::string_view("property") && requires { object.property; }) return (object.property);
+  else if constexpr (Key::name.view() == std::string_view("propertyMap") && requires { object.property_map; }) return (object.property_map);
+  else if constexpr (Key::name.view() == std::string_view("protocol") && requires { object.protocol; }) return (object.protocol);
+  else if constexpr (Key::name.view() == std::string_view("quality") && requires { object.quality; }) return (object.quality);
+  else if constexpr (Key::name.view() == std::string_view("quaternion") && requires { object.quaternion; }) return (object.quaternion);
+  else if constexpr (Key::name.view() == std::string_view("query") && requires { object.query; }) return (object.query);
   else if constexpr (Key::name.view() == std::string_view("queryPermission") && requires { object.query_permission; }) return (object.query_permission);
+  else if constexpr (Key::name.view() == std::string_view("queryPoint") && requires { object.query_point; }) return (object.query_point);
+  else if constexpr (Key::name.view() == std::string_view("queryRay") && requires { object.query_ray; }) return (object.query_ray);
+  else if constexpr (Key::name.view() == std::string_view("queryRegion") && requires { object.query_region; }) return (object.query_region);
+  else if constexpr (Key::name.view() == std::string_view("queryShapeCast") && requires { object.query_shape_cast; }) return (object.query_shape_cast);
   else if constexpr (Key::name.view() == std::string_view("querySpatialPairs") && requires { object.query_spatial_pairs; }) return (object.query_spatial_pairs);
   else if constexpr (Key::name.view() == std::string_view("querySpatialPoint") && requires { object.query_spatial_point; }) return (object.query_spatial_point);
   else if constexpr (Key::name.view() == std::string_view("querySpatialRay") && requires { object.query_spatial_ray; }) return (object.query_spatial_ray);
   else if constexpr (Key::name.view() == std::string_view("querySpatialRegion") && requires { object.query_spatial_region; }) return (object.query_spatial_region);
+  else if constexpr (Key::name.view() == std::string_view("quit") && requires { object.quit; }) return (object.quit);
   else if constexpr (Key::name.view() == std::string_view("rAX") && requires { object.r_ax; }) return (object.r_ax);
   else if constexpr (Key::name.view() == std::string_view("rAY") && requires { object.r_ay; }) return (object.r_ay);
   else if constexpr (Key::name.view() == std::string_view("rAZ") && requires { object.r_az; }) return (object.r_az);
@@ -494,36 +1243,100 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("radialAccelVariance") && requires { object.radial_accel_variance; }) return (object.radial_accel_variance);
   else if constexpr (Key::name.view() == std::string_view("radialAcceleration") && requires { object.radial_acceleration; }) return (object.radial_acceleration);
   else if constexpr (Key::name.view() == std::string_view("radius") && requires { object.radius; }) return (object.radius);
+  else if constexpr (Key::name.view() == std::string_view("radiusX") && requires { object.radius_x; }) return (object.radius_x);
+  else if constexpr (Key::name.view() == std::string_view("radiusY") && requires { object.radius_y; }) return (object.radius_y);
+  else if constexpr (Key::name.view() == std::string_view("random") && requires { object.random; }) return (object.random);
   else if constexpr (Key::name.view() == std::string_view("range") && requires { object.range; }) return (object.range);
+  else if constexpr (Key::name.view() == std::string_view("ranges") && requires { object.ranges; }) return (object.ranges);
+  else if constexpr (Key::name.view() == std::string_view("rasterizerBackend") && requires { object.rasterizer_backend; }) return (object.rasterizer_backend);
+  else if constexpr (Key::name.view() == std::string_view("ratio") && requires { object.ratio; }) return (object.ratio);
+  else if constexpr (Key::name.view() == std::string_view("ratios") && requires { object.ratios; }) return (object.ratios);
+  else if constexpr (Key::name.view() == std::string_view("read") && requires { object.read; }) return (object.read);
+  else if constexpr (Key::name.view() == std::string_view("readBitmap") && requires { object.read_bitmap; }) return (object.read_bitmap);
+  else if constexpr (Key::name.view() == std::string_view("readBodies") && requires { object.read_bodies; }) return (object.read_bodies);
   else if constexpr (Key::name.view() == std::string_view("readBookmark") && requires { object.read_bookmark; }) return (object.read_bookmark);
+  else if constexpr (Key::name.view() == std::string_view("readContacts") && requires { object.read_contacts; }) return (object.read_contacts);
   else if constexpr (Key::name.view() == std::string_view("readFormat") && requires { object.read_format; }) return (object.read_format);
   else if constexpr (Key::name.view() == std::string_view("readHtml") && requires { object.read_html; }) return (object.read_html);
   else if constexpr (Key::name.view() == std::string_view("readImage") && requires { object.read_image; }) return (object.read_image);
   else if constexpr (Key::name.view() == std::string_view("readItems") && requires { object.read_items; }) return (object.read_items);
+  else if constexpr (Key::name.view() == std::string_view("readJoints") && requires { object.read_joints; }) return (object.read_joints);
+  else if constexpr (Key::name.view() == std::string_view("readOnly") && requires { object.read_only; }) return (object.read_only);
   else if constexpr (Key::name.view() == std::string_view("readRTF") && requires { object.read_rtf; }) return (object.read_rtf);
   else if constexpr (Key::name.view() == std::string_view("readText") && requires { object.read_text; }) return (object.read_text);
   else if constexpr (Key::name.view() == std::string_view("reason") && requires { object.reason; }) return (object.reason);
   else if constexpr (Key::name.view() == std::string_view("red") && requires { object.red; }) return (object.red);
   else if constexpr (Key::name.view() == std::string_view("redBias") && requires { object.red_bias; }) return (object.red_bias);
   else if constexpr (Key::name.view() == std::string_view("redScale") && requires { object.red_scale; }) return (object.red_scale);
+  else if constexpr (Key::name.view() == std::string_view("referenceAngle") && requires { object.reference_angle; }) return (object.reference_angle);
+  else if constexpr (Key::name.view() == std::string_view("referencedPages") && requires { object.referenced_pages; }) return (object.referenced_pages);
+  else if constexpr (Key::name.view() == std::string_view("reflect") && requires { object.reflect; }) return (object.reflect);
   else if constexpr (Key::name.view() == std::string_view("refresh") && requires { object.refresh; }) return (object.refresh);
   else if constexpr (Key::name.view() == std::string_view("refreshRate") && requires { object.refresh_rate; }) return (object.refresh_rate);
+  else if constexpr (Key::name.view() == std::string_view("regionBlend") && requires { object.region_blend; }) return (object.region_blend);
+  else if constexpr (Key::name.view() == std::string_view("regionDuration") && requires { object.region_duration; }) return (object.region_duration);
+  else if constexpr (Key::name.view() == std::string_view("regionElapsed") && requires { object.region_elapsed; }) return (object.region_elapsed);
   else if constexpr (Key::name.view() == std::string_view("regionIdMax") && requires { object.region_id_max; }) return (object.region_id_max);
   else if constexpr (Key::name.view() == std::string_view("regionIdMin") && requires { object.region_id_min; }) return (object.region_id_min);
+  else if constexpr (Key::name.view() == std::string_view("regionIndex") && requires { object.region_index; }) return (object.region_index);
+  else if constexpr (Key::name.view() == std::string_view("regionStates") && requires { object.region_states; }) return (object.region_states);
+  else if constexpr (Key::name.view() == std::string_view("regionTransitions") && requires { object.region_transitions; }) return (object.region_transitions);
+  else if constexpr (Key::name.view() == std::string_view("regions") && requires { object.regions; }) return (object.regions);
+  else if constexpr (Key::name.view() == std::string_view("register") && requires { object.register_; }) return (object.register_);
+  else if constexpr (Key::name.view() == std::string_view("registeredCount") && requires { object.registered_count; }) return (object.registered_count);
+  else if constexpr (Key::name.view() == std::string_view("registrarImport") && requires { object.registrar_import; }) return (object.registrar_import);
+  else if constexpr (Key::name.view() == std::string_view("registrarSymbol") && requires { object.registrar_symbol; }) return (object.registrar_symbol);
+  else if constexpr (Key::name.view() == std::string_view("registry") && requires { object.registry; }) return (object.registry);
+  else if constexpr (Key::name.view() == std::string_view("relatedId") && requires { object.related_id; }) return (object.related_id);
   else if constexpr (Key::name.view() == std::string_view("relative") && requires { object.relative; }) return (object.relative);
+  else if constexpr (Key::name.view() == std::string_view("relaunch") && requires { object.relaunch; }) return (object.relaunch);
+  else if constexpr (Key::name.view() == std::string_view("release") && requires { object.release; }) return (object.release);
+  else if constexpr (Key::name.view() == std::string_view("releaseElement") && requires { object.release_element; }) return (object.release_element);
+  else if constexpr (Key::name.view() == std::string_view("releaseSingleInstanceLock") && requires { object.release_single_instance_lock; }) return (object.release_single_instance_lock);
+  else if constexpr (Key::name.view() == std::string_view("removeAsDefault") && requires { object.remove_as_default; }) return (object.remove_as_default);
   else if constexpr (Key::name.view() == std::string_view("removeNode") && requires { object.remove_node; }) return (object.remove_node);
   else if constexpr (Key::name.view() == std::string_view("removeSpatialObject") && requires { object.remove_spatial_object; }) return (object.remove_spatial_object);
+  else if constexpr (Key::name.view() == std::string_view("renderEffects") && requires { object.render_effects; }) return (object.render_effects);
+  else if constexpr (Key::name.view() == std::string_view("renderRootGuard") && requires { object.render_root_guard; }) return (object.render_root_guard);
+  else if constexpr (Key::name.view() == std::string_view("renderers") && requires { object.renderers; }) return (object.renderers);
+  else if constexpr (Key::name.view() == std::string_view("repeat") && requires { object.repeat; }) return (object.repeat);
   else if constexpr (Key::name.view() == std::string_view("repeatCount") && requires { object.repeat_count; }) return (object.repeat_count);
+  else if constexpr (Key::name.view() == std::string_view("reportDiagnostic") && requires { object.report_diagnostic; }) return (object.report_diagnostic);
   else if constexpr (Key::name.view() == std::string_view("request") && requires { object.request; }) return (object.request);
+  else if constexpr (Key::name.view() == std::string_view("requestAccess") && requires { object.request_access; }) return (object.request_access);
+  else if constexpr (Key::name.view() == std::string_view("requestAttention") && requires { object.request_attention; }) return (object.request_attention);
+  else if constexpr (Key::name.view() == std::string_view("requestMediaAccess") && requires { object.request_media_access; }) return (object.request_media_access);
   else if constexpr (Key::name.view() == std::string_view("requestPermission") && requires { object.request_permission; }) return (object.request_permission);
   else if constexpr (Key::name.view() == std::string_view("requestPersistence") && requires { object.request_persistence; }) return (object.request_persistence);
+  else if constexpr (Key::name.view() == std::string_view("requestSingleInstanceLock") && requires { object.request_single_instance_lock; }) return (object.request_single_instance_lock);
+  else if constexpr (Key::name.view() == std::string_view("requestWakeLock") && requires { object.request_wake_lock; }) return (object.request_wake_lock);
+  else if constexpr (Key::name.view() == std::string_view("requestedCount") && requires { object.requested_count; }) return (object.requested_count);
+  else if constexpr (Key::name.view() == std::string_view("required") && requires { object.required; }) return (object.required);
+  else if constexpr (Key::name.view() == std::string_view("requiredCount") && requires { object.required_count; }) return (object.required_count);
+  else if constexpr (Key::name.view() == std::string_view("requiredPointCount") && requires { object.required_point_count; }) return (object.required_point_count);
+  else if constexpr (Key::name.view() == std::string_view("requirements") && requires { object.requirements; }) return (object.requirements);
+  else if constexpr (Key::name.view() == std::string_view("resizable") && requires { object.resizable; }) return (object.resizable);
   else if constexpr (Key::name.view() == std::string_view("resize") && requires { object.resize; }) return (object.resize);
+  else if constexpr (Key::name.view() == std::string_view("resizeHandle") && requires { object.resize_handle; }) return (object.resize_handle);
   else if constexpr (Key::name.view() == std::string_view("resolution") && requires { object.resolution; }) return (object.resolution);
+  else if constexpr (Key::name.view() == std::string_view("resolvePage") && requires { object.resolve_page; }) return (object.resolve_page);
+  else if constexpr (Key::name.view() == std::string_view("resolveSlotContent") && requires { object.resolve_slot_content; }) return (object.resolve_slot_content);
+  else if constexpr (Key::name.view() == std::string_view("resolveTexture") && requires { object.resolve_texture; }) return (object.resolve_texture);
+  else if constexpr (Key::name.view() == std::string_view("resolvers") && requires { object.resolvers; }) return (object.resolvers);
+  else if constexpr (Key::name.view() == std::string_view("resources") && requires { object.resources; }) return (object.resources);
+  else if constexpr (Key::name.view() == std::string_view("responseType") && requires { object.response_type; }) return (object.response_type);
+  else if constexpr (Key::name.view() == std::string_view("restTranslation") && requires { object.rest_translation; }) return (object.rest_translation);
   else if constexpr (Key::name.view() == std::string_view("restitution") && requires { object.restitution; }) return (object.restitution);
+  else if constexpr (Key::name.view() == std::string_view("restore") && requires { object.restore; }) return (object.restore);
+  else if constexpr (Key::name.view() == std::string_view("restrict") && requires { object.restrict; }) return (object.restrict);
+  else if constexpr (Key::name.view() == std::string_view("resumeDevice") && requires { object.resume_device; }) return (object.resume_device);
+  else if constexpr (Key::name.view() == std::string_view("reveal") && requires { object.reveal; }) return (object.reveal);
+  else if constexpr (Key::name.view() == std::string_view("reverse") && requires { object.reverse; }) return (object.reverse);
+  else if constexpr (Key::name.view() == std::string_view("revokeObjectUrl") && requires { object.revoke_object_url; }) return (object.revoke_object_url);
+  else if constexpr (Key::name.view() == std::string_view("rgb") && requires { object.rgb; }) return (object.rgb);
   else if constexpr (Key::name.view() == std::string_view("right") && requires { object.right; }) return (object.right);
+  else if constexpr (Key::name.view() == std::string_view("rightMargin") && requires { object.right_margin; }) return (object.right_margin);
   else if constexpr (Key::name.view() == std::string_view("root") && requires { object.root; }) return (object.root);
-  else if constexpr (Key::name.view() == std::string_view("rotatePerSecond") && requires { object.rotate_per_second; }) return (object.rotate_per_second);
-  else if constexpr (Key::name.view() == std::string_view("rotatePerSecondVariance") && requires { object.rotate_per_second_variance; }) return (object.rotate_per_second_variance);
   else if constexpr (Key::name.view() == std::string_view("rotated") && requires { object.rotated; }) return (object.rotated);
   else if constexpr (Key::name.view() == std::string_view("rotation") && requires { object.rotation; }) return (object.rotation);
   else if constexpr (Key::name.view() == std::string_view("rotationAmplitude") && requires { object.rotation_amplitude; }) return (object.rotation_amplitude);
@@ -531,14 +1344,23 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("rotationEndVariance") && requires { object.rotation_end_variance; }) return (object.rotation_end_variance);
   else if constexpr (Key::name.view() == std::string_view("rotationSpeedMax") && requires { object.rotation_speed_max; }) return (object.rotation_speed_max);
   else if constexpr (Key::name.view() == std::string_view("rotationSpeedMin") && requires { object.rotation_speed_min; }) return (object.rotation_speed_min);
+  else if constexpr (Key::name.view() == std::string_view("rotationSpeeds") && requires { object.rotation_speeds; }) return (object.rotation_speeds);
   else if constexpr (Key::name.view() == std::string_view("rotationStart") && requires { object.rotation_start; }) return (object.rotation_start);
   else if constexpr (Key::name.view() == std::string_view("rotationStartVariance") && requires { object.rotation_start_variance; }) return (object.rotation_start_variance);
+  else if constexpr (Key::name.view() == std::string_view("rotationW") && requires { object.rotation_w; }) return (object.rotation_w);
   else if constexpr (Key::name.view() == std::string_view("rotationX") && requires { object.rotation_x; }) return (object.rotation_x);
   else if constexpr (Key::name.view() == std::string_view("rotationY") && requires { object.rotation_y; }) return (object.rotation_y);
   else if constexpr (Key::name.view() == std::string_view("rotationZ") && requires { object.rotation_z; }) return (object.rotation_z);
+  else if constexpr (Key::name.view() == std::string_view("roughness") && requires { object.roughness; }) return (object.roughness);
+  else if constexpr (Key::name.view() == std::string_view("row") && requires { object.row; }) return (object.row);
+  else if constexpr (Key::name.view() == std::string_view("rows") && requires { object.rows; }) return (object.rows);
+  else if constexpr (Key::name.view() == std::string_view("rtl") && requires { object.rtl; }) return (object.rtl);
   else if constexpr (Key::name.view() == std::string_view("runtime") && requires { object.runtime; }) return (object.runtime);
+  else if constexpr (Key::name.view() == std::string_view("sampleCount") && requires { object.sample_count; }) return (object.sample_count);
+  else if constexpr (Key::name.view() == std::string_view("sampleScratch") && requires { object.sample_scratch; }) return (object.sample_scratch);
   else if constexpr (Key::name.view() == std::string_view("samples") && requires { object.samples; }) return (object.samples);
   else if constexpr (Key::name.view() == std::string_view("saturation") && requires { object.saturation; }) return (object.saturation);
+  else if constexpr (Key::name.view() == std::string_view("saved") && requires { object.saved; }) return (object.saved);
   else if constexpr (Key::name.view() == std::string_view("scale") && requires { object.scale; }) return (object.scale);
   else if constexpr (Key::name.view() == std::string_view("scaleCurve") && requires { object.scale_curve; }) return (object.scale_curve);
   else if constexpr (Key::name.view() == std::string_view("scaleEnd") && requires { object.scale_end; }) return (object.scale_end);
@@ -547,55 +1369,149 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("scaleMin") && requires { object.scale_min; }) return (object.scale_min);
   else if constexpr (Key::name.view() == std::string_view("scaleX") && requires { object.scale_x; }) return (object.scale_x);
   else if constexpr (Key::name.view() == std::string_view("scaleY") && requires { object.scale_y; }) return (object.scale_y);
+  else if constexpr (Key::name.view() == std::string_view("scales") && requires { object.scales; }) return (object.scales);
   else if constexpr (Key::name.view() == std::string_view("scaling") && requires { object.scaling; }) return (object.scaling);
   else if constexpr (Key::name.view() == std::string_view("scanlineIntensity") && requires { object.scanline_intensity; }) return (object.scanline_intensity);
   else if constexpr (Key::name.view() == std::string_view("scattering") && requires { object.scattering; }) return (object.scattering);
-  else if constexpr (Key::name.view() == std::string_view("scope") && requires { object.scope; }) return (object.scope);
+  else if constexpr (Key::name.view() == std::string_view("sceneDepthTexture") && requires { object.scene_depth_texture; }) return (object.scene_depth_texture);
+  else if constexpr (Key::name.view() == std::string_view("sceneTarget") && requires { object.scene_target; }) return (object.scene_target);
+  else if constexpr (Key::name.view() == std::string_view("sceneVelocityTexture") && requires { object.scene_velocity_texture; }) return (object.scene_velocity_texture);
+  else if constexpr (Key::name.view() == std::string_view("scheme") && requires { object.scheme; }) return (object.scheme);
   else if constexpr (Key::name.view() == std::string_view("screen") && requires { object.screen; }) return (object.screen);
+  else if constexpr (Key::name.view() == std::string_view("screenRotation") && requires { object.screen_rotation; }) return (object.screen_rotation);
+  else if constexpr (Key::name.view() == std::string_view("script") && requires { object.script; }) return (object.script);
+  else if constexpr (Key::name.view() == std::string_view("scroll") && requires { object.scroll; }) return (object.scroll);
+  else if constexpr (Key::name.view() == std::string_view("scrollBar") && requires { object.scroll_bar; }) return (object.scroll_bar);
+  else if constexpr (Key::name.view() == std::string_view("scrollV") && requires { object.scroll_v; }) return (object.scroll_v);
+  else if constexpr (Key::name.view() == std::string_view("secondRegion") && requires { object.second_region; }) return (object.second_region);
+  else if constexpr (Key::name.view() == std::string_view("secondaryMap") && requires { object.secondary_map; }) return (object.secondary_map);
+  else if constexpr (Key::name.view() == std::string_view("secondaryScroll") && requires { object.secondary_scroll; }) return (object.secondary_scroll);
+  else if constexpr (Key::name.view() == std::string_view("sectionHandlers") && requires { object.section_handlers; }) return (object.section_handlers);
   else if constexpr (Key::name.view() == std::string_view("seed") && requires { object.seed; }) return (object.seed);
   else if constexpr (Key::name.view() == std::string_view("segment") && requires { object.segment; }) return (object.segment);
+  else if constexpr (Key::name.view() == std::string_view("segments") && requires { object.segments; }) return (object.segments);
+  else if constexpr (Key::name.view() == std::string_view("select") && requires { object.select; }) return (object.select);
+  else if constexpr (Key::name.view() == std::string_view("selectable") && requires { object.selectable; }) return (object.selectable);
+  else if constexpr (Key::name.view() == std::string_view("selectedIndex") && requires { object.selected_index; }) return (object.selected_index);
+  else if constexpr (Key::name.view() == std::string_view("selectedItem") && requires { object.selected_item; }) return (object.selected_item);
+  else if constexpr (Key::name.view() == std::string_view("selectedState") && requires { object.selected_state; }) return (object.selected_state);
   else if constexpr (Key::name.view() == std::string_view("selection") && requires { object.selection; }) return (object.selection);
+  else if constexpr (Key::name.view() == std::string_view("selectionAlpha") && requires { object.selection_alpha; }) return (object.selection_alpha);
+  else if constexpr (Key::name.view() == std::string_view("selectionColor") && requires { object.selection_color; }) return (object.selection_color);
   else if constexpr (Key::name.view() == std::string_view("send") && requires { object.send; }) return (object.send);
+  else if constexpr (Key::name.view() == std::string_view("sendEvent") && requires { object.send_event; }) return (object.send_event);
+  else if constexpr (Key::name.view() == std::string_view("sendNetRequest") && requires { object.send_net_request; }) return (object.send_net_request);
   else if constexpr (Key::name.view() == std::string_view("sensor") && requires { object.sensor; }) return (object.sensor);
+  else if constexpr (Key::name.view() == std::string_view("sensors") && requires { object.sensors; }) return (object.sensors);
+  else if constexpr (Key::name.view() == std::string_view("sequential") && requires { object.sequential; }) return (object.sequential);
   else if constexpr (Key::name.view() == std::string_view("setAccessoryBarVisible") && requires { object.set_accessory_bar_visible; }) return (object.set_accessory_bar_visible);
-  else if constexpr (Key::name.view() == std::string_view("setBackgroundColor") && requires { object.set_background_color; }) return (object.set_background_color);
+  else if constexpr (Key::name.view() == std::string_view("setActivationPolicy") && requires { object.set_activation_policy; }) return (object.set_activation_policy);
+  else if constexpr (Key::name.view() == std::string_view("setAlwaysOnTop") && requires { object.set_always_on_top; }) return (object.set_always_on_top);
+  else if constexpr (Key::name.view() == std::string_view("setAsDefault") && requires { object.set_as_default; }) return (object.set_as_default);
+  else if constexpr (Key::name.view() == std::string_view("setBadgeCount") && requires { object.set_badge_count; }) return (object.set_badge_count);
+  else if constexpr (Key::name.view() == std::string_view("setContentProtection") && requires { object.set_content_protection; }) return (object.set_content_protection);
   else if constexpr (Key::name.view() == std::string_view("setDisplaySize") && requires { object.set_display_size; }) return (object.set_display_size);
+  else if constexpr (Key::name.view() == std::string_view("setDockBadge") && requires { object.set_dock_badge; }) return (object.set_dock_badge);
+  else if constexpr (Key::name.view() == std::string_view("setDockMenu") && requires { object.set_dock_menu; }) return (object.set_dock_menu);
   else if constexpr (Key::name.view() == std::string_view("setFocus") && requires { object.set_focus; }) return (object.set_focus);
+  else if constexpr (Key::name.view() == std::string_view("setFullscreen") && requires { object.set_fullscreen; }) return (object.set_fullscreen);
+  else if constexpr (Key::name.view() == std::string_view("setHasShadow") && requires { object.set_has_shadow; }) return (object.set_has_shadow);
+  else if constexpr (Key::name.view() == std::string_view("setIcon") && requires { object.set_icon; }) return (object.set_icon);
+  else if constexpr (Key::name.view() == std::string_view("setLoginItem") && requires { object.set_login_item; }) return (object.set_login_item);
+  else if constexpr (Key::name.view() == std::string_view("setMaximumSize") && requires { object.set_maximum_size; }) return (object.set_maximum_size);
+  else if constexpr (Key::name.view() == std::string_view("setMenuBarVisible") && requires { object.set_menu_bar_visible; }) return (object.set_menu_bar_visible);
   else if constexpr (Key::name.view() == std::string_view("setMetadata") && requires { object.set_metadata; }) return (object.set_metadata);
+  else if constexpr (Key::name.view() == std::string_view("setMinimumSize") && requires { object.set_minimum_size; }) return (object.set_minimum_size);
+  else if constexpr (Key::name.view() == std::string_view("setName") && requires { object.set_name; }) return (object.set_name);
   else if constexpr (Key::name.view() == std::string_view("setNode") && requires { object.set_node; }) return (object.set_node);
-  else if constexpr (Key::name.view() == std::string_view("setOverlaysContent") && requires { object.set_overlays_content; }) return (object.set_overlays_content);
+  else if constexpr (Key::name.view() == std::string_view("setOpacity") && requires { object.set_opacity; }) return (object.set_opacity);
+  else if constexpr (Key::name.view() == std::string_view("setParent") && requires { object.set_parent; }) return (object.set_parent);
   else if constexpr (Key::name.view() == std::string_view("setPlaybackState") && requires { object.set_playback_state; }) return (object.set_playback_state);
+  else if constexpr (Key::name.view() == std::string_view("setPosition") && requires { object.set_position; }) return (object.set_position);
   else if constexpr (Key::name.view() == std::string_view("setPositionState") && requires { object.set_position_state; }) return (object.set_position_state);
+  else if constexpr (Key::name.view() == std::string_view("setProgress") && requires { object.set_progress; }) return (object.set_progress);
+  else if constexpr (Key::name.view() == std::string_view("setResizable") && requires { object.set_resizable; }) return (object.set_resizable);
   else if constexpr (Key::name.view() == std::string_view("setResizeMode") && requires { object.set_resize_mode; }) return (object.set_resize_mode);
   else if constexpr (Key::name.view() == std::string_view("setScrollAssistEnabled") && requires { object.set_scroll_assist_enabled; }) return (object.set_scroll_assist_enabled);
+  else if constexpr (Key::name.view() == std::string_view("setSize") && requires { object.set_size; }) return (object.set_size);
+  else if constexpr (Key::name.view() == std::string_view("setSkipTaskbar") && requires { object.set_skip_taskbar; }) return (object.set_skip_taskbar);
+  else if constexpr (Key::name.view() == std::string_view("setSourceGain") && requires { object.set_source_gain; }) return (object.set_source_gain);
+  else if constexpr (Key::name.view() == std::string_view("setSourcePan") && requires { object.set_source_pan; }) return (object.set_source_pan);
+  else if constexpr (Key::name.view() == std::string_view("setSourcePlaybackRate") && requires { object.set_source_playback_rate; }) return (object.set_source_playback_rate);
   else if constexpr (Key::name.view() == std::string_view("setStyle") && requires { object.set_style; }) return (object.set_style);
-  else if constexpr (Key::name.view() == std::string_view("setVisible") && requires { object.set_visible; }) return (object.set_visible);
+  else if constexpr (Key::name.view() == std::string_view("setTitle") && requires { object.set_title; }) return (object.set_title);
+  else if constexpr (Key::name.view() == std::string_view("setUserModelId") && requires { object.set_user_model_id; }) return (object.set_user_model_id);
+  else if constexpr (Key::name.view() == std::string_view("severity") && requires { object.severity; }) return (object.severity);
+  else if constexpr (Key::name.view() == std::string_view("shCoefficients") && requires { object.sh_coefficients; }) return (object.sh_coefficients);
   else if constexpr (Key::name.view() == std::string_view("shaderKey") && requires { object.shader_key; }) return (object.shader_key);
+  else if constexpr (Key::name.view() == std::string_view("shadowAlpha") && requires { object.shadow_alpha; }) return (object.shadow_alpha);
   else if constexpr (Key::name.view() == std::string_view("shadowBias") && requires { object.shadow_bias; }) return (object.shadow_bias);
+  else if constexpr (Key::name.view() == std::string_view("shadowColor") && requires { object.shadow_color; }) return (object.shadow_color);
   else if constexpr (Key::name.view() == std::string_view("shadowFar") && requires { object.shadow_far; }) return (object.shadow_far);
   else if constexpr (Key::name.view() == std::string_view("shadowMapSize") && requires { object.shadow_map_size; }) return (object.shadow_map_size);
   else if constexpr (Key::name.view() == std::string_view("shadowNear") && requires { object.shadow_near; }) return (object.shadow_near);
   else if constexpr (Key::name.view() == std::string_view("shadowStrength") && requires { object.shadow_strength; }) return (object.shadow_strength);
+  else if constexpr (Key::name.view() == std::string_view("shape") && requires { object.shape; }) return (object.shape);
+  else if constexpr (Key::name.view() == std::string_view("shapeCommandKeys") && requires { object.shape_command_keys; }) return (object.shape_command_keys);
+  else if constexpr (Key::name.view() == std::string_view("shapeRasterizer") && requires { object.shape_rasterizer; }) return (object.shape_rasterizer);
+  else if constexpr (Key::name.view() == std::string_view("shapeRun") && requires { object.shape_run; }) return (object.shape_run);
+  else if constexpr (Key::name.view() == std::string_view("share") && requires { object.share; }) return (object.share);
   else if constexpr (Key::name.view() == std::string_view("sheenColor") && requires { object.sheen_color; }) return (object.sheen_color);
   else if constexpr (Key::name.view() == std::string_view("sheenColorMap") && requires { object.sheen_color_map; }) return (object.sheen_color_map);
   else if constexpr (Key::name.view() == std::string_view("sheenColorMapUvSet") && requires { object.sheen_color_map_uv_set; }) return (object.sheen_color_map_uv_set);
+  else if constexpr (Key::name.view() == std::string_view("sheenEnabled") && requires { object.sheen_enabled; }) return (object.sheen_enabled);
   else if constexpr (Key::name.view() == std::string_view("sheenRoughness") && requires { object.sheen_roughness; }) return (object.sheen_roughness);
   else if constexpr (Key::name.view() == std::string_view("sheenRoughnessMap") && requires { object.sheen_roughness_map; }) return (object.sheen_roughness_map);
   else if constexpr (Key::name.view() == std::string_view("sheenRoughnessMapUvSet") && requires { object.sheen_roughness_map_uv_set; }) return (object.sheen_roughness_map_uv_set);
+  else if constexpr (Key::name.view() == std::string_view("shell") && requires { object.shell; }) return (object.shell);
+  else if constexpr (Key::name.view() == std::string_view("shiftKey") && requires { object.shift_key; }) return (object.shift_key);
+  else if constexpr (Key::name.view() == std::string_view("shininess") && requires { object.shininess; }) return (object.shininess);
+  else if constexpr (Key::name.view() == std::string_view("shortcut") && requires { object.shortcut; }) return (object.shortcut);
   else if constexpr (Key::name.view() == std::string_view("show") && requires { object.show; }) return (object.show);
+  else if constexpr (Key::name.view() == std::string_view("showApp") && requires { object.show_app; }) return (object.show_app);
+  else if constexpr (Key::name.view() == std::string_view("signal") && requires { object.signal; }) return (object.signal);
+  else if constexpr (Key::name.view() == std::string_view("signals") && requires { object.signals; }) return (object.signals);
+  else if constexpr (Key::name.view() == std::string_view("signature") && requires { object.signature; }) return (object.signature);
   else if constexpr (Key::name.view() == std::string_view("size") && requires { object.size; }) return (object.size);
+  else if constexpr (Key::name.view() == std::string_view("skeleton") && requires { object.skeleton; }) return (object.skeleton);
   else if constexpr (Key::name.view() == std::string_view("skewX") && requires { object.skew_x; }) return (object.skew_x);
   else if constexpr (Key::name.view() == std::string_view("skewY") && requires { object.skew_y; }) return (object.skew_y);
+  else if constexpr (Key::name.view() == std::string_view("skin") && requires { object.skin; }) return (object.skin);
+  else if constexpr (Key::name.view() == std::string_view("skinned") && requires { object.skinned; }) return (object.skinned);
+  else if constexpr (Key::name.view() == std::string_view("skinnedNormals") && requires { object.skinned_normals; }) return (object.skinned_normals);
+  else if constexpr (Key::name.view() == std::string_view("skinnedPositions") && requires { object.skinned_positions; }) return (object.skinned_positions);
+  else if constexpr (Key::name.view() == std::string_view("skinnedTangents") && requires { object.skinned_tangents; }) return (object.skinned_tangents);
+  else if constexpr (Key::name.view() == std::string_view("skipTaskbar") && requires { object.skip_taskbar; }) return (object.skip_taskbar);
   else if constexpr (Key::name.view() == std::string_view("skyColor") && requires { object.sky_color; }) return (object.sky_color);
+  else if constexpr (Key::name.view() == std::string_view("sleeping") && requires { object.sleeping; }) return (object.sleeping);
+  else if constexpr (Key::name.view() == std::string_view("slot") && requires { object.slot; }) return (object.slot);
   else if constexpr (Key::name.view() == std::string_view("slotIndex") && requires { object.slot_index; }) return (object.slot_index);
   else if constexpr (Key::name.view() == std::string_view("slots") && requires { object.slots; }) return (object.slots);
+  else if constexpr (Key::name.view() == std::string_view("smartRotation") && requires { object.smart_rotation; }) return (object.smart_rotation);
   else if constexpr (Key::name.view() == std::string_view("smoothTime") && requires { object.smooth_time; }) return (object.smooth_time);
+  else if constexpr (Key::name.view() == std::string_view("smoothness") && requires { object.smoothness; }) return (object.smoothness);
+  else if constexpr (Key::name.view() == std::string_view("snapping") && requires { object.snapping; }) return (object.snapping);
+  else if constexpr (Key::name.view() == std::string_view("snippets") && requires { object.snippets; }) return (object.snippets);
+  else if constexpr (Key::name.view() == std::string_view("socket") && requires { object.socket; }) return (object.socket);
+  else if constexpr (Key::name.view() == std::string_view("softKeyboard") && requires { object.soft_keyboard; }) return (object.soft_keyboard);
   else if constexpr (Key::name.view() == std::string_view("softness") && requires { object.softness; }) return (object.softness);
+  else if constexpr (Key::name.view() == std::string_view("solve") && requires { object.solve; }) return (object.solve);
+  else if constexpr (Key::name.view() == std::string_view("source") && requires { object.source; }) return (object.source);
   else if constexpr (Key::name.view() == std::string_view("sourceHeight") && requires { object.source_height; }) return (object.source_height);
+  else if constexpr (Key::name.view() == std::string_view("sourceIndex") && requires { object.source_index; }) return (object.source_index);
+  else if constexpr (Key::name.view() == std::string_view("sourceKind") && requires { object.source_kind; }) return (object.source_kind);
   else if constexpr (Key::name.view() == std::string_view("sourceMode") && requires { object.source_mode; }) return (object.source_mode);
   else if constexpr (Key::name.view() == std::string_view("sourcePositionVariancex") && requires { object.source_position_variancex; }) return (object.source_position_variancex);
   else if constexpr (Key::name.view() == std::string_view("sourcePositionVariancey") && requires { object.source_position_variancey; }) return (object.source_position_variancey);
+  else if constexpr (Key::name.view() == std::string_view("sourceStateIndex") && requires { object.source_state_index; }) return (object.source_state_index);
   else if constexpr (Key::name.view() == std::string_view("sourceWidth") && requires { object.source_width; }) return (object.source_width);
+  else if constexpr (Key::name.view() == std::string_view("sourceX") && requires { object.source_x; }) return (object.source_x);
+  else if constexpr (Key::name.view() == std::string_view("sourceY") && requires { object.source_y; }) return (object.source_y);
+  else if constexpr (Key::name.view() == std::string_view("sources") && requires { object.sources; }) return (object.sources);
+  else if constexpr (Key::name.view() == std::string_view("spacingX") && requires { object.spacing_x; }) return (object.spacing_x);
+  else if constexpr (Key::name.view() == std::string_view("spacingY") && requires { object.spacing_y; }) return (object.spacing_y);
+  else if constexpr (Key::name.view() == std::string_view("spawn") && requires { object.spawn; }) return (object.spawn);
+  else if constexpr (Key::name.view() == std::string_view("spawnAccumulator") && requires { object.spawn_accumulator; }) return (object.spawn_accumulator);
   else if constexpr (Key::name.view() == std::string_view("spawnHeight") && requires { object.spawn_height; }) return (object.spawn_height);
   else if constexpr (Key::name.view() == std::string_view("spawnRate") && requires { object.spawn_rate; }) return (object.spawn_rate);
   else if constexpr (Key::name.view() == std::string_view("spawnShape") && requires { object.spawn_shape; }) return (object.spawn_shape);
@@ -604,30 +1520,64 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("specularColor") && requires { object.specular_color; }) return (object.specular_color);
   else if constexpr (Key::name.view() == std::string_view("specularColorMap") && requires { object.specular_color_map; }) return (object.specular_color_map);
   else if constexpr (Key::name.view() == std::string_view("specularColorMapUvSet") && requires { object.specular_color_map_uv_set; }) return (object.specular_color_map_uv_set);
+  else if constexpr (Key::name.view() == std::string_view("specularEnabled") && requires { object.specular_enabled; }) return (object.specular_enabled);
+  else if constexpr (Key::name.view() == std::string_view("specularGlossinessMap") && requires { object.specular_glossiness_map; }) return (object.specular_glossiness_map);
   else if constexpr (Key::name.view() == std::string_view("specularMap") && requires { object.specular_map; }) return (object.specular_map);
   else if constexpr (Key::name.view() == std::string_view("specularMapUvSet") && requires { object.specular_map_uv_set; }) return (object.specular_map_uv_set);
   else if constexpr (Key::name.view() == std::string_view("speed") && requires { object.speed; }) return (object.speed);
   else if constexpr (Key::name.view() == std::string_view("speedMax") && requires { object.speed_max; }) return (object.speed_max);
   else if constexpr (Key::name.view() == std::string_view("speedMin") && requires { object.speed_min; }) return (object.speed_min);
   else if constexpr (Key::name.view() == std::string_view("speedVariance") && requires { object.speed_variance; }) return (object.speed_variance);
+  else if constexpr (Key::name.view() == std::string_view("sphereCount") && requires { object.sphere_count; }) return (object.sphere_count);
+  else if constexpr (Key::name.view() == std::string_view("spheres") && requires { object.spheres; }) return (object.spheres);
   else if constexpr (Key::name.view() == std::string_view("spot") && requires { object.spot; }) return (object.spot);
   else if constexpr (Key::name.view() == std::string_view("spotBlend") && requires { object.spot_blend; }) return (object.spot_blend);
   else if constexpr (Key::name.view() == std::string_view("spread") && requires { object.spread; }) return (object.spread);
+  else if constexpr (Key::name.view() == std::string_view("square") && requires { object.square; }) return (object.square);
   else if constexpr (Key::name.view() == std::string_view("stack") && requires { object.stack; }) return (object.stack);
   else if constexpr (Key::name.view() == std::string_view("start") && requires { object.start; }) return (object.start);
+  else if constexpr (Key::name.view() == std::string_view("startCap") && requires { object.start_cap; }) return (object.start_cap);
   else if constexpr (Key::name.view() == std::string_view("startColor") && requires { object.start_color; }) return (object.start_color);
   else if constexpr (Key::name.view() == std::string_view("startColorVariance") && requires { object.start_color_variance; }) return (object.start_color_variance);
+  else if constexpr (Key::name.view() == std::string_view("startData") && requires { object.start_data; }) return (object.start_data);
   else if constexpr (Key::name.view() == std::string_view("startIndex") && requires { object.start_index; }) return (object.start_index);
   else if constexpr (Key::name.view() == std::string_view("startParticleSize") && requires { object.start_particle_size; }) return (object.start_particle_size);
   else if constexpr (Key::name.view() == std::string_view("startParticleSizeVariance") && requires { object.start_particle_size_variance; }) return (object.start_particle_size_variance);
+  else if constexpr (Key::name.view() == std::string_view("startSample") && requires { object.start_sample; }) return (object.start_sample);
+  else if constexpr (Key::name.view() == std::string_view("startScreenX") && requires { object.start_screen_x; }) return (object.start_screen_x);
+  else if constexpr (Key::name.view() == std::string_view("startScreenY") && requires { object.start_screen_y; }) return (object.start_screen_y);
+  else if constexpr (Key::name.view() == std::string_view("startSource") && requires { object.start_source; }) return (object.start_source);
+  else if constexpr (Key::name.view() == std::string_view("startWorldX") && requires { object.start_world_x; }) return (object.start_world_x);
+  else if constexpr (Key::name.view() == std::string_view("startWorldY") && requires { object.start_world_y; }) return (object.start_world_y);
   else if constexpr (Key::name.view() == std::string_view("startX") && requires { object.start_x; }) return (object.start_x);
   else if constexpr (Key::name.view() == std::string_view("startY") && requires { object.start_y; }) return (object.start_y);
   else if constexpr (Key::name.view() == std::string_view("startZ") && requires { object.start_z; }) return (object.start_z);
+  else if constexpr (Key::name.view() == std::string_view("state") && requires { object.state; }) return (object.state);
+  else if constexpr (Key::name.view() == std::string_view("stateMachine") && requires { object.state_machine; }) return (object.state_machine);
+  else if constexpr (Key::name.view() == std::string_view("stateMachines") && requires { object.state_machines; }) return (object.state_machines);
   else if constexpr (Key::name.view() == std::string_view("stated") && requires { object.stated; }) return (object.stated);
+  else if constexpr (Key::name.view() == std::string_view("states") && requires { object.states; }) return (object.states);
+  else if constexpr (Key::name.view() == std::string_view("status") && requires { object.status; }) return (object.status);
+  else if constexpr (Key::name.view() == std::string_view("statusBar") && requires { object.status_bar; }) return (object.status_bar);
+  else if constexpr (Key::name.view() == std::string_view("statusText") && requires { object.status_text; }) return (object.status_text);
+  else if constexpr (Key::name.view() == std::string_view("step") && requires { object.step; }) return (object.step);
   else if constexpr (Key::name.view() == std::string_view("steps") && requires { object.steps; }) return (object.steps);
+  else if constexpr (Key::name.view() == std::string_view("streamEnd") && requires { object.stream_end; }) return (object.stream_end);
+  else if constexpr (Key::name.view() == std::string_view("streamStart") && requires { object.stream_start; }) return (object.stream_start);
+  else if constexpr (Key::name.view() == std::string_view("streaming") && requires { object.streaming; }) return (object.streaming);
   else if constexpr (Key::name.view() == std::string_view("strength") && requires { object.strength; }) return (object.strength);
+  else if constexpr (Key::name.view() == std::string_view("stroke") && requires { object.stroke; }) return (object.stroke);
   else if constexpr (Key::name.view() == std::string_view("strokeBounds") && requires { object.stroke_bounds; }) return (object.stroke_bounds);
+  else if constexpr (Key::name.view() == std::string_view("strokeDasharray") && requires { object.stroke_dasharray; }) return (object.stroke_dasharray);
+  else if constexpr (Key::name.view() == std::string_view("strokeDashoffset") && requires { object.stroke_dashoffset; }) return (object.stroke_dashoffset);
+  else if constexpr (Key::name.view() == std::string_view("strokeLinecap") && requires { object.stroke_linecap; }) return (object.stroke_linecap);
+  else if constexpr (Key::name.view() == std::string_view("strokeLinejoin") && requires { object.stroke_linejoin; }) return (object.stroke_linejoin);
+  else if constexpr (Key::name.view() == std::string_view("strokeMiterlimit") && requires { object.stroke_miterlimit; }) return (object.stroke_miterlimit);
+  else if constexpr (Key::name.view() == std::string_view("strokeOpacity") && requires { object.stroke_opacity; }) return (object.stroke_opacity);
+  else if constexpr (Key::name.view() == std::string_view("strokeTessellator") && requires { object.stroke_tessellator; }) return (object.stroke_tessellator);
+  else if constexpr (Key::name.view() == std::string_view("strokeWidth") && requires { object.stroke_width; }) return (object.stroke_width);
   else if constexpr (Key::name.view() == std::string_view("style") && requires { object.style; }) return (object.style);
+  else if constexpr (Key::name.view() == std::string_view("styleIndex") && requires { object.style_index; }) return (object.style_index);
   else if constexpr (Key::name.view() == std::string_view("subject") && requires { object.subject; }) return (object.subject);
   else if constexpr (Key::name.view() == std::string_view("subpixel") && requires { object.subpixel; }) return (object.subpixel);
   else if constexpr (Key::name.view() == std::string_view("subscribe") && requires { object.subscribe; }) return (object.subscribe);
@@ -641,69 +1591,210 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("subscribeOrientation") && requires { object.subscribe_orientation; }) return (object.subscribe_orientation);
   else if constexpr (Key::name.view() == std::string_view("subscribeProximity") && requires { object.subscribe_proximity; }) return (object.subscribe_proximity);
   else if constexpr (Key::name.view() == std::string_view("subscribeQuaternion") && requires { object.subscribe_quaternion; }) return (object.subscribe_quaternion);
+  else if constexpr (Key::name.view() == std::string_view("subscribeResize") && requires { object.subscribe_resize; }) return (object.subscribe_resize);
+  else if constexpr (Key::name.view() == std::string_view("subsets") && requires { object.subsets; }) return (object.subsets);
+  else if constexpr (Key::name.view() == std::string_view("subsurfaceEnabled") && requires { object.subsurface_enabled; }) return (object.subsurface_enabled);
   else if constexpr (Key::name.view() == std::string_view("supportedAbis") && requires { object.supported_abis; }) return (object.supported_abis);
+  else if constexpr (Key::name.view() == std::string_view("supportedFormats") && requires { object.supported_formats; }) return (object.supported_formats);
+  else if constexpr (Key::name.view() == std::string_view("surface") && requires { object.surface; }) return (object.surface);
+  else if constexpr (Key::name.view() == std::string_view("surfaceOwnership") && requires { object.surface_ownership; }) return (object.surface_ownership);
+  else if constexpr (Key::name.view() == std::string_view("swingLimitImpulse") && requires { object.swing_limit_impulse; }) return (object.swing_limit_impulse);
+  else if constexpr (Key::name.view() == std::string_view("swingLimitY") && requires { object.swing_limit_y; }) return (object.swing_limit_y);
+  else if constexpr (Key::name.view() == std::string_view("swingLimitZ") && requires { object.swing_limit_z; }) return (object.swing_limit_z);
+  else if constexpr (Key::name.view() == std::string_view("tables") && requires { object.tables; }) return (object.tables);
+  else if constexpr (Key::name.view() == std::string_view("tabs") && requires { object.tabs; }) return (object.tabs);
+  else if constexpr (Key::name.view() == std::string_view("tag") && requires { object.tag; }) return (object.tag);
+  else if constexpr (Key::name.view() == std::string_view("tangent0X") && requires { object.tangent0_x; }) return (object.tangent0_x);
+  else if constexpr (Key::name.view() == std::string_view("tangent0Y") && requires { object.tangent0_y; }) return (object.tangent0_y);
+  else if constexpr (Key::name.view() == std::string_view("tangent0Z") && requires { object.tangent0_z; }) return (object.tangent0_z);
+  else if constexpr (Key::name.view() == std::string_view("tangent1X") && requires { object.tangent1_x; }) return (object.tangent1_x);
+  else if constexpr (Key::name.view() == std::string_view("tangent1Y") && requires { object.tangent1_y; }) return (object.tangent1_y);
+  else if constexpr (Key::name.view() == std::string_view("tangent1Z") && requires { object.tangent1_z; }) return (object.tangent1_z);
+  else if constexpr (Key::name.view() == std::string_view("tangentImpulse0") && requires { object.tangent_impulse0; }) return (object.tangent_impulse0);
+  else if constexpr (Key::name.view() == std::string_view("tangentImpulse1") && requires { object.tangent_impulse1; }) return (object.tangent_impulse1);
+  else if constexpr (Key::name.view() == std::string_view("tangentMass0") && requires { object.tangent_mass0; }) return (object.tangent_mass0);
+  else if constexpr (Key::name.view() == std::string_view("tangentMass1") && requires { object.tangent_mass1; }) return (object.tangent_mass1);
   else if constexpr (Key::name.view() == std::string_view("tangentialAccelVariance") && requires { object.tangential_accel_variance; }) return (object.tangential_accel_variance);
   else if constexpr (Key::name.view() == std::string_view("tangentialAcceleration") && requires { object.tangential_acceleration; }) return (object.tangential_acceleration);
+  else if constexpr (Key::name.view() == std::string_view("tangents") && requires { object.tangents; }) return (object.tangents);
+  else if constexpr (Key::name.view() == std::string_view("target") && requires { object.target; }) return (object.target);
+  else if constexpr (Key::name.view() == std::string_view("targetIndex") && requires { object.target_index; }) return (object.target_index);
+  else if constexpr (Key::name.view() == std::string_view("targetRef") && requires { object.target_ref; }) return (object.target_ref);
+  else if constexpr (Key::name.view() == std::string_view("targetStateIndex") && requires { object.target_state_index; }) return (object.target_state_index);
+  else if constexpr (Key::name.view() == std::string_view("targetX") && requires { object.target_x; }) return (object.target_x);
+  else if constexpr (Key::name.view() == std::string_view("targetY") && requires { object.target_y; }) return (object.target_y);
+  else if constexpr (Key::name.view() == std::string_view("targets") && requires { object.targets; }) return (object.targets);
   else if constexpr (Key::name.view() == std::string_view("temperature") && requires { object.temperature; }) return (object.temperature);
+  else if constexpr (Key::name.view() == std::string_view("text") && requires { object.text; }) return (object.text);
+  else if constexpr (Key::name.view() == std::string_view("textField") && requires { object.text_field; }) return (object.text_field);
   else if constexpr (Key::name.view() == std::string_view("textHeight") && requires { object.text_height; }) return (object.text_height);
+  else if constexpr (Key::name.view() == std::string_view("textLayout") && requires { object.text_layout; }) return (object.text_layout);
+  else if constexpr (Key::name.view() == std::string_view("textSegment") && requires { object.text_segment; }) return (object.text_segment);
+  else if constexpr (Key::name.view() == std::string_view("textShaper") && requires { object.text_shaper; }) return (object.text_shaper);
   else if constexpr (Key::name.view() == std::string_view("textWidth") && requires { object.text_width; }) return (object.text_width);
-  else if constexpr (Key::name.view() == std::string_view("textureFileName") && requires { object.texture_file_name; }) return (object.texture_file_name);
+  else if constexpr (Key::name.view() == std::string_view("texture") && requires { object.texture; }) return (object.texture);
+  else if constexpr (Key::name.view() == std::string_view("textureBindGroup") && requires { object.texture_bind_group; }) return (object.texture_bind_group);
+  else if constexpr (Key::name.view() == std::string_view("textureBindGroupLayout") && requires { object.texture_bind_group_layout; }) return (object.texture_bind_group_layout);
+  else if constexpr (Key::name.view() == std::string_view("textureCount") && requires { object.texture_count; }) return (object.texture_count);
+  else if constexpr (Key::name.view() == std::string_view("textureKeys") && requires { object.texture_keys; }) return (object.texture_keys);
+  else if constexpr (Key::name.view() == std::string_view("textureResolvers") && requires { object.texture_resolvers; }) return (object.texture_resolvers);
+  else if constexpr (Key::name.view() == std::string_view("textureSamplers") && requires { object.texture_samplers; }) return (object.texture_samplers);
+  else if constexpr (Key::name.view() == std::string_view("textureSourceKinds") && requires { object.texture_source_kinds; }) return (object.texture_source_kinds);
+  else if constexpr (Key::name.view() == std::string_view("textureViews") && requires { object.texture_views; }) return (object.texture_views);
   else if constexpr (Key::name.view() == std::string_view("thickness") && requires { object.thickness; }) return (object.thickness);
   else if constexpr (Key::name.view() == std::string_view("thicknessMap") && requires { object.thickness_map; }) return (object.thickness_map);
   else if constexpr (Key::name.view() == std::string_view("thicknessMapUvSet") && requires { object.thickness_map_uv_set; }) return (object.thickness_map_uv_set);
   else if constexpr (Key::name.view() == std::string_view("threshold") && requires { object.threshold; }) return (object.threshold);
+  else if constexpr (Key::name.view() == std::string_view("thumb") && requires { object.thumb; }) return (object.thumb);
   else if constexpr (Key::name.view() == std::string_view("tilesets") && requires { object.tilesets; }) return (object.tilesets);
   else if constexpr (Key::name.view() == std::string_view("time") && requires { object.time; }) return (object.time);
+  else if constexpr (Key::name.view() == std::string_view("timeElapsed") && requires { object.time_elapsed; }) return (object.time_elapsed);
   else if constexpr (Key::name.view() == std::string_view("timeline") && requires { object.timeline; }) return (object.timeline);
+  else if constexpr (Key::name.view() == std::string_view("timelineHandlers") && requires { object.timeline_handlers; }) return (object.timeline_handlers);
+  else if constexpr (Key::name.view() == std::string_view("timeoutMs") && requires { object.timeout_ms; }) return (object.timeout_ms);
   else if constexpr (Key::name.view() == std::string_view("timestamp") && requires { object.timestamp; }) return (object.timestamp);
   else if constexpr (Key::name.view() == std::string_view("tint") && requires { object.tint; }) return (object.tint);
+  else if constexpr (Key::name.view() == std::string_view("title") && requires { object.title; }) return (object.title);
+  else if constexpr (Key::name.view() == std::string_view("titleBar") && requires { object.title_bar; }) return (object.title_bar);
+  else if constexpr (Key::name.view() == std::string_view("to") && requires { object.to; }) return (object.to);
+  else if constexpr (Key::name.view() == std::string_view("toIndex") && requires { object.to_index; }) return (object.to_index);
+  else if constexpr (Key::name.view() == std::string_view("toMotion") && requires { object.to_motion; }) return (object.to_motion);
+  else if constexpr (Key::name.view() == std::string_view("toSample") && requires { object.to_sample; }) return (object.to_sample);
+  else if constexpr (Key::name.view() == std::string_view("toX") && requires { object.to_x; }) return (object.to_x);
+  else if constexpr (Key::name.view() == std::string_view("toY") && requires { object.to_y; }) return (object.to_y);
+  else if constexpr (Key::name.view() == std::string_view("toggles") && requires { object.toggles; }) return (object.toggles);
+  else if constexpr (Key::name.view() == std::string_view("tolerance") && requires { object.tolerance; }) return (object.tolerance);
   else if constexpr (Key::name.view() == std::string_view("top") && requires { object.top; }) return (object.top);
+  else if constexpr (Key::name.view() == std::string_view("topology") && requires { object.topology; }) return (object.topology);
   else if constexpr (Key::name.view() == std::string_view("torque") && requires { object.torque; }) return (object.torque);
   else if constexpr (Key::name.view() == std::string_view("torqueX") && requires { object.torque_x; }) return (object.torque_x);
   else if constexpr (Key::name.view() == std::string_view("torqueY") && requires { object.torque_y; }) return (object.torque_y);
   else if constexpr (Key::name.view() == std::string_view("torqueZ") && requires { object.torque_z; }) return (object.torque_z);
+  else if constexpr (Key::name.view() == std::string_view("total") && requires { object.total; }) return (object.total);
+  else if constexpr (Key::name.view() == std::string_view("totalFrames") && requires { object.total_frames; }) return (object.total_frames);
   else if constexpr (Key::name.view() == std::string_view("totalMemory") && requires { object.total_memory; }) return (object.total_memory);
+  else if constexpr (Key::name.view() == std::string_view("totalSize") && requires { object.total_size; }) return (object.total_size);
   else if constexpr (Key::name.view() == std::string_view("touchSupport") && requires { object.touch_support; }) return (object.touch_support);
   else if constexpr (Key::name.view() == std::string_view("touching") && requires { object.touching; }) return (object.touching);
+  else if constexpr (Key::name.view() == std::string_view("track") && requires { object.track; }) return (object.track);
+  else if constexpr (Key::name.view() == std::string_view("traits") && requires { object.traits; }) return (object.traits);
+  else if constexpr (Key::name.view() == std::string_view("transactionDepth") && requires { object.transaction_depth; }) return (object.transaction_depth);
+  else if constexpr (Key::name.view() == std::string_view("transactionIndex") && requires { object.transaction_index; }) return (object.transaction_index);
+  else if constexpr (Key::name.view() == std::string_view("transactionLabel") && requires { object.transaction_label; }) return (object.transaction_label);
   else if constexpr (Key::name.view() == std::string_view("transform") && requires { object.transform; }) return (object.transform);
+  else if constexpr (Key::name.view() == std::string_view("transition") && requires { object.transition; }) return (object.transition);
+  else if constexpr (Key::name.view() == std::string_view("transitionCurve") && requires { object.transition_curve; }) return (object.transition_curve);
+  else if constexpr (Key::name.view() == std::string_view("transitionDuration") && requires { object.transition_duration; }) return (object.transition_duration);
+  else if constexpr (Key::name.view() == std::string_view("transitionElapsed") && requires { object.transition_elapsed; }) return (object.transition_elapsed);
+  else if constexpr (Key::name.view() == std::string_view("transitionFromStateIndex") && requires { object.transition_from_state_index; }) return (object.transition_from_state_index);
+  else if constexpr (Key::name.view() == std::string_view("transitionIndex") && requires { object.transition_index; }) return (object.transition_index);
+  else if constexpr (Key::name.view() == std::string_view("transitionToStateIndex") && requires { object.transition_to_state_index; }) return (object.transition_to_state_index);
+  else if constexpr (Key::name.view() == std::string_view("transitionWeight") && requires { object.transition_weight; }) return (object.transition_weight);
+  else if constexpr (Key::name.view() == std::string_view("transitions") && requires { object.transitions; }) return (object.transitions);
   else if constexpr (Key::name.view() == std::string_view("translationAmplitude") && requires { object.translation_amplitude; }) return (object.translation_amplitude);
   else if constexpr (Key::name.view() == std::string_view("transmission") && requires { object.transmission; }) return (object.transmission);
+  else if constexpr (Key::name.view() == std::string_view("transmissionEnabled") && requires { object.transmission_enabled; }) return (object.transmission_enabled);
   else if constexpr (Key::name.view() == std::string_view("transmissionMap") && requires { object.transmission_map; }) return (object.transmission_map);
   else if constexpr (Key::name.view() == std::string_view("transmissionMapUvSet") && requires { object.transmission_map_uv_set; }) return (object.transmission_map_uv_set);
   else if constexpr (Key::name.view() == std::string_view("transparency") && requires { object.transparency; }) return (object.transparency);
   else if constexpr (Key::name.view() == std::string_view("trauma") && requires { object.trauma; }) return (object.trauma);
+  else if constexpr (Key::name.view() == std::string_view("tray") && requires { object.tray; }) return (object.tray);
+  else if constexpr (Key::name.view() == std::string_view("triangleIndex") && requires { object.triangle_index; }) return (object.triangle_index);
   else if constexpr (Key::name.view() == std::string_view("tweens") && requires { object.tweens; }) return (object.tweens);
   else if constexpr (Key::name.view() == std::string_view("tx") && requires { object.tx; }) return (object.tx);
   else if constexpr (Key::name.view() == std::string_view("ty") && requires { object.ty; }) return (object.ty);
   else if constexpr (Key::name.view() == std::string_view("type") && requires { object.type; }) return (object.type);
+  else if constexpr (Key::name.view() == std::string_view("typeKey") && requires { object.type_key; }) return (object.type_key);
+  else if constexpr (Key::name.view() == std::string_view("u") && requires { object.u; }) return (object.u);
+  else if constexpr (Key::name.view() == std::string_view("uncheckedState") && requires { object.unchecked_state; }) return (object.unchecked_state);
+  else if constexpr (Key::name.view() == std::string_view("uniformBindGroup") && requires { object.uniform_bind_group; }) return (object.uniform_bind_group);
+  else if constexpr (Key::name.view() == std::string_view("uniformBindGroupLayout") && requires { object.uniform_bind_group_layout; }) return (object.uniform_bind_group_layout);
+  else if constexpr (Key::name.view() == std::string_view("uniformBuffer") && requires { object.uniform_buffer; }) return (object.uniform_buffer);
+  else if constexpr (Key::name.view() == std::string_view("uniformFloatCount") && requires { object.uniform_float_count; }) return (object.uniform_float_count);
   else if constexpr (Key::name.view() == std::string_view("uniforms") && requires { object.uniforms; }) return (object.uniforms);
+  else if constexpr (Key::name.view() == std::string_view("units") && requires { object.units; }) return (object.units);
+  else if constexpr (Key::name.view() == std::string_view("unitsPerEm") && requires { object.units_per_em; }) return (object.units_per_em);
+  else if constexpr (Key::name.view() == std::string_view("unpacked") && requires { object.unpacked; }) return (object.unpacked);
+  else if constexpr (Key::name.view() == std::string_view("unregister") && requires { object.unregister; }) return (object.unregister);
+  else if constexpr (Key::name.view() == std::string_view("unregisteredKinds") && requires { object.unregistered_kinds; }) return (object.unregistered_kinds);
+  else if constexpr (Key::name.view() == std::string_view("unresolved") && requires { object.unresolved; }) return (object.unresolved);
+  else if constexpr (Key::name.view() == std::string_view("unresolvedIndexes") && requires { object.unresolved_indexes; }) return (object.unresolved_indexes);
+  else if constexpr (Key::name.view() == std::string_view("unselectedState") && requires { object.unselected_state; }) return (object.unselected_state);
+  else if constexpr (Key::name.view() == std::string_view("unsupportedFields") && requires { object.unsupported_fields; }) return (object.unsupported_fields);
   else if constexpr (Key::name.view() == std::string_view("up") && requires { object.up; }) return (object.up);
+  else if constexpr (Key::name.view() == std::string_view("upState") && requires { object.up_state; }) return (object.up_state);
   else if constexpr (Key::name.view() == std::string_view("updateSpatialObject") && requires { object.update_spatial_object; }) return (object.update_spatial_object);
+  else if constexpr (Key::name.view() == std::string_view("updater") && requires { object.updater; }) return (object.updater);
+  else if constexpr (Key::name.view() == std::string_view("upperAngle") && requires { object.upper_angle; }) return (object.upper_angle);
+  else if constexpr (Key::name.view() == std::string_view("upperAngularX") && requires { object.upper_angular_x; }) return (object.upper_angular_x);
+  else if constexpr (Key::name.view() == std::string_view("upperAngularY") && requires { object.upper_angular_y; }) return (object.upper_angular_y);
+  else if constexpr (Key::name.view() == std::string_view("upperAngularZ") && requires { object.upper_angular_z; }) return (object.upper_angular_z);
+  else if constexpr (Key::name.view() == std::string_view("upperLimitImpulse") && requires { object.upper_limit_impulse; }) return (object.upper_limit_impulse);
+  else if constexpr (Key::name.view() == std::string_view("upperLimitImpulses") && requires { object.upper_limit_impulses; }) return (object.upper_limit_impulses);
+  else if constexpr (Key::name.view() == std::string_view("upperLinearX") && requires { object.upper_linear_x; }) return (object.upper_linear_x);
+  else if constexpr (Key::name.view() == std::string_view("upperLinearY") && requires { object.upper_linear_y; }) return (object.upper_linear_y);
+  else if constexpr (Key::name.view() == std::string_view("upperLinearZ") && requires { object.upper_linear_z; }) return (object.upper_linear_z);
+  else if constexpr (Key::name.view() == std::string_view("upperTranslation") && requires { object.upper_translation; }) return (object.upper_translation);
+  else if constexpr (Key::name.view() == std::string_view("upperTwistAngle") && requires { object.upper_twist_angle; }) return (object.upper_twist_angle);
+  else if constexpr (Key::name.view() == std::string_view("upperTwistImpulse") && requires { object.upper_twist_impulse; }) return (object.upper_twist_impulse);
+  else if constexpr (Key::name.view() == std::string_view("url") && requires { object.url; }) return (object.url);
+  else if constexpr (Key::name.view() == std::string_view("user") && requires { object.user; }) return (object.user);
+  else if constexpr (Key::name.view() == std::string_view("uvOffset") && requires { object.uv_offset; }) return (object.uv_offset);
+  else if constexpr (Key::name.view() == std::string_view("uvRotation") && requires { object.uv_rotation; }) return (object.uv_rotation);
+  else if constexpr (Key::name.view() == std::string_view("uvScale") && requires { object.uv_scale; }) return (object.uv_scale);
+  else if constexpr (Key::name.view() == std::string_view("v") && requires { object.v; }) return (object.v);
   else if constexpr (Key::name.view() == std::string_view("value") && requires { object.value; }) return (object.value);
+  else if constexpr (Key::name.view() == std::string_view("values") && requires { object.values; }) return (object.values);
+  else if constexpr (Key::name.view() == std::string_view("velocities") && requires { object.velocities; }) return (object.velocities);
   else if constexpr (Key::name.view() == std::string_view("velocity") && requires { object.velocity; }) return (object.velocity);
   else if constexpr (Key::name.view() == std::string_view("velocityInheritance") && requires { object.velocity_inheritance; }) return (object.velocity_inheritance);
+  else if constexpr (Key::name.view() == std::string_view("velocityWriters") && requires { object.velocity_writers; }) return (object.velocity_writers);
+  else if constexpr (Key::name.view() == std::string_view("velocityX") && requires { object.velocity_x; }) return (object.velocity_x);
+  else if constexpr (Key::name.view() == std::string_view("velocityY") && requires { object.velocity_y; }) return (object.velocity_y);
+  else if constexpr (Key::name.view() == std::string_view("velocityZ") && requires { object.velocity_z; }) return (object.velocity_z);
   else if constexpr (Key::name.view() == std::string_view("version") && requires { object.version; }) return (object.version);
+  else if constexpr (Key::name.view() == std::string_view("vertex") && requires { object.vertex; }) return (object.vertex);
+  else if constexpr (Key::name.view() == std::string_view("verticalScrollBar") && requires { object.vertical_scroll_bar; }) return (object.vertical_scroll_bar);
+  else if constexpr (Key::name.view() == std::string_view("vertices") && requires { object.vertices; }) return (object.vertices);
   else if constexpr (Key::name.view() == std::string_view("vibrate") && requires { object.vibrate; }) return (object.vibrate);
   else if constexpr (Key::name.view() == std::string_view("vibratePattern") && requires { object.vibrate_pattern; }) return (object.vibrate_pattern);
   else if constexpr (Key::name.view() == std::string_view("vibrateWaveform") && requires { object.vibrate_waveform; }) return (object.vibrate_waveform);
+  else if constexpr (Key::name.view() == std::string_view("video") && requires { object.video; }) return (object.video);
   else if constexpr (Key::name.view() == std::string_view("view") && requires { object.view; }) return (object.view);
+  else if constexpr (Key::name.view() == std::string_view("viewport") && requires { object.viewport; }) return (object.viewport);
   else if constexpr (Key::name.view() == std::string_view("viewportHeight") && requires { object.viewport_height; }) return (object.viewport_height);
   else if constexpr (Key::name.view() == std::string_view("viewportWidth") && requires { object.viewport_width; }) return (object.viewport_width);
   else if constexpr (Key::name.view() == std::string_view("vignette") && requires { object.vignette; }) return (object.vignette);
+  else if constexpr (Key::name.view() == std::string_view("visibility") && requires { object.visibility; }) return (object.visibility);
   else if constexpr (Key::name.view() == std::string_view("visible") && requires { object.visible; }) return (object.visible);
+  else if constexpr (Key::name.view() == std::string_view("visibleMeshes") && requires { object.visible_meshes; }) return (object.visible_meshes);
+  else if constexpr (Key::name.view() == std::string_view("visual") && requires { object.visual; }) return (object.visual);
   else if constexpr (Key::name.view() == std::string_view("w") && requires { object.w; }) return (object.w);
+  else if constexpr (Key::name.view() == std::string_view("warmStart") && requires { object.warm_start; }) return (object.warm_start);
   else if constexpr (Key::name.view() == std::string_view("watchPosition") && requires { object.watch_position; }) return (object.watch_position);
   else if constexpr (Key::name.view() == std::string_view("webViewVersion") && requires { object.web_view_version; }) return (object.web_view_version);
   else if constexpr (Key::name.view() == std::string_view("weight") && requires { object.weight; }) return (object.weight);
+  else if constexpr (Key::name.view() == std::string_view("weights") && requires { object.weights; }) return (object.weights);
+  else if constexpr (Key::name.view() == std::string_view("wgpu") && requires { object.wgpu; }) return (object.wgpu);
+  else if constexpr (Key::name.view() == std::string_view("whenReady") && requires { object.when_ready; }) return (object.when_ready);
   else if constexpr (Key::name.view() == std::string_view("white") && requires { object.white; }) return (object.white);
   else if constexpr (Key::name.view() == std::string_view("width") && requires { object.width; }) return (object.width);
   else if constexpr (Key::name.view() == std::string_view("wind") && requires { object.wind; }) return (object.wind);
   else if constexpr (Key::name.view() == std::string_view("winding") && requires { object.winding; }) return (object.winding);
+  else if constexpr (Key::name.view() == std::string_view("window") && requires { object.window; }) return (object.window);
+  else if constexpr (Key::name.view() == std::string_view("wordWrap") && requires { object.word_wrap; }) return (object.word_wrap);
   else if constexpr (Key::name.view() == std::string_view("workHeight") && requires { object.work_height; }) return (object.work_height);
   else if constexpr (Key::name.view() == std::string_view("workWidth") && requires { object.work_width; }) return (object.work_width);
+  else if constexpr (Key::name.view() == std::string_view("world") && requires { object.world; }) return (object.world);
   else if constexpr (Key::name.view() == std::string_view("worldBounds") && requires { object.world_bounds; }) return (object.world_bounds);
+  else if constexpr (Key::name.view() == std::string_view("worldBoundsUsingLocalBoundsId") && requires { object.world_bounds_using_local_bounds_id; }) return (object.world_bounds_using_local_bounds_id);
+  else if constexpr (Key::name.view() == std::string_view("worldBoundsUsingWorldTransformId") && requires { object.world_bounds_using_world_transform_id; }) return (object.world_bounds_using_world_transform_id);
   else if constexpr (Key::name.view() == std::string_view("worldMatrices") && requires { object.world_matrices; }) return (object.world_matrices);
   else if constexpr (Key::name.view() == std::string_view("worldSpace") && requires { object.world_space; }) return (object.world_space);
+  else if constexpr (Key::name.view() == std::string_view("worldTransformId") && requires { object.world_transform_id; }) return (object.world_transform_id);
+  else if constexpr (Key::name.view() == std::string_view("worldTransformUsingParentTransformId") && requires { object.world_transform_using_parent_transform_id; }) return (object.world_transform_using_parent_transform_id);
+  else if constexpr (Key::name.view() == std::string_view("worldX") && requires { object.world_x; }) return (object.world_x);
+  else if constexpr (Key::name.view() == std::string_view("worldY") && requires { object.world_y; }) return (object.world_y);
   else if constexpr (Key::name.view() == std::string_view("wouldOccupyBucketCount") && requires { object.would_occupy_bucket_count; }) return (object.would_occupy_bucket_count);
   else if constexpr (Key::name.view() == std::string_view("wrapU") && requires { object.wrap_u; }) return (object.wrap_u);
   else if constexpr (Key::name.view() == std::string_view("wrapV") && requires { object.wrap_v; }) return (object.wrap_v);
@@ -711,6 +1802,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("wrappedDiffuseMap") && requires { object.wrapped_diffuse_map; }) return (object.wrapped_diffuse_map);
   else if constexpr (Key::name.view() == std::string_view("wrappedDiffuseMapUvSet") && requires { object.wrapped_diffuse_map_uv_set; }) return (object.wrapped_diffuse_map_uv_set);
   else if constexpr (Key::name.view() == std::string_view("wrappedDiffuseStrength") && requires { object.wrapped_diffuse_strength; }) return (object.wrapped_diffuse_strength);
+  else if constexpr (Key::name.view() == std::string_view("write") && requires { object.write; }) return (object.write);
   else if constexpr (Key::name.view() == std::string_view("writeBookmark") && requires { object.write_bookmark; }) return (object.write_bookmark);
   else if constexpr (Key::name.view() == std::string_view("writeFormat") && requires { object.write_format; }) return (object.write_format);
   else if constexpr (Key::name.view() == std::string_view("writeHtml") && requires { object.write_html; }) return (object.write_html);
@@ -721,12 +1813,21 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("x") && requires { object.x; }) return (object.x);
   else if constexpr (Key::name.view() == std::string_view("x0") && requires { object.x0; }) return (object.x0);
   else if constexpr (Key::name.view() == std::string_view("x1") && requires { object.x1; }) return (object.x1);
+  else if constexpr (Key::name.view() == std::string_view("x2") && requires { object.x2; }) return (object.x2);
+  else if constexpr (Key::name.view() == std::string_view("xMax") && requires { object.x_max; }) return (object.x_max);
+  else if constexpr (Key::name.view() == std::string_view("xMin") && requires { object.x_min; }) return (object.x_min);
   else if constexpr (Key::name.view() == std::string_view("xOffset") && requires { object.x_offset; }) return (object.x_offset);
   else if constexpr (Key::name.view() == std::string_view("y") && requires { object.y; }) return (object.y);
   else if constexpr (Key::name.view() == std::string_view("y0") && requires { object.y0; }) return (object.y0);
   else if constexpr (Key::name.view() == std::string_view("y1") && requires { object.y1; }) return (object.y1);
+  else if constexpr (Key::name.view() == std::string_view("y2") && requires { object.y2; }) return (object.y2);
+  else if constexpr (Key::name.view() == std::string_view("yMax") && requires { object.y_max; }) return (object.y_max);
+  else if constexpr (Key::name.view() == std::string_view("yMin") && requires { object.y_min; }) return (object.y_min);
   else if constexpr (Key::name.view() == std::string_view("yOffset") && requires { object.y_offset; }) return (object.y_offset);
+  else if constexpr (Key::name.view() == std::string_view("yaw") && requires { object.yaw; }) return (object.yaw);
   else if constexpr (Key::name.view() == std::string_view("z") && requires { object.z; }) return (object.z);
+  else if constexpr (Key::name.view() == std::string_view("z0") && requires { object.z0; }) return (object.z0);
+  else if constexpr (Key::name.view() == std::string_view("z1") && requires { object.z1; }) return (object.z1);
   else if constexpr (Key::name.view() == std::string_view("zoom") && requires { object.zoom; }) return (object.zoom);
   else static_assert(dependent_false<Key>, "Flight SDK row key has no compatible generated C++ member");
 }
@@ -737,83 +1838,204 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("a") && requires(Object& object) { object.a; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().a)>>{};
   else if constexpr (Key::name.view() == std::string_view("aberration") && requires(Object& object) { object.aberration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().aberration)>>{};
   else if constexpr (Key::name.view() == std::string_view("absolute") && requires(Object& object) { object.absolute; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().absolute)>>{};
+  else if constexpr (Key::name.view() == std::string_view("accessibility") && requires(Object& object) { object.accessibility; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().accessibility)>>{};
   else if constexpr (Key::name.view() == std::string_view("accuracy") && requires(Object& object) { object.accuracy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().accuracy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("acquire") && requires(Object& object) { object.acquire; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().acquire)>>{};
+  else if constexpr (Key::name.view() == std::string_view("acquisition") && requires(Object& object) { object.acquisition; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().acquisition)>>{};
   else if constexpr (Key::name.view() == std::string_view("action") && requires(Object& object) { object.action; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().action)>>{};
   else if constexpr (Key::name.view() == std::string_view("adaptationSpeed") && requires(Object& object) { object.adaptation_speed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().adaptation_speed)>>{};
+  else if constexpr (Key::name.view() == std::string_view("addFontFace") && requires(Object& object) { object.add_font_face; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().add_font_face)>>{};
+  else if constexpr (Key::name.view() == std::string_view("addRecentDocument") && requires(Object& object) { object.add_recent_document; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().add_recent_document)>>{};
   else if constexpr (Key::name.view() == std::string_view("additive") && requires(Object& object) { object.additive; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().additive)>>{};
   else if constexpr (Key::name.view() == std::string_view("addressed") && requires(Object& object) { object.addressed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().addressed)>>{};
+  else if constexpr (Key::name.view() == std::string_view("advanceScratch") && requires(Object& object) { object.advance_scratch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().advance_scratch)>>{};
+  else if constexpr (Key::name.view() == std::string_view("advanceWidth") && requires(Object& object) { object.advance_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().advance_width)>>{};
+  else if constexpr (Key::name.view() == std::string_view("advances") && requires(Object& object) { object.advances; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().advances)>>{};
+  else if constexpr (Key::name.view() == std::string_view("align") && requires(Object& object) { object.align; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().align)>>{};
+  else if constexpr (Key::name.view() == std::string_view("allowRotation") && requires(Object& object) { object.allow_rotation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().allow_rotation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("allowedSchemes") && requires(Object& object) { object.allowed_schemes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().allowed_schemes)>>{};
   else if constexpr (Key::name.view() == std::string_view("alpha") && requires(Object& object) { object.alpha; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alpha)>>{};
   else if constexpr (Key::name.view() == std::string_view("alphaBias") && requires(Object& object) { object.alpha_bias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alpha_bias)>>{};
   else if constexpr (Key::name.view() == std::string_view("alphaCurve") && requires(Object& object) { object.alpha_curve; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alpha_curve)>>{};
+  else if constexpr (Key::name.view() == std::string_view("alphaCutoff") && requires(Object& object) { object.alpha_cutoff; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alpha_cutoff)>>{};
   else if constexpr (Key::name.view() == std::string_view("alphaEnd") && requires(Object& object) { object.alpha_end; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alpha_end)>>{};
+  else if constexpr (Key::name.view() == std::string_view("alphaMap") && requires(Object& object) { object.alpha_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alpha_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("alphaMaskEnabled") && requires(Object& object) { object.alpha_mask_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alpha_mask_enabled)>>{};
+  else if constexpr (Key::name.view() == std::string_view("alphaMode") && requires(Object& object) { object.alpha_mode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alpha_mode)>>{};
   else if constexpr (Key::name.view() == std::string_view("alphaScale") && requires(Object& object) { object.alpha_scale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alpha_scale)>>{};
   else if constexpr (Key::name.view() == std::string_view("alphaStart") && requires(Object& object) { object.alpha_start; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alpha_start)>>{};
+  else if constexpr (Key::name.view() == std::string_view("alphaType") && requires(Object& object) { object.alpha_type; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alpha_type)>>{};
+  else if constexpr (Key::name.view() == std::string_view("alphas") && requires(Object& object) { object.alphas; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alphas)>>{};
+  else if constexpr (Key::name.view() == std::string_view("altKey") && requires(Object& object) { object.alt_key; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alt_key)>>{};
   else if constexpr (Key::name.view() == std::string_view("altitude") && requires(Object& object) { object.altitude; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().altitude)>>{};
   else if constexpr (Key::name.view() == std::string_view("altitudeAccuracy") && requires(Object& object) { object.altitude_accuracy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().altitude_accuracy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("alwaysOnTop") && requires(Object& object) { object.always_on_top; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().always_on_top)>>{};
+  else if constexpr (Key::name.view() == std::string_view("alwaysShowSelection") && requires(Object& object) { object.always_show_selection; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().always_show_selection)>>{};
   else if constexpr (Key::name.view() == std::string_view("ambient") && requires(Object& object) { object.ambient; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ambient)>>{};
+  else if constexpr (Key::name.view() == std::string_view("ambientRgb") && requires(Object& object) { object.ambient_rgb; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ambient_rgb)>>{};
   else if constexpr (Key::name.view() == std::string_view("amount") && requires(Object& object) { object.amount; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().amount)>>{};
+  else if constexpr (Key::name.view() == std::string_view("amplitude") && requires(Object& object) { object.amplitude; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().amplitude)>>{};
   else if constexpr (Key::name.view() == std::string_view("angle") && requires(Object& object) { object.angle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().angle)>>{};
   else if constexpr (Key::name.view() == std::string_view("angleVariance") && requires(Object& object) { object.angle_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().angle_variance)>>{};
-  else if constexpr (Key::name.view() == std::string_view("animation") && requires(Object& object) { object.animation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().animation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("angularVelocity") && requires(Object& object) { object.angular_velocity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().angular_velocity)>>{};
+  else if constexpr (Key::name.view() == std::string_view("angularVelocityX") && requires(Object& object) { object.angular_velocity_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().angular_velocity_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("angularVelocityY") && requires(Object& object) { object.angular_velocity_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().angular_velocity_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("angularVelocityZ") && requires(Object& object) { object.angular_velocity_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().angular_velocity_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("animations") && requires(Object& object) { object.animations; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().animations)>>{};
   else if constexpr (Key::name.view() == std::string_view("anisotropy") && requires(Object& object) { object.anisotropy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().anisotropy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("anisotropyEnabled") && requires(Object& object) { object.anisotropy_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().anisotropy_enabled)>>{};
   else if constexpr (Key::name.view() == std::string_view("anisotropyMap") && requires(Object& object) { object.anisotropy_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().anisotropy_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("anisotropyMapUvSet") && requires(Object& object) { object.anisotropy_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().anisotropy_map_uv_set)>>{};
   else if constexpr (Key::name.view() == std::string_view("anisotropyRotation") && requires(Object& object) { object.anisotropy_rotation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().anisotropy_rotation)>>{};
   else if constexpr (Key::name.view() == std::string_view("anisotropyStrength") && requires(Object& object) { object.anisotropy_strength; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().anisotropy_strength)>>{};
   else if constexpr (Key::name.view() == std::string_view("announce") && requires(Object& object) { object.announce; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().announce)>>{};
+  else if constexpr (Key::name.view() == std::string_view("antialias") && requires(Object& object) { object.antialias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().antialias)>>{};
+  else if constexpr (Key::name.view() == std::string_view("app") && requires(Object& object) { object.app; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().app)>>{};
+  else if constexpr (Key::name.view() == std::string_view("appearanceId") && requires(Object& object) { object.appearance_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().appearance_id)>>{};
   else if constexpr (Key::name.view() == std::string_view("applied") && requires(Object& object) { object.applied; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().applied)>>{};
+  else if constexpr (Key::name.view() == std::string_view("arcTolerance") && requires(Object& object) { object.arc_tolerance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().arc_tolerance)>>{};
   else if constexpr (Key::name.view() == std::string_view("arch") && requires(Object& object) { object.arch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().arch)>>{};
+  else if constexpr (Key::name.view() == std::string_view("artboards") && requires(Object& object) { object.artboards; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().artboards)>>{};
   else if constexpr (Key::name.view() == std::string_view("ascent") && requires(Object& object) { object.ascent; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ascent)>>{};
+  else if constexpr (Key::name.view() == std::string_view("aspect") && requires(Object& object) { object.aspect; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().aspect)>>{};
+  else if constexpr (Key::name.view() == std::string_view("assets") && requires(Object& object) { object.assets; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().assets)>>{};
   else if constexpr (Key::name.view() == std::string_view("atlas") && requires(Object& object) { object.atlas; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().atlas)>>{};
+  else if constexpr (Key::name.view() == std::string_view("attach") && requires(Object& object) { object.attach; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().attach)>>{};
   else if constexpr (Key::name.view() == std::string_view("attenuationColor") && requires(Object& object) { object.attenuation_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().attenuation_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("attenuationDistance") && requires(Object& object) { object.attenuation_distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().attenuation_distance)>>{};
   else if constexpr (Key::name.view() == std::string_view("attributes") && requires(Object& object) { object.attributes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().attributes)>>{};
+  else if constexpr (Key::name.view() == std::string_view("audio") && requires(Object& object) { object.audio; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().audio)>>{};
+  else if constexpr (Key::name.view() == std::string_view("audioResources") && requires(Object& object) { object.audio_resources; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().audio_resources)>>{};
+  else if constexpr (Key::name.view() == std::string_view("autoSize") && requires(Object& object) { object.auto_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().auto_size)>>{};
   else if constexpr (Key::name.view() == std::string_view("availableMemory") && requires(Object& object) { object.available_memory; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().available_memory)>>{};
+  else if constexpr (Key::name.view() == std::string_view("axis") && requires(Object& object) { object.axis; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().axis)>>{};
+  else if constexpr (Key::name.view() == std::string_view("axisAX") && requires(Object& object) { object.axis_ax; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().axis_ax)>>{};
+  else if constexpr (Key::name.view() == std::string_view("axisAY") && requires(Object& object) { object.axis_ay; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().axis_ay)>>{};
+  else if constexpr (Key::name.view() == std::string_view("axisBX") && requires(Object& object) { object.axis_bx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().axis_bx)>>{};
+  else if constexpr (Key::name.view() == std::string_view("axisBY") && requires(Object& object) { object.axis_by; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().axis_by)>>{};
+  else if constexpr (Key::name.view() == std::string_view("axisRotation") && requires(Object& object) { object.axis_rotation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().axis_rotation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("azimuth") && requires(Object& object) { object.azimuth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().azimuth)>>{};
   else if constexpr (Key::name.view() == std::string_view("b") && requires(Object& object) { object.b; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().b)>>{};
+  else if constexpr (Key::name.view() == std::string_view("backdrop") && requires(Object& object) { object.backdrop; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().backdrop)>>{};
+  else if constexpr (Key::name.view() == std::string_view("backdropKey") && requires(Object& object) { object.backdrop_key; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().backdrop_key)>>{};
+  else if constexpr (Key::name.view() == std::string_view("backend") && requires(Object& object) { object.backend; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().backend)>>{};
+  else if constexpr (Key::name.view() == std::string_view("background") && requires(Object& object) { object.background; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().background)>>{};
+  else if constexpr (Key::name.view() == std::string_view("backgroundColor") && requires(Object& object) { object.background_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().background_color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("base") && requires(Object& object) { object.base; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().base)>>{};
+  else if constexpr (Key::name.view() == std::string_view("baseColor") && requires(Object& object) { object.base_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().base_color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("baseColorMap") && requires(Object& object) { object.base_color_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().base_color_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("bboxStream") && requires(Object& object) { object.bbox_stream; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bbox_stream)>>{};
+  else if constexpr (Key::name.view() == std::string_view("beep") && requires(Object& object) { object.beep; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().beep)>>{};
   else if constexpr (Key::name.view() == std::string_view("beta") && requires(Object& object) { object.beta; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().beta)>>{};
+  else if constexpr (Key::name.view() == std::string_view("bevelType") && requires(Object& object) { object.bevel_type; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bevel_type)>>{};
   else if constexpr (Key::name.view() == std::string_view("bias") && requires(Object& object) { object.bias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bias)>>{};
+  else if constexpr (Key::name.view() == std::string_view("bindings") && requires(Object& object) { object.bindings; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bindings)>>{};
   else if constexpr (Key::name.view() == std::string_view("bitmap") && requires(Object& object) { object.bitmap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bitmap)>>{};
   else if constexpr (Key::name.view() == std::string_view("blackTighten") && requires(Object& object) { object.black_tighten; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().black_tighten)>>{};
+  else if constexpr (Key::name.view() == std::string_view("blend") && requires(Object& object) { object.blend; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blend)>>{};
   else if constexpr (Key::name.view() == std::string_view("blendFuncDestination") && requires(Object& object) { object.blend_func_destination; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blend_func_destination)>>{};
   else if constexpr (Key::name.view() == std::string_view("blendFuncSource") && requires(Object& object) { object.blend_func_source; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blend_func_source)>>{};
   else if constexpr (Key::name.view() == std::string_view("blendMode") && requires(Object& object) { object.blend_mode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blend_mode)>>{};
+  else if constexpr (Key::name.view() == std::string_view("blendModeApplication") && requires(Object& object) { object.blend_mode_application; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blend_mode_application)>>{};
+  else if constexpr (Key::name.view() == std::string_view("blendTree") && requires(Object& object) { object.blend_tree; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blend_tree)>>{};
+  else if constexpr (Key::name.view() == std::string_view("blendTrees") && requires(Object& object) { object.blend_trees; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blend_trees)>>{};
+  else if constexpr (Key::name.view() == std::string_view("blended") && requires(Object& object) { object.blended; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blended)>>{};
+  else if constexpr (Key::name.view() == std::string_view("blendedNormals") && requires(Object& object) { object.blended_normals; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blended_normals)>>{};
+  else if constexpr (Key::name.view() == std::string_view("blendedPositions") && requires(Object& object) { object.blended_positions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blended_positions)>>{};
+  else if constexpr (Key::name.view() == std::string_view("blendedTangents") && requires(Object& object) { object.blended_tangents; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blended_tangents)>>{};
+  else if constexpr (Key::name.view() == std::string_view("blockCount") && requires(Object& object) { object.block_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().block_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("blockSize") && requires(Object& object) { object.block_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().block_size)>>{};
+  else if constexpr (Key::name.view() == std::string_view("blocks") && requires(Object& object) { object.blocks; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blocks)>>{};
   else if constexpr (Key::name.view() == std::string_view("blue") && requires(Object& object) { object.blue; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blue)>>{};
   else if constexpr (Key::name.view() == std::string_view("blueBias") && requires(Object& object) { object.blue_bias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blue_bias)>>{};
   else if constexpr (Key::name.view() == std::string_view("blueScale") && requires(Object& object) { object.blue_scale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blue_scale)>>{};
+  else if constexpr (Key::name.view() == std::string_view("blur") && requires(Object& object) { object.blur; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blur)>>{};
   else if constexpr (Key::name.view() == std::string_view("blurX") && requires(Object& object) { object.blur_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blur_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("blurY") && requires(Object& object) { object.blur_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blur_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("boardName") && requires(Object& object) { object.board_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().board_name)>>{};
   else if constexpr (Key::name.view() == std::string_view("bodies") && requires(Object& object) { object.bodies; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bodies)>>{};
+  else if constexpr (Key::name.view() == std::string_view("body") && requires(Object& object) { object.body; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().body)>>{};
   else if constexpr (Key::name.view() == std::string_view("bodyA") && requires(Object& object) { object.body_a; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().body_a)>>{};
   else if constexpr (Key::name.view() == std::string_view("bodyB") && requires(Object& object) { object.body_b; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().body_b)>>{};
+  else if constexpr (Key::name.view() == std::string_view("bodyByIndex") && requires(Object& object) { object.body_by_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().body_by_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("bodyIds") && requires(Object& object) { object.body_ids; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().body_ids)>>{};
+  else if constexpr (Key::name.view() == std::string_view("boneIndices") && requires(Object& object) { object.bone_indices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bone_indices)>>{};
+  else if constexpr (Key::name.view() == std::string_view("border") && requires(Object& object) { object.border; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().border)>>{};
   else if constexpr (Key::name.view() == std::string_view("bottom") && requires(Object& object) { object.bottom; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bottom)>>{};
+  else if constexpr (Key::name.view() == std::string_view("bounceDock") && requires(Object& object) { object.bounce_dock; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bounce_dock)>>{};
   else if constexpr (Key::name.view() == std::string_view("bounds") && requires(Object& object) { object.bounds; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bounds)>>{};
+  else if constexpr (Key::name.view() == std::string_view("brdfPipeline") && requires(Object& object) { object.brdf_pipeline; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().brdf_pipeline)>>{};
   else if constexpr (Key::name.view() == std::string_view("breakForce") && requires(Object& object) { object.break_force; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().break_force)>>{};
   else if constexpr (Key::name.view() == std::string_view("breakTorque") && requires(Object& object) { object.break_torque; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().break_torque)>>{};
   else if constexpr (Key::name.view() == std::string_view("brightness") && requires(Object& object) { object.brightness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().brightness)>>{};
+  else if constexpr (Key::name.view() == std::string_view("buffer") && requires(Object& object) { object.buffer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().buffer)>>{};
+  else if constexpr (Key::name.view() == std::string_view("buildNodeTransform") && requires(Object& object) { object.build_node_transform; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().build_node_transform)>>{};
+  else if constexpr (Key::name.view() == std::string_view("bullet") && requires(Object& object) { object.bullet; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bullet)>>{};
   else if constexpr (Key::name.view() == std::string_view("burstCount") && requires(Object& object) { object.burst_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().burst_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("burstInterval") && requires(Object& object) { object.burst_interval; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().burst_interval)>>{};
+  else if constexpr (Key::name.view() == std::string_view("burstTimer") && requires(Object& object) { object.burst_timer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().burst_timer)>>{};
+  else if constexpr (Key::name.view() == std::string_view("button") && requires(Object& object) { object.button; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().button)>>{};
+  else if constexpr (Key::name.view() == std::string_view("buttons") && requires(Object& object) { object.buttons; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().buttons)>>{};
+  else if constexpr (Key::name.view() == std::string_view("byteLength") && requires(Object& object) { object.byte_length; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().byte_length)>>{};
+  else if constexpr (Key::name.view() == std::string_view("byteOffset") && requires(Object& object) { object.byte_offset; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().byte_offset)>>{};
+  else if constexpr (Key::name.view() == std::string_view("bytes") && requires(Object& object) { object.bytes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bytes)>>{};
   else if constexpr (Key::name.view() == std::string_view("c") && requires(Object& object) { object.c; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().c)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cameras") && requires(Object& object) { object.cameras; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cameras)>>{};
   else if constexpr (Key::name.view() == std::string_view("cancel") && requires(Object& object) { object.cancel; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cancel)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cancelAttention") && requires(Object& object) { object.cancel_attention; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cancel_attention)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cancelDockBounce") && requires(Object& object) { object.cancel_dock_bounce; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cancel_dock_bounce)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cancelId") && requires(Object& object) { object.cancel_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cancel_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("candidateCenterA") && requires(Object& object) { object.candidate_center_a; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().candidate_center_a)>>{};
+  else if constexpr (Key::name.view() == std::string_view("candidateCenterB") && requires(Object& object) { object.candidate_center_b; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().candidate_center_b)>>{};
+  else if constexpr (Key::name.view() == std::string_view("canvas") && requires(Object& object) { object.canvas; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().canvas)>>{};
+  else if constexpr (Key::name.view() == std::string_view("canvasShapeCommands") && requires(Object& object) { object.canvas_shape_commands; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().canvas_shape_commands)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cap") && requires(Object& object) { object.cap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cap)>>{};
   else if constexpr (Key::name.view() == std::string_view("capabilities") && requires(Object& object) { object.capabilities; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().capabilities)>>{};
+  else if constexpr (Key::name.view() == std::string_view("capture") && requires(Object& object) { object.capture; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().capture)>>{};
+  else if constexpr (Key::name.view() == std::string_view("caret") && requires(Object& object) { object.caret; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().caret)>>{};
+  else if constexpr (Key::name.view() == std::string_view("caretColor") && requires(Object& object) { object.caret_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().caret_color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("caretWidth") && requires(Object& object) { object.caret_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().caret_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("cascadeCount") && requires(Object& object) { object.cascade_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cascade_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("cascadeSplits") && requires(Object& object) { object.cascade_splits; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cascade_splits)>>{};
   else if constexpr (Key::name.view() == std::string_view("castsShadow") && requires(Object& object) { object.casts_shadow; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().casts_shadow)>>{};
   else if constexpr (Key::name.view() == std::string_view("cellSize") && requires(Object& object) { object.cell_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cell_size)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cellSizeX") && requires(Object& object) { object.cell_size_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cell_size_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cellSizeZ") && requires(Object& object) { object.cell_size_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cell_size_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cells") && requires(Object& object) { object.cells; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cells)>>{};
   else if constexpr (Key::name.view() == std::string_view("center") && requires(Object& object) { object.center; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().center)>>{};
+  else if constexpr (Key::name.view() == std::string_view("centerOfMassRadius") && requires(Object& object) { object.center_of_mass_radius; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().center_of_mass_radius)>>{};
   else if constexpr (Key::name.view() == std::string_view("centerX") && requires(Object& object) { object.center_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().center_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("centerY") && requires(Object& object) { object.center_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().center_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("centerZ") && requires(Object& object) { object.center_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().center_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cff") && requires(Object& object) { object.cff; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cff)>>{};
+  else if constexpr (Key::name.view() == std::string_view("changedMetrics") && requires(Object& object) { object.changed_metrics; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().changed_metrics)>>{};
+  else if constexpr (Key::name.view() == std::string_view("channel") && requires(Object& object) { object.channel; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().channel)>>{};
+  else if constexpr (Key::name.view() == std::string_view("channelIndex") && requires(Object& object) { object.channel_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().channel_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("channelIndices") && requires(Object& object) { object.channel_indices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().channel_indices)>>{};
+  else if constexpr (Key::name.view() == std::string_view("channels") && requires(Object& object) { object.channels; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().channels)>>{};
+  else if constexpr (Key::name.view() == std::string_view("charCount") && requires(Object& object) { object.char_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().char_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("chars") && requires(Object& object) { object.chars; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().chars)>>{};
+  else if constexpr (Key::name.view() == std::string_view("chart") && requires(Object& object) { object.chart; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().chart)>>{};
+  else if constexpr (Key::name.view() == std::string_view("checkFontFace") && requires(Object& object) { object.check_font_face; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().check_font_face)>>{};
+  else if constexpr (Key::name.view() == std::string_view("checkboxChecked") && requires(Object& object) { object.checkbox_checked; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().checkbox_checked)>>{};
+  else if constexpr (Key::name.view() == std::string_view("checkboxLabel") && requires(Object& object) { object.checkbox_label; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().checkbox_label)>>{};
+  else if constexpr (Key::name.view() == std::string_view("checked") && requires(Object& object) { object.checked; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().checked)>>{};
+  else if constexpr (Key::name.view() == std::string_view("checkedState") && requires(Object& object) { object.checked_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().checked_state)>>{};
   else if constexpr (Key::name.view() == std::string_view("child1") && requires(Object& object) { object.child1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().child1)>>{};
   else if constexpr (Key::name.view() == std::string_view("child2") && requires(Object& object) { object.child2; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().child2)>>{};
+  else if constexpr (Key::name.view() == std::string_view("childCount") && requires(Object& object) { object.child_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().child_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("children") && requires(Object& object) { object.children; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().children)>>{};
+  else if constexpr (Key::name.view() == std::string_view("childrenId") && requires(Object& object) { object.children_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().children_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("clamp") && requires(Object& object) { object.clamp; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clamp)>>{};
   else if constexpr (Key::name.view() == std::string_view("clear") && requires(Object& object) { object.clear; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clear)>>{};
+  else if constexpr (Key::name.view() == std::string_view("clearAccumulatedImpulses") && requires(Object& object) { object.clear_accumulated_impulses; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clear_accumulated_impulses)>>{};
   else if constexpr (Key::name.view() == std::string_view("clearMetadata") && requires(Object& object) { object.clear_metadata; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clear_metadata)>>{};
   else if constexpr (Key::name.view() == std::string_view("clearPositionState") && requires(Object& object) { object.clear_position_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clear_position_state)>>{};
+  else if constexpr (Key::name.view() == std::string_view("clearRecentDocuments") && requires(Object& object) { object.clear_recent_documents; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clear_recent_documents)>>{};
   else if constexpr (Key::name.view() == std::string_view("clearSpatialIndex") && requires(Object& object) { object.clear_spatial_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clear_spatial_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("clearWatch") && requires(Object& object) { object.clear_watch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clear_watch)>>{};
   else if constexpr (Key::name.view() == std::string_view("clearcoat") && requires(Object& object) { object.clearcoat; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clearcoat)>>{};
+  else if constexpr (Key::name.view() == std::string_view("clearcoatEnabled") && requires(Object& object) { object.clearcoat_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clearcoat_enabled)>>{};
   else if constexpr (Key::name.view() == std::string_view("clearcoatMap") && requires(Object& object) { object.clearcoat_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clearcoat_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("clearcoatMapUvSet") && requires(Object& object) { object.clearcoat_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clearcoat_map_uv_set)>>{};
   else if constexpr (Key::name.view() == std::string_view("clearcoatNormalMap") && requires(Object& object) { object.clearcoat_normal_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clearcoat_normal_map)>>{};
@@ -823,10 +2045,28 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("clearcoatRoughnessMap") && requires(Object& object) { object.clearcoat_roughness_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clearcoat_roughness_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("clearcoatRoughnessMapUvSet") && requires(Object& object) { object.clearcoat_roughness_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clearcoat_roughness_map_uv_set)>>{};
   else if constexpr (Key::name.view() == std::string_view("clip") && requires(Object& object) { object.clip; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clip)>>{};
+  else if constexpr (Key::name.view() == std::string_view("clipMode") && requires(Object& object) { object.clip_mode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clip_mode)>>{};
+  else if constexpr (Key::name.view() == std::string_view("clipboard") && requires(Object& object) { object.clipboard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clipboard)>>{};
+  else if constexpr (Key::name.view() == std::string_view("clipboardText") && requires(Object& object) { object.clipboard_text; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clipboard_text)>>{};
+  else if constexpr (Key::name.view() == std::string_view("closeButton") && requires(Object& object) { object.close_button; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().close_button)>>{};
+  else if constexpr (Key::name.view() == std::string_view("closed") && requires(Object& object) { object.closed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().closed)>>{};
+  else if constexpr (Key::name.view() == std::string_view("codepoints") && requires(Object& object) { object.codepoints; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().codepoints)>>{};
+  else if constexpr (Key::name.view() == std::string_view("collideConnected") && requires(Object& object) { object.collide_connected; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().collide_connected)>>{};
+  else if constexpr (Key::name.view() == std::string_view("collider") && requires(Object& object) { object.collider; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().collider)>>{};
   else if constexpr (Key::name.view() == std::string_view("colliderA") && requires(Object& object) { object.collider_a; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().collider_a)>>{};
   else if constexpr (Key::name.view() == std::string_view("colliderB") && requires(Object& object) { object.collider_b; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().collider_b)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colliderIds") && requires(Object& object) { object.collider_ids; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().collider_ids)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colliderIndex") && requires(Object& object) { object.collider_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().collider_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colliders") && requires(Object& object) { object.colliders; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().colliders)>>{};
   else if constexpr (Key::name.view() == std::string_view("color") && requires(Object& object) { object.color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colorAdjustmentFeature") && requires(Object& object) { object.color_adjustment_feature; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_adjustment_feature)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colorAdjustmentFeatureGuard") && requires(Object& object) { object.color_adjustment_feature_guard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_adjustment_feature_guard)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colorAdjustmentUnsupportedGuard") && requires(Object& object) { object.color_adjustment_unsupported_guard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_adjustment_unsupported_guard)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colorAdjustments") && requires(Object& object) { object.color_adjustments; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_adjustments)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colorAttachments") && requires(Object& object) { object.color_attachments; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_attachments)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colorBirth") && requires(Object& object) { object.color_birth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_birth)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorCurve") && requires(Object& object) { object.color_curve; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_curve)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colorDeath") && requires(Object& object) { object.color_death; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_death)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorDepth") && requires(Object& object) { object.color_depth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_depth)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorEndB") && requires(Object& object) { object.color_end_b; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_end_b)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorEndG") && requires(Object& object) { object.color_end_g; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_end_g)>>{};
@@ -834,9 +2074,11 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("colorEndVarianceB") && requires(Object& object) { object.color_end_variance_b; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_end_variance_b)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorEndVarianceG") && requires(Object& object) { object.color_end_variance_g; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_end_variance_g)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorEndVarianceR") && requires(Object& object) { object.color_end_variance_r; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_end_variance_r)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colorFormats") && requires(Object& object) { object.color_formats; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_formats)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorGamut") && requires(Object& object) { object.color_gamut; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_gamut)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorMatrix") && requires(Object& object) { object.color_matrix; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_matrix)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorScaleBias") && requires(Object& object) { object.color_scale_bias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_scale_bias)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colorShift") && requires(Object& object) { object.color_shift; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_shift)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorSpace") && requires(Object& object) { object.color_space; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_space)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorStartB") && requires(Object& object) { object.color_start_b; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_start_b)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorStartG") && requires(Object& object) { object.color_start_g; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_start_g)>>{};
@@ -844,51 +2086,160 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("colorStartVarianceB") && requires(Object& object) { object.color_start_variance_b; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_start_variance_b)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorStartVarianceG") && requires(Object& object) { object.color_start_variance_g; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_start_variance_g)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorStartVarianceR") && requires(Object& object) { object.color_start_variance_r; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_start_variance_r)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colors") && requires(Object& object) { object.colors; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().colors)>>{};
+  else if constexpr (Key::name.view() == std::string_view("columns") && requires(Object& object) { object.columns; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().columns)>>{};
+  else if constexpr (Key::name.view() == std::string_view("commandCount") && requires(Object& object) { object.command_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().command_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("commandIndex") && requires(Object& object) { object.command_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().command_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("commandKind") && requires(Object& object) { object.command_kind; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().command_kind)>>{};
   else if constexpr (Key::name.view() == std::string_view("commands") && requires(Object& object) { object.commands; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().commands)>>{};
+  else if constexpr (Key::name.view() == std::string_view("comparison") && requires(Object& object) { object.comparison; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().comparison)>>{};
+  else if constexpr (Key::name.view() == std::string_view("complete") && requires(Object& object) { object.complete; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().complete)>>{};
   else if constexpr (Key::name.view() == std::string_view("componentX") && requires(Object& object) { object.component_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().component_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("componentY") && requires(Object& object) { object.component_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().component_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("components") && requires(Object& object) { object.components; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().components)>>{};
+  else if constexpr (Key::name.view() == std::string_view("compositeStream") && requires(Object& object) { object.composite_stream; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().composite_stream)>>{};
+  else if constexpr (Key::name.view() == std::string_view("compressed") && requires(Object& object) { object.compressed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().compressed)>>{};
+  else if constexpr (Key::name.view() == std::string_view("compressedAlphaBytes") && requires(Object& object) { object.compressed_alpha_bytes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().compressed_alpha_bytes)>>{};
+  else if constexpr (Key::name.view() == std::string_view("compressedTextureDecoder") && requires(Object& object) { object.compressed_texture_decoder; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().compressed_texture_decoder)>>{};
+  else if constexpr (Key::name.view() == std::string_view("compressedTextureUpload") && requires(Object& object) { object.compressed_texture_upload; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().compressed_texture_upload)>>{};
   else if constexpr (Key::name.view() == std::string_view("compression") && requires(Object& object) { object.compression; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().compression)>>{};
+  else if constexpr (Key::name.view() == std::string_view("computePathBoolean") && requires(Object& object) { object.compute_path_boolean; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().compute_path_boolean)>>{};
+  else if constexpr (Key::name.view() == std::string_view("conditionIndex") && requires(Object& object) { object.condition_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().condition_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("conditions") && requires(Object& object) { object.conditions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().conditions)>>{};
+  else if constexpr (Key::name.view() == std::string_view("config") && requires(Object& object) { object.config; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().config)>>{};
+  else if constexpr (Key::name.view() == std::string_view("confirm") && requires(Object& object) { object.confirm; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().confirm)>>{};
   else if constexpr (Key::name.view() == std::string_view("connections") && requires(Object& object) { object.connections; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().connections)>>{};
+  else if constexpr (Key::name.view() == std::string_view("connectivity") && requires(Object& object) { object.connectivity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().connectivity)>>{};
+  else if constexpr (Key::name.view() == std::string_view("constant") && requires(Object& object) { object.constant; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().constant)>>{};
+  else if constexpr (Key::name.view() == std::string_view("constantPool") && requires(Object& object) { object.constant_pool; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().constant_pool)>>{};
+  else if constexpr (Key::name.view() == std::string_view("constructFrame") && requires(Object& object) { object.construct_frame; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().construct_frame)>>{};
+  else if constexpr (Key::name.view() == std::string_view("contact") && requires(Object& object) { object.contact; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().contact)>>{};
+  else if constexpr (Key::name.view() == std::string_view("contactNormalLength") && requires(Object& object) { object.contact_normal_length; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().contact_normal_length)>>{};
+  else if constexpr (Key::name.view() == std::string_view("contacts") && requires(Object& object) { object.contacts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().contacts)>>{};
+  else if constexpr (Key::name.view() == std::string_view("container") && requires(Object& object) { object.container; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().container)>>{};
+  else if constexpr (Key::name.view() == std::string_view("content") && requires(Object& object) { object.content; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().content)>>{};
+  else if constexpr (Key::name.view() == std::string_view("context") && requires(Object& object) { object.context; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().context)>>{};
+  else if constexpr (Key::name.view() == std::string_view("contourIndex") && requires(Object& object) { object.contour_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().contour_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("contrast") && requires(Object& object) { object.contrast; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().contrast)>>{};
+  else if constexpr (Key::name.view() == std::string_view("controlX") && requires(Object& object) { object.control_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().control_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("controlX1") && requires(Object& object) { object.control_x1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().control_x1)>>{};
+  else if constexpr (Key::name.view() == std::string_view("controlX2") && requires(Object& object) { object.control_x2; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().control_x2)>>{};
+  else if constexpr (Key::name.view() == std::string_view("controlY") && requires(Object& object) { object.control_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().control_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("controlY1") && requires(Object& object) { object.control_y1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().control_y1)>>{};
+  else if constexpr (Key::name.view() == std::string_view("controlY2") && requires(Object& object) { object.control_y2; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().control_y2)>>{};
+  else if constexpr (Key::name.view() == std::string_view("coordinateA") && requires(Object& object) { object.coordinate_a; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().coordinate_a)>>{};
+  else if constexpr (Key::name.view() == std::string_view("coordinateB") && requires(Object& object) { object.coordinate_b; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().coordinate_b)>>{};
+  else if constexpr (Key::name.view() == std::string_view("coordinateCount") && requires(Object& object) { object.coordinate_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().coordinate_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("corner") && requires(Object& object) { object.corner; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().corner)>>{};
+  else if constexpr (Key::name.view() == std::string_view("corners") && requires(Object& object) { object.corners; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().corners)>>{};
   else if constexpr (Key::name.view() == std::string_view("count") && requires(Object& object) { object.count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("covers") && requires(Object& object) { object.covers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().covers)>>{};
   else if constexpr (Key::name.view() == std::string_view("cpuCores") && requires(Object& object) { object.cpu_cores; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cpu_cores)>>{};
+  else if constexpr (Key::name.view() == std::string_view("create") && requires(Object& object) { object.create; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create)>>{};
+  else if constexpr (Key::name.view() == std::string_view("createBuffer") && requires(Object& object) { object.create_buffer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_buffer)>>{};
+  else if constexpr (Key::name.view() == std::string_view("createImageSurface") && requires(Object& object) { object.create_image_surface; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_image_surface)>>{};
+  else if constexpr (Key::name.view() == std::string_view("createRenderSurface") && requires(Object& object) { object.create_render_surface; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_render_surface)>>{};
+  else if constexpr (Key::name.view() == std::string_view("createSource") && requires(Object& object) { object.create_source; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_source)>>{};
+  else if constexpr (Key::name.view() == std::string_view("createWorld") && requires(Object& object) { object.create_world; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_world)>>{};
+  else if constexpr (Key::name.view() == std::string_view("creator") && requires(Object& object) { object.creator; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().creator)>>{};
   else if constexpr (Key::name.view() == std::string_view("crop") && requires(Object& object) { object.crop; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().crop)>>{};
+  else if constexpr (Key::name.view() == std::string_view("ctrlKey") && requires(Object& object) { object.ctrl_key; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ctrl_key)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cueRegistry") && requires(Object& object) { object.cue_registry; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cue_registry)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cues") && requires(Object& object) { object.cues; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cues)>>{};
+  else if constexpr (Key::name.view() == std::string_view("currentFrame") && requires(Object& object) { object.current_frame; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().current_frame)>>{};
+  else if constexpr (Key::name.view() == std::string_view("currentStateIndex") && requires(Object& object) { object.current_state_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().current_state_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("currentTime") && requires(Object& object) { object.current_time; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().current_time)>>{};
   else if constexpr (Key::name.view() == std::string_view("curvature") && requires(Object& object) { object.curvature; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().curvature)>>{};
+  else if constexpr (Key::name.view() == std::string_view("curve") && requires(Object& object) { object.curve; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().curve)>>{};
+  else if constexpr (Key::name.view() == std::string_view("curved") && requires(Object& object) { object.curved; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().curved)>>{};
+  else if constexpr (Key::name.view() == std::string_view("customMaterialShaders") && requires(Object& object) { object.custom_material_shaders; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().custom_material_shaders)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cx") && requires(Object& object) { object.cx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cx)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cy") && requires(Object& object) { object.cy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cycleDelta") && requires(Object& object) { object.cycle_delta; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cycle_delta)>>{};
   else if constexpr (Key::name.view() == std::string_view("d") && requires(Object& object) { object.d; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().d)>>{};
   else if constexpr (Key::name.view() == std::string_view("dampingRatio") && requires(Object& object) { object.damping_ratio; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().damping_ratio)>>{};
+  else if constexpr (Key::name.view() == std::string_view("dash") && requires(Object& object) { object.dash; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dash)>>{};
+  else if constexpr (Key::name.view() == std::string_view("dashOffset") && requires(Object& object) { object.dash_offset; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dash_offset)>>{};
   else if constexpr (Key::name.view() == std::string_view("data") && requires(Object& object) { object.data; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().data)>>{};
   else if constexpr (Key::name.view() == std::string_view("deadzoneHalfHeight") && requires(Object& object) { object.deadzone_half_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().deadzone_half_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("deadzoneHalfWidth") && requires(Object& object) { object.deadzone_half_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().deadzone_half_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("decay") && requires(Object& object) { object.decay; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().decay)>>{};
   else if constexpr (Key::name.view() == std::string_view("declined") && requires(Object& object) { object.declined; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().declined)>>{};
+  else if constexpr (Key::name.view() == std::string_view("dedupe") && requires(Object& object) { object.dedupe; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dedupe)>>{};
   else if constexpr (Key::name.view() == std::string_view("defaultEase") && requires(Object& object) { object.default_ease; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().default_ease)>>{};
+  else if constexpr (Key::name.view() == std::string_view("defaultId") && requires(Object& object) { object.default_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().default_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("definitions") && requires(Object& object) { object.definitions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().definitions)>>{};
   else if constexpr (Key::name.view() == std::string_view("delay") && requires(Object& object) { object.delay; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().delay)>>{};
   else if constexpr (Key::name.view() == std::string_view("deltaTime") && requires(Object& object) { object.delta_time; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().delta_time)>>{};
+  else if constexpr (Key::name.view() == std::string_view("deltaX") && requires(Object& object) { object.delta_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().delta_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("deltaY") && requires(Object& object) { object.delta_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().delta_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("density") && requires(Object& object) { object.density; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().density)>>{};
   else if constexpr (Key::name.view() == std::string_view("densityDpi") && requires(Object& object) { object.density_dpi; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().density_dpi)>>{};
   else if constexpr (Key::name.view() == std::string_view("depth") && requires(Object& object) { object.depth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().depth)>>{};
   else if constexpr (Key::name.view() == std::string_view("depthPerComponent") && requires(Object& object) { object.depth_per_component; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().depth_per_component)>>{};
+  else if constexpr (Key::name.view() == std::string_view("depthStencilTexture") && requires(Object& object) { object.depth_stencil_texture; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().depth_stencil_texture)>>{};
+  else if constexpr (Key::name.view() == std::string_view("depthStencilView") && requires(Object& object) { object.depth_stencil_view; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().depth_stencil_view)>>{};
   else if constexpr (Key::name.view() == std::string_view("descent") && requires(Object& object) { object.descent; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().descent)>>{};
+  else if constexpr (Key::name.view() == std::string_view("dest") && requires(Object& object) { object.dest; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dest)>>{};
   else if constexpr (Key::name.view() == std::string_view("destroy") && requires(Object& object) { object.destroy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().destroy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("destroyBuffer") && requires(Object& object) { object.destroy_buffer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().destroy_buffer)>>{};
+  else if constexpr (Key::name.view() == std::string_view("destroyRenderSurface") && requires(Object& object) { object.destroy_render_surface; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().destroy_render_surface)>>{};
+  else if constexpr (Key::name.view() == std::string_view("destroySource") && requires(Object& object) { object.destroy_source; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().destroy_source)>>{};
+  else if constexpr (Key::name.view() == std::string_view("destroyWorld") && requires(Object& object) { object.destroy_world; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().destroy_world)>>{};
+  else if constexpr (Key::name.view() == std::string_view("destroyed") && requires(Object& object) { object.destroyed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().destroyed)>>{};
+  else if constexpr (Key::name.view() == std::string_view("detail") && requires(Object& object) { object.detail; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().detail)>>{};
+  else if constexpr (Key::name.view() == std::string_view("device") && requires(Object& object) { object.device; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().device)>>{};
   else if constexpr (Key::name.view() == std::string_view("devicePixelRatio") && requires(Object& object) { object.device_pixel_ratio; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().device_pixel_ratio)>>{};
+  else if constexpr (Key::name.view() == std::string_view("diagnostics") && requires(Object& object) { object.diagnostics; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().diagnostics)>>{};
+  else if constexpr (Key::name.view() == std::string_view("dialog") && requires(Object& object) { object.dialog; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dialog)>>{};
+  else if constexpr (Key::name.view() == std::string_view("diffuse") && requires(Object& object) { object.diffuse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().diffuse)>>{};
+  else if constexpr (Key::name.view() == std::string_view("diffuseMap") && requires(Object& object) { object.diffuse_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().diffuse_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("direction") && requires(Object& object) { object.direction; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().direction)>>{};
   else if constexpr (Key::name.view() == std::string_view("directionX") && requires(Object& object) { object.direction_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().direction_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("directionY") && requires(Object& object) { object.direction_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().direction_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("directionZ") && requires(Object& object) { object.direction_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().direction_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("directional") && requires(Object& object) { object.directional; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().directional)>>{};
+  else if constexpr (Key::name.view() == std::string_view("directory") && requires(Object& object) { object.directory; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().directory)>>{};
+  else if constexpr (Key::name.view() == std::string_view("disabled") && requires(Object& object) { object.disabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().disabled)>>{};
+  else if constexpr (Key::name.view() == std::string_view("dismissOnBackdrop") && requires(Object& object) { object.dismiss_on_backdrop; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dismiss_on_backdrop)>>{};
+  else if constexpr (Key::name.view() == std::string_view("display") && requires(Object& object) { object.display; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().display)>>{};
+  else if constexpr (Key::name.view() == std::string_view("displayAsPassword") && requires(Object& object) { object.display_as_password; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().display_as_password)>>{};
   else if constexpr (Key::name.view() == std::string_view("distance") && requires(Object& object) { object.distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().distance)>>{};
   else if constexpr (Key::name.view() == std::string_view("distro") && requires(Object& object) { object.distro; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().distro)>>{};
   else if constexpr (Key::name.view() == std::string_view("distroVersion") && requires(Object& object) { object.distro_version; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().distro_version)>>{};
+  else if constexpr (Key::name.view() == std::string_view("divider") && requires(Object& object) { object.divider; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().divider)>>{};
   else if constexpr (Key::name.view() == std::string_view("divisor") && requires(Object& object) { object.divisor; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().divisor)>>{};
+  else if constexpr (Key::name.view() == std::string_view("document") && requires(Object& object) { object.document; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().document)>>{};
+  else if constexpr (Key::name.view() == std::string_view("doubleSided") && requires(Object& object) { object.double_sided; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().double_sided)>>{};
+  else if constexpr (Key::name.view() == std::string_view("downState") && requires(Object& object) { object.down_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().down_state)>>{};
   else if constexpr (Key::name.view() == std::string_view("dpi") && requires(Object& object) { object.dpi; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dpi)>>{};
+  else if constexpr (Key::name.view() == std::string_view("draggable") && requires(Object& object) { object.draggable; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().draggable)>>{};
+  else if constexpr (Key::name.view() == std::string_view("drawCentersOfMass") && requires(Object& object) { object.draw_centers_of_mass; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().draw_centers_of_mass)>>{};
+  else if constexpr (Key::name.view() == std::string_view("drawColliders") && requires(Object& object) { object.draw_colliders; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().draw_colliders)>>{};
+  else if constexpr (Key::name.view() == std::string_view("drawContacts") && requires(Object& object) { object.draw_contacts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().draw_contacts)>>{};
+  else if constexpr (Key::name.view() == std::string_view("drawJoints") && requires(Object& object) { object.draw_joints; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().draw_joints)>>{};
+  else if constexpr (Key::name.view() == std::string_view("droppedMaps") && requires(Object& object) { object.dropped_maps; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dropped_maps)>>{};
   else if constexpr (Key::name.view() == std::string_view("duration") && requires(Object& object) { object.duration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().duration)>>{};
+  else if constexpr (Key::name.view() == std::string_view("durationGuard") && requires(Object& object) { object.duration_guard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().duration_guard)>>{};
+  else if constexpr (Key::name.view() == std::string_view("durationMs") && requires(Object& object) { object.duration_ms; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().duration_ms)>>{};
   else if constexpr (Key::name.view() == std::string_view("ease") && requires(Object& object) { object.ease; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ease)>>{};
   else if constexpr (Key::name.view() == std::string_view("edge") && requires(Object& object) { object.edge; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().edge)>>{};
+  else if constexpr (Key::name.view() == std::string_view("edgeColor") && requires(Object& object) { object.edge_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().edge_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("edgeMode") && requires(Object& object) { object.edge_mode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().edge_mode)>>{};
   else if constexpr (Key::name.view() == std::string_view("edgeThreshold") && requires(Object& object) { object.edge_threshold; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().edge_threshold)>>{};
+  else if constexpr (Key::name.view() == std::string_view("edgeWidth") && requires(Object& object) { object.edge_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().edge_width)>>{};
+  else if constexpr (Key::name.view() == std::string_view("edges") && requires(Object& object) { object.edges; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().edges)>>{};
+  else if constexpr (Key::name.view() == std::string_view("effect") && requires(Object& object) { object.effect; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().effect)>>{};
+  else if constexpr (Key::name.view() == std::string_view("effectPaddingResolvers") && requires(Object& object) { object.effect_padding_resolvers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().effect_padding_resolvers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("effectTargets") && requires(Object& object) { object.effect_targets; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().effect_targets)>>{};
   else if constexpr (Key::name.view() == std::string_view("elapsed") && requires(Object& object) { object.elapsed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().elapsed)>>{};
+  else if constexpr (Key::name.view() == std::string_view("element") && requires(Object& object) { object.element; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().element)>>{};
   else if constexpr (Key::name.view() == std::string_view("emission") && requires(Object& object) { object.emission; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emission)>>{};
+  else if constexpr (Key::name.view() == std::string_view("emissive") && requires(Object& object) { object.emissive; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emissive)>>{};
+  else if constexpr (Key::name.view() == std::string_view("emissiveMap") && requires(Object& object) { object.emissive_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emissive_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("emissiveStrength") && requires(Object& object) { object.emissive_strength; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emissive_strength)>>{};
   else if constexpr (Key::name.view() == std::string_view("emit") && requires(Object& object) { object.emit; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emit)>>{};
+  else if constexpr (Key::name.view() == std::string_view("emitterAge") && requires(Object& object) { object.emitter_age; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emitter_age)>>{};
   else if constexpr (Key::name.view() == std::string_view("emitterConeAngle") && requires(Object& object) { object.emitter_cone_angle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emitter_cone_angle)>>{};
   else if constexpr (Key::name.view() == std::string_view("emitterDepth") && requires(Object& object) { object.emitter_depth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emitter_depth)>>{};
   else if constexpr (Key::name.view() == std::string_view("emitterHeight") && requires(Object& object) { object.emitter_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emitter_height)>>{};
@@ -896,72 +2247,188 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("emitterShape") && requires(Object& object) { object.emitter_shape; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emitter_shape)>>{};
   else if constexpr (Key::name.view() == std::string_view("emitterType") && requires(Object& object) { object.emitter_type; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emitter_type)>>{};
   else if constexpr (Key::name.view() == std::string_view("emitterWidth") && requires(Object& object) { object.emitter_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emitter_width)>>{};
+  else if constexpr (Key::name.view() == std::string_view("enableLimit") && requires(Object& object) { object.enable_limit; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().enable_limit)>>{};
+  else if constexpr (Key::name.view() == std::string_view("enableLimitSpring") && requires(Object& object) { object.enable_limit_spring; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().enable_limit_spring)>>{};
+  else if constexpr (Key::name.view() == std::string_view("enableMotor") && requires(Object& object) { object.enable_motor; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().enable_motor)>>{};
+  else if constexpr (Key::name.view() == std::string_view("enableSpring") && requires(Object& object) { object.enable_spring; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().enable_spring)>>{};
+  else if constexpr (Key::name.view() == std::string_view("enableSwingLimit") && requires(Object& object) { object.enable_swing_limit; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().enable_swing_limit)>>{};
+  else if constexpr (Key::name.view() == std::string_view("enableTwistLimit") && requires(Object& object) { object.enable_twist_limit; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().enable_twist_limit)>>{};
   else if constexpr (Key::name.view() == std::string_view("enabled") && requires(Object& object) { object.enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().enabled)>>{};
+  else if constexpr (Key::name.view() == std::string_view("encodeBitmap") && requires(Object& object) { object.encode_bitmap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().encode_bitmap)>>{};
   else if constexpr (Key::name.view() == std::string_view("encoding") && requires(Object& object) { object.encoding; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().encoding)>>{};
   else if constexpr (Key::name.view() == std::string_view("end") && requires(Object& object) { object.end; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().end)>>{};
+  else if constexpr (Key::name.view() == std::string_view("endCap") && requires(Object& object) { object.end_cap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().end_cap)>>{};
+  else if constexpr (Key::name.view() == std::string_view("endData") && requires(Object& object) { object.end_data; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().end_data)>>{};
   else if constexpr (Key::name.view() == std::string_view("endIndex") && requires(Object& object) { object.end_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().end_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("endPoints") && requires(Object& object) { object.end_points; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().end_points)>>{};
+  else if constexpr (Key::name.view() == std::string_view("endSlotIndex") && requires(Object& object) { object.end_slot_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().end_slot_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("endX") && requires(Object& object) { object.end_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().end_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("endY") && requires(Object& object) { object.end_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().end_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("endZ") && requires(Object& object) { object.end_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().end_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("endianness") && requires(Object& object) { object.endianness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().endianness)>>{};
   else if constexpr (Key::name.view() == std::string_view("engine") && requires(Object& object) { object.engine; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().engine)>>{};
   else if constexpr (Key::name.view() == std::string_view("engineVersion") && requires(Object& object) { object.engine_version; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().engine_version)>>{};
+  else if constexpr (Key::name.view() == std::string_view("entries") && requires(Object& object) { object.entries; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().entries)>>{};
+  else if constexpr (Key::name.view() == std::string_view("entryId") && requires(Object& object) { object.entry_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().entry_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("environment") && requires(Object& object) { object.environment; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().environment)>>{};
+  else if constexpr (Key::name.view() == std::string_view("events") && requires(Object& object) { object.events; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().events)>>{};
+  else if constexpr (Key::name.view() == std::string_view("execute") && requires(Object& object) { object.execute; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().execute)>>{};
+  else if constexpr (Key::name.view() == std::string_view("exit") && requires(Object& object) { object.exit; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().exit)>>{};
+  else if constexpr (Key::name.view() == std::string_view("exitTimeRatio") && requires(Object& object) { object.exit_time_ratio; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().exit_time_ratio)>>{};
+  else if constexpr (Key::name.view() == std::string_view("exitX") && requires(Object& object) { object.exit_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().exit_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("exitY") && requires(Object& object) { object.exit_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().exit_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("expanded") && requires(Object& object) { object.expanded; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().expanded)>>{};
   else if constexpr (Key::name.view() == std::string_view("explainSpatialIndexing") && requires(Object& object) { object.explain_spatial_indexing; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().explain_spatial_indexing)>>{};
   else if constexpr (Key::name.view() == std::string_view("exposure") && requires(Object& object) { object.exposure; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().exposure)>>{};
   else if constexpr (Key::name.view() == std::string_view("exposureCompensation") && requires(Object& object) { object.exposure_compensation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().exposure_compensation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("extendMeshPrelude") && requires(Object& object) { object.extend_mesh_prelude; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().extend_mesh_prelude)>>{};
+  else if constexpr (Key::name.view() == std::string_view("extraBindGroupLayout") && requires(Object& object) { object.extra_bind_group_layout; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().extra_bind_group_layout)>>{};
+  else if constexpr (Key::name.view() == std::string_view("face") && requires(Object& object) { object.face; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().face)>>{};
+  else if constexpr (Key::name.view() == std::string_view("facet") && requires(Object& object) { object.facet; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().facet)>>{};
+  else if constexpr (Key::name.view() == std::string_view("facing") && requires(Object& object) { object.facing; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().facing)>>{};
+  else if constexpr (Key::name.view() == std::string_view("facingSoftness") && requires(Object& object) { object.facing_softness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().facing_softness)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fadeSourceGain") && requires(Object& object) { object.fade_source_gain; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fade_source_gain)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fallOff") && requires(Object& object) { object.fall_off; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fall_off)>>{};
+  else if constexpr (Key::name.view() == std::string_view("family") && requires(Object& object) { object.family; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().family)>>{};
   else if constexpr (Key::name.view() == std::string_view("far") && requires(Object& object) { object.far; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().far)>>{};
   else if constexpr (Key::name.view() == std::string_view("featureId") && requires(Object& object) { object.feature_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().feature_id)>>{};
   else if constexpr (Key::name.view() == std::string_view("feedback") && requires(Object& object) { object.feedback; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().feedback)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fetch") && requires(Object& object) { object.fetch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fetch)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fileSystem") && requires(Object& object) { object.file_system; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().file_system)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fill") && requires(Object& object) { object.fill; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fill)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fill0") && requires(Object& object) { object.fill0; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fill0)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fill1") && requires(Object& object) { object.fill1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fill1)>>{};
   else if constexpr (Key::name.view() == std::string_view("fillBounds") && requires(Object& object) { object.fill_bounds; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fill_bounds)>>{};
   else if constexpr (Key::name.view() == std::string_view("fillColor") && requires(Object& object) { object.fill_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fill_color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fillOpacity") && requires(Object& object) { object.fill_opacity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fill_opacity)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fillRule") && requires(Object& object) { object.fill_rule; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fill_rule)>>{};
+  else if constexpr (Key::name.view() == std::string_view("filter") && requires(Object& object) { object.filter; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().filter)>>{};
   else if constexpr (Key::name.view() == std::string_view("finishColor") && requires(Object& object) { object.finish_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().finish_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("finishColorVariance") && requires(Object& object) { object.finish_color_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().finish_color_variance)>>{};
   else if constexpr (Key::name.view() == std::string_view("finishParticleSize") && requires(Object& object) { object.finish_particle_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().finish_particle_size)>>{};
   else if constexpr (Key::name.view() == std::string_view("finishParticleSizeVariance") && requires(Object& object) { object.finish_particle_size_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().finish_particle_size_variance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("firstRegion") && requires(Object& object) { object.first_region; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().first_region)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fixedStepState") && requires(Object& object) { object.fixed_step_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fixed_step_state)>>{};
+  else if constexpr (Key::name.view() == std::string_view("flagStream") && requires(Object& object) { object.flag_stream; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().flag_stream)>>{};
+  else if constexpr (Key::name.view() == std::string_view("flags") && requires(Object& object) { object.flags; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().flags)>>{};
+  else if constexpr (Key::name.view() == std::string_view("flashWindowFrame") && requires(Object& object) { object.flash_window_frame; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().flash_window_frame)>>{};
+  else if constexpr (Key::name.view() == std::string_view("flipX") && requires(Object& object) { object.flip_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().flip_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("flipY") && requires(Object& object) { object.flip_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().flip_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("floorLevel") && requires(Object& object) { object.floor_level; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().floor_level)>>{};
+  else if constexpr (Key::name.view() == std::string_view("focalPointRatio") && requires(Object& object) { object.focal_point_ratio; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().focal_point_ratio)>>{};
+  else if constexpr (Key::name.view() == std::string_view("focus") && requires(Object& object) { object.focus; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().focus)>>{};
+  else if constexpr (Key::name.view() == std::string_view("focusDistance") && requires(Object& object) { object.focus_distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().focus_distance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("focusManager") && requires(Object& object) { object.focus_manager; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().focus_manager)>>{};
+  else if constexpr (Key::name.view() == std::string_view("focusRange") && requires(Object& object) { object.focus_range; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().focus_range)>>{};
+  else if constexpr (Key::name.view() == std::string_view("focused") && requires(Object& object) { object.focused; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().focused)>>{};
+  else if constexpr (Key::name.view() == std::string_view("font") && requires(Object& object) { object.font; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().font)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fontFamily") && requires(Object& object) { object.font_family; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().font_family)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fontHeight") && requires(Object& object) { object.font_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().font_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("fontScale") && requires(Object& object) { object.font_scale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().font_scale)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fontSize") && requires(Object& object) { object.font_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().font_size)>>{};
+  else if constexpr (Key::name.view() == std::string_view("footprintHeight") && requires(Object& object) { object.footprint_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().footprint_height)>>{};
+  else if constexpr (Key::name.view() == std::string_view("footprintWidth") && requires(Object& object) { object.footprint_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().footprint_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("forceX") && requires(Object& object) { object.force_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().force_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("forceY") && requires(Object& object) { object.force_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().force_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("forceZ") && requires(Object& object) { object.force_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().force_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("formFactor") && requires(Object& object) { object.form_factor; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().form_factor)>>{};
   else if constexpr (Key::name.view() == std::string_view("format") && requires(Object& object) { object.format; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().format)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fov") && requires(Object& object) { object.fov; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fov)>>{};
   else if constexpr (Key::name.view() == std::string_view("fovY") && requires(Object& object) { object.fov_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fov_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("fraction") && requires(Object& object) { object.fraction; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fraction)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fragmentDeclarations") && requires(Object& object) { object.fragment_declarations; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fragment_declarations)>>{};
+  else if constexpr (Key::name.view() == std::string_view("frame") && requires(Object& object) { object.frame; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frame)>>{};
   else if constexpr (Key::name.view() == std::string_view("frameCount") && requires(Object& object) { object.frame_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frame_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("frameDuration") && requires(Object& object) { object.frame_duration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frame_duration)>>{};
   else if constexpr (Key::name.view() == std::string_view("frameDurations") && requires(Object& object) { object.frame_durations; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frame_durations)>>{};
+  else if constexpr (Key::name.view() == std::string_view("frameHeight") && requires(Object& object) { object.frame_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frame_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("frameId") && requires(Object& object) { object.frame_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frame_id)>>{};
   else if constexpr (Key::name.view() == std::string_view("frameNames") && requires(Object& object) { object.frame_names; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frame_names)>>{};
+  else if constexpr (Key::name.view() == std::string_view("frameOffset") && requires(Object& object) { object.frame_offset; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frame_offset)>>{};
   else if constexpr (Key::name.view() == std::string_view("frameRate") && requires(Object& object) { object.frame_rate; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frame_rate)>>{};
+  else if constexpr (Key::name.view() == std::string_view("frameScale") && requires(Object& object) { object.frame_scale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frame_scale)>>{};
+  else if constexpr (Key::name.view() == std::string_view("frameScripts") && requires(Object& object) { object.frame_scripts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frame_scripts)>>{};
+  else if constexpr (Key::name.view() == std::string_view("frameWidth") && requires(Object& object) { object.frame_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frame_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("frames") && requires(Object& object) { object.frames; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frames)>>{};
+  else if constexpr (Key::name.view() == std::string_view("free") && requires(Object& object) { object.free; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().free)>>{};
   else if constexpr (Key::name.view() == std::string_view("frequency") && requires(Object& object) { object.frequency; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frequency)>>{};
+  else if constexpr (Key::name.view() == std::string_view("frequencyHz") && requires(Object& object) { object.frequency_hz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().frequency_hz)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fresnelBias") && requires(Object& object) { object.fresnel_bias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fresnel_bias)>>{};
   else if constexpr (Key::name.view() == std::string_view("friction") && requires(Object& object) { object.friction; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().friction)>>{};
+  else if constexpr (Key::name.view() == std::string_view("from") && requires(Object& object) { object.from; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().from)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fromIndex") && requires(Object& object) { object.from_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().from_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fromMotion") && requires(Object& object) { object.from_motion; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().from_motion)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fromSample") && requires(Object& object) { object.from_sample; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().from_sample)>>{};
+  else if constexpr (Key::name.view() == std::string_view("fullscreen") && requires(Object& object) { object.fullscreen; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fullscreen)>>{};
   else if constexpr (Key::name.view() == std::string_view("gain") && requires(Object& object) { object.gain; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gain)>>{};
   else if constexpr (Key::name.view() == std::string_view("gamma") && requires(Object& object) { object.gamma; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gamma)>>{};
+  else if constexpr (Key::name.view() == std::string_view("gamut") && requires(Object& object) { object.gamut; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gamut)>>{};
   else if constexpr (Key::name.view() == std::string_view("gateWeave") && requires(Object& object) { object.gate_weave; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gate_weave)>>{};
+  else if constexpr (Key::name.view() == std::string_view("geolocation") && requires(Object& object) { object.geolocation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().geolocation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("geometry") && requires(Object& object) { object.geometry; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().geometry)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getAppDirectoryPath") && requires(Object& object) { object.get_app_directory_path; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_app_directory_path)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getAppPath") && requires(Object& object) { object.get_app_path; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_app_path)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getBidiClass") && requires(Object& object) { object.get_bidi_class; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_bidi_class)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getBounds") && requires(Object& object) { object.get_bounds; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_bounds)>>{};
   else if constexpr (Key::name.view() == std::string_view("getCapabilities") && requires(Object& object) { object.get_capabilities; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_capabilities)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getCodePointForGlyph") && requires(Object& object) { object.get_code_point_for_glyph; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_code_point_for_glyph)>>{};
   else if constexpr (Key::name.view() == std::string_view("getCurrentPosition") && requires(Object& object) { object.get_current_position; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_current_position)>>{};
   else if constexpr (Key::name.view() == std::string_view("getCurrentPositionResult") && requires(Object& object) { object.get_current_position_result; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_current_position_result)>>{};
   else if constexpr (Key::name.view() == std::string_view("getCursorPosition") && requires(Object& object) { object.get_cursor_position; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_cursor_position)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getDeviceTime") && requires(Object& object) { object.get_device_time; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_device_time)>>{};
   else if constexpr (Key::name.view() == std::string_view("getDisplayMetrics") && requires(Object& object) { object.get_display_metrics; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_display_metrics)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getDuration") && requires(Object& object) { object.get_duration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_duration)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getExecutablePath") && requires(Object& object) { object.get_executable_path; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_executable_path)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getFontMetrics") && requires(Object& object) { object.get_font_metrics; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_font_metrics)>>{};
   else if constexpr (Key::name.view() == std::string_view("getFormats") && requires(Object& object) { object.get_formats; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_formats)>>{};
   else if constexpr (Key::name.view() == std::string_view("getGlyphAtlasImage") && requires(Object& object) { object.get_glyph_atlas_image; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_atlas_image)>>{};
   else if constexpr (Key::name.view() == std::string_view("getGlyphEntry") && requires(Object& object) { object.get_glyph_entry; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_entry)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getGlyphExtents") && requires(Object& object) { object.get_glyph_extents; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_extents)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getGlyphIndexForCodePoint") && requires(Object& object) { object.get_glyph_index_for_code_point; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_index_for_code_point)>>{};
   else if constexpr (Key::name.view() == std::string_view("getGlyphKerning") && requires(Object& object) { object.get_glyph_kerning; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_kerning)>>{};
   else if constexpr (Key::name.view() == std::string_view("getGlyphLayoutVersion") && requires(Object& object) { object.get_glyph_layout_version; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_layout_version)>>{};
   else if constexpr (Key::name.view() == std::string_view("getGlyphMetrics") && requires(Object& object) { object.get_glyph_metrics; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_metrics)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getGlyphName") && requires(Object& object) { object.get_glyph_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_name)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getGlyphOutline") && requires(Object& object) { object.get_glyph_outline; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_outline)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getGlyphOutlineAdvance") && requires(Object& object) { object.get_glyph_outline_advance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_outline_advance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getGlyphOutlineIndexForCodePoint") && requires(Object& object) { object.get_glyph_outline_index_for_code_point; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_outline_index_for_code_point)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getGlyphOutlineMetrics") && requires(Object& object) { object.get_glyph_outline_metrics; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_glyph_outline_metrics)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getHeight") && requires(Object& object) { object.get_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("getId") && requires(Object& object) { object.get_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_id)>>{};
   else if constexpr (Key::name.view() == std::string_view("getInfo") && requires(Object& object) { object.get_info; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_info)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getLaunchUrl") && requires(Object& object) { object.get_launch_url; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_launch_url)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getLocale") && requires(Object& object) { object.get_locale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_locale)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getLoginItem") && requires(Object& object) { object.get_login_item; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_login_item)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getName") && requires(Object& object) { object.get_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_name)>>{};
   else if constexpr (Key::name.view() == std::string_view("getPermission") && requires(Object& object) { object.get_permission; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_permission)>>{};
   else if constexpr (Key::name.view() == std::string_view("getPermissionState") && requires(Object& object) { object.get_permission_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_permission_state)>>{};
   else if constexpr (Key::name.view() == std::string_view("getPersistence") && requires(Object& object) { object.get_persistence; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_persistence)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getPreferredSystemLanguages") && requires(Object& object) { object.get_preferred_system_languages; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_preferred_system_languages)>>{};
   else if constexpr (Key::name.view() == std::string_view("getPrimaryScreen") && requires(Object& object) { object.get_primary_screen; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_primary_screen)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getRegisteredSchemes") && requires(Object& object) { object.get_registered_schemes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_registered_schemes)>>{};
   else if constexpr (Key::name.view() == std::string_view("getSafeAreaInsets") && requires(Object& object) { object.get_safe_area_insets; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_safe_area_insets)>>{};
   else if constexpr (Key::name.view() == std::string_view("getScreens") && requires(Object& object) { object.get_screens; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_screens)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getState") && requires(Object& object) { object.get_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_state)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getSystemLocale") && requires(Object& object) { object.get_system_locale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_system_locale)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getVersion") && requires(Object& object) { object.get_version; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_version)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getWidth") && requires(Object& object) { object.get_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_width)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getWorldStatus") && requires(Object& object) { object.get_world_status; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_world_status)>>{};
   else if constexpr (Key::name.view() == std::string_view("ghosts") && requires(Object& object) { object.ghosts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ghosts)>>{};
+  else if constexpr (Key::name.view() == std::string_view("gl") && requires(Object& object) { object.gl; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gl)>>{};
+  else if constexpr (Key::name.view() == std::string_view("glyph") && requires(Object& object) { object.glyph; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().glyph)>>{};
+  else if constexpr (Key::name.view() == std::string_view("glyphCount") && requires(Object& object) { object.glyph_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().glyph_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("glyphStream") && requires(Object& object) { object.glyph_stream; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().glyph_stream)>>{};
   else if constexpr (Key::name.view() == std::string_view("glyphs") && requires(Object& object) { object.glyphs; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().glyphs)>>{};
+  else if constexpr (Key::name.view() == std::string_view("goalAzimuth") && requires(Object& object) { object.goal_azimuth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().goal_azimuth)>>{};
+  else if constexpr (Key::name.view() == std::string_view("goalDistance") && requires(Object& object) { object.goal_distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().goal_distance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("goalPitch") && requires(Object& object) { object.goal_pitch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().goal_pitch)>>{};
+  else if constexpr (Key::name.view() == std::string_view("goalPolar") && requires(Object& object) { object.goal_polar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().goal_polar)>>{};
+  else if constexpr (Key::name.view() == std::string_view("goalYaw") && requires(Object& object) { object.goal_yaw; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().goal_yaw)>>{};
   else if constexpr (Key::name.view() == std::string_view("gpuRenderer") && requires(Object& object) { object.gpu_renderer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gpu_renderer)>>{};
+  else if constexpr (Key::name.view() == std::string_view("gpuSkinning") && requires(Object& object) { object.gpu_skinning; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gpu_skinning)>>{};
   else if constexpr (Key::name.view() == std::string_view("gpuVendor") && requires(Object& object) { object.gpu_vendor; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gpu_vendor)>>{};
+  else if constexpr (Key::name.view() == std::string_view("gradient") && requires(Object& object) { object.gradient; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gradient)>>{};
+  else if constexpr (Key::name.view() == std::string_view("gradientsById") && requires(Object& object) { object.gradients_by_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gradients_by_id)>>{};
   else if constexpr (Key::name.view() == std::string_view("grainIntensity") && requires(Object& object) { object.grain_intensity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().grain_intensity)>>{};
   else if constexpr (Key::name.view() == std::string_view("gravity") && requires(Object& object) { object.gravity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gravity)>>{};
   else if constexpr (Key::name.view() == std::string_view("gravityX") && requires(Object& object) { object.gravity_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gravity_x)>>{};
@@ -972,49 +2439,135 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("green") && requires(Object& object) { object.green; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().green)>>{};
   else if constexpr (Key::name.view() == std::string_view("greenBias") && requires(Object& object) { object.green_bias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().green_bias)>>{};
   else if constexpr (Key::name.view() == std::string_view("greenScale") && requires(Object& object) { object.green_scale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().green_scale)>>{};
+  else if constexpr (Key::name.view() == std::string_view("gridSize") && requires(Object& object) { object.grid_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().grid_size)>>{};
+  else if constexpr (Key::name.view() == std::string_view("groundAnchorAX") && requires(Object& object) { object.ground_anchor_ax; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ground_anchor_ax)>>{};
+  else if constexpr (Key::name.view() == std::string_view("groundAnchorAY") && requires(Object& object) { object.ground_anchor_ay; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ground_anchor_ay)>>{};
+  else if constexpr (Key::name.view() == std::string_view("groundAnchorBX") && requires(Object& object) { object.ground_anchor_bx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ground_anchor_bx)>>{};
+  else if constexpr (Key::name.view() == std::string_view("groundAnchorBY") && requires(Object& object) { object.ground_anchor_by; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ground_anchor_by)>>{};
   else if constexpr (Key::name.view() == std::string_view("groundColor") && requires(Object& object) { object.ground_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ground_color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("groups") && requires(Object& object) { object.groups; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().groups)>>{};
+  else if constexpr (Key::name.view() == std::string_view("growable") && requires(Object& object) { object.growable; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().growable)>>{};
+  else if constexpr (Key::name.view() == std::string_view("guard") && requires(Object& object) { object.guard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().guard)>>{};
   else if constexpr (Key::name.view() == std::string_view("halationRadius") && requires(Object& object) { object.halation_radius; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().halation_radius)>>{};
   else if constexpr (Key::name.view() == std::string_view("halationStrength") && requires(Object& object) { object.halation_strength; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().halation_strength)>>{};
   else if constexpr (Key::name.view() == std::string_view("halfExtentX") && requires(Object& object) { object.half_extent_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_extent_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("halfExtentY") && requires(Object& object) { object.half_extent_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_extent_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("halfExtentZ") && requires(Object& object) { object.half_extent_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_extent_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("halfH") && requires(Object& object) { object.half_h; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_h)>>{};
+  else if constexpr (Key::name.view() == std::string_view("halfHeight") && requires(Object& object) { object.half_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("halfW") && requires(Object& object) { object.half_w; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_w)>>{};
+  else if constexpr (Key::name.view() == std::string_view("halfWidth") && requires(Object& object) { object.half_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_width)>>{};
+  else if constexpr (Key::name.view() == std::string_view("halfX") && requires(Object& object) { object.half_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("halfY") && requires(Object& object) { object.half_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("halfZ") && requires(Object& object) { object.half_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("halo") && requires(Object& object) { object.halo; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().halo)>>{};
   else if constexpr (Key::name.view() == std::string_view("handle") && requires(Object& object) { object.handle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().handle)>>{};
+  else if constexpr (Key::name.view() == std::string_view("haptics") && requires(Object& object) { object.haptics; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().haptics)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hasAlphaMap") && requires(Object& object) { object.has_alpha_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_alpha_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hasBaseColorMap") && requires(Object& object) { object.has_base_color_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_base_color_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hasColor") && requires(Object& object) { object.has_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hasColorAdjustment") && requires(Object& object) { object.has_color_adjustment; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_color_adjustment)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hasColorMatrix") && requires(Object& object) { object.has_color_matrix; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_color_matrix)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hasCommon") && requires(Object& object) { object.has_common; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_common)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hasEmissiveMap") && requires(Object& object) { object.has_emissive_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_emissive_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("hasFormat") && requires(Object& object) { object.has_format; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_format)>>{};
   else if constexpr (Key::name.view() == std::string_view("hasImage") && requires(Object& object) { object.has_image; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_image)>>{};
   else if constexpr (Key::name.view() == std::string_view("hasKeyboard") && requires(Object& object) { object.has_keyboard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_keyboard)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hasMetallicRoughnessMap") && requires(Object& object) { object.has_metallic_roughness_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_metallic_roughness_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("hasMouse") && requires(Object& object) { object.has_mouse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_mouse)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hasNormalMap") && requires(Object& object) { object.has_normal_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_normal_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hasOcclusionMap") && requires(Object& object) { object.has_occlusion_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_occlusion_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hasRadius") && requires(Object& object) { object.has_radius; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_radius)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hasSingleInstanceLock") && requires(Object& object) { object.has_single_instance_lock; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_single_instance_lock)>>{};
   else if constexpr (Key::name.view() == std::string_view("hasStylus") && requires(Object& object) { object.has_stylus; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_stylus)>>{};
   else if constexpr (Key::name.view() == std::string_view("hasText") && requires(Object& object) { object.has_text; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_text)>>{};
   else if constexpr (Key::name.view() == std::string_view("heading") && requires(Object& object) { object.heading; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().heading)>>{};
   else if constexpr (Key::name.view() == std::string_view("height") && requires(Object& object) { object.height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().height)>>{};
+  else if constexpr (Key::name.view() == std::string_view("heights") && requires(Object& object) { object.heights; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().heights)>>{};
   else if constexpr (Key::name.view() == std::string_view("hemisphere") && requires(Object& object) { object.hemisphere; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().hemisphere)>>{};
+  else if constexpr (Key::name.view() == std::string_view("heuristic") && requires(Object& object) { object.heuristic; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().heuristic)>>{};
   else if constexpr (Key::name.view() == std::string_view("hide") && requires(Object& object) { object.hide; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().hide)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hideApp") && requires(Object& object) { object.hide_app; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().hide_app)>>{};
   else if constexpr (Key::name.view() == std::string_view("highMax") && requires(Object& object) { object.high_max; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().high_max)>>{};
   else if constexpr (Key::name.view() == std::string_view("highMin") && requires(Object& object) { object.high_min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().high_min)>>{};
+  else if constexpr (Key::name.view() == std::string_view("highlightAlpha") && requires(Object& object) { object.highlight_alpha; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().highlight_alpha)>>{};
+  else if constexpr (Key::name.view() == std::string_view("highlightColor") && requires(Object& object) { object.highlight_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().highlight_color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("historyLimit") && requires(Object& object) { object.history_limit; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().history_limit)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hit") && requires(Object& object) { object.hit; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().hit)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hitArea") && requires(Object& object) { object.hit_area; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().hit_area)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hitCount") && requires(Object& object) { object.hit_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().hit_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hits") && requires(Object& object) { object.hits; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().hits)>>{};
+  else if constexpr (Key::name.view() == std::string_view("horizontalScrollBar") && requires(Object& object) { object.horizontal_scroll_bar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().horizontal_scroll_bar)>>{};
+  else if constexpr (Key::name.view() == std::string_view("host") && requires(Object& object) { object.host; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().host)>>{};
+  else if constexpr (Key::name.view() == std::string_view("hovered") && requires(Object& object) { object.hovered; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().hovered)>>{};
+  else if constexpr (Key::name.view() == std::string_view("html") && requires(Object& object) { object.html; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().html)>>{};
   else if constexpr (Key::name.view() == std::string_view("hue") && requires(Object& object) { object.hue; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().hue)>>{};
+  else if constexpr (Key::name.view() == std::string_view("icon") && requires(Object& object) { object.icon; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().icon)>>{};
   else if constexpr (Key::name.view() == std::string_view("id") && requires(Object& object) { object.id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("ids") && requires(Object& object) { object.ids; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ids)>>{};
   else if constexpr (Key::name.view() == std::string_view("illuminance") && requires(Object& object) { object.illuminance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().illuminance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("image") && requires(Object& object) { object.image; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image)>>{};
   else if constexpr (Key::name.view() == std::string_view("imageCount") && requires(Object& object) { object.image_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("imageFile") && requires(Object& object) { object.image_file; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_file)>>{};
   else if constexpr (Key::name.view() == std::string_view("imageHeight") && requires(Object& object) { object.image_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("imagePath") && requires(Object& object) { object.image_path; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_path)>>{};
+  else if constexpr (Key::name.view() == std::string_view("imageResources") && requires(Object& object) { object.image_resources; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_resources)>>{};
   else if constexpr (Key::name.view() == std::string_view("imageWidth") && requires(Object& object) { object.image_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("impact") && requires(Object& object) { object.impact; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().impact)>>{};
+  else if constexpr (Key::name.view() == std::string_view("implementationImport") && requires(Object& object) { object.implementation_import; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().implementation_import)>>{};
+  else if constexpr (Key::name.view() == std::string_view("implementationSymbol") && requires(Object& object) { object.implementation_symbol; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().implementation_symbol)>>{};
+  else if constexpr (Key::name.view() == std::string_view("imported") && requires(Object& object) { object.imported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().imported)>>{};
+  else if constexpr (Key::name.view() == std::string_view("impulse0") && requires(Object& object) { object.impulse0; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().impulse0)>>{};
+  else if constexpr (Key::name.view() == std::string_view("impulse1") && requires(Object& object) { object.impulse1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().impulse1)>>{};
+  else if constexpr (Key::name.view() == std::string_view("impulse2") && requires(Object& object) { object.impulse2; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().impulse2)>>{};
+  else if constexpr (Key::name.view() == std::string_view("impulse3") && requires(Object& object) { object.impulse3; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().impulse3)>>{};
+  else if constexpr (Key::name.view() == std::string_view("impulse4") && requires(Object& object) { object.impulse4; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().impulse4)>>{};
+  else if constexpr (Key::name.view() == std::string_view("impulse5") && requires(Object& object) { object.impulse5; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().impulse5)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inUse") && requires(Object& object) { object.in_use; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().in_use)>>{};
+  else if constexpr (Key::name.view() == std::string_view("indent") && requires(Object& object) { object.indent; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().indent)>>{};
+  else if constexpr (Key::name.view() == std::string_view("index") && requires(Object& object) { object.index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("indexCount") && requires(Object& object) { object.index_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().index_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("indexFormat") && requires(Object& object) { object.index_format; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().index_format)>>{};
+  else if constexpr (Key::name.view() == std::string_view("indexOffset") && requires(Object& object) { object.index_offset; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().index_offset)>>{};
+  else if constexpr (Key::name.view() == std::string_view("indices") && requires(Object& object) { object.indices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().indices)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inertiaXX") && requires(Object& object) { object.inertia_xx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inertia_xx)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inertiaXY") && requires(Object& object) { object.inertia_xy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inertia_xy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inertiaXZ") && requires(Object& object) { object.inertia_xz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inertia_xz)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inertiaYY") && requires(Object& object) { object.inertia_yy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inertia_yy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inertiaYZ") && requires(Object& object) { object.inertia_yz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inertia_yz)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inertiaZZ") && requires(Object& object) { object.inertia_zz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inertia_zz)>>{};
   else if constexpr (Key::name.view() == std::string_view("influenceCounts") && requires(Object& object) { object.influence_counts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().influence_counts)>>{};
   else if constexpr (Key::name.view() == std::string_view("influences") && requires(Object& object) { object.influences; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().influences)>>{};
+  else if constexpr (Key::name.view() == std::string_view("initialFocus") && requires(Object& object) { object.initial_focus; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().initial_focus)>>{};
+  else if constexpr (Key::name.view() == std::string_view("initialStateIndex") && requires(Object& object) { object.initial_state_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().initial_state_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("initialValue") && requires(Object& object) { object.initial_value; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().initial_value)>>{};
+  else if constexpr (Key::name.view() == std::string_view("initialized") && requires(Object& object) { object.initialized; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().initialized)>>{};
   else if constexpr (Key::name.view() == std::string_view("innerConeCos") && requires(Object& object) { object.inner_cone_cos; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inner_cone_cos)>>{};
   else if constexpr (Key::name.view() == std::string_view("innerConeDegrees") && requires(Object& object) { object.inner_cone_degrees; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inner_cone_degrees)>>{};
+  else if constexpr (Key::name.view() == std::string_view("input") && requires(Object& object) { object.input; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().input)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inputIndex") && requires(Object& object) { object.input_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().input_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inputValues") && requires(Object& object) { object.input_values; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().input_values)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inputs") && requires(Object& object) { object.inputs; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inputs)>>{};
   else if constexpr (Key::name.view() == std::string_view("insertSpatialObject") && requires(Object& object) { object.insert_spatial_object; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().insert_spatial_object)>>{};
+  else if constexpr (Key::name.view() == std::string_view("instructionStream") && requires(Object& object) { object.instruction_stream; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().instruction_stream)>>{};
   else if constexpr (Key::name.view() == std::string_view("intensity") && requires(Object& object) { object.intensity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().intensity)>>{};
   else if constexpr (Key::name.view() == std::string_view("intensityUnit") && requires(Object& object) { object.intensity_unit; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().intensity_unit)>>{};
+  else if constexpr (Key::name.view() == std::string_view("interactiveStateBinding") && requires(Object& object) { object.interactive_state_binding; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().interactive_state_binding)>>{};
   else if constexpr (Key::name.view() == std::string_view("internal") && requires(Object& object) { object.internal; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().internal)>>{};
   else if constexpr (Key::name.view() == std::string_view("interval") && requires(Object& object) { object.interval; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().interval)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldXX") && requires(Object& object) { object.inverse_inertia_world_xx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_world_xx)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldXY") && requires(Object& object) { object.inverse_inertia_world_xy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_world_xy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldXZ") && requires(Object& object) { object.inverse_inertia_world_xz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_world_xz)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldYY") && requires(Object& object) { object.inverse_inertia_world_yy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_world_yy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldYZ") && requires(Object& object) { object.inverse_inertia_world_yz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_world_yz)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldZZ") && requires(Object& object) { object.inverse_inertia_world_zz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_world_zz)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseMass") && requires(Object& object) { object.inverse_mass; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_mass)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseViewProjection") && requires(Object& object) { object.inverse_view_projection; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_view_projection)>>{};
   else if constexpr (Key::name.view() == std::string_view("invoke") && requires(Object& object) { object.invoke; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().invoke)>>{};
   else if constexpr (Key::name.view() == std::string_view("ior") && requires(Object& object) { object.ior; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ior)>>{};
+  else if constexpr (Key::name.view() == std::string_view("ipc") && requires(Object& object) { object.ipc; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ipc)>>{};
   else if constexpr (Key::name.view() == std::string_view("iridescence") && requires(Object& object) { object.iridescence; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence)>>{};
+  else if constexpr (Key::name.view() == std::string_view("iridescenceEnabled") && requires(Object& object) { object.iridescence_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence_enabled)>>{};
   else if constexpr (Key::name.view() == std::string_view("iridescenceIor") && requires(Object& object) { object.iridescence_ior; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence_ior)>>{};
   else if constexpr (Key::name.view() == std::string_view("iridescenceMap") && requires(Object& object) { object.iridescence_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("iridescenceMapUvSet") && requires(Object& object) { object.iridescence_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence_map_uv_set)>>{};
@@ -1022,9 +2575,11 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("iridescenceThicknessMapUvSet") && requires(Object& object) { object.iridescence_thickness_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence_thickness_map_uv_set)>>{};
   else if constexpr (Key::name.view() == std::string_view("iridescenceThicknessMax") && requires(Object& object) { object.iridescence_thickness_max; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence_thickness_max)>>{};
   else if constexpr (Key::name.view() == std::string_view("iridescenceThicknessMin") && requires(Object& object) { object.iridescence_thickness_min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().iridescence_thickness_min)>>{};
+  else if constexpr (Key::name.view() == std::string_view("irradiancePipeline") && requires(Object& object) { object.irradiance_pipeline; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().irradiance_pipeline)>>{};
   else if constexpr (Key::name.view() == std::string_view("isAmbientLightSupported") && requires(Object& object) { object.is_ambient_light_supported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_ambient_light_supported)>>{};
   else if constexpr (Key::name.view() == std::string_view("isAvailable") && requires(Object& object) { object.is_available; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_available)>>{};
   else if constexpr (Key::name.view() == std::string_view("isBarometerSupported") && requires(Object& object) { object.is_barometer_supported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_barometer_supported)>>{};
+  else if constexpr (Key::name.view() == std::string_view("isDefault") && requires(Object& object) { object.is_default; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_default)>>{};
   else if constexpr (Key::name.view() == std::string_view("isGravitySupported") && requires(Object& object) { object.is_gravity_supported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_gravity_supported)>>{};
   else if constexpr (Key::name.view() == std::string_view("isGyroscopeSupported") && requires(Object& object) { object.is_gyroscope_supported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_gyroscope_supported)>>{};
   else if constexpr (Key::name.view() == std::string_view("isHdr") && requires(Object& object) { object.is_hdr; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_hdr)>>{};
@@ -1034,94 +2589,267 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("isMagnetometerSupported") && requires(Object& object) { object.is_magnetometer_supported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_magnetometer_supported)>>{};
   else if constexpr (Key::name.view() == std::string_view("isMotionSupported") && requires(Object& object) { object.is_motion_supported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_motion_supported)>>{};
   else if constexpr (Key::name.view() == std::string_view("isOrientationSupported") && requires(Object& object) { object.is_orientation_supported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_orientation_supported)>>{};
+  else if constexpr (Key::name.view() == std::string_view("isPlaying") && requires(Object& object) { object.is_playing; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_playing)>>{};
   else if constexpr (Key::name.view() == std::string_view("isPrimary") && requires(Object& object) { object.is_primary; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_primary)>>{};
   else if constexpr (Key::name.view() == std::string_view("isProximitySupported") && requires(Object& object) { object.is_proximity_supported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_proximity_supported)>>{};
+  else if constexpr (Key::name.view() == std::string_view("isReady") && requires(Object& object) { object.is_ready; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_ready)>>{};
+  else if constexpr (Key::name.view() == std::string_view("isRegistered") && requires(Object& object) { object.is_registered; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_registered)>>{};
   else if constexpr (Key::name.view() == std::string_view("isRooted") && requires(Object& object) { object.is_rooted; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_rooted)>>{};
   else if constexpr (Key::name.view() == std::string_view("isSupported") && requires(Object& object) { object.is_supported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_supported)>>{};
   else if constexpr (Key::name.view() == std::string_view("isTouch") && requires(Object& object) { object.is_touch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_touch)>>{};
   else if constexpr (Key::name.view() == std::string_view("isVirtual") && requires(Object& object) { object.is_virtual; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_virtual)>>{};
+  else if constexpr (Key::name.view() == std::string_view("items") && requires(Object& object) { object.items; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().items)>>{};
+  else if constexpr (Key::name.view() == std::string_view("jitter") && requires(Object& object) { object.jitter; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().jitter)>>{};
+  else if constexpr (Key::name.view() == std::string_view("join") && requires(Object& object) { object.join; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().join)>>{};
   else if constexpr (Key::name.view() == std::string_view("jointCollisionSuppressions") && requires(Object& object) { object.joint_collision_suppressions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().joint_collision_suppressions)>>{};
+  else if constexpr (Key::name.view() == std::string_view("jointMatrices") && requires(Object& object) { object.joint_matrices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().joint_matrices)>>{};
   else if constexpr (Key::name.view() == std::string_view("jointSolvers") && requires(Object& object) { object.joint_solvers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().joint_solvers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("joints") && requires(Object& object) { object.joints; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().joints)>>{};
   else if constexpr (Key::name.view() == std::string_view("kerning") && requires(Object& object) { object.kerning; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().kerning)>>{};
+  else if constexpr (Key::name.view() == std::string_view("kerningCount") && requires(Object& object) { object.kerning_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().kerning_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("kernings") && requires(Object& object) { object.kernings; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().kernings)>>{};
   else if constexpr (Key::name.view() == std::string_view("key") && requires(Object& object) { object.key; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().key)>>{};
+  else if constexpr (Key::name.view() == std::string_view("keyCode") && requires(Object& object) { object.key_code; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().key_code)>>{};
   else if constexpr (Key::name.view() == std::string_view("kind") && requires(Object& object) { object.kind; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().kind)>>{};
   else if constexpr (Key::name.view() == std::string_view("label") && requires(Object& object) { object.label; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().label)>>{};
+  else if constexpr (Key::name.view() == std::string_view("labels") && requires(Object& object) { object.labels; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().labels)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lastFailureActualLength") && requires(Object& object) { object.last_failure_actual_length; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().last_failure_actual_length)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lastFailureKind") && requires(Object& object) { object.last_failure_kind; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().last_failure_kind)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lastFailureNodeIndex") && requires(Object& object) { object.last_failure_node_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().last_failure_node_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lastFailureParentIndex") && requires(Object& object) { object.last_failure_parent_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().last_failure_parent_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lastFailureRequiredLength") && requires(Object& object) { object.last_failure_required_length; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().last_failure_required_length)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lastFailureResolverKind") && requires(Object& object) { object.last_failure_resolver_kind; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().last_failure_resolver_kind)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lastFrameUpdate") && requires(Object& object) { object.last_frame_update; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().last_frame_update)>>{};
   else if constexpr (Key::name.view() == std::string_view("latitude") && requires(Object& object) { object.latitude; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().latitude)>>{};
+  else if constexpr (Key::name.view() == std::string_view("layerIndex") && requires(Object& object) { object.layer_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().layer_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("layerMask") && requires(Object& object) { object.layer_mask; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().layer_mask)>>{};
+  else if constexpr (Key::name.view() == std::string_view("layers") && requires(Object& object) { object.layers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().layers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("layout") && requires(Object& object) { object.layout; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().layout)>>{};
+  else if constexpr (Key::name.view() == std::string_view("layoutType") && requires(Object& object) { object.layout_type; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().layout_type)>>{};
   else if constexpr (Key::name.view() == std::string_view("leading") && requires(Object& object) { object.leading; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().leading)>>{};
   else if constexpr (Key::name.view() == std::string_view("leafByObject") && requires(Object& object) { object.leaf_by_object; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().leaf_by_object)>>{};
+  else if constexpr (Key::name.view() == std::string_view("leased") && requires(Object& object) { object.leased; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().leased)>>{};
   else if constexpr (Key::name.view() == std::string_view("left") && requires(Object& object) { object.left; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().left)>>{};
+  else if constexpr (Key::name.view() == std::string_view("leftMargin") && requires(Object& object) { object.left_margin; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().left_margin)>>{};
+  else if constexpr (Key::name.view() == std::string_view("length") && requires(Object& object) { object.length; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().length)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lengths") && requires(Object& object) { object.lengths; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lengths)>>{};
   else if constexpr (Key::name.view() == std::string_view("levels") && requires(Object& object) { object.levels; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().levels)>>{};
   else if constexpr (Key::name.view() == std::string_view("life") && requires(Object& object) { object.life; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().life)>>{};
   else if constexpr (Key::name.view() == std::string_view("lifeOffset") && requires(Object& object) { object.life_offset; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().life_offset)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lifecycle") && requires(Object& object) { object.lifecycle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lifecycle)>>{};
   else if constexpr (Key::name.view() == std::string_view("lifetimeMax") && requires(Object& object) { object.lifetime_max; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lifetime_max)>>{};
   else if constexpr (Key::name.view() == std::string_view("lifetimeMin") && requires(Object& object) { object.lifetime_min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lifetime_min)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lifetimes") && requires(Object& object) { object.lifetimes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lifetimes)>>{};
   else if constexpr (Key::name.view() == std::string_view("lift") && requires(Object& object) { object.lift; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lift)>>{};
   else if constexpr (Key::name.view() == std::string_view("lightColor") && requires(Object& object) { object.light_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().light_color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lightType") && requires(Object& object) { object.light_type; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().light_type)>>{};
   else if constexpr (Key::name.view() == std::string_view("lightX") && requires(Object& object) { object.light_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().light_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("lightY") && requires(Object& object) { object.light_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().light_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("lightness") && requires(Object& object) { object.lightness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lightness)>>{};
+  else if constexpr (Key::name.view() == std::string_view("limitDampingRatio") && requires(Object& object) { object.limit_damping_ratio; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().limit_damping_ratio)>>{};
+  else if constexpr (Key::name.view() == std::string_view("limitFrequencyHz") && requires(Object& object) { object.limit_frequency_hz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().limit_frequency_hz)>>{};
+  else if constexpr (Key::name.view() == std::string_view("line") && requires(Object& object) { object.line; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().line)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lineAscents") && requires(Object& object) { object.line_ascents; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().line_ascents)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lineCount") && requires(Object& object) { object.line_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().line_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lineDescents") && requires(Object& object) { object.line_descents; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().line_descents)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lineGap") && requires(Object& object) { object.line_gap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().line_gap)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lineHeight") && requires(Object& object) { object.line_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().line_height)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lineHeights") && requires(Object& object) { object.line_heights; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().line_heights)>>{};
   else if constexpr (Key::name.view() == std::string_view("lineIndex") && requires(Object& object) { object.line_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().line_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lineLeadings") && requires(Object& object) { object.line_leadings; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().line_leadings)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lineWidths") && requires(Object& object) { object.line_widths; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().line_widths)>>{};
   else if constexpr (Key::name.view() == std::string_view("linearLength") && requires(Object& object) { object.linear_length; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().linear_length)>>{};
   else if constexpr (Key::name.view() == std::string_view("linearStart") && requires(Object& object) { object.linear_start; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().linear_start)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lines") && requires(Object& object) { object.lines; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lines)>>{};
+  else if constexpr (Key::name.view() == std::string_view("linkage") && requires(Object& object) { object.linkage; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().linkage)>>{};
+  else if constexpr (Key::name.view() == std::string_view("list") && requires(Object& object) { object.list; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().list)>>{};
+  else if constexpr (Key::name.view() == std::string_view("loadFontFaces") && requires(Object& object) { object.load_font_faces; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().load_font_faces)>>{};
+  else if constexpr (Key::name.view() == std::string_view("loaded") && requires(Object& object) { object.loaded; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().loaded)>>{};
+  else if constexpr (Key::name.view() == std::string_view("local") && requires(Object& object) { object.local; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localAnchorAX") && requires(Object& object) { object.local_anchor_ax; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_anchor_ax)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localAnchorAY") && requires(Object& object) { object.local_anchor_ay; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_anchor_ay)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localAnchorAZ") && requires(Object& object) { object.local_anchor_az; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_anchor_az)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localAnchorBX") && requires(Object& object) { object.local_anchor_bx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_anchor_bx)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localAnchorBY") && requires(Object& object) { object.local_anchor_by; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_anchor_by)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localAnchorBZ") && requires(Object& object) { object.local_anchor_bz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_anchor_bz)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localAnchorX") && requires(Object& object) { object.local_anchor_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_anchor_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localAnchorY") && requires(Object& object) { object.local_anchor_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_anchor_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localAxisAX") && requires(Object& object) { object.local_axis_ax; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_axis_ax)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localAxisAY") && requires(Object& object) { object.local_axis_ay; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_axis_ay)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localBoundsId") && requires(Object& object) { object.local_bounds_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_bounds_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localContentId") && requires(Object& object) { object.local_content_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_content_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localRotationAW") && requires(Object& object) { object.local_rotation_aw; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_rotation_aw)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localRotationAX") && requires(Object& object) { object.local_rotation_ax; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_rotation_ax)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localRotationAY") && requires(Object& object) { object.local_rotation_ay; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_rotation_ay)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localRotationAZ") && requires(Object& object) { object.local_rotation_az; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_rotation_az)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localRotationBW") && requires(Object& object) { object.local_rotation_bw; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_rotation_bw)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localRotationBX") && requires(Object& object) { object.local_rotation_bx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_rotation_bx)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localRotationBY") && requires(Object& object) { object.local_rotation_by; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_rotation_by)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localRotationBZ") && requires(Object& object) { object.local_rotation_bz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_rotation_bz)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localTransformId") && requires(Object& object) { object.local_transform_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_transform_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localX") && requires(Object& object) { object.local_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("localY") && requires(Object& object) { object.local_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().local_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("locale") && requires(Object& object) { object.locale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().locale)>>{};
   else if constexpr (Key::name.view() == std::string_view("logicalHeight") && requires(Object& object) { object.logical_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().logical_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("logicalWidth") && requires(Object& object) { object.logical_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().logical_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("longitude") && requires(Object& object) { object.longitude; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().longitude)>>{};
   else if constexpr (Key::name.view() == std::string_view("loop") && requires(Object& object) { object.loop; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().loop)>>{};
+  else if constexpr (Key::name.view() == std::string_view("loopMode") && requires(Object& object) { object.loop_mode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().loop_mode)>>{};
+  else if constexpr (Key::name.view() == std::string_view("loops") && requires(Object& object) { object.loops; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().loops)>>{};
   else if constexpr (Key::name.view() == std::string_view("lowMax") && requires(Object& object) { object.low_max; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().low_max)>>{};
   else if constexpr (Key::name.view() == std::string_view("lowMin") && requires(Object& object) { object.low_min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().low_min)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lowerAngle") && requires(Object& object) { object.lower_angle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lower_angle)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lowerAngularX") && requires(Object& object) { object.lower_angular_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lower_angular_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lowerAngularY") && requires(Object& object) { object.lower_angular_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lower_angular_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lowerAngularZ") && requires(Object& object) { object.lower_angular_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lower_angular_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lowerLimitImpulse") && requires(Object& object) { object.lower_limit_impulse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lower_limit_impulse)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lowerLimitImpulses") && requires(Object& object) { object.lower_limit_impulses; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lower_limit_impulses)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lowerLinearX") && requires(Object& object) { object.lower_linear_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lower_linear_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lowerLinearY") && requires(Object& object) { object.lower_linear_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lower_linear_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lowerLinearZ") && requires(Object& object) { object.lower_linear_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lower_linear_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lowerTranslation") && requires(Object& object) { object.lower_translation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lower_translation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lowerTwistAngle") && requires(Object& object) { object.lower_twist_angle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lower_twist_angle)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lowerTwistImpulse") && requires(Object& object) { object.lower_twist_impulse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lower_twist_impulse)>>{};
   else if constexpr (Key::name.view() == std::string_view("lut") && requires(Object& object) { object.lut; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lut)>>{};
+  else if constexpr (Key::name.view() == std::string_view("lutCache") && requires(Object& object) { object.lut_cache; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lut_cache)>>{};
   else if constexpr (Key::name.view() == std::string_view("m") && requires(Object& object) { object.m; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().m)>>{};
   else if constexpr (Key::name.view() == std::string_view("magFilter") && requires(Object& object) { object.mag_filter; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mag_filter)>>{};
+  else if constexpr (Key::name.view() == std::string_view("manager") && requires(Object& object) { object.manager; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().manager)>>{};
   else if constexpr (Key::name.view() == std::string_view("manufacturer") && requires(Object& object) { object.manufacturer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().manufacturer)>>{};
   else if constexpr (Key::name.view() == std::string_view("map") && requires(Object& object) { object.map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().map)>>{};
   else if constexpr (Key::name.view() == std::string_view("margin") && requires(Object& object) { object.margin; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().margin)>>{};
+  else if constexpr (Key::name.view() == std::string_view("marginX") && requires(Object& object) { object.margin_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().margin_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("marginY") && requires(Object& object) { object.margin_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().margin_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("marketingName") && requires(Object& object) { object.marketing_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().marketing_name)>>{};
+  else if constexpr (Key::name.view() == std::string_view("mask") && requires(Object& object) { object.mask; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mask)>>{};
+  else if constexpr (Key::name.view() == std::string_view("mass") && requires(Object& object) { object.mass; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mass)>>{};
   else if constexpr (Key::name.view() == std::string_view("material") && requires(Object& object) { object.material; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().material)>>{};
+  else if constexpr (Key::name.view() == std::string_view("materialBindGroupLayout") && requires(Object& object) { object.material_bind_group_layout; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().material_bind_group_layout)>>{};
   else if constexpr (Key::name.view() == std::string_view("materialData") && requires(Object& object) { object.material_data; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().material_data)>>{};
+  else if constexpr (Key::name.view() == std::string_view("materialKinds") && requires(Object& object) { object.material_kinds; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().material_kinds)>>{};
+  else if constexpr (Key::name.view() == std::string_view("materialRenderers") && requires(Object& object) { object.material_renderers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().material_renderers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("materials") && requires(Object& object) { object.materials; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().materials)>>{};
   else if constexpr (Key::name.view() == std::string_view("matrix") && requires(Object& object) { object.matrix; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().matrix)>>{};
   else if constexpr (Key::name.view() == std::string_view("matrixX") && requires(Object& object) { object.matrix_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().matrix_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("matrixY") && requires(Object& object) { object.matrix_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().matrix_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("max") && requires(Object& object) { object.max; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxArea") && requires(Object& object) { object.max_area; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_area)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxBlur") && requires(Object& object) { object.max_blur; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_blur)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxBrightness") && requires(Object& object) { object.max_brightness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_brightness)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxBytes") && requires(Object& object) { object.max_bytes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_bytes)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxChars") && requires(Object& object) { object.max_chars; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_chars)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxConcurrent") && requires(Object& object) { object.max_concurrent; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_concurrent)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxDeltaTime") && requires(Object& object) { object.max_delta_time; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_delta_time)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxDistance") && requires(Object& object) { object.max_distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_distance)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxEv") && requires(Object& object) { object.max_ev; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_ev)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxExposure") && requires(Object& object) { object.max_exposure; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_exposure)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxForce") && requires(Object& object) { object.max_force; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_force)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxGlyphs") && requires(Object& object) { object.max_glyphs; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_glyphs)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxHeight") && requires(Object& object) { object.max_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_height)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxLength") && requires(Object& object) { object.max_length; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_length)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxLines") && requires(Object& object) { object.max_lines; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_lines)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxLuminance") && requires(Object& object) { object.max_luminance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_luminance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxMotorForce") && requires(Object& object) { object.max_motor_force; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_motor_force)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxMotorTorque") && requires(Object& object) { object.max_motor_torque; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_motor_torque)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxParticleCount") && requires(Object& object) { object.max_particle_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_particle_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxParticles") && requires(Object& object) { object.max_particles; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_particles)>>{};
-  else if constexpr (Key::name.view() == std::string_view("maxRadius") && requires(Object& object) { object.max_radius; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_radius)>>{};
-  else if constexpr (Key::name.view() == std::string_view("maxRadiusVariance") && requires(Object& object) { object.max_radius_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_radius_variance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxPitch") && requires(Object& object) { object.max_pitch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_pitch)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxPolar") && requires(Object& object) { object.max_polar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_polar)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxSize") && requires(Object& object) { object.max_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_size)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxWidth") && requires(Object& object) { object.max_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxX") && requires(Object& object) { object.max_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxY") && requires(Object& object) { object.max_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxZ") && requires(Object& object) { object.max_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maximize") && requires(Object& object) { object.maximize; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().maximize)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maximized") && requires(Object& object) { object.maximized; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().maximized)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maximum") && requires(Object& object) { object.maximum; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().maximum)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maximumFirst") && requires(Object& object) { object.maximum_first; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().maximum_first)>>{};
+  else if constexpr (Key::name.view() == std::string_view("measureMetrics") && requires(Object& object) { object.measure_metrics; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().measure_metrics)>>{};
+  else if constexpr (Key::name.view() == std::string_view("measureText") && requires(Object& object) { object.measure_text; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().measure_text)>>{};
+  else if constexpr (Key::name.view() == std::string_view("mediaSession") && requires(Object& object) { object.media_session; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().media_session)>>{};
+  else if constexpr (Key::name.view() == std::string_view("menu") && requires(Object& object) { object.menu; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().menu)>>{};
+  else if constexpr (Key::name.view() == std::string_view("meshCount") && requires(Object& object) { object.mesh_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mesh_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("meshMaterialRenderers") && requires(Object& object) { object.mesh_material_renderers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mesh_material_renderers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("message") && requires(Object& object) { object.message; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().message)>>{};
+  else if constexpr (Key::name.view() == std::string_view("metaKey") && requires(Object& object) { object.meta_key; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().meta_key)>>{};
   else if constexpr (Key::name.view() == std::string_view("metadata") && requires(Object& object) { object.metadata; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().metadata)>>{};
+  else if constexpr (Key::name.view() == std::string_view("metallic") && requires(Object& object) { object.metallic; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().metallic)>>{};
+  else if constexpr (Key::name.view() == std::string_view("metallicRoughnessMap") && requires(Object& object) { object.metallic_roughness_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().metallic_roughness_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("method") && requires(Object& object) { object.method; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().method)>>{};
   else if constexpr (Key::name.view() == std::string_view("metrics") && requires(Object& object) { object.metrics; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().metrics)>>{};
+  else if constexpr (Key::name.view() == std::string_view("midi") && requires(Object& object) { object.midi; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().midi)>>{};
+  else if constexpr (Key::name.view() == std::string_view("mimeType") && requires(Object& object) { object.mime_type; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mime_type)>>{};
   else if constexpr (Key::name.view() == std::string_view("min") && requires(Object& object) { object.min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minDistance") && requires(Object& object) { object.min_distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_distance)>>{};
   else if constexpr (Key::name.view() == std::string_view("minEv") && requires(Object& object) { object.min_ev; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_ev)>>{};
   else if constexpr (Key::name.view() == std::string_view("minExposure") && requires(Object& object) { object.min_exposure; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_exposure)>>{};
   else if constexpr (Key::name.view() == std::string_view("minFilter") && requires(Object& object) { object.min_filter; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_filter)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minHeight") && requires(Object& object) { object.min_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_height)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minLength") && requires(Object& object) { object.min_length; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_length)>>{};
   else if constexpr (Key::name.view() == std::string_view("minParticleCount") && requires(Object& object) { object.min_particle_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_particle_count)>>{};
-  else if constexpr (Key::name.view() == std::string_view("minRadius") && requires(Object& object) { object.min_radius; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_radius)>>{};
-  else if constexpr (Key::name.view() == std::string_view("minRadiusVariance") && requires(Object& object) { object.min_radius_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_radius_variance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minPitch") && requires(Object& object) { object.min_pitch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_pitch)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minPolar") && requires(Object& object) { object.min_polar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_polar)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minWidth") && requires(Object& object) { object.min_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("minX") && requires(Object& object) { object.min_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("minY") && requires(Object& object) { object.min_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("minZ") && requires(Object& object) { object.min_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minimize") && requires(Object& object) { object.minimize; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().minimize)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minimized") && requires(Object& object) { object.minimized; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().minimized)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minimum") && requires(Object& object) { object.minimum; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().minimum)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minimumFirst") && requires(Object& object) { object.minimum_first; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().minimum_first)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minimumHeight") && requires(Object& object) { object.minimum_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().minimum_height)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minimumSecond") && requires(Object& object) { object.minimum_second; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().minimum_second)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minimumWidth") && requires(Object& object) { object.minimum_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().minimum_width)>>{};
+  else if constexpr (Key::name.view() == std::string_view("mipLevelCount") && requires(Object& object) { object.mip_level_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mip_level_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("mipmaps") && requires(Object& object) { object.mipmaps; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mipmaps)>>{};
+  else if constexpr (Key::name.view() == std::string_view("miterLimit") && requires(Object& object) { object.miter_limit; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().miter_limit)>>{};
   else if constexpr (Key::name.view() == std::string_view("mode") && requires(Object& object) { object.mode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mode)>>{};
   else if constexpr (Key::name.view() == std::string_view("model") && requires(Object& object) { object.model; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().model)>>{};
+  else if constexpr (Key::name.view() == std::string_view("modifierKinds") && requires(Object& object) { object.modifier_kinds; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().modifier_kinds)>>{};
+  else if constexpr (Key::name.view() == std::string_view("modifierSnippetRevision") && requires(Object& object) { object.modifier_snippet_revision; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().modifier_snippet_revision)>>{};
+  else if constexpr (Key::name.view() == std::string_view("modifierSnippets") && requires(Object& object) { object.modifier_snippets; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().modifier_snippets)>>{};
   else if constexpr (Key::name.view() == std::string_view("modifiers") && requires(Object& object) { object.modifiers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().modifiers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("module") && requires(Object& object) { object.module; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().module)>>{};
   else if constexpr (Key::name.view() == std::string_view("monochrome") && requires(Object& object) { object.monochrome; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().monochrome)>>{};
+  else if constexpr (Key::name.view() == std::string_view("morph") && requires(Object& object) { object.morph; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().morph)>>{};
+  else if constexpr (Key::name.view() == std::string_view("motorImpulse") && requires(Object& object) { object.motor_impulse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().motor_impulse)>>{};
+  else if constexpr (Key::name.view() == std::string_view("motorSpeed") && requires(Object& object) { object.motor_speed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().motor_speed)>>{};
+  else if constexpr (Key::name.view() == std::string_view("mouseWheelEnabled") && requires(Object& object) { object.mouse_wheel_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mouse_wheel_enabled)>>{};
+  else if constexpr (Key::name.view() == std::string_view("moveToTrash") && requires(Object& object) { object.move_to_trash; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().move_to_trash)>>{};
+  else if constexpr (Key::name.view() == std::string_view("moveToX") && requires(Object& object) { object.move_to_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().move_to_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("moveToY") && requires(Object& object) { object.move_to_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().move_to_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("multiline") && requires(Object& object) { object.multiline; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().multiline)>>{};
+  else if constexpr (Key::name.view() == std::string_view("muted") && requires(Object& object) { object.muted; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().muted)>>{};
+  else if constexpr (Key::name.view() == std::string_view("nContourStream") && requires(Object& object) { object.n_contour_stream; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().n_contour_stream)>>{};
+  else if constexpr (Key::name.view() == std::string_view("nPointsStream") && requires(Object& object) { object.n_points_stream; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().n_points_stream)>>{};
   else if constexpr (Key::name.view() == std::string_view("name") && requires(Object& object) { object.name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().name)>>{};
+  else if constexpr (Key::name.view() == std::string_view("namePrefix") && requires(Object& object) { object.name_prefix; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().name_prefix)>>{};
   else if constexpr (Key::name.view() == std::string_view("near") && requires(Object& object) { object.near; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().near)>>{};
+  else if constexpr (Key::name.view() == std::string_view("nearClipPlane") && requires(Object& object) { object.near_clip_plane; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().near_clip_plane)>>{};
+  else if constexpr (Key::name.view() == std::string_view("net") && requires(Object& object) { object.net; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().net)>>{};
+  else if constexpr (Key::name.view() == std::string_view("node") && requires(Object& object) { object.node; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().node)>>{};
+  else if constexpr (Key::name.view() == std::string_view("nodeIndices") && requires(Object& object) { object.node_indices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().node_indices)>>{};
+  else if constexpr (Key::name.view() == std::string_view("nodeKinds") && requires(Object& object) { object.node_kinds; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().node_kinds)>>{};
+  else if constexpr (Key::name.view() == std::string_view("nodes") && requires(Object& object) { object.nodes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().nodes)>>{};
+  else if constexpr (Key::name.view() == std::string_view("normal") && requires(Object& object) { object.normal; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normal)>>{};
   else if constexpr (Key::name.view() == std::string_view("normalBias") && requires(Object& object) { object.normal_bias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normal_bias)>>{};
+  else if constexpr (Key::name.view() == std::string_view("normalImpulse") && requires(Object& object) { object.normal_impulse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normal_impulse)>>{};
+  else if constexpr (Key::name.view() == std::string_view("normalMap") && requires(Object& object) { object.normal_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normal_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("normalMass") && requires(Object& object) { object.normal_mass; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normal_mass)>>{};
+  else if constexpr (Key::name.view() == std::string_view("normalMatrices") && requires(Object& object) { object.normal_matrices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normal_matrices)>>{};
+  else if constexpr (Key::name.view() == std::string_view("normalScale") && requires(Object& object) { object.normal_scale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normal_scale)>>{};
   else if constexpr (Key::name.view() == std::string_view("normalX") && requires(Object& object) { object.normal_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normal_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("normalY") && requires(Object& object) { object.normal_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normal_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("normalZ") && requires(Object& object) { object.normal_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normal_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("normals") && requires(Object& object) { object.normals; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normals)>>{};
   else if constexpr (Key::name.view() == std::string_view("notification") && requires(Object& object) { object.notification; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().notification)>>{};
   else if constexpr (Key::name.view() == std::string_view("numLines") && requires(Object& object) { object.num_lines; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().num_lines)>>{};
   else if constexpr (Key::name.view() == std::string_view("object") && requires(Object& object) { object.object; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().object)>>{};
+  else if constexpr (Key::name.view() == std::string_view("objectId") && requires(Object& object) { object.object_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().object_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("objectUrl") && requires(Object& object) { object.object_url; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().object_url)>>{};
+  else if constexpr (Key::name.view() == std::string_view("objects") && requires(Object& object) { object.objects; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().objects)>>{};
+  else if constexpr (Key::name.view() == std::string_view("occlusionMap") && requires(Object& object) { object.occlusion_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().occlusion_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("occlusionStrength") && requires(Object& object) { object.occlusion_strength; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().occlusion_strength)>>{};
   else if constexpr (Key::name.view() == std::string_view("offset") && requires(Object& object) { object.offset; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().offset)>>{};
   else if constexpr (Key::name.view() == std::string_view("offsetX") && requires(Object& object) { object.offset_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().offset_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("offsetY") && requires(Object& object) { object.offset_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().offset_y)>>{};
@@ -1129,29 +2857,78 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("onAbsoluteOrientation") && requires(Object& object) { object.on_absolute_orientation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_absolute_orientation)>>{};
   else if constexpr (Key::name.view() == std::string_view("onAccelerometer") && requires(Object& object) { object.on_accelerometer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_accelerometer)>>{};
   else if constexpr (Key::name.view() == std::string_view("onAction") && requires(Object& object) { object.on_action; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_action)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onActivate") && requires(Object& object) { object.on_activate; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_activate)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onAllWindowsClosed") && requires(Object& object) { object.on_all_windows_closed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_all_windows_closed)>>{};
   else if constexpr (Key::name.view() == std::string_view("onAmbientLight") && requires(Object& object) { object.on_ambient_light; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_ambient_light)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onBackendChanged") && requires(Object& object) { object.on_backend_changed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_backend_changed)>>{};
   else if constexpr (Key::name.view() == std::string_view("onBarometer") && requires(Object& object) { object.on_barometer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_barometer)>>{};
   else if constexpr (Key::name.view() == std::string_view("onChange") && requires(Object& object) { object.on_change; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_change)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onClick") && requires(Object& object) { object.on_click; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_click)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onClose") && requires(Object& object) { object.on_close; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_close)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onCloseRequest") && requires(Object& object) { object.on_close_request; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_close_request)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onComplete") && requires(Object& object) { object.on_complete; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_complete)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onCopy") && requires(Object& object) { object.on_copy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_copy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onDeactivate") && requires(Object& object) { object.on_deactivate; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_deactivate)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onDropFile") && requires(Object& object) { object.on_drop_file; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_drop_file)>>{};
   else if constexpr (Key::name.view() == std::string_view("onEmitterComplete") && requires(Object& object) { object.on_emitter_complete; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_emitter_complete)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onEnter") && requires(Object& object) { object.on_enter; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_enter)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onEvent") && requires(Object& object) { object.on_event; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_event)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onFinished") && requires(Object& object) { object.on_finished; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_finished)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onFocusIn") && requires(Object& object) { object.on_focus_in; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_focus_in)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onFocusOut") && requires(Object& object) { object.on_focus_out; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_focus_out)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onFullscreenChanged") && requires(Object& object) { object.on_fullscreen_changed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_fullscreen_changed)>>{};
   else if constexpr (Key::name.view() == std::string_view("onGravity") && requires(Object& object) { object.on_gravity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_gravity)>>{};
   else if constexpr (Key::name.view() == std::string_view("onGyroscope") && requires(Object& object) { object.on_gyroscope; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_gyroscope)>>{};
   else if constexpr (Key::name.view() == std::string_view("onHide") && requires(Object& object) { object.on_hide; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_hide)>>{};
   else if constexpr (Key::name.view() == std::string_view("onLinearAcceleration") && requires(Object& object) { object.on_linear_acceleration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_linear_acceleration)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onLooped") && requires(Object& object) { object.on_looped; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_looped)>>{};
   else if constexpr (Key::name.view() == std::string_view("onMagnetometer") && requires(Object& object) { object.on_magnetometer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_magnetometer)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onMaximize") && requires(Object& object) { object.on_maximize; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_maximize)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onMinimize") && requires(Object& object) { object.on_minimize; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_minimize)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onMove") && requires(Object& object) { object.on_move; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_move)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onOpenFile") && requires(Object& object) { object.on_open_file; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_open_file)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onOpenUrl") && requires(Object& object) { object.on_open_url; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_open_url)>>{};
   else if constexpr (Key::name.view() == std::string_view("onOrientation") && requires(Object& object) { object.on_orientation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_orientation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onOrientationChanged") && requires(Object& object) { object.on_orientation_changed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_orientation_changed)>>{};
   else if constexpr (Key::name.view() == std::string_view("onParticleDeath") && requires(Object& object) { object.on_particle_death; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_particle_death)>>{};
   else if constexpr (Key::name.view() == std::string_view("onParticleSpawn") && requires(Object& object) { object.on_particle_spawn; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_particle_spawn)>>{};
   else if constexpr (Key::name.view() == std::string_view("onProximity") && requires(Object& object) { object.on_proximity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_proximity)>>{};
   else if constexpr (Key::name.view() == std::string_view("onQuaternion") && requires(Object& object) { object.on_quaternion; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_quaternion)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onQuitRequest") && requires(Object& object) { object.on_quit_request; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_quit_request)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onReady") && requires(Object& object) { object.on_ready; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_ready)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onRenderContextLost") && requires(Object& object) { object.on_render_context_lost; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_render_context_lost)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onRenderContextRestored") && requires(Object& object) { object.on_render_context_restored; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_render_context_restored)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onRepeat") && requires(Object& object) { object.on_repeat; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_repeat)>>{};
   else if constexpr (Key::name.view() == std::string_view("onResize") && requires(Object& object) { object.on_resize; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_resize)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onResourceFailed") && requires(Object& object) { object.on_resource_failed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_resource_failed)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onResourceResolved") && requires(Object& object) { object.on_resource_resolved; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_resource_resolved)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onRestore") && requires(Object& object) { object.on_restore; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_restore)>>{};
   else if constexpr (Key::name.view() == std::string_view("onScreenAdded") && requires(Object& object) { object.on_screen_added; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_screen_added)>>{};
   else if constexpr (Key::name.view() == std::string_view("onScreenMetricsChanged") && requires(Object& object) { object.on_screen_metrics_changed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_screen_metrics_changed)>>{};
   else if constexpr (Key::name.view() == std::string_view("onScreenRemoved") && requires(Object& object) { object.on_screen_removed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_screen_removed)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onSecondInstance") && requires(Object& object) { object.on_second_instance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_second_instance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onSelect") && requires(Object& object) { object.on_select; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_select)>>{};
   else if constexpr (Key::name.view() == std::string_view("onShow") && requires(Object& object) { object.on_show; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_show)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onSocketClose") && requires(Object& object) { object.on_socket_close; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_socket_close)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onSocketError") && requires(Object& object) { object.on_socket_error; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_socket_error)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onSocketMessage") && requires(Object& object) { object.on_socket_message; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_socket_message)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onSocketOpen") && requires(Object& object) { object.on_socket_open; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_socket_open)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onSourceEnded") && requires(Object& object) { object.on_source_ended; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_source_ended)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onStateChange") && requires(Object& object) { object.on_state_change; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_state_change)>>{};
   else if constexpr (Key::name.view() == std::string_view("onTick") && requires(Object& object) { object.on_tick; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_tick)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onUpdate") && requires(Object& object) { object.on_update; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_update)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onYoyo") && requires(Object& object) { object.on_yoyo; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_yoyo)>>{};
   else if constexpr (Key::name.view() == std::string_view("once") && requires(Object& object) { object.once; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().once)>>{};
+  else if constexpr (Key::name.view() == std::string_view("opacity") && requires(Object& object) { object.opacity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().opacity)>>{};
+  else if constexpr (Key::name.view() == std::string_view("opcode") && requires(Object& object) { object.opcode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().opcode)>>{};
+  else if constexpr (Key::name.view() == std::string_view("open") && requires(Object& object) { object.open; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().open)>>{};
+  else if constexpr (Key::name.view() == std::string_view("openSocket") && requires(Object& object) { object.open_socket; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().open_socket)>>{};
+  else if constexpr (Key::name.view() == std::string_view("openTcpSocket") && requires(Object& object) { object.open_tcp_socket; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().open_tcp_socket)>>{};
+  else if constexpr (Key::name.view() == std::string_view("operands") && requires(Object& object) { object.operands; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().operands)>>{};
   else if constexpr (Key::name.view() == std::string_view("operation") && requires(Object& object) { object.operation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().operation)>>{};
   else if constexpr (Key::name.view() == std::string_view("operator") && requires(Object& object) { object.operator_; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().operator_)>>{};
+  else if constexpr (Key::name.view() == std::string_view("options") && requires(Object& object) { object.options; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().options)>>{};
+  else if constexpr (Key::name.view() == std::string_view("orderedModifiers") && requires(Object& object) { object.ordered_modifiers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ordered_modifiers)>>{};
   else if constexpr (Key::name.view() == std::string_view("orientation") && requires(Object& object) { object.orientation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().orientation)>>{};
   else if constexpr (Key::name.view() == std::string_view("orientationW") && requires(Object& object) { object.orientation_w; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().orientation_w)>>{};
   else if constexpr (Key::name.view() == std::string_view("orientationX") && requires(Object& object) { object.orientation_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().orientation_x)>>{};
@@ -1160,49 +2937,122 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("origin") && requires(Object& object) { object.origin; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().origin)>>{};
   else if constexpr (Key::name.view() == std::string_view("originX") && requires(Object& object) { object.origin_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().origin_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("originY") && requires(Object& object) { object.origin_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().origin_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("originalHeight") && requires(Object& object) { object.original_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().original_height)>>{};
+  else if constexpr (Key::name.view() == std::string_view("originalWidth") && requires(Object& object) { object.original_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().original_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("osBuild") && requires(Object& object) { object.os_build; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().os_build)>>{};
   else if constexpr (Key::name.view() == std::string_view("osName") && requires(Object& object) { object.os_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().os_name)>>{};
   else if constexpr (Key::name.view() == std::string_view("osVersion") && requires(Object& object) { object.os_version; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().os_version)>>{};
+  else if constexpr (Key::name.view() == std::string_view("outcome") && requires(Object& object) { object.outcome; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().outcome)>>{};
   else if constexpr (Key::name.view() == std::string_view("outerConeCos") && requires(Object& object) { object.outer_cone_cos; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().outer_cone_cos)>>{};
   else if constexpr (Key::name.view() == std::string_view("outerConeDegrees") && requires(Object& object) { object.outer_cone_degrees; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().outer_cone_degrees)>>{};
+  else if constexpr (Key::name.view() == std::string_view("overState") && requires(Object& object) { object.over_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().over_state)>>{};
   else if constexpr (Key::name.view() == std::string_view("overlapping") && requires(Object& object) { object.overlapping; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().overlapping)>>{};
-  else if constexpr (Key::name.view() == std::string_view("overlaysContent") && requires(Object& object) { object.overlays_content; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().overlays_content)>>{};
+  else if constexpr (Key::name.view() == std::string_view("overwrite") && requires(Object& object) { object.overwrite; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().overwrite)>>{};
+  else if constexpr (Key::name.view() == std::string_view("owner") && requires(Object& object) { object.owner; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().owner)>>{};
+  else if constexpr (Key::name.view() == std::string_view("ownsElement") && requires(Object& object) { object.owns_element; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().owns_element)>>{};
+  else if constexpr (Key::name.view() == std::string_view("padding") && requires(Object& object) { object.padding; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().padding)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pageIds") && requires(Object& object) { object.page_ids; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().page_ids)>>{};
   else if constexpr (Key::name.view() == std::string_view("pages") && requires(Object& object) { object.pages; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pages)>>{};
   else if constexpr (Key::name.view() == std::string_view("parent") && requires(Object& object) { object.parent; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().parent)>>{};
+  else if constexpr (Key::name.view() == std::string_view("parentIndices") && requires(Object& object) { object.parent_indices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().parent_indices)>>{};
+  else if constexpr (Key::name.view() == std::string_view("parentReferenceId") && requires(Object& object) { object.parent_reference_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().parent_reference_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("parentWindow") && requires(Object& object) { object.parent_window; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().parent_window)>>{};
   else if constexpr (Key::name.view() == std::string_view("particleLifespan") && requires(Object& object) { object.particle_lifespan; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().particle_lifespan)>>{};
   else if constexpr (Key::name.view() == std::string_view("particleLifespanVariance") && requires(Object& object) { object.particle_lifespan_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().particle_lifespan_variance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("passes") && requires(Object& object) { object.passes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().passes)>>{};
+  else if constexpr (Key::name.view() == std::string_view("passwordCharacter") && requires(Object& object) { object.password_character; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().password_character)>>{};
+  else if constexpr (Key::name.view() == std::string_view("path") && requires(Object& object) { object.path; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().path)>>{};
   else if constexpr (Key::name.view() == std::string_view("paused") && requires(Object& object) { object.paused; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().paused)>>{};
+  else if constexpr (Key::name.view() == std::string_view("payload") && requires(Object& object) { object.payload; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().payload)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pbrSampleBindGroupLayout") && requires(Object& object) { object.pbr_sample_bind_group_layout; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pbr_sample_bind_group_layout)>>{};
   else if constexpr (Key::name.view() == std::string_view("pcfRadius") && requires(Object& object) { object.pcf_radius; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pcf_radius)>>{};
   else if constexpr (Key::name.view() == std::string_view("pedestal") && requires(Object& object) { object.pedestal; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pedestal)>>{};
+  else if constexpr (Key::name.view() == std::string_view("percentage") && requires(Object& object) { object.percentage; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().percentage)>>{};
+  else if constexpr (Key::name.view() == std::string_view("permissionState") && requires(Object& object) { object.permission_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().permission_state)>>{};
+  else if constexpr (Key::name.view() == std::string_view("permissions") && requires(Object& object) { object.permissions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().permissions)>>{};
+  else if constexpr (Key::name.view() == std::string_view("persistence") && requires(Object& object) { object.persistence; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().persistence)>>{};
+  else if constexpr (Key::name.view() == std::string_view("phase") && requires(Object& object) { object.phase; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().phase)>>{};
   else if constexpr (Key::name.view() == std::string_view("physicalHeight") && requires(Object& object) { object.physical_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().physical_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("physicalWidth") && requires(Object& object) { object.physical_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().physical_width)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pitch") && requires(Object& object) { object.pitch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pitch)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pivotScreenX") && requires(Object& object) { object.pivot_screen_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pivot_screen_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pivotScreenY") && requires(Object& object) { object.pivot_screen_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pivot_screen_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pivotWorldX") && requires(Object& object) { object.pivot_world_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pivot_world_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pivotWorldY") && requires(Object& object) { object.pivot_world_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pivot_world_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("pivotX") && requires(Object& object) { object.pivot_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pivot_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("pivotY") && requires(Object& object) { object.pivot_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pivot_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("pixelDepth") && requires(Object& object) { object.pixel_depth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pixel_depth)>>{};
   else if constexpr (Key::name.view() == std::string_view("pixelFormat") && requires(Object& object) { object.pixel_format; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pixel_format)>>{};
   else if constexpr (Key::name.view() == std::string_view("pixelRatio") && requires(Object& object) { object.pixel_ratio; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pixel_ratio)>>{};
+  else if constexpr (Key::name.view() == std::string_view("placements") && requires(Object& object) { object.placements; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().placements)>>{};
+  else if constexpr (Key::name.view() == std::string_view("platform") && requires(Object& object) { object.platform; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().platform)>>{};
   else if constexpr (Key::name.view() == std::string_view("platformString") && requires(Object& object) { object.platform_string; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().platform_string)>>{};
+  else if constexpr (Key::name.view() == std::string_view("playMode") && requires(Object& object) { object.play_mode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().play_mode)>>{};
   else if constexpr (Key::name.view() == std::string_view("playbackRate") && requires(Object& object) { object.playback_rate; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().playback_rate)>>{};
+  else if constexpr (Key::name.view() == std::string_view("player") && requires(Object& object) { object.player; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().player)>>{};
+  else if constexpr (Key::name.view() == std::string_view("players") && requires(Object& object) { object.players; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().players)>>{};
+  else if constexpr (Key::name.view() == std::string_view("playing") && requires(Object& object) { object.playing; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().playing)>>{};
   else if constexpr (Key::name.view() == std::string_view("point") && requires(Object& object) { object.point; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pointAX") && requires(Object& object) { object.point_ax; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point_ax)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pointAY") && requires(Object& object) { object.point_ay; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point_ay)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pointAZ") && requires(Object& object) { object.point_az; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point_az)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pointBX") && requires(Object& object) { object.point_bx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point_bx)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pointBY") && requires(Object& object) { object.point_by; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point_by)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pointBZ") && requires(Object& object) { object.point_bz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point_bz)>>{};
   else if constexpr (Key::name.view() == std::string_view("pointCount") && requires(Object& object) { object.point_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pointCounts") && requires(Object& object) { object.point_counts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point_counts)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pointFeatureIds") && requires(Object& object) { object.point_feature_ids; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point_feature_ids)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pointStarts") && requires(Object& object) { object.point_starts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point_starts)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pointValues") && requires(Object& object) { object.point_values; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().point_values)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pointerId") && requires(Object& object) { object.pointer_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pointer_id)>>{};
   else if constexpr (Key::name.view() == std::string_view("pointerWidth") && requires(Object& object) { object.pointer_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pointer_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("points") && requires(Object& object) { object.points; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().points)>>{};
+  else if constexpr (Key::name.view() == std::string_view("polar") && requires(Object& object) { object.polar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().polar)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pool") && requires(Object& object) { object.pool; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pool)>>{};
   else if constexpr (Key::name.view() == std::string_view("position") && requires(Object& object) { object.position; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().position)>>{};
   else if constexpr (Key::name.view() == std::string_view("positions") && requires(Object& object) { object.positions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().positions)>>{};
+  else if constexpr (Key::name.view() == std::string_view("power") && requires(Object& object) { object.power; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().power)>>{};
+  else if constexpr (Key::name.view() == std::string_view("powerOfTwo") && requires(Object& object) { object.power_of_two; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().power_of_two)>>{};
+  else if constexpr (Key::name.view() == std::string_view("powerScratch") && requires(Object& object) { object.power_scratch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().power_scratch)>>{};
+  else if constexpr (Key::name.view() == std::string_view("precision") && requires(Object& object) { object.precision; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().precision)>>{};
+  else if constexpr (Key::name.view() == std::string_view("preferences") && requires(Object& object) { object.preferences; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().preferences)>>{};
+  else if constexpr (Key::name.view() == std::string_view("prefilteredPipeline") && requires(Object& object) { object.prefiltered_pipeline; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().prefiltered_pipeline)>>{};
+  else if constexpr (Key::name.view() == std::string_view("premultiplied") && requires(Object& object) { object.premultiplied; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().premultiplied)>>{};
   else if constexpr (Key::name.view() == std::string_view("premultipliedAlpha") && requires(Object& object) { object.premultiplied_alpha; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().premultiplied_alpha)>>{};
+  else if constexpr (Key::name.view() == std::string_view("premultiplyAlpha") && requires(Object& object) { object.premultiply_alpha; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().premultiply_alpha)>>{};
   else if constexpr (Key::name.view() == std::string_view("prepare") && requires(Object& object) { object.prepare; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().prepare)>>{};
   else if constexpr (Key::name.view() == std::string_view("preserveAlpha") && requires(Object& object) { object.preserve_alpha; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().preserve_alpha)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pressed") && requires(Object& object) { object.pressed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pressed)>>{};
   else if constexpr (Key::name.view() == std::string_view("pressure") && requires(Object& object) { object.pressure; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pressure)>>{};
+  else if constexpr (Key::name.view() == std::string_view("prevX") && requires(Object& object) { object.prev_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().prev_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("prevY") && requires(Object& object) { object.prev_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().prev_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("prevZ") && requires(Object& object) { object.prev_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().prev_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("previousWorldTransform") && requires(Object& object) { object.previous_world_transform; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().previous_world_transform)>>{};
   else if constexpr (Key::name.view() == std::string_view("priority") && requires(Object& object) { object.priority; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().priority)>>{};
+  else if constexpr (Key::name.view() == std::string_view("probes") && requires(Object& object) { object.probes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().probes)>>{};
   else if constexpr (Key::name.view() == std::string_view("productName") && requires(Object& object) { object.product_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().product_name)>>{};
+  else if constexpr (Key::name.view() == std::string_view("progress") && requires(Object& object) { object.progress; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().progress)>>{};
   else if constexpr (Key::name.view() == std::string_view("projection") && requires(Object& object) { object.projection; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().projection)>>{};
+  else if constexpr (Key::name.view() == std::string_view("projectionType") && requires(Object& object) { object.projection_type; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().projection_type)>>{};
+  else if constexpr (Key::name.view() == std::string_view("prompt") && requires(Object& object) { object.prompt; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().prompt)>>{};
   else if constexpr (Key::name.view() == std::string_view("promptForAccess") && requires(Object& object) { object.prompt_for_access; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().prompt_for_access)>>{};
+  else if constexpr (Key::name.view() == std::string_view("properties") && requires(Object& object) { object.properties; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().properties)>>{};
+  else if constexpr (Key::name.view() == std::string_view("property") && requires(Object& object) { object.property; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().property)>>{};
+  else if constexpr (Key::name.view() == std::string_view("propertyMap") && requires(Object& object) { object.property_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().property_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("protocol") && requires(Object& object) { object.protocol; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().protocol)>>{};
+  else if constexpr (Key::name.view() == std::string_view("quality") && requires(Object& object) { object.quality; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().quality)>>{};
+  else if constexpr (Key::name.view() == std::string_view("quaternion") && requires(Object& object) { object.quaternion; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().quaternion)>>{};
+  else if constexpr (Key::name.view() == std::string_view("query") && requires(Object& object) { object.query; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().query)>>{};
   else if constexpr (Key::name.view() == std::string_view("queryPermission") && requires(Object& object) { object.query_permission; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().query_permission)>>{};
+  else if constexpr (Key::name.view() == std::string_view("queryPoint") && requires(Object& object) { object.query_point; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().query_point)>>{};
+  else if constexpr (Key::name.view() == std::string_view("queryRay") && requires(Object& object) { object.query_ray; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().query_ray)>>{};
+  else if constexpr (Key::name.view() == std::string_view("queryRegion") && requires(Object& object) { object.query_region; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().query_region)>>{};
+  else if constexpr (Key::name.view() == std::string_view("queryShapeCast") && requires(Object& object) { object.query_shape_cast; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().query_shape_cast)>>{};
   else if constexpr (Key::name.view() == std::string_view("querySpatialPairs") && requires(Object& object) { object.query_spatial_pairs; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().query_spatial_pairs)>>{};
   else if constexpr (Key::name.view() == std::string_view("querySpatialPoint") && requires(Object& object) { object.query_spatial_point; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().query_spatial_point)>>{};
   else if constexpr (Key::name.view() == std::string_view("querySpatialRay") && requires(Object& object) { object.query_spatial_ray; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().query_spatial_ray)>>{};
   else if constexpr (Key::name.view() == std::string_view("querySpatialRegion") && requires(Object& object) { object.query_spatial_region; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().query_spatial_region)>>{};
+  else if constexpr (Key::name.view() == std::string_view("quit") && requires(Object& object) { object.quit; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().quit)>>{};
   else if constexpr (Key::name.view() == std::string_view("rAX") && requires(Object& object) { object.r_ax; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().r_ax)>>{};
   else if constexpr (Key::name.view() == std::string_view("rAY") && requires(Object& object) { object.r_ay; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().r_ay)>>{};
   else if constexpr (Key::name.view() == std::string_view("rAZ") && requires(Object& object) { object.r_az; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().r_az)>>{};
@@ -1213,36 +3063,100 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("radialAccelVariance") && requires(Object& object) { object.radial_accel_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().radial_accel_variance)>>{};
   else if constexpr (Key::name.view() == std::string_view("radialAcceleration") && requires(Object& object) { object.radial_acceleration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().radial_acceleration)>>{};
   else if constexpr (Key::name.view() == std::string_view("radius") && requires(Object& object) { object.radius; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().radius)>>{};
+  else if constexpr (Key::name.view() == std::string_view("radiusX") && requires(Object& object) { object.radius_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().radius_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("radiusY") && requires(Object& object) { object.radius_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().radius_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("random") && requires(Object& object) { object.random; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().random)>>{};
   else if constexpr (Key::name.view() == std::string_view("range") && requires(Object& object) { object.range; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().range)>>{};
+  else if constexpr (Key::name.view() == std::string_view("ranges") && requires(Object& object) { object.ranges; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ranges)>>{};
+  else if constexpr (Key::name.view() == std::string_view("rasterizerBackend") && requires(Object& object) { object.rasterizer_backend; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rasterizer_backend)>>{};
+  else if constexpr (Key::name.view() == std::string_view("ratio") && requires(Object& object) { object.ratio; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ratio)>>{};
+  else if constexpr (Key::name.view() == std::string_view("ratios") && requires(Object& object) { object.ratios; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ratios)>>{};
+  else if constexpr (Key::name.view() == std::string_view("read") && requires(Object& object) { object.read; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read)>>{};
+  else if constexpr (Key::name.view() == std::string_view("readBitmap") && requires(Object& object) { object.read_bitmap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_bitmap)>>{};
+  else if constexpr (Key::name.view() == std::string_view("readBodies") && requires(Object& object) { object.read_bodies; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_bodies)>>{};
   else if constexpr (Key::name.view() == std::string_view("readBookmark") && requires(Object& object) { object.read_bookmark; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_bookmark)>>{};
+  else if constexpr (Key::name.view() == std::string_view("readContacts") && requires(Object& object) { object.read_contacts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_contacts)>>{};
   else if constexpr (Key::name.view() == std::string_view("readFormat") && requires(Object& object) { object.read_format; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_format)>>{};
   else if constexpr (Key::name.view() == std::string_view("readHtml") && requires(Object& object) { object.read_html; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_html)>>{};
   else if constexpr (Key::name.view() == std::string_view("readImage") && requires(Object& object) { object.read_image; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_image)>>{};
   else if constexpr (Key::name.view() == std::string_view("readItems") && requires(Object& object) { object.read_items; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_items)>>{};
+  else if constexpr (Key::name.view() == std::string_view("readJoints") && requires(Object& object) { object.read_joints; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_joints)>>{};
+  else if constexpr (Key::name.view() == std::string_view("readOnly") && requires(Object& object) { object.read_only; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_only)>>{};
   else if constexpr (Key::name.view() == std::string_view("readRTF") && requires(Object& object) { object.read_rtf; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_rtf)>>{};
   else if constexpr (Key::name.view() == std::string_view("readText") && requires(Object& object) { object.read_text; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_text)>>{};
   else if constexpr (Key::name.view() == std::string_view("reason") && requires(Object& object) { object.reason; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().reason)>>{};
   else if constexpr (Key::name.view() == std::string_view("red") && requires(Object& object) { object.red; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().red)>>{};
   else if constexpr (Key::name.view() == std::string_view("redBias") && requires(Object& object) { object.red_bias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().red_bias)>>{};
   else if constexpr (Key::name.view() == std::string_view("redScale") && requires(Object& object) { object.red_scale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().red_scale)>>{};
+  else if constexpr (Key::name.view() == std::string_view("referenceAngle") && requires(Object& object) { object.reference_angle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().reference_angle)>>{};
+  else if constexpr (Key::name.view() == std::string_view("referencedPages") && requires(Object& object) { object.referenced_pages; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().referenced_pages)>>{};
+  else if constexpr (Key::name.view() == std::string_view("reflect") && requires(Object& object) { object.reflect; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().reflect)>>{};
   else if constexpr (Key::name.view() == std::string_view("refresh") && requires(Object& object) { object.refresh; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().refresh)>>{};
   else if constexpr (Key::name.view() == std::string_view("refreshRate") && requires(Object& object) { object.refresh_rate; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().refresh_rate)>>{};
+  else if constexpr (Key::name.view() == std::string_view("regionBlend") && requires(Object& object) { object.region_blend; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().region_blend)>>{};
+  else if constexpr (Key::name.view() == std::string_view("regionDuration") && requires(Object& object) { object.region_duration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().region_duration)>>{};
+  else if constexpr (Key::name.view() == std::string_view("regionElapsed") && requires(Object& object) { object.region_elapsed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().region_elapsed)>>{};
   else if constexpr (Key::name.view() == std::string_view("regionIdMax") && requires(Object& object) { object.region_id_max; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().region_id_max)>>{};
   else if constexpr (Key::name.view() == std::string_view("regionIdMin") && requires(Object& object) { object.region_id_min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().region_id_min)>>{};
+  else if constexpr (Key::name.view() == std::string_view("regionIndex") && requires(Object& object) { object.region_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().region_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("regionStates") && requires(Object& object) { object.region_states; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().region_states)>>{};
+  else if constexpr (Key::name.view() == std::string_view("regionTransitions") && requires(Object& object) { object.region_transitions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().region_transitions)>>{};
+  else if constexpr (Key::name.view() == std::string_view("regions") && requires(Object& object) { object.regions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().regions)>>{};
+  else if constexpr (Key::name.view() == std::string_view("register") && requires(Object& object) { object.register_; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().register_)>>{};
+  else if constexpr (Key::name.view() == std::string_view("registeredCount") && requires(Object& object) { object.registered_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().registered_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("registrarImport") && requires(Object& object) { object.registrar_import; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().registrar_import)>>{};
+  else if constexpr (Key::name.view() == std::string_view("registrarSymbol") && requires(Object& object) { object.registrar_symbol; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().registrar_symbol)>>{};
+  else if constexpr (Key::name.view() == std::string_view("registry") && requires(Object& object) { object.registry; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().registry)>>{};
+  else if constexpr (Key::name.view() == std::string_view("relatedId") && requires(Object& object) { object.related_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().related_id)>>{};
   else if constexpr (Key::name.view() == std::string_view("relative") && requires(Object& object) { object.relative; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().relative)>>{};
+  else if constexpr (Key::name.view() == std::string_view("relaunch") && requires(Object& object) { object.relaunch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().relaunch)>>{};
+  else if constexpr (Key::name.view() == std::string_view("release") && requires(Object& object) { object.release; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().release)>>{};
+  else if constexpr (Key::name.view() == std::string_view("releaseElement") && requires(Object& object) { object.release_element; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().release_element)>>{};
+  else if constexpr (Key::name.view() == std::string_view("releaseSingleInstanceLock") && requires(Object& object) { object.release_single_instance_lock; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().release_single_instance_lock)>>{};
+  else if constexpr (Key::name.view() == std::string_view("removeAsDefault") && requires(Object& object) { object.remove_as_default; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().remove_as_default)>>{};
   else if constexpr (Key::name.view() == std::string_view("removeNode") && requires(Object& object) { object.remove_node; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().remove_node)>>{};
   else if constexpr (Key::name.view() == std::string_view("removeSpatialObject") && requires(Object& object) { object.remove_spatial_object; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().remove_spatial_object)>>{};
+  else if constexpr (Key::name.view() == std::string_view("renderEffects") && requires(Object& object) { object.render_effects; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().render_effects)>>{};
+  else if constexpr (Key::name.view() == std::string_view("renderRootGuard") && requires(Object& object) { object.render_root_guard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().render_root_guard)>>{};
+  else if constexpr (Key::name.view() == std::string_view("renderers") && requires(Object& object) { object.renderers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().renderers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("repeat") && requires(Object& object) { object.repeat; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().repeat)>>{};
   else if constexpr (Key::name.view() == std::string_view("repeatCount") && requires(Object& object) { object.repeat_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().repeat_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("reportDiagnostic") && requires(Object& object) { object.report_diagnostic; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().report_diagnostic)>>{};
   else if constexpr (Key::name.view() == std::string_view("request") && requires(Object& object) { object.request; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().request)>>{};
+  else if constexpr (Key::name.view() == std::string_view("requestAccess") && requires(Object& object) { object.request_access; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().request_access)>>{};
+  else if constexpr (Key::name.view() == std::string_view("requestAttention") && requires(Object& object) { object.request_attention; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().request_attention)>>{};
+  else if constexpr (Key::name.view() == std::string_view("requestMediaAccess") && requires(Object& object) { object.request_media_access; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().request_media_access)>>{};
   else if constexpr (Key::name.view() == std::string_view("requestPermission") && requires(Object& object) { object.request_permission; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().request_permission)>>{};
   else if constexpr (Key::name.view() == std::string_view("requestPersistence") && requires(Object& object) { object.request_persistence; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().request_persistence)>>{};
+  else if constexpr (Key::name.view() == std::string_view("requestSingleInstanceLock") && requires(Object& object) { object.request_single_instance_lock; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().request_single_instance_lock)>>{};
+  else if constexpr (Key::name.view() == std::string_view("requestWakeLock") && requires(Object& object) { object.request_wake_lock; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().request_wake_lock)>>{};
+  else if constexpr (Key::name.view() == std::string_view("requestedCount") && requires(Object& object) { object.requested_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().requested_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("required") && requires(Object& object) { object.required; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().required)>>{};
+  else if constexpr (Key::name.view() == std::string_view("requiredCount") && requires(Object& object) { object.required_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().required_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("requiredPointCount") && requires(Object& object) { object.required_point_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().required_point_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("requirements") && requires(Object& object) { object.requirements; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().requirements)>>{};
+  else if constexpr (Key::name.view() == std::string_view("resizable") && requires(Object& object) { object.resizable; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resizable)>>{};
   else if constexpr (Key::name.view() == std::string_view("resize") && requires(Object& object) { object.resize; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resize)>>{};
+  else if constexpr (Key::name.view() == std::string_view("resizeHandle") && requires(Object& object) { object.resize_handle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resize_handle)>>{};
   else if constexpr (Key::name.view() == std::string_view("resolution") && requires(Object& object) { object.resolution; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resolution)>>{};
+  else if constexpr (Key::name.view() == std::string_view("resolvePage") && requires(Object& object) { object.resolve_page; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resolve_page)>>{};
+  else if constexpr (Key::name.view() == std::string_view("resolveSlotContent") && requires(Object& object) { object.resolve_slot_content; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resolve_slot_content)>>{};
+  else if constexpr (Key::name.view() == std::string_view("resolveTexture") && requires(Object& object) { object.resolve_texture; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resolve_texture)>>{};
+  else if constexpr (Key::name.view() == std::string_view("resolvers") && requires(Object& object) { object.resolvers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resolvers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("resources") && requires(Object& object) { object.resources; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resources)>>{};
+  else if constexpr (Key::name.view() == std::string_view("responseType") && requires(Object& object) { object.response_type; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().response_type)>>{};
+  else if constexpr (Key::name.view() == std::string_view("restTranslation") && requires(Object& object) { object.rest_translation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rest_translation)>>{};
   else if constexpr (Key::name.view() == std::string_view("restitution") && requires(Object& object) { object.restitution; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().restitution)>>{};
+  else if constexpr (Key::name.view() == std::string_view("restore") && requires(Object& object) { object.restore; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().restore)>>{};
+  else if constexpr (Key::name.view() == std::string_view("restrict") && requires(Object& object) { object.restrict; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().restrict)>>{};
+  else if constexpr (Key::name.view() == std::string_view("resumeDevice") && requires(Object& object) { object.resume_device; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resume_device)>>{};
+  else if constexpr (Key::name.view() == std::string_view("reveal") && requires(Object& object) { object.reveal; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().reveal)>>{};
+  else if constexpr (Key::name.view() == std::string_view("reverse") && requires(Object& object) { object.reverse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().reverse)>>{};
+  else if constexpr (Key::name.view() == std::string_view("revokeObjectUrl") && requires(Object& object) { object.revoke_object_url; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().revoke_object_url)>>{};
+  else if constexpr (Key::name.view() == std::string_view("rgb") && requires(Object& object) { object.rgb; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rgb)>>{};
   else if constexpr (Key::name.view() == std::string_view("right") && requires(Object& object) { object.right; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().right)>>{};
+  else if constexpr (Key::name.view() == std::string_view("rightMargin") && requires(Object& object) { object.right_margin; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().right_margin)>>{};
   else if constexpr (Key::name.view() == std::string_view("root") && requires(Object& object) { object.root; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().root)>>{};
-  else if constexpr (Key::name.view() == std::string_view("rotatePerSecond") && requires(Object& object) { object.rotate_per_second; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotate_per_second)>>{};
-  else if constexpr (Key::name.view() == std::string_view("rotatePerSecondVariance") && requires(Object& object) { object.rotate_per_second_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotate_per_second_variance)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotated") && requires(Object& object) { object.rotated; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotated)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotation") && requires(Object& object) { object.rotation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotationAmplitude") && requires(Object& object) { object.rotation_amplitude; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation_amplitude)>>{};
@@ -1250,14 +3164,23 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("rotationEndVariance") && requires(Object& object) { object.rotation_end_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation_end_variance)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotationSpeedMax") && requires(Object& object) { object.rotation_speed_max; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation_speed_max)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotationSpeedMin") && requires(Object& object) { object.rotation_speed_min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation_speed_min)>>{};
+  else if constexpr (Key::name.view() == std::string_view("rotationSpeeds") && requires(Object& object) { object.rotation_speeds; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation_speeds)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotationStart") && requires(Object& object) { object.rotation_start; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation_start)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotationStartVariance") && requires(Object& object) { object.rotation_start_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation_start_variance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("rotationW") && requires(Object& object) { object.rotation_w; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation_w)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotationX") && requires(Object& object) { object.rotation_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotationY") && requires(Object& object) { object.rotation_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotationZ") && requires(Object& object) { object.rotation_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("roughness") && requires(Object& object) { object.roughness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().roughness)>>{};
+  else if constexpr (Key::name.view() == std::string_view("row") && requires(Object& object) { object.row; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().row)>>{};
+  else if constexpr (Key::name.view() == std::string_view("rows") && requires(Object& object) { object.rows; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rows)>>{};
+  else if constexpr (Key::name.view() == std::string_view("rtl") && requires(Object& object) { object.rtl; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rtl)>>{};
   else if constexpr (Key::name.view() == std::string_view("runtime") && requires(Object& object) { object.runtime; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().runtime)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sampleCount") && requires(Object& object) { object.sample_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sample_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sampleScratch") && requires(Object& object) { object.sample_scratch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sample_scratch)>>{};
   else if constexpr (Key::name.view() == std::string_view("samples") && requires(Object& object) { object.samples; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().samples)>>{};
   else if constexpr (Key::name.view() == std::string_view("saturation") && requires(Object& object) { object.saturation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().saturation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("saved") && requires(Object& object) { object.saved; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().saved)>>{};
   else if constexpr (Key::name.view() == std::string_view("scale") && requires(Object& object) { object.scale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scale)>>{};
   else if constexpr (Key::name.view() == std::string_view("scaleCurve") && requires(Object& object) { object.scale_curve; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scale_curve)>>{};
   else if constexpr (Key::name.view() == std::string_view("scaleEnd") && requires(Object& object) { object.scale_end; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scale_end)>>{};
@@ -1266,55 +3189,149 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("scaleMin") && requires(Object& object) { object.scale_min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scale_min)>>{};
   else if constexpr (Key::name.view() == std::string_view("scaleX") && requires(Object& object) { object.scale_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scale_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("scaleY") && requires(Object& object) { object.scale_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scale_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("scales") && requires(Object& object) { object.scales; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scales)>>{};
   else if constexpr (Key::name.view() == std::string_view("scaling") && requires(Object& object) { object.scaling; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scaling)>>{};
   else if constexpr (Key::name.view() == std::string_view("scanlineIntensity") && requires(Object& object) { object.scanline_intensity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scanline_intensity)>>{};
   else if constexpr (Key::name.view() == std::string_view("scattering") && requires(Object& object) { object.scattering; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scattering)>>{};
-  else if constexpr (Key::name.view() == std::string_view("scope") && requires(Object& object) { object.scope; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scope)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sceneDepthTexture") && requires(Object& object) { object.scene_depth_texture; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scene_depth_texture)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sceneTarget") && requires(Object& object) { object.scene_target; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scene_target)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sceneVelocityTexture") && requires(Object& object) { object.scene_velocity_texture; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scene_velocity_texture)>>{};
+  else if constexpr (Key::name.view() == std::string_view("scheme") && requires(Object& object) { object.scheme; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scheme)>>{};
   else if constexpr (Key::name.view() == std::string_view("screen") && requires(Object& object) { object.screen; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().screen)>>{};
+  else if constexpr (Key::name.view() == std::string_view("screenRotation") && requires(Object& object) { object.screen_rotation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().screen_rotation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("script") && requires(Object& object) { object.script; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().script)>>{};
+  else if constexpr (Key::name.view() == std::string_view("scroll") && requires(Object& object) { object.scroll; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scroll)>>{};
+  else if constexpr (Key::name.view() == std::string_view("scrollBar") && requires(Object& object) { object.scroll_bar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scroll_bar)>>{};
+  else if constexpr (Key::name.view() == std::string_view("scrollV") && requires(Object& object) { object.scroll_v; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scroll_v)>>{};
+  else if constexpr (Key::name.view() == std::string_view("secondRegion") && requires(Object& object) { object.second_region; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().second_region)>>{};
+  else if constexpr (Key::name.view() == std::string_view("secondaryMap") && requires(Object& object) { object.secondary_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().secondary_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("secondaryScroll") && requires(Object& object) { object.secondary_scroll; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().secondary_scroll)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sectionHandlers") && requires(Object& object) { object.section_handlers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().section_handlers)>>{};
   else if constexpr (Key::name.view() == std::string_view("seed") && requires(Object& object) { object.seed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().seed)>>{};
   else if constexpr (Key::name.view() == std::string_view("segment") && requires(Object& object) { object.segment; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().segment)>>{};
+  else if constexpr (Key::name.view() == std::string_view("segments") && requires(Object& object) { object.segments; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().segments)>>{};
+  else if constexpr (Key::name.view() == std::string_view("select") && requires(Object& object) { object.select; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().select)>>{};
+  else if constexpr (Key::name.view() == std::string_view("selectable") && requires(Object& object) { object.selectable; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().selectable)>>{};
+  else if constexpr (Key::name.view() == std::string_view("selectedIndex") && requires(Object& object) { object.selected_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().selected_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("selectedItem") && requires(Object& object) { object.selected_item; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().selected_item)>>{};
+  else if constexpr (Key::name.view() == std::string_view("selectedState") && requires(Object& object) { object.selected_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().selected_state)>>{};
   else if constexpr (Key::name.view() == std::string_view("selection") && requires(Object& object) { object.selection; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().selection)>>{};
+  else if constexpr (Key::name.view() == std::string_view("selectionAlpha") && requires(Object& object) { object.selection_alpha; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().selection_alpha)>>{};
+  else if constexpr (Key::name.view() == std::string_view("selectionColor") && requires(Object& object) { object.selection_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().selection_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("send") && requires(Object& object) { object.send; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().send)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sendEvent") && requires(Object& object) { object.send_event; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().send_event)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sendNetRequest") && requires(Object& object) { object.send_net_request; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().send_net_request)>>{};
   else if constexpr (Key::name.view() == std::string_view("sensor") && requires(Object& object) { object.sensor; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sensor)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sensors") && requires(Object& object) { object.sensors; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sensors)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sequential") && requires(Object& object) { object.sequential; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sequential)>>{};
   else if constexpr (Key::name.view() == std::string_view("setAccessoryBarVisible") && requires(Object& object) { object.set_accessory_bar_visible; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_accessory_bar_visible)>>{};
-  else if constexpr (Key::name.view() == std::string_view("setBackgroundColor") && requires(Object& object) { object.set_background_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_background_color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setActivationPolicy") && requires(Object& object) { object.set_activation_policy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_activation_policy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setAlwaysOnTop") && requires(Object& object) { object.set_always_on_top; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_always_on_top)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setAsDefault") && requires(Object& object) { object.set_as_default; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_as_default)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setBadgeCount") && requires(Object& object) { object.set_badge_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_badge_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setContentProtection") && requires(Object& object) { object.set_content_protection; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_content_protection)>>{};
   else if constexpr (Key::name.view() == std::string_view("setDisplaySize") && requires(Object& object) { object.set_display_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_display_size)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setDockBadge") && requires(Object& object) { object.set_dock_badge; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_dock_badge)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setDockMenu") && requires(Object& object) { object.set_dock_menu; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_dock_menu)>>{};
   else if constexpr (Key::name.view() == std::string_view("setFocus") && requires(Object& object) { object.set_focus; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_focus)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setFullscreen") && requires(Object& object) { object.set_fullscreen; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_fullscreen)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setHasShadow") && requires(Object& object) { object.set_has_shadow; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_has_shadow)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setIcon") && requires(Object& object) { object.set_icon; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_icon)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setLoginItem") && requires(Object& object) { object.set_login_item; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_login_item)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setMaximumSize") && requires(Object& object) { object.set_maximum_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_maximum_size)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setMenuBarVisible") && requires(Object& object) { object.set_menu_bar_visible; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_menu_bar_visible)>>{};
   else if constexpr (Key::name.view() == std::string_view("setMetadata") && requires(Object& object) { object.set_metadata; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_metadata)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setMinimumSize") && requires(Object& object) { object.set_minimum_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_minimum_size)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setName") && requires(Object& object) { object.set_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_name)>>{};
   else if constexpr (Key::name.view() == std::string_view("setNode") && requires(Object& object) { object.set_node; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_node)>>{};
-  else if constexpr (Key::name.view() == std::string_view("setOverlaysContent") && requires(Object& object) { object.set_overlays_content; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_overlays_content)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setOpacity") && requires(Object& object) { object.set_opacity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_opacity)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setParent") && requires(Object& object) { object.set_parent; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_parent)>>{};
   else if constexpr (Key::name.view() == std::string_view("setPlaybackState") && requires(Object& object) { object.set_playback_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_playback_state)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setPosition") && requires(Object& object) { object.set_position; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_position)>>{};
   else if constexpr (Key::name.view() == std::string_view("setPositionState") && requires(Object& object) { object.set_position_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_position_state)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setProgress") && requires(Object& object) { object.set_progress; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_progress)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setResizable") && requires(Object& object) { object.set_resizable; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_resizable)>>{};
   else if constexpr (Key::name.view() == std::string_view("setResizeMode") && requires(Object& object) { object.set_resize_mode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_resize_mode)>>{};
   else if constexpr (Key::name.view() == std::string_view("setScrollAssistEnabled") && requires(Object& object) { object.set_scroll_assist_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_scroll_assist_enabled)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setSize") && requires(Object& object) { object.set_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_size)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setSkipTaskbar") && requires(Object& object) { object.set_skip_taskbar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_skip_taskbar)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setSourceGain") && requires(Object& object) { object.set_source_gain; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_source_gain)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setSourcePan") && requires(Object& object) { object.set_source_pan; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_source_pan)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setSourcePlaybackRate") && requires(Object& object) { object.set_source_playback_rate; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_source_playback_rate)>>{};
   else if constexpr (Key::name.view() == std::string_view("setStyle") && requires(Object& object) { object.set_style; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_style)>>{};
-  else if constexpr (Key::name.view() == std::string_view("setVisible") && requires(Object& object) { object.set_visible; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_visible)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setTitle") && requires(Object& object) { object.set_title; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_title)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setUserModelId") && requires(Object& object) { object.set_user_model_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_user_model_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("severity") && requires(Object& object) { object.severity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().severity)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shCoefficients") && requires(Object& object) { object.sh_coefficients; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sh_coefficients)>>{};
   else if constexpr (Key::name.view() == std::string_view("shaderKey") && requires(Object& object) { object.shader_key; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shader_key)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shadowAlpha") && requires(Object& object) { object.shadow_alpha; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shadow_alpha)>>{};
   else if constexpr (Key::name.view() == std::string_view("shadowBias") && requires(Object& object) { object.shadow_bias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shadow_bias)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shadowColor") && requires(Object& object) { object.shadow_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shadow_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("shadowFar") && requires(Object& object) { object.shadow_far; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shadow_far)>>{};
   else if constexpr (Key::name.view() == std::string_view("shadowMapSize") && requires(Object& object) { object.shadow_map_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shadow_map_size)>>{};
   else if constexpr (Key::name.view() == std::string_view("shadowNear") && requires(Object& object) { object.shadow_near; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shadow_near)>>{};
   else if constexpr (Key::name.view() == std::string_view("shadowStrength") && requires(Object& object) { object.shadow_strength; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shadow_strength)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shape") && requires(Object& object) { object.shape; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shape)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shapeCommandKeys") && requires(Object& object) { object.shape_command_keys; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shape_command_keys)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shapeRasterizer") && requires(Object& object) { object.shape_rasterizer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shape_rasterizer)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shapeRun") && requires(Object& object) { object.shape_run; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shape_run)>>{};
+  else if constexpr (Key::name.view() == std::string_view("share") && requires(Object& object) { object.share; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().share)>>{};
   else if constexpr (Key::name.view() == std::string_view("sheenColor") && requires(Object& object) { object.sheen_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sheen_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("sheenColorMap") && requires(Object& object) { object.sheen_color_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sheen_color_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("sheenColorMapUvSet") && requires(Object& object) { object.sheen_color_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sheen_color_map_uv_set)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sheenEnabled") && requires(Object& object) { object.sheen_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sheen_enabled)>>{};
   else if constexpr (Key::name.view() == std::string_view("sheenRoughness") && requires(Object& object) { object.sheen_roughness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sheen_roughness)>>{};
   else if constexpr (Key::name.view() == std::string_view("sheenRoughnessMap") && requires(Object& object) { object.sheen_roughness_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sheen_roughness_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("sheenRoughnessMapUvSet") && requires(Object& object) { object.sheen_roughness_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sheen_roughness_map_uv_set)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shell") && requires(Object& object) { object.shell; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shell)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shiftKey") && requires(Object& object) { object.shift_key; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shift_key)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shininess") && requires(Object& object) { object.shininess; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shininess)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shortcut") && requires(Object& object) { object.shortcut; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shortcut)>>{};
   else if constexpr (Key::name.view() == std::string_view("show") && requires(Object& object) { object.show; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().show)>>{};
+  else if constexpr (Key::name.view() == std::string_view("showApp") && requires(Object& object) { object.show_app; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().show_app)>>{};
+  else if constexpr (Key::name.view() == std::string_view("signal") && requires(Object& object) { object.signal; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().signal)>>{};
+  else if constexpr (Key::name.view() == std::string_view("signals") && requires(Object& object) { object.signals; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().signals)>>{};
+  else if constexpr (Key::name.view() == std::string_view("signature") && requires(Object& object) { object.signature; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().signature)>>{};
   else if constexpr (Key::name.view() == std::string_view("size") && requires(Object& object) { object.size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().size)>>{};
+  else if constexpr (Key::name.view() == std::string_view("skeleton") && requires(Object& object) { object.skeleton; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().skeleton)>>{};
   else if constexpr (Key::name.view() == std::string_view("skewX") && requires(Object& object) { object.skew_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().skew_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("skewY") && requires(Object& object) { object.skew_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().skew_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("skin") && requires(Object& object) { object.skin; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().skin)>>{};
+  else if constexpr (Key::name.view() == std::string_view("skinned") && requires(Object& object) { object.skinned; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().skinned)>>{};
+  else if constexpr (Key::name.view() == std::string_view("skinnedNormals") && requires(Object& object) { object.skinned_normals; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().skinned_normals)>>{};
+  else if constexpr (Key::name.view() == std::string_view("skinnedPositions") && requires(Object& object) { object.skinned_positions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().skinned_positions)>>{};
+  else if constexpr (Key::name.view() == std::string_view("skinnedTangents") && requires(Object& object) { object.skinned_tangents; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().skinned_tangents)>>{};
+  else if constexpr (Key::name.view() == std::string_view("skipTaskbar") && requires(Object& object) { object.skip_taskbar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().skip_taskbar)>>{};
   else if constexpr (Key::name.view() == std::string_view("skyColor") && requires(Object& object) { object.sky_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sky_color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sleeping") && requires(Object& object) { object.sleeping; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sleeping)>>{};
+  else if constexpr (Key::name.view() == std::string_view("slot") && requires(Object& object) { object.slot; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().slot)>>{};
   else if constexpr (Key::name.view() == std::string_view("slotIndex") && requires(Object& object) { object.slot_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().slot_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("slots") && requires(Object& object) { object.slots; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().slots)>>{};
+  else if constexpr (Key::name.view() == std::string_view("smartRotation") && requires(Object& object) { object.smart_rotation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().smart_rotation)>>{};
   else if constexpr (Key::name.view() == std::string_view("smoothTime") && requires(Object& object) { object.smooth_time; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().smooth_time)>>{};
+  else if constexpr (Key::name.view() == std::string_view("smoothness") && requires(Object& object) { object.smoothness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().smoothness)>>{};
+  else if constexpr (Key::name.view() == std::string_view("snapping") && requires(Object& object) { object.snapping; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().snapping)>>{};
+  else if constexpr (Key::name.view() == std::string_view("snippets") && requires(Object& object) { object.snippets; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().snippets)>>{};
+  else if constexpr (Key::name.view() == std::string_view("socket") && requires(Object& object) { object.socket; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().socket)>>{};
+  else if constexpr (Key::name.view() == std::string_view("softKeyboard") && requires(Object& object) { object.soft_keyboard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().soft_keyboard)>>{};
   else if constexpr (Key::name.view() == std::string_view("softness") && requires(Object& object) { object.softness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().softness)>>{};
+  else if constexpr (Key::name.view() == std::string_view("solve") && requires(Object& object) { object.solve; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().solve)>>{};
+  else if constexpr (Key::name.view() == std::string_view("source") && requires(Object& object) { object.source; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source)>>{};
   else if constexpr (Key::name.view() == std::string_view("sourceHeight") && requires(Object& object) { object.source_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source_height)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sourceIndex") && requires(Object& object) { object.source_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sourceKind") && requires(Object& object) { object.source_kind; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source_kind)>>{};
   else if constexpr (Key::name.view() == std::string_view("sourceMode") && requires(Object& object) { object.source_mode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source_mode)>>{};
   else if constexpr (Key::name.view() == std::string_view("sourcePositionVariancex") && requires(Object& object) { object.source_position_variancex; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source_position_variancex)>>{};
   else if constexpr (Key::name.view() == std::string_view("sourcePositionVariancey") && requires(Object& object) { object.source_position_variancey; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source_position_variancey)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sourceStateIndex") && requires(Object& object) { object.source_state_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source_state_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("sourceWidth") && requires(Object& object) { object.source_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source_width)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sourceX") && requires(Object& object) { object.source_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sourceY") && requires(Object& object) { object.source_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().source_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sources") && requires(Object& object) { object.sources; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sources)>>{};
+  else if constexpr (Key::name.view() == std::string_view("spacingX") && requires(Object& object) { object.spacing_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().spacing_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("spacingY") && requires(Object& object) { object.spacing_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().spacing_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("spawn") && requires(Object& object) { object.spawn; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().spawn)>>{};
+  else if constexpr (Key::name.view() == std::string_view("spawnAccumulator") && requires(Object& object) { object.spawn_accumulator; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().spawn_accumulator)>>{};
   else if constexpr (Key::name.view() == std::string_view("spawnHeight") && requires(Object& object) { object.spawn_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().spawn_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("spawnRate") && requires(Object& object) { object.spawn_rate; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().spawn_rate)>>{};
   else if constexpr (Key::name.view() == std::string_view("spawnShape") && requires(Object& object) { object.spawn_shape; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().spawn_shape)>>{};
@@ -1323,30 +3340,64 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("specularColor") && requires(Object& object) { object.specular_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().specular_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("specularColorMap") && requires(Object& object) { object.specular_color_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().specular_color_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("specularColorMapUvSet") && requires(Object& object) { object.specular_color_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().specular_color_map_uv_set)>>{};
+  else if constexpr (Key::name.view() == std::string_view("specularEnabled") && requires(Object& object) { object.specular_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().specular_enabled)>>{};
+  else if constexpr (Key::name.view() == std::string_view("specularGlossinessMap") && requires(Object& object) { object.specular_glossiness_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().specular_glossiness_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("specularMap") && requires(Object& object) { object.specular_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().specular_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("specularMapUvSet") && requires(Object& object) { object.specular_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().specular_map_uv_set)>>{};
   else if constexpr (Key::name.view() == std::string_view("speed") && requires(Object& object) { object.speed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().speed)>>{};
   else if constexpr (Key::name.view() == std::string_view("speedMax") && requires(Object& object) { object.speed_max; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().speed_max)>>{};
   else if constexpr (Key::name.view() == std::string_view("speedMin") && requires(Object& object) { object.speed_min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().speed_min)>>{};
   else if constexpr (Key::name.view() == std::string_view("speedVariance") && requires(Object& object) { object.speed_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().speed_variance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sphereCount") && requires(Object& object) { object.sphere_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sphere_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("spheres") && requires(Object& object) { object.spheres; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().spheres)>>{};
   else if constexpr (Key::name.view() == std::string_view("spot") && requires(Object& object) { object.spot; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().spot)>>{};
   else if constexpr (Key::name.view() == std::string_view("spotBlend") && requires(Object& object) { object.spot_blend; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().spot_blend)>>{};
   else if constexpr (Key::name.view() == std::string_view("spread") && requires(Object& object) { object.spread; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().spread)>>{};
+  else if constexpr (Key::name.view() == std::string_view("square") && requires(Object& object) { object.square; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().square)>>{};
   else if constexpr (Key::name.view() == std::string_view("stack") && requires(Object& object) { object.stack; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stack)>>{};
   else if constexpr (Key::name.view() == std::string_view("start") && requires(Object& object) { object.start; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start)>>{};
+  else if constexpr (Key::name.view() == std::string_view("startCap") && requires(Object& object) { object.start_cap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_cap)>>{};
   else if constexpr (Key::name.view() == std::string_view("startColor") && requires(Object& object) { object.start_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("startColorVariance") && requires(Object& object) { object.start_color_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_color_variance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("startData") && requires(Object& object) { object.start_data; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_data)>>{};
   else if constexpr (Key::name.view() == std::string_view("startIndex") && requires(Object& object) { object.start_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("startParticleSize") && requires(Object& object) { object.start_particle_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_particle_size)>>{};
   else if constexpr (Key::name.view() == std::string_view("startParticleSizeVariance") && requires(Object& object) { object.start_particle_size_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_particle_size_variance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("startSample") && requires(Object& object) { object.start_sample; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_sample)>>{};
+  else if constexpr (Key::name.view() == std::string_view("startScreenX") && requires(Object& object) { object.start_screen_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_screen_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("startScreenY") && requires(Object& object) { object.start_screen_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_screen_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("startSource") && requires(Object& object) { object.start_source; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_source)>>{};
+  else if constexpr (Key::name.view() == std::string_view("startWorldX") && requires(Object& object) { object.start_world_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_world_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("startWorldY") && requires(Object& object) { object.start_world_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_world_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("startX") && requires(Object& object) { object.start_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("startY") && requires(Object& object) { object.start_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("startZ") && requires(Object& object) { object.start_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("state") && requires(Object& object) { object.state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().state)>>{};
+  else if constexpr (Key::name.view() == std::string_view("stateMachine") && requires(Object& object) { object.state_machine; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().state_machine)>>{};
+  else if constexpr (Key::name.view() == std::string_view("stateMachines") && requires(Object& object) { object.state_machines; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().state_machines)>>{};
   else if constexpr (Key::name.view() == std::string_view("stated") && requires(Object& object) { object.stated; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stated)>>{};
+  else if constexpr (Key::name.view() == std::string_view("states") && requires(Object& object) { object.states; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().states)>>{};
+  else if constexpr (Key::name.view() == std::string_view("status") && requires(Object& object) { object.status; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().status)>>{};
+  else if constexpr (Key::name.view() == std::string_view("statusBar") && requires(Object& object) { object.status_bar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().status_bar)>>{};
+  else if constexpr (Key::name.view() == std::string_view("statusText") && requires(Object& object) { object.status_text; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().status_text)>>{};
+  else if constexpr (Key::name.view() == std::string_view("step") && requires(Object& object) { object.step; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().step)>>{};
   else if constexpr (Key::name.view() == std::string_view("steps") && requires(Object& object) { object.steps; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().steps)>>{};
+  else if constexpr (Key::name.view() == std::string_view("streamEnd") && requires(Object& object) { object.stream_end; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stream_end)>>{};
+  else if constexpr (Key::name.view() == std::string_view("streamStart") && requires(Object& object) { object.stream_start; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stream_start)>>{};
+  else if constexpr (Key::name.view() == std::string_view("streaming") && requires(Object& object) { object.streaming; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().streaming)>>{};
   else if constexpr (Key::name.view() == std::string_view("strength") && requires(Object& object) { object.strength; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().strength)>>{};
+  else if constexpr (Key::name.view() == std::string_view("stroke") && requires(Object& object) { object.stroke; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stroke)>>{};
   else if constexpr (Key::name.view() == std::string_view("strokeBounds") && requires(Object& object) { object.stroke_bounds; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stroke_bounds)>>{};
+  else if constexpr (Key::name.view() == std::string_view("strokeDasharray") && requires(Object& object) { object.stroke_dasharray; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stroke_dasharray)>>{};
+  else if constexpr (Key::name.view() == std::string_view("strokeDashoffset") && requires(Object& object) { object.stroke_dashoffset; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stroke_dashoffset)>>{};
+  else if constexpr (Key::name.view() == std::string_view("strokeLinecap") && requires(Object& object) { object.stroke_linecap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stroke_linecap)>>{};
+  else if constexpr (Key::name.view() == std::string_view("strokeLinejoin") && requires(Object& object) { object.stroke_linejoin; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stroke_linejoin)>>{};
+  else if constexpr (Key::name.view() == std::string_view("strokeMiterlimit") && requires(Object& object) { object.stroke_miterlimit; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stroke_miterlimit)>>{};
+  else if constexpr (Key::name.view() == std::string_view("strokeOpacity") && requires(Object& object) { object.stroke_opacity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stroke_opacity)>>{};
+  else if constexpr (Key::name.view() == std::string_view("strokeTessellator") && requires(Object& object) { object.stroke_tessellator; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stroke_tessellator)>>{};
+  else if constexpr (Key::name.view() == std::string_view("strokeWidth") && requires(Object& object) { object.stroke_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stroke_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("style") && requires(Object& object) { object.style; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().style)>>{};
+  else if constexpr (Key::name.view() == std::string_view("styleIndex") && requires(Object& object) { object.style_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().style_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("subject") && requires(Object& object) { object.subject; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subject)>>{};
   else if constexpr (Key::name.view() == std::string_view("subpixel") && requires(Object& object) { object.subpixel; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subpixel)>>{};
   else if constexpr (Key::name.view() == std::string_view("subscribe") && requires(Object& object) { object.subscribe; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subscribe)>>{};
@@ -1360,69 +3411,210 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("subscribeOrientation") && requires(Object& object) { object.subscribe_orientation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subscribe_orientation)>>{};
   else if constexpr (Key::name.view() == std::string_view("subscribeProximity") && requires(Object& object) { object.subscribe_proximity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subscribe_proximity)>>{};
   else if constexpr (Key::name.view() == std::string_view("subscribeQuaternion") && requires(Object& object) { object.subscribe_quaternion; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subscribe_quaternion)>>{};
+  else if constexpr (Key::name.view() == std::string_view("subscribeResize") && requires(Object& object) { object.subscribe_resize; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subscribe_resize)>>{};
+  else if constexpr (Key::name.view() == std::string_view("subsets") && requires(Object& object) { object.subsets; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subsets)>>{};
+  else if constexpr (Key::name.view() == std::string_view("subsurfaceEnabled") && requires(Object& object) { object.subsurface_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subsurface_enabled)>>{};
   else if constexpr (Key::name.view() == std::string_view("supportedAbis") && requires(Object& object) { object.supported_abis; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().supported_abis)>>{};
+  else if constexpr (Key::name.view() == std::string_view("supportedFormats") && requires(Object& object) { object.supported_formats; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().supported_formats)>>{};
+  else if constexpr (Key::name.view() == std::string_view("surface") && requires(Object& object) { object.surface; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().surface)>>{};
+  else if constexpr (Key::name.view() == std::string_view("surfaceOwnership") && requires(Object& object) { object.surface_ownership; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().surface_ownership)>>{};
+  else if constexpr (Key::name.view() == std::string_view("swingLimitImpulse") && requires(Object& object) { object.swing_limit_impulse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().swing_limit_impulse)>>{};
+  else if constexpr (Key::name.view() == std::string_view("swingLimitY") && requires(Object& object) { object.swing_limit_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().swing_limit_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("swingLimitZ") && requires(Object& object) { object.swing_limit_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().swing_limit_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tables") && requires(Object& object) { object.tables; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tables)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tabs") && requires(Object& object) { object.tabs; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tabs)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tag") && requires(Object& object) { object.tag; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tag)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tangent0X") && requires(Object& object) { object.tangent0_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangent0_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tangent0Y") && requires(Object& object) { object.tangent0_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangent0_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tangent0Z") && requires(Object& object) { object.tangent0_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangent0_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tangent1X") && requires(Object& object) { object.tangent1_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangent1_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tangent1Y") && requires(Object& object) { object.tangent1_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangent1_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tangent1Z") && requires(Object& object) { object.tangent1_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangent1_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tangentImpulse0") && requires(Object& object) { object.tangent_impulse0; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangent_impulse0)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tangentImpulse1") && requires(Object& object) { object.tangent_impulse1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangent_impulse1)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tangentMass0") && requires(Object& object) { object.tangent_mass0; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangent_mass0)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tangentMass1") && requires(Object& object) { object.tangent_mass1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangent_mass1)>>{};
   else if constexpr (Key::name.view() == std::string_view("tangentialAccelVariance") && requires(Object& object) { object.tangential_accel_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangential_accel_variance)>>{};
   else if constexpr (Key::name.view() == std::string_view("tangentialAcceleration") && requires(Object& object) { object.tangential_acceleration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangential_acceleration)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tangents") && requires(Object& object) { object.tangents; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tangents)>>{};
+  else if constexpr (Key::name.view() == std::string_view("target") && requires(Object& object) { object.target; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().target)>>{};
+  else if constexpr (Key::name.view() == std::string_view("targetIndex") && requires(Object& object) { object.target_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().target_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("targetRef") && requires(Object& object) { object.target_ref; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().target_ref)>>{};
+  else if constexpr (Key::name.view() == std::string_view("targetStateIndex") && requires(Object& object) { object.target_state_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().target_state_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("targetX") && requires(Object& object) { object.target_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().target_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("targetY") && requires(Object& object) { object.target_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().target_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("targets") && requires(Object& object) { object.targets; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().targets)>>{};
   else if constexpr (Key::name.view() == std::string_view("temperature") && requires(Object& object) { object.temperature; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().temperature)>>{};
+  else if constexpr (Key::name.view() == std::string_view("text") && requires(Object& object) { object.text; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().text)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textField") && requires(Object& object) { object.text_field; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().text_field)>>{};
   else if constexpr (Key::name.view() == std::string_view("textHeight") && requires(Object& object) { object.text_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().text_height)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textLayout") && requires(Object& object) { object.text_layout; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().text_layout)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textSegment") && requires(Object& object) { object.text_segment; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().text_segment)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textShaper") && requires(Object& object) { object.text_shaper; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().text_shaper)>>{};
   else if constexpr (Key::name.view() == std::string_view("textWidth") && requires(Object& object) { object.text_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().text_width)>>{};
-  else if constexpr (Key::name.view() == std::string_view("textureFileName") && requires(Object& object) { object.texture_file_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_file_name)>>{};
+  else if constexpr (Key::name.view() == std::string_view("texture") && requires(Object& object) { object.texture; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textureBindGroup") && requires(Object& object) { object.texture_bind_group; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_bind_group)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textureBindGroupLayout") && requires(Object& object) { object.texture_bind_group_layout; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_bind_group_layout)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textureCount") && requires(Object& object) { object.texture_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textureKeys") && requires(Object& object) { object.texture_keys; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_keys)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textureResolvers") && requires(Object& object) { object.texture_resolvers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_resolvers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textureSamplers") && requires(Object& object) { object.texture_samplers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_samplers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textureSourceKinds") && requires(Object& object) { object.texture_source_kinds; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_source_kinds)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textureViews") && requires(Object& object) { object.texture_views; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_views)>>{};
   else if constexpr (Key::name.view() == std::string_view("thickness") && requires(Object& object) { object.thickness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().thickness)>>{};
   else if constexpr (Key::name.view() == std::string_view("thicknessMap") && requires(Object& object) { object.thickness_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().thickness_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("thicknessMapUvSet") && requires(Object& object) { object.thickness_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().thickness_map_uv_set)>>{};
   else if constexpr (Key::name.view() == std::string_view("threshold") && requires(Object& object) { object.threshold; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().threshold)>>{};
+  else if constexpr (Key::name.view() == std::string_view("thumb") && requires(Object& object) { object.thumb; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().thumb)>>{};
   else if constexpr (Key::name.view() == std::string_view("tilesets") && requires(Object& object) { object.tilesets; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tilesets)>>{};
   else if constexpr (Key::name.view() == std::string_view("time") && requires(Object& object) { object.time; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().time)>>{};
+  else if constexpr (Key::name.view() == std::string_view("timeElapsed") && requires(Object& object) { object.time_elapsed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().time_elapsed)>>{};
   else if constexpr (Key::name.view() == std::string_view("timeline") && requires(Object& object) { object.timeline; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().timeline)>>{};
+  else if constexpr (Key::name.view() == std::string_view("timelineHandlers") && requires(Object& object) { object.timeline_handlers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().timeline_handlers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("timeoutMs") && requires(Object& object) { object.timeout_ms; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().timeout_ms)>>{};
   else if constexpr (Key::name.view() == std::string_view("timestamp") && requires(Object& object) { object.timestamp; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().timestamp)>>{};
   else if constexpr (Key::name.view() == std::string_view("tint") && requires(Object& object) { object.tint; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tint)>>{};
+  else if constexpr (Key::name.view() == std::string_view("title") && requires(Object& object) { object.title; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().title)>>{};
+  else if constexpr (Key::name.view() == std::string_view("titleBar") && requires(Object& object) { object.title_bar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().title_bar)>>{};
+  else if constexpr (Key::name.view() == std::string_view("to") && requires(Object& object) { object.to; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().to)>>{};
+  else if constexpr (Key::name.view() == std::string_view("toIndex") && requires(Object& object) { object.to_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().to_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("toMotion") && requires(Object& object) { object.to_motion; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().to_motion)>>{};
+  else if constexpr (Key::name.view() == std::string_view("toSample") && requires(Object& object) { object.to_sample; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().to_sample)>>{};
+  else if constexpr (Key::name.view() == std::string_view("toX") && requires(Object& object) { object.to_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().to_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("toY") && requires(Object& object) { object.to_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().to_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("toggles") && requires(Object& object) { object.toggles; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().toggles)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tolerance") && requires(Object& object) { object.tolerance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tolerance)>>{};
   else if constexpr (Key::name.view() == std::string_view("top") && requires(Object& object) { object.top; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().top)>>{};
+  else if constexpr (Key::name.view() == std::string_view("topology") && requires(Object& object) { object.topology; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().topology)>>{};
   else if constexpr (Key::name.view() == std::string_view("torque") && requires(Object& object) { object.torque; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().torque)>>{};
   else if constexpr (Key::name.view() == std::string_view("torqueX") && requires(Object& object) { object.torque_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().torque_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("torqueY") && requires(Object& object) { object.torque_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().torque_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("torqueZ") && requires(Object& object) { object.torque_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().torque_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("total") && requires(Object& object) { object.total; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().total)>>{};
+  else if constexpr (Key::name.view() == std::string_view("totalFrames") && requires(Object& object) { object.total_frames; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().total_frames)>>{};
   else if constexpr (Key::name.view() == std::string_view("totalMemory") && requires(Object& object) { object.total_memory; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().total_memory)>>{};
+  else if constexpr (Key::name.view() == std::string_view("totalSize") && requires(Object& object) { object.total_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().total_size)>>{};
   else if constexpr (Key::name.view() == std::string_view("touchSupport") && requires(Object& object) { object.touch_support; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().touch_support)>>{};
   else if constexpr (Key::name.view() == std::string_view("touching") && requires(Object& object) { object.touching; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().touching)>>{};
+  else if constexpr (Key::name.view() == std::string_view("track") && requires(Object& object) { object.track; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().track)>>{};
+  else if constexpr (Key::name.view() == std::string_view("traits") && requires(Object& object) { object.traits; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().traits)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transactionDepth") && requires(Object& object) { object.transaction_depth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transaction_depth)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transactionIndex") && requires(Object& object) { object.transaction_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transaction_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transactionLabel") && requires(Object& object) { object.transaction_label; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transaction_label)>>{};
   else if constexpr (Key::name.view() == std::string_view("transform") && requires(Object& object) { object.transform; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transform)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transition") && requires(Object& object) { object.transition; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transition)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transitionCurve") && requires(Object& object) { object.transition_curve; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transition_curve)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transitionDuration") && requires(Object& object) { object.transition_duration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transition_duration)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transitionElapsed") && requires(Object& object) { object.transition_elapsed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transition_elapsed)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transitionFromStateIndex") && requires(Object& object) { object.transition_from_state_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transition_from_state_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transitionIndex") && requires(Object& object) { object.transition_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transition_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transitionToStateIndex") && requires(Object& object) { object.transition_to_state_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transition_to_state_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transitionWeight") && requires(Object& object) { object.transition_weight; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transition_weight)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transitions") && requires(Object& object) { object.transitions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transitions)>>{};
   else if constexpr (Key::name.view() == std::string_view("translationAmplitude") && requires(Object& object) { object.translation_amplitude; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().translation_amplitude)>>{};
   else if constexpr (Key::name.view() == std::string_view("transmission") && requires(Object& object) { object.transmission; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transmission)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transmissionEnabled") && requires(Object& object) { object.transmission_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transmission_enabled)>>{};
   else if constexpr (Key::name.view() == std::string_view("transmissionMap") && requires(Object& object) { object.transmission_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transmission_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("transmissionMapUvSet") && requires(Object& object) { object.transmission_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transmission_map_uv_set)>>{};
   else if constexpr (Key::name.view() == std::string_view("transparency") && requires(Object& object) { object.transparency; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transparency)>>{};
   else if constexpr (Key::name.view() == std::string_view("trauma") && requires(Object& object) { object.trauma; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().trauma)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tray") && requires(Object& object) { object.tray; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tray)>>{};
+  else if constexpr (Key::name.view() == std::string_view("triangleIndex") && requires(Object& object) { object.triangle_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().triangle_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("tweens") && requires(Object& object) { object.tweens; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tweens)>>{};
   else if constexpr (Key::name.view() == std::string_view("tx") && requires(Object& object) { object.tx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tx)>>{};
   else if constexpr (Key::name.view() == std::string_view("ty") && requires(Object& object) { object.ty; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ty)>>{};
   else if constexpr (Key::name.view() == std::string_view("type") && requires(Object& object) { object.type; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().type)>>{};
+  else if constexpr (Key::name.view() == std::string_view("typeKey") && requires(Object& object) { object.type_key; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().type_key)>>{};
+  else if constexpr (Key::name.view() == std::string_view("u") && requires(Object& object) { object.u; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().u)>>{};
+  else if constexpr (Key::name.view() == std::string_view("uncheckedState") && requires(Object& object) { object.unchecked_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unchecked_state)>>{};
+  else if constexpr (Key::name.view() == std::string_view("uniformBindGroup") && requires(Object& object) { object.uniform_bind_group; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().uniform_bind_group)>>{};
+  else if constexpr (Key::name.view() == std::string_view("uniformBindGroupLayout") && requires(Object& object) { object.uniform_bind_group_layout; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().uniform_bind_group_layout)>>{};
+  else if constexpr (Key::name.view() == std::string_view("uniformBuffer") && requires(Object& object) { object.uniform_buffer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().uniform_buffer)>>{};
+  else if constexpr (Key::name.view() == std::string_view("uniformFloatCount") && requires(Object& object) { object.uniform_float_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().uniform_float_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("uniforms") && requires(Object& object) { object.uniforms; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().uniforms)>>{};
+  else if constexpr (Key::name.view() == std::string_view("units") && requires(Object& object) { object.units; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().units)>>{};
+  else if constexpr (Key::name.view() == std::string_view("unitsPerEm") && requires(Object& object) { object.units_per_em; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().units_per_em)>>{};
+  else if constexpr (Key::name.view() == std::string_view("unpacked") && requires(Object& object) { object.unpacked; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unpacked)>>{};
+  else if constexpr (Key::name.view() == std::string_view("unregister") && requires(Object& object) { object.unregister; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unregister)>>{};
+  else if constexpr (Key::name.view() == std::string_view("unregisteredKinds") && requires(Object& object) { object.unregistered_kinds; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unregistered_kinds)>>{};
+  else if constexpr (Key::name.view() == std::string_view("unresolved") && requires(Object& object) { object.unresolved; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unresolved)>>{};
+  else if constexpr (Key::name.view() == std::string_view("unresolvedIndexes") && requires(Object& object) { object.unresolved_indexes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unresolved_indexes)>>{};
+  else if constexpr (Key::name.view() == std::string_view("unselectedState") && requires(Object& object) { object.unselected_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unselected_state)>>{};
+  else if constexpr (Key::name.view() == std::string_view("unsupportedFields") && requires(Object& object) { object.unsupported_fields; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unsupported_fields)>>{};
   else if constexpr (Key::name.view() == std::string_view("up") && requires(Object& object) { object.up; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().up)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upState") && requires(Object& object) { object.up_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().up_state)>>{};
   else if constexpr (Key::name.view() == std::string_view("updateSpatialObject") && requires(Object& object) { object.update_spatial_object; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().update_spatial_object)>>{};
+  else if constexpr (Key::name.view() == std::string_view("updater") && requires(Object& object) { object.updater; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().updater)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upperAngle") && requires(Object& object) { object.upper_angle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().upper_angle)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upperAngularX") && requires(Object& object) { object.upper_angular_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().upper_angular_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upperAngularY") && requires(Object& object) { object.upper_angular_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().upper_angular_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upperAngularZ") && requires(Object& object) { object.upper_angular_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().upper_angular_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upperLimitImpulse") && requires(Object& object) { object.upper_limit_impulse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().upper_limit_impulse)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upperLimitImpulses") && requires(Object& object) { object.upper_limit_impulses; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().upper_limit_impulses)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upperLinearX") && requires(Object& object) { object.upper_linear_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().upper_linear_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upperLinearY") && requires(Object& object) { object.upper_linear_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().upper_linear_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upperLinearZ") && requires(Object& object) { object.upper_linear_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().upper_linear_z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upperTranslation") && requires(Object& object) { object.upper_translation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().upper_translation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upperTwistAngle") && requires(Object& object) { object.upper_twist_angle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().upper_twist_angle)>>{};
+  else if constexpr (Key::name.view() == std::string_view("upperTwistImpulse") && requires(Object& object) { object.upper_twist_impulse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().upper_twist_impulse)>>{};
+  else if constexpr (Key::name.view() == std::string_view("url") && requires(Object& object) { object.url; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().url)>>{};
+  else if constexpr (Key::name.view() == std::string_view("user") && requires(Object& object) { object.user; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().user)>>{};
+  else if constexpr (Key::name.view() == std::string_view("uvOffset") && requires(Object& object) { object.uv_offset; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().uv_offset)>>{};
+  else if constexpr (Key::name.view() == std::string_view("uvRotation") && requires(Object& object) { object.uv_rotation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().uv_rotation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("uvScale") && requires(Object& object) { object.uv_scale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().uv_scale)>>{};
+  else if constexpr (Key::name.view() == std::string_view("v") && requires(Object& object) { object.v; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().v)>>{};
   else if constexpr (Key::name.view() == std::string_view("value") && requires(Object& object) { object.value; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().value)>>{};
+  else if constexpr (Key::name.view() == std::string_view("values") && requires(Object& object) { object.values; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().values)>>{};
+  else if constexpr (Key::name.view() == std::string_view("velocities") && requires(Object& object) { object.velocities; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocities)>>{};
   else if constexpr (Key::name.view() == std::string_view("velocity") && requires(Object& object) { object.velocity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocity)>>{};
   else if constexpr (Key::name.view() == std::string_view("velocityInheritance") && requires(Object& object) { object.velocity_inheritance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocity_inheritance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("velocityWriters") && requires(Object& object) { object.velocity_writers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocity_writers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("velocityX") && requires(Object& object) { object.velocity_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocity_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("velocityY") && requires(Object& object) { object.velocity_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocity_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("velocityZ") && requires(Object& object) { object.velocity_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocity_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("version") && requires(Object& object) { object.version; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().version)>>{};
+  else if constexpr (Key::name.view() == std::string_view("vertex") && requires(Object& object) { object.vertex; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vertex)>>{};
+  else if constexpr (Key::name.view() == std::string_view("verticalScrollBar") && requires(Object& object) { object.vertical_scroll_bar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vertical_scroll_bar)>>{};
+  else if constexpr (Key::name.view() == std::string_view("vertices") && requires(Object& object) { object.vertices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vertices)>>{};
   else if constexpr (Key::name.view() == std::string_view("vibrate") && requires(Object& object) { object.vibrate; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vibrate)>>{};
   else if constexpr (Key::name.view() == std::string_view("vibratePattern") && requires(Object& object) { object.vibrate_pattern; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vibrate_pattern)>>{};
   else if constexpr (Key::name.view() == std::string_view("vibrateWaveform") && requires(Object& object) { object.vibrate_waveform; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vibrate_waveform)>>{};
+  else if constexpr (Key::name.view() == std::string_view("video") && requires(Object& object) { object.video; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().video)>>{};
   else if constexpr (Key::name.view() == std::string_view("view") && requires(Object& object) { object.view; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().view)>>{};
+  else if constexpr (Key::name.view() == std::string_view("viewport") && requires(Object& object) { object.viewport; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().viewport)>>{};
   else if constexpr (Key::name.view() == std::string_view("viewportHeight") && requires(Object& object) { object.viewport_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().viewport_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("viewportWidth") && requires(Object& object) { object.viewport_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().viewport_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("vignette") && requires(Object& object) { object.vignette; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vignette)>>{};
+  else if constexpr (Key::name.view() == std::string_view("visibility") && requires(Object& object) { object.visibility; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().visibility)>>{};
   else if constexpr (Key::name.view() == std::string_view("visible") && requires(Object& object) { object.visible; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().visible)>>{};
+  else if constexpr (Key::name.view() == std::string_view("visibleMeshes") && requires(Object& object) { object.visible_meshes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().visible_meshes)>>{};
+  else if constexpr (Key::name.view() == std::string_view("visual") && requires(Object& object) { object.visual; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().visual)>>{};
   else if constexpr (Key::name.view() == std::string_view("w") && requires(Object& object) { object.w; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().w)>>{};
+  else if constexpr (Key::name.view() == std::string_view("warmStart") && requires(Object& object) { object.warm_start; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().warm_start)>>{};
   else if constexpr (Key::name.view() == std::string_view("watchPosition") && requires(Object& object) { object.watch_position; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().watch_position)>>{};
   else if constexpr (Key::name.view() == std::string_view("webViewVersion") && requires(Object& object) { object.web_view_version; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().web_view_version)>>{};
   else if constexpr (Key::name.view() == std::string_view("weight") && requires(Object& object) { object.weight; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().weight)>>{};
+  else if constexpr (Key::name.view() == std::string_view("weights") && requires(Object& object) { object.weights; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().weights)>>{};
+  else if constexpr (Key::name.view() == std::string_view("wgpu") && requires(Object& object) { object.wgpu; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wgpu)>>{};
+  else if constexpr (Key::name.view() == std::string_view("whenReady") && requires(Object& object) { object.when_ready; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().when_ready)>>{};
   else if constexpr (Key::name.view() == std::string_view("white") && requires(Object& object) { object.white; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().white)>>{};
   else if constexpr (Key::name.view() == std::string_view("width") && requires(Object& object) { object.width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().width)>>{};
   else if constexpr (Key::name.view() == std::string_view("wind") && requires(Object& object) { object.wind; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wind)>>{};
   else if constexpr (Key::name.view() == std::string_view("winding") && requires(Object& object) { object.winding; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().winding)>>{};
+  else if constexpr (Key::name.view() == std::string_view("window") && requires(Object& object) { object.window; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().window)>>{};
+  else if constexpr (Key::name.view() == std::string_view("wordWrap") && requires(Object& object) { object.word_wrap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().word_wrap)>>{};
   else if constexpr (Key::name.view() == std::string_view("workHeight") && requires(Object& object) { object.work_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().work_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("workWidth") && requires(Object& object) { object.work_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().work_width)>>{};
+  else if constexpr (Key::name.view() == std::string_view("world") && requires(Object& object) { object.world; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().world)>>{};
   else if constexpr (Key::name.view() == std::string_view("worldBounds") && requires(Object& object) { object.world_bounds; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().world_bounds)>>{};
+  else if constexpr (Key::name.view() == std::string_view("worldBoundsUsingLocalBoundsId") && requires(Object& object) { object.world_bounds_using_local_bounds_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().world_bounds_using_local_bounds_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("worldBoundsUsingWorldTransformId") && requires(Object& object) { object.world_bounds_using_world_transform_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().world_bounds_using_world_transform_id)>>{};
   else if constexpr (Key::name.view() == std::string_view("worldMatrices") && requires(Object& object) { object.world_matrices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().world_matrices)>>{};
   else if constexpr (Key::name.view() == std::string_view("worldSpace") && requires(Object& object) { object.world_space; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().world_space)>>{};
+  else if constexpr (Key::name.view() == std::string_view("worldTransformId") && requires(Object& object) { object.world_transform_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().world_transform_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("worldTransformUsingParentTransformId") && requires(Object& object) { object.world_transform_using_parent_transform_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().world_transform_using_parent_transform_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("worldX") && requires(Object& object) { object.world_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().world_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("worldY") && requires(Object& object) { object.world_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().world_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("wouldOccupyBucketCount") && requires(Object& object) { object.would_occupy_bucket_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().would_occupy_bucket_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("wrapU") && requires(Object& object) { object.wrap_u; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wrap_u)>>{};
   else if constexpr (Key::name.view() == std::string_view("wrapV") && requires(Object& object) { object.wrap_v; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wrap_v)>>{};
@@ -1430,6 +3622,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("wrappedDiffuseMap") && requires(Object& object) { object.wrapped_diffuse_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wrapped_diffuse_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("wrappedDiffuseMapUvSet") && requires(Object& object) { object.wrapped_diffuse_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wrapped_diffuse_map_uv_set)>>{};
   else if constexpr (Key::name.view() == std::string_view("wrappedDiffuseStrength") && requires(Object& object) { object.wrapped_diffuse_strength; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wrapped_diffuse_strength)>>{};
+  else if constexpr (Key::name.view() == std::string_view("write") && requires(Object& object) { object.write; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().write)>>{};
   else if constexpr (Key::name.view() == std::string_view("writeBookmark") && requires(Object& object) { object.write_bookmark; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().write_bookmark)>>{};
   else if constexpr (Key::name.view() == std::string_view("writeFormat") && requires(Object& object) { object.write_format; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().write_format)>>{};
   else if constexpr (Key::name.view() == std::string_view("writeHtml") && requires(Object& object) { object.write_html; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().write_html)>>{};
@@ -1440,12 +3633,21 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("x") && requires(Object& object) { object.x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().x)>>{};
   else if constexpr (Key::name.view() == std::string_view("x0") && requires(Object& object) { object.x0; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().x0)>>{};
   else if constexpr (Key::name.view() == std::string_view("x1") && requires(Object& object) { object.x1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().x1)>>{};
+  else if constexpr (Key::name.view() == std::string_view("x2") && requires(Object& object) { object.x2; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().x2)>>{};
+  else if constexpr (Key::name.view() == std::string_view("xMax") && requires(Object& object) { object.x_max; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().x_max)>>{};
+  else if constexpr (Key::name.view() == std::string_view("xMin") && requires(Object& object) { object.x_min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().x_min)>>{};
   else if constexpr (Key::name.view() == std::string_view("xOffset") && requires(Object& object) { object.x_offset; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().x_offset)>>{};
   else if constexpr (Key::name.view() == std::string_view("y") && requires(Object& object) { object.y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().y)>>{};
   else if constexpr (Key::name.view() == std::string_view("y0") && requires(Object& object) { object.y0; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().y0)>>{};
   else if constexpr (Key::name.view() == std::string_view("y1") && requires(Object& object) { object.y1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().y1)>>{};
+  else if constexpr (Key::name.view() == std::string_view("y2") && requires(Object& object) { object.y2; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().y2)>>{};
+  else if constexpr (Key::name.view() == std::string_view("yMax") && requires(Object& object) { object.y_max; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().y_max)>>{};
+  else if constexpr (Key::name.view() == std::string_view("yMin") && requires(Object& object) { object.y_min; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().y_min)>>{};
   else if constexpr (Key::name.view() == std::string_view("yOffset") && requires(Object& object) { object.y_offset; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().y_offset)>>{};
+  else if constexpr (Key::name.view() == std::string_view("yaw") && requires(Object& object) { object.yaw; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().yaw)>>{};
   else if constexpr (Key::name.view() == std::string_view("z") && requires(Object& object) { object.z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().z)>>{};
+  else if constexpr (Key::name.view() == std::string_view("z0") && requires(Object& object) { object.z0; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().z0)>>{};
+  else if constexpr (Key::name.view() == std::string_view("z1") && requires(Object& object) { object.z1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().z1)>>{};
   else if constexpr (Key::name.view() == std::string_view("zoom") && requires(Object& object) { object.zoom; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().zoom)>>{};
   else return std::type_identity<void>{};
 }
@@ -1459,83 +3661,204 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->a; }) owner.bind_named("a", [object]() -> decltype(auto) { return (object->a); });
   if constexpr (requires { object->aberration; }) owner.bind_named("aberration", [object]() -> decltype(auto) { return (object->aberration); });
   if constexpr (requires { object->absolute; }) owner.bind_named("absolute", [object]() -> decltype(auto) { return (object->absolute); });
+  if constexpr (requires { object->accessibility; }) owner.bind_named("accessibility", [object]() -> decltype(auto) { return (object->accessibility); });
   if constexpr (requires { object->accuracy; }) owner.bind_named("accuracy", [object]() -> decltype(auto) { return (object->accuracy); });
+  if constexpr (requires { object->acquire; }) owner.bind_named("acquire", [object]() -> decltype(auto) { return (object->acquire); });
+  if constexpr (requires { object->acquisition; }) owner.bind_named("acquisition", [object]() -> decltype(auto) { return (object->acquisition); });
   if constexpr (requires { object->action; }) owner.bind_named("action", [object]() -> decltype(auto) { return (object->action); });
   if constexpr (requires { object->adaptation_speed; }) owner.bind_named("adaptationSpeed", [object]() -> decltype(auto) { return (object->adaptation_speed); });
+  if constexpr (requires { object->add_font_face; }) owner.bind_named("addFontFace", [object]() -> decltype(auto) { return (object->add_font_face); });
+  if constexpr (requires { object->add_recent_document; }) owner.bind_named("addRecentDocument", [object]() -> decltype(auto) { return (object->add_recent_document); });
   if constexpr (requires { object->additive; }) owner.bind_named("additive", [object]() -> decltype(auto) { return (object->additive); });
   if constexpr (requires { object->addressed; }) owner.bind_named("addressed", [object]() -> decltype(auto) { return (object->addressed); });
+  if constexpr (requires { object->advance_scratch; }) owner.bind_named("advanceScratch", [object]() -> decltype(auto) { return (object->advance_scratch); });
+  if constexpr (requires { object->advance_width; }) owner.bind_named("advanceWidth", [object]() -> decltype(auto) { return (object->advance_width); });
+  if constexpr (requires { object->advances; }) owner.bind_named("advances", [object]() -> decltype(auto) { return (object->advances); });
+  if constexpr (requires { object->align; }) owner.bind_named("align", [object]() -> decltype(auto) { return (object->align); });
+  if constexpr (requires { object->allow_rotation; }) owner.bind_named("allowRotation", [object]() -> decltype(auto) { return (object->allow_rotation); });
+  if constexpr (requires { object->allowed_schemes; }) owner.bind_named("allowedSchemes", [object]() -> decltype(auto) { return (object->allowed_schemes); });
   if constexpr (requires { object->alpha; }) owner.bind_named("alpha", [object]() -> decltype(auto) { return (object->alpha); });
   if constexpr (requires { object->alpha_bias; }) owner.bind_named("alphaBias", [object]() -> decltype(auto) { return (object->alpha_bias); });
   if constexpr (requires { object->alpha_curve; }) owner.bind_named("alphaCurve", [object]() -> decltype(auto) { return (object->alpha_curve); });
+  if constexpr (requires { object->alpha_cutoff; }) owner.bind_named("alphaCutoff", [object]() -> decltype(auto) { return (object->alpha_cutoff); });
   if constexpr (requires { object->alpha_end; }) owner.bind_named("alphaEnd", [object]() -> decltype(auto) { return (object->alpha_end); });
+  if constexpr (requires { object->alpha_map; }) owner.bind_named("alphaMap", [object]() -> decltype(auto) { return (object->alpha_map); });
+  if constexpr (requires { object->alpha_mask_enabled; }) owner.bind_named("alphaMaskEnabled", [object]() -> decltype(auto) { return (object->alpha_mask_enabled); });
+  if constexpr (requires { object->alpha_mode; }) owner.bind_named("alphaMode", [object]() -> decltype(auto) { return (object->alpha_mode); });
   if constexpr (requires { object->alpha_scale; }) owner.bind_named("alphaScale", [object]() -> decltype(auto) { return (object->alpha_scale); });
   if constexpr (requires { object->alpha_start; }) owner.bind_named("alphaStart", [object]() -> decltype(auto) { return (object->alpha_start); });
+  if constexpr (requires { object->alpha_type; }) owner.bind_named("alphaType", [object]() -> decltype(auto) { return (object->alpha_type); });
+  if constexpr (requires { object->alphas; }) owner.bind_named("alphas", [object]() -> decltype(auto) { return (object->alphas); });
+  if constexpr (requires { object->alt_key; }) owner.bind_named("altKey", [object]() -> decltype(auto) { return (object->alt_key); });
   if constexpr (requires { object->altitude; }) owner.bind_named("altitude", [object]() -> decltype(auto) { return (object->altitude); });
   if constexpr (requires { object->altitude_accuracy; }) owner.bind_named("altitudeAccuracy", [object]() -> decltype(auto) { return (object->altitude_accuracy); });
+  if constexpr (requires { object->always_on_top; }) owner.bind_named("alwaysOnTop", [object]() -> decltype(auto) { return (object->always_on_top); });
+  if constexpr (requires { object->always_show_selection; }) owner.bind_named("alwaysShowSelection", [object]() -> decltype(auto) { return (object->always_show_selection); });
   if constexpr (requires { object->ambient; }) owner.bind_named("ambient", [object]() -> decltype(auto) { return (object->ambient); });
+  if constexpr (requires { object->ambient_rgb; }) owner.bind_named("ambientRgb", [object]() -> decltype(auto) { return (object->ambient_rgb); });
   if constexpr (requires { object->amount; }) owner.bind_named("amount", [object]() -> decltype(auto) { return (object->amount); });
+  if constexpr (requires { object->amplitude; }) owner.bind_named("amplitude", [object]() -> decltype(auto) { return (object->amplitude); });
   if constexpr (requires { object->angle; }) owner.bind_named("angle", [object]() -> decltype(auto) { return (object->angle); });
   if constexpr (requires { object->angle_variance; }) owner.bind_named("angleVariance", [object]() -> decltype(auto) { return (object->angle_variance); });
-  if constexpr (requires { object->animation; }) owner.bind_named("animation", [object]() -> decltype(auto) { return (object->animation); });
+  if constexpr (requires { object->angular_velocity; }) owner.bind_named("angularVelocity", [object]() -> decltype(auto) { return (object->angular_velocity); });
+  if constexpr (requires { object->angular_velocity_x; }) owner.bind_named("angularVelocityX", [object]() -> decltype(auto) { return (object->angular_velocity_x); });
+  if constexpr (requires { object->angular_velocity_y; }) owner.bind_named("angularVelocityY", [object]() -> decltype(auto) { return (object->angular_velocity_y); });
+  if constexpr (requires { object->angular_velocity_z; }) owner.bind_named("angularVelocityZ", [object]() -> decltype(auto) { return (object->angular_velocity_z); });
   if constexpr (requires { object->animations; }) owner.bind_named("animations", [object]() -> decltype(auto) { return (object->animations); });
   if constexpr (requires { object->anisotropy; }) owner.bind_named("anisotropy", [object]() -> decltype(auto) { return (object->anisotropy); });
+  if constexpr (requires { object->anisotropy_enabled; }) owner.bind_named("anisotropyEnabled", [object]() -> decltype(auto) { return (object->anisotropy_enabled); });
   if constexpr (requires { object->anisotropy_map; }) owner.bind_named("anisotropyMap", [object]() -> decltype(auto) { return (object->anisotropy_map); });
   if constexpr (requires { object->anisotropy_map_uv_set; }) owner.bind_named("anisotropyMapUvSet", [object]() -> decltype(auto) { return (object->anisotropy_map_uv_set); });
   if constexpr (requires { object->anisotropy_rotation; }) owner.bind_named("anisotropyRotation", [object]() -> decltype(auto) { return (object->anisotropy_rotation); });
   if constexpr (requires { object->anisotropy_strength; }) owner.bind_named("anisotropyStrength", [object]() -> decltype(auto) { return (object->anisotropy_strength); });
   if constexpr (requires { object->announce; }) owner.bind_named("announce", [object]() -> decltype(auto) { return (object->announce); });
+  if constexpr (requires { object->antialias; }) owner.bind_named("antialias", [object]() -> decltype(auto) { return (object->antialias); });
+  if constexpr (requires { object->app; }) owner.bind_named("app", [object]() -> decltype(auto) { return (object->app); });
+  if constexpr (requires { object->appearance_id; }) owner.bind_named("appearanceId", [object]() -> decltype(auto) { return (object->appearance_id); });
   if constexpr (requires { object->applied; }) owner.bind_named("applied", [object]() -> decltype(auto) { return (object->applied); });
+  if constexpr (requires { object->arc_tolerance; }) owner.bind_named("arcTolerance", [object]() -> decltype(auto) { return (object->arc_tolerance); });
   if constexpr (requires { object->arch; }) owner.bind_named("arch", [object]() -> decltype(auto) { return (object->arch); });
+  if constexpr (requires { object->artboards; }) owner.bind_named("artboards", [object]() -> decltype(auto) { return (object->artboards); });
   if constexpr (requires { object->ascent; }) owner.bind_named("ascent", [object]() -> decltype(auto) { return (object->ascent); });
+  if constexpr (requires { object->aspect; }) owner.bind_named("aspect", [object]() -> decltype(auto) { return (object->aspect); });
+  if constexpr (requires { object->assets; }) owner.bind_named("assets", [object]() -> decltype(auto) { return (object->assets); });
   if constexpr (requires { object->atlas; }) owner.bind_named("atlas", [object]() -> decltype(auto) { return (object->atlas); });
+  if constexpr (requires { object->attach; }) owner.bind_named("attach", [object]() -> decltype(auto) { return (object->attach); });
   if constexpr (requires { object->attenuation_color; }) owner.bind_named("attenuationColor", [object]() -> decltype(auto) { return (object->attenuation_color); });
   if constexpr (requires { object->attenuation_distance; }) owner.bind_named("attenuationDistance", [object]() -> decltype(auto) { return (object->attenuation_distance); });
   if constexpr (requires { object->attributes; }) owner.bind_named("attributes", [object]() -> decltype(auto) { return (object->attributes); });
+  if constexpr (requires { object->audio; }) owner.bind_named("audio", [object]() -> decltype(auto) { return (object->audio); });
+  if constexpr (requires { object->audio_resources; }) owner.bind_named("audioResources", [object]() -> decltype(auto) { return (object->audio_resources); });
+  if constexpr (requires { object->auto_size; }) owner.bind_named("autoSize", [object]() -> decltype(auto) { return (object->auto_size); });
   if constexpr (requires { object->available_memory; }) owner.bind_named("availableMemory", [object]() -> decltype(auto) { return (object->available_memory); });
+  if constexpr (requires { object->axis; }) owner.bind_named("axis", [object]() -> decltype(auto) { return (object->axis); });
+  if constexpr (requires { object->axis_ax; }) owner.bind_named("axisAX", [object]() -> decltype(auto) { return (object->axis_ax); });
+  if constexpr (requires { object->axis_ay; }) owner.bind_named("axisAY", [object]() -> decltype(auto) { return (object->axis_ay); });
+  if constexpr (requires { object->axis_bx; }) owner.bind_named("axisBX", [object]() -> decltype(auto) { return (object->axis_bx); });
+  if constexpr (requires { object->axis_by; }) owner.bind_named("axisBY", [object]() -> decltype(auto) { return (object->axis_by); });
+  if constexpr (requires { object->axis_rotation; }) owner.bind_named("axisRotation", [object]() -> decltype(auto) { return (object->axis_rotation); });
+  if constexpr (requires { object->azimuth; }) owner.bind_named("azimuth", [object]() -> decltype(auto) { return (object->azimuth); });
   if constexpr (requires { object->b; }) owner.bind_named("b", [object]() -> decltype(auto) { return (object->b); });
+  if constexpr (requires { object->backdrop; }) owner.bind_named("backdrop", [object]() -> decltype(auto) { return (object->backdrop); });
+  if constexpr (requires { object->backdrop_key; }) owner.bind_named("backdropKey", [object]() -> decltype(auto) { return (object->backdrop_key); });
+  if constexpr (requires { object->backend; }) owner.bind_named("backend", [object]() -> decltype(auto) { return (object->backend); });
+  if constexpr (requires { object->background; }) owner.bind_named("background", [object]() -> decltype(auto) { return (object->background); });
+  if constexpr (requires { object->background_color; }) owner.bind_named("backgroundColor", [object]() -> decltype(auto) { return (object->background_color); });
+  if constexpr (requires { object->base; }) owner.bind_named("base", [object]() -> decltype(auto) { return (object->base); });
+  if constexpr (requires { object->base_color; }) owner.bind_named("baseColor", [object]() -> decltype(auto) { return (object->base_color); });
+  if constexpr (requires { object->base_color_map; }) owner.bind_named("baseColorMap", [object]() -> decltype(auto) { return (object->base_color_map); });
+  if constexpr (requires { object->bbox_stream; }) owner.bind_named("bboxStream", [object]() -> decltype(auto) { return (object->bbox_stream); });
+  if constexpr (requires { object->beep; }) owner.bind_named("beep", [object]() -> decltype(auto) { return (object->beep); });
   if constexpr (requires { object->beta; }) owner.bind_named("beta", [object]() -> decltype(auto) { return (object->beta); });
+  if constexpr (requires { object->bevel_type; }) owner.bind_named("bevelType", [object]() -> decltype(auto) { return (object->bevel_type); });
   if constexpr (requires { object->bias; }) owner.bind_named("bias", [object]() -> decltype(auto) { return (object->bias); });
+  if constexpr (requires { object->bindings; }) owner.bind_named("bindings", [object]() -> decltype(auto) { return (object->bindings); });
   if constexpr (requires { object->bitmap; }) owner.bind_named("bitmap", [object]() -> decltype(auto) { return (object->bitmap); });
   if constexpr (requires { object->black_tighten; }) owner.bind_named("blackTighten", [object]() -> decltype(auto) { return (object->black_tighten); });
+  if constexpr (requires { object->blend; }) owner.bind_named("blend", [object]() -> decltype(auto) { return (object->blend); });
   if constexpr (requires { object->blend_func_destination; }) owner.bind_named("blendFuncDestination", [object]() -> decltype(auto) { return (object->blend_func_destination); });
   if constexpr (requires { object->blend_func_source; }) owner.bind_named("blendFuncSource", [object]() -> decltype(auto) { return (object->blend_func_source); });
   if constexpr (requires { object->blend_mode; }) owner.bind_named("blendMode", [object]() -> decltype(auto) { return (object->blend_mode); });
+  if constexpr (requires { object->blend_mode_application; }) owner.bind_named("blendModeApplication", [object]() -> decltype(auto) { return (object->blend_mode_application); });
+  if constexpr (requires { object->blend_tree; }) owner.bind_named("blendTree", [object]() -> decltype(auto) { return (object->blend_tree); });
+  if constexpr (requires { object->blend_trees; }) owner.bind_named("blendTrees", [object]() -> decltype(auto) { return (object->blend_trees); });
+  if constexpr (requires { object->blended; }) owner.bind_named("blended", [object]() -> decltype(auto) { return (object->blended); });
+  if constexpr (requires { object->blended_normals; }) owner.bind_named("blendedNormals", [object]() -> decltype(auto) { return (object->blended_normals); });
+  if constexpr (requires { object->blended_positions; }) owner.bind_named("blendedPositions", [object]() -> decltype(auto) { return (object->blended_positions); });
+  if constexpr (requires { object->blended_tangents; }) owner.bind_named("blendedTangents", [object]() -> decltype(auto) { return (object->blended_tangents); });
+  if constexpr (requires { object->block_count; }) owner.bind_named("blockCount", [object]() -> decltype(auto) { return (object->block_count); });
+  if constexpr (requires { object->block_size; }) owner.bind_named("blockSize", [object]() -> decltype(auto) { return (object->block_size); });
+  if constexpr (requires { object->blocks; }) owner.bind_named("blocks", [object]() -> decltype(auto) { return (object->blocks); });
   if constexpr (requires { object->blue; }) owner.bind_named("blue", [object]() -> decltype(auto) { return (object->blue); });
   if constexpr (requires { object->blue_bias; }) owner.bind_named("blueBias", [object]() -> decltype(auto) { return (object->blue_bias); });
   if constexpr (requires { object->blue_scale; }) owner.bind_named("blueScale", [object]() -> decltype(auto) { return (object->blue_scale); });
+  if constexpr (requires { object->blur; }) owner.bind_named("blur", [object]() -> decltype(auto) { return (object->blur); });
   if constexpr (requires { object->blur_x; }) owner.bind_named("blurX", [object]() -> decltype(auto) { return (object->blur_x); });
   if constexpr (requires { object->blur_y; }) owner.bind_named("blurY", [object]() -> decltype(auto) { return (object->blur_y); });
   if constexpr (requires { object->board_name; }) owner.bind_named("boardName", [object]() -> decltype(auto) { return (object->board_name); });
   if constexpr (requires { object->bodies; }) owner.bind_named("bodies", [object]() -> decltype(auto) { return (object->bodies); });
+  if constexpr (requires { object->body; }) owner.bind_named("body", [object]() -> decltype(auto) { return (object->body); });
   if constexpr (requires { object->body_a; }) owner.bind_named("bodyA", [object]() -> decltype(auto) { return (object->body_a); });
   if constexpr (requires { object->body_b; }) owner.bind_named("bodyB", [object]() -> decltype(auto) { return (object->body_b); });
+  if constexpr (requires { object->body_by_index; }) owner.bind_named("bodyByIndex", [object]() -> decltype(auto) { return (object->body_by_index); });
+  if constexpr (requires { object->body_ids; }) owner.bind_named("bodyIds", [object]() -> decltype(auto) { return (object->body_ids); });
+  if constexpr (requires { object->bone_indices; }) owner.bind_named("boneIndices", [object]() -> decltype(auto) { return (object->bone_indices); });
+  if constexpr (requires { object->border; }) owner.bind_named("border", [object]() -> decltype(auto) { return (object->border); });
   if constexpr (requires { object->bottom; }) owner.bind_named("bottom", [object]() -> decltype(auto) { return (object->bottom); });
+  if constexpr (requires { object->bounce_dock; }) owner.bind_named("bounceDock", [object]() -> decltype(auto) { return (object->bounce_dock); });
   if constexpr (requires { object->bounds; }) owner.bind_named("bounds", [object]() -> decltype(auto) { return (object->bounds); });
+  if constexpr (requires { object->brdf_pipeline; }) owner.bind_named("brdfPipeline", [object]() -> decltype(auto) { return (object->brdf_pipeline); });
   if constexpr (requires { object->break_force; }) owner.bind_named("breakForce", [object]() -> decltype(auto) { return (object->break_force); });
   if constexpr (requires { object->break_torque; }) owner.bind_named("breakTorque", [object]() -> decltype(auto) { return (object->break_torque); });
   if constexpr (requires { object->brightness; }) owner.bind_named("brightness", [object]() -> decltype(auto) { return (object->brightness); });
+  if constexpr (requires { object->buffer; }) owner.bind_named("buffer", [object]() -> decltype(auto) { return (object->buffer); });
+  if constexpr (requires { object->build_node_transform; }) owner.bind_named("buildNodeTransform", [object]() -> decltype(auto) { return (object->build_node_transform); });
+  if constexpr (requires { object->bullet; }) owner.bind_named("bullet", [object]() -> decltype(auto) { return (object->bullet); });
   if constexpr (requires { object->burst_count; }) owner.bind_named("burstCount", [object]() -> decltype(auto) { return (object->burst_count); });
   if constexpr (requires { object->burst_interval; }) owner.bind_named("burstInterval", [object]() -> decltype(auto) { return (object->burst_interval); });
+  if constexpr (requires { object->burst_timer; }) owner.bind_named("burstTimer", [object]() -> decltype(auto) { return (object->burst_timer); });
+  if constexpr (requires { object->button; }) owner.bind_named("button", [object]() -> decltype(auto) { return (object->button); });
+  if constexpr (requires { object->buttons; }) owner.bind_named("buttons", [object]() -> decltype(auto) { return (object->buttons); });
+  if constexpr (requires { object->byte_length; }) owner.bind_named("byteLength", [object]() -> decltype(auto) { return (object->byte_length); });
+  if constexpr (requires { object->byte_offset; }) owner.bind_named("byteOffset", [object]() -> decltype(auto) { return (object->byte_offset); });
+  if constexpr (requires { object->bytes; }) owner.bind_named("bytes", [object]() -> decltype(auto) { return (object->bytes); });
   if constexpr (requires { object->c; }) owner.bind_named("c", [object]() -> decltype(auto) { return (object->c); });
+  if constexpr (requires { object->cameras; }) owner.bind_named("cameras", [object]() -> decltype(auto) { return (object->cameras); });
   if constexpr (requires { object->cancel; }) owner.bind_named("cancel", [object]() -> decltype(auto) { return (object->cancel); });
+  if constexpr (requires { object->cancel_attention; }) owner.bind_named("cancelAttention", [object]() -> decltype(auto) { return (object->cancel_attention); });
+  if constexpr (requires { object->cancel_dock_bounce; }) owner.bind_named("cancelDockBounce", [object]() -> decltype(auto) { return (object->cancel_dock_bounce); });
+  if constexpr (requires { object->cancel_id; }) owner.bind_named("cancelId", [object]() -> decltype(auto) { return (object->cancel_id); });
+  if constexpr (requires { object->candidate_center_a; }) owner.bind_named("candidateCenterA", [object]() -> decltype(auto) { return (object->candidate_center_a); });
+  if constexpr (requires { object->candidate_center_b; }) owner.bind_named("candidateCenterB", [object]() -> decltype(auto) { return (object->candidate_center_b); });
+  if constexpr (requires { object->canvas; }) owner.bind_named("canvas", [object]() -> decltype(auto) { return (object->canvas); });
+  if constexpr (requires { object->canvas_shape_commands; }) owner.bind_named("canvasShapeCommands", [object]() -> decltype(auto) { return (object->canvas_shape_commands); });
+  if constexpr (requires { object->cap; }) owner.bind_named("cap", [object]() -> decltype(auto) { return (object->cap); });
   if constexpr (requires { object->capabilities; }) owner.bind_named("capabilities", [object]() -> decltype(auto) { return (object->capabilities); });
+  if constexpr (requires { object->capture; }) owner.bind_named("capture", [object]() -> decltype(auto) { return (object->capture); });
+  if constexpr (requires { object->caret; }) owner.bind_named("caret", [object]() -> decltype(auto) { return (object->caret); });
+  if constexpr (requires { object->caret_color; }) owner.bind_named("caretColor", [object]() -> decltype(auto) { return (object->caret_color); });
+  if constexpr (requires { object->caret_width; }) owner.bind_named("caretWidth", [object]() -> decltype(auto) { return (object->caret_width); });
   if constexpr (requires { object->cascade_count; }) owner.bind_named("cascadeCount", [object]() -> decltype(auto) { return (object->cascade_count); });
   if constexpr (requires { object->cascade_splits; }) owner.bind_named("cascadeSplits", [object]() -> decltype(auto) { return (object->cascade_splits); });
   if constexpr (requires { object->casts_shadow; }) owner.bind_named("castsShadow", [object]() -> decltype(auto) { return (object->casts_shadow); });
   if constexpr (requires { object->cell_size; }) owner.bind_named("cellSize", [object]() -> decltype(auto) { return (object->cell_size); });
+  if constexpr (requires { object->cell_size_x; }) owner.bind_named("cellSizeX", [object]() -> decltype(auto) { return (object->cell_size_x); });
+  if constexpr (requires { object->cell_size_z; }) owner.bind_named("cellSizeZ", [object]() -> decltype(auto) { return (object->cell_size_z); });
+  if constexpr (requires { object->cells; }) owner.bind_named("cells", [object]() -> decltype(auto) { return (object->cells); });
   if constexpr (requires { object->center; }) owner.bind_named("center", [object]() -> decltype(auto) { return (object->center); });
+  if constexpr (requires { object->center_of_mass_radius; }) owner.bind_named("centerOfMassRadius", [object]() -> decltype(auto) { return (object->center_of_mass_radius); });
   if constexpr (requires { object->center_x; }) owner.bind_named("centerX", [object]() -> decltype(auto) { return (object->center_x); });
   if constexpr (requires { object->center_y; }) owner.bind_named("centerY", [object]() -> decltype(auto) { return (object->center_y); });
   if constexpr (requires { object->center_z; }) owner.bind_named("centerZ", [object]() -> decltype(auto) { return (object->center_z); });
+  if constexpr (requires { object->cff; }) owner.bind_named("cff", [object]() -> decltype(auto) { return (object->cff); });
+  if constexpr (requires { object->changed_metrics; }) owner.bind_named("changedMetrics", [object]() -> decltype(auto) { return (object->changed_metrics); });
+  if constexpr (requires { object->channel; }) owner.bind_named("channel", [object]() -> decltype(auto) { return (object->channel); });
+  if constexpr (requires { object->channel_index; }) owner.bind_named("channelIndex", [object]() -> decltype(auto) { return (object->channel_index); });
+  if constexpr (requires { object->channel_indices; }) owner.bind_named("channelIndices", [object]() -> decltype(auto) { return (object->channel_indices); });
+  if constexpr (requires { object->channels; }) owner.bind_named("channels", [object]() -> decltype(auto) { return (object->channels); });
+  if constexpr (requires { object->char_count; }) owner.bind_named("charCount", [object]() -> decltype(auto) { return (object->char_count); });
+  if constexpr (requires { object->chars; }) owner.bind_named("chars", [object]() -> decltype(auto) { return (object->chars); });
+  if constexpr (requires { object->chart; }) owner.bind_named("chart", [object]() -> decltype(auto) { return (object->chart); });
+  if constexpr (requires { object->check_font_face; }) owner.bind_named("checkFontFace", [object]() -> decltype(auto) { return (object->check_font_face); });
+  if constexpr (requires { object->checkbox_checked; }) owner.bind_named("checkboxChecked", [object]() -> decltype(auto) { return (object->checkbox_checked); });
+  if constexpr (requires { object->checkbox_label; }) owner.bind_named("checkboxLabel", [object]() -> decltype(auto) { return (object->checkbox_label); });
+  if constexpr (requires { object->checked; }) owner.bind_named("checked", [object]() -> decltype(auto) { return (object->checked); });
+  if constexpr (requires { object->checked_state; }) owner.bind_named("checkedState", [object]() -> decltype(auto) { return (object->checked_state); });
   if constexpr (requires { object->child1; }) owner.bind_named("child1", [object]() -> decltype(auto) { return (object->child1); });
   if constexpr (requires { object->child2; }) owner.bind_named("child2", [object]() -> decltype(auto) { return (object->child2); });
+  if constexpr (requires { object->child_count; }) owner.bind_named("childCount", [object]() -> decltype(auto) { return (object->child_count); });
   if constexpr (requires { object->children; }) owner.bind_named("children", [object]() -> decltype(auto) { return (object->children); });
+  if constexpr (requires { object->children_id; }) owner.bind_named("childrenId", [object]() -> decltype(auto) { return (object->children_id); });
+  if constexpr (requires { object->clamp; }) owner.bind_named("clamp", [object]() -> decltype(auto) { return (object->clamp); });
   if constexpr (requires { object->clear; }) owner.bind_named("clear", [object]() -> decltype(auto) { return (object->clear); });
+  if constexpr (requires { object->clear_accumulated_impulses; }) owner.bind_named("clearAccumulatedImpulses", [object]() -> decltype(auto) { return (object->clear_accumulated_impulses); });
   if constexpr (requires { object->clear_metadata; }) owner.bind_named("clearMetadata", [object]() -> decltype(auto) { return (object->clear_metadata); });
   if constexpr (requires { object->clear_position_state; }) owner.bind_named("clearPositionState", [object]() -> decltype(auto) { return (object->clear_position_state); });
+  if constexpr (requires { object->clear_recent_documents; }) owner.bind_named("clearRecentDocuments", [object]() -> decltype(auto) { return (object->clear_recent_documents); });
   if constexpr (requires { object->clear_spatial_index; }) owner.bind_named("clearSpatialIndex", [object]() -> decltype(auto) { return (object->clear_spatial_index); });
   if constexpr (requires { object->clear_watch; }) owner.bind_named("clearWatch", [object]() -> decltype(auto) { return (object->clear_watch); });
   if constexpr (requires { object->clearcoat; }) owner.bind_named("clearcoat", [object]() -> decltype(auto) { return (object->clearcoat); });
+  if constexpr (requires { object->clearcoat_enabled; }) owner.bind_named("clearcoatEnabled", [object]() -> decltype(auto) { return (object->clearcoat_enabled); });
   if constexpr (requires { object->clearcoat_map; }) owner.bind_named("clearcoatMap", [object]() -> decltype(auto) { return (object->clearcoat_map); });
   if constexpr (requires { object->clearcoat_map_uv_set; }) owner.bind_named("clearcoatMapUvSet", [object]() -> decltype(auto) { return (object->clearcoat_map_uv_set); });
   if constexpr (requires { object->clearcoat_normal_map; }) owner.bind_named("clearcoatNormalMap", [object]() -> decltype(auto) { return (object->clearcoat_normal_map); });
@@ -1545,10 +3868,28 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->clearcoat_roughness_map; }) owner.bind_named("clearcoatRoughnessMap", [object]() -> decltype(auto) { return (object->clearcoat_roughness_map); });
   if constexpr (requires { object->clearcoat_roughness_map_uv_set; }) owner.bind_named("clearcoatRoughnessMapUvSet", [object]() -> decltype(auto) { return (object->clearcoat_roughness_map_uv_set); });
   if constexpr (requires { object->clip; }) owner.bind_named("clip", [object]() -> decltype(auto) { return (object->clip); });
+  if constexpr (requires { object->clip_mode; }) owner.bind_named("clipMode", [object]() -> decltype(auto) { return (object->clip_mode); });
+  if constexpr (requires { object->clipboard; }) owner.bind_named("clipboard", [object]() -> decltype(auto) { return (object->clipboard); });
+  if constexpr (requires { object->clipboard_text; }) owner.bind_named("clipboardText", [object]() -> decltype(auto) { return (object->clipboard_text); });
+  if constexpr (requires { object->close_button; }) owner.bind_named("closeButton", [object]() -> decltype(auto) { return (object->close_button); });
+  if constexpr (requires { object->closed; }) owner.bind_named("closed", [object]() -> decltype(auto) { return (object->closed); });
+  if constexpr (requires { object->codepoints; }) owner.bind_named("codepoints", [object]() -> decltype(auto) { return (object->codepoints); });
+  if constexpr (requires { object->collide_connected; }) owner.bind_named("collideConnected", [object]() -> decltype(auto) { return (object->collide_connected); });
+  if constexpr (requires { object->collider; }) owner.bind_named("collider", [object]() -> decltype(auto) { return (object->collider); });
   if constexpr (requires { object->collider_a; }) owner.bind_named("colliderA", [object]() -> decltype(auto) { return (object->collider_a); });
   if constexpr (requires { object->collider_b; }) owner.bind_named("colliderB", [object]() -> decltype(auto) { return (object->collider_b); });
+  if constexpr (requires { object->collider_ids; }) owner.bind_named("colliderIds", [object]() -> decltype(auto) { return (object->collider_ids); });
+  if constexpr (requires { object->collider_index; }) owner.bind_named("colliderIndex", [object]() -> decltype(auto) { return (object->collider_index); });
+  if constexpr (requires { object->colliders; }) owner.bind_named("colliders", [object]() -> decltype(auto) { return (object->colliders); });
   if constexpr (requires { object->color; }) owner.bind_named("color", [object]() -> decltype(auto) { return (object->color); });
+  if constexpr (requires { object->color_adjustment_feature; }) owner.bind_named("colorAdjustmentFeature", [object]() -> decltype(auto) { return (object->color_adjustment_feature); });
+  if constexpr (requires { object->color_adjustment_feature_guard; }) owner.bind_named("colorAdjustmentFeatureGuard", [object]() -> decltype(auto) { return (object->color_adjustment_feature_guard); });
+  if constexpr (requires { object->color_adjustment_unsupported_guard; }) owner.bind_named("colorAdjustmentUnsupportedGuard", [object]() -> decltype(auto) { return (object->color_adjustment_unsupported_guard); });
+  if constexpr (requires { object->color_adjustments; }) owner.bind_named("colorAdjustments", [object]() -> decltype(auto) { return (object->color_adjustments); });
+  if constexpr (requires { object->color_attachments; }) owner.bind_named("colorAttachments", [object]() -> decltype(auto) { return (object->color_attachments); });
+  if constexpr (requires { object->color_birth; }) owner.bind_named("colorBirth", [object]() -> decltype(auto) { return (object->color_birth); });
   if constexpr (requires { object->color_curve; }) owner.bind_named("colorCurve", [object]() -> decltype(auto) { return (object->color_curve); });
+  if constexpr (requires { object->color_death; }) owner.bind_named("colorDeath", [object]() -> decltype(auto) { return (object->color_death); });
   if constexpr (requires { object->color_depth; }) owner.bind_named("colorDepth", [object]() -> decltype(auto) { return (object->color_depth); });
   if constexpr (requires { object->color_end_b; }) owner.bind_named("colorEndB", [object]() -> decltype(auto) { return (object->color_end_b); });
   if constexpr (requires { object->color_end_g; }) owner.bind_named("colorEndG", [object]() -> decltype(auto) { return (object->color_end_g); });
@@ -1556,9 +3897,11 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->color_end_variance_b; }) owner.bind_named("colorEndVarianceB", [object]() -> decltype(auto) { return (object->color_end_variance_b); });
   if constexpr (requires { object->color_end_variance_g; }) owner.bind_named("colorEndVarianceG", [object]() -> decltype(auto) { return (object->color_end_variance_g); });
   if constexpr (requires { object->color_end_variance_r; }) owner.bind_named("colorEndVarianceR", [object]() -> decltype(auto) { return (object->color_end_variance_r); });
+  if constexpr (requires { object->color_formats; }) owner.bind_named("colorFormats", [object]() -> decltype(auto) { return (object->color_formats); });
   if constexpr (requires { object->color_gamut; }) owner.bind_named("colorGamut", [object]() -> decltype(auto) { return (object->color_gamut); });
   if constexpr (requires { object->color_matrix; }) owner.bind_named("colorMatrix", [object]() -> decltype(auto) { return (object->color_matrix); });
   if constexpr (requires { object->color_scale_bias; }) owner.bind_named("colorScaleBias", [object]() -> decltype(auto) { return (object->color_scale_bias); });
+  if constexpr (requires { object->color_shift; }) owner.bind_named("colorShift", [object]() -> decltype(auto) { return (object->color_shift); });
   if constexpr (requires { object->color_space; }) owner.bind_named("colorSpace", [object]() -> decltype(auto) { return (object->color_space); });
   if constexpr (requires { object->color_start_b; }) owner.bind_named("colorStartB", [object]() -> decltype(auto) { return (object->color_start_b); });
   if constexpr (requires { object->color_start_g; }) owner.bind_named("colorStartG", [object]() -> decltype(auto) { return (object->color_start_g); });
@@ -1566,51 +3909,160 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->color_start_variance_b; }) owner.bind_named("colorStartVarianceB", [object]() -> decltype(auto) { return (object->color_start_variance_b); });
   if constexpr (requires { object->color_start_variance_g; }) owner.bind_named("colorStartVarianceG", [object]() -> decltype(auto) { return (object->color_start_variance_g); });
   if constexpr (requires { object->color_start_variance_r; }) owner.bind_named("colorStartVarianceR", [object]() -> decltype(auto) { return (object->color_start_variance_r); });
+  if constexpr (requires { object->colors; }) owner.bind_named("colors", [object]() -> decltype(auto) { return (object->colors); });
+  if constexpr (requires { object->columns; }) owner.bind_named("columns", [object]() -> decltype(auto) { return (object->columns); });
+  if constexpr (requires { object->command_count; }) owner.bind_named("commandCount", [object]() -> decltype(auto) { return (object->command_count); });
+  if constexpr (requires { object->command_index; }) owner.bind_named("commandIndex", [object]() -> decltype(auto) { return (object->command_index); });
+  if constexpr (requires { object->command_kind; }) owner.bind_named("commandKind", [object]() -> decltype(auto) { return (object->command_kind); });
   if constexpr (requires { object->commands; }) owner.bind_named("commands", [object]() -> decltype(auto) { return (object->commands); });
+  if constexpr (requires { object->comparison; }) owner.bind_named("comparison", [object]() -> decltype(auto) { return (object->comparison); });
+  if constexpr (requires { object->complete; }) owner.bind_named("complete", [object]() -> decltype(auto) { return (object->complete); });
   if constexpr (requires { object->component_x; }) owner.bind_named("componentX", [object]() -> decltype(auto) { return (object->component_x); });
   if constexpr (requires { object->component_y; }) owner.bind_named("componentY", [object]() -> decltype(auto) { return (object->component_y); });
+  if constexpr (requires { object->components; }) owner.bind_named("components", [object]() -> decltype(auto) { return (object->components); });
+  if constexpr (requires { object->composite_stream; }) owner.bind_named("compositeStream", [object]() -> decltype(auto) { return (object->composite_stream); });
+  if constexpr (requires { object->compressed; }) owner.bind_named("compressed", [object]() -> decltype(auto) { return (object->compressed); });
+  if constexpr (requires { object->compressed_alpha_bytes; }) owner.bind_named("compressedAlphaBytes", [object]() -> decltype(auto) { return (object->compressed_alpha_bytes); });
+  if constexpr (requires { object->compressed_texture_decoder; }) owner.bind_named("compressedTextureDecoder", [object]() -> decltype(auto) { return (object->compressed_texture_decoder); });
+  if constexpr (requires { object->compressed_texture_upload; }) owner.bind_named("compressedTextureUpload", [object]() -> decltype(auto) { return (object->compressed_texture_upload); });
   if constexpr (requires { object->compression; }) owner.bind_named("compression", [object]() -> decltype(auto) { return (object->compression); });
+  if constexpr (requires { object->compute_path_boolean; }) owner.bind_named("computePathBoolean", [object]() -> decltype(auto) { return (object->compute_path_boolean); });
+  if constexpr (requires { object->condition_index; }) owner.bind_named("conditionIndex", [object]() -> decltype(auto) { return (object->condition_index); });
+  if constexpr (requires { object->conditions; }) owner.bind_named("conditions", [object]() -> decltype(auto) { return (object->conditions); });
+  if constexpr (requires { object->config; }) owner.bind_named("config", [object]() -> decltype(auto) { return (object->config); });
+  if constexpr (requires { object->confirm; }) owner.bind_named("confirm", [object]() -> decltype(auto) { return (object->confirm); });
   if constexpr (requires { object->connections; }) owner.bind_named("connections", [object]() -> decltype(auto) { return (object->connections); });
+  if constexpr (requires { object->connectivity; }) owner.bind_named("connectivity", [object]() -> decltype(auto) { return (object->connectivity); });
+  if constexpr (requires { object->constant; }) owner.bind_named("constant", [object]() -> decltype(auto) { return (object->constant); });
+  if constexpr (requires { object->constant_pool; }) owner.bind_named("constantPool", [object]() -> decltype(auto) { return (object->constant_pool); });
+  if constexpr (requires { object->construct_frame; }) owner.bind_named("constructFrame", [object]() -> decltype(auto) { return (object->construct_frame); });
+  if constexpr (requires { object->contact; }) owner.bind_named("contact", [object]() -> decltype(auto) { return (object->contact); });
+  if constexpr (requires { object->contact_normal_length; }) owner.bind_named("contactNormalLength", [object]() -> decltype(auto) { return (object->contact_normal_length); });
+  if constexpr (requires { object->contacts; }) owner.bind_named("contacts", [object]() -> decltype(auto) { return (object->contacts); });
+  if constexpr (requires { object->container; }) owner.bind_named("container", [object]() -> decltype(auto) { return (object->container); });
+  if constexpr (requires { object->content; }) owner.bind_named("content", [object]() -> decltype(auto) { return (object->content); });
+  if constexpr (requires { object->context; }) owner.bind_named("context", [object]() -> decltype(auto) { return (object->context); });
+  if constexpr (requires { object->contour_index; }) owner.bind_named("contourIndex", [object]() -> decltype(auto) { return (object->contour_index); });
   if constexpr (requires { object->contrast; }) owner.bind_named("contrast", [object]() -> decltype(auto) { return (object->contrast); });
+  if constexpr (requires { object->control_x; }) owner.bind_named("controlX", [object]() -> decltype(auto) { return (object->control_x); });
+  if constexpr (requires { object->control_x1; }) owner.bind_named("controlX1", [object]() -> decltype(auto) { return (object->control_x1); });
+  if constexpr (requires { object->control_x2; }) owner.bind_named("controlX2", [object]() -> decltype(auto) { return (object->control_x2); });
+  if constexpr (requires { object->control_y; }) owner.bind_named("controlY", [object]() -> decltype(auto) { return (object->control_y); });
+  if constexpr (requires { object->control_y1; }) owner.bind_named("controlY1", [object]() -> decltype(auto) { return (object->control_y1); });
+  if constexpr (requires { object->control_y2; }) owner.bind_named("controlY2", [object]() -> decltype(auto) { return (object->control_y2); });
+  if constexpr (requires { object->coordinate_a; }) owner.bind_named("coordinateA", [object]() -> decltype(auto) { return (object->coordinate_a); });
+  if constexpr (requires { object->coordinate_b; }) owner.bind_named("coordinateB", [object]() -> decltype(auto) { return (object->coordinate_b); });
+  if constexpr (requires { object->coordinate_count; }) owner.bind_named("coordinateCount", [object]() -> decltype(auto) { return (object->coordinate_count); });
+  if constexpr (requires { object->corner; }) owner.bind_named("corner", [object]() -> decltype(auto) { return (object->corner); });
+  if constexpr (requires { object->corners; }) owner.bind_named("corners", [object]() -> decltype(auto) { return (object->corners); });
   if constexpr (requires { object->count; }) owner.bind_named("count", [object]() -> decltype(auto) { return (object->count); });
+  if constexpr (requires { object->covers; }) owner.bind_named("covers", [object]() -> decltype(auto) { return (object->covers); });
   if constexpr (requires { object->cpu_cores; }) owner.bind_named("cpuCores", [object]() -> decltype(auto) { return (object->cpu_cores); });
+  if constexpr (requires { object->create; }) owner.bind_named("create", [object]() -> decltype(auto) { return (object->create); });
+  if constexpr (requires { object->create_buffer; }) owner.bind_named("createBuffer", [object]() -> decltype(auto) { return (object->create_buffer); });
+  if constexpr (requires { object->create_image_surface; }) owner.bind_named("createImageSurface", [object]() -> decltype(auto) { return (object->create_image_surface); });
+  if constexpr (requires { object->create_render_surface; }) owner.bind_named("createRenderSurface", [object]() -> decltype(auto) { return (object->create_render_surface); });
+  if constexpr (requires { object->create_source; }) owner.bind_named("createSource", [object]() -> decltype(auto) { return (object->create_source); });
+  if constexpr (requires { object->create_world; }) owner.bind_named("createWorld", [object]() -> decltype(auto) { return (object->create_world); });
+  if constexpr (requires { object->creator; }) owner.bind_named("creator", [object]() -> decltype(auto) { return (object->creator); });
   if constexpr (requires { object->crop; }) owner.bind_named("crop", [object]() -> decltype(auto) { return (object->crop); });
+  if constexpr (requires { object->ctrl_key; }) owner.bind_named("ctrlKey", [object]() -> decltype(auto) { return (object->ctrl_key); });
+  if constexpr (requires { object->cue_registry; }) owner.bind_named("cueRegistry", [object]() -> decltype(auto) { return (object->cue_registry); });
+  if constexpr (requires { object->cues; }) owner.bind_named("cues", [object]() -> decltype(auto) { return (object->cues); });
+  if constexpr (requires { object->current_frame; }) owner.bind_named("currentFrame", [object]() -> decltype(auto) { return (object->current_frame); });
+  if constexpr (requires { object->current_state_index; }) owner.bind_named("currentStateIndex", [object]() -> decltype(auto) { return (object->current_state_index); });
+  if constexpr (requires { object->current_time; }) owner.bind_named("currentTime", [object]() -> decltype(auto) { return (object->current_time); });
   if constexpr (requires { object->curvature; }) owner.bind_named("curvature", [object]() -> decltype(auto) { return (object->curvature); });
+  if constexpr (requires { object->curve; }) owner.bind_named("curve", [object]() -> decltype(auto) { return (object->curve); });
+  if constexpr (requires { object->curved; }) owner.bind_named("curved", [object]() -> decltype(auto) { return (object->curved); });
+  if constexpr (requires { object->custom_material_shaders; }) owner.bind_named("customMaterialShaders", [object]() -> decltype(auto) { return (object->custom_material_shaders); });
+  if constexpr (requires { object->cx; }) owner.bind_named("cx", [object]() -> decltype(auto) { return (object->cx); });
+  if constexpr (requires { object->cy; }) owner.bind_named("cy", [object]() -> decltype(auto) { return (object->cy); });
+  if constexpr (requires { object->cycle_delta; }) owner.bind_named("cycleDelta", [object]() -> decltype(auto) { return (object->cycle_delta); });
   if constexpr (requires { object->d; }) owner.bind_named("d", [object]() -> decltype(auto) { return (object->d); });
   if constexpr (requires { object->damping_ratio; }) owner.bind_named("dampingRatio", [object]() -> decltype(auto) { return (object->damping_ratio); });
+  if constexpr (requires { object->dash; }) owner.bind_named("dash", [object]() -> decltype(auto) { return (object->dash); });
+  if constexpr (requires { object->dash_offset; }) owner.bind_named("dashOffset", [object]() -> decltype(auto) { return (object->dash_offset); });
   if constexpr (requires { object->data; }) owner.bind_named("data", [object]() -> decltype(auto) { return (object->data); });
   if constexpr (requires { object->deadzone_half_height; }) owner.bind_named("deadzoneHalfHeight", [object]() -> decltype(auto) { return (object->deadzone_half_height); });
   if constexpr (requires { object->deadzone_half_width; }) owner.bind_named("deadzoneHalfWidth", [object]() -> decltype(auto) { return (object->deadzone_half_width); });
   if constexpr (requires { object->decay; }) owner.bind_named("decay", [object]() -> decltype(auto) { return (object->decay); });
   if constexpr (requires { object->declined; }) owner.bind_named("declined", [object]() -> decltype(auto) { return (object->declined); });
+  if constexpr (requires { object->dedupe; }) owner.bind_named("dedupe", [object]() -> decltype(auto) { return (object->dedupe); });
   if constexpr (requires { object->default_ease; }) owner.bind_named("defaultEase", [object]() -> decltype(auto) { return (object->default_ease); });
+  if constexpr (requires { object->default_id; }) owner.bind_named("defaultId", [object]() -> decltype(auto) { return (object->default_id); });
+  if constexpr (requires { object->definitions; }) owner.bind_named("definitions", [object]() -> decltype(auto) { return (object->definitions); });
   if constexpr (requires { object->delay; }) owner.bind_named("delay", [object]() -> decltype(auto) { return (object->delay); });
   if constexpr (requires { object->delta_time; }) owner.bind_named("deltaTime", [object]() -> decltype(auto) { return (object->delta_time); });
+  if constexpr (requires { object->delta_x; }) owner.bind_named("deltaX", [object]() -> decltype(auto) { return (object->delta_x); });
+  if constexpr (requires { object->delta_y; }) owner.bind_named("deltaY", [object]() -> decltype(auto) { return (object->delta_y); });
   if constexpr (requires { object->density; }) owner.bind_named("density", [object]() -> decltype(auto) { return (object->density); });
   if constexpr (requires { object->density_dpi; }) owner.bind_named("densityDpi", [object]() -> decltype(auto) { return (object->density_dpi); });
   if constexpr (requires { object->depth; }) owner.bind_named("depth", [object]() -> decltype(auto) { return (object->depth); });
   if constexpr (requires { object->depth_per_component; }) owner.bind_named("depthPerComponent", [object]() -> decltype(auto) { return (object->depth_per_component); });
+  if constexpr (requires { object->depth_stencil_texture; }) owner.bind_named("depthStencilTexture", [object]() -> decltype(auto) { return (object->depth_stencil_texture); });
+  if constexpr (requires { object->depth_stencil_view; }) owner.bind_named("depthStencilView", [object]() -> decltype(auto) { return (object->depth_stencil_view); });
   if constexpr (requires { object->descent; }) owner.bind_named("descent", [object]() -> decltype(auto) { return (object->descent); });
+  if constexpr (requires { object->dest; }) owner.bind_named("dest", [object]() -> decltype(auto) { return (object->dest); });
   if constexpr (requires { object->destroy; }) owner.bind_named("destroy", [object]() -> decltype(auto) { return (object->destroy); });
+  if constexpr (requires { object->destroy_buffer; }) owner.bind_named("destroyBuffer", [object]() -> decltype(auto) { return (object->destroy_buffer); });
+  if constexpr (requires { object->destroy_render_surface; }) owner.bind_named("destroyRenderSurface", [object]() -> decltype(auto) { return (object->destroy_render_surface); });
+  if constexpr (requires { object->destroy_source; }) owner.bind_named("destroySource", [object]() -> decltype(auto) { return (object->destroy_source); });
+  if constexpr (requires { object->destroy_world; }) owner.bind_named("destroyWorld", [object]() -> decltype(auto) { return (object->destroy_world); });
+  if constexpr (requires { object->destroyed; }) owner.bind_named("destroyed", [object]() -> decltype(auto) { return (object->destroyed); });
+  if constexpr (requires { object->detail; }) owner.bind_named("detail", [object]() -> decltype(auto) { return (object->detail); });
+  if constexpr (requires { object->device; }) owner.bind_named("device", [object]() -> decltype(auto) { return (object->device); });
   if constexpr (requires { object->device_pixel_ratio; }) owner.bind_named("devicePixelRatio", [object]() -> decltype(auto) { return (object->device_pixel_ratio); });
+  if constexpr (requires { object->diagnostics; }) owner.bind_named("diagnostics", [object]() -> decltype(auto) { return (object->diagnostics); });
+  if constexpr (requires { object->dialog; }) owner.bind_named("dialog", [object]() -> decltype(auto) { return (object->dialog); });
+  if constexpr (requires { object->diffuse; }) owner.bind_named("diffuse", [object]() -> decltype(auto) { return (object->diffuse); });
+  if constexpr (requires { object->diffuse_map; }) owner.bind_named("diffuseMap", [object]() -> decltype(auto) { return (object->diffuse_map); });
   if constexpr (requires { object->direction; }) owner.bind_named("direction", [object]() -> decltype(auto) { return (object->direction); });
   if constexpr (requires { object->direction_x; }) owner.bind_named("directionX", [object]() -> decltype(auto) { return (object->direction_x); });
   if constexpr (requires { object->direction_y; }) owner.bind_named("directionY", [object]() -> decltype(auto) { return (object->direction_y); });
   if constexpr (requires { object->direction_z; }) owner.bind_named("directionZ", [object]() -> decltype(auto) { return (object->direction_z); });
   if constexpr (requires { object->directional; }) owner.bind_named("directional", [object]() -> decltype(auto) { return (object->directional); });
+  if constexpr (requires { object->directory; }) owner.bind_named("directory", [object]() -> decltype(auto) { return (object->directory); });
+  if constexpr (requires { object->disabled; }) owner.bind_named("disabled", [object]() -> decltype(auto) { return (object->disabled); });
+  if constexpr (requires { object->dismiss_on_backdrop; }) owner.bind_named("dismissOnBackdrop", [object]() -> decltype(auto) { return (object->dismiss_on_backdrop); });
+  if constexpr (requires { object->display; }) owner.bind_named("display", [object]() -> decltype(auto) { return (object->display); });
+  if constexpr (requires { object->display_as_password; }) owner.bind_named("displayAsPassword", [object]() -> decltype(auto) { return (object->display_as_password); });
   if constexpr (requires { object->distance; }) owner.bind_named("distance", [object]() -> decltype(auto) { return (object->distance); });
   if constexpr (requires { object->distro; }) owner.bind_named("distro", [object]() -> decltype(auto) { return (object->distro); });
   if constexpr (requires { object->distro_version; }) owner.bind_named("distroVersion", [object]() -> decltype(auto) { return (object->distro_version); });
+  if constexpr (requires { object->divider; }) owner.bind_named("divider", [object]() -> decltype(auto) { return (object->divider); });
   if constexpr (requires { object->divisor; }) owner.bind_named("divisor", [object]() -> decltype(auto) { return (object->divisor); });
+  if constexpr (requires { object->document; }) owner.bind_named("document", [object]() -> decltype(auto) { return (object->document); });
+  if constexpr (requires { object->double_sided; }) owner.bind_named("doubleSided", [object]() -> decltype(auto) { return (object->double_sided); });
+  if constexpr (requires { object->down_state; }) owner.bind_named("downState", [object]() -> decltype(auto) { return (object->down_state); });
   if constexpr (requires { object->dpi; }) owner.bind_named("dpi", [object]() -> decltype(auto) { return (object->dpi); });
+  if constexpr (requires { object->draggable; }) owner.bind_named("draggable", [object]() -> decltype(auto) { return (object->draggable); });
+  if constexpr (requires { object->draw_centers_of_mass; }) owner.bind_named("drawCentersOfMass", [object]() -> decltype(auto) { return (object->draw_centers_of_mass); });
+  if constexpr (requires { object->draw_colliders; }) owner.bind_named("drawColliders", [object]() -> decltype(auto) { return (object->draw_colliders); });
+  if constexpr (requires { object->draw_contacts; }) owner.bind_named("drawContacts", [object]() -> decltype(auto) { return (object->draw_contacts); });
+  if constexpr (requires { object->draw_joints; }) owner.bind_named("drawJoints", [object]() -> decltype(auto) { return (object->draw_joints); });
+  if constexpr (requires { object->dropped_maps; }) owner.bind_named("droppedMaps", [object]() -> decltype(auto) { return (object->dropped_maps); });
   if constexpr (requires { object->duration; }) owner.bind_named("duration", [object]() -> decltype(auto) { return (object->duration); });
+  if constexpr (requires { object->duration_guard; }) owner.bind_named("durationGuard", [object]() -> decltype(auto) { return (object->duration_guard); });
+  if constexpr (requires { object->duration_ms; }) owner.bind_named("durationMs", [object]() -> decltype(auto) { return (object->duration_ms); });
   if constexpr (requires { object->ease; }) owner.bind_named("ease", [object]() -> decltype(auto) { return (object->ease); });
   if constexpr (requires { object->edge; }) owner.bind_named("edge", [object]() -> decltype(auto) { return (object->edge); });
+  if constexpr (requires { object->edge_color; }) owner.bind_named("edgeColor", [object]() -> decltype(auto) { return (object->edge_color); });
   if constexpr (requires { object->edge_mode; }) owner.bind_named("edgeMode", [object]() -> decltype(auto) { return (object->edge_mode); });
   if constexpr (requires { object->edge_threshold; }) owner.bind_named("edgeThreshold", [object]() -> decltype(auto) { return (object->edge_threshold); });
+  if constexpr (requires { object->edge_width; }) owner.bind_named("edgeWidth", [object]() -> decltype(auto) { return (object->edge_width); });
+  if constexpr (requires { object->edges; }) owner.bind_named("edges", [object]() -> decltype(auto) { return (object->edges); });
+  if constexpr (requires { object->effect; }) owner.bind_named("effect", [object]() -> decltype(auto) { return (object->effect); });
+  if constexpr (requires { object->effect_padding_resolvers; }) owner.bind_named("effectPaddingResolvers", [object]() -> decltype(auto) { return (object->effect_padding_resolvers); });
+  if constexpr (requires { object->effect_targets; }) owner.bind_named("effectTargets", [object]() -> decltype(auto) { return (object->effect_targets); });
   if constexpr (requires { object->elapsed; }) owner.bind_named("elapsed", [object]() -> decltype(auto) { return (object->elapsed); });
+  if constexpr (requires { object->element; }) owner.bind_named("element", [object]() -> decltype(auto) { return (object->element); });
   if constexpr (requires { object->emission; }) owner.bind_named("emission", [object]() -> decltype(auto) { return (object->emission); });
+  if constexpr (requires { object->emissive; }) owner.bind_named("emissive", [object]() -> decltype(auto) { return (object->emissive); });
+  if constexpr (requires { object->emissive_map; }) owner.bind_named("emissiveMap", [object]() -> decltype(auto) { return (object->emissive_map); });
+  if constexpr (requires { object->emissive_strength; }) owner.bind_named("emissiveStrength", [object]() -> decltype(auto) { return (object->emissive_strength); });
   if constexpr (requires { object->emit; }) owner.bind_named("emit", [object]() -> decltype(auto) { return (object->emit); });
+  if constexpr (requires { object->emitter_age; }) owner.bind_named("emitterAge", [object]() -> decltype(auto) { return (object->emitter_age); });
   if constexpr (requires { object->emitter_cone_angle; }) owner.bind_named("emitterConeAngle", [object]() -> decltype(auto) { return (object->emitter_cone_angle); });
   if constexpr (requires { object->emitter_depth; }) owner.bind_named("emitterDepth", [object]() -> decltype(auto) { return (object->emitter_depth); });
   if constexpr (requires { object->emitter_height; }) owner.bind_named("emitterHeight", [object]() -> decltype(auto) { return (object->emitter_height); });
@@ -1618,72 +4070,188 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->emitter_shape; }) owner.bind_named("emitterShape", [object]() -> decltype(auto) { return (object->emitter_shape); });
   if constexpr (requires { object->emitter_type; }) owner.bind_named("emitterType", [object]() -> decltype(auto) { return (object->emitter_type); });
   if constexpr (requires { object->emitter_width; }) owner.bind_named("emitterWidth", [object]() -> decltype(auto) { return (object->emitter_width); });
+  if constexpr (requires { object->enable_limit; }) owner.bind_named("enableLimit", [object]() -> decltype(auto) { return (object->enable_limit); });
+  if constexpr (requires { object->enable_limit_spring; }) owner.bind_named("enableLimitSpring", [object]() -> decltype(auto) { return (object->enable_limit_spring); });
+  if constexpr (requires { object->enable_motor; }) owner.bind_named("enableMotor", [object]() -> decltype(auto) { return (object->enable_motor); });
+  if constexpr (requires { object->enable_spring; }) owner.bind_named("enableSpring", [object]() -> decltype(auto) { return (object->enable_spring); });
+  if constexpr (requires { object->enable_swing_limit; }) owner.bind_named("enableSwingLimit", [object]() -> decltype(auto) { return (object->enable_swing_limit); });
+  if constexpr (requires { object->enable_twist_limit; }) owner.bind_named("enableTwistLimit", [object]() -> decltype(auto) { return (object->enable_twist_limit); });
   if constexpr (requires { object->enabled; }) owner.bind_named("enabled", [object]() -> decltype(auto) { return (object->enabled); });
+  if constexpr (requires { object->encode_bitmap; }) owner.bind_named("encodeBitmap", [object]() -> decltype(auto) { return (object->encode_bitmap); });
   if constexpr (requires { object->encoding; }) owner.bind_named("encoding", [object]() -> decltype(auto) { return (object->encoding); });
   if constexpr (requires { object->end; }) owner.bind_named("end", [object]() -> decltype(auto) { return (object->end); });
+  if constexpr (requires { object->end_cap; }) owner.bind_named("endCap", [object]() -> decltype(auto) { return (object->end_cap); });
+  if constexpr (requires { object->end_data; }) owner.bind_named("endData", [object]() -> decltype(auto) { return (object->end_data); });
   if constexpr (requires { object->end_index; }) owner.bind_named("endIndex", [object]() -> decltype(auto) { return (object->end_index); });
+  if constexpr (requires { object->end_points; }) owner.bind_named("endPoints", [object]() -> decltype(auto) { return (object->end_points); });
+  if constexpr (requires { object->end_slot_index; }) owner.bind_named("endSlotIndex", [object]() -> decltype(auto) { return (object->end_slot_index); });
   if constexpr (requires { object->end_x; }) owner.bind_named("endX", [object]() -> decltype(auto) { return (object->end_x); });
   if constexpr (requires { object->end_y; }) owner.bind_named("endY", [object]() -> decltype(auto) { return (object->end_y); });
   if constexpr (requires { object->end_z; }) owner.bind_named("endZ", [object]() -> decltype(auto) { return (object->end_z); });
   if constexpr (requires { object->endianness; }) owner.bind_named("endianness", [object]() -> decltype(auto) { return (object->endianness); });
   if constexpr (requires { object->engine; }) owner.bind_named("engine", [object]() -> decltype(auto) { return (object->engine); });
   if constexpr (requires { object->engine_version; }) owner.bind_named("engineVersion", [object]() -> decltype(auto) { return (object->engine_version); });
+  if constexpr (requires { object->entries; }) owner.bind_named("entries", [object]() -> decltype(auto) { return (object->entries); });
+  if constexpr (requires { object->entry_id; }) owner.bind_named("entryId", [object]() -> decltype(auto) { return (object->entry_id); });
+  if constexpr (requires { object->environment; }) owner.bind_named("environment", [object]() -> decltype(auto) { return (object->environment); });
+  if constexpr (requires { object->events; }) owner.bind_named("events", [object]() -> decltype(auto) { return (object->events); });
+  if constexpr (requires { object->execute; }) owner.bind_named("execute", [object]() -> decltype(auto) { return (object->execute); });
+  if constexpr (requires { object->exit; }) owner.bind_named("exit", [object]() -> decltype(auto) { return (object->exit); });
+  if constexpr (requires { object->exit_time_ratio; }) owner.bind_named("exitTimeRatio", [object]() -> decltype(auto) { return (object->exit_time_ratio); });
+  if constexpr (requires { object->exit_x; }) owner.bind_named("exitX", [object]() -> decltype(auto) { return (object->exit_x); });
+  if constexpr (requires { object->exit_y; }) owner.bind_named("exitY", [object]() -> decltype(auto) { return (object->exit_y); });
+  if constexpr (requires { object->expanded; }) owner.bind_named("expanded", [object]() -> decltype(auto) { return (object->expanded); });
   if constexpr (requires { object->explain_spatial_indexing; }) owner.bind_named("explainSpatialIndexing", [object]() -> decltype(auto) { return (object->explain_spatial_indexing); });
   if constexpr (requires { object->exposure; }) owner.bind_named("exposure", [object]() -> decltype(auto) { return (object->exposure); });
   if constexpr (requires { object->exposure_compensation; }) owner.bind_named("exposureCompensation", [object]() -> decltype(auto) { return (object->exposure_compensation); });
+  if constexpr (requires { object->extend_mesh_prelude; }) owner.bind_named("extendMeshPrelude", [object]() -> decltype(auto) { return (object->extend_mesh_prelude); });
+  if constexpr (requires { object->extra_bind_group_layout; }) owner.bind_named("extraBindGroupLayout", [object]() -> decltype(auto) { return (object->extra_bind_group_layout); });
+  if constexpr (requires { object->face; }) owner.bind_named("face", [object]() -> decltype(auto) { return (object->face); });
+  if constexpr (requires { object->facet; }) owner.bind_named("facet", [object]() -> decltype(auto) { return (object->facet); });
+  if constexpr (requires { object->facing; }) owner.bind_named("facing", [object]() -> decltype(auto) { return (object->facing); });
+  if constexpr (requires { object->facing_softness; }) owner.bind_named("facingSoftness", [object]() -> decltype(auto) { return (object->facing_softness); });
+  if constexpr (requires { object->fade_source_gain; }) owner.bind_named("fadeSourceGain", [object]() -> decltype(auto) { return (object->fade_source_gain); });
+  if constexpr (requires { object->fall_off; }) owner.bind_named("fallOff", [object]() -> decltype(auto) { return (object->fall_off); });
+  if constexpr (requires { object->family; }) owner.bind_named("family", [object]() -> decltype(auto) { return (object->family); });
   if constexpr (requires { object->far; }) owner.bind_named("far", [object]() -> decltype(auto) { return (object->far); });
   if constexpr (requires { object->feature_id; }) owner.bind_named("featureId", [object]() -> decltype(auto) { return (object->feature_id); });
   if constexpr (requires { object->feedback; }) owner.bind_named("feedback", [object]() -> decltype(auto) { return (object->feedback); });
+  if constexpr (requires { object->fetch; }) owner.bind_named("fetch", [object]() -> decltype(auto) { return (object->fetch); });
+  if constexpr (requires { object->file_system; }) owner.bind_named("fileSystem", [object]() -> decltype(auto) { return (object->file_system); });
+  if constexpr (requires { object->fill; }) owner.bind_named("fill", [object]() -> decltype(auto) { return (object->fill); });
+  if constexpr (requires { object->fill0; }) owner.bind_named("fill0", [object]() -> decltype(auto) { return (object->fill0); });
+  if constexpr (requires { object->fill1; }) owner.bind_named("fill1", [object]() -> decltype(auto) { return (object->fill1); });
   if constexpr (requires { object->fill_bounds; }) owner.bind_named("fillBounds", [object]() -> decltype(auto) { return (object->fill_bounds); });
   if constexpr (requires { object->fill_color; }) owner.bind_named("fillColor", [object]() -> decltype(auto) { return (object->fill_color); });
+  if constexpr (requires { object->fill_opacity; }) owner.bind_named("fillOpacity", [object]() -> decltype(auto) { return (object->fill_opacity); });
+  if constexpr (requires { object->fill_rule; }) owner.bind_named("fillRule", [object]() -> decltype(auto) { return (object->fill_rule); });
+  if constexpr (requires { object->filter; }) owner.bind_named("filter", [object]() -> decltype(auto) { return (object->filter); });
   if constexpr (requires { object->finish_color; }) owner.bind_named("finishColor", [object]() -> decltype(auto) { return (object->finish_color); });
   if constexpr (requires { object->finish_color_variance; }) owner.bind_named("finishColorVariance", [object]() -> decltype(auto) { return (object->finish_color_variance); });
   if constexpr (requires { object->finish_particle_size; }) owner.bind_named("finishParticleSize", [object]() -> decltype(auto) { return (object->finish_particle_size); });
   if constexpr (requires { object->finish_particle_size_variance; }) owner.bind_named("finishParticleSizeVariance", [object]() -> decltype(auto) { return (object->finish_particle_size_variance); });
+  if constexpr (requires { object->first_region; }) owner.bind_named("firstRegion", [object]() -> decltype(auto) { return (object->first_region); });
+  if constexpr (requires { object->fixed_step_state; }) owner.bind_named("fixedStepState", [object]() -> decltype(auto) { return (object->fixed_step_state); });
+  if constexpr (requires { object->flag_stream; }) owner.bind_named("flagStream", [object]() -> decltype(auto) { return (object->flag_stream); });
+  if constexpr (requires { object->flags; }) owner.bind_named("flags", [object]() -> decltype(auto) { return (object->flags); });
+  if constexpr (requires { object->flash_window_frame; }) owner.bind_named("flashWindowFrame", [object]() -> decltype(auto) { return (object->flash_window_frame); });
+  if constexpr (requires { object->flip_x; }) owner.bind_named("flipX", [object]() -> decltype(auto) { return (object->flip_x); });
+  if constexpr (requires { object->flip_y; }) owner.bind_named("flipY", [object]() -> decltype(auto) { return (object->flip_y); });
   if constexpr (requires { object->floor_level; }) owner.bind_named("floorLevel", [object]() -> decltype(auto) { return (object->floor_level); });
+  if constexpr (requires { object->focal_point_ratio; }) owner.bind_named("focalPointRatio", [object]() -> decltype(auto) { return (object->focal_point_ratio); });
+  if constexpr (requires { object->focus; }) owner.bind_named("focus", [object]() -> decltype(auto) { return (object->focus); });
+  if constexpr (requires { object->focus_distance; }) owner.bind_named("focusDistance", [object]() -> decltype(auto) { return (object->focus_distance); });
+  if constexpr (requires { object->focus_manager; }) owner.bind_named("focusManager", [object]() -> decltype(auto) { return (object->focus_manager); });
+  if constexpr (requires { object->focus_range; }) owner.bind_named("focusRange", [object]() -> decltype(auto) { return (object->focus_range); });
+  if constexpr (requires { object->focused; }) owner.bind_named("focused", [object]() -> decltype(auto) { return (object->focused); });
+  if constexpr (requires { object->font; }) owner.bind_named("font", [object]() -> decltype(auto) { return (object->font); });
+  if constexpr (requires { object->font_family; }) owner.bind_named("fontFamily", [object]() -> decltype(auto) { return (object->font_family); });
+  if constexpr (requires { object->font_height; }) owner.bind_named("fontHeight", [object]() -> decltype(auto) { return (object->font_height); });
   if constexpr (requires { object->font_scale; }) owner.bind_named("fontScale", [object]() -> decltype(auto) { return (object->font_scale); });
+  if constexpr (requires { object->font_size; }) owner.bind_named("fontSize", [object]() -> decltype(auto) { return (object->font_size); });
+  if constexpr (requires { object->footprint_height; }) owner.bind_named("footprintHeight", [object]() -> decltype(auto) { return (object->footprint_height); });
+  if constexpr (requires { object->footprint_width; }) owner.bind_named("footprintWidth", [object]() -> decltype(auto) { return (object->footprint_width); });
   if constexpr (requires { object->force_x; }) owner.bind_named("forceX", [object]() -> decltype(auto) { return (object->force_x); });
   if constexpr (requires { object->force_y; }) owner.bind_named("forceY", [object]() -> decltype(auto) { return (object->force_y); });
   if constexpr (requires { object->force_z; }) owner.bind_named("forceZ", [object]() -> decltype(auto) { return (object->force_z); });
   if constexpr (requires { object->form_factor; }) owner.bind_named("formFactor", [object]() -> decltype(auto) { return (object->form_factor); });
   if constexpr (requires { object->format; }) owner.bind_named("format", [object]() -> decltype(auto) { return (object->format); });
+  if constexpr (requires { object->fov; }) owner.bind_named("fov", [object]() -> decltype(auto) { return (object->fov); });
   if constexpr (requires { object->fov_y; }) owner.bind_named("fovY", [object]() -> decltype(auto) { return (object->fov_y); });
   if constexpr (requires { object->fraction; }) owner.bind_named("fraction", [object]() -> decltype(auto) { return (object->fraction); });
+  if constexpr (requires { object->fragment_declarations; }) owner.bind_named("fragmentDeclarations", [object]() -> decltype(auto) { return (object->fragment_declarations); });
+  if constexpr (requires { object->frame; }) owner.bind_named("frame", [object]() -> decltype(auto) { return (object->frame); });
   if constexpr (requires { object->frame_count; }) owner.bind_named("frameCount", [object]() -> decltype(auto) { return (object->frame_count); });
   if constexpr (requires { object->frame_duration; }) owner.bind_named("frameDuration", [object]() -> decltype(auto) { return (object->frame_duration); });
   if constexpr (requires { object->frame_durations; }) owner.bind_named("frameDurations", [object]() -> decltype(auto) { return (object->frame_durations); });
+  if constexpr (requires { object->frame_height; }) owner.bind_named("frameHeight", [object]() -> decltype(auto) { return (object->frame_height); });
   if constexpr (requires { object->frame_id; }) owner.bind_named("frameId", [object]() -> decltype(auto) { return (object->frame_id); });
   if constexpr (requires { object->frame_names; }) owner.bind_named("frameNames", [object]() -> decltype(auto) { return (object->frame_names); });
+  if constexpr (requires { object->frame_offset; }) owner.bind_named("frameOffset", [object]() -> decltype(auto) { return (object->frame_offset); });
   if constexpr (requires { object->frame_rate; }) owner.bind_named("frameRate", [object]() -> decltype(auto) { return (object->frame_rate); });
+  if constexpr (requires { object->frame_scale; }) owner.bind_named("frameScale", [object]() -> decltype(auto) { return (object->frame_scale); });
+  if constexpr (requires { object->frame_scripts; }) owner.bind_named("frameScripts", [object]() -> decltype(auto) { return (object->frame_scripts); });
+  if constexpr (requires { object->frame_width; }) owner.bind_named("frameWidth", [object]() -> decltype(auto) { return (object->frame_width); });
   if constexpr (requires { object->frames; }) owner.bind_named("frames", [object]() -> decltype(auto) { return (object->frames); });
+  if constexpr (requires { object->free; }) owner.bind_named("free", [object]() -> decltype(auto) { return (object->free); });
   if constexpr (requires { object->frequency; }) owner.bind_named("frequency", [object]() -> decltype(auto) { return (object->frequency); });
+  if constexpr (requires { object->frequency_hz; }) owner.bind_named("frequencyHz", [object]() -> decltype(auto) { return (object->frequency_hz); });
+  if constexpr (requires { object->fresnel_bias; }) owner.bind_named("fresnelBias", [object]() -> decltype(auto) { return (object->fresnel_bias); });
   if constexpr (requires { object->friction; }) owner.bind_named("friction", [object]() -> decltype(auto) { return (object->friction); });
+  if constexpr (requires { object->from; }) owner.bind_named("from", [object]() -> decltype(auto) { return (object->from); });
+  if constexpr (requires { object->from_index; }) owner.bind_named("fromIndex", [object]() -> decltype(auto) { return (object->from_index); });
+  if constexpr (requires { object->from_motion; }) owner.bind_named("fromMotion", [object]() -> decltype(auto) { return (object->from_motion); });
+  if constexpr (requires { object->from_sample; }) owner.bind_named("fromSample", [object]() -> decltype(auto) { return (object->from_sample); });
+  if constexpr (requires { object->fullscreen; }) owner.bind_named("fullscreen", [object]() -> decltype(auto) { return (object->fullscreen); });
   if constexpr (requires { object->gain; }) owner.bind_named("gain", [object]() -> decltype(auto) { return (object->gain); });
   if constexpr (requires { object->gamma; }) owner.bind_named("gamma", [object]() -> decltype(auto) { return (object->gamma); });
+  if constexpr (requires { object->gamut; }) owner.bind_named("gamut", [object]() -> decltype(auto) { return (object->gamut); });
   if constexpr (requires { object->gate_weave; }) owner.bind_named("gateWeave", [object]() -> decltype(auto) { return (object->gate_weave); });
+  if constexpr (requires { object->geolocation; }) owner.bind_named("geolocation", [object]() -> decltype(auto) { return (object->geolocation); });
+  if constexpr (requires { object->geometry; }) owner.bind_named("geometry", [object]() -> decltype(auto) { return (object->geometry); });
+  if constexpr (requires { object->get_app_directory_path; }) owner.bind_named("getAppDirectoryPath", [object]() -> decltype(auto) { return (object->get_app_directory_path); });
+  if constexpr (requires { object->get_app_path; }) owner.bind_named("getAppPath", [object]() -> decltype(auto) { return (object->get_app_path); });
+  if constexpr (requires { object->get_bidi_class; }) owner.bind_named("getBidiClass", [object]() -> decltype(auto) { return (object->get_bidi_class); });
+  if constexpr (requires { object->get_bounds; }) owner.bind_named("getBounds", [object]() -> decltype(auto) { return (object->get_bounds); });
   if constexpr (requires { object->get_capabilities; }) owner.bind_named("getCapabilities", [object]() -> decltype(auto) { return (object->get_capabilities); });
+  if constexpr (requires { object->get_code_point_for_glyph; }) owner.bind_named("getCodePointForGlyph", [object]() -> decltype(auto) { return (object->get_code_point_for_glyph); });
   if constexpr (requires { object->get_current_position; }) owner.bind_named("getCurrentPosition", [object]() -> decltype(auto) { return (object->get_current_position); });
   if constexpr (requires { object->get_current_position_result; }) owner.bind_named("getCurrentPositionResult", [object]() -> decltype(auto) { return (object->get_current_position_result); });
   if constexpr (requires { object->get_cursor_position; }) owner.bind_named("getCursorPosition", [object]() -> decltype(auto) { return (object->get_cursor_position); });
+  if constexpr (requires { object->get_device_time; }) owner.bind_named("getDeviceTime", [object]() -> decltype(auto) { return (object->get_device_time); });
   if constexpr (requires { object->get_display_metrics; }) owner.bind_named("getDisplayMetrics", [object]() -> decltype(auto) { return (object->get_display_metrics); });
+  if constexpr (requires { object->get_duration; }) owner.bind_named("getDuration", [object]() -> decltype(auto) { return (object->get_duration); });
+  if constexpr (requires { object->get_executable_path; }) owner.bind_named("getExecutablePath", [object]() -> decltype(auto) { return (object->get_executable_path); });
+  if constexpr (requires { object->get_font_metrics; }) owner.bind_named("getFontMetrics", [object]() -> decltype(auto) { return (object->get_font_metrics); });
   if constexpr (requires { object->get_formats; }) owner.bind_named("getFormats", [object]() -> decltype(auto) { return (object->get_formats); });
   if constexpr (requires { object->get_glyph_atlas_image; }) owner.bind_named("getGlyphAtlasImage", [object]() -> decltype(auto) { return (object->get_glyph_atlas_image); });
   if constexpr (requires { object->get_glyph_entry; }) owner.bind_named("getGlyphEntry", [object]() -> decltype(auto) { return (object->get_glyph_entry); });
+  if constexpr (requires { object->get_glyph_extents; }) owner.bind_named("getGlyphExtents", [object]() -> decltype(auto) { return (object->get_glyph_extents); });
+  if constexpr (requires { object->get_glyph_index_for_code_point; }) owner.bind_named("getGlyphIndexForCodePoint", [object]() -> decltype(auto) { return (object->get_glyph_index_for_code_point); });
   if constexpr (requires { object->get_glyph_kerning; }) owner.bind_named("getGlyphKerning", [object]() -> decltype(auto) { return (object->get_glyph_kerning); });
   if constexpr (requires { object->get_glyph_layout_version; }) owner.bind_named("getGlyphLayoutVersion", [object]() -> decltype(auto) { return (object->get_glyph_layout_version); });
   if constexpr (requires { object->get_glyph_metrics; }) owner.bind_named("getGlyphMetrics", [object]() -> decltype(auto) { return (object->get_glyph_metrics); });
+  if constexpr (requires { object->get_glyph_name; }) owner.bind_named("getGlyphName", [object]() -> decltype(auto) { return (object->get_glyph_name); });
+  if constexpr (requires { object->get_glyph_outline; }) owner.bind_named("getGlyphOutline", [object]() -> decltype(auto) { return (object->get_glyph_outline); });
+  if constexpr (requires { object->get_glyph_outline_advance; }) owner.bind_named("getGlyphOutlineAdvance", [object]() -> decltype(auto) { return (object->get_glyph_outline_advance); });
+  if constexpr (requires { object->get_glyph_outline_index_for_code_point; }) owner.bind_named("getGlyphOutlineIndexForCodePoint", [object]() -> decltype(auto) { return (object->get_glyph_outline_index_for_code_point); });
+  if constexpr (requires { object->get_glyph_outline_metrics; }) owner.bind_named("getGlyphOutlineMetrics", [object]() -> decltype(auto) { return (object->get_glyph_outline_metrics); });
+  if constexpr (requires { object->get_height; }) owner.bind_named("getHeight", [object]() -> decltype(auto) { return (object->get_height); });
   if constexpr (requires { object->get_id; }) owner.bind_named("getId", [object]() -> decltype(auto) { return (object->get_id); });
   if constexpr (requires { object->get_info; }) owner.bind_named("getInfo", [object]() -> decltype(auto) { return (object->get_info); });
+  if constexpr (requires { object->get_launch_url; }) owner.bind_named("getLaunchUrl", [object]() -> decltype(auto) { return (object->get_launch_url); });
+  if constexpr (requires { object->get_locale; }) owner.bind_named("getLocale", [object]() -> decltype(auto) { return (object->get_locale); });
+  if constexpr (requires { object->get_login_item; }) owner.bind_named("getLoginItem", [object]() -> decltype(auto) { return (object->get_login_item); });
+  if constexpr (requires { object->get_name; }) owner.bind_named("getName", [object]() -> decltype(auto) { return (object->get_name); });
   if constexpr (requires { object->get_permission; }) owner.bind_named("getPermission", [object]() -> decltype(auto) { return (object->get_permission); });
   if constexpr (requires { object->get_permission_state; }) owner.bind_named("getPermissionState", [object]() -> decltype(auto) { return (object->get_permission_state); });
   if constexpr (requires { object->get_persistence; }) owner.bind_named("getPersistence", [object]() -> decltype(auto) { return (object->get_persistence); });
+  if constexpr (requires { object->get_preferred_system_languages; }) owner.bind_named("getPreferredSystemLanguages", [object]() -> decltype(auto) { return (object->get_preferred_system_languages); });
   if constexpr (requires { object->get_primary_screen; }) owner.bind_named("getPrimaryScreen", [object]() -> decltype(auto) { return (object->get_primary_screen); });
+  if constexpr (requires { object->get_registered_schemes; }) owner.bind_named("getRegisteredSchemes", [object]() -> decltype(auto) { return (object->get_registered_schemes); });
   if constexpr (requires { object->get_safe_area_insets; }) owner.bind_named("getSafeAreaInsets", [object]() -> decltype(auto) { return (object->get_safe_area_insets); });
   if constexpr (requires { object->get_screens; }) owner.bind_named("getScreens", [object]() -> decltype(auto) { return (object->get_screens); });
+  if constexpr (requires { object->get_state; }) owner.bind_named("getState", [object]() -> decltype(auto) { return (object->get_state); });
+  if constexpr (requires { object->get_system_locale; }) owner.bind_named("getSystemLocale", [object]() -> decltype(auto) { return (object->get_system_locale); });
+  if constexpr (requires { object->get_version; }) owner.bind_named("getVersion", [object]() -> decltype(auto) { return (object->get_version); });
+  if constexpr (requires { object->get_width; }) owner.bind_named("getWidth", [object]() -> decltype(auto) { return (object->get_width); });
+  if constexpr (requires { object->get_world_status; }) owner.bind_named("getWorldStatus", [object]() -> decltype(auto) { return (object->get_world_status); });
   if constexpr (requires { object->ghosts; }) owner.bind_named("ghosts", [object]() -> decltype(auto) { return (object->ghosts); });
+  if constexpr (requires { object->gl; }) owner.bind_named("gl", [object]() -> decltype(auto) { return (object->gl); });
+  if constexpr (requires { object->glyph; }) owner.bind_named("glyph", [object]() -> decltype(auto) { return (object->glyph); });
+  if constexpr (requires { object->glyph_count; }) owner.bind_named("glyphCount", [object]() -> decltype(auto) { return (object->glyph_count); });
+  if constexpr (requires { object->glyph_stream; }) owner.bind_named("glyphStream", [object]() -> decltype(auto) { return (object->glyph_stream); });
   if constexpr (requires { object->glyphs; }) owner.bind_named("glyphs", [object]() -> decltype(auto) { return (object->glyphs); });
+  if constexpr (requires { object->goal_azimuth; }) owner.bind_named("goalAzimuth", [object]() -> decltype(auto) { return (object->goal_azimuth); });
+  if constexpr (requires { object->goal_distance; }) owner.bind_named("goalDistance", [object]() -> decltype(auto) { return (object->goal_distance); });
+  if constexpr (requires { object->goal_pitch; }) owner.bind_named("goalPitch", [object]() -> decltype(auto) { return (object->goal_pitch); });
+  if constexpr (requires { object->goal_polar; }) owner.bind_named("goalPolar", [object]() -> decltype(auto) { return (object->goal_polar); });
+  if constexpr (requires { object->goal_yaw; }) owner.bind_named("goalYaw", [object]() -> decltype(auto) { return (object->goal_yaw); });
   if constexpr (requires { object->gpu_renderer; }) owner.bind_named("gpuRenderer", [object]() -> decltype(auto) { return (object->gpu_renderer); });
+  if constexpr (requires { object->gpu_skinning; }) owner.bind_named("gpuSkinning", [object]() -> decltype(auto) { return (object->gpu_skinning); });
   if constexpr (requires { object->gpu_vendor; }) owner.bind_named("gpuVendor", [object]() -> decltype(auto) { return (object->gpu_vendor); });
+  if constexpr (requires { object->gradient; }) owner.bind_named("gradient", [object]() -> decltype(auto) { return (object->gradient); });
+  if constexpr (requires { object->gradients_by_id; }) owner.bind_named("gradientsById", [object]() -> decltype(auto) { return (object->gradients_by_id); });
   if constexpr (requires { object->grain_intensity; }) owner.bind_named("grainIntensity", [object]() -> decltype(auto) { return (object->grain_intensity); });
   if constexpr (requires { object->gravity; }) owner.bind_named("gravity", [object]() -> decltype(auto) { return (object->gravity); });
   if constexpr (requires { object->gravity_x; }) owner.bind_named("gravityX", [object]() -> decltype(auto) { return (object->gravity_x); });
@@ -1694,49 +4262,135 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->green; }) owner.bind_named("green", [object]() -> decltype(auto) { return (object->green); });
   if constexpr (requires { object->green_bias; }) owner.bind_named("greenBias", [object]() -> decltype(auto) { return (object->green_bias); });
   if constexpr (requires { object->green_scale; }) owner.bind_named("greenScale", [object]() -> decltype(auto) { return (object->green_scale); });
+  if constexpr (requires { object->grid_size; }) owner.bind_named("gridSize", [object]() -> decltype(auto) { return (object->grid_size); });
+  if constexpr (requires { object->ground_anchor_ax; }) owner.bind_named("groundAnchorAX", [object]() -> decltype(auto) { return (object->ground_anchor_ax); });
+  if constexpr (requires { object->ground_anchor_ay; }) owner.bind_named("groundAnchorAY", [object]() -> decltype(auto) { return (object->ground_anchor_ay); });
+  if constexpr (requires { object->ground_anchor_bx; }) owner.bind_named("groundAnchorBX", [object]() -> decltype(auto) { return (object->ground_anchor_bx); });
+  if constexpr (requires { object->ground_anchor_by; }) owner.bind_named("groundAnchorBY", [object]() -> decltype(auto) { return (object->ground_anchor_by); });
   if constexpr (requires { object->ground_color; }) owner.bind_named("groundColor", [object]() -> decltype(auto) { return (object->ground_color); });
+  if constexpr (requires { object->groups; }) owner.bind_named("groups", [object]() -> decltype(auto) { return (object->groups); });
+  if constexpr (requires { object->growable; }) owner.bind_named("growable", [object]() -> decltype(auto) { return (object->growable); });
+  if constexpr (requires { object->guard; }) owner.bind_named("guard", [object]() -> decltype(auto) { return (object->guard); });
   if constexpr (requires { object->halation_radius; }) owner.bind_named("halationRadius", [object]() -> decltype(auto) { return (object->halation_radius); });
   if constexpr (requires { object->halation_strength; }) owner.bind_named("halationStrength", [object]() -> decltype(auto) { return (object->halation_strength); });
   if constexpr (requires { object->half_extent_x; }) owner.bind_named("halfExtentX", [object]() -> decltype(auto) { return (object->half_extent_x); });
   if constexpr (requires { object->half_extent_y; }) owner.bind_named("halfExtentY", [object]() -> decltype(auto) { return (object->half_extent_y); });
   if constexpr (requires { object->half_extent_z; }) owner.bind_named("halfExtentZ", [object]() -> decltype(auto) { return (object->half_extent_z); });
   if constexpr (requires { object->half_h; }) owner.bind_named("halfH", [object]() -> decltype(auto) { return (object->half_h); });
+  if constexpr (requires { object->half_height; }) owner.bind_named("halfHeight", [object]() -> decltype(auto) { return (object->half_height); });
   if constexpr (requires { object->half_w; }) owner.bind_named("halfW", [object]() -> decltype(auto) { return (object->half_w); });
+  if constexpr (requires { object->half_width; }) owner.bind_named("halfWidth", [object]() -> decltype(auto) { return (object->half_width); });
+  if constexpr (requires { object->half_x; }) owner.bind_named("halfX", [object]() -> decltype(auto) { return (object->half_x); });
+  if constexpr (requires { object->half_y; }) owner.bind_named("halfY", [object]() -> decltype(auto) { return (object->half_y); });
+  if constexpr (requires { object->half_z; }) owner.bind_named("halfZ", [object]() -> decltype(auto) { return (object->half_z); });
   if constexpr (requires { object->halo; }) owner.bind_named("halo", [object]() -> decltype(auto) { return (object->halo); });
   if constexpr (requires { object->handle; }) owner.bind_named("handle", [object]() -> decltype(auto) { return (object->handle); });
+  if constexpr (requires { object->haptics; }) owner.bind_named("haptics", [object]() -> decltype(auto) { return (object->haptics); });
+  if constexpr (requires { object->has_alpha_map; }) owner.bind_named("hasAlphaMap", [object]() -> decltype(auto) { return (object->has_alpha_map); });
+  if constexpr (requires { object->has_base_color_map; }) owner.bind_named("hasBaseColorMap", [object]() -> decltype(auto) { return (object->has_base_color_map); });
+  if constexpr (requires { object->has_color; }) owner.bind_named("hasColor", [object]() -> decltype(auto) { return (object->has_color); });
+  if constexpr (requires { object->has_color_adjustment; }) owner.bind_named("hasColorAdjustment", [object]() -> decltype(auto) { return (object->has_color_adjustment); });
+  if constexpr (requires { object->has_color_matrix; }) owner.bind_named("hasColorMatrix", [object]() -> decltype(auto) { return (object->has_color_matrix); });
+  if constexpr (requires { object->has_common; }) owner.bind_named("hasCommon", [object]() -> decltype(auto) { return (object->has_common); });
+  if constexpr (requires { object->has_emissive_map; }) owner.bind_named("hasEmissiveMap", [object]() -> decltype(auto) { return (object->has_emissive_map); });
   if constexpr (requires { object->has_format; }) owner.bind_named("hasFormat", [object]() -> decltype(auto) { return (object->has_format); });
   if constexpr (requires { object->has_image; }) owner.bind_named("hasImage", [object]() -> decltype(auto) { return (object->has_image); });
   if constexpr (requires { object->has_keyboard; }) owner.bind_named("hasKeyboard", [object]() -> decltype(auto) { return (object->has_keyboard); });
+  if constexpr (requires { object->has_metallic_roughness_map; }) owner.bind_named("hasMetallicRoughnessMap", [object]() -> decltype(auto) { return (object->has_metallic_roughness_map); });
   if constexpr (requires { object->has_mouse; }) owner.bind_named("hasMouse", [object]() -> decltype(auto) { return (object->has_mouse); });
+  if constexpr (requires { object->has_normal_map; }) owner.bind_named("hasNormalMap", [object]() -> decltype(auto) { return (object->has_normal_map); });
+  if constexpr (requires { object->has_occlusion_map; }) owner.bind_named("hasOcclusionMap", [object]() -> decltype(auto) { return (object->has_occlusion_map); });
+  if constexpr (requires { object->has_radius; }) owner.bind_named("hasRadius", [object]() -> decltype(auto) { return (object->has_radius); });
+  if constexpr (requires { object->has_single_instance_lock; }) owner.bind_named("hasSingleInstanceLock", [object]() -> decltype(auto) { return (object->has_single_instance_lock); });
   if constexpr (requires { object->has_stylus; }) owner.bind_named("hasStylus", [object]() -> decltype(auto) { return (object->has_stylus); });
   if constexpr (requires { object->has_text; }) owner.bind_named("hasText", [object]() -> decltype(auto) { return (object->has_text); });
   if constexpr (requires { object->heading; }) owner.bind_named("heading", [object]() -> decltype(auto) { return (object->heading); });
   if constexpr (requires { object->height; }) owner.bind_named("height", [object]() -> decltype(auto) { return (object->height); });
+  if constexpr (requires { object->heights; }) owner.bind_named("heights", [object]() -> decltype(auto) { return (object->heights); });
   if constexpr (requires { object->hemisphere; }) owner.bind_named("hemisphere", [object]() -> decltype(auto) { return (object->hemisphere); });
+  if constexpr (requires { object->heuristic; }) owner.bind_named("heuristic", [object]() -> decltype(auto) { return (object->heuristic); });
   if constexpr (requires { object->hide; }) owner.bind_named("hide", [object]() -> decltype(auto) { return (object->hide); });
+  if constexpr (requires { object->hide_app; }) owner.bind_named("hideApp", [object]() -> decltype(auto) { return (object->hide_app); });
   if constexpr (requires { object->high_max; }) owner.bind_named("highMax", [object]() -> decltype(auto) { return (object->high_max); });
   if constexpr (requires { object->high_min; }) owner.bind_named("highMin", [object]() -> decltype(auto) { return (object->high_min); });
+  if constexpr (requires { object->highlight_alpha; }) owner.bind_named("highlightAlpha", [object]() -> decltype(auto) { return (object->highlight_alpha); });
+  if constexpr (requires { object->highlight_color; }) owner.bind_named("highlightColor", [object]() -> decltype(auto) { return (object->highlight_color); });
+  if constexpr (requires { object->history_limit; }) owner.bind_named("historyLimit", [object]() -> decltype(auto) { return (object->history_limit); });
+  if constexpr (requires { object->hit; }) owner.bind_named("hit", [object]() -> decltype(auto) { return (object->hit); });
+  if constexpr (requires { object->hit_area; }) owner.bind_named("hitArea", [object]() -> decltype(auto) { return (object->hit_area); });
+  if constexpr (requires { object->hit_count; }) owner.bind_named("hitCount", [object]() -> decltype(auto) { return (object->hit_count); });
+  if constexpr (requires { object->hits; }) owner.bind_named("hits", [object]() -> decltype(auto) { return (object->hits); });
+  if constexpr (requires { object->horizontal_scroll_bar; }) owner.bind_named("horizontalScrollBar", [object]() -> decltype(auto) { return (object->horizontal_scroll_bar); });
+  if constexpr (requires { object->host; }) owner.bind_named("host", [object]() -> decltype(auto) { return (object->host); });
+  if constexpr (requires { object->hovered; }) owner.bind_named("hovered", [object]() -> decltype(auto) { return (object->hovered); });
+  if constexpr (requires { object->html; }) owner.bind_named("html", [object]() -> decltype(auto) { return (object->html); });
   if constexpr (requires { object->hue; }) owner.bind_named("hue", [object]() -> decltype(auto) { return (object->hue); });
+  if constexpr (requires { object->icon; }) owner.bind_named("icon", [object]() -> decltype(auto) { return (object->icon); });
   if constexpr (requires { object->id; }) owner.bind_named("id", [object]() -> decltype(auto) { return (object->id); });
+  if constexpr (requires { object->ids; }) owner.bind_named("ids", [object]() -> decltype(auto) { return (object->ids); });
   if constexpr (requires { object->illuminance; }) owner.bind_named("illuminance", [object]() -> decltype(auto) { return (object->illuminance); });
+  if constexpr (requires { object->image; }) owner.bind_named("image", [object]() -> decltype(auto) { return (object->image); });
   if constexpr (requires { object->image_count; }) owner.bind_named("imageCount", [object]() -> decltype(auto) { return (object->image_count); });
   if constexpr (requires { object->image_file; }) owner.bind_named("imageFile", [object]() -> decltype(auto) { return (object->image_file); });
   if constexpr (requires { object->image_height; }) owner.bind_named("imageHeight", [object]() -> decltype(auto) { return (object->image_height); });
   if constexpr (requires { object->image_path; }) owner.bind_named("imagePath", [object]() -> decltype(auto) { return (object->image_path); });
+  if constexpr (requires { object->image_resources; }) owner.bind_named("imageResources", [object]() -> decltype(auto) { return (object->image_resources); });
   if constexpr (requires { object->image_width; }) owner.bind_named("imageWidth", [object]() -> decltype(auto) { return (object->image_width); });
   if constexpr (requires { object->impact; }) owner.bind_named("impact", [object]() -> decltype(auto) { return (object->impact); });
+  if constexpr (requires { object->implementation_import; }) owner.bind_named("implementationImport", [object]() -> decltype(auto) { return (object->implementation_import); });
+  if constexpr (requires { object->implementation_symbol; }) owner.bind_named("implementationSymbol", [object]() -> decltype(auto) { return (object->implementation_symbol); });
+  if constexpr (requires { object->imported; }) owner.bind_named("imported", [object]() -> decltype(auto) { return (object->imported); });
+  if constexpr (requires { object->impulse0; }) owner.bind_named("impulse0", [object]() -> decltype(auto) { return (object->impulse0); });
+  if constexpr (requires { object->impulse1; }) owner.bind_named("impulse1", [object]() -> decltype(auto) { return (object->impulse1); });
+  if constexpr (requires { object->impulse2; }) owner.bind_named("impulse2", [object]() -> decltype(auto) { return (object->impulse2); });
+  if constexpr (requires { object->impulse3; }) owner.bind_named("impulse3", [object]() -> decltype(auto) { return (object->impulse3); });
+  if constexpr (requires { object->impulse4; }) owner.bind_named("impulse4", [object]() -> decltype(auto) { return (object->impulse4); });
+  if constexpr (requires { object->impulse5; }) owner.bind_named("impulse5", [object]() -> decltype(auto) { return (object->impulse5); });
+  if constexpr (requires { object->in_use; }) owner.bind_named("inUse", [object]() -> decltype(auto) { return (object->in_use); });
+  if constexpr (requires { object->indent; }) owner.bind_named("indent", [object]() -> decltype(auto) { return (object->indent); });
+  if constexpr (requires { object->index; }) owner.bind_named("index", [object]() -> decltype(auto) { return (object->index); });
+  if constexpr (requires { object->index_count; }) owner.bind_named("indexCount", [object]() -> decltype(auto) { return (object->index_count); });
+  if constexpr (requires { object->index_format; }) owner.bind_named("indexFormat", [object]() -> decltype(auto) { return (object->index_format); });
+  if constexpr (requires { object->index_offset; }) owner.bind_named("indexOffset", [object]() -> decltype(auto) { return (object->index_offset); });
+  if constexpr (requires { object->indices; }) owner.bind_named("indices", [object]() -> decltype(auto) { return (object->indices); });
+  if constexpr (requires { object->inertia_xx; }) owner.bind_named("inertiaXX", [object]() -> decltype(auto) { return (object->inertia_xx); });
+  if constexpr (requires { object->inertia_xy; }) owner.bind_named("inertiaXY", [object]() -> decltype(auto) { return (object->inertia_xy); });
+  if constexpr (requires { object->inertia_xz; }) owner.bind_named("inertiaXZ", [object]() -> decltype(auto) { return (object->inertia_xz); });
+  if constexpr (requires { object->inertia_yy; }) owner.bind_named("inertiaYY", [object]() -> decltype(auto) { return (object->inertia_yy); });
+  if constexpr (requires { object->inertia_yz; }) owner.bind_named("inertiaYZ", [object]() -> decltype(auto) { return (object->inertia_yz); });
+  if constexpr (requires { object->inertia_zz; }) owner.bind_named("inertiaZZ", [object]() -> decltype(auto) { return (object->inertia_zz); });
   if constexpr (requires { object->influence_counts; }) owner.bind_named("influenceCounts", [object]() -> decltype(auto) { return (object->influence_counts); });
   if constexpr (requires { object->influences; }) owner.bind_named("influences", [object]() -> decltype(auto) { return (object->influences); });
+  if constexpr (requires { object->initial_focus; }) owner.bind_named("initialFocus", [object]() -> decltype(auto) { return (object->initial_focus); });
+  if constexpr (requires { object->initial_state_index; }) owner.bind_named("initialStateIndex", [object]() -> decltype(auto) { return (object->initial_state_index); });
+  if constexpr (requires { object->initial_value; }) owner.bind_named("initialValue", [object]() -> decltype(auto) { return (object->initial_value); });
+  if constexpr (requires { object->initialized; }) owner.bind_named("initialized", [object]() -> decltype(auto) { return (object->initialized); });
   if constexpr (requires { object->inner_cone_cos; }) owner.bind_named("innerConeCos", [object]() -> decltype(auto) { return (object->inner_cone_cos); });
   if constexpr (requires { object->inner_cone_degrees; }) owner.bind_named("innerConeDegrees", [object]() -> decltype(auto) { return (object->inner_cone_degrees); });
+  if constexpr (requires { object->input; }) owner.bind_named("input", [object]() -> decltype(auto) { return (object->input); });
+  if constexpr (requires { object->input_index; }) owner.bind_named("inputIndex", [object]() -> decltype(auto) { return (object->input_index); });
+  if constexpr (requires { object->input_values; }) owner.bind_named("inputValues", [object]() -> decltype(auto) { return (object->input_values); });
+  if constexpr (requires { object->inputs; }) owner.bind_named("inputs", [object]() -> decltype(auto) { return (object->inputs); });
   if constexpr (requires { object->insert_spatial_object; }) owner.bind_named("insertSpatialObject", [object]() -> decltype(auto) { return (object->insert_spatial_object); });
+  if constexpr (requires { object->instruction_stream; }) owner.bind_named("instructionStream", [object]() -> decltype(auto) { return (object->instruction_stream); });
   if constexpr (requires { object->intensity; }) owner.bind_named("intensity", [object]() -> decltype(auto) { return (object->intensity); });
   if constexpr (requires { object->intensity_unit; }) owner.bind_named("intensityUnit", [object]() -> decltype(auto) { return (object->intensity_unit); });
+  if constexpr (requires { object->interactive_state_binding; }) owner.bind_named("interactiveStateBinding", [object]() -> decltype(auto) { return (object->interactive_state_binding); });
   if constexpr (requires { object->internal; }) owner.bind_named("internal", [object]() -> decltype(auto) { return (object->internal); });
   if constexpr (requires { object->interval; }) owner.bind_named("interval", [object]() -> decltype(auto) { return (object->interval); });
+  if constexpr (requires { object->inverse_inertia_world_xx; }) owner.bind_named("inverseInertiaWorldXX", [object]() -> decltype(auto) { return (object->inverse_inertia_world_xx); });
+  if constexpr (requires { object->inverse_inertia_world_xy; }) owner.bind_named("inverseInertiaWorldXY", [object]() -> decltype(auto) { return (object->inverse_inertia_world_xy); });
+  if constexpr (requires { object->inverse_inertia_world_xz; }) owner.bind_named("inverseInertiaWorldXZ", [object]() -> decltype(auto) { return (object->inverse_inertia_world_xz); });
+  if constexpr (requires { object->inverse_inertia_world_yy; }) owner.bind_named("inverseInertiaWorldYY", [object]() -> decltype(auto) { return (object->inverse_inertia_world_yy); });
+  if constexpr (requires { object->inverse_inertia_world_yz; }) owner.bind_named("inverseInertiaWorldYZ", [object]() -> decltype(auto) { return (object->inverse_inertia_world_yz); });
+  if constexpr (requires { object->inverse_inertia_world_zz; }) owner.bind_named("inverseInertiaWorldZZ", [object]() -> decltype(auto) { return (object->inverse_inertia_world_zz); });
+  if constexpr (requires { object->inverse_mass; }) owner.bind_named("inverseMass", [object]() -> decltype(auto) { return (object->inverse_mass); });
+  if constexpr (requires { object->inverse_view_projection; }) owner.bind_named("inverseViewProjection", [object]() -> decltype(auto) { return (object->inverse_view_projection); });
   if constexpr (requires { object->invoke; }) owner.bind_named("invoke", [object]() -> decltype(auto) { return (object->invoke); });
   if constexpr (requires { object->ior; }) owner.bind_named("ior", [object]() -> decltype(auto) { return (object->ior); });
+  if constexpr (requires { object->ipc; }) owner.bind_named("ipc", [object]() -> decltype(auto) { return (object->ipc); });
   if constexpr (requires { object->iridescence; }) owner.bind_named("iridescence", [object]() -> decltype(auto) { return (object->iridescence); });
+  if constexpr (requires { object->iridescence_enabled; }) owner.bind_named("iridescenceEnabled", [object]() -> decltype(auto) { return (object->iridescence_enabled); });
   if constexpr (requires { object->iridescence_ior; }) owner.bind_named("iridescenceIor", [object]() -> decltype(auto) { return (object->iridescence_ior); });
   if constexpr (requires { object->iridescence_map; }) owner.bind_named("iridescenceMap", [object]() -> decltype(auto) { return (object->iridescence_map); });
   if constexpr (requires { object->iridescence_map_uv_set; }) owner.bind_named("iridescenceMapUvSet", [object]() -> decltype(auto) { return (object->iridescence_map_uv_set); });
@@ -1744,9 +4398,11 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->iridescence_thickness_map_uv_set; }) owner.bind_named("iridescenceThicknessMapUvSet", [object]() -> decltype(auto) { return (object->iridescence_thickness_map_uv_set); });
   if constexpr (requires { object->iridescence_thickness_max; }) owner.bind_named("iridescenceThicknessMax", [object]() -> decltype(auto) { return (object->iridescence_thickness_max); });
   if constexpr (requires { object->iridescence_thickness_min; }) owner.bind_named("iridescenceThicknessMin", [object]() -> decltype(auto) { return (object->iridescence_thickness_min); });
+  if constexpr (requires { object->irradiance_pipeline; }) owner.bind_named("irradiancePipeline", [object]() -> decltype(auto) { return (object->irradiance_pipeline); });
   if constexpr (requires { object->is_ambient_light_supported; }) owner.bind_named("isAmbientLightSupported", [object]() -> decltype(auto) { return (object->is_ambient_light_supported); });
   if constexpr (requires { object->is_available; }) owner.bind_named("isAvailable", [object]() -> decltype(auto) { return (object->is_available); });
   if constexpr (requires { object->is_barometer_supported; }) owner.bind_named("isBarometerSupported", [object]() -> decltype(auto) { return (object->is_barometer_supported); });
+  if constexpr (requires { object->is_default; }) owner.bind_named("isDefault", [object]() -> decltype(auto) { return (object->is_default); });
   if constexpr (requires { object->is_gravity_supported; }) owner.bind_named("isGravitySupported", [object]() -> decltype(auto) { return (object->is_gravity_supported); });
   if constexpr (requires { object->is_gyroscope_supported; }) owner.bind_named("isGyroscopeSupported", [object]() -> decltype(auto) { return (object->is_gyroscope_supported); });
   if constexpr (requires { object->is_hdr; }) owner.bind_named("isHdr", [object]() -> decltype(auto) { return (object->is_hdr); });
@@ -1756,94 +4412,267 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->is_magnetometer_supported; }) owner.bind_named("isMagnetometerSupported", [object]() -> decltype(auto) { return (object->is_magnetometer_supported); });
   if constexpr (requires { object->is_motion_supported; }) owner.bind_named("isMotionSupported", [object]() -> decltype(auto) { return (object->is_motion_supported); });
   if constexpr (requires { object->is_orientation_supported; }) owner.bind_named("isOrientationSupported", [object]() -> decltype(auto) { return (object->is_orientation_supported); });
+  if constexpr (requires { object->is_playing; }) owner.bind_named("isPlaying", [object]() -> decltype(auto) { return (object->is_playing); });
   if constexpr (requires { object->is_primary; }) owner.bind_named("isPrimary", [object]() -> decltype(auto) { return (object->is_primary); });
   if constexpr (requires { object->is_proximity_supported; }) owner.bind_named("isProximitySupported", [object]() -> decltype(auto) { return (object->is_proximity_supported); });
+  if constexpr (requires { object->is_ready; }) owner.bind_named("isReady", [object]() -> decltype(auto) { return (object->is_ready); });
+  if constexpr (requires { object->is_registered; }) owner.bind_named("isRegistered", [object]() -> decltype(auto) { return (object->is_registered); });
   if constexpr (requires { object->is_rooted; }) owner.bind_named("isRooted", [object]() -> decltype(auto) { return (object->is_rooted); });
   if constexpr (requires { object->is_supported; }) owner.bind_named("isSupported", [object]() -> decltype(auto) { return (object->is_supported); });
   if constexpr (requires { object->is_touch; }) owner.bind_named("isTouch", [object]() -> decltype(auto) { return (object->is_touch); });
   if constexpr (requires { object->is_virtual; }) owner.bind_named("isVirtual", [object]() -> decltype(auto) { return (object->is_virtual); });
+  if constexpr (requires { object->items; }) owner.bind_named("items", [object]() -> decltype(auto) { return (object->items); });
+  if constexpr (requires { object->jitter; }) owner.bind_named("jitter", [object]() -> decltype(auto) { return (object->jitter); });
+  if constexpr (requires { object->join; }) owner.bind_named("join", [object]() -> decltype(auto) { return (object->join); });
   if constexpr (requires { object->joint_collision_suppressions; }) owner.bind_named("jointCollisionSuppressions", [object]() -> decltype(auto) { return (object->joint_collision_suppressions); });
+  if constexpr (requires { object->joint_matrices; }) owner.bind_named("jointMatrices", [object]() -> decltype(auto) { return (object->joint_matrices); });
   if constexpr (requires { object->joint_solvers; }) owner.bind_named("jointSolvers", [object]() -> decltype(auto) { return (object->joint_solvers); });
+  if constexpr (requires { object->joints; }) owner.bind_named("joints", [object]() -> decltype(auto) { return (object->joints); });
   if constexpr (requires { object->kerning; }) owner.bind_named("kerning", [object]() -> decltype(auto) { return (object->kerning); });
+  if constexpr (requires { object->kerning_count; }) owner.bind_named("kerningCount", [object]() -> decltype(auto) { return (object->kerning_count); });
+  if constexpr (requires { object->kernings; }) owner.bind_named("kernings", [object]() -> decltype(auto) { return (object->kernings); });
   if constexpr (requires { object->key; }) owner.bind_named("key", [object]() -> decltype(auto) { return (object->key); });
+  if constexpr (requires { object->key_code; }) owner.bind_named("keyCode", [object]() -> decltype(auto) { return (object->key_code); });
   if constexpr (requires { object->kind; }) owner.bind_named("kind", [object]() -> decltype(auto) { return (object->kind); });
   if constexpr (requires { object->label; }) owner.bind_named("label", [object]() -> decltype(auto) { return (object->label); });
+  if constexpr (requires { object->labels; }) owner.bind_named("labels", [object]() -> decltype(auto) { return (object->labels); });
+  if constexpr (requires { object->last_failure_actual_length; }) owner.bind_named("lastFailureActualLength", [object]() -> decltype(auto) { return (object->last_failure_actual_length); });
+  if constexpr (requires { object->last_failure_kind; }) owner.bind_named("lastFailureKind", [object]() -> decltype(auto) { return (object->last_failure_kind); });
+  if constexpr (requires { object->last_failure_node_index; }) owner.bind_named("lastFailureNodeIndex", [object]() -> decltype(auto) { return (object->last_failure_node_index); });
+  if constexpr (requires { object->last_failure_parent_index; }) owner.bind_named("lastFailureParentIndex", [object]() -> decltype(auto) { return (object->last_failure_parent_index); });
+  if constexpr (requires { object->last_failure_required_length; }) owner.bind_named("lastFailureRequiredLength", [object]() -> decltype(auto) { return (object->last_failure_required_length); });
+  if constexpr (requires { object->last_failure_resolver_kind; }) owner.bind_named("lastFailureResolverKind", [object]() -> decltype(auto) { return (object->last_failure_resolver_kind); });
+  if constexpr (requires { object->last_frame_update; }) owner.bind_named("lastFrameUpdate", [object]() -> decltype(auto) { return (object->last_frame_update); });
   if constexpr (requires { object->latitude; }) owner.bind_named("latitude", [object]() -> decltype(auto) { return (object->latitude); });
+  if constexpr (requires { object->layer_index; }) owner.bind_named("layerIndex", [object]() -> decltype(auto) { return (object->layer_index); });
   if constexpr (requires { object->layer_mask; }) owner.bind_named("layerMask", [object]() -> decltype(auto) { return (object->layer_mask); });
+  if constexpr (requires { object->layers; }) owner.bind_named("layers", [object]() -> decltype(auto) { return (object->layers); });
+  if constexpr (requires { object->layout; }) owner.bind_named("layout", [object]() -> decltype(auto) { return (object->layout); });
+  if constexpr (requires { object->layout_type; }) owner.bind_named("layoutType", [object]() -> decltype(auto) { return (object->layout_type); });
   if constexpr (requires { object->leading; }) owner.bind_named("leading", [object]() -> decltype(auto) { return (object->leading); });
   if constexpr (requires { object->leaf_by_object; }) owner.bind_named("leafByObject", [object]() -> decltype(auto) { return (object->leaf_by_object); });
+  if constexpr (requires { object->leased; }) owner.bind_named("leased", [object]() -> decltype(auto) { return (object->leased); });
   if constexpr (requires { object->left; }) owner.bind_named("left", [object]() -> decltype(auto) { return (object->left); });
+  if constexpr (requires { object->left_margin; }) owner.bind_named("leftMargin", [object]() -> decltype(auto) { return (object->left_margin); });
+  if constexpr (requires { object->length; }) owner.bind_named("length", [object]() -> decltype(auto) { return (object->length); });
+  if constexpr (requires { object->lengths; }) owner.bind_named("lengths", [object]() -> decltype(auto) { return (object->lengths); });
   if constexpr (requires { object->levels; }) owner.bind_named("levels", [object]() -> decltype(auto) { return (object->levels); });
   if constexpr (requires { object->life; }) owner.bind_named("life", [object]() -> decltype(auto) { return (object->life); });
   if constexpr (requires { object->life_offset; }) owner.bind_named("lifeOffset", [object]() -> decltype(auto) { return (object->life_offset); });
+  if constexpr (requires { object->lifecycle; }) owner.bind_named("lifecycle", [object]() -> decltype(auto) { return (object->lifecycle); });
   if constexpr (requires { object->lifetime_max; }) owner.bind_named("lifetimeMax", [object]() -> decltype(auto) { return (object->lifetime_max); });
   if constexpr (requires { object->lifetime_min; }) owner.bind_named("lifetimeMin", [object]() -> decltype(auto) { return (object->lifetime_min); });
+  if constexpr (requires { object->lifetimes; }) owner.bind_named("lifetimes", [object]() -> decltype(auto) { return (object->lifetimes); });
   if constexpr (requires { object->lift; }) owner.bind_named("lift", [object]() -> decltype(auto) { return (object->lift); });
   if constexpr (requires { object->light_color; }) owner.bind_named("lightColor", [object]() -> decltype(auto) { return (object->light_color); });
+  if constexpr (requires { object->light_type; }) owner.bind_named("lightType", [object]() -> decltype(auto) { return (object->light_type); });
   if constexpr (requires { object->light_x; }) owner.bind_named("lightX", [object]() -> decltype(auto) { return (object->light_x); });
   if constexpr (requires { object->light_y; }) owner.bind_named("lightY", [object]() -> decltype(auto) { return (object->light_y); });
   if constexpr (requires { object->lightness; }) owner.bind_named("lightness", [object]() -> decltype(auto) { return (object->lightness); });
+  if constexpr (requires { object->limit_damping_ratio; }) owner.bind_named("limitDampingRatio", [object]() -> decltype(auto) { return (object->limit_damping_ratio); });
+  if constexpr (requires { object->limit_frequency_hz; }) owner.bind_named("limitFrequencyHz", [object]() -> decltype(auto) { return (object->limit_frequency_hz); });
+  if constexpr (requires { object->line; }) owner.bind_named("line", [object]() -> decltype(auto) { return (object->line); });
+  if constexpr (requires { object->line_ascents; }) owner.bind_named("lineAscents", [object]() -> decltype(auto) { return (object->line_ascents); });
+  if constexpr (requires { object->line_count; }) owner.bind_named("lineCount", [object]() -> decltype(auto) { return (object->line_count); });
+  if constexpr (requires { object->line_descents; }) owner.bind_named("lineDescents", [object]() -> decltype(auto) { return (object->line_descents); });
+  if constexpr (requires { object->line_gap; }) owner.bind_named("lineGap", [object]() -> decltype(auto) { return (object->line_gap); });
+  if constexpr (requires { object->line_height; }) owner.bind_named("lineHeight", [object]() -> decltype(auto) { return (object->line_height); });
+  if constexpr (requires { object->line_heights; }) owner.bind_named("lineHeights", [object]() -> decltype(auto) { return (object->line_heights); });
   if constexpr (requires { object->line_index; }) owner.bind_named("lineIndex", [object]() -> decltype(auto) { return (object->line_index); });
+  if constexpr (requires { object->line_leadings; }) owner.bind_named("lineLeadings", [object]() -> decltype(auto) { return (object->line_leadings); });
+  if constexpr (requires { object->line_widths; }) owner.bind_named("lineWidths", [object]() -> decltype(auto) { return (object->line_widths); });
   if constexpr (requires { object->linear_length; }) owner.bind_named("linearLength", [object]() -> decltype(auto) { return (object->linear_length); });
   if constexpr (requires { object->linear_start; }) owner.bind_named("linearStart", [object]() -> decltype(auto) { return (object->linear_start); });
+  if constexpr (requires { object->lines; }) owner.bind_named("lines", [object]() -> decltype(auto) { return (object->lines); });
+  if constexpr (requires { object->linkage; }) owner.bind_named("linkage", [object]() -> decltype(auto) { return (object->linkage); });
+  if constexpr (requires { object->list; }) owner.bind_named("list", [object]() -> decltype(auto) { return (object->list); });
+  if constexpr (requires { object->load_font_faces; }) owner.bind_named("loadFontFaces", [object]() -> decltype(auto) { return (object->load_font_faces); });
+  if constexpr (requires { object->loaded; }) owner.bind_named("loaded", [object]() -> decltype(auto) { return (object->loaded); });
+  if constexpr (requires { object->local; }) owner.bind_named("local", [object]() -> decltype(auto) { return (object->local); });
+  if constexpr (requires { object->local_anchor_ax; }) owner.bind_named("localAnchorAX", [object]() -> decltype(auto) { return (object->local_anchor_ax); });
+  if constexpr (requires { object->local_anchor_ay; }) owner.bind_named("localAnchorAY", [object]() -> decltype(auto) { return (object->local_anchor_ay); });
+  if constexpr (requires { object->local_anchor_az; }) owner.bind_named("localAnchorAZ", [object]() -> decltype(auto) { return (object->local_anchor_az); });
+  if constexpr (requires { object->local_anchor_bx; }) owner.bind_named("localAnchorBX", [object]() -> decltype(auto) { return (object->local_anchor_bx); });
+  if constexpr (requires { object->local_anchor_by; }) owner.bind_named("localAnchorBY", [object]() -> decltype(auto) { return (object->local_anchor_by); });
+  if constexpr (requires { object->local_anchor_bz; }) owner.bind_named("localAnchorBZ", [object]() -> decltype(auto) { return (object->local_anchor_bz); });
+  if constexpr (requires { object->local_anchor_x; }) owner.bind_named("localAnchorX", [object]() -> decltype(auto) { return (object->local_anchor_x); });
+  if constexpr (requires { object->local_anchor_y; }) owner.bind_named("localAnchorY", [object]() -> decltype(auto) { return (object->local_anchor_y); });
+  if constexpr (requires { object->local_axis_ax; }) owner.bind_named("localAxisAX", [object]() -> decltype(auto) { return (object->local_axis_ax); });
+  if constexpr (requires { object->local_axis_ay; }) owner.bind_named("localAxisAY", [object]() -> decltype(auto) { return (object->local_axis_ay); });
+  if constexpr (requires { object->local_bounds_id; }) owner.bind_named("localBoundsId", [object]() -> decltype(auto) { return (object->local_bounds_id); });
+  if constexpr (requires { object->local_content_id; }) owner.bind_named("localContentId", [object]() -> decltype(auto) { return (object->local_content_id); });
+  if constexpr (requires { object->local_rotation_aw; }) owner.bind_named("localRotationAW", [object]() -> decltype(auto) { return (object->local_rotation_aw); });
+  if constexpr (requires { object->local_rotation_ax; }) owner.bind_named("localRotationAX", [object]() -> decltype(auto) { return (object->local_rotation_ax); });
+  if constexpr (requires { object->local_rotation_ay; }) owner.bind_named("localRotationAY", [object]() -> decltype(auto) { return (object->local_rotation_ay); });
+  if constexpr (requires { object->local_rotation_az; }) owner.bind_named("localRotationAZ", [object]() -> decltype(auto) { return (object->local_rotation_az); });
+  if constexpr (requires { object->local_rotation_bw; }) owner.bind_named("localRotationBW", [object]() -> decltype(auto) { return (object->local_rotation_bw); });
+  if constexpr (requires { object->local_rotation_bx; }) owner.bind_named("localRotationBX", [object]() -> decltype(auto) { return (object->local_rotation_bx); });
+  if constexpr (requires { object->local_rotation_by; }) owner.bind_named("localRotationBY", [object]() -> decltype(auto) { return (object->local_rotation_by); });
+  if constexpr (requires { object->local_rotation_bz; }) owner.bind_named("localRotationBZ", [object]() -> decltype(auto) { return (object->local_rotation_bz); });
+  if constexpr (requires { object->local_transform_id; }) owner.bind_named("localTransformId", [object]() -> decltype(auto) { return (object->local_transform_id); });
+  if constexpr (requires { object->local_x; }) owner.bind_named("localX", [object]() -> decltype(auto) { return (object->local_x); });
+  if constexpr (requires { object->local_y; }) owner.bind_named("localY", [object]() -> decltype(auto) { return (object->local_y); });
   if constexpr (requires { object->locale; }) owner.bind_named("locale", [object]() -> decltype(auto) { return (object->locale); });
   if constexpr (requires { object->logical_height; }) owner.bind_named("logicalHeight", [object]() -> decltype(auto) { return (object->logical_height); });
   if constexpr (requires { object->logical_width; }) owner.bind_named("logicalWidth", [object]() -> decltype(auto) { return (object->logical_width); });
   if constexpr (requires { object->longitude; }) owner.bind_named("longitude", [object]() -> decltype(auto) { return (object->longitude); });
   if constexpr (requires { object->loop; }) owner.bind_named("loop", [object]() -> decltype(auto) { return (object->loop); });
+  if constexpr (requires { object->loop_mode; }) owner.bind_named("loopMode", [object]() -> decltype(auto) { return (object->loop_mode); });
+  if constexpr (requires { object->loops; }) owner.bind_named("loops", [object]() -> decltype(auto) { return (object->loops); });
   if constexpr (requires { object->low_max; }) owner.bind_named("lowMax", [object]() -> decltype(auto) { return (object->low_max); });
   if constexpr (requires { object->low_min; }) owner.bind_named("lowMin", [object]() -> decltype(auto) { return (object->low_min); });
+  if constexpr (requires { object->lower_angle; }) owner.bind_named("lowerAngle", [object]() -> decltype(auto) { return (object->lower_angle); });
+  if constexpr (requires { object->lower_angular_x; }) owner.bind_named("lowerAngularX", [object]() -> decltype(auto) { return (object->lower_angular_x); });
+  if constexpr (requires { object->lower_angular_y; }) owner.bind_named("lowerAngularY", [object]() -> decltype(auto) { return (object->lower_angular_y); });
+  if constexpr (requires { object->lower_angular_z; }) owner.bind_named("lowerAngularZ", [object]() -> decltype(auto) { return (object->lower_angular_z); });
+  if constexpr (requires { object->lower_limit_impulse; }) owner.bind_named("lowerLimitImpulse", [object]() -> decltype(auto) { return (object->lower_limit_impulse); });
+  if constexpr (requires { object->lower_limit_impulses; }) owner.bind_named("lowerLimitImpulses", [object]() -> decltype(auto) { return (object->lower_limit_impulses); });
+  if constexpr (requires { object->lower_linear_x; }) owner.bind_named("lowerLinearX", [object]() -> decltype(auto) { return (object->lower_linear_x); });
+  if constexpr (requires { object->lower_linear_y; }) owner.bind_named("lowerLinearY", [object]() -> decltype(auto) { return (object->lower_linear_y); });
+  if constexpr (requires { object->lower_linear_z; }) owner.bind_named("lowerLinearZ", [object]() -> decltype(auto) { return (object->lower_linear_z); });
+  if constexpr (requires { object->lower_translation; }) owner.bind_named("lowerTranslation", [object]() -> decltype(auto) { return (object->lower_translation); });
+  if constexpr (requires { object->lower_twist_angle; }) owner.bind_named("lowerTwistAngle", [object]() -> decltype(auto) { return (object->lower_twist_angle); });
+  if constexpr (requires { object->lower_twist_impulse; }) owner.bind_named("lowerTwistImpulse", [object]() -> decltype(auto) { return (object->lower_twist_impulse); });
   if constexpr (requires { object->lut; }) owner.bind_named("lut", [object]() -> decltype(auto) { return (object->lut); });
+  if constexpr (requires { object->lut_cache; }) owner.bind_named("lutCache", [object]() -> decltype(auto) { return (object->lut_cache); });
   if constexpr (requires { object->m; }) owner.bind_named("m", [object]() -> decltype(auto) { return (object->m); });
   if constexpr (requires { object->mag_filter; }) owner.bind_named("magFilter", [object]() -> decltype(auto) { return (object->mag_filter); });
+  if constexpr (requires { object->manager; }) owner.bind_named("manager", [object]() -> decltype(auto) { return (object->manager); });
   if constexpr (requires { object->manufacturer; }) owner.bind_named("manufacturer", [object]() -> decltype(auto) { return (object->manufacturer); });
   if constexpr (requires { object->map; }) owner.bind_named("map", [object]() -> decltype(auto) { return (object->map); });
   if constexpr (requires { object->margin; }) owner.bind_named("margin", [object]() -> decltype(auto) { return (object->margin); });
+  if constexpr (requires { object->margin_x; }) owner.bind_named("marginX", [object]() -> decltype(auto) { return (object->margin_x); });
+  if constexpr (requires { object->margin_y; }) owner.bind_named("marginY", [object]() -> decltype(auto) { return (object->margin_y); });
   if constexpr (requires { object->marketing_name; }) owner.bind_named("marketingName", [object]() -> decltype(auto) { return (object->marketing_name); });
+  if constexpr (requires { object->mask; }) owner.bind_named("mask", [object]() -> decltype(auto) { return (object->mask); });
+  if constexpr (requires { object->mass; }) owner.bind_named("mass", [object]() -> decltype(auto) { return (object->mass); });
   if constexpr (requires { object->material; }) owner.bind_named("material", [object]() -> decltype(auto) { return (object->material); });
+  if constexpr (requires { object->material_bind_group_layout; }) owner.bind_named("materialBindGroupLayout", [object]() -> decltype(auto) { return (object->material_bind_group_layout); });
   if constexpr (requires { object->material_data; }) owner.bind_named("materialData", [object]() -> decltype(auto) { return (object->material_data); });
+  if constexpr (requires { object->material_kinds; }) owner.bind_named("materialKinds", [object]() -> decltype(auto) { return (object->material_kinds); });
+  if constexpr (requires { object->material_renderers; }) owner.bind_named("materialRenderers", [object]() -> decltype(auto) { return (object->material_renderers); });
+  if constexpr (requires { object->materials; }) owner.bind_named("materials", [object]() -> decltype(auto) { return (object->materials); });
   if constexpr (requires { object->matrix; }) owner.bind_named("matrix", [object]() -> decltype(auto) { return (object->matrix); });
   if constexpr (requires { object->matrix_x; }) owner.bind_named("matrixX", [object]() -> decltype(auto) { return (object->matrix_x); });
   if constexpr (requires { object->matrix_y; }) owner.bind_named("matrixY", [object]() -> decltype(auto) { return (object->matrix_y); });
   if constexpr (requires { object->max; }) owner.bind_named("max", [object]() -> decltype(auto) { return (object->max); });
+  if constexpr (requires { object->max_area; }) owner.bind_named("maxArea", [object]() -> decltype(auto) { return (object->max_area); });
+  if constexpr (requires { object->max_blur; }) owner.bind_named("maxBlur", [object]() -> decltype(auto) { return (object->max_blur); });
   if constexpr (requires { object->max_brightness; }) owner.bind_named("maxBrightness", [object]() -> decltype(auto) { return (object->max_brightness); });
+  if constexpr (requires { object->max_bytes; }) owner.bind_named("maxBytes", [object]() -> decltype(auto) { return (object->max_bytes); });
+  if constexpr (requires { object->max_chars; }) owner.bind_named("maxChars", [object]() -> decltype(auto) { return (object->max_chars); });
+  if constexpr (requires { object->max_concurrent; }) owner.bind_named("maxConcurrent", [object]() -> decltype(auto) { return (object->max_concurrent); });
+  if constexpr (requires { object->max_delta_time; }) owner.bind_named("maxDeltaTime", [object]() -> decltype(auto) { return (object->max_delta_time); });
   if constexpr (requires { object->max_distance; }) owner.bind_named("maxDistance", [object]() -> decltype(auto) { return (object->max_distance); });
   if constexpr (requires { object->max_ev; }) owner.bind_named("maxEv", [object]() -> decltype(auto) { return (object->max_ev); });
   if constexpr (requires { object->max_exposure; }) owner.bind_named("maxExposure", [object]() -> decltype(auto) { return (object->max_exposure); });
+  if constexpr (requires { object->max_force; }) owner.bind_named("maxForce", [object]() -> decltype(auto) { return (object->max_force); });
+  if constexpr (requires { object->max_glyphs; }) owner.bind_named("maxGlyphs", [object]() -> decltype(auto) { return (object->max_glyphs); });
+  if constexpr (requires { object->max_height; }) owner.bind_named("maxHeight", [object]() -> decltype(auto) { return (object->max_height); });
+  if constexpr (requires { object->max_length; }) owner.bind_named("maxLength", [object]() -> decltype(auto) { return (object->max_length); });
+  if constexpr (requires { object->max_lines; }) owner.bind_named("maxLines", [object]() -> decltype(auto) { return (object->max_lines); });
   if constexpr (requires { object->max_luminance; }) owner.bind_named("maxLuminance", [object]() -> decltype(auto) { return (object->max_luminance); });
+  if constexpr (requires { object->max_motor_force; }) owner.bind_named("maxMotorForce", [object]() -> decltype(auto) { return (object->max_motor_force); });
+  if constexpr (requires { object->max_motor_torque; }) owner.bind_named("maxMotorTorque", [object]() -> decltype(auto) { return (object->max_motor_torque); });
   if constexpr (requires { object->max_particle_count; }) owner.bind_named("maxParticleCount", [object]() -> decltype(auto) { return (object->max_particle_count); });
   if constexpr (requires { object->max_particles; }) owner.bind_named("maxParticles", [object]() -> decltype(auto) { return (object->max_particles); });
-  if constexpr (requires { object->max_radius; }) owner.bind_named("maxRadius", [object]() -> decltype(auto) { return (object->max_radius); });
-  if constexpr (requires { object->max_radius_variance; }) owner.bind_named("maxRadiusVariance", [object]() -> decltype(auto) { return (object->max_radius_variance); });
+  if constexpr (requires { object->max_pitch; }) owner.bind_named("maxPitch", [object]() -> decltype(auto) { return (object->max_pitch); });
+  if constexpr (requires { object->max_polar; }) owner.bind_named("maxPolar", [object]() -> decltype(auto) { return (object->max_polar); });
+  if constexpr (requires { object->max_size; }) owner.bind_named("maxSize", [object]() -> decltype(auto) { return (object->max_size); });
+  if constexpr (requires { object->max_width; }) owner.bind_named("maxWidth", [object]() -> decltype(auto) { return (object->max_width); });
   if constexpr (requires { object->max_x; }) owner.bind_named("maxX", [object]() -> decltype(auto) { return (object->max_x); });
   if constexpr (requires { object->max_y; }) owner.bind_named("maxY", [object]() -> decltype(auto) { return (object->max_y); });
   if constexpr (requires { object->max_z; }) owner.bind_named("maxZ", [object]() -> decltype(auto) { return (object->max_z); });
+  if constexpr (requires { object->maximize; }) owner.bind_named("maximize", [object]() -> decltype(auto) { return (object->maximize); });
+  if constexpr (requires { object->maximized; }) owner.bind_named("maximized", [object]() -> decltype(auto) { return (object->maximized); });
+  if constexpr (requires { object->maximum; }) owner.bind_named("maximum", [object]() -> decltype(auto) { return (object->maximum); });
+  if constexpr (requires { object->maximum_first; }) owner.bind_named("maximumFirst", [object]() -> decltype(auto) { return (object->maximum_first); });
+  if constexpr (requires { object->measure_metrics; }) owner.bind_named("measureMetrics", [object]() -> decltype(auto) { return (object->measure_metrics); });
+  if constexpr (requires { object->measure_text; }) owner.bind_named("measureText", [object]() -> decltype(auto) { return (object->measure_text); });
+  if constexpr (requires { object->media_session; }) owner.bind_named("mediaSession", [object]() -> decltype(auto) { return (object->media_session); });
+  if constexpr (requires { object->menu; }) owner.bind_named("menu", [object]() -> decltype(auto) { return (object->menu); });
+  if constexpr (requires { object->mesh_count; }) owner.bind_named("meshCount", [object]() -> decltype(auto) { return (object->mesh_count); });
+  if constexpr (requires { object->mesh_material_renderers; }) owner.bind_named("meshMaterialRenderers", [object]() -> decltype(auto) { return (object->mesh_material_renderers); });
+  if constexpr (requires { object->message; }) owner.bind_named("message", [object]() -> decltype(auto) { return (object->message); });
+  if constexpr (requires { object->meta_key; }) owner.bind_named("metaKey", [object]() -> decltype(auto) { return (object->meta_key); });
   if constexpr (requires { object->metadata; }) owner.bind_named("metadata", [object]() -> decltype(auto) { return (object->metadata); });
+  if constexpr (requires { object->metallic; }) owner.bind_named("metallic", [object]() -> decltype(auto) { return (object->metallic); });
+  if constexpr (requires { object->metallic_roughness_map; }) owner.bind_named("metallicRoughnessMap", [object]() -> decltype(auto) { return (object->metallic_roughness_map); });
+  if constexpr (requires { object->method; }) owner.bind_named("method", [object]() -> decltype(auto) { return (object->method); });
   if constexpr (requires { object->metrics; }) owner.bind_named("metrics", [object]() -> decltype(auto) { return (object->metrics); });
+  if constexpr (requires { object->midi; }) owner.bind_named("midi", [object]() -> decltype(auto) { return (object->midi); });
+  if constexpr (requires { object->mime_type; }) owner.bind_named("mimeType", [object]() -> decltype(auto) { return (object->mime_type); });
   if constexpr (requires { object->min; }) owner.bind_named("min", [object]() -> decltype(auto) { return (object->min); });
+  if constexpr (requires { object->min_distance; }) owner.bind_named("minDistance", [object]() -> decltype(auto) { return (object->min_distance); });
   if constexpr (requires { object->min_ev; }) owner.bind_named("minEv", [object]() -> decltype(auto) { return (object->min_ev); });
   if constexpr (requires { object->min_exposure; }) owner.bind_named("minExposure", [object]() -> decltype(auto) { return (object->min_exposure); });
   if constexpr (requires { object->min_filter; }) owner.bind_named("minFilter", [object]() -> decltype(auto) { return (object->min_filter); });
+  if constexpr (requires { object->min_height; }) owner.bind_named("minHeight", [object]() -> decltype(auto) { return (object->min_height); });
+  if constexpr (requires { object->min_length; }) owner.bind_named("minLength", [object]() -> decltype(auto) { return (object->min_length); });
   if constexpr (requires { object->min_particle_count; }) owner.bind_named("minParticleCount", [object]() -> decltype(auto) { return (object->min_particle_count); });
-  if constexpr (requires { object->min_radius; }) owner.bind_named("minRadius", [object]() -> decltype(auto) { return (object->min_radius); });
-  if constexpr (requires { object->min_radius_variance; }) owner.bind_named("minRadiusVariance", [object]() -> decltype(auto) { return (object->min_radius_variance); });
+  if constexpr (requires { object->min_pitch; }) owner.bind_named("minPitch", [object]() -> decltype(auto) { return (object->min_pitch); });
+  if constexpr (requires { object->min_polar; }) owner.bind_named("minPolar", [object]() -> decltype(auto) { return (object->min_polar); });
+  if constexpr (requires { object->min_width; }) owner.bind_named("minWidth", [object]() -> decltype(auto) { return (object->min_width); });
   if constexpr (requires { object->min_x; }) owner.bind_named("minX", [object]() -> decltype(auto) { return (object->min_x); });
   if constexpr (requires { object->min_y; }) owner.bind_named("minY", [object]() -> decltype(auto) { return (object->min_y); });
   if constexpr (requires { object->min_z; }) owner.bind_named("minZ", [object]() -> decltype(auto) { return (object->min_z); });
+  if constexpr (requires { object->minimize; }) owner.bind_named("minimize", [object]() -> decltype(auto) { return (object->minimize); });
+  if constexpr (requires { object->minimized; }) owner.bind_named("minimized", [object]() -> decltype(auto) { return (object->minimized); });
+  if constexpr (requires { object->minimum; }) owner.bind_named("minimum", [object]() -> decltype(auto) { return (object->minimum); });
+  if constexpr (requires { object->minimum_first; }) owner.bind_named("minimumFirst", [object]() -> decltype(auto) { return (object->minimum_first); });
+  if constexpr (requires { object->minimum_height; }) owner.bind_named("minimumHeight", [object]() -> decltype(auto) { return (object->minimum_height); });
+  if constexpr (requires { object->minimum_second; }) owner.bind_named("minimumSecond", [object]() -> decltype(auto) { return (object->minimum_second); });
+  if constexpr (requires { object->minimum_width; }) owner.bind_named("minimumWidth", [object]() -> decltype(auto) { return (object->minimum_width); });
+  if constexpr (requires { object->mip_level_count; }) owner.bind_named("mipLevelCount", [object]() -> decltype(auto) { return (object->mip_level_count); });
   if constexpr (requires { object->mipmaps; }) owner.bind_named("mipmaps", [object]() -> decltype(auto) { return (object->mipmaps); });
+  if constexpr (requires { object->miter_limit; }) owner.bind_named("miterLimit", [object]() -> decltype(auto) { return (object->miter_limit); });
   if constexpr (requires { object->mode; }) owner.bind_named("mode", [object]() -> decltype(auto) { return (object->mode); });
   if constexpr (requires { object->model; }) owner.bind_named("model", [object]() -> decltype(auto) { return (object->model); });
+  if constexpr (requires { object->modifier_kinds; }) owner.bind_named("modifierKinds", [object]() -> decltype(auto) { return (object->modifier_kinds); });
+  if constexpr (requires { object->modifier_snippet_revision; }) owner.bind_named("modifierSnippetRevision", [object]() -> decltype(auto) { return (object->modifier_snippet_revision); });
+  if constexpr (requires { object->modifier_snippets; }) owner.bind_named("modifierSnippets", [object]() -> decltype(auto) { return (object->modifier_snippets); });
   if constexpr (requires { object->modifiers; }) owner.bind_named("modifiers", [object]() -> decltype(auto) { return (object->modifiers); });
+  if constexpr (requires { object->module; }) owner.bind_named("module", [object]() -> decltype(auto) { return (object->module); });
   if constexpr (requires { object->monochrome; }) owner.bind_named("monochrome", [object]() -> decltype(auto) { return (object->monochrome); });
+  if constexpr (requires { object->morph; }) owner.bind_named("morph", [object]() -> decltype(auto) { return (object->morph); });
+  if constexpr (requires { object->motor_impulse; }) owner.bind_named("motorImpulse", [object]() -> decltype(auto) { return (object->motor_impulse); });
+  if constexpr (requires { object->motor_speed; }) owner.bind_named("motorSpeed", [object]() -> decltype(auto) { return (object->motor_speed); });
+  if constexpr (requires { object->mouse_wheel_enabled; }) owner.bind_named("mouseWheelEnabled", [object]() -> decltype(auto) { return (object->mouse_wheel_enabled); });
+  if constexpr (requires { object->move_to_trash; }) owner.bind_named("moveToTrash", [object]() -> decltype(auto) { return (object->move_to_trash); });
+  if constexpr (requires { object->move_to_x; }) owner.bind_named("moveToX", [object]() -> decltype(auto) { return (object->move_to_x); });
+  if constexpr (requires { object->move_to_y; }) owner.bind_named("moveToY", [object]() -> decltype(auto) { return (object->move_to_y); });
+  if constexpr (requires { object->multiline; }) owner.bind_named("multiline", [object]() -> decltype(auto) { return (object->multiline); });
+  if constexpr (requires { object->muted; }) owner.bind_named("muted", [object]() -> decltype(auto) { return (object->muted); });
+  if constexpr (requires { object->n_contour_stream; }) owner.bind_named("nContourStream", [object]() -> decltype(auto) { return (object->n_contour_stream); });
+  if constexpr (requires { object->n_points_stream; }) owner.bind_named("nPointsStream", [object]() -> decltype(auto) { return (object->n_points_stream); });
   if constexpr (requires { object->name; }) owner.bind_named("name", [object]() -> decltype(auto) { return (object->name); });
+  if constexpr (requires { object->name_prefix; }) owner.bind_named("namePrefix", [object]() -> decltype(auto) { return (object->name_prefix); });
   if constexpr (requires { object->near; }) owner.bind_named("near", [object]() -> decltype(auto) { return (object->near); });
+  if constexpr (requires { object->near_clip_plane; }) owner.bind_named("nearClipPlane", [object]() -> decltype(auto) { return (object->near_clip_plane); });
+  if constexpr (requires { object->net; }) owner.bind_named("net", [object]() -> decltype(auto) { return (object->net); });
+  if constexpr (requires { object->node; }) owner.bind_named("node", [object]() -> decltype(auto) { return (object->node); });
+  if constexpr (requires { object->node_indices; }) owner.bind_named("nodeIndices", [object]() -> decltype(auto) { return (object->node_indices); });
+  if constexpr (requires { object->node_kinds; }) owner.bind_named("nodeKinds", [object]() -> decltype(auto) { return (object->node_kinds); });
+  if constexpr (requires { object->nodes; }) owner.bind_named("nodes", [object]() -> decltype(auto) { return (object->nodes); });
+  if constexpr (requires { object->normal; }) owner.bind_named("normal", [object]() -> decltype(auto) { return (object->normal); });
   if constexpr (requires { object->normal_bias; }) owner.bind_named("normalBias", [object]() -> decltype(auto) { return (object->normal_bias); });
+  if constexpr (requires { object->normal_impulse; }) owner.bind_named("normalImpulse", [object]() -> decltype(auto) { return (object->normal_impulse); });
+  if constexpr (requires { object->normal_map; }) owner.bind_named("normalMap", [object]() -> decltype(auto) { return (object->normal_map); });
+  if constexpr (requires { object->normal_mass; }) owner.bind_named("normalMass", [object]() -> decltype(auto) { return (object->normal_mass); });
+  if constexpr (requires { object->normal_matrices; }) owner.bind_named("normalMatrices", [object]() -> decltype(auto) { return (object->normal_matrices); });
+  if constexpr (requires { object->normal_scale; }) owner.bind_named("normalScale", [object]() -> decltype(auto) { return (object->normal_scale); });
   if constexpr (requires { object->normal_x; }) owner.bind_named("normalX", [object]() -> decltype(auto) { return (object->normal_x); });
   if constexpr (requires { object->normal_y; }) owner.bind_named("normalY", [object]() -> decltype(auto) { return (object->normal_y); });
   if constexpr (requires { object->normal_z; }) owner.bind_named("normalZ", [object]() -> decltype(auto) { return (object->normal_z); });
+  if constexpr (requires { object->normals; }) owner.bind_named("normals", [object]() -> decltype(auto) { return (object->normals); });
   if constexpr (requires { object->notification; }) owner.bind_named("notification", [object]() -> decltype(auto) { return (object->notification); });
   if constexpr (requires { object->num_lines; }) owner.bind_named("numLines", [object]() -> decltype(auto) { return (object->num_lines); });
   if constexpr (requires { object->object; }) owner.bind_named("object", [object]() -> decltype(auto) { return (object->object); });
+  if constexpr (requires { object->object_id; }) owner.bind_named("objectId", [object]() -> decltype(auto) { return (object->object_id); });
+  if constexpr (requires { object->object_url; }) owner.bind_named("objectUrl", [object]() -> decltype(auto) { return (object->object_url); });
+  if constexpr (requires { object->objects; }) owner.bind_named("objects", [object]() -> decltype(auto) { return (object->objects); });
+  if constexpr (requires { object->occlusion_map; }) owner.bind_named("occlusionMap", [object]() -> decltype(auto) { return (object->occlusion_map); });
+  if constexpr (requires { object->occlusion_strength; }) owner.bind_named("occlusionStrength", [object]() -> decltype(auto) { return (object->occlusion_strength); });
   if constexpr (requires { object->offset; }) owner.bind_named("offset", [object]() -> decltype(auto) { return (object->offset); });
   if constexpr (requires { object->offset_x; }) owner.bind_named("offsetX", [object]() -> decltype(auto) { return (object->offset_x); });
   if constexpr (requires { object->offset_y; }) owner.bind_named("offsetY", [object]() -> decltype(auto) { return (object->offset_y); });
@@ -1851,29 +4680,78 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->on_absolute_orientation; }) owner.bind_named("onAbsoluteOrientation", [object]() -> decltype(auto) { return (object->on_absolute_orientation); });
   if constexpr (requires { object->on_accelerometer; }) owner.bind_named("onAccelerometer", [object]() -> decltype(auto) { return (object->on_accelerometer); });
   if constexpr (requires { object->on_action; }) owner.bind_named("onAction", [object]() -> decltype(auto) { return (object->on_action); });
+  if constexpr (requires { object->on_activate; }) owner.bind_named("onActivate", [object]() -> decltype(auto) { return (object->on_activate); });
+  if constexpr (requires { object->on_all_windows_closed; }) owner.bind_named("onAllWindowsClosed", [object]() -> decltype(auto) { return (object->on_all_windows_closed); });
   if constexpr (requires { object->on_ambient_light; }) owner.bind_named("onAmbientLight", [object]() -> decltype(auto) { return (object->on_ambient_light); });
+  if constexpr (requires { object->on_backend_changed; }) owner.bind_named("onBackendChanged", [object]() -> decltype(auto) { return (object->on_backend_changed); });
   if constexpr (requires { object->on_barometer; }) owner.bind_named("onBarometer", [object]() -> decltype(auto) { return (object->on_barometer); });
   if constexpr (requires { object->on_change; }) owner.bind_named("onChange", [object]() -> decltype(auto) { return (object->on_change); });
+  if constexpr (requires { object->on_click; }) owner.bind_named("onClick", [object]() -> decltype(auto) { return (object->on_click); });
+  if constexpr (requires { object->on_close; }) owner.bind_named("onClose", [object]() -> decltype(auto) { return (object->on_close); });
+  if constexpr (requires { object->on_close_request; }) owner.bind_named("onCloseRequest", [object]() -> decltype(auto) { return (object->on_close_request); });
+  if constexpr (requires { object->on_complete; }) owner.bind_named("onComplete", [object]() -> decltype(auto) { return (object->on_complete); });
+  if constexpr (requires { object->on_copy; }) owner.bind_named("onCopy", [object]() -> decltype(auto) { return (object->on_copy); });
+  if constexpr (requires { object->on_deactivate; }) owner.bind_named("onDeactivate", [object]() -> decltype(auto) { return (object->on_deactivate); });
+  if constexpr (requires { object->on_drop_file; }) owner.bind_named("onDropFile", [object]() -> decltype(auto) { return (object->on_drop_file); });
   if constexpr (requires { object->on_emitter_complete; }) owner.bind_named("onEmitterComplete", [object]() -> decltype(auto) { return (object->on_emitter_complete); });
+  if constexpr (requires { object->on_enter; }) owner.bind_named("onEnter", [object]() -> decltype(auto) { return (object->on_enter); });
+  if constexpr (requires { object->on_event; }) owner.bind_named("onEvent", [object]() -> decltype(auto) { return (object->on_event); });
+  if constexpr (requires { object->on_finished; }) owner.bind_named("onFinished", [object]() -> decltype(auto) { return (object->on_finished); });
+  if constexpr (requires { object->on_focus_in; }) owner.bind_named("onFocusIn", [object]() -> decltype(auto) { return (object->on_focus_in); });
+  if constexpr (requires { object->on_focus_out; }) owner.bind_named("onFocusOut", [object]() -> decltype(auto) { return (object->on_focus_out); });
+  if constexpr (requires { object->on_fullscreen_changed; }) owner.bind_named("onFullscreenChanged", [object]() -> decltype(auto) { return (object->on_fullscreen_changed); });
   if constexpr (requires { object->on_gravity; }) owner.bind_named("onGravity", [object]() -> decltype(auto) { return (object->on_gravity); });
   if constexpr (requires { object->on_gyroscope; }) owner.bind_named("onGyroscope", [object]() -> decltype(auto) { return (object->on_gyroscope); });
   if constexpr (requires { object->on_hide; }) owner.bind_named("onHide", [object]() -> decltype(auto) { return (object->on_hide); });
   if constexpr (requires { object->on_linear_acceleration; }) owner.bind_named("onLinearAcceleration", [object]() -> decltype(auto) { return (object->on_linear_acceleration); });
+  if constexpr (requires { object->on_looped; }) owner.bind_named("onLooped", [object]() -> decltype(auto) { return (object->on_looped); });
   if constexpr (requires { object->on_magnetometer; }) owner.bind_named("onMagnetometer", [object]() -> decltype(auto) { return (object->on_magnetometer); });
+  if constexpr (requires { object->on_maximize; }) owner.bind_named("onMaximize", [object]() -> decltype(auto) { return (object->on_maximize); });
+  if constexpr (requires { object->on_minimize; }) owner.bind_named("onMinimize", [object]() -> decltype(auto) { return (object->on_minimize); });
+  if constexpr (requires { object->on_move; }) owner.bind_named("onMove", [object]() -> decltype(auto) { return (object->on_move); });
+  if constexpr (requires { object->on_open_file; }) owner.bind_named("onOpenFile", [object]() -> decltype(auto) { return (object->on_open_file); });
+  if constexpr (requires { object->on_open_url; }) owner.bind_named("onOpenUrl", [object]() -> decltype(auto) { return (object->on_open_url); });
   if constexpr (requires { object->on_orientation; }) owner.bind_named("onOrientation", [object]() -> decltype(auto) { return (object->on_orientation); });
+  if constexpr (requires { object->on_orientation_changed; }) owner.bind_named("onOrientationChanged", [object]() -> decltype(auto) { return (object->on_orientation_changed); });
   if constexpr (requires { object->on_particle_death; }) owner.bind_named("onParticleDeath", [object]() -> decltype(auto) { return (object->on_particle_death); });
   if constexpr (requires { object->on_particle_spawn; }) owner.bind_named("onParticleSpawn", [object]() -> decltype(auto) { return (object->on_particle_spawn); });
   if constexpr (requires { object->on_proximity; }) owner.bind_named("onProximity", [object]() -> decltype(auto) { return (object->on_proximity); });
   if constexpr (requires { object->on_quaternion; }) owner.bind_named("onQuaternion", [object]() -> decltype(auto) { return (object->on_quaternion); });
+  if constexpr (requires { object->on_quit_request; }) owner.bind_named("onQuitRequest", [object]() -> decltype(auto) { return (object->on_quit_request); });
+  if constexpr (requires { object->on_ready; }) owner.bind_named("onReady", [object]() -> decltype(auto) { return (object->on_ready); });
+  if constexpr (requires { object->on_render_context_lost; }) owner.bind_named("onRenderContextLost", [object]() -> decltype(auto) { return (object->on_render_context_lost); });
+  if constexpr (requires { object->on_render_context_restored; }) owner.bind_named("onRenderContextRestored", [object]() -> decltype(auto) { return (object->on_render_context_restored); });
+  if constexpr (requires { object->on_repeat; }) owner.bind_named("onRepeat", [object]() -> decltype(auto) { return (object->on_repeat); });
   if constexpr (requires { object->on_resize; }) owner.bind_named("onResize", [object]() -> decltype(auto) { return (object->on_resize); });
+  if constexpr (requires { object->on_resource_failed; }) owner.bind_named("onResourceFailed", [object]() -> decltype(auto) { return (object->on_resource_failed); });
+  if constexpr (requires { object->on_resource_resolved; }) owner.bind_named("onResourceResolved", [object]() -> decltype(auto) { return (object->on_resource_resolved); });
+  if constexpr (requires { object->on_restore; }) owner.bind_named("onRestore", [object]() -> decltype(auto) { return (object->on_restore); });
   if constexpr (requires { object->on_screen_added; }) owner.bind_named("onScreenAdded", [object]() -> decltype(auto) { return (object->on_screen_added); });
   if constexpr (requires { object->on_screen_metrics_changed; }) owner.bind_named("onScreenMetricsChanged", [object]() -> decltype(auto) { return (object->on_screen_metrics_changed); });
   if constexpr (requires { object->on_screen_removed; }) owner.bind_named("onScreenRemoved", [object]() -> decltype(auto) { return (object->on_screen_removed); });
+  if constexpr (requires { object->on_second_instance; }) owner.bind_named("onSecondInstance", [object]() -> decltype(auto) { return (object->on_second_instance); });
+  if constexpr (requires { object->on_select; }) owner.bind_named("onSelect", [object]() -> decltype(auto) { return (object->on_select); });
   if constexpr (requires { object->on_show; }) owner.bind_named("onShow", [object]() -> decltype(auto) { return (object->on_show); });
+  if constexpr (requires { object->on_socket_close; }) owner.bind_named("onSocketClose", [object]() -> decltype(auto) { return (object->on_socket_close); });
+  if constexpr (requires { object->on_socket_error; }) owner.bind_named("onSocketError", [object]() -> decltype(auto) { return (object->on_socket_error); });
+  if constexpr (requires { object->on_socket_message; }) owner.bind_named("onSocketMessage", [object]() -> decltype(auto) { return (object->on_socket_message); });
+  if constexpr (requires { object->on_socket_open; }) owner.bind_named("onSocketOpen", [object]() -> decltype(auto) { return (object->on_socket_open); });
+  if constexpr (requires { object->on_source_ended; }) owner.bind_named("onSourceEnded", [object]() -> decltype(auto) { return (object->on_source_ended); });
+  if constexpr (requires { object->on_state_change; }) owner.bind_named("onStateChange", [object]() -> decltype(auto) { return (object->on_state_change); });
   if constexpr (requires { object->on_tick; }) owner.bind_named("onTick", [object]() -> decltype(auto) { return (object->on_tick); });
+  if constexpr (requires { object->on_update; }) owner.bind_named("onUpdate", [object]() -> decltype(auto) { return (object->on_update); });
+  if constexpr (requires { object->on_yoyo; }) owner.bind_named("onYoyo", [object]() -> decltype(auto) { return (object->on_yoyo); });
   if constexpr (requires { object->once; }) owner.bind_named("once", [object]() -> decltype(auto) { return (object->once); });
+  if constexpr (requires { object->opacity; }) owner.bind_named("opacity", [object]() -> decltype(auto) { return (object->opacity); });
+  if constexpr (requires { object->opcode; }) owner.bind_named("opcode", [object]() -> decltype(auto) { return (object->opcode); });
+  if constexpr (requires { object->open; }) owner.bind_named("open", [object]() -> decltype(auto) { return (object->open); });
+  if constexpr (requires { object->open_socket; }) owner.bind_named("openSocket", [object]() -> decltype(auto) { return (object->open_socket); });
+  if constexpr (requires { object->open_tcp_socket; }) owner.bind_named("openTcpSocket", [object]() -> decltype(auto) { return (object->open_tcp_socket); });
+  if constexpr (requires { object->operands; }) owner.bind_named("operands", [object]() -> decltype(auto) { return (object->operands); });
   if constexpr (requires { object->operation; }) owner.bind_named("operation", [object]() -> decltype(auto) { return (object->operation); });
   if constexpr (requires { object->operator_; }) owner.bind_named("operator", [object]() -> decltype(auto) { return (object->operator_); });
+  if constexpr (requires { object->options; }) owner.bind_named("options", [object]() -> decltype(auto) { return (object->options); });
+  if constexpr (requires { object->ordered_modifiers; }) owner.bind_named("orderedModifiers", [object]() -> decltype(auto) { return (object->ordered_modifiers); });
   if constexpr (requires { object->orientation; }) owner.bind_named("orientation", [object]() -> decltype(auto) { return (object->orientation); });
   if constexpr (requires { object->orientation_w; }) owner.bind_named("orientationW", [object]() -> decltype(auto) { return (object->orientation_w); });
   if constexpr (requires { object->orientation_x; }) owner.bind_named("orientationX", [object]() -> decltype(auto) { return (object->orientation_x); });
@@ -1882,49 +4760,122 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->origin; }) owner.bind_named("origin", [object]() -> decltype(auto) { return (object->origin); });
   if constexpr (requires { object->origin_x; }) owner.bind_named("originX", [object]() -> decltype(auto) { return (object->origin_x); });
   if constexpr (requires { object->origin_y; }) owner.bind_named("originY", [object]() -> decltype(auto) { return (object->origin_y); });
+  if constexpr (requires { object->original_height; }) owner.bind_named("originalHeight", [object]() -> decltype(auto) { return (object->original_height); });
+  if constexpr (requires { object->original_width; }) owner.bind_named("originalWidth", [object]() -> decltype(auto) { return (object->original_width); });
   if constexpr (requires { object->os_build; }) owner.bind_named("osBuild", [object]() -> decltype(auto) { return (object->os_build); });
   if constexpr (requires { object->os_name; }) owner.bind_named("osName", [object]() -> decltype(auto) { return (object->os_name); });
   if constexpr (requires { object->os_version; }) owner.bind_named("osVersion", [object]() -> decltype(auto) { return (object->os_version); });
+  if constexpr (requires { object->outcome; }) owner.bind_named("outcome", [object]() -> decltype(auto) { return (object->outcome); });
   if constexpr (requires { object->outer_cone_cos; }) owner.bind_named("outerConeCos", [object]() -> decltype(auto) { return (object->outer_cone_cos); });
   if constexpr (requires { object->outer_cone_degrees; }) owner.bind_named("outerConeDegrees", [object]() -> decltype(auto) { return (object->outer_cone_degrees); });
+  if constexpr (requires { object->over_state; }) owner.bind_named("overState", [object]() -> decltype(auto) { return (object->over_state); });
   if constexpr (requires { object->overlapping; }) owner.bind_named("overlapping", [object]() -> decltype(auto) { return (object->overlapping); });
-  if constexpr (requires { object->overlays_content; }) owner.bind_named("overlaysContent", [object]() -> decltype(auto) { return (object->overlays_content); });
+  if constexpr (requires { object->overwrite; }) owner.bind_named("overwrite", [object]() -> decltype(auto) { return (object->overwrite); });
+  if constexpr (requires { object->owner; }) owner.bind_named("owner", [object]() -> decltype(auto) { return (object->owner); });
+  if constexpr (requires { object->owns_element; }) owner.bind_named("ownsElement", [object]() -> decltype(auto) { return (object->owns_element); });
+  if constexpr (requires { object->padding; }) owner.bind_named("padding", [object]() -> decltype(auto) { return (object->padding); });
+  if constexpr (requires { object->page_ids; }) owner.bind_named("pageIds", [object]() -> decltype(auto) { return (object->page_ids); });
   if constexpr (requires { object->pages; }) owner.bind_named("pages", [object]() -> decltype(auto) { return (object->pages); });
   if constexpr (requires { object->parent; }) owner.bind_named("parent", [object]() -> decltype(auto) { return (object->parent); });
+  if constexpr (requires { object->parent_indices; }) owner.bind_named("parentIndices", [object]() -> decltype(auto) { return (object->parent_indices); });
+  if constexpr (requires { object->parent_reference_id; }) owner.bind_named("parentReferenceId", [object]() -> decltype(auto) { return (object->parent_reference_id); });
+  if constexpr (requires { object->parent_window; }) owner.bind_named("parentWindow", [object]() -> decltype(auto) { return (object->parent_window); });
   if constexpr (requires { object->particle_lifespan; }) owner.bind_named("particleLifespan", [object]() -> decltype(auto) { return (object->particle_lifespan); });
   if constexpr (requires { object->particle_lifespan_variance; }) owner.bind_named("particleLifespanVariance", [object]() -> decltype(auto) { return (object->particle_lifespan_variance); });
+  if constexpr (requires { object->passes; }) owner.bind_named("passes", [object]() -> decltype(auto) { return (object->passes); });
+  if constexpr (requires { object->password_character; }) owner.bind_named("passwordCharacter", [object]() -> decltype(auto) { return (object->password_character); });
+  if constexpr (requires { object->path; }) owner.bind_named("path", [object]() -> decltype(auto) { return (object->path); });
   if constexpr (requires { object->paused; }) owner.bind_named("paused", [object]() -> decltype(auto) { return (object->paused); });
+  if constexpr (requires { object->payload; }) owner.bind_named("payload", [object]() -> decltype(auto) { return (object->payload); });
+  if constexpr (requires { object->pbr_sample_bind_group_layout; }) owner.bind_named("pbrSampleBindGroupLayout", [object]() -> decltype(auto) { return (object->pbr_sample_bind_group_layout); });
   if constexpr (requires { object->pcf_radius; }) owner.bind_named("pcfRadius", [object]() -> decltype(auto) { return (object->pcf_radius); });
   if constexpr (requires { object->pedestal; }) owner.bind_named("pedestal", [object]() -> decltype(auto) { return (object->pedestal); });
+  if constexpr (requires { object->percentage; }) owner.bind_named("percentage", [object]() -> decltype(auto) { return (object->percentage); });
+  if constexpr (requires { object->permission_state; }) owner.bind_named("permissionState", [object]() -> decltype(auto) { return (object->permission_state); });
+  if constexpr (requires { object->permissions; }) owner.bind_named("permissions", [object]() -> decltype(auto) { return (object->permissions); });
+  if constexpr (requires { object->persistence; }) owner.bind_named("persistence", [object]() -> decltype(auto) { return (object->persistence); });
+  if constexpr (requires { object->phase; }) owner.bind_named("phase", [object]() -> decltype(auto) { return (object->phase); });
   if constexpr (requires { object->physical_height; }) owner.bind_named("physicalHeight", [object]() -> decltype(auto) { return (object->physical_height); });
   if constexpr (requires { object->physical_width; }) owner.bind_named("physicalWidth", [object]() -> decltype(auto) { return (object->physical_width); });
+  if constexpr (requires { object->pitch; }) owner.bind_named("pitch", [object]() -> decltype(auto) { return (object->pitch); });
+  if constexpr (requires { object->pivot_screen_x; }) owner.bind_named("pivotScreenX", [object]() -> decltype(auto) { return (object->pivot_screen_x); });
+  if constexpr (requires { object->pivot_screen_y; }) owner.bind_named("pivotScreenY", [object]() -> decltype(auto) { return (object->pivot_screen_y); });
+  if constexpr (requires { object->pivot_world_x; }) owner.bind_named("pivotWorldX", [object]() -> decltype(auto) { return (object->pivot_world_x); });
+  if constexpr (requires { object->pivot_world_y; }) owner.bind_named("pivotWorldY", [object]() -> decltype(auto) { return (object->pivot_world_y); });
   if constexpr (requires { object->pivot_x; }) owner.bind_named("pivotX", [object]() -> decltype(auto) { return (object->pivot_x); });
   if constexpr (requires { object->pivot_y; }) owner.bind_named("pivotY", [object]() -> decltype(auto) { return (object->pivot_y); });
   if constexpr (requires { object->pixel_depth; }) owner.bind_named("pixelDepth", [object]() -> decltype(auto) { return (object->pixel_depth); });
   if constexpr (requires { object->pixel_format; }) owner.bind_named("pixelFormat", [object]() -> decltype(auto) { return (object->pixel_format); });
   if constexpr (requires { object->pixel_ratio; }) owner.bind_named("pixelRatio", [object]() -> decltype(auto) { return (object->pixel_ratio); });
+  if constexpr (requires { object->placements; }) owner.bind_named("placements", [object]() -> decltype(auto) { return (object->placements); });
+  if constexpr (requires { object->platform; }) owner.bind_named("platform", [object]() -> decltype(auto) { return (object->platform); });
   if constexpr (requires { object->platform_string; }) owner.bind_named("platformString", [object]() -> decltype(auto) { return (object->platform_string); });
+  if constexpr (requires { object->play_mode; }) owner.bind_named("playMode", [object]() -> decltype(auto) { return (object->play_mode); });
   if constexpr (requires { object->playback_rate; }) owner.bind_named("playbackRate", [object]() -> decltype(auto) { return (object->playback_rate); });
+  if constexpr (requires { object->player; }) owner.bind_named("player", [object]() -> decltype(auto) { return (object->player); });
+  if constexpr (requires { object->players; }) owner.bind_named("players", [object]() -> decltype(auto) { return (object->players); });
+  if constexpr (requires { object->playing; }) owner.bind_named("playing", [object]() -> decltype(auto) { return (object->playing); });
   if constexpr (requires { object->point; }) owner.bind_named("point", [object]() -> decltype(auto) { return (object->point); });
+  if constexpr (requires { object->point_ax; }) owner.bind_named("pointAX", [object]() -> decltype(auto) { return (object->point_ax); });
+  if constexpr (requires { object->point_ay; }) owner.bind_named("pointAY", [object]() -> decltype(auto) { return (object->point_ay); });
+  if constexpr (requires { object->point_az; }) owner.bind_named("pointAZ", [object]() -> decltype(auto) { return (object->point_az); });
+  if constexpr (requires { object->point_bx; }) owner.bind_named("pointBX", [object]() -> decltype(auto) { return (object->point_bx); });
+  if constexpr (requires { object->point_by; }) owner.bind_named("pointBY", [object]() -> decltype(auto) { return (object->point_by); });
+  if constexpr (requires { object->point_bz; }) owner.bind_named("pointBZ", [object]() -> decltype(auto) { return (object->point_bz); });
   if constexpr (requires { object->point_count; }) owner.bind_named("pointCount", [object]() -> decltype(auto) { return (object->point_count); });
+  if constexpr (requires { object->point_counts; }) owner.bind_named("pointCounts", [object]() -> decltype(auto) { return (object->point_counts); });
+  if constexpr (requires { object->point_feature_ids; }) owner.bind_named("pointFeatureIds", [object]() -> decltype(auto) { return (object->point_feature_ids); });
+  if constexpr (requires { object->point_starts; }) owner.bind_named("pointStarts", [object]() -> decltype(auto) { return (object->point_starts); });
+  if constexpr (requires { object->point_values; }) owner.bind_named("pointValues", [object]() -> decltype(auto) { return (object->point_values); });
+  if constexpr (requires { object->pointer_id; }) owner.bind_named("pointerId", [object]() -> decltype(auto) { return (object->pointer_id); });
   if constexpr (requires { object->pointer_width; }) owner.bind_named("pointerWidth", [object]() -> decltype(auto) { return (object->pointer_width); });
   if constexpr (requires { object->points; }) owner.bind_named("points", [object]() -> decltype(auto) { return (object->points); });
+  if constexpr (requires { object->polar; }) owner.bind_named("polar", [object]() -> decltype(auto) { return (object->polar); });
+  if constexpr (requires { object->pool; }) owner.bind_named("pool", [object]() -> decltype(auto) { return (object->pool); });
   if constexpr (requires { object->position; }) owner.bind_named("position", [object]() -> decltype(auto) { return (object->position); });
   if constexpr (requires { object->positions; }) owner.bind_named("positions", [object]() -> decltype(auto) { return (object->positions); });
+  if constexpr (requires { object->power; }) owner.bind_named("power", [object]() -> decltype(auto) { return (object->power); });
+  if constexpr (requires { object->power_of_two; }) owner.bind_named("powerOfTwo", [object]() -> decltype(auto) { return (object->power_of_two); });
+  if constexpr (requires { object->power_scratch; }) owner.bind_named("powerScratch", [object]() -> decltype(auto) { return (object->power_scratch); });
+  if constexpr (requires { object->precision; }) owner.bind_named("precision", [object]() -> decltype(auto) { return (object->precision); });
+  if constexpr (requires { object->preferences; }) owner.bind_named("preferences", [object]() -> decltype(auto) { return (object->preferences); });
+  if constexpr (requires { object->prefiltered_pipeline; }) owner.bind_named("prefilteredPipeline", [object]() -> decltype(auto) { return (object->prefiltered_pipeline); });
+  if constexpr (requires { object->premultiplied; }) owner.bind_named("premultiplied", [object]() -> decltype(auto) { return (object->premultiplied); });
   if constexpr (requires { object->premultiplied_alpha; }) owner.bind_named("premultipliedAlpha", [object]() -> decltype(auto) { return (object->premultiplied_alpha); });
+  if constexpr (requires { object->premultiply_alpha; }) owner.bind_named("premultiplyAlpha", [object]() -> decltype(auto) { return (object->premultiply_alpha); });
   if constexpr (requires { object->prepare; }) owner.bind_named("prepare", [object]() -> decltype(auto) { return (object->prepare); });
   if constexpr (requires { object->preserve_alpha; }) owner.bind_named("preserveAlpha", [object]() -> decltype(auto) { return (object->preserve_alpha); });
+  if constexpr (requires { object->pressed; }) owner.bind_named("pressed", [object]() -> decltype(auto) { return (object->pressed); });
   if constexpr (requires { object->pressure; }) owner.bind_named("pressure", [object]() -> decltype(auto) { return (object->pressure); });
+  if constexpr (requires { object->prev_x; }) owner.bind_named("prevX", [object]() -> decltype(auto) { return (object->prev_x); });
+  if constexpr (requires { object->prev_y; }) owner.bind_named("prevY", [object]() -> decltype(auto) { return (object->prev_y); });
+  if constexpr (requires { object->prev_z; }) owner.bind_named("prevZ", [object]() -> decltype(auto) { return (object->prev_z); });
   if constexpr (requires { object->previous_world_transform; }) owner.bind_named("previousWorldTransform", [object]() -> decltype(auto) { return (object->previous_world_transform); });
   if constexpr (requires { object->priority; }) owner.bind_named("priority", [object]() -> decltype(auto) { return (object->priority); });
+  if constexpr (requires { object->probes; }) owner.bind_named("probes", [object]() -> decltype(auto) { return (object->probes); });
   if constexpr (requires { object->product_name; }) owner.bind_named("productName", [object]() -> decltype(auto) { return (object->product_name); });
+  if constexpr (requires { object->progress; }) owner.bind_named("progress", [object]() -> decltype(auto) { return (object->progress); });
   if constexpr (requires { object->projection; }) owner.bind_named("projection", [object]() -> decltype(auto) { return (object->projection); });
+  if constexpr (requires { object->projection_type; }) owner.bind_named("projectionType", [object]() -> decltype(auto) { return (object->projection_type); });
+  if constexpr (requires { object->prompt; }) owner.bind_named("prompt", [object]() -> decltype(auto) { return (object->prompt); });
   if constexpr (requires { object->prompt_for_access; }) owner.bind_named("promptForAccess", [object]() -> decltype(auto) { return (object->prompt_for_access); });
+  if constexpr (requires { object->properties; }) owner.bind_named("properties", [object]() -> decltype(auto) { return (object->properties); });
+  if constexpr (requires { object->property; }) owner.bind_named("property", [object]() -> decltype(auto) { return (object->property); });
+  if constexpr (requires { object->property_map; }) owner.bind_named("propertyMap", [object]() -> decltype(auto) { return (object->property_map); });
+  if constexpr (requires { object->protocol; }) owner.bind_named("protocol", [object]() -> decltype(auto) { return (object->protocol); });
+  if constexpr (requires { object->quality; }) owner.bind_named("quality", [object]() -> decltype(auto) { return (object->quality); });
+  if constexpr (requires { object->quaternion; }) owner.bind_named("quaternion", [object]() -> decltype(auto) { return (object->quaternion); });
+  if constexpr (requires { object->query; }) owner.bind_named("query", [object]() -> decltype(auto) { return (object->query); });
   if constexpr (requires { object->query_permission; }) owner.bind_named("queryPermission", [object]() -> decltype(auto) { return (object->query_permission); });
+  if constexpr (requires { object->query_point; }) owner.bind_named("queryPoint", [object]() -> decltype(auto) { return (object->query_point); });
+  if constexpr (requires { object->query_ray; }) owner.bind_named("queryRay", [object]() -> decltype(auto) { return (object->query_ray); });
+  if constexpr (requires { object->query_region; }) owner.bind_named("queryRegion", [object]() -> decltype(auto) { return (object->query_region); });
+  if constexpr (requires { object->query_shape_cast; }) owner.bind_named("queryShapeCast", [object]() -> decltype(auto) { return (object->query_shape_cast); });
   if constexpr (requires { object->query_spatial_pairs; }) owner.bind_named("querySpatialPairs", [object]() -> decltype(auto) { return (object->query_spatial_pairs); });
   if constexpr (requires { object->query_spatial_point; }) owner.bind_named("querySpatialPoint", [object]() -> decltype(auto) { return (object->query_spatial_point); });
   if constexpr (requires { object->query_spatial_ray; }) owner.bind_named("querySpatialRay", [object]() -> decltype(auto) { return (object->query_spatial_ray); });
   if constexpr (requires { object->query_spatial_region; }) owner.bind_named("querySpatialRegion", [object]() -> decltype(auto) { return (object->query_spatial_region); });
+  if constexpr (requires { object->quit; }) owner.bind_named("quit", [object]() -> decltype(auto) { return (object->quit); });
   if constexpr (requires { object->r_ax; }) owner.bind_named("rAX", [object]() -> decltype(auto) { return (object->r_ax); });
   if constexpr (requires { object->r_ay; }) owner.bind_named("rAY", [object]() -> decltype(auto) { return (object->r_ay); });
   if constexpr (requires { object->r_az; }) owner.bind_named("rAZ", [object]() -> decltype(auto) { return (object->r_az); });
@@ -1935,36 +4886,100 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->radial_accel_variance; }) owner.bind_named("radialAccelVariance", [object]() -> decltype(auto) { return (object->radial_accel_variance); });
   if constexpr (requires { object->radial_acceleration; }) owner.bind_named("radialAcceleration", [object]() -> decltype(auto) { return (object->radial_acceleration); });
   if constexpr (requires { object->radius; }) owner.bind_named("radius", [object]() -> decltype(auto) { return (object->radius); });
+  if constexpr (requires { object->radius_x; }) owner.bind_named("radiusX", [object]() -> decltype(auto) { return (object->radius_x); });
+  if constexpr (requires { object->radius_y; }) owner.bind_named("radiusY", [object]() -> decltype(auto) { return (object->radius_y); });
+  if constexpr (requires { object->random; }) owner.bind_named("random", [object]() -> decltype(auto) { return (object->random); });
   if constexpr (requires { object->range; }) owner.bind_named("range", [object]() -> decltype(auto) { return (object->range); });
+  if constexpr (requires { object->ranges; }) owner.bind_named("ranges", [object]() -> decltype(auto) { return (object->ranges); });
+  if constexpr (requires { object->rasterizer_backend; }) owner.bind_named("rasterizerBackend", [object]() -> decltype(auto) { return (object->rasterizer_backend); });
+  if constexpr (requires { object->ratio; }) owner.bind_named("ratio", [object]() -> decltype(auto) { return (object->ratio); });
+  if constexpr (requires { object->ratios; }) owner.bind_named("ratios", [object]() -> decltype(auto) { return (object->ratios); });
+  if constexpr (requires { object->read; }) owner.bind_named("read", [object]() -> decltype(auto) { return (object->read); });
+  if constexpr (requires { object->read_bitmap; }) owner.bind_named("readBitmap", [object]() -> decltype(auto) { return (object->read_bitmap); });
+  if constexpr (requires { object->read_bodies; }) owner.bind_named("readBodies", [object]() -> decltype(auto) { return (object->read_bodies); });
   if constexpr (requires { object->read_bookmark; }) owner.bind_named("readBookmark", [object]() -> decltype(auto) { return (object->read_bookmark); });
+  if constexpr (requires { object->read_contacts; }) owner.bind_named("readContacts", [object]() -> decltype(auto) { return (object->read_contacts); });
   if constexpr (requires { object->read_format; }) owner.bind_named("readFormat", [object]() -> decltype(auto) { return (object->read_format); });
   if constexpr (requires { object->read_html; }) owner.bind_named("readHtml", [object]() -> decltype(auto) { return (object->read_html); });
   if constexpr (requires { object->read_image; }) owner.bind_named("readImage", [object]() -> decltype(auto) { return (object->read_image); });
   if constexpr (requires { object->read_items; }) owner.bind_named("readItems", [object]() -> decltype(auto) { return (object->read_items); });
+  if constexpr (requires { object->read_joints; }) owner.bind_named("readJoints", [object]() -> decltype(auto) { return (object->read_joints); });
+  if constexpr (requires { object->read_only; }) owner.bind_named("readOnly", [object]() -> decltype(auto) { return (object->read_only); });
   if constexpr (requires { object->read_rtf; }) owner.bind_named("readRTF", [object]() -> decltype(auto) { return (object->read_rtf); });
   if constexpr (requires { object->read_text; }) owner.bind_named("readText", [object]() -> decltype(auto) { return (object->read_text); });
   if constexpr (requires { object->reason; }) owner.bind_named("reason", [object]() -> decltype(auto) { return (object->reason); });
   if constexpr (requires { object->red; }) owner.bind_named("red", [object]() -> decltype(auto) { return (object->red); });
   if constexpr (requires { object->red_bias; }) owner.bind_named("redBias", [object]() -> decltype(auto) { return (object->red_bias); });
   if constexpr (requires { object->red_scale; }) owner.bind_named("redScale", [object]() -> decltype(auto) { return (object->red_scale); });
+  if constexpr (requires { object->reference_angle; }) owner.bind_named("referenceAngle", [object]() -> decltype(auto) { return (object->reference_angle); });
+  if constexpr (requires { object->referenced_pages; }) owner.bind_named("referencedPages", [object]() -> decltype(auto) { return (object->referenced_pages); });
+  if constexpr (requires { object->reflect; }) owner.bind_named("reflect", [object]() -> decltype(auto) { return (object->reflect); });
   if constexpr (requires { object->refresh; }) owner.bind_named("refresh", [object]() -> decltype(auto) { return (object->refresh); });
   if constexpr (requires { object->refresh_rate; }) owner.bind_named("refreshRate", [object]() -> decltype(auto) { return (object->refresh_rate); });
+  if constexpr (requires { object->region_blend; }) owner.bind_named("regionBlend", [object]() -> decltype(auto) { return (object->region_blend); });
+  if constexpr (requires { object->region_duration; }) owner.bind_named("regionDuration", [object]() -> decltype(auto) { return (object->region_duration); });
+  if constexpr (requires { object->region_elapsed; }) owner.bind_named("regionElapsed", [object]() -> decltype(auto) { return (object->region_elapsed); });
   if constexpr (requires { object->region_id_max; }) owner.bind_named("regionIdMax", [object]() -> decltype(auto) { return (object->region_id_max); });
   if constexpr (requires { object->region_id_min; }) owner.bind_named("regionIdMin", [object]() -> decltype(auto) { return (object->region_id_min); });
+  if constexpr (requires { object->region_index; }) owner.bind_named("regionIndex", [object]() -> decltype(auto) { return (object->region_index); });
+  if constexpr (requires { object->region_states; }) owner.bind_named("regionStates", [object]() -> decltype(auto) { return (object->region_states); });
+  if constexpr (requires { object->region_transitions; }) owner.bind_named("regionTransitions", [object]() -> decltype(auto) { return (object->region_transitions); });
+  if constexpr (requires { object->regions; }) owner.bind_named("regions", [object]() -> decltype(auto) { return (object->regions); });
+  if constexpr (requires { object->register_; }) owner.bind_named("register", [object]() -> decltype(auto) { return (object->register_); });
+  if constexpr (requires { object->registered_count; }) owner.bind_named("registeredCount", [object]() -> decltype(auto) { return (object->registered_count); });
+  if constexpr (requires { object->registrar_import; }) owner.bind_named("registrarImport", [object]() -> decltype(auto) { return (object->registrar_import); });
+  if constexpr (requires { object->registrar_symbol; }) owner.bind_named("registrarSymbol", [object]() -> decltype(auto) { return (object->registrar_symbol); });
+  if constexpr (requires { object->registry; }) owner.bind_named("registry", [object]() -> decltype(auto) { return (object->registry); });
+  if constexpr (requires { object->related_id; }) owner.bind_named("relatedId", [object]() -> decltype(auto) { return (object->related_id); });
   if constexpr (requires { object->relative; }) owner.bind_named("relative", [object]() -> decltype(auto) { return (object->relative); });
+  if constexpr (requires { object->relaunch; }) owner.bind_named("relaunch", [object]() -> decltype(auto) { return (object->relaunch); });
+  if constexpr (requires { object->release; }) owner.bind_named("release", [object]() -> decltype(auto) { return (object->release); });
+  if constexpr (requires { object->release_element; }) owner.bind_named("releaseElement", [object]() -> decltype(auto) { return (object->release_element); });
+  if constexpr (requires { object->release_single_instance_lock; }) owner.bind_named("releaseSingleInstanceLock", [object]() -> decltype(auto) { return (object->release_single_instance_lock); });
+  if constexpr (requires { object->remove_as_default; }) owner.bind_named("removeAsDefault", [object]() -> decltype(auto) { return (object->remove_as_default); });
   if constexpr (requires { object->remove_node; }) owner.bind_named("removeNode", [object]() -> decltype(auto) { return (object->remove_node); });
   if constexpr (requires { object->remove_spatial_object; }) owner.bind_named("removeSpatialObject", [object]() -> decltype(auto) { return (object->remove_spatial_object); });
+  if constexpr (requires { object->render_effects; }) owner.bind_named("renderEffects", [object]() -> decltype(auto) { return (object->render_effects); });
+  if constexpr (requires { object->render_root_guard; }) owner.bind_named("renderRootGuard", [object]() -> decltype(auto) { return (object->render_root_guard); });
+  if constexpr (requires { object->renderers; }) owner.bind_named("renderers", [object]() -> decltype(auto) { return (object->renderers); });
+  if constexpr (requires { object->repeat; }) owner.bind_named("repeat", [object]() -> decltype(auto) { return (object->repeat); });
   if constexpr (requires { object->repeat_count; }) owner.bind_named("repeatCount", [object]() -> decltype(auto) { return (object->repeat_count); });
+  if constexpr (requires { object->report_diagnostic; }) owner.bind_named("reportDiagnostic", [object]() -> decltype(auto) { return (object->report_diagnostic); });
   if constexpr (requires { object->request; }) owner.bind_named("request", [object]() -> decltype(auto) { return (object->request); });
+  if constexpr (requires { object->request_access; }) owner.bind_named("requestAccess", [object]() -> decltype(auto) { return (object->request_access); });
+  if constexpr (requires { object->request_attention; }) owner.bind_named("requestAttention", [object]() -> decltype(auto) { return (object->request_attention); });
+  if constexpr (requires { object->request_media_access; }) owner.bind_named("requestMediaAccess", [object]() -> decltype(auto) { return (object->request_media_access); });
   if constexpr (requires { object->request_permission; }) owner.bind_named("requestPermission", [object]() -> decltype(auto) { return (object->request_permission); });
   if constexpr (requires { object->request_persistence; }) owner.bind_named("requestPersistence", [object]() -> decltype(auto) { return (object->request_persistence); });
+  if constexpr (requires { object->request_single_instance_lock; }) owner.bind_named("requestSingleInstanceLock", [object]() -> decltype(auto) { return (object->request_single_instance_lock); });
+  if constexpr (requires { object->request_wake_lock; }) owner.bind_named("requestWakeLock", [object]() -> decltype(auto) { return (object->request_wake_lock); });
+  if constexpr (requires { object->requested_count; }) owner.bind_named("requestedCount", [object]() -> decltype(auto) { return (object->requested_count); });
+  if constexpr (requires { object->required; }) owner.bind_named("required", [object]() -> decltype(auto) { return (object->required); });
+  if constexpr (requires { object->required_count; }) owner.bind_named("requiredCount", [object]() -> decltype(auto) { return (object->required_count); });
+  if constexpr (requires { object->required_point_count; }) owner.bind_named("requiredPointCount", [object]() -> decltype(auto) { return (object->required_point_count); });
+  if constexpr (requires { object->requirements; }) owner.bind_named("requirements", [object]() -> decltype(auto) { return (object->requirements); });
+  if constexpr (requires { object->resizable; }) owner.bind_named("resizable", [object]() -> decltype(auto) { return (object->resizable); });
   if constexpr (requires { object->resize; }) owner.bind_named("resize", [object]() -> decltype(auto) { return (object->resize); });
+  if constexpr (requires { object->resize_handle; }) owner.bind_named("resizeHandle", [object]() -> decltype(auto) { return (object->resize_handle); });
   if constexpr (requires { object->resolution; }) owner.bind_named("resolution", [object]() -> decltype(auto) { return (object->resolution); });
+  if constexpr (requires { object->resolve_page; }) owner.bind_named("resolvePage", [object]() -> decltype(auto) { return (object->resolve_page); });
+  if constexpr (requires { object->resolve_slot_content; }) owner.bind_named("resolveSlotContent", [object]() -> decltype(auto) { return (object->resolve_slot_content); });
+  if constexpr (requires { object->resolve_texture; }) owner.bind_named("resolveTexture", [object]() -> decltype(auto) { return (object->resolve_texture); });
+  if constexpr (requires { object->resolvers; }) owner.bind_named("resolvers", [object]() -> decltype(auto) { return (object->resolvers); });
+  if constexpr (requires { object->resources; }) owner.bind_named("resources", [object]() -> decltype(auto) { return (object->resources); });
+  if constexpr (requires { object->response_type; }) owner.bind_named("responseType", [object]() -> decltype(auto) { return (object->response_type); });
+  if constexpr (requires { object->rest_translation; }) owner.bind_named("restTranslation", [object]() -> decltype(auto) { return (object->rest_translation); });
   if constexpr (requires { object->restitution; }) owner.bind_named("restitution", [object]() -> decltype(auto) { return (object->restitution); });
+  if constexpr (requires { object->restore; }) owner.bind_named("restore", [object]() -> decltype(auto) { return (object->restore); });
+  if constexpr (requires { object->restrict; }) owner.bind_named("restrict", [object]() -> decltype(auto) { return (object->restrict); });
+  if constexpr (requires { object->resume_device; }) owner.bind_named("resumeDevice", [object]() -> decltype(auto) { return (object->resume_device); });
+  if constexpr (requires { object->reveal; }) owner.bind_named("reveal", [object]() -> decltype(auto) { return (object->reveal); });
+  if constexpr (requires { object->reverse; }) owner.bind_named("reverse", [object]() -> decltype(auto) { return (object->reverse); });
+  if constexpr (requires { object->revoke_object_url; }) owner.bind_named("revokeObjectUrl", [object]() -> decltype(auto) { return (object->revoke_object_url); });
+  if constexpr (requires { object->rgb; }) owner.bind_named("rgb", [object]() -> decltype(auto) { return (object->rgb); });
   if constexpr (requires { object->right; }) owner.bind_named("right", [object]() -> decltype(auto) { return (object->right); });
+  if constexpr (requires { object->right_margin; }) owner.bind_named("rightMargin", [object]() -> decltype(auto) { return (object->right_margin); });
   if constexpr (requires { object->root; }) owner.bind_named("root", [object]() -> decltype(auto) { return (object->root); });
-  if constexpr (requires { object->rotate_per_second; }) owner.bind_named("rotatePerSecond", [object]() -> decltype(auto) { return (object->rotate_per_second); });
-  if constexpr (requires { object->rotate_per_second_variance; }) owner.bind_named("rotatePerSecondVariance", [object]() -> decltype(auto) { return (object->rotate_per_second_variance); });
   if constexpr (requires { object->rotated; }) owner.bind_named("rotated", [object]() -> decltype(auto) { return (object->rotated); });
   if constexpr (requires { object->rotation; }) owner.bind_named("rotation", [object]() -> decltype(auto) { return (object->rotation); });
   if constexpr (requires { object->rotation_amplitude; }) owner.bind_named("rotationAmplitude", [object]() -> decltype(auto) { return (object->rotation_amplitude); });
@@ -1972,14 +4987,23 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->rotation_end_variance; }) owner.bind_named("rotationEndVariance", [object]() -> decltype(auto) { return (object->rotation_end_variance); });
   if constexpr (requires { object->rotation_speed_max; }) owner.bind_named("rotationSpeedMax", [object]() -> decltype(auto) { return (object->rotation_speed_max); });
   if constexpr (requires { object->rotation_speed_min; }) owner.bind_named("rotationSpeedMin", [object]() -> decltype(auto) { return (object->rotation_speed_min); });
+  if constexpr (requires { object->rotation_speeds; }) owner.bind_named("rotationSpeeds", [object]() -> decltype(auto) { return (object->rotation_speeds); });
   if constexpr (requires { object->rotation_start; }) owner.bind_named("rotationStart", [object]() -> decltype(auto) { return (object->rotation_start); });
   if constexpr (requires { object->rotation_start_variance; }) owner.bind_named("rotationStartVariance", [object]() -> decltype(auto) { return (object->rotation_start_variance); });
+  if constexpr (requires { object->rotation_w; }) owner.bind_named("rotationW", [object]() -> decltype(auto) { return (object->rotation_w); });
   if constexpr (requires { object->rotation_x; }) owner.bind_named("rotationX", [object]() -> decltype(auto) { return (object->rotation_x); });
   if constexpr (requires { object->rotation_y; }) owner.bind_named("rotationY", [object]() -> decltype(auto) { return (object->rotation_y); });
   if constexpr (requires { object->rotation_z; }) owner.bind_named("rotationZ", [object]() -> decltype(auto) { return (object->rotation_z); });
+  if constexpr (requires { object->roughness; }) owner.bind_named("roughness", [object]() -> decltype(auto) { return (object->roughness); });
+  if constexpr (requires { object->row; }) owner.bind_named("row", [object]() -> decltype(auto) { return (object->row); });
+  if constexpr (requires { object->rows; }) owner.bind_named("rows", [object]() -> decltype(auto) { return (object->rows); });
+  if constexpr (requires { object->rtl; }) owner.bind_named("rtl", [object]() -> decltype(auto) { return (object->rtl); });
   if constexpr (requires { object->runtime; }) owner.bind_named("runtime", [object]() -> decltype(auto) { return (object->runtime); });
+  if constexpr (requires { object->sample_count; }) owner.bind_named("sampleCount", [object]() -> decltype(auto) { return (object->sample_count); });
+  if constexpr (requires { object->sample_scratch; }) owner.bind_named("sampleScratch", [object]() -> decltype(auto) { return (object->sample_scratch); });
   if constexpr (requires { object->samples; }) owner.bind_named("samples", [object]() -> decltype(auto) { return (object->samples); });
   if constexpr (requires { object->saturation; }) owner.bind_named("saturation", [object]() -> decltype(auto) { return (object->saturation); });
+  if constexpr (requires { object->saved; }) owner.bind_named("saved", [object]() -> decltype(auto) { return (object->saved); });
   if constexpr (requires { object->scale; }) owner.bind_named("scale", [object]() -> decltype(auto) { return (object->scale); });
   if constexpr (requires { object->scale_curve; }) owner.bind_named("scaleCurve", [object]() -> decltype(auto) { return (object->scale_curve); });
   if constexpr (requires { object->scale_end; }) owner.bind_named("scaleEnd", [object]() -> decltype(auto) { return (object->scale_end); });
@@ -1988,55 +5012,149 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->scale_min; }) owner.bind_named("scaleMin", [object]() -> decltype(auto) { return (object->scale_min); });
   if constexpr (requires { object->scale_x; }) owner.bind_named("scaleX", [object]() -> decltype(auto) { return (object->scale_x); });
   if constexpr (requires { object->scale_y; }) owner.bind_named("scaleY", [object]() -> decltype(auto) { return (object->scale_y); });
+  if constexpr (requires { object->scales; }) owner.bind_named("scales", [object]() -> decltype(auto) { return (object->scales); });
   if constexpr (requires { object->scaling; }) owner.bind_named("scaling", [object]() -> decltype(auto) { return (object->scaling); });
   if constexpr (requires { object->scanline_intensity; }) owner.bind_named("scanlineIntensity", [object]() -> decltype(auto) { return (object->scanline_intensity); });
   if constexpr (requires { object->scattering; }) owner.bind_named("scattering", [object]() -> decltype(auto) { return (object->scattering); });
-  if constexpr (requires { object->scope; }) owner.bind_named("scope", [object]() -> decltype(auto) { return (object->scope); });
+  if constexpr (requires { object->scene_depth_texture; }) owner.bind_named("sceneDepthTexture", [object]() -> decltype(auto) { return (object->scene_depth_texture); });
+  if constexpr (requires { object->scene_target; }) owner.bind_named("sceneTarget", [object]() -> decltype(auto) { return (object->scene_target); });
+  if constexpr (requires { object->scene_velocity_texture; }) owner.bind_named("sceneVelocityTexture", [object]() -> decltype(auto) { return (object->scene_velocity_texture); });
+  if constexpr (requires { object->scheme; }) owner.bind_named("scheme", [object]() -> decltype(auto) { return (object->scheme); });
   if constexpr (requires { object->screen; }) owner.bind_named("screen", [object]() -> decltype(auto) { return (object->screen); });
+  if constexpr (requires { object->screen_rotation; }) owner.bind_named("screenRotation", [object]() -> decltype(auto) { return (object->screen_rotation); });
+  if constexpr (requires { object->script; }) owner.bind_named("script", [object]() -> decltype(auto) { return (object->script); });
+  if constexpr (requires { object->scroll; }) owner.bind_named("scroll", [object]() -> decltype(auto) { return (object->scroll); });
+  if constexpr (requires { object->scroll_bar; }) owner.bind_named("scrollBar", [object]() -> decltype(auto) { return (object->scroll_bar); });
+  if constexpr (requires { object->scroll_v; }) owner.bind_named("scrollV", [object]() -> decltype(auto) { return (object->scroll_v); });
+  if constexpr (requires { object->second_region; }) owner.bind_named("secondRegion", [object]() -> decltype(auto) { return (object->second_region); });
+  if constexpr (requires { object->secondary_map; }) owner.bind_named("secondaryMap", [object]() -> decltype(auto) { return (object->secondary_map); });
+  if constexpr (requires { object->secondary_scroll; }) owner.bind_named("secondaryScroll", [object]() -> decltype(auto) { return (object->secondary_scroll); });
+  if constexpr (requires { object->section_handlers; }) owner.bind_named("sectionHandlers", [object]() -> decltype(auto) { return (object->section_handlers); });
   if constexpr (requires { object->seed; }) owner.bind_named("seed", [object]() -> decltype(auto) { return (object->seed); });
   if constexpr (requires { object->segment; }) owner.bind_named("segment", [object]() -> decltype(auto) { return (object->segment); });
+  if constexpr (requires { object->segments; }) owner.bind_named("segments", [object]() -> decltype(auto) { return (object->segments); });
+  if constexpr (requires { object->select; }) owner.bind_named("select", [object]() -> decltype(auto) { return (object->select); });
+  if constexpr (requires { object->selectable; }) owner.bind_named("selectable", [object]() -> decltype(auto) { return (object->selectable); });
+  if constexpr (requires { object->selected_index; }) owner.bind_named("selectedIndex", [object]() -> decltype(auto) { return (object->selected_index); });
+  if constexpr (requires { object->selected_item; }) owner.bind_named("selectedItem", [object]() -> decltype(auto) { return (object->selected_item); });
+  if constexpr (requires { object->selected_state; }) owner.bind_named("selectedState", [object]() -> decltype(auto) { return (object->selected_state); });
   if constexpr (requires { object->selection; }) owner.bind_named("selection", [object]() -> decltype(auto) { return (object->selection); });
+  if constexpr (requires { object->selection_alpha; }) owner.bind_named("selectionAlpha", [object]() -> decltype(auto) { return (object->selection_alpha); });
+  if constexpr (requires { object->selection_color; }) owner.bind_named("selectionColor", [object]() -> decltype(auto) { return (object->selection_color); });
   if constexpr (requires { object->send; }) owner.bind_named("send", [object]() -> decltype(auto) { return (object->send); });
+  if constexpr (requires { object->send_event; }) owner.bind_named("sendEvent", [object]() -> decltype(auto) { return (object->send_event); });
+  if constexpr (requires { object->send_net_request; }) owner.bind_named("sendNetRequest", [object]() -> decltype(auto) { return (object->send_net_request); });
   if constexpr (requires { object->sensor; }) owner.bind_named("sensor", [object]() -> decltype(auto) { return (object->sensor); });
+  if constexpr (requires { object->sensors; }) owner.bind_named("sensors", [object]() -> decltype(auto) { return (object->sensors); });
+  if constexpr (requires { object->sequential; }) owner.bind_named("sequential", [object]() -> decltype(auto) { return (object->sequential); });
   if constexpr (requires { object->set_accessory_bar_visible; }) owner.bind_named("setAccessoryBarVisible", [object]() -> decltype(auto) { return (object->set_accessory_bar_visible); });
-  if constexpr (requires { object->set_background_color; }) owner.bind_named("setBackgroundColor", [object]() -> decltype(auto) { return (object->set_background_color); });
+  if constexpr (requires { object->set_activation_policy; }) owner.bind_named("setActivationPolicy", [object]() -> decltype(auto) { return (object->set_activation_policy); });
+  if constexpr (requires { object->set_always_on_top; }) owner.bind_named("setAlwaysOnTop", [object]() -> decltype(auto) { return (object->set_always_on_top); });
+  if constexpr (requires { object->set_as_default; }) owner.bind_named("setAsDefault", [object]() -> decltype(auto) { return (object->set_as_default); });
+  if constexpr (requires { object->set_badge_count; }) owner.bind_named("setBadgeCount", [object]() -> decltype(auto) { return (object->set_badge_count); });
+  if constexpr (requires { object->set_content_protection; }) owner.bind_named("setContentProtection", [object]() -> decltype(auto) { return (object->set_content_protection); });
   if constexpr (requires { object->set_display_size; }) owner.bind_named("setDisplaySize", [object]() -> decltype(auto) { return (object->set_display_size); });
+  if constexpr (requires { object->set_dock_badge; }) owner.bind_named("setDockBadge", [object]() -> decltype(auto) { return (object->set_dock_badge); });
+  if constexpr (requires { object->set_dock_menu; }) owner.bind_named("setDockMenu", [object]() -> decltype(auto) { return (object->set_dock_menu); });
   if constexpr (requires { object->set_focus; }) owner.bind_named("setFocus", [object]() -> decltype(auto) { return (object->set_focus); });
+  if constexpr (requires { object->set_fullscreen; }) owner.bind_named("setFullscreen", [object]() -> decltype(auto) { return (object->set_fullscreen); });
+  if constexpr (requires { object->set_has_shadow; }) owner.bind_named("setHasShadow", [object]() -> decltype(auto) { return (object->set_has_shadow); });
+  if constexpr (requires { object->set_icon; }) owner.bind_named("setIcon", [object]() -> decltype(auto) { return (object->set_icon); });
+  if constexpr (requires { object->set_login_item; }) owner.bind_named("setLoginItem", [object]() -> decltype(auto) { return (object->set_login_item); });
+  if constexpr (requires { object->set_maximum_size; }) owner.bind_named("setMaximumSize", [object]() -> decltype(auto) { return (object->set_maximum_size); });
+  if constexpr (requires { object->set_menu_bar_visible; }) owner.bind_named("setMenuBarVisible", [object]() -> decltype(auto) { return (object->set_menu_bar_visible); });
   if constexpr (requires { object->set_metadata; }) owner.bind_named("setMetadata", [object]() -> decltype(auto) { return (object->set_metadata); });
+  if constexpr (requires { object->set_minimum_size; }) owner.bind_named("setMinimumSize", [object]() -> decltype(auto) { return (object->set_minimum_size); });
+  if constexpr (requires { object->set_name; }) owner.bind_named("setName", [object]() -> decltype(auto) { return (object->set_name); });
   if constexpr (requires { object->set_node; }) owner.bind_named("setNode", [object]() -> decltype(auto) { return (object->set_node); });
-  if constexpr (requires { object->set_overlays_content; }) owner.bind_named("setOverlaysContent", [object]() -> decltype(auto) { return (object->set_overlays_content); });
+  if constexpr (requires { object->set_opacity; }) owner.bind_named("setOpacity", [object]() -> decltype(auto) { return (object->set_opacity); });
+  if constexpr (requires { object->set_parent; }) owner.bind_named("setParent", [object]() -> decltype(auto) { return (object->set_parent); });
   if constexpr (requires { object->set_playback_state; }) owner.bind_named("setPlaybackState", [object]() -> decltype(auto) { return (object->set_playback_state); });
+  if constexpr (requires { object->set_position; }) owner.bind_named("setPosition", [object]() -> decltype(auto) { return (object->set_position); });
   if constexpr (requires { object->set_position_state; }) owner.bind_named("setPositionState", [object]() -> decltype(auto) { return (object->set_position_state); });
+  if constexpr (requires { object->set_progress; }) owner.bind_named("setProgress", [object]() -> decltype(auto) { return (object->set_progress); });
+  if constexpr (requires { object->set_resizable; }) owner.bind_named("setResizable", [object]() -> decltype(auto) { return (object->set_resizable); });
   if constexpr (requires { object->set_resize_mode; }) owner.bind_named("setResizeMode", [object]() -> decltype(auto) { return (object->set_resize_mode); });
   if constexpr (requires { object->set_scroll_assist_enabled; }) owner.bind_named("setScrollAssistEnabled", [object]() -> decltype(auto) { return (object->set_scroll_assist_enabled); });
+  if constexpr (requires { object->set_size; }) owner.bind_named("setSize", [object]() -> decltype(auto) { return (object->set_size); });
+  if constexpr (requires { object->set_skip_taskbar; }) owner.bind_named("setSkipTaskbar", [object]() -> decltype(auto) { return (object->set_skip_taskbar); });
+  if constexpr (requires { object->set_source_gain; }) owner.bind_named("setSourceGain", [object]() -> decltype(auto) { return (object->set_source_gain); });
+  if constexpr (requires { object->set_source_pan; }) owner.bind_named("setSourcePan", [object]() -> decltype(auto) { return (object->set_source_pan); });
+  if constexpr (requires { object->set_source_playback_rate; }) owner.bind_named("setSourcePlaybackRate", [object]() -> decltype(auto) { return (object->set_source_playback_rate); });
   if constexpr (requires { object->set_style; }) owner.bind_named("setStyle", [object]() -> decltype(auto) { return (object->set_style); });
-  if constexpr (requires { object->set_visible; }) owner.bind_named("setVisible", [object]() -> decltype(auto) { return (object->set_visible); });
+  if constexpr (requires { object->set_title; }) owner.bind_named("setTitle", [object]() -> decltype(auto) { return (object->set_title); });
+  if constexpr (requires { object->set_user_model_id; }) owner.bind_named("setUserModelId", [object]() -> decltype(auto) { return (object->set_user_model_id); });
+  if constexpr (requires { object->severity; }) owner.bind_named("severity", [object]() -> decltype(auto) { return (object->severity); });
+  if constexpr (requires { object->sh_coefficients; }) owner.bind_named("shCoefficients", [object]() -> decltype(auto) { return (object->sh_coefficients); });
   if constexpr (requires { object->shader_key; }) owner.bind_named("shaderKey", [object]() -> decltype(auto) { return (object->shader_key); });
+  if constexpr (requires { object->shadow_alpha; }) owner.bind_named("shadowAlpha", [object]() -> decltype(auto) { return (object->shadow_alpha); });
   if constexpr (requires { object->shadow_bias; }) owner.bind_named("shadowBias", [object]() -> decltype(auto) { return (object->shadow_bias); });
+  if constexpr (requires { object->shadow_color; }) owner.bind_named("shadowColor", [object]() -> decltype(auto) { return (object->shadow_color); });
   if constexpr (requires { object->shadow_far; }) owner.bind_named("shadowFar", [object]() -> decltype(auto) { return (object->shadow_far); });
   if constexpr (requires { object->shadow_map_size; }) owner.bind_named("shadowMapSize", [object]() -> decltype(auto) { return (object->shadow_map_size); });
   if constexpr (requires { object->shadow_near; }) owner.bind_named("shadowNear", [object]() -> decltype(auto) { return (object->shadow_near); });
   if constexpr (requires { object->shadow_strength; }) owner.bind_named("shadowStrength", [object]() -> decltype(auto) { return (object->shadow_strength); });
+  if constexpr (requires { object->shape; }) owner.bind_named("shape", [object]() -> decltype(auto) { return (object->shape); });
+  if constexpr (requires { object->shape_command_keys; }) owner.bind_named("shapeCommandKeys", [object]() -> decltype(auto) { return (object->shape_command_keys); });
+  if constexpr (requires { object->shape_rasterizer; }) owner.bind_named("shapeRasterizer", [object]() -> decltype(auto) { return (object->shape_rasterizer); });
+  if constexpr (requires { object->shape_run; }) owner.bind_named("shapeRun", [object]() -> decltype(auto) { return (object->shape_run); });
+  if constexpr (requires { object->share; }) owner.bind_named("share", [object]() -> decltype(auto) { return (object->share); });
   if constexpr (requires { object->sheen_color; }) owner.bind_named("sheenColor", [object]() -> decltype(auto) { return (object->sheen_color); });
   if constexpr (requires { object->sheen_color_map; }) owner.bind_named("sheenColorMap", [object]() -> decltype(auto) { return (object->sheen_color_map); });
   if constexpr (requires { object->sheen_color_map_uv_set; }) owner.bind_named("sheenColorMapUvSet", [object]() -> decltype(auto) { return (object->sheen_color_map_uv_set); });
+  if constexpr (requires { object->sheen_enabled; }) owner.bind_named("sheenEnabled", [object]() -> decltype(auto) { return (object->sheen_enabled); });
   if constexpr (requires { object->sheen_roughness; }) owner.bind_named("sheenRoughness", [object]() -> decltype(auto) { return (object->sheen_roughness); });
   if constexpr (requires { object->sheen_roughness_map; }) owner.bind_named("sheenRoughnessMap", [object]() -> decltype(auto) { return (object->sheen_roughness_map); });
   if constexpr (requires { object->sheen_roughness_map_uv_set; }) owner.bind_named("sheenRoughnessMapUvSet", [object]() -> decltype(auto) { return (object->sheen_roughness_map_uv_set); });
+  if constexpr (requires { object->shell; }) owner.bind_named("shell", [object]() -> decltype(auto) { return (object->shell); });
+  if constexpr (requires { object->shift_key; }) owner.bind_named("shiftKey", [object]() -> decltype(auto) { return (object->shift_key); });
+  if constexpr (requires { object->shininess; }) owner.bind_named("shininess", [object]() -> decltype(auto) { return (object->shininess); });
+  if constexpr (requires { object->shortcut; }) owner.bind_named("shortcut", [object]() -> decltype(auto) { return (object->shortcut); });
   if constexpr (requires { object->show; }) owner.bind_named("show", [object]() -> decltype(auto) { return (object->show); });
+  if constexpr (requires { object->show_app; }) owner.bind_named("showApp", [object]() -> decltype(auto) { return (object->show_app); });
+  if constexpr (requires { object->signal; }) owner.bind_named("signal", [object]() -> decltype(auto) { return (object->signal); });
+  if constexpr (requires { object->signals; }) owner.bind_named("signals", [object]() -> decltype(auto) { return (object->signals); });
+  if constexpr (requires { object->signature; }) owner.bind_named("signature", [object]() -> decltype(auto) { return (object->signature); });
   if constexpr (requires { object->size; }) owner.bind_named("size", [object]() -> decltype(auto) { return (object->size); });
+  if constexpr (requires { object->skeleton; }) owner.bind_named("skeleton", [object]() -> decltype(auto) { return (object->skeleton); });
   if constexpr (requires { object->skew_x; }) owner.bind_named("skewX", [object]() -> decltype(auto) { return (object->skew_x); });
   if constexpr (requires { object->skew_y; }) owner.bind_named("skewY", [object]() -> decltype(auto) { return (object->skew_y); });
+  if constexpr (requires { object->skin; }) owner.bind_named("skin", [object]() -> decltype(auto) { return (object->skin); });
+  if constexpr (requires { object->skinned; }) owner.bind_named("skinned", [object]() -> decltype(auto) { return (object->skinned); });
+  if constexpr (requires { object->skinned_normals; }) owner.bind_named("skinnedNormals", [object]() -> decltype(auto) { return (object->skinned_normals); });
+  if constexpr (requires { object->skinned_positions; }) owner.bind_named("skinnedPositions", [object]() -> decltype(auto) { return (object->skinned_positions); });
+  if constexpr (requires { object->skinned_tangents; }) owner.bind_named("skinnedTangents", [object]() -> decltype(auto) { return (object->skinned_tangents); });
+  if constexpr (requires { object->skip_taskbar; }) owner.bind_named("skipTaskbar", [object]() -> decltype(auto) { return (object->skip_taskbar); });
   if constexpr (requires { object->sky_color; }) owner.bind_named("skyColor", [object]() -> decltype(auto) { return (object->sky_color); });
+  if constexpr (requires { object->sleeping; }) owner.bind_named("sleeping", [object]() -> decltype(auto) { return (object->sleeping); });
+  if constexpr (requires { object->slot; }) owner.bind_named("slot", [object]() -> decltype(auto) { return (object->slot); });
   if constexpr (requires { object->slot_index; }) owner.bind_named("slotIndex", [object]() -> decltype(auto) { return (object->slot_index); });
   if constexpr (requires { object->slots; }) owner.bind_named("slots", [object]() -> decltype(auto) { return (object->slots); });
+  if constexpr (requires { object->smart_rotation; }) owner.bind_named("smartRotation", [object]() -> decltype(auto) { return (object->smart_rotation); });
   if constexpr (requires { object->smooth_time; }) owner.bind_named("smoothTime", [object]() -> decltype(auto) { return (object->smooth_time); });
+  if constexpr (requires { object->smoothness; }) owner.bind_named("smoothness", [object]() -> decltype(auto) { return (object->smoothness); });
+  if constexpr (requires { object->snapping; }) owner.bind_named("snapping", [object]() -> decltype(auto) { return (object->snapping); });
+  if constexpr (requires { object->snippets; }) owner.bind_named("snippets", [object]() -> decltype(auto) { return (object->snippets); });
+  if constexpr (requires { object->socket; }) owner.bind_named("socket", [object]() -> decltype(auto) { return (object->socket); });
+  if constexpr (requires { object->soft_keyboard; }) owner.bind_named("softKeyboard", [object]() -> decltype(auto) { return (object->soft_keyboard); });
   if constexpr (requires { object->softness; }) owner.bind_named("softness", [object]() -> decltype(auto) { return (object->softness); });
+  if constexpr (requires { object->solve; }) owner.bind_named("solve", [object]() -> decltype(auto) { return (object->solve); });
+  if constexpr (requires { object->source; }) owner.bind_named("source", [object]() -> decltype(auto) { return (object->source); });
   if constexpr (requires { object->source_height; }) owner.bind_named("sourceHeight", [object]() -> decltype(auto) { return (object->source_height); });
+  if constexpr (requires { object->source_index; }) owner.bind_named("sourceIndex", [object]() -> decltype(auto) { return (object->source_index); });
+  if constexpr (requires { object->source_kind; }) owner.bind_named("sourceKind", [object]() -> decltype(auto) { return (object->source_kind); });
   if constexpr (requires { object->source_mode; }) owner.bind_named("sourceMode", [object]() -> decltype(auto) { return (object->source_mode); });
   if constexpr (requires { object->source_position_variancex; }) owner.bind_named("sourcePositionVariancex", [object]() -> decltype(auto) { return (object->source_position_variancex); });
   if constexpr (requires { object->source_position_variancey; }) owner.bind_named("sourcePositionVariancey", [object]() -> decltype(auto) { return (object->source_position_variancey); });
+  if constexpr (requires { object->source_state_index; }) owner.bind_named("sourceStateIndex", [object]() -> decltype(auto) { return (object->source_state_index); });
   if constexpr (requires { object->source_width; }) owner.bind_named("sourceWidth", [object]() -> decltype(auto) { return (object->source_width); });
+  if constexpr (requires { object->source_x; }) owner.bind_named("sourceX", [object]() -> decltype(auto) { return (object->source_x); });
+  if constexpr (requires { object->source_y; }) owner.bind_named("sourceY", [object]() -> decltype(auto) { return (object->source_y); });
+  if constexpr (requires { object->sources; }) owner.bind_named("sources", [object]() -> decltype(auto) { return (object->sources); });
+  if constexpr (requires { object->spacing_x; }) owner.bind_named("spacingX", [object]() -> decltype(auto) { return (object->spacing_x); });
+  if constexpr (requires { object->spacing_y; }) owner.bind_named("spacingY", [object]() -> decltype(auto) { return (object->spacing_y); });
+  if constexpr (requires { object->spawn; }) owner.bind_named("spawn", [object]() -> decltype(auto) { return (object->spawn); });
+  if constexpr (requires { object->spawn_accumulator; }) owner.bind_named("spawnAccumulator", [object]() -> decltype(auto) { return (object->spawn_accumulator); });
   if constexpr (requires { object->spawn_height; }) owner.bind_named("spawnHeight", [object]() -> decltype(auto) { return (object->spawn_height); });
   if constexpr (requires { object->spawn_rate; }) owner.bind_named("spawnRate", [object]() -> decltype(auto) { return (object->spawn_rate); });
   if constexpr (requires { object->spawn_shape; }) owner.bind_named("spawnShape", [object]() -> decltype(auto) { return (object->spawn_shape); });
@@ -2045,30 +5163,64 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->specular_color; }) owner.bind_named("specularColor", [object]() -> decltype(auto) { return (object->specular_color); });
   if constexpr (requires { object->specular_color_map; }) owner.bind_named("specularColorMap", [object]() -> decltype(auto) { return (object->specular_color_map); });
   if constexpr (requires { object->specular_color_map_uv_set; }) owner.bind_named("specularColorMapUvSet", [object]() -> decltype(auto) { return (object->specular_color_map_uv_set); });
+  if constexpr (requires { object->specular_enabled; }) owner.bind_named("specularEnabled", [object]() -> decltype(auto) { return (object->specular_enabled); });
+  if constexpr (requires { object->specular_glossiness_map; }) owner.bind_named("specularGlossinessMap", [object]() -> decltype(auto) { return (object->specular_glossiness_map); });
   if constexpr (requires { object->specular_map; }) owner.bind_named("specularMap", [object]() -> decltype(auto) { return (object->specular_map); });
   if constexpr (requires { object->specular_map_uv_set; }) owner.bind_named("specularMapUvSet", [object]() -> decltype(auto) { return (object->specular_map_uv_set); });
   if constexpr (requires { object->speed; }) owner.bind_named("speed", [object]() -> decltype(auto) { return (object->speed); });
   if constexpr (requires { object->speed_max; }) owner.bind_named("speedMax", [object]() -> decltype(auto) { return (object->speed_max); });
   if constexpr (requires { object->speed_min; }) owner.bind_named("speedMin", [object]() -> decltype(auto) { return (object->speed_min); });
   if constexpr (requires { object->speed_variance; }) owner.bind_named("speedVariance", [object]() -> decltype(auto) { return (object->speed_variance); });
+  if constexpr (requires { object->sphere_count; }) owner.bind_named("sphereCount", [object]() -> decltype(auto) { return (object->sphere_count); });
+  if constexpr (requires { object->spheres; }) owner.bind_named("spheres", [object]() -> decltype(auto) { return (object->spheres); });
   if constexpr (requires { object->spot; }) owner.bind_named("spot", [object]() -> decltype(auto) { return (object->spot); });
   if constexpr (requires { object->spot_blend; }) owner.bind_named("spotBlend", [object]() -> decltype(auto) { return (object->spot_blend); });
   if constexpr (requires { object->spread; }) owner.bind_named("spread", [object]() -> decltype(auto) { return (object->spread); });
+  if constexpr (requires { object->square; }) owner.bind_named("square", [object]() -> decltype(auto) { return (object->square); });
   if constexpr (requires { object->stack; }) owner.bind_named("stack", [object]() -> decltype(auto) { return (object->stack); });
   if constexpr (requires { object->start; }) owner.bind_named("start", [object]() -> decltype(auto) { return (object->start); });
+  if constexpr (requires { object->start_cap; }) owner.bind_named("startCap", [object]() -> decltype(auto) { return (object->start_cap); });
   if constexpr (requires { object->start_color; }) owner.bind_named("startColor", [object]() -> decltype(auto) { return (object->start_color); });
   if constexpr (requires { object->start_color_variance; }) owner.bind_named("startColorVariance", [object]() -> decltype(auto) { return (object->start_color_variance); });
+  if constexpr (requires { object->start_data; }) owner.bind_named("startData", [object]() -> decltype(auto) { return (object->start_data); });
   if constexpr (requires { object->start_index; }) owner.bind_named("startIndex", [object]() -> decltype(auto) { return (object->start_index); });
   if constexpr (requires { object->start_particle_size; }) owner.bind_named("startParticleSize", [object]() -> decltype(auto) { return (object->start_particle_size); });
   if constexpr (requires { object->start_particle_size_variance; }) owner.bind_named("startParticleSizeVariance", [object]() -> decltype(auto) { return (object->start_particle_size_variance); });
+  if constexpr (requires { object->start_sample; }) owner.bind_named("startSample", [object]() -> decltype(auto) { return (object->start_sample); });
+  if constexpr (requires { object->start_screen_x; }) owner.bind_named("startScreenX", [object]() -> decltype(auto) { return (object->start_screen_x); });
+  if constexpr (requires { object->start_screen_y; }) owner.bind_named("startScreenY", [object]() -> decltype(auto) { return (object->start_screen_y); });
+  if constexpr (requires { object->start_source; }) owner.bind_named("startSource", [object]() -> decltype(auto) { return (object->start_source); });
+  if constexpr (requires { object->start_world_x; }) owner.bind_named("startWorldX", [object]() -> decltype(auto) { return (object->start_world_x); });
+  if constexpr (requires { object->start_world_y; }) owner.bind_named("startWorldY", [object]() -> decltype(auto) { return (object->start_world_y); });
   if constexpr (requires { object->start_x; }) owner.bind_named("startX", [object]() -> decltype(auto) { return (object->start_x); });
   if constexpr (requires { object->start_y; }) owner.bind_named("startY", [object]() -> decltype(auto) { return (object->start_y); });
   if constexpr (requires { object->start_z; }) owner.bind_named("startZ", [object]() -> decltype(auto) { return (object->start_z); });
+  if constexpr (requires { object->state; }) owner.bind_named("state", [object]() -> decltype(auto) { return (object->state); });
+  if constexpr (requires { object->state_machine; }) owner.bind_named("stateMachine", [object]() -> decltype(auto) { return (object->state_machine); });
+  if constexpr (requires { object->state_machines; }) owner.bind_named("stateMachines", [object]() -> decltype(auto) { return (object->state_machines); });
   if constexpr (requires { object->stated; }) owner.bind_named("stated", [object]() -> decltype(auto) { return (object->stated); });
+  if constexpr (requires { object->states; }) owner.bind_named("states", [object]() -> decltype(auto) { return (object->states); });
+  if constexpr (requires { object->status; }) owner.bind_named("status", [object]() -> decltype(auto) { return (object->status); });
+  if constexpr (requires { object->status_bar; }) owner.bind_named("statusBar", [object]() -> decltype(auto) { return (object->status_bar); });
+  if constexpr (requires { object->status_text; }) owner.bind_named("statusText", [object]() -> decltype(auto) { return (object->status_text); });
+  if constexpr (requires { object->step; }) owner.bind_named("step", [object]() -> decltype(auto) { return (object->step); });
   if constexpr (requires { object->steps; }) owner.bind_named("steps", [object]() -> decltype(auto) { return (object->steps); });
+  if constexpr (requires { object->stream_end; }) owner.bind_named("streamEnd", [object]() -> decltype(auto) { return (object->stream_end); });
+  if constexpr (requires { object->stream_start; }) owner.bind_named("streamStart", [object]() -> decltype(auto) { return (object->stream_start); });
+  if constexpr (requires { object->streaming; }) owner.bind_named("streaming", [object]() -> decltype(auto) { return (object->streaming); });
   if constexpr (requires { object->strength; }) owner.bind_named("strength", [object]() -> decltype(auto) { return (object->strength); });
+  if constexpr (requires { object->stroke; }) owner.bind_named("stroke", [object]() -> decltype(auto) { return (object->stroke); });
   if constexpr (requires { object->stroke_bounds; }) owner.bind_named("strokeBounds", [object]() -> decltype(auto) { return (object->stroke_bounds); });
+  if constexpr (requires { object->stroke_dasharray; }) owner.bind_named("strokeDasharray", [object]() -> decltype(auto) { return (object->stroke_dasharray); });
+  if constexpr (requires { object->stroke_dashoffset; }) owner.bind_named("strokeDashoffset", [object]() -> decltype(auto) { return (object->stroke_dashoffset); });
+  if constexpr (requires { object->stroke_linecap; }) owner.bind_named("strokeLinecap", [object]() -> decltype(auto) { return (object->stroke_linecap); });
+  if constexpr (requires { object->stroke_linejoin; }) owner.bind_named("strokeLinejoin", [object]() -> decltype(auto) { return (object->stroke_linejoin); });
+  if constexpr (requires { object->stroke_miterlimit; }) owner.bind_named("strokeMiterlimit", [object]() -> decltype(auto) { return (object->stroke_miterlimit); });
+  if constexpr (requires { object->stroke_opacity; }) owner.bind_named("strokeOpacity", [object]() -> decltype(auto) { return (object->stroke_opacity); });
+  if constexpr (requires { object->stroke_tessellator; }) owner.bind_named("strokeTessellator", [object]() -> decltype(auto) { return (object->stroke_tessellator); });
+  if constexpr (requires { object->stroke_width; }) owner.bind_named("strokeWidth", [object]() -> decltype(auto) { return (object->stroke_width); });
   if constexpr (requires { object->style; }) owner.bind_named("style", [object]() -> decltype(auto) { return (object->style); });
+  if constexpr (requires { object->style_index; }) owner.bind_named("styleIndex", [object]() -> decltype(auto) { return (object->style_index); });
   if constexpr (requires { object->subject; }) owner.bind_named("subject", [object]() -> decltype(auto) { return (object->subject); });
   if constexpr (requires { object->subpixel; }) owner.bind_named("subpixel", [object]() -> decltype(auto) { return (object->subpixel); });
   if constexpr (requires { object->subscribe; }) owner.bind_named("subscribe", [object]() -> decltype(auto) { return (object->subscribe); });
@@ -2082,69 +5234,210 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->subscribe_orientation; }) owner.bind_named("subscribeOrientation", [object]() -> decltype(auto) { return (object->subscribe_orientation); });
   if constexpr (requires { object->subscribe_proximity; }) owner.bind_named("subscribeProximity", [object]() -> decltype(auto) { return (object->subscribe_proximity); });
   if constexpr (requires { object->subscribe_quaternion; }) owner.bind_named("subscribeQuaternion", [object]() -> decltype(auto) { return (object->subscribe_quaternion); });
+  if constexpr (requires { object->subscribe_resize; }) owner.bind_named("subscribeResize", [object]() -> decltype(auto) { return (object->subscribe_resize); });
+  if constexpr (requires { object->subsets; }) owner.bind_named("subsets", [object]() -> decltype(auto) { return (object->subsets); });
+  if constexpr (requires { object->subsurface_enabled; }) owner.bind_named("subsurfaceEnabled", [object]() -> decltype(auto) { return (object->subsurface_enabled); });
   if constexpr (requires { object->supported_abis; }) owner.bind_named("supportedAbis", [object]() -> decltype(auto) { return (object->supported_abis); });
+  if constexpr (requires { object->supported_formats; }) owner.bind_named("supportedFormats", [object]() -> decltype(auto) { return (object->supported_formats); });
+  if constexpr (requires { object->surface; }) owner.bind_named("surface", [object]() -> decltype(auto) { return (object->surface); });
+  if constexpr (requires { object->surface_ownership; }) owner.bind_named("surfaceOwnership", [object]() -> decltype(auto) { return (object->surface_ownership); });
+  if constexpr (requires { object->swing_limit_impulse; }) owner.bind_named("swingLimitImpulse", [object]() -> decltype(auto) { return (object->swing_limit_impulse); });
+  if constexpr (requires { object->swing_limit_y; }) owner.bind_named("swingLimitY", [object]() -> decltype(auto) { return (object->swing_limit_y); });
+  if constexpr (requires { object->swing_limit_z; }) owner.bind_named("swingLimitZ", [object]() -> decltype(auto) { return (object->swing_limit_z); });
+  if constexpr (requires { object->tables; }) owner.bind_named("tables", [object]() -> decltype(auto) { return (object->tables); });
+  if constexpr (requires { object->tabs; }) owner.bind_named("tabs", [object]() -> decltype(auto) { return (object->tabs); });
+  if constexpr (requires { object->tag; }) owner.bind_named("tag", [object]() -> decltype(auto) { return (object->tag); });
+  if constexpr (requires { object->tangent0_x; }) owner.bind_named("tangent0X", [object]() -> decltype(auto) { return (object->tangent0_x); });
+  if constexpr (requires { object->tangent0_y; }) owner.bind_named("tangent0Y", [object]() -> decltype(auto) { return (object->tangent0_y); });
+  if constexpr (requires { object->tangent0_z; }) owner.bind_named("tangent0Z", [object]() -> decltype(auto) { return (object->tangent0_z); });
+  if constexpr (requires { object->tangent1_x; }) owner.bind_named("tangent1X", [object]() -> decltype(auto) { return (object->tangent1_x); });
+  if constexpr (requires { object->tangent1_y; }) owner.bind_named("tangent1Y", [object]() -> decltype(auto) { return (object->tangent1_y); });
+  if constexpr (requires { object->tangent1_z; }) owner.bind_named("tangent1Z", [object]() -> decltype(auto) { return (object->tangent1_z); });
+  if constexpr (requires { object->tangent_impulse0; }) owner.bind_named("tangentImpulse0", [object]() -> decltype(auto) { return (object->tangent_impulse0); });
+  if constexpr (requires { object->tangent_impulse1; }) owner.bind_named("tangentImpulse1", [object]() -> decltype(auto) { return (object->tangent_impulse1); });
+  if constexpr (requires { object->tangent_mass0; }) owner.bind_named("tangentMass0", [object]() -> decltype(auto) { return (object->tangent_mass0); });
+  if constexpr (requires { object->tangent_mass1; }) owner.bind_named("tangentMass1", [object]() -> decltype(auto) { return (object->tangent_mass1); });
   if constexpr (requires { object->tangential_accel_variance; }) owner.bind_named("tangentialAccelVariance", [object]() -> decltype(auto) { return (object->tangential_accel_variance); });
   if constexpr (requires { object->tangential_acceleration; }) owner.bind_named("tangentialAcceleration", [object]() -> decltype(auto) { return (object->tangential_acceleration); });
+  if constexpr (requires { object->tangents; }) owner.bind_named("tangents", [object]() -> decltype(auto) { return (object->tangents); });
+  if constexpr (requires { object->target; }) owner.bind_named("target", [object]() -> decltype(auto) { return (object->target); });
+  if constexpr (requires { object->target_index; }) owner.bind_named("targetIndex", [object]() -> decltype(auto) { return (object->target_index); });
+  if constexpr (requires { object->target_ref; }) owner.bind_named("targetRef", [object]() -> decltype(auto) { return (object->target_ref); });
+  if constexpr (requires { object->target_state_index; }) owner.bind_named("targetStateIndex", [object]() -> decltype(auto) { return (object->target_state_index); });
+  if constexpr (requires { object->target_x; }) owner.bind_named("targetX", [object]() -> decltype(auto) { return (object->target_x); });
+  if constexpr (requires { object->target_y; }) owner.bind_named("targetY", [object]() -> decltype(auto) { return (object->target_y); });
+  if constexpr (requires { object->targets; }) owner.bind_named("targets", [object]() -> decltype(auto) { return (object->targets); });
   if constexpr (requires { object->temperature; }) owner.bind_named("temperature", [object]() -> decltype(auto) { return (object->temperature); });
+  if constexpr (requires { object->text; }) owner.bind_named("text", [object]() -> decltype(auto) { return (object->text); });
+  if constexpr (requires { object->text_field; }) owner.bind_named("textField", [object]() -> decltype(auto) { return (object->text_field); });
   if constexpr (requires { object->text_height; }) owner.bind_named("textHeight", [object]() -> decltype(auto) { return (object->text_height); });
+  if constexpr (requires { object->text_layout; }) owner.bind_named("textLayout", [object]() -> decltype(auto) { return (object->text_layout); });
+  if constexpr (requires { object->text_segment; }) owner.bind_named("textSegment", [object]() -> decltype(auto) { return (object->text_segment); });
+  if constexpr (requires { object->text_shaper; }) owner.bind_named("textShaper", [object]() -> decltype(auto) { return (object->text_shaper); });
   if constexpr (requires { object->text_width; }) owner.bind_named("textWidth", [object]() -> decltype(auto) { return (object->text_width); });
-  if constexpr (requires { object->texture_file_name; }) owner.bind_named("textureFileName", [object]() -> decltype(auto) { return (object->texture_file_name); });
+  if constexpr (requires { object->texture; }) owner.bind_named("texture", [object]() -> decltype(auto) { return (object->texture); });
+  if constexpr (requires { object->texture_bind_group; }) owner.bind_named("textureBindGroup", [object]() -> decltype(auto) { return (object->texture_bind_group); });
+  if constexpr (requires { object->texture_bind_group_layout; }) owner.bind_named("textureBindGroupLayout", [object]() -> decltype(auto) { return (object->texture_bind_group_layout); });
+  if constexpr (requires { object->texture_count; }) owner.bind_named("textureCount", [object]() -> decltype(auto) { return (object->texture_count); });
+  if constexpr (requires { object->texture_keys; }) owner.bind_named("textureKeys", [object]() -> decltype(auto) { return (object->texture_keys); });
+  if constexpr (requires { object->texture_resolvers; }) owner.bind_named("textureResolvers", [object]() -> decltype(auto) { return (object->texture_resolvers); });
+  if constexpr (requires { object->texture_samplers; }) owner.bind_named("textureSamplers", [object]() -> decltype(auto) { return (object->texture_samplers); });
+  if constexpr (requires { object->texture_source_kinds; }) owner.bind_named("textureSourceKinds", [object]() -> decltype(auto) { return (object->texture_source_kinds); });
+  if constexpr (requires { object->texture_views; }) owner.bind_named("textureViews", [object]() -> decltype(auto) { return (object->texture_views); });
   if constexpr (requires { object->thickness; }) owner.bind_named("thickness", [object]() -> decltype(auto) { return (object->thickness); });
   if constexpr (requires { object->thickness_map; }) owner.bind_named("thicknessMap", [object]() -> decltype(auto) { return (object->thickness_map); });
   if constexpr (requires { object->thickness_map_uv_set; }) owner.bind_named("thicknessMapUvSet", [object]() -> decltype(auto) { return (object->thickness_map_uv_set); });
   if constexpr (requires { object->threshold; }) owner.bind_named("threshold", [object]() -> decltype(auto) { return (object->threshold); });
+  if constexpr (requires { object->thumb; }) owner.bind_named("thumb", [object]() -> decltype(auto) { return (object->thumb); });
   if constexpr (requires { object->tilesets; }) owner.bind_named("tilesets", [object]() -> decltype(auto) { return (object->tilesets); });
   if constexpr (requires { object->time; }) owner.bind_named("time", [object]() -> decltype(auto) { return (object->time); });
+  if constexpr (requires { object->time_elapsed; }) owner.bind_named("timeElapsed", [object]() -> decltype(auto) { return (object->time_elapsed); });
   if constexpr (requires { object->timeline; }) owner.bind_named("timeline", [object]() -> decltype(auto) { return (object->timeline); });
+  if constexpr (requires { object->timeline_handlers; }) owner.bind_named("timelineHandlers", [object]() -> decltype(auto) { return (object->timeline_handlers); });
+  if constexpr (requires { object->timeout_ms; }) owner.bind_named("timeoutMs", [object]() -> decltype(auto) { return (object->timeout_ms); });
   if constexpr (requires { object->timestamp; }) owner.bind_named("timestamp", [object]() -> decltype(auto) { return (object->timestamp); });
   if constexpr (requires { object->tint; }) owner.bind_named("tint", [object]() -> decltype(auto) { return (object->tint); });
+  if constexpr (requires { object->title; }) owner.bind_named("title", [object]() -> decltype(auto) { return (object->title); });
+  if constexpr (requires { object->title_bar; }) owner.bind_named("titleBar", [object]() -> decltype(auto) { return (object->title_bar); });
+  if constexpr (requires { object->to; }) owner.bind_named("to", [object]() -> decltype(auto) { return (object->to); });
+  if constexpr (requires { object->to_index; }) owner.bind_named("toIndex", [object]() -> decltype(auto) { return (object->to_index); });
+  if constexpr (requires { object->to_motion; }) owner.bind_named("toMotion", [object]() -> decltype(auto) { return (object->to_motion); });
+  if constexpr (requires { object->to_sample; }) owner.bind_named("toSample", [object]() -> decltype(auto) { return (object->to_sample); });
+  if constexpr (requires { object->to_x; }) owner.bind_named("toX", [object]() -> decltype(auto) { return (object->to_x); });
+  if constexpr (requires { object->to_y; }) owner.bind_named("toY", [object]() -> decltype(auto) { return (object->to_y); });
+  if constexpr (requires { object->toggles; }) owner.bind_named("toggles", [object]() -> decltype(auto) { return (object->toggles); });
+  if constexpr (requires { object->tolerance; }) owner.bind_named("tolerance", [object]() -> decltype(auto) { return (object->tolerance); });
   if constexpr (requires { object->top; }) owner.bind_named("top", [object]() -> decltype(auto) { return (object->top); });
+  if constexpr (requires { object->topology; }) owner.bind_named("topology", [object]() -> decltype(auto) { return (object->topology); });
   if constexpr (requires { object->torque; }) owner.bind_named("torque", [object]() -> decltype(auto) { return (object->torque); });
   if constexpr (requires { object->torque_x; }) owner.bind_named("torqueX", [object]() -> decltype(auto) { return (object->torque_x); });
   if constexpr (requires { object->torque_y; }) owner.bind_named("torqueY", [object]() -> decltype(auto) { return (object->torque_y); });
   if constexpr (requires { object->torque_z; }) owner.bind_named("torqueZ", [object]() -> decltype(auto) { return (object->torque_z); });
+  if constexpr (requires { object->total; }) owner.bind_named("total", [object]() -> decltype(auto) { return (object->total); });
+  if constexpr (requires { object->total_frames; }) owner.bind_named("totalFrames", [object]() -> decltype(auto) { return (object->total_frames); });
   if constexpr (requires { object->total_memory; }) owner.bind_named("totalMemory", [object]() -> decltype(auto) { return (object->total_memory); });
+  if constexpr (requires { object->total_size; }) owner.bind_named("totalSize", [object]() -> decltype(auto) { return (object->total_size); });
   if constexpr (requires { object->touch_support; }) owner.bind_named("touchSupport", [object]() -> decltype(auto) { return (object->touch_support); });
   if constexpr (requires { object->touching; }) owner.bind_named("touching", [object]() -> decltype(auto) { return (object->touching); });
+  if constexpr (requires { object->track; }) owner.bind_named("track", [object]() -> decltype(auto) { return (object->track); });
+  if constexpr (requires { object->traits; }) owner.bind_named("traits", [object]() -> decltype(auto) { return (object->traits); });
+  if constexpr (requires { object->transaction_depth; }) owner.bind_named("transactionDepth", [object]() -> decltype(auto) { return (object->transaction_depth); });
+  if constexpr (requires { object->transaction_index; }) owner.bind_named("transactionIndex", [object]() -> decltype(auto) { return (object->transaction_index); });
+  if constexpr (requires { object->transaction_label; }) owner.bind_named("transactionLabel", [object]() -> decltype(auto) { return (object->transaction_label); });
   if constexpr (requires { object->transform; }) owner.bind_named("transform", [object]() -> decltype(auto) { return (object->transform); });
+  if constexpr (requires { object->transition; }) owner.bind_named("transition", [object]() -> decltype(auto) { return (object->transition); });
+  if constexpr (requires { object->transition_curve; }) owner.bind_named("transitionCurve", [object]() -> decltype(auto) { return (object->transition_curve); });
+  if constexpr (requires { object->transition_duration; }) owner.bind_named("transitionDuration", [object]() -> decltype(auto) { return (object->transition_duration); });
+  if constexpr (requires { object->transition_elapsed; }) owner.bind_named("transitionElapsed", [object]() -> decltype(auto) { return (object->transition_elapsed); });
+  if constexpr (requires { object->transition_from_state_index; }) owner.bind_named("transitionFromStateIndex", [object]() -> decltype(auto) { return (object->transition_from_state_index); });
+  if constexpr (requires { object->transition_index; }) owner.bind_named("transitionIndex", [object]() -> decltype(auto) { return (object->transition_index); });
+  if constexpr (requires { object->transition_to_state_index; }) owner.bind_named("transitionToStateIndex", [object]() -> decltype(auto) { return (object->transition_to_state_index); });
+  if constexpr (requires { object->transition_weight; }) owner.bind_named("transitionWeight", [object]() -> decltype(auto) { return (object->transition_weight); });
+  if constexpr (requires { object->transitions; }) owner.bind_named("transitions", [object]() -> decltype(auto) { return (object->transitions); });
   if constexpr (requires { object->translation_amplitude; }) owner.bind_named("translationAmplitude", [object]() -> decltype(auto) { return (object->translation_amplitude); });
   if constexpr (requires { object->transmission; }) owner.bind_named("transmission", [object]() -> decltype(auto) { return (object->transmission); });
+  if constexpr (requires { object->transmission_enabled; }) owner.bind_named("transmissionEnabled", [object]() -> decltype(auto) { return (object->transmission_enabled); });
   if constexpr (requires { object->transmission_map; }) owner.bind_named("transmissionMap", [object]() -> decltype(auto) { return (object->transmission_map); });
   if constexpr (requires { object->transmission_map_uv_set; }) owner.bind_named("transmissionMapUvSet", [object]() -> decltype(auto) { return (object->transmission_map_uv_set); });
   if constexpr (requires { object->transparency; }) owner.bind_named("transparency", [object]() -> decltype(auto) { return (object->transparency); });
   if constexpr (requires { object->trauma; }) owner.bind_named("trauma", [object]() -> decltype(auto) { return (object->trauma); });
+  if constexpr (requires { object->tray; }) owner.bind_named("tray", [object]() -> decltype(auto) { return (object->tray); });
+  if constexpr (requires { object->triangle_index; }) owner.bind_named("triangleIndex", [object]() -> decltype(auto) { return (object->triangle_index); });
   if constexpr (requires { object->tweens; }) owner.bind_named("tweens", [object]() -> decltype(auto) { return (object->tweens); });
   if constexpr (requires { object->tx; }) owner.bind_named("tx", [object]() -> decltype(auto) { return (object->tx); });
   if constexpr (requires { object->ty; }) owner.bind_named("ty", [object]() -> decltype(auto) { return (object->ty); });
   if constexpr (requires { object->type; }) owner.bind_named("type", [object]() -> decltype(auto) { return (object->type); });
+  if constexpr (requires { object->type_key; }) owner.bind_named("typeKey", [object]() -> decltype(auto) { return (object->type_key); });
+  if constexpr (requires { object->u; }) owner.bind_named("u", [object]() -> decltype(auto) { return (object->u); });
+  if constexpr (requires { object->unchecked_state; }) owner.bind_named("uncheckedState", [object]() -> decltype(auto) { return (object->unchecked_state); });
+  if constexpr (requires { object->uniform_bind_group; }) owner.bind_named("uniformBindGroup", [object]() -> decltype(auto) { return (object->uniform_bind_group); });
+  if constexpr (requires { object->uniform_bind_group_layout; }) owner.bind_named("uniformBindGroupLayout", [object]() -> decltype(auto) { return (object->uniform_bind_group_layout); });
+  if constexpr (requires { object->uniform_buffer; }) owner.bind_named("uniformBuffer", [object]() -> decltype(auto) { return (object->uniform_buffer); });
+  if constexpr (requires { object->uniform_float_count; }) owner.bind_named("uniformFloatCount", [object]() -> decltype(auto) { return (object->uniform_float_count); });
   if constexpr (requires { object->uniforms; }) owner.bind_named("uniforms", [object]() -> decltype(auto) { return (object->uniforms); });
+  if constexpr (requires { object->units; }) owner.bind_named("units", [object]() -> decltype(auto) { return (object->units); });
+  if constexpr (requires { object->units_per_em; }) owner.bind_named("unitsPerEm", [object]() -> decltype(auto) { return (object->units_per_em); });
+  if constexpr (requires { object->unpacked; }) owner.bind_named("unpacked", [object]() -> decltype(auto) { return (object->unpacked); });
+  if constexpr (requires { object->unregister; }) owner.bind_named("unregister", [object]() -> decltype(auto) { return (object->unregister); });
+  if constexpr (requires { object->unregistered_kinds; }) owner.bind_named("unregisteredKinds", [object]() -> decltype(auto) { return (object->unregistered_kinds); });
+  if constexpr (requires { object->unresolved; }) owner.bind_named("unresolved", [object]() -> decltype(auto) { return (object->unresolved); });
+  if constexpr (requires { object->unresolved_indexes; }) owner.bind_named("unresolvedIndexes", [object]() -> decltype(auto) { return (object->unresolved_indexes); });
+  if constexpr (requires { object->unselected_state; }) owner.bind_named("unselectedState", [object]() -> decltype(auto) { return (object->unselected_state); });
+  if constexpr (requires { object->unsupported_fields; }) owner.bind_named("unsupportedFields", [object]() -> decltype(auto) { return (object->unsupported_fields); });
   if constexpr (requires { object->up; }) owner.bind_named("up", [object]() -> decltype(auto) { return (object->up); });
+  if constexpr (requires { object->up_state; }) owner.bind_named("upState", [object]() -> decltype(auto) { return (object->up_state); });
   if constexpr (requires { object->update_spatial_object; }) owner.bind_named("updateSpatialObject", [object]() -> decltype(auto) { return (object->update_spatial_object); });
+  if constexpr (requires { object->updater; }) owner.bind_named("updater", [object]() -> decltype(auto) { return (object->updater); });
+  if constexpr (requires { object->upper_angle; }) owner.bind_named("upperAngle", [object]() -> decltype(auto) { return (object->upper_angle); });
+  if constexpr (requires { object->upper_angular_x; }) owner.bind_named("upperAngularX", [object]() -> decltype(auto) { return (object->upper_angular_x); });
+  if constexpr (requires { object->upper_angular_y; }) owner.bind_named("upperAngularY", [object]() -> decltype(auto) { return (object->upper_angular_y); });
+  if constexpr (requires { object->upper_angular_z; }) owner.bind_named("upperAngularZ", [object]() -> decltype(auto) { return (object->upper_angular_z); });
+  if constexpr (requires { object->upper_limit_impulse; }) owner.bind_named("upperLimitImpulse", [object]() -> decltype(auto) { return (object->upper_limit_impulse); });
+  if constexpr (requires { object->upper_limit_impulses; }) owner.bind_named("upperLimitImpulses", [object]() -> decltype(auto) { return (object->upper_limit_impulses); });
+  if constexpr (requires { object->upper_linear_x; }) owner.bind_named("upperLinearX", [object]() -> decltype(auto) { return (object->upper_linear_x); });
+  if constexpr (requires { object->upper_linear_y; }) owner.bind_named("upperLinearY", [object]() -> decltype(auto) { return (object->upper_linear_y); });
+  if constexpr (requires { object->upper_linear_z; }) owner.bind_named("upperLinearZ", [object]() -> decltype(auto) { return (object->upper_linear_z); });
+  if constexpr (requires { object->upper_translation; }) owner.bind_named("upperTranslation", [object]() -> decltype(auto) { return (object->upper_translation); });
+  if constexpr (requires { object->upper_twist_angle; }) owner.bind_named("upperTwistAngle", [object]() -> decltype(auto) { return (object->upper_twist_angle); });
+  if constexpr (requires { object->upper_twist_impulse; }) owner.bind_named("upperTwistImpulse", [object]() -> decltype(auto) { return (object->upper_twist_impulse); });
+  if constexpr (requires { object->url; }) owner.bind_named("url", [object]() -> decltype(auto) { return (object->url); });
+  if constexpr (requires { object->user; }) owner.bind_named("user", [object]() -> decltype(auto) { return (object->user); });
+  if constexpr (requires { object->uv_offset; }) owner.bind_named("uvOffset", [object]() -> decltype(auto) { return (object->uv_offset); });
+  if constexpr (requires { object->uv_rotation; }) owner.bind_named("uvRotation", [object]() -> decltype(auto) { return (object->uv_rotation); });
+  if constexpr (requires { object->uv_scale; }) owner.bind_named("uvScale", [object]() -> decltype(auto) { return (object->uv_scale); });
+  if constexpr (requires { object->v; }) owner.bind_named("v", [object]() -> decltype(auto) { return (object->v); });
   if constexpr (requires { object->value; }) owner.bind_named("value", [object]() -> decltype(auto) { return (object->value); });
+  if constexpr (requires { object->values; }) owner.bind_named("values", [object]() -> decltype(auto) { return (object->values); });
+  if constexpr (requires { object->velocities; }) owner.bind_named("velocities", [object]() -> decltype(auto) { return (object->velocities); });
   if constexpr (requires { object->velocity; }) owner.bind_named("velocity", [object]() -> decltype(auto) { return (object->velocity); });
   if constexpr (requires { object->velocity_inheritance; }) owner.bind_named("velocityInheritance", [object]() -> decltype(auto) { return (object->velocity_inheritance); });
+  if constexpr (requires { object->velocity_writers; }) owner.bind_named("velocityWriters", [object]() -> decltype(auto) { return (object->velocity_writers); });
+  if constexpr (requires { object->velocity_x; }) owner.bind_named("velocityX", [object]() -> decltype(auto) { return (object->velocity_x); });
+  if constexpr (requires { object->velocity_y; }) owner.bind_named("velocityY", [object]() -> decltype(auto) { return (object->velocity_y); });
+  if constexpr (requires { object->velocity_z; }) owner.bind_named("velocityZ", [object]() -> decltype(auto) { return (object->velocity_z); });
   if constexpr (requires { object->version; }) owner.bind_named("version", [object]() -> decltype(auto) { return (object->version); });
+  if constexpr (requires { object->vertex; }) owner.bind_named("vertex", [object]() -> decltype(auto) { return (object->vertex); });
+  if constexpr (requires { object->vertical_scroll_bar; }) owner.bind_named("verticalScrollBar", [object]() -> decltype(auto) { return (object->vertical_scroll_bar); });
+  if constexpr (requires { object->vertices; }) owner.bind_named("vertices", [object]() -> decltype(auto) { return (object->vertices); });
   if constexpr (requires { object->vibrate; }) owner.bind_named("vibrate", [object]() -> decltype(auto) { return (object->vibrate); });
   if constexpr (requires { object->vibrate_pattern; }) owner.bind_named("vibratePattern", [object]() -> decltype(auto) { return (object->vibrate_pattern); });
   if constexpr (requires { object->vibrate_waveform; }) owner.bind_named("vibrateWaveform", [object]() -> decltype(auto) { return (object->vibrate_waveform); });
+  if constexpr (requires { object->video; }) owner.bind_named("video", [object]() -> decltype(auto) { return (object->video); });
   if constexpr (requires { object->view; }) owner.bind_named("view", [object]() -> decltype(auto) { return (object->view); });
+  if constexpr (requires { object->viewport; }) owner.bind_named("viewport", [object]() -> decltype(auto) { return (object->viewport); });
   if constexpr (requires { object->viewport_height; }) owner.bind_named("viewportHeight", [object]() -> decltype(auto) { return (object->viewport_height); });
   if constexpr (requires { object->viewport_width; }) owner.bind_named("viewportWidth", [object]() -> decltype(auto) { return (object->viewport_width); });
   if constexpr (requires { object->vignette; }) owner.bind_named("vignette", [object]() -> decltype(auto) { return (object->vignette); });
+  if constexpr (requires { object->visibility; }) owner.bind_named("visibility", [object]() -> decltype(auto) { return (object->visibility); });
   if constexpr (requires { object->visible; }) owner.bind_named("visible", [object]() -> decltype(auto) { return (object->visible); });
+  if constexpr (requires { object->visible_meshes; }) owner.bind_named("visibleMeshes", [object]() -> decltype(auto) { return (object->visible_meshes); });
+  if constexpr (requires { object->visual; }) owner.bind_named("visual", [object]() -> decltype(auto) { return (object->visual); });
   if constexpr (requires { object->w; }) owner.bind_named("w", [object]() -> decltype(auto) { return (object->w); });
+  if constexpr (requires { object->warm_start; }) owner.bind_named("warmStart", [object]() -> decltype(auto) { return (object->warm_start); });
   if constexpr (requires { object->watch_position; }) owner.bind_named("watchPosition", [object]() -> decltype(auto) { return (object->watch_position); });
   if constexpr (requires { object->web_view_version; }) owner.bind_named("webViewVersion", [object]() -> decltype(auto) { return (object->web_view_version); });
   if constexpr (requires { object->weight; }) owner.bind_named("weight", [object]() -> decltype(auto) { return (object->weight); });
+  if constexpr (requires { object->weights; }) owner.bind_named("weights", [object]() -> decltype(auto) { return (object->weights); });
+  if constexpr (requires { object->wgpu; }) owner.bind_named("wgpu", [object]() -> decltype(auto) { return (object->wgpu); });
+  if constexpr (requires { object->when_ready; }) owner.bind_named("whenReady", [object]() -> decltype(auto) { return (object->when_ready); });
   if constexpr (requires { object->white; }) owner.bind_named("white", [object]() -> decltype(auto) { return (object->white); });
   if constexpr (requires { object->width; }) owner.bind_named("width", [object]() -> decltype(auto) { return (object->width); });
   if constexpr (requires { object->wind; }) owner.bind_named("wind", [object]() -> decltype(auto) { return (object->wind); });
   if constexpr (requires { object->winding; }) owner.bind_named("winding", [object]() -> decltype(auto) { return (object->winding); });
+  if constexpr (requires { object->window; }) owner.bind_named("window", [object]() -> decltype(auto) { return (object->window); });
+  if constexpr (requires { object->word_wrap; }) owner.bind_named("wordWrap", [object]() -> decltype(auto) { return (object->word_wrap); });
   if constexpr (requires { object->work_height; }) owner.bind_named("workHeight", [object]() -> decltype(auto) { return (object->work_height); });
   if constexpr (requires { object->work_width; }) owner.bind_named("workWidth", [object]() -> decltype(auto) { return (object->work_width); });
+  if constexpr (requires { object->world; }) owner.bind_named("world", [object]() -> decltype(auto) { return (object->world); });
   if constexpr (requires { object->world_bounds; }) owner.bind_named("worldBounds", [object]() -> decltype(auto) { return (object->world_bounds); });
+  if constexpr (requires { object->world_bounds_using_local_bounds_id; }) owner.bind_named("worldBoundsUsingLocalBoundsId", [object]() -> decltype(auto) { return (object->world_bounds_using_local_bounds_id); });
+  if constexpr (requires { object->world_bounds_using_world_transform_id; }) owner.bind_named("worldBoundsUsingWorldTransformId", [object]() -> decltype(auto) { return (object->world_bounds_using_world_transform_id); });
   if constexpr (requires { object->world_matrices; }) owner.bind_named("worldMatrices", [object]() -> decltype(auto) { return (object->world_matrices); });
   if constexpr (requires { object->world_space; }) owner.bind_named("worldSpace", [object]() -> decltype(auto) { return (object->world_space); });
+  if constexpr (requires { object->world_transform_id; }) owner.bind_named("worldTransformId", [object]() -> decltype(auto) { return (object->world_transform_id); });
+  if constexpr (requires { object->world_transform_using_parent_transform_id; }) owner.bind_named("worldTransformUsingParentTransformId", [object]() -> decltype(auto) { return (object->world_transform_using_parent_transform_id); });
+  if constexpr (requires { object->world_x; }) owner.bind_named("worldX", [object]() -> decltype(auto) { return (object->world_x); });
+  if constexpr (requires { object->world_y; }) owner.bind_named("worldY", [object]() -> decltype(auto) { return (object->world_y); });
   if constexpr (requires { object->would_occupy_bucket_count; }) owner.bind_named("wouldOccupyBucketCount", [object]() -> decltype(auto) { return (object->would_occupy_bucket_count); });
   if constexpr (requires { object->wrap_u; }) owner.bind_named("wrapU", [object]() -> decltype(auto) { return (object->wrap_u); });
   if constexpr (requires { object->wrap_v; }) owner.bind_named("wrapV", [object]() -> decltype(auto) { return (object->wrap_v); });
@@ -2152,6 +5445,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->wrapped_diffuse_map; }) owner.bind_named("wrappedDiffuseMap", [object]() -> decltype(auto) { return (object->wrapped_diffuse_map); });
   if constexpr (requires { object->wrapped_diffuse_map_uv_set; }) owner.bind_named("wrappedDiffuseMapUvSet", [object]() -> decltype(auto) { return (object->wrapped_diffuse_map_uv_set); });
   if constexpr (requires { object->wrapped_diffuse_strength; }) owner.bind_named("wrappedDiffuseStrength", [object]() -> decltype(auto) { return (object->wrapped_diffuse_strength); });
+  if constexpr (requires { object->write; }) owner.bind_named("write", [object]() -> decltype(auto) { return (object->write); });
   if constexpr (requires { object->write_bookmark; }) owner.bind_named("writeBookmark", [object]() -> decltype(auto) { return (object->write_bookmark); });
   if constexpr (requires { object->write_format; }) owner.bind_named("writeFormat", [object]() -> decltype(auto) { return (object->write_format); });
   if constexpr (requires { object->write_html; }) owner.bind_named("writeHtml", [object]() -> decltype(auto) { return (object->write_html); });
@@ -2162,12 +5456,21 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->x; }) owner.bind_named("x", [object]() -> decltype(auto) { return (object->x); });
   if constexpr (requires { object->x0; }) owner.bind_named("x0", [object]() -> decltype(auto) { return (object->x0); });
   if constexpr (requires { object->x1; }) owner.bind_named("x1", [object]() -> decltype(auto) { return (object->x1); });
+  if constexpr (requires { object->x2; }) owner.bind_named("x2", [object]() -> decltype(auto) { return (object->x2); });
+  if constexpr (requires { object->x_max; }) owner.bind_named("xMax", [object]() -> decltype(auto) { return (object->x_max); });
+  if constexpr (requires { object->x_min; }) owner.bind_named("xMin", [object]() -> decltype(auto) { return (object->x_min); });
   if constexpr (requires { object->x_offset; }) owner.bind_named("xOffset", [object]() -> decltype(auto) { return (object->x_offset); });
   if constexpr (requires { object->y; }) owner.bind_named("y", [object]() -> decltype(auto) { return (object->y); });
   if constexpr (requires { object->y0; }) owner.bind_named("y0", [object]() -> decltype(auto) { return (object->y0); });
   if constexpr (requires { object->y1; }) owner.bind_named("y1", [object]() -> decltype(auto) { return (object->y1); });
+  if constexpr (requires { object->y2; }) owner.bind_named("y2", [object]() -> decltype(auto) { return (object->y2); });
+  if constexpr (requires { object->y_max; }) owner.bind_named("yMax", [object]() -> decltype(auto) { return (object->y_max); });
+  if constexpr (requires { object->y_min; }) owner.bind_named("yMin", [object]() -> decltype(auto) { return (object->y_min); });
   if constexpr (requires { object->y_offset; }) owner.bind_named("yOffset", [object]() -> decltype(auto) { return (object->y_offset); });
+  if constexpr (requires { object->yaw; }) owner.bind_named("yaw", [object]() -> decltype(auto) { return (object->yaw); });
   if constexpr (requires { object->z; }) owner.bind_named("z", [object]() -> decltype(auto) { return (object->z); });
+  if constexpr (requires { object->z0; }) owner.bind_named("z0", [object]() -> decltype(auto) { return (object->z0); });
+  if constexpr (requires { object->z1; }) owner.bind_named("z1", [object]() -> decltype(auto) { return (object->z1); });
   if constexpr (requires { object->zoom; }) owner.bind_named("zoom", [object]() -> decltype(auto) { return (object->zoom); });
 }
 
@@ -2200,88 +5503,213 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
 template <typename Base, typename Derived>
 consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_COMPUTED(entity_runtime_key)
+  FLIGHT_SDK_ROW_COMPUTED(parse_failure)
+  FLIGHT_SDK_ROW_COMPUTED(quad_batch_signals_slot)
+  FLIGHT_SDK_ROW_COMPUTED(scene3_dresource_resolver_runtime_key)
+  FLIGHT_SDK_ROW_COMPUTED(tilemap_signals_slot)
   std::size_t matched = 0;
   FLIGHT_SDK_ROW_WIDENS(brand)
   FLIGHT_SDK_ROW_WIDENS(a)
   FLIGHT_SDK_ROW_WIDENS(aberration)
   FLIGHT_SDK_ROW_WIDENS(absolute)
+  FLIGHT_SDK_ROW_WIDENS(accessibility)
   FLIGHT_SDK_ROW_WIDENS(accuracy)
+  FLIGHT_SDK_ROW_WIDENS(acquire)
+  FLIGHT_SDK_ROW_WIDENS(acquisition)
   FLIGHT_SDK_ROW_WIDENS(action)
   FLIGHT_SDK_ROW_WIDENS(adaptation_speed)
+  FLIGHT_SDK_ROW_WIDENS(add_font_face)
+  FLIGHT_SDK_ROW_WIDENS(add_recent_document)
   FLIGHT_SDK_ROW_WIDENS(additive)
   FLIGHT_SDK_ROW_WIDENS(addressed)
+  FLIGHT_SDK_ROW_WIDENS(advance_scratch)
+  FLIGHT_SDK_ROW_WIDENS(advance_width)
+  FLIGHT_SDK_ROW_WIDENS(advances)
+  FLIGHT_SDK_ROW_WIDENS(align)
+  FLIGHT_SDK_ROW_WIDENS(allow_rotation)
+  FLIGHT_SDK_ROW_WIDENS(allowed_schemes)
   FLIGHT_SDK_ROW_WIDENS(alpha)
   FLIGHT_SDK_ROW_WIDENS(alpha_bias)
   FLIGHT_SDK_ROW_WIDENS(alpha_curve)
+  FLIGHT_SDK_ROW_WIDENS(alpha_cutoff)
   FLIGHT_SDK_ROW_WIDENS(alpha_end)
+  FLIGHT_SDK_ROW_WIDENS(alpha_map)
+  FLIGHT_SDK_ROW_WIDENS(alpha_mask_enabled)
+  FLIGHT_SDK_ROW_WIDENS(alpha_mode)
   FLIGHT_SDK_ROW_WIDENS(alpha_scale)
   FLIGHT_SDK_ROW_WIDENS(alpha_start)
+  FLIGHT_SDK_ROW_WIDENS(alpha_type)
+  FLIGHT_SDK_ROW_WIDENS(alphas)
+  FLIGHT_SDK_ROW_WIDENS(alt_key)
   FLIGHT_SDK_ROW_WIDENS(altitude)
   FLIGHT_SDK_ROW_WIDENS(altitude_accuracy)
+  FLIGHT_SDK_ROW_WIDENS(always_on_top)
+  FLIGHT_SDK_ROW_WIDENS(always_show_selection)
   FLIGHT_SDK_ROW_WIDENS(ambient)
+  FLIGHT_SDK_ROW_WIDENS(ambient_rgb)
   FLIGHT_SDK_ROW_WIDENS(amount)
+  FLIGHT_SDK_ROW_WIDENS(amplitude)
   FLIGHT_SDK_ROW_WIDENS(angle)
   FLIGHT_SDK_ROW_WIDENS(angle_variance)
-  FLIGHT_SDK_ROW_WIDENS(animation)
+  FLIGHT_SDK_ROW_WIDENS(angular_velocity)
+  FLIGHT_SDK_ROW_WIDENS(angular_velocity_x)
+  FLIGHT_SDK_ROW_WIDENS(angular_velocity_y)
+  FLIGHT_SDK_ROW_WIDENS(angular_velocity_z)
   FLIGHT_SDK_ROW_WIDENS(animations)
   FLIGHT_SDK_ROW_WIDENS(anisotropy)
+  FLIGHT_SDK_ROW_WIDENS(anisotropy_enabled)
   FLIGHT_SDK_ROW_WIDENS(anisotropy_map)
   FLIGHT_SDK_ROW_WIDENS(anisotropy_map_uv_set)
   FLIGHT_SDK_ROW_WIDENS(anisotropy_rotation)
   FLIGHT_SDK_ROW_WIDENS(anisotropy_strength)
   FLIGHT_SDK_ROW_WIDENS(announce)
+  FLIGHT_SDK_ROW_WIDENS(antialias)
+  FLIGHT_SDK_ROW_WIDENS(app)
+  FLIGHT_SDK_ROW_WIDENS(appearance_id)
   FLIGHT_SDK_ROW_WIDENS(applied)
+  FLIGHT_SDK_ROW_WIDENS(arc_tolerance)
   FLIGHT_SDK_ROW_WIDENS(arch)
+  FLIGHT_SDK_ROW_WIDENS(artboards)
   FLIGHT_SDK_ROW_WIDENS(ascent)
+  FLIGHT_SDK_ROW_WIDENS(aspect)
+  FLIGHT_SDK_ROW_WIDENS(assets)
   FLIGHT_SDK_ROW_WIDENS(atlas)
+  FLIGHT_SDK_ROW_WIDENS(attach)
   FLIGHT_SDK_ROW_WIDENS(attenuation_color)
   FLIGHT_SDK_ROW_WIDENS(attenuation_distance)
   FLIGHT_SDK_ROW_WIDENS(attributes)
+  FLIGHT_SDK_ROW_WIDENS(audio)
+  FLIGHT_SDK_ROW_WIDENS(audio_resources)
+  FLIGHT_SDK_ROW_WIDENS(auto_size)
   FLIGHT_SDK_ROW_WIDENS(available_memory)
+  FLIGHT_SDK_ROW_WIDENS(axis)
+  FLIGHT_SDK_ROW_WIDENS(axis_ax)
+  FLIGHT_SDK_ROW_WIDENS(axis_ay)
+  FLIGHT_SDK_ROW_WIDENS(axis_bx)
+  FLIGHT_SDK_ROW_WIDENS(axis_by)
+  FLIGHT_SDK_ROW_WIDENS(axis_rotation)
+  FLIGHT_SDK_ROW_WIDENS(azimuth)
   FLIGHT_SDK_ROW_WIDENS(b)
+  FLIGHT_SDK_ROW_WIDENS(backdrop)
+  FLIGHT_SDK_ROW_WIDENS(backdrop_key)
+  FLIGHT_SDK_ROW_WIDENS(backend)
+  FLIGHT_SDK_ROW_WIDENS(background)
+  FLIGHT_SDK_ROW_WIDENS(background_color)
+  FLIGHT_SDK_ROW_WIDENS(base)
+  FLIGHT_SDK_ROW_WIDENS(base_color)
+  FLIGHT_SDK_ROW_WIDENS(base_color_map)
+  FLIGHT_SDK_ROW_WIDENS(bbox_stream)
+  FLIGHT_SDK_ROW_WIDENS(beep)
   FLIGHT_SDK_ROW_WIDENS(beta)
+  FLIGHT_SDK_ROW_WIDENS(bevel_type)
   FLIGHT_SDK_ROW_WIDENS(bias)
+  FLIGHT_SDK_ROW_WIDENS(bindings)
   FLIGHT_SDK_ROW_WIDENS(bitmap)
   FLIGHT_SDK_ROW_WIDENS(black_tighten)
+  FLIGHT_SDK_ROW_WIDENS(blend)
   FLIGHT_SDK_ROW_WIDENS(blend_func_destination)
   FLIGHT_SDK_ROW_WIDENS(blend_func_source)
   FLIGHT_SDK_ROW_WIDENS(blend_mode)
+  FLIGHT_SDK_ROW_WIDENS(blend_mode_application)
+  FLIGHT_SDK_ROW_WIDENS(blend_tree)
+  FLIGHT_SDK_ROW_WIDENS(blend_trees)
+  FLIGHT_SDK_ROW_WIDENS(blended)
+  FLIGHT_SDK_ROW_WIDENS(blended_normals)
+  FLIGHT_SDK_ROW_WIDENS(blended_positions)
+  FLIGHT_SDK_ROW_WIDENS(blended_tangents)
+  FLIGHT_SDK_ROW_WIDENS(block_count)
+  FLIGHT_SDK_ROW_WIDENS(block_size)
+  FLIGHT_SDK_ROW_WIDENS(blocks)
   FLIGHT_SDK_ROW_WIDENS(blue)
   FLIGHT_SDK_ROW_WIDENS(blue_bias)
   FLIGHT_SDK_ROW_WIDENS(blue_scale)
+  FLIGHT_SDK_ROW_WIDENS(blur)
   FLIGHT_SDK_ROW_WIDENS(blur_x)
   FLIGHT_SDK_ROW_WIDENS(blur_y)
   FLIGHT_SDK_ROW_WIDENS(board_name)
   FLIGHT_SDK_ROW_WIDENS(bodies)
+  FLIGHT_SDK_ROW_WIDENS(body)
   FLIGHT_SDK_ROW_WIDENS(body_a)
   FLIGHT_SDK_ROW_WIDENS(body_b)
+  FLIGHT_SDK_ROW_WIDENS(body_by_index)
+  FLIGHT_SDK_ROW_WIDENS(body_ids)
+  FLIGHT_SDK_ROW_WIDENS(bone_indices)
+  FLIGHT_SDK_ROW_WIDENS(border)
   FLIGHT_SDK_ROW_WIDENS(bottom)
+  FLIGHT_SDK_ROW_WIDENS(bounce_dock)
   FLIGHT_SDK_ROW_WIDENS(bounds)
+  FLIGHT_SDK_ROW_WIDENS(brdf_pipeline)
   FLIGHT_SDK_ROW_WIDENS(break_force)
   FLIGHT_SDK_ROW_WIDENS(break_torque)
   FLIGHT_SDK_ROW_WIDENS(brightness)
+  FLIGHT_SDK_ROW_WIDENS(buffer)
+  FLIGHT_SDK_ROW_WIDENS(build_node_transform)
+  FLIGHT_SDK_ROW_WIDENS(bullet)
   FLIGHT_SDK_ROW_WIDENS(burst_count)
   FLIGHT_SDK_ROW_WIDENS(burst_interval)
+  FLIGHT_SDK_ROW_WIDENS(burst_timer)
+  FLIGHT_SDK_ROW_WIDENS(button)
+  FLIGHT_SDK_ROW_WIDENS(buttons)
+  FLIGHT_SDK_ROW_WIDENS(byte_length)
+  FLIGHT_SDK_ROW_WIDENS(byte_offset)
+  FLIGHT_SDK_ROW_WIDENS(bytes)
   FLIGHT_SDK_ROW_WIDENS(c)
+  FLIGHT_SDK_ROW_WIDENS(cameras)
   FLIGHT_SDK_ROW_WIDENS(cancel)
+  FLIGHT_SDK_ROW_WIDENS(cancel_attention)
+  FLIGHT_SDK_ROW_WIDENS(cancel_dock_bounce)
+  FLIGHT_SDK_ROW_WIDENS(cancel_id)
+  FLIGHT_SDK_ROW_WIDENS(candidate_center_a)
+  FLIGHT_SDK_ROW_WIDENS(candidate_center_b)
+  FLIGHT_SDK_ROW_WIDENS(canvas)
+  FLIGHT_SDK_ROW_WIDENS(canvas_shape_commands)
+  FLIGHT_SDK_ROW_WIDENS(cap)
   FLIGHT_SDK_ROW_WIDENS(capabilities)
+  FLIGHT_SDK_ROW_WIDENS(capture)
+  FLIGHT_SDK_ROW_WIDENS(caret)
+  FLIGHT_SDK_ROW_WIDENS(caret_color)
+  FLIGHT_SDK_ROW_WIDENS(caret_width)
   FLIGHT_SDK_ROW_WIDENS(cascade_count)
   FLIGHT_SDK_ROW_WIDENS(cascade_splits)
   FLIGHT_SDK_ROW_WIDENS(casts_shadow)
   FLIGHT_SDK_ROW_WIDENS(cell_size)
+  FLIGHT_SDK_ROW_WIDENS(cell_size_x)
+  FLIGHT_SDK_ROW_WIDENS(cell_size_z)
+  FLIGHT_SDK_ROW_WIDENS(cells)
   FLIGHT_SDK_ROW_WIDENS(center)
+  FLIGHT_SDK_ROW_WIDENS(center_of_mass_radius)
   FLIGHT_SDK_ROW_WIDENS(center_x)
   FLIGHT_SDK_ROW_WIDENS(center_y)
   FLIGHT_SDK_ROW_WIDENS(center_z)
+  FLIGHT_SDK_ROW_WIDENS(cff)
+  FLIGHT_SDK_ROW_WIDENS(changed_metrics)
+  FLIGHT_SDK_ROW_WIDENS(channel)
+  FLIGHT_SDK_ROW_WIDENS(channel_index)
+  FLIGHT_SDK_ROW_WIDENS(channel_indices)
+  FLIGHT_SDK_ROW_WIDENS(channels)
+  FLIGHT_SDK_ROW_WIDENS(char_count)
+  FLIGHT_SDK_ROW_WIDENS(chars)
+  FLIGHT_SDK_ROW_WIDENS(chart)
+  FLIGHT_SDK_ROW_WIDENS(check_font_face)
+  FLIGHT_SDK_ROW_WIDENS(checkbox_checked)
+  FLIGHT_SDK_ROW_WIDENS(checkbox_label)
+  FLIGHT_SDK_ROW_WIDENS(checked)
+  FLIGHT_SDK_ROW_WIDENS(checked_state)
   FLIGHT_SDK_ROW_WIDENS(child1)
   FLIGHT_SDK_ROW_WIDENS(child2)
+  FLIGHT_SDK_ROW_WIDENS(child_count)
   FLIGHT_SDK_ROW_WIDENS(children)
+  FLIGHT_SDK_ROW_WIDENS(children_id)
+  FLIGHT_SDK_ROW_WIDENS(clamp)
   FLIGHT_SDK_ROW_WIDENS(clear)
+  FLIGHT_SDK_ROW_WIDENS(clear_accumulated_impulses)
   FLIGHT_SDK_ROW_WIDENS(clear_metadata)
   FLIGHT_SDK_ROW_WIDENS(clear_position_state)
+  FLIGHT_SDK_ROW_WIDENS(clear_recent_documents)
   FLIGHT_SDK_ROW_WIDENS(clear_spatial_index)
   FLIGHT_SDK_ROW_WIDENS(clear_watch)
   FLIGHT_SDK_ROW_WIDENS(clearcoat)
+  FLIGHT_SDK_ROW_WIDENS(clearcoat_enabled)
   FLIGHT_SDK_ROW_WIDENS(clearcoat_map)
   FLIGHT_SDK_ROW_WIDENS(clearcoat_map_uv_set)
   FLIGHT_SDK_ROW_WIDENS(clearcoat_normal_map)
@@ -2291,10 +5719,28 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(clearcoat_roughness_map)
   FLIGHT_SDK_ROW_WIDENS(clearcoat_roughness_map_uv_set)
   FLIGHT_SDK_ROW_WIDENS(clip)
+  FLIGHT_SDK_ROW_WIDENS(clip_mode)
+  FLIGHT_SDK_ROW_WIDENS(clipboard)
+  FLIGHT_SDK_ROW_WIDENS(clipboard_text)
+  FLIGHT_SDK_ROW_WIDENS(close_button)
+  FLIGHT_SDK_ROW_WIDENS(closed)
+  FLIGHT_SDK_ROW_WIDENS(codepoints)
+  FLIGHT_SDK_ROW_WIDENS(collide_connected)
+  FLIGHT_SDK_ROW_WIDENS(collider)
   FLIGHT_SDK_ROW_WIDENS(collider_a)
   FLIGHT_SDK_ROW_WIDENS(collider_b)
+  FLIGHT_SDK_ROW_WIDENS(collider_ids)
+  FLIGHT_SDK_ROW_WIDENS(collider_index)
+  FLIGHT_SDK_ROW_WIDENS(colliders)
   FLIGHT_SDK_ROW_WIDENS(color)
+  FLIGHT_SDK_ROW_WIDENS(color_adjustment_feature)
+  FLIGHT_SDK_ROW_WIDENS(color_adjustment_feature_guard)
+  FLIGHT_SDK_ROW_WIDENS(color_adjustment_unsupported_guard)
+  FLIGHT_SDK_ROW_WIDENS(color_adjustments)
+  FLIGHT_SDK_ROW_WIDENS(color_attachments)
+  FLIGHT_SDK_ROW_WIDENS(color_birth)
   FLIGHT_SDK_ROW_WIDENS(color_curve)
+  FLIGHT_SDK_ROW_WIDENS(color_death)
   FLIGHT_SDK_ROW_WIDENS(color_depth)
   FLIGHT_SDK_ROW_WIDENS(color_end_b)
   FLIGHT_SDK_ROW_WIDENS(color_end_g)
@@ -2302,9 +5748,11 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(color_end_variance_b)
   FLIGHT_SDK_ROW_WIDENS(color_end_variance_g)
   FLIGHT_SDK_ROW_WIDENS(color_end_variance_r)
+  FLIGHT_SDK_ROW_WIDENS(color_formats)
   FLIGHT_SDK_ROW_WIDENS(color_gamut)
   FLIGHT_SDK_ROW_WIDENS(color_matrix)
   FLIGHT_SDK_ROW_WIDENS(color_scale_bias)
+  FLIGHT_SDK_ROW_WIDENS(color_shift)
   FLIGHT_SDK_ROW_WIDENS(color_space)
   FLIGHT_SDK_ROW_WIDENS(color_start_b)
   FLIGHT_SDK_ROW_WIDENS(color_start_g)
@@ -2312,51 +5760,160 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(color_start_variance_b)
   FLIGHT_SDK_ROW_WIDENS(color_start_variance_g)
   FLIGHT_SDK_ROW_WIDENS(color_start_variance_r)
+  FLIGHT_SDK_ROW_WIDENS(colors)
+  FLIGHT_SDK_ROW_WIDENS(columns)
+  FLIGHT_SDK_ROW_WIDENS(command_count)
+  FLIGHT_SDK_ROW_WIDENS(command_index)
+  FLIGHT_SDK_ROW_WIDENS(command_kind)
   FLIGHT_SDK_ROW_WIDENS(commands)
+  FLIGHT_SDK_ROW_WIDENS(comparison)
+  FLIGHT_SDK_ROW_WIDENS(complete)
   FLIGHT_SDK_ROW_WIDENS(component_x)
   FLIGHT_SDK_ROW_WIDENS(component_y)
+  FLIGHT_SDK_ROW_WIDENS(components)
+  FLIGHT_SDK_ROW_WIDENS(composite_stream)
+  FLIGHT_SDK_ROW_WIDENS(compressed)
+  FLIGHT_SDK_ROW_WIDENS(compressed_alpha_bytes)
+  FLIGHT_SDK_ROW_WIDENS(compressed_texture_decoder)
+  FLIGHT_SDK_ROW_WIDENS(compressed_texture_upload)
   FLIGHT_SDK_ROW_WIDENS(compression)
+  FLIGHT_SDK_ROW_WIDENS(compute_path_boolean)
+  FLIGHT_SDK_ROW_WIDENS(condition_index)
+  FLIGHT_SDK_ROW_WIDENS(conditions)
+  FLIGHT_SDK_ROW_WIDENS(config)
+  FLIGHT_SDK_ROW_WIDENS(confirm)
   FLIGHT_SDK_ROW_WIDENS(connections)
+  FLIGHT_SDK_ROW_WIDENS(connectivity)
+  FLIGHT_SDK_ROW_WIDENS(constant)
+  FLIGHT_SDK_ROW_WIDENS(constant_pool)
+  FLIGHT_SDK_ROW_WIDENS(construct_frame)
+  FLIGHT_SDK_ROW_WIDENS(contact)
+  FLIGHT_SDK_ROW_WIDENS(contact_normal_length)
+  FLIGHT_SDK_ROW_WIDENS(contacts)
+  FLIGHT_SDK_ROW_WIDENS(container)
+  FLIGHT_SDK_ROW_WIDENS(content)
+  FLIGHT_SDK_ROW_WIDENS(context)
+  FLIGHT_SDK_ROW_WIDENS(contour_index)
   FLIGHT_SDK_ROW_WIDENS(contrast)
+  FLIGHT_SDK_ROW_WIDENS(control_x)
+  FLIGHT_SDK_ROW_WIDENS(control_x1)
+  FLIGHT_SDK_ROW_WIDENS(control_x2)
+  FLIGHT_SDK_ROW_WIDENS(control_y)
+  FLIGHT_SDK_ROW_WIDENS(control_y1)
+  FLIGHT_SDK_ROW_WIDENS(control_y2)
+  FLIGHT_SDK_ROW_WIDENS(coordinate_a)
+  FLIGHT_SDK_ROW_WIDENS(coordinate_b)
+  FLIGHT_SDK_ROW_WIDENS(coordinate_count)
+  FLIGHT_SDK_ROW_WIDENS(corner)
+  FLIGHT_SDK_ROW_WIDENS(corners)
   FLIGHT_SDK_ROW_WIDENS(count)
+  FLIGHT_SDK_ROW_WIDENS(covers)
   FLIGHT_SDK_ROW_WIDENS(cpu_cores)
+  FLIGHT_SDK_ROW_WIDENS(create)
+  FLIGHT_SDK_ROW_WIDENS(create_buffer)
+  FLIGHT_SDK_ROW_WIDENS(create_image_surface)
+  FLIGHT_SDK_ROW_WIDENS(create_render_surface)
+  FLIGHT_SDK_ROW_WIDENS(create_source)
+  FLIGHT_SDK_ROW_WIDENS(create_world)
+  FLIGHT_SDK_ROW_WIDENS(creator)
   FLIGHT_SDK_ROW_WIDENS(crop)
+  FLIGHT_SDK_ROW_WIDENS(ctrl_key)
+  FLIGHT_SDK_ROW_WIDENS(cue_registry)
+  FLIGHT_SDK_ROW_WIDENS(cues)
+  FLIGHT_SDK_ROW_WIDENS(current_frame)
+  FLIGHT_SDK_ROW_WIDENS(current_state_index)
+  FLIGHT_SDK_ROW_WIDENS(current_time)
   FLIGHT_SDK_ROW_WIDENS(curvature)
+  FLIGHT_SDK_ROW_WIDENS(curve)
+  FLIGHT_SDK_ROW_WIDENS(curved)
+  FLIGHT_SDK_ROW_WIDENS(custom_material_shaders)
+  FLIGHT_SDK_ROW_WIDENS(cx)
+  FLIGHT_SDK_ROW_WIDENS(cy)
+  FLIGHT_SDK_ROW_WIDENS(cycle_delta)
   FLIGHT_SDK_ROW_WIDENS(d)
   FLIGHT_SDK_ROW_WIDENS(damping_ratio)
+  FLIGHT_SDK_ROW_WIDENS(dash)
+  FLIGHT_SDK_ROW_WIDENS(dash_offset)
   FLIGHT_SDK_ROW_WIDENS(data)
   FLIGHT_SDK_ROW_WIDENS(deadzone_half_height)
   FLIGHT_SDK_ROW_WIDENS(deadzone_half_width)
   FLIGHT_SDK_ROW_WIDENS(decay)
   FLIGHT_SDK_ROW_WIDENS(declined)
+  FLIGHT_SDK_ROW_WIDENS(dedupe)
   FLIGHT_SDK_ROW_WIDENS(default_ease)
+  FLIGHT_SDK_ROW_WIDENS(default_id)
+  FLIGHT_SDK_ROW_WIDENS(definitions)
   FLIGHT_SDK_ROW_WIDENS(delay)
   FLIGHT_SDK_ROW_WIDENS(delta_time)
+  FLIGHT_SDK_ROW_WIDENS(delta_x)
+  FLIGHT_SDK_ROW_WIDENS(delta_y)
   FLIGHT_SDK_ROW_WIDENS(density)
   FLIGHT_SDK_ROW_WIDENS(density_dpi)
   FLIGHT_SDK_ROW_WIDENS(depth)
   FLIGHT_SDK_ROW_WIDENS(depth_per_component)
+  FLIGHT_SDK_ROW_WIDENS(depth_stencil_texture)
+  FLIGHT_SDK_ROW_WIDENS(depth_stencil_view)
   FLIGHT_SDK_ROW_WIDENS(descent)
+  FLIGHT_SDK_ROW_WIDENS(dest)
   FLIGHT_SDK_ROW_WIDENS(destroy)
+  FLIGHT_SDK_ROW_WIDENS(destroy_buffer)
+  FLIGHT_SDK_ROW_WIDENS(destroy_render_surface)
+  FLIGHT_SDK_ROW_WIDENS(destroy_source)
+  FLIGHT_SDK_ROW_WIDENS(destroy_world)
+  FLIGHT_SDK_ROW_WIDENS(destroyed)
+  FLIGHT_SDK_ROW_WIDENS(detail)
+  FLIGHT_SDK_ROW_WIDENS(device)
   FLIGHT_SDK_ROW_WIDENS(device_pixel_ratio)
+  FLIGHT_SDK_ROW_WIDENS(diagnostics)
+  FLIGHT_SDK_ROW_WIDENS(dialog)
+  FLIGHT_SDK_ROW_WIDENS(diffuse)
+  FLIGHT_SDK_ROW_WIDENS(diffuse_map)
   FLIGHT_SDK_ROW_WIDENS(direction)
   FLIGHT_SDK_ROW_WIDENS(direction_x)
   FLIGHT_SDK_ROW_WIDENS(direction_y)
   FLIGHT_SDK_ROW_WIDENS(direction_z)
   FLIGHT_SDK_ROW_WIDENS(directional)
+  FLIGHT_SDK_ROW_WIDENS(directory)
+  FLIGHT_SDK_ROW_WIDENS(disabled)
+  FLIGHT_SDK_ROW_WIDENS(dismiss_on_backdrop)
+  FLIGHT_SDK_ROW_WIDENS(display)
+  FLIGHT_SDK_ROW_WIDENS(display_as_password)
   FLIGHT_SDK_ROW_WIDENS(distance)
   FLIGHT_SDK_ROW_WIDENS(distro)
   FLIGHT_SDK_ROW_WIDENS(distro_version)
+  FLIGHT_SDK_ROW_WIDENS(divider)
   FLIGHT_SDK_ROW_WIDENS(divisor)
+  FLIGHT_SDK_ROW_WIDENS(document)
+  FLIGHT_SDK_ROW_WIDENS(double_sided)
+  FLIGHT_SDK_ROW_WIDENS(down_state)
   FLIGHT_SDK_ROW_WIDENS(dpi)
+  FLIGHT_SDK_ROW_WIDENS(draggable)
+  FLIGHT_SDK_ROW_WIDENS(draw_centers_of_mass)
+  FLIGHT_SDK_ROW_WIDENS(draw_colliders)
+  FLIGHT_SDK_ROW_WIDENS(draw_contacts)
+  FLIGHT_SDK_ROW_WIDENS(draw_joints)
+  FLIGHT_SDK_ROW_WIDENS(dropped_maps)
   FLIGHT_SDK_ROW_WIDENS(duration)
+  FLIGHT_SDK_ROW_WIDENS(duration_guard)
+  FLIGHT_SDK_ROW_WIDENS(duration_ms)
   FLIGHT_SDK_ROW_WIDENS(ease)
   FLIGHT_SDK_ROW_WIDENS(edge)
+  FLIGHT_SDK_ROW_WIDENS(edge_color)
   FLIGHT_SDK_ROW_WIDENS(edge_mode)
   FLIGHT_SDK_ROW_WIDENS(edge_threshold)
+  FLIGHT_SDK_ROW_WIDENS(edge_width)
+  FLIGHT_SDK_ROW_WIDENS(edges)
+  FLIGHT_SDK_ROW_WIDENS(effect)
+  FLIGHT_SDK_ROW_WIDENS(effect_padding_resolvers)
+  FLIGHT_SDK_ROW_WIDENS(effect_targets)
   FLIGHT_SDK_ROW_WIDENS(elapsed)
+  FLIGHT_SDK_ROW_WIDENS(element)
   FLIGHT_SDK_ROW_WIDENS(emission)
+  FLIGHT_SDK_ROW_WIDENS(emissive)
+  FLIGHT_SDK_ROW_WIDENS(emissive_map)
+  FLIGHT_SDK_ROW_WIDENS(emissive_strength)
   FLIGHT_SDK_ROW_WIDENS(emit)
+  FLIGHT_SDK_ROW_WIDENS(emitter_age)
   FLIGHT_SDK_ROW_WIDENS(emitter_cone_angle)
   FLIGHT_SDK_ROW_WIDENS(emitter_depth)
   FLIGHT_SDK_ROW_WIDENS(emitter_height)
@@ -2364,72 +5921,188 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(emitter_shape)
   FLIGHT_SDK_ROW_WIDENS(emitter_type)
   FLIGHT_SDK_ROW_WIDENS(emitter_width)
+  FLIGHT_SDK_ROW_WIDENS(enable_limit)
+  FLIGHT_SDK_ROW_WIDENS(enable_limit_spring)
+  FLIGHT_SDK_ROW_WIDENS(enable_motor)
+  FLIGHT_SDK_ROW_WIDENS(enable_spring)
+  FLIGHT_SDK_ROW_WIDENS(enable_swing_limit)
+  FLIGHT_SDK_ROW_WIDENS(enable_twist_limit)
   FLIGHT_SDK_ROW_WIDENS(enabled)
+  FLIGHT_SDK_ROW_WIDENS(encode_bitmap)
   FLIGHT_SDK_ROW_WIDENS(encoding)
   FLIGHT_SDK_ROW_WIDENS(end)
+  FLIGHT_SDK_ROW_WIDENS(end_cap)
+  FLIGHT_SDK_ROW_WIDENS(end_data)
   FLIGHT_SDK_ROW_WIDENS(end_index)
+  FLIGHT_SDK_ROW_WIDENS(end_points)
+  FLIGHT_SDK_ROW_WIDENS(end_slot_index)
   FLIGHT_SDK_ROW_WIDENS(end_x)
   FLIGHT_SDK_ROW_WIDENS(end_y)
   FLIGHT_SDK_ROW_WIDENS(end_z)
   FLIGHT_SDK_ROW_WIDENS(endianness)
   FLIGHT_SDK_ROW_WIDENS(engine)
   FLIGHT_SDK_ROW_WIDENS(engine_version)
+  FLIGHT_SDK_ROW_WIDENS(entries)
+  FLIGHT_SDK_ROW_WIDENS(entry_id)
+  FLIGHT_SDK_ROW_WIDENS(environment)
+  FLIGHT_SDK_ROW_WIDENS(events)
+  FLIGHT_SDK_ROW_WIDENS(execute)
+  FLIGHT_SDK_ROW_WIDENS(exit)
+  FLIGHT_SDK_ROW_WIDENS(exit_time_ratio)
+  FLIGHT_SDK_ROW_WIDENS(exit_x)
+  FLIGHT_SDK_ROW_WIDENS(exit_y)
+  FLIGHT_SDK_ROW_WIDENS(expanded)
   FLIGHT_SDK_ROW_WIDENS(explain_spatial_indexing)
   FLIGHT_SDK_ROW_WIDENS(exposure)
   FLIGHT_SDK_ROW_WIDENS(exposure_compensation)
+  FLIGHT_SDK_ROW_WIDENS(extend_mesh_prelude)
+  FLIGHT_SDK_ROW_WIDENS(extra_bind_group_layout)
+  FLIGHT_SDK_ROW_WIDENS(face)
+  FLIGHT_SDK_ROW_WIDENS(facet)
+  FLIGHT_SDK_ROW_WIDENS(facing)
+  FLIGHT_SDK_ROW_WIDENS(facing_softness)
+  FLIGHT_SDK_ROW_WIDENS(fade_source_gain)
+  FLIGHT_SDK_ROW_WIDENS(fall_off)
+  FLIGHT_SDK_ROW_WIDENS(family)
   FLIGHT_SDK_ROW_WIDENS(far)
   FLIGHT_SDK_ROW_WIDENS(feature_id)
   FLIGHT_SDK_ROW_WIDENS(feedback)
+  FLIGHT_SDK_ROW_WIDENS(fetch)
+  FLIGHT_SDK_ROW_WIDENS(file_system)
+  FLIGHT_SDK_ROW_WIDENS(fill)
+  FLIGHT_SDK_ROW_WIDENS(fill0)
+  FLIGHT_SDK_ROW_WIDENS(fill1)
   FLIGHT_SDK_ROW_WIDENS(fill_bounds)
   FLIGHT_SDK_ROW_WIDENS(fill_color)
+  FLIGHT_SDK_ROW_WIDENS(fill_opacity)
+  FLIGHT_SDK_ROW_WIDENS(fill_rule)
+  FLIGHT_SDK_ROW_WIDENS(filter)
   FLIGHT_SDK_ROW_WIDENS(finish_color)
   FLIGHT_SDK_ROW_WIDENS(finish_color_variance)
   FLIGHT_SDK_ROW_WIDENS(finish_particle_size)
   FLIGHT_SDK_ROW_WIDENS(finish_particle_size_variance)
+  FLIGHT_SDK_ROW_WIDENS(first_region)
+  FLIGHT_SDK_ROW_WIDENS(fixed_step_state)
+  FLIGHT_SDK_ROW_WIDENS(flag_stream)
+  FLIGHT_SDK_ROW_WIDENS(flags)
+  FLIGHT_SDK_ROW_WIDENS(flash_window_frame)
+  FLIGHT_SDK_ROW_WIDENS(flip_x)
+  FLIGHT_SDK_ROW_WIDENS(flip_y)
   FLIGHT_SDK_ROW_WIDENS(floor_level)
+  FLIGHT_SDK_ROW_WIDENS(focal_point_ratio)
+  FLIGHT_SDK_ROW_WIDENS(focus)
+  FLIGHT_SDK_ROW_WIDENS(focus_distance)
+  FLIGHT_SDK_ROW_WIDENS(focus_manager)
+  FLIGHT_SDK_ROW_WIDENS(focus_range)
+  FLIGHT_SDK_ROW_WIDENS(focused)
+  FLIGHT_SDK_ROW_WIDENS(font)
+  FLIGHT_SDK_ROW_WIDENS(font_family)
+  FLIGHT_SDK_ROW_WIDENS(font_height)
   FLIGHT_SDK_ROW_WIDENS(font_scale)
+  FLIGHT_SDK_ROW_WIDENS(font_size)
+  FLIGHT_SDK_ROW_WIDENS(footprint_height)
+  FLIGHT_SDK_ROW_WIDENS(footprint_width)
   FLIGHT_SDK_ROW_WIDENS(force_x)
   FLIGHT_SDK_ROW_WIDENS(force_y)
   FLIGHT_SDK_ROW_WIDENS(force_z)
   FLIGHT_SDK_ROW_WIDENS(form_factor)
   FLIGHT_SDK_ROW_WIDENS(format)
+  FLIGHT_SDK_ROW_WIDENS(fov)
   FLIGHT_SDK_ROW_WIDENS(fov_y)
   FLIGHT_SDK_ROW_WIDENS(fraction)
+  FLIGHT_SDK_ROW_WIDENS(fragment_declarations)
+  FLIGHT_SDK_ROW_WIDENS(frame)
   FLIGHT_SDK_ROW_WIDENS(frame_count)
   FLIGHT_SDK_ROW_WIDENS(frame_duration)
   FLIGHT_SDK_ROW_WIDENS(frame_durations)
+  FLIGHT_SDK_ROW_WIDENS(frame_height)
   FLIGHT_SDK_ROW_WIDENS(frame_id)
   FLIGHT_SDK_ROW_WIDENS(frame_names)
+  FLIGHT_SDK_ROW_WIDENS(frame_offset)
   FLIGHT_SDK_ROW_WIDENS(frame_rate)
+  FLIGHT_SDK_ROW_WIDENS(frame_scale)
+  FLIGHT_SDK_ROW_WIDENS(frame_scripts)
+  FLIGHT_SDK_ROW_WIDENS(frame_width)
   FLIGHT_SDK_ROW_WIDENS(frames)
+  FLIGHT_SDK_ROW_WIDENS(free)
   FLIGHT_SDK_ROW_WIDENS(frequency)
+  FLIGHT_SDK_ROW_WIDENS(frequency_hz)
+  FLIGHT_SDK_ROW_WIDENS(fresnel_bias)
   FLIGHT_SDK_ROW_WIDENS(friction)
+  FLIGHT_SDK_ROW_WIDENS(from)
+  FLIGHT_SDK_ROW_WIDENS(from_index)
+  FLIGHT_SDK_ROW_WIDENS(from_motion)
+  FLIGHT_SDK_ROW_WIDENS(from_sample)
+  FLIGHT_SDK_ROW_WIDENS(fullscreen)
   FLIGHT_SDK_ROW_WIDENS(gain)
   FLIGHT_SDK_ROW_WIDENS(gamma)
+  FLIGHT_SDK_ROW_WIDENS(gamut)
   FLIGHT_SDK_ROW_WIDENS(gate_weave)
+  FLIGHT_SDK_ROW_WIDENS(geolocation)
+  FLIGHT_SDK_ROW_WIDENS(geometry)
+  FLIGHT_SDK_ROW_WIDENS(get_app_directory_path)
+  FLIGHT_SDK_ROW_WIDENS(get_app_path)
+  FLIGHT_SDK_ROW_WIDENS(get_bidi_class)
+  FLIGHT_SDK_ROW_WIDENS(get_bounds)
   FLIGHT_SDK_ROW_WIDENS(get_capabilities)
+  FLIGHT_SDK_ROW_WIDENS(get_code_point_for_glyph)
   FLIGHT_SDK_ROW_WIDENS(get_current_position)
   FLIGHT_SDK_ROW_WIDENS(get_current_position_result)
   FLIGHT_SDK_ROW_WIDENS(get_cursor_position)
+  FLIGHT_SDK_ROW_WIDENS(get_device_time)
   FLIGHT_SDK_ROW_WIDENS(get_display_metrics)
+  FLIGHT_SDK_ROW_WIDENS(get_duration)
+  FLIGHT_SDK_ROW_WIDENS(get_executable_path)
+  FLIGHT_SDK_ROW_WIDENS(get_font_metrics)
   FLIGHT_SDK_ROW_WIDENS(get_formats)
   FLIGHT_SDK_ROW_WIDENS(get_glyph_atlas_image)
   FLIGHT_SDK_ROW_WIDENS(get_glyph_entry)
+  FLIGHT_SDK_ROW_WIDENS(get_glyph_extents)
+  FLIGHT_SDK_ROW_WIDENS(get_glyph_index_for_code_point)
   FLIGHT_SDK_ROW_WIDENS(get_glyph_kerning)
   FLIGHT_SDK_ROW_WIDENS(get_glyph_layout_version)
   FLIGHT_SDK_ROW_WIDENS(get_glyph_metrics)
+  FLIGHT_SDK_ROW_WIDENS(get_glyph_name)
+  FLIGHT_SDK_ROW_WIDENS(get_glyph_outline)
+  FLIGHT_SDK_ROW_WIDENS(get_glyph_outline_advance)
+  FLIGHT_SDK_ROW_WIDENS(get_glyph_outline_index_for_code_point)
+  FLIGHT_SDK_ROW_WIDENS(get_glyph_outline_metrics)
+  FLIGHT_SDK_ROW_WIDENS(get_height)
   FLIGHT_SDK_ROW_WIDENS(get_id)
   FLIGHT_SDK_ROW_WIDENS(get_info)
+  FLIGHT_SDK_ROW_WIDENS(get_launch_url)
+  FLIGHT_SDK_ROW_WIDENS(get_locale)
+  FLIGHT_SDK_ROW_WIDENS(get_login_item)
+  FLIGHT_SDK_ROW_WIDENS(get_name)
   FLIGHT_SDK_ROW_WIDENS(get_permission)
   FLIGHT_SDK_ROW_WIDENS(get_permission_state)
   FLIGHT_SDK_ROW_WIDENS(get_persistence)
+  FLIGHT_SDK_ROW_WIDENS(get_preferred_system_languages)
   FLIGHT_SDK_ROW_WIDENS(get_primary_screen)
+  FLIGHT_SDK_ROW_WIDENS(get_registered_schemes)
   FLIGHT_SDK_ROW_WIDENS(get_safe_area_insets)
   FLIGHT_SDK_ROW_WIDENS(get_screens)
+  FLIGHT_SDK_ROW_WIDENS(get_state)
+  FLIGHT_SDK_ROW_WIDENS(get_system_locale)
+  FLIGHT_SDK_ROW_WIDENS(get_version)
+  FLIGHT_SDK_ROW_WIDENS(get_width)
+  FLIGHT_SDK_ROW_WIDENS(get_world_status)
   FLIGHT_SDK_ROW_WIDENS(ghosts)
+  FLIGHT_SDK_ROW_WIDENS(gl)
+  FLIGHT_SDK_ROW_WIDENS(glyph)
+  FLIGHT_SDK_ROW_WIDENS(glyph_count)
+  FLIGHT_SDK_ROW_WIDENS(glyph_stream)
   FLIGHT_SDK_ROW_WIDENS(glyphs)
+  FLIGHT_SDK_ROW_WIDENS(goal_azimuth)
+  FLIGHT_SDK_ROW_WIDENS(goal_distance)
+  FLIGHT_SDK_ROW_WIDENS(goal_pitch)
+  FLIGHT_SDK_ROW_WIDENS(goal_polar)
+  FLIGHT_SDK_ROW_WIDENS(goal_yaw)
   FLIGHT_SDK_ROW_WIDENS(gpu_renderer)
+  FLIGHT_SDK_ROW_WIDENS(gpu_skinning)
   FLIGHT_SDK_ROW_WIDENS(gpu_vendor)
+  FLIGHT_SDK_ROW_WIDENS(gradient)
+  FLIGHT_SDK_ROW_WIDENS(gradients_by_id)
   FLIGHT_SDK_ROW_WIDENS(grain_intensity)
   FLIGHT_SDK_ROW_WIDENS(gravity)
   FLIGHT_SDK_ROW_WIDENS(gravity_x)
@@ -2440,49 +6113,135 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(green)
   FLIGHT_SDK_ROW_WIDENS(green_bias)
   FLIGHT_SDK_ROW_WIDENS(green_scale)
+  FLIGHT_SDK_ROW_WIDENS(grid_size)
+  FLIGHT_SDK_ROW_WIDENS(ground_anchor_ax)
+  FLIGHT_SDK_ROW_WIDENS(ground_anchor_ay)
+  FLIGHT_SDK_ROW_WIDENS(ground_anchor_bx)
+  FLIGHT_SDK_ROW_WIDENS(ground_anchor_by)
   FLIGHT_SDK_ROW_WIDENS(ground_color)
+  FLIGHT_SDK_ROW_WIDENS(groups)
+  FLIGHT_SDK_ROW_WIDENS(growable)
+  FLIGHT_SDK_ROW_WIDENS(guard)
   FLIGHT_SDK_ROW_WIDENS(halation_radius)
   FLIGHT_SDK_ROW_WIDENS(halation_strength)
   FLIGHT_SDK_ROW_WIDENS(half_extent_x)
   FLIGHT_SDK_ROW_WIDENS(half_extent_y)
   FLIGHT_SDK_ROW_WIDENS(half_extent_z)
   FLIGHT_SDK_ROW_WIDENS(half_h)
+  FLIGHT_SDK_ROW_WIDENS(half_height)
   FLIGHT_SDK_ROW_WIDENS(half_w)
+  FLIGHT_SDK_ROW_WIDENS(half_width)
+  FLIGHT_SDK_ROW_WIDENS(half_x)
+  FLIGHT_SDK_ROW_WIDENS(half_y)
+  FLIGHT_SDK_ROW_WIDENS(half_z)
   FLIGHT_SDK_ROW_WIDENS(halo)
   FLIGHT_SDK_ROW_WIDENS(handle)
+  FLIGHT_SDK_ROW_WIDENS(haptics)
+  FLIGHT_SDK_ROW_WIDENS(has_alpha_map)
+  FLIGHT_SDK_ROW_WIDENS(has_base_color_map)
+  FLIGHT_SDK_ROW_WIDENS(has_color)
+  FLIGHT_SDK_ROW_WIDENS(has_color_adjustment)
+  FLIGHT_SDK_ROW_WIDENS(has_color_matrix)
+  FLIGHT_SDK_ROW_WIDENS(has_common)
+  FLIGHT_SDK_ROW_WIDENS(has_emissive_map)
   FLIGHT_SDK_ROW_WIDENS(has_format)
   FLIGHT_SDK_ROW_WIDENS(has_image)
   FLIGHT_SDK_ROW_WIDENS(has_keyboard)
+  FLIGHT_SDK_ROW_WIDENS(has_metallic_roughness_map)
   FLIGHT_SDK_ROW_WIDENS(has_mouse)
+  FLIGHT_SDK_ROW_WIDENS(has_normal_map)
+  FLIGHT_SDK_ROW_WIDENS(has_occlusion_map)
+  FLIGHT_SDK_ROW_WIDENS(has_radius)
+  FLIGHT_SDK_ROW_WIDENS(has_single_instance_lock)
   FLIGHT_SDK_ROW_WIDENS(has_stylus)
   FLIGHT_SDK_ROW_WIDENS(has_text)
   FLIGHT_SDK_ROW_WIDENS(heading)
   FLIGHT_SDK_ROW_WIDENS(height)
+  FLIGHT_SDK_ROW_WIDENS(heights)
   FLIGHT_SDK_ROW_WIDENS(hemisphere)
+  FLIGHT_SDK_ROW_WIDENS(heuristic)
   FLIGHT_SDK_ROW_WIDENS(hide)
+  FLIGHT_SDK_ROW_WIDENS(hide_app)
   FLIGHT_SDK_ROW_WIDENS(high_max)
   FLIGHT_SDK_ROW_WIDENS(high_min)
+  FLIGHT_SDK_ROW_WIDENS(highlight_alpha)
+  FLIGHT_SDK_ROW_WIDENS(highlight_color)
+  FLIGHT_SDK_ROW_WIDENS(history_limit)
+  FLIGHT_SDK_ROW_WIDENS(hit)
+  FLIGHT_SDK_ROW_WIDENS(hit_area)
+  FLIGHT_SDK_ROW_WIDENS(hit_count)
+  FLIGHT_SDK_ROW_WIDENS(hits)
+  FLIGHT_SDK_ROW_WIDENS(horizontal_scroll_bar)
+  FLIGHT_SDK_ROW_WIDENS(host)
+  FLIGHT_SDK_ROW_WIDENS(hovered)
+  FLIGHT_SDK_ROW_WIDENS(html)
   FLIGHT_SDK_ROW_WIDENS(hue)
+  FLIGHT_SDK_ROW_WIDENS(icon)
   FLIGHT_SDK_ROW_WIDENS(id)
+  FLIGHT_SDK_ROW_WIDENS(ids)
   FLIGHT_SDK_ROW_WIDENS(illuminance)
+  FLIGHT_SDK_ROW_WIDENS(image)
   FLIGHT_SDK_ROW_WIDENS(image_count)
   FLIGHT_SDK_ROW_WIDENS(image_file)
   FLIGHT_SDK_ROW_WIDENS(image_height)
   FLIGHT_SDK_ROW_WIDENS(image_path)
+  FLIGHT_SDK_ROW_WIDENS(image_resources)
   FLIGHT_SDK_ROW_WIDENS(image_width)
   FLIGHT_SDK_ROW_WIDENS(impact)
+  FLIGHT_SDK_ROW_WIDENS(implementation_import)
+  FLIGHT_SDK_ROW_WIDENS(implementation_symbol)
+  FLIGHT_SDK_ROW_WIDENS(imported)
+  FLIGHT_SDK_ROW_WIDENS(impulse0)
+  FLIGHT_SDK_ROW_WIDENS(impulse1)
+  FLIGHT_SDK_ROW_WIDENS(impulse2)
+  FLIGHT_SDK_ROW_WIDENS(impulse3)
+  FLIGHT_SDK_ROW_WIDENS(impulse4)
+  FLIGHT_SDK_ROW_WIDENS(impulse5)
+  FLIGHT_SDK_ROW_WIDENS(in_use)
+  FLIGHT_SDK_ROW_WIDENS(indent)
+  FLIGHT_SDK_ROW_WIDENS(index)
+  FLIGHT_SDK_ROW_WIDENS(index_count)
+  FLIGHT_SDK_ROW_WIDENS(index_format)
+  FLIGHT_SDK_ROW_WIDENS(index_offset)
+  FLIGHT_SDK_ROW_WIDENS(indices)
+  FLIGHT_SDK_ROW_WIDENS(inertia_xx)
+  FLIGHT_SDK_ROW_WIDENS(inertia_xy)
+  FLIGHT_SDK_ROW_WIDENS(inertia_xz)
+  FLIGHT_SDK_ROW_WIDENS(inertia_yy)
+  FLIGHT_SDK_ROW_WIDENS(inertia_yz)
+  FLIGHT_SDK_ROW_WIDENS(inertia_zz)
   FLIGHT_SDK_ROW_WIDENS(influence_counts)
   FLIGHT_SDK_ROW_WIDENS(influences)
+  FLIGHT_SDK_ROW_WIDENS(initial_focus)
+  FLIGHT_SDK_ROW_WIDENS(initial_state_index)
+  FLIGHT_SDK_ROW_WIDENS(initial_value)
+  FLIGHT_SDK_ROW_WIDENS(initialized)
   FLIGHT_SDK_ROW_WIDENS(inner_cone_cos)
   FLIGHT_SDK_ROW_WIDENS(inner_cone_degrees)
+  FLIGHT_SDK_ROW_WIDENS(input)
+  FLIGHT_SDK_ROW_WIDENS(input_index)
+  FLIGHT_SDK_ROW_WIDENS(input_values)
+  FLIGHT_SDK_ROW_WIDENS(inputs)
   FLIGHT_SDK_ROW_WIDENS(insert_spatial_object)
+  FLIGHT_SDK_ROW_WIDENS(instruction_stream)
   FLIGHT_SDK_ROW_WIDENS(intensity)
   FLIGHT_SDK_ROW_WIDENS(intensity_unit)
+  FLIGHT_SDK_ROW_WIDENS(interactive_state_binding)
   FLIGHT_SDK_ROW_WIDENS(internal)
   FLIGHT_SDK_ROW_WIDENS(interval)
+  FLIGHT_SDK_ROW_WIDENS(inverse_inertia_world_xx)
+  FLIGHT_SDK_ROW_WIDENS(inverse_inertia_world_xy)
+  FLIGHT_SDK_ROW_WIDENS(inverse_inertia_world_xz)
+  FLIGHT_SDK_ROW_WIDENS(inverse_inertia_world_yy)
+  FLIGHT_SDK_ROW_WIDENS(inverse_inertia_world_yz)
+  FLIGHT_SDK_ROW_WIDENS(inverse_inertia_world_zz)
+  FLIGHT_SDK_ROW_WIDENS(inverse_mass)
+  FLIGHT_SDK_ROW_WIDENS(inverse_view_projection)
   FLIGHT_SDK_ROW_WIDENS(invoke)
   FLIGHT_SDK_ROW_WIDENS(ior)
+  FLIGHT_SDK_ROW_WIDENS(ipc)
   FLIGHT_SDK_ROW_WIDENS(iridescence)
+  FLIGHT_SDK_ROW_WIDENS(iridescence_enabled)
   FLIGHT_SDK_ROW_WIDENS(iridescence_ior)
   FLIGHT_SDK_ROW_WIDENS(iridescence_map)
   FLIGHT_SDK_ROW_WIDENS(iridescence_map_uv_set)
@@ -2490,9 +6249,11 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(iridescence_thickness_map_uv_set)
   FLIGHT_SDK_ROW_WIDENS(iridescence_thickness_max)
   FLIGHT_SDK_ROW_WIDENS(iridescence_thickness_min)
+  FLIGHT_SDK_ROW_WIDENS(irradiance_pipeline)
   FLIGHT_SDK_ROW_WIDENS(is_ambient_light_supported)
   FLIGHT_SDK_ROW_WIDENS(is_available)
   FLIGHT_SDK_ROW_WIDENS(is_barometer_supported)
+  FLIGHT_SDK_ROW_WIDENS(is_default)
   FLIGHT_SDK_ROW_WIDENS(is_gravity_supported)
   FLIGHT_SDK_ROW_WIDENS(is_gyroscope_supported)
   FLIGHT_SDK_ROW_WIDENS(is_hdr)
@@ -2502,94 +6263,267 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(is_magnetometer_supported)
   FLIGHT_SDK_ROW_WIDENS(is_motion_supported)
   FLIGHT_SDK_ROW_WIDENS(is_orientation_supported)
+  FLIGHT_SDK_ROW_WIDENS(is_playing)
   FLIGHT_SDK_ROW_WIDENS(is_primary)
   FLIGHT_SDK_ROW_WIDENS(is_proximity_supported)
+  FLIGHT_SDK_ROW_WIDENS(is_ready)
+  FLIGHT_SDK_ROW_WIDENS(is_registered)
   FLIGHT_SDK_ROW_WIDENS(is_rooted)
   FLIGHT_SDK_ROW_WIDENS(is_supported)
   FLIGHT_SDK_ROW_WIDENS(is_touch)
   FLIGHT_SDK_ROW_WIDENS(is_virtual)
+  FLIGHT_SDK_ROW_WIDENS(items)
+  FLIGHT_SDK_ROW_WIDENS(jitter)
+  FLIGHT_SDK_ROW_WIDENS(join)
   FLIGHT_SDK_ROW_WIDENS(joint_collision_suppressions)
+  FLIGHT_SDK_ROW_WIDENS(joint_matrices)
   FLIGHT_SDK_ROW_WIDENS(joint_solvers)
+  FLIGHT_SDK_ROW_WIDENS(joints)
   FLIGHT_SDK_ROW_WIDENS(kerning)
+  FLIGHT_SDK_ROW_WIDENS(kerning_count)
+  FLIGHT_SDK_ROW_WIDENS(kernings)
   FLIGHT_SDK_ROW_WIDENS(key)
+  FLIGHT_SDK_ROW_WIDENS(key_code)
   FLIGHT_SDK_ROW_WIDENS(kind)
   FLIGHT_SDK_ROW_WIDENS(label)
+  FLIGHT_SDK_ROW_WIDENS(labels)
+  FLIGHT_SDK_ROW_WIDENS(last_failure_actual_length)
+  FLIGHT_SDK_ROW_WIDENS(last_failure_kind)
+  FLIGHT_SDK_ROW_WIDENS(last_failure_node_index)
+  FLIGHT_SDK_ROW_WIDENS(last_failure_parent_index)
+  FLIGHT_SDK_ROW_WIDENS(last_failure_required_length)
+  FLIGHT_SDK_ROW_WIDENS(last_failure_resolver_kind)
+  FLIGHT_SDK_ROW_WIDENS(last_frame_update)
   FLIGHT_SDK_ROW_WIDENS(latitude)
+  FLIGHT_SDK_ROW_WIDENS(layer_index)
   FLIGHT_SDK_ROW_WIDENS(layer_mask)
+  FLIGHT_SDK_ROW_WIDENS(layers)
+  FLIGHT_SDK_ROW_WIDENS(layout)
+  FLIGHT_SDK_ROW_WIDENS(layout_type)
   FLIGHT_SDK_ROW_WIDENS(leading)
   FLIGHT_SDK_ROW_WIDENS(leaf_by_object)
+  FLIGHT_SDK_ROW_WIDENS(leased)
   FLIGHT_SDK_ROW_WIDENS(left)
+  FLIGHT_SDK_ROW_WIDENS(left_margin)
+  FLIGHT_SDK_ROW_WIDENS(length)
+  FLIGHT_SDK_ROW_WIDENS(lengths)
   FLIGHT_SDK_ROW_WIDENS(levels)
   FLIGHT_SDK_ROW_WIDENS(life)
   FLIGHT_SDK_ROW_WIDENS(life_offset)
+  FLIGHT_SDK_ROW_WIDENS(lifecycle)
   FLIGHT_SDK_ROW_WIDENS(lifetime_max)
   FLIGHT_SDK_ROW_WIDENS(lifetime_min)
+  FLIGHT_SDK_ROW_WIDENS(lifetimes)
   FLIGHT_SDK_ROW_WIDENS(lift)
   FLIGHT_SDK_ROW_WIDENS(light_color)
+  FLIGHT_SDK_ROW_WIDENS(light_type)
   FLIGHT_SDK_ROW_WIDENS(light_x)
   FLIGHT_SDK_ROW_WIDENS(light_y)
   FLIGHT_SDK_ROW_WIDENS(lightness)
+  FLIGHT_SDK_ROW_WIDENS(limit_damping_ratio)
+  FLIGHT_SDK_ROW_WIDENS(limit_frequency_hz)
+  FLIGHT_SDK_ROW_WIDENS(line)
+  FLIGHT_SDK_ROW_WIDENS(line_ascents)
+  FLIGHT_SDK_ROW_WIDENS(line_count)
+  FLIGHT_SDK_ROW_WIDENS(line_descents)
+  FLIGHT_SDK_ROW_WIDENS(line_gap)
+  FLIGHT_SDK_ROW_WIDENS(line_height)
+  FLIGHT_SDK_ROW_WIDENS(line_heights)
   FLIGHT_SDK_ROW_WIDENS(line_index)
+  FLIGHT_SDK_ROW_WIDENS(line_leadings)
+  FLIGHT_SDK_ROW_WIDENS(line_widths)
   FLIGHT_SDK_ROW_WIDENS(linear_length)
   FLIGHT_SDK_ROW_WIDENS(linear_start)
+  FLIGHT_SDK_ROW_WIDENS(lines)
+  FLIGHT_SDK_ROW_WIDENS(linkage)
+  FLIGHT_SDK_ROW_WIDENS(list)
+  FLIGHT_SDK_ROW_WIDENS(load_font_faces)
+  FLIGHT_SDK_ROW_WIDENS(loaded)
+  FLIGHT_SDK_ROW_WIDENS(local)
+  FLIGHT_SDK_ROW_WIDENS(local_anchor_ax)
+  FLIGHT_SDK_ROW_WIDENS(local_anchor_ay)
+  FLIGHT_SDK_ROW_WIDENS(local_anchor_az)
+  FLIGHT_SDK_ROW_WIDENS(local_anchor_bx)
+  FLIGHT_SDK_ROW_WIDENS(local_anchor_by)
+  FLIGHT_SDK_ROW_WIDENS(local_anchor_bz)
+  FLIGHT_SDK_ROW_WIDENS(local_anchor_x)
+  FLIGHT_SDK_ROW_WIDENS(local_anchor_y)
+  FLIGHT_SDK_ROW_WIDENS(local_axis_ax)
+  FLIGHT_SDK_ROW_WIDENS(local_axis_ay)
+  FLIGHT_SDK_ROW_WIDENS(local_bounds_id)
+  FLIGHT_SDK_ROW_WIDENS(local_content_id)
+  FLIGHT_SDK_ROW_WIDENS(local_rotation_aw)
+  FLIGHT_SDK_ROW_WIDENS(local_rotation_ax)
+  FLIGHT_SDK_ROW_WIDENS(local_rotation_ay)
+  FLIGHT_SDK_ROW_WIDENS(local_rotation_az)
+  FLIGHT_SDK_ROW_WIDENS(local_rotation_bw)
+  FLIGHT_SDK_ROW_WIDENS(local_rotation_bx)
+  FLIGHT_SDK_ROW_WIDENS(local_rotation_by)
+  FLIGHT_SDK_ROW_WIDENS(local_rotation_bz)
+  FLIGHT_SDK_ROW_WIDENS(local_transform_id)
+  FLIGHT_SDK_ROW_WIDENS(local_x)
+  FLIGHT_SDK_ROW_WIDENS(local_y)
   FLIGHT_SDK_ROW_WIDENS(locale)
   FLIGHT_SDK_ROW_WIDENS(logical_height)
   FLIGHT_SDK_ROW_WIDENS(logical_width)
   FLIGHT_SDK_ROW_WIDENS(longitude)
   FLIGHT_SDK_ROW_WIDENS(loop)
+  FLIGHT_SDK_ROW_WIDENS(loop_mode)
+  FLIGHT_SDK_ROW_WIDENS(loops)
   FLIGHT_SDK_ROW_WIDENS(low_max)
   FLIGHT_SDK_ROW_WIDENS(low_min)
+  FLIGHT_SDK_ROW_WIDENS(lower_angle)
+  FLIGHT_SDK_ROW_WIDENS(lower_angular_x)
+  FLIGHT_SDK_ROW_WIDENS(lower_angular_y)
+  FLIGHT_SDK_ROW_WIDENS(lower_angular_z)
+  FLIGHT_SDK_ROW_WIDENS(lower_limit_impulse)
+  FLIGHT_SDK_ROW_WIDENS(lower_limit_impulses)
+  FLIGHT_SDK_ROW_WIDENS(lower_linear_x)
+  FLIGHT_SDK_ROW_WIDENS(lower_linear_y)
+  FLIGHT_SDK_ROW_WIDENS(lower_linear_z)
+  FLIGHT_SDK_ROW_WIDENS(lower_translation)
+  FLIGHT_SDK_ROW_WIDENS(lower_twist_angle)
+  FLIGHT_SDK_ROW_WIDENS(lower_twist_impulse)
   FLIGHT_SDK_ROW_WIDENS(lut)
+  FLIGHT_SDK_ROW_WIDENS(lut_cache)
   FLIGHT_SDK_ROW_WIDENS(m)
   FLIGHT_SDK_ROW_WIDENS(mag_filter)
+  FLIGHT_SDK_ROW_WIDENS(manager)
   FLIGHT_SDK_ROW_WIDENS(manufacturer)
   FLIGHT_SDK_ROW_WIDENS(map)
   FLIGHT_SDK_ROW_WIDENS(margin)
+  FLIGHT_SDK_ROW_WIDENS(margin_x)
+  FLIGHT_SDK_ROW_WIDENS(margin_y)
   FLIGHT_SDK_ROW_WIDENS(marketing_name)
+  FLIGHT_SDK_ROW_WIDENS(mask)
+  FLIGHT_SDK_ROW_WIDENS(mass)
   FLIGHT_SDK_ROW_WIDENS(material)
+  FLIGHT_SDK_ROW_WIDENS(material_bind_group_layout)
   FLIGHT_SDK_ROW_WIDENS(material_data)
+  FLIGHT_SDK_ROW_WIDENS(material_kinds)
+  FLIGHT_SDK_ROW_WIDENS(material_renderers)
+  FLIGHT_SDK_ROW_WIDENS(materials)
   FLIGHT_SDK_ROW_WIDENS(matrix)
   FLIGHT_SDK_ROW_WIDENS(matrix_x)
   FLIGHT_SDK_ROW_WIDENS(matrix_y)
   FLIGHT_SDK_ROW_WIDENS(max)
+  FLIGHT_SDK_ROW_WIDENS(max_area)
+  FLIGHT_SDK_ROW_WIDENS(max_blur)
   FLIGHT_SDK_ROW_WIDENS(max_brightness)
+  FLIGHT_SDK_ROW_WIDENS(max_bytes)
+  FLIGHT_SDK_ROW_WIDENS(max_chars)
+  FLIGHT_SDK_ROW_WIDENS(max_concurrent)
+  FLIGHT_SDK_ROW_WIDENS(max_delta_time)
   FLIGHT_SDK_ROW_WIDENS(max_distance)
   FLIGHT_SDK_ROW_WIDENS(max_ev)
   FLIGHT_SDK_ROW_WIDENS(max_exposure)
+  FLIGHT_SDK_ROW_WIDENS(max_force)
+  FLIGHT_SDK_ROW_WIDENS(max_glyphs)
+  FLIGHT_SDK_ROW_WIDENS(max_height)
+  FLIGHT_SDK_ROW_WIDENS(max_length)
+  FLIGHT_SDK_ROW_WIDENS(max_lines)
   FLIGHT_SDK_ROW_WIDENS(max_luminance)
+  FLIGHT_SDK_ROW_WIDENS(max_motor_force)
+  FLIGHT_SDK_ROW_WIDENS(max_motor_torque)
   FLIGHT_SDK_ROW_WIDENS(max_particle_count)
   FLIGHT_SDK_ROW_WIDENS(max_particles)
-  FLIGHT_SDK_ROW_WIDENS(max_radius)
-  FLIGHT_SDK_ROW_WIDENS(max_radius_variance)
+  FLIGHT_SDK_ROW_WIDENS(max_pitch)
+  FLIGHT_SDK_ROW_WIDENS(max_polar)
+  FLIGHT_SDK_ROW_WIDENS(max_size)
+  FLIGHT_SDK_ROW_WIDENS(max_width)
   FLIGHT_SDK_ROW_WIDENS(max_x)
   FLIGHT_SDK_ROW_WIDENS(max_y)
   FLIGHT_SDK_ROW_WIDENS(max_z)
+  FLIGHT_SDK_ROW_WIDENS(maximize)
+  FLIGHT_SDK_ROW_WIDENS(maximized)
+  FLIGHT_SDK_ROW_WIDENS(maximum)
+  FLIGHT_SDK_ROW_WIDENS(maximum_first)
+  FLIGHT_SDK_ROW_WIDENS(measure_metrics)
+  FLIGHT_SDK_ROW_WIDENS(measure_text)
+  FLIGHT_SDK_ROW_WIDENS(media_session)
+  FLIGHT_SDK_ROW_WIDENS(menu)
+  FLIGHT_SDK_ROW_WIDENS(mesh_count)
+  FLIGHT_SDK_ROW_WIDENS(mesh_material_renderers)
+  FLIGHT_SDK_ROW_WIDENS(message)
+  FLIGHT_SDK_ROW_WIDENS(meta_key)
   FLIGHT_SDK_ROW_WIDENS(metadata)
+  FLIGHT_SDK_ROW_WIDENS(metallic)
+  FLIGHT_SDK_ROW_WIDENS(metallic_roughness_map)
+  FLIGHT_SDK_ROW_WIDENS(method)
   FLIGHT_SDK_ROW_WIDENS(metrics)
+  FLIGHT_SDK_ROW_WIDENS(midi)
+  FLIGHT_SDK_ROW_WIDENS(mime_type)
   FLIGHT_SDK_ROW_WIDENS(min)
+  FLIGHT_SDK_ROW_WIDENS(min_distance)
   FLIGHT_SDK_ROW_WIDENS(min_ev)
   FLIGHT_SDK_ROW_WIDENS(min_exposure)
   FLIGHT_SDK_ROW_WIDENS(min_filter)
+  FLIGHT_SDK_ROW_WIDENS(min_height)
+  FLIGHT_SDK_ROW_WIDENS(min_length)
   FLIGHT_SDK_ROW_WIDENS(min_particle_count)
-  FLIGHT_SDK_ROW_WIDENS(min_radius)
-  FLIGHT_SDK_ROW_WIDENS(min_radius_variance)
+  FLIGHT_SDK_ROW_WIDENS(min_pitch)
+  FLIGHT_SDK_ROW_WIDENS(min_polar)
+  FLIGHT_SDK_ROW_WIDENS(min_width)
   FLIGHT_SDK_ROW_WIDENS(min_x)
   FLIGHT_SDK_ROW_WIDENS(min_y)
   FLIGHT_SDK_ROW_WIDENS(min_z)
+  FLIGHT_SDK_ROW_WIDENS(minimize)
+  FLIGHT_SDK_ROW_WIDENS(minimized)
+  FLIGHT_SDK_ROW_WIDENS(minimum)
+  FLIGHT_SDK_ROW_WIDENS(minimum_first)
+  FLIGHT_SDK_ROW_WIDENS(minimum_height)
+  FLIGHT_SDK_ROW_WIDENS(minimum_second)
+  FLIGHT_SDK_ROW_WIDENS(minimum_width)
+  FLIGHT_SDK_ROW_WIDENS(mip_level_count)
   FLIGHT_SDK_ROW_WIDENS(mipmaps)
+  FLIGHT_SDK_ROW_WIDENS(miter_limit)
   FLIGHT_SDK_ROW_WIDENS(mode)
   FLIGHT_SDK_ROW_WIDENS(model)
+  FLIGHT_SDK_ROW_WIDENS(modifier_kinds)
+  FLIGHT_SDK_ROW_WIDENS(modifier_snippet_revision)
+  FLIGHT_SDK_ROW_WIDENS(modifier_snippets)
   FLIGHT_SDK_ROW_WIDENS(modifiers)
+  FLIGHT_SDK_ROW_WIDENS(module)
   FLIGHT_SDK_ROW_WIDENS(monochrome)
+  FLIGHT_SDK_ROW_WIDENS(morph)
+  FLIGHT_SDK_ROW_WIDENS(motor_impulse)
+  FLIGHT_SDK_ROW_WIDENS(motor_speed)
+  FLIGHT_SDK_ROW_WIDENS(mouse_wheel_enabled)
+  FLIGHT_SDK_ROW_WIDENS(move_to_trash)
+  FLIGHT_SDK_ROW_WIDENS(move_to_x)
+  FLIGHT_SDK_ROW_WIDENS(move_to_y)
+  FLIGHT_SDK_ROW_WIDENS(multiline)
+  FLIGHT_SDK_ROW_WIDENS(muted)
+  FLIGHT_SDK_ROW_WIDENS(n_contour_stream)
+  FLIGHT_SDK_ROW_WIDENS(n_points_stream)
   FLIGHT_SDK_ROW_WIDENS(name)
+  FLIGHT_SDK_ROW_WIDENS(name_prefix)
   FLIGHT_SDK_ROW_WIDENS(near)
+  FLIGHT_SDK_ROW_WIDENS(near_clip_plane)
+  FLIGHT_SDK_ROW_WIDENS(net)
+  FLIGHT_SDK_ROW_WIDENS(node)
+  FLIGHT_SDK_ROW_WIDENS(node_indices)
+  FLIGHT_SDK_ROW_WIDENS(node_kinds)
+  FLIGHT_SDK_ROW_WIDENS(nodes)
+  FLIGHT_SDK_ROW_WIDENS(normal)
   FLIGHT_SDK_ROW_WIDENS(normal_bias)
+  FLIGHT_SDK_ROW_WIDENS(normal_impulse)
+  FLIGHT_SDK_ROW_WIDENS(normal_map)
+  FLIGHT_SDK_ROW_WIDENS(normal_mass)
+  FLIGHT_SDK_ROW_WIDENS(normal_matrices)
+  FLIGHT_SDK_ROW_WIDENS(normal_scale)
   FLIGHT_SDK_ROW_WIDENS(normal_x)
   FLIGHT_SDK_ROW_WIDENS(normal_y)
   FLIGHT_SDK_ROW_WIDENS(normal_z)
+  FLIGHT_SDK_ROW_WIDENS(normals)
   FLIGHT_SDK_ROW_WIDENS(notification)
   FLIGHT_SDK_ROW_WIDENS(num_lines)
   FLIGHT_SDK_ROW_WIDENS(object)
+  FLIGHT_SDK_ROW_WIDENS(object_id)
+  FLIGHT_SDK_ROW_WIDENS(object_url)
+  FLIGHT_SDK_ROW_WIDENS(objects)
+  FLIGHT_SDK_ROW_WIDENS(occlusion_map)
+  FLIGHT_SDK_ROW_WIDENS(occlusion_strength)
   FLIGHT_SDK_ROW_WIDENS(offset)
   FLIGHT_SDK_ROW_WIDENS(offset_x)
   FLIGHT_SDK_ROW_WIDENS(offset_y)
@@ -2597,29 +6531,78 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(on_absolute_orientation)
   FLIGHT_SDK_ROW_WIDENS(on_accelerometer)
   FLIGHT_SDK_ROW_WIDENS(on_action)
+  FLIGHT_SDK_ROW_WIDENS(on_activate)
+  FLIGHT_SDK_ROW_WIDENS(on_all_windows_closed)
   FLIGHT_SDK_ROW_WIDENS(on_ambient_light)
+  FLIGHT_SDK_ROW_WIDENS(on_backend_changed)
   FLIGHT_SDK_ROW_WIDENS(on_barometer)
   FLIGHT_SDK_ROW_WIDENS(on_change)
+  FLIGHT_SDK_ROW_WIDENS(on_click)
+  FLIGHT_SDK_ROW_WIDENS(on_close)
+  FLIGHT_SDK_ROW_WIDENS(on_close_request)
+  FLIGHT_SDK_ROW_WIDENS(on_complete)
+  FLIGHT_SDK_ROW_WIDENS(on_copy)
+  FLIGHT_SDK_ROW_WIDENS(on_deactivate)
+  FLIGHT_SDK_ROW_WIDENS(on_drop_file)
   FLIGHT_SDK_ROW_WIDENS(on_emitter_complete)
+  FLIGHT_SDK_ROW_WIDENS(on_enter)
+  FLIGHT_SDK_ROW_WIDENS(on_event)
+  FLIGHT_SDK_ROW_WIDENS(on_finished)
+  FLIGHT_SDK_ROW_WIDENS(on_focus_in)
+  FLIGHT_SDK_ROW_WIDENS(on_focus_out)
+  FLIGHT_SDK_ROW_WIDENS(on_fullscreen_changed)
   FLIGHT_SDK_ROW_WIDENS(on_gravity)
   FLIGHT_SDK_ROW_WIDENS(on_gyroscope)
   FLIGHT_SDK_ROW_WIDENS(on_hide)
   FLIGHT_SDK_ROW_WIDENS(on_linear_acceleration)
+  FLIGHT_SDK_ROW_WIDENS(on_looped)
   FLIGHT_SDK_ROW_WIDENS(on_magnetometer)
+  FLIGHT_SDK_ROW_WIDENS(on_maximize)
+  FLIGHT_SDK_ROW_WIDENS(on_minimize)
+  FLIGHT_SDK_ROW_WIDENS(on_move)
+  FLIGHT_SDK_ROW_WIDENS(on_open_file)
+  FLIGHT_SDK_ROW_WIDENS(on_open_url)
   FLIGHT_SDK_ROW_WIDENS(on_orientation)
+  FLIGHT_SDK_ROW_WIDENS(on_orientation_changed)
   FLIGHT_SDK_ROW_WIDENS(on_particle_death)
   FLIGHT_SDK_ROW_WIDENS(on_particle_spawn)
   FLIGHT_SDK_ROW_WIDENS(on_proximity)
   FLIGHT_SDK_ROW_WIDENS(on_quaternion)
+  FLIGHT_SDK_ROW_WIDENS(on_quit_request)
+  FLIGHT_SDK_ROW_WIDENS(on_ready)
+  FLIGHT_SDK_ROW_WIDENS(on_render_context_lost)
+  FLIGHT_SDK_ROW_WIDENS(on_render_context_restored)
+  FLIGHT_SDK_ROW_WIDENS(on_repeat)
   FLIGHT_SDK_ROW_WIDENS(on_resize)
+  FLIGHT_SDK_ROW_WIDENS(on_resource_failed)
+  FLIGHT_SDK_ROW_WIDENS(on_resource_resolved)
+  FLIGHT_SDK_ROW_WIDENS(on_restore)
   FLIGHT_SDK_ROW_WIDENS(on_screen_added)
   FLIGHT_SDK_ROW_WIDENS(on_screen_metrics_changed)
   FLIGHT_SDK_ROW_WIDENS(on_screen_removed)
+  FLIGHT_SDK_ROW_WIDENS(on_second_instance)
+  FLIGHT_SDK_ROW_WIDENS(on_select)
   FLIGHT_SDK_ROW_WIDENS(on_show)
+  FLIGHT_SDK_ROW_WIDENS(on_socket_close)
+  FLIGHT_SDK_ROW_WIDENS(on_socket_error)
+  FLIGHT_SDK_ROW_WIDENS(on_socket_message)
+  FLIGHT_SDK_ROW_WIDENS(on_socket_open)
+  FLIGHT_SDK_ROW_WIDENS(on_source_ended)
+  FLIGHT_SDK_ROW_WIDENS(on_state_change)
   FLIGHT_SDK_ROW_WIDENS(on_tick)
+  FLIGHT_SDK_ROW_WIDENS(on_update)
+  FLIGHT_SDK_ROW_WIDENS(on_yoyo)
   FLIGHT_SDK_ROW_WIDENS(once)
+  FLIGHT_SDK_ROW_WIDENS(opacity)
+  FLIGHT_SDK_ROW_WIDENS(opcode)
+  FLIGHT_SDK_ROW_WIDENS(open)
+  FLIGHT_SDK_ROW_WIDENS(open_socket)
+  FLIGHT_SDK_ROW_WIDENS(open_tcp_socket)
+  FLIGHT_SDK_ROW_WIDENS(operands)
   FLIGHT_SDK_ROW_WIDENS(operation)
   FLIGHT_SDK_ROW_WIDENS(operator_)
+  FLIGHT_SDK_ROW_WIDENS(options)
+  FLIGHT_SDK_ROW_WIDENS(ordered_modifiers)
   FLIGHT_SDK_ROW_WIDENS(orientation)
   FLIGHT_SDK_ROW_WIDENS(orientation_w)
   FLIGHT_SDK_ROW_WIDENS(orientation_x)
@@ -2628,49 +6611,122 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(origin)
   FLIGHT_SDK_ROW_WIDENS(origin_x)
   FLIGHT_SDK_ROW_WIDENS(origin_y)
+  FLIGHT_SDK_ROW_WIDENS(original_height)
+  FLIGHT_SDK_ROW_WIDENS(original_width)
   FLIGHT_SDK_ROW_WIDENS(os_build)
   FLIGHT_SDK_ROW_WIDENS(os_name)
   FLIGHT_SDK_ROW_WIDENS(os_version)
+  FLIGHT_SDK_ROW_WIDENS(outcome)
   FLIGHT_SDK_ROW_WIDENS(outer_cone_cos)
   FLIGHT_SDK_ROW_WIDENS(outer_cone_degrees)
+  FLIGHT_SDK_ROW_WIDENS(over_state)
   FLIGHT_SDK_ROW_WIDENS(overlapping)
-  FLIGHT_SDK_ROW_WIDENS(overlays_content)
+  FLIGHT_SDK_ROW_WIDENS(overwrite)
+  FLIGHT_SDK_ROW_WIDENS(owner)
+  FLIGHT_SDK_ROW_WIDENS(owns_element)
+  FLIGHT_SDK_ROW_WIDENS(padding)
+  FLIGHT_SDK_ROW_WIDENS(page_ids)
   FLIGHT_SDK_ROW_WIDENS(pages)
   FLIGHT_SDK_ROW_WIDENS(parent)
+  FLIGHT_SDK_ROW_WIDENS(parent_indices)
+  FLIGHT_SDK_ROW_WIDENS(parent_reference_id)
+  FLIGHT_SDK_ROW_WIDENS(parent_window)
   FLIGHT_SDK_ROW_WIDENS(particle_lifespan)
   FLIGHT_SDK_ROW_WIDENS(particle_lifespan_variance)
+  FLIGHT_SDK_ROW_WIDENS(passes)
+  FLIGHT_SDK_ROW_WIDENS(password_character)
+  FLIGHT_SDK_ROW_WIDENS(path)
   FLIGHT_SDK_ROW_WIDENS(paused)
+  FLIGHT_SDK_ROW_WIDENS(payload)
+  FLIGHT_SDK_ROW_WIDENS(pbr_sample_bind_group_layout)
   FLIGHT_SDK_ROW_WIDENS(pcf_radius)
   FLIGHT_SDK_ROW_WIDENS(pedestal)
+  FLIGHT_SDK_ROW_WIDENS(percentage)
+  FLIGHT_SDK_ROW_WIDENS(permission_state)
+  FLIGHT_SDK_ROW_WIDENS(permissions)
+  FLIGHT_SDK_ROW_WIDENS(persistence)
+  FLIGHT_SDK_ROW_WIDENS(phase)
   FLIGHT_SDK_ROW_WIDENS(physical_height)
   FLIGHT_SDK_ROW_WIDENS(physical_width)
+  FLIGHT_SDK_ROW_WIDENS(pitch)
+  FLIGHT_SDK_ROW_WIDENS(pivot_screen_x)
+  FLIGHT_SDK_ROW_WIDENS(pivot_screen_y)
+  FLIGHT_SDK_ROW_WIDENS(pivot_world_x)
+  FLIGHT_SDK_ROW_WIDENS(pivot_world_y)
   FLIGHT_SDK_ROW_WIDENS(pivot_x)
   FLIGHT_SDK_ROW_WIDENS(pivot_y)
   FLIGHT_SDK_ROW_WIDENS(pixel_depth)
   FLIGHT_SDK_ROW_WIDENS(pixel_format)
   FLIGHT_SDK_ROW_WIDENS(pixel_ratio)
+  FLIGHT_SDK_ROW_WIDENS(placements)
+  FLIGHT_SDK_ROW_WIDENS(platform)
   FLIGHT_SDK_ROW_WIDENS(platform_string)
+  FLIGHT_SDK_ROW_WIDENS(play_mode)
   FLIGHT_SDK_ROW_WIDENS(playback_rate)
+  FLIGHT_SDK_ROW_WIDENS(player)
+  FLIGHT_SDK_ROW_WIDENS(players)
+  FLIGHT_SDK_ROW_WIDENS(playing)
   FLIGHT_SDK_ROW_WIDENS(point)
+  FLIGHT_SDK_ROW_WIDENS(point_ax)
+  FLIGHT_SDK_ROW_WIDENS(point_ay)
+  FLIGHT_SDK_ROW_WIDENS(point_az)
+  FLIGHT_SDK_ROW_WIDENS(point_bx)
+  FLIGHT_SDK_ROW_WIDENS(point_by)
+  FLIGHT_SDK_ROW_WIDENS(point_bz)
   FLIGHT_SDK_ROW_WIDENS(point_count)
+  FLIGHT_SDK_ROW_WIDENS(point_counts)
+  FLIGHT_SDK_ROW_WIDENS(point_feature_ids)
+  FLIGHT_SDK_ROW_WIDENS(point_starts)
+  FLIGHT_SDK_ROW_WIDENS(point_values)
+  FLIGHT_SDK_ROW_WIDENS(pointer_id)
   FLIGHT_SDK_ROW_WIDENS(pointer_width)
   FLIGHT_SDK_ROW_WIDENS(points)
+  FLIGHT_SDK_ROW_WIDENS(polar)
+  FLIGHT_SDK_ROW_WIDENS(pool)
   FLIGHT_SDK_ROW_WIDENS(position)
   FLIGHT_SDK_ROW_WIDENS(positions)
+  FLIGHT_SDK_ROW_WIDENS(power)
+  FLIGHT_SDK_ROW_WIDENS(power_of_two)
+  FLIGHT_SDK_ROW_WIDENS(power_scratch)
+  FLIGHT_SDK_ROW_WIDENS(precision)
+  FLIGHT_SDK_ROW_WIDENS(preferences)
+  FLIGHT_SDK_ROW_WIDENS(prefiltered_pipeline)
+  FLIGHT_SDK_ROW_WIDENS(premultiplied)
   FLIGHT_SDK_ROW_WIDENS(premultiplied_alpha)
+  FLIGHT_SDK_ROW_WIDENS(premultiply_alpha)
   FLIGHT_SDK_ROW_WIDENS(prepare)
   FLIGHT_SDK_ROW_WIDENS(preserve_alpha)
+  FLIGHT_SDK_ROW_WIDENS(pressed)
   FLIGHT_SDK_ROW_WIDENS(pressure)
+  FLIGHT_SDK_ROW_WIDENS(prev_x)
+  FLIGHT_SDK_ROW_WIDENS(prev_y)
+  FLIGHT_SDK_ROW_WIDENS(prev_z)
   FLIGHT_SDK_ROW_WIDENS(previous_world_transform)
   FLIGHT_SDK_ROW_WIDENS(priority)
+  FLIGHT_SDK_ROW_WIDENS(probes)
   FLIGHT_SDK_ROW_WIDENS(product_name)
+  FLIGHT_SDK_ROW_WIDENS(progress)
   FLIGHT_SDK_ROW_WIDENS(projection)
+  FLIGHT_SDK_ROW_WIDENS(projection_type)
+  FLIGHT_SDK_ROW_WIDENS(prompt)
   FLIGHT_SDK_ROW_WIDENS(prompt_for_access)
+  FLIGHT_SDK_ROW_WIDENS(properties)
+  FLIGHT_SDK_ROW_WIDENS(property)
+  FLIGHT_SDK_ROW_WIDENS(property_map)
+  FLIGHT_SDK_ROW_WIDENS(protocol)
+  FLIGHT_SDK_ROW_WIDENS(quality)
+  FLIGHT_SDK_ROW_WIDENS(quaternion)
+  FLIGHT_SDK_ROW_WIDENS(query)
   FLIGHT_SDK_ROW_WIDENS(query_permission)
+  FLIGHT_SDK_ROW_WIDENS(query_point)
+  FLIGHT_SDK_ROW_WIDENS(query_ray)
+  FLIGHT_SDK_ROW_WIDENS(query_region)
+  FLIGHT_SDK_ROW_WIDENS(query_shape_cast)
   FLIGHT_SDK_ROW_WIDENS(query_spatial_pairs)
   FLIGHT_SDK_ROW_WIDENS(query_spatial_point)
   FLIGHT_SDK_ROW_WIDENS(query_spatial_ray)
   FLIGHT_SDK_ROW_WIDENS(query_spatial_region)
+  FLIGHT_SDK_ROW_WIDENS(quit)
   FLIGHT_SDK_ROW_WIDENS(r_ax)
   FLIGHT_SDK_ROW_WIDENS(r_ay)
   FLIGHT_SDK_ROW_WIDENS(r_az)
@@ -2681,36 +6737,100 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(radial_accel_variance)
   FLIGHT_SDK_ROW_WIDENS(radial_acceleration)
   FLIGHT_SDK_ROW_WIDENS(radius)
+  FLIGHT_SDK_ROW_WIDENS(radius_x)
+  FLIGHT_SDK_ROW_WIDENS(radius_y)
+  FLIGHT_SDK_ROW_WIDENS(random)
   FLIGHT_SDK_ROW_WIDENS(range)
+  FLIGHT_SDK_ROW_WIDENS(ranges)
+  FLIGHT_SDK_ROW_WIDENS(rasterizer_backend)
+  FLIGHT_SDK_ROW_WIDENS(ratio)
+  FLIGHT_SDK_ROW_WIDENS(ratios)
+  FLIGHT_SDK_ROW_WIDENS(read)
+  FLIGHT_SDK_ROW_WIDENS(read_bitmap)
+  FLIGHT_SDK_ROW_WIDENS(read_bodies)
   FLIGHT_SDK_ROW_WIDENS(read_bookmark)
+  FLIGHT_SDK_ROW_WIDENS(read_contacts)
   FLIGHT_SDK_ROW_WIDENS(read_format)
   FLIGHT_SDK_ROW_WIDENS(read_html)
   FLIGHT_SDK_ROW_WIDENS(read_image)
   FLIGHT_SDK_ROW_WIDENS(read_items)
+  FLIGHT_SDK_ROW_WIDENS(read_joints)
+  FLIGHT_SDK_ROW_WIDENS(read_only)
   FLIGHT_SDK_ROW_WIDENS(read_rtf)
   FLIGHT_SDK_ROW_WIDENS(read_text)
   FLIGHT_SDK_ROW_WIDENS(reason)
   FLIGHT_SDK_ROW_WIDENS(red)
   FLIGHT_SDK_ROW_WIDENS(red_bias)
   FLIGHT_SDK_ROW_WIDENS(red_scale)
+  FLIGHT_SDK_ROW_WIDENS(reference_angle)
+  FLIGHT_SDK_ROW_WIDENS(referenced_pages)
+  FLIGHT_SDK_ROW_WIDENS(reflect)
   FLIGHT_SDK_ROW_WIDENS(refresh)
   FLIGHT_SDK_ROW_WIDENS(refresh_rate)
+  FLIGHT_SDK_ROW_WIDENS(region_blend)
+  FLIGHT_SDK_ROW_WIDENS(region_duration)
+  FLIGHT_SDK_ROW_WIDENS(region_elapsed)
   FLIGHT_SDK_ROW_WIDENS(region_id_max)
   FLIGHT_SDK_ROW_WIDENS(region_id_min)
+  FLIGHT_SDK_ROW_WIDENS(region_index)
+  FLIGHT_SDK_ROW_WIDENS(region_states)
+  FLIGHT_SDK_ROW_WIDENS(region_transitions)
+  FLIGHT_SDK_ROW_WIDENS(regions)
+  FLIGHT_SDK_ROW_WIDENS(register_)
+  FLIGHT_SDK_ROW_WIDENS(registered_count)
+  FLIGHT_SDK_ROW_WIDENS(registrar_import)
+  FLIGHT_SDK_ROW_WIDENS(registrar_symbol)
+  FLIGHT_SDK_ROW_WIDENS(registry)
+  FLIGHT_SDK_ROW_WIDENS(related_id)
   FLIGHT_SDK_ROW_WIDENS(relative)
+  FLIGHT_SDK_ROW_WIDENS(relaunch)
+  FLIGHT_SDK_ROW_WIDENS(release)
+  FLIGHT_SDK_ROW_WIDENS(release_element)
+  FLIGHT_SDK_ROW_WIDENS(release_single_instance_lock)
+  FLIGHT_SDK_ROW_WIDENS(remove_as_default)
   FLIGHT_SDK_ROW_WIDENS(remove_node)
   FLIGHT_SDK_ROW_WIDENS(remove_spatial_object)
+  FLIGHT_SDK_ROW_WIDENS(render_effects)
+  FLIGHT_SDK_ROW_WIDENS(render_root_guard)
+  FLIGHT_SDK_ROW_WIDENS(renderers)
+  FLIGHT_SDK_ROW_WIDENS(repeat)
   FLIGHT_SDK_ROW_WIDENS(repeat_count)
+  FLIGHT_SDK_ROW_WIDENS(report_diagnostic)
   FLIGHT_SDK_ROW_WIDENS(request)
+  FLIGHT_SDK_ROW_WIDENS(request_access)
+  FLIGHT_SDK_ROW_WIDENS(request_attention)
+  FLIGHT_SDK_ROW_WIDENS(request_media_access)
   FLIGHT_SDK_ROW_WIDENS(request_permission)
   FLIGHT_SDK_ROW_WIDENS(request_persistence)
+  FLIGHT_SDK_ROW_WIDENS(request_single_instance_lock)
+  FLIGHT_SDK_ROW_WIDENS(request_wake_lock)
+  FLIGHT_SDK_ROW_WIDENS(requested_count)
+  FLIGHT_SDK_ROW_WIDENS(required)
+  FLIGHT_SDK_ROW_WIDENS(required_count)
+  FLIGHT_SDK_ROW_WIDENS(required_point_count)
+  FLIGHT_SDK_ROW_WIDENS(requirements)
+  FLIGHT_SDK_ROW_WIDENS(resizable)
   FLIGHT_SDK_ROW_WIDENS(resize)
+  FLIGHT_SDK_ROW_WIDENS(resize_handle)
   FLIGHT_SDK_ROW_WIDENS(resolution)
+  FLIGHT_SDK_ROW_WIDENS(resolve_page)
+  FLIGHT_SDK_ROW_WIDENS(resolve_slot_content)
+  FLIGHT_SDK_ROW_WIDENS(resolve_texture)
+  FLIGHT_SDK_ROW_WIDENS(resolvers)
+  FLIGHT_SDK_ROW_WIDENS(resources)
+  FLIGHT_SDK_ROW_WIDENS(response_type)
+  FLIGHT_SDK_ROW_WIDENS(rest_translation)
   FLIGHT_SDK_ROW_WIDENS(restitution)
+  FLIGHT_SDK_ROW_WIDENS(restore)
+  FLIGHT_SDK_ROW_WIDENS(restrict)
+  FLIGHT_SDK_ROW_WIDENS(resume_device)
+  FLIGHT_SDK_ROW_WIDENS(reveal)
+  FLIGHT_SDK_ROW_WIDENS(reverse)
+  FLIGHT_SDK_ROW_WIDENS(revoke_object_url)
+  FLIGHT_SDK_ROW_WIDENS(rgb)
   FLIGHT_SDK_ROW_WIDENS(right)
+  FLIGHT_SDK_ROW_WIDENS(right_margin)
   FLIGHT_SDK_ROW_WIDENS(root)
-  FLIGHT_SDK_ROW_WIDENS(rotate_per_second)
-  FLIGHT_SDK_ROW_WIDENS(rotate_per_second_variance)
   FLIGHT_SDK_ROW_WIDENS(rotated)
   FLIGHT_SDK_ROW_WIDENS(rotation)
   FLIGHT_SDK_ROW_WIDENS(rotation_amplitude)
@@ -2718,14 +6838,23 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(rotation_end_variance)
   FLIGHT_SDK_ROW_WIDENS(rotation_speed_max)
   FLIGHT_SDK_ROW_WIDENS(rotation_speed_min)
+  FLIGHT_SDK_ROW_WIDENS(rotation_speeds)
   FLIGHT_SDK_ROW_WIDENS(rotation_start)
   FLIGHT_SDK_ROW_WIDENS(rotation_start_variance)
+  FLIGHT_SDK_ROW_WIDENS(rotation_w)
   FLIGHT_SDK_ROW_WIDENS(rotation_x)
   FLIGHT_SDK_ROW_WIDENS(rotation_y)
   FLIGHT_SDK_ROW_WIDENS(rotation_z)
+  FLIGHT_SDK_ROW_WIDENS(roughness)
+  FLIGHT_SDK_ROW_WIDENS(row)
+  FLIGHT_SDK_ROW_WIDENS(rows)
+  FLIGHT_SDK_ROW_WIDENS(rtl)
   FLIGHT_SDK_ROW_WIDENS(runtime)
+  FLIGHT_SDK_ROW_WIDENS(sample_count)
+  FLIGHT_SDK_ROW_WIDENS(sample_scratch)
   FLIGHT_SDK_ROW_WIDENS(samples)
   FLIGHT_SDK_ROW_WIDENS(saturation)
+  FLIGHT_SDK_ROW_WIDENS(saved)
   FLIGHT_SDK_ROW_WIDENS(scale)
   FLIGHT_SDK_ROW_WIDENS(scale_curve)
   FLIGHT_SDK_ROW_WIDENS(scale_end)
@@ -2734,55 +6863,149 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(scale_min)
   FLIGHT_SDK_ROW_WIDENS(scale_x)
   FLIGHT_SDK_ROW_WIDENS(scale_y)
+  FLIGHT_SDK_ROW_WIDENS(scales)
   FLIGHT_SDK_ROW_WIDENS(scaling)
   FLIGHT_SDK_ROW_WIDENS(scanline_intensity)
   FLIGHT_SDK_ROW_WIDENS(scattering)
-  FLIGHT_SDK_ROW_WIDENS(scope)
+  FLIGHT_SDK_ROW_WIDENS(scene_depth_texture)
+  FLIGHT_SDK_ROW_WIDENS(scene_target)
+  FLIGHT_SDK_ROW_WIDENS(scene_velocity_texture)
+  FLIGHT_SDK_ROW_WIDENS(scheme)
   FLIGHT_SDK_ROW_WIDENS(screen)
+  FLIGHT_SDK_ROW_WIDENS(screen_rotation)
+  FLIGHT_SDK_ROW_WIDENS(script)
+  FLIGHT_SDK_ROW_WIDENS(scroll)
+  FLIGHT_SDK_ROW_WIDENS(scroll_bar)
+  FLIGHT_SDK_ROW_WIDENS(scroll_v)
+  FLIGHT_SDK_ROW_WIDENS(second_region)
+  FLIGHT_SDK_ROW_WIDENS(secondary_map)
+  FLIGHT_SDK_ROW_WIDENS(secondary_scroll)
+  FLIGHT_SDK_ROW_WIDENS(section_handlers)
   FLIGHT_SDK_ROW_WIDENS(seed)
   FLIGHT_SDK_ROW_WIDENS(segment)
+  FLIGHT_SDK_ROW_WIDENS(segments)
+  FLIGHT_SDK_ROW_WIDENS(select)
+  FLIGHT_SDK_ROW_WIDENS(selectable)
+  FLIGHT_SDK_ROW_WIDENS(selected_index)
+  FLIGHT_SDK_ROW_WIDENS(selected_item)
+  FLIGHT_SDK_ROW_WIDENS(selected_state)
   FLIGHT_SDK_ROW_WIDENS(selection)
+  FLIGHT_SDK_ROW_WIDENS(selection_alpha)
+  FLIGHT_SDK_ROW_WIDENS(selection_color)
   FLIGHT_SDK_ROW_WIDENS(send)
+  FLIGHT_SDK_ROW_WIDENS(send_event)
+  FLIGHT_SDK_ROW_WIDENS(send_net_request)
   FLIGHT_SDK_ROW_WIDENS(sensor)
+  FLIGHT_SDK_ROW_WIDENS(sensors)
+  FLIGHT_SDK_ROW_WIDENS(sequential)
   FLIGHT_SDK_ROW_WIDENS(set_accessory_bar_visible)
-  FLIGHT_SDK_ROW_WIDENS(set_background_color)
+  FLIGHT_SDK_ROW_WIDENS(set_activation_policy)
+  FLIGHT_SDK_ROW_WIDENS(set_always_on_top)
+  FLIGHT_SDK_ROW_WIDENS(set_as_default)
+  FLIGHT_SDK_ROW_WIDENS(set_badge_count)
+  FLIGHT_SDK_ROW_WIDENS(set_content_protection)
   FLIGHT_SDK_ROW_WIDENS(set_display_size)
+  FLIGHT_SDK_ROW_WIDENS(set_dock_badge)
+  FLIGHT_SDK_ROW_WIDENS(set_dock_menu)
   FLIGHT_SDK_ROW_WIDENS(set_focus)
+  FLIGHT_SDK_ROW_WIDENS(set_fullscreen)
+  FLIGHT_SDK_ROW_WIDENS(set_has_shadow)
+  FLIGHT_SDK_ROW_WIDENS(set_icon)
+  FLIGHT_SDK_ROW_WIDENS(set_login_item)
+  FLIGHT_SDK_ROW_WIDENS(set_maximum_size)
+  FLIGHT_SDK_ROW_WIDENS(set_menu_bar_visible)
   FLIGHT_SDK_ROW_WIDENS(set_metadata)
+  FLIGHT_SDK_ROW_WIDENS(set_minimum_size)
+  FLIGHT_SDK_ROW_WIDENS(set_name)
   FLIGHT_SDK_ROW_WIDENS(set_node)
-  FLIGHT_SDK_ROW_WIDENS(set_overlays_content)
+  FLIGHT_SDK_ROW_WIDENS(set_opacity)
+  FLIGHT_SDK_ROW_WIDENS(set_parent)
   FLIGHT_SDK_ROW_WIDENS(set_playback_state)
+  FLIGHT_SDK_ROW_WIDENS(set_position)
   FLIGHT_SDK_ROW_WIDENS(set_position_state)
+  FLIGHT_SDK_ROW_WIDENS(set_progress)
+  FLIGHT_SDK_ROW_WIDENS(set_resizable)
   FLIGHT_SDK_ROW_WIDENS(set_resize_mode)
   FLIGHT_SDK_ROW_WIDENS(set_scroll_assist_enabled)
+  FLIGHT_SDK_ROW_WIDENS(set_size)
+  FLIGHT_SDK_ROW_WIDENS(set_skip_taskbar)
+  FLIGHT_SDK_ROW_WIDENS(set_source_gain)
+  FLIGHT_SDK_ROW_WIDENS(set_source_pan)
+  FLIGHT_SDK_ROW_WIDENS(set_source_playback_rate)
   FLIGHT_SDK_ROW_WIDENS(set_style)
-  FLIGHT_SDK_ROW_WIDENS(set_visible)
+  FLIGHT_SDK_ROW_WIDENS(set_title)
+  FLIGHT_SDK_ROW_WIDENS(set_user_model_id)
+  FLIGHT_SDK_ROW_WIDENS(severity)
+  FLIGHT_SDK_ROW_WIDENS(sh_coefficients)
   FLIGHT_SDK_ROW_WIDENS(shader_key)
+  FLIGHT_SDK_ROW_WIDENS(shadow_alpha)
   FLIGHT_SDK_ROW_WIDENS(shadow_bias)
+  FLIGHT_SDK_ROW_WIDENS(shadow_color)
   FLIGHT_SDK_ROW_WIDENS(shadow_far)
   FLIGHT_SDK_ROW_WIDENS(shadow_map_size)
   FLIGHT_SDK_ROW_WIDENS(shadow_near)
   FLIGHT_SDK_ROW_WIDENS(shadow_strength)
+  FLIGHT_SDK_ROW_WIDENS(shape)
+  FLIGHT_SDK_ROW_WIDENS(shape_command_keys)
+  FLIGHT_SDK_ROW_WIDENS(shape_rasterizer)
+  FLIGHT_SDK_ROW_WIDENS(shape_run)
+  FLIGHT_SDK_ROW_WIDENS(share)
   FLIGHT_SDK_ROW_WIDENS(sheen_color)
   FLIGHT_SDK_ROW_WIDENS(sheen_color_map)
   FLIGHT_SDK_ROW_WIDENS(sheen_color_map_uv_set)
+  FLIGHT_SDK_ROW_WIDENS(sheen_enabled)
   FLIGHT_SDK_ROW_WIDENS(sheen_roughness)
   FLIGHT_SDK_ROW_WIDENS(sheen_roughness_map)
   FLIGHT_SDK_ROW_WIDENS(sheen_roughness_map_uv_set)
+  FLIGHT_SDK_ROW_WIDENS(shell)
+  FLIGHT_SDK_ROW_WIDENS(shift_key)
+  FLIGHT_SDK_ROW_WIDENS(shininess)
+  FLIGHT_SDK_ROW_WIDENS(shortcut)
   FLIGHT_SDK_ROW_WIDENS(show)
+  FLIGHT_SDK_ROW_WIDENS(show_app)
+  FLIGHT_SDK_ROW_WIDENS(signal)
+  FLIGHT_SDK_ROW_WIDENS(signals)
+  FLIGHT_SDK_ROW_WIDENS(signature)
   FLIGHT_SDK_ROW_WIDENS(size)
+  FLIGHT_SDK_ROW_WIDENS(skeleton)
   FLIGHT_SDK_ROW_WIDENS(skew_x)
   FLIGHT_SDK_ROW_WIDENS(skew_y)
+  FLIGHT_SDK_ROW_WIDENS(skin)
+  FLIGHT_SDK_ROW_WIDENS(skinned)
+  FLIGHT_SDK_ROW_WIDENS(skinned_normals)
+  FLIGHT_SDK_ROW_WIDENS(skinned_positions)
+  FLIGHT_SDK_ROW_WIDENS(skinned_tangents)
+  FLIGHT_SDK_ROW_WIDENS(skip_taskbar)
   FLIGHT_SDK_ROW_WIDENS(sky_color)
+  FLIGHT_SDK_ROW_WIDENS(sleeping)
+  FLIGHT_SDK_ROW_WIDENS(slot)
   FLIGHT_SDK_ROW_WIDENS(slot_index)
   FLIGHT_SDK_ROW_WIDENS(slots)
+  FLIGHT_SDK_ROW_WIDENS(smart_rotation)
   FLIGHT_SDK_ROW_WIDENS(smooth_time)
+  FLIGHT_SDK_ROW_WIDENS(smoothness)
+  FLIGHT_SDK_ROW_WIDENS(snapping)
+  FLIGHT_SDK_ROW_WIDENS(snippets)
+  FLIGHT_SDK_ROW_WIDENS(socket)
+  FLIGHT_SDK_ROW_WIDENS(soft_keyboard)
   FLIGHT_SDK_ROW_WIDENS(softness)
+  FLIGHT_SDK_ROW_WIDENS(solve)
+  FLIGHT_SDK_ROW_WIDENS(source)
   FLIGHT_SDK_ROW_WIDENS(source_height)
+  FLIGHT_SDK_ROW_WIDENS(source_index)
+  FLIGHT_SDK_ROW_WIDENS(source_kind)
   FLIGHT_SDK_ROW_WIDENS(source_mode)
   FLIGHT_SDK_ROW_WIDENS(source_position_variancex)
   FLIGHT_SDK_ROW_WIDENS(source_position_variancey)
+  FLIGHT_SDK_ROW_WIDENS(source_state_index)
   FLIGHT_SDK_ROW_WIDENS(source_width)
+  FLIGHT_SDK_ROW_WIDENS(source_x)
+  FLIGHT_SDK_ROW_WIDENS(source_y)
+  FLIGHT_SDK_ROW_WIDENS(sources)
+  FLIGHT_SDK_ROW_WIDENS(spacing_x)
+  FLIGHT_SDK_ROW_WIDENS(spacing_y)
+  FLIGHT_SDK_ROW_WIDENS(spawn)
+  FLIGHT_SDK_ROW_WIDENS(spawn_accumulator)
   FLIGHT_SDK_ROW_WIDENS(spawn_height)
   FLIGHT_SDK_ROW_WIDENS(spawn_rate)
   FLIGHT_SDK_ROW_WIDENS(spawn_shape)
@@ -2791,30 +7014,64 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(specular_color)
   FLIGHT_SDK_ROW_WIDENS(specular_color_map)
   FLIGHT_SDK_ROW_WIDENS(specular_color_map_uv_set)
+  FLIGHT_SDK_ROW_WIDENS(specular_enabled)
+  FLIGHT_SDK_ROW_WIDENS(specular_glossiness_map)
   FLIGHT_SDK_ROW_WIDENS(specular_map)
   FLIGHT_SDK_ROW_WIDENS(specular_map_uv_set)
   FLIGHT_SDK_ROW_WIDENS(speed)
   FLIGHT_SDK_ROW_WIDENS(speed_max)
   FLIGHT_SDK_ROW_WIDENS(speed_min)
   FLIGHT_SDK_ROW_WIDENS(speed_variance)
+  FLIGHT_SDK_ROW_WIDENS(sphere_count)
+  FLIGHT_SDK_ROW_WIDENS(spheres)
   FLIGHT_SDK_ROW_WIDENS(spot)
   FLIGHT_SDK_ROW_WIDENS(spot_blend)
   FLIGHT_SDK_ROW_WIDENS(spread)
+  FLIGHT_SDK_ROW_WIDENS(square)
   FLIGHT_SDK_ROW_WIDENS(stack)
   FLIGHT_SDK_ROW_WIDENS(start)
+  FLIGHT_SDK_ROW_WIDENS(start_cap)
   FLIGHT_SDK_ROW_WIDENS(start_color)
   FLIGHT_SDK_ROW_WIDENS(start_color_variance)
+  FLIGHT_SDK_ROW_WIDENS(start_data)
   FLIGHT_SDK_ROW_WIDENS(start_index)
   FLIGHT_SDK_ROW_WIDENS(start_particle_size)
   FLIGHT_SDK_ROW_WIDENS(start_particle_size_variance)
+  FLIGHT_SDK_ROW_WIDENS(start_sample)
+  FLIGHT_SDK_ROW_WIDENS(start_screen_x)
+  FLIGHT_SDK_ROW_WIDENS(start_screen_y)
+  FLIGHT_SDK_ROW_WIDENS(start_source)
+  FLIGHT_SDK_ROW_WIDENS(start_world_x)
+  FLIGHT_SDK_ROW_WIDENS(start_world_y)
   FLIGHT_SDK_ROW_WIDENS(start_x)
   FLIGHT_SDK_ROW_WIDENS(start_y)
   FLIGHT_SDK_ROW_WIDENS(start_z)
+  FLIGHT_SDK_ROW_WIDENS(state)
+  FLIGHT_SDK_ROW_WIDENS(state_machine)
+  FLIGHT_SDK_ROW_WIDENS(state_machines)
   FLIGHT_SDK_ROW_WIDENS(stated)
+  FLIGHT_SDK_ROW_WIDENS(states)
+  FLIGHT_SDK_ROW_WIDENS(status)
+  FLIGHT_SDK_ROW_WIDENS(status_bar)
+  FLIGHT_SDK_ROW_WIDENS(status_text)
+  FLIGHT_SDK_ROW_WIDENS(step)
   FLIGHT_SDK_ROW_WIDENS(steps)
+  FLIGHT_SDK_ROW_WIDENS(stream_end)
+  FLIGHT_SDK_ROW_WIDENS(stream_start)
+  FLIGHT_SDK_ROW_WIDENS(streaming)
   FLIGHT_SDK_ROW_WIDENS(strength)
+  FLIGHT_SDK_ROW_WIDENS(stroke)
   FLIGHT_SDK_ROW_WIDENS(stroke_bounds)
+  FLIGHT_SDK_ROW_WIDENS(stroke_dasharray)
+  FLIGHT_SDK_ROW_WIDENS(stroke_dashoffset)
+  FLIGHT_SDK_ROW_WIDENS(stroke_linecap)
+  FLIGHT_SDK_ROW_WIDENS(stroke_linejoin)
+  FLIGHT_SDK_ROW_WIDENS(stroke_miterlimit)
+  FLIGHT_SDK_ROW_WIDENS(stroke_opacity)
+  FLIGHT_SDK_ROW_WIDENS(stroke_tessellator)
+  FLIGHT_SDK_ROW_WIDENS(stroke_width)
   FLIGHT_SDK_ROW_WIDENS(style)
+  FLIGHT_SDK_ROW_WIDENS(style_index)
   FLIGHT_SDK_ROW_WIDENS(subject)
   FLIGHT_SDK_ROW_WIDENS(subpixel)
   FLIGHT_SDK_ROW_WIDENS(subscribe)
@@ -2828,69 +7085,210 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(subscribe_orientation)
   FLIGHT_SDK_ROW_WIDENS(subscribe_proximity)
   FLIGHT_SDK_ROW_WIDENS(subscribe_quaternion)
+  FLIGHT_SDK_ROW_WIDENS(subscribe_resize)
+  FLIGHT_SDK_ROW_WIDENS(subsets)
+  FLIGHT_SDK_ROW_WIDENS(subsurface_enabled)
   FLIGHT_SDK_ROW_WIDENS(supported_abis)
+  FLIGHT_SDK_ROW_WIDENS(supported_formats)
+  FLIGHT_SDK_ROW_WIDENS(surface)
+  FLIGHT_SDK_ROW_WIDENS(surface_ownership)
+  FLIGHT_SDK_ROW_WIDENS(swing_limit_impulse)
+  FLIGHT_SDK_ROW_WIDENS(swing_limit_y)
+  FLIGHT_SDK_ROW_WIDENS(swing_limit_z)
+  FLIGHT_SDK_ROW_WIDENS(tables)
+  FLIGHT_SDK_ROW_WIDENS(tabs)
+  FLIGHT_SDK_ROW_WIDENS(tag)
+  FLIGHT_SDK_ROW_WIDENS(tangent0_x)
+  FLIGHT_SDK_ROW_WIDENS(tangent0_y)
+  FLIGHT_SDK_ROW_WIDENS(tangent0_z)
+  FLIGHT_SDK_ROW_WIDENS(tangent1_x)
+  FLIGHT_SDK_ROW_WIDENS(tangent1_y)
+  FLIGHT_SDK_ROW_WIDENS(tangent1_z)
+  FLIGHT_SDK_ROW_WIDENS(tangent_impulse0)
+  FLIGHT_SDK_ROW_WIDENS(tangent_impulse1)
+  FLIGHT_SDK_ROW_WIDENS(tangent_mass0)
+  FLIGHT_SDK_ROW_WIDENS(tangent_mass1)
   FLIGHT_SDK_ROW_WIDENS(tangential_accel_variance)
   FLIGHT_SDK_ROW_WIDENS(tangential_acceleration)
+  FLIGHT_SDK_ROW_WIDENS(tangents)
+  FLIGHT_SDK_ROW_WIDENS(target)
+  FLIGHT_SDK_ROW_WIDENS(target_index)
+  FLIGHT_SDK_ROW_WIDENS(target_ref)
+  FLIGHT_SDK_ROW_WIDENS(target_state_index)
+  FLIGHT_SDK_ROW_WIDENS(target_x)
+  FLIGHT_SDK_ROW_WIDENS(target_y)
+  FLIGHT_SDK_ROW_WIDENS(targets)
   FLIGHT_SDK_ROW_WIDENS(temperature)
+  FLIGHT_SDK_ROW_WIDENS(text)
+  FLIGHT_SDK_ROW_WIDENS(text_field)
   FLIGHT_SDK_ROW_WIDENS(text_height)
+  FLIGHT_SDK_ROW_WIDENS(text_layout)
+  FLIGHT_SDK_ROW_WIDENS(text_segment)
+  FLIGHT_SDK_ROW_WIDENS(text_shaper)
   FLIGHT_SDK_ROW_WIDENS(text_width)
-  FLIGHT_SDK_ROW_WIDENS(texture_file_name)
+  FLIGHT_SDK_ROW_WIDENS(texture)
+  FLIGHT_SDK_ROW_WIDENS(texture_bind_group)
+  FLIGHT_SDK_ROW_WIDENS(texture_bind_group_layout)
+  FLIGHT_SDK_ROW_WIDENS(texture_count)
+  FLIGHT_SDK_ROW_WIDENS(texture_keys)
+  FLIGHT_SDK_ROW_WIDENS(texture_resolvers)
+  FLIGHT_SDK_ROW_WIDENS(texture_samplers)
+  FLIGHT_SDK_ROW_WIDENS(texture_source_kinds)
+  FLIGHT_SDK_ROW_WIDENS(texture_views)
   FLIGHT_SDK_ROW_WIDENS(thickness)
   FLIGHT_SDK_ROW_WIDENS(thickness_map)
   FLIGHT_SDK_ROW_WIDENS(thickness_map_uv_set)
   FLIGHT_SDK_ROW_WIDENS(threshold)
+  FLIGHT_SDK_ROW_WIDENS(thumb)
   FLIGHT_SDK_ROW_WIDENS(tilesets)
   FLIGHT_SDK_ROW_WIDENS(time)
+  FLIGHT_SDK_ROW_WIDENS(time_elapsed)
   FLIGHT_SDK_ROW_WIDENS(timeline)
+  FLIGHT_SDK_ROW_WIDENS(timeline_handlers)
+  FLIGHT_SDK_ROW_WIDENS(timeout_ms)
   FLIGHT_SDK_ROW_WIDENS(timestamp)
   FLIGHT_SDK_ROW_WIDENS(tint)
+  FLIGHT_SDK_ROW_WIDENS(title)
+  FLIGHT_SDK_ROW_WIDENS(title_bar)
+  FLIGHT_SDK_ROW_WIDENS(to)
+  FLIGHT_SDK_ROW_WIDENS(to_index)
+  FLIGHT_SDK_ROW_WIDENS(to_motion)
+  FLIGHT_SDK_ROW_WIDENS(to_sample)
+  FLIGHT_SDK_ROW_WIDENS(to_x)
+  FLIGHT_SDK_ROW_WIDENS(to_y)
+  FLIGHT_SDK_ROW_WIDENS(toggles)
+  FLIGHT_SDK_ROW_WIDENS(tolerance)
   FLIGHT_SDK_ROW_WIDENS(top)
+  FLIGHT_SDK_ROW_WIDENS(topology)
   FLIGHT_SDK_ROW_WIDENS(torque)
   FLIGHT_SDK_ROW_WIDENS(torque_x)
   FLIGHT_SDK_ROW_WIDENS(torque_y)
   FLIGHT_SDK_ROW_WIDENS(torque_z)
+  FLIGHT_SDK_ROW_WIDENS(total)
+  FLIGHT_SDK_ROW_WIDENS(total_frames)
   FLIGHT_SDK_ROW_WIDENS(total_memory)
+  FLIGHT_SDK_ROW_WIDENS(total_size)
   FLIGHT_SDK_ROW_WIDENS(touch_support)
   FLIGHT_SDK_ROW_WIDENS(touching)
+  FLIGHT_SDK_ROW_WIDENS(track)
+  FLIGHT_SDK_ROW_WIDENS(traits)
+  FLIGHT_SDK_ROW_WIDENS(transaction_depth)
+  FLIGHT_SDK_ROW_WIDENS(transaction_index)
+  FLIGHT_SDK_ROW_WIDENS(transaction_label)
   FLIGHT_SDK_ROW_WIDENS(transform)
+  FLIGHT_SDK_ROW_WIDENS(transition)
+  FLIGHT_SDK_ROW_WIDENS(transition_curve)
+  FLIGHT_SDK_ROW_WIDENS(transition_duration)
+  FLIGHT_SDK_ROW_WIDENS(transition_elapsed)
+  FLIGHT_SDK_ROW_WIDENS(transition_from_state_index)
+  FLIGHT_SDK_ROW_WIDENS(transition_index)
+  FLIGHT_SDK_ROW_WIDENS(transition_to_state_index)
+  FLIGHT_SDK_ROW_WIDENS(transition_weight)
+  FLIGHT_SDK_ROW_WIDENS(transitions)
   FLIGHT_SDK_ROW_WIDENS(translation_amplitude)
   FLIGHT_SDK_ROW_WIDENS(transmission)
+  FLIGHT_SDK_ROW_WIDENS(transmission_enabled)
   FLIGHT_SDK_ROW_WIDENS(transmission_map)
   FLIGHT_SDK_ROW_WIDENS(transmission_map_uv_set)
   FLIGHT_SDK_ROW_WIDENS(transparency)
   FLIGHT_SDK_ROW_WIDENS(trauma)
+  FLIGHT_SDK_ROW_WIDENS(tray)
+  FLIGHT_SDK_ROW_WIDENS(triangle_index)
   FLIGHT_SDK_ROW_WIDENS(tweens)
   FLIGHT_SDK_ROW_WIDENS(tx)
   FLIGHT_SDK_ROW_WIDENS(ty)
   FLIGHT_SDK_ROW_WIDENS(type)
+  FLIGHT_SDK_ROW_WIDENS(type_key)
+  FLIGHT_SDK_ROW_WIDENS(u)
+  FLIGHT_SDK_ROW_WIDENS(unchecked_state)
+  FLIGHT_SDK_ROW_WIDENS(uniform_bind_group)
+  FLIGHT_SDK_ROW_WIDENS(uniform_bind_group_layout)
+  FLIGHT_SDK_ROW_WIDENS(uniform_buffer)
+  FLIGHT_SDK_ROW_WIDENS(uniform_float_count)
   FLIGHT_SDK_ROW_WIDENS(uniforms)
+  FLIGHT_SDK_ROW_WIDENS(units)
+  FLIGHT_SDK_ROW_WIDENS(units_per_em)
+  FLIGHT_SDK_ROW_WIDENS(unpacked)
+  FLIGHT_SDK_ROW_WIDENS(unregister)
+  FLIGHT_SDK_ROW_WIDENS(unregistered_kinds)
+  FLIGHT_SDK_ROW_WIDENS(unresolved)
+  FLIGHT_SDK_ROW_WIDENS(unresolved_indexes)
+  FLIGHT_SDK_ROW_WIDENS(unselected_state)
+  FLIGHT_SDK_ROW_WIDENS(unsupported_fields)
   FLIGHT_SDK_ROW_WIDENS(up)
+  FLIGHT_SDK_ROW_WIDENS(up_state)
   FLIGHT_SDK_ROW_WIDENS(update_spatial_object)
+  FLIGHT_SDK_ROW_WIDENS(updater)
+  FLIGHT_SDK_ROW_WIDENS(upper_angle)
+  FLIGHT_SDK_ROW_WIDENS(upper_angular_x)
+  FLIGHT_SDK_ROW_WIDENS(upper_angular_y)
+  FLIGHT_SDK_ROW_WIDENS(upper_angular_z)
+  FLIGHT_SDK_ROW_WIDENS(upper_limit_impulse)
+  FLIGHT_SDK_ROW_WIDENS(upper_limit_impulses)
+  FLIGHT_SDK_ROW_WIDENS(upper_linear_x)
+  FLIGHT_SDK_ROW_WIDENS(upper_linear_y)
+  FLIGHT_SDK_ROW_WIDENS(upper_linear_z)
+  FLIGHT_SDK_ROW_WIDENS(upper_translation)
+  FLIGHT_SDK_ROW_WIDENS(upper_twist_angle)
+  FLIGHT_SDK_ROW_WIDENS(upper_twist_impulse)
+  FLIGHT_SDK_ROW_WIDENS(url)
+  FLIGHT_SDK_ROW_WIDENS(user)
+  FLIGHT_SDK_ROW_WIDENS(uv_offset)
+  FLIGHT_SDK_ROW_WIDENS(uv_rotation)
+  FLIGHT_SDK_ROW_WIDENS(uv_scale)
+  FLIGHT_SDK_ROW_WIDENS(v)
   FLIGHT_SDK_ROW_WIDENS(value)
+  FLIGHT_SDK_ROW_WIDENS(values)
+  FLIGHT_SDK_ROW_WIDENS(velocities)
   FLIGHT_SDK_ROW_WIDENS(velocity)
   FLIGHT_SDK_ROW_WIDENS(velocity_inheritance)
+  FLIGHT_SDK_ROW_WIDENS(velocity_writers)
+  FLIGHT_SDK_ROW_WIDENS(velocity_x)
+  FLIGHT_SDK_ROW_WIDENS(velocity_y)
+  FLIGHT_SDK_ROW_WIDENS(velocity_z)
   FLIGHT_SDK_ROW_WIDENS(version)
+  FLIGHT_SDK_ROW_WIDENS(vertex)
+  FLIGHT_SDK_ROW_WIDENS(vertical_scroll_bar)
+  FLIGHT_SDK_ROW_WIDENS(vertices)
   FLIGHT_SDK_ROW_WIDENS(vibrate)
   FLIGHT_SDK_ROW_WIDENS(vibrate_pattern)
   FLIGHT_SDK_ROW_WIDENS(vibrate_waveform)
+  FLIGHT_SDK_ROW_WIDENS(video)
   FLIGHT_SDK_ROW_WIDENS(view)
+  FLIGHT_SDK_ROW_WIDENS(viewport)
   FLIGHT_SDK_ROW_WIDENS(viewport_height)
   FLIGHT_SDK_ROW_WIDENS(viewport_width)
   FLIGHT_SDK_ROW_WIDENS(vignette)
+  FLIGHT_SDK_ROW_WIDENS(visibility)
   FLIGHT_SDK_ROW_WIDENS(visible)
+  FLIGHT_SDK_ROW_WIDENS(visible_meshes)
+  FLIGHT_SDK_ROW_WIDENS(visual)
   FLIGHT_SDK_ROW_WIDENS(w)
+  FLIGHT_SDK_ROW_WIDENS(warm_start)
   FLIGHT_SDK_ROW_WIDENS(watch_position)
   FLIGHT_SDK_ROW_WIDENS(web_view_version)
   FLIGHT_SDK_ROW_WIDENS(weight)
+  FLIGHT_SDK_ROW_WIDENS(weights)
+  FLIGHT_SDK_ROW_WIDENS(wgpu)
+  FLIGHT_SDK_ROW_WIDENS(when_ready)
   FLIGHT_SDK_ROW_WIDENS(white)
   FLIGHT_SDK_ROW_WIDENS(width)
   FLIGHT_SDK_ROW_WIDENS(wind)
   FLIGHT_SDK_ROW_WIDENS(winding)
+  FLIGHT_SDK_ROW_WIDENS(window)
+  FLIGHT_SDK_ROW_WIDENS(word_wrap)
   FLIGHT_SDK_ROW_WIDENS(work_height)
   FLIGHT_SDK_ROW_WIDENS(work_width)
+  FLIGHT_SDK_ROW_WIDENS(world)
   FLIGHT_SDK_ROW_WIDENS(world_bounds)
+  FLIGHT_SDK_ROW_WIDENS(world_bounds_using_local_bounds_id)
+  FLIGHT_SDK_ROW_WIDENS(world_bounds_using_world_transform_id)
   FLIGHT_SDK_ROW_WIDENS(world_matrices)
   FLIGHT_SDK_ROW_WIDENS(world_space)
+  FLIGHT_SDK_ROW_WIDENS(world_transform_id)
+  FLIGHT_SDK_ROW_WIDENS(world_transform_using_parent_transform_id)
+  FLIGHT_SDK_ROW_WIDENS(world_x)
+  FLIGHT_SDK_ROW_WIDENS(world_y)
   FLIGHT_SDK_ROW_WIDENS(would_occupy_bucket_count)
   FLIGHT_SDK_ROW_WIDENS(wrap_u)
   FLIGHT_SDK_ROW_WIDENS(wrap_v)
@@ -2898,6 +7296,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(wrapped_diffuse_map)
   FLIGHT_SDK_ROW_WIDENS(wrapped_diffuse_map_uv_set)
   FLIGHT_SDK_ROW_WIDENS(wrapped_diffuse_strength)
+  FLIGHT_SDK_ROW_WIDENS(write)
   FLIGHT_SDK_ROW_WIDENS(write_bookmark)
   FLIGHT_SDK_ROW_WIDENS(write_format)
   FLIGHT_SDK_ROW_WIDENS(write_html)
@@ -2908,12 +7307,21 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(x)
   FLIGHT_SDK_ROW_WIDENS(x0)
   FLIGHT_SDK_ROW_WIDENS(x1)
+  FLIGHT_SDK_ROW_WIDENS(x2)
+  FLIGHT_SDK_ROW_WIDENS(x_max)
+  FLIGHT_SDK_ROW_WIDENS(x_min)
   FLIGHT_SDK_ROW_WIDENS(x_offset)
   FLIGHT_SDK_ROW_WIDENS(y)
   FLIGHT_SDK_ROW_WIDENS(y0)
   FLIGHT_SDK_ROW_WIDENS(y1)
+  FLIGHT_SDK_ROW_WIDENS(y2)
+  FLIGHT_SDK_ROW_WIDENS(y_max)
+  FLIGHT_SDK_ROW_WIDENS(y_min)
   FLIGHT_SDK_ROW_WIDENS(y_offset)
+  FLIGHT_SDK_ROW_WIDENS(yaw)
   FLIGHT_SDK_ROW_WIDENS(z)
+  FLIGHT_SDK_ROW_WIDENS(z0)
+  FLIGHT_SDK_ROW_WIDENS(z1)
   FLIGHT_SDK_ROW_WIDENS(zoom)
   return matched > 0;
 }

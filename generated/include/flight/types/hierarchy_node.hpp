@@ -12,8 +12,8 @@ namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-using HierarchyNode = flight::Ref<flight::types::Node<Traits>>;
-using HierarchyNodeAny = flight::Ref<flight::types::Node<flight::Any>>;
+using HierarchyNode = std::shared_ptr<flight::types::Node<Traits>>;
+using HierarchyNodeAny = std::shared_ptr<flight::types::Node<flight::Any>>;
 } // namespace flight::types
 
 #include <flight/types/node.hpp>

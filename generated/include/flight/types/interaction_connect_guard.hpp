@@ -10,7 +10,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
-using InteractionConnectGuard = std::function<void(flight::Ref<Node<flight::Any>>, flight::String)>;
+using InteractionConnectGuard = std::function<void(std::shared_ptr<Node<flight::Any>>, flight::String)>;
 } // namespace flight::types
 
 #include <flight/types/interaction_manager.hpp>

@@ -23,7 +23,7 @@ namespace flight::types { struct Rectangle; }
 
 namespace flight::bitmap {
 
-inline std::optional<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::Rectangle>>> get_bitmap_color_bounds_rectangle(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> source, double mask, double color, std::optional<bool> find_color = std::nullopt) {
+inline std::optional<flight::Ref<flight::types::Rectangle>> get_bitmap_color_bounds_rectangle(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> source, double mask, double color, std::optional<bool> find_color = std::nullopt) {
   find_color = find_color.value_or(true);
   flight::Uint8ClampedArray data = flight::row_get<flight::RowKey<"bitmap">>(source)->data;
   const double bitmap_width = flight::row_get<flight::RowKey<"bitmap">>(source)->width;
@@ -78,7 +78,7 @@ inline std::optional<flight::types::EntityWithoutRuntime<flight::Ref<flight::typ
   if ((max_x == -1.0)) {
     return std::nullopt;
   }
-  return std::optional<flight::types::EntityWithoutRuntime<flight::Ref<flight::types::Rectangle>>>{([&]() { auto object_member_x = min_x; auto object_member_y = min_y; auto object_member_width = ((max_x - min_x) + 1.0); auto object_member_height = ((max_y - min_y) + 1.0); return flight::make_ref<flight::types::Rectangle>(flight::types::Rectangle{.height = object_member_height, .width = object_member_width, .x = object_member_x, .y = object_member_y}); }())};
+  return std::optional<flight::Ref<flight::types::Rectangle>>{([&]() { auto object_member_x = min_x; auto object_member_y = min_y; auto object_member_width = ((max_x - min_x) + 1.0); auto object_member_height = ((max_y - min_y) + 1.0); return flight::make_ref<flight::types::Rectangle>(flight::types::Rectangle{.height = object_member_height, .width = object_member_width, .x = object_member_x, .y = object_member_y}); }())};
 }
 
 } // namespace flight::bitmap

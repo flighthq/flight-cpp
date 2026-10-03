@@ -24,7 +24,7 @@ inline double read_texture_atlas_scale(std::optional<std::variant<double, flight
   if (!scale.has_value()) {
     return 1.0;
   }
-  const double parsed = ((scale.has_value() && scale.value().index() == 0) ? std::get<double>(scale.value()) : flight::parse_float(std::get<flight::String>(scale.value())));
+  const double parsed = ((scale.has_value() && scale.value().index() == 0) ? std::get<0>(scale.value()) : flight::parse_float(std::get<1>(scale.value())));
   return ((std::isfinite(parsed) && (parsed > 0.0)) ? parsed : 1.0);
 }
 

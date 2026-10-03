@@ -23,9 +23,9 @@ namespace flight::types {
 
 struct InstancedMeshSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void()>>> on_cleared;
-  flight::Ref<flight::types::Signal<std::function<void(double)>>> on_instance_appended;
-  flight::Ref<flight::types::Signal<std::function<void(double, double)>>> on_instance_removed;
+  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_cleared;
+  std::shared_ptr<flight::types::Signal<std::function<void(double)>>> on_instance_appended;
+  std::shared_ptr<flight::types::Signal<std::function<void(double, double)>>> on_instance_removed;
 };
 
 } // namespace flight::types

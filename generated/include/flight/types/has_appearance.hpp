@@ -17,7 +17,7 @@ namespace flight::types {
 struct HasAppearance;
 struct HasAppearanceRuntime;
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-using AppearanceNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<flight::Ref<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasAppearance>>>>;
+using AppearanceNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasAppearance>>>>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>

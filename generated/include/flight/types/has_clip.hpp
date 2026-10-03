@@ -17,7 +17,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 namespace flight::types {
 struct HasClip;
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-using ClipNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<flight::Ref<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasClip>>>>;
+using ClipNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<HasClip>>>>;
 } // namespace flight::types
 
 #include <flight/types/clip_region.hpp>

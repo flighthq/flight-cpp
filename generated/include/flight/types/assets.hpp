@@ -67,7 +67,7 @@ struct AssetLoadProgress : public flight::ReferenceEnabled {
 };
 
 struct AssetGroupLoadOptions : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AssetLoadProgress>>>>)>>>> progress;
+  std::optional<std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AssetLoadProgress>>>>)>>>> progress;
 };
 
 struct AssetLibraryRuntime : public flight::ReferenceEnabled {

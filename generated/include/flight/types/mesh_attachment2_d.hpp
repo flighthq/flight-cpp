@@ -24,12 +24,12 @@ namespace flight::types {
 struct MeshAttachment2D : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
-  std::variant<flight::String, flight::Null, flight::Undefined> name;
-  std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined> skin;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined> skin = std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   flight::Uint16Array triangles;
   flight::Float32Array uvs;
   double vertex_count;
-  std::variant<flight::Float32Array, flight::Null, flight::Undefined> vertices;
+  std::variant<flight::Float32Array, flight::Null, flight::Undefined> vertices = std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
 inline const flight::String mesh_attachment2_dkind = flight::String("MeshAttachment2D");

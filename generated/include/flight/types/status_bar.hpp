@@ -76,7 +76,7 @@ struct HostStatusBarVisibilityCapability : public flight::ReferenceEnabled {
 
 struct StatusBar : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<StatusBarInfo>>>>)>>> on_change;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<StatusBarInfo>>>>)>>> on_change;
 };
 
 } // namespace flight::types
