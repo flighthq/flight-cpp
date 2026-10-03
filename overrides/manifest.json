@@ -32,6 +32,20 @@
       "expires": "when the emitter qualifies types-owned names from another namespace, spells type names in their declared case, and lowers the `in` operator.",
       "authoredOn": "2026-10-03",
       "correction": "An earlier version of this entry said the ten remaining diagnostics came from emit_signal comparing a signal's slots. That was wrong, and the mistake mattered: flight/signals/emitter.hpp's emit_signal only forwards to signal->emit and compares nothing. Function equality was reachable from exactly two lines in @flighthq/log -- add_log_sink's includes and remove_log_sink's index_of -- which is why the module could be closed at all. The emit_signal failures were a different defect entirely: 'couldn't deduce template parameter T' through the flight::Ref alias, now answered by the respell-reference-alias repairs, not by anything in this override."
+    },
+    {
+      "id": "camera-frustum-corners-reference-member-assignment",
+      "path": "flight/camera/frustum_corners.hpp",
+      "package": "@flighthq/camera",
+      "status": "complete",
+      "derivedFrom": "ab9f0f86c6fd06f9f1afce3788dccca8a45297ecd271f478ec6d1ac86755f468",
+      "reason": "get_camera3_dfrustum_corners writes `out.element(i_2).x = ...` where `out` is Array<Vector3Like> and Vector3Like is flight::Ref<Vector3>, a std::shared_ptr. The TypeScript is `out[i].x = results[i][0]`, a member assignment THROUGH a reference, and the emitter wrote it as a direct member access on the element: \"'std::shared_ptr<flight::types::Vector3>' has no member named 'x'\".",
+      "change": "Three characters, three times: `.` becomes `->` on the three component assignments. Nothing else in the function changes.",
+      "equivalence": "Array::element returns a reference to the stored shared_ptr, so `->x = v` assigns through to the pointee -- the same object the caller passed in, mutated in place, which is what the TypeScript does to the array it was given. No declaration is added or removed, no control flow changes, and the function's result is unchanged.",
+      "whyNotAPatchOrRepair": "A source patch cannot reach it: the TypeScript is already correct and idiomatic, and there is no equivalent spelling of `out[i].x = v` that would make the emitter choose `->`. A repair cannot reach it either, for a reason worth stating because the fix LOOKS mechanical: deciding between `.` and `->` requires knowing that the element type is a pointer, which is type information no text rewrite has. There are eleven `.element(...).member` sites in the tree and @flighthq/adjustments compiles with its own, because there the element is a value -- so a textual rule would break the compiling package to fix this one. AGENTS.md names rewriting an operator the emitter emitted as source text as override territory, and this is exactly that.",
+      "unblocks": "@flighthq/camera's last three failing headers -- frustum_corners.hpp and the two barrels that include it -- taking camera from 18/21 to 21/21, a complete package. It is 21/21 emitted and had no other defect.",
+      "expires": "when the emitter selects the member-access operator from the lowered element type rather than writing `.` unconditionally.",
+      "authoredOn": "2026-10-03"
     }
   ]
 }
