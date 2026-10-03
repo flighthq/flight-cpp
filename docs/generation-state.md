@@ -1361,3 +1361,52 @@ condition under which it is correct visible in the text".
 
 Three overrides now, and all three are the same category — an operator or a name the emitter wrote as
 source text, which is the one thing the other three mechanisms cannot express.
+
+## A real defect that repairing buys nothing, and so is not repaired
+
+`SignalData<T>` is declared in TypeScript as
+
+```ts
+export interface SignalData<T extends (...args: any[]) => void> {
+  slots: (T | null)[];
+```
+
+and emitted as
+
+```cpp
+template <typename T>
+struct SignalData : public flight::ReferenceEnabled {
+  flight::Array<std::optional<std::function<void(flight::Array<flight::Any>)>>> slots;
+```
+
+The emitter substituted `T`'s **constraint** for `T`. `slots` should be `Array<optional<T>>` — `T | null`
+is `optional<T>` by the emitter's own convention for a nullable — and the consequence is that
+`SignalData<T>::slots` holds the same type for every `T`, so a signal instantiated with a concrete slot
+type cannot store its own slots: `Array<optional<function<void(Array<Any>)>>>::splice(..., function<void(double)>&)`.
+
+That reads like a clean, high-value repair. **It was measured and it is not one.**
+
+Patched into a scratch tree, `Array<optional<T>>` is accepted and every use site agrees with it — which
+confirms the diagnosis — and then:
+
+| | before | after |
+|---|---|---|
+| `signals` headers | 6/10 | 6/10 |
+| `animation` + `scene2d` + `texture` headers | 8/32 | 8/32 |
+
+Nothing. `signals` does not move because the identity blocker sits behind it: with `slots` restored,
+`disconnect_signal` still needs `operator!=` between `optional<T>` and `T`, which is `operator==` on a
+`std::function`, which is the refusal this repository holds on purpose. And the consumers do not move
+because all 24 of their failures are an earlier and entirely different class — unqualified names
+(`AnimationInterpolation`, `NodeAny`, `TextureLike`).
+
+So the defect is real, the fix is right, and declaring it today would add a maintenance obligation and a
+line in the expiry ledger for zero shipped headers. It is recorded here instead, to be declared when
+something downstream of it can actually move. This is the same conclusion the deleted
+`headerIncludeRepair` reached, and the same rule: a repair earns its place by removing a failure, not by
+being correct.
+
+For the record, the full `signals` residual once `slots` is restored and the single `%=` is rewritten is
+two causes: `std::optional<std::function<...>>::optional(<brace-enclosed initializer list>)` at
+`flight/signals/slot.hpp:155`, and the `operator!=` identity blocker. The second cannot be closed here,
+so `signals` cannot be a complete package at this pin whatever else is done to it.
