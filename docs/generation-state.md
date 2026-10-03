@@ -1142,3 +1142,99 @@ Fourteen repairs added; applied to the seventeen-package tree the full set now t
 listed in the file's own `NOT GENERATED` header alongside `concatRegistryTable`, `createKeyedTable`,
 `withRegistryTableEntry` and eight more. Finishing `registry` means hand-writing most of a module, which
 is an override, not a repair, and it is not the cheapest thing left. Recorded rather than attempted.
+
+## `node`, taken from one cause to two, and why the last one is refused
+
+`node` went from 6 of 21 headers compiling to **12 of 21** in this pass, and the value is less in the
+number than in what the residual turned into: five distinct causes became two.
+
+The sequence, each step measured:
+
+| step | node | what it closed |
+|---|---|---|
+| after the `respell-reference-alias` repairs | 6/21 | `couldn't deduce template parameter 'T'` |
+| after fourteen unqualified-name repairs | 6/21 | every `was not declared in this scope` |
+| after `name-defaulted-template-argument` | 6/21 | bare `Node` in template-argument position |
+| after `deduce-call-argument-from-assignment` | **12/21** | `create_signal()` |
+
+The three middle rows moving nothing is the point worth recording: each closed a whole error class and
+revealed the next one behind it in the same headers. A count is a bad progress measure under a
+first-error-per-file report; the class list is the real one.
+
+### Two repairs worth describing, because both could have been done wrong
+
+**`create_signal()`.** `createSignal<T>()` takes its type argument from TypeScript's *contextual
+typing* — `out.onChildAdded = createSignal()` reads `T` off the declared type of the target — and C++ has
+no equivalent, so the emitted call has nothing to deduce from. It was the sole remaining cause in twelve
+of node's 21 headers.
+
+The fix follows the order `AGENTS.md` sets: extend the runtime first. `include/flight/template_argument.hpp`
+adds one trait that names the first template argument of an instantiation, generic over any class
+template and naming nothing the compiler emits, so the runtime stays uncoupled from generated types. The
+repair then applies TypeScript's own rule mechanically — it reads `T` off the assignment target, which is
+sitting in the text:
+
+```cpp
+(out->on_child_added = create_signal<flight::template_argument_t<
+     typename std::remove_cvref_t<decltype(out->on_child_added)>::element_type>>());
+```
+
+The argument is not *chosen* here, it is *recovered*: TypeScript says `T` is the target's parameter, so
+there is one answer. And unlike the other repairs this one is self-checking — a wrong type would not
+compile, so a wrong rewrite cannot reach a built header. Only the assignment form is matched; the single
+non-assignment call in the tree (`flight/render/render_cache.hpp`, inside a nullish-assignment lambda) has
+no target to read and is left alone rather than guessed at. Five tests pin the trait, including the
+`element_type` path the repair relies on and the first-of-many-arguments case.
+
+**Bare `Node`, and the wrong answer I wrote first.** TypeScript declares
+`interface Node<Traits extends object = NodeTraits>`, so a bare `Node` means `Node<NodeTraits>`; the
+emitter drops the default and writes the bare name in template-argument position, which is not a type.
+Two substitutions are available and both are wrong:
+
+- `flight::types::NodeAny` is `Node<any>` — a *different* instantiation, which the tree uses 29 times for
+  genuinely untyped nodes.
+- `flight::types::NodeTraits`, which is what I wrote first. It compiles in isolation and then fails to
+  convert at `set_reparent_node_guard`, because everywhere the emitter *does* supply this argument it
+  spells it `Node<flight::Ref<flight::types::NodeTraits>>` — eight occurrences, and zero of the bare
+  form. That is the authority for the spelling, and it is also the semantically right answer:
+  `NodeTraits` derives from `flight::ReferenceEnabled` and TypeScript object types lower through `Ref`.
+
+The repair fires only where the bare name sits in template-argument position — after a `<` or `,` and
+before a `,` or `>` — because a class-template name with no arguments is *never* valid C++ there. So
+there is no reading of the text under which the rewrite could be altering a correct program, and the
+definition site, the parameterised uses and every ordinary mention are all outside it.
+
+### Repairs are now applied to a fixed point
+
+Adding the above exposed an ordering bug in the mechanism itself. The bare-`Node` repair writes a type
+argument; the using-declaration repair that would have introduced that name had already run and found
+nothing, so the result depended on the order entries happen to sit in the JSON — not a property anyone
+would think to preserve while editing the file. `applyEmissionRepairs` now iterates until nothing
+changes, with a bound of eight rounds and a hard error if it is hit, since two repairs rewriting each
+other is a declaration bug rather than something to tolerate. It immediately paid: round one writes
+`flight::Ref<Node<...>>` and round two's respell repair turns it into `std::shared_ptr<Node<...>>`.
+
+### The absence channel: recorded, deliberately not repaired
+
+`has_clip`, `has_material` and `has_blend_mode` fail on one shape:
+
+```
+could not convert row_get<RowKey<"clip">, RowReadonly<RowPartial<RowOf<shared_ptr<HasClip>>>>>(...)
+  from 'std::optional<std::shared_ptr<ClipRegion>>'
+  to   'std::variant<std::shared_ptr<ClipRegion>, flight::Null, flight::Undefined>'
+```
+
+The emitter is right to want three states: `initClipTrait` reads `obj?.clip ?? null` where
+`clip: ClipRegion | null`, so the value can be absent, null, or a region. The runtime's `row_get` over a
+`RowPartial` returns a single `optional<V>`, which has already collapsed null into absent, so **the
+information is not recoverable at the call site**.
+
+It would be easy to "fix" by mapping `nullopt` to `Undefined`, and at these three sites it is even
+observationally identical — the surrounding code only asks whether a region is present and treats null
+and undefined alike. That is exactly the reasoning to refuse. A repair applies everywhere its pattern
+matches, not only where someone checked the collapse is harmless, and `AGENTS.md` names absence as one of
+the semantics no workaround may change. So this is not repair work: it is a runtime capability —
+`row_get` over a `RowPartial` preserving three states — plus the emitter agreeing on the spelling, and
+`flight::Presence<V>` already exists for it in `include/flight/presence.hpp`, though with its alternatives
+in the other order (`variant<Undefined, Null, V>` against the emitter's `variant<V, Null, Undefined>`),
+which is likely why it has never been used.
