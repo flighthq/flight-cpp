@@ -756,3 +756,41 @@ All three were plausible, two were suggested almost verbatim by the compiler's o
 changed the lowering. The pattern worth carrying forward: a prescriptive diagnostic describes a condition
 the emitter needs met, not a guarantee that meeting it is sufficient — and where the message itself adds
 a qualifying clause, that clause has been right every time.
+
+## `log` under the override: 200 to 40, and the residual is a rewrite
+
+The override mechanism works, and `log` is a poor first choice for hand-finishing. Both halves of that
+are worth recording.
+
+Mechanical edits alone took `flight/log/log.hpp` from roughly 200 diagnostics of one structural class to
+**40**. In order of discovery, each found by compiling rather than by reading:
+
+1. **The `LogSink` alias disagreed with every use of it.** Spelled as a readonly row in
+   `flight/types/log.hpp`, spelled as a reference at all ten of its uses — the row spelling appears zero
+   times in the module. Fixed in a separate, complete override of one line.
+2. **Names left unqualified** inside `namespace flight::log` for types owned by `flight::types`.
+3. **TypeScript's `in` operator emitted verbatim as C++**: `flight::String("__kind") in value`. Rewritten
+   to `flight::object_has_own`, which is exactly equivalent here because this runtime has no prototype
+   chain, so JavaScript's `in` would find only own properties. Two sites, both in this module; nothing
+   else in the foundation tree leaks `in`.
+4. **`LogLevel`'s representation, twice wrong.** It is a TypeScript `enum`, emitted correctly as
+   `enum class LogLevel`, and then used as neither: wrapped in `Ref<>` in 21 places, which an enum can
+   never need, and spelled in snake_case as though it were an object in 38 more — `log_level.debug` for
+   `flight::types::LogLevel::Debug`.
+
+### What the remaining 40 actually are
+
+**Fifteen references to names that do not exist.** The eight functions best-effort marked
+`NOT GENERATED`, plus `emit_signal` and `handle`. This half is honest work with a clear shape: write a
+JSON formatter, a text formatter, two console writers, span-field merging, and sink-state teardown.
+
+**About ten representation defects inside code the emitter *did* generate.** Designated initializers
+applied to a `std::variant`; `.value` read off a `flight::Any` as though it were a struct; a `Record`
+built with a key outside the PropertyKey domain; a ternary whose branches have different types. These are
+not missing pieces — they are emitted expressions that are not valid C++, and repairing each one means
+recovering its intended semantics from the TypeScript first.
+
+That second group is what makes this module a **rewrite rather than a copy-and-tweak**. The copy-and-edit
+workflow assumes the generated text is mostly right and locally wrong; here a tenth of what remains is
+emitted code that has to be re-derived. Worth knowing before picking a package to finish by hand: prefer
+one whose residual is group 1 only.
