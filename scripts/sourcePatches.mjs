@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 // Patches applied to a pinned sibling checkout before generation, so a module the compiler refuses to
@@ -115,16 +115,121 @@ export function applySourcePatches(patches, dependency) {
       package: patch.package,
     });
   }
+  // Records which process owns the patched state, so a later run can tell a dead run's leftovers from a
+  // live run's working tree. Written only when something was actually applied; see recoverStalePatches.
+  if (applied.length > 0) {
+    writeFileSync(
+      ownershipMarker(dependency),
+      `${JSON.stringify({ patches: applied.map((record) => record.id), pid: process.pid, startedAt: new Date().toISOString() }, undefined, 2)}\n`,
+    );
+  }
   return applied;
 }
 
 // Restores every path the applied patches touched. Safe to call when nothing was applied, and safe to
 // call twice, so it belongs in a `finally`.
+// Who currently owns the patched state of a checkout. Written beside the checkout rather than inside it,
+// so recording ownership does not itself dirty the tree the integrity check reads.
+function ownershipMarker(dependency) {
+  return path.join(path.dirname(dependency.directory), `.${path.basename(dependency.directory)}-source-patches.json`);
+}
+
+function readOwner(dependency) {
+  const file = ownershipMarker(dependency);
+  if (!existsSync(file)) return undefined;
+  try {
+    const parsed = JSON.parse(readFileSync(file, 'utf8'));
+    return typeof parsed.pid === 'number' ? parsed : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function ownerIsAlive(pid) {
+  if (pid === process.pid) return true;
+  try {
+    // Signal 0 tests for existence without delivering anything.
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    // EPERM means the process exists but belongs to someone else, which still counts as alive.
+    return error.code === 'EPERM';
+  }
+}
+
+// Recovers a checkout left patched by a run that could not clean up after itself.
+//
+// `revertSourcePatches` runs in a `finally` and from a SIGINT/SIGTERM/SIGHUP handler, which covers every
+// ending the process gets a say in. SIGKILL is not one of them, and the generation hang has to be killed
+// that way -- it ignores SIGTERM, which is what proves it is a synchronous spin. So a killed run leaves
+// all three patches applied, and the NEXT run refuses with "flight has uncommitted changes" and no hint
+// about why. That is a confusing failure and it cost a measurement here.
+//
+// The hazard in fixing it is the opposite mistake. A reverting recovery that only asks "is this dirt
+// shaped like our patches?" cannot tell a DEAD run's leftovers from a LIVE run's working state, and would
+// happily pull the patches out from under a generation in progress -- which is not hypothetical, it is
+// what the first version of this function did to a running 73-package run. So ownership is recorded
+// explicitly: `applySourcePatches` writes a marker naming its pid, `revertSourcePatches` removes it, and
+// recovery proceeds only when the owner is GONE.
+//
+// Three conditions, all required:
+//
+//   1. A marker exists and its pid is not alive. No marker means we cannot show the dirt is ours, so the
+//      integrity check's refusal stands; a live pid means another run owns it and is reported as such.
+//   2. Every modified path in the checkout is a path some declared patch touches, so a file nobody
+//      declared a patch against is never discarded.
+//   3. Every patch whose paths are dirty reverse-applies CLEANLY. `git apply --reverse --check` succeeds
+//      only if the patch's exact added lines are present, which is a byte-level identification rather
+//      than a guess from filenames.
+//
+// Returns `{ recovered, heldBy }`: the ids reverted, or the live pid that owns the checkout.
+export function recoverStalePatches(patches, dependency) {
+  const mine = patches.filter((patch) => patch.dependency === dependency.name);
+  if (mine.length === 0) return { recovered: [] };
+  const owner = readOwner(dependency);
+  if (owner === undefined) return { recovered: [] };
+  if (ownerIsAlive(owner.pid)) return { heldBy: owner.pid, recovered: [] };
+  const status = git(dependency.directory, ['status', '--porcelain']);
+  if (status.status !== 0) return { recovered: [] };
+  const dirty = status.stdout
+    .split('\n')
+    .map((line) => line.slice(3).trim())
+    .filter((line) => line.length > 0);
+  if (dirty.length === 0) {
+    // The owner died after reverting but before removing its marker. Nothing to undo; clear the marker.
+    rmSync(ownershipMarker(dependency), { force: true });
+    return { recovered: [] };
+  }
+  const declared = new Set(mine.flatMap((patch) => patchedPaths(patch)));
+  if (dirty.some((filename) => !declared.has(filename))) return { recovered: [] };
+  const dirtySet = new Set(dirty);
+  const applied = mine.filter((patch) => patchedPaths(patch).some((filename) => dirtySet.has(filename)));
+  for (const patch of applied) {
+    if (git(dependency.directory, ['apply', '--reverse', '--check', patch.file]).status !== 0) {
+      return { recovered: [] };
+    }
+  }
+  for (const patch of applied) git(dependency.directory, ['apply', '--reverse', '--quiet', patch.file]);
+  rmSync(ownershipMarker(dependency), { force: true });
+  return { recovered: applied.map((patch) => patch.id) };
+}
+
+// The repository-relative paths a patch file touches, read from its own `+++ b/...` headers.
+function patchedPaths(patch) {
+  const text = readFileSync(patch.file, 'utf8');
+  return [...text.matchAll(/^\+\+\+ b\/(.+)$/gmu)].map((found) => found[1].trim());
+}
+
 export function revertSourcePatches(patches, dependency) {
+  let reverted = false;
   for (const patch of patches) {
     if (patch.dependency !== dependency.name) continue;
     git(dependency.directory, ['apply', '--reverse', '--quiet', patch.file]);
+    reverted = true;
   }
+  // Releases ownership. Removed after the reverts so a process killed mid-revert still leaves a marker
+  // naming it, which is what lets the next run recover rather than refuse.
+  if (reverted) rmSync(ownershipMarker(dependency), { force: true });
 }
 
 // A patch earns its place by removing a refusal. When the refusal it names is still there, the patch is

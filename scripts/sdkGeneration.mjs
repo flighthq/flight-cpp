@@ -27,6 +27,7 @@ import {
   applySourcePatches,
   ineffectivePatches,
   loadSourcePatches,
+  recoverStalePatches,
   revertSourcePatches,
 } from './sourcePatches.mjs';
 
@@ -76,6 +77,23 @@ const generatedRoot = outputOption
   ? path.resolve(root, outputOption.slice('--output='.length))
   : path.join(root, 'generated');
 const bindingProfiles = loadBindingProfiles(bindingProfileOptions);
+// Before the integrity check, not after: a run killed with SIGKILL -- which the generation hang has to
+// be, since it ignores SIGTERM -- leaves its patches applied, and the integrity check would then refuse
+// with "flight has uncommitted changes" and no hint about the cause. Recovery reverts only dirt a
+// declared patch provably put there; see recoverStalePatches.
+const recovery = recoverStalePatches(loadSourcePatches(root), flight);
+if (recovery.recovered.length > 0) {
+  process.stdout.write(
+    `Recovered ${String(recovery.recovered.length)} source patch(es) left applied by an interrupted run: ${recovery.recovered.join(', ')}\n`,
+  );
+}
+if (recovery.heldBy !== undefined) {
+  process.stderr.write(
+    `Another generation run (pid ${String(recovery.heldBy)}) holds the pinned Flight checkout patched. ` +
+      'Wait for it to finish rather than running two generations against one checkout.\n',
+  );
+  process.exit(1);
+}
 const inputFailure = validateInput(flight, compiler);
 if (inputFailure !== undefined) {
   const message = `${inputFailure} Run \`npm run rehydrate\` and \`npm ci --prefix .dependencies/flight-compiler\`.\n`;
