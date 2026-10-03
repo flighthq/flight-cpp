@@ -840,3 +840,43 @@ So the foundation's remaining blockers are, without exception, representation or
 The useful conclusion for sequencing: there is no cheap first package here. `log` remains the most
 valuable by a wide margin — nineteen packages plus `geometry` — and its cost is now known precisely
 rather than guessed, which is a better position to choose from than the one we were in an hour ago.
+
+## Stubbing log, and the one blocker that is left
+
+`log` is now stubbed rather than implemented, because the goal is a working SDK and not a finished log
+module. The override does three things in order of increasing bluntness:
+
+1. **Corrects representation** — the `LogSink` alias, unqualified names, the `in` operator, and
+   `LogLevel`, which is a TS enum the emitter both wrapped in `Ref<>` (21 sites) and spelled snake_case
+   as an object (38 sites).
+2. **Stubs nine invalid bodies.** Each of these functions had an emitted body that is not valid C++ —
+   designated initializers on a `std::variant`, `.value` read off a `flight::Any`, a `Record` key outside
+   the PropertyKey domain, and in `create_file_log_sink` a read of a `handle` that is never declared in
+   its scope. Each now throws, naming itself and the reason. Throwing is deliberate: a logging function
+   that silently does nothing looks fine forever, and this names the gap at the one moment it matters.
+3. **Declares three functions the emitter never generated** — `merge_span_fields`,
+   `initialize_log_entity`, `create_json_log_formatter`. Their real return types differ per call site, so
+   there is no single signature to write; they return a `NotImplementedInThisProfile` value that converts
+   to whatever the call site wanted and throws at the conversion.
+
+That took the module from roughly 200 diagnostics to **10**, and all ten are one thing:
+
+```
+include/flight/equality.hpp:10: no match for 'operator==' (operand types are
+  'const std::function<void(std::shared_ptr<flight::types::LogEntry>)>' and the same)
+```
+
+`emit_to_sinks` calls `emit_signal`; emitting a signal compares its slots; `SameValueZero` needs
+`operator==` on the slot type. TypeScript compares functions by **reference identity** — that is how a
+listener is removed — and `std::function` has none.
+
+This is the blocker refused on purpose throughout, and it is worth being precise about why no local fix
+works. `std::function::target()` looks like an answer and is not: copies of one `std::function` hold
+distinct targets, so it would report *different* exactly where JavaScript reports *same*, breaking
+listener removal in the quiet direction. Any equality invented here would be a semantics this repository
+asserted and its own tests then certified as true. Closing it needs function values that carry identity —
+a `shared_ptr`-backed callable compared by pointer — which is the emitter's representation choice for
+every `std::function` it writes, and the same blocker that stops `@flighthq/signals`.
+
+So `log` and `signals` are one blocker, not two, and it is the single highest-value thing left in the
+corpus: it holds nineteen packages plus `geometry` through log, and `signals` on its own account.
