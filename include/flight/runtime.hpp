@@ -45,6 +45,7 @@
 #include <flight/structured_clone.hpp>
 #include <flight/symbol.hpp>
 #include <flight/task.hpp>
+#include <flight/template_argument.hpp>
 #include <flight/text_decoder.hpp>
 #include <flight/text_encoder.hpp>
 #include <flight/typed_array.hpp>

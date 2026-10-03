@@ -2840,6 +2840,30 @@ void test_web_types() {
         "portable Web dictionaries preserve optional member presence");
 }
 
+// The trait the create_signal repair is built on. TypeScript infers a call's type argument from the
+// assignment target; C++ cannot, so the repair computes it from the target instead and needs to name the
+// `T` inside a `shared_ptr<Signal<T>>`. These assertions are that extraction, and the last two pin the
+// properties the repair relies on: it reads through `element_type` (so a smart pointer works), and it
+// takes the FIRST argument of a multi-parameter template rather than failing to match it.
+template <typename T>
+struct OneParameterTemplate {};
+template <typename First, typename Second>
+struct TwoParameterTemplate {};
+
+void test_template_argument() {
+  static_assert(std::same_as<flight::template_argument_t<OneParameterTemplate<double>>, double>);
+  static_assert(std::same_as<flight::template_argument_t<TwoParameterTemplate<int, char>>, int>);
+  // The shape the repair actually writes: through a smart pointer's element_type.
+  using Pointer = std::shared_ptr<OneParameterTemplate<flight::String>>;
+  static_assert(std::same_as<flight::template_argument_t<Pointer::element_type>, flight::String>);
+  // A nested instantiation comes back whole, not decomposed further.
+  static_assert(std::same_as<flight::template_argument_t<OneParameterTemplate<OneParameterTemplate<bool>>>,
+                             OneParameterTemplate<bool>>);
+  // And the callable shape this exists for: a signal slot type.
+  using Slot = std::function<void(double)>;
+  static_assert(std::same_as<flight::template_argument_t<OneParameterTemplate<Slot>>, Slot>);
+}
+
 void test_task() {
   const auto source = FlightTask<int>::ready(21);
   check(source.is_ready() && source.get() == 21, "ready task exposes its settled value");
@@ -3165,6 +3189,7 @@ int main() {
   test_string();
   test_streams();
   test_task();
+  test_template_argument();
   test_typed_array();
   test_uri_components();
   test_web_types();

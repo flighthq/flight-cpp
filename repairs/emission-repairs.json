@@ -574,6 +574,29 @@
       "defect": "The emitter writes the FUNCTION create_rectangle unqualified inside namespace flight::node, where it lives in flight::geometry. Same defect as the unqualified type names, on a function rather than a type: a using-declaration introduces the name and nothing else, so it stays inside the rule that a repair adds no behavior.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "node-bare-node-template-argument",
+      "kind": "name-defaulted-template-argument",
+      "appliesTo": "flight/node/",
+      "symbol": "Node",
+      "defaultArgument": "flight::types::NodeTraits",
+      "sourceDeclaration": "packages/types/src/Node.ts:19 -- export interface Node<Traits extends object = NodeTraits> extends NodeTraits, Entity",
+      "diagnostic": "type/value mismatch at argument 1 in template parameter list for 'flight::Ref'; note: expected a type, got 'Node'",
+      "defect": "TypeScript's Node declares a DEFAULT type parameter (Traits extends object = NodeTraits), so a bare `Node` in the source means Node<NodeTraits>. The emitter drops the default from the generated template and then writes the bare name in template-argument position, which is not a type in C++. Five occurrences in flight/node/hierarchy.hpp, all inside flight::Ref<...>. Note that flight::types::NodeAny is NOT the right substitution: it is Node<any>, a different instantiation from the declared default. The default is written QUALIFIED so the repair introduces no name that would itself need a using-declaration -- an unqualified NodeTraits here depended on another repair having already run, which is exactly the order-sensitivity applyEmissionRepairs now iterates to a fixed point to remove.",
+      "expectedWhen": "always",
+      "expires": "when the emitter carries a declared default type parameter through to the use sites; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "create-signal-argument-from-assignment",
+      "kind": "deduce-call-argument-from-assignment",
+      "appliesTo": "flight/",
+      "symbol": "create_signal",
+      "sourceDeclaration": "packages/signals/src/signal.ts:8 -- export function createSignal<T extends (...args: any[]) => void>(): Signal<T>",
+      "diagnostic": "no matching function for call to 'create_signal()'",
+      "defect": "createSignal<T>() takes its type argument from TypeScript's CONTEXTUAL TYPING -- T is read off the type being assigned to -- and C++ has no equivalent, so the emitted call has nothing to deduce from. Eight assignment-shaped calls across @flighthq/node (5) and @flighthq/scene2d (3); it was the sole remaining cause in twelve of node's 21 headers. The repair recovers the argument from the assignment target, which is the same rule TypeScript applies, and is self-checking: a wrong type would not compile.",
+      "expectedWhen": "always",
+      "expires": "when the emitter supplies the type argument it resolved from the assignment context; sdk:check fails if this repair matches no header."
     }
   ]
 }

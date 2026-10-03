@@ -12,7 +12,9 @@ import path from 'node:path';
 // a patched build into a silent fork of the generator.
 
 const SCHEMA = 'flight-cpp-emission-repairs/1';
-const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias', 'name-in-place-alternative']);
+const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias', 'name-in-place-alternative', 'name-defaulted-template-argument',
+  'deduce-call-argument-from-assignment',
+]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
 // variant). The two are not interchangeable and the wrong one is a type error, so each repair states
@@ -46,6 +48,10 @@ export function loadEmissionRepairs(root) {
         ? ['id', 'kind', 'appliesTo', 'symbol', 'expansion', 'witness', 'witnessInclude', 'diagnostic', 'defect', 'expires']
         : repair.kind === 'name-in-place-alternative'
           ? ['id', 'kind', 'appliesTo', 'symbol', 'diagnostic', 'defect', 'expires']
+          : repair.kind === 'name-defaulted-template-argument'
+            ? ['id', 'kind', 'appliesTo', 'symbol', 'defaultArgument', 'sourceDeclaration', 'diagnostic', 'defect', 'expires']
+            : repair.kind === 'deduce-call-argument-from-assignment'
+              ? ['id', 'kind', 'appliesTo', 'symbol', 'sourceDeclaration', 'diagnostic', 'defect', 'expires']
           : ['id', 'kind', 'appliesTo', 'symbol', 'declaration', 'diagnostic', 'defect', 'expires'];
     for (const field of required) {
       if (typeof repair[field] !== 'string' || repair[field].length === 0) {
@@ -71,13 +77,38 @@ export function loadEmissionRepairs(root) {
 export function applyEmissionRepairs(repairs, files) {
   const applied = repairs.map((repair) => ({ expectedWhen: repair.expectedWhen, files: [], id: repair.id }));
   if (repairs.length === 0) return applied;
+  // To a FIXED POINT, because one repair can create the condition another answers: the bare-Node repair
+  // writes a type argument, and if that argument needed a using-declaration the declaration repair had
+  // already run and found nothing. A single ordered pass makes the outcome depend on the order entries
+  // happen to sit in the JSON, which is not a property anyone would think to preserve while editing it.
+  // Iterating until nothing changes removes the ordering from the contract altogether. The bound is a
+  // guard against a pair of repairs that undo each other, which would otherwise spin forever; it has
+  // never been reached, and reaching it is a declaration bug rather than a condition to tolerate.
+  const rounds = 8;
+  for (let round = 0; round < rounds; round += 1) {
+    const changed = applyOneRound(repairs, files, applied);
+    if (!changed) return applied;
+  }
+  throw new Error(
+    `Emission repairs did not reach a fixed point in ${String(rounds)} rounds, which means two repairs are ` +
+      'rewriting each other. Check the most recently added entries in repairs/emission-repairs.json.',
+  );
+}
+
+// One pass over every file. Returns whether anything changed, and records each file a repair touched.
+function applyOneRound(repairs, files, applied) {
+  let changed = false;
   for (const file of files) {
     for (const [index, repair] of repairs.entries()) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
       const repaired =
-        repair.kind === 'name-in-place-alternative'
-          ? nameInPlaceAlternative(contents, repair)
+        repair.kind === 'deduce-call-argument-from-assignment'
+          ? deduceCallArgumentFromAssignment(contents, repair)
+          : repair.kind === 'name-defaulted-template-argument'
+            ? nameDefaultedTemplateArgument(contents, repair)
+            : repair.kind === 'name-in-place-alternative'
+              ? nameInPlaceAlternative(contents, repair)
           : repair.kind === 'respell-reference-alias'
             ? respellReferenceAlias(contents, repair)
           : repair.kind === 'insert-using-declaration'
@@ -85,10 +116,78 @@ export function applyEmissionRepairs(repairs, files) {
             : insertForwardDeclaration(contents, repair);
       if (repaired === undefined) continue;
       file.contents = repaired;
-      applied[index].files.push(file.path);
+      changed = true;
+      // A repair can legitimately touch one file across two rounds; the record is a set of files, not a
+      // count of rewrites, so the same path must not appear twice.
+      if (!applied[index].files.includes(file.path)) applied[index].files.push(file.path);
     }
   }
-  return applied;
+  return changed;
+}
+
+// Supplies the type argument TypeScript took from the assignment target.
+//
+// TypeScript infers a call's type argument from the type being assigned to:
+//
+//   out.onChildAdded = createSignal();      // T is read off the declared type of onChildAdded
+//
+// C++ has no contextual typing, so the emitted `create_signal()` has nothing to deduce T from:
+// "no matching function for call to 'create_signal()'". Twelve of @flighthq/node's 21 headers and
+// @flighthq/scene2d's fail on this and on nothing else.
+//
+// The rewrite applies the SAME RULE mechanically: it reads T off the assignment target, which is sitting
+// right there in the text. `(out->on_child_added = create_signal());` becomes
+//
+//   (out->on_child_added = create_signal<flight::template_argument_t<
+//       typename std::remove_cvref_t<decltype(out->on_child_added)>::element_type>>());
+//
+// -- the target's `shared_ptr<Signal<T>>`, through `element_type`, through the trait, is `T`.
+//
+// Why this is still a repair and not a rewrite of meaning: the argument is not CHOSEN here, it is
+// RECOVERED. TypeScript's own rule says T is the target's parameter, so there is exactly one answer and
+// this computes it. It is also self-checking in a way the other repairs are not -- if the expression
+// named the wrong type the assignment would not compile, so a wrong rewrite cannot reach a built header.
+//
+// Only the assignment form is matched. The one non-assignment call in the tree
+// (flight/render/render_cache.hpp, inside a nullish-assignment lambda) has no target to read and is
+// deliberately left for its own repair or an override rather than guessed at.
+function deduceCallArgumentFromAssignment(contents, repair) {
+  const pattern = new RegExp(`\\(([A-Za-z_][\\w]*(?:(?:->|\\.)[A-Za-z_]\\w*)+) = ${repair.symbol}\\(\\)\\)`, 'gu');
+  if (!pattern.test(contents)) return undefined;
+  return contents.replace(
+    pattern,
+    (_match, target) =>
+      `(${target} = ${repair.symbol}<flight::template_argument_t<` +
+      `typename std::remove_cvref_t<decltype(${target})>::element_type>>())`,
+  );
+}
+
+// Writes the default template argument the TypeScript declares and the emitter dropped.
+//
+// `export interface Node<Traits extends object = NodeTraits>` has a DEFAULT, so TypeScript's bare `Node`
+// means `Node<NodeTraits>`. The emitter writes `template <typename Traits> struct Node` with no default
+// and then writes the bare name at the use sites, which in C++ is not a type:
+//
+//   inline std::optional<std::function<void(flight::Ref<Node>, flight::Ref<Node>)>> reparent_node_guard;
+//   error: type/value mismatch at argument 1 ... note: expected a type, got 'Node'
+//
+// Restoring the default on the template would not be enough on its own -- C++ still spells a defaulted
+// instantiation `Node<>`, never a bare `Node` -- so the use sites have to be written either way, and
+// writing them is the whole repair.
+//
+// The rewrite only fires where the bare name sits in a TEMPLATE-ARGUMENT position: immediately after a
+// `<` or `,` and immediately before a `,` or `>`. That restriction is what makes it safe rather than a
+// search-and-replace on a common identifier. In such a position a class-template name with no arguments
+// of its own is NEVER valid C++, so there is no reading of the text under which the rewrite could be
+// changing a correct program -- and the definition site (`struct Node : public ...`), the parameterised
+// uses (`Node<Traits>`), and every ordinary mention are all outside it and left alone.
+//
+// `sourceDeclaration` records the TypeScript the default is read from, because that citation IS the
+// equivalence argument here: nothing in the C++ tree can prove what the dropped default was.
+function nameDefaultedTemplateArgument(contents, repair) {
+  const pattern = new RegExp(`(?<=[<,]\\s*)${repair.symbol}(?=\\s*[,>])`, 'gu');
+  if (!pattern.test(contents)) return undefined;
+  return contents.replace(pattern, `${repair.symbol}<${repair.defaultArgument}>`);
 }
 
 // Names the variant alternative the emitter left for deduction to find.
