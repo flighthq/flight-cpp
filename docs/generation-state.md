@@ -794,3 +794,49 @@ That second group is what makes this module a **rewrite rather than a copy-and-t
 workflow assumes the generated text is mostly right and locally wrong; here a tenth of what remains is
 emitted code that has to be re-derived. Worth knowing before picking a package to finish by hand: prefer
 one whose residual is group 1 only.
+
+## The survey: no foundation package has a cheap residual
+
+Having found that `log` is a rewrite rather than a copy-and-tweak, the next question was which package
+*does* have a missing-functions-only residual — the case the copy-and-edit workflow is cheap for. The
+answer, across the whole foundation slice, is **none of them**.
+
+`@flighthq/signals` looked like the candidate: 8/10 modules, five failing headers, and the first
+diagnostic was the familiar unqualified-name class — `Signal` written bare inside `namespace
+flight::signals` where it is `flight::types::Signal`. Two declared `insert-using-declaration` repairs
+later, carrying `flight/types/signal.hpp` and `flight/types/signal_connection.hpp`:
+
+```
+connection.hpp   33 errors -> 0        scope.hpp        35 -> 14
+contract.hpp     49 -> 32              throttle.hpp     14 -> 18
+_internal_index  49 -> 32
+```
+
+`connection.hpp` compiles. And everything left in `scope.hpp` and `throttle.hpp` is one class:
+
+```
+no match for 'operator!=' (operand types are 'const std::function<void(flight::Array<flight::Any>)>'
+                                         and 'const std::function<void(flight::Array<flight::Any>)>')
+```
+
+Comparing two functions. TypeScript compares them by reference identity, which is how a listener is
+removed from a signal; `std::function` has no `operator==` at all. This is the one case flagged from the
+beginning as **must not be patched**: any equality invented here would be a semantics this repository
+asserted and its own tests then certified. Closing it properly means function values carrying identity —
+a `shared_ptr`-backed callable whose comparison is pointer comparison — which is the emitter's
+representation choice for every `std::function` it writes, not something the runtime can impose from
+below.
+
+So the foundation's remaining blockers are, without exception, representation or emitter issues:
+
+| package | blocked on |
+|---|---|
+| `signals` | function reference identity — must not be patched |
+| `log` | 8 un-generated functions **and** ~10 emitted-code representation defects |
+| `node` | derived-owner proofs; a Flight typing refactor |
+| `types` | mutually dependent aliases; no include order resolves it |
+| `materials` | the anonymous-struct variant family, the corpus's hardest class |
+
+The useful conclusion for sequencing: there is no cheap first package here. `log` remains the most
+valuable by a wide margin — nineteen packages plus `geometry` — and its cost is now known precisely
+rather than guessed, which is a better position to choose from than the one we were in an hour ago.
