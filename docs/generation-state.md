@@ -1070,3 +1070,34 @@ reference identity was reachable from exactly **two lines** in `@flighthq/log`.
 `is_slot_connected` compare a stored slot against a passed one, which is listener removal. Those are
 templates, so they fail only where instantiated — which is a materially better position than "log and
 signals are one blocker holding nineteen packages", the claim this section replaces.
+
+### A correction to the claim above, and what is actually established
+
+The section above says "per-package generation is unblocked today. Every slice that excludes
+`render-gl` and `scene2d-gl` completes." That was written from slices of up to 38 packages and it
+over-reached. Measured afterwards: a run over **all 145 applicable packages** with `render-gl`'s whole
+family and the five `web` packages excluded **did not complete in 45 minutes** (killed with `-s KILL`,
+no output).
+
+So two claims have to be separated, because only one of them is established.
+
+**Established**, by a controlled comparison: `render-gl`'s own source triggers a hang. Its 18-package
+closure does not finish in 600s; the same closure minus its 33 modules finishes in 6m6s with 1185 of
+1240 emitted. The two runs differ by one package's source and nothing else.
+
+**Not established**: that `render-gl` is the *only* trigger. The 145-package result is consistent with a
+second trigger somewhere in the remaining 138 packages, and equally consistent with 145 packages simply
+costing more than 45 minutes of wall clock. Nothing measured so far separates those, and the timings do
+not extrapolate: 995 modules of `types` alone take 1m40s, 1240 modules across 17 packages take 6m6s, and
+a 38-package closure takes 6m59s, which is superlinear in packages and roughly flat in modules. A 145
+package run being four to six times the 38-package cost would land outside the 45-minute window on its
+own.
+
+The discriminator is a halving, and it is running: 73 packages, then 72. If both halves complete, the
+cost is scale and the answer is batched generation. If one half hangs, it contains a second trigger and
+halving again names it — the same ladder that found `render-gl`, which took five runs.
+
+What this does not change: the per-package and per-slice workaround is still real for every slice
+actually measured, and `log`, `camera`, `geometry`, `node`, `registry` and `signals` were all repaired
+against a tree that generated in 6m6s. The open question is the size of the batch the committed
+inventory can be produced in, not whether the packages can be generated at all.
