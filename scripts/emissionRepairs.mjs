@@ -12,7 +12,12 @@ import path from 'node:path';
 // a patched build into a silent fork of the generator.
 
 const SCHEMA = 'flight-cpp-emission-repairs/1';
-const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration']);
+const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias']);
+// How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
+// derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
+// variant). The two are not interchangeable and the wrong one is a type error, so each repair states
+// which it is and `referenceAliasIdentityProof` turns that statement into a compiled assertion.
+const EXPANSIONS = new Set(['shared-pointer', 'value']);
 // When a repair is expected to match. A module that only emits once external bindings are applied
 // cannot need its repair in the unbound inventory, so claiming the repair is obsolete there would be
 // wrong -- `withBindings` says to judge expiry only on a profiled run.
@@ -34,13 +39,22 @@ export function loadEmissionRepairs(root) {
     throw new Error(`Emission repair declaration ${portable(file)} has no repairs array`);
   }
   for (const repair of parsed.repairs) {
-    for (const field of ['id', 'kind', 'appliesTo', 'symbol', 'declaration', 'diagnostic', 'defect', 'expires']) {
+    // A respell repair carries an `expansion` and a `witness` where the insertion kinds carry a
+    // `declaration`: it writes no declaration, it rewrites a type spelling to the type it already was.
+    const required =
+      repair.kind === 'respell-reference-alias'
+        ? ['id', 'kind', 'appliesTo', 'symbol', 'expansion', 'witness', 'witnessInclude', 'diagnostic', 'defect', 'expires']
+        : ['id', 'kind', 'appliesTo', 'symbol', 'declaration', 'diagnostic', 'defect', 'expires'];
+    for (const field of required) {
       if (typeof repair[field] !== 'string' || repair[field].length === 0) {
         throw new Error(`Emission repair ${repair.id ?? '<unnamed>'} is missing required field ${field}`);
       }
     }
     if (!KINDS.has(repair.kind)) {
       throw new Error(`Emission repair ${repair.id} has unknown kind ${repair.kind}`);
+    }
+    if (repair.kind === 'respell-reference-alias' && !EXPANSIONS.has(repair.expansion)) {
+      throw new Error(`Emission repair ${repair.id} has unknown expansion ${repair.expansion}`);
     }
     repair.expectedWhen ??= 'always';
     if (!EXPECTATIONS.has(repair.expectedWhen)) {
@@ -60,15 +74,114 @@ export function applyEmissionRepairs(repairs, files) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
       const repaired =
-        repair.kind === 'insert-using-declaration'
-          ? insertUsingDeclaration(contents, repair)
-          : insertForwardDeclaration(contents, repair);
+        repair.kind === 'respell-reference-alias'
+          ? respellReferenceAlias(contents, repair)
+          : repair.kind === 'insert-using-declaration'
+            ? insertUsingDeclaration(contents, repair)
+            : insertForwardDeclaration(contents, repair);
       if (repaired === undefined) continue;
       file.contents = repaired;
       applied[index].files.push(file.path);
     }
   }
   return applied;
+}
+
+// Writes the type `flight::Ref<X>` already IS, in place of the alias, so a function template can
+// deduce through it.
+//
+// `flight::Ref<Value>` is not a transparent alias -- it resolves through
+// `detail::reference_shape<Value, decltype(detail::complete_probe<Value>(0))::value>::type`, a
+// computation. A template parameter that appears only inside it is therefore in a NON-DEDUCED CONTEXT,
+// and every generated signal and node helper is declared that way:
+//
+//   template <typename T>
+//   void emit_signal(flight::Ref<flight::types::Signal<T>> signal, ArgsPack&&... args);
+//
+// so `emit_signal(signals->on_log_entry, entry)` fails with "couldn't deduce template parameter 'T'".
+// The declaration is well-formed and the file compiles alone; every CALL fails. That is why packages
+// that are 100% emitted still have failing headers, and it is the largest single cause measured in the
+// corpus.
+//
+// The repair writes the alias's own result: `std::shared_ptr<Signal<T>>` for a struct deriving from
+// flight::ReferenceEnabled, and `X` itself otherwise. Those are the SAME TYPE -- `reference_shape` has
+// exactly those two answers, and `make_ref` already static_asserts the correspondence -- so this is a
+// spelling change and not a behavior change, which keeps it inside the rule repairs live by. The
+// difference is only that the result is deducible and the alias is not.
+//
+// Each repair names its `expansion` and a concrete `witness` type; `referenceAliasIdentityProof` emits
+// `static_assert(std::same_as<...>)` per repair so the claim is compiled rather than argued. A wrong
+// expansion fails the build instead of silently changing a signature.
+function respellReferenceAlias(contents, repair) {
+  const pattern = new RegExp(`(?<![A-Za-z0-9_:])(?:flight::)?Ref<\\s*((?:[A-Za-z_][A-Za-z0-9_]*::)*${repair.symbol})<`, 'gu');
+  let out = contents;
+  let changed = false;
+  for (;;) {
+    pattern.lastIndex = 0;
+    const found = pattern.exec(out);
+    if (found === null) break;
+    // The argument list of the inner template, then the `>` that closes `Ref<`.
+    const innerOpen = found.index + found[0].length - 1;
+    const innerClose = matchingAngle(out, innerOpen);
+    if (innerClose === undefined) break;
+    const outerClose = out.indexOf('>', innerClose + 1);
+    if (outerClose === -1) break;
+    // Nothing but whitespace may sit between the two closers, or this is not the shape we parsed.
+    if (out.slice(innerClose + 1, outerClose).trim() !== '') break;
+    const inner = `${found[1]}<${out.slice(innerOpen + 1, innerClose)}>`;
+    const respelt = repair.expansion === 'shared-pointer' ? `std::shared_ptr<${inner}>` : inner;
+    out = out.slice(0, found.index) + respelt + out.slice(outerClose + 1);
+    changed = true;
+  }
+  return changed ? out : undefined;
+}
+
+// Index of the `>` closing the `<` at `open`, counting nesting. `>>` is plain text here -- the emitter
+// never writes a shift operator inside a type -- so no token-level handling is needed.
+function matchingAngle(text, open) {
+  let depth = 0;
+  for (let at = open; at < text.length; at += 1) {
+    if (text[at] === '<') depth += 1;
+    else if (text[at] === '>') {
+      depth -= 1;
+      if (depth === 0) return at;
+    }
+  }
+  return undefined;
+}
+
+// The compiled proof for every respell repair that was applied. Each line asserts that the alias and
+// the replacement name the same type at a concrete witness, which is the whole claim the repair makes.
+// Written into the generated tree so it is compiled by the same gate that compiles the headers.
+export function referenceAliasIdentityProof(repairs) {
+  const respells = repairs.filter((repair) => repair.kind === 'respell-reference-alias');
+  if (respells.length === 0) return undefined;
+  const lines = respells.map((repair) => {
+    const replacement =
+      repair.expansion === 'shared-pointer' ? `std::shared_ptr<${repair.witness}>` : repair.witness;
+    return `// ${repair.id}\nstatic_assert(std::same_as<flight::Ref<${repair.witness}>, ${replacement}>,\n              "respell-reference-alias ${repair.id} claims the wrong expansion for ${repair.symbol}");`;
+  });
+  return [
+    '// Generated by scripts/emissionRepairs.mjs. Do not edit.',
+    '//',
+    '// One assertion per respell-reference-alias repair. The repair rewrites `flight::Ref<X>` to the type',
+    '// that alias already resolves to, so that a function template can deduce through it; these lines are',
+    '// that claim, compiled. If a repair names the wrong expansion the build fails here rather than',
+    '// changing a signature quietly.',
+    '#pragma once',
+    '#include <concepts>',
+    '#include <memory>',
+    '#include <flight/runtime.hpp>',
+    '',
+    ...flightIncludesFor(respells),
+    '',
+    ...lines,
+    '',
+  ].join('\n');
+}
+
+function flightIncludesFor(respells) {
+  return [...new Set(respells.map((repair) => `#include <${repair.witnessInclude}>`))].sort();
 }
 
 // Brings a name from flight::types into the package's own namespace, for a file that refers to it

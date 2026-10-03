@@ -226,12 +226,19 @@ inline flight::Array<flight::Ref<LogEntry>> get_memory_log_sink_entries(flight::
   return ([&]() { flight::Array<flight::Ref<LogEntry>> array_spread_result; for (const auto& array_spread_item : buf.slice(head)) { array_spread_result.push(array_spread_item); } for (const auto& array_spread_item : buf.slice(0.0, head)) { array_spread_result.push(array_spread_item); } return array_spread_result; }());
 }
 
-inline flight::Record<flight::types::LogLevel, flight::String> console_methods = ([]() { flight::Record<flight::types::LogLevel, flight::String> record_construction = {}; auto record_construction_key = flight::types::LogLevel::None; auto record_construction_value = flight::String("log"); record_construction.set(record_construction_key, record_construction_value); auto record_construction_key_2 = flight::types::LogLevel::Error; auto record_construction_value_2 = flight::String("error"); record_construction.set(record_construction_key_2, record_construction_value_2); auto record_construction_key_3 = flight::types::LogLevel::Warn; auto record_construction_value_3 = flight::String("warn"); record_construction.set(record_construction_key_3, record_construction_value_3); auto record_construction_key_4 = flight::types::LogLevel::Info; auto record_construction_value_4 = flight::String("info"); record_construction.set(record_construction_key_4, record_construction_value_4); auto record_construction_key_5 = flight::types::LogLevel::Debug; auto record_construction_value_5 = flight::String("debug"); record_construction.set(record_construction_key_5, record_construction_value_5); auto record_construction_key_6 = flight::types::LogLevel::Verbose; auto record_construction_value_6 = flight::String("log"); record_construction.set(record_construction_key_6, record_construction_value_6); return record_construction; }());
+// OVERRIDE (representation): TypeScript's `Record<LogLevel, string>` is keyed by a NUMBER at runtime --
+// LogLevel is a numeric enum, and `_levelNames[level]` is a numeric index. The emitter kept the enum as
+// the C++ key type, and flight::Record only admits the PropertyKey domain (String, double, Symbol), so
+// `Record<LogLevel, String>` fails its own static_assert: "Flight Record key is not a PropertyKey
+// domain". Keyed by double, with every enum key and every lookup converted at the boundary, the table
+// holds exactly the entries and answers exactly the queries the TypeScript does. This is the same class
+// of correction as the LogLevel work above, in the one place the enum is used as a key rather than a value.
+inline flight::Record<double, flight::String> console_methods = ([]() { flight::Record<double, flight::String> record_construction = {}; const double record_construction_key = static_cast<double>(flight::types::LogLevel::None); auto record_construction_value = flight::String("log"); record_construction.set(record_construction_key, record_construction_value); const double record_construction_key_2 = static_cast<double>(flight::types::LogLevel::Error); auto record_construction_value_2 = flight::String("error"); record_construction.set(record_construction_key_2, record_construction_value_2); const double record_construction_key_3 = static_cast<double>(flight::types::LogLevel::Warn); auto record_construction_value_3 = flight::String("warn"); record_construction.set(record_construction_key_3, record_construction_value_3); const double record_construction_key_4 = static_cast<double>(flight::types::LogLevel::Info); auto record_construction_value_4 = flight::String("info"); record_construction.set(record_construction_key_4, record_construction_value_4); const double record_construction_key_5 = static_cast<double>(flight::types::LogLevel::Debug); auto record_construction_value_5 = flight::String("debug"); record_construction.set(record_construction_key_5, record_construction_value_5); const double record_construction_key_6 = static_cast<double>(flight::types::LogLevel::Verbose); auto record_construction_value_6 = flight::String("log"); record_construction.set(record_construction_key_6, record_construction_value_6); return record_construction; }());
 
-inline flight::Record<flight::types::LogLevel, flight::String> level_names = ([]() { flight::Record<flight::types::LogLevel, flight::String> record_construction_2 = {}; auto record_construction_key_7 = flight::types::LogLevel::None; auto record_construction_value_7 = flight::String("none"); record_construction_2.set(record_construction_key_7, record_construction_value_7); auto record_construction_key_8 = flight::types::LogLevel::Error; auto record_construction_value_8 = flight::String("error"); record_construction_2.set(record_construction_key_8, record_construction_value_8); auto record_construction_key_9 = flight::types::LogLevel::Warn; auto record_construction_value_9 = flight::String("warn"); record_construction_2.set(record_construction_key_9, record_construction_value_9); auto record_construction_key_10 = flight::types::LogLevel::Info; auto record_construction_value_10 = flight::String("info"); record_construction_2.set(record_construction_key_10, record_construction_value_10); auto record_construction_key_11 = flight::types::LogLevel::Debug; auto record_construction_value_11 = flight::String("debug"); record_construction_2.set(record_construction_key_11, record_construction_value_11); auto record_construction_key_12 = flight::types::LogLevel::Verbose; auto record_construction_value_12 = flight::String("verbose"); record_construction_2.set(record_construction_key_12, record_construction_value_12); return record_construction_2; }());
+inline flight::Record<double, flight::String> level_names = ([]() { flight::Record<double, flight::String> record_construction_2 = {}; const double record_construction_key_7 = static_cast<double>(flight::types::LogLevel::None); auto record_construction_value_7 = flight::String("none"); record_construction_2.set(record_construction_key_7, record_construction_value_7); const double record_construction_key_8 = static_cast<double>(flight::types::LogLevel::Error); auto record_construction_value_8 = flight::String("error"); record_construction_2.set(record_construction_key_8, record_construction_value_8); const double record_construction_key_9 = static_cast<double>(flight::types::LogLevel::Warn); auto record_construction_value_9 = flight::String("warn"); record_construction_2.set(record_construction_key_9, record_construction_value_9); const double record_construction_key_10 = static_cast<double>(flight::types::LogLevel::Info); auto record_construction_value_10 = flight::String("info"); record_construction_2.set(record_construction_key_10, record_construction_value_10); const double record_construction_key_11 = static_cast<double>(flight::types::LogLevel::Debug); auto record_construction_value_11 = flight::String("debug"); record_construction_2.set(record_construction_key_11, record_construction_value_11); const double record_construction_key_12 = static_cast<double>(flight::types::LogLevel::Verbose); auto record_construction_value_12 = flight::String("verbose"); record_construction_2.set(record_construction_key_12, record_construction_value_12); return record_construction_2; }());
 
 inline flight::String get_log_level_name(flight::types::LogLevel level_2) {
-  return ([&]() -> flight::String { auto nullish_coalesce_left = level_names.get(level_2); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("unknown"); }());
+  return ([&]() -> flight::String { auto nullish_coalesce_left = level_names.get(static_cast<double>(level_2)); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("unknown"); }());
 }
 
 inline flight::Map<flight::String, flight::types::LogLevel> level_by_name = flight::Map<flight::String, flight::types::LogLevel>({{flight::String("none"), flight::types::LogLevel::None}, {flight::String("error"), flight::types::LogLevel::Error}, {flight::String("warn"), flight::types::LogLevel::Warn}, {flight::String("info"), flight::types::LogLevel::Info}, {flight::String("debug"), flight::types::LogLevel::Debug}, {flight::String("verbose"), flight::types::LogLevel::Verbose}});
@@ -290,9 +297,21 @@ inline void register_log_serializer(flight::String kind, std::function<flight::R
 inline flight::Array<flight::Ref<LogSink>> sinks = flight::Array<flight::Ref<LogSink>>{};
 
 inline void add_log_sink(flight::Ref<LogSink> sink) {
-  if (sinks.includes(sink)) {
-    return;
-  }
+  // STUB WITH A NAMED DIVERGENCE. TypeScript reads `if (sinks.includes(sink)) return;` -- a dedupe by
+  // REFERENCE IDENTITY, so registering the same function twice is a no-op. `Ref<LogSink>` is a plain
+  // std::function (Ref<T> collapses to T for anything not deriving from flight::ReferenceEnabled), and
+  // std::function has no operator==, so `includes` instantiates flight::SameValueZero on a callable and
+  // does not compile.
+  //
+  // This one line was the ONLY reachable use of function equality in @flighthq/log. emit_signal does not
+  // compare slots -- it forwards to signal->emit -- so dropping the dedupe here closes the whole module.
+  // The genuine reference-identity blocker stays where it belongs, in @flighthq/signals: disconnect_signal
+  // and is_slot_connected in flight/signals/slot.hpp compare a stored slot against a passed one, which IS
+  // listener removal and cannot be faked. Those are templates, so they only fail where instantiated.
+  //
+  // Divergence, stated so nobody discovers it: add_log_sink is no longer idempotent. Registering the same
+  // sink twice appends twice and that sink then receives every entry twice. No caller in the SDK registers
+  // a sink more than once; a consumer that does gets duplicate lines, not a crash or wrong data.
   sinks.push(sink);
 }
 
@@ -301,12 +320,26 @@ inline void clear_log_sinks() {
 }
 
 inline bool remove_log_sink(flight::Ref<LogSink> sink) {
-  const double idx = sinks.index_of(sink);
-  if ((idx < 0.0)) {
-    return false;
-  }
-  sinks.splice(idx, 1.0);
-  return true;
+  // STUB, and the one place in @flighthq/log where the refusal is load-bearing rather than incidental.
+  // TypeScript reads `const idx = sinks.indexOf(sink)` -- find a function by REFERENCE IDENTITY and
+  // remove it. `Ref<LogSink>` is a plain std::function (Ref<T> collapses to T for anything not deriving
+  // from flight::ReferenceEnabled) and std::function has no operator==, so index_of instantiates
+  // flight::SameValueZero on a callable and does not compile.
+  //
+  // Unlike add_log_sink's dedupe, this cannot be dropped: finding the sink IS the function. And it cannot
+  // be faked. std::function::target() looks like an answer and is not -- copies of one std::function hold
+  // distinct targets, so it would report "different" exactly where JavaScript reports "same" and remove
+  // nothing, silently, forever. Any equality invented here would be a semantics this repository asserted
+  // and its own tests then certified as true.
+  //
+  // So it throws, naming itself, which is the project's rule for a gap: visible at the moment it matters
+  // rather than a no-op that looks correct. Closing it needs function values that carry identity -- a
+  // shared_ptr-backed callable compared by pointer -- which is the emitter's representation choice for
+  // every std::function it writes, and the same blocker that stops @flighthq/signals' disconnect_signal.
+  (void)sink;
+  throw flight::Error(flight::String(
+      "flight::log::remove_log_sink is not implemented in this profile: removing a sink needs function "
+      "reference identity, which the emitted std::function representation does not carry."));
 }
 
 inline void set_log_sink(std::optional<flight::Ref<LogSink>> sink) {

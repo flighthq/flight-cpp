@@ -19,6 +19,7 @@ import { resolveDependency } from './dependencyLock.mjs';
 import {
   aliasDuplicateStructuralStructs,
   applyEmissionRepairs,
+  referenceAliasIdentityProof,
   loadEmissionRepairs,
   obsoleteRepairs,
 } from './emissionRepairs.mjs';
@@ -238,6 +239,17 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   // Needs the whole file set rather than one file at a time, because it has to find the canonical
   // definition before it can alias a duplicate to it.
   const aliasedStructs = aliasDuplicateStructuralStructs(compilation.compilation.files);
+  // The respell repairs claim that `flight::Ref<X>` and the spelling they write are the same type. This
+  // turns that claim into static_asserts compiled by the same gate that compiles the headers, so a
+  // wrong expansion fails the build instead of quietly changing a signature. It is emitted as a header
+  // in the generated tree rather than kept beside the script, because the claim is about THIS tree.
+  const identityProof = referenceAliasIdentityProof(repairs);
+  if (identityProof !== undefined) {
+    compilation.compilation.files.push({
+      contents: identityProof,
+      path: 'flight/repairs/reference_alias_identity.hpp',
+    });
+  }
   for (const file of compilation.compilation.files) {
     const target = path.join(outputRoot, 'include', file.path);
     mkdirSync(path.dirname(target), { recursive: true });
