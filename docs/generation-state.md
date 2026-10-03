@@ -1493,3 +1493,74 @@ that never reached `repairs/`.
 It is deliberately not `using namespace flight::types;`, which would be shorter still: a directive also
 pulls in every name the package did not ask for, so a future collision between a package's own name and
 a types-owned one becomes an ambiguity error in generated code nobody edited.
+
+## The committed inventory is the SDL-profiled tree, and the first whole-SDK failure map
+
+### What was wrong with the first promotion
+
+`generated/` was promoted once from a run with **no binding profiles**, and that was a mistake worth
+recording because the symptom is so quiet. Without the SDL profiles the compiler has no binding for
+`console`, `performance`, `setInterval` or `clearInterval`, so it refuses whole modules that need them:
+`generated/include/flight/log/log.hpp` came out as a 149-line placeholder reading *"no part of it was
+generated"*, where the profiled tree has 1081 lines of real output.
+
+| | unbound | SDL-profiled |
+|---|---|---|
+| 150 packages | 1907/2709, 802 refusals | **2172/2709, 537 refusals** |
+| `log`'s 4-package closure | log refused entirely | 1015/1018, 3 refusals |
+| `math` + `types` | — | 1012/1012, **0 refusals** |
+
+The tell was mechanical, not a judgement call: the committed tree **did not match its own overrides**.
+`overrides:check` reported `flight/log/log.hpp is no longer generated`, and the expiry check named four
+`log-log*-using-declaration` repairs as matching nothing — correct, because a placeholder contains no
+unqualified names. Both mechanisms did exactly what they exist for.
+
+So the SDL profile set is now the script's **default**, for the same reason best-effort is: three call
+sites have to agree and a flag lets them drift. An explicit `--binding-profile` list still wins, so the
+narrower `sdk:generate:headless` and friends are unaffected. After regeneration all three overrides match
+their `derivedFrom` digests and all 58 repairs match at least one header.
+
+Two defaults followed from it: `overridesCheck` and `sdkPackageTiers` both defaulted to `out/sdk-sdl`,
+which was the SDL side output back when `generated/` was unbound. Those trees now have identical content
+and `out/` is gitignored, so the default failed on a fresh clone for no reason. Both read `generated/`.
+
+### The name class, measured across the whole SDK
+
+Half the tree compiled (1356 of 2710 headers, 553 passing) gives the first corpus-wide cause breakdown:
+
+| cause | headers | share of failures |
+|---|---|---|
+| unqualified or undeclared name | 576 | **71.7%** |
+| type conversion | 72 | 9.0% |
+| missing operator | 55 | 6.8% |
+| no matching function | 50 | 6.2% |
+| member on wrong shape | 25 | 3.1% |
+| arrow on a non-pointer | 6 | 0.7% |
+| other | 19 | 2.4% |
+
+Resolving every one of those names against the whole committed tree — asking whether the name is
+declared *somewhere* — gives **550 of 576 resolvable by qualification (95.5%)**, with only 26 genuinely
+declared nowhere.
+
+That is a **correction to the conclusion recorded above**, which generalised from three packages where
+the name chain terminated in never-generated functions. Across 150 packages it overwhelmingly does not:
+the names almost all resolve.
+
+The first attempt at this measurement said 489 of 576 and named `registry_entry_state` as undeclared 61
+times. That was my own indexing bug, not a finding: the declaration index matched functions with
+`^inline … name(` and so missed `inline` **variables**, which have no parenthesis —
+`inline flight::Ref<bound_tombstoned_…> registry_entry_state = …` is right there in
+`flight/types/registry_table.hpp`. One missing alternation inflated the unresolvable share by a factor of
+three. Worth stating because the corrected number changes which work is worth doing.
+
+### What is still not established
+
+Resolvable is not the same as *gained*, and the three-package experiment is still the only direct
+measurement of the delta: 56 names resolved, iterated to a fixed point, **zero headers gained**. So the
+open question is not whether these names can be qualified but whether anything is behind them, and the
+answer differs per package.
+
+The packages worth testing first are the **45 that emitted completely**, because a package with no
+refusals cannot have a never-generated function behind its names — there is nothing else for the chain to
+terminate on. None of the 576 sampled name failures fall in one, which is either because those packages
+pass or because they sit in the half not yet compiled. The full report settles it.
