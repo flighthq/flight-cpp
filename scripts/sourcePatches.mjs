@@ -127,8 +127,15 @@ export function revertSourcePatches(patches, dependency) {
   }
 }
 
-// A patch earns its place by removing a refusal. When the module it targets is still refused for the
-// same reason, the patch is not doing what it claims and the caller should say so rather than carry it.
+// A patch earns its place by removing a refusal. When the refusal it names is still there, the patch is
+// not doing what it claims and the caller should say so rather than carry it.
+//
+// The check looks at the whole PACKAGE, not just the patched module. A patch often edits one file to
+// clear a rule that fires in several -- narrowing an assertion in node.ts to clear six consumers of it,
+// say -- and a module-only check passes such a patch the moment its own file happens to be refused for
+// some other reason. That is exactly how an ineffective patch survived a run here: node.ts was refused
+// under `cpp-reference-assertion-without-heritage` while the rule the patch targeted still fired, in
+// six other modules, unreported.
 export function ineffectivePatches(applied, patchesById, refusals) {
   const ineffective = [];
   for (const record of applied) {
@@ -138,7 +145,9 @@ export function ineffectivePatches(applied, patchesById, refusals) {
     // gate is what judges it, so claiming anything here would be guessing.
     if (patch.answers !== 'refusal') continue;
     const still = refusals.some(
-      (refusal) => refusal.module === patch.module && refusal.reason.includes(patch.refusal),
+      (refusal) =>
+        refusal.reason.includes(patch.refusal) &&
+        (refusal.module === patch.module || refusal.package === patch.package),
     );
     if (still) ineffective.push(record.id);
   }

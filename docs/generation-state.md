@@ -708,3 +708,51 @@ Every one is the row-versus-reference disagreement. There is no declaration, inc
 that reconciles it, and rewriting ~20 lambda parameter types would be editing emitted code rather than
 adding text with no behavior. `log` is an emitter fix or a hand-written module, and it holds nineteen
 packages plus `@flighthq/geometry`, which is 30/30 emitted and fails only through log's header.
+
+## `node`: `source-portability` does not mean cheaply patchable
+
+Eight placeholders, and the compiler classifies seven of them `source-portability`. That classification
+is easy to read as "a source patch will do it". For `node` it does not.
+
+Six of the eight fail one rule, `cpp-structural-assertion-writable-capability-unproven`, and all six
+reach it through a single assertion in `node.ts`:
+
+```ts
+export function getNodeRuntime<Traits extends object = NodeTraits>(
+  source: Readonly<Node<Traits>>,
+): Readonly<NodeRuntime<Traits>> {
+  return getEntityRuntime(source) as NodeRuntime<Traits>;   // asserts the WRITABLE row
+}
+```
+
+The function declares a readonly return and asserts the writable row, which is precisely what the
+diagnostic describes — and the diagnostic prescribes the fix: *"Spell the assertion as [the readonly
+row] to remove the writable-capability claim."* Narrowing it to `Readonly<NodeRuntime<Traits>>` is a
+one-line, plainly equivalent change, since the writable capability was discarded at the return boundary
+and no caller could observe it.
+
+**It changed nothing.** 13/21 modules and the same eight placeholders under the same eight rules. The
+diagnostic had already said why, in the clause after the remedy: *"but that alone cannot recover the
+derived owner … the retained row has no proven cells for those members."* Removing the spurious claim is
+necessary and not sufficient; the owner proof is the real blocker, and the message's remaining remedies
+— preserve the writable row through a named typed runner or carrier, or have an erased registry validate
+and recover the owner — are a refactor of how Flight types node traversal, not a patch.
+
+So the honest reading of `source-portability` is "the source shape is what the emitter cannot port",
+which is a statement about where the problem lives, not about how cheap it is to move.
+
+### The miss this exposed in our own tooling
+
+`ineffectivePatches` did not flag the patch. It compared the declared refusal against refusals of the
+patched **module**, and `node.ts` is refused under a different rule (`cpp-reference-assertion-without-heritage`),
+so the targeted rule still firing in six *other* modules went unreported. A patch that edits one file to
+clear a rule in several is the normal case, so the check now matches on the **package** as well as the
+module. Found by a patch slipping through, fixed, and recorded.
+
+### Three source patches now measured ineffective and reverted
+
+`power-emit-void-signal-non-nullable`, `log-contextual-sink-parameter`, `node-runtime-readonly-assertion`.
+All three were plausible, two were suggested almost verbatim by the compiler's own diagnostics, and none
+changed the lowering. The pattern worth carrying forward: a prescriptive diagnostic describes a condition
+the emitter needs met, not a guarantee that meeting it is sufficient — and where the message itself adds
+a qualifying clause, that clause has been right every time.
