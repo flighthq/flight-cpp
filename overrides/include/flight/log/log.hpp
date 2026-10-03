@@ -200,21 +200,21 @@ inline flight::Array<flight::Ref<LogEntry>> get_memory_log_sink_entries(flight::
   return ([&]() { flight::Array<flight::Ref<LogEntry>> array_spread_result; for (const auto& array_spread_item : buf.slice(head)) { array_spread_result.push(array_spread_item); } for (const auto& array_spread_item : buf.slice(0.0, head)) { array_spread_result.push(array_spread_item); } return array_spread_result; }());
 }
 
-inline flight::Record<flight::Ref<flight::types::LogLevel>, flight::String> console_methods = ([]() { flight::Record<flight::Ref<flight::types::LogLevel>, flight::String> record_construction = {}; auto record_construction_key = log_level.none; auto record_construction_value = flight::String("log"); record_construction.set(record_construction_key, record_construction_value); auto record_construction_key_2 = log_level.error; auto record_construction_value_2 = flight::String("error"); record_construction.set(record_construction_key_2, record_construction_value_2); auto record_construction_key_3 = log_level.warn; auto record_construction_value_3 = flight::String("warn"); record_construction.set(record_construction_key_3, record_construction_value_3); auto record_construction_key_4 = log_level.info; auto record_construction_value_4 = flight::String("info"); record_construction.set(record_construction_key_4, record_construction_value_4); auto record_construction_key_5 = log_level.debug; auto record_construction_value_5 = flight::String("debug"); record_construction.set(record_construction_key_5, record_construction_value_5); auto record_construction_key_6 = log_level.verbose; auto record_construction_value_6 = flight::String("log"); record_construction.set(record_construction_key_6, record_construction_value_6); return record_construction; }());
+inline flight::Record<flight::types::LogLevel, flight::String> console_methods = ([]() { flight::Record<flight::types::LogLevel, flight::String> record_construction = {}; auto record_construction_key = flight::types::LogLevel::None; auto record_construction_value = flight::String("log"); record_construction.set(record_construction_key, record_construction_value); auto record_construction_key_2 = flight::types::LogLevel::Error; auto record_construction_value_2 = flight::String("error"); record_construction.set(record_construction_key_2, record_construction_value_2); auto record_construction_key_3 = flight::types::LogLevel::Warn; auto record_construction_value_3 = flight::String("warn"); record_construction.set(record_construction_key_3, record_construction_value_3); auto record_construction_key_4 = flight::types::LogLevel::Info; auto record_construction_value_4 = flight::String("info"); record_construction.set(record_construction_key_4, record_construction_value_4); auto record_construction_key_5 = flight::types::LogLevel::Debug; auto record_construction_value_5 = flight::String("debug"); record_construction.set(record_construction_key_5, record_construction_value_5); auto record_construction_key_6 = flight::types::LogLevel::Verbose; auto record_construction_value_6 = flight::String("log"); record_construction.set(record_construction_key_6, record_construction_value_6); return record_construction; }());
 
-inline flight::Record<flight::Ref<flight::types::LogLevel>, flight::String> level_names = ([]() { flight::Record<flight::Ref<flight::types::LogLevel>, flight::String> record_construction_2 = {}; auto record_construction_key_7 = log_level.none; auto record_construction_value_7 = flight::String("none"); record_construction_2.set(record_construction_key_7, record_construction_value_7); auto record_construction_key_8 = log_level.error; auto record_construction_value_8 = flight::String("error"); record_construction_2.set(record_construction_key_8, record_construction_value_8); auto record_construction_key_9 = log_level.warn; auto record_construction_value_9 = flight::String("warn"); record_construction_2.set(record_construction_key_9, record_construction_value_9); auto record_construction_key_10 = log_level.info; auto record_construction_value_10 = flight::String("info"); record_construction_2.set(record_construction_key_10, record_construction_value_10); auto record_construction_key_11 = log_level.debug; auto record_construction_value_11 = flight::String("debug"); record_construction_2.set(record_construction_key_11, record_construction_value_11); auto record_construction_key_12 = log_level.verbose; auto record_construction_value_12 = flight::String("verbose"); record_construction_2.set(record_construction_key_12, record_construction_value_12); return record_construction_2; }());
+inline flight::Record<flight::types::LogLevel, flight::String> level_names = ([]() { flight::Record<flight::types::LogLevel, flight::String> record_construction_2 = {}; auto record_construction_key_7 = flight::types::LogLevel::None; auto record_construction_value_7 = flight::String("none"); record_construction_2.set(record_construction_key_7, record_construction_value_7); auto record_construction_key_8 = flight::types::LogLevel::Error; auto record_construction_value_8 = flight::String("error"); record_construction_2.set(record_construction_key_8, record_construction_value_8); auto record_construction_key_9 = flight::types::LogLevel::Warn; auto record_construction_value_9 = flight::String("warn"); record_construction_2.set(record_construction_key_9, record_construction_value_9); auto record_construction_key_10 = flight::types::LogLevel::Info; auto record_construction_value_10 = flight::String("info"); record_construction_2.set(record_construction_key_10, record_construction_value_10); auto record_construction_key_11 = flight::types::LogLevel::Debug; auto record_construction_value_11 = flight::String("debug"); record_construction_2.set(record_construction_key_11, record_construction_value_11); auto record_construction_key_12 = flight::types::LogLevel::Verbose; auto record_construction_value_12 = flight::String("verbose"); record_construction_2.set(record_construction_key_12, record_construction_value_12); return record_construction_2; }());
 
-inline flight::String get_log_level_name(flight::Ref<flight::types::LogLevel> level_2) {
+inline flight::String get_log_level_name(flight::types::LogLevel level_2) {
   return ([&]() -> flight::String { auto nullish_coalesce_left = level_names.get(level_2); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("unknown"); }());
 }
 
-inline flight::Map<flight::String, flight::Ref<flight::types::LogLevel>> level_by_name = flight::Map<flight::String, flight::Ref<flight::types::LogLevel>>({{flight::String("none"), log_level.none}, {flight::String("error"), log_level.error}, {flight::String("warn"), log_level.warn}, {flight::String("info"), log_level.info}, {flight::String("debug"), log_level.debug}, {flight::String("verbose"), log_level.verbose}});
+inline flight::Map<flight::String, flight::types::LogLevel> level_by_name = flight::Map<flight::String, flight::types::LogLevel>({{flight::String("none"), flight::types::LogLevel::None}, {flight::String("error"), flight::types::LogLevel::Error}, {flight::String("warn"), flight::types::LogLevel::Warn}, {flight::String("info"), flight::types::LogLevel::Info}, {flight::String("debug"), flight::types::LogLevel::Debug}, {flight::String("verbose"), flight::types::LogLevel::Verbose}});
 
-inline std::optional<flight::Ref<flight::types::LogLevel>> parse_log_level(flight::String name) {
+inline std::optional<flight::types::LogLevel> parse_log_level(flight::String name) {
   return level_by_name.get(name.to_lower());
 }
 
-inline flight::Map<flight::String, flight::Ref<flight::types::LogLevel>> channel_levels = flight::Map<flight::String, flight::Ref<flight::types::LogLevel>>();
+inline flight::Map<flight::String, flight::types::LogLevel> channel_levels = flight::Map<flight::String, flight::types::LogLevel>();
 
 inline void clear_log_channel_level(flight::String channel) {
   channel_levels.erase(channel);
@@ -224,11 +224,11 @@ inline void clear_log_channel_levels() {
   channel_levels.clear();
 }
 
-inline std::optional<flight::Ref<flight::types::LogLevel>> get_log_channel_level(flight::String channel) {
+inline std::optional<flight::types::LogLevel> get_log_channel_level(flight::String channel) {
   return channel_levels.get(channel);
 }
 
-inline void set_log_channel_level(flight::String channel, flight::Ref<flight::types::LogLevel> level_2) {
+inline void set_log_channel_level(flight::String channel, flight::types::LogLevel level_2) {
   channel_levels.set(channel, level_2);
 }
 
@@ -303,13 +303,13 @@ inline void exit_log_span(flight::Ref<LogSpan> span) {
   }
 }
 
-inline flight::Ref<flight::types::LogLevel> console_level = log_level.info;
+inline flight::types::LogLevel console_level = flight::types::LogLevel::Info;
 
-inline flight::Ref<flight::types::LogLevel> get_log_console_level() {
+inline flight::types::LogLevel get_log_console_level() {
   return console_level;
 }
 
-inline void set_log_console_level(flight::Ref<flight::types::LogLevel> level_2) {
+inline void set_log_console_level(flight::types::LogLevel level_2) {
   (console_level = level_2);
 }
 
@@ -319,13 +319,13 @@ inline void clear_log_groups() {
   (group_depth = 0.0);
 }
 
-inline flight::Ref<flight::types::LogLevel> level = log_level.verbose;
+inline flight::types::LogLevel level = flight::types::LogLevel::Verbose;
 
-inline flight::Ref<flight::types::LogLevel> get_log_level() {
+inline flight::types::LogLevel get_log_level() {
   return level;
 }
 
-inline void set_log_level(flight::Ref<flight::types::LogLevel> level_2) {
+inline void set_log_level(flight::types::LogLevel level_2) {
   (level = level_2);
 }
 
@@ -445,7 +445,7 @@ inline void emit_to_sinks(flight::Ref<LogEntry> entry) {
   }
   if (log_signals.has_value()) {
     emit_signal(log_signals.value()->on_log_entry, entry);
-    if ((entry->level == log_level.error)) {
+    if ((entry->level == flight::types::LogLevel::Error)) {
       emit_signal(log_signals.value()->on_log_error, entry);
     }
   }
@@ -487,21 +487,21 @@ inline void emit_to_sinks(flight::Ref<LogEntry> entry) {
 // cpp emission failed for @flighthq/log/packages/log/src/log.ts: Object.assign requires one closed
 // callable-object target and an exact compatible object literal source
 
-inline bool passes_level_gate(flight::Ref<flight::types::LogLevel> level_2, std::optional<flight::String> channel) {
+inline bool passes_level_gate(flight::types::LogLevel level_2, std::optional<flight::String> channel) {
   if (((static_cast<double>(sinks.size()) == 0.0) && !log_signals.has_value())) {
     return false;
   }
   flight::Ref<LogLevel> gate = ((channel.has_value() && channel_levels.has(channel.value())) ? channel_levels.get(channel.value()).value() : level);
-  return ((level_2 <= gate) && (level_2 != log_level.none));
+  return ((level_2 <= gate) && (level_2 != flight::types::LogLevel::None));
 }
 
 inline void begin_log_group(flight::String label, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
   group_depth++;
-  if (!passes_level_gate(log_level.debug, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Debug, channel.value())) {
     return;
   }
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.debug, .channel = channel.value(), .data = flight::make_ref<LogData>(LogData{.msg = label, .group = flight::String("begin"), .depth = group_depth})}));
+  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = flight::types::LogLevel::Debug, .channel = channel.value(), .data = flight::make_ref<LogData>(LogData{.msg = label, .group = flight::String("begin"), .depth = group_depth})}));
 }
 
 inline void end_log_group(std::optional<std::optional<flight::String>> channel = std::nullopt) {
@@ -510,13 +510,13 @@ inline void end_log_group(std::optional<std::optional<flight::String>> channel =
     return;
   }
   group_depth--;
-  if (!passes_level_gate(log_level.debug, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Debug, channel.value())) {
     return;
   }
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.debug, .channel = channel.value(), .data = flight::make_ref<LogData>(LogData{.group = flight::String("end"), .depth = (group_depth + 1.0)})}));
+  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = flight::types::LogLevel::Debug, .channel = channel.value(), .data = flight::make_ref<LogData>(LogData{.group = flight::String("end"), .depth = (group_depth + 1.0)})}));
 }
 
-inline void log(flight::Ref<flight::types::LogLevel> level_2, std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+inline void log(flight::types::LogLevel level_2, std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
   if (!passes_level_gate(level_2, channel.value())) {
     return;
@@ -531,20 +531,20 @@ inline void log_assert(bool condition, std::variant<flight::Ref<LogDataProvider>
   if (condition) {
     return;
   }
-  if (!passes_level_gate(log_level.error, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Error, channel.value())) {
     return;
   }
   flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.error, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = flight::types::LogLevel::Error, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
 }
 
 inline void log_debug(std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
-  if (!passes_level_gate(log_level.debug, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Debug, channel.value())) {
     return;
   }
   flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.debug, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = flight::types::LogLevel::Debug, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
 }
 
 
@@ -568,11 +568,11 @@ inline void log_debug(std::variant<flight::Ref<LogDataProvider>, flight::Ref<Log
 
 inline void log_error(std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
-  if (!passes_level_gate(log_level.error, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Error, channel.value())) {
     return;
   }
   flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.error, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = flight::types::LogLevel::Error, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
 }
 
 
@@ -596,11 +596,11 @@ inline void log_error(std::variant<flight::Ref<LogDataProvider>, flight::Ref<Log
 
 inline void log_info(std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
-  if (!passes_level_gate(log_level.info, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Info, channel.value())) {
     return;
   }
   flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.info, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = flight::types::LogLevel::Info, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
 }
 
 
@@ -624,7 +624,7 @@ inline void log_info(std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogD
 // cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
 // expression type evidence
 
-inline bool log_once(flight::String key, flight::Ref<flight::types::LogLevel> level_2, std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+inline bool log_once(flight::String key, flight::types::LogLevel level_2, std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
   if (once_keys.has(key)) {
     return false;
@@ -636,11 +636,11 @@ inline bool log_once(flight::String key, flight::Ref<flight::types::LogLevel> le
 
 inline void log_verbose(std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
-  if (!passes_level_gate(log_level.verbose, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Verbose, channel.value())) {
     return;
   }
   flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.verbose, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = flight::types::LogLevel::Verbose, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
 }
 
 
@@ -664,11 +664,11 @@ inline void log_verbose(std::variant<flight::Ref<LogDataProvider>, flight::Ref<L
 
 inline void log_warn(std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
-  if (!passes_level_gate(log_level.warn, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Warn, channel.value())) {
     return;
   }
   flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.warn, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = flight::types::LogLevel::Warn, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
 }
 
 
