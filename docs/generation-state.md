@@ -1410,3 +1410,86 @@ For the record, the full `signals` residual once `slots` is restored and the sin
 two causes: `std::optional<std::function<...>>::optional(<brace-enclosed initializer list>)` at
 `flight/signals/slot.hpp:155`, and the `operator!=` identity blocker. The second cannot be closed here,
 so `signals` cannot be a complete package at this pin whatever else is done to it.
+
+## The unqualified-name class is almost never the blocker
+
+This is the third time in this session that a correct fix turned out to buy nothing, and the three
+together make a pattern worth stating as a rule rather than rediscovering a fourth time.
+
+`animation`, `scene2d` and `texture` are 8 of 32 headers. Every one of the 24 failures reported an
+unqualified name, so the class looked like the gate. Resolved against the tree — each name's namespace
+taken from where it is actually declared, not guessed — that is 56 names across seven (package, namespace)
+pairs. Hand-applied to a scratch tree and iterated to convergence:
+
+| round | names found | resolvable |
+|---|---|---|
+| 1 | 71 | 56 |
+| 2 | 15 | 3 |
+| 3 | 12 | **0** |
+| 4, 5 | 12 | 0 |
+
+**8 of 32 before. 8 of 32 after. Nothing newly passes.**
+
+The chain terminates on twelve names that have *no declaration anywhere in the generated tree* —
+`initialize_animation_track`, `get_node_runtime`, `initialize_sprite_renderer_data`, `clone_texture`,
+`get_first_texture_source`, `equals_texture_content` and six more. Those are not qualification problems;
+they are functions the compiler refused to generate. Behind the names is hand-written code.
+
+The final residual for these three packages is two causes and neither is reachable by any repair:
+
+- **18 headers**: a never-generated function. Override territory — writing the function.
+- **6 headers** (all of `texture`): `base operand of '->' has non-pointer type
+  'flight::Ref<std::variant<std::shared_ptr<...>>>'`. `Ref` of a variant collapses to the variant, and
+  the emitter wrote `->` on it. TypeScript permits `.member` on a union where every member has it; C++
+  needs `std::visit`. That is a runtime capability or an override, not a text rewrite.
+
+### The rule
+
+In this corpus, "was not declared in this scope" is what gcc reports *first*, almost never what is
+actually blocking. The report keeps one diagnostic per header, so a class that appears in every failure
+row looks like the gate and usually is not. Three measurements this session:
+
+| fix | correct? | headers gained |
+|---|---|---|
+| `respell-reference-alias` (12 repairs) | yes | **many** — closed `log`, enabled `geometry`, `camera` |
+| `deduce-call-argument-from-assignment` | yes | **6** — node 6/21 to 12/21 |
+| `SignalData<T>` constraint substitution | yes | 0 |
+| 56 unqualified names in three packages | yes | 0 |
+
+The two that paid were the ones that answered a *structural* defect — a non-deduced context, a missing
+contextual type. The two that did not were cosmetic in effect even though real in cause. Measure the
+delta, never the plausibility.
+
+### What was declared anyway, and why that is not a contradiction
+
+The seven grouped name repairs **are** declared, despite gaining zero headers, and the reasoning is
+narrow enough to be worth writing down because it reverses a test I set myself one step earlier:
+
+- They are not speculative. These packages cannot compile without them *and* without the overrides; the
+  names are necessary, just not sufficient.
+- They cannot mask anything. A using-declaration either resolves a name or does not; unlike a type or
+  operator rewrite there is no wrong-but-compiling outcome.
+- They match headers, so the expiry rule is satisfied honestly — `sdk:check` is not being told a
+  falsehood to keep them alive.
+- Without them, whoever writes the `texture` and `scene2d` overrides rediscovers all 56 names first.
+
+`SignalData` stays undeclared by the same reasoning applied honestly: it is a *type* change, it could be
+wrong-but-compiling, and nothing downstream of it can move at this pin.
+
+### One entry per defect, not one per name
+
+56 rows for one emitter defect would make the expiry ledger unreadable and its signal worthless, so
+`insert-using-declaration` now accepts a `symbols` list with a shared `namespace` — seven entries. Each
+name is still enumerated, and each is introduced only into the files that use it unqualified, so the
+emitted text is what 56 single-symbol entries would have produced.
+
+Each name carries **its own** defining header, and that is not a detail. The first version of this used
+one `include` per entry taken from the first name's header; `scene2d` got
+`flight/types/animation_interpolation.hpp` for a group that also contained `EntityConstruction`, and a
+header that had been **passing** started failing with `'EntityConstruction' has not been declared in
+'flight::types'` — 8/32 down to 7/32. Measuring on a scratch tree before declaring is the only reason
+that never reached `repairs/`.
+
+It is deliberately not `using namespace flight::types;`, which would be shorter still: a directive also
+pulls in every name the package did not ask for, so a future collision between a package's own name and
+a types-owned one becomes an ambiguity error in generated code nobody edited.
