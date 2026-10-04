@@ -2413,3 +2413,48 @@ file ("measure the delta, never the plausibility") was written about the confirm
 applied to the disconfirming one.
 
 [^1]: corrected; the table above was built from a mid-run checkpoint and read 407/411.
+
+## Correcting "46 headers, one clause": the family was a regex bucket, not a family
+
+The section above claims the structural-row family is 46 headers and that one `std::same_as` clause in
+`FLIGHT_SDK_ROW_WIDENS` addresses it. **The 46 is a coarse regex bucket and the claim is wrong.** It was
+produced by matching any diagnostic mentioning `StructuralRef|RowReadonly|RowOf|RowPartial|RowMerge`,
+which catches every failure that happens to involve a row anywhere in a long type, not the ones a widening
+rule could fix.
+
+Reclassified by what the conversion actually is:
+
+| | headers | packages |
+|---|---|---|
+| concrete type → variant alternative | 22 | `physics2d` 15, `node` 5, `lighting` 1, `materials` 1 |
+| other conversion involving a row | 15 | `scene2d-resources` 7, `lighting` 3, `loader` 3, two more |
+| row WRITE incompatible value type | 7 | `requirements` 4, `registry-codegen` 3 |
+| no overload accepts the row | 1 | `shading` |
+| other | 1 | `statechart` |
+| **row → row widening** | **1** | `lighting/scene_lights.hpp` |
+
+**One.** The widening clause I localised addresses the `Readonly<RichTextData>` →
+`Readonly<auto_size_height_width_word_wrap_…>` shape, and across the whole corpus that shape appears in
+one header in this report plus `textlayout`'s three remaining failures, which post-date it. So the clause
+is worth roughly **four headers**, not 46.
+
+The three genuinely separate families the bucket was hiding:
+
+- **`physics2d`'s 15** are a concrete struct converting into a *variant of structs* —
+  `shared_ptr<x_y_radius_kind_…>` into `variant<shared_ptr<min_x_min_y_…>, …>`. A discriminated union of
+  collider shapes where the emitter passes one alternative's type where the union is wanted. Nothing to do
+  with rows or widening; it is its own defect and the largest single cluster left.
+- **The absence channel, 10** — `node` 5, `lighting` 4, `materials` 1 — unchanged and still correctly
+  refused.
+- **Row writes, 7** — `requirements` 4, `registry-codegen` 3 — the `static_assert` on an incompatible
+  cell value type, which is a different mechanism from the read-side widening proof.
+
+This is the third over-reach of this session and the mechanism was the same every time: a plausible
+mechanism-level story attached to a number that came from pattern-matching rather than from reading the
+cases. The earlier two were inferring that both halves are always needed, and that a zero marker count
+predicts a repair will help. The cheap check that would have caught all three is the same — group by what
+the diagnostic actually *says*, then read three of them.
+
+What survives: the localisation itself is still correct and still valuable. The clause is real, the
+soundness argument holds, and `physics2d`'s 15 is now identified as the biggest target. Only the sizing was
+fiction.
