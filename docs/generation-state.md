@@ -3487,12 +3487,20 @@ reach the consumers at all:
 
 | intra-package quoted includes | packages | verdict |
 |---|---|---|
-| 0 | **19** | an override reaches every consumer |
+| 0 | **20** | an override reaches every consumer |
 | 1–4 | 6 | partial; check the specific consumer |
 | 13 | 1 (`interaction`) | the 16-to-1 case |
 | 171 | 1 (`effects_wgpu`, 60 headers) | worst in the tree |
 
-Nineteen of 28 are clean, and eleven of those are three-header packages — one module plus `contract.hpp`
+**Twenty**, corrected from 19 — builder reproduced the table independently against its own tree, matched
+every per-package edge count, and caught the arithmetic: the eight partial-delivery packages are
+`effects_wgpu`, `interaction`, `particleemitter`, `bitmapfont_formats`, `textureatlas`, `app`, `textinput`
+and `shape_formats`, so 28 − 8 = 20. Worth keeping as a reminder that 19 is a real number here but a
+different one: it is how many packages have a single internal header whose reverse closure covers every
+header in the package. Two plausible figures for two different graph properties is exactly how a wrong one
+survives.
+
+Twenty of 28 are clean, and eleven of those are three-header packages — one module plus `contract.hpp`
 and `_internal_index.hpp` — where a single root defect clears the package. Those are the cheapest wins on
 the board.
 
