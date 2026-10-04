@@ -76,6 +76,16 @@ struct TestArrayBearing final : public flight::ReferenceEnabled {
   flight::Array<double> advances;
 };
 
+// The absence-channel shape: `clip: ClipRegion | null` on a possibly-absent property, which is three
+// TypeScript states reaching C++ as one `std::optional<std::shared_ptr<...>>`.
+struct TestClipRegion final : public flight::ReferenceEnabled {
+  double radius{};
+};
+
+struct TestClipBearing final : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<TestClipRegion>> clip;
+};
+
 // A SECOND subject widening onto the same base. The SDK's motivating case is a union -- an audio
 // reference is embedded or external -- where both alternatives declare the key the common row wants,
 // so a row over that shape has to be satisfiable by either one. The proof is computed from declared
@@ -851,6 +861,46 @@ int main() {
     check(static_cast<double>(subject->advances.size()) == 1.0,
           "a push through the SOURCE is invisible, which is the identity change that disqualifies "
           "array_of at a row write");
+  }
+
+  // Absence, null and a value are THREE distinguishable states through a partial row read.
+  //
+  // This contradicts what docs/generation-state.md recorded: that `row_get` over a `RowPartial` has
+  // already collapsed null into absent and the information is unrecoverable at the call site. It is
+  // recoverable WHEN the member type can itself represent null, which a pointer can -- `nullopt` is the
+  // absent property, a held null pointer is TypeScript `null`, and a held non-null pointer is the value.
+  // The collapse is real only for a member that has no null of its own, such as `optional<double>`.
+  {
+    using ClipRow = flight::StructuralRef<flight::RowReadonly<flight::RowPartial<
+        flight::RowOf<flight::Ref<TestClipBearing>>>>>;
+
+    auto absent = flight::make_ref<TestClipBearing>();
+    const ClipRow absent_row(absent);
+    const auto absent_read = flight::row_get<flight::RowKey<"clip">>(absent_row);
+    check(!absent_read.has_value(), "an absent property reads as nullopt");
+
+    auto nulled = flight::make_ref<TestClipBearing>();
+    nulled->clip = flight::Ref<TestClipRegion>{};
+    const ClipRow nulled_row(nulled);
+    const auto nulled_read = flight::row_get<flight::RowKey<"clip">>(nulled_row);
+    check(nulled_read.has_value() && *nulled_read == nullptr,
+          "an explicit null reads as a PRESENT optional holding a null pointer, not as nullopt");
+
+    auto region = flight::make_ref<TestClipRegion>();
+    region->radius = 4.0;
+    auto valued = flight::make_ref<TestClipBearing>();
+    valued->clip = region;
+    const ClipRow valued_row(valued);
+    const auto valued_read = flight::row_get<flight::RowKey<"clip">>(valued_row);
+    check(valued_read.has_value() && *valued_read != nullptr && (*valued_read)->radius == 4.0,
+          "and a value reads as the region itself");
+
+    // The three are pairwise distinct, which is the whole claim: a lossless re-encoding into the
+    // emitter's `variant<V, Null, Undefined>` is therefore possible for a nullable member.
+    check(absent_read.has_value() != nulled_read.has_value(),
+          "absent and null are not the same state");
+    check(static_cast<bool>(*nulled_read) != static_cast<bool>(*valued_read),
+          "null and a value are not the same state");
   }
 
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
