@@ -1107,6 +1107,86 @@
       "defect": "The emitter writes GlyphAtlasRuntime unqualified inside namespace flight::glyphatlas, where the type is flight::types::GlyphAtlasRuntime, and without the header that defines it.\n\nFound by builder's audit of the modules whose refusal reports ZERO missing declarations. Those placeholders withhold nothing -- the complete source surface is retained and the refusal is recorded at module level only -- so there is nothing for an override to supply and the first failure is ordinary qualification. That is a correction to the assumption that a refused-placeholder module is always a replaceable stub.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "glyphatlas-unqualified-bitmap-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/glyphatlas/",
+      "namespace": "flight::bitmap",
+      "symbols": [
+        {
+          "include": "flight/bitmap/bitmap_region.hpp",
+          "name": "create_bitmap_region"
+        },
+        {
+          "include": "flight/bitmap/bitmap_composite.hpp",
+          "name": "write_bitmap_pixels"
+        }
+      ],
+      "diagnostic": "'create_bitmap_region' was not declared in this scope; did you mean 'flight::bitmap::create_bitmap_region'?",
+      "defect": "The emitter writes 2 name(s) owned by flight::bitmap unqualified inside namespace flight::glyphatlas, and without the headers that define them. Each name carries its own defining header and is introduced only into the files that use it unqualified.\n\n@flighthq/glyphatlas is a zero-marker package: builder's audit established that its refused modules withhold no declarations, so by the synthesis recorded in docs/generation-state.md qualification is the whole fix here rather than half of it -- the same shape as @flighthq/spatial, which went 8/11 to 11/11 on one using-declaration. Found by sweeping every unqualified name in one pass: the first repair (GlyphAtlasRuntime) moved the diagnostic to GlyphEntry rather than clearing the header, which is the iterative-revelation pattern this file warns about.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "glyphatlas-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/glyphatlas/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'finish_entity' was not declared in this scope; did you mean 'flight::entity::finish_entity'?",
+      "defect": "The emitter writes 1 name(s) owned by flight::entity unqualified inside namespace flight::glyphatlas, and without the headers that define them. Each name carries its own defining header and is introduced only into the files that use it unqualified.\n\n@flighthq/glyphatlas is a zero-marker package: builder's audit established that its refused modules withhold no declarations, so by the synthesis recorded in docs/generation-state.md qualification is the whole fix here rather than half of it -- the same shape as @flighthq/spatial, which went 8/11 to 11/11 on one using-declaration. Found by sweeping every unqualified name in one pass: the first repair (GlyphAtlasRuntime) moved the diagnostic to GlyphEntry rather than clearing the header, which is the iterative-revelation pattern this file warns about.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "glyphatlas-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/glyphatlas/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/bitmap.hpp",
+          "name": "Bitmap"
+        },
+        {
+          "include": "flight/types/bitmap_region.hpp",
+          "name": "BitmapRegion"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/glyph_source.hpp",
+          "name": "GlyphAtlas"
+        },
+        {
+          "include": "flight/types/glyph_source.hpp",
+          "name": "GlyphAtlasShelf"
+        },
+        {
+          "include": "flight/types/glyph_source.hpp",
+          "name": "GlyphEntry"
+        },
+        {
+          "include": "flight/types/glyph_source.hpp",
+          "name": "GlyphRasterizedBitmap"
+        },
+        {
+          "include": "flight/types/glyph_source.hpp",
+          "name": "GlyphSource"
+        }
+      ],
+      "diagnostic": "'Bitmap' was not declared in this scope; did you mean 'flight::types::Bitmap'?",
+      "defect": "The emitter writes 8 name(s) owned by flight::types unqualified inside namespace flight::glyphatlas, and without the headers that define them. Each name carries its own defining header and is introduced only into the files that use it unqualified.\n\n@flighthq/glyphatlas is a zero-marker package: builder's audit established that its refused modules withhold no declarations, so by the synthesis recorded in docs/generation-state.md qualification is the whole fix here rather than half of it -- the same shape as @flighthq/spatial, which went 8/11 to 11/11 on one using-declaration. Found by sweeping every unqualified name in one pass: the first repair (GlyphAtlasRuntime) moved the diagnostic to GlyphEntry rather than clearing the header, which is the iterative-revelation pattern this file warns about.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }

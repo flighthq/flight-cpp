@@ -2230,3 +2230,49 @@ stays current.
 What this does mean in practice: a repair and an override that touch the same file are coupled, and the
 repair's expiry no longer removes its effect from the tree — the override still carries it. Anyone deleting
 a repair as obsolete should check whether an override is shadowing a file that repair used to rewrite.
+
+## The synthesis, corrected: the marker count predicts the OVERRIDE, never the repair
+
+The section above claimed the marker count predicts which half is the whole fix — declarations withheld
+means the override, nothing withheld means the qualification repair. The first half holds. **The second
+half is wrong**, and `@flighthq/glyphatlas` is the counterexample.
+
+`glyphatlas` is a zero-marker package: `builder`'s audit established its refused modules withhold nothing.
+By the stated synthesis, qualification should therefore have been the whole fix. So every unqualified name
+in all ten headers was swept in one pass — 13 found, 11 resolvable, declared as three grouped repairs
+touching **24 files** — and the result was **5/10 before, 5/10 after**.
+
+What is actually behind the names:
+
+```
+conversion from 'flight::IteratorResult<double>' to 'flight::Ref<flight::glyphatlas::done_…>'
+'flight::Ref<flight::types::Bitmap>' has no member named …
+```
+
+An iterator-result against the emitter's anonymous `{done, value}` shape, and a member access through a
+`shared_ptr`. Neither is reachable by qualification.
+
+Tallying all four zero-marker packages honestly:
+
+| package | zero markers | qualification fixed it? |
+|---|---|---|
+| `spatial` | yes | **yes** — 8/11 to 11/11 |
+| `textshaper` | yes | no — structural behind it |
+| `bitmapfont` | yes | no — structural behind it |
+| `glyphatlas` | yes | no — structural behind it |
+
+One of four. So the defensible rule is narrower than what was written, and it is the half that was actually
+established by evidence:
+
+> **A zero marker count means an override has nothing to supply.** That is positive evidence and it saved
+> four overrides nobody needed. It says nothing about whether a *repair* will help; only measuring does.
+
+This is the second generalisation in this file walked back after over-reaching from a small sample — the
+first was inferring from "748 of 753 name failures sit behind refusals" that both halves were always
+needed. Both times the measurement that contradicted it was cheap and available. The pattern worth
+internalising is not either specific rule but that a mechanism-level explanation derived from two or three
+packages is a hypothesis, and this corpus has 150.
+
+`glyphatlas`'s three grouped name repairs are kept: they match 24 files, remove real undefined-name
+errors, and are prerequisites for whatever closes the structural defects behind them. But they gain no
+header today and are recorded as such.
