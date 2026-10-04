@@ -2189,3 +2189,44 @@ owners have no heritage; `bitmapfont` needs an owner-preserving `Bitmap → Text
 One reporting detail worth imitating: `builder` noted that its sweep deliberately excluded existing
 overrides, which is why it measured `textshaper` 6/10 and `bitmapfont` 2/8 against this clone's 7/10 and
 3/8. A discrepancy explained is worth more than a number that happens to agree.
+
+## `path-boolean` completes, and two corrections to how this file counts
+
+`builder` supplied `martinezKernel.ts` — 849 lines — and the package went **7/10 to 10/10**.
+
+### The costing column was mislabelled
+
+Every costing table above, including the one sent to `builder`, called the marker count
+"missing **function** lines". It is not: the marker names whatever kind of declaration was withheld, and
+across the tree that is
+
+```
+1519  missing: function
+ 205  missing: variable
+   2  missing: interface
+   1  missing: type
+   1  missing: class
+```
+
+`martinezKernel` was costed as "1 function" and the withheld declaration was `class DirectedGraph`, which
+is a materially different job — a class with state and methods rather than a free function. The estimate
+survived only because `builder` read the marker rather than trusting the summary. The 205 `variable`
+markers matter too: a withheld `const` table is cheap, a withheld class is not, and the current tables do
+not distinguish them.
+
+### An override copies the REPAIRED text, not the emitter's text
+
+`builder` noted that the copied body "needed its existing Array tuple repair" — that is,
+`array-from-tuple-construction` had already rewritten the generated file, and the override, being a copy
+of that file, had to carry the rewrite with it.
+
+The mechanism handles this correctly and it is worth stating why, because it looks like duplication. Repairs
+run **before** the tree is written, so `derivedFrom` is the digest of the *repaired* file. An override is
+therefore derived from the repaired text by construction, and if the repair later changes or is deleted the
+digest moves and `overrides:check` reports drift — which is the signal to re-derive. The duplication is
+real but it is tracked, which is the whole point of recording `derivedFrom` rather than trusting that a copy
+stays current.
+
+What this does mean in practice: a repair and an override that touch the same file are coupled, and the
+repair's expiry no longer removes its effect from the tree — the override still carries it. Anyone deleting
+a repair as obsolete should check whether an override is shadowing a file that repair used to rewrite.

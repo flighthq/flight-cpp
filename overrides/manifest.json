@@ -166,6 +166,21 @@
       "unblocks": "The five refused bindings in packages/shading/src/registerBuiltInModifiers.ts and the module's independently compiling header. Generated-only compilation passes 14/19 shading headers; the override raises that to 15/19. The four remaining failures are independent: contract.hpp, _internal_index.hpp, and create_shaded_material.hpp stop in nested optional/variant extraction, while get_modifier_define_key.hpp attempts a readonly-to-writable ModifierRegistry row conversion.",
       "expires": "when the emitter lowers read-only TypeScript interface assertions to checked readonly structural projections that retain the source row owner instead of requiring native reference heritage.",
       "authoredOn": "2026-10-04"
+    },
+    {
+      "id": "path-boolean-martinez-directed-graph",
+      "path": "flight/path_boolean/martinez_kernel.hpp",
+      "package": "@flighthq/path-boolean",
+      "status": "complete",
+      "supplies": "packages/path-boolean/src/martinezKernel.ts",
+      "derivedFrom": "bd3dc9de3e68a0bac09594e571b543bca6a89df8ac8cbafead30cd5d24e6fbf2",
+      "reason": "The emitter withheld the module-private DirectedGraph class after losing the present-element proof at outgoing[from].push, even though vertex() appends one outgoing array at exactly the index it returns. The retained module also carried three mechanical contradictions with its own declared types: a tuple value constructed as std::tuple inside Array<Array<double>>, an Array value accessed with ->, and EventHeap's SweepEvent[] local inferred as an unrelated anonymous nominal array.",
+      "change": "Supplies DirectedGraph as the source's snapped-vertex directed adjacency graph, including one-use edge tracing and clockwise angular next-edge selection. The otherwise copied module constructs the overlap endpoint as Array<double>, reads contour.size() as a value, and keeps EventHeap's local alias on the declared Array<Ref<SweepEvent>> carrier; defining type and entity imports are made explicit so the shadow header is self-contained.",
+      "equivalence": "vertex() creates outgoing in lockstep with xs and ys before returning its index, so outgoing.element(from) is always present when add_edge appends. Map lookup preserves zero as a present vertex index. Every directed edge is marked used once; walk uses the source's edge-count-plus-two guard, appends each source vertex in order, and stops on no edge, closure to the start, or an already-consumed edge. next_edge uses the same atan2 angles and normalizes the clockwise gap into (0, 2*pi]. The three retained-body corrections use the exact source and declared carriers rather than converting data. A strict behavioral probe covers the upstream kernel's coincident/shared edges, holes, disjoint and empty inputs, all four operations, four fill rules, scale invariance across 1e9, touching vertices, diagonal crossings, and shared singleton path.",
+      "whyNotAPatchOrRepair": "A repair cannot add a behavioral class. The TypeScript already proves the nested element exists by creating outgoing, xs, and ys together inside vertex(), so adding a defensive source branch would obscure a local invariant solely for the C++ emitter. The accompanying mechanical corrections are necessary inside the shadow copy because generation repairs target the generated header, which this file replaces by include order.",
+      "unblocks": "The only withheld declaration in packages/path-boolean/src/martinezKernel.ts and its three-header cascade. Generated-only compilation passes 7/10 package headers; the override takes @flighthq/path-boolean to an assisted, shippable 10/10 headers.",
+      "expires": "when indexed access to a synchronously appended nested Array carries presence into member calls, and the emitter retains declared Array carriers and value/reference access consistently throughout this module.",
+      "authoredOn": "2026-10-04"
     }
   ]
 }
