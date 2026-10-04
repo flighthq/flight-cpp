@@ -2073,3 +2073,70 @@ qualifying them was never going to help.
 
 What survives unchanged: "was not declared in this scope" is what gcc reports first and almost never what
 is really wrong. The lesson is the same; the remedy is the opposite of the one I inferred.
+
+## Hand-written modules are outperforming repairs, measured
+
+Six modules supplied by `builder`, each verified here independently against the same regenerated
+inventory (digests matched byte-for-byte in every case):
+
+| package | headers before | after | |
+|---|---|---|---|
+| `particles` | 13/13 | 13/13 | the refusal was the only gap |
+| `font` | 5/9 | **9/9** | complete |
+| `texture-formats` | 7/11 | **11/11** | complete |
+| `textbidi` | 4/8 | **8/8** | complete |
+| `filesystem` | 3/3 | 3/3 | 40 of 44 declarations; gap declared, `supplies` omitted |
+| `font-formats` | 13/17 | 13/17 | no gain, and reported as none |
+
+Against that, four of my repairs this session gained zero or one header. The asymmetry is consistent with
+the correction recorded above: name-class diagnostics are mostly the refusal's shadow, so supplying the
+module is often the whole fix while repairing names around it is often nothing.
+
+Two things `builder` did that are worth keeping as the standard for this work. It reported `font-formats`
+as **no gain** after measuring both ways, naming the real blocker rather than claiming the headers its
+override touched. And on `filesystem` it stopped at 40 of 44 declarations and left `supplies` off, because
+the remaining four need a function from a *separately refused* module and returning a default would change
+behaviour when operations are present. An honest gap beats a stub that claims completion, and the manifest
+is built to record exactly that difference.
+
+## A repair that reported success and did nothing, and the regression fixing it caused
+
+`font-formats` depends on `data_tag_aef43e71dd1e9a6d`, which `woff_font.hpp` constructs and casts to
+`data_tag_3ad9a8f109659685` — and which is **defined nowhere in the tree**. The emitter hashed one declared
+TypeScript type under two names and emitted a definition for only one. The source settles it:
+
+```ts
+interface WoffTable { data: Uint8Array; tag: number; }
+```
+
+exactly `data_tag_3ad9a8f109659685`'s `flight::Uint8Array data; double tag;`. Since the cast requires the
+two to BE one type, a second definition cannot work and an alias is the fix. Unlike the reverted
+shape-matching, this introduces no misleading name — both spellings are anonymous hashes of the same shape
+in the same module — and the correspondence is read from the source, not inferred from matching bodies.
+
+Then the placement went wrong twice, in opposite directions, because the emitter writes two file shapes:
+
+|  | `flight/types/dom_render_state.hpp` | `flight/font_formats/woff_font.hpp` |
+|---|---|---|
+| shape | prologue block of forward declarations, then aliases, then a second block with definitions | one block, code from the first line |
+| end-of-block | correct | **useless** — alias at line 133, used at line 59 |
+| start-of-block | **wrong** — alias above `struct DomRenderState;`, which this file defines | correct |
+
+End-of-block was the original. It matched `woff_font.hpp`, reported `touched: 1 file`, satisfied the expiry
+check, and changed nothing — **the one failure mode here that looks like success**. Every other mistake
+this session surfaced as a wrong number or a compile error.
+
+Start-of-block was the fix, and it regressed `font-formats` from 13/17 to **11/17** by breaking the `types`
+headers it includes: `'DomRenderState' is not a member of 'flight::types'`, plus a conflicting declaration.
+That was caught only because the measurement covered both shapes rather than the one being fixed — the
+`types` resolvers were already banked, so the loss would have been silent.
+
+The anchor is now the end of the leading run of forward declarations inside the block: line 20 in
+`woff_font.hpp`, line 48 in `dom_render_state.hpp` directly after `struct DomRenderState;`. All four
+`types` headers at zero errors, `font-formats` back to 13/17.
+
+**The alias still gains nothing.** `woff_font.hpp` now fails on a `std::variant<bool, double, String>`
+construction inside `report_import_diagnostic`, which is a third variation of the brace-initialised-union
+family and not reachable by either existing repair — `in_place_type` followed by a brace list no longer
+appears anywhere in the tree, because the earlier repair rewrites all of those at generation time. Recorded
+rather than chased.
