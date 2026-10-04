@@ -76,6 +76,21 @@
       "unblocks": "@flighthq/particles: its only refused module is supplied, taking the package from 12/13 emitted modules plus 13/13 compiling headers to an assisted, shippable 13/13 package.",
       "expires": "when the compiler can resolve Partial<ParticleEmitterConfig>, string-and-keyof intersections, and closed-key reads against the concrete ParticleEmitterConfig carrier and emit this module faithfully.",
       "authoredOn": "2026-10-03"
+    },
+    {
+      "id": "filesystem-module-indexed-abort-event-map",
+      "path": "flight/filesystem/filesystem.hpp",
+      "package": "@flighthq/filesystem",
+      "status": "incomplete",
+      "derivedFrom": "071df5784d9ff9320828f92e3e6b7f46cada2d9e5c0fd4e4fcba75d93b885254",
+      "reason": "The emitter refused the whole module when AbortSignal.addEventListener reached AbortSignalEventMap through an indexed-access type. That signature-level restriction withheld forty-four declarations even though forty bodies use runtime carriers the SDK already provides.",
+      "change": "Supplies the forty representable declarations. Optional host operations retain their documented resolved defaults, already-aborted direct operations return rejected Tasks carrying the signal's reason, and signal presence is forwarded exactly: absence remains std::nullopt while a present signal is passed through. Path normalization, glob matching, recursive discovery, stream chunk writing, and the no-provider symlink, permissions, real-path, well-known-path, and watch defaults follow the TypeScript source.",
+      "equivalence": "The override uses the exact generated Readonly structural rows and HostFileSystemCapability callback signatures. Direct wrappers return the host Task unchanged, so host settlement and Task identity are preserved; they reject before consulting an operation when the source does, and distinguish an omitted signal from a present one. Source defaults resolve rather than throw. write_binary_file_chunks retains abort-listener identity through flight::Function, copies each Uint8Array chunk with slice, suppresses writer-abort failures, removes the listener, converts non-abort stream failures to false, and keeps abort as rejection.",
+      "whyNotAPatchOrRepair": "A repair cannot add behavior. Rewriting ordinary AbortSignal.addEventListener TypeScript solely to avoid the emitter's indexed-access computation would distort target-neutral source and would still leave the separately refused dialog runtime projection unresolved.",
+      "unblocks": "Forty of the forty-four declarations in @flighthq/filesystem's single refused implementation module; the package remains explicitly incomplete until the dialog runtime projection exists.",
+      "remaining": "read_dialog_handle_binary_file, read_dialog_handle_text_file, write_dialog_handle_binary_file, and write_dialog_handle_text_file are intentionally not supplied. Path-backed handles could delegate, but pathless handles require getFileDialogHandleOperations; that function is absent from the refused flight/dialog/file_dialog.hpp, and the generated FileDialogHandle EntityRuntime carrier has no checked projection to FileDialogHandleRuntime::operations. Inventing null/false defaults would change behavior for present operations.",
+      "expires": "when the emitter lowers AbortSignalEventMap indexed access and dialog handle runtimes have a generated checked projection to FileDialogHandleOperations.",
+      "authoredOn": "2026-10-03"
     }
   ]
 }
