@@ -2575,3 +2575,53 @@ emitter does not put nested references in a union, so recursing for it would be 
 What this does **not** yet establish is that the seven `scene2d-resources` headers compile. The
 conversion is fixed and tested; the next error in that cluster is an unqualified name
 (`LottieDocumentImportResult`, `AudioResourceFetch`), which is a separate repair and is still owed.
+
+## The row-write array repair is withdrawn: it would change array identity
+
+`project-array-at-row-write` was queued as the next repair — the seven row-write headers
+(`requirements`, `registry-codegen`) fail because the emitted write passes an `Array` whose element type
+is not the one the row's value type declares, and `flight::array_of<Target>(source)` produces exactly the
+array the write wants. It compiles, and the four sites were verified. **It is not a legal repair, and it
+is withdrawn.**
+
+The reason is in `array_of`'s own test, which pinned it before there was a use for it. `array_of` keeps
+element identity — the elements are the same objects, not clones — but the array it returns is a
+**separate handle**: a `push` through the result is not visible through the source. That is the limitation
+the test exists to pin, and it is why `array_of` is a free function rather than a converting constructor
+on `Array`.
+
+At a row **write**, that separateness is a semantics change. TypeScript's `row.items = arr` stores *that*
+array: afterwards `row.items === arr`, and a later `arr.push(...)` is visible through the row. Through
+`array_of` the row holds a different array, so the identity comparison is false and the later push is
+invisible. `AGENTS.md` lists reference identity among the semantics no workaround may change, and names
+why: a workaround that alters one is a claim our own tests would then certify as true. These seven
+headers would have compiled, measured as a gain, and been wrong.
+
+The distinction is the SITE, not the function, so this does not retire `array_of`:
+
+- where TypeScript itself produces a fresh array — a `.map`, a spread, a `from` — a fresh array is the
+  faithful lowering, and `array_of` is correct;
+- where TypeScript assigns or stores an existing array, only an identity-preserving conversion will do,
+  and `array_of` is not one.
+
+Worth noting against the repair contract as practised. "May only add text with no behavior" reads like
+forward declarations only, but the declared kinds are broader than that: `wrap-conditional-absent-branch`
+puts `std::optional{...}` around a present branch, and `name-array-from-tuple-construction` replaces a
+`std::make_tuple` call. Both change expression text. What makes them legal is that each only **names the
+type the surrounding declaration already requires** — the emitter wrote the type and then built a value
+that did not match it. Neither introduces an operation. `array_of` does: it allocates. That is the line,
+and it is a sharper test than "is it a declaration".
+
+**What the seven headers need instead.** Identity-preserving is the whole requirement, so the candidates
+are narrow. If the two element types are duplicate structural structs for one TypeScript shape, the
+answer is an alias and costs nothing — but the derived alias repair only fires on byte-identical bodies
+in different packages, so it has to be checked at these sites rather than assumed. If they are genuinely
+different types, then TypeScript would not have permitted the assignment either, and the defect is a
+type-representation choice in the emitter — the same shape as the `physics2d` intersection family, and
+correctly refused rather than papered over. Which of the two it is cannot be read off the heuristic; it
+needs the generated sites, so it is deferred to the regeneration now in flight and is NOT counted as
+addressable work until then.
+
+The board line `row WRITE incompatible value type | 7` therefore moves out of "addressable" and into
+"mechanism unknown pending measurement". That drops the honest addressable count from roughly 24 headers
+to roughly 17.
