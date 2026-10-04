@@ -2797,3 +2797,25 @@ family. Projecting from the 745 would repeat the mistake this document has now m
 One practical note for implementing it: gcc writes its diagnostics with U+2018/U+2019 curly quotes, while
 the stored report has them normalized to ASCII. A scraper written against the report's spelling silently
 matches nothing against live compiler output, which cost a round here.
+
+### Measuring a repair with a single-file overlay reports false failures
+
+The cheap way to measure a candidate repair without touching the committed tree is to write the modified
+header into a scratch directory and put that directory first on the include path. It works, but it has a
+failure mode that looks exactly like a defect in the repair.
+
+Generated headers include their own package siblings with a QUOTED relative include —
+`flight/app/app_render_view.hpp` contains `#include "app_window.hpp"`. A quoted include resolves relative
+to the including file's own directory first, so when the overlay holds only `app_render_view.hpp`, that
+sibling is not beside it and the compile fails with `app_window.hpp: No such file or directory`. The tree
+is complete — 2711 headers on disk against 2710 the report attempted, and both `types/app_window.hpp` and
+`app/app_window.hpp` exist — and the repair under test is irrelevant to the error.
+
+The fix is to copy `generated/include` once into a scratch tree and patch headers **in place** there, so
+siblings stay beside each other. Restore each header afterwards so one measurement cannot contaminate the
+next.
+
+The direction of the bias is worth keeping in mind when reading an earlier measurement taken this way: the
+artifact produces false FAILURES, never false passes. So a header measured as compiling under a
+single-file overlay is still sound evidence, and the absence-channel results above are unaffected — all
+five of those compiled. Only a measured failure needs re-running in a full tree.
