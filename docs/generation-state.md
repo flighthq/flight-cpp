@@ -3650,3 +3650,54 @@ raised the 33 and inferred the wrong TypeScript behind it.
 The silver lining is the tooling: this is the last attribution question that needed a recompile.
 `sdkHeaderCompile.mjs` now records each failure's `location` — `flight/signals/slot.hpp:109` — beside its
 message, verified end to end, so the next report answers "which file blocks this header" directly.
+
+## The widening proof is one `same_as` too strict: an optional base key accepts a plain member
+
+Decomposing the 32 row/structural conversion failures by their from/to shapes gives a board where almost
+everything is already accounted for:
+
+| shape | headers | status |
+|---|---|---|
+| `shared_ptr<X>` → `variant<shared_ptr<A>, shared_ptr<B>, …>` | 15 | `physics2d`, refused compiler-side |
+| `optional<variant<…>>` → `optional<StructuralRef<…>>` | 3 | `loader`, emitter type error |
+| `StructuralRef<RowOf<A>>` → `StructuralRef<RowOf<B>>` | 3 | **`textlayout` — see below** |
+| `optional<shared_ptr<X>>` → `variant<shared_ptr<X>, Null, Undefined>` | 2 | absence channel, now declared |
+| others | 9 | assorted |
+
+The `textlayout` three are a row over `RichTextData` wanted as a row over the anonymous
+`{auto_size, height, width, word_wrap}` shape — a structural widening, so it goes through the generated
+proof. Reading the two subjects:
+
+| key | base (anonymous target) | derived (`RichTextData`) | agrees? |
+|---|---|---|---|
+| `auto_size` | `types::TextAutoSize` | `types::TextAutoSize` | yes |
+| `height` | `double` | `double` | yes |
+| `width` | `double` | `double` | yes |
+| `word_wrap` | `std::optional<bool>` | `bool` | **no, under `same_as`** |
+
+One key, one level of optionality. And **TypeScript accepts that assignment**: the anonymous shape's
+`wordWrap?` is `boolean | undefined`, and `boolean` is assignable to it. `FLIGHT_SDK_ROW_WIDENS` requires
+`std::same_as` on the two declared member types, so the proof fails and a conversion TypeScript permits is
+refused.
+
+I first guessed `RichTextData` simply lacked the member, which would have made the refusal correct. It
+declares it — as `bool` — so this is a type disagreement, and a one-sided one.
+
+**The relaxation, and why it is a named trait.** `flight::detail::row_member_widens_v<BaseMember,
+DerivedMember>` is now in the runtime: identical types agree, and a base key declared `std::optional<T>`
+is additionally satisfied by a derived member of plain `T`. The reverse stays refused — a base key of
+plain `T` promises every read yields a value, and an `optional<T>` source may be empty, so accepting that
+direction would let a row hand back a default where the object holds nothing, which is an absence change
+and outside what any mechanism here may do. Naming the trait is what keeps the two directions visibly
+separate instead of a loosened `same_as` whose asymmetry nobody can see.
+
+Tested both directions plus the nested case (`optional<optional<T>>` is satisfied by `optional<T>`, one
+level, not unwrapped to the bottom), and mutation-checked: deleting the direction guard makes two of the
+assertions fail to compile.
+
+**Staged deliberately.** The predicate is in the runtime because semantics belong there; the key
+enumeration stays generated. Switching `FLIGHT_SDK_ROW_WIDENS` in `scripts/sdkGeneration.mjs` to call the
+trait is a one-line change held back until the regeneration now in flight lands — changing the generator
+while a run is emitting from the old one would leave the committed tree inconsistent with the script that
+produced it, which is the mistake that already cost one 27-minute compile. Expected gain is small and
+should be stated as such: 3 headers, one of them a root and two aggregates.
