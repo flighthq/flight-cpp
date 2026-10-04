@@ -3753,3 +3753,65 @@ The preferences declaration is written and verified but **staged rather than dec
 `/tmp/claude-1000/staged-preferences-repair.json`: the regeneration in flight will finish with 82
 declarations, and adding an 83rd now would leave the committed tree inconsistent with its own ledger again.
 It batches with the `FLIGHT_SDK_ROW_WIDENS` generator switch into one further regeneration.
+
+## The widening relaxation works: `textlayout` reaches 14/14
+
+Validated by hand-patching `FLIGHT_SDK_ROW_WIDENS` to call `row_member_widens_v` in a tree copy:
+
+| header | baseline errors | relaxed |
+|---|---|---|
+| `textlayout/rich_text_metrics.hpp` | 2 | **0** |
+| `textlayout/contract.hpp` | 2 | **0** |
+| `textlayout/_internal_index.hpp` | 2 | **0** |
+
+`textlayout` was 11/14. All three failures were this one cause, so it becomes **14/14 — a shippable
+package** from one generator line plus one runtime trait.
+
+### The first validation said 2 errors became 200, and that was a build-order mistake
+
+Worth recording because the number was so alarming that it nearly cost a correct change. The first run
+reported `rich_text_metrics.hpp` going from 2 errors to 200, which reads as a semantic catastrophe. The
+actual first diagnostic was `'row_member_widens_v' is not a member of 'flight::detail'` inside a template
+body: the trait was defined further down `structural_ref.hpp` than line 751, where the generated table is
+included, so the generated macro could not see it.
+
+The trait compiled. Every unit test passed. Every widening in the SDK failed. Two lessons:
+
+- **A large error-count jump is as likely to be a build-order error as a semantic one.** Read the first
+  diagnostic before concluding anything. "The relaxation is unsafe" would have been the wrong conclusion
+  and the change would have been dropped.
+- **`ctest` cannot catch this class of bug**, because the runtime's own tests do not include the generated
+  table in the order the SDK does. Anything the generated tree calls INTO must be validated against a
+  generated header, not only against the test suite.
+
+Fixed by declaring the trait above the include and rewriting it as a partial specialization —
+`RowMemberWidens<std::optional<Value>, Value>` — so it depends on nothing declared later and the directional
+asymmetry is structural rather than spelled out in a conjunction.
+
+## `host` and `net`: refused, and the runtime must NOT be extended to fix them
+
+Both are one module from shippable and both stop on the same thing, which I first read as a runtime gap and
+it is not.
+
+The emitted call is `flight::Record<flight::String, flight::Any>{{String("backends"), explanation->backends.map(…)}, …}`,
+and the diagnostic is `no matching function … candidate expects 1 argument, 5 provided` — brace elision after
+a `std::pair<String, Any>` fails to form. `Record` already has an `initializer_list<std::pair<Key, Value>>`
+constructor, so the constructor is not missing. Probed directly:
+`std::is_constructible_v<flight::Any, flight::Array<flight::String>>` is **false**, while `String` and
+`double` both work.
+
+In JavaScript an array is an ordinary value for `unknown`, so the obvious move is to add an `Array`
+alternative to `Any`. **`any.hpp` says not to, deliberately:**
+
+> `flight::Array`, a structural row and a variant are all objects in the source language, but none of them
+> can be handed to `Any` without inventing an identity or reinterpreting storage, and a dynamic read that
+> quietly returned the wrong object would be worse than one that reports it cannot answer.
+
+That is a reference-identity guarantee — `flight::Array` is a handle over `shared_ptr<vector<Value>>` and has
+no object identity to box — and reference identity is first on the list of semantics `AGENTS.md` says no
+mechanism here may change. So extending `Any` would not have been filling a gap; it would have been breaking
+a documented promise to make six headers compile, and the runtime's own tests would then have certified it.
+
+`host` and `net` are therefore **compiler-side**: the emitter is passing an `Array<String>` where it has
+declared `Any`. Recorded as refused, claimed by neither lane. I had told builder these two were mine to fix
+with a Record repair; that was wrong twice over — not a repair, and not fixable here at all.
