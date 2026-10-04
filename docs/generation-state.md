@@ -2153,11 +2153,20 @@ only where a declaration is *actually* absent, so a zero marker count is **posit
 nothing to supply** — not an anomaly to investigate. Four of the five would have been overrides nobody
 needed.
 
-Those four fail first on ordinary qualification, and the first measurement is decisive:
+Those four fail first on ordinary qualification. Measured, all four:
 
-| package | before | after | fixed by |
+| package | before | after | |
 |---|---|---|---|
-| `spatial` | 8/11 | **11/11** | one using-declaration for `SpatialIndexingNotice` |
+| `spatial` | 8/11 | **11/11** | complete, on one using-declaration for `SpatialIndexingNotice` |
+| `textshaper` | 7/10 | 7/10 | no gain |
+| `bitmapfont` | 3/8 | 3/8 | no gain |
+| `glyphatlas` | 5/10 | 5/10 | no gain |
+
+One of four paid, and `builder` called all four correctly in advance: `spatial` was described as
+"using/include repair territory, not an override", and `textshaper`, `bitmapfont` and `glyphSource` each
+as structural with "move on". Its predictions about which repairs would NOT help were as accurate as the
+one about which would — the three that gained nothing are blocked behind exactly the structural defects it
+named, one layer down.
 
 So the two halves are not interchangeable, and which one is the *whole* fix is predictable from what the
 refusal withheld:
