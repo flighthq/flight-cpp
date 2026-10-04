@@ -232,9 +232,14 @@ function readPreviousReport() {
     process.stderr.write('Existing report predates resumable runs and lists no passes; starting over.\n');
     return recorded;
   }
-  for (const header of report.passed) recorded.set(header, { diagnostic: '', header, passed: true });
+  for (const header of report.passed) recorded.set(header, { diagnostic: '', header, location: '', passed: true });
   for (const failure of report.failures ?? []) {
-    recorded.set(failure.header, { diagnostic: failure.diagnostic, header: failure.header, passed: false });
+    recorded.set(failure.header, {
+      diagnostic: failure.diagnostic,
+      header: failure.header,
+      location: failure.location ?? '',
+      passed: false,
+    });
   }
   return recorded;
 }
@@ -265,7 +270,7 @@ function writeReport() {
       totalHeaders: selected.length,
       unattemptedHeaders: unattemptedHeaders.length,
     },
-    failures: failures.map(({ header, diagnostic }) => ({ diagnostic, header })),
+    failures: failures.map(({ header, diagnostic, location }) => ({ diagnostic, header, location: location ?? '' })),
     passed: passedHeaders,
     unattempted: unattemptedHeaders,
   };
@@ -315,6 +320,23 @@ function duration(seconds) {
   return minutes > 0 ? `${String(minutes)}m${String(whole % 60).padStart(2, '0')}s` : `${String(whole)}s`;
 }
 
+// `…/include/flight/signals/slot.hpp:109:15: error: …` -> `flight/signals/slot.hpp:109`, with whichever
+// include root it came from stripped so the field is portable across checkouts. Empty when the compiler
+// produced no located error (an internal failure, or a status with no diagnostic line).
+function errorLocation(errorLine) {
+  const matched = /^(.*?):(\d+):(?:\d+:)?\s*(?:fatal error|error):/u.exec(errorLine ?? '');
+  if (matched === null) return '';
+  let file = matched[1];
+  for (const prefix of [overrideInclude, generatedInclude, runtimeInclude]) {
+    const relative = path.relative(prefix, file);
+    if (!relative.startsWith('..') && !path.isAbsolute(relative)) {
+      file = relative;
+      break;
+    }
+  }
+  return `${portable(file)}:${matched[2]}`;
+}
+
 function compileHeader(header) {
   return new Promise((resolve) => {
     const child = spawn(
@@ -340,11 +362,15 @@ function compileHeader(header) {
     });
     child.on('error', (error) => resolve({ diagnostic: error.message, header, passed: false }));
     child.on('close', (status) => {
-      const diagnostic = stderr
-        .split(/\r?\n/u)
-        .find((line) => line.includes('error:'))
-        ?.replace(/^.*?error:\s*/u, '') ?? `compiler exited with status ${String(status)}`;
-      resolve({ diagnostic, header, passed: status === 0 });
+      const errorLine = stderr.split(/\r?\n/u).find((line) => line.includes('error:'));
+      const diagnostic =
+        errorLine?.replace(/^.*?error:\s*/u, '') ?? `compiler exited with status ${String(status)}`;
+      // The `file:line:` prefix the message strips is the only record of WHICH FILE the complaint is in,
+      // and that is a different question from which header failed to compile: a header's first error
+      // routinely lives in something it includes. Without this, attributing a failure to a defect SITE
+      // needs a recompile, which is what made every family count in docs/generation-state.md an upper
+      // bound by construction rather than by accident.
+      resolve({ diagnostic, header, location: errorLocation(errorLine), passed: status === 0 });
     });
     child.stdin.end(`#include <${header}>\n`);
   });
