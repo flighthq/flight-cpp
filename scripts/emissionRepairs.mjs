@@ -20,6 +20,8 @@ const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration',
   'name-array-from-tuple-construction',
   'repeat-alias-declaration',
   'alias-anonymous-struct-to-named',
+  'project-partial-row-absence',
+  'unwrap-partial-row-three-state-member',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -52,6 +54,8 @@ const REQUIRED_FIELDS = {
   'alias-anonymous-struct-to-named': [...SHARED_FIELDS, 'symbol', 'replacement', 'canonicalInclude', 'sourceDeclaration'],
   'repeat-alias-declaration': [...SHARED_FIELDS, 'symbol', 'declaration', 'sourceDeclaration'],
   'wrap-conditional-absent-branch': [...SHARED_FIELDS, 'sourceDeclaration'],
+  'project-partial-row-absence': [...SHARED_FIELDS, 'keys', 'sourceDeclaration'],
+  'unwrap-partial-row-three-state-member': [...SHARED_FIELDS, 'keys', 'sourceDeclaration'],
 };
 
 export function loadEmissionRepairs(root) {
@@ -164,6 +168,8 @@ const HANDLERS = {
   'respell-flattened-union': respellFlattenedUnion,
   'respell-reference-alias': respellReferenceAlias,
   'wrap-conditional-absent-branch': (contents) => wrapConditionalAbsentBranch(contents),
+  'project-partial-row-absence': projectPartialRowAbsence,
+  'unwrap-partial-row-three-state-member': unwrapPartialRowThreeStateMember,
 };
 
 function applyOneRound(repairs, files, applied) {
@@ -870,6 +876,116 @@ function insertForwardDeclaration(contents, repair) {
 
 // The expiry check. A repair that matched nothing is either fixed upstream or no longer reachable;
 // either way carrying it is how a patched build drifts into a fork.
+// The declared return type of the lambda enclosing `index`, or undefined outside one.
+//
+// The emitter writes these on one line, deeply nested, so the type cannot be found by scanning backwards
+// for a delimiter. This walks forward keeping a stack of open lambdas with the brace depth each one's
+// body opened at, which is the only way to tell which `([&]() -> T {` a given position sits inside.
+function enclosingLambdaReturnType(text, index) {
+  const opener = '([&]() -> ';
+  const stack = [];
+  let depth = 0;
+  for (let i = 0; i < index; i += 1) {
+    if (text.startsWith(opener, i)) {
+      const brace = text.indexOf('{', i);
+      if (brace === -1) break;
+      depth += 1;
+      stack.push({ depth, type: text.slice(i + opener.length, brace).trim() });
+      i = brace;
+      continue;
+    }
+    const character = text[i];
+    if (character === '{') depth += 1;
+    else if (character === '}') {
+      if (stack.length > 0 && stack[stack.length - 1].depth === depth) stack.pop();
+      depth -= 1;
+    }
+  }
+  return stack.length > 0 ? stack[stack.length - 1].type : undefined;
+}
+
+// The first template argument of `std::variant<A, B, C>`, respecting nesting.
+function firstTemplateArgument(type) {
+  const open = type.indexOf('<');
+  const close = type.lastIndexOf('>');
+  if (open === -1 || close <= open) return undefined;
+  let depth = 0;
+  const inner = type.slice(open + 1, close);
+  for (let i = 0; i < inner.length; i += 1) {
+    const character = inner[i];
+    if (character === '<') depth += 1;
+    else if (character === '>') depth -= 1;
+    else if (character === ',' && depth === 0) return inner.slice(0, i).trim();
+  }
+  return inner.trim();
+}
+
+// Rewrites each declared key's bare `return flight::row_get<...>` into the long form, at a site whose
+// enclosing lambda is declared to return the three-state variant.
+//
+// Both of these kinds anchor to an exact header path through `appliesTo` and name their keys, rather
+// than matching the construct. That is deliberate: the three cases that produce an identical diagnostic
+// are separated by the SUBJECT's member declaration, which is in another file and not visible here.
+// Matched by text alone, this transform fixes four headers, breaks one that already compiled, and fails
+// on a third. Anchoring is what keeps it honest; see docs/generation-state.md.
+function rewritePartialRowProjection(contents, repair, absentAlternative, presentExpression) {
+  let text = contents;
+  let changed = false;
+  for (const key of repair.keys) {
+    const needle = `return flight::row_get<flight::RowKey<"${key}">>(`;
+    let from = 0;
+    for (;;) {
+      const start = text.indexOf(needle, from);
+      if (start === -1) break;
+      // End the statement at the call's matching parenthesis, not at the first semicolon: an argument
+      // could contain one, and a mis-sliced call would be rewritten into something that still compiles.
+      const close = matchingParenthesis(text, start + needle.length - 1);
+      if (close === undefined || text[close + 1] !== ';') break;
+      const semicolon = close + 1;
+      const variant = enclosingLambdaReturnType(text, start);
+      if (
+        variant === undefined ||
+        !variant.includes('flight::Null') ||
+        !variant.includes('flight::Undefined')
+      ) {
+        from = semicolon + 1;
+        continue;
+      }
+      const call = text.slice(start + 'return '.length, semicolon);
+      const replacement =
+        `auto optional_chain_projected = ${call}; ` +
+        `if (!optional_chain_projected.has_value()) return ${variant}{std::in_place_type<flight::${absentAlternative}>, flight::${absentAlternative.toLowerCase()}}; ` +
+        `return ${presentExpression(variant)};`;
+      text = text.slice(0, start) + replacement + text.slice(semicolon + 1);
+      changed = true;
+      from = start + replacement.length;
+    }
+  }
+  return changed ? text : undefined;
+}
+
+// Case 1: the subject's member is an `optional<Ref<T>>`, so a partial read yields `optional<Ref<T>>` and
+// the three states are recoverable. `nullopt` maps to `flight::Null` because that is what the emitter's
+// own long-form lowering does at every site where it emits one -- unanimously, never `Undefined`. The
+// `Undefined` channel is supplied separately by the receiver check that precedes the read.
+function projectPartialRowAbsence(contents, repair) {
+  return rewritePartialRowProjection(
+    contents,
+    repair,
+    'Null',
+    (variant) =>
+      `${variant}{std::in_place_type<${firstTemplateArgument(variant)}>, optional_chain_projected.value()}`,
+  );
+}
+
+// Case 2: the subject's member is ALREADY declared as the three-state variant, so a partial read yields
+// `optional<variant<...>>` and case 1's form would build the value alternative from a variant. Unwrapping
+// is forced rather than chosen: the member itself already distinguishes null from a value, so `nullopt`
+// can only mean the property was absent, which is `Undefined`.
+function unwrapPartialRowThreeStateMember(contents, repair) {
+  return rewritePartialRowProjection(contents, repair, 'Undefined', () => 'optional_chain_projected.value()');
+}
+
 export function obsoleteRepairs(applied, profiles, fullRun) {
   const bound = profiles.length > 0;
   // Expiry is judged ONLY on a full run, the same way the structural-row-key guard is. On a subset run
