@@ -2920,3 +2920,23 @@ The 745 undeclared names remain the only family large enough to change the headl
 measured rate at which resolving a name actually reaches zero errors is still unknown. That measurement —
 iterate each header to a fixed point, record whether it compiles or lands on a different family — is the
 next thing worth running, and it needs CPU that the in-flight regeneration currently owns.
+
+### Retraction: the `for...in` behind `light_analysis.hpp` was in a shadowed file
+
+Recorded above as a finding: resolving the unqualified `Light` in `lighting/light_analysis.hpp` exposes
+`expected ')' before 'in'`, a `for...in` lowering. **Retracted.** That header has a hand-written override,
+so the generated file I measured is shadowed and never compiles. Whatever is wrong with it does not ship.
+
+The cause was an include order I got wrong, and it is worth stating because it is silent. The compile gate
+orders its include paths `overrides/include`, then `generated/include`, then the runtime — overrides
+**first**, which is the whole mechanism, as `scripts/overrides.mjs` says in its header comment. My ad-hoc
+measurement command used `-I include -I generated/include -I overrides/include`, with overrides **last**.
+For a header with no override the two orders give identical results; for an overridden one, the generated
+file wins and you measure a file that is not part of the build.
+
+Checked rather than assumed: none of the six absence-channel headers has an override, so those
+measurements stand. `light_analysis.hpp` and `scene_forward_lights.hpp` both do.
+
+The general form of the mistake: an override is invisible in the generated tree by design, so a
+measurement that reads the generated tree directly cannot see that it is testing dead code. Any one-off
+compile has to copy the gate's include order, not approximate it.
