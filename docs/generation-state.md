@@ -2335,3 +2335,49 @@ has twice had to walk back for over-reaching: the soundness argument above needs
 direction — readonly target admits, writable target refuses, absence still distinguishable through the
 widened view — before it earns the 37 headers it looks worth. The one-line localisation is the durable
 part; the clause is cheap once someone writes those tests.
+
+## The two families that remain, both sized
+
+With `builder`'s queue worked through, the residue has resolved into two named families rather than a long
+tail. Both are runtime-capability questions, both are localised, and neither should be attempted without
+the tests named below.
+
+### 1. Structural row widening — 46 headers
+
+Sized and localised above: one `std::same_as` clause in `FLIGHT_SDK_ROW_WIDENS`, refusing a widening
+TypeScript permits (`{wordWrap?: boolean}` accepts `wordWrap: boolean`). Candidate fix is one clause,
+admitting an `optional<T>` base member against a `T` derived member **when the target schema is readonly**.
+
+Needs: a semantic test per direction — readonly target admits, writable target refuses, absence still
+distinguishable through the widened view.
+
+### 2. The absence channel — 10 headers
+
+| package | headers |
+|---|---|
+| `node` | 5 |
+| `lighting` | 4 |
+| `materials` | 1 |
+
+`node`'s `has_clip` / `has_material` / `has_blend_mode`, and — identified by `builder` — `lighting`'s
+`scene_lights.hpp`, which "tries to return optional partial-row reads as `variant<T, Null, Undefined>`".
+That is the same defect from a second direction, which is what confirms it as a family rather than three
+odd sites.
+
+The shape, unchanged from where it was first refused: `row_get` over a `RowPartial` returns a single
+`optional<V>`, having already collapsed *null* into *absent*, while the emitter wants three states. The
+information is **not recoverable at the call site**, so no repair can close it — and mapping `nullopt` to
+`Undefined` would compile and be observationally identical at every current site, which is exactly why it
+must not be done. `AGENTS.md` names absence as a semantics no workaround may change.
+
+The real fix is upstream of `row_get`: a partial row's cell has to carry three states. `flight::Presence<V>`
+already exists for it in `include/flight/presence.hpp` — unused by the emitter, and with its alternatives
+in the opposite order (`variant<Undefined, Null, V>` against the emitter's `variant<V, Null, Undefined>`),
+which is probably why it has never been wired up. Closing this is a runtime/emitter contract change, not a
+repair, and it is the smaller of the two families.
+
+### What that leaves
+
+Every other remaining failure is either a one-off or sits behind one of these two. The useful consequence:
+there is no longer a long tail to triage — there are two capabilities, 46 headers and 10 headers, each
+localised to a specific mechanism, each with its required tests written down.
