@@ -3701,3 +3701,55 @@ trait is a one-line change held back until the regeneration now in flight lands 
 while a run is emitting from the old one would leave the committed tree inconsistent with the script that
 produced it, which is the mistake that already cost one 27-minute compile. Expected gain is small and
 should be stated as such: 3 headers, one of them a root and two aggregates.
+
+## `preferences` is two families, and the "arrow" family was two defects wearing one diagnostic
+
+`preferences` is one of the eleven packages sitting exactly 3 failures from shippable — 2 aggregates plus
+one broken module, `storage.hpp`. I expected its blocker to be the doubly-optional call, since it is one of
+the four headers in that family. It is not: the doubly-optional local is further down and never reached.
+
+Its first errors are four unqualified `flight::types` names — `HostPreferencesChangeCapability`,
+`StorageKeysResult`, `HostPreferencesCapability`, `StorageNamespace` — all declared in the single header
+`flight/types/storage.hpp`, so one `insert-using-declaration` in its `symbols` list form covers all four.
+
+**Measured, and the measurement needed its own correction.** The first run reported 20 errors before and 20
+after, which reads as "the repair did nothing". It was `-fmax-errors=20` capping both runs. Raising the cap
+and diffing the DIAGNOSTICS instead of counting them:
+
+| | first error |
+|---|---|
+| baseline | `storage.hpp:22: 'HostPreferencesChangeCapability' was not declared in this scope` |
+| repaired | `storage.hpp:36: base operand of '->' has non-pointer type 'flight::Ref<std::variant<…>>'` |
+
+All four names resolved and the header advanced from line 22 to line 36. This is the third time an error
+count has hidden a working repair, and the first time the cause was my own measurement flag rather than the
+queue depth. **Compare diagnostics; a count is only meaningful at zero.**
+
+So `preferences` is NOT one declaration from shipping. The name repair is correct and necessary and still
+leaves a second family behind it.
+
+### Splitting the arrow family
+
+That second family forced a correction to the board. The entry above recorded "`->` used on a non-pointer
+`flight::Ref` — 12 headers" as one family and noted builder had closed one of them. Separating them by
+whether the pointee is a variant:
+
+| shape | headers | packages |
+|---|---|---|
+| `->` on `Ref<std::variant<…>>` | 11 | `texture` 6, `render_wgpu` 2, `scene2d_canvas` 2, `scene2d_dom` 1 |
+| `->` on a plain non-variant `Ref` | 1 | `node` |
+
+These are **different defects**. The plain form is what builder closed with a source patch in
+`raycast_collision_shape3_d.hpp` — a `Ref<CollisionCapsule3D>` accessed with `.` instead of `->`, where the
+pointee does have the member. The variant form cannot be fixed by choosing a different operator at all:
+`shared_ptr<variant<A, B>>` has no members, so reaching one needs `std::get` or `std::visit`. Treating them
+as one family would have sent someone at eleven headers with a mechanism that cannot work on them.
+
+And the 11 is itself an undercount: `preferences/storage.hpp` belongs to the variant form but does not
+appear in it, because its first diagnostic was the name. The real size shows only after the name repairs
+land — which is the same masking that has made every count in this document an upper bound.
+
+The preferences declaration is written and verified but **staged rather than declared**, in
+`/tmp/claude-1000/staged-preferences-repair.json`: the regeneration in flight will finish with 82
+declarations, and adding an 83rd now would leave the committed tree inconsistent with its own ledger again.
+It batches with the `FLIGHT_SDK_ROW_WIDENS` generator switch into one further regeneration.
