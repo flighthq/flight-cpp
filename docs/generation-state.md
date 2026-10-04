@@ -3815,3 +3815,45 @@ a documented promise to make six headers compile, and the runtime's own tests wo
 `host` and `net` are therefore **compiler-side**: the emitter is passing an `Array<String>` where it has
 declared `Any`. Recorded as refused, claimed by neither lane. I had told builder these two were mine to fix
 with a Record repair; that was wrong twice over — not a repair, and not fixable here at all.
+
+## A safety constraint the alias mechanisms do not state: never collapse two alternatives of ONE variant
+
+`lighting/environment.hpp` is one of `lighting`'s two broken modules, and chasing it turned up a constraint
+that belongs on the duplicate-struct alias mechanisms rather than on `lighting`.
+
+Its first error is a `row_get<"environment">` over a non-partial row whose result will not convert, and the
+reason is that `types::Environment::environment` is `std::optional<types::Texture>` while
+`types::EnvironmentOptions::environment` is a `std::variant` of anonymous structs. `Texture` is itself a
+variant of anonymous structs. So the conversion is between two variants over *different* anonymous shapes.
+
+Enumerating every `entity_runtime_key_flip_x…` struct in the tree and hashing its body gives 7 distinct
+structs, and exactly **one byte-identical pair**:
+
+| body hash | structs | file |
+|---|---|---|
+| `3f25df961f0c` | `…_dimension_sources_9bce411d6d710991` **and** `…_dimension_sources_473401c615c3ad52` | both in `flight/types/texture.hpp` |
+
+Byte-identical bodies, different names, same file — which reads exactly like the case the declared
+`alias-anonymous-struct-to-named` kind exists for. **Aliasing them would break the build**, because both are
+alternatives of the *same* variant, and collapsing them makes that `std::variant<A, A>`. Verified directly:
+
+```
+std::get_if<std::shared_ptr<A>>(&collapsed);
+  error: static assertion failed: T must occur exactly once in alternatives
+```
+
+So the alias mechanisms' stated safety condition — byte-identical bodies, one canonical home — is
+**necessary but not sufficient**. A third condition is required and is currently unwritten: *the two structs
+must not both appear as alternatives of a single variant.* The derived `aliasDuplicateStructuralStructs`
+happens to be safe here because it pairs by NAME and these names differ, which is a second accidental
+benefit of the name-matching decision made when body-matching was reverted. A hand-declared pair has no such
+protection, and this pair is sitting in the tree looking like an obvious candidate.
+
+`lighting/environment.hpp` itself is **compiler-side**: the remaining shapes are genuinely different — the
+one in `EnvironmentOptions` has a unique body and is defined in `scene2d_formats/rive_scene2_ddocument.hpp`,
+not shared with `Texture`'s set — so no alias applies and the emitter is converting between two unrelated
+anonymous shapes. Its second error is the `get_if` family: `get_if<Ref<…_sources_95b8b467441ec19b>>` on a
+variant that does not list that alternative, which is the same defect seen from the other side.
+
+Consequence for `lighting`: my declared absence repair covers `scene_lights.hpp`, but `environment.hpp` is
+refused, so the package does not reach shippable. It goes 10/14 to 11/14 at best, not 14/14.
