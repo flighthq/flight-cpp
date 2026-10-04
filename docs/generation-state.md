@@ -3086,3 +3086,52 @@ the written array is a parameter, or a value the caller still holds, `array_of` 
 withdrawal stands. That precondition has to be stated in the declaration and checked per site, because it
 is not visible in the diagnostic — the same shape of discipline the absence-channel repairs needed, for
 the same reason.
+
+## Measured: the unqualified-name family is a coupled graph, and bulk application REGRESSES
+
+The 745-header family is 75% of all failures and matches an established repair kind, which made it look
+like the one lever big enough to move the headline fraction. Measured at the granularity a real repair
+uses — insert the using-declaration and its include into every header of a package, iterate to a fixed
+point, then count headers that went from failing to passing:
+
+| package | before | after | names resolved |
+|---|---|---|---|
+| `clip` | 0/4 | 0/4 | 12 |
+| `command` | 1/8 | **0/8** | 21 |
+| total | 1/12 | **0/12** | 33 |
+
+Thirty-three names resolved, **net minus one header**. The family is not a mechanical win, and the
+regression is the useful part.
+
+`command/command_history_signals.hpp` passes at baseline and fails after the sweep, and the error is not
+in that file:
+
+```
+flight/registry/registry_table.hpp:372:54: error: 'registry_entry_state' was not declared in this
+  scope; did you mean 'flight::types::registry_entry_state'?  [-Wtemplate-body]
+```
+
+The insertion added an `#include` to reach a name, that include pulled in another package's header, and
+THAT header has its own unqualified name inside a **template body**. GCC checks template bodies ahead of
+instantiation (`-Wtemplate-body`), so the defect surfaces as soon as the header is included at all. A
+passing header was turned into a failing one by a repair that is individually correct.
+
+So three things are true of this family at once:
+
+- **it is coupled through includes.** Repairing a package needs the closure of packages its headers
+  transitively include, not the package alone. `registry_entry_state` — the single most frequent name at
+  69 occurrences — is unqualified in `flight::registry`, so anything that reaches that header inherits the
+  failure;
+- **adding an include is not a free action.** Every `insert-using-declaration` declaration carries an
+  `include`, and each one widens the set of template bodies the compiler will check. That is how a repair
+  can have negative value;
+- **the 656 figure is not a plan.** It counts headers whose first diagnostic is a name. It does not count
+  the second family behind each one, and it does not net off the headers a careless application breaks.
+
+This also retrospectively explains why the 47 `insert-using-declaration` entries already declared were
+added package by package with a measurement each time, rather than generated in a batch. That was the
+right method and this is the evidence for it: a batch would have shipped a regression.
+
+The family remains worth working, but as a per-package, measured, include-closure-aware sequence — and
+`flight::registry`'s own unqualified names should be repaired before anything that includes it. It is not
+the quick lever the headline share implied, and nothing in the earlier sizing should be read as a forecast.
