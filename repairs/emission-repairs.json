@@ -1059,6 +1059,54 @@
       "defect": "woff_font.hpp constructs data_tag_aef43e71dd1e9a6d and casts it to data_tag_3ad9a8f109659685, and the former is defined NOWHERE in the tree -- the emitter hashed one declared TypeScript type under two names, most likely once from the declared element type and once from the inferred object literal, and emitted a definition for only one of them. The cast requires them to be the same type, so a second definition would not do: the alias is the fix.\n\nUnlike a shape-matched alias to a NAMED type, this introduces no misleading name -- both spellings are anonymous structural hashes of the same shape in the same module -- and the correspondence is read from the source rather than inferred from the bodies: woffFont.ts declares the element type as { data: Uint8Array; tag: number } and data_tag_3ad9a8f109659685 is exactly flight::Uint8Array data with double tag. See the reverted body-matching generalisation recorded in wgpu-render-stats-anonymous-twin for why that distinction matters.",
       "expectedWhen": "always",
       "expires": "when the emitter gives one declared type one structural name, or emits a definition for every name it references; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "spatial-spatialindexingnotice-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/spatial/",
+      "symbol": "SpatialIndexingNotice",
+      "declaration": "using flight::types::SpatialIndexingNotice;",
+      "include": "flight/types/spatial_indexing.hpp",
+      "diagnostic": "'SpatialIndexingNotice' was not declared in this scope; did you mean 'flight::types::SpatialIndexingNotice'?",
+      "defect": "The emitter writes SpatialIndexingNotice unqualified inside namespace flight::spatial, where the type is flight::types::SpatialIndexingNotice, and without the header that defines it.\n\nFound by builder's audit of the modules whose refusal reports ZERO missing declarations. Those placeholders withhold nothing -- the complete source surface is retained and the refusal is recorded at module level only -- so there is nothing for an override to supply and the first failure is ordinary qualification. That is a correction to the assumption that a refused-placeholder module is always a replaceable stub.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "textshaper-shapedrun-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/textshaper/",
+      "symbol": "ShapedRun",
+      "declaration": "using flight::types::ShapedRun;",
+      "include": "flight/types/shaped_run.hpp",
+      "diagnostic": "'ShapedRun' was not declared in this scope; did you mean 'flight::types::ShapedRun'?",
+      "defect": "The emitter writes ShapedRun unqualified inside namespace flight::textshaper, where the type is flight::types::ShapedRun, and without the header that defines it.\n\nFound by builder's audit of the modules whose refusal reports ZERO missing declarations. Those placeholders withhold nothing -- the complete source surface is retained and the refusal is recorded at module level only -- so there is nothing for an override to supply and the first failure is ordinary qualification. That is a correction to the assumption that a refused-placeholder module is always a replaceable stub.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "bitmapfont-bitmapfont-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/bitmapfont/",
+      "symbol": "BitmapFont",
+      "declaration": "using flight::types::BitmapFont;",
+      "include": "flight/types/bitmap_font.hpp",
+      "diagnostic": "'BitmapFont' was not declared in this scope; did you mean 'flight::types::BitmapFont'?",
+      "defect": "The emitter writes BitmapFont unqualified inside namespace flight::bitmapfont, where the type is flight::types::BitmapFont, and without the header that defines it.\n\nFound by builder's audit of the modules whose refusal reports ZERO missing declarations. Those placeholders withhold nothing -- the complete source surface is retained and the refusal is recorded at module level only -- so there is nothing for an override to supply and the first failure is ordinary qualification. That is a correction to the assumption that a refused-placeholder module is always a replaceable stub.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "glyphatlas-glyphatlasruntime-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/glyphatlas/",
+      "symbol": "GlyphAtlasRuntime",
+      "declaration": "using flight::types::GlyphAtlasRuntime;",
+      "include": "flight/types/glyph_source.hpp",
+      "diagnostic": "'GlyphAtlasRuntime' was not declared in this scope; did you mean 'flight::types::GlyphAtlasRuntime'?",
+      "defect": "The emitter writes GlyphAtlasRuntime unqualified inside namespace flight::glyphatlas, where the type is flight::types::GlyphAtlasRuntime, and without the header that defines it.\n\nFound by builder's audit of the modules whose refusal reports ZERO missing declarations. Those placeholders withhold nothing -- the complete source surface is retained and the refusal is recorded at module level only -- so there is nothing for an override to supply and the first failure is ordinary qualification. That is a correction to the assumption that a refused-placeholder module is always a replaceable stub.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
