@@ -120,6 +120,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_socket_statechart_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_socket_statechart COMMAND flight_cpp_generated_socket_statechart_tests)
 
+add_executable(flight_cpp_generated_surface_tests generated_surface_test.cpp)
+target_include_directories(
+  flight_cpp_generated_surface_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_surface_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_surface COMMAND flight_cpp_generated_surface_tests)
+
 add_executable(flight_cpp_c_api_tests c_api_test.c)
 target_link_libraries(flight_cpp_c_api_tests PRIVATE Flight::C)
 flight_cpp_set_project_warnings(flight_cpp_c_api_tests)
