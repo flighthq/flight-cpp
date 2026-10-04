@@ -3237,3 +3237,44 @@ same module also refuses `get_registry_table_entry_state` — one of the three g
 an override would have to supply that too, not merely respell an operator.
 
 Left for whoever takes the arrow family, with the cheap option already eliminated.
+
+## `npm run build:check` caught an unregistered public header — and a larger pre-existing drift
+
+`build:check` reported `template_argument.hpp` missing from the CMake public-header list, from Bazel's
+`hdrs`, and from the Bazel per-header self-containment suite. That header was added here earlier and is
+included by `flight/runtime.hpp`, so it ships on the public boundary while being absent from the build
+metadata — exactly the gap that gate exists to find. Now registered in all four places (the three the gate
+names, plus a case in `header_self_containment_test.cpp`, which the Bazel entry's selector indexes into).
+
+Investigating where to put it surfaced a **pre-existing and much larger inconsistency in the Bazel header
+tests**, which `build:check` does not detect because it only checks that each name appears as text.
+
+`tests/header_tests.bzl` pairs each header with a selector, and `flight_cpp_public_header_tests` passes it
+as `FLIGHT_CPP_HEADER_SELECTOR`, which `header_self_containment_test.cpp` resolves through an `#elif`
+chain. The selector is therefore an index into that chain, and the two have drifted:
+
+- **50 of 54 bzl entries name the wrong header.** `("presence", 12)` builds `header_presence_test`, but
+  selector 12 in the chain includes `runtime.hpp`. The numbering follows each list's own order, and the
+  two orders are unrelated — the bzl is roughly alphabetical, the chain is append-ordered.
+- **3 bzl entries resolve to no header at all** — `structured_clone`, `attachment` and `audio_context` are
+  given 54, 55 and 56, and the chain stops at 53, so those three targets hit
+  `#error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"` and fail to build under Bazel.
+- **3 headers have no chain case**: `audio_context`, `erased_ref`, `font_face`.
+- **2 headers are absent from the bzl entirely**: `base64`, `canvas_2d`.
+
+Because the selectors are close to a permutation, most headers are still compiled by *some* target — just
+not the one named after them — so the suite provides weaker assurance than its target names claim rather
+than none. CMake is unaffected: it generates `#include <flight/${header}.hpp>` from the name directly and
+needs no selector, which is why only the Bazel side drifted.
+
+**Not fixed here.** Re-pointing 50 test targets and adding five chain cases is a visible change to the
+build graph that is outside making the generated tree compile, so it is reported rather than taken. The
+one-line fix that would prevent a recurrence is for `build:check` to assert the mapping instead of the
+text — that it can read each bzl selector, resolve it through the chain, and require the result to equal
+the entry's own name.
+
+One other `build:check` failure is open and also pre-existing, unchanged by this regeneration: `generated
+SDK contains 2710 module headers, expected 2172`. `summary.emittedModules` is 2172 in both the previous
+and the current manifest, so the gate is comparing a header count against a module count and the two
+legitimately differ — every package also emits `contract.hpp` and `_internal_index.hpp`, which are not
+modules. Either the gate's expectation or the manifest field it reads is wrong.
