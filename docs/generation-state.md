@@ -3887,3 +3887,55 @@ The report being written incrementally is a feature — it is how progress is re
 **any analysis over it must test `run.complete` first.** Nothing in the file's shape distinguishes a partial
 report from a finished one; a consumer has to ask. `sdkPackageTiers` already refuses to overwrite one; a
 reader needs the same care.
+
+## `matched > 0` refuses two different things, and only one of them should be refused
+
+Builder closed `@flighthq/surface` 1/7 → 7/7 and reported the obstacle precisely: *"Surface has only the
+computed EntityRuntimeKey cell and the generated widening proof requires at least one ordinary named
+field."* It kept the workaround module-local because the shared structural generator is this lane. That was
+the right split, and the underlying limitation generalises.
+
+`generated_row_widening_matches()` ends in `return matched > 0`, and only `FLIGHT_SDK_ROW_WIDENS` increments
+`matched` — `FLIGHT_SDK_ROW_COMPUTED` does not, because a computed-cell disagreement is fatal rather than
+counted. So a subject whose only members are computed cells matches zero keys and proves nothing against
+anything, including itself. `flight::types::Surface` is exactly that shape:
+
+```cpp
+struct Surface : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+};
+```
+
+**That guard is conflating two cases**, and this is the whole finding:
+
+- a subject whose keys are **absent from the generated table** is UNVERIFIABLE — the table cannot see a key
+  it does not enumerate, so claiming a proof would be unsound. This is what `TestOutsideTheKeySet` pins, and
+  it must keep failing;
+- a subject that **genuinely declares nothing except computed cells** is vacuously satisfiable — a row over
+  it can ask for nothing beyond cells the proof already checks fatally, so every derived subject satisfies
+  it. That mirrors TypeScript, where a type with no required properties is satisfied by anything.
+
+From inside the macro the two are indistinguishable: both match zero keys. **The generator can tell them
+apart**, because it reads the struct bodies. So the distinction is now recorded at generation time rather
+than inferred at compile time: `keylessSubjects` finds every subject whose member list is non-empty and
+entirely computed cells, the generator specializes a new runtime trait `GeneratedRowKeyless` for each, and
+the proof becomes `matched > 0 || generated_row_keyless_v<Base>`.
+
+Measured: **84 of 3628** generated subjects have that shape, so it is a family rather than a one-off —
+`types::Surface`, `types::AppLifecycle`, `types::StatechartSignals`, `quadbatch::QuadBatchWithSignals`,
+`tilemap::TilemapWithSignals` and 79 others. `keylessSubjects` was tested against the real tree by
+evaluating the shipped function rather than a reimplementation: it finds exactly 84, includes
+`flight::types::Surface`, and correctly excludes `types::RichTextData`, which has ordinary members.
+
+The unverifiable case is untouched: a subject with an ordinary member the table does not enumerate is not
+keyless, the generator will not mark it, and it still proves nothing. The trait defaults to `false` and only
+the generated table says otherwise, the same shape as `GeneratedRowWidening`, and it is declared above the
+generated include — the ordering mistake made once already with `row_member_widens_v`.
+
+### A consequence for builder's override that neither of us should decide alone
+
+If this relaxation makes the generated `surface` headers compile on their own, builder's four surface
+overrides are supplying something the emitter can now produce — and `derivedFrom` exists to catch exactly
+that: an override whose refusal has been lifted should be **deleted**, not re-pinned. That cannot be judged
+until a regeneration has run with the relaxation in it, and it is builder's override to drop, so it is
+flagged rather than acted on.
