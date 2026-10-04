@@ -2979,3 +2979,26 @@ A side effect worth knowing: that using-declaration repair is now **inert for th
 override shadows the whole file. It still matches a generated header, so `sdk:check` is satisfied, but its
 effect is invisible in the shipped tree. A repair and an override targeting the same header are not an
 error, but only one of them is doing anything.
+
+### Measuring the unqualified-name repair one header at a time understates it
+
+The first attempt at measuring the 745-header family patched the header under test: insert
+`using flight::types::X;` for each name the compiler reported, re-compile, iterate. On two headers it got
+nowhere, and the reason is a granularity error rather than a property of the family.
+
+`allocate_entity` is used unqualified in **nine** `flight/animation/*.hpp` headers, and the header under
+test includes several of them. Patching that one header leaves the same name unqualified in everything it
+pulls in, so the name is reported again and the measurement records a failure that the real repair would
+not have.
+
+The declared repairs already have this right. `appliesTo` is a path PREFIX — `"flight/log/"`, not a file
+— so one declaration inserts the using-declaration into every header of the package. The measurement has
+to do the same: patch the whole package, iterate to a fixed point over all of its headers, and only then
+count how many went from failing to passing. A per-header harness answers a question nobody is asking.
+
+Two smaller things the same investigation turned up. `allocate_entity` lives in `flight::entity` and
+`get_node_runtime` in `flight::node`, so `flight::types` is not the only home for an unqualified name and
+a sweep that assumes it will generate wrong declarations. And the index must skip one-line forward
+declarations — `namespace flight::types { struct AnimationBlendTree; }` appears at the top of many headers
+and is not the package's namespace opener, so the insertion point has to be a namespace opener that ends
+its line.
