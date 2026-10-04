@@ -3416,3 +3416,24 @@ declarations in that module remain refused — `concat`, `keys`, all three creat
 without/with/tombstone. That is the right call: `supplies` is a stronger claim than `status: complete`,
 and claiming it for a module where most of the surface is still refused would make the override's own
 ledger lie.
+
+### A `pgrep -f` watcher for a long job matches itself and never fires
+
+Operational, but it cost ninety minutes of unnecessary polling and a burned CPU core, so it is worth
+writing down.
+
+Waiting for the compile was armed as `until ! pgrep -f sdkHeaderCompile >/dev/null; do sleep 30; done`.
+That never fires. `pgrep -f` matches against the full command line of every process, and the watcher's own
+shell carries the string `sdkHeaderCompile` in its command line — so the pattern matches the watcher, the
+condition stays true after the real job exits, and no notification ever arrives. The compile finished and
+nothing said so; it was found only by reading the report file.
+
+Worse, an earlier watcher from a previous session was written as
+`while pgrep -f sdkHeaderCompile >/dev/null; do :; done` — self-matching **and** with no `sleep`, so it
+spun a core at 100% for as long as it lived. Load sat around 7 with only a 6-worker compile running;
+killing three stale watchers dropped it to 0.97. Those watchers had been slowing the very job they were
+waiting for.
+
+Wait on the **pid** instead — `until ! kill -0 <pid> 2>/dev/null; do sleep 30; done` — which cannot match
+itself. If a name must be used, exclude the watcher (`pgrep -f 'name' | grep -v $$`) and never omit the
+sleep.
