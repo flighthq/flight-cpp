@@ -238,6 +238,26 @@ function applyOneRound(repairs, files, applied) {
 // So the correspondence is asserted by an author who checked it, per pair, and `sourceDeclaration` records
 // what they checked. A pair is only worth declaring when the two names mean the same thing in the same
 // domain, which is verifiable by reading them and is not computable from the bodies.
+// The first `std::variant<…>` in `contents` that lists BOTH names as alternatives, or undefined.
+//
+// The alternative list has to be taken to the variant's MATCHING angle bracket: alternatives are spelled
+// `flight::Ref<name>`, so a regex ending at the first `>` truncates after the first alternative and the
+// check silently never fires. That is how the first version of this guard passed its own trap test.
+function variantListingBoth(contents, symbol, replacement) {
+  const named = new RegExp(`\\b${symbol}\\b`, 'u');
+  const other = new RegExp(`\\b${replacement}\\b`, 'u');
+  const opener = 'std::variant<';
+  for (let at = contents.indexOf(opener); at !== -1; at = contents.indexOf(opener, at + 1)) {
+    const close = matchingAngle(contents, at + opener.length - 1);
+    if (close === undefined) continue;
+    const alternatives = contents.slice(at + opener.length, close);
+    if (named.test(alternatives) && other.test(alternatives)) {
+      return `${contents.slice(at, Math.min(close + 1, at + 70))}…`;
+    }
+  }
+  return undefined;
+}
+
 function aliasAnonymousStructToNamed(contents, repair) {
   const guard = new RegExp(
     `^(#ifndef (FLIGHT_COMPILER_ANONYMOUS__[A-Z0-9_]+)\\n#define \\2\\n)struct ${repair.symbol} : public flight::ReferenceEnabled \\{\\n[\\s\\S]*?^\\};\\n(#endif[^\\n]*\\n)`,
@@ -245,6 +265,20 @@ function aliasAnonymousStructToNamed(contents, repair) {
   );
   const found = guard.exec(contents);
   if (found === null) return undefined;
+  // Byte-identical bodies and one canonical home are NOT sufficient. If the two structs are both
+  // alternatives of a single `std::variant`, aliasing them collapses that variant to `variant<A, A>`
+  // and every `std::get_if<A>` on it stops compiling: "T must occur exactly once in alternatives".
+  // `flight/types/texture.hpp` currently holds exactly such a pair -- two byte-identical
+  // `entity_runtime_key_flip_x…sources_*` structs that are alternatives of the same variant -- so this
+  // is a live trap rather than a hypothetical, and the derived name-matching aliasing avoids it only by
+  // accident. See docs/generation-state.md.
+  const collapsed = variantListingBoth(contents, repair.symbol, repair.replacement);
+  if (collapsed !== undefined) {
+    throw new Error(
+      `Emission repair ${repair.id} would alias ${repair.symbol} to ${repair.replacement}, but both are ` +
+        `alternatives of one std::variant (${collapsed}); collapsing it breaks every std::get_if on that variant.`,
+    );
+  }
   const hoisted = contents.includes(`#include <${repair.canonicalInclude}>`)
     ? contents
     : hoistInclude(contents, repair.canonicalInclude);
