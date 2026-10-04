@@ -2879,3 +2879,44 @@ reports as passing, so a per-package diagnosis has to follow the error's FILE an
 test — the ten errors in `load.hpp` are in two different files. And a template-bearing header should not
 be counted as verified on the strength of the gate alone; something must instantiate it. That is an
 argument for the runtime's own tests over header counting, which is where semantics get pinned anyway.
+
+## The whole board, by family
+
+Every one of the 996 failures in the last full report, classified by its diagnostic. **Read the column as
+"headers whose FIRST error is in this family", not "headers this family would fix"** — that distinction is
+the one this document has now got wrong five times, and the families below are not independent.
+
+| family | headers | share |
+|---|---|---|
+| undeclared name | 745 | 74.8% |
+| no match for operator or call | 62 | 6.2% |
+| no matching call | 40 | 4.0% |
+| row / structural conversion | 36 | 3.6% |
+| other conversion | 35 | 3.5% |
+| not a member | 14 | 1.4% |
+| missing member | 12 | 1.2% |
+| `->` used on a non-pointer `flight::Ref` | 12 | 1.2% |
+| parse / unlowered syntax | 8 | 0.8% |
+| structural row WRITE incompatible type | 7 | 0.7% |
+| everything else (13 shapes) | 25 | 2.5% |
+
+Three things in this table are worth acting on.
+
+**212 of the 996 — 21% — are per-package aggregates**, `contract.hpp` and `_internal_index.hpp`. Those
+cannot be addressed directly at all: each clears only when its entire package clears, which is why
+`node/contract.hpp` sits at 585 errors. The real addressable surface is **784 headers**, and any plan that
+counts the aggregates as work items is counting the same work twice.
+
+**The `->` on a non-pointer `Ref` family is 12 headers**, and one of them is already closed — it is the
+family `raycast_collision_shape3_d.hpp` belonged to, and it was fixed with a SOURCE PATCH rather than the
+override that `AGENTS.md` nominally points to for an operator emitted as source text. That is the cheaper
+mechanism and it carries no copy, so the remaining eleven should be attempted the same way first.
+
+**The row WRITE family is exactly 7**, matching the earlier count, and its repair is withdrawn (see
+above) — so those seven are currently unaddressed and their mechanism is unknown pending measurement of
+whether the element types are duplicate structural structs.
+
+The 745 undeclared names remain the only family large enough to change the headline fraction, and the
+measured rate at which resolving a name actually reaches zero errors is still unknown. That measurement —
+iterate each header to a fixed point, record whether it compiles or lands on a different family — is the
+next thing worth running, and it needs CPU that the in-flight regeneration currently owns.
