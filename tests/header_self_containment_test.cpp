@@ -106,6 +106,8 @@
 #include <flight/structured_clone.hpp>
 #elif FLIGHT_CPP_HEADER_SELECTOR == 53
 #include <flight/attachment.hpp>
+#elif FLIGHT_CPP_HEADER_SELECTOR == 57
+#include <flight/template_argument.hpp>
 #else
 #error "FLIGHT_CPP_HEADER_SELECTOR does not name a public header"
 #endif

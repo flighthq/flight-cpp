@@ -80,4 +80,5 @@ _PUBLIC_HEADERS = [
     ("structured_clone", 54),
     ("attachment", 55),
     ("audio_context", 56),
+    ("template_argument", 57),
 ]

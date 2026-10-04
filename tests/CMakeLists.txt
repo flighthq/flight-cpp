@@ -114,6 +114,7 @@ set(
   symbol
   runtime
   task
+  template_argument
   text_decoder
   text_encoder
   typed_array
