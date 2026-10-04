@@ -106,6 +106,21 @@
       "unblocks": "The only refused declaration in packages/font/src/fontFormat.ts. On the current base, generated-only compilation passes 5/9 package headers; supplying this function closes the four dependent failures as well, taking @flighthq/font to an assisted, shippable 9/9 source modules and 9/9 headers.",
       "expires": "when optional chaining after Array.pop records a present payload for the member projection.",
       "authoredOn": "2026-10-03"
+    },
+    {
+      "id": "texture-formats-parse-atf-nested-levels",
+      "path": "flight/texture_formats/parse_atf.hpp",
+      "package": "@flighthq/texture-formats",
+      "status": "complete",
+      "supplies": "packages/texture-formats/src/parseAtf.ts",
+      "derivedFrom": "aed8ee75338d9372286ca7296ca5529e75a2d82421c68c415ac331487154497e",
+      "reason": "The emitter produced the module constants and public wrappers but refused parseAtfInternal after treating a present nested array element as optional storage at perSlotLevels[slot].push.",
+      "change": "Supplies the one refused parser function and the defining type includes the partial placeholder omitted. The transcription validates legacy and versioned headers, declared payload and every length prefix/range; walks side, mip, and format slot order; groups non-empty blocks by GPU-format slot; and returns one TextureContainer per populated slot.",
+      "equivalence": "The C++ uses the source's exact format-code sets, three-versus-four slot boundary at version 3, u24 legacy and u32 versioned big-endian lengths, cube face count, log2 dimension guard, signed mip shifts clamped to one, face-major level order, all-zero slot elision, and populated mip count levels.size()/faces rather than the declared header count. Every failure writes the same reason only when a failure object is present and returns nullopt. Array::element(slot) is the source indexed element with proven presence because per_slot_levels is initialized to slot_count arrays before the walk.",
+      "whyNotAPatchOrRepair": "A repair cannot add the parser body. The TypeScript already initializes one inner array per slot before indexed push, so rewriting ordinary, checked array code to accommodate the emitter's lost presence proof would make the source less direct.",
+      "unblocks": "The only refused declaration in packages/texture-formats/src/parseAtf.ts. Generated-only compilation passes 7/11 package headers; the override closes parse_atf.hpp and its three consumers, taking @flighthq/texture-formats to an assisted, shippable 11/11 source modules and 11/11 headers.",
+      "expires": "when indexed access to an initialized nested Array carries a present payload through member projection.",
+      "authoredOn": "2026-10-03"
     }
   ]
 }
