@@ -151,6 +151,21 @@
       "unblocks": "All four refused declarations in packages/textbidi/src/resolveBidiLevels.ts and the defining imported BidiClass name. Generated-only compilation passes 4/8 package headers; the override closes resolve_bidi_levels.hpp and its three consumers, taking @flighthq/textbidi to an assisted, shippable 8/8 source modules and 8/8 headers.",
       "expires": "when dense proof recognizes fully initialized length-constructed arrays, contextual string unions retain their declared BidiClass domain, and the emitted partial preserves its defining imported type dependency.",
       "authoredOn": "2026-10-04"
+    },
+    {
+      "id": "shading-register-built-in-modifiers-structural-assertions",
+      "path": "flight/shading/register_built_in_modifiers.hpp",
+      "package": "@flighthq/shading",
+      "status": "complete",
+      "supplies": "packages/shading/src/registerBuiltInModifiers.ts",
+      "derivedFrom": "8737664ba8d93cc925170534bc9d9a82575e13815402a9fdb650896dff02441e",
+      "reason": "The emitter refused five of the module's eight ModifierDefinition bindings because each callback structurally asserts a readonly generic Modifier to the specific modifier or anonymous property shape whose signature fields it reads. The emitted reference owners have no nominal inheritance path even though these are TypeScript interface projections and the runtime can safely answer unrelated readonly Partial rows from the retained owner.",
+      "change": "Supplies the complete module. Specific modifier assertions use readonly partial projections of the retained generic owner; dissolve's anonymous `{ map?: unknown }` probe examines the named cell's erased undefined state without constraining its value type. The callbacks reproduce the source's compile-time keys for animated-normal layers, dissolve maps, emissive masks and facing gates, fog modes, and vertex-displacement source and axis. The three single-shape definitions retain absent signature callbacks, and registration installs all eight definitions in source order.",
+      "equivalence": "Every projection keeps the original row owner and cells; it neither pointer-casts nor materializes a replacement object. Reads therefore observe the same optional members the specific modifier owns. The dissolve check treats a missing cell, an empty optional, and an explicit Any undefined as source undefined, while any represented or unrepresentable C++ value is present. Animated-normal additionally distinguishes a bound empty map cell (source null, signature 0) from an absent cell (source undefined, signature 1), while all other presence checks and enum comparisons match the TypeScript branches. A strict behavioral probe covers all upstream signature cases, all eight slots and kinds, absent signatures, an extra absent-versus-null case, and last-write-wins re-registration.",
+      "whyNotAPatchOrRepair": "A repair cannot add five behavioral definitions. The TypeScript uses ordinary, target-neutral interface assertions to read fields selected by each already-discriminated modifier kind; changing its public Modifier hierarchy or callback API solely to manufacture C++ nominal heritage would distort that design. The runtime already provides the narrower safe operation required here: unrelated readonly partial projection.",
+      "unblocks": "The five refused bindings in packages/shading/src/registerBuiltInModifiers.ts and the module's independently compiling header. Generated-only compilation passes 14/19 shading headers; the override raises that to 15/19. The four remaining failures are independent: contract.hpp, _internal_index.hpp, and create_shaded_material.hpp stop in nested optional/variant extraction, while get_modifier_define_key.hpp attempts a readonly-to-writable ModifierRegistry row conversion.",
+      "expires": "when the emitter lowers read-only TypeScript interface assertions to checked readonly structural projections that retain the source row owner instead of requiring native reference heritage.",
+      "authoredOn": "2026-10-04"
     }
   ]
 }
