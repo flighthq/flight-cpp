@@ -580,6 +580,36 @@ class Array {
   std::shared_ptr<std::vector<Value>> values_;
 };
 
+// An Array of a different element type over the SAME elements, built element-wise.
+//
+// `Array<Value>` is a handle onto shared storage, so two handles of the same type are one array and a
+// conversion between DIFFERENT element types cannot be a handle conversion -- the element type is part of
+// the storage. This builds a new handle whose elements are each converted from the source's.
+//
+// WHY THAT IS NOT A SEMANTICS CHANGE AT THE SITES IT IS FOR, and why it is not a general conversion.
+// The emitter writes `Array<Ref<T>>` where a cell is declared `Array<StructuralRef<RowReadonly<RowOf<
+// Ref<T>>>>>` -- a readonly row view of the same subject. The ELEMENT conversion is a view, not a copy:
+// `StructuralRef(shared_ptr<Type>)` flattens the reference and takes an owner, so the row observes the
+// very object the source element points at. Element identity, mutation visibility and absence are all
+// preserved.
+//
+// What is NOT preserved is ARRAY identity: in TypeScript `out.requirements = arr` makes those two the
+// same array, and a later push through `arr` is visible through `out.requirements`. Here they are two
+// handles over two buffers. That is why this is deliberately NOT a converting constructor on Array and
+// not reachable implicitly -- a general conversion would silently break any site where the source array
+// is still held by someone else. Each call site has to be a place where the source array is provably
+// unaliased, and that is a per-site fact an author must check, not a property of this function.
+//
+// Single evaluation is the other reason it exists: writing `Array<B>(expr.begin(), expr.end())` at the
+// call site evaluates `expr` twice, which for `distinct_sorted_requirements(requirements)` means running
+// the whole deduplication twice.
+template <typename Element, typename Source>
+[[nodiscard]] Array<Element> array_of(const Source& source) {
+  Array<Element> result;
+  for (const auto& element : source) result.push(Element(element));
+  return result;
+}
+
 } // namespace flight
 
 namespace flight {

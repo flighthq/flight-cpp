@@ -171,6 +171,49 @@ void test_locale_compare() {
   }
 }
 
+// flight::array_of -- an Array of a different element type over the same elements.
+//
+// The assertions that matter are the two that make it usable at a row-write site: the elements must be
+// the SAME objects (a view, not a clone), and the result must be a genuinely separate array handle, so
+// that nobody mistakes it for an aliasing conversion. The second is a limitation being pinned, not a
+// feature: it is precisely why this is not a converting constructor on Array.
+void test_array_of() {
+  struct Subject : flight::ReferenceEnabled {
+    double value{0.0};
+  };
+  flight::Array<flight::Ref<Subject>> source;
+  auto first = flight::make_ref<Subject>();
+  auto second = flight::make_ref<Subject>();
+  first->value = 1.0;
+  second->value = 2.0;
+  source.push(first);
+  source.push(second);
+
+  // Same element type: a plain element-wise rebuild.
+  const auto same = flight::array_of<flight::Ref<Subject>>(source);
+  check(static_cast<double>(same.size()) == 2.0, "array_of keeps the length");
+  check(same.element(0.0).get() == first.get(), "array_of elements are the SAME objects, not copies");
+  check(same.element(1.0).get() == second.get(), "array_of preserves element identity throughout");
+
+  // Mutating through an element of the result is visible through the source element: one object.
+  same.element(0.0)->value = 7.0;
+  check(first->value == 7.0, "array_of elements share the subject with the source");
+
+  // The ARRAY is a separate handle. This is the limitation that keeps array_of off Array as a
+  // conversion: a push here is NOT visible through the source.
+  same.push(flight::make_ref<Subject>());
+  check(static_cast<double>(source.size()) == 2.0, "array_of returns a SEPARATE array handle");
+  check(static_cast<double>(same.size()) == 3.0, "the result grew without growing the source");
+
+  // Projecting to a readonly row view: the row observes the same subject.
+  using Row = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Subject>>>>;
+  const auto rows = flight::array_of<Row>(source);
+  check(static_cast<double>(rows.size()) == 2.0, "array_of projects every element");
+  check(rows.element(0.0).shared_object().get() == first.get(),
+        "a projected row observes the source element's own subject");
+  check(rows.element(0.0)->value == 7.0, "the projected row reads the live subject");
+}
+
 void test_copy_within() {
   const auto digits = [] {
     flight::Array<double> values;
@@ -3294,6 +3337,7 @@ static void test_self_reference() {
 
 int main() {
   test_array();
+  test_array_of();
   test_copy_within();
   test_locale_compare();
   test_any_optional_shape();
