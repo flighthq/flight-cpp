@@ -2726,3 +2726,62 @@ The discriminator between the two cases is the subject's member declaration, not
 site: `optional<Ref<T>>` is case 1, an already-three-state `variant<...>` is case 2, and a receiver row
 with no `RowPartial` is case 3 and needs nothing. A repair implementation must test the member
 declaration, or anchor to these sites explicitly.
+
+### The gain is five headers, not ten — and `contract.hpp` is why that was misjudged
+
+The family was recorded as 10 headers (`node` 5, `lighting` 4, `materials` 1). Measured, the repair fixes
+**five**. The difference is entirely in how a cascade was counted.
+
+`contract.hpp` and `_internal_index.hpp` are per-package aggregates: they include the whole package, so
+they accumulate every defect in it. Measured standalone against the committed tree:
+
+| aggregate | baseline errors | with the absence-channel repair |
+|---|---|---|
+| `node/contract.hpp` | 585 | 581 |
+| `lighting/contract.hpp` | 48 | 46 |
+
+The repair is real and the error count drops by exactly the number of sites in each package, but neither
+aggregate comes close to compiling, because neither was ever within four errors of it. Attributing them
+to this family counted two headers that no single repair can unlock.
+
+The rule this gives: **never count a `contract.hpp` or `_internal_index.hpp` in a family's gain without
+reading its own error count first.** A cascade claim is only as good as the aggregate's distance from
+zero, and these two are the headers most likely to appear in any family's failure list precisely because
+they include everything.
+
+This is the same bias as the collision package's overcount, where the heuristic's 20 attributable
+failures measured as 17. Two independent overcounts in the same direction is enough to treat every
+unmeasured per-family estimate as an upper bound.
+
+## The unqualified-name family is 75% of all failures — and the first diagnostic hides a second defect
+
+Sizing the whole report rather than one package: of 996 header failures, **745 fail on `'X' was not
+declared in this scope`**, across 129 distinct names. Of those names, 124 are declared in
+`flight::types` and simply used unqualified from another package's namespace — which is exactly what the
+established `insert-using-declaration` kind repairs, one entry per (package, symbol) with the defining
+header as its `include`. That accounts for 656 of the header failures and is by far the largest single
+shape in the tree.
+
+Five names are NOT declared anywhere in the generated tree, and they are a different problem:
+
+| occurrences | name |
+|---|---|
+| 69 | `registry_entry_state` |
+| 10 | `get_node_runtime` |
+| 4 | `data_tag_aef43e71dd1e9a6d` |
+| 3 | `test_image_dimension_resolver` |
+| 3 | `warn_on_unsupported_snapshot_source` |
+
+**But 656 is an upper bound on headers unlocked, not a prediction, and the first measurement already
+shows why.** The report records only each header's FIRST diagnostic. Resolving `Light` in
+`lighting/light_analysis.hpp` — adding `using flight::types::Light;` and its include, which works — moves
+the header to `expected ')' before 'in'`, a `for...in` lowering the emitter should never have produced.
+That is a separate family, and no declaration repair reaches it.
+
+So the sweep has to be measured per package by iterating to a fixed point: resolve every name the compiler
+names, re-compile, and record whether the header actually reaches zero errors or lands on a different
+family. Projecting from the 745 would repeat the mistake this document has now made three times.
+
+One practical note for implementing it: gcc writes its diagnostics with U+2018/U+2019 curly quotes, while
+the stored report has them normalized to ASCII. A scraper written against the report's spelling silently
+matches nothing against live compiler output, which cost a round here.
