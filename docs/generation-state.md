@@ -3512,3 +3512,48 @@ reachability BEFORE choosing an override target, not after measuring a disappoin
 `project-array-at-row-write` declarations now in flight, which measured all seven of their headers to zero
 errors. `statusbar` (3) is the single declared deferred defect in the fresh tier report, so it sits in the
 shippable denominator by design and closing it is real progress.
+
+## The doubly-optional call: one truthiness test in TypeScript, two optional levels in C++
+
+`signals/slot.hpp` is the header that passes the gate while breaking its consumers, and its defect is
+precise and small:
+
+```cpp
+std::optional<std::optional<std::function<void(flight::Array<flight::Any>)>>> slot = data->slots.get(i);
+if (!slot.has_value()) { i++; continue; }
+slot.value()(std::forward<ArgsPack>(args)...);     // calling an optional<function>
+```
+
+Both the type and the first check are RIGHT. `data->slots` is an `Array<optional<function>>` because a
+slot can be cleared, and `Array::get` returns an `optional` because an index can be out of range — so
+`optional<optional<function>>` faithfully models TypeScript's `Fn | null | undefined`. The emitter then
+checks only the OUTER level and calls `.value()` once, which yields an `optional<function>` and is not
+callable.
+
+The cause is that **one JavaScript truthiness test covers both levels and C++ separates them.** The source
+is `if (!slot) { i++; continue; } slot(...args)`, and `!slot` rejects `undefined` *and* `null` in one
+expression. Lowered faithfully that is two tests and two unwraps:
+
+```cpp
+if (!slot.has_value() || !slot.value().has_value()) { i++; continue; }
+slot.value().value()(std::forward<ArgsPack>(args)...);
+```
+
+Sized, with comments stripped: there are **128** doubly-optional local declarations tree-wide and only
+**4** headers use one through a single `.value()` — `signals/slot.hpp`, `signals/safe.hpp`,
+`preferences/storage.hpp`, and `scene3d_wgpu/wgpu_mesh_pipeline.hpp`. So the emitter normally gets this
+right and these four are exceptions, which is a point in favour of a narrow declared fix rather than a
+general one.
+
+**Mechanism.** This is not declaration-only — it adds a condition and an unwrap — so by the standard used
+for the other repairs it is not an emission repair, and `AGENTS.md` points at an override. An override is
+a poor fit here: `slot.hpp` is template-heavy, and it would mean carrying a copy of a header the gate
+reports as PASSING, which is a confusing thing to leave behind. The better first attempt is a **source
+patch** that makes the two levels explicit in the TypeScript — `if (slot === undefined || slot === null)`
+rather than `if (!slot)` — so the emitter has no truthiness to collapse. That cannot be tested while a
+regeneration holds the pinned checkout, so it is the next thing to try when the tree is free, with an
+override as the fallback only if no equivalent rewrite lowers correctly.
+
+Note the runtime cannot help here, which is worth stating because it is the first option `AGENTS.md`
+prefers: making `slot.value()(...)` compile would require `operator()` on `std::optional`, and that is not
+ours to add.
