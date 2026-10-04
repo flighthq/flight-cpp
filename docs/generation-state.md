@@ -3002,3 +3002,40 @@ a sweep that assumes it will generate wrong declarations. And the index must ski
 declarations — `namespace flight::types { struct AnimationBlendTree; }` appears at the top of many headers
 and is not the package's namespace opener, so the insertion point has to be a namespace opener that ends
 its line.
+
+### The absence-channel repairs, implemented and measured — including the control that breaks
+
+Both kinds are now implemented in `scripts/emissionRepairs.mjs` as `project-partial-row-absence` and
+`unwrap-partial-row-three-state-member`, and run against the real generated files through
+`applyEmissionRepairs`:
+
+| header | baseline errors | after the repair |
+|---|---|---|
+| `node/has_clip.hpp` | 1 | **0** |
+| `node/has_material.hpp` | 2 | **0** |
+| `node/has_blend_mode.hpp` | 1 | **0** |
+| `lighting/scene_lights.hpp` | 2 | **0** |
+| `materials/standard_material.hpp` | 1 | **0** |
+| `scene2d_resources/scene2_ddocument_source.hpp` *(control)* | 0 | **3** |
+
+The last row is the point. It is the same construct, textually indistinguishable — its enclosing lambda is
+declared to return the same three-state variant — but its receiver row is not partial, so the read already
+yields the member type and the header compiles untouched. Declared deliberately as a control, the repair
+fires and **breaks it**, 0 errors to 3.
+
+So the transform is correct where it is declared and destructive where it is not, and nothing available at
+the call site distinguishes the two. That is why both kinds anchor `appliesTo` to an exact header path and
+name their keys, instead of matching the construct the way the other repair kinds do. It is the one place
+in this file where a narrower `appliesTo` than a package prefix is the right choice, and the control is the
+evidence rather than the argument.
+
+Two implementation notes. The enclosing lambda's declared return type cannot be found by scanning
+backwards, because the emitter writes these as one deeply nested line; `enclosingLambdaReturnType` walks
+forward keeping a stack of open lambdas with the brace depth each body opened at. And the statement end is
+taken from the call's matching parenthesis rather than the first semicolon — an argument could contain
+one, and a mis-sliced call could be rewritten into something that still compiles.
+
+While adding them, the dispatch in `applyOneRound` was replaced with a `HANDLERS` table. The ternary chain
+had reached eleven branches, which is how `repeat-alias-declaration` got the wrong insertion point twice;
+the table was checked to cover exactly what the chain did, with only `insert-forward-declaration` falling
+to the default as before.
