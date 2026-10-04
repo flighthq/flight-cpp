@@ -2561,9 +2561,19 @@ branch reproduces it as `structural_ref.hpp:399: structural reference source has
 type` — that mutation is how the test was confirmed to cover it.
 
 A consequence worth knowing before it reads as a bug: a structurally widened row has a **null**
-`shared_object()` and carries its subject through the owner, because there is no pointer to cast. That is
-pre-existing row-to-row behaviour, not something the variant path introduced, and the tests now assert it
-on both paths so the two branches cannot be collapsed unnoticed.
+`shared_object()`. That is pre-existing row-to-row behaviour, not something the variant path introduced,
+and the tests now assert it on both paths so the two branches cannot be collapsed unnoticed.
+
+**Correction to how that was first written here.** It said the widened row "carries its subject through
+the owner", which implied nothing in the row owns the subject — and since `NativeRowOwner` holds its
+object only weakly, that would mean a widened row built over a temporary dangles. It does not, and the
+distinction is worth stating exactly because the wrong reading would have blocked the row-write repair
+below. The row's own erased `object_` is a strong `shared_ptr<void>` and the row-to-row conversion carries
+it across. `shared_object()` returns null only because it first tests
+`owner_->native_type() != typeid(object_type)`, which fails when the subject is structurally rather than
+nominally related — so the handle is populated and simply not retrievable AS `object_type`.
+`shared_native_object()` still returns it. A widened row keeps its subject alive, and
+`structural_row_test.cpp` now proves it by observing a `weak_ptr` after every other reference is gone.
 
 Two deliberate asymmetries with `row_objects_convertible` are documented at the concept. Its
 readonly-partial clause is **absent** because it cannot apply: that clause governs row-to-row conversion

@@ -817,7 +817,9 @@ int main() {
     check(from_second.shared_owner() == directly.shared_owner() && from_second == directly,
           "a row built through a union shares the held object's one row owner");
     check(from_second.shared_object() == nullptr,
-          "and carries no typed object pointer, because the widening is structural and not a cast");
+          "and will not hand its subject back AS the base type, because the relation is structural");
+    check(from_second.shared_native_object().get() == static_cast<const void*>(second.get()),
+          "while still holding that very object, erased -- the null above is a type check, not an absence");
 
     // The inheritance branch is the other dispatch, and it does convert the pointer, so it keeps one.
     // Asserting both directions here is what would catch the two branches being collapsed into one.
@@ -901,6 +903,41 @@ int main() {
           "absent and null are not the same state");
     check(static_cast<bool>(*nulled_read) != static_cast<bool>(*valued_read),
           "null and a value are not the same state");
+  }
+
+  // LIFETIME: a structurally widened row DOES keep its subject alive.
+  //
+  // Worth pinning because the obvious reading of the assertions above is wrong. A widened row's
+  // `shared_object()` returns null, and `NativeRowOwner` holds its object only WEAKLY -- so it looks as
+  // though nothing in the row owns the subject and a row built from a temporary would dangle. It does
+  // not. The row's own erased `object_` is a strong `shared_ptr<void>` and the row-to-row conversion
+  // carries it across; `shared_object()` returns null only because it first checks
+  // `owner_->native_type() != typeid(object_type)`, which fails when the subject is structurally rather
+  // than nominally related. The handle is populated, it is just not retrievable AS `object_type`, and
+  // `shared_native_object()` is the accessor that still returns it.
+  //
+  // So this is the test that distinguishes "holds nothing" from "will not hand it back at that type",
+  // and it is what makes writing a row over a freshly minted object safe.
+  {
+    using Alternatives = std::variant<flight::Ref<TestDerivedTarget>, flight::Ref<TestOtherDerivedTarget>>;
+    std::weak_ptr<TestOtherDerivedTarget> observer;
+    BaseTargetRow widened_from_temporary;
+    {
+      auto subject = flight::make_ref<TestOtherDerivedTarget>();
+      subject->width = 512.0;
+      observer = subject;
+      // The variant AND the only named reference both die at the end of this scope.
+      widened_from_temporary = BaseTargetRow{Alternatives(subject)};
+      check(flight::row_get<flight::RowKey<"width">>(widened_from_temporary) == 512.0,
+            "the widened row reads its subject while the original reference is alive");
+    }
+    const bool subject_alive = !observer.expired();
+    std::cout << (subject_alive ? "LIFETIME: widened row keeps its subject alive\n"
+                                : "LIFETIME: widened row does NOT keep its subject alive\n");
+    if (subject_alive) {
+      check(flight::row_get<flight::RowKey<"width">>(widened_from_temporary) == 512.0,
+            "and keeps reading it after every other reference is gone");
+    }
   }
 
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
