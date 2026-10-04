@@ -1783,3 +1783,29 @@ carry `supplies`, and the loader refuses the claim on any override that is not `
 ```
 
 `log` staying partial is the gate working. **34 of 146 applicable packages are now shippable.**
+
+### Why `particles` and `filesystem` are not the next `easing`
+
+They have the same *shape* — one refused module, every other header compiling — and a very different cost,
+which is worth writing down so nobody starts them expecting `easing`.
+
+`easing` was **one function, twenty lines**, and the refusal was about a signature the TypeScript itself
+explained. These are not:
+
+| package | refused module | TS lines | what is missing |
+|---|---|---|---|
+| `particles` | `validateParticleEmitterConfig.ts` | 242 | **five** functions, including the module's main export |
+| `filesystem` | `filesystem.ts` | 433 | the **whole module** — "no part of it was generated" |
+
+`particles` refuses under two distinct rules at once — `cpp-erased-record-assertion-unrepresented` for the
+module and `cpp-intersection-member-shapeless` for `reportCurve` — with the stated cause that
+`Partial<T>` needs a statically resolvable C++ object shape. `filesystem` refuses under
+`cpp-indexed-access-unlowered` and emitted nothing at all, so its placeholder is a surface declaration
+with no bodies behind it.
+
+Each is a few hundred lines of careful transcription where a subtle divergence would be invisible, which
+is a different kind of task from `easing` and should be costed as one. The `easing` play — read the refused
+function out of the comment, transcribe it, declare `supplies` — repeats cleanly only where the refusal is
+*one* declaration whose invariant the source states. Of the 42 single-refusal packages, how many are that
+shape is not yet measured, and measuring it is cheaper than attempting any of them: the count of
+`missing: function` lines in each placeholder header is the whole estimate.
