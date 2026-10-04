@@ -1033,6 +1033,11 @@ function projectArrayAtRowWrite(contents, repair) {
 
 // The index of the comma separating `row_set(row, value)`'s two arguments, at paren depth 1 so a comma
 // inside a template argument list or a nested call is not mistaken for it.
+//
+// The angle-bracket count is deliberately crude and only safe because this kind anchors to named sites
+// where the row argument is a bare identifier: `->` decrements it, so a row argument containing a member
+// access would throw the count off. It holds for every declared site, and the kind must not be widened to
+// match a construct without replacing this with real tokenisation.
 function splitRowSetArgument(text, open, close) {
   let depth = 0;
   let angle = 0;
