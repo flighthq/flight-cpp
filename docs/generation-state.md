@@ -3039,3 +3039,40 @@ While adding them, the dispatch in `applyOneRound` was replaced with a `HANDLERS
 had reached eleven branches, which is how `repeat-alias-declaration` got the wrong insertion point twice;
 the table was checked to cover exactly what the chain did, with only `insert-forward-declaration` falling
 to the default as before.
+
+## Partly un-withdrawing the row-write repair: the rule was right, the sites are safe
+
+The row-write repair was withdrawn above because `flight::array_of` returns a separate array handle, so
+using it where TypeScript stores an existing array changes array identity. That reasoning stands. What was
+wrong was applying it to these seven sites without reading them, and the correction matters because it
+turns a refused family back into work.
+
+The exact types, from the compiler rather than the heuristic: the write passes
+`Array<Ref<types::Requirement>>` where `types::Requirement::requirements` is declared
+`Array<StructuralRef<RowReadonly<RowOf<Ref<Requirement>>>>>`. So the element conversion is a row
+projection over the **same subject** — not two types for one shape, and nothing to do with duplicate
+structural structs, which is what the earlier note guessed it would be.
+
+**The safety condition is what the written expression IS**, and it is visible at the site:
+
+| site | written expression | identity observable? |
+|---|---|---|
+| `requirements/requirement_set.hpp` `requirements` | `distinct_sorted_requirements(...)` | no — a temporary |
+| `requirements/requirement_set.hpp` `covers` | `distinct_sorted(covers)` | no — a temporary |
+| `registry_codegen/registry_codegen.hpp` `entries` | a fresh local, built up then written once | no — the local dies with the call |
+| `registry_codegen/registry_codegen.hpp` `unresolved` | a fresh local, already the row's element type | n/a — no conversion needed |
+
+A temporary has no identity anyone can hold, and `distinct_sorted_requirements` mints new objects with
+`make_ref` anyway, exactly as the TypeScript builds fresh object literals — so there is no pre-existing
+array or element identity to preserve. A local written once into a row and never otherwise retained is the
+same case: its identity is unobservable after the call returns.
+
+So `array_of` is sound here, and measured: inserting it at the `requirements` write takes
+`requirements/requirement_set.hpp` from failing to **0 errors**.
+
+The general rule and these sites are both correct, and the distinction is the repair's precondition: the
+written expression must be a temporary, or a local that is written once and not otherwise retained. Where
+the written array is a parameter, or a value the caller still holds, `array_of` is still forbidden and the
+withdrawal stands. That precondition has to be stated in the declaration and checked per site, because it
+is not visible in the diagnostic — the same shape of discipline the absence-channel repairs needed, for
+the same reason.
