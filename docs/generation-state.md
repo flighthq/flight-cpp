@@ -3437,3 +3437,44 @@ waiting for.
 Wait on the **pid** instead — `until ! kill -0 <pid> 2>/dev/null; do sleep 30; done` — which cannot match
 itself. If a name must be used, exclude the watcher (`pgrep -f 'name' | grep -v $$`) and never omit the
 sleep.
+
+## A quoted relative include BYPASSES an override, and nothing currently checks for it
+
+`AGENTS.md` says of overrides: "The whole mechanism is include order: the override directory goes first".
+That is true for an angle include and **false for a quoted one**, which is a real hole in the mechanism
+rather than a detail of it.
+
+`#include "node_interaction_state.hpp"` resolves against the including file's own directory *before* any
+`-I` path is consulted. The including file is the generated sibling, so the generated copy wins and the
+override in `overrides/include` is never seen. `#include <flight/interaction/node_interaction_state.hpp>`
+goes through the include path and does get the override. Both forms appear in the same package:
+
+```
+interaction/interaction_spatial_index.hpp:  #include "node_interaction_state.hpp"                      <- bypasses
+interaction/hit_tests.hpp:                  #include "node_interaction_state.hpp"                      <- bypasses
+interaction/enable_interaction_guards.hpp:  #include <flight/interaction/node_interaction_state.hpp>   <- honoured
+```
+
+This is what capped builder's interaction result at **0/19 → 1/19** despite a complete, faithful override
+with a valid `supplies` claim and a 16-header closure. Fifteen of those siblings reach the generated
+partial through a quoted include, so the override cannot affect them. Builder measured it and said
+explicitly not to report 16 gained — the blast radius was real and the override was correct, and the
+mechanism still could not deliver it.
+
+**Scale, measured rather than assumed.** The tree has **836 quoted relative includes** against 15,985
+angle includes. Of the 17 override files in this clone, **2** are reached by at least one quoted include
+(`lighting/light_analysis.hpp`, `textlayout/text_format.hpp`), and both are also reached by angle includes,
+so each is partially effective today. So this is not currently widespread damage — it is a latent hazard
+that bites exactly when an override's own package siblings are its consumers, which is the common shape for
+a package-internal header and therefore the shape most worth overriding.
+
+It also explains the earlier measurement artifact from the opposite direction: a single-file overlay breaks
+a quoted sibling include because the sibling is not beside the overlay copy. Same resolution rule, two
+different symptoms.
+
+**What should change.** `overrides:check` currently verifies only that each override still hashes to the
+generated file it was derived from. It should also verify that the override can actually be *reached*: for
+each override, scan the generated tree for any header that includes it with a quoted relative path, and
+report those as sites the override does not cover. An override whose consumers all bypass it is a copy
+carrying a maintenance claim and delivering nothing, and `derivedFrom` cannot detect that. Not implemented
+here — it is a gate change, and the measurement above is the specification for it.
