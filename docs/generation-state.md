@@ -3610,3 +3610,43 @@ upper bound by construction rather than by accident.
   fact resolved.
 
 The data is already in `stderr` at the point the report is written; only the capture discards it.
+
+### `signals/slot.hpp`: a real defect with ZERO measured gain — recorded, not repaired
+
+The defect is real and the diagnosis above is correct. The measured value of fixing it is nothing.
+
+Applying the two-level guard and unwrap to a tree copy and compiling six of the 33 failing downstream
+headers:
+
+| header | baseline errors | with the fix |
+|---|---|---|
+| `app/_internal_index.hpp` | 40 | 40 |
+| `app/app.hpp` | 1 | 1 |
+| `app/app_render_view.hpp` | 52 | 52 |
+
+And checking, with live gcc, which FILE actually holds the first error for five more of them:
+
+| header | first error lives in |
+|---|---|
+| `gui/contract.hpp` | `interaction/node_interactive_state_binding.hpp` |
+| `gui/text_input_controller.hpp` | `text/text_label_layout.hpp` |
+| `loader/_internal_index.hpp` | `loader/load.hpp` |
+| `loader/contract.hpp` | `loader/load.hpp` |
+| `loader/load.hpp` | `loader/load.hpp` |
+
+**Not one of them is blocked by `signals/slot.hpp`.** `app/app.hpp`'s single error is
+`no match for call to '(const flight::Any) ()'` — an unrelated family. The 33 figure counted headers that
+*include* slot.hpp, and the gate never instantiates its template, so its broken body is not what stops any
+of them.
+
+So the decision is to **record it and not repair it**, for the same reason the `swfText` patch was removed:
+the mechanism available is an override carrying a copy of a template-heavy header the gate reports as
+passing, and the measured gain is zero. That is negative value. The defect is written down here, with the
+exact faithful lowering, so whoever fixes the emitter's indexed-access lowering has it ready.
+
+That makes **seven for seven** on counts coming in high — and this one is mine twice over, since I both
+raised the 33 and inferred the wrong TypeScript behind it.
+
+The silver lining is the tooling: this is the last attribution question that needed a recompile.
+`sdkHeaderCompile.mjs` now records each failure's `location` — `flight/signals/slot.hpp:109` — beside its
+message, verified end to end, so the next report answers "which file blocks this header" directly.
