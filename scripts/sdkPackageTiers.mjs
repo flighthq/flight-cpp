@@ -16,7 +16,22 @@ import { loadOverrides } from './overrides.mjs';
 // So each package lands in exactly one tier:
 //
 //   ready       every module emitted, every header compiles, nothing was patched or repaired
-//   assisted    the same, but a declared source patch or emission repair was involved
+//   assisted    the same, but a declared source patch, emission repair or supplying override TOUCHED it
+//
+// `assisted` says TOUCHED, not NEEDED, and the difference is not cosmetic. A repair scoped to `flight/`
+// rewrites every file where its construct appears, including files that would have compiled without it:
+// @flighthq/permissions was `ready` until conditional-absent-branch-optional rewrote a ternary in it --
+// plausibly one inside a template nobody instantiates -- and it has been `assisted` since, which
+// understates it.
+//
+// Distinguishing the two needs the package compiled with that repair's effect REMOVED, and repairs are
+// applied before the tree is written, so removing one means regenerating: about a hundred minutes per
+// repair per package. The cheap approximations are all unreliable -- "the inserted text is referenced" is
+// true by construction, because a using-declaration repair only fires where the name is used unqualified.
+//
+// So the honest handling is to say what is known and not invent the rest. A supplying override IS
+// load-bearing by construction (remove it and the module has no body), and that case is reported as such.
+// For a repair, the report says it was involved and does not claim the package depends on it.
 //   uncompiled  every module emitted, but no header of it was actually compiled
 //   partial     some modules emitted, some refused, or a header fails to compile
 //   blocked     nothing emitted
@@ -241,10 +256,18 @@ for (const tier of ['ready', 'assisted']) {
   if (named.length === 0) continue;
   process.stdout.write(`\n${tier}:\n`);
   for (const row of named) {
-    const how = [...row.patches, ...row.repairs];
+    // An override that declares `supplies` is load-bearing by construction: take it away and the refused
+    // module has no body at all. A repair or patch may merely have touched the package, so it is reported
+    // with a weaker word -- see the tier comments above for why the stronger claim is not affordable.
+    const supplied = row.overrides ?? [];
+    const touched = [...row.patches, ...row.repairs];
+    const how = [
+      ...(supplied.length > 0 ? [`supplied by ${supplied.join(', ')}`] : []),
+      ...(touched.length > 0 ? [`repairs touched it: ${touched.join(', ')}`] : []),
+    ];
     process.stdout.write(
       `- ${row.package} (${String(row.emittedModules)} modules, ${String(row.headers)} headers)` +
-        `${how.length > 0 ? ` via ${how.join(', ')}` : ''}\n`,
+        `${how.length > 0 ? ` -- ${how.join('; ')}` : ''}\n`,
     );
   }
 }
