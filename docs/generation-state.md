@@ -3135,3 +3135,33 @@ right method and this is the evidence for it: a batch would have shipped a regre
 The family remains worth working, but as a per-package, measured, include-closure-aware sequence — and
 `flight::registry`'s own unqualified names should be repaired before anything that includes it. It is not
 the quick lever the headline share implied, and nothing in the earlier sizing should be read as a forecast.
+
+### The row-write family closes completely: 7 headers from two declarations
+
+Measured against the regenerated tree, each header compiled standalone in the gate's include order:
+
+| header | baseline errors | with `array_of` |
+|---|---|---|
+| `requirements/requirement_set.hpp` | 2 | **0** |
+| `requirements/requirement_collector.hpp` | 2 | **0** |
+| `requirements/contract.hpp` | 2 | **0** |
+| `requirements/_internal_index.hpp` | 2 | **0** |
+| `registry_codegen/registry_codegen.hpp` | 2 | **0** |
+| `registry_codegen/contract.hpp` | 2 | **0** |
+| `registry_codegen/_internal_index.hpp` | 2 | **0** |
+
+**+7 headers from two repair sites** — one `array_of` at `requirements`' write, one at
+`registry_codegen`'s `entries`. That is the whole family the board listed as 7, closed.
+
+Both aggregates cleared here, which qualifies the aggregate rule stated earlier rather than contradicting
+it. The rule was to read a `contract.hpp`'s own error count before crediting it to a family: `node/contract.hpp`
+has 585 and cannot be cleared by one repair, while `requirements/contract.hpp` has **2** — the package's
+only defect was this one, so fixing it clears the aggregate and the index with it. The error count is the
+test, not the filename.
+
+Implemented as `project-array-at-row-write`, which carries an `identityArgument` field alongside its
+`keys` and `element`, because the precondition that makes `array_of` legal — the written expression is a
+temporary, or a local written once and not otherwise retained — is invisible in the diagnostic and has to
+be asserted per site. The handler was checked to reproduce the hand-verified edits byte for byte and to be
+idempotent across repair rounds, since `applyEmissionRepairs` iterates to a fixed point and a second wrap
+would nest `array_of` inside itself.
