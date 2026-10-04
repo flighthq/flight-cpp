@@ -3359,3 +3359,60 @@ every other header in the package downstream of it.
 
 Which is the general lesson. **Site count and headers blocked are different numbers, and the second is the
 one worth queueing on.** Three defect sites block 187 headers between them.
+
+## The fresh numbers, against the regenerated tree
+
+`npm run sdk:compile:sdl` over the tree at `98b53e16`, 89 minutes, then `sdk:tiers` against that report:
+
+| figure | previous | now |
+|---|---|---|
+| headers compiling | 1714/2710 (63.2%) | **1752/2710 (64.6%)** |
+| shippable packages | 39/146 | **44/146** (29 ready, 15 assisted) |
+| partial | — | 101 |
+| deferred defects | — | 1 (`statusbar`, 3 headers) |
+| not applicable | — | 4, all declaring `flight.environment: "web"` |
+
+`@flighthq/types` is at **995/995**, fully compiling. The remaining four non-applicable packages —
+`effects-canvas`, `scene2d-canvas`, `scene2d-dom`, `textshaper-canvas` — are derived from their declared
+environment, not inferred, as `AGENTS.md` requires.
+
+## Correction, and it is mine: blast radius is leverage's CEILING, not leverage
+
+The entry above ranked `registry/registry_table.hpp` as the highest-leverage defect in the tree on the
+strength of 178 downstream headers, none of which compiled. The ranking was right about the site. The
+implied leverage was wrong, and builder measured it rather than accepting it.
+
+Builder landed the unit — a source patch rewriting the two retained `RegistryEntryState.Bound`
+comparisons to the literal `'bound'`, plus an incomplete override supplying the refused
+`get_registry_table_entry_state` — and measured the exact 179-header closure (the site plus its 178
+downstream):
+
+**baseline 0/179 → 3/179.** The three are `registry_table.hpp`, `registry/_internal_index.hpp` and
+`registry/contract.hpp`. The other 176 reach later, independent diagnostics.
+
+So the correct statement is: *178-header blast radius, 3 independently compiling headers gained.* Being
+downstream of a defect means a header **cannot** compile until that defect is fixed; it does not mean the
+defect is the only thing standing in its way. Blast radius is a necessary-condition count and therefore a
+ceiling on leverage, exactly as a first-diagnostic count is. I had six prior examples of a count coming in
+high and still presented this one as though it were a forecast; the discipline has to apply to my own
+metrics, not only to the ones I was auditing.
+
+That makes **six for six**. The pattern now includes a count I invented specifically to escape the pattern.
+
+It does not retire the metric. A necessary condition is still worth knowing — those 176 headers will not
+compile until registry is fixed, so the work was correctly prioritised and had to happen either way. What
+changes is only the claim attached to it: rank queue ORDER by blast radius, and report GAIN only after
+compiling the closure.
+
+### Two consequences for the pending declarations
+
+Builder's literal rewrite removes both occurrences of the unqualified `registry_entry_state`, so the
+`registry-entry-state-using-declaration` entry I had drafted is **subsumed after regeneration** and must
+be dropped rather than declared — a repair matching no header is exactly what `sdk:check` is built to
+fail. Dropped; the pending set is 7, not 8.
+
+And builder's override deliberately carries **no `supplies` claim**, with `status: incomplete`, because 11
+declarations in that module remain refused — `concat`, `keys`, all three create/initialize pairs, and
+without/with/tombstone. That is the right call: `supplies` is a stronger claim than `status: complete`,
+and claiming it for a module where most of the surface is still refused would make the override's own
+ledger lie.
