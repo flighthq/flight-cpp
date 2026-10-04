@@ -963,6 +963,17 @@
       "expectedWhen": "always",
       "expires": "when the emitter constructs a Record for an object literal passed as LogData; sdk:check fails if this repair matches no header.",
       "recordType": "flight::Record<flight::String, flight::Any>"
+    },
+    {
+      "id": "array-from-tuple-construction",
+      "kind": "name-array-from-tuple-construction",
+      "appliesTo": "flight/",
+      "symbol": "std::make_tuple",
+      "sourceDeclaration": "e.g. packages/path/src/path.ts -- a function declared to return [number, number] | null, which the emitter types as std::optional<flight::Array<double>>",
+      "diagnostic": "no matching function for call to 'std::optional<flight::Array<double> >::optional(<brace-enclosed initializer list>)'",
+      "defect": "A TypeScript tuple is an array at runtime, and the emitter agrees when it writes the TYPE -- std::optional<flight::Array<double>> -- then builds the value with std::make_tuple, which has no conversion to flight::Array. The repair reads the declared value type out of the text and constructs that, recovering the emitter's own stated intent; values and order are untouched. 30 sites, in @flighthq/path (fully emitted, 23/31) and @flighthq/render-wgpu.\n\nReading the DECLARED type is what makes it safe: three sites in the tree are declared std::optional<std::tuple<double, double, bool>>, where make_tuple is correct and a rewrite would break working code. Keying on the call would have hit them; keying on the value type skips them because it does not begin with flight::Array<, which is checked rather than remembered.",
+      "expectedWhen": "always",
+      "expires": "when the emitter constructs the declared array type for a tuple literal; sdk:check fails if this repair matches no header."
     }
   ]
 }

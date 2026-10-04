@@ -17,6 +17,7 @@ const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration',
   'respell-flattened-union',
   'wrap-conditional-absent-branch',
   'record-from-designated-initializer',
+  'name-array-from-tuple-construction',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -44,6 +45,7 @@ const REQUIRED_FIELDS = {
   'name-in-place-alternative': [...SHARED_FIELDS, 'symbol'],
   'respell-flattened-union': [...SHARED_FIELDS, 'symbol', 'replacement', 'requiredSuffix', 'sourceDeclaration'],
   'respell-reference-alias': [...SHARED_FIELDS, 'symbol', 'expansion', 'witness', 'witnessInclude'],
+  'name-array-from-tuple-construction': [...SHARED_FIELDS, 'symbol', 'sourceDeclaration'],
   'record-from-designated-initializer': [...SHARED_FIELDS, 'symbol', 'recordType', 'replacement', 'sourceDeclaration'],
   'wrap-conditional-absent-branch': [...SHARED_FIELDS, 'sourceDeclaration'],
 };
@@ -149,18 +151,20 @@ function applyOneRound(repairs, files, applied) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
       const repaired =
-        repair.kind === 'record-from-designated-initializer'
-          ? recordFromDesignatedInitializer(contents, repair)
-          : repair.kind === 'wrap-conditional-absent-branch'
-            ? wrapConditionalAbsentBranch(contents)
-            : repair.kind === 'respell-flattened-union'
-              ? respellFlattenedUnion(contents, repair)
-              : repair.kind === 'deduce-call-argument-from-assignment'
-                ? deduceCallArgumentFromAssignment(contents, repair)
-                : repair.kind === 'name-defaulted-template-argument'
-                  ? nameDefaultedTemplateArgument(contents, repair)
-                  : repair.kind === 'name-in-place-alternative'
-                    ? nameInPlaceAlternative(contents, repair)
+        repair.kind === 'name-array-from-tuple-construction'
+          ? nameArrayFromTupleConstruction(contents, repair)
+          : repair.kind === 'record-from-designated-initializer'
+            ? recordFromDesignatedInitializer(contents, repair)
+            : repair.kind === 'wrap-conditional-absent-branch'
+              ? wrapConditionalAbsentBranch(contents)
+              : repair.kind === 'respell-flattened-union'
+                ? respellFlattenedUnion(contents, repair)
+                : repair.kind === 'deduce-call-argument-from-assignment'
+                  ? deduceCallArgumentFromAssignment(contents, repair)
+                  : repair.kind === 'name-defaulted-template-argument'
+                    ? nameDefaultedTemplateArgument(contents, repair)
+                    : repair.kind === 'name-in-place-alternative'
+                      ? nameInPlaceAlternative(contents, repair)
           : repair.kind === 'respell-reference-alias'
             ? respellReferenceAlias(contents, repair)
           : repair.kind === 'insert-using-declaration'
@@ -175,6 +179,87 @@ function applyOneRound(repairs, files, applied) {
     }
   }
   return changed;
+}
+
+// Constructs the Array a TypeScript tuple literal is, where the emitter reached for std::make_tuple.
+//
+// A TypeScript tuple IS an array at runtime -- `return [a, b]` for a declared `[number, number]` builds an
+// Array -- and the emitter agrees when it writes the TYPE: `std::optional<flight::Array<double>>`. It then
+// builds the value with `std::make_tuple(a, b)`, and a std::tuple has no conversion to flight::Array:
+//
+//   error: no matching function for call to 'std::optional<flight::Array<double> >::optional(<brace-enclosed initializer list>)'
+//
+// The repair reads the DECLARED type out of the text and constructs that, so it recovers the emitter's own
+// stated intent rather than choosing a representation. The values and their order are untouched.
+//
+// Reading the declared type is also what makes it safe, and this is the part that matters. Three of the
+// tree's `std::make_tuple` sites are declared as `std::optional<std::tuple<double, double, bool>>`, where
+// make_tuple is exactly right and a rewrite would break working code. Keying on the call -- "every
+// std::make_tuple inside a brace" -- would have hit them. Keying on the declared value type skips them for
+// a reason that is checked rather than remembered: the type does not begin with `flight::Array<`.
+//
+// 30 sites, in @flighthq/path (which is fully emitted and 23/31) and @flighthq/render-wgpu.
+function nameArrayFromTupleConstruction(contents, repair) {
+  const needle = `{${repair.symbol}(`;
+  let out = contents;
+  let changed = false;
+  let from = 0;
+  for (;;) {
+    const at = out.indexOf(needle, from);
+    if (at === -1) break;
+    const valueType = bracedValueType(out, at);
+    if (valueType === undefined || !valueType.startsWith('flight::Array<')) {
+      from = at + needle.length;
+      continue;
+    }
+    const open = at + needle.length - 1;
+    const close = matchingParenthesis(out, open);
+    if (close === undefined) {
+      from = at + needle.length;
+      continue;
+    }
+    const args = out.slice(open + 1, close);
+    out = `${out.slice(0, at)}{${valueType}{${args}}${out.slice(close + 1)}`;
+    changed = true;
+    from = at + 1;
+  }
+  return changed ? out : undefined;
+}
+
+// The type a brace at `brace` constructs a VALUE of: the first template argument of the type spelled
+// immediately before it. `std::optional<flight::Array<double>>{` constructs an Array<double>; so does
+// `flight::Array<flight::Array<double>>{`, whose elements are Array<double>. Returns undefined when the
+// text before the brace is not a template-id.
+function bracedValueType(text, brace) {
+  if (text[brace - 1] !== '>') return undefined;
+  let depth = 0;
+  for (let at = brace - 1; at >= 0; at -= 1) {
+    const character = text[at];
+    if (character === '>') depth += 1;
+    else if (character === '<') {
+      depth -= 1;
+      if (depth === 0) {
+        // The outer template's argument list runs from here to brace - 1.
+        const inner = text.slice(at + 1, brace - 1).trim();
+        return inner.length === 0 ? undefined : inner;
+      }
+    } else if (depth === 0) {
+      return undefined;
+    }
+  }
+  return undefined;
+}
+
+function matchingParenthesis(text, open) {
+  let depth = 0;
+  for (let at = open; at < text.length; at += 1) {
+    if (text[at] === '(') depth += 1;
+    else if (text[at] === ')') {
+      depth -= 1;
+      if (depth === 0) return at;
+    }
+  }
+  return undefined;
 }
 
 // Builds the Record an object literal was, where the emitter wrote a designated initializer instead.
