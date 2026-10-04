@@ -61,6 +61,21 @@
       "unblocks": "@flighthq/easing: 23/23 modules and 23/23 headers, a 23-module package that was held entirely by one function.",
       "expires": "when the compiler can represent a union whose domains share a carrier but are provably the same object, or accepts the invariant as a declared contract.",
       "authoredOn": "2026-10-04"
+    },
+    {
+      "id": "particles-validate-particle-emitter-config",
+      "path": "flight/particles/validate_particle_emitter_config.hpp",
+      "package": "@flighthq/particles",
+      "status": "complete",
+      "supplies": "packages/particles/src/validateParticleEmitterConfig.ts",
+      "derivedFrom": "3d71af5f6c6012a76f0076ca0619dd08247612818d59402141585535b2dbd01d",
+      "reason": "The one refused module in @flighthq/particles contains five missing functions. Its Partial<ParticleEmitterConfig> parameter, string-and-keyof intersections, and closed-key reads have no statically represented C++ object shape, even though every function body operates on the concrete ParticleEmitterConfig carrier and otherwise uses supported control flow.",
+      "change": "Supplies all five refused functions as a faithful transcription. A private key dispatcher maps the module's 45 numeric field names to the concrete ParticleEmitterConfig members; normalization replaces non-finite values from a separately created defaults object, copies the normalized object across the TypeScript object-spread identity boundary, then applies the source's curve filtering, flooring, and clamping in source order. Validation appends the same finite, non-negative, lifetime, capacity, frame-count, inverted-range, unit-range, and curve issues in the same order with the same fields, severities, and message text.",
+      "equivalence": "The public functions use the exact generated carriers: the same optional partial-input shape accepted by create_particle_emitter_config, flight::Ref<ParticleEmitterConfig>, and Array<Ref<ParticleConfigIssue>>. The returned normalized config is a new reference, matching `{ ...out, overrides }`, while retained curve arrays preserve their reference identity. std::isfinite, std::floor, std::max, std::fmod, flight::to_string, optional absence, and shared Array storage reproduce the corresponding TypeScript operations without changing equality, ordering, null handling, or mutation visibility.",
+      "whyNotAPatchOrRepair": "A repair may only insert declarations with no behavior, while this module needs five bodies. A source patch would have to replace public Partial<T> and Readonly<T> signatures or re-express ordinary keyed validation code solely to satisfy the current C++ shape model; that would distort target-neutral TypeScript instead of addressing the signature-level lowering gap.",
+      "unblocks": "@flighthq/particles: its only refused module is supplied, taking the package from 12/13 emitted modules plus 13/13 compiling headers to an assisted, shippable 13/13 package.",
+      "expires": "when the compiler can resolve Partial<ParticleEmitterConfig>, string-and-keyof intersections, and closed-key reads against the concrete ParticleEmitterConfig carrier and emit this module faithfully.",
+      "authoredOn": "2026-10-03"
     }
   ]
 }
