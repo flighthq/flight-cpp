@@ -196,6 +196,36 @@
       "unblocks": "The only refused declaration in packages/glyphatlas/src/explainGlyphAtlasEntry.ts. On the current base the package remains at 5/10 independently compiling headers because glyphAtlasEntry.ts and glyphSource.ts have separate retained-body qualification and reference-heritage failures; this override removes the missing explanation API without claiming those repairs.",
       "expires": "when a Map.has(key) true branch or the following non-null assertion proves that Map.get(key) carries a present value for member projection.",
       "authoredOn": "2026-10-04"
+    },
+    {
+      "id": "textlayout-text-format-keyof-merge",
+      "path": "flight/textlayout/text_format.hpp",
+      "package": "@flighthq/textlayout",
+      "status": "complete",
+      "supplies": "packages/textlayout/src/textFormat.ts",
+      "derivedFrom": "a4b244868d3cb480efa0a8d909ed298cae2435465f257589ba826f926d22a215",
+      "reason": "The emitter refused mergeTextFormat because Object.keys(override) asserted to (keyof TextFormat)[] requires C++ type-level key computation. The partial header also omitted the defining TextFormat include and used the type unqualified, so its four retained metric helpers were not self-contained.",
+      "change": "Supplies mergeTextFormat over the finite generated TextFormat carrier, adds its defining type include, and qualifies the retained helper signatures. The merge creates a new format from the base and copies each of the carrier's twenty-one fields only when the override optional is engaged.",
+      "equivalence": "Every optional TextFormat field is the generated storage for the corresponding optional source property, so an engaged field is exactly a non-nullish override value and disengaged storage is skipped. Copying TextFormat creates a new reference while Flight Array copies retain shared storage, matching object spread's new object and shallow array identity. False, zero, and empty strings remain engaged and therefore override. A strict probe verifies present and absent fields, base immutability, shallow tab-stop identity, and the four metric helpers.",
+      "whyNotAPatchOrRepair": "A repair cannot add the merge body or its twenty-one keyed assignments. The source is ordinary target-neutral Object.keys/keyof iteration over a declared interface; replacing it with a handwritten field list in TypeScript would duplicate the interface solely for this emitter limitation.",
+      "unblocks": "The only refused declaration in packages/textlayout/src/textFormat.ts and the format dependency needed by richTextContent. Together with the companion rich-text override, textlayout rises from 5/14 to 11/14 independently compiling headers.",
+      "expires": "when keyof iteration over a declared object carrier lowers to its finite generated member set and partial headers retain defining type includes and qualifications.",
+      "authoredOn": "2026-10-04"
+    },
+    {
+      "id": "textlayout-rich-text-content-presence-and-keyof",
+      "path": "flight/textlayout/rich_text_content.hpp",
+      "package": "@flighthq/textlayout",
+      "status": "complete",
+      "supplies": "packages/textlayout/src/richTextContent.ts",
+      "derivedFrom": "074b52dc486f75c7b5471fed3253315120f7e659727fc91e7bbdb881722c709f",
+      "reason": "The emitter refused getRichTextContent and createBaseFormat after failing to recognize that the generated optional runtime-content and format-color fields carry the source null and undefined states, and refused textFormatEquals because keyof needs C++ type computation. The retained construction wrapped EntityConstruction in Ref, clear assigned nullptr into optional storage instead of disengaging it, and this runtime pin lacks the trimStart method the retained body called.",
+      "change": "Supplies all three refused functions and a self-contained transcription of the retained module. Runtime content is initialized once through the actual optional carrier; base color falls back only when absent; and all TextFormat fields are compared explicitly, with tabStops and variations compared element by element. Construction keeps the exact EntityConstruction row and initializes its materialized native object, clear writes nullopt, and a local ECMA-whitespace prefix trim fills the missing retained String operation.",
+      "equivalence": "Content attachment preserves reference identity until clear, which restores absence rather than an engaged null shared pointer. The public initializer and creator retain the Entity construction boundary and undefined runtime key. Format equality gives scalar optionals JavaScript strict-value behavior, including NaN inequality and signed-zero equality, while its two array fields compare lengths and elements rather than array identity exactly as the source. The rest preserves entity decoding, whitespace condensation, UTF-16 password masking, maxChars truncation, range clamping, override splitting, adjacent equal-range coalescing, and shallow format copies. A strict probe exercises each branch and the upstream examples.",
+      "whyNotAPatchOrRepair": "A repair cannot add three bodies or correct retained behavior. The source already uses direct null and undefined checks on optional interface fields and conventional Object.keys/keyof equality; rewriting those forms or expanding twenty-one fields in target-neutral TypeScript would encode the current C++ representation into Flight source.",
+      "unblocks": "All three refused declarations in packages/textlayout/src/richTextContent.ts. With textFormat.ts supplied, textlayout moves from 5/14 to 11/14 headers. The remaining _internal_index.hpp, contract.hpp, and rich_text_metrics.hpp failures are one structural conversion: Readonly<RichTextData> cannot widen to the anonymous readonly {autoSize,height,width,wordWrap} row required by computeTextBoundsWidth/Height, despite containing those same fields.",
+      "expires": "when optional carriers are accepted as proof for null and undefined tests, keyof iteration lowers over TextFormat, EntityConstruction is emitted without an extra Ref, clear writes the optional absence state, and String.trimStart exists at the pinned runtime contract.",
+      "authoredOn": "2026-10-04"
     }
   ]
 }
