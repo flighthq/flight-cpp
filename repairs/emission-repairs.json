@@ -4,6 +4,58 @@
   "note": "Mechanical repairs applied to compiler output so a package can ship before upstream fixes the emitter. A repair may only correct TEXT. It may never change absence, reference identity, equality, ordering, exception shape, or task settlement -- those are the contract in AGENTS.md, and a semantic repair is a lie that our own tests would then certify. Every repair declares the upstream defect it stands in for, and `npm run sdk:check` fails when a repair stops matching anything, so a repair cannot outlive the bug it answers. Two kinds exist. A declared `insert-forward-declaration` entry below names a symbol the emitter omits. The duplicate-structural-struct aliasing in scripts/emissionRepairs.mjs needs no entry because it is derived entirely from the emitted tree: it finds an anonymous structural struct defined in more than one package namespace with BYTE-IDENTICAL bodies, keeps the flight::types definition, and turns every other copy into a type alias to it. It reports what it aliased in manifest.duplicateStructuralStructAliases, and it is self-expiring -- when the emitter stops duplicating these, it finds nothing and rewrites nothing.",
   "repairs": [
     {
+      "id": "interaction-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/interaction/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/flight_document_field_schema.hpp",
+          "name": "FlightDocumentFields"
+        },
+        {
+          "include": "flight/types/flight_document_interactive_state.hpp",
+          "name": "FlightDocumentInteractiveStates"
+        },
+        {
+          "include": "flight/types/flight_document_interactive_state.hpp",
+          "name": "FlightDocumentInteractiveStateTransitionDescriptor"
+        },
+        {
+          "include": "flight/types/flight_document_schema_registry.hpp",
+          "name": "FlightDocumentSchemaRegistry"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "NodeAny"
+        },
+        {
+          "include": "flight/types/node_interactive_state_binding.hpp",
+          "name": "NodeInteractiveStateBinding"
+        },
+        {
+          "include": "flight/types/node_interactive_state_binding.hpp",
+          "name": "NodeInteractiveStateExtensionRuntime"
+        },
+        {
+          "include": "flight/types/node_interactive_state_binding.hpp",
+          "name": "NodeInteractiveStateExplanation"
+        },
+        {
+          "include": "flight/types/node_interactive_state_binding.hpp",
+          "name": "NodeInteractiveStateFlags"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "entity_runtime_key"
+        }
+      ],
+      "diagnostic": "'NodeAny' was not declared in this scope; did you mean 'flight::types::NodeAny'?",
+      "defect": "The emitter writes the types-owned aliases and records listed here unqualified inside namespace flight::interaction. Their defining headers establish the names only in flight::types; one package-scoped declaration enumerates each exact name and inserts its include and using-declaration only in headers that use that name unqualified.\n\nMEASURED GAIN TODAY: ZERO headers from qualification alone. It moves fifteen headers to the refused getNodeInteractionState dependency, moves node_interactive_state_binding.hpp to its separate FacetRef indexing/construction and refused buildInteractiveStateRuntime defects, and leaves two node-bounds consumers unchanged. Combined with the complete direct node-interaction-state override the package moves from 0/19 to 1/19, because quoted sibling includes bypass the include-path override.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "types-node-forward-declaration",
       "kind": "insert-forward-declaration",
       "appliesTo": "flight/types/",
