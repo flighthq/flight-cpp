@@ -1904,3 +1904,33 @@ Distinguishing the two would mean compiling each package with and without each r
 which is expensive and has not been done. So the count understates `ready` by at least one, and
 `assisted` should be read as "carries declared debt, which it may or may not depend on". `easing` and
 `particles` are genuinely assisted — remove their overrides and the packages do not build.
+
+## Measured: what the five repairs and five runtime members were worth
+
+Full compile over the regenerated tree, against the pre-repair baseline of 1686/2710:
+
+**1714 of 2710 headers, +28.** And **39 of 146 applicable packages shippable (29 ready, 10 assisted)**,
+up from 35 (27 ready, 8 assisted).
+
+| package | before | after | |
+|---|---|---|---|
+| `path-boolean` | 0/10 | 7/10 | +7 |
+| `flow` | 0/4 | **4/4** | +4 |
+| `bitmap` | 41/44 | **44/44** | +3 |
+| `path-formats` | 0/3 | **3/3** | +3 |
+| `registry-catalog` | 1/4 | **4/4** | +3 |
+| `path` | 23/31 | 26/31 | +3 |
+| `collision`, `font`, `physics3d`, `shape`, `textshaper` | | | +1 each |
+
+`path-boolean` at +7 was not predicted — it was 0/10 and never appeared in any of the targeted analysis.
+It uses the same `std::make_tuple`-for-an-array construction as `path`, so the tuple repair reached it for
+free. Worth noting because the targeted work was aimed at `path` and `bitmap`; a third of the gain came
+from a package nobody looked at.
+
+Four packages went from partial to complete on headers: `flow`, `bitmap`, `path-formats`,
+`registry-catalog`.
+
+Not in this measurement: the five `types` headers fixed by `types-flight-document-value-forward-declaration`
+and the three `repeat-alias-declaration` entries. Those were declared after the regeneration, so the
+committed tree does not carry them yet — another +5 and `@flighthq/types` going ready are pending the next
+`npm run sdk:generate`.
