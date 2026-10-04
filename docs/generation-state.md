@@ -3857,3 +3857,33 @@ variant that does not list that alternative, which is the same defect seen from 
 
 Consequence for `lighting`: my declared absence repair covers `scene_lights.hpp`, but `environment.hpp` is
 refused, so the package does not reach shippable. It goes 10/14 to 11/14 at best, not 14/14.
+
+### Reachability is a property of the MODULE, not the package — and a near-miss on partial data
+
+Two things, one of which I nearly shipped to builder as a work queue.
+
+**The refinement.** The earlier reachability table counted quoted intra-package includes per PACKAGE, and
+used that to say whether an override could reach its consumers. That is too coarse. What decides it is
+whether the **broken module specifically** is reached by a quoted include — a package can carry several
+quoted includes that all point at headers nobody is overriding, and an override there is perfectly safe.
+Computed per module rather than per package, several packages previously filed as "partially reachable"
+turn out to be clean. The right question is always "how do the consumers of THIS header include it", and
+the tree answers it directly: 836 quoted includes across 69 of 152 packages, which is tree-derived and does
+not depend on any compile report.
+
+**The near-miss.** I computed that per-module table, got nine clean packages, and was about to send it as
+builder's next tranche. It was built on `out/sdk-sdl-header-compilation.json` — which a compile was
+**actively writing**. `run.complete` was `false` at 1007 of 2711 headers, so every package not yet reached
+reported `pass=0 fail=0`: `surface`, `socket` and `statechart` all read as having no headers at all. The
+broken-module lists the verdicts were derived from were therefore incomplete, and the verdicts were
+unreliable.
+
+What exposed it was checking a package I had independently classified an hour earlier — `surface` was
+"fully reachable, 1 pass / 6 fail" then and "0/0" now. A figure that moves when nothing changed is the
+cheapest possible signal that the source is wrong, and it only showed up because I cross-checked against a
+number I already had.
+
+The report being written incrementally is a feature — it is how progress is readable mid-run — but it means
+**any analysis over it must test `run.complete` first.** Nothing in the file's shape distinguishes a partial
+report from a finished one; a consumer has to ask. `sdkPackageTiers` already refuses to overwrite one; a
+reader needs the same care.
