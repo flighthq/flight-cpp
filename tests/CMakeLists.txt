@@ -32,6 +32,14 @@ target_link_libraries(flight_cpp_generated_collision_tests PRIVATE Flight::Cpp F
 add_test(NAME flight_cpp.generated_collision COMMAND flight_cpp_generated_collision_tests)
 set_tests_properties(flight_cpp.generated_collision PROPERTIES SKIP_RETURN_CODE 77)
 
+add_executable(flight_cpp_generated_registry_tests generated_registry_test.cpp)
+target_include_directories(
+  flight_cpp_generated_registry_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_registry_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_registry COMMAND flight_cpp_generated_registry_tests)
+
 add_executable(flight_cpp_c_api_tests c_api_test.c)
 target_link_libraries(flight_cpp_c_api_tests PRIVATE Flight::C)
 flight_cpp_set_project_warnings(flight_cpp_c_api_tests)

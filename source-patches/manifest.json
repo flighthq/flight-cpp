@@ -4,6 +4,22 @@
   "note": "Patches applied to a pinned sibling checkout before generation, so a module the compiler refuses to lower today can still ship. A patch here may only rewrite an expression into an equivalent the compiler does lower. It may NEVER change observable behavior -- absence, reference identity, equality, ordering, exception shape, task settlement -- because the generated header is then tested against the patched source, so a behavioral patch is a lie our own tests would certify. Each patch states the equivalence that makes it safe and the refusal it answers. The patch is applied after the pin integrity check and reverted when generation ends, so the checkout is only ever dirty inside one run. `baseCommit` pins the patch to the revision it was written against: a pin move that breaks the patch fails loudly instead of silently applying to different code.",
   "patches": [
     {
+      "id": "registry-bound-discriminant-literal",
+      "dependency": "flight",
+      "patch": "registry-bound-discriminant-literal.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/registry/src/registryTable.ts",
+      "package": "@flighthq/registry",
+      "answers": "diagnostic",
+      "refusal": "RegistryEntryState.Bound emits a reference-backed registry_entry_state with value-style member access",
+      "rewrite": "Compares the two public resolution results with the literal discriminant `bound` instead of selecting the identically typed Bound field from RegistryEntryState.",
+      "equivalence": "RegistryTableEntry declares its bound arm with the literal type `typeof RegistryEntryState.Bound`, and RegistryEntryState declares that readonly const field as exactly `bound`. Comparing entry.state with the literal therefore performs the same strict string comparison and preserves the same union narrowing, return value, and tombstone handling. The exported RegistryEntryState object and every public signature remain unchanged.",
+      "whyNotUpstreamFirst": "The emitter correctly represents the exported const object by reference but lowers its member selection with `.`. The literal spelling is idiomatic for a string-discriminated union and avoids that backend defect without introducing a target-specific construct.",
+      "unblocks": "Removes the registry_entry_state.bound diagnostic from getRegistryTableEntry and hasRegistryTableEntry; the separately refused table-union dispatcher still needs an implementation before either reader is usable.",
+      "expires": "when member access on a reference-backed exported const object emits `->`, or Flight adopts the literal discriminant comparisons.",
+      "appliedOn": "2026-10-04"
+    },
+    {
       "id": "node-initialize-node-non-optional-source",
       "dependency": "flight",
       "patch": "node-initialize-node-non-optional-source.patch",

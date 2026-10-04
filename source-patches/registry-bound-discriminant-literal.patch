@@ -1,0 +1,17 @@
+diff --git a/packages/registry/src/registryTable.ts b/packages/registry/src/registryTable.ts
+--- a/packages/registry/src/registryTable.ts
++++ b/packages/registry/src/registryTable.ts
+@@ -127,5 +127,5 @@ export function getRegistryTableEntry<T>(table: Readonly<RegistryTable<T>>, key:
+ export function getRegistryTableEntry<T>(table: Readonly<RegistryTable<T>>, key: Kind): T | null {
+   const entry = getRegistryTableEntryState(table, key);
+-  if (entry === null || entry.state !== RegistryEntryState.Bound) return null;
++  if (entry === null || entry.state !== 'bound') return null;
+   return entry.value;
+ }
+@@ -153,5 +153,5 @@ export function hasRegistryTableEntry(table: Readonly<RegistryTable<unknown>>, k
+ // true where `get` answers null is that disagreement wearing a different name.
+ export function hasRegistryTableEntry(table: Readonly<RegistryTable<unknown>>, key: Kind): boolean {
+   const entry = getRegistryTableEntryState(table, key);
+-  return entry !== null && entry.state === RegistryEntryState.Bound;
++  return entry !== null && entry.state === 'bound';
+ }
