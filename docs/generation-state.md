@@ -2940,3 +2940,42 @@ measurements stand. `light_analysis.hpp` and `scene_forward_lights.hpp` both do.
 The general form of the mistake: an override is invisible in the generated tree by design, so a
 measurement that reads the generated tree directly cannot see that it is testing dead code. Any one-off
 compile has to copy the gate's include order, not approximate it.
+
+## The regeneration, and what it settled
+
+124 minutes, committed at `98b53e16`. **2172/2709 modules emitted across 150 packages**, 537 refusals,
+3 source patches applied, 637 headers repaired after emission, 42 duplicated structural structs aliased.
+Four packages were excluded as non-terminating: `effects-gl`, `render-gl`, `scene2d-gl`, `scene3d-gl`.
+The pinned Flight checkout came back with **0 dirty files**, so every patch reverted.
+
+The important result is how little moved. 38 files changed — 37 headers and the manifest — and the only
+manifest field that differs is `emissionRepairs: 61 -> 74`. Module counts are identical. So the 13 repairs
+added since the previous run touched 37 headers and changed nothing else, which is what a regeneration
+should look like when the repairs are declaration-shaped.
+
+`npm run overrides:check` reported exactly the one drift predicted: `glyphatlas-explain-entry-optional-map-read`.
+
+### Re-deriving a drifted override is a judgement, not a re-hash
+
+The temptation is to re-record the digest and move on. What the drift actually asks is whether the
+override is still correct for the file it now shadows, and that needs the diff read.
+
+The generated file changed by exactly two added lines — `#include <flight/types/glyph_source.hpp>` and
+`using flight::types::GlyphAtlas;` — one of the new `insert-using-declaration` repairs. Three things then
+had to hold before re-pinning was the right move, and each was checked rather than assumed:
+
+- the function is still refused — `NOT GENERATED: function explainGlyphAtlasEntry` is still in the
+  generated file, so the override still has something to supply and cannot simply be dropped;
+- the override does not depend on the added lines — it spells `flight::types::GlyphAtlas` fully qualified,
+  so the new using-declaration is irrelevant to it;
+- the override still compiles against the new tree, in the gate's include order.
+
+Only then is the digest re-recorded, in both the manifest's `derivedFrom` and the override's own header
+comment. Had the generated file's refusal been lifted instead, the correct action would have been to
+**delete** the override, and re-hashing would have silently kept a copy of code the emitter can now
+produce — which is the exact failure mode `derivedFrom` exists to catch.
+
+A side effect worth knowing: that using-declaration repair is now **inert for this header**, because the
+override shadows the whole file. It still matches a generated header, so `sdk:check` is satisfied, but its
+effect is invisible in the shipped tree. A repair and an override targeting the same header are not an
+error, but only one of them is doing anything.
