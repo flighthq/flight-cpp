@@ -3939,3 +3939,45 @@ overrides are supplying something the emitter can now produce — and `derivedFr
 that: an override whose refusal has been lifted should be **deleted**, not re-pinned. That cannot be judged
 until a regeneration has run with the relaxation in it, and it is builder's override to drop, so it is
 flagged rather than acted on.
+
+### Measured: the keyless relaxation is SOUND but currently buys nothing, so it is held, not shipped
+
+Implemented, validated, and then **not committed**. The sequence is worth recording in full because the two
+failed measurements each looked like a verdict on the change and neither was.
+
+**Attempt 1 — 17 errors became 50.** First diagnostic: `'quadbatch' is not a member of 'flight'`. The
+generated table is included from `structural_ref.hpp` before any package header, so it can only name types it
+declares itself; 84 specializations naming concrete types could not resolve. `GeneratedRowWidening` sidesteps
+this entirely by never naming a concrete type. Fixed by emitting a forward declaration for each subject,
+grouped by namespace and placed outside `flight::detail` — an incomplete type is sufficient to specialize a
+trait that only inherits `std::true_type`.
+
+**Attempt 2 — safe, and worth almost nothing.** With forward declarations, generated-only:
+
+| header | baseline errors | with the relaxation |
+|---|---|---|
+| `surface/surface.hpp` | 13 | 13 |
+| `surface/canvas_surface.hpp` | 17 | 15 |
+
+No regression anywhere, and **zero headers moved to compiling**. `surface/surface.hpp`'s first error is now
+`'SurfaceRuntime' was not declared in this scope` — an unqualified name, nothing to do with widening. The one
+case we knew about was already closed by builder's overrides, so the relaxation removes a false refusal that
+nothing is currently waiting on.
+
+So it is held: the diff is saved at `/tmp/claude-1000/keyless-relaxation.patch`, the working tree is clean,
+and the recipe is above. Shipping it would add 84 forward declarations and 84 specializations to every
+generated tree for no present benefit, and `AGENTS.md`'s whole posture is against machinery without a
+demonstrated need. The decision is deferred to the complete compile report: **if any header's failure turns
+out to be a keyless-widening refusal, apply the patch; if none is, this entry is the record and the change
+stays unshipped.**
+
+That is the same judgement applied to `signals/slot.hpp` — a correct fix with zero measured gain is not worth
+the debt — with one difference worth noting. `slot.hpp` was a defect, so recording it was the whole
+deliverable. This is an improvement to a proof that is *conservative rather than wrong*: the proof refuses
+something TypeScript permits, which is a real limitation, but a conservative refusal costs nothing until a
+header needs it.
+
+**Two build-order mistakes in one change, both mine, both in the same direction:** `row_member_widens_v`
+defined below the generated include, and then 84 specializations naming types the table cannot see. Anything
+the generated table calls into or names must be validated against a generated header — `ctest` passes in both
+cases, because the runtime's own tests do not include that table the way the SDK does.
