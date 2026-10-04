@@ -3579,3 +3579,34 @@ narrowly declared repair for the four sites plus a recorded compiler defect — 
 Note the runtime cannot help here, which is worth stating because it is the first option `AGENTS.md`
 prefers: making `slot.value()(...)` compile would require `operator()` on `std::optional`, and that is not
 ours to add.
+
+### The compile report drops the one field that would settle attribution
+
+`out/sdk-sdl-header-compilation.json` stores each failure as `{header, diagnostic}`, and `diagnostic` is
+the gcc **message only**, with `file:line:column:` stripped:
+
+```json
+{"header": "flight/app/app.hpp",
+ "diagnostic": "'allocate_entity' was not declared in this scope; did you mean 'flight::entity::allocate_entity'?"}
+```
+
+So the report records *which header failed to compile* and *what the complaint was*, but not *which file
+the complaint is in* — and those are different things whenever a header's first error lives in something it
+includes. That is the common case: `loader/load.hpp` has ten errors across two files, and
+`signals/slot.hpp` contributes errors to consumers while passing itself.
+
+This is why every attribution question in this document has had to be answered by recompiling. It is also
+the single largest contributor to the over-counting pattern: a family count built on the message alone
+cannot distinguish "this header's own defect" from "a defect it inherited", so every such count is an
+upper bound by construction rather than by accident.
+
+**Recommendation: record the first diagnostic's file and line alongside the message.** One extra field —
+`"location": "flight/signals/slot.hpp:109"` — turns several expensive questions into queries:
+
+- which defect SITE blocks each failing header, directly, instead of by include-closure inference;
+- blast radius versus measured gain, without compiling a closure twice;
+- whether a repair moved a header forward or merely changed which complaint comes first, which is the trap
+  that made `registry_table.hpp` read as 4-errors-before and 4-errors-after while both target names had in
+  fact resolved.
+
+The data is already in `stderr` at the point the report is written; only the capture discards it.
