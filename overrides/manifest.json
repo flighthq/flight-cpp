@@ -4,6 +4,22 @@
   "note": "Hand-written headers that SHADOW the generated tree. An override is placed earlier on the include path than the generated include directory, so the generated file stays untouched and the override is the whole of the modification: the set of files under overrides/include is the diff, and no computation is needed to find it. Reserved for what the declared mechanisms cannot reach -- source-patches/ rewrites the pinned TypeScript, repairs/ adds text with no behavior to emitted output, and either is preferable because neither carries a copy. An override does carry a copy, so each entry records `derivedFrom`, the sha256 of the generated file it was produced from. When a pin move changes that file the digest stops matching and `npm run overrides:check` says so, which is the signal to re-derive the override or drop it. Each entry also carries a `status`: `complete` means the override compiles, `incomplete` means it is partway and says what remains, so nobody mistakes a half-finished override for a finished one.",
   "overrides": [
     {
+      "id": "textshaper-cache-identity-and-keying",
+      "path": "flight/textshaper/text_shaper_cache.hpp",
+      "package": "@flighthq/textshaper",
+      "status": "complete",
+      "supplies": "packages/textshaper/src/textShaperCache.ts",
+      "derivedFrom": "d78daa47486340b305a5b6c122fd85d657d0bfdf45a6319c44820f8590816394",
+      "reason": "The emitter leaves entity, provider, format, option, and cache types unqualified; emits EntityRuntimeKey symbol access as operator[] on nominal references; constructs a heterogeneous JavaScript join as an impossible deduced Array; and produces variant<String, String> for the TextDirection alias.",
+      "change": "Supplies the complete cache module with weak cache-runtime ownership, weak provider identity IDs, explicit JavaScript-equivalent key concatenation, and nominal-to-readonly-row projections for the retained shaping function.",
+      "equivalence": "Every cache has distinct identity and an entity marker. Clear evicts without disposing, dispose is idempotent and disables later shaping, null results are not cached, successful results retain object identity, provider identities never collide, and keys include text plus every source format and option field with the same separators and defaults.",
+      "whyNotAPatchOrRepair": "Qualification alone was measured and removed: it exposes three independent invalid expression families, including symbol indexing and duplicate union alternatives. Source rewrites would encode C++ entity storage and homogeneous-array constraints into ordinary TypeScript. A declaration repair cannot replace those behaviors.",
+      "unblocks": "The one broken module is angle-included by both aggregators. Blast radius and measured gain are both three headers: @flighthq/textshaper moves from 0/3 to 3/3.",
+      "remaining": "None in @flighthq/textshaper at this pin.",
+      "expires": "when entity symbol access, heterogeneous Array.join, aliased union normalization, imported names, and nominal-to-row arguments lower directly.",
+      "authoredOn": "2026-10-04"
+    },
+    {
       "id": "dialog-file-handle-runtime-authority",
       "path": "flight/dialog/file_dialog.hpp",
       "package": "@flighthq/dialog",

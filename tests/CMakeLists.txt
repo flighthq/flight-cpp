@@ -104,6 +104,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_dialog_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_dialog COMMAND flight_cpp_generated_dialog_tests)
 
+add_executable(flight_cpp_generated_textshaper_cache_tests generated_textshaper_cache_test.cpp)
+target_include_directories(
+  flight_cpp_generated_textshaper_cache_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_textshaper_cache_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_textshaper_cache COMMAND flight_cpp_generated_textshaper_cache_tests)
+
 add_executable(flight_cpp_c_api_tests c_api_test.c)
 target_link_libraries(flight_cpp_c_api_tests PRIVATE Flight::C)
 flight_cpp_set_project_warnings(flight_cpp_c_api_tests)
