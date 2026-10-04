@@ -115,6 +115,26 @@ FlightTask<void> set_flag(bool& flag) {
 // String.prototype.search. Each one answers a diagnostic from the generated SDK, and each is pinned here
 // because each is a SEMANTICS claim: the overlapping-range direction, the index base, and whether
 // lastIndex moves are all things a plausible implementation gets wrong silently.
+void test_locale_compare() {
+  const auto a = flight::String::from_utf8("a");
+  const auto b = flight::String::from_utf8("b");
+  check(a.locale_compare(b) < 0.0, "localeCompare orders an earlier string first");
+  check(b.locale_compare(a) > 0.0, "localeCompare orders a later string after");
+  check(a.locale_compare(a) == 0.0, "localeCompare reports equal strings as equal");
+  // It must agree with Intl.Collator, because in JavaScript they are the same comparison. This is the
+  // assertion that keeps a second collation from appearing: localeCompare delegates to the collator, so
+  // the two cannot drift apart.
+  const flight::IntlCollator collator;
+  for (const auto& left : {flight::String::from_utf8("apple"), flight::String::from_utf8("Banana"),
+                           flight::String::from_utf8("")}) {
+    for (const auto& right : {flight::String::from_utf8("apple"), flight::String::from_utf8("banana"),
+                              flight::String::from_utf8("Apple")}) {
+      check(left.locale_compare(right) == collator.compare(left, right),
+            "localeCompare and Intl.Collator give the same ordering");
+    }
+  }
+}
+
 void test_copy_within() {
   const auto digits = [] {
     flight::Array<double> values;
@@ -3239,6 +3259,7 @@ static void test_self_reference() {
 int main() {
   test_array();
   test_copy_within();
+  test_locale_compare();
   test_sequence_view_map();
   test_string_search();
   test_array_buffer_like();

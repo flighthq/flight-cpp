@@ -98,6 +98,21 @@ class IntlCollator {
   }
 };
 
+// `String.prototype.localeCompare`, defined HERE rather than in string.hpp so it can delegate to
+// IntlCollator and there is exactly one collation in the runtime.
+//
+// That delegation is the point. IntlCollator::compare already answers "how does this runtime order two
+// strings", and it answers code-point order, because real locale-aware collation needs a collation table
+// this runtime deliberately does not carry. A second implementation written beside it -- even the same
+// three lines -- could drift from it silently, and then `a.localeCompare(b)` and
+// `new Intl.Collator().compare(a, b)` would disagree, which they cannot do in JavaScript.
+//
+// So this is not a new semantics claim. It inherits the one already declared and tested for IntlCollator,
+// and when that gains a collation table this gains it in the same commit.
+inline double String::locale_compare(const String& other) const noexcept {
+  return IntlCollator{}.compare(*this, other);
+}
+
 class IntlDateTimeFormat {
  public:
   IntlDateTimeFormat() = default;
