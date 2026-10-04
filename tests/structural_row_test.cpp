@@ -69,6 +69,13 @@ struct TestUnrelatedTarget final : public flight::ReferenceEnabled {
   double color{};
 };
 
+// An Array-valued member, to pin what a row WRITE does to array identity. `advances` is a key the
+// committed table carries; the table dispatches on the key name and returns whatever member the subject
+// declares, so the member's type is ours to choose.
+struct TestArrayBearing final : public flight::ReferenceEnabled {
+  flight::Array<double> advances;
+};
+
 // A SECOND subject widening onto the same base. The SDK's motivating case is a union -- an audio
 // reference is embedded or external -- where both alternatives declare the key the common row wants,
 // so a row over that shape has to be satisfiable by either one. The proof is computed from declared
@@ -806,6 +813,44 @@ int main() {
     // Asserting both directions here is what would catch the two branches being collapsed into one.
     check(from_first.shared_object() == nullptr,
           "the structural branch is taken for both alternatives of this union");
+  }
+
+  // A row write stores THE ARRAY, not a copy of it.
+  //
+  // `flight::Array` holds `shared_ptr<vector<Value>>`, so it is a handle with JS reference semantics and
+  // array identity is a real, observable thing. TypeScript's `subject.advances = values` leaves
+  // `subject.advances === values` true and a later `values.push(...)` visible through the subject. This
+  // pins that the row write lane does the same, because a repair was queued that would have broken it.
+  {
+    using ArrayRow = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestArrayBearing>>>>;
+    auto subject = flight::make_ref<TestArrayBearing>();
+    const ArrayRow row(subject);
+
+    flight::Array<double> values;
+    values.push(1.0);
+    flight::row_set<flight::RowKey<"advances">>(row, values);
+    check(static_cast<double>(subject->advances.size()) == 1.0, "the write reached the subject");
+
+    values.push(2.0);
+    check(static_cast<double>(subject->advances.size()) == 2.0,
+          "a push through the written array is visible through the subject, so the row stored THAT array");
+    check(static_cast<double>(flight::row_get<flight::RowKey<"advances">>(row).size()) == 2.0,
+          "and reading the member back through the row sees it too");
+    subject->advances.push(3.0);
+    check(static_cast<double>(values.size()) == 3.0, "identity holds in the other direction as well");
+
+    // The contrast that makes the withdrawn repair concrete. `flight::array_of` keeps ELEMENT identity
+    // but returns a SEPARATE array handle, so writing its result through a row silently breaks the
+    // invariant just asserted -- a later push through the source is invisible to the subject. That is why
+    // array_of is correct where TypeScript itself produces a fresh array, and wrong at an assignment.
+    flight::Array<double> source;
+    source.push(1.0);
+    flight::row_set<flight::RowKey<"advances">>(row, flight::array_of<double>(source));
+    check(static_cast<double>(subject->advances.size()) == 1.0, "the projected array was written");
+    source.push(2.0);
+    check(static_cast<double>(subject->advances.size()) == 1.0,
+          "a push through the SOURCE is invisible, which is the identity change that disqualifies "
+          "array_of at a row write");
   }
 
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
