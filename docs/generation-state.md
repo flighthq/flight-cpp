@@ -1564,3 +1564,76 @@ The packages worth testing first are the **45 that emitted completely**, because
 refusals cannot have a never-generated function behind its names — there is nothing else for the chain to
 terminate on. None of the 576 sampled name failures fall in one, which is either because those packages
 pass or because they sit in the half not yet compiled. The full report settles it.
+
+## 33 of 146 packages are shippable
+
+The full tree compiled against the committed inventory: **1686 of 2710 headers**, and with that report the
+tier gate can finally rank packages.
+
+**33 of 146 applicable SDK packages are shippable — 28 ready, 5 assisted.** None are "emitted but never
+compiled" any more; 112 are partial, 1 deferred, 4 not applicable.
+
+Ready, needing nothing: `abc`, `accessibility`, `adjustments`, `binpack`, `camera-controls`, `clipboard`,
+`color`, `compression`, `device`, `encoding`, `entity`, `geolocation`, `haptics`, `image-codec`,
+`importdiagnostics`, `ipc`, `keyboard`, `math`, `mediasession`, `motionpath`, `permissions`, `platform`,
+`protocol`, `sensors`, `shell`, `spring`, `webcam`, `xml`.
+
+Assisted, each naming what carries it: `camera` (flattened-union respell), `clock` (reference-alias
+respell), `geometry` (release-function alias), `screen` (a source patch), `timeline` (a source patch plus
+a reference-alias respell).
+
+Two things in that list are worth drawing out.
+
+`log` is **not** shippable, and should not be. Its three headers compile, but they compile because an
+override stubs nine functions to throw and declares three the emitter never wrote. A gate that counted
+"compiles" as "works" would have called it ready; this one counts refusals, so a module whose functions
+throw stays partial. That is the taxonomy doing its job.
+
+`webcam` is ready. It was named earlier as the reason applicability must be read from
+`flight.environment` and never inferred from a package name — an inference would have parked it as
+web-only. It compiles on a native SDL host, and now it ships.
+
+### The sharpest remaining target: fully emitted and still failing
+
+A package with **no refusals** cannot have a never-generated function behind its diagnostics, so whatever
+it reports is the real blocker. 45 packages are fully emitted; 31 of them compile completely. The other
+twelve are therefore the highest-value work in the corpus, and they are small:
+
+| package | headers | blocker |
+|---|---|---|
+| `types` | 407/411 | `DomTextureResolver` is not a member of `flight::types` |
+| `bitmap` | 41/44 | `optional<Array<double>>::optional(<brace-enclosed initializer list>)` |
+| `path` | 23/31 | `Array::copy_within` missing from the runtime |
+| `host` | 2/6 | `Any::has_value` missing from the runtime |
+| `net` | 2/5 | `log_once` designated initializer — **fixed** this pass |
+| `registry-catalog` | 1/4 | `SequenceView::map` missing from the runtime |
+| `socket` | 1/5 | calling a `std::function` with the wrong argument shape |
+| `statechart` | 1/5 | `ErasedRef` will not convert to `shared_ptr<void>` |
+| `flow` | 0/4 | **fixed** this pass — now 4/4 |
+| `path-formats` | 0/3 | same braced-initializer shape as `bitmap` |
+| `registry-codegen` | 0/3 | `SequenceView::map` |
+| `requirements` | 0/4 | `RequirementFacet` alias to `String` misused |
+
+### Missing runtime members are the preferred fix, and there are only five
+
+`AGENTS.md` ranks extending the runtime above every patching mechanism, and the failure set names exactly
+what is missing:
+
+| member | headers |
+|---|---|
+| `SequenceView::map` | 6 |
+| `Any::has_value` | 7 |
+| `Array::copy_within` | 3 |
+| `String::search` | 2 |
+| `StructuralRef::has_value` | 1 |
+
+Three have exact JavaScript semantics and an existing house pattern to follow: `Array::copy_within` is
+`Array.prototype.copyWithin` and `normalize_boundary` is already the runtime's relative-index clamp;
+`SequenceView::map` mirrors `Array::map`; and `String::search` needs care, because JS `search` must not
+disturb `lastIndex` while `RegExp::exec` updates it for a global pattern — so it goes through
+`std::regex_search` directly and computes the index the way `exec` does, in UTF-16 code units rather than
+bytes.
+
+`Any::has_value` is the largest and is deliberately last: `flight::Any` carries `unknown`, so what
+`has_value` means on it is an absence question, and absence is the one thing this repository will not
+decide casually.
