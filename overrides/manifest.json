@@ -226,6 +226,36 @@
       "unblocks": "All three refused declarations in packages/textlayout/src/richTextContent.ts. With textFormat.ts supplied, textlayout moves from 5/14 to 11/14 headers. The remaining _internal_index.hpp, contract.hpp, and rich_text_metrics.hpp failures are one structural conversion: Readonly<RichTextData> cannot widen to the anonymous readonly {autoSize,height,width,wordWrap} row required by computeTextBoundsWidth/Height, despite containing those same fields.",
       "expires": "when optional carriers are accepted as proof for null and undefined tests, keyof iteration lowers over TextFormat, EntityConstruction is emitted without an extra Ref, clear writes the optional absence state, and String.trimStart exists at the pinned runtime contract.",
       "authoredOn": "2026-10-04"
+    },
+    {
+      "id": "lighting-light-analysis-structural-light-projections",
+      "path": "flight/lighting/light_analysis.hpp",
+      "package": "@flighthq/lighting",
+      "status": "complete",
+      "supplies": "packages/lighting/src/lightAnalysis.ts",
+      "derivedFrom": "c7ef2696ab08ebb336a885dec08e30e13c1a5374039477c623468a05831ba12f",
+      "reason": "The emitter refused getLightInfluenceBounds, getLightLuminance, and hasLightInfluenceOnBounds because their kind-discriminated readonly Light assertions have no nominal C++ heritage, and refused getLightContributionAtBoundingSphere because common fields on PointLight | SpotLight were not proven safe. The retained isLightEnabled and isLightCastingShadow also emitted JavaScript `in` operators, unqualified source names, and unavailable base-Light fields, leaving the partial header uncompilable.",
+      "change": "Supplies the complete analysis module with carrier-preserving templates for nominal references and readonly structural views. Built-in kinds are evaluated against the concrete owners already carried by callers, the punctual-light public union has an explicit variant visitor, and custom enabled and castsShadow fields participate only when their represented C++ member is exactly boolean.",
+      "equivalence": "No native pointer cast, replacement row, or side storage is introduced: each template unwraps the original shared owner and all reads remain on it. Kind dispatch, sRGB luminance, disabled and unlimited sentinels, sphere overlap, nearest-surface distance, squared range window, decay attenuation, and normalized spot-cone smoothstep follow the source formulas exactly. Unknown kinds retain unlimited influence and zero luminance; missing or non-boolean custom gates preserve strict JavaScript comparisons. A strict probe covers every built-in family, open custom kinds, finite and infinite bounds, disabled lights, point and spot contribution, radius slack, cone rejection, and the explicit point-or-spot variant boundary.",
+      "whyNotAPatchOrRepair": "A repair cannot add four bodies or replace invalid retained behavior. The TypeScript uses ordinary kind discrimination over target-neutral light interfaces; rewriting its public Light model or duplicating analysis per nominal type solely to manufacture C++ heritage would damage the source design.",
+      "unblocks": "All four refused functions and the otherwise uncompilable retained functions in packages/lighting/src/lightAnalysis.ts. Together with sceneForwardLights.ts, this raises @flighthq/lighting from 8/14 to 10/14 independently compiling headers.",
+      "expires": "when kind discrimination can recover readonly interface projections without nominal heritage, common union fields remain accessible, and `in` checks lower against represented optional object members.",
+      "authoredOn": "2026-10-04"
+    },
+    {
+      "id": "lighting-scene-forward-lights-dense-family-scratch",
+      "path": "flight/lighting/scene_forward_lights.hpp",
+      "package": "@flighthq/lighting",
+      "status": "complete",
+      "supplies": "packages/lighting/src/sceneForwardLights.ts",
+      "derivedFrom": "b0ebbeb3b8e52b9435fff1caa4e6471039e00ff056d74455b06642ef123fe903",
+      "reason": "The emitter refused selectStrongestLights when common PointLight | SpotLight fields lost their union proof, refused selectScene3DForwardLights when its optional point and spot arrays lacked contextual expression evidence, and refused both length-constructed scratch arrays because Flight's dense Array cannot represent holes.",
+      "change": "Supplies the complete selector with a family-typed implementation and separate point and spot scratch arrays. The scratch arrays are densely default-constructed, but every slot below selectedCount is assigned before any read; family-specific storage also removes the private union that the two call sites never mix.",
+      "equivalence": "Layer masking still happens before ranking, priority outranks contribution, contribution breaks priority ties, and original family index preserves stable final ties. Point and spot budgets remain separate, zero contributions are omitted, selected spots retain the bitwise-complement key, and all input selections are completed before output arrays are cleared so input/output aliasing remains safe. Dense default elements are never observable. A strict probe covers budgets, ranking dimensions and ties, masks, both families, exact keys, empty inputs, and aliased input/output arrays.",
+      "whyNotAPatchOrRepair": "A repair cannot add the withheld function bodies or variables. Replacing source scratch construction with artificial light values would manufacture observable domain objects solely for one runtime profile, while splitting the private union in target-neutral TypeScript would encode the current C++ lowering limitation into otherwise clear source.",
+      "unblocks": "All four refused declarations in packages/lighting/src/sceneForwardLights.ts. With lightAnalysis.ts supplied, lighting moves from 8/14 to 10/14 headers. The four remaining failures are the contract and internal-index cascade from two independent retained-body defects: environment.hpp mixes optional<Texture> with a null/undefined variant and then applies std::get_if to the optional, while scene_lights.hpp returns optional partial-row reads where the emitted contextual lambda requires variant<T, Null, Undefined>.",
+      "expires": "when common fields on readonly object unions carry a safe projection, contextual optional arrays retain their expression types, and definite assignment proves that length-constructed scratch arrays expose no holes before each element is written.",
+      "authoredOn": "2026-10-04"
     }
   ]
 }
