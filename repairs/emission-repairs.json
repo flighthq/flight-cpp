@@ -1031,6 +1031,19 @@
       "defect": "wgpu_texture_resolver.hpp defines the WgpuTextureResolver alias and includes the render-state header, while that render-state header uses flight::types::WgpuTextureResolver in a member. Whichever is parsed first needs the other, and an alias has no forward declaration, so insert-forward-declaration cannot reach it. Repeating the identical alias in the render-state prologue is legal C++ and introduces no new type, name or behaviour -- if the two declarations ever disagreed the compiler would reject the file, so the language enforces the equivalence rather than this entry asserting it.",
       "expectedWhen": "always",
       "expires": "when the emitter writes alias declarations after its include block, or breaks the cycle between a resolver alias and its render state; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "wgpu-render-stats-anonymous-twin",
+      "kind": "alias-anonymous-struct-to-named",
+      "appliesTo": "flight/",
+      "symbol": "draw_call_count_instance_count_batch_flush_count_texture_upload_count_9fe60b6367cb7daf",
+      "replacement": "WgpuRenderStats",
+      "canonicalInclude": "flight/types/wgpu_render_stats.hpp",
+      "sourceDeclaration": "packages/types/src/WgpuRenderStats.ts -- interface WgpuRenderStats { drawCallCount; instanceCount; batchFlushCount; textureUploadCount }. Verified by reading both: the anonymous struct has byte-identical members, the same four names in the same order, and the consuming package is @flighthq/scene2d_wgpu -- the same WGPU render-statistics domain as the named type. This is one type the emitter could not name across a module boundary, not two shapes that happen to coincide.",
+      "diagnostic": "could not convert 'shared_ptr<draw_call_count_instance_count_batch_flush_count_texture_upload_count_9fe60b6367cb7daf>' to 'shared_ptr<flight::types::WgpuRenderStats>'",
+      "defect": "A module-private interface the emitter cannot name across a module boundary becomes an anonymous structural struct in the consuming package, while flight::types holds the named one. The bodies are byte-identical and C++ makes them unrelated types, so the value one produces does not convert where the other is expected. MEASURED GAIN: ONE header (@flighthq/scene2d_wgpu 9/33 to 10/33). The conversion appears 15 times across the diagnostics, which is occurrences and not headers -- the other scene2d_wgpu headers fail on unrelated causes behind it. Kept because it removes a real failure and the pair is verified, but it is a one-header repair and the 15 should not be read as its value.\n\nDeclared one pair at a time ON PURPOSE. Pairing by body automatically was built, measured and reverted: {a,b,c,d,tx,ty} is the shape of every 2D affine matrix in the corpus and its only named holder in flight::types is SwfTagMatrix, so automatic pairing made a WGPU shader's transform an SWF tag matrix; {r,g,b,a} resolved to UnityColor. Structural assignability makes such an alias type-correct but does not make the NAME correct, and the name is what every diagnostic and reader sees.",
+      "expectedWhen": "always",
+      "expires": "when the emitter names a module-private interface consistently across a module boundary, or the derived aliasing can pair by identity rather than by shape; sdk:check fails if this repair matches no header."
     }
   ]
 }

@@ -19,6 +19,7 @@ const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration',
   'record-from-designated-initializer',
   'name-array-from-tuple-construction',
   'repeat-alias-declaration',
+  'alias-anonymous-struct-to-named',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -48,6 +49,7 @@ const REQUIRED_FIELDS = {
   'respell-reference-alias': [...SHARED_FIELDS, 'symbol', 'expansion', 'witness', 'witnessInclude'],
   'name-array-from-tuple-construction': [...SHARED_FIELDS, 'symbol', 'sourceDeclaration'],
   'record-from-designated-initializer': [...SHARED_FIELDS, 'symbol', 'recordType', 'replacement', 'sourceDeclaration'],
+  'alias-anonymous-struct-to-named': [...SHARED_FIELDS, 'symbol', 'replacement', 'canonicalInclude', 'sourceDeclaration'],
   'repeat-alias-declaration': [...SHARED_FIELDS, 'symbol', 'declaration', 'sourceDeclaration'],
   'wrap-conditional-absent-branch': [...SHARED_FIELDS, 'sourceDeclaration'],
 };
@@ -153,22 +155,24 @@ function applyOneRound(repairs, files, applied) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
       const repaired =
-        repair.kind === 'repeat-alias-declaration'
-          ? repeatAliasDeclaration(contents, repair)
-          : repair.kind === 'name-array-from-tuple-construction'
-            ? nameArrayFromTupleConstruction(contents, repair)
-            : repair.kind === 'record-from-designated-initializer'
-              ? recordFromDesignatedInitializer(contents, repair)
-              : repair.kind === 'wrap-conditional-absent-branch'
-                ? wrapConditionalAbsentBranch(contents)
-                : repair.kind === 'respell-flattened-union'
-                  ? respellFlattenedUnion(contents, repair)
-                  : repair.kind === 'deduce-call-argument-from-assignment'
-                    ? deduceCallArgumentFromAssignment(contents, repair)
-                    : repair.kind === 'name-defaulted-template-argument'
-                      ? nameDefaultedTemplateArgument(contents, repair)
-                      : repair.kind === 'name-in-place-alternative'
-                        ? nameInPlaceAlternative(contents, repair)
+        repair.kind === 'alias-anonymous-struct-to-named'
+          ? aliasAnonymousStructToNamed(contents, repair)
+          : repair.kind === 'repeat-alias-declaration'
+            ? repeatAliasDeclaration(contents, repair)
+            : repair.kind === 'name-array-from-tuple-construction'
+              ? nameArrayFromTupleConstruction(contents, repair)
+              : repair.kind === 'record-from-designated-initializer'
+                ? recordFromDesignatedInitializer(contents, repair)
+                : repair.kind === 'wrap-conditional-absent-branch'
+                  ? wrapConditionalAbsentBranch(contents)
+                  : repair.kind === 'respell-flattened-union'
+                    ? respellFlattenedUnion(contents, repair)
+                    : repair.kind === 'deduce-call-argument-from-assignment'
+                      ? deduceCallArgumentFromAssignment(contents, repair)
+                      : repair.kind === 'name-defaulted-template-argument'
+                        ? nameDefaultedTemplateArgument(contents, repair)
+                        : repair.kind === 'name-in-place-alternative'
+                          ? nameInPlaceAlternative(contents, repair)
           : repair.kind === 'respell-reference-alias'
             ? respellReferenceAlias(contents, repair)
           : repair.kind === 'insert-using-declaration'
@@ -183,6 +187,55 @@ function applyOneRound(repairs, files, applied) {
     }
   }
   return changed;
+}
+
+// Aliases ONE named anonymous structural struct to ONE named type in flight::types, by declaration.
+//
+// The derived aliasing beside this pairs structs by NAME and requires byte-identical bodies. It therefore
+// misses the commonest form: a module-private interface the emitter cannot name across a module boundary
+// becomes an anonymous structural struct, while flight::types holds the named one. The bodies are
+// identical, the names are not, and C++ makes them unrelated types. The conversion appears 15 times in the
+// diagnostics for WgpuRenderStats, which is occurrences rather than headers: declaring that pair gained
+// ONE header, because the rest of the package fails on unrelated causes behind it.
+//
+// THIS IS DECLARED, ONE PAIR AT A TIME, AND THAT IS THE WHOLE POINT. The obvious generalisation is to
+// pair them by body automatically, and it was built, measured, and reverted, because the criterion is not
+// sound:
+//
+//   {a, b, c, d, tx, ty}  is the shape of every 2D affine matrix in the corpus, and the only NAMED type
+//                         in flight::types holding it is SwfTagMatrix. Automatic pairing aliased the
+//                         anonymous twin -- used by render_wgpu, swf, shape_formats and scene2d_wgpu --
+//                         to SwfTagMatrix, making a WGPU shader's transform literally an SWF tag matrix.
+//   {r, g, b, a}          likewise resolved to UnityColor.
+//
+// The tempting argument for automatic pairing is that TypeScript is structurally typed, so identical
+// shapes are mutually assignable and merging them is what the source language already says they are.
+// That argument is TRUE and INSUFFICIENT: structural assignability makes the alias type-correct, it does
+// not make the chosen NAME correct, and the name is what every diagnostic, debugger and future reader
+// sees. Which name wins is also an accident of the corpus -- whichever named type happens to be the
+// unique holder of that shape.
+//
+// So the correspondence is asserted by an author who checked it, per pair, and `sourceDeclaration` records
+// what they checked. A pair is only worth declaring when the two names mean the same thing in the same
+// domain, which is verifiable by reading them and is not computable from the bodies.
+function aliasAnonymousStructToNamed(contents, repair) {
+  const guard = new RegExp(
+    `^(#ifndef (FLIGHT_COMPILER_ANONYMOUS__[A-Z0-9_]+)\\n#define \\2\\n)struct ${repair.symbol} : public flight::ReferenceEnabled \\{\\n[\\s\\S]*?^\\};\\n(#endif[^\\n]*\\n)`,
+    'mu',
+  );
+  const found = guard.exec(contents);
+  if (found === null) return undefined;
+  const hoisted = contents.includes(`#include <${repair.canonicalInclude}>`)
+    ? contents
+    : hoistInclude(contents, repair.canonicalInclude);
+  if (hoisted === undefined) return undefined;
+  const again = guard.exec(hoisted);
+  if (again === null) return undefined;
+  return (
+    hoisted.slice(0, again.index) +
+    `${again[1]}using ${repair.symbol} = flight::types::${repair.replacement};\n${again[3]}` +
+    hoisted.slice(again.index + again[0].length)
+  );
 }
 
 // Repeats an alias definition in the file that needs it, where a forward declaration cannot reach.
