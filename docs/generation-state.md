@@ -2762,15 +2762,27 @@ established `insert-using-declaration` kind repairs, one entry per (package, sym
 header as its `include`. That accounts for 656 of the header failures and is by far the largest single
 shape in the tree.
 
-Five names are NOT declared anywhere in the generated tree, and they are a different problem:
+Five names first looked like they were declared nowhere in the tree, accounting for 89 header failures.
+Checked individually, only three of them are, and the correction matters because the two big ones are the
+ordinary case:
 
-| occurrences | name |
-|---|---|
-| 69 | `registry_entry_state` |
-| 10 | `get_node_runtime` |
-| 4 | `data_tag_aef43e71dd1e9a6d` |
-| 3 | `test_image_dimension_resolver` |
-| 3 | `warn_on_unsupported_snapshot_source` |
+| occurrences | name | actually |
+|---|---|---|
+| 69 | `registry_entry_state` | declared in `flight::types` — `types/registry_table.hpp` has it as an `inline flight::Ref<...>` **variable**, used unqualified as `registry_entry_state.bound` |
+| 10 | `get_node_runtime` | declared in `flight::node` — `node/revision.hpp`, a **template** function with a defaulted `Traits` argument |
+| 4 | `data_tag_aef43e71dd1e9a6d` | genuinely absent: 2 references, no definition |
+| 3 | `test_image_dimension_resolver` | genuinely absent: 1 reference, no definition |
+| 3 | `warn_on_unsupported_snapshot_source` | genuinely absent: 1 reference, no definition |
+
+So roughly 735 of the 745 are qualification problems and about 10 are referenced-but-never-emitted
+symbols — a much smaller and different family, and the only one of the two that an override could be the
+answer for.
+
+The cause of the misreading is worth recording because it will recur: the declaration index matched only
+`struct`, `class`, `enum class` and `using`. An emitted constant object is an `inline` variable and an
+emitted generic function is a template, so neither was indexed, and both then read as "declared nowhere".
+`get_node_runtime` also lives in `flight::node` rather than `flight::types`, so a sweep that assumes
+`flight::types` is the only home for an unqualified name will miss it and mis-declare its repair.
 
 **But 656 is an upper bound on headers unlocked, not a prediction, and the first measurement already
 shows why.** The report records only each header's FIRST diagnostic. Resolving `Light` in
