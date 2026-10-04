@@ -2276,3 +2276,62 @@ packages is a hypothesis, and this corpus has 150.
 `glyphatlas`'s three grouped name repairs are kept: they match 24 files, remove real undefined-name
 errors, and are prerequisites for whatever closes the structural defects behind them. But they gain no
 header today and are recorded as such.
+
+## The structural-row family, localised to one line
+
+This is the largest remaining cluster and four independent paths converge on it, so it is worth stating
+exactly where it lives.
+
+**Size.** 46 headers whose *first* diagnostic names a structural row, 37 of them "will not widen or
+convert":
+
+| package | headers | | package | headers |
+|---|---|---|---|---|
+| `physics2d` | 15 | | `requirements` | 4 |
+| `scene2d-resources` | 7 | | `loader` | 3 |
+| `node` | 5 | | `registry-codegen` | 3 |
+| `lighting` | 4 | | six others | 1 each |
+
+Plus the packages whose *remaining* failures terminate here once their names are qualified:
+`textshaper`, `bitmapfont`, `glyphatlas`, and `textlayout`'s last three — the last identified by
+`builder`, which is what made the convergence visible.
+
+**Where it lives.** The runtime already has a widening path. `row_objects_convertible` admits
+`generated_row_widening_proven_v<To, From>`, a trait the generated structural member table specialises
+for every pair it can prove, over the key set collected from every `flight::RowKey<"…">` spelling in the
+tree. The proof itself is one macro, `FLIGHT_SDK_ROW_WIDENS`, and the refusal is one clause of it:
+
+```cpp
+else if constexpr (!std::same_as<std::remove_cvref_t<decltype(std::declval<Base&>().member)>,
+                                 std::remove_cvref_t<decltype(std::declval<Derived&>().member)>>)
+  return false;
+```
+
+**The concrete failure.** `@flighthq/textlayout`'s `rich_text_metrics.hpp` cannot pass a
+`Readonly<RichTextData>` row where `compute_text_bounds_width` wants
+`Readonly<auto_size_height_width_word_wrap_75a4ff02b472c2de>`. The two subjects agree on three of four
+members and differ on one:
+
+```cpp
+auto_size_height_width_word_wrap_…:  std::optional<bool> word_wrap;
+RichTextData:                        bool                word_wrap;
+```
+
+All four keys are present in the generated table, so the proof has everything it needs. It refuses on
+exact-type equality alone.
+
+**Why that refusal is stricter than the source language.** In TypeScript the target is
+`{ wordWrap?: boolean }` and `RichTextData` has `wordWrap: boolean`; a required property **is** assignable
+to an optional one. Reading a `bool` cell through an `optional<bool>` view is sound — the value is simply
+always present — and the target here is `RowReadonly`, so nothing can write `nullopt` back into a required
+field. The unsound direction is the reverse, and it stays refused.
+
+So the candidate capability is narrow and checkable: admit a base member of type `std::optional<T>`
+against a derived member of type `T` **when the target schema is readonly**. That is one clause, it
+matches the source language, and it fails closed for a writable target.
+
+It is recorded rather than implemented because a widening rule is exactly the kind of change this file
+has twice had to walk back for over-reaching: the soundness argument above needs a semantic test per
+direction — readonly target admits, writable target refuses, absence still distinguishable through the
+widened view — before it earns the 37 headers it looks worth. The one-line localisation is the durable
+part; the clause is cheap once someone writes those tests.
