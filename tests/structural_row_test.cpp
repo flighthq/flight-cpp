@@ -940,6 +940,25 @@ int main() {
     }
   }
 
+  // What agreement between two member types means, and why one direction only.
+  //
+  // The generated table enumerates keys; `row_member_widens_v` decides whether the two declared types
+  // agree. Identical types agree. A base key declared `std::optional<T>` is also satisfied by a derived
+  // member of plain `T`, which is TypeScript's rule -- an optional property is `T | undefined` and `T`
+  // is assignable to it -- and reads honestly, since such a subject answers every read with a value.
+  static_assert(flight::detail::row_member_widens_v<double, double>);
+  static_assert(flight::detail::row_member_widens_v<std::optional<bool>, bool>,
+                "an optional base key is satisfied by a plain derived member");
+  static_assert(!flight::detail::row_member_widens_v<bool, std::optional<bool>>,
+                "but NOT the reverse: a plain base key promises a value the optional source may not have");
+  static_assert(!flight::detail::row_member_widens_v<std::optional<bool>, double>,
+                "and the relaxation does not loosen the value type itself");
+  static_assert(!flight::detail::row_member_widens_v<double, flight::String>);
+  // Nested optionals are not collapsed: optional<optional<T>> is satisfied by optional<T>, one level.
+  static_assert(flight::detail::row_member_widens_v<std::optional<std::optional<bool>>, std::optional<bool>>);
+  static_assert(!flight::detail::row_member_widens_v<std::optional<std::optional<bool>>, bool>,
+                "one level of relaxation, not an unwrap to the bottom");
+
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
   return failures == 0 ? 0 : 1;
 }
