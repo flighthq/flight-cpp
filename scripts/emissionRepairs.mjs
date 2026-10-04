@@ -22,6 +22,7 @@ const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration',
   'alias-anonymous-struct-to-named',
   'project-partial-row-absence',
   'unwrap-partial-row-three-state-member',
+  'project-array-at-row-write',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -56,6 +57,7 @@ const REQUIRED_FIELDS = {
   'wrap-conditional-absent-branch': [...SHARED_FIELDS, 'sourceDeclaration'],
   'project-partial-row-absence': [...SHARED_FIELDS, 'keys', 'sourceDeclaration'],
   'unwrap-partial-row-three-state-member': [...SHARED_FIELDS, 'keys', 'sourceDeclaration'],
+  'project-array-at-row-write': [...SHARED_FIELDS, 'keys', 'element', 'identityArgument', 'sourceDeclaration'],
 };
 
 export function loadEmissionRepairs(root) {
@@ -170,6 +172,7 @@ const HANDLERS = {
   'wrap-conditional-absent-branch': (contents) => wrapConditionalAbsentBranch(contents),
   'project-partial-row-absence': projectPartialRowAbsence,
   'unwrap-partial-row-three-state-member': unwrapPartialRowThreeStateMember,
+  'project-array-at-row-write': projectArrayAtRowWrite,
 };
 
 function applyOneRound(repairs, files, applied) {
@@ -984,6 +987,64 @@ function projectPartialRowAbsence(contents, repair) {
 // can only mean the property was absent, which is `Undefined`.
 function unwrapPartialRowThreeStateMember(contents, repair) {
   return rewritePartialRowProjection(contents, repair, 'Undefined', () => 'optional_chain_projected.value()');
+}
+
+// Projects the array written to a row into the element type the row's member declares.
+//
+// `flight::array_of` keeps ELEMENT identity but returns a SEPARATE array handle, so using it where
+// TypeScript stores an existing array changes array identity -- one of the semantics `AGENTS.md` says no
+// workaround may change. It is sound only where the written array has no identity anyone can observe: a
+// temporary, or a local written once and not otherwise retained. That precondition is NOT visible in the
+// diagnostic, so each declaration must name the sites and state, in `identityArgument`, why the written
+// expression at each one has no observable identity. Same discipline as the absence-channel kinds, for
+// the same reason: the diagnostic cannot tell a safe site from an unsafe one.
+function projectArrayAtRowWrite(contents, repair) {
+  let text = contents;
+  let changed = false;
+  for (const key of repair.keys) {
+    const needle = `flight::row_set<flight::RowKey<"${key}">>(`;
+    let from = 0;
+    for (;;) {
+      const start = text.indexOf(needle, from);
+      if (start === -1) break;
+      const open = start + needle.length - 1;
+      const close = matchingParenthesis(text, open);
+      if (close === undefined) break;
+      const comma = splitRowSetArgument(text, open, close);
+      if (comma === undefined) {
+        from = close + 1;
+        continue;
+      }
+      const value = text.slice(comma + 1, close).trim();
+      // Idempotent across rounds: `applyEmissionRepairs` iterates to a fixed point, and wrapping an
+      // already-wrapped value would nest array_of inside itself.
+      if (value.startsWith('flight::array_of<')) {
+        from = close + 1;
+        continue;
+      }
+      const replacement = `flight::array_of<${repair.element}>(${value})`;
+      text = `${text.slice(0, comma + 1)} ${replacement}${text.slice(close)}`;
+      changed = true;
+      from = comma + 1 + replacement.length;
+    }
+  }
+  return changed ? text : undefined;
+}
+
+// The index of the comma separating `row_set(row, value)`'s two arguments, at paren depth 1 so a comma
+// inside a template argument list or a nested call is not mistaken for it.
+function splitRowSetArgument(text, open, close) {
+  let depth = 0;
+  let angle = 0;
+  for (let at = open; at < close; at += 1) {
+    const character = text[at];
+    if (character === '(') depth += 1;
+    else if (character === ')') depth -= 1;
+    else if (character === '<') angle += 1;
+    else if (character === '>') angle -= 1;
+    else if (character === ',' && depth === 1 && angle === 0) return at;
+  }
+  return undefined;
 }
 
 export function obsoleteRepairs(applied, profiles, fullRun) {
