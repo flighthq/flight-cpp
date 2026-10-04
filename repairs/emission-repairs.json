@@ -929,6 +929,40 @@
       "defect": "The emitter writes 26 name(s) owned by flight::types unqualified inside namespace flight::texture, and without the headers that define them. Declared as one entry rather than one per name because this is a single emitter defect that produces names by the dozen per package; each name is still enumerated, carries its own defining header, and is introduced only into the files that use it unqualified.\\n\\nMEASURED GAIN TODAY: ZERO headers. Applied to a scratch tree and iterated to convergence, flight::texture and its two sibling packages stayed at 8 of 32 headers compiling. The chain terminates on twelve names with no declaration anywhere in the tree -- functions the compiler refused to generate -- so these packages need hand-written overrides as well. It is declared anyway because the names are necessary though not sufficient, because a using-declaration has no wrong-but-compiling outcome, and because otherwise whoever writes those overrides rediscovers all 56 names first. See docs/generation-state.md.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "conditional-absent-branch-optional",
+      "kind": "wrap-conditional-absent-branch",
+      "appliesTo": "flight/",
+      "sourceDeclaration": "e.g. packages/flow/src/flow.ts -- return states.length > 0 ? states[states.length - 1] : null; lowered against a declared std::optional<flight::Ref<FlowState>> result",
+      "diagnostic": "operands to '?:' have different types 'std::shared_ptr<...>' and 'const std::nullopt_t'",
+      "defect": "TypeScript's `cond ? value : null` lowers with the absent branch as std::nullopt and the present branch left as a bare value, and C++ has no common type for the two. Wrapping the present branch in std::optional{...} produces exactly the type the surrounding declaration already asks for, so the repair writes what the code states rather than choosing anything. 138 sites across 87 files; @flighthq/flow is fully emitted and all four of its headers fail on this and one other thing only.",
+      "expectedWhen": "always",
+      "expires": "when the emitter gives a conditional's present branch the optional type its absent branch implies; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "log-once-record-from-designated-initializer",
+      "kind": "record-from-designated-initializer",
+      "appliesTo": "flight/",
+      "symbol": "log_once",
+      "replacement": "flight::types::LogData",
+      "keyNames": {
+        "body_indices": "bodyIndices",
+        "missing_command_key": "missingCommandKey",
+        "registered_count": "registeredCount",
+        "repeat_count": "repeatCount",
+        "requested_count": "requestedCount",
+        "timeout_ms": "timeoutMs",
+        "unregistered_kinds": "unregisteredKinds",
+        "unresolved_indexes": "unresolvedIndexes",
+        "unsupported_fields": "unsupportedFields"
+      },
+      "sourceDeclaration": "packages/log/src/log.ts -- export function logOnce(key: string, level: LogLevel, data: LogData | (() => LogData), channel?: string): boolean; packages/types/src/Log.ts -- export type LogData = Record<string, unknown> | string",
+      "diagnostic": "designated initializers cannot be used with a non-aggregate type 'std::variant<std::function<...>, std::variant<flight::Record<flight::String, flight::Any>, flight::String> >'",
+      "defect": "TypeScript passes an object literal as log_once's data argument, which has to become a flight::Record<flight::String, flight::Any>. The emitter instead wrote C++ designated-initializer syntax, which is neither a Record nor valid for the variant parameter. 21 sites across 12 packages. @flighthq/flow is fully emitted and all four of its headers fail on this and nothing else once conditional-absent-branch-optional has run.\n\nEvery entry in keyNames was verified to occur in the pinned TypeScript before being written down; the inverse of the emitter's snake_casing is not computable (it produces spellings like scene3_dresource from scene3DResource), so an underscored key absent from the map leaves its site UNTOUCHED and its header failing, rather than closing the gap with a guessed log field name.",
+      "expectedWhen": "always",
+      "expires": "when the emitter constructs a Record for an object literal passed as LogData; sdk:check fails if this repair matches no header.",
+      "recordType": "flight::Record<flight::String, flight::Any>"
     }
   ]
 }

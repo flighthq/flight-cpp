@@ -15,6 +15,8 @@ const SCHEMA = 'flight-cpp-emission-repairs/1';
 const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias', 'name-in-place-alternative', 'name-defaulted-template-argument',
   'deduce-call-argument-from-assignment',
   'respell-flattened-union',
+  'wrap-conditional-absent-branch',
+  'record-from-designated-initializer',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -42,6 +44,8 @@ const REQUIRED_FIELDS = {
   'name-in-place-alternative': [...SHARED_FIELDS, 'symbol'],
   'respell-flattened-union': [...SHARED_FIELDS, 'symbol', 'replacement', 'requiredSuffix', 'sourceDeclaration'],
   'respell-reference-alias': [...SHARED_FIELDS, 'symbol', 'expansion', 'witness', 'witnessInclude'],
+  'record-from-designated-initializer': [...SHARED_FIELDS, 'symbol', 'recordType', 'replacement', 'sourceDeclaration'],
+  'wrap-conditional-absent-branch': [...SHARED_FIELDS, 'sourceDeclaration'],
 };
 
 export function loadEmissionRepairs(root) {
@@ -145,14 +149,18 @@ function applyOneRound(repairs, files, applied) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
       const repaired =
-        repair.kind === 'respell-flattened-union'
-          ? respellFlattenedUnion(contents, repair)
-          : repair.kind === 'deduce-call-argument-from-assignment'
-            ? deduceCallArgumentFromAssignment(contents, repair)
-            : repair.kind === 'name-defaulted-template-argument'
-              ? nameDefaultedTemplateArgument(contents, repair)
-              : repair.kind === 'name-in-place-alternative'
-                ? nameInPlaceAlternative(contents, repair)
+        repair.kind === 'record-from-designated-initializer'
+          ? recordFromDesignatedInitializer(contents, repair)
+          : repair.kind === 'wrap-conditional-absent-branch'
+            ? wrapConditionalAbsentBranch(contents)
+            : repair.kind === 'respell-flattened-union'
+              ? respellFlattenedUnion(contents, repair)
+              : repair.kind === 'deduce-call-argument-from-assignment'
+                ? deduceCallArgumentFromAssignment(contents, repair)
+                : repair.kind === 'name-defaulted-template-argument'
+                  ? nameDefaultedTemplateArgument(contents, repair)
+                  : repair.kind === 'name-in-place-alternative'
+                    ? nameInPlaceAlternative(contents, repair)
           : repair.kind === 'respell-reference-alias'
             ? respellReferenceAlias(contents, repair)
           : repair.kind === 'insert-using-declaration'
@@ -167,6 +175,183 @@ function applyOneRound(repairs, files, applied) {
     }
   }
   return changed;
+}
+
+// Builds the Record an object literal was, where the emitter wrote a designated initializer instead.
+//
+// TypeScript passes an object literal: `logOnce(key, LogLevel.Warn, { kind }, 'flow')`. The parameter is
+// `LogData | (() => LogData)` and `LogData` is `Record<string, unknown> | string`, so the argument has to
+// become a `flight::Record<flight::String, flight::Any>`. The emitter instead wrote C++ designated
+// initializer syntax:
+//
+//   flight::log::log_once(..., {.kind = kind}, ...);
+//   error: designated initializers cannot be used with a non-aggregate type 'std::variant<...>'
+//
+// which is not a Record and is not valid for a variant either. The repair writes the Record: each
+// `.name = value` becomes `{flight::String("name"), value}`, wrapped in the declared `LogData` alias so it
+// selects the variant alternative exactly -- the same construction the emitter produces at the call sites
+// where it gets this right.
+//
+// THE KEY NAME IS THE WHOLE DIFFICULTY, and the reason this carries a declared map. A Record key is the
+// TypeScript property name, and the emitter has already snake_cased the field: `.timeout_ms` has to become
+// "timeoutMs", not "timeout_ms", or the field silently appears under the wrong name in log output. That
+// inverse is not computable -- snake_case to camelCase is ambiguous in general, and this emitter produces
+// spellings like `scene3_dresource` from `scene3DResource`. So:
+//
+//   * a key with no underscore maps to itself, which is exact and needs nothing declared;
+//   * a key with an underscore must appear in `keyNames`, each entry verified to occur in the pinned
+//     TypeScript before being written down;
+//   * a site with an underscored key that is NOT in the map is LEFT ALONE, so its header keeps failing
+//     and the gap stays visible, rather than being closed with a guessed field name.
+//
+// 21 sites across 12 packages, including @flighthq/flow, whose four headers fail on this and nothing else
+// once the conditional repair has run.
+function recordFromDesignatedInitializer(contents, repair) {
+  let out = contents;
+  let changed = false;
+  let from = 0;
+  for (;;) {
+    const call = out.indexOf(`${repair.symbol}(`, from);
+    if (call === -1) break;
+    const open = out.indexOf('{.', call);
+    const end = open === -1 ? -1 : out.indexOf(';', call);
+    if (open === -1 || end === -1 || open > end) {
+      from = call + repair.symbol.length;
+      continue;
+    }
+    const close = matchingBrace(out, open);
+    if (close === undefined) {
+      from = call + repair.symbol.length;
+      continue;
+    }
+    const built = recordLiteral(out.slice(open + 1, close), repair);
+    if (built === undefined) {
+      from = close;
+      continue;
+    }
+    // Both names are written: the Record, which holds the cells, and the union alias around it, which
+    // selects the variant alternative. `LogData{{...}}` alone would be a braced-list construction of the
+    // variant itself and does not compile.
+    out =
+      out.slice(0, open) +
+      `${repair.replacement}{${repair.recordType}{${built}}}` +
+      out.slice(close + 1);
+    changed = true;
+    from = open + built.length;
+  }
+  return changed ? out : undefined;
+}
+
+// `.name = value, .other = value` to `{flight::String("name"), value}, {flight::String("other"), value}`.
+// Returns undefined when any key needs a camelCase spelling that has not been declared and verified.
+function recordLiteral(fields, repair) {
+  const parts = splitTopLevel(fields);
+  const cells = [];
+  for (const part of parts) {
+    const match = /^\s*\.([a-z_0-9]+)\s*=\s*([\s\S]+)$/u.exec(part);
+    if (match === null) return undefined;
+    const [, field, value] = match;
+    const key = field.includes('_') ? repair.keyNames?.[field] : field;
+    if (key === undefined) return undefined;
+    cells.push(`{flight::String("${key}"), ${value.trim()}}`);
+  }
+  return cells.length === 0 ? undefined : cells.join(', ');
+}
+
+// Commas at brace/paren/angle depth zero only: a field's value is frequently a call or a nested literal
+// with commas of its own.
+function splitTopLevel(text) {
+  const parts = [];
+  let depth = 0;
+  let start = 0;
+  for (let at = 0; at < text.length; at += 1) {
+    const character = text[at];
+    if (character === '{' || character === '(' || character === '[') depth += 1;
+    else if (character === '}' || character === ')' || character === ']') depth -= 1;
+    else if (character === ',' && depth === 0) {
+      parts.push(text.slice(start, at));
+      start = at + 1;
+    }
+  }
+  parts.push(text.slice(start));
+  return parts;
+}
+
+function matchingBrace(text, open) {
+  let depth = 0;
+  for (let at = open; at < text.length; at += 1) {
+    if (text[at] === '{') depth += 1;
+    else if (text[at] === '}') {
+      depth -= 1;
+      if (depth === 0) return at;
+    }
+  }
+  return undefined;
+}
+
+// Gives a conditional's present branch the optional type its absent branch already implies.
+//
+// TypeScript writes `cond ? states[states.length - 1] : null`, and the emitter lowers `null` to
+// `std::nullopt` while leaving the other branch as a bare value. C++ then has no common type for the two:
+//
+//   error: operands to '?:' have different types 'std::shared_ptr<FlowState>' and 'const std::nullopt_t'
+//
+// Wrapping the present branch in `std::optional{...}` gives exactly the type the declaration on the left
+// already asks for -- `std::optional<flight::Ref<FlowState>> revealed = (...)` -- so the repair writes
+// what the surrounding code states, rather than choosing anything. Class template argument deduction
+// picks the element type, and `std::optional{x}` where `x` is already an optional is a copy rather than a
+// nesting, so a branch that is itself optional is unaffected.
+//
+// 138 sites across 87 files, including @flighthq/flow, which is fully emitted and whose four headers fail
+// on this and one other thing only.
+//
+// The scan walks BACKWARD from each `: std::nullopt)` to the `?` at the same parenthesis depth, instead
+// of matching a regex across the branch. Conditionals here nest and their branches contain calls, casts
+// and further parentheses, and a regex that tried to span the present branch would either stop at the
+// first `:` -- there is one in every `std::` qualification -- or run past the end of the conditional.
+function wrapConditionalAbsentBranch(contents) {
+  const marker = ' : std::nullopt)';
+  let out = contents;
+  let changed = false;
+  let from = 0;
+  for (;;) {
+    const at = out.indexOf(marker, from);
+    if (at === -1) break;
+    const question = conditionalQuestionBefore(out, at);
+    if (question === undefined) {
+      from = at + marker.length;
+      continue;
+    }
+    const branch = out.slice(question + 2, at);
+    if (branch.startsWith('std::optional')) {
+      from = at + marker.length;
+      continue;
+    }
+    out = `${out.slice(0, question + 2)}std::optional{${branch}}${out.slice(at)}`;
+    changed = true;
+    from = at + marker.length + 'std::optional{}'.length;
+  }
+  return changed ? out : undefined;
+}
+
+// The `?` opening the conditional whose absent branch starts at `colon`: the nearest one to its left that
+// sits at the same parenthesis depth, scanning right to left. Returns undefined when the text in between
+// is unbalanced, which means this `: std::nullopt)` does not belong to a conditional we can read.
+function conditionalQuestionBefore(text, colon) {
+  let depth = 0;
+  for (let at = colon - 1; at >= 0; at -= 1) {
+    const character = text[at];
+    if (character === ')') depth += 1;
+    else if (character === '(') {
+      if (depth === 0) return undefined;
+      depth -= 1;
+    } else if (character === '?' && depth === 0 && text[at + 1] === ' ') {
+      return at;
+    } else if (character === ';' && depth === 0) {
+      return undefined;
+    }
+  }
+  return undefined;
 }
 
 // Writes a union back as the alias it is declared as, where the emitter flattened it.
