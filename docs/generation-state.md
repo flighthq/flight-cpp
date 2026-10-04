@@ -3478,3 +3478,29 @@ each override, scan the generated tree for any header that includes it with a qu
 report those as sites the override does not cover. An override whose consumers all bypass it is a copy
 carrying a maintenance claim and delivering nothing, and `derivedFrom` cannot detect that. Not implemented
 here — it is a gate change, and the measurement above is the specification for it.
+
+### The zero-pass packages, classified by whether an override can even reach them
+
+28 packages have zero passing headers, 193 headers between them. The useful second column is not the
+header count but the **include form their own siblings use**, because that decides whether an override can
+reach the consumers at all:
+
+| intra-package quoted includes | packages | verdict |
+|---|---|---|
+| 0 | **19** | an override reaches every consumer |
+| 1–4 | 6 | partial; check the specific consumer |
+| 13 | 1 (`interaction`) | the 16-to-1 case |
+| 171 | 1 (`effects_wgpu`, 60 headers) | worst in the tree |
+
+Nineteen of 28 are clean, and eleven of those are three-header packages — one module plus `contract.hpp`
+and `_internal_index.hpp` — where a single root defect clears the package. Those are the cheapest wins on
+the board.
+
+This also shows that sending builder at `interaction` was a bad call on my part: of the 28, it was among
+the four worst choices by reachability, and the check that would have revealed it costs minutes. Compute
+reachability BEFORE choosing an override target, not after measuring a disappointing gain.
+
+`requirements` (4) and `registry_codegen` (3) are on this list and are covered by the two
+`project-array-at-row-write` declarations now in flight, which measured all seven of their headers to zero
+errors. `statusbar` (3) is the single declared deferred defect in the fresh tier report, so it sits in the
+shippable denominator by design and closing it is real progress.
