@@ -1601,7 +1601,7 @@ twelve are therefore the highest-value work in the corpus, and they are small:
 
 | package | headers | blocker |
 |---|---|---|
-| `types` | 407/411 | `DomTextureResolver` is not a member of `flight::types` |
+| `types` | 990/995 [^1] | `DomTextureResolver` is not a member of `flight::types` |
 | `bitmap` | 41/44 | `optional<Array<double>>::optional(<brace-enclosed initializer list>)` |
 | `path` | 23/31 | `Array::copy_within` missing from the runtime |
 | `host` | 2/6 | `Any::has_value` missing from the runtime |
@@ -1839,8 +1839,8 @@ in front of a refusal.
 
 ### `types`: one defect, two shapes
 
-`@flighthq/types` is the largest package in the SDK — 995 modules, 411 headers — and everything depends on
-it. It was 406/411, and both causes were the same emitter defect: **aliases written into the
+`@flighthq/types` is the largest package in the SDK — 995 modules and 995 headers — and everything depends
+on it. It was 990/995, and both causes were the same emitter defect: **aliases written into the
 forward-declaration prologue, which sits before the include block.** That placement is fine for a struct,
 whose name can be forward-declared, and wrong for an alias, whose definition names types the includes have
 not brought in yet.
@@ -1904,3 +1904,512 @@ Distinguishing the two would mean compiling each package with and without each r
 which is expensive and has not been done. So the count understates `ready` by at least one, and
 `assisted` should be read as "carries declared debt, which it may or may not depend on". `easing` and
 `particles` are genuinely assisted — remove their overrides and the packages do not build.
+
+## Measured: what the five repairs and five runtime members were worth
+
+Full compile over the regenerated tree, against the pre-repair baseline of 1686/2710:
+
+**1714 of 2710 headers, +28.** And **39 of 146 applicable packages shippable (29 ready, 10 assisted)**,
+up from 35 (27 ready, 8 assisted).
+
+| package | before | after | |
+|---|---|---|---|
+| `path-boolean` | 0/10 | 7/10 | +7 |
+| `flow` | 0/4 | **4/4** | +4 |
+| `bitmap` | 41/44 | **44/44** | +3 |
+| `path-formats` | 0/3 | **3/3** | +3 |
+| `registry-catalog` | 1/4 | **4/4** | +3 |
+| `path` | 23/31 | 26/31 | +3 |
+| `collision`, `font`, `physics3d`, `shape`, `textshaper` | | | +1 each |
+
+`path-boolean` at +7 was not predicted — it was 0/10 and never appeared in any of the targeted analysis.
+It uses the same `std::make_tuple`-for-an-array construction as `path`, so the tuple repair reached it for
+free. Worth noting because the targeted work was aimed at `path` and `bitmap`; a third of the gain came
+from a package nobody looked at.
+
+Four packages went from partial to complete on headers: `flow`, `bitmap`, `path-formats`,
+`registry-catalog`.
+
+Not in this measurement: the five `types` headers fixed by `types-flight-document-value-forward-declaration`
+and the three `repeat-alias-declaration` entries. Those were declared after the regeneration, so the
+committed tree does not carry them yet — another +5 and `@flighthq/types` going ready are pending the next
+`npm run sdk:generate`.
+
+## A repair built, measured, and reverted: pairing structs by shape
+
+The conversion family is 85 headers. Classified in detail:
+
+| cause | headers |
+|---|---|
+| structural row seam | 37 |
+| distinct struct identities | 25 |
+| other | 19 |
+| `Record<String, Any>` from a brace list | 3 |
+
+That breakdown redirected the work twice.
+
+**It killed a runtime addition before it was built.** `@flighthq/host` fails because a `.map(...)` result
+— an `Array<String>` — will not become a `flight::Any`, and `Any` can only hold an object through a
+`shared_ptr`. Adding array support to `Any` looked worthwhile until the count said **three headers**.
+
+**And the detailed grouping produced artifacts of my own tooling.** It first reported
+`Texture2D → Texture2D`, `AmbientLight`, `ClipRegion` and `Material` as distinct-identity pairs. They are
+not: the compiler abbreviates `flight::types::StandardMaterial` to `types::StandardMaterial` in the same
+diagnostic, and my regex read the two spellings as two types. Those rows were row-seam cases misfiled by
+the classifier, not findings.
+
+### The real cluster, and the generalisation that failed
+
+`flight::types::WgpuRenderStats` and `flight::scene2d_wgpu::draw_call_count_..._9fe60b6367cb7daf` have
+**byte-identical bodies differing only in the struct name** — a module-private interface the emitter
+cannot name across a module boundary, synthesised as an anonymous twin. The derived aliasing pairs structs
+by NAME, so it never sees them.
+
+Pairing by BODY was implemented. The argument for it felt solid: TypeScript is structurally typed, so two
+interfaces with identical members are mutually assignable by definition, and merging them is what the
+source language already says they are.
+
+It worked, and then what it chose was the problem:
+
+```
+{a, b, c, d, tx, ty}  ->  SwfTagMatrix     (the twin is used by render_wgpu, swf, shape_formats, scene2d_wgpu)
+{r, g, b, a}          ->  UnityColor
+```
+
+`{a,b,c,d,tx,ty}` is the shape of every 2D affine matrix in the corpus, and the only *named* type in
+`flight::types` holding it is `SwfTagMatrix`. So a WGPU shader's transform became an SWF tag matrix.
+
+The argument was **true and insufficient**. Structural assignability makes such an alias type-correct; it
+does not make the chosen NAME correct, and the name is what every diagnostic, debugger and future reader
+sees. Which name wins is also an accident of the corpus — whichever named type happens to be the unique
+holder of that shape. Reverted.
+
+Three self-inflicted failures on the way there, each reporting a confident `0 aliased`: the scratch tree
+held `render_wgpu` when the twin lives in `scene2d_wgpu`; `body` in the existing code means the whole
+struct text *including the name*, while the new index held member text only, so they could never compare
+equal; and the early return tested the same-name index and bailed before the new path ran.
+
+### What replaced it, and what it was actually worth
+
+A declared kind, `alias-anonymous-struct-to-named`, one verified pair at a time. `WgpuRenderStats`
+qualifies on evidence that is read rather than computed: byte-identical members, the same four names in
+the same order, and a consuming package (`scene2d_wgpu`) in the same WGPU render-statistics domain as the
+named type.
+
+**It gained one header** — `scene2d_wgpu` 9/33 to 10/33. The conversion appears 15 times in the
+diagnostics, which is occurrences and not headers; the rest of that package fails on unrelated causes
+behind it. The repair is kept because it removes a real failure and the pair is verified, but the 15 is
+not its value, and the overstated claim has been corrected in the repair's own `defect` field.
+
+That is the fourth time this session a correct fix gained nothing or nearly nothing. The rejected
+body-matching generalisation is recorded inside the repair so nobody rebuilds it.
+
+## `filesystem`: 40 of 44, and the four that were refused on purpose
+
+`builder` supplied the module. 501 lines, 40 of the 44 declarations, and **`supplies` deliberately
+omitted** — the manifest records `status: incomplete` with the gap named: `read_dialog_handle_binary_file`
+and three siblings need `getFileDialogHandleOperations`, which lives in a *separately refused* module, and
+`FileDialogHandle`'s generated carrier exposes no checked projection to it. Returning null or false would
+change behaviour whenever operations are present.
+
+That is the right call, and the mechanism is built to record it: the four omissions have **no callers
+outside the package**, so nothing breaks today, and the package stays `partial` rather than claiming a
+tier it has not earned.
+
+The abort boundary is faithful in the order that matters — rejected with `signal.reason.snapshot()`
+*before* any host callback runs, resolved with the source's default for a missing host member:
+
+```cpp
+if (signal.has_value() && signal->aborted) return detail::reject_aborted<bool>(*signal);
+const auto append = detail::member(host_file_system, &HostFileSystemCapability::append_text_file, "appendTextFile");
+if (!append.has_value()) return flight::Task<bool>::resolve(false);
+```
+
+One correction to the brief I wrote: I said the `signal === undefined ? f(a,b) : f(a,b,signal)` ternary
+"selects a different host arity" and had to be preserved. In TypeScript it does. In the C++ lowering the
+host callback is a single `std::function` taking `std::optional<AbortSignal>`, so there is no arity to
+select and both branches are identical — the ternary is harmlessly redundant either way.
+
+## A correction that inverts the central inference: the name class is a SYMPTOM of the refusal
+
+`builder` supplied one refused declaration in each of two packages. I predicted no movement, told builder
+so, and cited these exact numbers as the reason. Both went complete:
+
+| package | before | after |
+|---|---|---|
+| `@flighthq/font` | 5/9 | **9/9** |
+| `@flighthq/texture-formats` | 7/11 | **11/11** |
+
+The prediction rested on an inference recorded earlier in this file, and the inference was wrong.
+
+**What was measured** (and still holds): 748 of 753 name-class failures sit in packages that already have
+refusals.
+
+**What I concluded from it**: that those packages therefore need *both* halves — an override for the
+refusal AND repairs for the name failures — so an override alone would not move them.
+
+**What the two packages actually show**: the name failures were *downstream of the refusal*. Look at what
+the four failing `font` headers were reporting:
+
+```
+'infer_font_format_from_url' is not a member of 'flight::font'
+```
+
+That is the refused function itself. The barrels and the two real consumers all failed because the
+declaration did not exist — not because of anything a repair could address. Supplying the module fixed
+all four. `texture-formats` is the same shape one step removed: its four headers reported
+`'TextureContainerParseFailureReason' was not declared in this scope`, a name the refused module declares,
+so writing the module brought the name with it.
+
+So the correlation was real and the causation ran the other way. In a package whose refusal withholds a
+declaration that its own barrels and siblings reference, **the override is not half the fix, it is the
+whole fix**, and the name-class diagnostics are the refusal's shadow rather than an independent problem.
+
+This reprices both queues. Hand-written modules are worth more than this file previously claimed, and
+repairing unqualified names in a package that has a refusal is worth less — frequently nothing, because
+supplying the module removes the diagnostic anyway. The earlier result that resolving 56 names across
+three packages gained zero headers now reads differently too: those names were waiting on refusals, and
+qualifying them was never going to help.
+
+What survives unchanged: "was not declared in this scope" is what gcc reports first and almost never what
+is really wrong. The lesson is the same; the remedy is the opposite of the one I inferred.
+
+## Hand-written modules are outperforming repairs, measured
+
+Six modules supplied by `builder`, each verified here independently against the same regenerated
+inventory (digests matched byte-for-byte in every case):
+
+| package | headers before | after | |
+|---|---|---|---|
+| `particles` | 13/13 | 13/13 | the refusal was the only gap |
+| `font` | 5/9 | **9/9** | complete |
+| `texture-formats` | 7/11 | **11/11** | complete |
+| `textbidi` | 4/8 | **8/8** | complete |
+| `filesystem` | 3/3 | 3/3 | 40 of 44 declarations; gap declared, `supplies` omitted |
+| `font-formats` | 13/17 | 13/17 | no gain, and reported as none |
+
+Against that, four of my repairs this session gained zero or one header. The asymmetry is consistent with
+the correction recorded above: name-class diagnostics are mostly the refusal's shadow, so supplying the
+module is often the whole fix while repairing names around it is often nothing.
+
+Two things `builder` did that are worth keeping as the standard for this work. It reported `font-formats`
+as **no gain** after measuring both ways, naming the real blocker rather than claiming the headers its
+override touched. And on `filesystem` it stopped at 40 of 44 declarations and left `supplies` off, because
+the remaining four need a function from a *separately refused* module and returning a default would change
+behaviour when operations are present. An honest gap beats a stub that claims completion, and the manifest
+is built to record exactly that difference.
+
+## A repair that reported success and did nothing, and the regression fixing it caused
+
+`font-formats` depends on `data_tag_aef43e71dd1e9a6d`, which `woff_font.hpp` constructs and casts to
+`data_tag_3ad9a8f109659685` — and which is **defined nowhere in the tree**. The emitter hashed one declared
+TypeScript type under two names and emitted a definition for only one. The source settles it:
+
+```ts
+interface WoffTable { data: Uint8Array; tag: number; }
+```
+
+exactly `data_tag_3ad9a8f109659685`'s `flight::Uint8Array data; double tag;`. Since the cast requires the
+two to BE one type, a second definition cannot work and an alias is the fix. Unlike the reverted
+shape-matching, this introduces no misleading name — both spellings are anonymous hashes of the same shape
+in the same module — and the correspondence is read from the source, not inferred from matching bodies.
+
+Then the placement went wrong twice, in opposite directions, because the emitter writes two file shapes:
+
+|  | `flight/types/dom_render_state.hpp` | `flight/font_formats/woff_font.hpp` |
+|---|---|---|
+| shape | prologue block of forward declarations, then aliases, then a second block with definitions | one block, code from the first line |
+| end-of-block | correct | **useless** — alias at line 133, used at line 59 |
+| start-of-block | **wrong** — alias above `struct DomRenderState;`, which this file defines | correct |
+
+End-of-block was the original. It matched `woff_font.hpp`, reported `touched: 1 file`, satisfied the expiry
+check, and changed nothing — **the one failure mode here that looks like success**. Every other mistake
+this session surfaced as a wrong number or a compile error.
+
+Start-of-block was the fix, and it regressed `font-formats` from 13/17 to **11/17** by breaking the `types`
+headers it includes: `'DomRenderState' is not a member of 'flight::types'`, plus a conflicting declaration.
+That was caught only because the measurement covered both shapes rather than the one being fixed — the
+`types` resolvers were already banked, so the loss would have been silent.
+
+The anchor is now the end of the leading run of forward declarations inside the block: line 20 in
+`woff_font.hpp`, line 48 in `dom_render_state.hpp` directly after `struct DomRenderState;`. All four
+`types` headers at zero errors, `font-formats` back to 13/17.
+
+**The alias still gains nothing.** `woff_font.hpp` now fails on a `std::variant<bool, double, String>`
+construction inside `report_import_diagnostic`, which is a third variation of the brace-initialised-union
+family and not reachable by either existing repair — `in_place_type` followed by a brace list no longer
+appears anywhere in the tree, because the earlier repair rewrites all of those at generation time. Recorded
+rather than chased.
+
+## The synthesis: which half is the whole fix depends on what the refusal withheld
+
+`builder` audited the five modules whose refusal reports **zero** `missing: function` lines, before writing
+anything, and the result corrects an assumption recorded earlier in this file.
+
+I had written that `refused-placeholder` means the file is a replaceable stub. For these five it does not.
+The placeholder retains the **complete source surface**; the refusal is recorded at module level only and
+nothing is withheld. The decisive observation is `builder`'s: `PARTIAL` / `NOT GENERATED` markers appear
+only where a declaration is *actually* absent, so a zero marker count is **positive evidence that there is
+nothing to supply** — not an anomaly to investigate. Four of the five would have been overrides nobody
+needed.
+
+Those four fail first on ordinary qualification. Measured, all four:
+
+| package | before | after | |
+|---|---|---|---|
+| `spatial` | 8/11 | **11/11** | complete, on one using-declaration for `SpatialIndexingNotice` |
+| `textshaper` | 7/10 | 7/10 | no gain |
+| `bitmapfont` | 3/8 | 3/8 | no gain |
+| `glyphatlas` | 5/10 | 5/10 | no gain |
+
+One of four paid, and `builder` called all four correctly in advance: `spatial` was described as
+"using/include repair territory, not an override", and `textshaper`, `bitmapfont` and `glyphSource` each
+as structural with "move on". Its predictions about which repairs would NOT help were as accurate as the
+one about which would — the three that gained nothing are blocked behind exactly the structural defects it
+named, one layer down.
+
+So the two halves are not interchangeable, and which one is the *whole* fix is predictable from what the
+refusal withheld:
+
+- **The refusal withheld declarations** → the override is the whole fix, and repairing names around it
+  gains nothing. `font` 5/9→9/9, `texture-formats` 7/11→11/11, `textbidi` 4/8→8/8.
+- **The refusal withheld nothing** → the qualification repair is the whole fix, and there is nothing for
+  an override to supply. `spatial` 8/11→11/11.
+
+That resolves the tension between two earlier records in this file — "hand-written modules are
+outperforming repairs" and "the name class is the refusal's shadow". Both were measured correctly; neither
+was the general rule. The marker count tells you which case you are in, and it is free to read.
+
+`builder`'s structural findings behind the other three are recorded for the queue rather than worked
+around: `textshaper` stores `Ref<TextShaperCacheRuntime>` through an `EntityRuntime` cell whose flattened
+owners have no heritage; `bitmapfont` needs an owner-preserving `Bitmap → TextureSource` conversion;
+`glyphSource` produces `optional<Ref<Bitmap>>` where `GlyphSource` requires
+`optional<Ref<TextureSource>>`. All three are the asserted-row and interface-heritage families.
+
+One reporting detail worth imitating: `builder` noted that its sweep deliberately excluded existing
+overrides, which is why it measured `textshaper` 6/10 and `bitmapfont` 2/8 against this clone's 7/10 and
+3/8. A discrepancy explained is worth more than a number that happens to agree.
+
+## `path-boolean` completes, and two corrections to how this file counts
+
+`builder` supplied `martinezKernel.ts` — 849 lines — and the package went **7/10 to 10/10**.
+
+### The costing column was mislabelled
+
+Every costing table above, including the one sent to `builder`, called the marker count
+"missing **function** lines". It is not: the marker names whatever kind of declaration was withheld, and
+across the tree that is
+
+```
+1519  missing: function
+ 205  missing: variable
+   2  missing: interface
+   1  missing: type
+   1  missing: class
+```
+
+`martinezKernel` was costed as "1 function" and the withheld declaration was `class DirectedGraph`, which
+is a materially different job — a class with state and methods rather than a free function. The estimate
+survived only because `builder` read the marker rather than trusting the summary. The 205 `variable`
+markers matter too: a withheld `const` table is cheap, a withheld class is not, and the current tables do
+not distinguish them.
+
+### An override copies the REPAIRED text, not the emitter's text
+
+`builder` noted that the copied body "needed its existing Array tuple repair" — that is,
+`array-from-tuple-construction` had already rewritten the generated file, and the override, being a copy
+of that file, had to carry the rewrite with it.
+
+The mechanism handles this correctly and it is worth stating why, because it looks like duplication. Repairs
+run **before** the tree is written, so `derivedFrom` is the digest of the *repaired* file. An override is
+therefore derived from the repaired text by construction, and if the repair later changes or is deleted the
+digest moves and `overrides:check` reports drift — which is the signal to re-derive. The duplication is
+real but it is tracked, which is the whole point of recording `derivedFrom` rather than trusting that a copy
+stays current.
+
+What this does mean in practice: a repair and an override that touch the same file are coupled, and the
+repair's expiry no longer removes its effect from the tree — the override still carries it. Anyone deleting
+a repair as obsolete should check whether an override is shadowing a file that repair used to rewrite.
+
+## The synthesis, corrected: the marker count predicts the OVERRIDE, never the repair
+
+The section above claimed the marker count predicts which half is the whole fix — declarations withheld
+means the override, nothing withheld means the qualification repair. The first half holds. **The second
+half is wrong**, and `@flighthq/glyphatlas` is the counterexample.
+
+`glyphatlas` is a zero-marker package: `builder`'s audit established its refused modules withhold nothing.
+By the stated synthesis, qualification should therefore have been the whole fix. So every unqualified name
+in all ten headers was swept in one pass — 13 found, 11 resolvable, declared as three grouped repairs
+touching **24 files** — and the result was **5/10 before, 5/10 after**.
+
+What is actually behind the names:
+
+```
+conversion from 'flight::IteratorResult<double>' to 'flight::Ref<flight::glyphatlas::done_…>'
+'flight::Ref<flight::types::Bitmap>' has no member named …
+```
+
+An iterator-result against the emitter's anonymous `{done, value}` shape, and a member access through a
+`shared_ptr`. Neither is reachable by qualification.
+
+Tallying all four zero-marker packages honestly:
+
+| package | zero markers | qualification fixed it? |
+|---|---|---|
+| `spatial` | yes | **yes** — 8/11 to 11/11 |
+| `textshaper` | yes | no — structural behind it |
+| `bitmapfont` | yes | no — structural behind it |
+| `glyphatlas` | yes | no — structural behind it |
+
+One of four. So the defensible rule is narrower than what was written, and it is the half that was actually
+established by evidence:
+
+> **A zero marker count means an override has nothing to supply.** That is positive evidence and it saved
+> four overrides nobody needed. It says nothing about whether a *repair* will help; only measuring does.
+
+This is the second generalisation in this file walked back after over-reaching from a small sample — the
+first was inferring from "748 of 753 name failures sit behind refusals" that both halves were always
+needed. Both times the measurement that contradicted it was cheap and available. The pattern worth
+internalising is not either specific rule but that a mechanism-level explanation derived from two or three
+packages is a hypothesis, and this corpus has 150.
+
+`glyphatlas`'s three grouped name repairs are kept: they match 24 files, remove real undefined-name
+errors, and are prerequisites for whatever closes the structural defects behind them. But they gain no
+header today and are recorded as such.
+
+## The structural-row family, localised to one line
+
+This is the largest remaining cluster and four independent paths converge on it, so it is worth stating
+exactly where it lives.
+
+**Size.** 46 headers whose *first* diagnostic names a structural row, 37 of them "will not widen or
+convert":
+
+| package | headers | | package | headers |
+|---|---|---|---|---|
+| `physics2d` | 15 | | `requirements` | 4 |
+| `scene2d-resources` | 7 | | `loader` | 3 |
+| `node` | 5 | | `registry-codegen` | 3 |
+| `lighting` | 4 | | six others | 1 each |
+
+Plus the packages whose *remaining* failures terminate here once their names are qualified:
+`textshaper`, `bitmapfont`, `glyphatlas`, and `textlayout`'s last three — the last identified by
+`builder`, which is what made the convergence visible.
+
+**Where it lives.** The runtime already has a widening path. `row_objects_convertible` admits
+`generated_row_widening_proven_v<To, From>`, a trait the generated structural member table specialises
+for every pair it can prove, over the key set collected from every `flight::RowKey<"…">` spelling in the
+tree. The proof itself is one macro, `FLIGHT_SDK_ROW_WIDENS`, and the refusal is one clause of it:
+
+```cpp
+else if constexpr (!std::same_as<std::remove_cvref_t<decltype(std::declval<Base&>().member)>,
+                                 std::remove_cvref_t<decltype(std::declval<Derived&>().member)>>)
+  return false;
+```
+
+**The concrete failure.** `@flighthq/textlayout`'s `rich_text_metrics.hpp` cannot pass a
+`Readonly<RichTextData>` row where `compute_text_bounds_width` wants
+`Readonly<auto_size_height_width_word_wrap_75a4ff02b472c2de>`. The two subjects agree on three of four
+members and differ on one:
+
+```cpp
+auto_size_height_width_word_wrap_…:  std::optional<bool> word_wrap;
+RichTextData:                        bool                word_wrap;
+```
+
+All four keys are present in the generated table, so the proof has everything it needs. It refuses on
+exact-type equality alone.
+
+**Why that refusal is stricter than the source language.** In TypeScript the target is
+`{ wordWrap?: boolean }` and `RichTextData` has `wordWrap: boolean`; a required property **is** assignable
+to an optional one. Reading a `bool` cell through an `optional<bool>` view is sound — the value is simply
+always present — and the target here is `RowReadonly`, so nothing can write `nullopt` back into a required
+field. The unsound direction is the reverse, and it stays refused.
+
+So the candidate capability is narrow and checkable: admit a base member of type `std::optional<T>`
+against a derived member of type `T` **when the target schema is readonly**. That is one clause, it
+matches the source language, and it fails closed for a writable target.
+
+It is recorded rather than implemented because a widening rule is exactly the kind of change this file
+has twice had to walk back for over-reaching: the soundness argument above needs a semantic test per
+direction — readonly target admits, writable target refuses, absence still distinguishable through the
+widened view — before it earns the 37 headers it looks worth. The one-line localisation is the durable
+part; the clause is cheap once someone writes those tests.
+
+## The two families that remain, both sized
+
+With `builder`'s queue worked through, the residue has resolved into two named families rather than a long
+tail. Both are runtime-capability questions, both are localised, and neither should be attempted without
+the tests named below.
+
+### 1. Structural row widening — 46 headers
+
+Sized and localised above: one `std::same_as` clause in `FLIGHT_SDK_ROW_WIDENS`, refusing a widening
+TypeScript permits (`{wordWrap?: boolean}` accepts `wordWrap: boolean`). Candidate fix is one clause,
+admitting an `optional<T>` base member against a `T` derived member **when the target schema is readonly**.
+
+Needs: a semantic test per direction — readonly target admits, writable target refuses, absence still
+distinguishable through the widened view.
+
+### 2. The absence channel — 10 headers
+
+| package | headers |
+|---|---|
+| `node` | 5 |
+| `lighting` | 4 |
+| `materials` | 1 |
+
+`node`'s `has_clip` / `has_material` / `has_blend_mode`, and — identified by `builder` — `lighting`'s
+`scene_lights.hpp`, which "tries to return optional partial-row reads as `variant<T, Null, Undefined>`".
+That is the same defect from a second direction, which is what confirms it as a family rather than three
+odd sites.
+
+The shape, unchanged from where it was first refused: `row_get` over a `RowPartial` returns a single
+`optional<V>`, having already collapsed *null* into *absent*, while the emitter wants three states. The
+information is **not recoverable at the call site**, so no repair can close it — and mapping `nullopt` to
+`Undefined` would compile and be observationally identical at every current site, which is exactly why it
+must not be done. `AGENTS.md` names absence as a semantics no workaround may change.
+
+The real fix is upstream of `row_get`: a partial row's cell has to carry three states. `flight::Presence<V>`
+already exists for it in `include/flight/presence.hpp` — unused by the emitter, and with its alternatives
+in the opposite order (`variant<Undefined, Null, V>` against the emitter's `variant<V, Null, Undefined>`),
+which is probably why it has never been wired up. Closing this is a runtime/emitter contract change, not a
+repair, and it is the smaller of the two families.
+
+### What that leaves
+
+Every other remaining failure is either a one-off or sits behind one of these two. The useful consequence:
+there is no longer a long tail to triage — there are two capabilities, 46 headers and 10 headers, each
+localised to a specific mechanism, each with its required tests written down.
+
+## Correcting the `types` figures: right conclusion, wrong numbers, three times
+
+`@flighthq/types` **is** complete — measured 995/995 with every declared repair applied, from a baseline
+of 990/995 taken from the full-tree compile report. The five headers gained are the three
+`*_texture_resolver.hpp` (by `repeat-alias-declaration`) and the two `flight_document_*` (by the
+`FlightDocumentValue` forward declaration), exactly as predicted.
+
+Every number this file previously attached to that conclusion was wrong, and the sequence is worth keeping
+because each error had a different cause.
+
+**"407 of 411."** `411` was never the package size. It came off a *mid-run checkpoint* while the full
+compile was at 1356 of 2710 headers: of the `flight/types/` entries attempted *so far*, 407 passed. The
+package has 995 headers. A progress snapshot read as a final figure.
+
+**"411/411, complete."** An inference, not a measurement. Thirteen headers were compiled — the five that
+had been failing plus the eight the forward declaration incidentally touched — all returned zero, and the
+package was declared complete without being swept.
+
+**"990/995 → 993/995, not complete."** The correction was also wrong. The scratch tree used for it had
+only four repair IDs applied by hand, and `types-flight-document-value-forward-declaration` was not among
+them, so the two headers that repair fixes were failing for want of the repair rather than for want of a
+fix.
+
+The instructive part is not the arithmetic. It is that the *correction* was published before the
+correction was measured: a result arrived that contradicted the earlier claim, and the contradiction itself
+felt like evidence. It was not — it was a second incomplete measurement. A partial measurement that
+disagrees deserves exactly as much scepticism as one that agrees, and the rule recorded earlier in this
+file ("measure the delta, never the plausibility") was written about the confirming case and then not
+applied to the disconfirming one.
+
+[^1]: corrected; the table above was built from a mid-run checkpoint and read 407/411.

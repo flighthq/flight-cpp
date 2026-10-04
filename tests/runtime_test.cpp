@@ -115,6 +115,42 @@ FlightTask<void> set_flag(bool& flag) {
 // String.prototype.search. Each one answers a diagnostic from the generated SDK, and each is pinned here
 // because each is a SEMANTICS claim: the overlapping-range direction, the index base, and whether
 // lastIndex moves are all things a plausible implementation gets wrong silently.
+// The optional-shaped pair on Any. These exist so the emitter's `typeof` lowering compiles against a
+// plain Any, and the whole point is that has_value() is false for UNDEFINED ONLY -- the pair must reduce
+// the lowering to type_of() for every case, including null.
+void test_any_optional_shape() {
+  const auto type_of_lowering = [](const flight::Any& subject) {
+    // Exactly the shape the emitter writes.
+    if (!subject.has_value()) return flight::String("undefined");
+    return subject.value().type_of();
+  };
+
+  const flight::Any undefined_value(flight::undefined);
+  const flight::Any null_value(flight::null);
+  const flight::Any number_value(1.0);
+  const flight::Any string_value(flight::String::from_utf8("x"));
+  const flight::Any boolean_value(true);
+
+  check(!undefined_value.has_value(), "an Any holding undefined has no value");
+  // null IS a value in JavaScript: typeof null is "object", not "undefined". A has_value() that answered
+  // false here -- which is_nullish() would -- would silently turn typeof null into "undefined".
+  check(null_value.has_value(), "an Any holding null HAS a value");
+  check(number_value.has_value() && string_value.has_value() && boolean_value.has_value(),
+        "an Any holding a scalar has a value");
+
+  // The lowering must agree with type_of() directly, for every alternative. That equality is the reason
+  // supplying these two members is a faithful answer rather than a convenient one.
+  for (const auto& subject : {undefined_value, null_value, number_value, string_value, boolean_value}) {
+    check(type_of_lowering(subject) == subject.type_of(),
+          "the optional-shaped typeof lowering reduces to type_of()");
+  }
+  check(type_of_lowering(null_value) == flight::String::from_utf8("object"), "typeof null is object");
+  check(type_of_lowering(undefined_value) == flight::String::from_utf8("undefined"),
+        "typeof undefined is undefined");
+  // value() is the Any itself, not a copy of something inside it.
+  check(&number_value.value() == &number_value, "value() returns the Any itself");
+}
+
 void test_locale_compare() {
   const auto a = flight::String::from_utf8("a");
   const auto b = flight::String::from_utf8("b");
@@ -3260,6 +3296,7 @@ int main() {
   test_array();
   test_copy_within();
   test_locale_compare();
+  test_any_optional_shape();
   test_sequence_view_map();
   test_string_search();
   test_array_buffer_like();

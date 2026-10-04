@@ -19,6 +19,7 @@ const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration',
   'record-from-designated-initializer',
   'name-array-from-tuple-construction',
   'repeat-alias-declaration',
+  'alias-anonymous-struct-to-named',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -48,6 +49,7 @@ const REQUIRED_FIELDS = {
   'respell-reference-alias': [...SHARED_FIELDS, 'symbol', 'expansion', 'witness', 'witnessInclude'],
   'name-array-from-tuple-construction': [...SHARED_FIELDS, 'symbol', 'sourceDeclaration'],
   'record-from-designated-initializer': [...SHARED_FIELDS, 'symbol', 'recordType', 'replacement', 'sourceDeclaration'],
+  'alias-anonymous-struct-to-named': [...SHARED_FIELDS, 'symbol', 'replacement', 'canonicalInclude', 'sourceDeclaration'],
   'repeat-alias-declaration': [...SHARED_FIELDS, 'symbol', 'declaration', 'sourceDeclaration'],
   'wrap-conditional-absent-branch': [...SHARED_FIELDS, 'sourceDeclaration'],
 };
@@ -153,22 +155,24 @@ function applyOneRound(repairs, files, applied) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
       const repaired =
-        repair.kind === 'repeat-alias-declaration'
-          ? repeatAliasDeclaration(contents, repair)
-          : repair.kind === 'name-array-from-tuple-construction'
-            ? nameArrayFromTupleConstruction(contents, repair)
-            : repair.kind === 'record-from-designated-initializer'
-              ? recordFromDesignatedInitializer(contents, repair)
-              : repair.kind === 'wrap-conditional-absent-branch'
-                ? wrapConditionalAbsentBranch(contents)
-                : repair.kind === 'respell-flattened-union'
-                  ? respellFlattenedUnion(contents, repair)
-                  : repair.kind === 'deduce-call-argument-from-assignment'
-                    ? deduceCallArgumentFromAssignment(contents, repair)
-                    : repair.kind === 'name-defaulted-template-argument'
-                      ? nameDefaultedTemplateArgument(contents, repair)
-                      : repair.kind === 'name-in-place-alternative'
-                        ? nameInPlaceAlternative(contents, repair)
+        repair.kind === 'alias-anonymous-struct-to-named'
+          ? aliasAnonymousStructToNamed(contents, repair)
+          : repair.kind === 'repeat-alias-declaration'
+            ? repeatAliasDeclaration(contents, repair)
+            : repair.kind === 'name-array-from-tuple-construction'
+              ? nameArrayFromTupleConstruction(contents, repair)
+              : repair.kind === 'record-from-designated-initializer'
+                ? recordFromDesignatedInitializer(contents, repair)
+                : repair.kind === 'wrap-conditional-absent-branch'
+                  ? wrapConditionalAbsentBranch(contents)
+                  : repair.kind === 'respell-flattened-union'
+                    ? respellFlattenedUnion(contents, repair)
+                    : repair.kind === 'deduce-call-argument-from-assignment'
+                      ? deduceCallArgumentFromAssignment(contents, repair)
+                      : repair.kind === 'name-defaulted-template-argument'
+                        ? nameDefaultedTemplateArgument(contents, repair)
+                        : repair.kind === 'name-in-place-alternative'
+                          ? nameInPlaceAlternative(contents, repair)
           : repair.kind === 'respell-reference-alias'
             ? respellReferenceAlias(contents, repair)
           : repair.kind === 'insert-using-declaration'
@@ -183,6 +187,55 @@ function applyOneRound(repairs, files, applied) {
     }
   }
   return changed;
+}
+
+// Aliases ONE named anonymous structural struct to ONE named type in flight::types, by declaration.
+//
+// The derived aliasing beside this pairs structs by NAME and requires byte-identical bodies. It therefore
+// misses the commonest form: a module-private interface the emitter cannot name across a module boundary
+// becomes an anonymous structural struct, while flight::types holds the named one. The bodies are
+// identical, the names are not, and C++ makes them unrelated types. The conversion appears 15 times in the
+// diagnostics for WgpuRenderStats, which is occurrences rather than headers: declaring that pair gained
+// ONE header, because the rest of the package fails on unrelated causes behind it.
+//
+// THIS IS DECLARED, ONE PAIR AT A TIME, AND THAT IS THE WHOLE POINT. The obvious generalisation is to
+// pair them by body automatically, and it was built, measured, and reverted, because the criterion is not
+// sound:
+//
+//   {a, b, c, d, tx, ty}  is the shape of every 2D affine matrix in the corpus, and the only NAMED type
+//                         in flight::types holding it is SwfTagMatrix. Automatic pairing aliased the
+//                         anonymous twin -- used by render_wgpu, swf, shape_formats and scene2d_wgpu --
+//                         to SwfTagMatrix, making a WGPU shader's transform literally an SWF tag matrix.
+//   {r, g, b, a}          likewise resolved to UnityColor.
+//
+// The tempting argument for automatic pairing is that TypeScript is structurally typed, so identical
+// shapes are mutually assignable and merging them is what the source language already says they are.
+// That argument is TRUE and INSUFFICIENT: structural assignability makes the alias type-correct, it does
+// not make the chosen NAME correct, and the name is what every diagnostic, debugger and future reader
+// sees. Which name wins is also an accident of the corpus -- whichever named type happens to be the
+// unique holder of that shape.
+//
+// So the correspondence is asserted by an author who checked it, per pair, and `sourceDeclaration` records
+// what they checked. A pair is only worth declaring when the two names mean the same thing in the same
+// domain, which is verifiable by reading them and is not computable from the bodies.
+function aliasAnonymousStructToNamed(contents, repair) {
+  const guard = new RegExp(
+    `^(#ifndef (FLIGHT_COMPILER_ANONYMOUS__[A-Z0-9_]+)\\n#define \\2\\n)struct ${repair.symbol} : public flight::ReferenceEnabled \\{\\n[\\s\\S]*?^\\};\\n(#endif[^\\n]*\\n)`,
+    'mu',
+  );
+  const found = guard.exec(contents);
+  if (found === null) return undefined;
+  const hoisted = contents.includes(`#include <${repair.canonicalInclude}>`)
+    ? contents
+    : hoistInclude(contents, repair.canonicalInclude);
+  if (hoisted === undefined) return undefined;
+  const again = guard.exec(hoisted);
+  if (again === null) return undefined;
+  return (
+    hoisted.slice(0, again.index) +
+    `${again[1]}using ${repair.symbol} = flight::types::${repair.replacement};\n${again[3]}` +
+    hoisted.slice(again.index + again[0].length)
+  );
 }
 
 // Repeats an alias definition in the file that needs it, where a forward declaration cannot reach.
@@ -204,10 +257,24 @@ function applyOneRound(repairs, files, applied) {
 // disagreed the compiler would reject the file, so the equivalence is enforced by the language rather
 // than asserted here.
 //
-// Placement is load-bearing and is why this is not a variation of insert-using-declaration. The alias goes
-// at the END of the prologue namespace block, after the struct forward declarations, because it REFERENCES
-// them -- `Ref<flight::types::DomRenderState>` needs that name already declared. Inserting at the start of
-// the block, where the using-declaration repair inserts, would put the alias above its own dependencies.
+// Placement needed two attempts and a measured regression, because the emitter writes two different file
+// shapes and each wants a different anchor:
+//
+//   flight/types/dom_render_state.hpp   namespace block of forward declarations (`struct DomRenderState;`),
+//                                       then aliases, then a SECOND block with the definitions.
+//   flight/font_formats/woff_font.hpp   one namespace block, code from the first line.
+//
+// End-of-first-block is right for the first and useless for the second: woff_font.hpp uses the alias at
+// line 59 and the declaration landed at line 133, after every function in the file. The repair matched,
+// reported `touched: 1 file`, and changed nothing -- the one failure mode here that looks like success.
+//
+// Start-of-block is right for the second and WRONG for the first, measured: the alias references
+// `DomRenderState`, which that file itself defines, so hoisting it above the forward declarations gives
+// "'DomRenderState' is not a member of 'flight::types'" plus a conflicting declaration, and took
+// font-formats from 13/17 to 11/17 through the types headers it includes.
+//
+// So the anchor is the end of the LEADING RUN of forward declarations inside the block, which is the
+// alias's own neighbourhood in the first shape and collapses to the block start in the second.
 function repeatAliasDeclaration(contents, repair) {
   const { symbol } = repair;
   if (!new RegExp(`\\b${symbol}\\b`, 'u').test(contents)) return undefined;
@@ -221,12 +288,19 @@ function repeatAliasDeclaration(contents, repair) {
     if (hoisted === undefined) return undefined;
     out = hoisted;
   }
-  // End of the forward-declaration prologue: the alias needs the names declared above it.
   const anchor = /^namespace flight::[a-z0-9_]+ \{\n/mu.exec(out);
   if (anchor === null) return undefined;
-  const close = out.indexOf('} // namespace flight::', anchor.index + anchor[0].length);
-  if (close === -1) return undefined;
-  return `${out.slice(0, close)}${repair.declaration}\n${out.slice(close)}`;
+  let at = anchor.index + anchor[0].length;
+  for (;;) {
+    const lineEnd = out.indexOf('\n', at);
+    if (lineEnd === -1) break;
+    const line = out.slice(at, lineEnd);
+    const isForwardDeclaration =
+      /^struct [A-Za-z_]\w*;$/u.test(line) || /^template <[^>]*> struct [A-Za-z_]\w*;$/u.test(line);
+    if (!isForwardDeclaration && line.trim() !== '') break;
+    at = lineEnd + 1;
+  }
+  return `${out.slice(0, at)}${repair.declaration}\n${out.slice(at)}`;
 }
 
 // Constructs the Array a TypeScript tuple literal is, where the emitter reached for std::make_tuple.

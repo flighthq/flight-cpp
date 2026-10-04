@@ -226,6 +226,32 @@ class Any final {
 
   // `== null` in TypeScript: the one test that admits both absent values and nothing else.
   [[nodiscard]] bool is_nullish() const noexcept { return is_undefined() || is_null(); }
+  // The optional-shaped pair, so that emitted code written for `std::optional<Any>` compiles against a
+  // plain `Any` and means the same thing.
+  //
+  // The emitter lowers TypeScript's `typeof x` as
+  //
+  //   if (!x.has_value()) return String("undefined");
+  //   return x.value().type_of();
+  //
+  // which is the shape for an OPTIONAL subject. Where the subject is a plain `Any` -- as in
+  // flight/host/host_explain.hpp and flight/app/app.hpp -- those two members do not exist and the module
+  // does not compile. Supplying them is better than rewriting the call site, because `Any` already
+  // carries `undefined` as one of its alternatives, so the wrapper is REDUNDANT rather than wrong:
+  // `type_of()` already answers "undefined" for an Any holding undefined, and the lowering above reduces
+  // to `x.type_of()` for every case once these are defined as below.
+  //
+  // `has_value()` is false for UNDEFINED ONLY, and that is the load-bearing detail. JavaScript's absence
+  // test is `x === undefined`; `null` is a value, and `typeof null` is "object", not "undefined". So a
+  // definition that also answered false for null -- which `is_nullish()` would give, and which looks like
+  // the obvious reading of "has a value" -- would turn `typeof null` into "undefined" and silently break
+  // every null check downstream of it. See also `is_nullish()`, which is the OTHER question and is spelled
+  // differently on purpose.
+  //
+  // `value()` returns the Any itself. There is nothing to unwrap: an `Any` is already the value, and the
+  // name exists only to satisfy the optional-shaped call.
+  [[nodiscard]] bool has_value() const noexcept { return !is_undefined(); }
+  [[nodiscard]] const Any& value() const noexcept { return *this; }
 
   [[nodiscard]] bool as_boolean() const { return require<bool>(); }
   [[nodiscard]] double as_number() const { return require<double>(); }
