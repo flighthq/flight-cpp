@@ -4,6 +4,22 @@
   "note": "Hand-written headers that SHADOW the generated tree. An override is placed earlier on the include path than the generated include directory, so the generated file stays untouched and the override is the whole of the modification: the set of files under overrides/include is the diff, and no computation is needed to find it. Reserved for what the declared mechanisms cannot reach -- source-patches/ rewrites the pinned TypeScript, repairs/ adds text with no behavior to emitted output, and either is preferable because neither carries a copy. An override does carry a copy, so each entry records `derivedFrom`, the sha256 of the generated file it was produced from. When a pin move changes that file the digest stops matching and `npm run overrides:check` says so, which is the signal to re-derive the override or drop it. Each entry also carries a `status`: `complete` means the override compiles, `incomplete` means it is partway and says what remains, so nobody mistakes a half-finished override for a finished one.",
   "overrides": [
     {
+      "id": "share-complete-module",
+      "path": "flight/share/share.hpp",
+      "package": "@flighthq/share",
+      "status": "complete",
+      "supplies": "packages/share/src/share.ts",
+      "derivedFrom": "6c9b7d69721871823c2b6b87032476736a9f486e68aa9a92697c025407fa6234",
+      "reason": "The emitter leaves imported capabilities, entities, helpers and types unqualified, refuses hasShareContentFields because it loses the optional absence channel across the ShareContent variant, constructs variant arms as if ShareContent were a record, and constructs the non-empty files tuple as an Array. Those defects keep the angle-only module root and both aggregators from compiling.",
+      "change": "Supplies the complete share module over the generated three-arm ShareContent variant, non-empty files tuple, host capability Tasks, ShareResult signal entity, and live attached-signal Set.",
+      "equivalence": "Variant visitation tests each generated required or optional title/text/url carrier for a non-empty string without collapsing absence into empty. Invalid content and files resolve false without invoking a provider; valid calls return the provider Task directly. Result sharing awaits the provider, returns the same ShareResult reference, and iterates the live Set so callback-time detach and attach have JavaScript Set iteration behavior. File validation preserves all four source predicates, files content preserves the first element plus a sliced rest array, and signal disposal detaches before clearing.",
+      "whyNotAPatchOrRepair": "A using-declaration repair cannot add the refused field-presence body, discriminate and construct variant arms, or correct the tuple construction. Rewriting the ordinary target-neutral TypeScript around its discriminated object union would distort a public API solely for this emitter. No source trial was retained; the generated types already provide the exact absence and variant evidence needed by a complete override.",
+      "unblocks": "The angle-only all-header root has a three-header blast radius. Focused compilation measures the same gain: @flighthq/share moves from 0/3 to 3/3 independently compiling headers.",
+      "remaining": "None in @flighthq/share at this pin.",
+      "expires": "when union object properties preserve per-arm absence, object literals construct the elected variant arm, non-empty tuple rest lowers to its generated tuple carrier, and imported names are qualified.",
+      "authoredOn": "2026-10-04"
+    },
+    {
       "id": "connectivity-complete-module",
       "path": "flight/connectivity/connectivity.hpp",
       "package": "@flighthq/connectivity",
