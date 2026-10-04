@@ -1336,6 +1336,34 @@
       "defect": "Same shape as requirements-row-write-array-projection: the member is declared as rows over the entry type and the write passes the entry references. See that entry for why array_of is legal only with the identity precondition stated.",
       "expectedWhen": "always",
       "expires": "when the emitter projects an array into the row element type its member declares; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "preferences-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/preferences/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "HostPreferencesCapability"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "HostPreferencesChangeCapability"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageKeysResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageNamespace"
+        }
+      ],
+      "diagnostic": "'HostPreferencesChangeCapability' was not declared in this scope -- and the same for StorageKeysResult, HostPreferencesCapability and StorageNamespace, each followed by 'template argument 1 is invalid' and 'base operand of -> is not a pointer' as the invalid type propagates",
+      "defect": "The emitter writes four flight::types names unqualified inside namespace flight::preferences. All four are declared in flight/types/storage.hpp and the defining header is not included, so both the qualification and the include are missing. They are the FIRST errors in flight/preferences/storage.hpp, which is the single broken module in an otherwise compiling package -- its contract.hpp and _internal_index.hpp fail only by including it -- so the package is three failures from shippable and all three are this one cause.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a types-owned name used from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
