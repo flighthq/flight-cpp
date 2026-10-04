@@ -121,6 +121,36 @@
       "unblocks": "The only refused declaration in packages/texture-formats/src/parseAtf.ts. Generated-only compilation passes 7/11 package headers; the override closes parse_atf.hpp and its three consumers, taking @flighthq/texture-formats to an assisted, shippable 11/11 source modules and 11/11 headers.",
       "expires": "when indexed access to an initialized nested Array carries a present payload through member projection.",
       "authoredOn": "2026-10-03"
+    },
+    {
+      "id": "font-formats-cff-charstring-structural-subroutines",
+      "path": "flight/font_formats/cff_charstring.hpp",
+      "package": "@flighthq/font-formats",
+      "status": "complete",
+      "supplies": "packages/font-formats/src/cffCharstring.ts",
+      "derivedFrom": "9f6667a6e2e1e3f2e3d884645bdd8499e3050c3a7ef4c05aa8043d71e2b2c0f6",
+      "reason": "The emitter generated the numeric decoder and helper shapes but refused runCffCharstring because readonly arrays of structural {start,end} views could not be stored as owning arrays without changing the nominal CffIndexEntry array identity.",
+      "change": "Supplies the one refused Type 2 charstring interpreter. Its public boundary retains the exact Array<Ref<CffIndexEntry>> carrier generated callers already own, while the individual charstring keeps the generated readonly structural row; the body implements operand decoding, width consumption, stems and inline masks, moves, lines, cubic operators, biased local and global subroutines, recursion depth, escaped-operator handling, contour closure, and path replacement.",
+      "equivalence": "The interpreter preserves the source's shared input and output identities, clears commands and data before execution, always writes nonZero winding, negates y only at the Path seam, closes an open contour before another move and after unterminated input, applies a leading width only once, counts explicit and implicit stems before skipping mask bytes, shares the operand stack across subroutine calls, uses the three specified bias ranges, and rejects the same truncated operands, masks, absent subroutines, depth overflow, and unknown operators. Direct probes cover all path operator families, 16-bit and 16.16 operands, width and mask rules, local and global calls, depth rejection, empty glyphs, replacement, and implicit closure.",
+      "whyNotAPatchOrRepair": "A repair cannot add the interpreter body. The TypeScript signature is ordinary target-neutral readonly structural input, and its callers already pass nominal CffIndexEntry arrays; changing the public source types solely to expose the current C++ carrier would trade away the intended structural API for an emitter storage limitation.",
+      "unblocks": "The only refused declaration in packages/font-formats/src/cffCharstring.ts. The package remains at 13/17 independently compiling headers on the current base because all four failures stop earlier in woff_font.hpp at the unrelated missing data_tag_aef43e71dd1e9a6d shape; the override removes the withheld run_cff_charstring declaration behind that blocker but does not claim those headers as newly passing.",
+      "expires": "when the compiler can preserve the owning nominal sequence identity while accepting a readonly structural projection of its elements.",
+      "authoredOn": "2026-10-04"
+    },
+    {
+      "id": "textbidi-resolve-levels-dense-arrays-and-class-union",
+      "path": "flight/textbidi/resolve_bidi_levels.hpp",
+      "package": "@flighthq/textbidi",
+      "status": "complete",
+      "supplies": "packages/textbidi/src/resolveBidiLevels.ts",
+      "derivedFrom": "2208ac8325022bde748aa7520f7c8083158eb8cbf4ba92225941f688a56f8b00",
+      "reason": "The emitter produced the scalar, run-sequence, and weak/neutral helpers but refused resolveBidiLevels because new Array(length) is potentially sparse, and refused applyExplicitLevels, resolvePairedBrackets, and strongBidiDirection after the BidiClass string union lost a represented runtime domain or equivalent carrier evidence. The partial header also omitted the defining bidi type include and alias, so its otherwise-emitted helpers were not self-contained.",
+      "change": "Supplies the complete UAX #9 level resolver and its three refused helpers, retains the emitted helper names and anonymous shapes, and adds the defining BidiClass types. The entry point fills dense codepoint, class, and level arrays by UTF-16 code-unit index; the remaining stages pair isolates, apply the explicit directional stack and overflow rules, form isolating run sequences, resolve W1-W7, bracket rule N0, neutrals N1-N2, implicit levels I1-I2, and line resets L1.",
+      "equivalence": "Every slot in each source length-constructed array is assigned before the first read, including copying one supplementary code point and class into both surrogate positions, so dense allocation cannot expose a value where the TypeScript exposes a hole. Array copies retain Flight shared identity where the source mutates them, typed-array fills and writes keep Int32/Uint8 conversion, paragraph and FSI scoring skip nested isolates, the explicit stack retains the 125 maximum and overflow counters, and the 120-value paired-bracket table is byte-for-value identical to the source. A direct behavioral probe passes the upstream resolveBidiLevels and conformance fixtures: weak chains, Arabic and European numbers, automatic and explicit bases, embeddings, isolates, overrides, L1 resets, N0/N1/N2, 126-deep overflow, empty text, custom kernels, and supplementary code points.",
+      "whyNotAPatchOrRepair": "A repair cannot add four function bodies or a defining type dependency. Replacing the source's fully-filled new Array(length) temporaries with artificial default BidiClass values would make the target-neutral algorithm less clear and would not address the separate contextual-union refusals; narrowing the public BidiClass API would change its contract.",
+      "unblocks": "All four refused declarations in packages/textbidi/src/resolveBidiLevels.ts and the defining imported BidiClass name. Generated-only compilation passes 4/8 package headers; the override closes resolve_bidi_levels.hpp and its three consumers, taking @flighthq/textbidi to an assisted, shippable 8/8 source modules and 8/8 headers.",
+      "expires": "when dense proof recognizes fully initialized length-constructed arrays, contextual string unions retain their declared BidiClass domain, and the emitted partial preserves its defining imported type dependency.",
+      "authoredOn": "2026-10-04"
     }
   ]
 }

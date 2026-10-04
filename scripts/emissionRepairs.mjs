@@ -257,10 +257,24 @@ function aliasAnonymousStructToNamed(contents, repair) {
 // disagreed the compiler would reject the file, so the equivalence is enforced by the language rather
 // than asserted here.
 //
-// Placement is load-bearing and is why this is not a variation of insert-using-declaration. The alias goes
-// at the END of the prologue namespace block, after the struct forward declarations, because it REFERENCES
-// them -- `Ref<flight::types::DomRenderState>` needs that name already declared. Inserting at the start of
-// the block, where the using-declaration repair inserts, would put the alias above its own dependencies.
+// Placement needed two attempts and a measured regression, because the emitter writes two different file
+// shapes and each wants a different anchor:
+//
+//   flight/types/dom_render_state.hpp   namespace block of forward declarations (`struct DomRenderState;`),
+//                                       then aliases, then a SECOND block with the definitions.
+//   flight/font_formats/woff_font.hpp   one namespace block, code from the first line.
+//
+// End-of-first-block is right for the first and useless for the second: woff_font.hpp uses the alias at
+// line 59 and the declaration landed at line 133, after every function in the file. The repair matched,
+// reported `touched: 1 file`, and changed nothing -- the one failure mode here that looks like success.
+//
+// Start-of-block is right for the second and WRONG for the first, measured: the alias references
+// `DomRenderState`, which that file itself defines, so hoisting it above the forward declarations gives
+// "'DomRenderState' is not a member of 'flight::types'" plus a conflicting declaration, and took
+// font-formats from 13/17 to 11/17 through the types headers it includes.
+//
+// So the anchor is the end of the LEADING RUN of forward declarations inside the block, which is the
+// alias's own neighbourhood in the first shape and collapses to the block start in the second.
 function repeatAliasDeclaration(contents, repair) {
   const { symbol } = repair;
   if (!new RegExp(`\\b${symbol}\\b`, 'u').test(contents)) return undefined;
@@ -274,12 +288,19 @@ function repeatAliasDeclaration(contents, repair) {
     if (hoisted === undefined) return undefined;
     out = hoisted;
   }
-  // End of the forward-declaration prologue: the alias needs the names declared above it.
   const anchor = /^namespace flight::[a-z0-9_]+ \{\n/mu.exec(out);
   if (anchor === null) return undefined;
-  const close = out.indexOf('} // namespace flight::', anchor.index + anchor[0].length);
-  if (close === -1) return undefined;
-  return `${out.slice(0, close)}${repair.declaration}\n${out.slice(close)}`;
+  let at = anchor.index + anchor[0].length;
+  for (;;) {
+    const lineEnd = out.indexOf('\n', at);
+    if (lineEnd === -1) break;
+    const line = out.slice(at, lineEnd);
+    const isForwardDeclaration =
+      /^struct [A-Za-z_]\w*;$/u.test(line) || /^template <[^>]*> struct [A-Za-z_]\w*;$/u.test(line);
+    if (!isForwardDeclaration && line.trim() !== '') break;
+    at = lineEnd + 1;
+  }
+  return `${out.slice(0, at)}${repair.declaration}\n${out.slice(at)}`;
 }
 
 // Constructs the Array a TypeScript tuple literal is, where the emitter reached for std::make_tuple.
