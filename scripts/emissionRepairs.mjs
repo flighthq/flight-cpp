@@ -148,36 +148,32 @@ export function applyEmissionRepairs(repairs, files) {
 }
 
 // One pass over every file. Returns whether anything changed, and records each file a repair touched.
+// Kind -> handler. A table for the same reason `REQUIRED_FIELDS` is one: the ternary chain this
+// replaced had reached eleven branches, and a reader could no longer tell which branch a kind fell
+// into -- which is exactly how `repeat-alias-declaration` was given the wrong insertion point twice.
+// A kind with no entry falls to `insertForwardDeclaration`, preserving the chain's old default.
+const HANDLERS = {
+  'alias-anonymous-struct-to-named': aliasAnonymousStructToNamed,
+  'deduce-call-argument-from-assignment': deduceCallArgumentFromAssignment,
+  'insert-using-declaration': insertUsingDeclaration,
+  'name-array-from-tuple-construction': nameArrayFromTupleConstruction,
+  'name-defaulted-template-argument': nameDefaultedTemplateArgument,
+  'name-in-place-alternative': nameInPlaceAlternative,
+  'record-from-designated-initializer': recordFromDesignatedInitializer,
+  'repeat-alias-declaration': repeatAliasDeclaration,
+  'respell-flattened-union': respellFlattenedUnion,
+  'respell-reference-alias': respellReferenceAlias,
+  'wrap-conditional-absent-branch': (contents) => wrapConditionalAbsentBranch(contents),
+};
+
 function applyOneRound(repairs, files, applied) {
   let changed = false;
   for (const file of files) {
     for (const [index, repair] of repairs.entries()) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
-      const repaired =
-        repair.kind === 'alias-anonymous-struct-to-named'
-          ? aliasAnonymousStructToNamed(contents, repair)
-          : repair.kind === 'repeat-alias-declaration'
-            ? repeatAliasDeclaration(contents, repair)
-            : repair.kind === 'name-array-from-tuple-construction'
-              ? nameArrayFromTupleConstruction(contents, repair)
-              : repair.kind === 'record-from-designated-initializer'
-                ? recordFromDesignatedInitializer(contents, repair)
-                : repair.kind === 'wrap-conditional-absent-branch'
-                  ? wrapConditionalAbsentBranch(contents)
-                  : repair.kind === 'respell-flattened-union'
-                    ? respellFlattenedUnion(contents, repair)
-                    : repair.kind === 'deduce-call-argument-from-assignment'
-                      ? deduceCallArgumentFromAssignment(contents, repair)
-                      : repair.kind === 'name-defaulted-template-argument'
-                        ? nameDefaultedTemplateArgument(contents, repair)
-                        : repair.kind === 'name-in-place-alternative'
-                          ? nameInPlaceAlternative(contents, repair)
-          : repair.kind === 'respell-reference-alias'
-            ? respellReferenceAlias(contents, repair)
-          : repair.kind === 'insert-using-declaration'
-            ? insertUsingDeclaration(contents, repair)
-            : insertForwardDeclaration(contents, repair);
+      const handler = HANDLERS[repair.kind] ?? insertForwardDeclaration;
+      const repaired = handler(contents, repair);
       if (repaired === undefined) continue;
       file.contents = repaired;
       changed = true;
