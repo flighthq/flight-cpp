@@ -1809,3 +1809,28 @@ function out of the comment, transcribe it, declare `supplies` — repeats clean
 *one* declaration whose invariant the source states. Of the 42 single-refusal packages, how many are that
 shape is not yet measured, and measuring it is cheaper than attempting any of them: the count of
 `missing: function` lines in each placeholder header is the whole estimate.
+
+### Measured: the `easing` play was almost unique
+
+The previous paragraph said the count of `easing`-shaped packages was not yet measured and that measuring
+it was cheaper than attempting any. It was, and the answer is small enough to change the plan.
+
+Across the whole tree, **187 refused modules are missing exactly one function** — which looks like the
+`easing` play repeating 187 times. It does not, because the package around the module also has to compile.
+Intersecting "exactly one refused module" with "every header already compiling" leaves **three** packages:
+
+| package | modules | headers | missing functions |
+|---|---|---|---|
+| `easing` | 23 | 23/23 | 1 — **done** |
+| `particles` | 13 | 13/13 | 5 |
+| `log` | 3 | 3/3 | 22 — already stubbed, deliberately |
+
+So `easing` was not the first of a series; it was very nearly the only one of its kind at this pin. The
+other 41 single-refusal packages have failing headers *as well*, which means an override alone does not
+finish them — they need the header failures closed first, and those are the name class and the conversion
+family, which is where the earlier measurements said the leverage is not.
+
+That is a more useful thing to know than another finished package would have been. The next real increment
+is not more hand-written modules; it is whatever closes header failures across the 111 partial packages,
+and the honest answer from the cause map is that no single repair does — 748 of 753 name-class failures sit
+in front of a refusal.
