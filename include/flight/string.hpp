@@ -248,6 +248,7 @@ class String {
     return String(std::move(result));
   }
 
+  [[nodiscard]] double search(const RegExp& expression) const;
   [[nodiscard]] std::optional<RegExpExecArray> match(const RegExp& expression) const;
   [[nodiscard]] String replace(const RegExp& expression, const String& replacement) const;
 

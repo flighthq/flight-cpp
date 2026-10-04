@@ -270,6 +270,28 @@ String regexp_replace(const String& input, const RegExp& expression, Replacement
 
 } // namespace detail
 
+// `String.prototype.search`: the index of the first match in UTF-16 code units, or -1.
+//
+// Deliberately NOT implemented through `RegExp::exec`, for two reasons that both change the answer.
+// `search` ignores `lastIndex` and always searches from the start, where `exec` on a global pattern starts
+// at `lastIndex`; and `search` leaves `lastIndex` as it found it, where `exec` on a global pattern writes
+// to it. Going through `std::regex_search` directly satisfies both without having to save and restore
+// state that has no public accessor.
+//
+// The index is in UTF-16 code units, not bytes -- `match.position()` is a byte offset into the UTF-8
+// encoding, so it is converted the same way `exec` converts its own, by measuring the length of the
+// prefix. A pattern matching after any non-ASCII character would otherwise report a position no
+// JavaScript caller would recognise.
+inline double String::search(const RegExp& expression) const {
+  const std::string encoded = to_utf8();
+  std::match_results<std::string::const_iterator> match;
+  if (!std::regex_search(encoded.cbegin(), encoded.cend(), match, expression.native_expression())) {
+    return -1.0;
+  }
+  const auto byte_index = static_cast<std::size_t>(match.position());
+  return static_cast<double>(String::from_utf8(encoded.substr(0, byte_index)).length());
+}
+
 inline std::optional<RegExpExecArray> String::match(const RegExp& expression) const {
   if (!expression.global()) return expression.exec(*this);
 

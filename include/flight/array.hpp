@@ -334,6 +334,39 @@ class Array {
     return -1;
   }
 
+  // `Array.prototype.copyWithin`. Copies the elements in [start, end) to `target`, in place, and returns
+  // the same array -- a MUTATION whose result is the receiver, which is why it returns a reference rather
+  // than a new Array like map and filter do.
+  //
+  // All three indices are relative, so they go through `normalize_boundary`, the clamp this class already
+  // uses for fill and slice: a negative index counts from the end and anything out of range clamps to the
+  // bounds rather than throwing. The length never changes, so the copy stops when it reaches the end of
+  // the array even if the source range is longer.
+  //
+  // The ranges may OVERLAP, and that is the whole reason this cannot be a loop in emitted code:
+  // `copyWithin(0, 2)` shifts elements down and must read ahead of the write cursor, while
+  // `copyWithin(2, 0)` shifts them up and must read behind it. `std::copy` is only correct for the first;
+  // the direction is chosen here so both match the specification.
+  Array& copy_within(std::ptrdiff_t target_index, std::ptrdiff_t begin_index = 0,
+                     std::ptrdiff_t end_index = std::numeric_limits<std::ptrdiff_t>::max()) const {
+    const auto target = normalize_boundary(target_index);
+    const auto first = normalize_boundary(begin_index);
+    const auto last = normalize_boundary(end_index);
+    if (last <= first || target >= size()) return const_cast<Array&>(*this);
+    const auto count = std::min(last - first, size() - target);
+    const auto begin = values_->begin();
+    if (target <= first) {
+      std::copy(begin + static_cast<std::ptrdiff_t>(first),
+                begin + static_cast<std::ptrdiff_t>(first + count),
+                begin + static_cast<std::ptrdiff_t>(target));
+    } else {
+      std::copy_backward(begin + static_cast<std::ptrdiff_t>(first),
+                         begin + static_cast<std::ptrdiff_t>(first + count),
+                         begin + static_cast<std::ptrdiff_t>(target + count));
+    }
+    return const_cast<Array&>(*this);
+  }
+
   template <typename Transform>
   [[nodiscard]] auto map(Transform&& transform) const
       -> Array<std::remove_cvref_t<decltype(detail::invoke_array_callback(

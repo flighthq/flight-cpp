@@ -111,6 +111,95 @@ FlightTask<void> set_flag(bool& flag) {
   co_return;
 }
 
+// Array.prototype.copyWithin, Array.prototype.map over a read-only view, and
+// String.prototype.search. Each one answers a diagnostic from the generated SDK, and each is pinned here
+// because each is a SEMANTICS claim: the overlapping-range direction, the index base, and whether
+// lastIndex moves are all things a plausible implementation gets wrong silently.
+void test_copy_within() {
+  const auto digits = [] {
+    flight::Array<double> values;
+    for (double value = 1.0; value <= 5.0; value += 1.0) values.push(value);
+    return values;
+  };
+
+  // Shifting DOWN reads ahead of the write cursor. [1,2,3,4,5].copyWithin(0, 3) -> [4,5,3,4,5].
+  auto down = digits();
+  down.copy_within(0, 3);
+  check(down.element(0.0) == 4.0 && down.element(1.0) == 5.0 && down.element(2.0) == 3.0,
+        "copyWithin shifting down copies the tail over the head");
+  check(static_cast<double>(down.size()) == 5.0, "copyWithin never changes the length");
+
+  // Shifting UP reads BEHIND it, and overlaps. [1,2,3,4,5].copyWithin(2, 0) -> [1,2,1,2,3].
+  // A forward std::copy here would produce [1,2,1,2,1]: the write of index 2 would be read back at
+  // index 4. This is the case that makes the direction load-bearing rather than cosmetic.
+  auto up = digits();
+  up.copy_within(2, 0);
+  check(up.element(2.0) == 1.0 && up.element(3.0) == 2.0 && up.element(4.0) == 3.0,
+        "copyWithin shifting up handles the overlap backwards");
+
+  // A bounded source range. [1,2,3,4,5].copyWithin(0, 3, 4) -> [4,2,3,4,5].
+  auto bounded = digits();
+  bounded.copy_within(0, 3, 4);
+  check(bounded.element(0.0) == 4.0 && bounded.element(1.0) == 2.0,
+        "copyWithin stops at the end index");
+
+  // Negative indices count from the end, as everywhere else in this class.
+  auto negative = digits();
+  negative.copy_within(-2, 0);
+  check(negative.element(3.0) == 1.0 && negative.element(4.0) == 2.0,
+        "copyWithin takes relative indices");
+
+  // Out-of-range and empty ranges are no-ops, not errors.
+  auto noop = digits();
+  noop.copy_within(9, 0);
+  check(noop.element(0.0) == 1.0 && noop.element(4.0) == 5.0, "copyWithin past the end does nothing");
+  auto empty_range = digits();
+  empty_range.copy_within(0, 3, 3);
+  check(empty_range.element(0.0) == 1.0, "copyWithin with an empty source range does nothing");
+
+  // The result IS the receiver: this mutates and returns itself, unlike map or filter.
+  auto receiver = digits();
+  auto& returned = receiver.copy_within(0, 1);
+  check(&returned == &receiver, "copyWithin returns the array it mutated");
+}
+
+void test_sequence_view_map() {
+  auto backing = std::make_shared<std::vector<double>>(std::vector<double>{2.0, 4.0, 8.0});
+  const auto view = flight::SequenceView<double>::from_shared(backing);
+  const auto doubled = view.map([](double value) { return value * 2.0; });
+  check(static_cast<double>(doubled.size()) == 3.0, "a view maps to an array of the same length");
+  check(doubled.element(0.0) == 4.0 && doubled.element(2.0) == 16.0, "a view maps element by element");
+  // The index reaches the callback as the second argument, as it does for Array::map.
+  const auto indices = view.map([](double, std::size_t index) { return static_cast<double>(index); });
+  check(indices.element(0.0) == 0.0 && indices.element(2.0) == 2.0, "a view passes the index");
+  // The element type comes from the callback, not from the view.
+  const auto texts = view.map([](double value) { return flight::String::from_utf8(value == 2.0 ? "two" : "other"); });
+  check(texts.element(0.0) == flight::String::from_utf8("two"), "a view map deduces the result type");
+  check(backing->size() == 3 && (*backing)[0] == 2.0, "mapping a view does not touch the source");
+}
+
+void test_string_search() {
+  const auto text = flight::String::from_utf8("a b");
+  check(text.search(flight::RegExp(flight::String::from_utf8("\\s"), flight::String::from_utf8(""))) == 1.0,
+        "search returns the index of the first match");
+  check(text.search(flight::RegExp(flight::String::from_utf8("z"), flight::String::from_utf8(""))) == -1.0,
+        "search returns -1 when there is no match");
+
+  // The index is in UTF-16 code units, not bytes. A two-byte character before the match would make a
+  // byte offset report 3 where JavaScript reports 2.
+  const auto accented = flight::String::from_utf8("\xc3\xa9\x61 b");
+  check(accented.search(flight::RegExp(flight::String::from_utf8("\\s"), flight::String::from_utf8(""))) == 2.0,
+        "search counts UTF-16 code units");
+
+  // search ignores lastIndex and leaves it alone, where exec on a global pattern both reads and writes it.
+  const flight::RegExp global(flight::String::from_utf8("b"), flight::String::from_utf8("g"));
+  const auto twice = flight::String::from_utf8("b b");
+  check(twice.search(global) == 0.0, "search on a global pattern starts at the beginning");
+  check(twice.search(global) == 0.0, "search on a global pattern does not advance lastIndex");
+  check(global.exec(twice).has_value() && global.exec(twice)->index == 2.0,
+        "search left lastIndex untouched for a following exec");
+}
+
 void test_array() {
   // An array is an object: `===` asks whether two names denote the SAME array, never whether they
   // hold equal elements. Copies share one storage and are therefore one array.
@@ -3149,6 +3238,9 @@ static void test_self_reference() {
 
 int main() {
   test_array();
+  test_copy_within();
+  test_sequence_view_map();
+  test_string_search();
   test_array_buffer_like();
   test_array_like_views();
   test_audio_buffer();

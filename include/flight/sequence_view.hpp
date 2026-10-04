@@ -153,6 +153,30 @@ class SequenceView {
   [[nodiscard]] const_iterator begin() const noexcept { return const_iterator(this, 0); }
   [[nodiscard]] const_iterator end() const { return const_iterator(this, size()); }
 
+  // `Array.prototype.map` over a read-only view, returning a real Array as JavaScript does.
+  //
+  // A SequenceView does not own its elements -- it reads them through `get_`, which is how a row cell or
+  // a typed-array window presents a sequence without copying it. `map` is still the right shape for it:
+  // the result is a new Array and the view is untouched, so nothing here depends on ownership.
+  //
+  // Mirrors `Array::map` exactly, including passing the INDEX as the callback's second argument and
+  // deducing the element type from what the callback returns, so emitted code that works over an Array
+  // works unchanged over a view. `detail::invoke_array_callback` is what makes a one-argument callback
+  // acceptable too, which is the common case in emitted code.
+  template <typename Transform>
+  [[nodiscard]] auto map(Transform&& transform) const
+      -> Array<std::remove_cvref_t<decltype(detail::invoke_array_callback(
+          transform, std::declval<const Value&>(), std::declval<size_type>()))>> {
+    using Result = std::remove_cvref_t<decltype(detail::invoke_array_callback(
+        transform, std::declval<const Value&>(), std::declval<size_type>()))>;
+    Array<Result> result;
+    for (size_type index = 0; index < size(); ++index) {
+      const Value element = (*this)[index];
+      result.push(detail::invoke_array_callback(transform, element, index));
+    }
+    return result;
+  }
+
  private:
   [[nodiscard]] std::optional<size_type> normalize_index(std::ptrdiff_t index) const {
     const auto count = size();
