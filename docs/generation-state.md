@@ -1637,3 +1637,80 @@ bytes.
 `Any::has_value` is the largest and is deliberately last: `flight::Any` carries `unknown`, so what
 `has_value` means on it is an absence question, and absence is the one thing this repository will not
 decide casually.
+
+## Three runtime members, and what they unblocked
+
+`AGENTS.md` ranks extending the runtime above every patching mechanism, and the failure set named exactly
+what was missing. Three were added, each with the semantics pinned by tests in `tests/runtime_test.cpp`:
+
+- **`Array::copy_within`** — `Array.prototype.copyWithin`, over the existing `normalize_boundary` clamp
+  this class already uses for `fill` and `slice`. The **overlap direction is load-bearing**:
+  `copyWithin(0, 3)` shifts down and reads ahead of the write cursor, while `copyWithin(2, 0)` shifts up
+  and must read behind it. A forward `std::copy` yields `[1,2,1,2,1]` where the specification says
+  `[1,2,1,2,3]`, so that exact case is a test.
+- **`SequenceView::map`** — mirrors `Array::map`, index argument included, so emitted code written against
+  an Array works unchanged over a read-only view.
+- **`String::search`** — deliberately **not** implemented through `RegExp::exec`. JS `search` ignores
+  `lastIndex` and leaves it as it found it, while `exec` on a global pattern both reads and writes it, so
+  this goes through `std::regex_search` directly. The index is in UTF-16 code units, converted the way
+  `exec` converts its own; a test with a two-byte character pins it, because a byte offset would report 3
+  where JavaScript reports 2.
+
+`Any::has_value` is the largest remaining gap at 7 headers and is deliberately untouched: `flight::Any`
+carries `unknown`, so what `has_value` means on it is an absence question, and absence is the one thing
+this repository will not decide casually.
+
+### A fourth defect found behind them
+
+With `copy_within` and `SequenceView::map` in place, `path`'s diagnostics moved on to this:
+
+```cpp
+return std::optional<flight::Array<double>>{std::make_tuple(a, b)};
+```
+
+A TypeScript tuple is an array at runtime, and the emitter agrees when it writes the **type** — then
+builds the value with a `std::tuple`, which has no conversion to `flight::Array`. The repair reads the
+declared value type out of the text and constructs that, so it recovers the emitter's own stated intent
+rather than choosing a representation.
+
+Reading the declared type is also what makes it safe, and that is the whole design. Three of the tree's
+`std::make_tuple` sites are declared `std::optional<std::tuple<double, double, bool>>`, where
+`make_tuple` is correct and a rewrite would break working code. A rule shaped like "every `std::make_tuple`
+inside a brace" would have hit them; keying on the value type skips them for a reason that is *checked*
+rather than remembered — it does not begin with `flight::Array<`.
+
+Result: `path_formats` **0/3 to 3/3**, `path` **23/31 to 26/31**.
+
+### Two green results that measured nothing
+
+Both worth recording, because each looked like success:
+
+`ctest` reported **7/7 passing on a stale binary** after the build had failed on `get_index` (that is the
+typed-array accessor; `Array` uses `element`). The fix is trivial; the lesson is that a passing test run
+after a failed build is not evidence. So one assertion was then deliberately broken to confirm the new
+tests execute at all — `FAIL: copyWithin shifting up handles the overlap backwards`, exit 1 — and
+restored.
+
+A verification loop reported **all 34 `path` headers failing with one error each**, while a single direct
+compile of one of them succeeded. The harness was wrong, not the code: the header list already held
+`flight/path/...` and the loop's `printf '#include <flight/%s>'` added a second prefix, so every
+compilation failed with `flight/flight/path/clean_path.hpp: No such file or directory`. It was caught only
+because "all 34 fail identically" contradicted "one compiles fine", and the contradiction was worth
+chasing instead of explaining away.
+
+### `path`'s last blocker is a module-private interface crossing a module boundary
+
+`stroke_path.hpp` declares `flight::Ref<issue_issue_subpath_pieces_704ed4447de90a30>` and assigns
+`build_stroke_path_geometry(...)`, which returns `Ref<StrokePathGeometry>`.
+
+`StrokePathGeometry` is **not exported** from `strokePathGeometry.ts` — it is module-private. When
+`strokePath.ts` imports a function returning it, the emitter cannot name the private interface across the
+module boundary, so it synthesises an anonymous structural struct for the same shape. The two are
+structurally equivalent but **not byte-identical**: the named one spells its fields
+`StrokePathTessellationIssue` and `Array<Ref<StrokePathPieceGeometry>>`, the anonymous twin spells them
+`double` and `Array<Ref<closed_end_cap_left_right_start_cap_a41f9e2ea90d2c0a>>`.
+
+That is why the derived duplicate-struct aliasing does not fire: it requires byte-identical bodies, on
+purpose, because that is what makes it safe without type analysis. Closing this one needs structural
+equivalence across differently-spelled-but-equivalent field types, which is a transitive alias problem and
+genuinely harder than anything else in this file. Recorded, not attempted.
