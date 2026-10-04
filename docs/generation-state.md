@@ -3278,3 +3278,39 @@ SDK contains 2710 module headers, expected 2172`. `summary.emittedModules` is 21
 and the current manifest, so the gate is comparing a header count against a module count and the two
 legitimately differ — every package also emits `contract.hpp` and `_internal_index.hpp`, which are not
 modules. Either the gate's expectation or the manifest field it reads is wrong.
+
+## Every per-family estimate has come in high, and one came in at zero
+
+Five independent attempts to size a family before repairing it, against what the compiler then said:
+
+| family | estimated | measured | by |
+|---|---|---|---|
+| collision attributable failures | 20 | 17 | builder |
+| absence channel | 10 | 5 | here |
+| raw JS operators in emitted code | 53 | 3 | here |
+| `swfText` attributable failures | 10 | **0** | builder |
+| unqualified names (bulk, per package) | 656 | **net −1** | here |
+
+Five for five in the same direction, two of them at or below zero. This is no longer a run of bad luck; it
+is a property of how the estimates are produced. Each one counts headers whose FIRST diagnostic matches a
+family, and a header's first diagnostic is the front of a queue — behind it sit families the count never
+saw, dependencies that report as healthy, and in the bulk case a cost the count cannot express at all.
+
+`swfText` is the sharpest case and the method is worth keeping. The cheapest source rewrite was tested
+exhaustively rather than argued about: an explicit-fallback form removed the dual-sentinel refusal and
+exposed a null-presence test over an inferred variant; an explicit common result shape removed that and
+exposed a missing `GlyphOutlineMetrics` binding; spelling the four-field structural shape inline finally
+emitted the function; a safe-integer guard corrected the emitted nullable-array lookup. Four successive
+refusals cleared — and the header still did not compile, because the emitted function then produced
+independent diagnostics for Record construction, Path structural conversion, nested optional Path member
+access and metrics structural conversion, on top of inherited shape-package failures. Identical-denominator
+census unchanged at 9/19, and `swf_text.hpp` still reports `CapsStyle` from `shape_bounds.hpp` first.
+
+**The patch was then removed** (`408cd3e`) rather than carried. That is the right call and the reason is
+worth stating: a rewrite that converts one refusal into several C++ diagnostics has negative value even
+though it looks like progress at the refusal ledger. It makes the pinned TypeScript less direct, it carries
+a maintenance claim, and it buys nothing a compiler will confirm. A source patch has to be judged on
+whether a header compiles, not on whether a refusal disappeared.
+
+The standing rule this all supports: **a family's size is what a compiler says after the fix.** Publish
+estimates as hypotheses, name the measurement that would settle them, and expect to revise downward.
