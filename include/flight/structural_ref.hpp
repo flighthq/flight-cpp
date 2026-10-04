@@ -14,6 +14,7 @@
 #include <type_traits>
 #include <typeindex>
 #include <unordered_map>
+#include <variant>
 #include <utility>
 #include <vector>
 
@@ -707,6 +708,28 @@ struct GeneratedRowWidening : std::false_type {};
 template <typename Base, typename Derived>
 inline constexpr bool generated_row_widening_proven_v = GeneratedRowWidening<Base, Derived>::value;
 
+// Whether one variant alternative can produce a row over `Object`.
+//
+// This exists because `std::constructible_from` cannot answer the question. The shared_ptr constructor
+// below is viable for ANY pointee and validates inside `flatten_ref`, which ends in
+// `static_assert(dependent_false<Type>)` -- a hard error, not a substitution failure. So a fold over
+// `std::constructible_from` admits alternatives that then fail to compile inside the runtime, which is
+// worse than refusing them: the diagnostic lands in structural_ref.hpp instead of at the call site. A test
+// asserting that an unrelated alternative is NOT convertible is what caught it.
+//
+// The disjunction mirrors `row_objects_convertible`'s own: the alternative's pointee is the target subject,
+// derives from it, or the generated table proves it widens to it and their computed cells agree. It is
+// deliberately restricted to alternatives that are smart pointers, which is the only shape the emitter
+// produces for a union of object types, rather than recursing through arbitrary wrappers.
+template <typename Object, typename Alternative>
+concept variant_alternative_rows_as =
+    requires { typename Alternative::element_type; } &&
+    (std::same_as<typename Alternative::element_type, Object> ||
+     std::derived_from<typename Alternative::element_type, Object> ||
+     (generated_row_widening_proven_v<Object, typename Alternative::element_type> &&
+      computed_cells_agree<Object, typename Alternative::element_type>));
+
+
 } // namespace detail
 
 } // namespace flight
@@ -949,6 +972,31 @@ class StructuralRef {
     requires detail::row_convertible_to<OtherSchema, Schema>
   StructuralRef(const StructuralRef<OtherSchema>& other)
       : object_(other.shared_native_object()), owner_(other.shared_owner()) {}
+
+  // A row over whichever alternative a variant currently holds.
+  //
+  // TypeScript passes a union of object types where a row over their common shape is expected -- an
+  // `AudioResourceReference[]` where `readonly Readonly<{ state }>[]` is wanted -- because every member of
+  // the union has the key the target reads. The emitter lowers the union as `std::variant<shared_ptr<A>,
+  // shared_ptr<B>>` and the target as a row over an anonymous `{state}` struct, and there was no way to
+  // get from one to the other.
+  //
+  // This visits the variant and builds the row over the held object. It is a VIEW, exactly like the
+  // shared_ptr constructor it delegates to: the row observes the live object the active alternative points
+  // at, nothing is copied, and element identity, mutation visibility and absence are untouched.
+  //
+  // Soundness rests entirely on the constraint, which is why it is written as a fold rather than a
+  // `std::visit` that might throw at run time: EVERY alternative must independently satisfy this class's
+  // existing conversion rules. For the motivating case that means each one has to pass the generated
+  // widening proof -- every key the target row declares, declared by that alternative at the same type.
+  // A union with one alternative that does not qualify does not compile, which is the behaviour wanted: a
+  // row that could read a key off some alternatives and not others is exactly what must not be built.
+  template <typename... Alternatives>
+    requires(sizeof...(Alternatives) > 0 && !std::is_void_v<object_type> &&
+             (detail::variant_alternative_rows_as<object_type, Alternatives> && ...))
+  StructuralRef(const std::variant<Alternatives...>& alternatives)
+      : StructuralRef(std::visit(
+            [](const auto& held) { return StructuralRef(held); }, alternatives)) {}
 
   [[nodiscard]] static StructuralRef from_owner(std::shared_ptr<RowOwner> owner) {
     StructuralRef result;

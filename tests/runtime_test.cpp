@@ -177,6 +177,60 @@ void test_locale_compare() {
 // the SAME objects (a view, not a clone), and the result must be a genuinely separate array handle, so
 // that nobody mistakes it for an aliasing conversion. The second is a limitation being pinned, not a
 // feature: it is precisely why this is not a converting constructor on Array.
+// A row over whichever alternative a variant holds.
+//
+// Three properties are pinned. The row must be a VIEW of the live object -- TypeScript passes a union
+// where a row over its common shape is wanted, and the object is not copied. Every alternative must
+// qualify. And an alternative that cannot produce the row must make the whole conversion ill-formed,
+// because a row that could read a key off some alternatives and not others is exactly what must not be
+// constructible.
+//
+// The common shape is expressed here as a base class, which exercises the `derived_from` branch of the
+// predicate. The motivating case in the SDK goes through the generated widening proof instead -- both
+// audio-reference alternatives declare `state` at the type the anonymous `{state}` row wants -- and that
+// branch cannot be reached from a unit test, since the proof is specialised only for generated pairs.
+void test_structural_ref_from_variant() {
+  struct Common : flight::ReferenceEnabled {
+    flight::String state;
+  };
+  struct Held : Common {};
+  struct Other : Common {};
+  struct Unrelated : flight::ReferenceEnabled {
+    double unrelated{0.0};
+  };
+  using Row = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Common>>>>;
+
+  auto held = flight::make_ref<Held>();
+  held->state = flight::String::from_utf8("resolved");
+  const std::variant<flight::Ref<Held>, flight::Ref<Other>> first(held);
+  const Row row(first);
+  check(row.shared_object().get() == static_cast<Common*>(held.get()),
+        "the row observes the object the variant holds");
+  check(row->state == flight::String::from_utf8("resolved"), "the row reads the live object");
+  // A view, not a snapshot: a later write through the original is visible through the row.
+  held->state = flight::String::from_utf8("failed");
+  check(row->state == flight::String::from_utf8("failed"), "the row is a view, not a copy");
+
+  // The other alternative works the same way, and selects by what is held rather than by position.
+  auto other = flight::make_ref<Other>();
+  other->state = flight::String::from_utf8("pending");
+  const std::variant<flight::Ref<Held>, flight::Ref<Other>> second(other);
+  const Row second_row(second);
+  check(second_row->state == flight::String::from_utf8("pending"),
+        "the row follows the active alternative");
+
+  // The constraint is what makes this sound, and `std::constructible_from` could not express it: the
+  // shared_ptr constructor is viable for any pointee and validates inside flatten_ref with a
+  // static_assert, so a fold over constructible_from admitted alternatives that then failed to compile
+  // inside the runtime. These two assertions are that distinction.
+  static_assert(std::constructible_from<Row, const std::variant<flight::Ref<Held>>&>,
+                "a variant whose every alternative produces the row is convertible");
+  static_assert(!std::constructible_from<Row, const std::variant<flight::Ref<Unrelated>>&>,
+                "an alternative that cannot produce the row makes the conversion ill-formed");
+  static_assert(!std::constructible_from<Row, const std::variant<flight::Ref<Held>, flight::Ref<Unrelated>>&>,
+                "ONE disqualifying alternative is enough to refuse the whole union");
+}
+
 void test_array_of() {
   struct Subject : flight::ReferenceEnabled {
     double value{0.0};
@@ -3337,6 +3391,7 @@ static void test_self_reference() {
 
 int main() {
   test_array();
+  test_structural_ref_from_variant();
   test_array_of();
   test_copy_within();
   test_locale_compare();
