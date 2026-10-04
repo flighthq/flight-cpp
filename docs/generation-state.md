@@ -3205,3 +3205,35 @@ recorded that way on the strength of the number. The repair in fact resolved bot
 error count is a measure of the FRONT of a queue, not of progress through it, and the only honest readings
 are zero or a diff of the diagnostics themselves. This is the same first-diagnostic trap as the report,
 one level down, and it is the sixth over-or-under-count in this session traceable to counting a proxy.
+
+### Why `respell-reference-alias` is not the answer for `registry_entry_state.bound`
+
+Worth writing down because it is the obvious cheap fix and it is wrong.
+
+`registry_entry_state` is a TypeScript const object — `{ bound: 'bound', tombstoned: 'tombstoned' }` — and
+the emitter gives it a heap identity:
+
+```cpp
+inline flight::Ref<bound_tombstoned_54a1df218909e3d5> registry_entry_state =
+    flight::make_ref<bound_tombstoned_54a1df218909e3d5>({.bound = …, .tombstoned = …});
+```
+
+then reads it as `registry_entry_state.bound`, which needs `->bound` on a `shared_ptr`. The tempting
+repair is `respell-reference-alias` with `expansion: "value"`, which exists precisely to say that a
+`flight::Ref<...>` of some named template should expand to a value rather than a shared pointer — and a
+value would make `.bound` correct.
+
+It does not apply. That kind's own rule is `shared-pointer` for a struct deriving from
+`flight::ReferenceEnabled` and `value` for anything else, and
+`struct bound_tombstoned_54a1df218909e3d5 : public flight::ReferenceEnabled` derives from it. So
+`shared-pointer` is the CORRECT expansion here, and declaring `value` would contradict the rule that
+`referenceAliasIdentityProof` turns into a compiled assertion — the repair would either fail its own proof
+or change the object's identity from shared to copied, which is a reference-identity change.
+
+So these two sites are genuinely the `.` instead of `->` family, which is an operator emitted as source
+text. `AGENTS.md` nominates an override for that, and the one instance already closed used a SOURCE PATCH
+instead, which is cheaper and carries no copy. An override here would be larger than it looks, because the
+same module also refuses `get_registry_table_entry_state` — one of the three genuinely-absent symbols — so
+an override would have to supply that too, not merely respell an operator.
+
+Left for whoever takes the arrow family, with the cheap option already eliminated.
