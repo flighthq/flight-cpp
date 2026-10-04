@@ -2458,3 +2458,68 @@ the diagnostic actually *says*, then read three of them.
 What survives: the localisation itself is still correct and still valuable. The clause is real, the
 soundness argument holds, and `physics2d`'s 15 is now identified as the biggest target. Only the sizing was
 fiction.
+
+## `physics2d`'s 15 headers are compiler-side, and that is now established rather than guessed
+
+The largest single cluster left is not fixable from this repository. Worth recording in detail, because the
+number is the biggest on the board and would otherwise attract effort indefinitely.
+
+The source is one function with a switch:
+
+```ts
+function createPhysics2DColliderWorldShape(
+  local: Readonly<CollisionBuiltInShape2D>,
+): CollisionBuiltInShape2D & Entity {
+  case 'circle': {
+    const out = allocateEntity<(CollisionCircle2D & { kind: 'circle' }) & Entity>();
+    initializeCollisionCircle2D(out, 'circle', local.radius, local.x, local.y);
+    return finishEntity(out);
+  }
+```
+
+The emitter lowers the same intersection **two different ways in the same file**:
+
+```cpp
+// the branch's allocation — intersection as C++ INHERITANCE
+struct x_y_radius_kind_entity_runtime_key_3b411ce3c09d63df : public flight::types::CollisionCircle2D {
+  flight::String kind;
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+};
+
+// the return union's alternative — intersection FLATTENED
+struct x_y_radius_kind_entity_runtime_key_9d232207bd12a07b : public flight::ReferenceEnabled {
+  double x; double y; double radius;
+  flight::String kind;
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+};
+```
+
+Same logical member set, different structural hash, because the hash is over *declared* members and one
+inherits `x`/`y`/`radius` while the other declares them. So `finish_entity` returns the inheriting type
+where the variant holds the flattened one, and the two are unrelated C++ types.
+
+**Why none of the four mechanisms can close it.** An alias is wrong: these are not two names for one type,
+they are two different layouts, one with a base subobject. A conversion is worse: constructing the
+flattened struct from the inheriting one copies members and yields a **new object**, where the TypeScript
+returns the same one — that is a reference-identity change, which `AGENTS.md` names as a semantics no
+workaround may change. A repair cannot reach it because the defect is a type-representation choice, not
+text. And an override would have to rewrite the function around the inconsistency rather than supply
+anything missing.
+
+The fix is for the emitter to lower an intersection type consistently — either always by inheritance or
+always flattened — within a single module. Until then these 15 headers stay refused, and that is the
+correct outcome rather than a gap to paper over.
+
+**Consequence for the queue.** The remaining work that IS actionable from here is smaller than the headline
+numbers suggested:
+
+| target | headers | nature |
+|---|---|---|
+| row WRITE incompatible value type | 7 | `requirements` 4, `registry-codegen` 3 |
+| `scene2d-resources` row conversions | 7 | other conversion involving a row |
+| the row-widening clause | ~4 | one `std::same_as` clause, tests required first |
+| `loader`, `lighting` row conversions | 6 | |
+| the absence channel | 10 | refused on purpose; needs a runtime/emitter contract change |
+
+That is the honest board: roughly 24 addressable headers plus two refused families, not the 46 + 10 the
+earlier sizing implied.
