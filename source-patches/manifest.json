@@ -100,6 +100,40 @@
       "unblocks": "Makes raycast_collision_shape3_d.hpp compile and clears its _internal_index.hpp and contract.hpp cascades.",
       "expires": "when property access on narrowed intersection parameters uses reference member access, or Flight adopts the named interface annotations.",
       "appliedOn": "2026-10-04"
+    },
+    {
+      "id": "path-retain-stroke-geometry-return-type",
+      "dependency": "flight",
+      "patch": "path-retain-stroke-geometry-return-type.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/path/src/strokePathGeometry.ts plus its three consumers",
+      "package": "@flighthq/path",
+      "answers": "diagnostic",
+      "refusal": "callers infer fresh anonymous structural owners for the declared StrokePathGeometry return and cannot convert the returned reference",
+      "rewrite": "Exports the two private geometry interfaces from their internal module and annotates each consumer binding with StrokePathGeometry so the declared owner survives cross-module lowering.",
+      "equivalence": "The package exports only its root and contract entry points, neither of which re-exports these internal types. A type-only internal export and local annotations emit no JavaScript, make the same call once, retain the same reference, and perform the same reads in the same order.",
+      "whyNotUpstreamFirst": "The source inference is already exact in TypeScript, but the pinned C++ emitter re-derives use-site anonymous rows when a return interface is private to another module. Naming that internal interface supplies target-neutral evidence without changing the package API or runtime behavior.",
+      "verification": "Targeted regeneration of @flighthq/path emitted every module with the patch applied, and all 31 package headers compiled independently. The annotation-only ReturnType spelling was measured first, remained 26/31, and was removed.",
+      "unblocks": "Makes stroke_path.hpp, tessellate_stroke_path.hpp, and explain_stroke_path_tessellation.hpp compile, clearing their two aggregator cascades and moving @flighthq/path from 26/31 to 31/31.",
+      "expires": "when the emitter retains a call expression's declared nominal return owner through local inference, or Flight adopts the explicit annotations.",
+      "appliedOn": "2026-10-04"
+    },
+    {
+      "id": "font-formats-name-woff-diagnostic-details",
+      "dependency": "flight",
+      "patch": "font-formats-name-woff-diagnostic-details.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/font-formats/src/woffFont.ts",
+      "package": "@flighthq/font-formats",
+      "answers": "diagnostic",
+      "refusal": "object-literal diagnostic details are emitted as a brace initializer that cannot cross both Record and optional<Record> construction boundaries",
+      "rewrite": "Binds each diagnostic detail object to its already-declared Record<string, boolean | number | string> parameter type before passing it, and binds the nullable output length to an explicitly numeric local.",
+      "equivalence": "The binding evaluates the same property expressions once in the same order and passes the same object contents. inflated?.byteLength ?? -1 and inflated === null ? -1 : inflated.byteLength agree because inflated has exactly Uint8Array | null and byteLength is always numeric. Nothing escapes, mutates, or changes parameter omission.",
+      "whyNotUpstreamFirst": "The object literals already receive the exact parameter context and the optional chain already has a numeric result in TypeScript. These ordinary target-neutral spellings avoid maintaining a copied WOFF reader while the emitter cannot compose Record and optional construction or retain the optional-chain value domain.",
+      "verification": "Targeted regeneration made woff_font.hpp compile independently and a C++ probe preserved the missing-decompressor null result plus diagnostic kind, origin, and table detail. Combining that candidate with the committed full structural-member table made all 17 package headers compile; the first named-Record trial exposed and the final typed-local spelling removed the optional-chain Any widening.",
+      "unblocks": "Makes woff_font.hpp compile, clearing open_type_glyph_outline_source.hpp and both package aggregators and moving @flighthq/font-formats from 13/17 to 17/17 when regenerated with the full SDK structural schema.",
+      "expires": "when the emitter materializes a contextual Record object literal before constructing an optional<Record> function argument, or Flight adopts the named bindings.",
+      "appliedOn": "2026-10-04"
     }
   ]
 }

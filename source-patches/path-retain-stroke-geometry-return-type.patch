@@ -1,0 +1,80 @@
+diff --git a/packages/path/src/strokePathGeometry.ts b/packages/path/src/strokePathGeometry.ts
+--- a/packages/path/src/strokePathGeometry.ts
++++ b/packages/path/src/strokePathGeometry.ts
+@@ -11,7 +11,7 @@ export const StrokePathTessellationIssueSelfIntersectingOutline = 5;
+ 
+ type StrokePathTessellationIssue = 0 | 1 | 2 | 3 | 4 | 5;
+ 
+-interface StrokePathPieceGeometry {
++export interface StrokePathPieceGeometry {
+   closed: boolean;
+   endCap: number[];
+   left: number[];
+@@ -19,7 +19,7 @@ interface StrokePathPieceGeometry {
+   startCap: number[];
+ }
+ 
+-interface StrokePathGeometry {
++export interface StrokePathGeometry {
+   issue: StrokePathTessellationIssue;
+   issueSubpath: number | null;
+   pieces: StrokePathPieceGeometry[];
+diff --git a/packages/path/src/explainStrokePathTessellation.ts b/packages/path/src/explainStrokePathTessellation.ts
+--- a/packages/path/src/explainStrokePathTessellation.ts
++++ b/packages/path/src/explainStrokePathTessellation.ts
+@@ -10,4 +10,5 @@ import {
+   buildStrokePathGeometry,
++  type StrokePathGeometry,
+   StrokePathTessellationIssueInvalidPath,
+   StrokePathTessellationIssueInvalidStyle,
+   StrokePathTessellationIssueNone,
+@@ -25,7 +26,7 @@ export function explainStrokePathTessellation(
+   style: Readonly<StrokeStyle>,
+   tolerance = 0.25,
+ ): StrokePathTessellationExplanation {
+-  const geometry = buildStrokePathGeometry(path, style, tolerance);
++  const geometry: StrokePathGeometry = buildStrokePathGeometry(path, style, tolerance);
+   return {
+     reason: getReason(geometry.issue),
+     subpath: geometry.issueSubpath,
+diff --git a/packages/path/src/strokePath.ts b/packages/path/src/strokePath.ts
+--- a/packages/path/src/strokePath.ts
++++ b/packages/path/src/strokePath.ts
+@@ -1,5 +1,5 @@
+ import type { Path, StrokeStyle } from '@flighthq/types/contract';
+ 
+ import { appendPathClose, appendPathLineTo, appendPathMoveTo, createPath } from './path';
+-import { buildStrokePathGeometry } from './strokePathGeometry';
++import { buildStrokePathGeometry, type StrokePathGeometry } from './strokePathGeometry';
+ 
+@@ -11,7 +11,7 @@ export type { StrokeStyle } from '@flighthq/types/contract';
+ // must honor non-zero winding for that case rather than independently filling both contours.
+ export function strokePath(path: Readonly<Path>, style: Readonly<StrokeStyle>, tolerance = 0.25): Path {
+   const result = createPath('nonZero');
+-  const geometry = buildStrokePathGeometry(path, style, tolerance);
++  const geometry: StrokePathGeometry = buildStrokePathGeometry(path, style, tolerance);
+   for (let i = 0; i < geometry.pieces.length; i++) appendPieceOutline(result, geometry.pieces[i]);
+   return result;
+ }
+diff --git a/packages/path/src/tessellateStrokePath.ts b/packages/path/src/tessellateStrokePath.ts
+--- a/packages/path/src/tessellateStrokePath.ts
++++ b/packages/path/src/tessellateStrokePath.ts
+@@ -1,4 +1,8 @@
+ import type { Path, PathMesh, StrokeStyle } from '@flighthq/types/contract';
+ 
+-import { buildStrokePathGeometry, StrokePathTessellationIssueNone } from './strokePathGeometry';
++import {
++  buildStrokePathGeometry,
++  type StrokePathGeometry,
++  StrokePathTessellationIssueNone,
++} from './strokePathGeometry';
+ 
+@@ -11,7 +15,7 @@ export function tessellateStrokePath(
+   style: Readonly<StrokeStyle>,
+   tolerance = 0.25,
+ ): PathMesh | null {
+-  const geometry = buildStrokePathGeometry(path, style, tolerance);
++  const geometry: StrokePathGeometry = buildStrokePathGeometry(path, style, tolerance);
+   if (geometry.issue !== StrokePathTessellationIssueNone) return null;
+   const mesh: PathMesh = { indices: [], vertices: [] };
+   for (let i = 0; i < geometry.pieces.length; i++) appendStrokePieceMesh(mesh, geometry.pieces[i]);
