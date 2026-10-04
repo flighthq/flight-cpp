@@ -1239,6 +1239,103 @@
       "defect": "The emitter writes 8 name(s) owned by flight::types unqualified inside namespace flight::glyphatlas, and without the headers that define them. Each name carries its own defining header and is introduced only into the files that use it unqualified.\n\n@flighthq/glyphatlas is a zero-marker package: builder's audit established that its refused modules withhold no declarations, so by the synthesis recorded in docs/generation-state.md qualification is the whole fix here rather than half of it -- the same shape as @flighthq/spatial, which went 8/11 to 11/11 on one using-declaration. Found by sweeping every unqualified name in one pass: the first repair (GlyphAtlasRuntime) moved the diagnostic to GlyphEntry rather than clearing the header, which is the iterative-revelation pattern this file warns about.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "node-has-clip-partial-row-absence",
+      "kind": "project-partial-row-absence",
+      "appliesTo": "flight/node/has_clip.hpp",
+      "keys": [
+        "clip"
+      ],
+      "sourceDeclaration": "packages/node/src/hasClip.ts -- target.clip = obj?.clip ?? null, where clip: ClipRegion | null on a possibly-absent receiver row, lowered against a declared std::variant<flight::Ref<ClipRegion>, flight::Null, flight::Undefined>",
+      "diagnostic": "could not convert 'flight::row_get<RowKey<FixedString<5>{\"clip\"}>, RowReadonly<RowPartial<RowOf<std::shared_ptr<types::HasClip> > > > >(...)' from 'std::optional<std::shared_ptr<flight::types::ClipRegion>>' to 'std::variant<std::shared_ptr<flight::types::ClipRegion>, flight::Null, flight::Undefined>'",
+      "defect": "The emitter has two lowerings for this construct and emits the short one here: it returns the std::optional straight into a position it declared as the three-state variant, which has no conversion. The long one, which it emits correctly in scene2d_formats/svg_document.hpp, binds the read to a local, maps !has_value() to flight::Null, and returns the value alternative otherwise. The repair writes that long form, so the absence mapping is the emitter's own rather than ours -- at every long-form site in the tree nullopt maps to flight::Null and never to Undefined, and the Undefined channel is already supplied by the receiver check that precedes the read. Anchored to this header and these keys because the three cases that produce this identical diagnostic are separated by the SUBJECT's member declaration, which is in another file: matched by text alone the same transform breaks scene2d_resources/scene2_ddocument_source.hpp, which already compiles.",
+      "expectedWhen": "always",
+      "expires": "when the emitter uses its long-form lowering at every partial row_get in a three-state position; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "node-has-material-partial-row-absence",
+      "kind": "project-partial-row-absence",
+      "appliesTo": "flight/node/has_material.hpp",
+      "keys": [
+        "material",
+        "materialData"
+      ],
+      "sourceDeclaration": "packages/node/src/hasMaterial.ts -- material and materialData read as `obj?.key ?? null` against declared three-state variants",
+      "diagnostic": "could not convert 'flight::row_get<RowKey<...>, RowReadonly<RowPartial<RowOf<std::shared_ptr<types::HasMaterial> > > > >(...)' from 'std::optional<std::shared_ptr<...>>' to 'std::variant<std::shared_ptr<...>, flight::Null, flight::Undefined>'",
+      "defect": "Same short-form lowering as node-has-clip-partial-row-absence, at two keys in one module. See that entry for why the mapping is the emitter's own and why this is anchored rather than matched.",
+      "expectedWhen": "always",
+      "expires": "when the emitter uses its long-form lowering at every partial row_get in a three-state position; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "node-has-blend-mode-partial-row-absence",
+      "kind": "project-partial-row-absence",
+      "appliesTo": "flight/node/has_blend_mode.hpp",
+      "keys": [
+        "blendMode"
+      ],
+      "sourceDeclaration": "packages/node/src/hasBlendMode.ts -- blendMode read as `obj?.blendMode ?? null` against a declared three-state variant",
+      "diagnostic": "could not convert 'flight::row_get<RowKey<FixedString<10>{\"blendMode\"}>, RowReadonly<RowPartial<RowOf<std::shared_ptr<types::HasBlendMode> > > > >(...)' to 'std::variant<..., flight::Null, flight::Undefined>'",
+      "defect": "Same short-form lowering as node-has-clip-partial-row-absence. See that entry.",
+      "expectedWhen": "always",
+      "expires": "when the emitter uses its long-form lowering at every partial row_get in a three-state position; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "lighting-scene-lights-partial-row-absence",
+      "kind": "project-partial-row-absence",
+      "appliesTo": "flight/lighting/scene_lights.hpp",
+      "keys": [
+        "ambient",
+        "directional"
+      ],
+      "sourceDeclaration": "packages/lighting/src/sceneLights.ts -- ambient and directional read from a possibly-absent Scene3DLights row against declared three-state variants",
+      "diagnostic": "could not convert 'flight::row_get<RowKey<FixedString<8>{\"ambient\"}>, RowReadonly<RowPartial<RowOf<std::shared_ptr<types::Scene3DLights> > > > >(...)' to 'std::variant<..., flight::Null, flight::Undefined>'",
+      "defect": "Same short-form lowering as node-has-clip-partial-row-absence, at two keys in one module. See that entry.",
+      "expectedWhen": "always",
+      "expires": "when the emitter uses its long-form lowering at every partial row_get in a three-state position; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "materials-standard-material-three-state-member",
+      "kind": "unwrap-partial-row-three-state-member",
+      "appliesTo": "flight/materials/standard_material.hpp",
+      "keys": [
+        "name"
+      ],
+      "sourceDeclaration": "packages/materials/src/standardMaterial.ts -- a name member declared string | null, read from a possibly-absent options row",
+      "diagnostic": "could not convert 'flight::row_get<RowKey<FixedString<5>{\"name\"}>, RowReadonly<RowPartial<RowOf<std::shared_ptr<types::StandardMaterial> > > > >(...)' to 'std::variant<flight::String, flight::Null, flight::Undefined>'",
+      "defect": "A DIFFERENT case from the four project-partial-row-absence entries, with the same diagnostic. flight::types::StandardMaterial declares `name` as std::variant<flight::String, flight::Null, flight::Undefined> -- already three-state -- so a partial read yields std::optional<std::variant<...>> and the other form would build in_place_type<flight::String> from a variant. Unwrapping is forced rather than chosen and loses nothing: the member itself already distinguishes null from a value, so nullopt can only mean the property was absent, which is Undefined.",
+      "expectedWhen": "always",
+      "expires": "when the emitter unwraps a partial read of an already-three-state member; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "requirements-row-write-array-projection",
+      "kind": "project-array-at-row-write",
+      "appliesTo": "flight/requirements/requirement_set.hpp",
+      "keys": [
+        "requirements"
+      ],
+      "element": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>",
+      "identityArgument": "The written expression is `distinct_sorted_requirements(...)`, a TEMPORARY: no caller holds the array, so it has no identity anyone can observe. The function also mints fresh Requirement objects with make_ref from object literals, exactly as the TypeScript builds fresh objects, so there is no pre-existing element identity either. array_of preserves element identity and returns a separate array handle; here there is no array handle to preserve.",
+      "sourceDeclaration": "packages/requirements/src/requirementSet.ts -- initializeRequirementSet assigns distinctSortedRequirements(requirements) to a member declared as rows over Requirement",
+      "diagnostic": "static assertion failed: structural row write has an incompatible value type -- Array<flight::Ref<types::Requirement>> written where Array<StructuralRef<RowReadonly<RowOf<Ref<Requirement>>>>> is declared",
+      "defect": "The member is declared as an Array of readonly ROWS over Requirement, and the emitted write passes an Array of the Requirement references themselves. The element conversion is a row projection over the SAME subject, so nothing is reinterpreted; only the array has to be rebuilt, and flight::array_of does exactly that while keeping each element observing its own object. array_of is NOT generally legal at a row write -- it returns a separate array handle, so where TypeScript stores an existing array it would change array identity, which AGENTS.md forbids. It is legal here for the reason in identityArgument, which is why this kind anchors to named sites rather than matching the construct.",
+      "expectedWhen": "always",
+      "expires": "when the emitter projects an array into the row element type its member declares; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "registry-codegen-row-write-array-projection",
+      "kind": "project-array-at-row-write",
+      "appliesTo": "flight/registry_codegen/registry_codegen.hpp",
+      "keys": [
+        "entries"
+      ],
+      "element": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RegistryCatalogEntry>>>>",
+      "identityArgument": "`entries` is a LOCAL, constructed empty at the top of initialize_registry_codegen_plan, built up, and written once into the row. Nothing outside the call can hold it and it dies with the frame, so its array identity is unobservable. The sibling `unresolved` local is already declared at the row's element type and needs no projection, which is why only `entries` is named here.",
+      "sourceDeclaration": "packages/registry-codegen/src/registryCodegen.ts -- initializeRegistryCodegenPlan assigns its accumulated entries to a member declared as rows over RegistryCatalogEntry",
+      "diagnostic": "static assertion failed: structural row write has an incompatible value type -- Array<flight::Ref<types::RegistryCatalogEntry>> written where Array<StructuralRef<RowReadonly<RowOf<Ref<RegistryCatalogEntry>>>>> is declared",
+      "defect": "Same shape as requirements-row-write-array-projection: the member is declared as rows over the entry type and the write passes the entry references. See that entry for why array_of is legal only with the identity precondition stated.",
+      "expectedWhen": "always",
+      "expires": "when the emitter projects an array into the row element type its member declares; sdk:check fails if this repair matches no header."
     }
   ]
 }

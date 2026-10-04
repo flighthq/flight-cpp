@@ -42,6 +42,9 @@ const EXPECTATIONS = new Set(['always', 'withBindings']);
 // fields and the rest is checked below: either a single `symbol` with the `declaration` to insert, or a
 // `symbols` list with the `namespace` they come from.
 const SHARED_FIELDS = ['id', 'kind', 'appliesTo', 'diagnostic', 'defect', 'expires'];
+// Required fields that hold a LIST of names rather than a string. The string loop below rejects an array,
+// so these are named here and checked separately -- the same split `symbols` already needs.
+const LIST_FIELDS = new Set(['keys']);
 const REQUIRED_FIELDS = {
   'deduce-call-argument-from-assignment': [...SHARED_FIELDS, 'symbol', 'sourceDeclaration'],
   default: [...SHARED_FIELDS, 'symbol', 'declaration'],
@@ -78,6 +81,18 @@ export function loadEmissionRepairs(root) {
   for (const repair of parsed.repairs) {
     const required = REQUIRED_FIELDS[repair.kind] ?? REQUIRED_FIELDS.default;
     for (const field of required) {
+      if (LIST_FIELDS.has(field)) {
+        if (
+          !Array.isArray(repair[field]) ||
+          repair[field].length === 0 ||
+          repair[field].some((entry) => typeof entry !== 'string' || entry.length === 0)
+        ) {
+          throw new Error(
+            `Emission repair ${repair.id ?? '<unnamed>'} needs ${field} as a non-empty list of names`,
+          );
+        }
+        continue;
+      }
       if (typeof repair[field] !== 'string' || repair[field].length === 0) {
         throw new Error(`Emission repair ${repair.id ?? '<unnamed>'} is missing required field ${field}`);
       }
