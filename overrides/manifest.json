@@ -46,6 +46,21 @@
       "unblocks": "@flighthq/camera's last three failing headers -- frustum_corners.hpp and the two barrels that include it -- taking camera from 18/21 to 21/21, a complete package. It is 21/21 emitted and had no other defect.",
       "expires": "when the emitter selects the member-access operator from the lowered element type rather than writing `.` unconditionally.",
       "authoredOn": "2026-10-03"
+    },
+    {
+      "id": "easing-create-easing-samples",
+      "path": "flight/easing/create_easing_samples.hpp",
+      "package": "@flighthq/easing",
+      "status": "complete",
+      "supplies": "packages/easing/src/createEasingSamples.ts",
+      "derivedFrom": "1a4bd70d8ec34457687209265990880e2e583eb72c356dcc30f7ed3d55ffeada",
+      "reason": "createEasingSamples is the ONE declaration the emitter refused in @flighthq/easing, and the refusal is about the signature rather than the body: `out?: Float32Array` returning `Float32Array` gives two union domains -- the supplied array and a freshly allocated one -- that land on a single carrier, flight::Float32Array, with no discriminator. Refusing that in general is correct, because the compiler cannot know the two are meant to be the same object.",
+      "change": "Writes the function, transcribed from the TypeScript the refusal comment quotes verbatim. 22 of the package's 23 modules were already emitted and all 23 headers already compiled; this is the whole remainder.",
+      "equivalence": "The TypeScript states the invariant the compiler could not verify -- \"Returns the output array (always the same object as `out` when one is supplied)\" -- and flight::Float32Array is a handle onto shared storage, so returning the supplied array returns that same object rather than a copy. The three behaviours the source comments single out are preserved exactly: count=1 samples the MIDPOINT ease(0.5) rather than ease(0); the endpoints are reassigned after the loop to clamp away floating-point drift in i * step, so result[0] is exactly ease(0) and result[n-1] exactly ease(1); and t is read into a local before the write, which the source marks as alias safety because `out` may be a view over memory the easing function also reads. Number.isFinite lowers to std::isfinite, the spelling the emitter uses everywhere else in the tree.",
+      "whyNotAPatchOrRepair": "A repair may only add text with no behavior, and this is a function body. A source patch could in principle rewrite the TypeScript signature to avoid the union, but that would change the public API of a shipped Flight package to suit this profile's compiler, which is a worse trade than writing twenty lines here. The refusal is a genuine limitation of the union lowering, not a defect in the emitted text.",
+      "unblocks": "@flighthq/easing: 23/23 modules and 23/23 headers, a 23-module package that was held entirely by one function.",
+      "expires": "when the compiler can represent a union whose domains share a carrier but are provably the same object, or accepts the invariant as a declared contract.",
+      "authoredOn": "2026-10-04"
     }
   ]
 }

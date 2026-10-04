@@ -58,6 +58,25 @@ export function loadOverrides(root) {
     if (!STATUSES.has(entry.status)) {
       throw new Error(`Override ${entry.id} has unknown status ${entry.status}`);
     }
+    // `supplies` names the refused module this override provides a FAITHFUL implementation of, by its
+    // source path in the pinned checkout. It is a stronger claim than `status`, and separate from it on
+    // purpose: `status: complete` only means the override compiles, which a file full of functions that
+    // throw also does. flight/log/log.hpp is exactly that -- it compiles, and nine of its functions
+    // throw -- so it must never carry `supplies`, or the tier gate would call @flighthq/log shippable.
+    //
+    // Only an override that actually implements the module gets it, and only then does the tier gate
+    // count the package's refusal as answered.
+    if (entry.supplies !== undefined) {
+      if (typeof entry.supplies !== 'string' || entry.supplies.length === 0) {
+        throw new Error(`Override ${entry.id} has a non-string supplies path`);
+      }
+      if (entry.status !== 'complete') {
+        throw new Error(
+          `Override ${entry.id} claims to supply ${entry.supplies} but its status is ${entry.status}. ` +
+            'An override that does not compile cannot be supplying anything.',
+        );
+      }
+    }
     if (entry.status === 'incomplete' && (typeof entry.remaining !== 'string' || entry.remaining.length === 0)) {
       throw new Error(`Override ${entry.id} is incomplete and must say what remains`);
     }

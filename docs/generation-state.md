@@ -1714,3 +1714,72 @@ That is why the derived duplicate-struct aliasing does not fire: it requires byt
 purpose, because that is what makes it safe without type analysis. Closing this one needs structural
 equivalence across differently-spelled-but-equivalent field types, which is a transitive alias problem and
 genuinely harder than anything else in this file. Recorded, not attempted.
+
+## The refusals are the frontier, and they are better distributed than expected
+
+Two measurements over the full-tree report settle where the remaining work is.
+
+**The name class is not the frontier.** It is 73.5% of all failures (753 of 1024 headers), and **748 of
+those 753 sit in packages that already have refusals**. Only 5 are in a fully emitted package. That
+reconciles the two earlier results that looked contradictory: names resolve 95.5% of the time, and
+resolving them gains nothing, because they are almost always standing in front of a refusal that needs
+hand-written code anyway.
+
+**The refusals are concentrated in ones and twos:**
+
+| refused modules | packages |
+|---|---|
+| 0 | 45 |
+| **1** | **42** |
+| 2–3 | 28 |
+| 4–9 | 21 |
+| 10–24 | 10 |
+| 25+ | 4 |
+
+Forty-two packages are a single module away from full emission, and three of those already have **every
+header compiling** — `easing` 23/23, `particles` 13/13, `filesystem` 3/3 — held back only by the refusal
+count.
+
+## `easing` ships: one function, hand-written
+
+`easing`'s single refusal is one declaration, `createEasingSamples`, and the refusal is about the
+**signature** rather than the body: `out?: Float32Array` returning `Float32Array` gives two union domains
+— the supplied array and a freshly allocated one — landing on one carrier with no discriminator. Refusing
+that in general is right, because the compiler cannot know the two are meant to be the same object.
+
+Here they are, and the TypeScript says so: *"Returns the output array (always the same object as `out`
+when one is supplied)."* `flight::Float32Array` is a handle onto shared storage, so returning the supplied
+array returns that object rather than a copy — which is what makes the guarantee hold rather than merely
+appear to.
+
+The three behaviours the source comments single out are the three worth checking, and all three are
+preserved: `count=1` samples the **midpoint** `ease(0.5)` and not `ease(0)`; the endpoints are reassigned
+*after* the loop to clamp away floating-point drift in `i * step`; and `t` is read into a local before the
+write, which the source marks as alias safety because `out` may be a view over memory the easing function
+also reads. `Number.isFinite` lowers to `std::isfinite`, which is how the emitter spells it everywhere
+else in the tree — checked rather than assumed.
+
+Result: **23/23 modules, 23/23 headers**.
+
+## The tier gate could not see overrides at all
+
+Landing that exposed a hole in the gate. `complete` demanded `refusedModules === 0`, and overrides were
+never consulted — so a package whose only gap was supplied by hand stayed `partial` for ever, and the
+override mechanism, one of the four declared mechanisms, could never show progress. That defeats the point
+of having it.
+
+The fix is an explicit claim rather than an inference. An override may declare `supplies`, naming the
+refused module it faithfully implements by its source path, and the gate then counts that package's
+refusal as answered and ranks it `assisted` — never `ready`, because it carries debt.
+
+`supplies` is deliberately **a stronger claim than `status`**, and separate from it, because
+`status: complete` only means the override compiles — which a file full of functions that throw also does.
+`flight/log/log.hpp` is exactly that file: it compiles, and nine of its functions throw. It must never
+carry `supplies`, and the loader refuses the claim on any override that is not `complete`. Measured:
+
+```
+@flighthq/easing     assisted   supplies: easing-create-easing-samples
+@flighthq/log        partial    supplies: (none)
+```
+
+`log` staying partial is the gate working. **34 of 146 applicable packages are now shippable.**

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { loadApplicableEnvironments, loadDeferredPackages } from './deferredPackages.mjs';
+import { loadOverrides } from './overrides.mjs';
 
 // What of the SDK is actually usable, counted per package.
 //
@@ -73,6 +74,32 @@ const compilationFile = path.resolve(
   valueOf('--compilation=') ?? `${portable(path.relative(root, generatedRoot))}-header-compilation.json`,
 );
 const compilation = existsSync(compilationFile) ? JSON.parse(readFileSync(compilationFile, 'utf8')) : undefined;
+// A refused module can be answered by a hand-written override, and before this the gate could not see
+// that: `complete` demanded refusedModules === 0, so a package whose only gap was supplied by an override
+// stayed `partial` for ever and the override mechanism could never show progress -- which defeats the
+// point of having it as a declared mechanism. An override earns this only by declaring `supplies`, which
+// names the refused module it faithfully implements; see scripts/overrides.mjs for why that is a stronger
+// claim than `status: complete`.
+const bestEffortFile = path.join(generatedRoot, 'best-effort.json');
+const bestEffort = existsSync(bestEffortFile) ? JSON.parse(readFileSync(bestEffortFile, 'utf8')) : undefined;
+const suppliedModules = new Set(
+  loadOverrides(root)
+    .filter((override) => override.supplies !== undefined)
+    .map((override) => override.supplies),
+);
+const suppliedBy = new Map(
+  loadOverrides(root)
+    .filter((override) => override.supplies !== undefined)
+    .map((override) => [override.supplies, override.id]),
+);
+// Refused modules per package, from the compiler's own per-module verdict.
+const refusedByPackage = new Map();
+for (const record of bestEffort?.modules ?? []) {
+  if (record.status !== 'refused-placeholder') continue;
+  const list = refusedByPackage.get(record.module.packageName) ?? [];
+  list.push(record.module.source);
+  refusedByPackage.set(record.module.packageName, list);
+}
 const reportFile = path.resolve(root, valueOf('--report=') ?? path.join('out', 'sdk-package-tiers.json'));
 // `--report=` is where this script WRITES, and `--compilation=` is what it reads. Both scripts in this
 // pair spell their output `--report=`, so passing the header compile report here reads as "use this as
@@ -126,7 +153,16 @@ const tiers = manifest.packages.map((package_) => {
     package_.environment !== undefined && !applicableEnvironments.has(package_.environment)
       ? package_.environment
       : undefined;
-  const complete = package_.emittedModules === package_.sourceModules && package_.refusedModules === 0;
+  // Either nothing was refused, or every refused module is supplied by an override that says so.
+  const refusedHere = refusedByPackage.get(package_.package) ?? [];
+  const allRefusalsSupplied =
+    package_.refusedModules > 0 &&
+    refusedHere.length === package_.refusedModules &&
+    refusedHere.every((source) => suppliedModules.has(source));
+  const overrides = refusedHere.map((source) => suppliedBy.get(source)).filter((id) => id !== undefined);
+  const complete =
+    package_.emittedModules + (allRefusalsSupplied ? package_.refusedModules : 0) === package_.sourceModules &&
+    (package_.refusedModules === 0 || allRefusalsSupplied);
   const tier = foreignEnvironment !== undefined
     ? 'n/a'
     : isDeferred
@@ -139,7 +175,7 @@ const tiers = manifest.packages.map((package_) => {
         ? 'partial'
         : headers.length === 0
           ? 'uncompiled'
-          : repairs.length > 0 || patches.length > 0
+          : repairs.length > 0 || patches.length > 0 || overrides.length > 0
             ? 'assisted'
             : 'ready';
   return {
@@ -149,6 +185,7 @@ const tiers = manifest.packages.map((package_) => {
     headers: headers.length,
     package: package_.package,
     repairs,
+    overrides,
     patches,
     sourceModules: package_.sourceModules,
     tier,
