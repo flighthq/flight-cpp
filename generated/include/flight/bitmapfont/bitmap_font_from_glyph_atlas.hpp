@@ -6,9 +6,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/bitmap_font.hpp>
+
 #include "bitmap_font.hpp"
 
 namespace flight::bitmapfont {
+
+using flight::types::BitmapFont;
 
 inline flight::Ref<BitmapFont> create_bitmap_font_from_glyph_atlas(flight::Ref<GlyphAtlas> atlas) {
   flight::Ref<GlyphAtlasRuntime> runtime = atlas->runtime;

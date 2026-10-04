@@ -7,11 +7,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/glyph_source.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/bitmap.hpp>
+
+#include <flight/entity/entity.hpp>
+
 #include "glyph_atlas.hpp"
 #include "glyph_atlas_entry.hpp"
 #include "glyph_atlas_metrics.hpp"
 
 namespace flight::glyphatlas {
+
+using flight::types::Bitmap;
+using flight::types::EntityConstruction;
+using flight::types::GlyphAtlas;
+using flight::types::GlyphEntry;
+using flight::types::GlyphSource;
+
+using flight::entity::finish_entity;
 
 inline void initialize_glyph_source_from_glyph_atlas(flight::Ref<EntityConstruction<flight::Ref<GlyphSource>>> out, flight::Ref<GlyphAtlas> atlas) {
   (out->get_glyph_atlas_image = [=](std::optional<double> page = std::nullopt) -> std::optional<flight::Ref<Bitmap>> {

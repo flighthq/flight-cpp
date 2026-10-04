@@ -14,6 +14,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture.hpp>
+
+#include <flight/host_sdl/image.hpp>
+
 namespace flight::types { struct Bitmap; }
 namespace flight::types { struct DomScene2DRectangle; }
 namespace flight::types { struct EntityRuntime; }
@@ -41,6 +45,7 @@ struct DomRenderRegistries;
 struct DomRenderStateRuntime;
 struct DomClipContourEntry;
 struct DomClipHooks;
+using DomTextureResolver = std::function<std::optional<flight::host_sdl::ImageSource>(flight::Ref<flight::types::DomRenderState>, flight::types::Texture)>;
 using DomClipEntry = std::variant<flight::Ref<flight::types::DomScene2DRectangle>, flight::Ref<DomClipContourEntry>>;
 } // namespace flight::types
 

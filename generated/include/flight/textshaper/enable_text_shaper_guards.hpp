@@ -20,6 +20,8 @@ namespace flight::types { struct ShapedRun; }
 
 namespace flight::textshaper {
 
+using flight::types::ShapedRun;
+
 inline void disable_text_shaper_guards() {
   flight::textshaper::set_shaped_run_release_guard(std::nullopt);
 }

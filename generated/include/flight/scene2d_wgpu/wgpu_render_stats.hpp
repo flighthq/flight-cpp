@@ -21,12 +21,7 @@ using Mutable = flight::StructuralRef<flight::RowWritable<flight::RowOf<T>>>;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_DRAW_CALL_COUNT_INSTANCE_COUNT_BATCH_FLUSH_COUNT_TEXTURE_UPLOAD_COUNT_9FE60B6367CB7DAF
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_DRAW_CALL_COUNT_INSTANCE_COUNT_BATCH_FLUSH_COUNT_TEXTURE_UPLOAD_COUNT_9FE60B6367CB7DAF
-struct draw_call_count_instance_count_batch_flush_count_texture_upload_count_9fe60b6367cb7daf : public flight::ReferenceEnabled {
-  double draw_call_count;
-  double instance_count;
-  double batch_flush_count;
-  double texture_upload_count;
-};
+using draw_call_count_instance_count_batch_flush_count_texture_upload_count_9fe60b6367cb7daf = flight::types::WgpuRenderStats;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_DRAW_CALL_COUNT_INSTANCE_COUNT_BATCH_FLUSH_COUNT_TEXTURE_UPLOAD_COUNT_9FE60B6367CB7DAF
 
 inline flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Ref<draw_call_count_instance_count_batch_flush_count_texture_upload_count_9fe60b6367cb7daf>> stats = flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Ref<draw_call_count_instance_count_batch_flush_count_texture_upload_count_9fe60b6367cb7daf>>();

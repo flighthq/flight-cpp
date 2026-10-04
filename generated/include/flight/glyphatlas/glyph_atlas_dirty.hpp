@@ -25,6 +25,14 @@ namespace flight::types { struct Rectangle; }
 
 namespace flight::glyphatlas {
 
+using flight::types::Bitmap;
+using flight::types::GlyphAtlas;
+using flight::types::GlyphAtlasShelf;
+using flight::types::GlyphEntry;
+using flight::types::GlyphRasterizedBitmap;
+
+using flight::types::GlyphAtlasRuntime;
+
 inline void clear_glyph_atlas_dirty(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphAtlas>>>> atlas) {
   (flight::row_get<flight::RowKey<"runtime">>(atlas)->dirty = false);
 }

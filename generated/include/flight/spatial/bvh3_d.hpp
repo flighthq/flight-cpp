@@ -22,6 +22,8 @@ namespace flight::types { struct SpatialIndexingNotice; }
 namespace flight::types { struct SpatialPair; }
 
 namespace flight::spatial {
+
+using flight::types::SpatialIndexingNotice;
 struct Bvh3D;
 } // namespace flight::spatial
 

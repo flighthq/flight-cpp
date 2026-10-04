@@ -20,6 +20,8 @@ namespace flight::types { struct TextureAtlas; }
 
 namespace flight::bitmapfont {
 
+using flight::types::BitmapFont;
+
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_GLYPH_HEIGHT_GLYPH_WIDTH_PAGE_PAGE_COUNT_CA3DD572B8B129EE
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_GLYPH_HEIGHT_GLYPH_WIDTH_PAGE_PAGE_COUNT_CA3DD572B8B129EE
 struct glyph_height_glyph_width_page_page_count_ca3dd572b8b129ee : public flight::ReferenceEnabled {

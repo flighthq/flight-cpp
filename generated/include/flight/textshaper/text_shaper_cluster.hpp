@@ -19,6 +19,8 @@ namespace flight::types { struct ShapedRun; }
 
 namespace flight::textshaper {
 
+using flight::types::ShapedRun;
+
 inline flight::Array<double> get_caret_positions_for_run(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapedRun>>>> run) {
   flight::Array<flight::Ref<flight::types::ShapedGlyph>> glyphs = flight::row_get<flight::RowKey<"glyphs">>(run);
   const double count = flight::row_get<flight::RowKey<"glyphCount">>(run);

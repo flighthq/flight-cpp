@@ -18,6 +18,8 @@ namespace flight::types { struct ShapedRun; }
 
 namespace flight::textshaper {
 
+using flight::types::ShapedRun;
+
 inline const double pool_max_size = 64.0;
 
 inline flight::Array<flight::Ref<flight::types::ShapedRun>> pool = flight::Array<flight::Ref<flight::types::ShapedRun>>{};

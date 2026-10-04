@@ -29,6 +29,8 @@ namespace flight::types { struct TextShaperOptions; }
 
 namespace flight::textshaper {
 
+using flight::types::ShapedRun;
+
 inline flight::String get_code_point_bidi_class(double code_point) {
   if (((((((code_point >= 1536.0) && (code_point <= 1791.0)) || ((code_point >= 1872.0) && (code_point <= 1919.0))) || ((code_point >= 2208.0) && (code_point <= 2303.0))) || ((code_point >= 64336.0) && (code_point <= 65023.0))) || ((code_point >= 65136.0) && (code_point <= 65279.0)))) {
     return flight::String("rtl");

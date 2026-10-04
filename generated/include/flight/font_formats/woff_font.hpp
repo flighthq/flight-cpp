@@ -17,6 +17,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::font_formats {
 
+using data_tag_aef43e71dd1e9a6d = data_tag_3ad9a8f109659685;
 inline const double woff_header_bytes = 44.0;
 
 inline const double woff_directory_entry_bytes = 20.0;

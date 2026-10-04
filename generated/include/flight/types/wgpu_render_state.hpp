@@ -15,6 +15,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture.hpp>
+
 namespace flight::types { struct ColorScaleBias; }
 namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
@@ -79,6 +81,7 @@ struct WgpuTextureResource;
 struct WgpuTextureEntry;
 struct WgpuTextureSourceTextureEntry;
 struct WgpuVideoTextureEntry;
+using WgpuTextureResolver = std::function<std::optional<flight::Ref<flight::types::WgpuTextureEntry>>(flight::Ref<flight::types::WgpuRenderState>, flight::types::TextureLike, bool, flight::types::TextureColorSpace)>;
 using WgpuTextureBindings = flight::Map<flight::host_sdl::WgpuSampler, flight::host_sdl::WgpuBindGroup>;
 using WgpuColorAdjustmentMaterialFeatureGuard = std::function<void(flight::Ref<WgpuRenderState>, std::variant<flight::Array<double>, flight::Ref<flight::types::ColorScaleBias>, flight::Ref<flight::types::TintMaterialData>>)>;
 } // namespace flight::types

@@ -14,6 +14,8 @@ namespace flight::types { struct SpatialIndexingNotice; }
 
 namespace flight::spatial {
 
+using flight::types::SpatialIndexingNotice;
+
 inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndexingNotice>>>>)>> indexing_guard = std::nullopt;
 
 inline void report_spatial_indexing(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndexingNotice>>>> notice) {

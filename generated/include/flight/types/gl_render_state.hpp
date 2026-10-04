@@ -13,6 +13,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture.hpp>
+
 namespace flight::types { struct ColorScaleBias; }
 namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct GlContextRuntime; }
@@ -67,6 +69,8 @@ struct GlUniformColorScaleBiasShader;
 struct GlShapeMeshColorScaleBiasShader;
 struct GlScissorRect;
 struct GlViewportRect;
+struct GlTextureRealization;
+using GlTextureResolver = std::function<std::optional<flight::Ref<GlTextureRealization>>(flight::Ref<flight::types::GlRenderState>, flight::types::TextureLike, bool, flight::types::TextureColorSpace)>;
 using GlBlendFactor = flight::String;
 using GlBlendEquation = flight::String;
 using GlColorAdjustmentMaterialFeatureGuard = std::function<void(flight::Ref<GlRenderState>, std::variant<flight::Array<double>, flight::Ref<flight::types::ColorScaleBias>, flight::Ref<flight::types::TintMaterialData>>)>;

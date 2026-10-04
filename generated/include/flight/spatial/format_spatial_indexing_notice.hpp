@@ -5,9 +5,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spatial_indexing.hpp>
+
 #include "uniform_grid.hpp"
 
 namespace flight::spatial {
+
+using flight::types::SpatialIndexingNotice;
 
 inline flight::String format_spatial_indexing_notice(flight::Ref<SpatialIndexingNotice> notice) {
   if ((notice->reason == flight::String("invalid-cell-size"))) {

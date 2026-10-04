@@ -29,6 +29,14 @@ namespace flight::types { struct HostGlyphRasterizerCapability; }
 
 namespace flight::glyphatlas {
 
+using flight::types::Bitmap;
+using flight::types::GlyphAtlas;
+using flight::types::GlyphAtlasShelf;
+using flight::types::GlyphEntry;
+using flight::types::GlyphRasterizedBitmap;
+
+using flight::types::GlyphAtlasRuntime;
+
 inline flight::Ref<flight::types::GlyphMetrics> derive_glyph_metrics_from_font_size(double font_size) {
   return flight::make_ref<flight::types::GlyphMetrics>(flight::types::GlyphMetrics{.ascent = (font_size * 0.8), .descent = (font_size * 0.2), .line_gap = 0.0});
 }

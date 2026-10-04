@@ -23,6 +23,8 @@ namespace flight::types { struct SpatialIndexingNotice; }
 namespace flight::types { struct SpatialPair; }
 
 namespace flight::spatial {
+
+using flight::types::SpatialIndexingNotice;
 struct GridCell3D;
 struct UniformGrid3D;
 } // namespace flight::spatial

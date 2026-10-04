@@ -21,6 +21,14 @@ namespace flight::types { struct HostGlyphRasterizerCapability; }
 
 namespace flight::glyphatlas {
 
+using flight::types::Bitmap;
+using flight::types::GlyphAtlas;
+using flight::types::GlyphAtlasShelf;
+using flight::types::GlyphEntry;
+using flight::types::GlyphRasterizedBitmap;
+
+using flight::types::GlyphAtlasRuntime;
+
 inline double get_glyph_atlas_kerning(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphAtlas>>>> atlas, double left, double right) {
   return 0.0;
 }

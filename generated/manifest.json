@@ -871,6 +871,114 @@
         "flight/textshaper/text_shaper_cluster.hpp"
       ],
       "id": "array-from-tuple-construction"
+    },
+    {
+      "files": [
+        "flight/types/flight_document.hpp",
+        "flight/types/flight_document_interactive_state.hpp",
+        "flight/types/flight_document_interactive_state_transition_schema.hpp",
+        "flight/types/flight_document_layout.hpp",
+        "flight/types/flight_document_node_schema.hpp",
+        "flight/types/flight_document_resource.hpp",
+        "flight/types/flight_document_token.hpp",
+        "flight/types/node_interactive_state_binding.hpp"
+      ],
+      "id": "types-flight-document-value-forward-declaration"
+    },
+    {
+      "files": [
+        "flight/types/dom_render_state.hpp"
+      ],
+      "id": "types-dom-texture-resolver-repeat-alias"
+    },
+    {
+      "files": [
+        "flight/types/gl_render_state.hpp"
+      ],
+      "id": "types-gl-texture-resolver-repeat-alias"
+    },
+    {
+      "files": [
+        "flight/types/wgpu_render_state.hpp"
+      ],
+      "id": "types-wgpu-texture-resolver-repeat-alias"
+    },
+    {
+      "files": [
+        "flight/scene2d_wgpu/wgpu_render_stats.hpp"
+      ],
+      "id": "wgpu-render-stats-anonymous-twin"
+    },
+    {
+      "files": [
+        "flight/font_formats/woff_font.hpp"
+      ],
+      "id": "font-formats-woff-table-shape-alias"
+    },
+    {
+      "files": [
+        "flight/spatial/bvh3_d.hpp",
+        "flight/spatial/format_spatial_indexing_notice.hpp",
+        "flight/spatial/spatial_indexing_guard.hpp",
+        "flight/spatial/uniform_grid.hpp",
+        "flight/spatial/uniform_grid3_d.hpp"
+      ],
+      "id": "spatial-spatialindexingnotice-using-declaration"
+    },
+    {
+      "files": [
+        "flight/textshaper/enable_text_shaper_guards.hpp",
+        "flight/textshaper/text_shaper.hpp",
+        "flight/textshaper/text_shaper_cache.hpp",
+        "flight/textshaper/text_shaper_cluster.hpp",
+        "flight/textshaper/text_shaper_itemize.hpp",
+        "flight/textshaper/text_shaper_pool.hpp",
+        "flight/textshaper/text_shaper_run.hpp"
+      ],
+      "id": "textshaper-shapedrun-using-declaration"
+    },
+    {
+      "files": [
+        "flight/bitmapfont/bitmap_font.hpp",
+        "flight/bitmapfont/bitmap_font_from_glyph_atlas.hpp",
+        "flight/bitmapfont/bitmap_font_glyph_source.hpp",
+        "flight/bitmapfont/explain_bitmap_font_glyph.hpp",
+        "flight/bitmapfont/summarize_bitmap_font.hpp"
+      ],
+      "id": "bitmapfont-bitmapfont-using-declaration"
+    },
+    {
+      "files": [
+        "flight/glyphatlas/glyph_atlas.hpp",
+        "flight/glyphatlas/glyph_atlas_dirty.hpp",
+        "flight/glyphatlas/glyph_atlas_entry.hpp",
+        "flight/glyphatlas/glyph_atlas_metrics.hpp"
+      ],
+      "id": "glyphatlas-glyphatlasruntime-using-declaration"
+    },
+    {
+      "files": [
+        "flight/glyphatlas/glyph_atlas_entry.hpp"
+      ],
+      "id": "glyphatlas-unqualified-bitmap-names"
+    },
+    {
+      "files": [
+        "flight/glyphatlas/glyph_source.hpp"
+      ],
+      "id": "glyphatlas-unqualified-entity-names"
+    },
+    {
+      "files": [
+        "flight/glyphatlas/explain_glyph_atlas_entry.hpp",
+        "flight/glyphatlas/glyph_atlas.hpp",
+        "flight/glyphatlas/glyph_atlas_dirty.hpp",
+        "flight/glyphatlas/glyph_atlas_entry.hpp",
+        "flight/glyphatlas/glyph_atlas_metrics.hpp",
+        "flight/glyphatlas/glyph_rasterizer_backend.hpp",
+        "flight/glyphatlas/glyph_source.hpp"
+      ],
+      "id": "glyphatlas-unqualified-types-names"
     }
   ],
   "sourcePatches": [

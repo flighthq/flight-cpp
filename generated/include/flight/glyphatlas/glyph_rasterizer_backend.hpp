@@ -20,6 +20,8 @@ namespace flight::types { struct HostGlyphRasterizerCapability; }
 
 namespace flight::glyphatlas {
 
+using flight::types::GlyphRasterizedBitmap;
+
 inline void initialize_stub_glyph_rasterizer_backend(flight::Ref<flight::types::HostGlyphRasterizerCapability> out) {
   (out->rasterize = [=](double codepoint, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphRasterizeOptions>>>> options) -> std::optional<flight::Ref<flight::types::GlyphRasterizedBitmap>> {
   const double size = flight::maximum(1.0, flight::round(flight::row_get<flight::RowKey<"fontSize">>(options)));

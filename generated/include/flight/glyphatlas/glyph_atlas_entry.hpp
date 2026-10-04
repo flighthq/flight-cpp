@@ -16,7 +16,29 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/bitmap_region.hpp>
+
+#include <flight/types/bitmap.hpp>
+
+#include <flight/bitmap/bitmap_region.hpp>
+
+#include <flight/bitmap/bitmap_composite.hpp>
+
+#include <flight/types/glyph_source.hpp>
+
 namespace flight::glyphatlas {
+
+using flight::types::Bitmap;
+using flight::types::BitmapRegion;
+using flight::types::GlyphAtlas;
+using flight::types::GlyphAtlasShelf;
+using flight::types::GlyphEntry;
+using flight::types::GlyphRasterizedBitmap;
+
+using flight::bitmap::create_bitmap_region;
+using flight::bitmap::write_bitmap_pixels;
+
+using flight::types::GlyphAtlasRuntime;
 
 inline void mark_glyph_atlas_dirty_rect(flight::Ref<GlyphAtlasRuntime> runtime, double x, double y, double width, double height) {
   const double max_x = (x + width);

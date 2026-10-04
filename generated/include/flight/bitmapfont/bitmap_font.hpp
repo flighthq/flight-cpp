@@ -29,6 +29,8 @@ namespace flight::types { struct TextureAtlas; }
 
 namespace flight::bitmapfont {
 
+using flight::types::BitmapFont;
+
 inline std::optional<flight::Ref<flight::types::GlyphEntry>> get_bitmap_font_glyph(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>> font, double codepoint) {
   return flight::row_get<flight::RowKey<"glyphs">>(font).get(codepoint);
 }

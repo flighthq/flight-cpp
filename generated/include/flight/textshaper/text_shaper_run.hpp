@@ -34,6 +34,8 @@ namespace flight::types { struct TextFormat; }
 
 namespace flight::textshaper {
 
+using flight::types::ShapedRun;
+
 inline flight::Ref<flight::types::ShapedRun> clear_shaped_run(flight::Ref<flight::types::ShapedRun> run) {
   (run->advance_width = 0.0);
   (run->direction = flight::String("LeftToRight"));
