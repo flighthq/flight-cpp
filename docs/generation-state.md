@@ -1934,3 +1934,98 @@ Not in this measurement: the five `types` headers fixed by `types-flight-documen
 and the three `repeat-alias-declaration` entries. Those were declared after the regeneration, so the
 committed tree does not carry them yet — another +5 and `@flighthq/types` going ready are pending the next
 `npm run sdk:generate`.
+
+## A repair built, measured, and reverted: pairing structs by shape
+
+The conversion family is 85 headers. Classified in detail:
+
+| cause | headers |
+|---|---|
+| structural row seam | 37 |
+| distinct struct identities | 25 |
+| other | 19 |
+| `Record<String, Any>` from a brace list | 3 |
+
+That breakdown redirected the work twice.
+
+**It killed a runtime addition before it was built.** `@flighthq/host` fails because a `.map(...)` result
+— an `Array<String>` — will not become a `flight::Any`, and `Any` can only hold an object through a
+`shared_ptr`. Adding array support to `Any` looked worthwhile until the count said **three headers**.
+
+**And the detailed grouping produced artifacts of my own tooling.** It first reported
+`Texture2D → Texture2D`, `AmbientLight`, `ClipRegion` and `Material` as distinct-identity pairs. They are
+not: the compiler abbreviates `flight::types::StandardMaterial` to `types::StandardMaterial` in the same
+diagnostic, and my regex read the two spellings as two types. Those rows were row-seam cases misfiled by
+the classifier, not findings.
+
+### The real cluster, and the generalisation that failed
+
+`flight::types::WgpuRenderStats` and `flight::scene2d_wgpu::draw_call_count_..._9fe60b6367cb7daf` have
+**byte-identical bodies differing only in the struct name** — a module-private interface the emitter
+cannot name across a module boundary, synthesised as an anonymous twin. The derived aliasing pairs structs
+by NAME, so it never sees them.
+
+Pairing by BODY was implemented. The argument for it felt solid: TypeScript is structurally typed, so two
+interfaces with identical members are mutually assignable by definition, and merging them is what the
+source language already says they are.
+
+It worked, and then what it chose was the problem:
+
+```
+{a, b, c, d, tx, ty}  ->  SwfTagMatrix     (the twin is used by render_wgpu, swf, shape_formats, scene2d_wgpu)
+{r, g, b, a}          ->  UnityColor
+```
+
+`{a,b,c,d,tx,ty}` is the shape of every 2D affine matrix in the corpus, and the only *named* type in
+`flight::types` holding it is `SwfTagMatrix`. So a WGPU shader's transform became an SWF tag matrix.
+
+The argument was **true and insufficient**. Structural assignability makes such an alias type-correct; it
+does not make the chosen NAME correct, and the name is what every diagnostic, debugger and future reader
+sees. Which name wins is also an accident of the corpus — whichever named type happens to be the unique
+holder of that shape. Reverted.
+
+Three self-inflicted failures on the way there, each reporting a confident `0 aliased`: the scratch tree
+held `render_wgpu` when the twin lives in `scene2d_wgpu`; `body` in the existing code means the whole
+struct text *including the name*, while the new index held member text only, so they could never compare
+equal; and the early return tested the same-name index and bailed before the new path ran.
+
+### What replaced it, and what it was actually worth
+
+A declared kind, `alias-anonymous-struct-to-named`, one verified pair at a time. `WgpuRenderStats`
+qualifies on evidence that is read rather than computed: byte-identical members, the same four names in
+the same order, and a consuming package (`scene2d_wgpu`) in the same WGPU render-statistics domain as the
+named type.
+
+**It gained one header** — `scene2d_wgpu` 9/33 to 10/33. The conversion appears 15 times in the
+diagnostics, which is occurrences and not headers; the rest of that package fails on unrelated causes
+behind it. The repair is kept because it removes a real failure and the pair is verified, but the 15 is
+not its value, and the overstated claim has been corrected in the repair's own `defect` field.
+
+That is the fourth time this session a correct fix gained nothing or nearly nothing. The rejected
+body-matching generalisation is recorded inside the repair so nobody rebuilds it.
+
+## `filesystem`: 40 of 44, and the four that were refused on purpose
+
+`builder` supplied the module. 501 lines, 40 of the 44 declarations, and **`supplies` deliberately
+omitted** — the manifest records `status: incomplete` with the gap named: `read_dialog_handle_binary_file`
+and three siblings need `getFileDialogHandleOperations`, which lives in a *separately refused* module, and
+`FileDialogHandle`'s generated carrier exposes no checked projection to it. Returning null or false would
+change behaviour whenever operations are present.
+
+That is the right call, and the mechanism is built to record it: the four omissions have **no callers
+outside the package**, so nothing breaks today, and the package stays `partial` rather than claiming a
+tier it has not earned.
+
+The abort boundary is faithful in the order that matters — rejected with `signal.reason.snapshot()`
+*before* any host callback runs, resolved with the source's default for a missing host member:
+
+```cpp
+if (signal.has_value() && signal->aborted) return detail::reject_aborted<bool>(*signal);
+const auto append = detail::member(host_file_system, &HostFileSystemCapability::append_text_file, "appendTextFile");
+if (!append.has_value()) return flight::Task<bool>::resolve(false);
+```
+
+One correction to the brief I wrote: I said the `signal === undefined ? f(a,b) : f(a,b,signal)` ternary
+"selects a different host arity" and had to be preserved. In TypeScript it does. In the C++ lowering the
+host callback is a single `std::function` taking `std::optional<AbortSignal>`, so there is no arity to
+select and both branches are identical — the ternary is harmlessly redundant either way.
