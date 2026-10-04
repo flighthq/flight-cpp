@@ -1601,7 +1601,7 @@ twelve are therefore the highest-value work in the corpus, and they are small:
 
 | package | headers | blocker |
 |---|---|---|
-| `types` | 407/411 | `DomTextureResolver` is not a member of `flight::types` |
+| `types` | 990/995 [^1] | `DomTextureResolver` is not a member of `flight::types` |
 | `bitmap` | 41/44 | `optional<Array<double>>::optional(<brace-enclosed initializer list>)` |
 | `path` | 23/31 | `Array::copy_within` missing from the runtime |
 | `host` | 2/6 | `Any::has_value` missing from the runtime |
@@ -1839,8 +1839,8 @@ in front of a refusal.
 
 ### `types`: one defect, two shapes
 
-`@flighthq/types` is the largest package in the SDK — 995 modules, 411 headers — and everything depends on
-it. It was 406/411, and both causes were the same emitter defect: **aliases written into the
+`@flighthq/types` is the largest package in the SDK — 995 modules and 995 headers — and everything depends
+on it. It was 990/995, and both causes were the same emitter defect: **aliases written into the
 forward-declaration prologue, which sits before the include block.** That placement is fine for a struct,
 whose name can be forward-declared, and wrong for an alias, whose definition names types the includes have
 not brought in yet.
@@ -2381,3 +2381,35 @@ repair, and it is the smaller of the two families.
 Every other remaining failure is either a one-off or sits behind one of these two. The useful consequence:
 there is no longer a long tail to triage — there are two capabilities, 46 headers and 10 headers, each
 localised to a specific mechanism, each with its required tests written down.
+
+## Correcting the `types` figures: right conclusion, wrong numbers, three times
+
+`@flighthq/types` **is** complete — measured 995/995 with every declared repair applied, from a baseline
+of 990/995 taken from the full-tree compile report. The five headers gained are the three
+`*_texture_resolver.hpp` (by `repeat-alias-declaration`) and the two `flight_document_*` (by the
+`FlightDocumentValue` forward declaration), exactly as predicted.
+
+Every number this file previously attached to that conclusion was wrong, and the sequence is worth keeping
+because each error had a different cause.
+
+**"407 of 411."** `411` was never the package size. It came off a *mid-run checkpoint* while the full
+compile was at 1356 of 2710 headers: of the `flight/types/` entries attempted *so far*, 407 passed. The
+package has 995 headers. A progress snapshot read as a final figure.
+
+**"411/411, complete."** An inference, not a measurement. Thirteen headers were compiled — the five that
+had been failing plus the eight the forward declaration incidentally touched — all returned zero, and the
+package was declared complete without being swept.
+
+**"990/995 → 993/995, not complete."** The correction was also wrong. The scratch tree used for it had
+only four repair IDs applied by hand, and `types-flight-document-value-forward-declaration` was not among
+them, so the two headers that repair fixes were failing for want of the repair rather than for want of a
+fix.
+
+The instructive part is not the arithmetic. It is that the *correction* was published before the
+correction was measured: a result arrived that contradicted the earlier claim, and the contradiction itself
+felt like evidence. It was not — it was a second incomplete measurement. A partial measurement that
+disagrees deserves exactly as much scepticism as one that agrees, and the rule recorded earlier in this
+file ("measure the delta, never the plausibility") was written about the confirming case and then not
+applied to the disconfirming one.
+
+[^1]: corrected; the table above was built from a mid-run checkpoint and read 407/411.
