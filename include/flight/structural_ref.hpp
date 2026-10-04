@@ -721,6 +721,19 @@ inline constexpr bool generated_row_widening_proven_v = GeneratedRowWidening<Bas
 // derives from it, or the generated table proves it widens to it and their computed cells agree. It is
 // deliberately restricted to alternatives that are smart pointers, which is the only shape the emitter
 // produces for a union of object types, rather than recursing through arbitrary wrappers.
+//
+// Two differences from `row_objects_convertible` are deliberate, not oversights.
+//
+// Its READONLY-PARTIAL clause is absent because it cannot apply here. That clause lets a partial row be
+// read off an unrelated subject, and it governs row-to-row conversion, where the source already holds an
+// erased object. This path has to produce a `shared_ptr<object_type>` from the alternative's own pointer,
+// and `flatten_ref` can only do that when the pointee is the same type or derives from it -- a partial
+// target does not change what its subject is. Admitting the clause here would widen the constraint past
+// what the constructor it guards can actually do.
+//
+// Conversely `flatten_ref` accepts one shape this refuses: a nested reference, which it unwraps through
+// its `*value` branch. The emitter does not put nested references in a union, so recursing for it would
+// be untested generality; this refusal is conservative on purpose and a diagnostic, not a miscompile.
 template <typename Object, typename Alternative>
 concept variant_alternative_rows_as =
     requires { typename Alternative::element_type; } &&
@@ -991,12 +1004,34 @@ class StructuralRef {
   // widening proof -- every key the target row declares, declared by that alternative at the same type.
   // A union with one alternative that does not qualify does not compile, which is the behaviour wanted: a
   // row that could read a key off some alternatives and not others is exactly what must not be built.
+  //
+  // The two qualifying relationships reach this class by DIFFERENT constructors, and the dispatch below
+  // is not a shortcut. When the alternative's pointee is the subject or inherits from it, the pointer
+  // itself converts, so the shared_ptr constructor applies. A STRUCTURAL widening is the case the SDK
+  // actually has -- `GlTextureRenderTarget extends GlRenderTarget` flattens to two unrelated C++ structs
+  // -- and there `flatten_ref` cannot cast the pointer and hard-errors. That conversion exists only
+  // between rows, where the subject stays erased behind its owner, so the alternative is first given a
+  // row over its own subject and that row is then widened. Writing it as one `StructuralRef(held)` call
+  // compiles for the inheritance case and fails inside the runtime for the structural one, which is the
+  // case this constructor was added for.
   template <typename... Alternatives>
     requires(sizeof...(Alternatives) > 0 && !std::is_void_v<object_type> &&
              (detail::variant_alternative_rows_as<object_type, Alternatives> && ...))
   StructuralRef(const std::variant<Alternatives...>& alternatives)
       : StructuralRef(std::visit(
-            [](const auto& held) { return StructuralRef(held); }, alternatives)) {}
+            [](const auto& held) {
+              using Element = typename std::remove_cvref_t<decltype(held)>::element_type;
+              if constexpr (std::same_as<Element, object_type> ||
+                            std::derived_from<Element, object_type>) {
+                return StructuralRef(held);
+              } else {
+                // Writable, so this one spelling converts to a readonly and a writable target alike;
+                // `row_convertible_to` refuses the reverse, and no writable row escapes this expression.
+                return StructuralRef(
+                    StructuralRef<RowWritable<RowOf<std::shared_ptr<Element>>>>(held));
+              }
+            },
+            alternatives)) {}
 
   [[nodiscard]] static StructuralRef from_owner(std::shared_ptr<RowOwner> owner) {
     StructuralRef result;

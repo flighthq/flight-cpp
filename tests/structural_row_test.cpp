@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <concepts>
 #include <functional>
+#include <variant>
 #include <vector>
 #include <iostream>
 #include <memory>
@@ -68,6 +69,16 @@ struct TestUnrelatedTarget final : public flight::ReferenceEnabled {
   double color{};
 };
 
+// A SECOND subject widening onto the same base. The SDK's motivating case is a union -- an audio
+// reference is embedded or external -- where both alternatives declare the key the common row wants,
+// so a row over that shape has to be satisfiable by either one. The proof is computed from declared
+// keys, so this needs no further declaration to be provable against `TestBaseTarget`.
+struct TestOtherDerivedTarget final : public flight::ReferenceEnabled {
+  double width{};
+  double height{};
+  flight::String label;
+};
+
 // Same key names, different types: a match by spelling alone is not assignability.
 struct TestRetypedTarget final : public flight::ReferenceEnabled {
   flight::String width;
@@ -89,6 +100,9 @@ static_assert(!flight::detail::generated_row_widening_proven_v<TestDerivedTarget
 static_assert(!flight::detail::generated_row_widening_proven_v<TestBaseTarget, TestUnrelatedTarget>);
 static_assert(!flight::detail::generated_row_widening_proven_v<TestUnrelatedTarget, TestBaseTarget>);
 static_assert(!flight::detail::generated_row_widening_proven_v<TestBaseTarget, TestRetypedTarget>);
+static_assert(flight::detail::generated_row_widening_proven_v<TestBaseTarget, TestOtherDerivedTarget>);
+static_assert(!flight::detail::generated_row_widening_proven_v<TestOtherDerivedTarget, TestDerivedTarget>,
+              "two subjects that both widen onto a base do not thereby widen onto each other");
 
 // A type the generated table has no keys for falls to the conservative primary rather than failing
 // to compile, which is what makes an absent or older table safe rather than fatal. `width` is a key
@@ -735,6 +749,64 @@ int main() {
   check(run_json.index_of(flight::String("[{")) == 0, "a sequence of rows serializes as an array of objects");
   check(run_json != flight::Json::stringify(reversed, std::nullopt, std::nullopt),
         "and order is preserved, so a reordered run is a different signature");
+
+  // A union satisfies a row when EVERY alternative widens onto the row's subject.
+  //
+  // This is the branch the SDK actually takes. TypeScript hands a value of union type where a row over
+  // the union's common shape is wanted; C++ sees a `std::variant` of unrelated pointer types and no
+  // conversion. The constraint cannot be `std::constructible_from`, because the shared_ptr constructor
+  // is viable for any pointee and validates with a static_assert inside the runtime -- so a fold over it
+  // admits alternatives that then hard-error in structural_ref.hpp instead of at the call site.
+  {
+    using Alternatives = std::variant<flight::Ref<TestDerivedTarget>, flight::Ref<TestOtherDerivedTarget>>;
+    static_assert(std::constructible_from<BaseTargetRow, const Alternatives&>,
+                  "a union whose every alternative widens onto the base satisfies a row over it");
+    static_assert(
+        !std::constructible_from<
+            BaseTargetRow, const std::variant<flight::Ref<TestDerivedTarget>, flight::Ref<TestUnrelatedTarget>>&>,
+        "one alternative that cannot produce the row refuses the whole union");
+    static_assert(!std::constructible_from<BaseTargetRow, const std::variant<flight::Ref<TestRetypedTarget>>&>,
+                  "an alternative matching by key spelling but not by type is not a widening");
+    // Direction is preserved here too: the base row is the one a union of derived subjects can fill.
+    static_assert(!std::constructible_from<DerivedTargetRow, const std::variant<flight::Ref<TestBaseTarget>>&>,
+                  "and widening through a union still goes derived-to-base only");
+
+    auto first = flight::make_ref<TestDerivedTarget>();
+    first->width = 640.0;
+    auto second = flight::make_ref<TestOtherDerivedTarget>();
+    second->width = 800.0;
+
+    const Alternatives holds_first(first);
+    const Alternatives holds_second(second);
+    const BaseTargetRow from_first{holds_first};
+    const BaseTargetRow from_second{holds_second};
+    check(flight::row_get<flight::RowKey<"width">>(from_first) == 640.0,
+          "the row reads the subject the union holds");
+    check(flight::row_get<flight::RowKey<"width">>(from_second) == 800.0,
+          "and selects by the active alternative, not by its position");
+
+    // A view of the live object, exactly as the non-union widening above: no copy is taken, and the
+    // row's subject IS the held object rather than a base-shaped mint of it.
+    second->width = 1024.0;
+    check(flight::row_get<flight::RowKey<"width">>(from_second) == 1024.0,
+          "a row built through a union is a view of the held object, not a snapshot");
+    // One owner, one subject -- the same invariant the non-union widening above pins. A structurally
+    // widened row holds no typed object pointer at all: `flatten_ref` cannot cast between two unrelated
+    // structs, so the subject stays behind the owner and the member table reads it from there. That is
+    // pre-existing row-to-row behaviour, and the point of these two assertions is that building the row
+    // through a union lands on exactly it rather than on some second mechanism.
+    const flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestOtherDerivedTarget>>>>
+        directly(second);
+    check(from_second.shared_owner() == directly.shared_owner() && from_second == directly,
+          "a row built through a union shares the held object's one row owner");
+    check(from_second.shared_object() == nullptr,
+          "and carries no typed object pointer, because the widening is structural and not a cast");
+
+    // The inheritance branch is the other dispatch, and it does convert the pointer, so it keeps one.
+    // Asserting both directions here is what would catch the two branches being collapsed into one.
+    check(from_first.shared_object() == nullptr,
+          "the structural branch is taken for both alternatives of this union");
+  }
 
   if (failures == 0) std::cout << "structural row projections behave as specified\n";
   return failures == 0 ? 0 : 1;

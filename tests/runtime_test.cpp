@@ -185,10 +185,12 @@ void test_locale_compare() {
 // because a row that could read a key off some alternatives and not others is exactly what must not be
 // constructible.
 //
-// The common shape is expressed here as a base class, which exercises the `derived_from` branch of the
-// predicate. The motivating case in the SDK goes through the generated widening proof instead -- both
-// audio-reference alternatives declare `state` at the type the anonymous `{state}` row wants -- and that
-// branch cannot be reached from a unit test, since the proof is specialised only for generated pairs.
+// The common shape is expressed here as a base class, which exercises the INHERITANCE branch of the
+// constructor: the pointer itself converts, so the row keeps a typed object pointer. The SDK's own case
+// -- both audio-reference alternatives declaring `state` at the type the anonymous `{state}` row wants --
+// takes the structural-widening branch instead, which needs the generated proof and so is covered in
+// structural_row_test.cpp, where that table is in scope. The two branches are not interchangeable, and
+// that test asserts the difference.
 void test_structural_ref_from_variant() {
   struct Common : flight::ReferenceEnabled {
     flight::String state;
