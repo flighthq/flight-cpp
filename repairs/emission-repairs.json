@@ -974,6 +974,63 @@
       "defect": "A TypeScript tuple is an array at runtime, and the emitter agrees when it writes the TYPE -- std::optional<flight::Array<double>> -- then builds the value with std::make_tuple, which has no conversion to flight::Array. The repair reads the declared value type out of the text and constructs that, recovering the emitter's own stated intent; values and order are untouched. 30 sites, in @flighthq/path (fully emitted, 23/31) and @flighthq/render-wgpu.\n\nReading the DECLARED type is what makes it safe: three sites in the tree are declared std::optional<std::tuple<double, double, bool>>, where make_tuple is correct and a rewrite would break working code. Keying on the call would have hit them; keying on the value type skips them because it does not begin with flight::Array<, which is checked rather than remembered.",
       "expectedWhen": "always",
       "expires": "when the emitter constructs the declared array type for a tuple literal; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "types-flight-document-value-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/types/",
+      "symbol": "FlightDocumentValue",
+      "declaration": "namespace flight::types { struct FlightDocumentValue; }",
+      "diagnostic": "'FlightDocumentValue' was not declared in this scope; did you mean 'FlightDocumentLayoutTree'?",
+      "defect": "The emitter writes type ALIASES into the forward-declaration prologue, which sits BEFORE the include block. A struct forward declaration is fine there; an alias is not, because it names types that the includes have not brought in yet. flight_document_layout.hpp declares `using FlightDocumentLayoutNode = Ref<LayoutNode<Record<String, FlightDocumentValue>, ...>>` above its own `#include <flight/types/flight_document_field_schema.hpp>`, which is where FlightDocumentValue is defined.\n\nA forward declaration is enough, and that is a measured fact rather than an assumption: the alias does not instantiate Record or LayoutNode, so the incomplete type is never examined. Adding `struct FlightDocumentValue;` before the prologue takes flight_document_layout.hpp from seven diagnostics to zero. Affects it and flight_document_node_schema.hpp in @flighthq/types, which is fully emitted at 995/995 modules and otherwise 408 of 411 headers.",
+      "expectedWhen": "always",
+      "expires": "when the emitter writes alias declarations after the include block rather than in the forward-declaration prologue; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "types-dom-texture-resolver-repeat-alias",
+      "kind": "repeat-alias-declaration",
+      "appliesTo": "flight/types/",
+      "symbol": "DomTextureResolver",
+      "includes": [
+        "flight/host_sdl/image.hpp",
+        "flight/types/texture.hpp"
+      ],
+      "declaration": "using DomTextureResolver = std::function<std::optional<flight::host_sdl::ImageSource>(flight::Ref<flight::types::DomRenderState>, flight::types::Texture)>;",
+      "sourceDeclaration": "packages/types/src/DomTextureResolver.ts",
+      "diagnostic": "'DomTextureResolver' is not a member of 'flight::types'",
+      "defect": "dom_texture_resolver.hpp defines the DomTextureResolver alias and includes the render-state header, while that render-state header uses flight::types::DomTextureResolver in a member. Whichever is parsed first needs the other, and an alias has no forward declaration, so insert-forward-declaration cannot reach it. Repeating the identical alias in the render-state prologue is legal C++ and introduces no new type, name or behaviour -- if the two declarations ever disagreed the compiler would reject the file, so the language enforces the equivalence rather than this entry asserting it.",
+      "expectedWhen": "always",
+      "expires": "when the emitter writes alias declarations after its include block, or breaks the cycle between a resolver alias and its render state; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "types-gl-texture-resolver-repeat-alias",
+      "kind": "repeat-alias-declaration",
+      "appliesTo": "flight/types/",
+      "symbol": "GlTextureResolver",
+      "includes": [
+        "flight/types/texture.hpp"
+      ],
+      "declaration": "struct GlTextureRealization;\nusing GlTextureResolver = std::function<std::optional<flight::Ref<GlTextureRealization>>(flight::Ref<flight::types::GlRenderState>, flight::types::TextureLike, bool, flight::types::TextureColorSpace)>;",
+      "sourceDeclaration": "packages/types/src/GlTextureResolver.ts",
+      "diagnostic": "'GlTextureResolver' is not a member of 'flight::types'",
+      "defect": "gl_texture_resolver.hpp defines the GlTextureResolver alias and includes the render-state header, while that render-state header uses flight::types::GlTextureResolver in a member. Whichever is parsed first needs the other, and an alias has no forward declaration, so insert-forward-declaration cannot reach it. Repeating the identical alias in the render-state prologue is legal C++ and introduces no new type, name or behaviour -- if the two declarations ever disagreed the compiler would reject the file, so the language enforces the equivalence rather than this entry asserting it. GlTextureRealization is forward-declared alongside it because the alias references that name.",
+      "expectedWhen": "always",
+      "expires": "when the emitter writes alias declarations after its include block, or breaks the cycle between a resolver alias and its render state; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "types-wgpu-texture-resolver-repeat-alias",
+      "kind": "repeat-alias-declaration",
+      "appliesTo": "flight/types/",
+      "symbol": "WgpuTextureResolver",
+      "includes": [
+        "flight/types/texture.hpp"
+      ],
+      "declaration": "using WgpuTextureResolver = std::function<std::optional<flight::Ref<flight::types::WgpuTextureEntry>>(flight::Ref<flight::types::WgpuRenderState>, flight::types::TextureLike, bool, flight::types::TextureColorSpace)>;",
+      "sourceDeclaration": "packages/types/src/WgpuTextureResolver.ts",
+      "diagnostic": "'WgpuTextureResolver' is not a member of 'flight::types'",
+      "defect": "wgpu_texture_resolver.hpp defines the WgpuTextureResolver alias and includes the render-state header, while that render-state header uses flight::types::WgpuTextureResolver in a member. Whichever is parsed first needs the other, and an alias has no forward declaration, so insert-forward-declaration cannot reach it. Repeating the identical alias in the render-state prologue is legal C++ and introduces no new type, name or behaviour -- if the two declarations ever disagreed the compiler would reject the file, so the language enforces the equivalence rather than this entry asserting it.",
+      "expectedWhen": "always",
+      "expires": "when the emitter writes alias declarations after its include block, or breaks the cycle between a resolver alias and its render state; sdk:check fails if this repair matches no header."
     }
   ]
 }

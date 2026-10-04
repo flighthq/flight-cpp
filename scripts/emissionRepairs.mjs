@@ -18,6 +18,7 @@ const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration',
   'wrap-conditional-absent-branch',
   'record-from-designated-initializer',
   'name-array-from-tuple-construction',
+  'repeat-alias-declaration',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -47,6 +48,7 @@ const REQUIRED_FIELDS = {
   'respell-reference-alias': [...SHARED_FIELDS, 'symbol', 'expansion', 'witness', 'witnessInclude'],
   'name-array-from-tuple-construction': [...SHARED_FIELDS, 'symbol', 'sourceDeclaration'],
   'record-from-designated-initializer': [...SHARED_FIELDS, 'symbol', 'recordType', 'replacement', 'sourceDeclaration'],
+  'repeat-alias-declaration': [...SHARED_FIELDS, 'symbol', 'declaration', 'sourceDeclaration'],
   'wrap-conditional-absent-branch': [...SHARED_FIELDS, 'sourceDeclaration'],
 };
 
@@ -151,20 +153,22 @@ function applyOneRound(repairs, files, applied) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
       const repaired =
-        repair.kind === 'name-array-from-tuple-construction'
-          ? nameArrayFromTupleConstruction(contents, repair)
-          : repair.kind === 'record-from-designated-initializer'
-            ? recordFromDesignatedInitializer(contents, repair)
-            : repair.kind === 'wrap-conditional-absent-branch'
-              ? wrapConditionalAbsentBranch(contents)
-              : repair.kind === 'respell-flattened-union'
-                ? respellFlattenedUnion(contents, repair)
-                : repair.kind === 'deduce-call-argument-from-assignment'
-                  ? deduceCallArgumentFromAssignment(contents, repair)
-                  : repair.kind === 'name-defaulted-template-argument'
-                    ? nameDefaultedTemplateArgument(contents, repair)
-                    : repair.kind === 'name-in-place-alternative'
-                      ? nameInPlaceAlternative(contents, repair)
+        repair.kind === 'repeat-alias-declaration'
+          ? repeatAliasDeclaration(contents, repair)
+          : repair.kind === 'name-array-from-tuple-construction'
+            ? nameArrayFromTupleConstruction(contents, repair)
+            : repair.kind === 'record-from-designated-initializer'
+              ? recordFromDesignatedInitializer(contents, repair)
+              : repair.kind === 'wrap-conditional-absent-branch'
+                ? wrapConditionalAbsentBranch(contents)
+                : repair.kind === 'respell-flattened-union'
+                  ? respellFlattenedUnion(contents, repair)
+                  : repair.kind === 'deduce-call-argument-from-assignment'
+                    ? deduceCallArgumentFromAssignment(contents, repair)
+                    : repair.kind === 'name-defaulted-template-argument'
+                      ? nameDefaultedTemplateArgument(contents, repair)
+                      : repair.kind === 'name-in-place-alternative'
+                        ? nameInPlaceAlternative(contents, repair)
           : repair.kind === 'respell-reference-alias'
             ? respellReferenceAlias(contents, repair)
           : repair.kind === 'insert-using-declaration'
@@ -179,6 +183,50 @@ function applyOneRound(repairs, files, applied) {
     }
   }
   return changed;
+}
+
+// Repeats an alias definition in the file that needs it, where a forward declaration cannot reach.
+//
+// The emitter writes type aliases into its forward-declaration PROLOGUE, which sits before the include
+// block. That is fine for a struct, whose name can be forward-declared, and wrong for an alias, whose
+// definition names types the includes have not brought in yet. Where the cycle closes between two files it
+// is unfixable by declaration order alone:
+//
+//   dom_texture_resolver.hpp  defines  using DomTextureResolver = std::function<...>;
+//                             includes dom_render_state.hpp
+//   dom_render_state.hpp      uses     KeyedTable<flight::types::DomTextureResolver>
+//
+// so whichever is parsed first needs the other. `insert-forward-declaration` cannot help -- an alias has
+// no forward declaration -- and that is exactly why this kind exists alongside it.
+//
+// Repeating an identical alias declaration is legal C++, which is what makes this a repair rather than a
+// rewrite: the second declaration introduces no new type, no new name, and no behaviour. If the two ever
+// disagreed the compiler would reject the file, so the equivalence is enforced by the language rather
+// than asserted here.
+//
+// Placement is load-bearing and is why this is not a variation of insert-using-declaration. The alias goes
+// at the END of the prologue namespace block, after the struct forward declarations, because it REFERENCES
+// them -- `Ref<flight::types::DomRenderState>` needs that name already declared. Inserting at the start of
+// the block, where the using-declaration repair inserts, would put the alias above its own dependencies.
+function repeatAliasDeclaration(contents, repair) {
+  const { symbol } = repair;
+  if (!new RegExp(`\\b${symbol}\\b`, 'u').test(contents)) return undefined;
+  // The file that defines the alias already has it; leave it alone.
+  if (new RegExp(`using ${symbol} =`, 'u').test(contents)) return undefined;
+  if (contents.includes(repair.declaration)) return undefined;
+  let out = contents;
+  for (const header of repair.includes ?? []) {
+    if (out.includes(`#include <${header}>`)) continue;
+    const hoisted = hoistInclude(out, header);
+    if (hoisted === undefined) return undefined;
+    out = hoisted;
+  }
+  // End of the forward-declaration prologue: the alias needs the names declared above it.
+  const anchor = /^namespace flight::[a-z0-9_]+ \{\n/mu.exec(out);
+  if (anchor === null) return undefined;
+  const close = out.indexOf('} // namespace flight::', anchor.index + anchor[0].length);
+  if (close === -1) return undefined;
+  return `${out.slice(0, close)}${repair.declaration}\n${out.slice(close)}`;
 }
 
 // Constructs the Array a TypeScript tuple literal is, where the emitter reached for std::make_tuple.
