@@ -708,6 +708,38 @@ struct GeneratedRowWidening : std::false_type {};
 template <typename Base, typename Derived>
 inline constexpr bool generated_row_widening_proven_v = GeneratedRowWidening<Base, Derived>::value;
 
+// Whether a BASE row key's declared type is satisfied by a DERIVED subject's member type.
+//
+// The generated table enumerates the keys; this decides what agreement between two member types means,
+// because that is a semantics question and semantics belong in the runtime. It is declared HERE, above the
+// generated include below, because the generated `FLIGHT_SDK_ROW_WIDENS` macro calls it -- defined further
+// down beside `optional_traits` it compiled fine and every widening then failed with
+// `'row_member_widens_v' is not a member of 'flight::detail'` inside a template body. Written as a partial
+// specialization rather than a concept over `optional_traits` for the same reason: it must not depend on
+// anything declared later.
+//
+// Identical types agree. The one relaxation is directional: a base key declared `std::optional<T>` is also
+// satisfied by a derived member of plain `T`. That is TypeScript's own rule -- an optional property has
+// type `T | undefined` and `T` is assignable to it -- and it reads honestly, because a derived subject that
+// always has the member answers every read with an engaged optional.
+//
+// The REVERSE stays refused, which is why this is a named trait and not a loosened `same_as`: a base key
+// of plain `T` promises every read yields a value, and a derived `std::optional<T>` may be empty. Accepting
+// that direction would let a row hand back a default where the object holds nothing, which is an absence
+// change and outside what any mechanism here may do.
+//
+// Found via `textlayout`: a row over the anonymous `{auto_size, height, width, word_wrap}` shape is wanted
+// from a `RichTextData` subject, and the only disagreement is `std::optional<bool> word_wrap` against
+// `bool word_wrap`. TypeScript accepts that assignment; `std::same_as` alone did not.
+template <typename BaseMember, typename DerivedMember>
+struct RowMemberWidens : std::is_same<BaseMember, DerivedMember> {};
+
+template <typename Value>
+struct RowMemberWidens<std::optional<Value>, Value> : std::true_type {};
+
+template <typename BaseMember, typename DerivedMember>
+inline constexpr bool row_member_widens_v = RowMemberWidens<BaseMember, DerivedMember>::value;
+
 // Whether one variant alternative can produce a row over `Object`.
 //
 // This exists because `std::constructible_from` cannot answer the question. The shared_ptr constructor
@@ -786,29 +818,6 @@ using optional_value_t = typename optional_traits<Value>::value_type;
 template <typename Value>
 using optionalize_t = std::conditional_t<optional_traits<Value>::optional, Value, std::optional<Value>>;
 
-// Whether a BASE row key's declared type is satisfied by a DERIVED subject's member type.
-//
-// The generated widening table enumerates the keys; this decides what agreement between two member
-// types means, because that is a semantics question and semantics live in the runtime.
-//
-// Identical types obviously agree. The one relaxation is directional: a base key declared
-// `std::optional<T>` is satisfied by a derived member of plain `T`. That is TypeScript's own rule --
-// an optional property has type `T | undefined`, and `T` is assignable to it -- and it reads honestly,
-// because a derived subject that always has the member answers every read with an engaged optional.
-//
-// The REVERSE stays refused, and that is the whole reason this is a named trait rather than a
-// `same_as` loosened in place: a base key of plain `T` promises every read yields a value, and a
-// derived member of `std::optional<T>` may be empty. Accepting that direction would let a row hand
-// back a default where the object holds nothing, which is an absence change.
-//
-// Found via `textlayout`: a row over the anonymous `{auto_size, height, width, word_wrap}` shape is
-// wanted from a `RichTextData` subject, and the only disagreement is `std::optional<bool> word_wrap`
-// against `bool word_wrap`. TypeScript accepts that assignment; `std::same_as` alone did not.
-template <typename BaseMember, typename DerivedMember>
-inline constexpr bool row_member_widens_v =
-    std::same_as<BaseMember, DerivedMember> ||
-    (optional_traits<BaseMember>::optional &&
-     std::same_as<optional_value_t<BaseMember>, DerivedMember>);
 
 template <typename Value>
 struct partial_member {
