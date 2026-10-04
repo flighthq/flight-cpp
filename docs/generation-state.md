@@ -2523,3 +2523,55 @@ numbers suggested:
 
 That is the honest board: roughly 24 addressable headers plus two refused families, not the 46 + 10 the
 earlier sizing implied.
+
+## A union where a row is wanted, and the two branches it has to dispatch between
+
+The `scene2d-resources` cluster's blocker was narrower than "a row conversion". An audio reference is
+embedded or external, so the SDK hands a `std::variant` of two unrelated `Ref` types where a row over the
+union's common shape — the anonymous `{state}` struct — is wanted. Everything else in the chain already
+worked: `SequenceView` projects an `Array` without copying, and the widening proof already passed, both
+alternatives declaring `state` at the type the row wants with `FLIGHT_SDK_ROW_WIDENS(state)` present. The
+only missing piece was that `StructuralRef` had no constructor from a variant at all.
+
+Two things about closing it were not obvious, and both were found by a test rather than by reading.
+
+**`std::constructible_from` cannot express the constraint.** The natural guard is a fold asserting every
+alternative is constructible. It does not work: the `shared_ptr` constructor is viable for *any* pointee
+and validates inside `flatten_ref`, which ends in `static_assert(dependent_false<Type>)` — a hard error,
+not a substitution failure. So the fold answers yes for alternatives that then fail to compile inside
+`structural_ref.hpp`, with the diagnostic landing in the runtime instead of at the call site. The
+assertion that caught this was the NEGATIVE one — that an unrelated alternative is *not* convertible.
+`detail::variant_alternative_rows_as` is the real predicate, mirroring `row_objects_convertible`'s
+disjunction over the alternative's pointee.
+
+**The two qualifying relationships reach the class through different constructors.** This is the part a
+single delegation gets silently wrong. When the pointee *inherits* from the subject the pointer itself
+converts, so the `shared_ptr` constructor applies and the row keeps a typed object pointer. A
+**structural** widening is the case the SDK actually has — `GlTextureRenderTarget extends GlRenderTarget`
+flattens to two unrelated C++ structs — and there `flatten_ref` cannot cast the pointer and hard-errors.
+That conversion exists only *between rows*, where the subject stays erased behind its owner. So the
+alternative is first given a row over its own subject, and that row is then widened.
+
+Writing it as one `StructuralRef(held)` call compiles for the inheritance case and fails for the
+structural one, which is the case the constructor was added for. The first version did exactly that, and
+the reason it looked finished is worth recording: the earlier error in the real header moved on to an
+unqualified name, so the conversion never got instantiated and the defect never surfaced. It surfaced
+only against the test fixtures that carry a real widening proof. Collapsing the dispatch back to one
+branch reproduces it as `structural_ref.hpp:399: structural reference source has an incompatible object
+type` — that mutation is how the test was confirmed to cover it.
+
+A consequence worth knowing before it reads as a bug: a structurally widened row has a **null**
+`shared_object()` and carries its subject through the owner, because there is no pointer to cast. That is
+pre-existing row-to-row behaviour, not something the variant path introduced, and the tests now assert it
+on both paths so the two branches cannot be collapsed unnoticed.
+
+Two deliberate asymmetries with `row_objects_convertible` are documented at the concept. Its
+readonly-partial clause is **absent** because it cannot apply: that clause governs row-to-row conversion
+where the object is already erased, while this path must produce a `shared_ptr<object_type>` from the
+alternative's own pointer, and a partial target does not change what its subject is. Conversely
+`flatten_ref` accepts one shape this refuses — a nested reference, via its `*value` branch — and the
+emitter does not put nested references in a union, so recursing for it would be untested generality.
+
+What this does **not** yet establish is that the seven `scene2d-resources` headers compile. The
+conversion is fixed and tested; the next error in that cluster is an unqualified name
+(`LottieDocumentImportResult`, `AudioResourceFetch`), which is a separate repair and is still owed.
