@@ -3165,3 +3165,35 @@ temporary, or a local written once and not otherwise retained — is invisible i
 be asserted per site. The handler was checked to reproduce the hand-verified edits byte for byte and to be
 idempotent across repair rounds, since `applyEmissionRepairs` iterates to a fixed point and a second wrap
 would nest `array_of` inside itself.
+
+### `flight::registry` is three stacked families, and an unchanged error count hid the progress
+
+The previous entry concluded that `flight::registry` should be repaired before anything that includes it,
+since its unqualified `registry_entry_state` is checked inside a template body and poisons every includer.
+Tested, by inserting `using flight::types::registry_entry_state;` and its include into
+`flight/registry/registry_table.hpp`:
+
+**4 errors before, 4 errors after** — and the repair worked. The errors are not the same ones:
+
+| before | after |
+|---|---|
+| `'registry_entry_state' was not declared` (line 372, `-Wtemplate-body`) | `flight::Ref<types::bound_tombstoned_…> {aka shared_ptr<…>}` — member access on a reference |
+| `'get_registry_table_entry_state' was not declared` | unchanged |
+| variant alternative error | unchanged |
+| `'registry_entry_state' was not declared` (line 395) | the same member-access error at 396 |
+
+Both name errors resolved and both were replaced by the **`.` instead of `->` on a `flight::Ref`** family —
+`registry_entry_state` is declared `inline flight::Ref<bound_tombstoned_…>`, so the emitted
+`registry_entry_state.bound` needs `->bound`. That is the family `raycast_collision_shape3_d.hpp` belonged
+to, already closed once with a source patch rather than an override, so the mechanism is known.
+`get_registry_table_entry_state` is in neither tree and is one of the three genuinely-absent symbols.
+
+So `registry` needs three repairs stacked — the using-declaration, the arrow family, and a refused
+function — and it is not the single unlock the include-coupling argument suggested. The coupling claim
+still holds; the hoped-for leverage does not.
+
+**The method lesson is the error count.** 4 to 4 reads as "the repair did nothing" and would have been
+recorded that way on the strength of the number. The repair in fact resolved both names it targeted. An
+error count is a measure of the FRONT of a queue, not of progress through it, and the only honest readings
+are zero or a diff of the diagnostics themselves. This is the same first-diagnostic trap as the report,
+one level down, and it is the sixth over-or-under-count in this session traceable to counting a proxy.
