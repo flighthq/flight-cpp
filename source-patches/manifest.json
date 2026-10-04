@@ -134,6 +134,23 @@
       "unblocks": "Makes woff_font.hpp compile, clearing open_type_glyph_outline_source.hpp and both package aggregators and moving @flighthq/font-formats from 13/17 to 17/17 when regenerated with the full SDK structural schema.",
       "expires": "when the emitter materializes a contextual Record object literal before constructing an optional<Record> function argument, or Flight adopts the named bindings.",
       "appliedOn": "2026-10-04"
+    },
+    {
+      "id": "statechart-single-transition-binding",
+      "dependency": "flight",
+      "patch": "statechart-single-transition-binding.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/statechart/src/statechart.ts",
+      "package": "@flighthq/statechart",
+      "answers": "diagnostic",
+      "refusal": "assignment into a predeclared optional transition emits a present StructuralRef and then calls has_value on the payload",
+      "rewrite": "Chooses the transition index first, then performs one const array lookup and one existing undefined check.",
+      "equivalence": "For an active index both forms read and validate the same element. For a newly selected index getReadyTransitionIndex only returns an index from the same transitions array, so the added impossible-case check cannot alter a reachable result; state writes retain their order and the transition reference is read exactly once.",
+      "whyNotUpstreamFirst": "The source already narrows the optional binding, but the pinned emitter conflates the binding's optional storage with its present StructuralRef payload. A single post-branch binding is clearer TypeScript and avoids a whole-module override.",
+      "verification": "Targeted regeneration and focused compilation made statechart.hpp compile independently, moving the package from 1/5 to 2/5 before the separate guard override is applied.",
+      "unblocks": "Makes statechart.hpp compile. The companion complete guard override clears enable_statechart_guards.hpp and both aggregators.",
+      "expires": "when assignment and narrowing of an optional structural reference preserve one optional layer, or Flight adopts the single binding.",
+      "appliedOn": "2026-10-04"
     }
   ]
 }

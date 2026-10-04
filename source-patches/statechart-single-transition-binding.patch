@@ -1,0 +1,30 @@
+diff --git a/packages/statechart/src/statechart.ts b/packages/statechart/src/statechart.ts
+--- a/packages/statechart/src/statechart.ts
++++ b/packages/statechart/src/statechart.ts
+@@ -237,21 +237,18 @@ function advanceStatechartRegion(instance: StatechartInstance, regionIndex: number, deltaTimeMs: number): boolean {
+   if (sourceState === undefined) throw new RangeError(`Statechart region ${regionIndex} has an invalid active state`);
+   instance.regionElapsed[regionIndex] += deltaTimeMs;
+ 
+   let transitionIndex = instance.regionTransitions[regionIndex];
+-  let transition: Readonly<StatechartTransition> | undefined;
+-  if (transitionIndex >= 0) {
+-    transition = sourceState.transitions[transitionIndex];
+-    if (transition === undefined) {
+-      throw new RangeError(`Statechart region ${regionIndex} has an invalid active transition`);
+-    }
+-  } else {
++  if (transitionIndex < 0) {
+     transitionIndex = getReadyTransitionIndex(instance, regionIndex);
+     if (transitionIndex < 0) return false;
+-    transition = sourceState.transitions[transitionIndex];
+     instance.regionTransitions[regionIndex] = transitionIndex;
+     instance.regionBlend[regionIndex] = 0;
+   }
++  const transition = sourceState.transitions[transitionIndex];
++  if (transition === undefined) {
++    throw new RangeError(`Statechart region ${regionIndex} has an invalid active transition`);
++  }
+ 
+   const durationMs = Number.isFinite(transition.durationMs) && transition.durationMs > 0 ? transition.durationMs : 0;
+   const blend = durationMs === 0 ? 1 : Math.min(1, instance.regionBlend[regionIndex] + deltaTimeMs / durationMs);
+   instance.regionBlend[regionIndex] = blend;

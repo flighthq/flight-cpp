@@ -538,6 +538,54 @@
       "remaining": "The three remaining package compile failures are one retained raycastCollisionShape3D member-access defect and its _internal_index.hpp and contract.hpp cascades: a Ref<CollisionCapsule3D> is accessed as shape.x1/shape.x0 instead of shape->x1/shape->x0. The raycast module has zero refusal markers and is therefore not supplied here.",
       "expires": "when WeakMap cache values and keys, fully initialized dense arrays, contextual collision unions, and the five refused functions lower directly, and module-local includes honor the selected header profile.",
       "authoredOn": "2026-10-04"
+    },
+    {
+      "id": "socket-complete-lifecycle",
+      "path": "flight/socket/socket.hpp",
+      "package": "@flighthq/socket",
+      "status": "complete",
+      "supplies": "packages/socket/src/socket.ts",
+      "derivedFrom": "32d8b532dd160038418bbe2279b89dd91e364131df4e088b77e909ab20bcba33",
+      "reason": "The emitter refuses the backend event sink and socket constructor because null tests lose their optional storage, leaves imported socket types unqualified, represents the SocketGuard callable behind an extra Ref, and cannot materialize the contextual guard notices as their declared reference-backed owner.",
+      "change": "Supplies the complete framed-socket lifecycle, raw-TCP forwarding, lazy signal group, provider event sink, disposal behavior, guard seam, and send path over the generated socket types.",
+      "equivalence": "Creation retains the exact backend connection and sink, provider events update state before synchronously emitting only while delivery is attached, close and dispose remain distinct and idempotent, disposed sockets cannot reattach, signals allocate once, raw TCP and frame arguments forward without copying their represented storage, and each misuse guard receives one fresh notice carrying the original socket identity.",
+      "whyNotAPatchOrRepair": "A named-notice source experiment was measured and removed: it exposed the independent lost-optional event-sink and constructor refusals plus invalid callable and imported-type carriers, leaving the package at 1/5. A repair cannot add the two refused behavioral declarations or change the invalid guard storage.",
+      "unblocks": "The lifecycle module is angle-included by the guard and both aggregators. Together with the companion guard override it moves @flighthq/socket from 1/5 to 5/5; the four-header blast radius equals the measured gain.",
+      "remaining": "None in @flighthq/socket when composed with socket-guard-reporting.",
+      "expires": "when optional connection and signal properties preserve their absence channel, contextual reference-backed notices materialize their elected owner, imported socket types are qualified, and callable aliases are stored without an extra Ref.",
+      "authoredOn": "2026-10-04"
+    },
+    {
+      "id": "socket-guard-reporting",
+      "path": "flight/socket/enable_socket_guards.hpp",
+      "package": "@flighthq/socket",
+      "status": "complete",
+      "supplies": "packages/socket/src/enableSocketGuards.ts",
+      "derivedFrom": "d7f7c9597015a276fcb9d8756de60cde9282d315ae074fedf4bbf6a008776d36",
+      "reason": "The retained module accesses a reference-backed notice with value syntax, constructs LogData as an anonymous designated aggregate instead of the generated Record union, and installs the callback through the invalid guard storage emitted by socket.hpp.",
+      "change": "Supplies complete opt-in guard enablement and warning reporting with the exact generated notice, LogData, level, channel, and socket URL carriers.",
+      "equivalence": "Enable and disable preserve the module-level boolean and replace or clear the one core hook in source order. Warning keys, messages, structured data fields, channel, socket URL, and log-once suppression are unchanged.",
+      "whyNotAPatchOrRepair": "This module depends on the companion complete socket override's corrected callable seam. A local repair cannot replace expression member operators or rebuild the contextual LogData union, and retaining the failed named-notice patch would not close any package header.",
+      "unblocks": "Composes with socket-complete-lifecycle to clear enable_socket_guards.hpp and the two aggregators, completing the measured @flighthq/socket gain from 1/5 to 5/5.",
+      "remaining": "None in @flighthq/socket when composed with socket-complete-lifecycle.",
+      "expires": "when reference-backed notice access, LogData contextual records, and the corrected SocketGuard callable carrier lower directly.",
+      "authoredOn": "2026-10-04"
+    },
+    {
+      "id": "statechart-guard-identity-and-reporting",
+      "path": "flight/statechart/enable_statechart_guards.hpp",
+      "package": "@flighthq/statechart",
+      "status": "complete",
+      "supplies": "packages/statechart/src/enableStatechartGuards.ts",
+      "derivedFrom": "10125ef2b03a19c9bda43a291b16839165c81ccca6405c08b2ab4561a7c9608f",
+      "reason": "The emitter types the object-keyed WeakMap as shared_ptr<void> but passes ErasedRef, emits JavaScript function equality on std::function, and constructs structured LogData as an anonymous designated aggregate.",
+      "change": "Supplies complete per-instance guard installation and removal, exact callback identity detection, weak chart-owner identity numbering, optional transition lookup, and the source warning record.",
+      "equivalence": "Guard detection is true only for the exact installed function pointer, external hook replacement remains observable, chart IDs key the retained structural row owner weakly and remain stable across instances sharing that same chart object, and warning keys, optional fallbacks, message, structured fields, level, and channel match the source.",
+      "whyNotAPatchOrRepair": "The core transition optional-binding defect has the cheaper localized source patch. The remaining module needs a represented weak identity carrier, callable identity inspection, and contextual LogData construction; a text repair cannot supply those behaviors, while replacing WeakMap or function equality in shared TypeScript would encode C++ runtime mechanics into target-neutral source.",
+      "unblocks": "The source patch first moves @flighthq/statechart from 1/5 to 2/5. This angle-included guard then clears itself and both aggregators, producing the measured final gain to 5/5 with a three-header blast radius.",
+      "remaining": "None in @flighthq/statechart when regenerated with statechart-single-transition-binding.",
+      "expires": "when erased object WeakMap keys retain structural owner identity, function equality lowers for represented callbacks, and contextual LogData records construct their declared union.",
+      "authoredOn": "2026-10-04"
     }
   ]
 }
