@@ -74,6 +74,29 @@ const compilationFile = path.resolve(
 );
 const compilation = existsSync(compilationFile) ? JSON.parse(readFileSync(compilationFile, 'utf8')) : undefined;
 const reportFile = path.resolve(root, valueOf('--report=') ?? path.join('out', 'sdk-package-tiers.json'));
+// `--report=` is where this script WRITES, and `--compilation=` is what it reads. Both scripts in this
+// pair spell their output `--report=`, so passing the header compile report here reads as "use this as
+// input" and is in fact "overwrite this". That destroyed a two-hour full-tree compile report once; the
+// tier report landed at out/sdk-sdl-header-compilation.json, every package then showed zero headers, and
+// the only clue was the tier output insisting no compile report existed.
+//
+// Refusing to write over a header compile report costs nothing and makes the mistake unrepeatable. It is
+// identified by its own schema rather than by filename, so renaming the file does not defeat it.
+if (existsSync(reportFile)) {
+  let existingSchema;
+  try {
+    existingSchema = JSON.parse(readFileSync(reportFile, 'utf8')).schema;
+  } catch {
+    existingSchema = undefined;
+  }
+  if (typeof existingSchema === 'string' && existingSchema.startsWith('flight-sdk-header-compilation/')) {
+    process.stderr.write(
+      `--report=${portable(path.relative(root, reportFile))} is a header compile report, not somewhere to ` +
+        'write the tier report. Did you mean --compilation= to READ it?\n',
+    );
+    process.exit(1);
+  }
+}
 const deferred = loadDeferredPackages(root);
 const applicableEnvironments = loadApplicableEnvironments(root);
 
