@@ -84,22 +84,6 @@
       "unblocks": "Makes raycast_collision_shape3_d.hpp compile and clears its _internal_index.hpp and contract.hpp cascades.",
       "expires": "when property access on narrowed intersection parameters uses reference member access, or Flight adopts the named interface annotations.",
       "appliedOn": "2026-10-04"
-    },
-    {
-      "id": "swf-text-explicit-metadata-fallbacks",
-      "dependency": "flight",
-      "patch": "swf-text-explicit-metadata-fallbacks.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/swf/src/swfText.ts",
-      "package": "@flighthq/swf",
-      "answers": "refusal",
-      "refusal": "dual-sentinel optional property result requires one represented member value domain",
-      "rewrite": "Gives the private metadata helper one explicit nullable-property result shape, initializes the three consumers from their existing fallbacks, and replaces each value only when non-null metadata supplies it instead of combining optional chaining and nullish coalescing. It also makes the public glyph-index validity test explicit before reading the nullable array element.",
-      "equivalence": "The return annotation is exactly the structural union already inferred from the helper's two object literals. When metadata is null, both forms use fallback advances and metrics plus a new empty map. When metadata is present, both use its codepoint map; each nullable advances or metrics member replaces its fallback exactly when it is non-null. The helper returns a local plain object, so the rewrite neither changes accessor effects nor exposes the temporary empty map. For a numeric array index, JavaScript returns a stored outline only for a non-negative safe integer below length; the explicit guard rejects exactly every input for which the original indexed read produced undefined, including fractions, infinities, and out-of-range integers.",
-      "whyNotUpstreamFirst": "The pinned emitter first refuses an optional property read carrying both absent-object and nullable-member sentinels; merely spelling the fallbacks as branches then exposes that its inferred object-literal union stores null as a separate variant arm rather than an optional property. The explicit common result shape plus guarded reads express the same selection through supported storage and control flow. The index guard also prevents the now-emitted nullable array read from using unchecked Array::element for JavaScript property-access cases that should yield undefined. All forms remain suitable upstream TypeScript.",
-      "unblocks": "Emits readSwfFontGlyphOutlineSource instead of leaving a missing-function marker. The SWF headers still inherit separate shape package diagnostics and are remeasured after this patch rather than credited speculatively.",
-      "expires": "when the emitter represents dual-sentinel optional property results, or Flight adopts the explicit fallback form.",
-      "appliedOn": "2026-10-04"
     }
   ]
 }
