@@ -2687,3 +2687,42 @@ the subject's member declaration, and the diagnostic is identical in all three c
 
 Both repairs are drafted and verified but NOT yet declared: a regeneration is in flight, and editing
 `repairs/` mid-run already cost one 27-minute compile. They land when it does.
+
+### The seven sites, and the exact text each needs
+
+Recorded because the site list is the part that took measurement rather than reasoning, and because the
+textual pattern must NOT be used to rediscover it — it finds an eighth site that needs nothing.
+
+Case 1 — six sites in four files. Each is a bare
+`return flight::row_get<flight::RowKey<"K">>(optional_chain_receiver.value());` inside a lambda declared
+to return `std::variant<V, flight::Null, flight::Undefined>`, where `V` is a `flight::Ref<...>`:
+
+| file | keys |
+|---|---|
+| `node/has_clip.hpp` | `clip` |
+| `node/has_material.hpp` | `material`, `materialData` |
+| `node/has_blend_mode.hpp` | `blendMode` |
+| `lighting/scene_lights.hpp` | `ambient`, `directional` |
+
+Each becomes the emitter's own long form, with `VARIANT` standing for the lambda's declared return type
+and `V` for its first alternative:
+
+```cpp
+auto optional_chain_projected = flight::row_get<flight::RowKey<"K">>(optional_chain_receiver.value());
+if (!optional_chain_projected.has_value()) return VARIANT{std::in_place_type<flight::Null>, flight::null};
+return VARIANT{std::in_place_type<V>, optional_chain_projected.value()};
+```
+
+Case 2 — one site, `materials/standard_material.hpp`, key `name`, whose subject member is declared
+`std::variant<flight::String, flight::Null, flight::Undefined>`:
+
+```cpp
+auto optional_chain_projected = flight::row_get<flight::RowKey<"name">>(optional_chain_receiver.value());
+if (!optional_chain_projected.has_value()) return VARIANT{std::in_place_type<flight::Undefined>, flight::undefined};
+return optional_chain_projected.value();
+```
+
+The discriminator between the two cases is the subject's member declaration, not anything at the call
+site: `optional<Ref<T>>` is case 1, an already-three-state `variant<...>` is case 2, and a receiver row
+with no `RowPartial` is case 3 and needs nothing. A repair implementation must test the member
+declaration, or anchor to these sites explicitly.
