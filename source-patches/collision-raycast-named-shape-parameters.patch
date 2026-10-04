@@ -1,0 +1,52 @@
+diff --git a/packages/collision/src/raycastCollisionShape3D.ts b/packages/collision/src/raycastCollisionShape3D.ts
+--- a/packages/collision/src/raycastCollisionShape3D.ts
++++ b/packages/collision/src/raycastCollisionShape3D.ts
+@@ -1,5 +1,13 @@
+ import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+-import type { CollisionBuiltInShape3D, CollisionRaycastHit3D, EntityConstruction } from '@flighthq/types/contract';
++import type {
++  CollisionBox3D,
++  CollisionBuiltInShape3D,
++  CollisionCapsule3D,
++  CollisionCone3D,
++  CollisionCylinder3D,
++  CollisionRaycastHit3D,
++  EntityConstruction,
++} from '@flighthq/types/contract';
+ 
+ import { writeCollisionConvexHullFaces3D } from './convexHull3D';
+ import { getCollisionShapeContainsPoint3D } from './pointContainment3D';
+@@ -228,7 +236,7 @@ function raycastConvexHull3D(
+ // world's. One conjugate rotation of two vectors replaces rotating eight corners, and the slab test then
+ // runs on an axis-aligned problem; only the resulting normal rotates back.
+ function raycastBox3D(
+-  shape: Readonly<CollisionBuiltInShape3D & { kind: 'box' }>,
++  shape: Readonly<CollisionBox3D>,
+   originX: number,
+   originY: number,
+   originZ: number,
+@@ -309,6 +317,6 @@ function raycastBox3D(
+ // a hit on the phantom one behind the apex.
+ function raycastCone3D(
+-  shape: Readonly<CollisionBuiltInShape3D & { kind: 'cone' }>,
++  shape: Readonly<CollisionCone3D>,
+   originX: number,
+   originY: number,
+   originZ: number,
+@@ -447,6 +455,6 @@ function raycastCone3D(
+ // with far more places to get a sign wrong.
+ function raycastCylinder3D(
+-  shape: Readonly<CollisionBuiltInShape3D & { kind: 'cylinder' }>,
++  shape: Readonly<CollisionCylinder3D>,
+   originX: number,
+   originY: number,
+   originZ: number,
+@@ -574,7 +582,7 @@ function raycastCylinder3D(
+ }
+ 
+ function raycastCapsule3D(
+-  shape: Readonly<CollisionBuiltInShape3D & { kind: 'capsule' }>,
++  shape: Readonly<CollisionCapsule3D>,
+   originX: number,
+   originY: number,
+   originZ: number,

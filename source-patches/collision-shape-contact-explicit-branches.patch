@@ -1,0 +1,59 @@
+diff --git a/packages/collision/src/shapeContact2D.ts b/packages/collision/src/shapeContact2D.ts
+--- a/packages/collision/src/shapeContact2D.ts
++++ b/packages/collision/src/shapeContact2D.ts
+@@ -74,10 +74,11 @@ export function collideCircleAabbContactManifold2D(
+   const scratch = acquireShapeContactScratch();
+   try {
+-    if (!testCircleAabbCollision2D(a, b, scratch.leanManifold)) {
++    if (testCircleAabbCollision2D(a, b, scratch.leanManifold)) {
++      return writeCircleContact(a.x, a.y, a.radius, out, scratch);
++    } else {
+       clearCollisionContactManifold2D(out);
+       return false;
+     }
+-    return writeCircleContact(a.x, a.y, a.radius, out, scratch);
+   } finally {
+     releaseShapeContactScratch(scratch);
+   }
+@@ -91,10 +92,11 @@ export function collideCircleCircleContactManifold2D(
+   const scratch = acquireShapeContactScratch();
+   try {
+-    if (!testCircleCircleCollision2D(a, b, scratch.leanManifold)) {
++    if (testCircleCircleCollision2D(a, b, scratch.leanManifold)) {
++      return writeCircleContact(a.x, a.y, a.radius, out, scratch);
++    } else {
+       clearCollisionContactManifold2D(out);
+       return false;
+     }
+-    return writeCircleContact(a.x, a.y, a.radius, out, scratch);
+   } finally {
+     releaseShapeContactScratch(scratch);
+   }
+@@ -108,10 +110,11 @@ export function collideCircleObbContactManifold2D(
+   const scratch = acquireShapeContactScratch();
+   try {
+-    if (!testCircleObbCollision2D(a, b, scratch.leanManifold)) {
++    if (testCircleObbCollision2D(a, b, scratch.leanManifold)) {
++      return writeCircleContact(a.x, a.y, a.radius, out, scratch);
++    } else {
+       clearCollisionContactManifold2D(out);
+       return false;
+     }
+-    return writeCircleContact(a.x, a.y, a.radius, out, scratch);
+   } finally {
+     releaseShapeContactScratch(scratch);
+   }
+@@ -125,10 +128,11 @@ export function collideCirclePolygonContactManifold2D(
+   const scratch = acquireShapeContactScratch();
+   try {
+-    if (!testCirclePolygonCollision2D(a, b, scratch.leanManifold)) {
++    if (testCirclePolygonCollision2D(a, b, scratch.leanManifold)) {
++      return writeCircleContact(a.x, a.y, a.radius, out, scratch);
++    } else {
+       clearCollisionContactManifold2D(out);
+       return false;
+     }
+-    return writeCircleContact(a.x, a.y, a.radius, out, scratch);
+   } finally {
+     releaseShapeContactScratch(scratch);
+   }
