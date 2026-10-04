@@ -91,6 +91,21 @@
       "remaining": "read_dialog_handle_binary_file, read_dialog_handle_text_file, write_dialog_handle_binary_file, and write_dialog_handle_text_file are intentionally not supplied. Path-backed handles could delegate, but pathless handles require getFileDialogHandleOperations; that function is absent from the refused flight/dialog/file_dialog.hpp, and the generated FileDialogHandle EntityRuntime carrier has no checked projection to FileDialogHandleRuntime::operations. Inventing null/false defaults would change behavior for present operations.",
       "expires": "when the emitter lowers AbortSignalEventMap indexed access and dialog handle runtimes have a generated checked projection to FileDialogHandleOperations.",
       "authoredOn": "2026-10-03"
+    },
+    {
+      "id": "font-infer-format-from-url-optional-pop",
+      "path": "flight/font/font_format.hpp",
+      "package": "@flighthq/font",
+      "status": "complete",
+      "supplies": "packages/font/src/fontFormat.ts",
+      "derivedFrom": "18b158ba53bc6c22575636be5f1475049682a3ebb882b35f62a9b38c4d85dadb",
+      "reason": "The emitter generated detectFontFormat but refused inferFontFormatFromUrl because the optional result of Array.pop reached a member projection without a recorded proof that storage was present.",
+      "change": "Adds the one refused function, explicitly testing the pop result before lowercasing and mapping the six supported font extensions.",
+      "equivalence": "The query is removed before extension inference, only the final dot-separated component is considered, matching is case-insensitive, woff/woff2 pass through, ttf/otf/eot map to the source's CSS format names, svg passes through, and an absent or unknown component returns nullopt. Array::element(0) is valid because String.split always returns at least one component, while the explicit pop presence check is the proof the source optional chain supplies.",
+      "whyNotAPatchOrRepair": "A repair cannot add a function body. The TypeScript already expresses the presence-safe read idiomatically with optional chaining, so rewriting it to accommodate a lost C++ narrowing proof would make the target-neutral source less clear.",
+      "unblocks": "The only refused declaration in packages/font/src/fontFormat.ts. On the current base, generated-only compilation passes 5/9 package headers; supplying this function closes the four dependent failures as well, taking @flighthq/font to an assisted, shippable 9/9 source modules and 9/9 headers.",
+      "expires": "when optional chaining after Array.pop records a present payload for the member projection.",
+      "authoredOn": "2026-10-03"
     }
   ]
 }
