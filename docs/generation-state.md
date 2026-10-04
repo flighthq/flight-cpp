@@ -1834,3 +1834,73 @@ That is a more useful thing to know than another finished package would have bee
 is not more hand-written modules; it is whatever closes header failures across the 111 partial packages,
 and the honest answer from the cause map is that no single repair does — 748 of 753 name-class failures sit
 in front of a refusal.
+
+## `types` goes clean, and `particles` ships
+
+### `types`: one defect, two shapes
+
+`@flighthq/types` is the largest package in the SDK — 995 modules, 411 headers — and everything depends on
+it. It was 406/411, and both causes were the same emitter defect: **aliases written into the
+forward-declaration prologue, which sits before the include block.** That placement is fine for a struct,
+whose name can be forward-declared, and wrong for an alias, whose definition names types the includes have
+not brought in yet.
+
+`FlightDocumentValue` needed only a forward declaration — and that a forward declaration *suffices* is
+measured, not assumed: the alias `using FlightDocumentLayoutNode = Ref<LayoutNode<Record<String,
+FlightDocumentValue>, ...>>` never instantiates `Record` or `LayoutNode`, so the incomplete type is never
+examined. Tested before the repair was declared, seven diagnostics to zero.
+
+The three texture resolvers close a real cycle, and no forward declaration can reach them:
+
+```
+dom_texture_resolver.hpp   defines  using DomTextureResolver = std::function<...>;
+                           includes dom_render_state.hpp
+dom_render_state.hpp       uses     KeyedTable<flight::types::DomTextureResolver>
+```
+
+Whichever is parsed first needs the other, and **an alias has no forward declaration**. A new kind,
+`repeat-alias-declaration`, repeats the identical alias in the file that needs it. That is legal C++ and
+introduces no new type, name or behaviour — and crucially, **if the two declarations ever disagreed the
+compiler would reject the file, so the language enforces the equivalence rather than the entry asserting
+it.** That is a stronger guarantee than any other repair in this file has.
+
+Placement is load-bearing, which is why this is not a variation of `insert-using-declaration`: the alias
+goes at the **end** of the prologue block, after the struct forward declarations, because it references
+them. Inserting at the start — where the using-declaration repair inserts — would put the alias above its
+own dependencies. `GlTextureResolver` additionally needs `struct GlTextureRealization;` alongside it, so
+the declaration carries both.
+
+All five previously failing headers now compile, and the eight files the forward declaration incidentally
+touched still compile.
+
+### `particles`: delegated, and verified rather than accepted
+
+`builder` implemented the five refused functions in `validateParticleEmitterConfig` (490 lines). It was
+reviewed independently, because `supplies` is the claim that decides shippability and a wrong one ships a
+lie. Three checks were worth the time:
+
+- **`derivedFrom` matches byte-for-byte**, so both clones worked from the same regenerated inventory.
+- **`regionIdMax`** is the line a careful transcription still gets wrong. The TypeScript clamps from
+  `out.regionIdMin` — the *pre-clamp* field — not from the normalized one it has just written. The
+  override reads from `out`. The two values coincide at this pin, so getting it backwards would have been
+  invisible.
+- **Numeric stringification matches JavaScript, not C++.** Verified directly: `flight::to_string` gives
+  `NaN`, `Infinity`, and `3` for `3.0` — not `nan`, `inf`, `3.000000` — so the interpolated
+  `(got ${value})` message text is identical. And `curve.length % stride !== 0` as
+  `std::fmod(...) != 0.0` is right, since JS `%` on numbers *is* `fmod` and `-0.0 != 0.0` is false in
+  both languages.
+
+**35 of 146 applicable packages are shippable — 27 ready, 8 assisted.**
+
+### A known imprecision in the tier gate
+
+Landing those moved `@flighthq/permissions` from `ready` to `assisted`, and that is an artifact rather
+than a change in the package. `assisted` currently means *a repair touched this package*, not *this
+package needed it*: the new `conditional-absent-branch-optional` repair rewrote a ternary in `permissions`
+— plausibly one inside a template that was never instantiated, since the package compiled before the
+repair existed.
+
+Distinguishing the two would mean compiling each package with and without each repair that touches it,
+which is expensive and has not been done. So the count understates `ready` by at least one, and
+`assisted` should be read as "carries declared debt, which it may or may not depend on". `easing` and
+`particles` are genuinely assisted — remove their overrides and the packages do not build.
