@@ -2854,3 +2854,28 @@ That is the fourth over-count in this session, after the collision estimate (20 
 absence-channel attribution (10 vs 5), and the unqualified-name projection. Every one was high, and every
 one came from counting a proxy instead of compiling the thing. The standing rule: a family's size is what
 a compiler says after the fix, and anything else is a hypothesis.
+
+### A header can pass the gate and still break every consumer
+
+`signals/slot.hpp` **passes** the per-header compile gate. It also contributes three of the ten errors in
+`loader/load.hpp`. Both are true, and the reason is structural rather than a flaw in either measurement.
+
+The failing code is inside `template <typename T> inline T make_dispatch(...)`, in a generic lambda in its
+body. A template's body is only type-checked when it is instantiated with concrete arguments, so
+compiling `slot.hpp` on its own checks that it parses and nothing more. `loader/load.hpp` instantiates
+`make_dispatch` with its concrete signal type, and the body fails then — `slot.value()(args...)` calls an
+`optional<function>`, because the value is doubly wrapped.
+
+This is why `loader` cannot be fixed by fixing `loader`: one of its four families lives in a dependency
+that the gate reports as healthy. Twelve headers include `signals/slot.hpp` directly.
+
+The blind spot is real and it is **bounded**: of the 1714 passing headers, **83 (5%)** contain a template
+definition at all, so at most that many could be passing without their bodies checked — and only some of
+those will have defects. The headline fraction is not badly wrong; it has a known 5% ceiling of
+uninstantiated code, and `slot.hpp` is one confirmed instance.
+
+Two consequences for how work is chosen. A package's failures may be rooted in a dependency that itself
+reports as passing, so a per-package diagnosis has to follow the error's FILE and not the header under
+test — the ten errors in `load.hpp` are in two different files. And a template-bearing header should not
+be counted as verified on the strength of the gate alone; something must instantiate it. That is an
+argument for the runtime's own tests over header counting, which is where semantics get pinned anyway.
