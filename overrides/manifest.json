@@ -121,6 +121,21 @@
       "unblocks": "The only refused declaration in packages/texture-formats/src/parseAtf.ts. Generated-only compilation passes 7/11 package headers; the override closes parse_atf.hpp and its three consumers, taking @flighthq/texture-formats to an assisted, shippable 11/11 source modules and 11/11 headers.",
       "expires": "when indexed access to an initialized nested Array carries a present payload through member projection.",
       "authoredOn": "2026-10-03"
+    },
+    {
+      "id": "font-formats-cff-charstring-structural-subroutines",
+      "path": "flight/font_formats/cff_charstring.hpp",
+      "package": "@flighthq/font-formats",
+      "status": "complete",
+      "supplies": "packages/font-formats/src/cffCharstring.ts",
+      "derivedFrom": "9f6667a6e2e1e3f2e3d884645bdd8499e3050c3a7ef4c05aa8043d71e2b2c0f6",
+      "reason": "The emitter generated the numeric decoder and helper shapes but refused runCffCharstring because readonly arrays of structural {start,end} views could not be stored as owning arrays without changing the nominal CffIndexEntry array identity.",
+      "change": "Supplies the one refused Type 2 charstring interpreter. Its public boundary retains the exact Array<Ref<CffIndexEntry>> carrier generated callers already own, while the individual charstring keeps the generated readonly structural row; the body implements operand decoding, width consumption, stems and inline masks, moves, lines, cubic operators, biased local and global subroutines, recursion depth, escaped-operator handling, contour closure, and path replacement.",
+      "equivalence": "The interpreter preserves the source's shared input and output identities, clears commands and data before execution, always writes nonZero winding, negates y only at the Path seam, closes an open contour before another move and after unterminated input, applies a leading width only once, counts explicit and implicit stems before skipping mask bytes, shares the operand stack across subroutine calls, uses the three specified bias ranges, and rejects the same truncated operands, masks, absent subroutines, depth overflow, and unknown operators. Direct probes cover all path operator families, 16-bit and 16.16 operands, width and mask rules, local and global calls, depth rejection, empty glyphs, replacement, and implicit closure.",
+      "whyNotAPatchOrRepair": "A repair cannot add the interpreter body. The TypeScript signature is ordinary target-neutral readonly structural input, and its callers already pass nominal CffIndexEntry arrays; changing the public source types solely to expose the current C++ carrier would trade away the intended structural API for an emitter storage limitation.",
+      "unblocks": "The only refused declaration in packages/font-formats/src/cffCharstring.ts. The package remains at 13/17 independently compiling headers on the current base because all four failures stop earlier in woff_font.hpp at the unrelated missing data_tag_aef43e71dd1e9a6d shape; the override removes the withheld run_cff_charstring declaration behind that blocker but does not claim those headers as newly passing.",
+      "expires": "when the compiler can preserve the owning nominal sequence identity while accepting a readonly structural projection of its elements.",
+      "authoredOn": "2026-10-04"
     }
   ]
 }
