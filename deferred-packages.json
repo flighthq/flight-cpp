@@ -6,16 +6,6 @@
   "note": "Packages this profile does not hold to the compile gate, with the REASON distinguished by `kind`. `not-applicable` means the profile cannot provide the capability the package exists to implement -- a Canvas 2D renderer has no meaning on a host with no canvas -- so the package is not broken and is not counted in the shippable denominator. `defect` means the package should work here and does not; it stays in the denominator and is a debt. Neither kind is a silent skip: every gate that honors this file reports what it deferred, and a deferral is REFUSED when a non-deferred header includes the deferred package, because deferring something still reachable hides a real break instead of parking an irrelevant one. Deferral changes no generated output -- headers are still emitted and still compiled, so progress stays visible and un-deferring is a one-line change.",
   "deferred": [
     {
-      "package": "@flighthq/statusbar",
-      "includePrefix": "flight/statusbar",
-      "reason": "statusbar.hpp needs structural widening between an owner's declared row type and its applied-provider projection (optional<shared_ptr<StyleStackState>> to optional<shared_ptr<applied_baseline_..._4a6fee11>>). That is a runtime capability, not a text defect, and it is not worth holding the SDK for.",
-      "evidence": "No example package imports @flighthq/statusbar or @flighthq/sdk/statusbar; the user confirmed deferring it hurts nothing.",
-      "owner": "flight-cpp runtime (structural widening)",
-      "unblockedBy": "A RowOwner recovery path that admits an applied-provider projection of a declared row, with the semantic test that proves it.",
-      "deferredOn": "2026-10-01",
-      "kind": "defect"
-    },
-    {
       "package": "@flighthq/render-gl",
       "includePrefix": "flight/render_gl",
       "reason": "Generation does not terminate over this package's own source.",

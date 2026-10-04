@@ -4,6 +4,22 @@
   "note": "Hand-written headers that SHADOW the generated tree. An override is placed earlier on the include path than the generated include directory, so the generated file stays untouched and the override is the whole of the modification: the set of files under overrides/include is the diff, and no computation is needed to find it. Reserved for what the declared mechanisms cannot reach -- source-patches/ rewrites the pinned TypeScript, repairs/ adds text with no behavior to emitted output, and either is preferable because neither carries a copy. An override does carry a copy, so each entry records `derivedFrom`, the sha256 of the generated file it was produced from. When a pin move changes that file the digest stops matching and `npm run overrides:check` says so, which is the signal to re-derive the override or drop it. Each entry also carries a `status`: `complete` means the override compiles, `incomplete` means it is partway and says what remains, so nobody mistakes a half-finished override for a finished one.",
   "overrides": [
     {
+      "id": "statusbar-complete-module",
+      "path": "flight/statusbar/statusbar.hpp",
+      "package": "@flighthq/statusbar",
+      "status": "complete",
+      "supplies": "packages/statusbar/src/statusbar.ts",
+      "derivedFrom": "ec2247fe76654383947df81261150b8c3da08efb8fccc2df25f423efc430541f",
+      "reason": "The emitter leaves all imported types and functions unqualified, represents the value aliases StatusBarStyle, StatusBarAnimation and StatusBarStyleEntryHandle as Ref owners, and refuses applyTopStyleEntry's five optional accumulators. Those defects keep the module and both package aggregators from compiling.",
+      "change": "Supplies the complete statusbar module over the generated host-capability and entity types, including subscription ownership, signal publication, direct host setters, last-pushed-wins style-stack resolution, baseline restoration, and exact numeric/string alias storage.",
+      "equivalence": "Subscriptions retain and invoke the host unsubscribe closure exactly once per detach; status events allocate a fresh StatusBarInfo before emission. Style resolution scans entries newest-to-oldest independently per optional field, falls back to the captured baseline, invokes providers only for changed applied values, passes the winning animation only when visibility changes, preserves monotonically increasing handles, and drops an empty provider stack. The applied snapshot copies only public StatusBarInfo fields, so the entity runtime symbol is not spread.",
+      "whyNotAPatchOrRepair": "Using declarations could repair the missing qualification but cannot add the refused resolver body or correct value aliases emitted as reference owners. A target-neutral source rewrite of the resolver would still leave those independent C++ representation defects; the module is small enough to supply completely and test at its public host-capability boundary.",
+      "unblocks": "The angle-only all-header root moves @flighthq/statusbar from 0/3 to 3/3 independently compiling headers and makes its defect deferral obsolete.",
+      "remaining": "None in @flighthq/statusbar at this pin.",
+      "expires": "when imported names are qualified, string/number aliases retain value representation, and applyTopStyleEntry's optional accumulators lower directly.",
+      "authoredOn": "2026-10-04"
+    },
+    {
       "id": "interaction-node-interaction-state",
       "path": "flight/interaction/node_interaction_state.hpp",
       "package": "@flighthq/interaction",
