@@ -2140,3 +2140,43 @@ construction inside `report_import_diagnostic`, which is a third variation of th
 family and not reachable by either existing repair — `in_place_type` followed by a brace list no longer
 appears anywhere in the tree, because the earlier repair rewrites all of those at generation time. Recorded
 rather than chased.
+
+## The synthesis: which half is the whole fix depends on what the refusal withheld
+
+`builder` audited the five modules whose refusal reports **zero** `missing: function` lines, before writing
+anything, and the result corrects an assumption recorded earlier in this file.
+
+I had written that `refused-placeholder` means the file is a replaceable stub. For these five it does not.
+The placeholder retains the **complete source surface**; the refusal is recorded at module level only and
+nothing is withheld. The decisive observation is `builder`'s: `PARTIAL` / `NOT GENERATED` markers appear
+only where a declaration is *actually* absent, so a zero marker count is **positive evidence that there is
+nothing to supply** — not an anomaly to investigate. Four of the five would have been overrides nobody
+needed.
+
+Those four fail first on ordinary qualification, and the first measurement is decisive:
+
+| package | before | after | fixed by |
+|---|---|---|---|
+| `spatial` | 8/11 | **11/11** | one using-declaration for `SpatialIndexingNotice` |
+
+So the two halves are not interchangeable, and which one is the *whole* fix is predictable from what the
+refusal withheld:
+
+- **The refusal withheld declarations** → the override is the whole fix, and repairing names around it
+  gains nothing. `font` 5/9→9/9, `texture-formats` 7/11→11/11, `textbidi` 4/8→8/8.
+- **The refusal withheld nothing** → the qualification repair is the whole fix, and there is nothing for
+  an override to supply. `spatial` 8/11→11/11.
+
+That resolves the tension between two earlier records in this file — "hand-written modules are
+outperforming repairs" and "the name class is the refusal's shadow". Both were measured correctly; neither
+was the general rule. The marker count tells you which case you are in, and it is free to read.
+
+`builder`'s structural findings behind the other three are recorded for the queue rather than worked
+around: `textshaper` stores `Ref<TextShaperCacheRuntime>` through an `EntityRuntime` cell whose flattened
+owners have no heritage; `bitmapfont` needs an owner-preserving `Bitmap → TextureSource` conversion;
+`glyphSource` produces `optional<Ref<Bitmap>>` where `GlyphSource` requires
+`optional<Ref<TextureSource>>`. All three are the asserted-row and interface-heritage families.
+
+One reporting detail worth imitating: `builder` noted that its sweep deliberately excluded existing
+overrides, which is why it measured `textshaper` 6/10 and `bitmapfont` 2/8 against this clone's 7/10 and
+3/8. A discrepancy explained is worth more than a number that happens to agree.
