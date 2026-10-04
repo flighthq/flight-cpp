@@ -1,5 +1,5 @@
 // Derived from @flighthq/glyphatlas/packages/glyphatlas/src/explainGlyphAtlasEntry.ts
-// at generated digest 56308cad42908447cd9d7d9bde8b913c5ac4e64c8f9332702cb978a882bb50a7.
+// at generated digest b3cd2582c7b2d313cae68a835a2426e686ef1e835fa61616a997f355f81bf52f.
 #pragma once
 
 #include <flight/runtime.hpp>

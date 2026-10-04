@@ -219,7 +219,7 @@
       "package": "@flighthq/glyphatlas",
       "status": "complete",
       "supplies": "packages/glyphatlas/src/explainGlyphAtlasEntry.ts",
-      "derivedFrom": "56308cad42908447cd9d7d9bde8b913c5ac4e64c8f9332702cb978a882bb50a7",
+      "derivedFrom": "b3cd2582c7b2d313cae68a835a2426e686ef1e835fa61616a997f355f81bf52f",
       "reason": "The emitter refused the module's only function because runtime.entries.get(codepoint)! did not inherit the present-value proof from the immediately preceding runtime.entries.has(codepoint) branch, leaving the cached GlyphEntry member reads on absence-carrying C++ storage.",
       "change": "Supplies explainGlyphAtlasEntry with one explicitly tested Map::get result. It computes the same padded atlas bounds, reports cached glyph dimensions without rasterizing, and otherwise distinguishes a null rasterizer result, a fitting bitmap, and a bitmap larger than the usable atlas.",
       "equivalence": "Map::get is bound and tested once instead of repeating has followed by get; for Flight's non-overridable Map this observes the same entry state and preserves the source's cache-first branch. The cached branch never invokes the rasterizer. Uncached calls forward the same codepoint and shared rasterize-options reference, do not mutate or insert the returned bitmap, and copy only its width and height into a fresh explanation. Null, fit, and oversize results retain the exact reason strings and usable dimensions.",
