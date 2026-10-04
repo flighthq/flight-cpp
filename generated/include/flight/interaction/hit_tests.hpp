@@ -28,9 +28,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/node.hpp>
+
 #include "node_interaction_state.hpp"
 
 namespace flight::interaction {
+
+using flight::types::NodeAny;
 
 inline bool hit_test_node2_ds(flight::Ref<Node2D> source, flight::Ref<Node2D> other) {
   if ((get_node_parent(source).has_value() && get_node_parent(other).has_value())) {

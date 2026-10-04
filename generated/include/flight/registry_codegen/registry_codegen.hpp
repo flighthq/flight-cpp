@@ -43,7 +43,7 @@ inline void initialize_registry_codegen_plan(flight::types::EntityConstruction<f
     }
   }
   flight::row_set<flight::RowKey<"backend">>(out, backend);
-  flight::row_set<flight::RowKey<"entries">>(out, entries);
+  flight::row_set<flight::RowKey<"entries">>(out, flight::array_of<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RegistryCatalogEntry>>>>>(entries));
   flight::row_set<flight::RowKey<"unresolved">>(out, unresolved);
 }
 

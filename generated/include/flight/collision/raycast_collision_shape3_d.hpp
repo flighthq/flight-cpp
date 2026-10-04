@@ -249,28 +249,23 @@ inline flight::Ref<SlabHit> scratch_slab = flight::make_ref<SlabHit>(SlabHit{.fr
 
 inline flight::Ref<flight::types::CollisionRaycastHit3D> scratch_cap_hit = create_collision_raycast_hit3_d();
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_X0_Y0_Z0_X1_Y1_Z1_RADIUS_KIND_3CA9ADA7B527E64B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_X0_Y0_Z0_X1_Y1_Z1_RADIUS_KIND_3CA9ADA7B527E64B
-using x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b = flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_X0_Y0_Z0_X1_Y1_Z1_RADIUS_KIND_3CA9ADA7B527E64B
-
-inline bool raycast_capsule3_d(flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b> shape, double origin_x, double origin_y, double origin_z, double direction_x, double direction_y, double direction_z, flight::Ref<flight::types::CollisionRaycastHit3D> out, double max_fraction) {
+inline bool raycast_capsule3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCapsule3D>>>> shape, double origin_x, double origin_y, double origin_z, double direction_x, double direction_y, double direction_z, flight::Ref<flight::types::CollisionRaycastHit3D> out, double max_fraction) {
   double best = std::numeric_limits<double>::infinity();
   double best_normal_x = 0.0;
   double best_normal_y = 0.0;
   double best_normal_z = 0.0;
-  const double axis_x = (shape.x1 - shape.x0);
-  const double axis_y = (shape.y1 - shape.y0);
-  const double axis_z = (shape.z1 - shape.z0);
+  const double axis_x = (flight::row_get<flight::RowKey<"x1">>(shape) - flight::row_get<flight::RowKey<"x0">>(shape));
+  const double axis_y = (flight::row_get<flight::RowKey<"y1">>(shape) - flight::row_get<flight::RowKey<"y0">>(shape));
+  const double axis_z = (flight::row_get<flight::RowKey<"z1">>(shape) - flight::row_get<flight::RowKey<"z0">>(shape));
   const double axis_length_squared = (((axis_x * axis_x) + (axis_y * axis_y)) + (axis_z * axis_z));
   {
     double end = 0.0;
     while ((end < 2.0)) {
       {
-        const double center_x = ((end == 0.0) ? shape.x0 : shape.x1);
-        const double center_y = ((end == 0.0) ? shape.y0 : shape.y1);
-        const double center_z = ((end == 0.0) ? shape.z0 : shape.z1);
-        if ((raycast_sphere3_d(center_x, center_y, center_z, shape.radius, origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, scratch_cap_hit, max_fraction) && (scratch_cap_hit->fraction < best))) {
+        const double center_x = ((end == 0.0) ? flight::row_get<flight::RowKey<"x0">>(shape) : flight::row_get<flight::RowKey<"x1">>(shape));
+        const double center_y = ((end == 0.0) ? flight::row_get<flight::RowKey<"y0">>(shape) : flight::row_get<flight::RowKey<"y1">>(shape));
+        const double center_z = ((end == 0.0) ? flight::row_get<flight::RowKey<"z0">>(shape) : flight::row_get<flight::RowKey<"z1">>(shape));
+        if ((raycast_sphere3_d(center_x, center_y, center_z, flight::row_get<flight::RowKey<"radius">>(shape), origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, scratch_cap_hit, max_fraction) && (scratch_cap_hit->fraction < best))) {
           (best = scratch_cap_hit->fraction);
           (best_normal_x = scratch_cap_hit->normal_x);
           (best_normal_y = scratch_cap_hit->normal_y);
@@ -288,9 +283,9 @@ inline bool raycast_capsule3_d(flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada
     const double u_x = (axis_x * inverse_length);
     const double u_y = (axis_y * inverse_length);
     const double u_z = (axis_z * inverse_length);
-    const double offset_x = (origin_x - shape.x0);
-    const double offset_y = (origin_y - shape.y0);
-    const double offset_z = (origin_z - shape.z0);
+    const double offset_x = (origin_x - flight::row_get<flight::RowKey<"x0">>(shape));
+    const double offset_y = (origin_y - flight::row_get<flight::RowKey<"y0">>(shape));
+    const double offset_z = (origin_z - flight::row_get<flight::RowKey<"z0">>(shape));
     const double offset_axial = (((offset_x * u_x) + (offset_y * u_y)) + (offset_z * u_z));
     const double perpendicular_origin_x = (offset_x - (u_x * offset_axial));
     const double perpendicular_origin_y = (offset_y - (u_y * offset_axial));
@@ -302,7 +297,7 @@ inline bool raycast_capsule3_d(flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada
     const double a = (((perpendicular_direction_x * perpendicular_direction_x) + (perpendicular_direction_y * perpendicular_direction_y)) + (perpendicular_direction_z * perpendicular_direction_z));
     if ((a > 0.0)) {
       const double b = (2.0 * (((perpendicular_origin_x * perpendicular_direction_x) + (perpendicular_origin_y * perpendicular_direction_y)) + (perpendicular_origin_z * perpendicular_direction_z)));
-      const double c = ((((perpendicular_origin_x * perpendicular_origin_x) + (perpendicular_origin_y * perpendicular_origin_y)) + (perpendicular_origin_z * perpendicular_origin_z)) - (shape.radius * shape.radius));
+      const double c = ((((perpendicular_origin_x * perpendicular_origin_x) + (perpendicular_origin_y * perpendicular_origin_y)) + (perpendicular_origin_z * perpendicular_origin_z)) - (flight::row_get<flight::RowKey<"radius">>(shape) * flight::row_get<flight::RowKey<"radius">>(shape)));
       const double discriminant = ((b * b) - ((4.0 * a) * c));
       if ((discriminant >= 0.0)) {
         const double root = std::sqrt(discriminant);
@@ -313,14 +308,14 @@ inline bool raycast_capsule3_d(flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada
           const double hit_x = (origin_x + (direction_x * fraction));
           const double hit_y = (origin_y + (direction_y * fraction));
           const double hit_z = (origin_z + (direction_z * fraction));
-          const double axial = ((((hit_x - shape.x0) * u_x) + ((hit_y - shape.y0) * u_y)) + ((hit_z - shape.z0) * u_z));
+          const double axial = ((((hit_x - flight::row_get<flight::RowKey<"x0">>(shape)) * u_x) + ((hit_y - flight::row_get<flight::RowKey<"y0">>(shape)) * u_y)) + ((hit_z - flight::row_get<flight::RowKey<"z0">>(shape)) * u_z));
           if (((axial < 0.0) || ((axial * inverse_length) > 1.0))) {
             continue;
           }
           (best = fraction);
-          (best_normal_x = ((hit_x - (shape.x0 + (u_x * axial))) / shape.radius));
-          (best_normal_y = ((hit_y - (shape.y0 + (u_y * axial))) / shape.radius));
-          (best_normal_z = ((hit_z - (shape.z0 + (u_z * axial))) / shape.radius));
+          (best_normal_x = ((hit_x - (flight::row_get<flight::RowKey<"x0">>(shape) + (u_x * axial))) / flight::row_get<flight::RowKey<"radius">>(shape)));
+          (best_normal_y = ((hit_y - (flight::row_get<flight::RowKey<"y0">>(shape) + (u_y * axial))) / flight::row_get<flight::RowKey<"radius">>(shape)));
+          (best_normal_z = ((hit_z - (flight::row_get<flight::RowKey<"z0">>(shape) + (u_z * axial))) / flight::row_get<flight::RowKey<"radius">>(shape)));
           break;
         }
       }
@@ -338,36 +333,26 @@ inline flight::Array<double> scratch_local_direction_flight_value_variable_scrat
 
 inline flight::Array<double> scratch_world_normal_flight_value_variable_scratch_u000057_orld_u00004e_ormal_flight_private_07ba5af7ddf45fb3 = flight::Array<double>{0.0, 0.0, 0.0};
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_X_Y_Z_HALF_X_HALF_Y_HALF_Z_ROTATION_X_ROTATION_Y_ROTATION_Z_ROTATION_W_KIND_BDD50A8E154D5A6A
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_X_Y_Z_HALF_X_HALF_Y_HALF_Z_ROTATION_X_ROTATION_Y_ROTATION_Z_ROTATION_W_KIND_BDD50A8E154D5A6A
-using x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a = flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_X_Y_Z_HALF_X_HALF_Y_HALF_Z_ROTATION_X_ROTATION_Y_ROTATION_Z_ROTATION_W_KIND_BDD50A8E154D5A6A
-
-inline bool raycast_box3_d(flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a> shape, double origin_x, double origin_y, double origin_z, double direction_x, double direction_y, double direction_z, flight::Ref<flight::types::CollisionRaycastHit3D> out, double max_fraction) {
-  const double q_x = -shape.rotation_x;
-  const double q_y = -shape.rotation_y;
-  const double q_z = -shape.rotation_z;
-  const double q_w = shape.rotation_w;
-  rotate_vector3_d(q_x, q_y, q_z, q_w, (origin_x - shape.x), (origin_y - shape.y), (origin_z - shape.z), scratch_local_origin_flight_value_variable_scratch_u00004c_ocal_u00004f_rigin_flight_private_07ba5af7ddf45fb3);
+inline bool raycast_box3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionBox3D>>>> shape, double origin_x, double origin_y, double origin_z, double direction_x, double direction_y, double direction_z, flight::Ref<flight::types::CollisionRaycastHit3D> out, double max_fraction) {
+  const double q_x = -flight::row_get<flight::RowKey<"rotationX">>(shape);
+  const double q_y = -flight::row_get<flight::RowKey<"rotationY">>(shape);
+  const double q_z = -flight::row_get<flight::RowKey<"rotationZ">>(shape);
+  const double q_w = flight::row_get<flight::RowKey<"rotationW">>(shape);
+  rotate_vector3_d(q_x, q_y, q_z, q_w, (origin_x - flight::row_get<flight::RowKey<"x">>(shape)), (origin_y - flight::row_get<flight::RowKey<"y">>(shape)), (origin_z - flight::row_get<flight::RowKey<"z">>(shape)), scratch_local_origin_flight_value_variable_scratch_u00004c_ocal_u00004f_rigin_flight_private_07ba5af7ddf45fb3);
   rotate_vector3_d(q_x, q_y, q_z, q_w, direction_x, direction_y, direction_z, scratch_local_direction_flight_value_variable_scratch_u00004c_ocal_u000044_irection_flight_private_07ba5af7ddf45fb3);
-  if (!raycast_slabs3_d(scratch_local_origin_flight_value_variable_scratch_u00004c_ocal_u00004f_rigin_flight_private_07ba5af7ddf45fb3.element(0.0), scratch_local_origin_flight_value_variable_scratch_u00004c_ocal_u00004f_rigin_flight_private_07ba5af7ddf45fb3.element(1.0), scratch_local_origin_flight_value_variable_scratch_u00004c_ocal_u00004f_rigin_flight_private_07ba5af7ddf45fb3.element(2.0), scratch_local_direction_flight_value_variable_scratch_u00004c_ocal_u000044_irection_flight_private_07ba5af7ddf45fb3.element(0.0), scratch_local_direction_flight_value_variable_scratch_u00004c_ocal_u000044_irection_flight_private_07ba5af7ddf45fb3.element(1.0), scratch_local_direction_flight_value_variable_scratch_u00004c_ocal_u000044_irection_flight_private_07ba5af7ddf45fb3.element(2.0), shape.half_x, shape.half_y, shape.half_z, max_fraction, scratch_slab)) {
+  if (!raycast_slabs3_d(scratch_local_origin_flight_value_variable_scratch_u00004c_ocal_u00004f_rigin_flight_private_07ba5af7ddf45fb3.element(0.0), scratch_local_origin_flight_value_variable_scratch_u00004c_ocal_u00004f_rigin_flight_private_07ba5af7ddf45fb3.element(1.0), scratch_local_origin_flight_value_variable_scratch_u00004c_ocal_u00004f_rigin_flight_private_07ba5af7ddf45fb3.element(2.0), scratch_local_direction_flight_value_variable_scratch_u00004c_ocal_u000044_irection_flight_private_07ba5af7ddf45fb3.element(0.0), scratch_local_direction_flight_value_variable_scratch_u00004c_ocal_u000044_irection_flight_private_07ba5af7ddf45fb3.element(1.0), scratch_local_direction_flight_value_variable_scratch_u00004c_ocal_u000044_irection_flight_private_07ba5af7ddf45fb3.element(2.0), flight::row_get<flight::RowKey<"halfX">>(shape), flight::row_get<flight::RowKey<"halfY">>(shape), flight::row_get<flight::RowKey<"halfZ">>(shape), max_fraction, scratch_slab)) {
     return false;
   }
-  rotate_vector3_d(shape.rotation_x, shape.rotation_y, shape.rotation_z, shape.rotation_w, scratch_slab->normal_x, scratch_slab->normal_y, scratch_slab->normal_z, scratch_world_normal_flight_value_variable_scratch_u000057_orld_u00004e_ormal_flight_private_07ba5af7ddf45fb3);
+  rotate_vector3_d(flight::row_get<flight::RowKey<"rotationX">>(shape), flight::row_get<flight::RowKey<"rotationY">>(shape), flight::row_get<flight::RowKey<"rotationZ">>(shape), flight::row_get<flight::RowKey<"rotationW">>(shape), scratch_slab->normal_x, scratch_slab->normal_y, scratch_slab->normal_z, scratch_world_normal_flight_value_variable_scratch_u000057_orld_u00004e_ormal_flight_private_07ba5af7ddf45fb3);
   return write_raycast_hit3_d(out, origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, scratch_slab->fraction, scratch_world_normal_flight_value_variable_scratch_u000057_orld_u00004e_ormal_flight_private_07ba5af7ddf45fb3.element(0.0), scratch_world_normal_flight_value_variable_scratch_u000057_orld_u00004e_ormal_flight_private_07ba5af7ddf45fb3.element(1.0), scratch_world_normal_flight_value_variable_scratch_u000057_orld_u00004e_ormal_flight_private_07ba5af7ddf45fb3.element(2.0));
 }
 
 inline const double cone_epsilon = 1e-12;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_APEX_X_APEX_Y_APEX_Z_BASE_X_BASE_Y_BASE_Z_RADIUS_KIND_21C650AD310BF539
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_APEX_X_APEX_Y_APEX_Z_BASE_X_BASE_Y_BASE_Z_RADIUS_KIND_21C650AD310BF539
-using apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539 = flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_APEX_X_APEX_Y_APEX_Z_BASE_X_BASE_Y_BASE_Z_RADIUS_KIND_21C650AD310BF539
-
-inline bool raycast_cone3_d(flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539> shape, double origin_x, double origin_y, double origin_z, double direction_x, double direction_y, double direction_z, flight::Ref<flight::types::CollisionRaycastHit3D> out, double max_fraction) {
-  const double axis_x = (shape.base_x - shape.apex_x);
-  const double axis_y = (shape.base_y - shape.apex_y);
-  const double axis_z = (shape.base_z - shape.apex_z);
+inline bool raycast_cone3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCone3D>>>> shape, double origin_x, double origin_y, double origin_z, double direction_x, double direction_y, double direction_z, flight::Ref<flight::types::CollisionRaycastHit3D> out, double max_fraction) {
+  const double axis_x = (flight::row_get<flight::RowKey<"baseX">>(shape) - flight::row_get<flight::RowKey<"apexX">>(shape));
+  const double axis_y = (flight::row_get<flight::RowKey<"baseY">>(shape) - flight::row_get<flight::RowKey<"apexY">>(shape));
+  const double axis_z = (flight::row_get<flight::RowKey<"baseZ">>(shape) - flight::row_get<flight::RowKey<"apexZ">>(shape));
   const double height = std::sqrt((((axis_x * axis_x) + (axis_y * axis_y)) + (axis_z * axis_z)));
   if ((height <= 0.0)) {
     return false;
@@ -375,10 +360,10 @@ inline bool raycast_cone3_d(flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_
   const double unit_x = (axis_x / height);
   const double unit_y = (axis_y / height);
   const double unit_z = (axis_z / height);
-  const double w_x = (origin_x - shape.apex_x);
-  const double w_y = (origin_y - shape.apex_y);
-  const double w_z = (origin_z - shape.apex_z);
-  const double slope = (shape.radius / height);
+  const double w_x = (origin_x - flight::row_get<flight::RowKey<"apexX">>(shape));
+  const double w_y = (origin_y - flight::row_get<flight::RowKey<"apexY">>(shape));
+  const double w_z = (origin_z - flight::row_get<flight::RowKey<"apexZ">>(shape));
+  const double slope = (flight::row_get<flight::RowKey<"radius">>(shape) / height);
   const double factor = (1.0 + (slope * slope));
   const double dir_axial = (((direction_x * unit_x) + (direction_y * unit_y)) + (direction_z * unit_z));
   const double origin_axial = (((w_x * unit_x) + (w_y * unit_y)) + (w_z * unit_z));
@@ -420,7 +405,7 @@ inline bool raycast_cone3_d(flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_
       const double hit_x = ((w_x + (direction_x * t_3)) - (unit_x * height));
       const double hit_y = ((w_y + (direction_y * t_3)) - (unit_y * height));
       const double hit_z = ((w_z + (direction_z * t_3)) - (unit_z * height));
-      if (((((hit_x * hit_x) + (hit_y * hit_y)) + (hit_z * hit_z)) <= (shape.radius * shape.radius))) {
+      if (((((hit_x * hit_x) + (hit_y * hit_y)) + (hit_z * hit_z)) <= (flight::row_get<flight::RowKey<"radius">>(shape) * flight::row_get<flight::RowKey<"radius">>(shape)))) {
         (best = t_3);
         (lateral = false);
       }
@@ -440,22 +425,17 @@ inline bool raycast_cone3_d(flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_
   if ((radial_length <= 0.0)) {
     return write_raycast_hit3_d(out, origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, best, -unit_x, -unit_y, -unit_z);
   }
-  const double normal_x = (((radial_x / radial_length) * height) - (unit_x * shape.radius));
-  const double normal_y = (((radial_y / radial_length) * height) - (unit_y * shape.radius));
-  const double normal_z = (((radial_z / radial_length) * height) - (unit_z * shape.radius));
+  const double normal_x = (((radial_x / radial_length) * height) - (unit_x * flight::row_get<flight::RowKey<"radius">>(shape)));
+  const double normal_y = (((radial_y / radial_length) * height) - (unit_y * flight::row_get<flight::RowKey<"radius">>(shape)));
+  const double normal_z = (((radial_z / radial_length) * height) - (unit_z * flight::row_get<flight::RowKey<"radius">>(shape)));
   const double normal_length = std::sqrt((((normal_x * normal_x) + (normal_y * normal_y)) + (normal_z * normal_z)));
   return write_raycast_hit3_d(out, origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, best, (normal_x / normal_length), (normal_y / normal_length), (normal_z / normal_length));
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_X0_Y0_Z0_X1_Y1_Z1_RADIUS_KIND_AEF60734FA17CFF8
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_X0_Y0_Z0_X1_Y1_Z1_RADIUS_KIND_AEF60734FA17CFF8
-using x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8 = flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COLLISION_X0_Y0_Z0_X1_Y1_Z1_RADIUS_KIND_AEF60734FA17CFF8
-
-inline bool raycast_cylinder3_d(flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8> shape, double origin_x, double origin_y, double origin_z, double direction_x, double direction_y, double direction_z, flight::Ref<flight::types::CollisionRaycastHit3D> out, double max_fraction) {
-  const double axis_x = (shape.x1 - shape.x0);
-  const double axis_y = (shape.y1 - shape.y0);
-  const double axis_z = (shape.z1 - shape.z0);
+inline bool raycast_cylinder3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCylinder3D>>>> shape, double origin_x, double origin_y, double origin_z, double direction_x, double direction_y, double direction_z, flight::Ref<flight::types::CollisionRaycastHit3D> out, double max_fraction) {
+  const double axis_x = (flight::row_get<flight::RowKey<"x1">>(shape) - flight::row_get<flight::RowKey<"x0">>(shape));
+  const double axis_y = (flight::row_get<flight::RowKey<"y1">>(shape) - flight::row_get<flight::RowKey<"y0">>(shape));
+  const double axis_z = (flight::row_get<flight::RowKey<"z1">>(shape) - flight::row_get<flight::RowKey<"z0">>(shape));
   const double height = std::sqrt((((axis_x * axis_x) + (axis_y * axis_y)) + (axis_z * axis_z)));
   if ((height <= 0.0)) {
     return false;
@@ -463,9 +443,9 @@ inline bool raycast_cylinder3_d(flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef607
   const double unit_x = (axis_x / height);
   const double unit_y = (axis_y / height);
   const double unit_z = (axis_z / height);
-  const double w_x = (origin_x - shape.x0);
-  const double w_y = (origin_y - shape.y0);
-  const double w_z = (origin_z - shape.z0);
+  const double w_x = (origin_x - flight::row_get<flight::RowKey<"x0">>(shape));
+  const double w_y = (origin_y - flight::row_get<flight::RowKey<"y0">>(shape));
+  const double w_z = (origin_z - flight::row_get<flight::RowKey<"z0">>(shape));
   const double dir_axial = (((direction_x * unit_x) + (direction_y * unit_y)) + (direction_z * unit_z));
   const double origin_axial = (((w_x * unit_x) + (w_y * unit_y)) + (w_z * unit_z));
   double enter = 0.0;
@@ -505,7 +485,7 @@ inline bool raycast_cylinder3_d(flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef607
   const double radial_dir_y = (direction_y - (unit_y * dir_axial));
   const double radial_dir_z = (direction_z - (unit_z * dir_axial));
   const double a = (((radial_dir_x * radial_dir_x) + (radial_dir_y * radial_dir_y)) + (radial_dir_z * radial_dir_z));
-  const double c = ((((radial_origin_x * radial_origin_x) + (radial_origin_y * radial_origin_y)) + (radial_origin_z * radial_origin_z)) - (shape.radius * shape.radius));
+  const double c = ((((radial_origin_x * radial_origin_x) + (radial_origin_y * radial_origin_y)) + (radial_origin_z * radial_origin_z)) - (flight::row_get<flight::RowKey<"radius">>(shape) * flight::row_get<flight::RowKey<"radius">>(shape)));
   if ((a <= cone_epsilon)) {
     if ((c > 0.0)) {
       return false;
@@ -572,16 +552,16 @@ inline bool raycast_collision_shape3_d(flight::types::CollisionBuiltInShape3D sh
       return (raycast_slabs3_d((origin_x - ((std::get<3>(shape)->min_x + std::get<3>(shape)->max_x) / 2.0)), (origin_y - ((std::get<3>(shape)->min_y + std::get<3>(shape)->max_y) / 2.0)), (origin_z - ((std::get<3>(shape)->min_z + std::get<3>(shape)->max_z) / 2.0)), direction_x, direction_y, direction_z, ((std::get<3>(shape)->max_x - std::get<3>(shape)->min_x) / 2.0), ((std::get<3>(shape)->max_y - std::get<3>(shape)->min_y) / 2.0), ((std::get<3>(shape)->max_z - std::get<3>(shape)->min_z) / 2.0), max_fraction.value(), scratch_slab) ? write_raycast_hit3_d(out, origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, scratch_slab->fraction, scratch_slab->normal_x, scratch_slab->normal_y, scratch_slab->normal_z) : false);
     }
     else if (switch_value == flight::String("box")) {
-      return raycast_box3_d(std::get<2>(shape), origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, out, max_fraction.value());
+      return raycast_box3_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionBox3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>>>>(std::get<2>(shape))), origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, out, max_fraction.value());
     }
     else if (switch_value == flight::String("capsule")) {
-      return raycast_capsule3_d(std::get<5>(shape), origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, out, max_fraction.value());
+      return raycast_capsule3_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCapsule3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>>>>(std::get<5>(shape))), origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, out, max_fraction.value());
     }
     else if (switch_value == flight::String("cylinder")) {
-      return raycast_cylinder3_d(std::get<6>(shape), origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, out, max_fraction.value());
+      return raycast_cylinder3_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCylinder3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>>>(std::get<6>(shape))), origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, out, max_fraction.value());
     }
     else if (switch_value == flight::String("cone")) {
-      return raycast_cone3_d(std::get<1>(shape), origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, out, max_fraction.value());
+      return raycast_cone3_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCone3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>>>>(std::get<1>(shape))), origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, out, max_fraction.value());
     }
     else if (switch_value == flight::String("convex")) {
       return raycast_convex_hull3_d(std::get<4>(shape)->points, origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, out, max_fraction.value());

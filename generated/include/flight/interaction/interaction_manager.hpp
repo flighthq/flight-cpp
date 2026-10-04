@@ -46,11 +46,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/node.hpp>
+
 #include "hit_tests.hpp"
 #include "interaction_spatial_index.hpp"
 #include "node_interaction_state.hpp"
 
 namespace flight::interaction {
+
+using flight::types::NodeAny;
 
 template <typename N>
 inline void capture_interaction_pointer(flight::Ref<InteractionManager<N>> manager, double pointer_id, N target) {

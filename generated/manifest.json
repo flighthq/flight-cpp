@@ -64,6 +64,22 @@
   "emissionRepairs": [
     {
       "files": [
+        "flight/interaction/focus_manager.hpp",
+        "flight/interaction/hit_tests.hpp",
+        "flight/interaction/interaction_manager.hpp",
+        "flight/interaction/interaction_spatial_index.hpp",
+        "flight/interaction/node_interaction_state.hpp",
+        "flight/interaction/node_interactive_state_binding.hpp",
+        "flight/interaction/register_quad_batch_hit_test.hpp",
+        "flight/interaction/register_shape_hit_test.hpp",
+        "flight/interaction/register_sprite_hit_test.hpp",
+        "flight/interaction/register_text_hit_test.hpp",
+        "flight/interaction/register_tilemap_hit_test.hpp"
+      ],
+      "id": "interaction-unqualified-types-names"
+    },
+    {
+      "files": [
         "flight/types/frame_script.hpp",
         "flight/types/group.hpp",
         "flight/types/gui_controller.hpp",
@@ -979,9 +995,58 @@
         "flight/glyphatlas/glyph_source.hpp"
       ],
       "id": "glyphatlas-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/node/has_clip.hpp"
+      ],
+      "id": "node-has-clip-partial-row-absence"
+    },
+    {
+      "files": [
+        "flight/node/has_material.hpp"
+      ],
+      "id": "node-has-material-partial-row-absence"
+    },
+    {
+      "files": [
+        "flight/node/has_blend_mode.hpp"
+      ],
+      "id": "node-has-blend-mode-partial-row-absence"
+    },
+    {
+      "files": [
+        "flight/lighting/scene_lights.hpp"
+      ],
+      "id": "lighting-scene-lights-partial-row-absence"
+    },
+    {
+      "files": [
+        "flight/materials/standard_material.hpp"
+      ],
+      "id": "materials-standard-material-three-state-member"
+    },
+    {
+      "files": [
+        "flight/requirements/requirement_set.hpp"
+      ],
+      "id": "requirements-row-write-array-projection"
+    },
+    {
+      "files": [
+        "flight/registry_codegen/registry_codegen.hpp"
+      ],
+      "id": "registry-codegen-row-write-array-projection"
     }
   ],
   "sourcePatches": [
+    {
+      "dependency": "flight",
+      "digest": "135864574496281b9f3377f15917da7eb3c239bd42ae707b5253a62cd13b2a52",
+      "id": "registry-bound-discriminant-literal",
+      "module": "packages/registry/src/registryTable.ts",
+      "package": "@flighthq/registry"
+    },
     {
       "dependency": "flight",
       "digest": "ce4bffb331c4e80b0b9fba007b4e52636720082d81686ddf48de8eb63bed5979",
@@ -1002,6 +1067,20 @@
       "id": "screen-copy-screen-info-explicit-fields",
       "module": "packages/screen/src/screen.ts",
       "package": "@flighthq/screen"
+    },
+    {
+      "dependency": "flight",
+      "digest": "9fecaa2800758daa48ca1bb516cdc2ab3c7d12985a2c6b30da8d721bc63ea744",
+      "id": "collision-shape-contact-explicit-branches",
+      "module": "packages/collision/src/shapeContact2D.ts",
+      "package": "@flighthq/collision"
+    },
+    {
+      "dependency": "flight",
+      "digest": "ba9d3edcba057bcd8a2841d7626a9eadaefe94c4269d1fa4b426646e3b07a42c",
+      "id": "collision-raycast-named-shape-parameters",
+      "module": "packages/collision/src/raycastCollisionShape3D.ts",
+      "package": "@flighthq/collision"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -1021,7 +1100,6 @@
       "flight/collision/gjk3_d.hpp",
       "flight/collision/gjk_distance3_d.hpp",
       "flight/collision/raycast_collision_shape2_d.hpp",
-      "flight/collision/raycast_collision_shape3_d.hpp",
       "flight/collision/test_collision2_d.hpp",
       "flight/collision/test_collision3_d.hpp",
       "flight/effects/render_effect_interpolation.hpp",

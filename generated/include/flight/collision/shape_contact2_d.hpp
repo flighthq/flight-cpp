@@ -360,11 +360,13 @@ inline bool collide_circle_aabb_contact_manifold2_d(flight::StructuralRef<flight
   std::optional<bool> finally_return_4;
   std::exception_ptr finally_exception_4;
   try {
-    if (!flight::collision::test_circle_aabb_collision2_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCircle2D>>>>>(a), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionAabb2D>>>>>(b), scratch->lean_manifold)) {
+    if (flight::collision::test_circle_aabb_collision2_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCircle2D>>>>>(a), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionAabb2D>>>>>(b), scratch->lean_manifold)) {
+      finally_return_4 = write_circle_contact(flight::row_get<flight::RowKey<"x">>(a), flight::row_get<flight::RowKey<"y">>(a), flight::row_get<flight::RowKey<"radius">>(a), out, scratch);
+    }
+    else {
       flight::collision::clear_collision_contact_manifold2_d(out);
       finally_return_4 = false;
     }
-    finally_return_4 = write_circle_contact(flight::row_get<flight::RowKey<"x">>(a), flight::row_get<flight::RowKey<"y">>(a), flight::row_get<flight::RowKey<"radius">>(a), out, scratch);
   }
   catch (...) {
     finally_exception_4 = std::current_exception();
@@ -380,11 +382,13 @@ inline bool collide_circle_circle_contact_manifold2_d(flight::StructuralRef<flig
   std::optional<bool> finally_return_5;
   std::exception_ptr finally_exception_5;
   try {
-    if (!flight::collision::test_circle_circle_collision2_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCircle2D>>>>>(a), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCircle2D>>>>>(b), scratch->lean_manifold)) {
+    if (flight::collision::test_circle_circle_collision2_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCircle2D>>>>>(a), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCircle2D>>>>>(b), scratch->lean_manifold)) {
+      finally_return_5 = write_circle_contact(flight::row_get<flight::RowKey<"x">>(a), flight::row_get<flight::RowKey<"y">>(a), flight::row_get<flight::RowKey<"radius">>(a), out, scratch);
+    }
+    else {
       flight::collision::clear_collision_contact_manifold2_d(out);
       finally_return_5 = false;
     }
-    finally_return_5 = write_circle_contact(flight::row_get<flight::RowKey<"x">>(a), flight::row_get<flight::RowKey<"y">>(a), flight::row_get<flight::RowKey<"radius">>(a), out, scratch);
   }
   catch (...) {
     finally_exception_5 = std::current_exception();
@@ -400,11 +404,13 @@ inline bool collide_circle_obb_contact_manifold2_d(flight::StructuralRef<flight:
   std::optional<bool> finally_return_6;
   std::exception_ptr finally_exception_6;
   try {
-    if (!flight::collision::test_circle_obb_collision2_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCircle2D>>>>>(a), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionObb2D>>>>>(b), scratch->lean_manifold)) {
+    if (flight::collision::test_circle_obb_collision2_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCircle2D>>>>>(a), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionObb2D>>>>>(b), scratch->lean_manifold)) {
+      finally_return_6 = write_circle_contact(flight::row_get<flight::RowKey<"x">>(a), flight::row_get<flight::RowKey<"y">>(a), flight::row_get<flight::RowKey<"radius">>(a), out, scratch);
+    }
+    else {
       flight::collision::clear_collision_contact_manifold2_d(out);
       finally_return_6 = false;
     }
-    finally_return_6 = write_circle_contact(flight::row_get<flight::RowKey<"x">>(a), flight::row_get<flight::RowKey<"y">>(a), flight::row_get<flight::RowKey<"radius">>(a), out, scratch);
   }
   catch (...) {
     finally_exception_6 = std::current_exception();
@@ -420,11 +426,13 @@ inline bool collide_circle_polygon_contact_manifold2_d(flight::StructuralRef<fli
   std::optional<bool> finally_return_7;
   std::exception_ptr finally_exception_7;
   try {
-    if (!flight::collision::test_circle_polygon_collision2_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCircle2D>>>>>(a), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionPolygon2D>>>>>(b), scratch->lean_manifold)) {
+    if (flight::collision::test_circle_polygon_collision2_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionCircle2D>>>>>(a), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionPolygon2D>>>>>(b), scratch->lean_manifold)) {
+      finally_return_7 = write_circle_contact(flight::row_get<flight::RowKey<"x">>(a), flight::row_get<flight::RowKey<"y">>(a), flight::row_get<flight::RowKey<"radius">>(a), out, scratch);
+    }
+    else {
       flight::collision::clear_collision_contact_manifold2_d(out);
       finally_return_7 = false;
     }
-    finally_return_7 = write_circle_contact(flight::row_get<flight::RowKey<"x">>(a), flight::row_get<flight::RowKey<"y">>(a), flight::row_get<flight::RowKey<"radius">>(a), out, scratch);
   }
   catch (...) {
     finally_exception_7 = std::current_exception();

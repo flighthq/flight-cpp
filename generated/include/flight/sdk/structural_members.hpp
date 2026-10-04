@@ -70,6 +70,9 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("anisotropyStrength") && requires { object.anisotropy_strength; }) return (object.anisotropy_strength);
   else if constexpr (Key::name.view() == std::string_view("announce") && requires { object.announce; }) return (object.announce);
   else if constexpr (Key::name.view() == std::string_view("antialias") && requires { object.antialias; }) return (object.antialias);
+  else if constexpr (Key::name.view() == std::string_view("apexX") && requires { object.apex_x; }) return (object.apex_x);
+  else if constexpr (Key::name.view() == std::string_view("apexY") && requires { object.apex_y; }) return (object.apex_y);
+  else if constexpr (Key::name.view() == std::string_view("apexZ") && requires { object.apex_z; }) return (object.apex_z);
   else if constexpr (Key::name.view() == std::string_view("app") && requires { object.app; }) return (object.app);
   else if constexpr (Key::name.view() == std::string_view("appearanceId") && requires { object.appearance_id; }) return (object.appearance_id);
   else if constexpr (Key::name.view() == std::string_view("applied") && requires { object.applied; }) return (object.applied);
@@ -104,6 +107,9 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("base") && requires { object.base; }) return (object.base);
   else if constexpr (Key::name.view() == std::string_view("baseColor") && requires { object.base_color; }) return (object.base_color);
   else if constexpr (Key::name.view() == std::string_view("baseColorMap") && requires { object.base_color_map; }) return (object.base_color_map);
+  else if constexpr (Key::name.view() == std::string_view("baseX") && requires { object.base_x; }) return (object.base_x);
+  else if constexpr (Key::name.view() == std::string_view("baseY") && requires { object.base_y; }) return (object.base_y);
+  else if constexpr (Key::name.view() == std::string_view("baseZ") && requires { object.base_z; }) return (object.base_z);
   else if constexpr (Key::name.view() == std::string_view("bboxStream") && requires { object.bbox_stream; }) return (object.bbox_stream);
   else if constexpr (Key::name.view() == std::string_view("beep") && requires { object.beep; }) return (object.beep);
   else if constexpr (Key::name.view() == std::string_view("beta") && requires { object.beta; }) return (object.beta);
@@ -1890,6 +1896,9 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("anisotropyStrength") && requires(Object& object) { object.anisotropy_strength; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().anisotropy_strength)>>{};
   else if constexpr (Key::name.view() == std::string_view("announce") && requires(Object& object) { object.announce; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().announce)>>{};
   else if constexpr (Key::name.view() == std::string_view("antialias") && requires(Object& object) { object.antialias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().antialias)>>{};
+  else if constexpr (Key::name.view() == std::string_view("apexX") && requires(Object& object) { object.apex_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().apex_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("apexY") && requires(Object& object) { object.apex_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().apex_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("apexZ") && requires(Object& object) { object.apex_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().apex_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("app") && requires(Object& object) { object.app; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().app)>>{};
   else if constexpr (Key::name.view() == std::string_view("appearanceId") && requires(Object& object) { object.appearance_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().appearance_id)>>{};
   else if constexpr (Key::name.view() == std::string_view("applied") && requires(Object& object) { object.applied; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().applied)>>{};
@@ -1924,6 +1933,9 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("base") && requires(Object& object) { object.base; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().base)>>{};
   else if constexpr (Key::name.view() == std::string_view("baseColor") && requires(Object& object) { object.base_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().base_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("baseColorMap") && requires(Object& object) { object.base_color_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().base_color_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("baseX") && requires(Object& object) { object.base_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().base_x)>>{};
+  else if constexpr (Key::name.view() == std::string_view("baseY") && requires(Object& object) { object.base_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().base_y)>>{};
+  else if constexpr (Key::name.view() == std::string_view("baseZ") && requires(Object& object) { object.base_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().base_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("bboxStream") && requires(Object& object) { object.bbox_stream; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bbox_stream)>>{};
   else if constexpr (Key::name.view() == std::string_view("beep") && requires(Object& object) { object.beep; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().beep)>>{};
   else if constexpr (Key::name.view() == std::string_view("beta") && requires(Object& object) { object.beta; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().beta)>>{};
@@ -3713,6 +3725,9 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->anisotropy_strength; }) owner.bind_named("anisotropyStrength", [object]() -> decltype(auto) { return (object->anisotropy_strength); });
   if constexpr (requires { object->announce; }) owner.bind_named("announce", [object]() -> decltype(auto) { return (object->announce); });
   if constexpr (requires { object->antialias; }) owner.bind_named("antialias", [object]() -> decltype(auto) { return (object->antialias); });
+  if constexpr (requires { object->apex_x; }) owner.bind_named("apexX", [object]() -> decltype(auto) { return (object->apex_x); });
+  if constexpr (requires { object->apex_y; }) owner.bind_named("apexY", [object]() -> decltype(auto) { return (object->apex_y); });
+  if constexpr (requires { object->apex_z; }) owner.bind_named("apexZ", [object]() -> decltype(auto) { return (object->apex_z); });
   if constexpr (requires { object->app; }) owner.bind_named("app", [object]() -> decltype(auto) { return (object->app); });
   if constexpr (requires { object->appearance_id; }) owner.bind_named("appearanceId", [object]() -> decltype(auto) { return (object->appearance_id); });
   if constexpr (requires { object->applied; }) owner.bind_named("applied", [object]() -> decltype(auto) { return (object->applied); });
@@ -3747,6 +3762,9 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->base; }) owner.bind_named("base", [object]() -> decltype(auto) { return (object->base); });
   if constexpr (requires { object->base_color; }) owner.bind_named("baseColor", [object]() -> decltype(auto) { return (object->base_color); });
   if constexpr (requires { object->base_color_map; }) owner.bind_named("baseColorMap", [object]() -> decltype(auto) { return (object->base_color_map); });
+  if constexpr (requires { object->base_x; }) owner.bind_named("baseX", [object]() -> decltype(auto) { return (object->base_x); });
+  if constexpr (requires { object->base_y; }) owner.bind_named("baseY", [object]() -> decltype(auto) { return (object->base_y); });
+  if constexpr (requires { object->base_z; }) owner.bind_named("baseZ", [object]() -> decltype(auto) { return (object->base_z); });
   if constexpr (requires { object->bbox_stream; }) owner.bind_named("bboxStream", [object]() -> decltype(auto) { return (object->bbox_stream); });
   if constexpr (requires { object->beep; }) owner.bind_named("beep", [object]() -> decltype(auto) { return (object->beep); });
   if constexpr (requires { object->beta; }) owner.bind_named("beta", [object]() -> decltype(auto) { return (object->beta); });
@@ -5564,6 +5582,9 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(anisotropy_strength)
   FLIGHT_SDK_ROW_WIDENS(announce)
   FLIGHT_SDK_ROW_WIDENS(antialias)
+  FLIGHT_SDK_ROW_WIDENS(apex_x)
+  FLIGHT_SDK_ROW_WIDENS(apex_y)
+  FLIGHT_SDK_ROW_WIDENS(apex_z)
   FLIGHT_SDK_ROW_WIDENS(app)
   FLIGHT_SDK_ROW_WIDENS(appearance_id)
   FLIGHT_SDK_ROW_WIDENS(applied)
@@ -5598,6 +5619,9 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(base)
   FLIGHT_SDK_ROW_WIDENS(base_color)
   FLIGHT_SDK_ROW_WIDENS(base_color_map)
+  FLIGHT_SDK_ROW_WIDENS(base_x)
+  FLIGHT_SDK_ROW_WIDENS(base_y)
+  FLIGHT_SDK_ROW_WIDENS(base_z)
   FLIGHT_SDK_ROW_WIDENS(bbox_stream)
   FLIGHT_SDK_ROW_WIDENS(beep)
   FLIGHT_SDK_ROW_WIDENS(beta)

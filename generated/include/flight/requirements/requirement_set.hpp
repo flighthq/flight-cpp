@@ -37,7 +37,7 @@ inline flight::Array<flight::Ref<flight::types::Requirement>> distinct_sorted_re
 
 inline void initialize_requirement_set(flight::types::EntityConstruction<flight::Ref<flight::types::RequirementSet>> out, flight::Array<flight::types::RequirementFacet> covers, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>> requirements) {
   flight::row_set<flight::RowKey<"covers">>(out, distinct_sorted(covers));
-  flight::row_set<flight::RowKey<"requirements">>(out, distinct_sorted_requirements(requirements));
+  flight::row_set<flight::RowKey<"requirements">>(out, flight::array_of<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(distinct_sorted_requirements(requirements)));
 }
 
 inline flight::Ref<flight::types::RequirementSet> create_requirement_set(flight::Array<flight::types::RequirementFacet> covers, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>> requirements) {

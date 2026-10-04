@@ -369,7 +369,7 @@ struct state_value_bb0dd2ad1c4d9809 : public flight::ReferenceEnabled {
 template <typename T>
 inline std::optional<T> get_registry_table_entry(RegistryTable<T> table, flight::Ref<Kind> key) {
   std::optional<std::variant<flight::Ref<state_value_bb0dd2ad1c4d9809<T>>, flight::Ref<state_f95be77fd2c2ea3b<T>>>> entry = get_registry_table_entry_state<T>(table, key);
-  if ((!entry.has_value() || (entry.value().state != registry_entry_state.bound))) {
+  if ((!entry.has_value() || (entry.value().state != flight::String("bound")))) {
     return std::nullopt;
   }
   return std::optional<T>{std::get<0>(entry.value())->value};
@@ -392,7 +392,7 @@ struct state_value_e98bf220b4f8b71c : public flight::ReferenceEnabled {
 
 inline bool has_registry_table_entry(RegistryTable<flight::Any> table, flight::Ref<Kind> key) {
   std::optional<std::variant<flight::Ref<state_value_e98bf220b4f8b71c>, flight::Ref<state_701e8465bd6197e1>>> entry = get_registry_table_entry_state<flight::Any>(table, key);
-  return (entry.has_value() && (entry.value().state == registry_entry_state.bound));
+  return (entry.has_value() && (entry.value().state == flight::String("bound")));
 }
 
 } // namespace flight::registry

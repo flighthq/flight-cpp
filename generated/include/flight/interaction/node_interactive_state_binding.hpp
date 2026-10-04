@@ -23,7 +23,30 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/node_interactive_state_binding.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/flight_document_schema_registry.hpp>
+
+#include <flight/types/flight_document_interactive_state.hpp>
+
+#include <flight/types/flight_document_field_schema.hpp>
+
+#include <flight/types/entity.hpp>
+
 namespace flight::interaction {
+
+using flight::types::FlightDocumentFields;
+using flight::types::FlightDocumentInteractiveStates;
+using flight::types::FlightDocumentInteractiveStateTransitionDescriptor;
+using flight::types::FlightDocumentSchemaRegistry;
+using flight::types::NodeAny;
+using flight::types::NodeInteractiveStateBinding;
+using flight::types::NodeInteractiveStateExtensionRuntime;
+using flight::types::NodeInteractiveStateExplanation;
+using flight::types::NodeInteractiveStateFlags;
+using flight::types::entity_runtime_key;
 
 struct InteractiveExtension;
 struct InteractiveStateRuntime;
