@@ -2625,3 +2625,65 @@ addressable work until then.
 The board line `row WRITE incompatible value type | 7` therefore moves out of "addressable" and into
 "mechanism unknown pending measurement". That drops the honest addressable count from roughly 24 headers
 to roughly 17.
+
+## The absence channel was never a runtime gap — it is three cases, and five of six files compile
+
+The earlier entry refused this family on two premises. Both are wrong, and the correction is worth as much
+as the fix.
+
+**Premise 1: "`row_get` over a `RowPartial` has already collapsed null into absent, so the information is
+not recoverable at the call site."** False whenever the member can represent null itself. A partial read
+of `std::optional<flight::Ref<ClipRegion>>` has three distinguishable states — `nullopt` is the absent
+property, a held NULL pointer is TypeScript `null`, and a held non-null pointer is the value. The collapse
+is real only for a member with no null of its own, such as `optional<double>`. This is now pinned in
+`structural_row_test.cpp` against the committed member table.
+
+**Premise 2: "this is a runtime capability — `row_get` preserving three states — plus the emitter agreeing
+on the spelling."** No runtime change is needed and the emitter already has the spelling. It emits a
+correct long-form lowering for this exact construct elsewhere in the same tree
+(`scene2d_formats/svg_document.hpp`): project the read into a local, map `!has_value()` to `flight::Null`,
+and return the value alternative otherwise. At every long-form site in the tree, `nullopt` maps to
+`flight::Null` — unanimously, never `Undefined`. So a repair here copies the emitter's own decision rather
+than inventing an absence semantics, which is the strongest justification available and a checkable one.
+`flight::Presence` is irrelevant to this and stays unused.
+
+**The textual pattern over-matches, which is the trap.** A scan for a bare `return flight::row_get<...>`
+inside a lambda declared to return `variant<V, Null, Undefined>` finds 8 sites in 6 files. Applying one
+transform to all 8 fixes four files, breaks one that **already compiled**, and fails on one more. The
+sites are not one defect but three, separated by facts no text match can see:
+
+| case | subject member | receiver row | `row_get` yields | fix |
+|---|---|---|---|---|
+| 1 | `optional<Ref<T>>` | `RowPartial` | `optional<Ref<T>>` | the emitter's long form: `nullopt` → `Null`, else the value |
+| 2 | `variant<V, Null, Undefined>` | `RowPartial` | `optional<variant<V, Null, Undefined>>` | unwrap: `nullopt` → `Undefined`, else return the held variant |
+| 3 | any | NOT partial | the member type itself | nothing — it already compiles |
+
+Case 3 is `scene2d_resources/scene2_ddocument_source.hpp`, which has no `RowPartial` anywhere in it: the
+read returns the member type, which is already the three-state variant, so it converts. It was flagged
+only by textual resemblance, and the transform broke working code. That is the whole argument against
+declaring this repair on a text pattern.
+
+Case 2 is `materials/standard_material.hpp`, whose `name` member is *declared* as
+`variant<String, Null, Undefined>`. A partial read therefore yields `optional<variant<...>>`, and the
+case-1 transform builds `in_place_type<String>` from a variant and fails. Its fix needs no choice from us
+and loses nothing: the member already distinguishes null from a value, so `nullopt` can only mean the
+property was absent, which is `Undefined`. That is a forced mapping, not a judgement call.
+
+Measured against the committed tree, compiling each header standalone:
+
+| header | baseline errors | after |
+|---|---|---|
+| `node/has_clip.hpp` | 1 | compiles |
+| `node/has_material.hpp` | 2 | compiles |
+| `node/has_blend_mode.hpp` | 1 | compiles |
+| `lighting/scene_lights.hpp` | 2 | compiles |
+| `materials/standard_material.hpp` | 1 | compiles (case 2) |
+| `scene2d_resources/scene2_ddocument_source.hpp` | 0 | untouched; needed nothing |
+
+So the family is two declared repairs anchored to their sites — six sites in four files for case 1, one
+site in one file for case 2 — not one pattern and not a runtime capability. The reason this was recorded
+as refused for so long is that the refusal reasoning was done against the diagnostic rather than against
+the subject's member declaration, and the diagnostic is identical in all three cases.
+
+Both repairs are drafted and verified but NOT yet declared: a regeneration is in flight, and editing
+`repairs/` mid-run already cost one 27-minute compile. They land when it does.
