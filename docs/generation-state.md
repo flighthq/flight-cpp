@@ -3136,6 +3136,14 @@ The family remains worth working, but as a per-package, measured, include-closur
 `flight::registry`'s own unqualified names should be repaired before anything that includes it. It is not
 the quick lever the headline share implied, and nothing in the earlier sizing should be read as a forecast.
 
+**One refinement, measured afterwards: the family is not inherently net-negative — careless bulk
+application is.** Applying only the targeted `flight::registry` using-declaration, and nothing to the
+`command` package at all, leaves `command/command_history_signals.hpp` at **0 errors**. It was the bulk
+insertion's new includes that broke it, not the existence of the repair. So the cost sits specifically in
+adding an include to reach a name, and a declaration that is individually justified and measured does not
+carry it. That is the difference between the 47 declared entries, which are safe, and a generated batch,
+which is not.
+
 ### The row-write family closes completely: 7 headers from two declarations
 
 Measured against the regenerated tree, each header compiled standalone in the gate's include order:
