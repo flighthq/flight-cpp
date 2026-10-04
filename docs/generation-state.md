@@ -3314,3 +3314,48 @@ whether a header compiles, not on whether a refusal disappeared.
 
 The standing rule this all supports: **a family's size is what a compiler says after the fix.** Publish
 estimates as hypotheses, name the measurement that would settle them, and expect to revise downward.
+
+## Rank defects by BLAST RADIUS, not by first-diagnostic count — one header blocks 178
+
+Every family count in this document shares a flaw: it attributes a header to whatever its first
+diagnostic happens to be, which says nothing about where the defect physically lives. Computing the
+reverse-transitive include closure over the generated tree and intersecting it with the compile report
+gives a different and far more actionable ranking.
+
+| defect site | headers downstream | of those, pass | fail | shadowed by an override? |
+|---|---|---|---|---|
+| `registry/registry_table.hpp` | **178** | **0** | **178** | no |
+| `signals/slot.hpp` | 47 | 14 | 33 | no |
+| `log/log.hpp` | 118 | — | — | **yes — shadowed, so inert** |
+| `tween/_internal_internal.hpp` | 7 | 0 | 7 | no |
+| `scene3d/scene_document.hpp` | 2 | — | — | no |
+
+**`registry/registry_table.hpp` is the single highest-leverage defect in the tree.** 178 headers reach it
+and **not one of them compiles** — a perfect correlation, and 19% of all 944 failures. Its three stacked
+defects are already diagnosed above: the unqualified `registry_entry_state` (measured: the
+using-declaration resolves both occurrences), the `.` instead of `->` on a `flight::Ref` that sits behind
+it, and the refused `get_registry_table_entry_state`. All three must land together; fixing one leaves the
+header failing and the 178 unchanged.
+
+`tween/_internal_internal.hpp` validates the method independently: 7 downstream, 0 passing, which is
+exactly the measurement builder reported for tween from the other direction — all eight failing headers
+stopping at that file's emitted `key in tween->property_map`. Two different approaches, the same answer.
+
+`log/log.hpp` is the cautionary row. It has the largest raw fan-out after registry at 118 headers and
+contains a raw JS `in` in code — and none of it matters, because a hand-written override shadows the whole
+file. A blast-radius ranking computed without checking `overrides/include` first would have put it near the
+top of the queue. The override set is invisible in the generated tree by design, so it has to be consulted
+explicitly, exactly as it does for any measurement in the gate's include order.
+
+### The raw `in` operator, sized properly
+
+The earlier raw-operator entry measured `instanceof` and `typeof` and reported 3 headers. It never tested
+the **`in` operator**, which is the one builder's tween audit hit, because `in` is too common a word to
+grep for naively. Anchoring on the emitted shape — an identifier followed by ` in ` inside parentheses,
+comments stripped — finds it in exactly **3 headers of code**: `tween/_internal_internal.hpp`,
+`scene3d/scene_document.hpp`, and `log/log.hpp` (shadowed). So the raw-operator family really is tiny by
+site count; what makes `in` matter is that one of its three sites is a package's internal header with
+every other header in the package downstream of it.
+
+Which is the general lesson. **Site count and headers blocked are different numbers, and the second is the
+one worth queueing on.** Three defect sites block 187 headers between them.
