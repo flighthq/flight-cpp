@@ -388,7 +388,7 @@ inline void record_text_input_edit(flight::Ref<TextInputState> state, flight::St
   if ((state->history_index < (static_cast<double>(state->history.size()) - 1.0))) {
     ([&]() { auto&& assignment_receiver = state->history; const auto assignment_value = (state->history_index + 1.0); assignment_receiver.resize(assignment_value); return assignment_value; }());
   }
-  std::optional<flight::Ref<TextInputHistoryEntry>> previous = ((state->history_index >= 0.0) ? state->history.element(state->history_index) : std::nullopt);
+  std::optional<flight::Ref<TextInputHistoryEntry>> previous = ((state->history_index >= 0.0) ? std::optional{state->history.element(state->history_index)} : std::nullopt);
   if (((previous.has_value() && merge_kind.has_value()) && (previous.value()->merge_kind == merge_kind.value()))) {
     (previous.value()->text_after = text_after);
     (previous.value()->caret_index_after = state->caret_index);

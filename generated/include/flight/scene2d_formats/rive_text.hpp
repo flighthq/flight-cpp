@@ -184,7 +184,7 @@ inline double read_rive_style_color(flight::Ref<RiveArtboardGraph> artboard, dou
 }
 
 inline flight::Ref<TextFormat> create_rive_text_format(flight::Ref<RiveArtboardGraph> artboard, double style_index, double align, flight::Array<flight::String> font_names, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics, flight::Set<double> unresolved_styles) {
-  std::optional<flight::Ref<RiveCoreObject>> style = (((style_index >= 0.0) && (style_index < static_cast<double>(artboard->objects.size()))) ? artboard->objects.element(style_index) : std::nullopt);
+  std::optional<flight::Ref<RiveCoreObject>> style = (((style_index >= 0.0) && (style_index < static_cast<double>(artboard->objects.size()))) ? std::optional{artboard->objects.element(style_index)} : std::nullopt);
   flight::Ref<TextFormat> format = flight::make_ref<TextFormat>(TextFormat{.align = ((align == rive_align_right) ? flight::String("right") : ((align == rive_align_center) ? flight::String("center") : flight::String("left"))), .color = read_rive_style_color(artboard, style_index)});
   if (!style.has_value()) {
     if (((style_index >= 0.0) && !unresolved_styles.has(style_index))) {

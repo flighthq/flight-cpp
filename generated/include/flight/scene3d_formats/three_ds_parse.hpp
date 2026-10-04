@@ -159,7 +159,7 @@ inline void collect_three_ds_node_pivots(flight::DataView view, double offset, d
         }
         else {
           if (((inner_id == three_ds_keyframe_pivot) && ((data_start + 12.0) <= inner_end))) {
-            (pivot = std::optional<flight::Array<double>>{std::make_tuple(view.get_float32(data_start, true), view.get_float32((data_start + 4.0), true), view.get_float32((data_start + 8.0), true))});
+            (pivot = std::optional<flight::Array<double>>{flight::Array<double>{view.get_float32(data_start, true), view.get_float32((data_start + 4.0), true), view.get_float32((data_start + 8.0), true)}});
           }
         }
         (inner = inner_end);
@@ -209,10 +209,10 @@ inline std::optional<flight::Array<double>> parse_color_chunk(flight::DataView v
     }
     const double data_start = (cursor + three_ds_chunk_header_bytes);
     if (((chunk_id == three_ds_color_float) && ((data_start + 12.0) <= chunk_end))) {
-      return std::optional<flight::Array<double>>{std::make_tuple(view.get_float32(data_start, true), view.get_float32((data_start + 4.0), true), view.get_float32((data_start + 8.0), true))};
+      return std::optional<flight::Array<double>>{flight::Array<double>{view.get_float32(data_start, true), view.get_float32((data_start + 4.0), true), view.get_float32((data_start + 8.0), true)}};
     }
     if (((chunk_id == three_ds_color_byte) && ((data_start + 3.0) <= chunk_end))) {
-      return std::optional<flight::Array<double>>{std::make_tuple((view.get_uint8(data_start) / 255.0), (view.get_uint8((data_start + 1.0)) / 255.0), (view.get_uint8((data_start + 2.0)) / 255.0))};
+      return std::optional<flight::Array<double>>{flight::Array<double>{(view.get_uint8(data_start) / 255.0), (view.get_uint8((data_start + 1.0)) / 255.0), (view.get_uint8((data_start + 2.0)) / 255.0)}};
     }
     (cursor = chunk_end);
   }
@@ -436,7 +436,7 @@ inline std::optional<flight::Ref<ThreeDsLight>> parse_three_ds_light(flight::Dat
             else {
               if ((chunk_id == three_ds_light_spot)) {
                 if (((data_start + 20.0) <= chunk_end)) {
-                  (target = std::optional<flight::Array<double>>{std::make_tuple(view.get_float32(data_start, true), view.get_float32((data_start + 4.0), true), view.get_float32((data_start + 8.0), true))});
+                  (target = std::optional<flight::Array<double>>{flight::Array<double>{view.get_float32(data_start, true), view.get_float32((data_start + 4.0), true), view.get_float32((data_start + 8.0), true)}});
                   (hotspot = view.get_float32((data_start + 12.0), true));
                   (falloff = view.get_float32((data_start + 16.0), true));
                 }

@@ -72,7 +72,7 @@ inline void initialize_video_image_resource(flight::Ref<EntityConstruction<fligh
 }
 
 inline std::optional<flight::Ref<ImageResource>> get_video_image(flight::Ref<TextureLike> texture) {
-  return ((texture->dimension == flight::String("2d")) ? static_cast<std::optional<flight::Ref<ImageResource>>>(texture->source) : std::nullopt);
+  return ((texture->dimension == flight::String("2d")) ? std::optional{static_cast<std::optional<flight::Ref<ImageResource>>>(texture->source)} : std::nullopt);
 }
 
 inline std::optional<flight::Ref<HostImageSource>> get_video_source(flight::Ref<TextureLike> texture) {

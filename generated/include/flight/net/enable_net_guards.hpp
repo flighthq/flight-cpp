@@ -37,7 +37,7 @@ inline void warn_on_net_misuse(flight::StructuralRef<flight::RowReadonly<flight:
       (message = flight::String("sendNetRequest: the capability completed successfully without emitting the supplied progress signal — use a capability that supports download progress"));
     }
   }
-  flight::log::log_once(flight::String("net:") + flight::to_string(flight::row_get<flight::RowKey<"operation">>(notice)) + flight::String(":") + flight::to_string(flight::row_get<flight::RowKey<"reason">>(notice)) + flight::String(""), flight::types::LogLevel::Warn, {.message = message, .method = method, .operation = flight::row_get<flight::RowKey<"operation">>(notice), .reason = flight::row_get<flight::RowKey<"reason">>(notice), .timeout_ms = timeout_ms, .url = url}, std::optional<flight::String>{flight::String("net")});
+  flight::log::log_once(flight::String("net:") + flight::to_string(flight::row_get<flight::RowKey<"operation">>(notice)) + flight::String(":") + flight::to_string(flight::row_get<flight::RowKey<"reason">>(notice)) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{flight::Record<flight::String, flight::Any>{{flight::String("message"), message}, {flight::String("method"), method}, {flight::String("operation"), flight::row_get<flight::RowKey<"operation">>(notice)}, {flight::String("reason"), flight::row_get<flight::RowKey<"reason">>(notice)}, {flight::String("timeoutMs"), timeout_ms}, {flight::String("url"), url}}}, std::optional<flight::String>{flight::String("net")});
 }
 
 inline bool enabled = false;

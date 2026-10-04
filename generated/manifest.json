@@ -805,6 +805,72 @@
         "flight/texture/voxel_grid.hpp"
       ],
       "id": "texture-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/bitmapfont/bitmap_font_glyph_source.hpp",
+        "flight/bitmapfont_formats/bitmap_font_fnt.hpp",
+        "flight/command/command_history.hpp",
+        "flight/flow/flow.hpp",
+        "flight/node/node_color_adjustment.hpp",
+        "flight/particles_formats/libgdx_parse.hpp",
+        "flight/path_boolean/martinez_kernel.hpp",
+        "flight/permissions/permission.hpp",
+        "flight/render_wgpu/wgpu_external_texture.hpp",
+        "flight/scene2d_formats/rive_clipping.hpp",
+        "flight/scene2d_formats/rive_text.hpp",
+        "flight/scene2d_wgpu/wgpu_clip_rectangle.hpp",
+        "flight/scene3d_formats/awd2_parse.hpp",
+        "flight/scene3d_formats/gltf_parse.hpp",
+        "flight/scene3d_wgpu/render_wgpu_scene3_d.hpp",
+        "flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp",
+        "flight/skeleton2d_formats/spine_binary_parse.hpp",
+        "flight/textinput/text_input_editing.hpp",
+        "flight/texture/video_texture.hpp",
+        "flight/texture_formats/parse_atf.hpp",
+        "flight/texture_formats/parse_basis.hpp",
+        "flight/texture_formats/parse_dds.hpp",
+        "flight/texture_formats/parse_ktx2.hpp",
+        "flight/tilemap_formats/tiled_json_parse.hpp",
+        "flight/tilemap_formats/tiled_xml_parse.hpp"
+      ],
+      "id": "conditional-absent-branch-optional"
+    },
+    {
+      "files": [
+        "flight/effects_wgpu/enable_wgpu_render_effect_guards.hpp",
+        "flight/flow/flow_guards.hpp",
+        "flight/host/enable_host_guards.hpp",
+        "flight/materials/enable_material_conversion_guards.hpp",
+        "flight/movieclip/enable_movie_clip_guards.hpp",
+        "flight/net/enable_net_guards.hpp",
+        "flight/physics2d/enable_physics2_dguards.hpp",
+        "flight/physics3d/enable_physics3_dguards.hpp",
+        "flight/render/enable_color_adjustment_guards.hpp",
+        "flight/render/render_registry_guards.hpp",
+        "flight/scene2d_resources/enable_scene2_dresource_failure_guards.hpp",
+        "flight/scene2d_wgpu/enable_wgpu_color_adjustment_guards.hpp",
+        "flight/scene3d_wgpu/enable_wgpu_scene3_dcustom_shader_guards.hpp",
+        "flight/shape/enable_shape_bounds_guards.hpp",
+        "flight/socket/enable_socket_guards.hpp"
+      ],
+      "id": "log-once-record-from-designated-initializer"
+    },
+    {
+      "files": [
+        "flight/bitmap/bitmap_warp.hpp",
+        "flight/collision/convex_hull3_d.hpp",
+        "flight/path/path.hpp",
+        "flight/path/stroke_path_geometry.hpp",
+        "flight/path_boolean/martinez_kernel.hpp",
+        "flight/render_wgpu/wgpu_compressed_texture.hpp",
+        "flight/scene3d_formats/mtl_parse.hpp",
+        "flight/scene3d_formats/three_ds_parse.hpp",
+        "flight/skeleton2d_formats/spine_binary_parse.hpp",
+        "flight/skeleton2d_formats/spine_parse.hpp",
+        "flight/textshaper/text_shaper_cluster.hpp"
+      ],
+      "id": "array-from-tuple-construction"
     }
   ],
   "sourcePatches": [

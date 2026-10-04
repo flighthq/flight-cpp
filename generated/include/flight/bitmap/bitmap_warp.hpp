@@ -333,7 +333,7 @@ inline std::optional<flight::Array<double>> compute_homography(flight::Array<dou
   if (!h.has_value()) {
     return std::nullopt;
   }
-  return std::optional<flight::Array<double>>{std::make_tuple(h.value().element(0.0), h.value().element(1.0), h.value().element(2.0), h.value().element(3.0), h.value().element(4.0), h.value().element(5.0), h.value().element(6.0), h.value().element(7.0), 1.0)};
+  return std::optional<flight::Array<double>>{flight::Array<double>{h.value().element(0.0), h.value().element(1.0), h.value().element(2.0), h.value().element(3.0), h.value().element(4.0), h.value().element(5.0), h.value().element(6.0), h.value().element(7.0), 1.0}};
 }
 
 inline std::optional<flight::Array<double>> invert_matrix3x3(flight::Array<double> m) {
@@ -352,7 +352,7 @@ inline std::optional<flight::Array<double>> invert_matrix3x3(flight::Array<doubl
     return std::nullopt;
   }
   const double inv_det = (1.0 / det);
-  return std::optional<flight::Array<double>>{std::make_tuple((((e * k) - (f * h)) * inv_det), (((c * h) - (b * k)) * inv_det), (((b * f) - (c * e)) * inv_det), (((f * g) - (d * k)) * inv_det), (((a * k) - (c * g)) * inv_det), (((c * d) - (a * f)) * inv_det), (((d * h) - (e * g)) * inv_det), (((b * g) - (a * h)) * inv_det), (((a * e) - (b * d)) * inv_det))};
+  return std::optional<flight::Array<double>>{flight::Array<double>{(((e * k) - (f * h)) * inv_det), (((c * h) - (b * k)) * inv_det), (((b * f) - (c * e)) * inv_det), (((f * g) - (d * k)) * inv_det), (((a * k) - (c * g)) * inv_det), (((c * d) - (a * f)) * inv_det), (((d * h) - (e * g)) * inv_det), (((b * g) - (a * h)) * inv_det), (((a * e) - (b * d)) * inv_det)}};
 }
 
 inline void warp_bitmap_quad(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> dest, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapRegion>>>> source, flight::Array<double> dst_quad, std::optional<flight::types::BitmapEdgeMode> edge_mode = std::nullopt, std::optional<flight::types::BitmapResizeMode> sample_mode = std::nullopt) {

@@ -38,7 +38,7 @@ inline void initialize_glyph_source_from_bitmap_font(flight::types::EntityConstr
   flight::row_set<flight::RowKey<"getGlyphAtlasImage">>(out, [=](std::optional<double> page = std::nullopt) -> std::optional<flight::Ref<flight::types::TextureSource>> {
   page = page.value_or(0.0);
   auto texture = ([&]() -> std::optional<flight::Ref<flight::types::Texture2D>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"pages">>(font).get(page); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->texture; }());
-  return (texture.has_value() ? texture.value()->source : std::nullopt);
+  return (texture.has_value() ? std::optional{texture.value()->source} : std::nullopt);
 });
   flight::row_set<flight::RowKey<"getGlyphEntry">>(out, [=](double codepoint) -> std::optional<flight::Ref<flight::types::GlyphEntry>> {
   return flight::bitmapfont::get_bitmap_font_glyph(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>>>(font), codepoint);

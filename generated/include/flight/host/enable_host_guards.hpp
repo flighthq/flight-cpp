@@ -30,7 +30,7 @@ inline void enable_host_guards(flight::StructuralRef<flight::RowReadonly<flight:
     if (explanation->is_present) {
       continue;
     }
-    flight::log::log_once(flight::String("host:missing:") + flight::to_string(explanation->group) + flight::String(".") + flight::to_string(explanation->slot) + flight::String(""), flight::types::LogLevel::Warn, {.backends = explanation->backends.map([=](flight::Ref<flight::types::HostCapabilityBackend> backend) { return flight::String("") + flight::to_string(backend->entry_point) + flight::String(" (") + flight::to_string(backend->package_name) + flight::String(")"); }), .group = explanation->group, .message = explanation->message, .capability = explanation->capability, .slot = explanation->slot}, std::optional<flight::String>{flight::String("host")});
+    flight::log::log_once(flight::String("host:missing:") + flight::to_string(explanation->group) + flight::String(".") + flight::to_string(explanation->slot) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{flight::Record<flight::String, flight::Any>{{flight::String("backends"), explanation->backends.map([=](flight::Ref<flight::types::HostCapabilityBackend> backend) { return flight::String("") + flight::to_string(backend->entry_point) + flight::String(" (") + flight::to_string(backend->package_name) + flight::String(")"); })}, {flight::String("group"), explanation->group}, {flight::String("message"), explanation->message}, {flight::String("capability"), explanation->capability}, {flight::String("slot"), explanation->slot}}}, std::optional<flight::String>{flight::String("host")});
   }
 }
 

@@ -32,7 +32,7 @@ inline void resolve_node_color_adjustments(flight::Ref<flight::types::ColorAdjus
   flight::Ref<flight::types::ColorScaleBias> out = ([&]() -> flight::Ref<flight::types::ColorScaleBias> { auto nullish_coalesce_left = runtime->resolved_color_scale_bias; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::materials::create_color_scale_bias(std::nullopt); }());
   const double status = flight::adjustments::resolve_color_adjustments_color_scale_bias(std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>>{adjustments.value()}, out);
   (runtime->resolved_color_scale_bias = std::optional<flight::Ref<flight::types::ColorScaleBias>>{out});
-  (runtime->resolved_color_matrix = ((status == flight::adjustments::color_adjustment_channel_mixing) ? flight::adjustments::resolve_color_adjustments_color_matrix(std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>>{adjustments.value()}) : std::nullopt));
+  (runtime->resolved_color_matrix = ((status == flight::adjustments::color_adjustment_channel_mixing) ? std::optional{flight::adjustments::resolve_color_adjustments_color_matrix(std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>>{adjustments.value()})} : std::nullopt));
   (runtime->color_adjustments_unsupported = ((status == flight::adjustments::color_adjustment_channel_mixing) && !runtime->resolved_color_matrix.has_value()));
 }
 

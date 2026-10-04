@@ -19,7 +19,7 @@ inline bool are_color_adjustment_guards_enabled(flight::Ref<RenderState> state) 
 }
 
 inline void warn_unsupported_color_adjustment() {
-  log_once(flight::String("render:unsupported-color-adjustment"), log_level.warn, {.message = flight::String("enableColorAdjustments: a per-object color adjustment is not inline-able because it has no 4×5 matrix representation. Use an Effect pass for the unsupported operation.")}, std::optional<flight::String>{flight::String("render")});
+  log_once(flight::String("render:unsupported-color-adjustment"), log_level.warn, flight::types::LogData{flight::Record<flight::String, flight::Any>{{flight::String("message"), flight::String("enableColorAdjustments: a per-object color adjustment is not inline-able because it has no 4×5 matrix representation. Use an Effect pass for the unsupported operation.")}}}, std::optional<flight::String>{flight::String("render")});
 }
 
 

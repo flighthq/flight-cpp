@@ -111,7 +111,7 @@ inline void record_render_registries_miss(flight::Ref<flight::types::RenderState
     return;
   }
   misses.value().push(flight::make_ref<flight::types::RenderRegistriesMiss>(flight::types::RenderRegistriesMiss{.kind = kind, .registry = registry}));
-  flight::log::log_once(flight::String("render:registry-miss:") + flight::to_string(state_id) + flight::String(":") + flight::to_string(registry) + flight::String(":") + flight::to_string(kind) + flight::String(""), flight::types::LogLevel::Warn, {.kind = kind, .message = get_render_registries_miss_message(state, registry), .registry = registry}, std::optional<flight::String>{flight::String("render")});
+  flight::log::log_once(flight::String("render:registry-miss:") + flight::to_string(state_id) + flight::String(":") + flight::to_string(registry) + flight::String(":") + flight::to_string(kind) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{flight::Record<flight::String, flight::Any>{{flight::String("kind"), kind}, {flight::String("message"), get_render_registries_miss_message(state, registry)}, {flight::String("registry"), registry}}}, std::optional<flight::String>{flight::String("render")});
 }
 
 inline double next_state_id = 0.0;

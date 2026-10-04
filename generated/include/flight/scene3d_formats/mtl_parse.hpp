@@ -60,7 +60,7 @@ inline std::optional<flight::Array<double>> parse_color(flight::String args, std
     tally_mtl_drop(mtl_drops, import_diagnostic_severity.recover, flight::String("mtl.color-malformed"), flight::String("non-numeric"), {{flight::String("firstDirective"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, directive}}, {flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric")}}});
     return std::nullopt;
   }
-  return std::optional<flight::Array<double>>{std::make_tuple(r, g, b)};
+  return std::optional<flight::Array<double>>{flight::Array<double>{r, g, b}};
 }
 
 inline void tally_directive_before_material(std::optional<flight::Map<flight::String, flight::Ref<MtlDropTally>>> mtl_drops, flight::String directive, double line_index) {

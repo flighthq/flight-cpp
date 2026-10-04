@@ -173,7 +173,7 @@ inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_basis_i
 inline std::optional<flight::String> get_basis_parse_failure_reason(flight::Uint8Array bytes) {
   flight::Ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751> failure = flight::make_ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751>(ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_7401d55d6b747751{.reason = std::nullopt});
   auto container = parse_basis_internal(bytes, failure);
-  return (!container.has_value() ? failure->reason : std::nullopt);
+  return (!container.has_value() ? std::optional{failure->reason} : std::nullopt);
 }
 
 inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_basis(flight::Uint8Array bytes) {

@@ -138,7 +138,7 @@ inline bool execute_command(flight::Ref<flight::types::CommandHistory> history, 
   if ((history->index < static_cast<double>(history->entries.size()))) {
     ([&]() { auto&& assignment_receiver = history->entries; const auto assignment_value = history->index; assignment_receiver.resize(assignment_value); return assignment_value; }());
   }
-  std::optional<flight::Ref<flight::types::Command>> previous = ((history->index > 0.0) ? history->entries.element((history->index - 1.0)) : std::nullopt);
+  std::optional<flight::Ref<flight::types::Command>> previous = ((history->index > 0.0) ? std::optional{history->entries.element((history->index - 1.0))} : std::nullopt);
   const bool mergeable = (((history->transaction_depth == 0.0) && previous.has_value()) && (history->index > history->transaction_index));
   if ((mergeable && binding.value()->merge.has_value())) {
     auto merged = binding.value()->merge.value()(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Command>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Command>>>>(previous.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Command>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Command>>>>(command)));

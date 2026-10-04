@@ -168,7 +168,7 @@ inline flight::String format_bitmap_font_fnt(flight::StructuralRef<flight::RowRe
   const double line_height = ((flight::row_get<flight::RowKey<"ascent">>(metrics) + flight::row_get<flight::RowKey<"descent">>(metrics)) + flight::row_get<flight::RowKey<"lineGap">>(metrics));
   const double base = flight::row_get<flight::RowKey<"ascent">>(metrics);
   auto primary_texture = ([&]() -> std::optional<flight::Ref<flight::types::Texture2D>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"pages">>(font).get(0.0); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->texture; }());
-  auto primary_image = (primary_texture.has_value() ? primary_texture.value()->source : std::nullopt);
+  auto primary_image = (primary_texture.has_value() ? std::optional{primary_texture.value()->source} : std::nullopt);
   const double scale_w = (primary_image.has_value() ? primary_image.value()->width : 0.0);
   const double scale_h = (primary_image.has_value() ? primary_image.value()->height : 0.0);
   const double page_count = flight::maximum(static_cast<double>(flight::row_get<flight::RowKey<"pages">>(font).size()), 1.0);

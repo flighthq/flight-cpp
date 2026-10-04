@@ -164,7 +164,7 @@ inline flight::Array<flight::Ref<TextureContainerFormat>> atf_alpha_slot_formats
 inline std::optional<flight::Ref<TextureContainerParseFailureReason>> get_atf_parse_failure_reason(flight::Uint8Array bytes) {
   flight::Ref<ParseFailure> failure = flight::make_ref<ParseFailure>(ParseFailure{.reason = std::nullopt});
   std::optional<flight::Array<flight::Ref<TextureContainer>>> containers = parse_atf_internal(bytes, failure);
-  return (!containers.has_value() ? failure->reason : std::nullopt);
+  return (!containers.has_value() ? std::optional{failure->reason} : std::nullopt);
 }
 
 inline std::optional<flight::Array<flight::Ref<TextureContainer>>> parse_atf(flight::Uint8Array bytes) {

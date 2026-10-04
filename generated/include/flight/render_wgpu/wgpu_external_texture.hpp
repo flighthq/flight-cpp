@@ -41,7 +41,7 @@ inline flight::host_sdl::WgpuSampler get_external_wgpu_sampler(flight::Ref<WgpuR
   flight::Ref<Sampler> sampler = texture->sampler;
   flight::String min_filter = (sampler->min_filter->starts_with(flight::String("nearest")) ? flight::String("nearest") : flight::String("linear"));
   flight::String mag_filter = (sampler->mag_filter->starts_with(flight::String("nearest")) ? flight::String("nearest") : flight::String("linear"));
-  std::optional<flight::String> mipmap_filter = (sampler->mipmaps ? (sampler->min_filter->ends_with(flight::String("mipmap-nearest")) ? std::optional<flight::String>{flight::String("nearest")} : (sampler->min_filter->ends_with(flight::String("mipmap-linear")) ? std::optional<flight::String>{flight::String("linear")} : std::nullopt)) : std::nullopt);
+  std::optional<flight::String> mipmap_filter = (sampler->mipmaps ? std::optional{(sampler->min_filter->ends_with(flight::String("mipmap-nearest")) ? std::optional<flight::String>{flight::String("nearest")} : (sampler->min_filter->ends_with(flight::String("mipmap-linear")) ? std::optional<flight::String>{flight::String("linear")} : std::nullopt))} : std::nullopt);
   return get_wgpu_sampler(state, min_filter, mag_filter, sampler->wrap_u, sampler->wrap_v, mipmap_filter, sampler->anisotropy);
 }
 

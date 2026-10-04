@@ -17,7 +17,7 @@ inline bool are_wgpu_color_adjustment_guards_enabled(flight::Ref<WgpuRenderState
 }
 
 inline void warn_wgpu_color_adjustment_not_enabled() {
-  log_once(flight::String("scene2d-wgpu:color-adjustment-not-enabled"), log_level.warn, {.message = flight::String("recordWgpuQuadBatchColorScaleBias: color adjustment present but WGPU color adjustment not enabled — call registerWgpuColorAdjustmentMaterialFeature(state)")}, std::optional<flight::String>{flight::String("scene2d-wgpu")});
+  log_once(flight::String("scene2d-wgpu:color-adjustment-not-enabled"), log_level.warn, flight::types::LogData{flight::Record<flight::String, flight::Any>{{flight::String("message"), flight::String("recordWgpuQuadBatchColorScaleBias: color adjustment present but WGPU color adjustment not enabled — call registerWgpuColorAdjustmentMaterialFeature(state)")}}}, std::optional<flight::String>{flight::String("scene2d-wgpu")});
 }
 
 

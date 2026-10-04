@@ -87,7 +87,7 @@ inline std::optional<flight::Array<double>> get_index_range_for_cluster(flight::
           if (!end.has_value()) {
             (end = (string_length.has_value() ? std::optional<double>{string_length.value()} : std::optional<double>{(cluster + 1.0)}));
           }
-          return std::optional<flight::Array<double>>{std::make_tuple(cluster, end.value())};
+          return std::optional<flight::Array<double>>{flight::Array<double>{cluster, end.value()}};
         }
       }
       (i += 1.0);

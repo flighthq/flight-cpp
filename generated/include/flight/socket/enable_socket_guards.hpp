@@ -35,7 +35,7 @@ struct operation_reason_socket_33737934b106de78 : public flight::ReferenceEnable
 inline void warn_on_socket_misuse(flight::types::SocketGuardNotice notice) {
   const flight::String url = flight::row_get<flight::RowKey<"url">>(notice.socket);
   const flight::String message = (notice->reason == flight::String("no-connection") ? flight::String("createSocket: the host carries no socket capability for this transport, or the capability returned no connection — pass a host whose net.socket supports it") : flight::String("") + flight::to_string(flight::row_get<flight::RowKey<"operation">>(notice)) + flight::String(": socket is already disposed — call createSocket(...) to create a new socket"));
-  flight::log::log_once(flight::String("socket:") + flight::to_string(notice.operation) + flight::String(":") + flight::to_string(notice.reason) + flight::String(""), flight::types::LogLevel::Warn, {.message = message, .operation = notice.operation, .reason = notice.reason, .url = url}, std::optional<flight::String>{flight::String("socket")});
+  flight::log::log_once(flight::String("socket:") + flight::to_string(notice.operation) + flight::String(":") + flight::to_string(notice.reason) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{flight::Record<flight::String, flight::Any>{{flight::String("message"), message}, {flight::String("operation"), notice.operation}, {flight::String("reason"), notice.reason}, {flight::String("url"), url}}}, std::optional<flight::String>{flight::String("socket")});
 }
 
 inline bool enabled = false;

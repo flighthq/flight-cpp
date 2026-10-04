@@ -158,7 +158,7 @@ inline std::optional<flight::Array<double>> find_initial_tetrahedron(flight::Arr
   if (((d < 0.0) || (best <= hull_epsilon))) {
     return std::nullopt;
   }
-  return std::optional<flight::Array<double>>{std::make_tuple(a, b, c, d)};
+  return std::optional<flight::Array<double>>{flight::Array<double>{a, b, c, d}};
 }
 
 inline bool is_face_visible_from(flight::Array<double> points, flight::Array<double> faces, double f, double p) {

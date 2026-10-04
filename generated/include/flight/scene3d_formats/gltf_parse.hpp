@@ -999,7 +999,7 @@ inline std::optional<flight::Ref<GltfDracoMesh>> resolve_gltf_draco_mesh(flight:
     return std::nullopt;
   }
   std::optional<flight::Ref<GltfBufferView>> view = ([&]() -> std::optional<flight::Ref<GltfBufferView>> { auto optional_chain_receiver = doc->buffer_views; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(block.value()->buffer_view); }());
-  std::optional<flight::Uint8Array> bytes = (view.has_value() ? buffers.element(view.value()->buffer) : std::nullopt);
+  std::optional<flight::Uint8Array> bytes = (view.has_value() ? std::optional{buffers.element(view.value()->buffer)} : std::nullopt);
   if ((!view.has_value() || !bytes.has_value())) {
     tally_gltf_drop(gltf_drops, import_diagnostic_severity.drop, flight::String("gltf.draco-payload-missing"), flight::String(""), {{flight::String("firstBufferView"), std::variant<bool, double, flight::String>{std::in_place_type<double>, block.value()->buffer_view}}});
     return std::nullopt;

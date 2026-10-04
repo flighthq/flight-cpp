@@ -1049,7 +1049,7 @@ inline std::optional<flight::Ref<Decompressor>> resolve_awd_decompressor(double 
   if ((compression_2 == awd2_compression_deflate)) {
     return get_decompressor(compression.deflate);
   }
-  return ((compression_2 == awd2_compression_lzma) ? get_decompressor(compression.lzma) : std::nullopt);
+  return ((compression_2 == awd2_compression_lzma) ? std::optional{get_decompressor(compression.lzma)} : std::nullopt);
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_SOURCE_VIEW_5898DE4C756CF2A0
@@ -1834,7 +1834,7 @@ inline void build_awd_document_lights(flight::StructuralRef<flight::RowReadonly<
   }
   document->lights.push(flight::make_ref<Scene3DDocumentLight>(Scene3DDocumentLight{.descriptor = descriptor, .name = (flight::row_get<flight::RowKey<"name">>(light) || flight::undefined), .node = node_index, .transform = transform}));
   if ((flight::row_get<flight::RowKey<"ambient">>(light) != 0.0)) {
-    document->lights.push(flight::make_ref<Scene3DDocumentLight>(Scene3DDocumentLight{.descriptor = create_ambient_light(flight::make_ref<AmbientLightOptions>(AmbientLightOptions{.color = get_awd_light_rgba(flight::row_get<flight::RowKey<"ambientRgb">>(light)), .intensity = flight::row_get<flight::RowKey<"ambient">>(light)})), .name = (flight::to_boolean(flight::row_get<flight::RowKey<"name">>(light)) ? flight::String("") + flight::to_string(flight::row_get<flight::RowKey<"name">>(light)) + flight::String(" Ambient") : std::nullopt), .node = node_index, .transform = create_transform3_d()}));
+    document->lights.push(flight::make_ref<Scene3DDocumentLight>(Scene3DDocumentLight{.descriptor = create_ambient_light(flight::make_ref<AmbientLightOptions>(AmbientLightOptions{.color = get_awd_light_rgba(flight::row_get<flight::RowKey<"ambientRgb">>(light)), .intensity = flight::row_get<flight::RowKey<"ambient">>(light)})), .name = (flight::to_boolean(flight::row_get<flight::RowKey<"name">>(light)) ? std::optional{flight::String("") + flight::to_string(flight::row_get<flight::RowKey<"name">>(light)) + flight::String(" Ambient")} : std::nullopt), .node = node_index, .transform = create_transform3_d()}));
   }
 }
 

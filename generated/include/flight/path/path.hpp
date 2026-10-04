@@ -263,7 +263,7 @@ inline std::optional<flight::Array<double>> get_path_last_point(flight::Structur
     return std::nullopt;
   }
   if ((commands.element(last) != flight::types::path_command->close)) {
-    return std::optional<flight::Array<double>>{std::make_tuple(data.element((static_cast<double>(data.size()) - 2.0)), data.element((static_cast<double>(data.size()) - 1.0)))};
+    return std::optional<flight::Array<double>>{flight::Array<double>{data.element((static_cast<double>(data.size()) - 2.0)), data.element((static_cast<double>(data.size()) - 1.0))}};
   }
   double di = static_cast<double>(data.size());
   {
@@ -273,10 +273,10 @@ inline std::optional<flight::Array<double>> get_path_last_point(flight::Structur
         const double cmd = commands.element(ci);
         (di -= path_command_data_count(cmd));
         if ((cmd == flight::types::path_command->move_to)) {
-          return std::optional<flight::Array<double>>{std::make_tuple(data.element(di), data.element((di + 1.0)))};
+          return std::optional<flight::Array<double>>{flight::Array<double>{data.element(di), data.element((di + 1.0))}};
         }
         if ((cmd == flight::types::path_command->wide_move_to)) {
-          return std::optional<flight::Array<double>>{std::make_tuple(data.element((di + 2.0)), data.element((di + 3.0)))};
+          return std::optional<flight::Array<double>>{flight::Array<double>{data.element((di + 2.0)), data.element((di + 3.0))}};
         }
       }
       (ci -= 1.0);

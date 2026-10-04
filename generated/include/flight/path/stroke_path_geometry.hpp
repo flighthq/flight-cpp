@@ -180,7 +180,7 @@ inline std::optional<flight::Array<double>> intersect_lines(double ax, double ay
     return std::nullopt;
   }
   const double scale = (cross((bx - ax), (by - ay), bdx, bdy) / denominator);
-  return std::optional<flight::Array<double>>{std::make_tuple((ax + (adx * scale)), (ay + (ady * scale)))};
+  return std::optional<flight::Array<double>>{flight::Array<double>{(ax + (adx * scale)), (ay + (ady * scale))}};
 }
 
 inline StrokePathTessellationIssue append_join_sections(flight::Ref<StrokePathPieceGeometry> piece, double px, double py, flight::Ref<SegmentFrame> previous, flight::Ref<SegmentFrame> next, double half_width, flight::String join, double miter_limit, double tolerance) {

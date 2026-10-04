@@ -78,7 +78,7 @@ inline bool has_excess_forward_lights(flight::Ref<Scene3DLightsLike> lights) {
 
 inline std::optional<flight::Ref<Material>> resolve_subset_material(flight::Ref<Mesh> mesh, double subset_index) {
   flight::Array<std::optional<flight::Ref<Material>>> materials = mesh.materials;
-  return ((subset_index < static_cast<double>(materials.size())) ? materials.element(subset_index) : std::nullopt);
+  return ((subset_index < static_cast<double>(materials.size())) ? std::optional{materials.element(subset_index)} : std::nullopt);
 }
 
 inline double compare_blended_entries_descending(flight::Ref<WgpuScene3DDrawEntry> a, flight::Ref<WgpuScene3DDrawEntry> b) {

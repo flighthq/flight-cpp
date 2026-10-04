@@ -24,7 +24,7 @@ inline void pop_wgpu_clip_rectangle(flight::Ref<flight::types::WgpuRenderState> 
   flight::scene2d_wgpu::flush_wgpu_quad_batch_writer(state);
   flight::Array<flight::Ref<flight::types::WgpuScissorRect>> stack = runtime->scissor_stack;
   stack.pop();
-  std::optional<flight::Ref<flight::types::WgpuScissorRect>> previous = ((static_cast<double>(stack.size()) > 0.0) ? stack.element((static_cast<double>(stack.size()) - 1.0)) : std::nullopt);
+  std::optional<flight::Ref<flight::types::WgpuScissorRect>> previous = ((static_cast<double>(stack.size()) > 0.0) ? std::optional{stack.element((static_cast<double>(stack.size()) - 1.0))} : std::nullopt);
   (runtime->current_scissor_rect = previous);
   std::optional<flight::host_sdl::WgpuRenderPassEncoder> pass = runtime->render_pass;
   if (!pass.has_value()) {

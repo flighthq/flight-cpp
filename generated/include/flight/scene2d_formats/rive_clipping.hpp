@@ -194,7 +194,7 @@ inline void apply_rive_clipping(flight::Ref<PathBooleanKernel> path_boolean_kern
           continue;
         }
         const double owner = artboard->parent_indices.element(index);
-        std::optional<flight::Ref<DisplayObject>> target = ((owner >= 0.0) ? nodes.element(owner) : std::nullopt);
+        std::optional<flight::Ref<DisplayObject>> target = ((owner >= 0.0) ? std::optional{nodes.element(owner)} : std::nullopt);
         if ((!target.has_value() || !target.value().has_value())) {
           (index += 1.0);
           continue;

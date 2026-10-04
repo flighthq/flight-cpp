@@ -38,7 +38,7 @@ inline bool has_binding(flight::String source, double group, double binding) {
 }
 
 inline void warn(flight::String key, flight::String message) {
-  log_once(flight::String("scene-wgpu:custom-shader:") + flight::to_string(key) + flight::String(""), log_level.warn, {.message = message}, std::optional<flight::String>{flight::String("scene-wgpu")});
+  log_once(flight::String("scene-wgpu:custom-shader:") + flight::to_string(key) + flight::String(""), log_level.warn, flight::types::LogData{flight::Record<flight::String, flight::Any>{{flight::String("message"), message}}}, std::optional<flight::String>{flight::String("scene-wgpu")});
 }
 
 

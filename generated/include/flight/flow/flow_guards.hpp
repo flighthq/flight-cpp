@@ -28,7 +28,7 @@ inline void report_flow_guard(flight::String kind) {
   if (!enabled) {
     return;
   }
-  flight::log::log_once(flight::String("flow:") + flight::to_string(kind) + flight::String(""), flight::types::LogLevel::Warn, {.kind = kind}, std::optional<flight::String>{flight::String("flow")});
+  flight::log::log_once(flight::String("flow:") + flight::to_string(kind) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{flight::Record<flight::String, flight::Any>{{flight::String("kind"), kind}}}, std::optional<flight::String>{flight::String("flow")});
 }
 
 } // namespace flight::flow

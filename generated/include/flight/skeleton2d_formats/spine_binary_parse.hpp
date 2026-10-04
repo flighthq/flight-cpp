@@ -291,7 +291,7 @@ inline void skip_spine_binary_sequence(flight::Ref<ByteReader> reader) {
 
 inline std::optional<flight::String> read_spine_binary_string_reference(flight::Ref<ByteReader> reader, flight::Array<std::optional<flight::String>> strings) {
   const double index = read_spine_binary_varint(reader);
-  return (((index > 0.0) && (index <= static_cast<double>(strings.size()))) ? strings.element((index - 1.0)) : std::nullopt);
+  return (((index > 0.0) && (index <= static_cast<double>(strings.size()))) ? std::optional{strings.element((index - 1.0))} : std::nullopt);
 }
 
 inline void report_spine_binary_crumb(std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics, double count, flight::String kind, flight::String origin, flight::String unit) {
@@ -1152,7 +1152,7 @@ inline std::optional<flight::Array<std::optional<flight::Ref<EasingFunction>>>> 
   if ((rise == 0.0)) {
     return std::nullopt;
   }
-  return std::optional<flight::Array<double>>{std::make_tuple(((points.value().element((v * 4.0)) - timeline->times.element(i_capture.read_binding())) / span), ((points.value().element(((v * 4.0) + 1.0)) - from) / rise), ((points.value().element(((v * 4.0) + 2.0)) - timeline->times.element(i_capture.read_binding())) / span), ((points.value().element(((v * 4.0) + 3.0)) - from) / rise))};
+  return std::optional<flight::Array<double>>{flight::Array<double>{((points.value().element((v * 4.0)) - timeline->times.element(i_capture.read_binding())) / span), ((points.value().element(((v * 4.0) + 1.0)) - from) / rise), ((points.value().element(((v * 4.0) + 2.0)) - timeline->times.element(i_capture.read_binding())) / span), ((points.value().element(((v * 4.0) + 3.0)) - from) / rise)}};
 };
         std::optional<flight::Array<double>> won = ((winner < 0.0) ? std::nullopt : rebase(winner));
         if (won.has_value()) {

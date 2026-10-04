@@ -171,7 +171,7 @@ inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_ktx2_in
 inline std::optional<flight::String> get_ktx2_parse_failure_reason(flight::Uint8Array bytes) {
   flight::Ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_6c35f23c7f4597e8> failure = flight::make_ref<ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_6c35f23c7f4597e8>(ParseFailure_flight_type_interface__u000050_arse_u000046_ailure_flight_private_6c35f23c7f4597e8{.reason = std::nullopt});
   auto container = parse_ktx2_internal(bytes, failure);
-  return (!container.has_value() ? failure->reason : std::nullopt);
+  return (!container.has_value() ? std::optional{failure->reason} : std::nullopt);
 }
 
 inline std::optional<flight::Ref<flight::types::TextureContainer>> parse_ktx2(flight::Uint8Array bytes) {

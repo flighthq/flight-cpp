@@ -47,7 +47,7 @@ inline void warn_on_scene2_dresource_failure(flight::StructuralRef<flight::RowRe
       }
     }
   }
-  flight::log::log_once(flight::String("scene2d-resources:") + flight::to_string(flight::row_get<flight::RowKey<"reason">>(notice)) + flight::String(""), flight::types::LogLevel::Warn, {.message = message}, std::optional<flight::String>{flight::String("scene2d-resources")});
+  flight::log::log_once(flight::String("scene2d-resources:") + flight::to_string(flight::row_get<flight::RowKey<"reason">>(notice)) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{flight::Record<flight::String, flight::Any>{{flight::String("message"), message}}}, std::optional<flight::String>{flight::String("scene2d-resources")});
 }
 
 inline bool enabled = false;

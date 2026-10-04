@@ -38,7 +38,7 @@ inline void clear_flow_stack(flight::Ref<flight::types::FlowStack> stack) {
 
 inline std::optional<flight::Ref<flight::types::FlowState>> get_active_flow_state(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlowStack>>>> stack) {
   flight::Array<flight::Ref<flight::types::FlowState>> states = flight::row_get<flight::RowKey<"states">>(stack);
-  return ((static_cast<double>(states.size()) > 0.0) ? states.element((static_cast<double>(states.size()) - 1.0)) : std::nullopt);
+  return ((static_cast<double>(states.size()) > 0.0) ? std::optional{states.element((static_cast<double>(states.size()) - 1.0))} : std::nullopt);
 }
 
 inline double get_flow_stack_depth(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlowStack>>>> stack) {
@@ -84,7 +84,7 @@ inline std::optional<flight::Ref<flight::types::FlowState>> pop_flow_state(fligh
   }
   auto popped = states.pop().value();
   ([&]() { auto optional_chain_receiver = popped->on_exit; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(); }());
-  std::optional<flight::Ref<flight::types::FlowState>> revealed = ((static_cast<double>(states.size()) > 0.0) ? states.element((static_cast<double>(states.size()) - 1.0)) : std::nullopt);
+  std::optional<flight::Ref<flight::types::FlowState>> revealed = ((static_cast<double>(states.size()) > 0.0) ? std::optional{states.element((static_cast<double>(states.size()) - 1.0))} : std::nullopt);
   ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void()>> { auto optional_chain_receiver = revealed; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->on_resume; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(); }());
   return std::optional<flight::Ref<flight::types::FlowState>>{popped};
 }
@@ -99,7 +99,7 @@ inline void push_flow_state(flight::Ref<flight::types::FlowStack> stack, flight:
     flight::flow::report_flow_guard(flight::String("duplicate-state-push"));
   }
   flight::Array<flight::Ref<flight::types::FlowState>> states = stack->states;
-  std::optional<flight::Ref<flight::types::FlowState>> previous_top = ((static_cast<double>(states.size()) > 0.0) ? states.element((static_cast<double>(states.size()) - 1.0)) : std::nullopt);
+  std::optional<flight::Ref<flight::types::FlowState>> previous_top = ((static_cast<double>(states.size()) > 0.0) ? std::optional{states.element((static_cast<double>(states.size()) - 1.0))} : std::nullopt);
   transition_depth++;
   std::exception_ptr finally_exception;
   try {

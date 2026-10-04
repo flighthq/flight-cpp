@@ -207,7 +207,7 @@ inline std::optional<flight::Array<flight::Array<double>>> segment_intersection(
     if (((t < 0.0) || (t > 1.0))) {
       return std::nullopt;
     }
-    return std::optional<flight::Array<flight::Array<double>>>{flight::Array<flight::Array<double>>{std::make_tuple((a1x + (s * vax)), (a1y + (s * vay)))}};
+    return std::optional<flight::Array<flight::Array<double>>>{flight::Array<flight::Array<double>>{flight::Array<double>{(a1x + (s * vax)), (a1y + (s * vay))}}};
   }
   const double kross_e = ((ex * vay) - (ey * vax));
   if (((kross_e * kross_e) > ((intersection_eps * sqr_len_a) * ((ex * ex) + (ey * ey))))) {
@@ -221,9 +221,9 @@ inline std::optional<flight::Array<flight::Array<double>>> segment_intersection(
     return std::nullopt;
   }
   if ((std::abs((lo - hi)) <= 1e-12)) {
-    return std::optional<flight::Array<flight::Array<double>>>{flight::Array<flight::Array<double>>{std::make_tuple((a1x + (lo * vax)), (a1y + (lo * vay)))}};
+    return std::optional<flight::Array<flight::Array<double>>>{flight::Array<flight::Array<double>>{flight::Array<double>{(a1x + (lo * vax)), (a1y + (lo * vay))}}};
   }
-  return std::optional<flight::Array<flight::Array<double>>>{flight::Array<flight::Array<double>>{std::make_tuple((a1x + (lo * vax)), (a1y + (lo * vay))), std::make_tuple((a1x + (hi * vax)), (a1y + (hi * vay)))}};
+  return std::optional<flight::Array<flight::Array<double>>>{flight::Array<flight::Array<double>>{flight::Array<double>{(a1x + (lo * vax)), (a1y + (lo * vay))}, std::make_tuple((a1x + (hi * vax)), (a1y + (hi * vay)))}};
 }
 
 inline double winding_at(flight::Array<flight::Ref<UniqueSegment>> unique, double px, double py, bool subject) {
@@ -696,8 +696,8 @@ inline flight::Array<flight::Ref<ArrangementSegment>> build_arrangement(flight::
     auto event = heap->pop();
     if (event->left) {
       const double index = insert_status(status, event);
-      std::optional<flight::Ref<SweepEvent>> prev = ((index > 0.0) ? status.element((index - 1.0)) : std::nullopt);
-      std::optional<flight::Ref<SweepEvent>> next = ((index < (static_cast<double>(status.size()) - 1.0)) ? status.element((index + 1.0)) : std::nullopt);
+      std::optional<flight::Ref<SweepEvent>> prev = ((index > 0.0) ? std::optional{status.element((index - 1.0))} : std::nullopt);
+      std::optional<flight::Ref<SweepEvent>> next = ((index < (static_cast<double>(status.size()) - 1.0)) ? std::optional{status.element((index + 1.0))} : std::nullopt);
       if (next.has_value()) {
         possible_intersection(event, next.value(), heap);
       }
@@ -709,8 +709,8 @@ inline flight::Array<flight::Ref<ArrangementSegment>> build_arrangement(flight::
       auto left_event = get_other_event(event);
       const double index_2 = find_status(status, left_event);
       if ((index_2 != -1.0)) {
-        std::optional<flight::Ref<SweepEvent>> prev_2 = ((index_2 > 0.0) ? status.element((index_2 - 1.0)) : std::nullopt);
-        std::optional<flight::Ref<SweepEvent>> next_2 = ((index_2 < (static_cast<double>(status.size()) - 1.0)) ? status.element((index_2 + 1.0)) : std::nullopt);
+        std::optional<flight::Ref<SweepEvent>> prev_2 = ((index_2 > 0.0) ? std::optional{status.element((index_2 - 1.0))} : std::nullopt);
+        std::optional<flight::Ref<SweepEvent>> next_2 = ((index_2 < (static_cast<double>(status.size()) - 1.0)) ? std::optional{status.element((index_2 + 1.0))} : std::nullopt);
         status.splice(index_2, 1.0);
         if ((prev_2.has_value() && next_2.has_value())) {
           possible_intersection(prev_2.value(), next_2.value(), heap);

@@ -427,7 +427,7 @@ inline std::optional<flight::Array<std::optional<flight::Ref<EasingFunction>>>> 
     return std::nullopt;
   }
   const double offset = (c * 4.0);
-  return std::optional<flight::Array<double>>{std::make_tuple(((number_or(curve[static_cast<size_t>(offset)], 0.0) - times.element(i_capture.read_binding())) / span), ((number_or(curve[static_cast<size_t>((offset + 1.0))], 0.0) - from) / rise), ((number_or(curve[static_cast<size_t>((offset + 2.0))], 0.0) - times.element(i_capture.read_binding())) / span), ((number_or(curve[static_cast<size_t>((offset + 3.0))], 0.0) - from) / rise))};
+  return std::optional<flight::Array<double>>{flight::Array<double>{((number_or(curve[static_cast<size_t>(offset)], 0.0) - times.element(i_capture.read_binding())) / span), ((number_or(curve[static_cast<size_t>((offset + 1.0))], 0.0) - from) / rise), ((number_or(curve[static_cast<size_t>((offset + 2.0))], 0.0) - times.element(i_capture.read_binding())) / span), ((number_or(curve[static_cast<size_t>((offset + 3.0))], 0.0) - from) / rise)}};
 };
         std::optional<flight::Array<double>> won = ((winner < 0.0) ? std::nullopt : rebase(winner));
         bool diverged = false;
