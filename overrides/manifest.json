@@ -4,6 +4,22 @@
   "note": "Hand-written headers that SHADOW the generated tree. An override is placed earlier on the include path than the generated include directory, so the generated file stays untouched and the override is the whole of the modification: the set of files under overrides/include is the diff, and no computation is needed to find it. Reserved for what the declared mechanisms cannot reach -- source-patches/ rewrites the pinned TypeScript, repairs/ adds text with no behavior to emitted output, and either is preferable because neither carries a copy. An override does carry a copy, so each entry records `derivedFrom`, the sha256 of the generated file it was produced from. When a pin move changes that file the digest stops matching and `npm run overrides:check` says so, which is the signal to re-derive the override or drop it. Each entry also carries a `status`: `complete` means the override compiles, `incomplete` means it is partway and says what remains, so nobody mistakes a half-finished override for a finished one.",
   "overrides": [
     {
+      "id": "connectivity-complete-module",
+      "path": "flight/connectivity/connectivity.hpp",
+      "package": "@flighthq/connectivity",
+      "status": "complete",
+      "supplies": "packages/connectivity/src/connectivity.ts",
+      "derivedFrom": "b0102c8791f1da598fff53dd27c3e775e73c630507ffccf27bdcfbbcfdf1bef6",
+      "reason": "The emitter leaves every imported type and function unqualified, and refuses getConnectivityOnline plus attachConnectivity because their nullable optional values lack contextual union evidence. The retained signal initialization and status sentinel also depend on generated spellings that do not compile as emitted, so the angle-only module root and both aggregators fail.",
+      "change": "Supplies the complete connectivity module over the generated host-capability and entity types: snapshot queries, reachability delegation, five signal lifecycles, exact subscription replacement and release, and status-diff event routing.",
+      "equivalence": "The status sentinel retains null online and the source's remaining eight defaults. Attach snapshots before subscribing, emits onChange for every host notification, emits online/offline only for the corresponding changed boolean arm, and independently emits changed type and metered values. Replacement consumes the prior provider's exact unsubscribe; removal precedes invocation so re-entrant detach remains idempotent. A failed subscribe stores nothing, dispose detaches and clears all signals, provider Task settlement is returned unchanged, and status results preserve their reference identity.",
+      "whyNotAPatchOrRepair": "Using declarations could repair imported-name qualification but cannot add either refused function body or make the generated out-object initializer legal. Rewriting nullable values in Flight would either preserve the same missing contextual evidence or change the public null semantics. A complete module is localized, independently testable, and carries no partial source rewrite.",
+      "unblocks": "The angle-only all-header root has a three-header blast radius. Focused compilation measures the same gain: @flighthq/connectivity moves from 0/3 to 3/3 independently compiling headers.",
+      "remaining": "None in @flighthq/connectivity at this pin.",
+      "expires": "when imported names are qualified, contextual nullable optionals lower in returns and subscription results, and the status sentinel is emitted as a valid construction.",
+      "authoredOn": "2026-10-04"
+    },
+    {
       "id": "statusbar-complete-module",
       "path": "flight/statusbar/statusbar.hpp",
       "package": "@flighthq/statusbar",
