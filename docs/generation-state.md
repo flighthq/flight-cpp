@@ -2029,3 +2029,47 @@ One correction to the brief I wrote: I said the `signal === undefined ? f(a,b) :
 "selects a different host arity" and had to be preserved. In TypeScript it does. In the C++ lowering the
 host callback is a single `std::function` taking `std::optional<AbortSignal>`, so there is no arity to
 select and both branches are identical — the ternary is harmlessly redundant either way.
+
+## A correction that inverts the central inference: the name class is a SYMPTOM of the refusal
+
+`builder` supplied one refused declaration in each of two packages. I predicted no movement, told builder
+so, and cited these exact numbers as the reason. Both went complete:
+
+| package | before | after |
+|---|---|---|
+| `@flighthq/font` | 5/9 | **9/9** |
+| `@flighthq/texture-formats` | 7/11 | **11/11** |
+
+The prediction rested on an inference recorded earlier in this file, and the inference was wrong.
+
+**What was measured** (and still holds): 748 of 753 name-class failures sit in packages that already have
+refusals.
+
+**What I concluded from it**: that those packages therefore need *both* halves — an override for the
+refusal AND repairs for the name failures — so an override alone would not move them.
+
+**What the two packages actually show**: the name failures were *downstream of the refusal*. Look at what
+the four failing `font` headers were reporting:
+
+```
+'infer_font_format_from_url' is not a member of 'flight::font'
+```
+
+That is the refused function itself. The barrels and the two real consumers all failed because the
+declaration did not exist — not because of anything a repair could address. Supplying the module fixed
+all four. `texture-formats` is the same shape one step removed: its four headers reported
+`'TextureContainerParseFailureReason' was not declared in this scope`, a name the refused module declares,
+so writing the module brought the name with it.
+
+So the correlation was real and the causation ran the other way. In a package whose refusal withholds a
+declaration that its own barrels and siblings reference, **the override is not half the fix, it is the
+whole fix**, and the name-class diagnostics are the refusal's shadow rather than an independent problem.
+
+This reprices both queues. Hand-written modules are worth more than this file previously claimed, and
+repairing unqualified names in a package that has a refusal is worth less — frequently nothing, because
+supplying the module removes the diagnostic anyway. The earlier result that resolving 56 names across
+three packages gained zero headers now reads differently too: those names were waiting on refusals, and
+qualifying them was never going to help.
+
+What survives unchanged: "was not declared in this scope" is what gcc reports first and almost never what
+is really wrong. The lesson is the same; the remedy is the opposite of the one I inferred.
