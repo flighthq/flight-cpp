@@ -2819,3 +2819,38 @@ The direction of the bias is worth keeping in mind when reading an earlier measu
 artifact produces false FAILURES, never false passes. So a header measured as compiling under a
 single-file overlay is still sound evidence, and the absence-channel results above are unaffected — all
 five of those compiled. Only a measured failure needs re-running in a full tree.
+
+### `loader` is four families, not one — and a grep over emitted code must strip comments
+
+The report lists `loader` as 1/4 with all three failures naming one `request_options(...)` conversion in
+`load.hpp`. Compiled directly, `load.hpp` has **ten** errors in four distinct families:
+
+- the `request_options` conversion, at two sites;
+- `expected ')' before 'instanceof'` — a raw JavaScript operator emitted into C++;
+- `std::optional<flight::String>` built from a brace-enclosed initializer, which is the
+  `wrap-conditional-absent-branch` / designated-initializer family already declared;
+- three errors inside `signals/slot.hpp`, a dependency that is itself broken, so `load.hpp` cannot
+  compile until that does.
+
+The `request_options` conversion is NOT fixed by the new variant constructor, and it was a reasonable
+guess that it would be: the diagnostic is
+`optional<variant<Ref<signal_progress_…>, Ref<signal_progress_…>>>` to
+`optional<StructuralRef<RowReadonly<RowOf<Ref<NetRequestOptions>>>>>`, and `std::optional`'s converting
+constructor would carry a variant-to-row conversion through. It does not apply because the two
+`signal_progress_*` alternatives are progress-callback shapes that do not declare `NetRequestOptions`'
+keys, so neither widens onto it and the constraint correctly refuses. That refusal is the right answer —
+the emitter is passing a progress shape where a request-options row is declared — so this is an emitter
+type error, not a conversion to supply.
+
+**The comment trap.** Sizing the raw-operator family by grep gave `instanceof` in 14 headers and `typeof`
+in 57, which read as a large family. Stripping `//` comments first leaves **3 headers** with a raw
+operator in actual code, and the single `typeof` in code is in a header that PASSES. Emitted headers carry
+the original TypeScript in comments — `// if (typeof data === 'string') return { msg: data, ...fields };`
+in `log/log.hpp` is what produced most of the count — so any grep for a JS construct over this tree
+measures the comments unless it strips them. `new` is worse than useless as a probe, since it is valid
+C++ and matched 161 headers.
+
+That is the fourth over-count in this session, after the collision estimate (20 vs 17), the
+absence-channel attribution (10 vs 5), and the unqualified-name projection. Every one was high, and every
+one came from counting a proxy instead of compiling the thing. The standing rule: a family's size is what
+a compiler says after the fix, and anything else is a hypothesis.
