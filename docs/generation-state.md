@@ -4190,3 +4190,19 @@ id, so only `animation` was affected.
 The general shape is worth keeping: **"already present, skipping" is only safe when the id identifies the
 same content.** Where an id is derived rather than authored, it identifies a slot, and two different sets
 can land in one slot.
+
+### Keyless relaxation: decision resolved, stays unshipped
+
+The decision was deferred to the complete compile report with a stated test: *apply the patch if any
+header's failure turns out to be a keyless-widening refusal; if none is, the entry is the record.*
+
+Measured against all 921 failures — taking every `could not convert` between two `StructuralRef`s, pulling
+the subject names out of the diagnostic, and reading each subject's member list from the tree to see whether
+it declares only computed cells:
+
+**Zero failures involve a keyless subject.**
+
+So the relaxation is correct, safe, validated, and buys nothing. It stays unshipped, the patch stays at
+`/tmp/claude-1000/keyless-relaxation.patch`, and the analysis above is the record for whoever hits a header
+that needs it. 84 of 3628 subjects have the shape; none of them is currently on the failing side of a
+widening.
