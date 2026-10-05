@@ -5516,3 +5516,48 @@ find. Measured on a scratch overlay ahead of `generated/`:
 The other 160 are in the four WGPU packages (145) and `scene2d_dom` (14), which are blocked by the host
 binding gap and by not being applicable, so they would not close regardless. 91 is the honest ceiling, and
 `types/canvas_render_state.hpp` going 6 → 0 shows the ceiling is not purely theoretical.
+
+## The compile gate does not pass `-pedantic-errors`, so a fix can pass it on a GCC extension
+
+A correction to the `render_state.hpp` recipe recorded above, and a caution about the gate itself.
+
+The proposed fix was to make the cycle-crossing body a template so two-phase lookup defers it:
+
+```cpp
+template <typename = void>                       // NOT SUFFICIENT
+inline void invoke_render_proxy_destroy_data(std::optional<flight::Ref<flight::types::RenderProxy>> proxy, …)
+```
+
+That measured clean — `types/canvas_render_state.hpp` went 6 → 0 — and it is **wrong**. A bare
+`template <typename = void>` makes the function a template but leaves the member expressions in its body
+**non-dependent**, because nothing in them mentions the template parameter. A non-dependent expression is
+checked at definition time, so the standard requires the error; GCC merely accepts it as an extension:
+
+| invocation | result |
+| --- | --- |
+| `c++ -std=c++20 -fmax-errors=0` | **0 errors** |
+| `c++ -std=c++20 -pedantic-errors` | `invalid use of incomplete type … RenderProxy …` |
+
+**`scripts/sdkHeaderCompile.mjs` passes `-std=c++20` and not `-pedantic-errors`**, so the project's own gate
+would have accepted it too. The measurement harness used for this document inherits the same flags. So "the
+gate went green" is not by itself evidence that emitted or override code is well-formed C++20 — it is
+evidence that GCC, in its default permissive mode, accepted it.
+
+The correct form makes the body **genuinely dependent**: a defaulted template parameter constrained to the
+type in question, with the owner copied through that parameter inside the body, so the member accesses depend
+on it and are deferred to instantiation. Both public parameters stay exactly as emitted.
+
+### Consequences worth keeping
+
+- **Check anything subtle with `-pedantic-errors` before believing it.** It costs one flag and it caught a
+  fix that three separate measurements had called clean.
+- Only `invoke_render_proxy_destroy_data` needed deferral; the adjacent runtime-owner read/write helpers touch
+  structs already complete in the same header and must stay non-templates. Templating more than necessary
+  would be a gratuitous signature change.
+- The measured result over a 101-header reverse-include closure in `types`, `effects_canvas`,
+  `scene2d_canvas` and `render`: **17/101 → 68/101 passing, +51 newly clean, zero regressions**, with all 53
+  headers whose first diagnostic was `render_state.hpp:133/134` cleared at that site. Two advance to an
+  independent `canvas_render_surface.hpp:68` error. That is the largest single gain recorded in this document,
+  against a 146-line override of a header with 67 angle includers and 0 quoted.
+- The earlier estimate in this document was a ceiling of 91 from the first-diagnostic list. The reverse-include
+  closure is the better denominator, and +51 of 101 is the real figure.
