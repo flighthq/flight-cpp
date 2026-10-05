@@ -1,0 +1,58 @@
+diff --git a/packages/scene3d-formats/src/gltfCameras.ts b/packages/scene3d-formats/src/gltfCameras.ts
+index 1b0d4e8..d2489dc 100644
+--- a/packages/scene3d-formats/src/gltfCameras.ts
++++ b/packages/scene3d-formats/src/gltfCameras.ts
+@@ -22,10 +22,11 @@ function buildGltfCameras(context: Readonly<GltfCoreFeatureContext>): Scene3DDoc
+     if (cameraIndex === undefined) continue;
+     const definition = definitions[cameraIndex];
+     if (definition === undefined) {
+-      context.reportDiagnostic(ImportDiagnosticSeverity.Drop, 'gltf.camera-missing', {
++      const detail: Record<string, boolean | number | string> = {
+         firstCamera: cameraIndex,
+         firstNode: node,
+-      });
++      };
++      context.reportDiagnostic(ImportDiagnosticSeverity.Drop, 'gltf.camera-missing', detail);
+       continue;
+     }
+     if (definition.type === 'perspective' && definition.perspective !== undefined) {
+@@ -37,9 +38,10 @@ function buildGltfCameras(context: Readonly<GltfCoreFeatureContext>): Scene3DDoc
+         (perspective.zfar !== undefined && !(perspective.zfar > perspective.znear)) ||
+         (perspective.aspectRatio !== undefined && !(perspective.aspectRatio > 0))
+       ) {
+-        context.reportDiagnostic(ImportDiagnosticSeverity.Drop, 'gltf.camera-invalid-perspective', {
++        const detail: Record<string, boolean | number | string> = {
+           firstCamera: cameraIndex,
+-        });
++        };
++        context.reportDiagnostic(ImportDiagnosticSeverity.Drop, 'gltf.camera-invalid-perspective', detail);
+         continue;
+       }
+       cameras.push({
+@@ -60,9 +62,10 @@ function buildGltfCameras(context: Readonly<GltfCoreFeatureContext>): Scene3DDoc
+         !(orthographic.znear >= 0) ||
+         !(orthographic.zfar > orthographic.znear)
+       ) {
+-        context.reportDiagnostic(ImportDiagnosticSeverity.Drop, 'gltf.camera-invalid-orthographic', {
++        const detail: Record<string, boolean | number | string> = {
+           firstCamera: cameraIndex,
+-        });
++        };
++        context.reportDiagnostic(ImportDiagnosticSeverity.Drop, 'gltf.camera-invalid-orthographic', detail);
+         continue;
+       }
+       cameras.push({
+@@ -75,9 +78,10 @@ function buildGltfCameras(context: Readonly<GltfCoreFeatureContext>): Scene3DDoc
+       });
+       continue;
+     }
+-    context.reportDiagnostic(ImportDiagnosticSeverity.Drop, 'gltf.camera-missing-descriptor', {
++    const detail: Record<string, boolean | number | string> = {
+       firstCamera: cameraIndex,
+       firstType: definition.type,
+-    });
++    };
++    context.reportDiagnostic(ImportDiagnosticSeverity.Drop, 'gltf.camera-missing-descriptor', detail);
+   }
+   return cameras;
+ }
