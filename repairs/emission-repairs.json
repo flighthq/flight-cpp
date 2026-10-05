@@ -1416,6 +1416,58 @@
       "defect": "The emitter writes ten flight::types names unqualified inside namespace flight::render. This is the highest-leverage instance of the defect in the tree: flight/render/render_state.hpp holds the FIRST error of 49 headers, more than any other file in the SDK. The set was found by ITERATING the repair to a fixed point rather than reading the compile report, which lists only each header's first diagnostic and showed four of the ten; compiling render_state.hpp directly surfaced eleven candidate names in one pass and settled after a second round. Measured on render_state.hpp: 37 errors to 4. It does NOT close the header -- the remaining four are three unrelated families, one of which is the refused declaration dispose_render_proxy_for_shutdown, so the header additionally needs a supplied function. `entity_runtime_key` is an inline const flight::Symbol rather than a type, which is why a declaration index that matches only struct/class/using misses it; gcc names it in its own diagnostic.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies a types-owned name used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "mesh-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/mesh/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/aabb.hpp",
+          "name": "Aabb"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/mesh_geometry.hpp",
+          "name": "MeshGeometry"
+        },
+        {
+          "include": "flight/types/mesh_geometry.hpp",
+          "name": "MeshGeometryRuntime"
+        },
+        {
+          "include": "flight/types/mesh_morph_bind_pose.hpp",
+          "name": "MeshMorphBindPose"
+        },
+        {
+          "include": "flight/types/mesh_skin_bind_pose.hpp",
+          "name": "MeshSkinBindPose"
+        },
+        {
+          "include": "flight/types/mesh_geometry.hpp",
+          "name": "MeshSubset"
+        },
+        {
+          "include": "flight/types/mesh_geometry.hpp",
+          "name": "VertexAttribute"
+        },
+        {
+          "include": "flight/types/mesh_geometry.hpp",
+          "name": "VertexAttributeLayout"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "entity_runtime_key"
+        }
+      ],
+      "diagnostic": "'Aabb' was not declared in this scope; did you mean 'flight::types::Aabb'? -- and the same for 9 further flight::types name(s) in this package",
+      "defect": "The emitter writes 10 flight::types name(s) unqualified inside namespace flight::mesh. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/mesh/ holds the first error of 18 header(s). Each name carries its own defining header because they are spread across several files.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
