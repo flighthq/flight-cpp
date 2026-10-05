@@ -273,8 +273,11 @@ class TypedArray {
 
   [[nodiscard]] std::span<Value> span() const { return {mutable_data(), length_}; }
 
+  // `begin_index` defaults to 0 because ECMAScript's `%TypedArray%.prototype.slice()` takes no required
+  // argument -- `slice()` is a full copy -- and the emitter writes the argument-free call. flight::Array
+  // already defaults it the same way; this closes the gap between the two containers.
   [[nodiscard]] TypedArray slice(
-      std::ptrdiff_t begin_index,
+      std::ptrdiff_t begin_index = 0,
       std::ptrdiff_t end_index = std::numeric_limits<std::ptrdiff_t>::max()) const {
     const auto first = normalize_boundary(begin_index);
     const auto last = normalize_boundary(end_index);
@@ -283,8 +286,10 @@ class TypedArray {
                       begin() + static_cast<std::ptrdiff_t>(last));
   }
 
+  // Same default, same reason -- `subarray()` is also argument-free in ECMAScript. It stays a VIEW onto the
+  // same buffer while `slice` copies, which is the distinction between the two and is pinned by a test.
   [[nodiscard]] TypedArray subarray(
-      std::ptrdiff_t begin_index,
+      std::ptrdiff_t begin_index = 0,
       std::ptrdiff_t end_index = std::numeric_limits<std::ptrdiff_t>::max()) const {
     const auto first = normalize_boundary(begin_index);
     const auto last = normalize_boundary(end_index);

@@ -3001,6 +3001,29 @@ void test_streams() {
 }
 
 void test_typed_array() {
+  // ECMAScript `%TypedArray%.prototype.slice()` and `.subarray()` take no required argument, and the
+  // emitter writes them that way. slice COPIES, subarray VIEWS -- the distinction is the point, so it is
+  // checked by writing through the result and observing whether the source moved.
+  {
+    flight::Float32Array source(3.0);
+    source[0] = 1.0F;
+    source[1] = 2.0F;
+    source[2] = 3.0F;
+
+    const auto copied = source.slice();
+    check(copied.size() == 3 && copied[0] == 1.0F && copied[2] == 3.0F,
+          "an argument-free typed-array slice must copy every element");
+    copied[0] = 99.0F;
+    check(source[0] == 1.0F, "a typed-array slice must own its storage rather than view the source");
+
+    const auto viewed = source.subarray();
+    check(viewed.size() == 3 && viewed[1] == 2.0F,
+          "an argument-free typed-array subarray must span every element");
+    viewed[1] = 42.0F;
+    check(source[1] == 42.0F, "a typed-array subarray must share the source buffer rather than copy it");
+  }
+
+
   flight::Int16Array values{1, 2, 3};
   auto alias = values;
   check(alias == values && values.subarray(0) != values && values.slice(0) != values,
