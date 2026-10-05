@@ -5437,3 +5437,82 @@ The collector reads the ledger at startup and writes it at the end, tens of minu
 between is silently discarded**. Do not edit `repairs/emission-repairs.json` while one is running, and do not
 run two at once. The real fix is to re-read immediately before writing and union into the current file; until
 then, snapshot first.
+
+## Two lines in `flight/types/render_state.hpp` are 28% of all remaining failures
+
+After the second regeneration the largest single defect site in the tree is two lines, and finding it was
+worth more than the regeneration's own header gain.
+
+### The measurement that pointed here
+
+The second regeneration applied all **342** repairs (against 148 for the 1792 baseline), repaired **1543**
+headers after emission (up from 900), and was again refusal-neutral — 1020 refused modules before and after,
+zero newly refused. The complete gate run then moved **1792 → 1800 passed, 918 → 910 failed: +8 headers**.
+
+Eight headers for 194 repairs looks like a poor return, and the family breakdown explains why it is not:
+
+| family | before | after |
+| --- | --- | --- |
+| undeclared name | 495 (56%) | **249 (27%)** |
+| incomplete type | — | **251 (28%)** |
+
+The declarations **halved** their own family. What they did was unmask the next defect, which is the
+documented behaviour of a first-diagnostic report, and the thing they unmasked is concentrated to a degree
+nothing else in this tree is:
+
+```
+251 failures, and 238 + 13 of them are located at
+  flight/types/render_state.hpp:133   incomplete type 'std::__shared_ptr_access<flight::types::RenderProxy…>'
+  flight/types/render_state.hpp:134   incomplete type 'std::__shared_ptr_access<flight::types::Renderer…>'
+```
+
+### It is an include cycle, not a missing definition
+
+`RenderProxy` and `Renderer` **are** fully defined, in `flight/types/render_proxy.hpp` and
+`flight/types/renderer.hpp:26`. (So this is not the never-defined-types family recorded above; that negative
+result stands.) The cause is mutual dependence:
+
+- `renderer.hpp:22` includes `render_state.hpp`
+- `render_state.hpp` transitively reaches `render_proxy.hpp`
+
+so the emitter forward-declares instead of including, and the inline body at line 132 dereferences whichever
+type the consumer's include order left incomplete.
+
+**Include ordering cannot fix it.** Moving an include of `render_proxy.hpp` to the bottom of
+`render_state.hpp` works when a consumer reaches `render_state.hpp` first and fails when it reaches
+`render_proxy.hpp` first, because `#pragma once` skips the re-entry and leaves `RenderProxy` incomplete at
+line 132 again.
+
+### What does work: defer the body to instantiation
+
+Making the offending function a template moves its body past the point where completeness is required —
+two-phase lookup checks a dependent body only when it is instantiated, and at every call site both types are
+complete:
+
+```cpp
+template <typename = void>
+inline void invoke_render_proxy_destroy_data(std::optional<flight::Ref<flight::types::RenderProxy>> proxy, …)
+```
+
+The defaulted parameter is never written at a call site, there is exactly one candidate so overload
+resolution is unchanged, and the function's names are fully qualified so two-phase lookup has nothing new to
+find. Measured on a scratch overlay ahead of `generated/`:
+
+| header | before | after |
+| --- | --- | --- |
+| `flight/types/canvas_render_state.hpp` | 6 | **0** |
+| `flight/effects_wgpu/wgpu_effect_pass.hpp` | 102 | 96 |
+| `flight/types/render_state.hpp`, `flight/render/render_state.hpp` | 0 | 0 |
+
+### Why this is the best remaining override target
+
+| | |
+| --- | --- |
+| reachability | **67 angle includers, 0 quoted** — nothing bypasses an override of it |
+| file size | **146 lines** |
+| failures located here | 251 of 910 (28%) |
+| of those, in packages not already dead | **91** — types 50, effects_canvas 23, scene2d_canvas 15, render 4 |
+
+The other 160 are in the four WGPU packages (145) and `scene2d_dom` (14), which are blocked by the host
+binding gap and by not being applicable, so they would not close regardless. 91 is the honest ceiling, and
+`types/canvas_render_state.hpp` going 6 → 0 shows the ceiling is not purely theoretical.
