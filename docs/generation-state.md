@@ -4125,3 +4125,42 @@ subject, and `operator[]` cannot be added to `std::shared_ptr`. Making `Ref` a c
 would change the public reference type throughout the SDK, which is far beyond what these 20 headers justify
 and would touch reference identity. So this family is an override or a compiler fix, not a repair and not a
 runtime extension — recorded here with its size so the question is not re-opened from scratch.
+
+### Two records, not one: `refusals.json` is module-level, `NOT GENERATED` is per declaration
+
+I nearly recorded a significant defect that does not exist, and the near-miss is the useful part.
+
+Iterating the name family left several packages stopping on a function that is called but declared nowhere:
+`initialize_animation_track`, `get_text_layout`, `get_node_hit_area`. Each exists in the pinned TypeScript —
+`initializeAnimationTrack` is an `export function` at `animation/src/animationTrack.ts:42`. None of them
+appears anywhere in `generated/refusals.json`. That reads as the refusal ledger silently understating what
+the compiler declined, which would undermine `sdk:check` reproducing it.
+
+It is wrong. `generated/include/flight/animation/animation_track.hpp:56` says:
+
+```
+// NOT GENERATED: function initializeAnimationTrack -- source line 42
+```
+
+**The two records cover different scopes.** `refusals.json` records MODULE-level refusals — "this module was
+refused, here is why", including dependency cascades. A refused DECLARATION inside an otherwise-emitted
+module is recorded in the emitted header itself, as a `NOT GENERATED` marker with its reason and source
+line, under the `PARTIAL:` banner at the top of the file. `animation_track.hpp` carries seven such markers
+while `@flighthq/animation`'s nine `refusals.json` entries are all dependency cascades off
+`./animationTrack`.
+
+So the mechanism is working as designed and the ledger is complete. What was incomplete was my search.
+**Checking only `refusals.json` understates what the compiler recorded**, and any question of the form "was
+this declined, or silently dropped?" has to look in both places. The header is the authority for a single
+declaration; the JSON is the authority for a module.
+
+Also worth recording: gcc's `did you mean` is a fuzzy match over similar identifiers, not evidence of a
+renaming. `initialize_animation_track` suggested `create_animation_track`, and `get_text_layout` suggested
+`get_text_layout_metrics`, and in both cases the suggestion is a DIFFERENT function — `create_*` returns
+while `initialize_*` takes an `out` parameter, which is the two-phase construction shape. I had started to
+treat these as emitter misspellings, which would have produced an alias repair pointing one name at another
+function's body. The suggestion is a good index for a NAMESPACE, which it reports from real lookup, and a
+bad one for identity.
+
+Consequence: the remaining blockers in `animation`, `text` and `gui` after the name repairs are refused
+declarations needing supplied functions, which is the override mechanism and not mine.
