@@ -4573,3 +4573,35 @@ sites and the read sites separately; do not assume 28 sites means 17 headers gai
 This is the family builder's withdrawn `node-runtime-owner-accessors.patch` was reaching for. That patch
 narrowed `[EntityRuntimeKey]` on three sibling interfaces that `Node2D` inherits and cost 240 newly
 refused modules, so anything touching this slot needs a FULL generation rather than a package closure.
+
+## `to_string(flight::Any)` must NOT be added: three of nine `AnyKind`s have no faithful answer
+
+Five headers call `to_string` on an `Any`-typed local (`render_wgpu/wgpu_shader.hpp`,
+`particles_formats/spine_parse.hpp`, `scene2d_wgpu/wgpu_quad_batch_writer.hpp`,
+`scene2d_wgpu/wgpu_shape_mesh.hpp`, `tilemap_formats/tiled_json_parse.hpp`), and
+`include/flight/string.hpp` has overloads for `String`, `bool`, and a template for arithmetic types —
+none for `Any`. The obvious move is to add one. It would be wrong.
+
+`to_string(Any)` is ECMAScript `ToString`, and `AnyKind` has nine variants:
+
+| kind | faithful answer | expressible here |
+| --- | --- | --- |
+| undefined, null, boolean, number, string | "undefined", "null", "true"/"false", Number::toString, itself | yes |
+| **symbol** | **throws TypeError** — `String(Symbol())` is an error, not a string | only by inventing an exception |
+| **object** | `ToPrimitive(value, hint string)`, i.e. dispatch to `toString()` then `valueOf()` | **no** — the runtime does not model either |
+| **function** | `Function.prototype.toString()`, the source text of the function | **no** |
+| external | — | no |
+
+So a complete implementation is not available, and a partial one that handled the first five kinds and
+did something convenient for the rest is precisely the "permissive fallback behavior" the contract tells
+us to document instead of hiding behind. `Any` deliberately exposes `as_string()`, a typed *require*
+that throws unless the value already IS a string, rather than a coercion — that asymmetry is the design,
+not an omission.
+
+This also costs nothing to leave alone: `to_string(Any)` is the first diagnostic on **zero** headers.
+All five sites fail on something else first, so there is no package waiting on it.
+
+Related and already recorded: `has_value()` on a `StructuralRef` is likewise not a safe addition,
+because `json.hpp:274` duck-types `requires { value.has_value(); *value; }` to detect optional-like
+values. `has_value`, `value`, `begin`, `end`, `index`, `size` and now `to_string` are not neutral
+identifiers in this runtime.
