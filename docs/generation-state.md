@@ -5810,3 +5810,34 @@ Why this matters for ranking:
 
 Found by builder while applying the three tests to a target I had ranked; recorded because the first form of
 the wall is now well documented and this second form would otherwise be rediscovered from its symptoms.
+
+## A single-file overlay can produce a false SUCCESS, not just false failures
+
+This document already records that overlaying one header on a scratch include path breaks its QUOTED sibling
+includes and "yields false failures only". **That second half is wrong, and the failure mode it misses is the
+dangerous one.**
+
+Measuring a candidate fix to `flight/texture/texture.hpp:108` with a single-file overlay:
+
+| overlay | errors reported |
+| --- | --- |
+| one file (`/tmp/.../flight/texture/texture.hpp` alone) | **1** — `sampler.hpp: No such file or directory` |
+| the whole `flight/texture/` package copied | **129** (from 131) |
+
+The one-file number looked like 131 → 1, i.e. a header fixed outright. What actually happened is that
+`texture.hpp` does `#include "sampler.hpp"`, which resolves relative to the overlay directory, the file is not
+there, and **the compile aborts at that point without ever reaching the other 129 errors**. A missing include
+does not degrade gracefully into "the rest still failed"; it stops the translation unit.
+
+So a single-file overlay can report a dramatic improvement that is entirely an artifact. The correct form is to
+copy the **whole package directory** so quoted siblings resolve, which gives the honest 131 → 129.
+
+The general rule, now stated in both directions: **never overlay a single generated header.** Copy its
+directory. And treat any measurement that improves by more than it plausibly could — a one-line change
+removing 130 errors — as a reason to re-measure rather than a result to report.
+
+This also corrects the sizing of the `->` on `Ref<variant>` family. Those 33 failures come from only **three**
+defect locations — `physics3d/collider_transform.hpp:445` (22), `texture/texture.hpp:108` (11),
+`preferences/storage.hpp:80` (3) — which is genuinely concentrated. But the fix at the texture site removes
+**two** errors from that header, not 131, so the family's value is "33 headers advance to their next
+diagnostic", not "33 headers pass".
