@@ -4206,3 +4206,28 @@ So the relaxation is correct, safe, validated, and buys nothing. It stays unship
 `/tmp/claude-1000/keyless-relaxation.patch`, and the analysis above is the record for whoever hits a header
 that needs it. 84 of 3628 subjects have the shape; none of them is currently on the failing side of a
 widening.
+
+### The name lookup, fixed four times, finally in the right place
+
+The declaration index for this family has now been wrong four times, each in a different dimension, and each
+time I patched the instance rather than the lookup:
+
+| occurrence | name | what the index missed |
+|---|---|---|
+| 1 | `registry_entry_state` | an `inline const flight::Symbol` **value**, not a type |
+| 2 | `get_node_runtime` | a **template function** sharing a line with its namespace opener |
+| 3 | `allocate_entity` | a different **namespace** (`flight::entity`), lookup only read `flight/types/` |
+| 4 | `allocate_entity`, `finish_entity` | same, where gcc offered **no** `did you mean` to lean on |
+
+After the third I made the tool read gcc's suggested namespace, which is the right primary source — the
+compiler performs real lookup where a regex guesses. The fourth showed that was not sufficient, because the
+suggestion is not always offered, and the fallback still only scanned `flight/types/`.
+
+The lookup now has three layers: gcc's suggested namespace first; then `flight/types/`, which owns most
+names; then **every package in the tree**, preferring `flight::types` when several declare the same name. A
+full scan costs a few seconds once per run and removes the whole class.
+
+The pattern is worth naming because it cost four rounds: **a name can be a type or a value, in any package's
+namespace, declared in any of four syntactic forms.** Every narrowing of that produced a false
+"unresolvable", and a false unresolvable looks exactly like a refused declaration — which is a different
+mechanism with a different owner. Three of the four times, I nearly filed one as the other.
