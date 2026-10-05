@@ -3148,6 +3148,106 @@
       "defect": "The emitter writes 1 flight::types name(s) unqualified inside namespace flight::intl. The package's remaining blockers after this are the refused getCacheKey and getCached, which six of its headers share.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "gizmo-unqualified-node-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/gizmo/",
+      "namespace": "flight::node",
+      "symbols": [
+        {
+          "include": "flight/node/revision.hpp",
+          "name": "invalidate_node_appearance"
+        },
+        {
+          "include": "flight/node/revision.hpp",
+          "name": "invalidate_node_local_transform"
+        }
+      ],
+      "diagnostic": "'invalidate_node_appearance' was not declared in this scope -- flight::node::invalidate_node_appearance",
+      "defect": "The emitter writes 2 name(s) owned by flight::node unqualified inside namespace flight::gizmo, and without the header that defines them. All of them are template functions declared in flight/node/revision.hpp; the 2D and 3D transform headers only call them, so revision.hpp is the single defining include. Unqualified at flight/gizmo/gizmo_state.hpp. GAIN NOT YET MEASURED: declared after the in-flight generation started, so it takes effect on the next run (loadEmissionRepairs reads at startup).",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-unqualified-node-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/",
+      "namespace": "flight::node",
+      "symbols": [
+        {
+          "include": "flight/node/revision.hpp",
+          "name": "get_node_appearance_revision"
+        }
+      ],
+      "diagnostic": "'get_node_appearance_revision' was not declared in this scope -- flight::node::get_node_appearance_revision",
+      "defect": "The emitter writes 1 name(s) owned by flight::node unqualified inside namespace flight::render, and without the header that defines them. All of them are template functions declared in flight/node/revision.hpp; the 2D and 3D transform headers only call them, so revision.hpp is the single defining include. Unqualified at flight/render/render_appearance.hpp. GAIN NOT YET MEASURED: declared after the in-flight generation started, so it takes effect on the next run (loadEmissionRepairs reads at startup).",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-node-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::node",
+      "symbols": [
+        {
+          "include": "flight/node/revision.hpp",
+          "name": "invalidate_node_local_transform"
+        }
+      ],
+      "diagnostic": "'invalidate_node_local_transform' was not declared in this scope -- flight::node::invalidate_node_local_transform",
+      "defect": "The emitter writes 1 name(s) owned by flight::node unqualified inside namespace flight::scene2d_formats, and without the header that defines them. All of them are template functions declared in flight/node/revision.hpp; the 2D and 3D transform headers only call them, so revision.hpp is the single defining include. Unqualified at flight/scene2d_formats/lottie_document.hpp. GAIN NOT YET MEASURED: declared after the in-flight generation started, so it takes effect on the next run (loadEmissionRepairs reads at startup).",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-unqualified-node-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d/",
+      "namespace": "flight::node",
+      "symbols": [
+        {
+          "include": "flight/node/revision.hpp",
+          "name": "invalidate_node_local_transform"
+        }
+      ],
+      "diagnostic": "'invalidate_node_local_transform' was not declared in this scope -- flight::node::invalidate_node_local_transform",
+      "defect": "The emitter writes 1 name(s) owned by flight::node unqualified inside namespace flight::scene3d, and without the header that defines them. All of them are template functions declared in flight/node/revision.hpp; the 2D and 3D transform headers only call them, so revision.hpp is the single defining include. Unqualified at flight/scene3d/scene_document.hpp. GAIN NOT YET MEASURED: declared after the in-flight generation started, so it takes effect on the next run (loadEmissionRepairs reads at startup).",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "shape-unqualified-node-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/shape/",
+      "namespace": "flight::node",
+      "symbols": [
+        {
+          "include": "flight/node/revision.hpp",
+          "name": "invalidate_content"
+        }
+      ],
+      "diagnostic": "'invalidate_content' was not declared in this scope -- flight::node::invalidate_content",
+      "defect": "The emitter writes 1 name(s) owned by flight::node unqualified inside namespace flight::shape, and without the header that defines them. All of them are template functions declared in flight/node/revision.hpp; the 2D and 3D transform headers only call them, so revision.hpp is the single defining include. Unqualified at flight/shape/morph_shape.hpp. GAIN NOT YET MEASURED: declared after the in-flight generation started, so it takes effect on the next run (loadEmissionRepairs reads at startup).",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "textinput-unqualified-node-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/textinput/",
+      "namespace": "flight::node",
+      "symbols": [
+        {
+          "include": "flight/node/revision.hpp",
+          "name": "invalidate_node_appearance"
+        }
+      ],
+      "diagnostic": "'invalidate_node_appearance' was not declared in this scope -- flight::node::invalidate_node_appearance",
+      "defect": "The emitter writes 1 name(s) owned by flight::node unqualified inside namespace flight::textinput, and without the header that defines them. All of them are template functions declared in flight/node/revision.hpp; the 2D and 3D transform headers only call them, so revision.hpp is the single defining include. Unqualified at flight/textinput/text_input_editing.hpp. GAIN NOT YET MEASURED: declared after the in-flight generation started, so it takes effect on the next run (loadEmissionRepairs reads at startup).",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
