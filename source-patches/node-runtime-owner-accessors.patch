@@ -366,27 +366,33 @@ index 03088ba..c84d546 100644
 +    [EntityRuntimeKey]: Transform2DNodeRuntime<Traits> | undefined;
 +  };
 diff --git a/packages/types/src/Node2D.ts b/packages/types/src/Node2D.ts
-index e0664aa..e22f7a0 100644
+index e0664aa..eb47f41 100644
 --- a/packages/types/src/Node2D.ts
 +++ b/packages/types/src/Node2D.ts
-@@ -1,6 +1,11 @@
+@@ -1,10 +1,13 @@
 +import type { EntityRuntimeKey } from './Entity';
  import type { HasAppearance } from './HasAppearance';
  import type { HasBlendMode } from './HasBlendMode';
 -import type { HasBoundsRectangle, HasBoundsRectangleRuntime } from './HasBoundsRectangle';
-+import type {
-+  HasBoundsRectangle,
-+  HasBoundsRectangleRuntime,
-+  Spatial2DNodeRuntime,
-+} from './HasBoundsRectangle';
++import type { HasBoundsRectangle, Spatial2DNodeRuntime } from './HasBoundsRectangle';
  import type { HasClip } from './HasClip';
  import type { HasMaterial } from './HasMaterial';
- import type { HasTransform2D, HasTransform2DRuntime } from './HasTransform2D';
-@@ -12,6 +17,7 @@ export type Node2D = Node<Node2DTraits> & Node2DTraits;
- // `setNodeColorAdjustments`; the render walk resolves that stack onto `RenderProxy.colorScaleBias`.
- export interface Node2DTraits
-   extends NodeTraits, HasAppearance, HasBlendMode, HasBoundsRectangle, HasClip, HasMaterial, HasTransform2D {
-+  [EntityRuntimeKey]: Spatial2DNodeRuntime<Node2DTraits> | undefined;
-   data: Node2DData | null;
+-import type { HasTransform2D, HasTransform2DRuntime } from './HasTransform2D';
+-import type { Node, NodeData, NodeDataFactory, NodeRuntime, NodeRuntimeFactory, NodeTraits } from './Node';
++import type { HasTransform2D } from './HasTransform2D';
++import type { Node, NodeData, NodeDataFactory, NodeRuntimeFactory, NodeTraits } from './Node';
+ import type { Scene2D } from './Scene2D';
+-export type Node2D = Node<Node2DTraits> & Node2DTraits;
++export interface Node2D extends Node<Node2DTraits>, Node2DTraits {
++  [EntityRuntimeKey]: Node2DRuntime | undefined;
++}
+ // A display object no longer carries a color adjustment as an entity trait. Its color adjustments live on
+@@ -22,7 +25,7 @@ export const Node2DTraitsKey = Symbol('Node2DTraits');
+ // A named interface rather than an intersection typedef ending in an anonymous overlay: the runtime is
+ // a seam subsystems attach to, so it needs a name a declaration can be found by and extended from.
+ // Every base is already an interface, so this introduces no second root — it names the same shape.
+-export interface Node2DRuntime extends NodeRuntime<Node2DTraits>, HasTransform2DRuntime, HasBoundsRectangleRuntime {
++export interface Node2DRuntime extends Spatial2DNodeRuntime<Node2DTraits> {
+   scene2d: Scene2D | null;
  }
- export interface Node2DData extends NodeData {}
+ export type Node2DDataFactory = NodeDataFactory<Node2DData>;
