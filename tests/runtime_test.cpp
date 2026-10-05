@@ -11,6 +11,8 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <flight/callable.hpp>
+#include <functional>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -1250,6 +1252,58 @@ void test_attached_properties() {
 template <typename Value, typename Options>
 concept structured_clone_accepts_second_argument =
     requires(const Value& value, Options options) { flight::structured_clone(value, options); };
+
+
+// The two operations the emitted signal code needs and `std::function` cannot provide: removing a slot by
+// identity, and refusing a duplicate registration. `flight/signals/slot.hpp`'s `disconnect_signal` is
+// `slots.element(i) != slot`, and `add_log_sink`'s dedupe was `sinks.includes(sink)`; both are ECMAScript
+// reference identity on a function value. This is that pattern written against flight::Function, so the
+// claim that the runtime already supports it is demonstrated rather than asserted.
+void test_callable_identity_slot_list() {
+  using Slot = flight::Function<void(double)>;
+
+  double total = 0.0;
+  const Slot first([&total](double value) { total += value; });
+  const Slot second([&total](double value) { total += value * 10.0; });
+  // A copy shares the callable's state, which is what makes identity survive being stored and read back.
+  const Slot first_copy = first;
+  check(first_copy == first, "copying a flight::Function must preserve its identity");
+  check(!(first == second), "two separately constructed callables must not compare equal");
+
+  flight::Array<std::optional<Slot>> slots;
+  slots.push(first);
+  slots.push(second);
+
+  // `includes`-style dedupe: registering the same callable twice must be refused.
+  const auto already_registered = [&slots](const Slot& candidate) {
+    for (std::size_t index = 0; index < slots.size(); ++index) {
+      const auto& held = slots[index];
+      if (held.has_value() && *held == candidate) return true;
+    }
+    return false;
+  };
+  check(already_registered(first_copy),
+        "a copy of a registered callable must be recognised as already registered");
+  check(!already_registered(Slot([](double) {})),
+        "a distinct callable with an identical body must NOT be recognised as registered");
+
+  // `disconnect_signal`-style removal by identity, through the copy rather than the original.
+  for (std::size_t index = 0; index < slots.size(); ++index) {
+    const auto& held = slots[index];
+    if (held.has_value() && *held == first_copy) slots[index] = std::nullopt;
+  }
+  for (std::size_t index = 0; index < slots.size(); ++index) {
+    if (slots[index].has_value()) (*slots[index])(2.0);
+  }
+  check(total == 20.0,
+        "disconnecting by identity must silence exactly the matching slot and leave the other live");
+
+  // The hash specialisation, so an identity can key a map -- the shape a slot registry wants.
+  check(std::hash<Slot>{}(first) == std::hash<Slot>{}(first_copy),
+        "flight::Function must hash by identity so copies share a key");
+  check(first.identity() == first_copy.identity() && first.identity() != second.identity(),
+        "identity() must expose the shared state that operator== compares");
+}
 
 void test_structured_clone() {
   const flight::Array<double> samples{1.0, 2.0};
@@ -3523,6 +3577,7 @@ int main() {
   test_number_to_fixed();
   test_any_domain();
   test_attached_properties();
+  test_callable_identity_slot_list();
   test_structured_clone();
   test_settled_task_arms();
   test_any_equality_and_absence();
