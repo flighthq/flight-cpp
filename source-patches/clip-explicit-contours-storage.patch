@@ -1,0 +1,265 @@
+diff --git a/packages/types/src/ClipRegion.ts b/packages/types/src/ClipRegion.ts
+--- a/packages/types/src/ClipRegion.ts
++++ b/packages/types/src/ClipRegion.ts
+@@ -29,6 +29,10 @@ export interface ClipRegion extends Entity {
+   version: number;
+ }
+ 
++export function readClipRegionContours(clip: Readonly<ClipRegion>): number[][] | null {
++  return clip.contours;
++}
++
+ export interface ClipRegionExplanation {
+   conservative: boolean;
+   status: 'active' | 'released';
+diff --git a/packages/clip/src/clipRegion.ts b/packages/clip/src/clipRegion.ts
+--- a/packages/clip/src/clipRegion.ts
++++ b/packages/clip/src/clipRegion.ts
+@@ -31,5 +31,6 @@ import type {
+   RectangleLike,
+ } from '@flighthq/types/contract';
++import { readClipRegionContours } from '@flighthq/types/contract';
+ 
+ // Returns a ClipRegion from the pool (as an empty rectangular region at the origin).
+ // Every acquireClipRegion must have a matching releaseClipRegion — treat them as paired brackets.
+@@ -42,7 +42,7 @@ export function acquireClipRegion(): ClipRegion {
+     region.rect.y = 0;
+     region.rect.width = 0;
+     region.rect.height = 0;
+-    region.contours = null;
++    region.contours = noContours();
+     region.winding = 'nonZero';
+     region.version = 0;
+     return region;
+@@ -64,8 +64,9 @@ export function clipRegionContainsClipRegion(a: Readonly<ClipRegion>, b: Readonl
+ export function clipRegionContainsPoint(clip: Readonly<ClipRegion>, x: number, y: number): boolean {
+   guardClipRegionUse(clip);
+   if (!containsRectanglePointXY(clip.rect, x, y)) return false;
+-  if (clip.contours === null) return true;
+-  return pointInContours(clip.contours, clip.winding, x, y);
++  const contours = readClipRegionContours(clip);
++  if (contours === null) return true;
++  return pointInContours(contours, clip.winding, x, y);
+ }
+ 
+ // Returns true when the clip region fully contains the given rectangle.
+@@ -95,7 +96,8 @@ export function clipRegionIntersectsRectangle(clip: Readonly<ClipRegion>, rectan
+ export function cloneClipRegion(clip: Readonly<ClipRegion>): ClipRegion {
+   guardClipRegionUse(clip);
+   const rect = cloneRectangle(clip.rect);
+-  const contours = clip.contours === null ? null : clip.contours.map((c) => c.slice());
++  const sourceContours = readClipRegionContours(clip);
++  const contours: number[][] | null = sourceContours === null ? noContours() : sourceContours.map((c) => c.slice());
+   const out = allocateEntity<ClipRegion>();
+   out.contours = contours;
+   out.rect = rect;
+@@ -111,7 +113,8 @@ export function copyClipRegion(out: ClipRegion, source: Readonly<ClipRegion>): v
+   guardClipRegionUse(source);
+   if ((out as unknown) === (source as unknown)) return;
+   copyRectangle(out.rect, source.rect);
+-  out.contours = source.contours === null ? null : source.contours.map((c) => c.slice());
++  const contours = readClipRegionContours(source);
++  out.contours = contours === null ? noContours() : contours.map((c) => c.slice());
+   out.winding = source.winding;
+   out.version = (out.version + 1) >>> 0;
+ }
+@@ -175,14 +178,14 @@ export function equalsClipRegion(a: Readonly<ClipRegion>, b: Readonly<ClipRegion
+   const ar = a.rect;
+   const br = b.rect;
+   if (ar.x !== br.x || ar.y !== br.y || ar.width !== br.width || ar.height !== br.height) return false;
+-  if (a.contours === null && b.contours === null) return true;
+-  if (a.contours === null || b.contours === null) return false;
+-  const ac = a.contours;
+-  const bc = b.contours;
++  const ac = readClipRegionContours(a);
++  const bc = readClipRegionContours(b);
++  if (ac === null && bc === null) return true;
++  if (ac === null || bc === null) return false;
+   if (ac.length !== bc.length) return false;
+   for (let i = 0; i < ac.length; i++) {
+-    const ai = ac[i];
+-    const bi = bc[i];
++    const ai = ac[i]!;
++    const bi = bc[i]!;
+     if (ai.length !== bi.length) return false;
+     for (let j = 0; j < ai.length; j++) {
+       if (ai[j] !== bi[j]) return false;
+@@ -194,8 +197,9 @@ export function equalsClipRegion(a: Readonly<ClipRegion>, b: Readonly<ClipRegion
+ // Describes whether a region is safe to use and whether its bounds-based region/rectangle predicates
+ // are conservative. Kept allocation-free on the ordinary query path except for the returned data.
+ export function explainClipRegion(clip: Readonly<ClipRegion>): ClipRegionExplanation {
++  const contours = readClipRegionContours(clip);
+   return {
+-    conservative: clip.contours !== null,
++    conservative: contours !== null,
+     status: clipRegionPool.includes(clip as ClipRegion) ? 'released' : 'active',
+   };
+ }
+@@ -206,7 +210,8 @@ export function explainClipRegionContours(
+   contours: Readonly<ReadonlyArray<ReadonlyArray<number>>>,
+ ): ClipRegionContoursExplanation | null {
+   for (let i = 0; i < contours.length; i++) {
+-    const coordinateCount = contours[i].length;
++    const contour = contours[i]!;
++    const coordinateCount = contour.length;
+     if ((coordinateCount & 1) !== 0) return { contourIndex: i, coordinateCount, reason: 'odd-coordinate-count' };
+     if (coordinateCount < 6) return { contourIndex: i, coordinateCount, reason: 'too-few-points' };
+   }
+@@ -267,7 +272,7 @@ export function initializeClipRegionFromRectangle(
+   out: EntityConstruction<ClipRegion>,
+   rectangle: Readonly<RectangleLike>,
+ ): void {
+-  out.contours = null;
++  out.contours = noContours();
+   out.rect = cloneRectangle(rectangle);
+   out.version = 0;
+   out.winding = 'nonZero';
+@@ -292,7 +297,7 @@ export function intersectClipRegions(out: ClipRegion, a: Readonly<ClipRegion>, b
+     bw = bRect.width,
+     bh = bRect.height;
+-  const aContours = a.contours;
+-  const bContours = b.contours;
++  const aContours = readClipRegionContours(a);
++  const bContours = readClipRegionContours(b);
+   const aWinding = a.winding;
+   const bWinding = b.winding;
+ 
+@@ -309,7 +314,7 @@ export function intersectClipRegions(out: ClipRegion, a: Readonly<ClipRegion>, b
+     out.rect.y = 0;
+     out.rect.width = 0;
+     out.rect.height = 0;
+-    out.contours = null;
++    out.contours = noContours();
+     out.winding = 'nonZero';
+     out.version = (out.version + 1) >>> 0;
+     return;
+@@ -322,7 +327,7 @@ export function intersectClipRegions(out: ClipRegion, a: Readonly<ClipRegion>, b
+ 
+   if (aContours === null && bContours === null) {
+     // Both rectangular: result is scissor-eligible.
+-    out.contours = null;
++    out.contours = noContours();
+     out.winding = 'nonZero';
+   } else if (aContours !== null && bContours === null) {
+     // Contours ∩ rect: keep contours, clipped bounds computed above.
+@@ -353,14 +358,16 @@ export function invalidateClipRegion(clip: ClipRegion): void {
+ export function isClipRegionEmpty(clip: Readonly<ClipRegion>): boolean {
+   guardClipRegionUse(clip);
+   if (isEmptyRectangle(clip.rect)) return true;
+-  if (clip.contours !== null && clip.contours.length === 0) return true;
++  const contours = readClipRegionContours(clip);
++  if (contours !== null && contours.length === 0) return true;
+   return false;
+ }
+ 
+ // Returns true when the clip is in the scissor-eligible rectangle form (contours === null).
+ export function isClipRegionRectangular(clip: Readonly<ClipRegion>): boolean {
+   guardClipRegionUse(clip);
+-  return clip.contours === null;
++  const contours = readClipRegionContours(clip);
++  return contours === null;
+ }
+ 
+ // Canonicalizes a contour region back to the scissor-eligible rect form when the contour set is
+@@ -373,14 +380,14 @@ export function normalizeClipRegion(out: ClipRegion, clip: Readonly<ClipRegion>)
+ export function normalizeClipRegion(out: ClipRegion, clip: Readonly<ClipRegion>): void {
+   guardClipRegionUse(out);
+   guardClipRegionUse(clip);
+-  const inContours = clip.contours;
++  const inContours = readClipRegionContours(clip);
+   const inRect = clip.rect;
+   const inWinding = clip.winding;
+ 
+   if (inContours === null) {
+     // Already rect form: copy straight through.
+     copyRectangle(out.rect, inRect);
+-    out.contours = null;
++    out.contours = noContours();
+     out.winding = inWinding;
+     out.version = (out.version + 1) >>> 0;
+     return;
+@@ -389,7 +396,7 @@ export function normalizeClipRegion(out: ClipRegion, clip: Readonly<ClipRegion>)
+ 
+   // Only attempt rect detection for a single contour with exactly 4 points (8 xy values).
+-  if (inContours.length === 1 && inContours[0].length === 8) {
+-    const c = inContours[0];
++  if (inContours.length === 1 && inContours[0]!.length === 8) {
++    const c = inContours[0]!;
+     const e = NORMALIZE_EPSILON;
+     // Compute bounding box of the 4 points.
+     let minX = Infinity,
+@@ -422,7 +429,7 @@ export function normalizeClipRegion(out: ClipRegion, clip: Readonly<ClipRegion>)
+       out.rect.y = minY;
+       out.rect.width = maxX - minX;
+       out.rect.height = maxY - minY;
+-      out.contours = null;
++      out.contours = noContours();
+       out.winding = 'nonZero';
+       out.version = (out.version + 1) >>> 0;
+       return;
+@@ -480,7 +487,7 @@ export function setClipRegionToRectangle(out: ClipRegion, rectangle: Readonly<Re
+ export function setClipRegionToRectangle(out: ClipRegion, rectangle: Readonly<RectangleLike>): void {
+   guardClipRegionUse(out);
+   copyRectangle(out.rect, rectangle);
+-  out.contours = null;
++  out.contours = noContours();
+   out.winding = 'nonZero';
+   out.version = (out.version + 1) >>> 0;
+ }
+@@ -504,7 +511,7 @@ export function transformClipRegion(out: ClipRegion, clip: Readonly<ClipRegion>,
+   const mtx = matrix.tx;
+   const mty = matrix.ty;
+ 
+-  const inContours = clip.contours;
++  const inContours = readClipRegionContours(clip);
+   const inRect = clip.rect;
+   const inWinding = clip.winding;
+ 
+@@ -513,7 +520,7 @@ export function transformClipRegion(out: ClipRegion, clip: Readonly<ClipRegion>,
+     if (axisAligned) {
+       // Rectangle stays scissor-eligible: apply transform to the rect.
+       matrixTransformRectangle(out.rect, matrix, inRect);
+-      out.contours = null;
++      out.contours = noContours();
+       out.winding = 'nonZero';
+     } else {
+       // Rotation or skew: promote to 4-point quad contour.
+@@ -567,8 +574,8 @@ export function unionClipRegions(out: ClipRegion, a: Readonly<ClipRegion>, b: Re
+   // Read inputs into locals (alias-safe).
+   const aRect = a.rect;
+   const bRect = b.rect;
+-  const aContours = a.contours;
+-  const bContours = b.contours;
++  const aContours = readClipRegionContours(a);
++  const bContours = readClipRegionContours(b);
+   const aWinding = a.winding;
+   const bWinding = b.winding;
+ 
+@@ -575,6 +582,6 @@ export function unionClipRegions(out: ClipRegion, a: Readonly<ClipRegion>, b: Re
+ 
+   if (aContours === null && bContours === null) {
+-    out.contours = null;
++    out.contours = noContours();
+     out.winding = 'nonZero';
+   } else if (aContours !== null && bContours === null) {
+     out.contours = aContours.map((c) => c.slice());
+@@ -595,6 +602,10 @@ export function unionClipRegions(out: ClipRegion, a: Readonly<ClipRegion>, b: Re
+ // -- module-level pools, constants, and scratch helpers --
+ 
+ // Tolerance used when comparing floats in normalizeClipRegion.
++// A named nullable result gives the C++ lowering the same storage evidence as ClipRegion.contours.
++function noContours(): number[][] | null {
++  return null;
++}
+ const NORMALIZE_EPSILON = 1e-6;
+ 
+ // Kappa constant for circle/ellipse cubic Bezier approximation.
+@@ -607,7 +616,7 @@ let _useGuard: ClipRegionUseGuard | null = null;
+ 
+ function makeEmptyClipRegion(): ClipRegion {
+   const out = allocateEntity<ClipRegion>();
+-  out.contours = null;
++  out.contours = noContours();
+   out.rect = createRectangle();
+   out.version = 0;
+   out.winding = 'nonZero';

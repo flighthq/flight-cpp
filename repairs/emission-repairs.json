@@ -9338,10 +9338,18 @@
         {
           "include": "flight/clip/clip_region.hpp",
           "name": "create_clip_region_from_path"
+        },
+        {
+          "include": "flight/clip/clip_region.hpp",
+          "name": "transform_clip_region"
+        },
+        {
+          "include": "flight/clip/clip_region.hpp",
+          "name": "union_clip_regions"
         }
       ],
-      "diagnostic": "'create_clip_region_from_path' was not declared in this scope",
-      "defect": "The emitter writes 1 function name(s) owned by flight::clip unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "diagnostic": "clip functions were not declared in this scope",
+      "defect": "The emitter writes 3 function name(s) owned by flight::clip unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },

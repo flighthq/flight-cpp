@@ -231,6 +231,22 @@
       "unblocks": "Makes statechart.hpp compile. The companion complete guard override clears enable_statechart_guards.hpp and both aggregators.",
       "expires": "when assignment and narrowing of an optional structural reference preserve one optional layer, or Flight adopts the single binding.",
       "appliedOn": "2026-10-04"
+    },
+    {
+      "id": "clip-explicit-contours-storage",
+      "dependency": "flight",
+      "patch": "clip-explicit-contours-storage.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types/src/ClipRegion.ts plus packages/clip/src/clipRegion.ts",
+      "package": "@flighthq/clip",
+      "answers": "refusal",
+      "refusal": "imported ClipRegion.contours reads lose their nullable owner evidence, contextual null writes emit nullptr instead of optional absence, and loop-bounded contour reads lose dense-array presence",
+      "rewrite": "Adds one owner-side readClipRegionContours helper beside the ClipRegion declaration, snapshots each consumer read through it, obtains null through a private function with the exact number[][] | null return type, and marks length-bounded contour elements with TypeScript's erased non-null assertion.",
+      "equivalence": "The owner helper returns the same contours field once without copying; flight::Array copies preserve JavaScript array identity. noContours returns the same null primitive at each call. Flight documents ClipRegion as plain data, so snapshotting that declared field preserves the supported object model and every later read, branch, deep copy, and assignment. The non-null assertions emit no JavaScript, and each asserted index is proved by the immediately enclosing length guard or loop; malformed sparse JavaScript input still reaches the same member read and throws rather than being accepted or skipped. Existing interfaces, function signatures, field shapes, ordering, identity, absence, and version updates are unchanged; the new helper is additive.",
+      "whyNotUpstreamFirst": "These are ordinary target-neutral TypeScript spellings, and this repository already uses owner-side helpers where the emitter loses a declaration across a package barrel. They avoid a copied 850-line override while making the nullable field boundary and dense-index proofs explicit enough for every target.",
+      "unblocks": "Scoped regeneration moves @flighthq/clip from 3/4 to 4/4 emitted modules, restores all twelve absent functions, and makes clip_region.hpp compile independently with zero diagnostics. In the existing external angle consumer rive_clipping.hpp, all thirteen clip-origin diagnostics disappear; the header remains blocked by unrelated Rive/schema findings. Regenerating the 29-package scene2d-formats closure installs the three clip using declarations in svg_document.hpp, and focused compilation reports zero missing clip declarations at its real call sites.",
+      "expires": "when imported nullable property reads and contextual writes retain their declared union evidence and length-bounded dense array reads retain presence, or Flight adopts these explicit forms.",
+      "appliedOn": "2026-10-05"
     }
   ]
 }
