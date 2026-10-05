@@ -20,6 +20,9 @@ namespace flight::types { struct RenderState; }
 
 namespace flight::scene2d_canvas {
 
+using flight::types::CanvasTextureResolvers;
+using flight::types::RenderState;
+
 inline flight::types::ShapeRasterizer create_canvas_shape_rasterizer(flight::Ref<flight::types::CanvasTextureResolvers> resolvers) {
   return [=](flight::CanvasRenderingContext2D context, flight::Array<flight::types::ShapeCommandToken> commands, flight::Ref<flight::types::RenderState> state) {
   flight::scene2d_canvas::render_canvas_shape_commands(context, state, static_cast<flight::Array<flight::Any>>(commands), resolvers);

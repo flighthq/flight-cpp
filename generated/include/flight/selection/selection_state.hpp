@@ -18,7 +18,25 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/signals/signal.hpp>
+
+#include <flight/types/signal.hpp>
+
+#include <flight/types/selection_state_runtime.hpp>
+
+#include <flight/types/selection_state.hpp>
+
+#include <flight/types/hierarchy_node.hpp>
+
 namespace flight::selection {
+
+using flight::signals::create_signal;
+
+using flight::types::HierarchyNodeAny;
+using flight::types::SelectionSignals;
+using flight::types::SelectionState;
+using flight::types::SelectionStateRuntime;
+using flight::types::Signal;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ON_ACTIVE_CHANGE_ON_CHANGE_0CEEE09FDBB896CB
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ON_ACTIVE_CHANGE_ON_CHANGE_0CEEE09FDBB896CB
@@ -45,7 +63,7 @@ template <typename NodeType = flight::Ref<HierarchyNodeAny>>
 inline flight::Ref<SelectionState<NodeType>> create_selection_state() {
   flight::Ref<SelectionState<NodeType>> state = flight::make_ref<SelectionState<NodeType>>(SelectionState<NodeType>{});
   flight::Ref<active_node_binding_selected_node_set_selected_nodes_signals_692d586b414f8777<NodeType>> runtime = flight::make_ref<active_node_binding_selected_node_set_selected_nodes_signals_692d586b414f8777<NodeType>>(active_node_binding_selected_node_set_selected_nodes_signals_692d586b414f8777<NodeType>{.active_node = flight::null, .binding = flight::null, .selected_node_set = flight::Set<NodeType>(), .selected_nodes = flight::Array<flight::Any>{}, .signals = flight::make_ref<on_active_change_on_change_0ceee09fdbb896cb<NodeType>>(on_active_change_on_change_0ceee09fdbb896cb<NodeType>{.on_active_change = create_signal(), .on_change = create_signal()})});
-  (state[entity_runtime_key] = runtime);
+  (state->entity_runtime_key = runtime);
   return state;
 }
 
@@ -72,7 +90,7 @@ inline flight::Ref<SelectionState<NodeType>> create_selection_state() {
 
 template <typename NodeType>
 inline flight::Ref<SelectionStateRuntime<NodeType>> get_selection_state_runtime(flight::Ref<SelectionState<NodeType>> state) {
-  return static_cast<flight::Ref<SelectionStateRuntime<NodeType>>>(state[entity_runtime_key]);
+  return static_cast<flight::Ref<SelectionStateRuntime<NodeType>>>(state->entity_runtime_key);
 }
 
 

@@ -10,6 +10,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/entity.hpp>
+
 #include <flight/mesh/mesh_geometry_deformation_clone.hpp>
 #include <flight/node/node.hpp>
 #include <flight/node/node_transform3d.hpp>
@@ -17,6 +19,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene3d/scene_node.hpp>
 
 namespace flight::scene3d {
+
+using flight::types::entity_runtime_key;
 
 using flight::types::MeshKind;
 

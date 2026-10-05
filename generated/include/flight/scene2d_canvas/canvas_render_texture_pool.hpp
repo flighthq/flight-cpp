@@ -49,6 +49,10 @@ namespace flight::types { struct Vector2; }
 
 namespace flight::scene2d_canvas {
 
+using flight::types::CanvasRenderState;
+using flight::types::CanvasRenderSurfaceCreator;
+using flight::types::CanvasTextureRenderTarget;
+
 inline void assign_canvas_render_target_pool_fields(flight::types::EntityConstruction<flight::Ref<flight::types::CanvasRenderTargetPool>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasRenderSurfaceCreator>>>> creator) {
   flight::row_set<flight::RowKey<"creator">>(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasRenderSurfaceCreator>>>>>(creator));
   flight::row_set<flight::RowKey<"free">>(out, flight::Array<flight::Ref<flight::types::CanvasTextureRenderTarget>>{});

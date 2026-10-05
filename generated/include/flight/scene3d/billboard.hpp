@@ -15,10 +15,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/node3_d.hpp>
 
+#include <flight/types/material.hpp>
+
+#include <flight/types/billboard.hpp>
+
 #include "scene_node.hpp"
 
 namespace flight::scene3d {
 
+using flight::types::Billboard;
+using flight::types::BillboardMode;
+using flight::types::BillboardRuntime;
+using flight::types::Material;
 using flight::types::Node3D;
 using flight::types::NodeSignals;
 

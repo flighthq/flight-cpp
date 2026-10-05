@@ -30,7 +30,100 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/xml/xml_parse.hpp>
+
+#include <flight/lighting/spot_light.hpp>
+
+#include <flight/lighting/point_light.hpp>
+
+#include <flight/lighting/directional_light.hpp>
+
+#include <flight/lighting/ambient_light.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/geometry/transform3d.hpp>
+
+#include <flight/geometry/matrix4.hpp>
+
+#include <flight/types/xml_element.hpp>
+
+#include <flight/types/vector3.hpp>
+
+#include <flight/types/transform3_d.hpp>
+
+#include <flight/types/spot_light_options.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/scene3_danimation_path.hpp>
+
+#include <flight/types/point_light_options.hpp>
+
+#include <flight/types/morph_target.hpp>
+
+#include <flight/types/matrix4.hpp>
+
+#include <flight/types/material.hpp>
+
+#include <flight/types/light.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/image_resource_reference.hpp>
+
+#include <flight/types/easing_function.hpp>
+
+#include <flight/types/directional_light_options.hpp>
+
+#include <flight/types/animation_interpolation.hpp>
+
 namespace flight::scene3d_formats {
+
+using flight::xml::parse_xml_document;
+
+using flight::lighting::create_ambient_light;
+using flight::lighting::create_directional_light;
+using flight::lighting::create_point_light;
+using flight::lighting::create_spot_light;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::geometry::compose_matrix4_from_transform3_d;
+using flight::geometry::create_matrix4;
+using flight::geometry::create_transform3_d;
+using flight::geometry::decompose_matrix4_to_transform3_d;
+using flight::geometry::multiply_matrix4;
+using flight::geometry::set_matrix4;
+
+using flight::types::AnimationInterpolation;
+using flight::types::DirectionalLightOptions;
+using flight::types::EasingFunction;
+using flight::types::ImageResourceReference;
+using flight::types::ImportDiagnostic;
+using flight::types::ImportDiagnosticSeverity;
+using flight::types::Light;
+using flight::types::MaterialLike;
+using flight::types::Matrix4;
+using flight::types::Matrix4Like;
+using flight::types::MeshMorph;
+using flight::types::MorphTarget;
+using flight::types::PointLightOptions;
+using flight::types::Scene3DAnimationPath;
+using flight::types::Scene3DDocument;
+using flight::types::Scene3DDocumentAnimation;
+using flight::types::Scene3DDocumentAnimationChannel;
+using flight::types::Scene3DDocumentCamera;
+using flight::types::Scene3DDocumentLight;
+using flight::types::Scene3DDocumentMesh;
+using flight::types::Scene3DDocumentNode;
+using flight::types::Scene3DDocumentScene;
+using flight::types::Scene3DDocumentSkin;
+using flight::types::SpotLightOptions;
+using flight::types::Transform3D;
+using flight::types::Vector3Like;
+using flight::types::XmlElement;
+using flight::types::import_diagnostic_severity;
 struct ColladaDecodedSkin;
 struct ColladaDecodedAnimationChannel;
 struct ColladaPerspectiveCameraDefinition;

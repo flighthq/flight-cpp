@@ -11,10 +11,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_target.hpp>
+
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_node2_d.hpp"
 #include "wgpu_quad_batch_writer.hpp"
 
 namespace flight::scene2d_wgpu {
+
+using flight::types::WgpuRenderState;
+using flight::types::WgpuTextureRenderTarget;
 
 inline flight::Ref<WgpuRenderState> create_wgpu_cache_state(flight::Ref<WgpuRenderState> owner_state, flight::Ref<WgpuDeviceState> device_state, flight::Ref<WgpuRenderRegistries> registry, std::optional<flight::Ref<WgpuRenderOptions>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<WgpuRenderOptions>(WgpuRenderOptions{}));

@@ -18,6 +18,11 @@ namespace flight::types { struct RigidBody2D; }
 
 namespace flight::physics2d {
 
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
+
 inline flight::WeakMap<flight::Ref<flight::types::RigidBody2D>, flight::Ref<flight::types::Physics2DWorld>> physics2_dbody_owners = flight::WeakMap<flight::Ref<flight::types::RigidBody2D>, flight::Ref<flight::types::Physics2DWorld>>();
 
 inline flight::WeakMap<flight::Ref<flight::types::Physics2DCollider>, flight::Ref<flight::types::RigidBody2D>> physics2_dcollider_owners = flight::WeakMap<flight::Ref<flight::types::Physics2DCollider>, flight::Ref<flight::types::RigidBody2D>>();

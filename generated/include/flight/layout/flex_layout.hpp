@@ -24,9 +24,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/layout.hpp>
+
 #include "layout_state.hpp"
 
 namespace flight::layout {
+
+using flight::types::FlexLayoutAlign;
+using flight::types::FlexLayoutItemStyle;
+using flight::types::FlexLayoutJustify;
+using flight::types::LayoutNode;
+using flight::types::LayoutState;
+using flight::types::LayoutTree;
+using flight::types::flex_layout_kind;
 
 inline double get_flex_item_main_size(double base, double grow, double shrink, double distributable, double grow_sum, double shrink_scale) {
   if (((distributable > 0.0) && (grow_sum > 0.0))) {

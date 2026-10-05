@@ -28,6 +28,9 @@ namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::scene3d {
 
+using flight::types::Matrix4;
+using flight::types::Vector3;
+
 inline flight::Ref<flight::types::Matrix4> scratch_matrix = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
 inline void set_node3_dlook_at(flight::types::Node3D node, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> eye, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> up) {

@@ -27,7 +27,16 @@ namespace flight::types { struct SpatialPair; }
 namespace flight::physics3d {
 
 using flight::types::Physics3DCollider;
+using flight::types::Physics3DContact;
+using flight::types::Physics3DJoint;
+using flight::types::Physics3DJointEvents;
+using flight::types::Physics3DJointSolver;
+using flight::types::Physics3DSolverConfig;
+using flight::types::Physics3DWorld;
+using flight::types::RigidBody3D;
 using flight::types::SpatialAabb3D;
+using flight::types::SpatialIndexBackend3D;
+using flight::types::SpatialIndexingExplanation;
 struct Physics3DBroadphasePublication;
 } // namespace flight::physics3d
 

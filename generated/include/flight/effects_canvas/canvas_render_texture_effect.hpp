@@ -32,6 +32,10 @@ namespace flight::types { struct RenderTexture; }
 
 namespace flight::effects_canvas {
 
+using flight::types::CanvasRenderState;
+using flight::types::CanvasRenderTargetPool;
+using flight::types::CanvasTextureRenderTarget;
+
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_CANVAS_EFFECT_RUNNER_5B183785B4FE9069
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_CANVAS_EFFECT_RUNNER_5B183785B4FE9069
 struct effect_runner_5b183785b4fe9069 : public flight::ReferenceEnabled {

@@ -26,6 +26,8 @@ namespace flight::types { struct Physics2DWorld; }
 
 namespace flight::physics2d {
 
+using flight::types::Physics2DWorld;
+
 inline flight::Array<flight::String> get_unresolved_physics2_djoint_faults(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJointResolutionExplanation>>>> explanation) {
   auto faults = flight::Set<flight::String>();
   for (auto joint : flight::row_get<flight::RowKey<"joints">>(explanation)) {

@@ -16,7 +16,26 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/scene3_danimation_path.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/gltf_extension.hpp>
+
+#include <flight/types/animation_interpolation.hpp>
+
 namespace flight::scene3d_formats {
+
+using flight::types::AnimationInterpolation;
+using flight::types::GltfCoreFeatureHandler;
+using flight::types::ImportDiagnosticSeverity;
+using flight::types::Scene3DAnimationPath;
+using flight::types::Scene3DDocumentAnimation;
+using flight::types::Scene3DDocumentAnimationChannel;
+using flight::types::Scene3DDocumentMesh;
+using flight::types::Scene3DDocumentNode;
 
 
 // NOT GENERATED: variable (binding) -- source line 157

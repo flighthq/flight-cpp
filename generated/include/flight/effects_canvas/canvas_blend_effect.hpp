@@ -15,10 +15,25 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/canvas_render_target.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
+#include <flight/types/advanced_blend_mode.hpp>
+
+#include <flight/scene2d_canvas/canvas_render_state.hpp>
+
 #include "canvas_effect_compositing.hpp"
 #include "canvas_render_effect_registry.hpp"
 
 namespace flight::effects_canvas {
+
+using flight::types::AdvancedBlendMode;
+using flight::types::CanvasRenderState;
+using flight::types::CanvasRenderStateRuntime;
+using flight::types::CanvasTextureRenderTarget;
+
+using flight::scene2d_canvas::get_canvas_render_state_runtime;
 
 inline std::optional<flight::Ref<CanvasTextureRenderTarget>> get_canvas_blend_effect_backdrop(flight::Ref<CanvasRenderState> state, std::optional<flight::String> backdrop_key) {
   if (!backdrop_key.has_value()) {

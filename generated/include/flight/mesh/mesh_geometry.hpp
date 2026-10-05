@@ -21,9 +21,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/aabb.hpp>
+
 #include <flight/types/mesh_skin_bind_pose.hpp>
 
 #include <flight/types/mesh_morph_bind_pose.hpp>
+
+#include <flight/types/mesh_geometry_options.hpp>
 
 #include <flight/types/mesh_geometry.hpp>
 
@@ -33,9 +37,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::mesh {
 
+using flight::geometry::create_aabb;
+
 using flight::types::Aabb;
 using flight::types::EntityConstruction;
 using flight::types::MeshGeometry;
+using flight::types::MeshGeometryOptions;
 using flight::types::MeshGeometryRuntime;
 using flight::types::MeshMorphBindPose;
 using flight::types::MeshSkinBindPose;
@@ -45,14 +52,14 @@ using flight::types::VertexAttributeLayout;
 using flight::types::entity_runtime_key;
 
 inline void destroy_mesh_geometry_gl_data(flight::Ref<MeshGeometry> geometry) {
-  std::optional<flight::Ref<MeshGeometryRuntime>> runtime = static_cast<std::optional<flight::Ref<MeshGeometryRuntime>>>(geometry[entity_runtime_key]);
+  std::optional<flight::Ref<MeshGeometryRuntime>> runtime = static_cast<std::optional<flight::Ref<MeshGeometryRuntime>>>(geometry->entity_runtime_key);
   if (flight::to_boolean(runtime)) {
     (runtime.value()->webgl_data = nullptr);
   }
 }
 
 inline void destroy_mesh_geometry_wgpu_data(flight::Ref<MeshGeometry> geometry) {
-  std::optional<flight::Ref<MeshGeometryRuntime>> runtime = static_cast<std::optional<flight::Ref<MeshGeometryRuntime>>>(geometry[entity_runtime_key]);
+  std::optional<flight::Ref<MeshGeometryRuntime>> runtime = static_cast<std::optional<flight::Ref<MeshGeometryRuntime>>>(geometry->entity_runtime_key);
   if (flight::to_boolean(runtime)) {
     (runtime.value()->webgpu_data = nullptr);
   }
@@ -124,14 +131,14 @@ inline void invalidate_mesh_geometry(flight::Ref<MeshGeometry> geometry) {
 }
 
 inline void set_mesh_geometry_morph_bind_pose(flight::Ref<MeshGeometry> geometry, std::optional<flight::Ref<MeshMorphBindPose>> bind_pose) {
-  std::optional<flight::Ref<MeshGeometryRuntime>> runtime = static_cast<std::optional<flight::Ref<MeshGeometryRuntime>>>(geometry[entity_runtime_key]);
+  std::optional<flight::Ref<MeshGeometryRuntime>> runtime = static_cast<std::optional<flight::Ref<MeshGeometryRuntime>>>(geometry->entity_runtime_key);
   if (flight::to_boolean(runtime)) {
     (runtime.value()->morph_bind_pose = bind_pose);
   }
 }
 
 inline void set_mesh_geometry_skin_bind_pose(flight::Ref<MeshGeometry> geometry, std::optional<flight::Ref<MeshSkinBindPose>> bind_pose) {
-  std::optional<flight::Ref<MeshGeometryRuntime>> runtime = static_cast<std::optional<flight::Ref<MeshGeometryRuntime>>>(geometry[entity_runtime_key]);
+  std::optional<flight::Ref<MeshGeometryRuntime>> runtime = static_cast<std::optional<flight::Ref<MeshGeometryRuntime>>>(geometry->entity_runtime_key);
   if (flight::to_boolean(runtime)) {
     (runtime.value()->skin_bind_pose = bind_pose);
   }

@@ -17,13 +17,51 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/textlayout/text_format_range.hpp>
+
+#include <flight/node/revision.hpp>
+
+#include <flight/types/text_vertical_align.hpp>
+
+#include <flight/types/text_layout.hpp>
+
 #include <flight/types/text_label.hpp>
+
+#include <flight/types/text_format.hpp>
+
+#include <flight/types/text_auto_size.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/has_bounds_rectangle.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include "text_label_layout.hpp"
 
 namespace flight::text {
 
+using flight::textlayout::create_text_format_range;
+
+using flight::node::invalidate_node_local_bounds;
+using flight::node::invalidate_node_local_content;
+
+using flight::types::BoundsNodeAny;
+using flight::types::EntityConstruction;
+using flight::types::Node;
+using flight::types::Node2DTraits;
+using flight::types::Rectangle;
+using flight::types::TextAutoSize;
+using flight::types::TextFormat;
 using flight::types::TextLabel;
+using flight::types::TextLabelData;
+using flight::types::TextLayoutParams;
+using flight::types::TextMeasureFunction;
+using flight::types::TextVerticalAlign;
 
 inline flight::Ref<TextLayoutParams> build_text_label_layout_params(flight::Ref<TextLabel> source, flight::Ref<TextMeasureFunction> measure) {
   flight::Ref<TextLabelData> data = source->data;

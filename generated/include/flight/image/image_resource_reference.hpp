@@ -16,9 +16,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/resource_resolution_state.hpp>
+
+#include <flight/types/image_resource_reference.hpp>
+
+#include <flight/types/image_bitmap_composition.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/alpha_type.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::image {
+
+using flight::types::AlphaType;
+using flight::types::EmbeddedImageResourceReference;
+using flight::types::EntityConstruction;
+using flight::types::ExternalImageResourceReference;
+using flight::types::ImageBitmapCompositionResolver;
+using flight::types::ImageResourceReference;
+using flight::types::resource_resolution_state;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

@@ -30,6 +30,8 @@ namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::scene3d {
 
+using flight::types::Scene3D;
+
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_F1ABECE853AC935C
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_F1ABECE853AC935C
 struct enabled_name_f1abece853ac935c : public flight::ReferenceEnabled {

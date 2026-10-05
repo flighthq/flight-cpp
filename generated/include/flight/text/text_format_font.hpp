@@ -15,6 +15,8 @@ namespace flight::types { struct TextFormat; }
 
 namespace flight::text {
 
+using flight::types::TextFormat;
+
 inline flight::String compute_text_format_font_string(flight::Ref<flight::types::TextFormat> format) {
   const flight::String style = (flight::to_boolean(format->italic) ? flight::String("italic") : flight::String("normal"));
   const flight::String weight = (flight::to_boolean(format->bold) ? flight::String("bold") : flight::String("normal"));

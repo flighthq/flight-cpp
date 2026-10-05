@@ -30,6 +30,8 @@ namespace flight::types { template <typename Traits> struct Node; }
 namespace flight::gui {
 
 using flight::types::Entity;
+using flight::types::ScrollBarController;
+using flight::types::ScrollBarControllerSignals;
 using flight::types::Signal;
 struct ListControllerFields;
 } // namespace flight::gui

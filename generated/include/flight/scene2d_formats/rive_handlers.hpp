@@ -25,6 +25,9 @@ namespace flight::types { struct RiveImportRegistry; }
 
 namespace flight::scene2d_formats {
 
+using flight::types::PathBooleanKernel;
+using flight::types::RiveImportRegistry;
+
 inline void register_all_rive_handlers(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>> path_boolean_kernel, flight::Ref<flight::types::RiveImportRegistry> registry) {
   flight::scene2d_formats::register_rive_path_handlers(registry);
   flight::scene2d_formats::register_rive_paint_handlers(registry);

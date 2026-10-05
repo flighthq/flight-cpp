@@ -38,13 +38,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::interaction {
 
 using flight::types::FlightDocumentFields;
-using flight::types::FlightDocumentInteractiveStates;
 using flight::types::FlightDocumentInteractiveStateTransitionDescriptor;
+using flight::types::FlightDocumentInteractiveStates;
 using flight::types::FlightDocumentSchemaRegistry;
 using flight::types::NodeAny;
 using flight::types::NodeInteractiveStateBinding;
-using flight::types::NodeInteractiveStateExtensionRuntime;
 using flight::types::NodeInteractiveStateExplanation;
+using flight::types::NodeInteractiveStateExtensionRuntime;
 using flight::types::NodeInteractiveStateFlags;
 using flight::types::entity_runtime_key;
 
@@ -163,7 +163,7 @@ inline void dispose_extensions(flight::Array<flight::Ref<InteractiveExtension>> 
 // presence test against null has no absence channel in the emitted C++ storage for property
 
 inline flight::Ref<InteractiveStateRuntime> get_interactive_state_runtime(flight::Ref<NodeInteractiveStateBinding> binding) {
-  return static_cast<flight::Ref<InteractiveStateRuntime>>(binding[entity_runtime_key]);
+  return static_cast<flight::Ref<InteractiveStateRuntime>>(binding->entity_runtime_key);
 }
 
 inline bool same_flags(flight::Ref<NodeInteractiveStateFlags> left, flight::Ref<NodeInteractiveStateFlags> right) {

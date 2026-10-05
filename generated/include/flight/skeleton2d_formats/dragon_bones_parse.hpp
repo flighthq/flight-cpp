@@ -40,6 +40,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/skeleton2d/skeleton2d_animation_target.hpp>
+
+#include <flight/shortcut/shortcut.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/easing/ease_cubic_bezier.hpp>
+
+#include <flight/animation/animation_track.hpp>
+
+#include <flight/animation/animation_clip.hpp>
+
+#include <flight/types/transform_inherit2_d.hpp>
+
 #include <flight/types/slot2_d.hpp>
 
 #include <flight/types/skin2_d.hpp>
@@ -64,8 +78,28 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/attachment2_d.hpp>
 
+#include <flight/types/animation_track.hpp>
+
+#include <flight/types/animation_interpolation.hpp>
+
+#include <flight/types/animation_channel.hpp>
+
 namespace flight::skeleton2d_formats {
 
+using flight::skeleton2d::create_skeleton2_dbone_animation_target;
+
+using flight::shortcut::parse;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::easing::ease_cubic_bezier;
+
+using flight::animation::create_animation_channel;
+using flight::animation::create_animation_track;
+
+using flight::types::AnimationChannel;
+using flight::types::AnimationInterpolation;
+using flight::types::AnimationTrack;
 using flight::types::Attachment2D;
 using flight::types::AttachmentSkin2D;
 using flight::types::Bone2D;
@@ -74,10 +108,15 @@ using flight::types::EntityConstruction;
 using flight::types::ImportDiagnostic;
 using flight::types::MeshAttachment2D;
 using flight::types::RegionAttachment2D;
+using flight::types::Skeleton2DAnimationPath;
+using flight::types::Skeleton2DImport;
 using flight::types::Skeleton2DImportAnimation;
 using flight::types::Skin2D;
 using flight::types::SkinAttachment2D;
 using flight::types::Slot2D;
+using flight::types::TransformInherit2D;
+using flight::types::animation_interpolation_linear;
+using flight::types::animation_interpolation_step;
 using flight::types::import_diagnostic_severity;
 using flight::types::skeleton2_danimation_path;
 

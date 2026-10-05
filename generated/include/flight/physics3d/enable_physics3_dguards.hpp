@@ -12,6 +12,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/log/log.hpp>
+
+#include <flight/types/spatial_indexing.hpp>
+
+#include <flight/types/physics3_d.hpp>
+
 #include "contact_intake.hpp"
 #include "explain_physics3_dcollision.hpp"
 #include "explain_physics3_djoints.hpp"
@@ -21,6 +27,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "step.hpp"
 
 namespace flight::physics3d {
+
+using flight::log::log_once;
+
+using flight::types::Physics3DCollisionExplanation;
+using flight::types::Physics3DJointExplanation;
+using flight::types::Physics3DStepExplanation;
+using flight::types::Physics3DWorld;
+using flight::types::SpatialIndexingExplanation;
 
 inline void warn_on_undetectable_physics3_dcolliders(flight::Ref<Physics3DWorld> world) {
   flight::Ref<Physics3DCollisionExplanation> explanation = explain_physics3_dcollision(world);

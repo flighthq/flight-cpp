@@ -15,11 +15,36 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/path/path_morph.hpp>
+
+#include <flight/path/path.hpp>
+
+#include <flight/types/shape.hpp>
+
+#include <flight/types/path_morph.hpp>
+
+#include <flight/types/path.hpp>
+
+#include <flight/types/morph_shape.hpp>
+
+#include <flight/node/revision.hpp>
+
 #include "morph_shape_paint.hpp"
 #include "shape.hpp"
 #include "shape_commands.hpp"
 
 namespace flight::shape {
+
+using flight::path::create_path;
+using flight::path::sample_path_morph;
+
+using flight::types::MorphShape;
+using flight::types::MorphShapePathBinding;
+using flight::types::Path;
+using flight::types::PathMorph;
+using flight::types::Shape;
+
+using flight::node::invalidate_content;
 
 inline flight::Ref<Path> append_morph_shape_path(flight::Ref<MorphShape> shape, std::optional<flight::Ref<PathMorph>> morph = std::nullopt) {
   morph = morph.value_or(shape->data.morph);

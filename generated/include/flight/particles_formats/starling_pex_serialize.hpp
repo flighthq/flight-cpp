@@ -14,7 +14,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/starling_pex_schema.hpp>
+
+#include <flight/types/particle_emitter_config.hpp>
+
 namespace flight::particles_formats {
+
+using flight::types::ParticleEmitterConfig;
+using flight::types::StarlingPexColor;
+using flight::types::StarlingPexDocument;
 
 
 // NOT GENERATED: function collectStarlingPexSerializeWarnings -- source line 39

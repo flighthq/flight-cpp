@@ -17,7 +17,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/skeleton2_dpath_constraint.hpp>
+
+#include <flight/types/skeleton2_dconstraint.hpp>
+
 #include <flight/types/skeleton2_d.hpp>
+
+#include <flight/types/shape_command.hpp>
+
+#include <flight/types/path.hpp>
 
 #include <flight/types/entity.hpp>
 
@@ -31,7 +39,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::skeleton2d {
 
 using flight::types::EntityConstruction;
+using flight::types::Path;
+using flight::types::PathWinding;
 using flight::types::Skeleton2D;
+using flight::types::Skeleton2DPathConstraint;
+using flight::types::skeleton2_dconstraint_kind;
+using flight::types::skeleton2_dpath_spacing_mode;
 
 using flight::entity::allocate_entity;
 

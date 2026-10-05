@@ -8,6 +8,44 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/tilt_shift_effect.hpp>
+
+#include <flight/types/outline_effect.hpp>
+
+#include <flight/types/outer_glow_effect.hpp>
+
+#include <flight/types/median_effect.hpp>
+
+#include <flight/types/inner_shadow_effect.hpp>
+
+#include <flight/types/inner_glow_effect.hpp>
+
+#include <flight/types/gradient_glow_effect.hpp>
+
+#include <flight/types/gradient_bevel_effect.hpp>
+
+#include <flight/types/glitch_effect.hpp>
+
+#include <flight/types/drop_shadow_effect.hpp>
+
+#include <flight/types/displacement_effect.hpp>
+
+#include <flight/types/directional_blur_effect.hpp>
+
+#include <flight/types/convolution_effect.hpp>
+
+#include <flight/types/contact_shadows_effect.hpp>
+
+#include <flight/types/bokeh_depth_of_field_effect.hpp>
+
+#include <flight/types/blur_effect.hpp>
+
+#include <flight/types/bloom_effect.hpp>
+
+#include <flight/types/bitmap_displacement_effect.hpp>
+
+#include <flight/types/bevel_effect.hpp>
+
 namespace flight::types { struct RenderEffect; }
 
 #include <flight/types/entity.hpp>
@@ -15,6 +53,27 @@ namespace flight::types { struct RenderEffect; }
 #include <flight/types/render_effect_input.hpp>
 
 namespace flight::effects {
+
+using flight::types::BevelEffect;
+using flight::types::BitmapDisplacementEffect;
+using flight::types::BloomEffect;
+using flight::types::BlurEffect;
+using flight::types::BokehDepthOfFieldEffect;
+using flight::types::ContactShadowsEffect;
+using flight::types::ConvolutionEffect;
+using flight::types::DirectionalBlurEffect;
+using flight::types::DisplacementEffect;
+using flight::types::DropShadowEffect;
+using flight::types::GlitchEffect;
+using flight::types::GradientBevelEffect;
+using flight::types::GradientGlowEffect;
+using flight::types::InnerGlowEffect;
+using flight::types::InnerShadowEffect;
+using flight::types::MedianEffect;
+using flight::types::OuterGlowEffect;
+using flight::types::OutlineEffect;
+using flight::types::RenderEffect;
+using flight::types::TiltShiftEffect;
 
 inline flight::Record<flight::String, flight::Array<flight::types::RenderEffectInput>> render_effect_inputs = {{flight::String("AutoExposureEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Hdr")}}, {flight::String("BloomEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Hdr")}}, {flight::String("BokehDepthOfFieldEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Depth")}}, {flight::String("CameraMotionBlurEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Motion")}}, {flight::String("ContactShadowsEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Depth")}}, {flight::String("MotionBlurEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Motion")}}, {flight::String("ScreenSpaceFogEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Depth")}}, {flight::String("SsaoEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Depth")}}, {flight::String("SsrEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Depth")}}, {flight::String("TaaEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Temporal")}}, {flight::String("TiltShiftEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Depth")}}, {flight::String("ToneMapEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Hdr")}}, {flight::String("VolumetricLightEffect"), flight::Array<flight::types::RenderEffectInput>{flight::String("Depth")}}};
 

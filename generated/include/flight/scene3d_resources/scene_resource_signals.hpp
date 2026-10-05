@@ -35,6 +35,13 @@ namespace flight::types { template <typename T> struct Signal; }
 namespace flight::scene3d_resources {
 
 using flight::types::Material;
+using flight::types::Scene3DResourceEvent;
+using flight::types::Scene3DResourceInFlight;
+using flight::types::Scene3DResourceResolverRuntime;
+using flight::types::Scene3DResourceResolverWithRuntime;
+using flight::types::Scene3DResourceSignals;
+using flight::types::TextureSource;
+using flight::types::scene3_dresource_resolver_runtime_key;
 
 inline std::optional<flight::Ref<flight::types::Scene3DResourceSignals>> get_scene3_dresource_signals(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DResourceResolverWithRuntime>>>> resolver) {
   return flight::row_get<flight::Ref<flight::types::Scene3DResourceResolverRuntime>>(resolver, flight::types::scene3_dresource_resolver_runtime_key)->signals;

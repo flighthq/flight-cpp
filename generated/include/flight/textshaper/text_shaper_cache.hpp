@@ -10,11 +10,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/text_shaper_cache.hpp>
+
 #include <flight/entity/entity.hpp>
 
 #include <flight/types/shaped_run.hpp>
 
 namespace flight::textshaper {
+
+using flight::types::TextShaperCache;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
@@ -35,7 +39,7 @@ struct TextShaperCacheRuntime : public flight::ReferenceEnabled {
 
 inline void initialize_text_shaper_cache(flight::Ref<EntityConstruction<flight::Ref<TextShaperCache>>> out) {
   flight::Ref<TextShaperCacheRuntime> runtime = flight::make_ref<TextShaperCacheRuntime>(TextShaperCacheRuntime{.binding = std::nullopt, .entries = flight::Map<flight::String, flight::Ref<ShapedRun>>()});
-  (out[entity_runtime_key] = runtime);
+  (out->entity_runtime_key = runtime);
 }
 
 inline flight::Ref<TextShaperCache> create_text_shaper_cache() {
@@ -45,7 +49,7 @@ inline flight::Ref<TextShaperCache> create_text_shaper_cache() {
 }
 
 inline std::optional<flight::Ref<TextShaperCacheRuntime>> get_text_shaper_cache_runtime(flight::Ref<TextShaperCache> cache) {
-  return static_cast<std::optional<flight::Ref<TextShaperCacheRuntime>>>(cache[entity_runtime_key]);
+  return static_cast<std::optional<flight::Ref<TextShaperCacheRuntime>>>(cache->entity_runtime_key);
 }
 
 inline void clear_text_shaper_cache(flight::Ref<TextShaperCache> cache) {
@@ -58,7 +62,7 @@ inline void dispose_text_shaper_cache(flight::Ref<TextShaperCache> cache) {
     return;
   }
   runtime.value()->entries.clear();
-  (cache[entity_runtime_key] = std::nullopt);
+  (cache->entity_runtime_key = std::nullopt);
 }
 
 inline flight::WeakMap<flight::Ref<HostTextShaperCapability>, double> backend_cache_ids = flight::WeakMap<flight::Ref<HostTextShaperCapability>, double>();

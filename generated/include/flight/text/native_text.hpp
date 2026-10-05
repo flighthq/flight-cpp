@@ -20,7 +20,39 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/node/revision.hpp>
+
+#include <flight/types/text_vertical_align.hpp>
+
+#include <flight/types/text_auto_size.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/native_text.hpp>
+
+#include <flight/types/has_bounds_rectangle.hpp>
+
+#include <flight/types/entity.hpp>
+
 namespace flight::text {
+
+using flight::node::invalidate_node_local_bounds;
+using flight::node::invalidate_node_local_content;
+
+using flight::types::BoundsNodeAny;
+using flight::types::EntityConstruction;
+using flight::types::NativeText;
+using flight::types::NativeTextData;
+using flight::types::NativeTextStyle;
+using flight::types::Node;
+using flight::types::Node2DTraits;
+using flight::types::Rectangle;
+using flight::types::TextAutoSize;
+using flight::types::TextVerticalAlign;
 
 
 // NOT GENERATED: function getNativeTextMeasuredHeight -- source line 60

@@ -22,9 +22,45 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/materials/phong_to_pbr.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/color/pack_color.hpp>
+
+#include <flight/types/xml_element.hpp>
+
+#include <flight/types/texture.hpp>
+
+#include <flight/types/standard_pbr_material.hpp>
+
+#include <flight/types/material.hpp>
+
+#include <flight/types/linear_color.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/image_resource_reference.hpp>
+
 #include "shared.hpp"
 
 namespace flight::scene3d_formats {
+
+using flight::materials::get_pbr_roughness_from_phong_shininess;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::color::pack_linear_to_color;
+
+using flight::types::ImageResourceReference;
+using flight::types::ImportDiagnostic;
+using flight::types::LinearColor;
+using flight::types::MaterialLike;
+using flight::types::StandardPbrMaterial;
+using flight::types::Texture;
+using flight::types::TextureColorSpace;
+using flight::types::XmlElement;
+using flight::types::import_diagnostic_severity;
 
 inline flight::String local_name(flight::String name) {
   const double separator = name.last_index_of(flight::String(":"));

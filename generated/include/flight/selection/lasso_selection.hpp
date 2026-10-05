@@ -13,9 +13,26 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/path.hpp>
+
+#include <flight/types/lasso_selection_runtime.hpp>
+
+#include <flight/types/lasso_selection.hpp>
+
+#include <flight/types/entity.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::selection {
+
+using flight::types::EntityConstruction;
+using flight::types::LassoSelection;
+using flight::types::LassoSelectionRuntime;
+using flight::types::Path;
+using flight::types::Rectangle;
+using flight::types::path_command;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
@@ -42,12 +59,12 @@ inline flight::Ref<LassoSelection> create_lasso_selection() {
   (out->winding = flight::String("evenOdd"));
   return finish_entity(out);
 })()});
-  (selection[entity_runtime_key] = runtime);
+  (selection->entity_runtime_key = runtime);
   return finish_entity(selection);
 }
 
 inline flight::Ref<LassoSelectionRuntime> get_lasso_selection_runtime(flight::Ref<LassoSelection> selection) {
-  return static_cast<flight::Ref<LassoSelectionRuntime>>(selection[entity_runtime_key]);
+  return static_cast<flight::Ref<LassoSelectionRuntime>>(selection->entity_runtime_key);
 }
 
 inline void add_lasso_selection_point(flight::Ref<LassoSelection> selection, double x, double y) {

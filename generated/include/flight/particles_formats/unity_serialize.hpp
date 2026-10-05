@@ -39,6 +39,15 @@ namespace flight::types { struct UnitySizeOverLifetime; }
 
 namespace flight::particles_formats {
 
+using flight::types::ParticleEmitterConfig;
+using flight::types::UnityColor;
+using flight::types::UnityColorOverLifetime;
+using flight::types::UnityMinMaxValue;
+using flight::types::UnityParticleDocument;
+using flight::types::UnityRotationOverLifetime;
+using flight::types::UnityShape;
+using flight::types::UnitySizeOverLifetime;
+
 inline const double default_ppu_flight_value_variable__u000044__u000045__u000046__u000041__u000055__u00004c__u000054__u00005f__u000050__u000050__u000055__flight_private_b9123d7782ad7ec3 = 100.0;
 
 inline flight::Ref<flight::types::UnityColor> color(double r, double g, double b, double a) {

@@ -34,22 +34,86 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/texture.hpp>
 
+#include <flight/textlayout/text_format_range.hpp>
+
+#include <flight/textlayout/rich_text_query.hpp>
+
+#include <flight/textlayout/rich_text_metrics.hpp>
+
+#include <flight/node/revision.hpp>
+
+#include <flight/signals/signal.hpp>
+
 #include <flight/entity/entity.hpp>
+
+#include <flight/types/text_vertical_align.hpp>
+
+#include <flight/types/text_line_metrics.hpp>
 
 #include <flight/types/text_layout.hpp>
 
 #include <flight/types/text_label.hpp>
+
+#include <flight/types/text_format_range.hpp>
+
+#include <flight/types/text_format.hpp>
+
+#include <flight/types/text_field_signals.hpp>
+
+#include <flight/types/rich_text_content.hpp>
+
+#include <flight/types/rich_text.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/has_bounds_rectangle.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include "text_label.hpp"
 #include "text_label_layout.hpp"
 
 namespace flight::text {
 
+using flight::textlayout::compute_rich_text_bottom_scroll_v;
+using flight::textlayout::compute_rich_text_char_index_at_point;
+using flight::textlayout::compute_rich_text_line_count;
+using flight::textlayout::compute_rich_text_line_metrics;
+using flight::textlayout::compute_rich_text_max_scroll_h;
+using flight::textlayout::compute_rich_text_max_scroll_v;
+using flight::textlayout::compute_rich_text_text_height;
+using flight::textlayout::compute_rich_text_text_width;
+using flight::textlayout::create_text_format_range;
+
+using flight::node::invalidate_node_local_bounds;
+using flight::node::invalidate_node_local_content;
+
+using flight::signals::create_signal;
+
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
+using flight::types::BoundsNodeAny;
+using flight::types::EntityConstruction;
+using flight::types::Node;
+using flight::types::Node2DTraits;
+using flight::types::Rectangle;
+using flight::types::RichText;
+using flight::types::RichTextContent;
+using flight::types::RichTextData;
+using flight::types::TextFieldSignals;
+using flight::types::TextFormat;
+using flight::types::TextFormatRange;
 using flight::types::TextLabel;
+using flight::types::TextLayoutParams;
 using flight::types::TextLayoutResult;
+using flight::types::TextLineMetrics;
+using flight::types::TextMeasureFunction;
+using flight::types::TextVerticalAlign;
 
 
 // NOT GENERATED: function computeRichTextLocalBoundsRectangle -- source line 91

@@ -21,6 +21,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/spatial/uniform_grid.hpp>
+
+#include <flight/types/spatial.hpp>
+
+#include <flight/types/physics2_d.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/collision.hpp>
+
 #include <flight/entity/entity.hpp>
 
 #include "broadphase.hpp"
@@ -30,6 +40,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "ownership.hpp"
 
 namespace flight::physics2d {
+
+using flight::spatial::create_uniform_grid_spatial_backend2_d;
+
+using flight::types::CollisionBuiltInShape2D;
+using flight::types::EntityConstruction;
+using flight::types::Physics2DBodyType;
+using flight::types::Physics2DBrokenJoint;
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DCollisionFilter;
+using flight::types::Physics2DContact;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DJointSolver;
+using flight::types::Physics2DMaterial;
+using flight::types::Physics2DSolverConfig;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
+using flight::types::SpatialIndexBackend2D;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

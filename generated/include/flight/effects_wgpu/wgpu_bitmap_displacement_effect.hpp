@@ -17,11 +17,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_effect_pass.hpp"
 #include "wgpu_effect_program_cache.hpp"
 #include "wgpu_render_effect_registry.hpp"
 
 namespace flight::effects_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline void initialize_wgpu_effect_pipeline(flight::Ref<EntityConstruction<flight::Ref<WgpuEffectPipeline>>> out, flight::Ref<WgpuEffectBlendMode> blend_mode, flight::host_sdl::WgpuRenderPipeline pipeline) {
   (out->blend_mode = blend_mode);

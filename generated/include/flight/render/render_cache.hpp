@@ -16,22 +16,52 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/matrix.hpp>
+
+#include <flight/signals/signal.hpp>
+
 #include <flight/entity/entity.hpp>
+
+#include <flight/types/renderer.hpp>
+
+#include <flight/types/renderable.hpp>
 
 #include <flight/types/render_state.hpp>
 
+#include <flight/types/render_proxy_adapter.hpp>
+
+#include <flight/types/render_proxy2_d.hpp>
+
+#include <flight/types/render_cache_adapter.hpp>
+
 #include <flight/types/render_cache.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include "renderer.hpp"
 #include "render_proxy_adapter.hpp"
 
 namespace flight::render {
 
+using flight::geometry::create_matrix;
+
+using flight::signals::create_signal;
+
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
+using flight::types::EntityConstruction;
+using flight::types::Node;
 using flight::types::RenderCache;
+using flight::types::RenderCacheAdapter;
+using flight::types::RenderProxy2D;
+using flight::types::RenderProxyAdapter;
 using flight::types::RenderState;
+using flight::types::Renderable;
+using flight::types::Renderer;
+using flight::types::render_cache_kind;
 
 inline void enable_render_cache_adapter_signals(flight::Ref<RenderCacheAdapter> adapter) {
   ([&]() { auto&& assignment_target = adapter->signals; if (!assignment_target.has_value()) assignment_target = {.on_prepare = create_signal()}; return assignment_target.value(); }());

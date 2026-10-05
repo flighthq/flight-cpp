@@ -19,6 +19,8 @@ namespace flight::types { struct MaterialConversionExplanation; }
 
 namespace flight::materials {
 
+using flight::types::MaterialConversionExplanation;
+
 inline void disable_material_conversion_guards() {
   flight::materials::set_material_conversion_guard(std::nullopt);
 }

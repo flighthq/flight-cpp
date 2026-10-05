@@ -12,10 +12,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_render_effect_registry.hpp"
 #include "wgpu_ssao_effect.hpp"
 
 namespace flight::effects_wgpu {
+
+using flight::types::WgpuRenderState;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_SAMPLES_INTENSITY_BIAS_RADIUS_2E396971C457AFF5
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_SAMPLES_INTENSITY_BIAS_RADIUS_2E396971C457AFF5

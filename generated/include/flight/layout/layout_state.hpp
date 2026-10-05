@@ -9,10 +9,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/layout.hpp>
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::layout {
+
+using flight::types::LayoutState;
 
 inline void initialize_layout_state(flight::types::EntityConstruction<flight::Ref<flight::types::LayoutState>> out) {
   flight::row_set<flight::RowKey<"guard">>(out, std::nullopt);

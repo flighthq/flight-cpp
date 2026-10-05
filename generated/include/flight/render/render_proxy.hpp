@@ -24,7 +24,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
+#include <flight/types/renderable.hpp>
+
 #include <flight/types/render_state.hpp>
+
+#include <flight/types/render_proxy2_d.hpp>
+
+#include <flight/types/render_proxy.hpp>
+
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include "render_appearance.hpp"
 #include "render_material.hpp"
@@ -36,7 +48,13 @@ namespace flight::render {
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
+using flight::types::EntityConstruction;
+using flight::types::Node;
+using flight::types::Node2D;
+using flight::types::RenderProxy;
+using flight::types::RenderProxy2D;
 using flight::types::RenderState;
+using flight::types::Renderable;
 
 using AdaptHook = std::function<void(flight::Ref<RenderState>, flight::Ref<Renderable>, flight::Ref<RenderProxy2D>)>;
 

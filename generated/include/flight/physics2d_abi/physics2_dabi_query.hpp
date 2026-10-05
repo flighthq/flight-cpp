@@ -35,6 +35,15 @@ namespace flight::types { struct SpatialAabb2D; }
 
 namespace flight::physics2d_abi {
 
+using flight::types::Physics2DAbi;
+using flight::types::Physics2DAbiBodyBuffer;
+using flight::types::Physics2DAbiCommandBuffer;
+using flight::types::Physics2DAbiContactBuffer;
+using flight::types::Physics2DAbiContactHooks;
+using flight::types::Physics2DAbiExecutionResult;
+using flight::types::Physics2DAbiJointBuffer;
+using flight::types::Physics2DAbiQueryBuffer;
+
 inline bool query_physics2_dabi_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DAbi>>>> abi, double world, double x, double y, flight::Ref<flight::types::Physics2DAbiQueryBuffer> out, std::optional<std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>>> filter = std::nullopt) {
   filter = filter.value_or(std::nullopt);
   return flight::row_get<flight::RowKey<"queryPoint">>(abi)(world, x, y, filter.value(), out);

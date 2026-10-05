@@ -29,6 +29,8 @@ namespace flight::types { struct WgpuTextureRenderTarget; }
 
 namespace flight::effects_wgpu {
 
+using flight::types::WgpuRenderState;
+
 inline const flight::String box_blur_wgsl = flight::String("\nstruct Uniforms {\n  texelSize : vec2f,\n  direction : vec2f,\n  edgeColor : vec4f,\n  radius : f32,\n  useEdgeColor : f32,\n  _pad0 : f32, _pad1 : f32,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\nfn sampleBlur(uv : vec2f) -> vec4f {\n  if (uni.useEdgeColor > 0.5 && (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0)) {\n    return uni.edgeColor;\n  }\n  return textureSampleLevel(tex, smp, uv, 0.0);\n}\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let r = i32(uni.radius);\n  if (r == 0) { return sampleBlur(uv); }\n  var sum = vec4f(0.0);\n  let count = f32(2 * r + 1);\n  for (var i = -r; i <= r; i++) {\n    sum += sampleBlur(uv + f32(i) * uni.texelSize * uni.direction);\n  }\n  return sum / count;\n}");
 
 using BoxBlurEdgeColor = flight::Array<double>;

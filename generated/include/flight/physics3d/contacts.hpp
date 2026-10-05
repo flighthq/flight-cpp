@@ -17,6 +17,8 @@ namespace flight::types { struct Physics3DContactPoint; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DContact;
+
 inline void initialize_physics3_dcontact(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContact>> out, double body_a, double body_b, std::optional<double> collider_a = std::nullopt, std::optional<double> collider_b = std::nullopt) {
   collider_a = collider_a.value_or(0.0);
   collider_b = collider_b.value_or(0.0);

@@ -7,11 +7,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/entity.hpp>
+
 #include <flight/node/revision.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene3d/scene_node.hpp>
 
 namespace flight::scene3d {
+
+using flight::types::entity_runtime_key;
 
 inline void set_node3_dalpha(flight::types::Node3D source, double alpha) {
   flight::row_set<flight::RowKey<"alpha">>(source, alpha);

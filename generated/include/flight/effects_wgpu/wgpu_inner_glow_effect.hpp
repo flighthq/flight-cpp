@@ -17,6 +17,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_effect_blit_shader.hpp"
 #include "wgpu_effect_box_blur.hpp"
 #include "wgpu_effect_pass.hpp"
@@ -24,6 +26,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "wgpu_render_effect_registry.hpp"
 
 namespace flight::effects_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline flight::Array<double> scratch_edge = flight::Array<double>{0.0, 0.0, 0.0, 0.0};
 

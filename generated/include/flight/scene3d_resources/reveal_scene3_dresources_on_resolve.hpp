@@ -17,11 +17,29 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/texture.hpp>
 
+#include <flight/types/scene3_dresources.hpp>
+
+#include <flight/types/scene3_d.hpp>
+
+#include <flight/types/resource_resolution_state.hpp>
+
+#include <flight/types/node3_d.hpp>
+
 #include <flight/types/material.hpp>
+
+#include <flight/types/easing_function.hpp>
 
 namespace flight::scene3d_resources {
 
+using flight::types::resource_resolution_state;
+
+using flight::types::EasingFunction;
 using flight::types::Material;
+using flight::types::Node3D;
+using flight::types::ResourceResolutionState;
+using flight::types::Scene3D;
+using flight::types::Scene3DResourceResolver;
+using flight::types::Scene3DResourceResolverWithRuntime;
 using flight::types::Texture;
 struct Scene3DResourceRevealOwner;
 } // namespace flight::scene3d_resources

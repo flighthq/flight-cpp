@@ -16,11 +16,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/matrix.hpp>
+
+#include <flight/types/render_effect_padding.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/node2_d.hpp>
+
 #include <flight/types/matrix.hpp>
 
 namespace flight::render {
 
+using flight::geometry::create_matrix;
+using flight::geometry::inverse_matrix;
+using flight::geometry::multiply_matrix;
+
+using flight::types::Matrix;
 using flight::types::MatrixLike;
+using flight::types::Node2D;
+using flight::types::RectangleLike;
+using flight::types::RenderEffectPadding;
 
 inline void compute_render_cache_transform(flight::Ref<MatrixLike> out_cache_transform, flight::Ref<RectangleLike> bounds, std::optional<double> content_x = std::nullopt, std::optional<double> content_y = std::nullopt) {
   content_x = content_x.value_or(0.0);

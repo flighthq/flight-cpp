@@ -22,6 +22,8 @@ namespace flight::types { struct WgpuRenderState; }
 
 namespace flight::effects_wgpu {
 
+using flight::types::WgpuRenderState;
+
 inline flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Map<flight::String, flight::Ref<flight::types::WgpuEffectPipeline>>> pipelines_flight_value_variable__u00005f_pipelines_flight_private_fda78176433a4872 = flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Map<flight::String, flight::Ref<flight::types::WgpuEffectPipeline>>>();
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_ENTITY_RUNTIME_KEY_PIPELINE_BLEND_MODE_COMPILE_FOR_FORMAT_VARIANTS_183787019555C435

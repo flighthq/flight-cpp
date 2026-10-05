@@ -10,7 +10,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 namespace flight::scene2d_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline bool are_wgpu_color_adjustment_guards_enabled(flight::Ref<WgpuRenderState> state) {
   return get_wgpu_color_adjustment_material_feature_guard(state).has_value();

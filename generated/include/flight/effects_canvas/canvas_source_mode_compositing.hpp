@@ -22,6 +22,8 @@ namespace flight::types { struct CanvasTextureRenderTarget; }
 
 namespace flight::effects_canvas {
 
+using flight::types::CanvasTextureRenderTarget;
+
 inline void clear_canvas_target(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>> dest) {
   flight::CanvasRenderingContext2D ctx = flight::row_get<flight::RowKey<"context">>(dest);
   ctx.save();

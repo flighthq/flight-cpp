@@ -21,6 +21,10 @@ namespace flight::types { struct TextFormat; }
 
 namespace flight::scene2d_canvas {
 
+using flight::types::CanvasRenderSurface;
+using flight::types::CanvasRenderSurfaceCreator;
+using flight::types::CanvasRenderSurfaceOptions;
+
 inline flight::types::TextMeasureFunction create_canvas_text_measure(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasRenderSurface>>>> surface) {
   const auto context_capture = flight::make_binding_cell(flight::CanvasRenderingContext2D{flight::row_get<flight::RowKey<"context">>(surface)});
   return [=](flight::String text, flight::Ref<flight::types::TextFormat> format) {

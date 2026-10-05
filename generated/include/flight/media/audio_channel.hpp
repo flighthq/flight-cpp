@@ -22,6 +22,8 @@ namespace flight::types { struct MediaChannelSignals; }
 namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::media {
+
+using flight::signals::create_signal;
 struct AudioChannelRuntime;
 } // namespace flight::media
 

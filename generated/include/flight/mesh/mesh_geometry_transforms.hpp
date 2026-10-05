@@ -15,7 +15,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/aabb.hpp>
+
 #include <flight/types/mesh_geometry.hpp>
+
+#include <flight/types/matrix4.hpp>
 
 #include <flight/types/aabb.hpp>
 
@@ -24,7 +28,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::mesh {
 
+using flight::geometry::create_aabb;
+
 using flight::types::Aabb;
+using flight::types::Matrix4Like;
 using flight::types::MeshGeometry;
 
 inline void translate_mesh_geometry(flight::Ref<MeshGeometry> geometry, double x, double y, double z) {

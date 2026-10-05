@@ -24,14 +24,46 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/matrix4.hpp>
+
+#include <flight/geometry/aabb.hpp>
+
+#include <flight/signals/signal.hpp>
+
 #include <flight/entity/entity.hpp>
+
+#include <flight/types/matrix4.hpp>
+
+#include <flight/types/material.hpp>
+
+#include <flight/types/instanced_mesh_signals.hpp>
+
+#include <flight/types/instanced_mesh.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/aabb.hpp>
 
 #include "scene_node.hpp"
 
 namespace flight::scene3d {
 
+using flight::geometry::copy_matrix4;
+using flight::geometry::create_aabb;
+using flight::geometry::transform_aabb_by_matrix4;
+using flight::geometry::union_aabb;
+
+using flight::signals::create_signal;
+
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
+
+using flight::types::Aabb;
+using flight::types::EntityConstruction;
+using flight::types::InstancedMesh;
+using flight::types::InstancedMeshSignals;
+using flight::types::Material;
+using flight::types::Matrix4;
 
 inline double get_instanced_mesh_capacity(flight::Ref<InstancedMesh> source) {
   return static_cast<double>(source->instance_matrices.size());

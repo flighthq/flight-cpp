@@ -14,10 +14,23 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/composite_operator.hpp>
+
+#include <flight/types/composite_effect.hpp>
+
+#include <flight/types/canvas_render_target.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
 #include "canvas_blend_effect.hpp"
 #include "canvas_render_effect_registry.hpp"
 
 namespace flight::effects_canvas {
+
+using flight::types::CanvasRenderState;
+using flight::types::CanvasTextureRenderTarget;
+using flight::types::CompositeEffect;
+using flight::types::CompositeOperator;
 
 inline flight::Record<flight::String, flight::String> composite_operator_operation = ([]() { flight::Record<flight::String, flight::String> record_construction = {}; auto record_construction_key = composite_operator_values.copy; auto record_construction_value = flight::String("copy"); record_construction.set(record_construction_key, record_construction_value); auto record_construction_key_2 = composite_operator_values.destination_atop; auto record_construction_value_2 = flight::String("destination-atop"); record_construction.set(record_construction_key_2, record_construction_value_2); auto record_construction_key_3 = composite_operator_values.destination_in; auto record_construction_value_3 = flight::String("destination-in"); record_construction.set(record_construction_key_3, record_construction_value_3); auto record_construction_key_4 = composite_operator_values.destination_out; auto record_construction_value_4 = flight::String("destination-out"); record_construction.set(record_construction_key_4, record_construction_value_4); auto record_construction_key_5 = composite_operator_values.destination_over; auto record_construction_value_5 = flight::String("destination-over"); record_construction.set(record_construction_key_5, record_construction_value_5); auto record_construction_key_6 = composite_operator_values.source_atop; auto record_construction_value_6 = flight::String("source-atop"); record_construction.set(record_construction_key_6, record_construction_value_6); auto record_construction_key_7 = composite_operator_values.source_in; auto record_construction_value_7 = flight::String("source-in"); record_construction.set(record_construction_key_7, record_construction_value_7); auto record_construction_key_8 = composite_operator_values.source_out; auto record_construction_value_8 = flight::String("source-out"); record_construction.set(record_construction_key_8, record_construction_value_8); auto record_construction_key_9 = composite_operator_values.source_over; auto record_construction_value_9 = flight::String("source-over"); record_construction.set(record_construction_key_9, record_construction_value_9); auto record_construction_key_10 = composite_operator_values.xor_; auto record_construction_value_10 = flight::String("xor"); record_construction.set(record_construction_key_10, record_construction_value_10); return record_construction; }());
 

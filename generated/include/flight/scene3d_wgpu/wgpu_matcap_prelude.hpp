@@ -19,11 +19,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/capacitor_api.hpp>
 
+#include <flight/types/wgpu_skinning_adapter.hpp>
+
 #include "wgpu_mesh_fragment_tail.hpp"
 #include "wgpu_mesh_pipeline.hpp"
 #include "wgpu_scene3_druntime.hpp"
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuSkinningAdapter;
 
 inline flight::String build_wgpu_matcap_define_key(flight::Ref<WgpuMatcapDefineKey> key) {
   return flight::String("") + flight::to_string((flight::to_boolean(key->alpha_mask_enabled) ? flight::String("m") : flight::String("-"))) + flight::String("") + flight::to_string((flight::to_boolean(key->double_sided) ? flight::String("d") : flight::String("-"))) + flight::String("") + flight::to_string((flight::to_boolean(key->has_matcap) ? flight::String("t") : flight::String("-"))) + flight::String("");

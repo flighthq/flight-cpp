@@ -9,7 +9,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/surface.hpp>
+
 namespace flight::surface {
+
+using flight::types::SurfaceRuntime;
 
 
 // NOT GENERATED: function allocateSurface -- source line 9
@@ -38,7 +42,7 @@ namespace flight::surface {
 // the factory result, copy or materialize a replacement owner, or invent side storage
 
 inline flight::Ref<SurfaceRuntime> get_surface_runtime(flight::Ref<Surface> surface) {
-  return static_cast<flight::Ref<SurfaceRuntime>>(surface[entity_runtime_key]);
+  return static_cast<flight::Ref<SurfaceRuntime>>(surface->entity_runtime_key);
 }
 
 inline flight::Ref<NativeSurfaceHandle> get_surface_handle(flight::Ref<Surface> surface) {

@@ -12,12 +12,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_effect_pass.hpp"
 #include "wgpu_effect_program_cache.hpp"
 #include "wgpu_effect_texel_scale.hpp"
 #include "wgpu_render_effect_registry.hpp"
 
 namespace flight::effects_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline const flight::String crt_fragment_wgsl = flight::String("\nstruct Uniforms {\n  u_curvature : f32,\n  u_scanlineIntensity : f32,\n  u_vignette : f32,\n  u_aberration : f32,\n  u_resolution : vec2f,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\nfn barrel(uv : vec2f) -> vec2f {\n  var c = uv * 2.0 - 1.0;\n  c += c * uni.u_curvature * dot(c, c);\n  return c * 0.5 + 0.5;\n}\n\n@fragment\nfn fs_main(@location(0) uvIn : vec2f) -> @location(0) vec4f {\n  let uv = barrel(uvIn);\n  if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {\n    return vec4f(0.0, 0.0, 0.0, 1.0);\n  }\n  let off = vec2f(uni.u_aberration, 0.0);\n  let r = textureSampleLevel(tex, smp, uv + off, 0.0).r;\n  let g = textureSampleLevel(tex, smp, uv, 0.0).g;\n  let b = textureSampleLevel(tex, smp, uv - off, 0.0).b;\n  let a = textureSampleLevel(tex, smp, uv, 0.0).a;\n  var col = vec3f(r, g, b);\n  let line = sin(uv.y * uni.u_resolution.y * 3.14159265) * 0.5 + 0.5;\n  col *= 1.0 - uni.u_scanlineIntensity * (1.0 - line);\n  let vc = uv * 2.0 - 1.0;\n  col *= 1.0 - uni.u_vignette * dot(vc, vc);\n  return vec4f(col, a);\n}");
 

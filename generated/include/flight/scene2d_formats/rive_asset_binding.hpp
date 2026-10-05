@@ -12,7 +12,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture.hpp>
+
+#include <flight/types/sprite.hpp>
+
+#include <flight/types/partial_node.hpp>
+
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/display_object.hpp>
+
+#include <flight/types/create_texture_options.hpp>
+
 namespace flight::scene2d_formats {
+
+using flight::types::CreateTextureOptions;
+using flight::types::DisplayObject;
+using flight::types::Node2D;
+using flight::types::PartialNode;
+using flight::types::Sprite;
+using flight::types::Texture;
+using flight::types::Texture2D;
 
 inline const double rive_no_index = -1.0;
 

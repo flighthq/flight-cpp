@@ -6,7 +6,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/shape.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/path.hpp>
+
+#include <flight/types/lottie_document.hpp>
+
 namespace flight::scene2d_formats {
+
+using flight::types::LottieAsset;
+using flight::types::Path;
+using flight::types::Rectangle;
+using flight::types::Shape;
 
 struct RiveCoreTypeRow;
 

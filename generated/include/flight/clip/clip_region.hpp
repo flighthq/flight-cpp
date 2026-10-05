@@ -27,9 +27,48 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/path/path.hpp>
+
+#include <flight/path/flatten_path.hpp>
+
+#include <flight/geometry/rectangle.hpp>
+
+#include <flight/types/shape_command.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/path.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/clip_region.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::clip {
+
+using flight::path::append_path_cubic_curve_to;
+using flight::path::append_path_line_to;
+using flight::path::append_path_move_to;
+using flight::path::create_path;
+using flight::path::flatten_path;
+
+using flight::geometry::clone_rectangle;
+using flight::geometry::copy_rectangle;
+using flight::geometry::create_rectangle;
+using flight::geometry::encloses_rectangle;
+using flight::geometry::intersects_rectangle;
+
+using flight::types::ClipRegion;
+using flight::types::ClipRegionContoursExplanation;
+using flight::types::ClipRegionContoursGuard;
+using flight::types::ClipRegionReleaseGuard;
+using flight::types::ClipRegionUseGuard;
+using flight::types::EntityConstruction;
+using flight::types::Path;
+using flight::types::PathWinding;
+using flight::types::Rectangle;
+using flight::types::RectangleLike;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

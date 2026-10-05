@@ -35,6 +35,10 @@ namespace flight::types { struct Physics3DSliderJointOptions; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DConeTwistJoint;
+using flight::types::Physics3DGeneric6DofJoint;
+using flight::types::Physics3DJoint;
+
 inline void init_joint_base(flight::Ref<flight::types::Physics3DJoint> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointOptions>>>> options) {
   (out->body_a = flight::row_get<flight::RowKey<"bodyA">>(options));
   (out->body_b = flight::row_get<flight::RowKey<"bodyB">>(options));

@@ -14,10 +14,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/text_selection_rectangle.hpp>
+
+#include <flight/types/render_proxy2_d.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
 #include "canvas_rich_text.hpp"
 #include "canvas_transform.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::types::CanvasRenderState;
+using flight::types::RenderProxy2D;
+using flight::types::TextSelectionRectangle;
 
 inline const double caret_blink_ms = 530.0;
 

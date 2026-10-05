@@ -12,6 +12,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_skinning_adapter.hpp>
+
 #include "wgpu_mesh_material_registry.hpp"
 #include "wgpu_mesh_pipeline.hpp"
 #include "wgpu_scene3_druntime.hpp"
@@ -19,6 +21,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "wgpu_wireframe_upload.hpp"
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuSkinningAdapter;
 
 inline flight::Ref<LinearColor> scratch = flight::Array{0.0, 0.0, 0.0, 0.0};
 

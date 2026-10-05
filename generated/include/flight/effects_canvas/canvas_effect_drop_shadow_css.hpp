@@ -21,6 +21,9 @@ namespace flight::types { struct OuterGlowEffect; }
 
 namespace flight::effects_canvas {
 
+using flight::types::DropShadowEffect;
+using flight::types::OuterGlowEffect;
+
 inline flight::String css_rgba_from_color_flight_value_function_css_u000052_gba_u000046_rom_u000043_olor_flight_private_7ecb08dc8f5df6f0(double color, double alpha) {
   const double r = flight::bitwise_and(flight::unsigned_right_shift(color, 24.0), 255.0);
   const double g = flight::bitwise_and(flight::unsigned_right_shift(color, 16.0), 255.0);

@@ -43,12 +43,16 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/unity_schema.hpp>
 
+#include <flight/types/wgpu_skinning_adapter.hpp>
+
 #include <flight/entity/entity.hpp>
 
 #include "wgpu_mesh_upload.hpp"
 #include "wgpu_scene3_druntime.hpp"
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuSkinningAdapter;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

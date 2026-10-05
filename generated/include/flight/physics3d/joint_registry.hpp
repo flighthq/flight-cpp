@@ -30,6 +30,16 @@ namespace flight::types { struct SpatialIndexBackend3D; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DContact;
+using flight::types::Physics3DJoint;
+using flight::types::Physics3DJointEvents;
+using flight::types::Physics3DJointReaction;
+using flight::types::Physics3DJointSolver;
+using flight::types::Physics3DSolverConfig;
+using flight::types::Physics3DWorld;
+using flight::types::RigidBody3D;
+using flight::types::SpatialIndexBackend3D;
+
 inline std::optional<flight::Ref<flight::types::Physics3DJointSolver>> get_physics3_djoint_solver(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::String kind) {
   return flight::row_get<flight::RowKey<"jointSolvers">>(world).get(kind);
 }

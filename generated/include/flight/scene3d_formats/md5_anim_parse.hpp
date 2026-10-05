@@ -23,7 +23,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/node3_d.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/animation_clip.hpp>
+
 namespace flight::scene3d_formats {
+
+using flight::types::AnimationClip;
+using flight::types::ImportDiagnostic;
+using flight::types::ImportDiagnosticSeverity;
+using flight::types::Node3D;
+using flight::types::import_diagnostic_severity;
 struct Md5AnimHierarchyEntry;
 struct Md5AnimBaseframePose;
 struct Md5AnimDropTally;

@@ -47,6 +47,12 @@ namespace flight::types { struct Vector2; }
 
 namespace flight::scene2d_canvas {
 
+using flight::types::CanvasRenderPass;
+using flight::types::CanvasRenderState;
+using flight::types::CanvasRenderSurface;
+using flight::types::CanvasRenderSurfaceCreator;
+using flight::types::CanvasTextureRenderTarget;
+
 inline flight::WeakMap<flight::Ref<flight::types::CanvasRenderState>, flight::Map<flight::Ref<flight::types::RenderTexture>, flight::Ref<flight::types::CanvasRenderTextureEntry>>> targets_by_state = flight::WeakMap<flight::Ref<flight::types::CanvasRenderState>, flight::Map<flight::Ref<flight::types::RenderTexture>, flight::Ref<flight::types::CanvasRenderTextureEntry>>>();
 
 inline void destroy_canvas_render_texture(flight::Ref<flight::types::CanvasRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTexture>>>> render_texture) {

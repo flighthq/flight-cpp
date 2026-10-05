@@ -17,6 +17,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/scene2_drenderer.hpp>
+
+#include <flight/types/render_proxy2_d.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
 #include "canvas_node2_d.hpp"
 #include "canvas_render_state.hpp"
 #include "canvas_scale9_sprite_slices.hpp"
@@ -24,6 +32,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "canvas_transform.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::types::CanvasRenderState;
+using flight::types::MatrixLike;
+using flight::types::RenderProxy2D;
+using flight::types::Scene2DRenderer;
 
 inline flight::Array<double> slices = flight::Array<double>{};
 

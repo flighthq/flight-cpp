@@ -34,6 +34,12 @@ namespace flight::types { struct VoxelGrid; }
 
 namespace flight::scene3d_resources {
 
+using flight::types::Scene3D;
+using flight::types::Scene3DResourceResolverWithRuntime;
+using flight::types::Scene3DResources;
+using flight::types::TextureSource;
+using flight::types::UpdateScene3DResourceStreamingOptions;
+
 inline double retry_failed_scene3_dresources(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3D>>>> scene, flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> resolver, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::UpdateScene3DResourceStreamingOptions>>>>> options = std::nullopt) {
   flight::Array<flight::types::Texture> textures = flight::Array<flight::types::Texture>{};
   flight::scene3d_resources::get_scene3_dresource_textures(textures, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3D>>>>>(scene));

@@ -63,6 +63,23 @@ namespace flight::types { struct Transform3D; }
 
 namespace flight::scene3d_formats {
 
+using flight::types::GltfBufferView;
+using flight::types::GltfDocument;
+using flight::types::GltfExtensionHandler;
+using flight::types::GltfMaterialsAnisotropy;
+using flight::types::GltfMaterialsClearcoat;
+using flight::types::GltfMaterialsEmissiveStrength;
+using flight::types::GltfMaterialsIor;
+using flight::types::GltfMaterialsIridescence;
+using flight::types::GltfMaterialsPbrSpecularGlossiness;
+using flight::types::GltfMaterialsSheen;
+using flight::types::GltfMaterialsSpecular;
+using flight::types::GltfMaterialsTransmission;
+using flight::types::GltfMaterialsVolume;
+using flight::types::ImportDiagnostic;
+using flight::types::Scene3DDocument;
+using flight::types::Transform3D;
+
 inline const double gltf_default_iridescence_ior = 1.3;
 
 inline const double gltf_default_iridescence_thickness_max = 400.0;

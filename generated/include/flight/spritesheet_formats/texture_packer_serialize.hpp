@@ -13,6 +13,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture_packer_schema.hpp>
+
 #include <flight/types/spritesheet_frame_data.hpp>
 
 #include <flight/types/spritesheet_data.hpp>
@@ -21,6 +23,9 @@ namespace flight::spritesheet_formats {
 
 using flight::types::SpritesheetData;
 using flight::types::SpritesheetFrameData;
+using flight::types::TexturePackerDocument;
+using flight::types::TexturePackerHashFrame;
+using flight::types::TexturePackerMeta;
 
 
 // NOT GENERATED: function dataToMeta -- source line 12

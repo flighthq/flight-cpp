@@ -24,9 +24,25 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/signals/slot.hpp>
+
+#include <flight/signals/emitter.hpp>
+
+#include <flight/signals/signal.hpp>
+
+#include <flight/types/input_state.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::input {
+
+using flight::signals::connect_signal;
+using flight::signals::disconnect_signal;
+using flight::signals::emit_signal;
+
+using flight::signals::create_signal;
+
+using flight::types::InputState;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

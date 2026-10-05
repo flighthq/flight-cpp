@@ -19,9 +19,57 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/vector3.hpp>
+
+#include <flight/geometry/ray3d.hpp>
+
+#include <flight/geometry/matrix4.hpp>
+
+#include <flight/geometry/aabb.hpp>
+
+#include <flight/camera/picking.hpp>
+
+#include <flight/types/vector3.hpp>
+
+#include <flight/types/scene3_dpick_options.hpp>
+
+#include <flight/types/scene3_dhit.hpp>
+
+#include <flight/types/ray3_d.hpp>
+
+#include <flight/types/node3_d.hpp>
+
+#include <flight/types/mesh.hpp>
+
+#include <flight/types/matrix4.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/camera3_d.hpp>
+
+#include <flight/types/aabb.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::picking {
+
+using flight::geometry::create_aabb;
+using flight::geometry::create_matrix4;
+using flight::geometry::create_ray3_d;
+using flight::geometry::create_vector3;
+
+using flight::camera::get_camera3_dscreen_to_world_ray;
+
+using flight::types::Aabb;
+using flight::types::Camera3D;
+using flight::types::EntityConstruction;
+using flight::types::Matrix4;
+using flight::types::Mesh;
+using flight::types::Node3D;
+using flight::types::Ray3D;
+using flight::types::Scene3DHit;
+using flight::types::Scene3DPickOptions;
+using flight::types::Vector3;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

@@ -25,7 +25,87 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/unity_schema.hpp>
 
+#include <flight/scene3d/scene_document.hpp>
+
+#include <flight/mesh/mesh_geometry_operations.hpp>
+
+#include <flight/mesh/mesh_geometry_attributes.hpp>
+
+#include <flight/geometry/vector3.hpp>
+
+#include <flight/geometry/transform3d.hpp>
+
+#include <flight/geometry/quaternion.hpp>
+
+#include <flight/geometry/matrix4.hpp>
+
+#include <flight/types/vector3.hpp>
+
+#include <flight/types/transform3_d.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/scene3_d.hpp>
+
+#include <flight/types/quaternion.hpp>
+
+#include <flight/types/mesh_triangle_vertex_indices.hpp>
+
+#include <flight/types/mesh_geometry.hpp>
+
+#include <flight/types/md5_schema.hpp>
+
+#include <flight/types/matrix4.hpp>
+
+#include <flight/types/material.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/image_resource_reference.hpp>
+
 namespace flight::scene3d_formats {
+
+using flight::scene3d::create_scene3_dfrom_document;
+
+using flight::mesh::get_mesh_geometry_triangle_count;
+using flight::mesh::get_vertex_attribute_float_offset;
+
+using flight::geometry::compose_matrix4;
+using flight::geometry::conjugate_quaternion;
+using flight::geometry::create_matrix4;
+using flight::geometry::create_quaternion;
+using flight::geometry::create_transform3_d;
+using flight::geometry::inverse_matrix4;
+using flight::geometry::multiply_quaternion;
+using flight::geometry::rotate_vector3_by_quaternion;
+using flight::geometry::set_quaternion;
+using flight::geometry::set_vector3;
+
+using flight::types::ImageResourceReference;
+using flight::types::ImportDiagnostic;
+using flight::types::ImportDiagnosticSeverity;
+using flight::types::MaterialLike;
+using flight::types::Matrix4;
+using flight::types::Md5Joint;
+using flight::types::Md5Mesh;
+using flight::types::Md5Vertex;
+using flight::types::Md5Weight;
+using flight::types::MeshGeometry;
+using flight::types::MeshTriangleVertexIndices;
+using flight::types::Quaternion;
+using flight::types::QuaternionLike;
+using flight::types::Scene3D;
+using flight::types::Scene3DDocument;
+using flight::types::Scene3DDocumentAnimation;
+using flight::types::Scene3DDocumentCamera;
+using flight::types::Scene3DDocumentLight;
+using flight::types::Scene3DDocumentMesh;
+using flight::types::Scene3DDocumentNode;
+using flight::types::Scene3DDocumentScene;
+using flight::types::Scene3DDocumentSkin;
+using flight::types::Transform3D;
+using flight::types::Vector3Like;
+using flight::types::import_diagnostic_severity;
 struct Md5WeightInfluence;
 struct Md5DropTally;
 } // namespace flight::scene3d_formats

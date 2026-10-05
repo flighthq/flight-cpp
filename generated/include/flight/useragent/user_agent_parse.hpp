@@ -12,7 +12,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/device_form_factor.hpp>
+
 namespace flight::useragent {
+
+using flight::types::DeviceFormFactor;
 
 inline flight::Ref<DeviceFormFactor> parse_user_agent_form_factor(flight::String ua, double max_touch_points) {
   if (flight::RegExp(flight::String("android auto|car browser|automotive"), flight::String("i")).test(ua)) {

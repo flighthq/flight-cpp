@@ -29,7 +29,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/tray.hpp>
+
 namespace flight::tray {
+
+using flight::types::TrayReleaseResult;
 
 struct TrayRuntime;
 struct TrayReleaseRuntime;
@@ -199,7 +203,7 @@ inline void set_tray_animation_guard(std::optional<std::function<void(flight::Re
 }
 
 inline std::optional<flight::Ref<TrayRuntime>> get_tray_runtime(flight::Ref<TrayIcon> tray) {
-  return static_cast<std::optional<flight::Ref<TrayRuntime>>>(tray[entity_runtime_key]);
+  return static_cast<std::optional<flight::Ref<TrayRuntime>>>(tray->entity_runtime_key);
 }
 
 inline flight::Task<flight::Ref<TrayDestroyResult>> destroy_tray_icon(flight::Ref<TrayIcon> tray) {

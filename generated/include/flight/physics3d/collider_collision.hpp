@@ -16,6 +16,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::physics3d {
 
 using flight::types::CollisionColliderShape3D;
+using flight::types::CollisionContactManifold3D;
+using flight::types::CollisionRaycastHit3D;
+using flight::types::CollisionTimeOfImpact3D;
 
 
 // NOT GENERATED: function raycastPhysics3DColliderShape -- source line 38

@@ -13,9 +13,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/signals/signal.hpp>
+
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_render_state.hpp"
 
 namespace flight::render_wgpu {
+
+using flight::signals::create_signal;
+
+using flight::types::WgpuRenderState;
 
 inline void dispose_wgpu_device_signals(flight::Ref<WgpuRenderState> state) {
   (get_wgpu_render_state_runtime(state)->context.signals = nullptr);

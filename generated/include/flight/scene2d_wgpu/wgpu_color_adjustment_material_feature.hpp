@@ -24,10 +24,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_quad_batch_writer.hpp"
 #include "wgpu_shape_mesh.hpp"
 
 namespace flight::scene2d_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline const double color_scale_bias_floats = 8.0;
 

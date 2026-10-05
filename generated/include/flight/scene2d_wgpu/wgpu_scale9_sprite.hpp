@@ -12,10 +12,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_quad_batch_writer.hpp"
 #include "wgpu_scale9_mapper.hpp"
 
 namespace flight::scene2d_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline const double slice_count = 9.0;
 

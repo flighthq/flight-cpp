@@ -14,6 +14,8 @@ namespace flight::types { struct CanvasRenderSurfaceCreator; }
 
 namespace flight::scene2d_canvas {
 
+using flight::types::CanvasRenderSurfaceCreator;
+
 inline flight::host_sdl::GlCanvas create_canvas_element(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasRenderSurfaceCreator>>>> creator, double width, double height, std::optional<double> pixel_ratio = std::nullopt) {
   pixel_ratio = pixel_ratio.value_or(1.0);
   std::optional<flight::host_sdl::GlCanvas> canvas = flight::row_get<flight::RowKey<"createRenderSurface">>(creator)(width, height, pixel_ratio.value());

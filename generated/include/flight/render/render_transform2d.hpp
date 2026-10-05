@@ -10,12 +10,22 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/node/revision.hpp>
+
 #include <flight/types/render_state.hpp>
+
+#include <flight/types/render_proxy2_d.hpp>
+
+#include <flight/types/node.hpp>
 
 #include "render_state.hpp"
 
 namespace flight::render {
 
+using flight::node::get_node_local_transform_revision;
+
+using flight::types::Node;
+using flight::types::RenderProxy2D;
 using flight::types::RenderState;
 
 

@@ -14,9 +14,28 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/light.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
 #include <flight/types/gltf_schema.hpp>
 
+#include <flight/types/gltf_extension.hpp>
+
 namespace flight::scene3d_formats {
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::types::GltfExtensionHandler;
+using flight::types::GltfPunctualLight;
+using flight::types::ImportDiagnosticSeverity;
+using flight::types::Light;
+using flight::types::Scene3DDocumentLight;
+using flight::types::import_diagnostic_severity;
 
 struct LightDropTally;
 

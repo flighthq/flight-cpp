@@ -20,6 +20,8 @@ namespace flight::types { struct AudioBus; }
 
 namespace flight::media {
 
+using flight::types::AudioBus;
+
 inline void disable_audio_mixer_guards() {
   flight::media::set_audio_bus_mixer_guard(std::nullopt);
 }

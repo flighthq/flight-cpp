@@ -11,6 +11,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture_source_kind.hpp>
+
 #include <flight/types/texture.hpp>
 
 #include <flight/types/render_target.hpp>
@@ -29,6 +31,7 @@ using flight::types::EntityConstruction;
 using flight::types::RenderTarget;
 using flight::types::RenderTargetColorSpace;
 using flight::types::Texture2D;
+using flight::types::render_target_texture_source_kind;
 
 inline void initialize_render_texture_target(flight::Ref<EntityConstruction<flight::Ref<RenderTarget>>> out, flight::Ref<CreateRenderTextureOptions> options, flight::Ref<RenderTargetColorSpace> color_space) {
   (out->color_attachments = options->color_attachments);

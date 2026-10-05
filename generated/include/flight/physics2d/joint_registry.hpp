@@ -30,6 +30,15 @@ namespace flight::types { struct SpatialIndexBackend2D; }
 
 namespace flight::physics2d {
 
+using flight::types::Physics2DContact;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DJointReaction;
+using flight::types::Physics2DJointSolver;
+using flight::types::Physics2DSolverConfig;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
+using flight::types::SpatialIndexBackend2D;
+
 inline std::optional<flight::Ref<flight::types::Physics2DJointSolver>> get_physics2_djoint_solver(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, flight::String kind) {
   return flight::row_get<flight::RowKey<"jointSolvers">>(world).get(kind);
 }

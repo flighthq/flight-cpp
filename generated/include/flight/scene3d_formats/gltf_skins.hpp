@@ -12,7 +12,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/matrix4.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/gltf_extension.hpp>
+
 namespace flight::scene3d_formats {
+
+using flight::types::GltfCoreFeatureHandler;
+using flight::types::ImportDiagnosticSeverity;
+using flight::types::Matrix4;
+using flight::types::Scene3DDocumentSkin;
 
 
 // NOT GENERATED: function bindGltfSkins -- source line 15

@@ -27,6 +27,10 @@ namespace flight::types { template <typename T> struct KeyedTable; }
 
 namespace flight::scene2d_canvas {
 
+using flight::types::CanvasShapeCommand;
+using flight::types::CanvasShapeDrawState;
+using flight::types::entity_runtime_key;
+
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_ON_MISS_REGISTRY_ENTRIES_SHAPE_ENTITY_RUNTIME_KEY_7EB51FAEBA1141A2
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_ON_MISS_REGISTRY_ENTRIES_SHAPE_ENTITY_RUNTIME_KEY_7EB51FAEBA1141A2
 struct on_miss_registry_entries_shape_entity_runtime_key_7eb51faeba1141a2 : public flight::types::KeyedTable<flight::Ref<flight::types::CanvasShapeCommand<flight::String>>> {

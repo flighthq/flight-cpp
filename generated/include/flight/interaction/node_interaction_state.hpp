@@ -16,14 +16,28 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
+#include <flight/types/node_interaction_state.hpp>
+
+#include <flight/types/node_interaction.hpp>
+
 #include <flight/types/node.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/cursor.hpp>
 
 namespace flight::interaction {
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
+using flight::types::Cursor;
+using flight::types::EntityConstruction;
+using flight::types::HitArea;
 using flight::types::NodeAny;
+using flight::types::NodeInteractionState;
+using flight::types::NodeRuntime;
+using flight::types::NodeTraits;
 
 
 // NOT GENERATED: function getNodeInteractionState -- source line 46

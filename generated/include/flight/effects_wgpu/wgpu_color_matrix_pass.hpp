@@ -23,6 +23,8 @@ namespace flight::types { struct WgpuTextureRenderTarget; }
 
 namespace flight::effects_wgpu {
 
+using flight::types::WgpuRenderState;
+
 inline const flight::String color_matrix_fragment_wgsl = flight::String("\nstruct Uniforms { u_row_r : vec4f, u_row_g : vec4f, u_row_b : vec4f, u_row_a : vec4f, u_offset : vec4f, }\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let c = textureSampleLevel(tex, smp, uv, 0.0);\n  let nr = uni.u_row_r.x * c.r + uni.u_row_r.y * c.g + uni.u_row_r.z * c.b + uni.u_row_r.w * c.a + uni.u_offset.x;\n  let ng = uni.u_row_g.x * c.r + uni.u_row_g.y * c.g + uni.u_row_g.z * c.b + uni.u_row_g.w * c.a + uni.u_offset.y;\n  let nb = uni.u_row_b.x * c.r + uni.u_row_b.y * c.g + uni.u_row_b.z * c.b + uni.u_row_b.w * c.a + uni.u_offset.z;\n  let na = uni.u_row_a.x * c.r + uni.u_row_a.y * c.g + uni.u_row_a.z * c.b + uni.u_row_a.w * c.a + uni.u_offset.w;\n  return vec4f(clamp(vec3f(nr, ng, nb), vec3f(0.0), vec3f(1.0)), na);\n}");
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_ENTITY_RUNTIME_KEY_PIPELINE_BLEND_MODE_COMPILE_FOR_FORMAT_VARIANTS_5A993344E208D790

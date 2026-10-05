@@ -16,11 +16,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/render_effect_padding.hpp>
+
 #include <flight/registry/registry_table.hpp>
 #include <flight/render/render_state.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::effects {
+
+using flight::types::RenderEffectPadding;
 
 inline flight::Ref<flight::types::RenderEffectPadding> get_gaussian_render_effect_padding(double blur_x, double blur_y) {
   const double horizontal = std::ceil((flight::maximum(0.0, blur_x) * 3.0));

@@ -19,6 +19,11 @@ namespace flight::types { struct CompositeCommand; }
 
 namespace flight::command {
 
+using flight::types::Command;
+using flight::types::CommandBinding;
+using flight::types::CommandHistory;
+using flight::types::CompositeCommand;
+
 inline std::optional<flight::String> find_missing_command_kind(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CommandHistory>>>> history, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Command>>>> command) {
   if (!flight::command::get_command_binding(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CommandHistory>>>>>(history), flight::row_get<flight::RowKey<"kind">>(command)).has_value()) {
     return std::optional<flight::String>{flight::row_get<flight::RowKey<"kind">>(command)};

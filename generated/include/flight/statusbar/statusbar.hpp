@@ -14,9 +14,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/signals/emitter.hpp>
+
+#include <flight/signals/signal.hpp>
+
+#include <flight/types/status_bar.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::statusbar {
+
+using flight::signals::emit_signal;
+
+using flight::signals::create_signal;
+
+using flight::types::StatusBarInfo;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

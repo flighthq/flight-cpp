@@ -17,12 +17,52 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/render/render_state.hpp>
+
+#include <flight/types/shape_command.hpp>
+
+#include <flight/types/shape.hpp>
+
+#include <flight/types/scene2_drenderer.hpp>
+
+#include <flight/types/render_state.hpp>
+
+#include <flight/types/render_registry_signals.hpp>
+
+#include <flight/types/render_proxy2_d.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/canvas_texture_resolver.hpp>
+
+#include <flight/types/canvas_shape_registry.hpp>
+
+#include <flight/types/canvas_shape_draw_state.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
 #include "canvas_node2_d.hpp"
 #include "canvas_render_state.hpp"
 #include "canvas_shape_registry.hpp"
 #include "canvas_transform.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::render::get_render_state_runtime;
+
+using flight::types::CanvasRenderState;
+using flight::types::CanvasShapeCommand;
+using flight::types::CanvasShapeDrawState;
+using flight::types::CanvasTextureResolvers;
+using flight::types::Kind;
+using flight::types::LineScaleMode;
+using flight::types::RenderProxy2D;
+using flight::types::RenderRegistrySignals;
+using flight::types::RenderState;
+using flight::types::Scene2DRenderer;
+using flight::types::Shape;
+using flight::types::ShapeCommandToken;
+using flight::types::ShapeData;
 
 inline double resolve_stroke_width(flight::CanvasRenderingContext2D context, double width, flight::Ref<LineScaleMode> mode) {
   if ((mode == flight::String("normal"))) {

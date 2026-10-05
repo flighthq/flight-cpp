@@ -16,9 +16,29 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/color/pack_color.hpp>
+
+#include <flight/types/gltf_schema.hpp>
+
+#include <flight/types/gltf_extension.hpp>
+
 #include "gltf_material_extension.hpp"
 
 namespace flight::scene3d_formats {
+
+using flight::color::pack_linear_to_color;
+
+using flight::types::GltfExtensionHandler;
+using flight::types::GltfMaterialsAnisotropy;
+using flight::types::GltfMaterialsClearcoat;
+using flight::types::GltfMaterialsEmissiveStrength;
+using flight::types::GltfMaterialsIor;
+using flight::types::GltfMaterialsIridescence;
+using flight::types::GltfMaterialsPbrSpecularGlossiness;
+using flight::types::GltfMaterialsSheen;
+using flight::types::GltfMaterialsSpecular;
+using flight::types::GltfMaterialsTransmission;
+using flight::types::GltfMaterialsVolume;
 
 
 // NOT GENERATED: function resolveTransmissionVolume -- source line 72

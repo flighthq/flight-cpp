@@ -28,7 +28,42 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/collision/sweep_collision_shape2_d.hpp>
+
+#include <flight/collision/contact_manifold2_d.hpp>
+
+#include <flight/collision/collide_contact_manifold2_d.hpp>
+
+#include <flight/types/spatial.hpp>
+
+#include <flight/types/physics2_d.hpp>
+
+#include <flight/types/collision.hpp>
+
 namespace flight::physics2d {
+
+using flight::collision::collide_contact_manifold2_d;
+using flight::collision::create_collision_contact_manifold2_d;
+using flight::collision::create_collision_time_of_impact2_d;
+using flight::collision::sweep_collision_shape2_d;
+
+using flight::types::CollisionBuiltInShape2D;
+using flight::types::CollisionContactManifold2D;
+using flight::types::CollisionContactPoint2D;
+using flight::types::CollisionTimeOfImpact2D;
+using flight::types::Physics2DBrokenJoint;
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DContact;
+using flight::types::Physics2DContactIntakeGuard;
+using flight::types::Physics2DContactPoint;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DJointReaction;
+using flight::types::Physics2DJointResolutionGuard;
+using flight::types::Physics2DSolverConfig;
+using flight::types::Physics2DStepGuard;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
+using flight::types::SpatialPair;
 struct Physics2DStepScratch;
 } // namespace flight::physics2d
 

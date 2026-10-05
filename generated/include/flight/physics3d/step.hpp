@@ -45,6 +45,18 @@ namespace flight::types { struct SpatialIndexBackend3D; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DContact;
+using flight::types::Physics3DContactConstraint;
+using flight::types::Physics3DJoint;
+using flight::types::Physics3DJointEvents;
+using flight::types::Physics3DJointReaction;
+using flight::types::Physics3DJointSolver;
+using flight::types::Physics3DSequentialImpulseConfig;
+using flight::types::Physics3DSolverConfig;
+using flight::types::Physics3DWorld;
+using flight::types::RigidBody3D;
+using flight::types::SpatialIndexBackend3D;
+
 inline void clear_joint_accumulators(flight::Ref<flight::types::Physics3DJoint> joint, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointSolver>>>> solver) {
   ([&]() { auto optional_chain_receiver = flight::row_get<flight::RowKey<"clearAccumulatedImpulses">>(solver); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(joint); }());
   (joint->impulse0 = 0.0);

@@ -17,7 +17,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/scale9_mapper.hpp>
+
+#include <flight/types/rectangle.hpp>
+
 namespace flight::scene2d_canvas {
+
+using flight::types::RectangleLike;
+using flight::types::Scale9Mapper;
 
 inline double to_scale9_position(double pos, double scale9_start, double scale9_center, double unscaled_size, double scale) {
   const double scale9_end = ((unscaled_size - scale9_center) - scale9_start);

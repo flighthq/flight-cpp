@@ -29,9 +29,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/signals/signal.hpp>
+
+#include <flight/types/quad_batch.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::quadbatch {
+
+using flight::signals::create_signal;
+
+using flight::types::QuadBatch;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

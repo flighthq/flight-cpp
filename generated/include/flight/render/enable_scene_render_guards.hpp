@@ -20,6 +20,8 @@ namespace flight::types { struct Mesh; }
 
 namespace flight::render {
 
+using flight::types::Mesh;
+
 inline void disable_scene_render_guards() {
   flight::render::set_skinned_mesh_bounds_guard(std::nullopt);
 }

@@ -24,6 +24,8 @@ namespace flight::types { template <typename T> struct AssetLoaderAdapter; }
 
 namespace flight::assets {
 
+using flight::types::AssetLibrary;
+
 inline void disable_asset_guards(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AssetLibrary>>>> library) {
   flight::assets::set_asset_acquire_guard(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AssetLibrary>>>>>(library), std::nullopt);
 }

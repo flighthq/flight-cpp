@@ -23,6 +23,8 @@ namespace flight::types { struct CanvasTextureRenderTarget; }
 
 namespace flight::effects_canvas {
 
+using flight::types::CanvasTextureRenderTarget;
+
 inline void draw_canvas_accumulation_pass(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>> dest, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>> source, double samples, std::function<void(flight::CanvasRenderingContext2D, double, double)> per_sample_transform) {
   const double clamped_samples = flight::maximum(1.0, flight::round(samples));
   flight::CanvasRenderingContext2D ctx = flight::row_get<flight::RowKey<"context">>(dest);

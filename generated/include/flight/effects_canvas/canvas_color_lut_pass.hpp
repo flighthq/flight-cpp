@@ -17,6 +17,8 @@ namespace flight::types { struct ColorLut; }
 
 namespace flight::effects_canvas {
 
+using flight::types::CanvasTextureRenderTarget;
+
 inline void apply_color_lut_pass_to_canvas(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>> dest, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorLut>>>> lut) {
   flight::Array<double> rgb = flight::Array<double>{0.0, 0.0, 0.0};
   flight::effects_canvas::draw_canvas_image_data_pass(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>>>(dest), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>>>(source), [=](flight::Uint8ClampedArray data, double pixel_count) {

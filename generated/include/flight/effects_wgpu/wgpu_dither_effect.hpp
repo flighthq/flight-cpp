@@ -12,12 +12,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_effect_pass.hpp"
 #include "wgpu_effect_program_cache.hpp"
 #include "wgpu_effect_texel_scale.hpp"
 #include "wgpu_render_effect_registry.hpp"
 
 namespace flight::effects_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline const flight::String dither_fragment_wgsl = flight::String("\nstruct Uniforms {\n  u_levels : f32,\n  _pad0 : f32,\n  u_resolution : vec2f,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\nfn bayer(p : vec2i) -> f32 {\n  let x = p.x & 3;\n  let y = p.y & 3;\n  var m = array<i32, 16>(0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5);\n  return f32(m[y * 4 + x]) / 16.0;\n}\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let c = textureSampleLevel(tex, smp, uv, 0.0);\n  let px = vec2i(uv * uni.u_resolution);\n  let t = bayer(px) - 0.5;\n  let steps = uni.u_levels - 1.0;\n  let q = floor(c.rgb * steps + 0.5 + t) / steps;\n  return vec4f(clamp(q, vec3f(0.0), vec3f(1.0)), c.a);\n}");
 

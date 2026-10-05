@@ -12,7 +12,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/host_audio_codec.hpp>
+
 namespace flight::audio {
+
+using flight::types::HostAudioCodecCapability;
 
 inline bool can_play_audio_type(flight::Ref<HostAudioCodecCapability> host_audio_codec, flight::String mime_type) {
   if ((mime_type == flight::String(""))) {

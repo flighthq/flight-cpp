@@ -12,11 +12,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_effect_pass.hpp"
 #include "wgpu_effect_program_cache.hpp"
 #include "wgpu_render_effect_registry.hpp"
 
 namespace flight::effects_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline const flight::String lens_flare_fragment_wgsl = flight::String("\nstruct Uniforms {\n  u_threshold : f32,\n  u_intensity : f32,\n  u_ghosts : f32,\n  u_halo : f32,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\nfn brightPass(uv : vec2f) -> vec3f {\n  if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) { return vec3f(0.0); }\n  let c = textureSampleLevel(tex, smp, uv, 0.0).rgb;\n  let l = dot(c, vec3f(0.2126, 0.7152, 0.0722));\n  return c * max(0.0, l - uni.u_threshold);\n}\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let scene = textureSampleLevel(tex, smp, uv, 0.0);\n  // Single-pass approximation of a flare: walk ghost samples along the vector toward the optical\n  // center and add a halo ring, all from the bright pass of the scene itself (no separate buffer).\n  let toCenter = vec2f(0.5) - uv;\n  var flare = vec3f(0.0);\n  let count = i32(clamp(uni.u_ghosts, 0.0, 8.0));\n  for (var i = 0; i < 8; i = i + 1) {\n    if (i >= count) { break; }\n    let t = (f32(i) + 1.0) / (f32(count) + 1.0);\n    let ghostUv = uv + toCenter * (2.0 * t);\n    flare = flare + brightPass(ghostUv);\n  }\n  let haloDir = normalize(toCenter + vec2f(1e-5));\n  flare = flare + brightPass(uv + haloDir * uni.u_halo) * uni.u_halo;\n  return vec4f(scene.rgb + flare * uni.u_intensity, scene.a);\n}");
 

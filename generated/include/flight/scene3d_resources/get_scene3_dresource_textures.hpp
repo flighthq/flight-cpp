@@ -15,8 +15,26 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/texture.hpp>
 
+#include <flight/types/scene3_d.hpp>
+
+#include <flight/types/resource_resolution_state.hpp>
+
+#include <flight/types/image_resource_reference.hpp>
+
+#include <flight/types/image_bitmap_composition.hpp>
+
+#include <flight/types/alpha_type.hpp>
+
 namespace flight::scene3d_resources {
 
+using flight::types::resource_resolution_state;
+
+using flight::types::AlphaType;
+using flight::types::ImageBitmapComposition;
+using flight::types::ImageResourceFailureKind;
+using flight::types::ImageResourceReference;
+using flight::types::ResourceResolutionState;
+using flight::types::Scene3D;
 using flight::types::Texture;
 
 inline void get_scene3_dresource_textures(flight::Array<flight::Ref<Texture>> out, flight::Ref<Scene3D> scene) {

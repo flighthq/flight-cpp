@@ -17,9 +17,40 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/signals/slot.hpp>
+
+#include <flight/signals/emitter.hpp>
+
+#include <flight/signals/signal.hpp>
+
+#include <flight/types/menu_signals.hpp>
+
+#include <flight/types/menu_select.hpp>
+
+#include <flight/types/menu_highlight.hpp>
+
+#include <flight/types/menu.hpp>
+
+#include <flight/types/entity.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::menu {
+
+using flight::signals::clear_signal;
+using flight::signals::emit_signal;
+
+using flight::signals::create_signal;
+
+using flight::types::EntityConstruction;
+using flight::types::HostAppMenuCapability;
+using flight::types::HostMenuHighlightCapability;
+using flight::types::HostMenuPopupCapability;
+using flight::types::HostMenuSelectCapability;
+using flight::types::MenuHighlight;
+using flight::types::MenuItemTemplate;
+using flight::types::MenuSelect;
+using flight::types::MenuSignals;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

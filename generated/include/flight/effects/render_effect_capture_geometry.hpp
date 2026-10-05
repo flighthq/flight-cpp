@@ -11,9 +11,32 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/rectangle.hpp>
+
+#include <flight/geometry/matrix.hpp>
+
+#include <flight/types/render_state.hpp>
+
+#include <flight/types/render_effect_padding.hpp>
+
+#include <flight/types/render_effect.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/matrix.hpp>
+
 #include "render_effect_padding.hpp"
 
 namespace flight::effects {
+
+using flight::geometry::create_matrix;
+using flight::geometry::create_rectangle;
+
+using flight::types::Matrix;
+using flight::types::Rectangle;
+using flight::types::RenderEffect;
+using flight::types::RenderEffectPadding;
+using flight::types::RenderState;
 
 inline void copy_padding(flight::Ref<RenderEffectPadding> out, flight::Ref<RenderEffectPadding> source) {
   (out->bottom = source->bottom);

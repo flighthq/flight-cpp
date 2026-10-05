@@ -14,6 +14,8 @@ namespace flight::types { struct GltfDracoMesh; }
 
 namespace flight::scene3d_formats {
 
+using flight::types::GltfDracoMesh;
+
 inline std::optional<std::function<std::optional<flight::Ref<flight::types::GltfDracoMesh>>(flight::Uint8Array, flight::Record<flight::String, double>)>> draco_decoder = std::nullopt;
 
 inline std::optional<std::function<std::optional<flight::Ref<flight::types::GltfDracoMesh>>(flight::Uint8Array, flight::Record<flight::String, double>)>> get_gltf_draco_decoder() {

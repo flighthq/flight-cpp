@@ -28,6 +28,11 @@ namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::command {
 
+using flight::types::Command;
+using flight::types::CommandBinding;
+using flight::types::CommandBindingTable;
+using flight::types::CommandHistory;
+
 inline bool can_redo_command(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CommandHistory>>>> history) {
   return (flight::row_get<flight::RowKey<"index">>(history) < static_cast<double>(flight::row_get<flight::RowKey<"entries">>(history).size()));
 }

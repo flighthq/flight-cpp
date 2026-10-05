@@ -45,6 +45,8 @@ namespace flight::types { template <typename T> struct Signal; }
 namespace flight::types { template <typename T> struct SignalData; }
 
 namespace flight::app {
+
+using flight::signals::create_signal;
 struct AppSubscriptions;
 } // namespace flight::app
 

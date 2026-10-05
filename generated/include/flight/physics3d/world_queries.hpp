@@ -16,21 +16,44 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/collision/sweep_collision_shape3_d.hpp>
+
+#include <flight/collision/raycast_collision_shape3_d.hpp>
+
 #include <flight/entity/entity.hpp>
 
 #include <flight/types/spatial.hpp>
 
 #include <flight/types/physics3_d.hpp>
 
+#include <flight/types/entity.hpp>
+
 #include <flight/types/collision.hpp>
 
 namespace flight::physics3d {
 
+using flight::collision::create_collision_raycast_hit3_d;
+using flight::collision::create_collision_time_of_impact3_d;
+
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
+using flight::types::CollisionBuiltInShape3D;
 using flight::types::CollisionColliderShape3D;
+using flight::types::CollisionRaycastHit3D;
+using flight::types::CollisionTimeOfImpact3D;
+using flight::types::EntityConstruction;
 using flight::types::Physics3DCollider;
+using flight::types::Physics3DCollisionFilter;
+using flight::types::Physics3DMaterial;
+using flight::types::Physics3DQueryFilter;
+using flight::types::Physics3DQueryHit;
+using flight::types::Physics3DQueryResult;
+using flight::types::Physics3DRayHit;
+using flight::types::Physics3DRayResult;
+using flight::types::Physics3DShapeCastResult;
+using flight::types::Physics3DWorld;
+using flight::types::RigidBody3D;
 using flight::types::SpatialAabb3D;
 struct Physics3DQueryScratch;
 } // namespace flight::physics3d

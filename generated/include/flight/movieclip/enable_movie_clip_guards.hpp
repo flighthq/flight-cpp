@@ -10,6 +10,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/movie_clip.hpp>
+
 namespace flight::types { struct SpritesheetAnimation; }
 namespace flight::types { struct SpritesheetTimelineSourceExplanation; }
 
@@ -21,6 +23,9 @@ namespace flight::types { struct SpritesheetTimelineSourceExplanation; }
 #include <flight/movieclip/spritesheet_timeline_source.hpp>
 
 namespace flight::movieclip {
+
+using flight::types::MovieClip;
+using flight::types::SpritesheetAnimation;
 
 inline void warn_on_unsupported_spritesheet_timeline_fields(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpritesheetAnimation>>>> animation, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpritesheetTimelineSourceExplanation>>>> explanation) {
   if ((static_cast<double>(flight::row_get<flight::RowKey<"unsupportedFields">>(explanation).size()) == 0.0)) {

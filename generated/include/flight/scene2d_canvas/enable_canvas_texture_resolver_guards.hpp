@@ -14,6 +14,9 @@ namespace flight::types { struct RenderState; }
 
 namespace flight::scene2d_canvas {
 
+using flight::types::CanvasRenderState;
+using flight::types::RenderState;
+
 inline bool are_canvas_texture_resolver_guards_enabled(flight::Ref<flight::types::CanvasRenderState> state) {
   return flight::render::are_render_registries_guards_enabled(state);
 }

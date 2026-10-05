@@ -16,7 +16,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/vector3.hpp>
+
+#include <flight/geometry/quaternion.hpp>
+
+#include <flight/node/revision.hpp>
+
+#include <flight/node/hierarchy.hpp>
+
+#include <flight/types/transform3_d.hpp>
+
+#include <flight/types/skeleton3_d.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/scene3_d.hpp>
+
 #include <flight/types/node3_d.hpp>
+
+#include <flight/types/material.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include "mesh.hpp"
 #include "scene.hpp"
@@ -24,7 +44,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene3d {
 
+using flight::geometry::set_quaternion;
+using flight::geometry::set_vector3;
+
+using flight::node::add_node_child;
+using flight::node::invalidate_node_local_transform;
+
+using flight::types::EntityConstruction;
+using flight::types::Material;
+using flight::types::MaterialLike;
 using flight::types::Node3D;
+using flight::types::Scene3D;
+using flight::types::Scene3DDocument;
+using flight::types::Scene3DDocumentNode;
+using flight::types::Skeleton3D;
+using flight::types::Transform3D;
+using flight::types::entity_runtime_key;
 
 inline void assign_skeleton3_dfields(flight::Ref<EntityConstruction<flight::Ref<Skeleton3D>>> out, flight::Float32Array inverse_bind_matrices, flight::Float32Array joint_matrices, flight::Array<flight::Ref<Node3D>> joints, std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined> names, flight::Float32Array normal_matrices) {
   (out->inverse_bind_matrices = inverse_bind_matrices);

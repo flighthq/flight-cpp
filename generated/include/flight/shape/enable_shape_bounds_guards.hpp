@@ -20,6 +20,8 @@ namespace flight::types { struct Shape; }
 
 namespace flight::shape {
 
+using flight::types::Shape;
+
 inline void warn_on_missing_shape_bounds_command(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>> source, flight::types::ShapeBoundsMode mode, flight::String missing_command_key) {
   flight::log::log_once(flight::String("shape:bounds-command-missing:") + flight::to_string(mode) + flight::String(":") + flight::to_string(missing_command_key) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{flight::Record<flight::String, flight::Any>{{flight::String("message"), flight::String("Shape bounds are incomplete because command '") + flight::to_string(missing_command_key) + flight::String("' has no registered bounds contribution. Register its CanvasShapeCommand with explicit fillBounds and strokeBounds, or call explainShapeBounds(shape, mode) to inspect every missing key.")}, {flight::String("missingCommandKey"), missing_command_key}, {flight::String("mode"), mode}}}, std::optional<flight::String>{flight::String("shape")});
 }

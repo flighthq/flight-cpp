@@ -28,6 +28,8 @@ namespace flight::types { struct ParticleSerializeResult; }
 
 namespace flight::particles_formats {
 
+using flight::types::ParticleEmitterConfig;
+
 inline flight::Array<flight::String> collect_libgdx_serialize_warnings(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitterConfig>>>> config) {
   flight::Array<flight::String> warnings = flight::Array<flight::String>{};
   if (((flight::row_get<flight::RowKey<"blendMode">>(config).has_value() && (flight::row_get<flight::RowKey<"blendMode">>(config).value() != flight::String("add"))) && (flight::row_get<flight::RowKey<"blendMode">>(config).value() != flight::String("normal")))) {

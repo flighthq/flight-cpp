@@ -22,6 +22,8 @@ namespace flight::types { struct RigidBody3D; }
 namespace flight::physics3d {
 
 using flight::types::Physics3DCollider;
+using flight::types::Physics3DJoint;
+using flight::types::RigidBody3D;
 
 inline double get_physics3_djoint_row_velocity(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, double direction_x, double direction_y, double direction_z, double arm_ax, double arm_ay, double arm_az, double arm_bx, double arm_by, double arm_bz) {
   return ((((((((((flight::row_get<flight::RowKey<"velocityX">>(body_b) - flight::row_get<flight::RowKey<"velocityX">>(body_a)) * direction_x) + ((flight::row_get<flight::RowKey<"velocityY">>(body_b) - flight::row_get<flight::RowKey<"velocityY">>(body_a)) * direction_y)) + ((flight::row_get<flight::RowKey<"velocityZ">>(body_b) - flight::row_get<flight::RowKey<"velocityZ">>(body_a)) * direction_z)) + (flight::row_get<flight::RowKey<"angularVelocityX">>(body_b) * arm_bx)) + (flight::row_get<flight::RowKey<"angularVelocityY">>(body_b) * arm_by)) + (flight::row_get<flight::RowKey<"angularVelocityZ">>(body_b) * arm_bz)) - (flight::row_get<flight::RowKey<"angularVelocityX">>(body_a) * arm_ax)) - (flight::row_get<flight::RowKey<"angularVelocityY">>(body_a) * arm_ay)) - (flight::row_get<flight::RowKey<"angularVelocityZ">>(body_a) * arm_az));

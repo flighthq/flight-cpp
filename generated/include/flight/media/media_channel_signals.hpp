@@ -23,6 +23,10 @@ namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::media {
 
+using flight::signals::create_signal;
+
+using flight::types::VideoChannel;
+
 inline flight::WeakMap<flight::Ref<void>, flight::Ref<flight::types::MediaChannelSignals>> channel_signals = flight::WeakMap<flight::Ref<void>, flight::Ref<flight::types::MediaChannelSignals>>();
 
 inline std::optional<flight::Ref<flight::types::MediaChannelSignals>> get_audio_channel_signals(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioChannel>>>> channel) {

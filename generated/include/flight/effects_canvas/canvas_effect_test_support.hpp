@@ -44,6 +44,9 @@ namespace flight::types { struct Matrix; }
 
 namespace flight::effects_canvas {
 
+using flight::types::CanvasRenderState;
+using flight::types::CanvasTextureRenderTarget;
+
 inline flight::Ref<flight::types::CanvasRenderSurfaceCreator> canvas_test_surface_creator = flight::make_ref<flight::types::CanvasRenderSurfaceCreator>(flight::types::CanvasRenderSurfaceCreator{.create_render_surface = [](double width, double height, double pixel_ratio) -> std::optional<flight::host_sdl::GlCanvas> {
   flight::host_sdl::GlCanvas canvas = flight::host_sdl::global_this.document.create_element(flight::String("canvas"), std::nullopt);
   (canvas.style.width = flight::String("") + flight::to_string(width) + flight::String("px"));

@@ -19,7 +19,24 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/signals/slot.hpp>
+
+#include <flight/signals/emitter.hpp>
+
+#include <flight/types/gizmo_state.hpp>
+
+#include <flight/node/revision.hpp>
+
 namespace flight::gizmo {
+
+using flight::signals::connect_signal;
+using flight::signals::disconnect_signal;
+using flight::signals::emit_signal;
+
+using flight::types::GizmoHandleKind;
+
+using flight::node::invalidate_node_appearance;
+using flight::node::invalidate_node_local_transform;
 
 struct GizmoDrag;
 struct GizmoHandle;
@@ -157,7 +174,7 @@ inline flight::String get_gizmo_handle_cursor(flight::Ref<GizmoHandleKind> kind)
 
 template <typename NodeType>
 inline flight::Ref<GizmoRuntime<NodeType>> get_gizmo_runtime(flight::Ref<GizmoState<NodeType>> state) {
-  return static_cast<flight::Ref<GizmoRuntime<NodeType>>>(state[entity_runtime_key]);
+  return static_cast<flight::Ref<GizmoRuntime<NodeType>>>(state->entity_runtime_key);
 }
 
 template <typename NodeType>

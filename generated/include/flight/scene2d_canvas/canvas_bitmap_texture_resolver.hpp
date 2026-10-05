@@ -15,9 +15,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture.hpp>
+
+#include <flight/types/canvas_texture_resolver.hpp>
+
 #include "canvas_texture_resolver.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::types::CanvasTextureResolvers;
+using flight::types::Texture;
 
 
 // NOT GENERATED: function resolveCanvasBitmapTexture -- source line 17

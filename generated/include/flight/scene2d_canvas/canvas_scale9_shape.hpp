@@ -12,6 +12,24 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/shape/scale9_shape_commands.hpp>
+
+#include <flight/types/shape_command.hpp>
+
+#include <flight/types/scene2_drenderer.hpp>
+
+#include <flight/types/scale9_shape.hpp>
+
+#include <flight/types/scale9_mapper.hpp>
+
+#include <flight/types/render_proxy2_d.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
 #include "canvas_node2_d.hpp"
 #include "canvas_render_state.hpp"
 #include "canvas_scale9_mapper.hpp"
@@ -19,6 +37,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "canvas_transform.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::shape::map_scale9_shape_commands;
+
+using flight::types::CanvasRenderState;
+using flight::types::MatrixLike;
+using flight::types::RectangleLike;
+using flight::types::RenderProxy2D;
+using flight::types::Scale9Mapper;
+using flight::types::Scale9Shape;
+using flight::types::Scale9ShapeData;
+using flight::types::Scene2DRenderer;
+using flight::types::ShapeCommandToken;
 
 inline flight::Array<flight::Ref<ShapeCommandToken>> remapped_commands = flight::Array<flight::Ref<ShapeCommandToken>>{};
 

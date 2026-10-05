@@ -16,6 +16,46 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/render/render_target.hpp>
+
+#include <flight/render/render_proxy.hpp>
+
+#include <flight/render/render_cache.hpp>
+
+#include <flight/geometry/rectangle.hpp>
+
+#include <flight/geometry/matrix.hpp>
+
+#include <flight/effects_canvas/canvas_effect_test_support.hpp>
+
+#include <flight/types/scene2_drenderer.hpp>
+
+#include <flight/types/render_state.hpp>
+
+#include <flight/types/render_proxy2_d.hpp>
+
+#include <flight/types/render_effect_padding.hpp>
+
+#include <flight/types/render_cache_refresh_options.hpp>
+
+#include <flight/types/render_cache.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/canvas_texture_resolver.hpp>
+
+#include <flight/types/canvas_render_target.hpp>
+
+#include <flight/types/canvas_render_surface.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
+#include <flight/types/canvas_render_pass.hpp>
+
 #include "canvas_node2_d.hpp"
 #include "canvas_render_pass.hpp"
 #include "canvas_render_state.hpp"
@@ -24,6 +64,32 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "canvas_transform.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::render::compute_render_cache_transform;
+using flight::render::compute_render_target_size;
+using flight::render::compute_scene2_drender_target_transform;
+using flight::render::prepare_scene2_drender;
+using flight::render::register_render_cache_renderer;
+
+using flight::geometry::create_matrix;
+using flight::geometry::create_rectangle;
+
+using flight::effects_canvas::create_canvas_texture_render_target;
+
+using flight::types::CanvasRenderPass;
+using flight::types::CanvasRenderState;
+using flight::types::CanvasRenderSurfaceCreator;
+using flight::types::CanvasTextureRenderTarget;
+using flight::types::CanvasTextureResolvers;
+using flight::types::Matrix;
+using flight::types::Node2D;
+using flight::types::Rectangle;
+using flight::types::RenderCache;
+using flight::types::RenderCacheRefreshOptions;
+using flight::types::RenderEffectPadding;
+using flight::types::RenderProxy2D;
+using flight::types::RenderState;
+using flight::types::Scene2DRenderer;
 
 
 // NOT GENERATED: function createCanvasOffscreenRenderState -- source line 65

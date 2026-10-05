@@ -14,6 +14,8 @@ namespace flight::types { struct RenderEffect; }
 
 namespace flight::effects {
 
+using flight::types::RenderEffect;
+
 template <typename T>
 inline void initialize_render_effect(flight::types::EntityConstruction<T> out, flight::String kind) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);

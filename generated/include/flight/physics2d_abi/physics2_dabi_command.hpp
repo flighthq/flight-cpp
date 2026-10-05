@@ -20,7 +20,22 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/physics2_dabi.hpp>
+
+#include <flight/types/physics2_d.hpp>
+
+#include <flight/types/collision.hpp>
+
 namespace flight::physics2d_abi {
+
+using flight::types::CollisionBuiltInShape2D;
+using flight::types::Physics2DAbiCommandBuffer;
+using flight::types::Physics2DAbiObjectId;
+using flight::types::Physics2DBodyType;
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DSolverConfig;
+using flight::types::RigidBody2D;
 struct PendingCommand;
 } // namespace flight::physics2d_abi
 

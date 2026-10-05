@@ -39,6 +39,8 @@ namespace flight::types { struct Physics2DWheelJointOptions; }
 
 namespace flight::physics2d {
 
+using flight::types::Physics2DJoint;
+
 inline void init_joint_base(flight::Ref<flight::types::Physics2DJoint> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJointOptions>>>> options) {
   (out->body_a = flight::row_get<flight::RowKey<"bodyA">>(options));
   (out->body_b = flight::row_get<flight::RowKey<"bodyB">>(options));

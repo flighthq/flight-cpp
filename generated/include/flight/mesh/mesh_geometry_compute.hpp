@@ -18,7 +18,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/mesh_triangle_vertex_indices.hpp>
+
 #include <flight/types/mesh_geometry.hpp>
+
+#include <flight/types/bounding_sphere.hpp>
 
 #include <flight/types/aabb.hpp>
 
@@ -27,8 +31,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::mesh {
 
 using flight::types::Aabb;
+using flight::types::AabbLike;
+using flight::types::BoundingSphereLike;
 using flight::types::MeshGeometry;
 using flight::types::MeshGeometryRuntime;
+using flight::types::MeshTriangleVertexIndices;
 
 inline void accumulate_normal(flight::Float64Array accum, double vertex, double nx, double ny, double nz) {
   const double base = (vertex * 3.0);

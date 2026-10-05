@@ -21,13 +21,31 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/registry/registry_table.hpp>
+
 #include <flight/types/slot2_d.hpp>
 
+#include <flight/types/skeleton2_dslot_animation_target.hpp>
+
+#include <flight/types/skeleton2_danimation_target_kind.hpp>
+
+#include <flight/types/skeleton2_danimation_target_binder.hpp>
+
+#include <flight/types/skeleton2_danimation_target.hpp>
+
+#include <flight/types/skeleton2_danimation_path.hpp>
+
 #include <flight/types/skeleton2_d.hpp>
+
+#include <flight/types/registry_table.hpp>
 
 #include <flight/types/entity.hpp>
 
 #include <flight/types/bone2_d.hpp>
+
+#include <flight/types/attachment2_d.hpp>
+
+#include <flight/types/animation_channel.hpp>
 
 #include <flight/entity/entity.hpp>
 
@@ -35,9 +53,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::skeleton2d {
 
+using flight::types::skeleton2_danimation_target_kind;
+
+using flight::registry::get_registry_table_entry;
+
+using flight::types::AnimationChannel;
+using flight::types::Attachment2D;
 using flight::types::Bone2D;
 using flight::types::EntityConstruction;
+using flight::types::KeyedTable;
 using flight::types::Skeleton2D;
+using flight::types::Skeleton2DAnimationPath;
+using flight::types::Skeleton2DAnimationTarget;
+using flight::types::Skeleton2DAnimationTargetBinder;
+using flight::types::Skeleton2DAnimationTargetKind;
+using flight::types::Skeleton2DSlotAnimationPath;
+using flight::types::Skeleton2DSlotAnimationTarget;
 using flight::types::Slot2D;
 
 using flight::entity::allocate_entity;

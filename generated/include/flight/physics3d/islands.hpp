@@ -39,6 +39,16 @@ namespace flight::types { struct SpatialIndexBackend3D; }
 namespace flight::physics3d {
 
 using flight::types::Physics3DCollider;
+using flight::types::Physics3DContact;
+using flight::types::Physics3DJoint;
+using flight::types::Physics3DJointEvents;
+using flight::types::Physics3DJointReaction;
+using flight::types::Physics3DJointSolver;
+using flight::types::Physics3DSequentialImpulseConfig;
+using flight::types::Physics3DSolverConfig;
+using flight::types::Physics3DWorld;
+using flight::types::RigidBody3D;
+using flight::types::SpatialIndexBackend3D;
 
 inline void copy_island_starts(flight::Array<double> cursors, flight::Array<double> starts) {
   ([&]() { auto&& assignment_receiver = cursors; const auto assignment_value = static_cast<double>(starts.size()); assignment_receiver.resize(assignment_value); return assignment_value; }());

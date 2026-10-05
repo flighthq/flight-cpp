@@ -31,6 +31,7 @@ namespace flight::types { struct VertexAttributeLayout; }
 namespace flight::mesh {
 
 using flight::types::MeshGeometry;
+using flight::types::MeshGeometryOptions;
 using flight::types::MeshSubset;
 using flight::types::VertexAttribute;
 using flight::types::VertexAttributeLayout;

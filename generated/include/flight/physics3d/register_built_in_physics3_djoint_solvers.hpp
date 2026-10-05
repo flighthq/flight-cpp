@@ -14,6 +14,9 @@ namespace flight::types { struct Physics3DWorld; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DJointSolver;
+using flight::types::Physics3DWorld;
+
 inline void register_built_in_physics3_djoint_solvers(flight::Ref<flight::types::Physics3DWorld> world) {
   flight::physics3d::register_physics3_djoint_solver(world, flight::physics3d::physics3_dball_and_socket_joint_kind, flight::physics3d::physics3_dball_and_socket_joint_solver);
   flight::physics3d::register_physics3_djoint_solver(world, flight::physics3d::physics3_dcone_twist_joint_kind, flight::physics3d::physics3_dcone_twist_joint_solver);

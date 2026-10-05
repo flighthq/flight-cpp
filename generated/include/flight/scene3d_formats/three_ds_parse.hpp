@@ -21,7 +21,129 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/scene3d/scene_document.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/geometry/vector3.hpp>
+
+#include <flight/geometry/transform3d.hpp>
+
+#include <flight/geometry/quaternion.hpp>
+
+#include <flight/geometry/matrix4.hpp>
+
+#include <flight/camera/projection.hpp>
+
+#include <flight/types/vector3.hpp>
+
+#include <flight/types/transform3_d.hpp>
+
+#include <flight/types/three_ds_schema.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/scene3_d.hpp>
+
+#include <flight/types/quaternion.hpp>
+
+#include <flight/types/perspective_projection_options.hpp>
+
+#include <flight/types/matrix4.hpp>
+
+#include <flight/types/material.hpp>
+
+#include <flight/types/light.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/image_resource_reference.hpp>
+
 namespace flight::scene3d_formats {
+
+using flight::scene3d::create_scene3_dfrom_document;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::geometry::create_matrix4;
+using flight::geometry::create_quaternion;
+using flight::geometry::create_transform3_d;
+using flight::geometry::create_vector3;
+using flight::geometry::decompose_matrix4_to_transform3_d;
+using flight::geometry::inverse_matrix4;
+using flight::geometry::matrix4_transform_point;
+using flight::geometry::multiply_matrix4;
+using flight::geometry::multiply_quaternion;
+using flight::geometry::normalize_vector3;
+using flight::geometry::set_quaternion_from_axis_angle;
+using flight::geometry::set_quaternion_from_unit_vectors;
+using flight::geometry::subtract_vector3;
+
+using flight::camera::create_perspective_projection;
+
+using flight::types::ImageResourceReference;
+using flight::types::ImportDiagnostic;
+using flight::types::ImportDiagnosticSeverity;
+using flight::types::Light;
+using flight::types::MaterialLike;
+using flight::types::Matrix4;
+using flight::types::PerspectiveProjectionOptions;
+using flight::types::Quaternion;
+using flight::types::Scene3D;
+using flight::types::Scene3DDocument;
+using flight::types::Scene3DDocumentAnimation;
+using flight::types::Scene3DDocumentCamera;
+using flight::types::Scene3DDocumentLight;
+using flight::types::Scene3DDocumentMesh;
+using flight::types::Scene3DDocumentNode;
+using flight::types::Scene3DDocumentScene;
+using flight::types::Scene3DDocumentSkin;
+using flight::types::ThreeDsCamera;
+using flight::types::ThreeDsLight;
+using flight::types::ThreeDsMaterial;
+using flight::types::ThreeDsMaterialGroup;
+using flight::types::ThreeDsMesh;
+using flight::types::Transform3D;
+using flight::types::Vector3;
+using flight::types::import_diagnostic_severity;
+using flight::types::three_ds_camera;
+using flight::types::three_ds_camera_ranges;
+using flight::types::three_ds_chunk_header_bytes;
+using flight::types::three_ds_color_byte;
+using flight::types::three_ds_color_float;
+using flight::types::three_ds_editor;
+using flight::types::three_ds_face_material;
+using flight::types::three_ds_faces;
+using flight::types::three_ds_keyframe;
+using flight::types::three_ds_keyframe_node_header;
+using flight::types::three_ds_keyframe_object_node;
+using flight::types::three_ds_keyframe_pivot;
+using flight::types::three_ds_light;
+using flight::types::three_ds_light_inner_range;
+using flight::types::three_ds_light_multiplier;
+using flight::types::three_ds_light_off;
+using flight::types::three_ds_light_outer_range;
+using flight::types::three_ds_light_spot;
+using flight::types::three_ds_main;
+using flight::types::three_ds_material;
+using flight::types::three_ds_material_ambient;
+using flight::types::three_ds_material_bump_map;
+using flight::types::three_ds_material_diffuse;
+using flight::types::three_ds_material_name;
+using flight::types::three_ds_material_opacity_map;
+using flight::types::three_ds_material_shininess;
+using flight::types::three_ds_material_specular;
+using flight::types::three_ds_material_texture_filename;
+using flight::types::three_ds_material_texture_map;
+using flight::types::three_ds_material_transparency;
+using flight::types::three_ds_object;
+using flight::types::three_ds_percent_float;
+using flight::types::three_ds_percent_int;
+using flight::types::three_ds_smooth_group;
+using flight::types::three_ds_transform_matrix;
+using flight::types::three_ds_trimesh;
+using flight::types::three_ds_uv_coords;
+using flight::types::three_ds_vertices;
 struct ThreeDsDropTally;
 } // namespace flight::scene3d_formats
 

@@ -25,9 +25,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/capacitor_api.hpp>
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_render_stats.hpp"
 
 namespace flight::scene2d_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline const double quad_batch_instance_floats = 13.0;
 

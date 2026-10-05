@@ -20,6 +20,10 @@ namespace flight::types { struct Entity; }
 
 namespace flight::scene2d_canvas {
 
+using flight::types::CanvasRenderSurface;
+using flight::types::CanvasRenderSurfaceCreator;
+using flight::types::CanvasRenderSurfaceOptions;
+
 inline void dispose_canvas_screen_render_target(flight::Ref<flight::types::CanvasScreenRenderTarget> target) {
   (target->width = 0.0);
   (target->height = 0.0);

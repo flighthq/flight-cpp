@@ -11,9 +11,24 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/signals/slot.hpp>
+
+#include <flight/signals/emitter.hpp>
+
+#include <flight/signals/signal.hpp>
+
+#include <flight/types/share.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::share {
+
+using flight::signals::clear_signal;
+using flight::signals::emit_signal;
+
+using flight::signals::create_signal;
+
+using flight::types::HostShareContentCapability;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

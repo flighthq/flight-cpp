@@ -15,7 +15,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/node/node_order_list.hpp>
+
+#include <flight/types/skeleton2_ddraw_order_animation_target.hpp>
+
+#include <flight/types/node_order_list.hpp>
+
+#include <flight/types/node.hpp>
+
 #include <flight/types/entity.hpp>
+
+#include <flight/types/animation_track.hpp>
+
+#include <flight/types/animation_channel.hpp>
 
 #include <flight/entity/entity.hpp>
 
@@ -24,7 +36,16 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::skeleton2d {
 
+using flight::node::add_node_order_list_entry;
+using flight::node::clear_node_order_list;
+
+using flight::types::AnimationChannel;
+using flight::types::AnimationTrack;
 using flight::types::EntityConstruction;
+using flight::types::Node;
+using flight::types::NodeOrderList;
+using flight::types::NodeTraits;
+using flight::types::Skeleton2DDrawOrderAnimationTarget;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

@@ -15,13 +15,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/sprite.hpp>
+
+#include <flight/types/node2_d.hpp>
+
 #include <flight/types/node.hpp>
+
+#include <flight/types/host_bitmap_readback.hpp>
 
 #include "hit_tests.hpp"
 
 namespace flight::interaction {
 
+using flight::types::HostBitmapReadbackCapability;
+using flight::types::Node2D;
 using flight::types::NodeAny;
+using flight::types::sprite_kind;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_INTERACTION_X_Y_8365950BD60F783F
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_INTERACTION_X_Y_8365950BD60F783F

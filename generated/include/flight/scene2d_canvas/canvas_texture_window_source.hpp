@@ -13,10 +13,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/texture.hpp>
+
+#include <flight/types/canvas_texture_resolver.hpp>
+
 #include "canvas_texture_resolver.hpp"
 #include "canvas_texture_view.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::types::CanvasTextureResolvers;
+using flight::types::Texture;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_X_Y_8365950BD60F783F
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_X_Y_8365950BD60F783F

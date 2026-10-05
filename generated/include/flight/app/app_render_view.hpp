@@ -17,7 +17,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/signals/slot.hpp>
+
+#include <flight/types/render_state.hpp>
+
 namespace flight::app {
+
+using flight::signals::connect_signal;
+using flight::signals::disconnect_signal;
+
+using flight::types::RenderState;
 template <typename State = flight::Ref<RenderState>, typename Target = flight::Ref<RenderTargetDimensions>>
 struct AppRenderViewRuntime;
 } // namespace flight::app
@@ -36,7 +45,7 @@ struct AppRenderViewRuntime : public flight::ReferenceEnabled {
 };
 
 inline flight::Ref<AppRenderViewRuntime<flight::Ref<RenderState>, flight::Ref<RenderTargetDimensions>>> get_app_render_view_runtime(flight::Ref<AppRenderView> view) {
-  return static_cast<flight::Ref<AppRenderViewRuntime<flight::Ref<RenderState>, flight::Ref<RenderTargetDimensions>>>>(view[entity_runtime_key]);
+  return static_cast<flight::Ref<AppRenderViewRuntime<flight::Ref<RenderState>, flight::Ref<RenderTargetDimensions>>>>(view->entity_runtime_key);
 }
 
 inline void detach_app_render_view(flight::Ref<AppRenderView> view) {

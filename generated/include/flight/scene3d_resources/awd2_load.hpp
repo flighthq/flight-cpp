@@ -20,6 +20,10 @@ namespace flight::types { struct Scene3DDocumentLoadOptions; }
 
 namespace flight::scene3d_resources {
 
+using flight::types::HostNetCapability;
+using flight::types::Scene3DDocument;
+using flight::types::Scene3DDocumentLoadOptions;
+
 inline flight::Task<std::optional<flight::Ref<flight::types::Scene3DDocument>>> load_scene3_ddocument_from_awd2_url(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>> host_net, flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocumentLoadOptions>>>>> options = std::nullopt) {
   std::optional<flight::Uint8Array> bytes = co_await flight::scene3d_resources::load_scene3_ddocument_bytes_from_url(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), url, options);
   if (!bytes.has_value()) {

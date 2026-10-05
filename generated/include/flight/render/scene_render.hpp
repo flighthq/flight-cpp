@@ -25,14 +25,79 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/matrix4.hpp>
+
+#include <flight/geometry/frustum.hpp>
+
+#include <flight/geometry/aabb.hpp>
+
+#include <flight/color/pack_color.hpp>
+
+#include <flight/types/spot_light.hpp>
+
+#include <flight/types/scene3_drender_list.hpp>
+
+#include <flight/types/scene3_dlights.hpp>
+
+#include <flight/types/scene3_dlight_block.hpp>
+
 #include <flight/types/render_state.hpp>
+
+#include <flight/types/point_light.hpp>
+
+#include <flight/types/node3_d.hpp>
+
+#include <flight/types/mesh.hpp>
 
 #include <flight/types/matrix4.hpp>
 
+#include <flight/types/linear_color.hpp>
+
+#include <flight/types/instanced_mesh.hpp>
+
+#include <flight/types/hemisphere_light.hpp>
+
+#include <flight/types/frustum.hpp>
+
+#include <flight/types/directional_light.hpp>
+
+#include <flight/types/camera3_d.hpp>
+
+#include <flight/types/ambient_light.hpp>
+
+#include <flight/types/aabb.hpp>
+
 namespace flight::render {
 
+using flight::geometry::create_aabb;
+using flight::geometry::create_frustum;
+using flight::geometry::create_matrix4;
+using flight::geometry::is_frustum_intersecting_aabb;
+using flight::geometry::set_frustum_from_matrix4;
+using flight::geometry::transform_aabb_by_matrix4;
+
+using flight::color::unpack_color_to_linear;
+
+using flight::types::Aabb;
+using flight::types::AmbientLight;
+using flight::types::Camera3D;
+using flight::types::DirectionalLight;
+using flight::types::Frustum;
+using flight::types::HemisphereLight;
+using flight::types::InstancedMesh;
+using flight::types::LinearColor;
 using flight::types::Matrix4;
+using flight::types::Mesh;
+using flight::types::Node3D;
+using flight::types::PointLight;
 using flight::types::RenderState;
+using flight::types::Scene3DLightsLike;
+using flight::types::Scene3DRenderList;
+using flight::types::SpotLight;
+using flight::types::scene_light_ambient_radiance_offset;
+using flight::types::scene_light_block_floats;
+using flight::types::scene_light_directional_direction_offset;
+using flight::types::scene_light_directional_radiance_offset;
 
 struct PreparedScene3D;
 

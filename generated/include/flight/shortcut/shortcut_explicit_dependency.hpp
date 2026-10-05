@@ -19,12 +19,42 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/shortcut.hpp>
 #include <flight/types/texture.hpp>
+
+#include <flight/signals/slot.hpp>
+
+#include <flight/signals/signal.hpp>
+
+#include <flight/types/shortcut.hpp>
+
+#include <flight/types/parsed_accelerator.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/accelerator_parse_error.hpp>
+
+#include <flight/types/accelerator.hpp>
 
 #include <flight/entity/entity.hpp>
 
 namespace flight::shortcut {
+
+using flight::signals::clear_signal;
+
+using flight::signals::create_signal;
+
+using flight::types::Accelerator;
+using flight::types::AcceleratorParseError;
+using flight::types::CreateGlobalShortcutOutcome;
+using flight::types::EntityConstruction;
+using flight::types::GlobalShortcut;
+using flight::types::GlobalShortcutAttachOutcome;
+using flight::types::GlobalShortcutDetachOutcome;
+using flight::types::GlobalShortcutQueryOutcome;
+using flight::types::HostShortcutQueryCapability;
+using flight::types::HostShortcutTriggerCapability;
+using flight::types::ParsedAccelerator;
+using flight::types::ShortcutTriggerSubscription;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

@@ -24,11 +24,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/physics2_d.hpp>
+
 #include "joint_rows.hpp"
 #include "solver.hpp"
 #include "world.hpp"
 
 namespace flight::physics2d {
+
+using flight::types::Physics2DGearCoordinateKind;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DJointReaction;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
 
 inline const flight::String physics2_ddistance_joint_kind = flight::String("Distance");
 

@@ -27,9 +27,83 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/physics2d/world.hpp>
+
+#include <flight/physics2d/step_validation.hpp>
+
+#include <flight/physics2d/joint_registry.hpp>
+
+#include <flight/physics2d/joint_reactions.hpp>
+
+#include <flight/physics2d/islands.hpp>
+
+#include <flight/types/physics2_dabi.hpp>
+
+#include <flight/types/physics2_d.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/collision.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::physics2d_abi {
+
+using flight::physics2d::add_physics2_dbody;
+using flight::physics2d::add_physics2_dcollider;
+using flight::physics2d::add_physics2_djoint;
+using flight::physics2d::apply_physics2_dforce;
+using flight::physics2d::apply_physics2_dforce_at_point;
+using flight::physics2d::apply_physics2_dlinear_impulse;
+using flight::physics2d::apply_physics2_dlinear_impulse_at_point;
+using flight::physics2d::apply_physics2_dtorque;
+using flight::physics2d::create_rigid_body2_d;
+using flight::physics2d::is_physics2_dbody_state_valid;
+using flight::physics2d::is_physics2_dcontact_state_valid;
+using flight::physics2d::is_physics2_dgravity_valid;
+using flight::physics2d::is_physics2_djoint_state_valid;
+using flight::physics2d::is_physics2_dprevious_timestep_valid;
+using flight::physics2d::is_physics2_dtimestep_valid;
+using flight::physics2d::remove_physics2_dbody;
+using flight::physics2d::remove_physics2_dcollider;
+using flight::physics2d::remove_physics2_djoint;
+using flight::physics2d::set_physics2_dbody_bullet;
+using flight::physics2d::set_physics2_dbody_fixed_rotation;
+using flight::physics2d::set_physics2_dbody_sleep_enabled;
+using flight::physics2d::set_physics2_dbody_transform;
+using flight::physics2d::set_physics2_dbody_type;
+using flight::physics2d::wake_physics2_dbody;
+using flight::physics2d::write_physics2_djoint_reaction;
+
+using flight::types::CollisionBuiltInShape2D;
+using flight::types::EntityConstruction;
+using flight::types::Physics2DAbi;
+using flight::types::Physics2DAbiBodyBuffer;
+using flight::types::Physics2DAbiCommandBuffer;
+using flight::types::Physics2DAbiContactBuffer;
+using flight::types::Physics2DAbiContactHooks;
+using flight::types::Physics2DAbiContactSelection;
+using flight::types::Physics2DAbiExecutionResult;
+using flight::types::Physics2DAbiExecutionStatus;
+using flight::types::Physics2DAbiJointBuffer;
+using flight::types::Physics2DAbiQueryBuffer;
+using flight::types::Physics2DBodyType;
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DCollisionFilter;
+using flight::types::Physics2DContact;
+using flight::types::Physics2DContactCallback;
+using flight::types::Physics2DContactPoint;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DJointReaction;
+using flight::types::Physics2DMaterial;
+using flight::types::Physics2DQueryHit;
+using flight::types::Physics2DQueryResult;
+using flight::types::Physics2DRayHit;
+using flight::types::Physics2DRayResult;
+using flight::types::Physics2DShapeCastResult;
+using flight::types::Physics2DSolverConfig;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

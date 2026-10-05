@@ -26,7 +26,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
+#include <flight/types/texture_source.hpp>
+
 #include <flight/types/texture.hpp>
+
+#include <flight/types/scene3_dresources.hpp>
+
+#include <flight/types/scene3_d.hpp>
+
+#include <flight/types/resource_resolution_state.hpp>
+
+#include <flight/types/resource_load_handle.hpp>
+
+#include <flight/types/image_resource_reference.hpp>
 
 #include <flight/types/entity.hpp>
 
@@ -38,7 +50,23 @@ using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
 using flight::types::EntityConstruction;
+using flight::types::ImageResourceFailure;
+using flight::types::ImageResourceReference;
+using flight::types::ResourceLoadHandle;
+using flight::types::ResourceResolutionState;
+using flight::types::Scene3D;
+using flight::types::Scene3DResourceInFlight;
+using flight::types::Scene3DResourceResolver;
+using flight::types::Scene3DResourceResolverRuntime;
+using flight::types::Scene3DResourceResolverWithRuntime;
+using flight::types::Scene3DResourceWorkingSet;
+using flight::types::Scene3DResources;
 using flight::types::Texture;
+using flight::types::TextureSource;
+using flight::types::UpdateScene3DResourceStreamingOptions;
+using flight::types::image_resource_failure_kind;
+using flight::types::resource_resolution_state;
+using flight::types::scene3_dresource_resolver_runtime_key;
 
 inline void initialize_image_resource_failure(flight::Ref<EntityConstruction<flight::Ref<ImageResourceFailure>>> out, flight::Ref<image_resource_failure_kind> kind, flight::String message, std::optional<flight::String> name) {
   (out->kind = kind);

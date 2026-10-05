@@ -13,6 +13,8 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 namespace flight::scene2d_formats {
+
+using flight::path::dash_path;
 struct RiveGradientPaint;
 struct RiveTrim;
 struct RiveDashLength;

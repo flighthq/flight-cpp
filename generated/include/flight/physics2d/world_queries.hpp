@@ -47,6 +47,21 @@ namespace flight::types { struct SpatialIndexingExplanation; }
 namespace flight::types { struct SpatialPair; }
 
 namespace flight::physics2d {
+
+using flight::collision::sweep_collision_shape2_d;
+
+using flight::types::CollisionTimeOfImpact2D;
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DCollisionFilter;
+using flight::types::Physics2DContact;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DJointSolver;
+using flight::types::Physics2DMaterial;
+using flight::types::Physics2DSolverConfig;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
+using flight::types::SpatialIndexBackend2D;
+using flight::types::SpatialPair;
 struct Physics2DQueryScratch;
 } // namespace flight::physics2d
 

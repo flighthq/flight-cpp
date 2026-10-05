@@ -17,7 +17,44 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/scene3d/scene_document.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/scene3_d.hpp>
+
+#include <flight/types/morph_target.hpp>
+
+#include <flight/types/material.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/image_resource_reference.hpp>
+
 namespace flight::scene3d_formats {
+
+using flight::scene3d::create_scene3_dfrom_document;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::types::ImageResourceReference;
+using flight::types::ImportDiagnostic;
+using flight::types::ImportDiagnosticSeverity;
+using flight::types::MaterialLike;
+using flight::types::MeshMorph;
+using flight::types::MorphTarget;
+using flight::types::Scene3D;
+using flight::types::Scene3DDocument;
+using flight::types::Scene3DDocumentAnimation;
+using flight::types::Scene3DDocumentCamera;
+using flight::types::Scene3DDocumentLight;
+using flight::types::Scene3DDocumentMesh;
+using flight::types::Scene3DDocumentNode;
+using flight::types::Scene3DDocumentScene;
+using flight::types::Scene3DDocumentSkin;
+using flight::types::import_diagnostic_severity;
 struct Md2Frame;
 } // namespace flight::scene3d_formats
 

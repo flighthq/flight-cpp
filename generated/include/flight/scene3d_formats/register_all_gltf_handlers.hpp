@@ -17,6 +17,9 @@ namespace flight::types { struct GltfExtensionHandler; }
 
 namespace flight::scene3d_formats {
 
+using flight::types::GltfCoreFeatureHandler;
+using flight::types::GltfExtensionHandler;
+
 inline void register_all_gltf_handlers(flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> core_feature_handlers, flight::Array<flight::Ref<flight::types::GltfExtensionHandler>> extension_handlers) {
   flight::scene3d_formats::register_gltf_animation_handlers(core_feature_handlers);
   flight::scene3d_formats::register_gltf_camera_handlers(core_feature_handlers);

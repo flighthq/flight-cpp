@@ -25,6 +25,8 @@ namespace flight::types { struct WgpuTextureRenderTarget; }
 
 namespace flight::effects_wgpu {
 
+using flight::types::WgpuRenderState;
+
 inline const flight::String tint_wgsl = flight::String("\nstruct Uniforms {\n  colorAlpha : vec4f,\n  strength : f32,\n  _pad0 : f32, _pad1 : f32, _pad2 : f32,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let a = min(1.0, textureSampleLevel(tex, smp, uv, 0.0).a * uni.colorAlpha.w * uni.strength);\n  return vec4f(uni.colorAlpha.xyz * a, a);\n}");
 
 inline const flight::String invert_tint_wgsl = flight::String("\nstruct Uniforms {\n  colorAlpha : vec4f,\n  strength : f32,\n  _pad0 : f32, _pad1 : f32, _pad2 : f32,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let a = min(1.0, (1.0 - textureSampleLevel(tex, smp, uv, 0.0).a) * uni.colorAlpha.w * uni.strength);\n  return vec4f(uni.colorAlpha.xyz * a, a);\n}");

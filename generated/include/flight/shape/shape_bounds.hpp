@@ -28,7 +28,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/shape_command.hpp>
+
+#include <flight/types/shape_bounds.hpp>
+
+#include <flight/types/shape.hpp>
+
+#include <flight/types/rectangle.hpp>
+
 namespace flight::shape {
+
+using flight::types::CapsStyle;
+using flight::types::JointStyle;
+using flight::types::Rectangle;
+using flight::types::Shape;
+using flight::types::ShapeBoundsCommand;
+using flight::types::ShapeBoundsCommandHandler;
+using flight::types::ShapeBoundsContext;
+using flight::types::ShapeBoundsExplanation;
+using flight::types::ShapeBoundsGuard;
+using flight::types::ShapeBoundsMode;
+using flight::types::ShapeCommandToken;
 struct ShapeBoundsAccumulator;
 struct ShapeBoundsLaneState;
 struct ShapeBoundsSegment;

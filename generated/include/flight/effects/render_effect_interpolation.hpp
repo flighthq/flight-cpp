@@ -18,7 +18,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/capacitor_api.hpp>
 
+#include <flight/types/render_effect_field_role.hpp>
+
+#include <flight/types/render_effect.hpp>
+
 namespace flight::effects {
+
+using flight::types::RenderEffect;
+using flight::types::RenderEffectFieldRoles;
 
 inline bool can_lerp_render_effects(flight::Ref<RenderEffect> a, flight::Ref<RenderEffect> b) {
   return (a->kind == b->kind);

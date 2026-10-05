@@ -14,6 +14,9 @@ namespace flight::types { struct Physics2DWorld; }
 
 namespace flight::physics2d {
 
+using flight::types::Physics2DJointSolver;
+using flight::types::Physics2DWorld;
+
 inline void register_built_in_physics2_djoint_solvers(flight::Ref<flight::types::Physics2DWorld> world) {
   flight::physics2d::register_physics2_djoint_solver(world, flight::physics2d::physics2_ddistance_joint_kind, flight::physics2d::physics2_ddistance_joint_solver);
   flight::physics2d::register_physics2_djoint_solver(world, flight::physics2d::physics2_dgear_joint_kind, flight::physics2d::physics2_dgear_joint_solver);

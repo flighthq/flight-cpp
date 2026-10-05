@@ -28,12 +28,29 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/geometry/rectangle.hpp>
+
+#include <flight/types/node_interaction.hpp>
+
+#include <flight/types/node2_d.hpp>
+
 #include <flight/types/node.hpp>
+
+#include <flight/types/hit_test_function.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include "node_interaction_state.hpp"
 
 namespace flight::interaction {
 
+using flight::geometry::intersects_rectangle;
+
+using flight::types::HitArea;
+using flight::types::HitTestFunction;
+using flight::types::HitTestPreciseFunction;
+using flight::types::Kind;
+using flight::types::Node2D;
 using flight::types::NodeAny;
 
 inline bool hit_test_node2_ds(flight::Ref<Node2D> source, flight::Ref<Node2D> other) {

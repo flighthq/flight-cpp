@@ -19,6 +19,9 @@ namespace flight::types { struct Skeleton2DCoercedInterpolation; }
 
 namespace flight::skeleton2d {
 
+using flight::types::AnimationChannel;
+using flight::types::AnimationTrack;
+
 inline const flight::String attachment_subject = flight::String("Attachment");
 
 inline const flight::String draw_order_subject_flight_value_variable__u000044__u000052__u000041__u000057__u00005f__u00004f__u000052__u000044__u000045__u000052__u00005f__u000053__u000055__u000042__u00004a__u000045__u000043__u000054__flight_private_61d39132f2b772a6 = flight::String("DrawOrder");

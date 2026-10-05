@@ -46,9 +46,37 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/geometry/matrix.hpp>
+
+#include <flight/signals/slot.hpp>
+
+#include <flight/signals/signal.hpp>
+
 #include <flight/entity/entity.hpp>
 
+#include <flight/types/pointer_event_data.hpp>
+
+#include <flight/types/node_interaction_state.hpp>
+
 #include <flight/types/node.hpp>
+
+#include <flight/types/keyboard_event_data.hpp>
+
+#include <flight/types/interaction_signals.hpp>
+
+#include <flight/types/interaction_manager.hpp>
+
+#include <flight/types/interaction_connect_guard.hpp>
+
+#include <flight/types/input_pointer_data.hpp>
+
+#include <flight/types/input_keyboard_data.hpp>
+
+#include <flight/types/focus_event_data.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/cursor.hpp>
 
 #include "hit_tests.hpp"
 #include "interaction_spatial_index.hpp"
@@ -56,10 +84,38 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::interaction {
 
+using flight::geometry::inverse_matrix_transform_point_xy;
+
+using flight::signals::connect_signal;
+using flight::signals::disconnect_signal;
+
+using flight::signals::create_signal;
+
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
+using flight::types::AnyInteractionSignalSlot;
+using flight::types::Cursor;
+using flight::types::EntityConstruction;
+using flight::types::FocusEventData;
+using flight::types::InputKeyboardData;
+using flight::types::InputPointerData;
+using flight::types::InteractionConnectGuard;
+using flight::types::InteractionDispatchLayer;
+using flight::types::InteractionInputSource;
+using flight::types::InteractionManager;
+using flight::types::InteractionManagerOptions;
+using flight::types::InteractionPointerOptions;
+using flight::types::InteractionPointerState;
+using flight::types::InteractionSignalName;
+using flight::types::InteractionSignals;
+using flight::types::KeyboardEventData;
 using flight::types::NodeAny;
+using flight::types::NodeInteractionState;
+using flight::types::NodeRuntime;
+using flight::types::NodeTraits;
+using flight::types::PointerEventData;
+using flight::types::PointerType;
 
 template <typename N>
 inline void capture_interaction_pointer(flight::Ref<InteractionManager<N>> manager, double pointer_id, N target) {

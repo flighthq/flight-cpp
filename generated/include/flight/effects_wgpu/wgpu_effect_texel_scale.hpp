@@ -22,6 +22,8 @@ namespace flight::types { struct WgpuScissorRect; }
 namespace flight::types { struct WgpuTextureRenderTarget; }
 
 namespace flight::effects_wgpu {
+
+using flight::types::WgpuRenderState;
 struct WgpuEffectLogicalResolution;
 } // namespace flight::effects_wgpu
 

@@ -31,6 +31,16 @@ namespace flight::types { struct SpatialIndexBackend2D; }
 
 namespace flight::physics2d {
 
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DContact;
+using flight::types::Physics2DContactPoint;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DJointSolver;
+using flight::types::Physics2DSolverConfig;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
+using flight::types::SpatialIndexBackend2D;
+
 inline void apply_physics2_dimpulse(flight::Ref<flight::types::RigidBody2D> body_a, flight::Ref<flight::types::RigidBody2D> body_b, double r_ax, double r_ay, double r_bx, double r_by, double impulse_x, double impulse_y) {
   (body_a->velocity_x += (impulse_x * body_a->inverse_mass));
   (body_a->velocity_y += (impulse_y * body_a->inverse_mass));

@@ -27,6 +27,8 @@ namespace flight::types { struct WgpuRenderState; }
 
 namespace flight::scene2d_wgpu {
 
+using flight::types::WgpuRenderState;
+
 inline void draw_wgpu_shape(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy) {
   if (flight::scene2d_wgpu::draw_wgpu_mesh_shape(state, render_proxy)) {
     return;

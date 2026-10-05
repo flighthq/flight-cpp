@@ -27,9 +27,90 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/physics3d/world.hpp>
+
+#include <flight/physics3d/step_validation.hpp>
+
+#include <flight/physics3d/mass_properties.hpp>
+
+#include <flight/physics3d/joint_registry.hpp>
+
+#include <flight/physics3d/joint_reaction.hpp>
+
+#include <flight/physics3d/integrate.hpp>
+
+#include <flight/types/physics3_dabi.hpp>
+
+#include <flight/types/physics3_d.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/collision.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::physics3d_abi {
+
+using flight::physics3d::add_physics3_dbody;
+using flight::physics3d::add_physics3_dcollider;
+using flight::physics3d::add_physics3_djoint;
+using flight::physics3d::apply_physics3_dforce;
+using flight::physics3d::apply_physics3_dforce_at_point;
+using flight::physics3d::apply_physics3_dlinear_impulse;
+using flight::physics3d::apply_physics3_dlinear_impulse_at_point;
+using flight::physics3d::apply_physics3_dtorque;
+using flight::physics3d::create_rigid_body3_d;
+using flight::physics3d::is_physics3_dbody_state_valid;
+using flight::physics3d::is_physics3_dcollider_state_valid;
+using flight::physics3d::is_physics3_dcontact_state_valid;
+using flight::physics3d::is_physics3_dgravity_valid;
+using flight::physics3d::is_physics3_djoint_state_valid;
+using flight::physics3d::is_physics3_dposition_iterations_valid;
+using flight::physics3d::is_physics3_dsubsteps_valid;
+using flight::physics3d::is_physics3_dtimestep_valid;
+using flight::physics3d::is_physics3_dvelocity_iterations_valid;
+using flight::physics3d::refresh_rigid_body3_dworld_inertia;
+using flight::physics3d::remove_physics3_dbody;
+using flight::physics3d::remove_physics3_dcollider;
+using flight::physics3d::remove_physics3_djoint;
+using flight::physics3d::set_physics3_dbody_bullet;
+using flight::physics3d::set_physics3_dbody_fixed_rotation;
+using flight::physics3d::set_physics3_dbody_sleep_enabled;
+using flight::physics3d::set_physics3_dbody_transform;
+using flight::physics3d::set_physics3_dbody_type;
+using flight::physics3d::set_rigid_body3_dmass_data;
+using flight::physics3d::wake_physics3_dbody;
+using flight::physics3d::write_physics3_djoint_reaction;
+
+using flight::types::CollisionColliderShape3D;
+using flight::types::EntityConstruction;
+using flight::types::Physics3DAbi;
+using flight::types::Physics3DAbiBodyBuffer;
+using flight::types::Physics3DAbiCommandBuffer;
+using flight::types::Physics3DAbiContactBuffer;
+using flight::types::Physics3DAbiContactHooks;
+using flight::types::Physics3DAbiContactSelection;
+using flight::types::Physics3DAbiExecutionResult;
+using flight::types::Physics3DAbiExecutionStatus;
+using flight::types::Physics3DAbiJointBuffer;
+using flight::types::Physics3DAbiQueryBuffer;
+using flight::types::Physics3DBodyType;
+using flight::types::Physics3DCollider;
+using flight::types::Physics3DCollisionFilter;
+using flight::types::Physics3DContact;
+using flight::types::Physics3DContactCallback;
+using flight::types::Physics3DContactPoint;
+using flight::types::Physics3DJoint;
+using flight::types::Physics3DJointReaction;
+using flight::types::Physics3DMassData;
+using flight::types::Physics3DMaterial;
+using flight::types::Physics3DQueryHit;
+using flight::types::Physics3DQueryResult;
+using flight::types::Physics3DRayHit;
+using flight::types::Physics3DRayResult;
+using flight::types::Physics3DShapeCastResult;
+using flight::types::Physics3DWorld;
+using flight::types::RigidBody3D;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

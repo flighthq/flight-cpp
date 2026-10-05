@@ -20,6 +20,9 @@ namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::physics2d {
 
+using flight::types::Physics2DCollider;
+using flight::types::RigidBody2D;
+
 inline void sync_physics2_dbody_to_node2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body, flight::types::Node2D node) {
   flight::row_set<flight::RowKey<"x">>(node, flight::row_get<flight::RowKey<"x">>(body));
   flight::row_set<flight::RowKey<"y">>(node, flight::row_get<flight::RowKey<"y">>(body));

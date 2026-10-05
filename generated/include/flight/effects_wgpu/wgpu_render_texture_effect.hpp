@@ -32,6 +32,8 @@ namespace flight::types { struct WgpuTextureRenderTarget; }
 
 namespace flight::effects_wgpu {
 
+using flight::types::WgpuRenderState;
+
 inline flight::types::WgpuRenderEffectApplicationStatus get_wgpu_render_effect_application_status(double requested_count, double registered_count, double unresolved_count, bool source_available, bool destination_available) {
   if ((requested_count == 0.0)) {
     return flight::String("no-effects");

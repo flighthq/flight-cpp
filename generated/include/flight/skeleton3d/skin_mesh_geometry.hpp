@@ -27,6 +27,8 @@ namespace flight::types { struct VertexAttributeLayout; }
 
 namespace flight::skeleton3d {
 
+using flight::types::Skeleton3D;
+
 inline double float_offset_for_semantic(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>> layout, flight::String semantic) {
   flight::Array<flight::Ref<flight::types::VertexAttribute>> attributes = flight::row_get<flight::RowKey<"attributes">>(layout);
   {

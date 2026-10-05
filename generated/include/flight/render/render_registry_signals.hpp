@@ -45,9 +45,14 @@ namespace flight::types { template <typename T> struct SlotTable; }
 
 namespace flight::render {
 
+using flight::signals::create_signal;
+
+using flight::types::RenderProxy;
+using flight::types::RenderProxy2D;
 using flight::types::RenderRegistrySignals;
 using flight::types::RenderState;
 using flight::types::RenderStateRuntime;
+using flight::types::Renderer;
 
 using RenderRegistriesMissEmitter = typename decltype(std::declval<flight::types::RenderStateRuntime&>().registry_miss)::value_type;
 

@@ -30,6 +30,11 @@ namespace flight::types { struct RigidBody2D; }
 
 namespace flight::physics2d {
 
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DCollisionFilter;
+using flight::types::Physics2DMaterial;
+using flight::types::RigidBody2D;
+
 inline void write_polygon_mass_data(flight::Array<double> points, double density, flight::Ref<flight::types::Physics2DMassData> out) {
   const double count = flight::signed_right_shift(static_cast<double>(points.size()), 1.0);
   if ((count < 3.0)) {

@@ -16,11 +16,43 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/render/render_state.hpp>
+
+#include <flight/types/texture_source_kind.hpp>
+
+#include <flight/types/texture.hpp>
+
+#include <flight/types/render_state.hpp>
+
+#include <flight/types/render_registry_signals.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/canvas_texture_resolver.hpp>
+
+#include <flight/types/canvas_render_surface.hpp>
+
 #include <flight/entity/entity.hpp>
 
 #include "canvas_render_surface.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::render::get_render_state_runtime;
+
+using flight::types::CanvasRenderSurface;
+using flight::types::CanvasRenderSurfaceCreator;
+using flight::types::CanvasRenderSurfaceOptions;
+using flight::types::CanvasTextureResolver;
+using flight::types::CanvasTextureResolvers;
+using flight::types::EntityConstruction;
+using flight::types::Kind;
+using flight::types::RenderRegistrySignals;
+using flight::types::RenderState;
+using flight::types::RenderStateRuntime;
+using flight::types::Texture;
+using flight::types::TextureSourceKind;
+using flight::types::entity_runtime_key;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
@@ -109,7 +141,7 @@ inline void initialize_canvas_texture_resolvers(flight::Ref<EntityConstruction<f
   (resolvers->registry = nullptr);
   (resolvers->registry_miss = nullptr);
   (resolvers->surface_creator = surface_creator);
-  (resolvers[entity_runtime_key] = {.binding = nullptr});
+  (resolvers->entity_runtime_key = {.binding = nullptr});
   owned_surfaces.set(resolvers, flight::Set<flight::Ref<CanvasRenderSurface>>());
 }
 

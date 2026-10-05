@@ -66,6 +66,10 @@ namespace flight::types { struct RenderTargetClear; }
 
 namespace flight::effects_canvas {
 
+using flight::types::CanvasRenderState;
+using flight::types::CanvasRenderTargetPool;
+using flight::types::CanvasTextureRenderTarget;
+
 inline flight::Ref<flight::types::CanvasTextureRenderTarget> acquire_canvas_render_target(flight::Ref<flight::types::CanvasRenderTargetPool> pool, double width, double height) {
   const double w = flight::maximum(1.0, std::ceil(width));
   const double h = flight::maximum(1.0, std::ceil(height));

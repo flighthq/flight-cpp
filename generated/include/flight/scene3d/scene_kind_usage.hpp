@@ -15,7 +15,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
+#include <flight/types/scene3_dkind_usage.hpp>
+
+#include <flight/types/scene3_d.hpp>
+
 #include <flight/types/node3_d.hpp>
+
+#include <flight/types/modifier.hpp>
+
+#include <flight/types/material.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include "mesh.hpp"
 
@@ -24,7 +34,12 @@ namespace flight::scene3d {
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
+using flight::types::EntityConstruction;
+using flight::types::Material;
+using flight::types::Modifier;
 using flight::types::Node3D;
+using flight::types::Scene3D;
+using flight::types::Scene3DKindUsage;
 
 inline void initialize_scene3_dkind_usage(flight::Ref<EntityConstruction<flight::Ref<Scene3DKindUsage>>> out) {
   (out->material_kinds = flight::Array<flight::Ref<Kind>>{});

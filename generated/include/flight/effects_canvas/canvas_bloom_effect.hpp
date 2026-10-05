@@ -12,11 +12,28 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/canvas_render_target.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
+#include <flight/types/canvas_effect_state.hpp>
+
+#include <flight/types/bloom_effect.hpp>
+
+#include <flight/effects/bloom_effect.hpp>
+
 #include "canvas_effect_compositing.hpp"
 #include "canvas_effect_state.hpp"
 #include "canvas_render_effect_registry.hpp"
 
 namespace flight::effects_canvas {
+
+using flight::types::BloomEffect;
+using flight::types::CanvasRenderState;
+using flight::types::CanvasRenderTargetPool;
+using flight::types::CanvasTextureRenderTarget;
+
+using flight::effects::compute_bloom_blur_radius;
 
 inline void apply_bloom_effect_to_canvas(flight::Ref<CanvasTextureRenderTarget> source, flight::Ref<CanvasTextureRenderTarget> dest, flight::Ref<CanvasRenderTargetPool> pool, flight::Ref<BloomEffect> effect) {
   const double threshold = effect->threshold.value_or(0.8);

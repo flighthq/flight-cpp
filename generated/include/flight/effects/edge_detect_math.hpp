@@ -19,6 +19,8 @@ namespace flight::types { struct SketchEffect; }
 
 namespace flight::effects {
 
+using flight::types::OutlineEffect;
+
 inline void compute_outline_edge_params(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OutlineEffect>>>> effect, flight::Array<double> out) {
   const double threshold = flight::maximum(0.0, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"threshold">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.1; }()));
   const double feather = (threshold * 0.5);

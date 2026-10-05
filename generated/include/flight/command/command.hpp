@@ -14,9 +14,30 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/node.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/command.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::command {
+
+using flight::types::AddNodeChildCommand;
+using flight::types::Command;
+using flight::types::CommandPropertyEntry;
+using flight::types::CompositeCommand;
+using flight::types::EntityConstruction;
+using flight::types::NodeAny;
+using flight::types::RemoveNodeChildCommand;
+using flight::types::ReorderNodeChildCommand;
+using flight::types::SetNodePropertyCommand;
+using flight::types::add_node_child_command_kind;
+using flight::types::composite_command_kind;
+using flight::types::remove_node_child_command_kind;
+using flight::types::reorder_node_child_command_kind;
+using flight::types::set_node_property_command_kind;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

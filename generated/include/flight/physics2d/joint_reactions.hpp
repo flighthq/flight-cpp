@@ -32,6 +32,15 @@ namespace flight::types { struct SpatialIndexBackend2D; }
 
 namespace flight::physics2d {
 
+using flight::types::Physics2DContact;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DJointReaction;
+using flight::types::Physics2DJointSolver;
+using flight::types::Physics2DSolverConfig;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
+using flight::types::SpatialIndexBackend2D;
+
 inline void initialize_physics2_djoint_reaction(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DJointReaction>> out) {
   flight::row_set<flight::RowKey<"forceX">>(out, 0.0);
   flight::row_set<flight::RowKey<"forceY">>(out, 0.0);

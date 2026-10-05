@@ -17,10 +17,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_bitmap_displacement_effect.hpp"
 #include "wgpu_effect_pass.hpp"
 
 namespace flight::effects_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline double clamp01(double v) {
   return ((v < 0.0) ? 0.0 : ((v > 1.0) ? 1.0 : v));

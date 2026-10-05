@@ -24,6 +24,11 @@ namespace flight::types { struct Entity; }
 
 namespace flight::scene2d_canvas {
 
+using flight::types::CanvasRenderSurface;
+using flight::types::CanvasRenderSurfaceCreator;
+using flight::types::CanvasRenderSurfaceOptions;
+using flight::types::CanvasTextureRenderTarget;
+
 inline void destroy_canvas_texture_render_target(flight::Ref<flight::types::CanvasTextureRenderTarget> target) {
   flight::scene2d_canvas::destroy_canvas_render_surface(target->surface);
   (target->width = 0.0);

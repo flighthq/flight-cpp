@@ -23,9 +23,58 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/text_selection_rectangle.hpp>
+
+#include <flight/types/text_layout.hpp>
+
+#include <flight/types/text_input_state.hpp>
+
+#include <flight/types/text_input_editing_options.hpp>
+
+#include <flight/types/text_format_range.hpp>
+
+#include <flight/types/text_format.hpp>
+
+#include <flight/types/rich_text.hpp>
+
+#include <flight/types/keyboard_event_data.hpp>
+
+#include <flight/types/key_code.hpp>
+
+#include <flight/textlayout/text_format_range.hpp>
+
+#include <flight/textlayout/rich_text_query.hpp>
+
+#include <flight/text/rich_text.hpp>
+
+#include <flight/node/revision.hpp>
+
 #include "text_input.hpp"
 
 namespace flight::textinput {
+
+using flight::types::HandleTextInputKeyboardOptions;
+using flight::types::KeyboardEventData;
+using flight::types::ReplaceTextInputOptions;
+using flight::types::RichText;
+using flight::types::RichTextData;
+using flight::types::TextFormat;
+using flight::types::TextFormatRange;
+using flight::types::TextInputHistoryEntry;
+using flight::types::TextInputState;
+using flight::types::TextLayoutGroup;
+using flight::types::TextLayoutResult;
+using flight::types::TextSelectionRectangle;
+using flight::types::key_code;
+
+using flight::textlayout::create_text_format_range;
+using flight::textlayout::get_rich_text_selection_rectangles;
+
+using flight::text::set_rich_text_scroll_h;
+using flight::text::set_rich_text_scroll_v;
+
+using flight::node::invalidate_node_appearance;
+using flight::node::invalidate_node_local_content;
 
 inline const double desired_caret_x_unset = -1.0;
 

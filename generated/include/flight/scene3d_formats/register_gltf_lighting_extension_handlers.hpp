@@ -13,6 +13,8 @@ namespace flight::types { struct GltfExtensionHandler; }
 
 namespace flight::scene3d_formats {
 
+using flight::types::GltfExtensionHandler;
+
 inline void register_gltf_lighting_extension_handlers(flight::Array<flight::Ref<flight::types::GltfExtensionHandler>> handlers) {
   flight::scene3d_formats::register_gltf_extension_handler(handlers, flight::scene3d_formats::gltf_punctual_lights_extension_handler);
 }

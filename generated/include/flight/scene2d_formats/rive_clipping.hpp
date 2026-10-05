@@ -20,10 +20,63 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/path_boolean/simplify_path.hpp>
+
+#include <flight/path_boolean/boolean_paths.hpp>
+
+#include <flight/path/path.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/geometry/matrix.hpp>
+
+#include <flight/clip/clip_region.hpp>
+
+#include <flight/types/rive_import_registry.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/path_boolean_options.hpp>
+
+#include <flight/types/path_boolean_kernel.hpp>
+
+#include <flight/types/path.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/display_object.hpp>
+
 #include "rive_core_types.hpp"
 #include "rive_import_registry.hpp"
 
 namespace flight::scene2d_formats {
+
+using flight::path_boolean::intersect_paths;
+using flight::path_boolean::simplify_path;
+
+using flight::path::create_path;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::geometry::create_matrix;
+using flight::geometry::inverse_matrix;
+using flight::geometry::multiply_matrix;
+
+using flight::clip::create_clip_region_from_path;
+
+using flight::types::DisplayObject;
+using flight::types::ImportDiagnostic;
+using flight::types::Matrix;
+using flight::types::Path;
+using flight::types::PathBooleanKernel;
+using flight::types::PathBooleanOptions;
+using flight::types::RiveArtboardGraph;
+using flight::types::RiveCoreObject;
+using flight::types::RiveImportRegistry;
+using flight::types::RivePathRecord;
+using flight::types::import_diagnostic_severity;
 
 
 // NOT GENERATED: function readRiveNumber -- source line 179

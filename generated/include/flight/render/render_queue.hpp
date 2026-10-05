@@ -16,11 +16,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
+#include <flight/types/renderable.hpp>
+
 #include <flight/types/render_state.hpp>
+
+#include <flight/types/render_queue.hpp>
+
+#include <flight/types/render_proxy.hpp>
 
 #include <flight/types/render_cache.hpp>
 
 #include <flight/types/node.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include "render_state.hpp"
 
@@ -29,9 +37,15 @@ namespace flight::render {
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
+using flight::types::EntityConstruction;
 using flight::types::NodeAny;
 using flight::types::RenderCache;
+using flight::types::RenderProxy;
+using flight::types::RenderQueue;
+using flight::types::RenderQueueEntry;
+using flight::types::RenderSortKey;
 using flight::types::RenderState;
+using flight::types::Renderable;
 
 inline void clear_render_queue(flight::Ref<RenderQueue> queue) {
   (queue->entry_count = 0.0);

@@ -23,16 +23,25 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/collision/triangle_mesh3_d.hpp>
+
 #include <flight/types/spatial.hpp>
 
 #include <flight/types/physics3_d.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include <flight/types/collision.hpp>
 
 namespace flight::physics3d {
 
+using flight::collision::write_collision_heightfield_bounds3_d;
+using flight::collision::write_collision_triangle_mesh_bounds3_d;
+
 using flight::types::CollisionColliderShape3D;
+using flight::types::EntityConstruction;
 using flight::types::Physics3DCollider;
+using flight::types::RigidBody3D;
 using flight::types::SpatialAabb3D;
 
 

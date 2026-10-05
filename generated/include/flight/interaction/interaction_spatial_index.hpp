@@ -16,14 +16,24 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spatial.hpp>
+
+#include <flight/types/node2_d.hpp>
+
 #include <flight/types/node.hpp>
+
+#include <flight/types/interaction_manager.hpp>
 
 #include "hit_tests.hpp"
 #include "node_interaction_state.hpp"
 
 namespace flight::interaction {
 
+using flight::types::InteractionManager;
+using flight::types::Node2D;
 using flight::types::NodeAny;
+using flight::types::SpatialAabb2D;
+using flight::types::SpatialObjectId;
 
 
 // NOT GENERATED: function collectSpatialCandidates -- source line 66

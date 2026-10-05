@@ -17,7 +17,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/physics2_d.hpp>
+
+#include <flight/types/collision.hpp>
+
 namespace flight::physics2d {
+
+using flight::types::CollisionBuiltInShape2D;
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DContact;
+using flight::types::Physics2DContactPoint;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DSolverConfig;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
 
 
 // NOT GENERATED: function isPhysics2DContactValid -- source line 26

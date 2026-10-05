@@ -29,6 +29,16 @@ namespace flight::types { struct SpatialIndexBackend3D; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DContact;
+using flight::types::Physics3DJoint;
+using flight::types::Physics3DJointEvents;
+using flight::types::Physics3DJointReaction;
+using flight::types::Physics3DJointSolver;
+using flight::types::Physics3DSolverConfig;
+using flight::types::Physics3DWorld;
+using flight::types::RigidBody3D;
+using flight::types::SpatialIndexBackend3D;
+
 inline bool is_physics3_dpair_joint_suppressed(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, double body_a, double body_b) {
   const double first = flight::minimum(body_a, body_b);
   const double second = flight::maximum(body_a, body_b);

@@ -31,9 +31,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/flight_document_refusal_explanation.hpp>
+
 #include "scene_document_refusal.hpp"
 
 namespace flight::scene_document {
+
+using flight::types::FlightDocumentRefusalExplanation;
 
 
 // NOT GENERATED: function collectAuthoredTargetMatches -- source line 145

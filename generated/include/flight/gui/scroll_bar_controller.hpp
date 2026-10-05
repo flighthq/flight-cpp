@@ -20,6 +20,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/scroll_bar_controller.hpp>
+
 #include <flight/types/node2_d.hpp>
 
 #include <flight/types/gui_controller.hpp>
@@ -28,6 +30,8 @@ namespace flight::gui {
 
 using flight::types::GuiOrientation;
 using flight::types::Node2D;
+using flight::types::ScrollBarController;
+using flight::types::ScrollBarControllerSignals;
 struct ScrollBarControllerFields;
 } // namespace flight::gui
 

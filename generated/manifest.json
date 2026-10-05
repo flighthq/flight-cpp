@@ -1051,6 +1051,7 @@
       "files": [
         "flight/render/enable_color_adjustment_guards.hpp",
         "flight/render/enable_color_adjustments.hpp",
+        "flight/render/enable_scene_render_guards.hpp",
         "flight/render/explain_scene2_dpipeline_coverage.hpp",
         "flight/render/explain_scene3_dpipeline_coverage.hpp",
         "flight/render/render_appearance.hpp",
@@ -1065,6 +1066,7 @@
         "flight/render/render_target.hpp",
         "flight/render/render_transform2d.hpp",
         "flight/render/render_viewport.hpp",
+        "flight/render/renderer.hpp",
         "flight/render/scene_render.hpp"
       ],
       "id": "render-unqualified-types-names"
@@ -1083,7 +1085,8 @@
         "flight/mesh/mesh_geometry_transforms.hpp",
         "flight/mesh/mesh_geometry_uvs.hpp",
         "flight/mesh/morph_mesh_geometry.hpp",
-        "flight/mesh/update_mesh_morph.hpp"
+        "flight/mesh/update_mesh_morph.hpp",
+        "flight/mesh/vertex_format.hpp"
       ],
       "id": "mesh-unqualified-types-names"
     },
@@ -1115,18 +1118,31 @@
         "flight/physics3d/collider_collision.hpp",
         "flight/physics3d/collider_transform.hpp",
         "flight/physics3d/contact_intake.hpp",
+        "flight/physics3d/contacts.hpp",
         "flight/physics3d/continuous.hpp",
         "flight/physics3d/debug_geometry.hpp",
+        "flight/physics3d/enable_physics3_dguards.hpp",
         "flight/physics3d/explain_physics3_dcollision.hpp",
+        "flight/physics3d/explain_physics3_djoints.hpp",
+        "flight/physics3d/explain_physics3_dstep.hpp",
         "flight/physics3d/integrate.hpp",
         "flight/physics3d/islands.hpp",
+        "flight/physics3d/joint_breakage.hpp",
+        "flight/physics3d/joint_collision_suppression.hpp",
+        "flight/physics3d/joint_factories.hpp",
         "flight/physics3d/joint_math.hpp",
+        "flight/physics3d/joint_reaction.hpp",
+        "flight/physics3d/joint_registry.hpp",
         "flight/physics3d/joint_rows.hpp",
+        "flight/physics3d/joints.hpp",
         "flight/physics3d/mass_properties.hpp",
         "flight/physics3d/node_sync.hpp",
         "flight/physics3d/ownership.hpp",
         "flight/physics3d/physics3_dbroadphase_publication.hpp",
+        "flight/physics3d/physics3_dspatial_indexing_guards.hpp",
+        "flight/physics3d/register_built_in_physics3_djoint_solvers.hpp",
         "flight/physics3d/solver.hpp",
+        "flight/physics3d/step.hpp",
         "flight/physics3d/step_validation.hpp",
         "flight/physics3d/world.hpp",
         "flight/physics3d/world_queries.hpp"
@@ -1136,7 +1152,38 @@
     {
       "files": [
         "flight/scene3d_formats/awd2_parse.hpp",
-        "flight/scene3d_formats/shared.hpp"
+        "flight/scene3d_formats/collada_material.hpp",
+        "flight/scene3d_formats/collada_parse.hpp",
+        "flight/scene3d_formats/gltf_animations.hpp",
+        "flight/scene3d_formats/gltf_anisotropy.hpp",
+        "flight/scene3d_formats/gltf_clearcoat.hpp",
+        "flight/scene3d_formats/gltf_draco.hpp",
+        "flight/scene3d_formats/gltf_emissive_strength.hpp",
+        "flight/scene3d_formats/gltf_extension_handler_registry.hpp",
+        "flight/scene3d_formats/gltf_iridescence.hpp",
+        "flight/scene3d_formats/gltf_material_extension.hpp",
+        "flight/scene3d_formats/gltf_parse.hpp",
+        "flight/scene3d_formats/gltf_punctual_lights.hpp",
+        "flight/scene3d_formats/gltf_sheen.hpp",
+        "flight/scene3d_formats/gltf_skins.hpp",
+        "flight/scene3d_formats/gltf_specular.hpp",
+        "flight/scene3d_formats/gltf_specular_glossiness.hpp",
+        "flight/scene3d_formats/gltf_transmission_volume.hpp",
+        "flight/scene3d_formats/gltf_unlit.hpp",
+        "flight/scene3d_formats/md2_parse.hpp",
+        "flight/scene3d_formats/md5_anim_parse.hpp",
+        "flight/scene3d_formats/md5_parse.hpp",
+        "flight/scene3d_formats/mtl_parse.hpp",
+        "flight/scene3d_formats/obj_parse.hpp",
+        "flight/scene3d_formats/register_all_gltf_handlers.hpp",
+        "flight/scene3d_formats/register_gltf_animation_handlers.hpp",
+        "flight/scene3d_formats/register_gltf_camera_handlers.hpp",
+        "flight/scene3d_formats/register_gltf_lighting_extension_handlers.hpp",
+        "flight/scene3d_formats/register_gltf_material_extension_handlers.hpp",
+        "flight/scene3d_formats/register_gltf_skin_handlers.hpp",
+        "flight/scene3d_formats/scene_skeleton.hpp",
+        "flight/scene3d_formats/shared.hpp",
+        "flight/scene3d_formats/three_ds_parse.hpp"
       ],
       "id": "scene3d-formats-unqualified-types-names"
     },
@@ -1144,7 +1191,9 @@
       "files": [
         "flight/text/enable_text_label_guards.hpp",
         "flight/text/explain_text_label_content.hpp",
+        "flight/text/native_text.hpp",
         "flight/text/rich_text.hpp",
+        "flight/text/text_format_font.hpp",
         "flight/text/text_label.hpp",
         "flight/text/text_label_layout.hpp"
       ],
@@ -1152,7 +1201,11 @@
     },
     {
       "files": [
+        "flight/materials/enable_material_conversion_guards.hpp",
+        "flight/materials/extended_pbr_material.hpp",
         "flight/materials/material.hpp",
+        "flight/materials/material_presets.hpp",
+        "flight/materials/pbr_materials.hpp",
         "flight/materials/surface_material.hpp",
         "flight/materials/unlit_materials.hpp"
       ],
@@ -1174,30 +1227,46 @@
         "flight/scene3d/billboard.hpp",
         "flight/scene3d/billboard_camera.hpp",
         "flight/scene3d/clone_node3_dsubtree.hpp",
+        "flight/scene3d/enable_scene3_dguards.hpp",
+        "flight/scene3d/instanced_mesh.hpp",
+        "flight/scene3d/mesh.hpp",
+        "flight/scene3d/scene.hpp",
         "flight/scene3d/scene_document.hpp",
+        "flight/scene3d/scene_document_lights.hpp",
         "flight/scene3d/scene_kind_usage.hpp",
         "flight/scene3d/scene_material.hpp",
         "flight/scene3d/scene_node.hpp",
+        "flight/scene3d/scene_node_appearance.hpp",
         "flight/scene3d/scene_node_bounds.hpp",
-        "flight/scene3d/scene_node_culling.hpp"
+        "flight/scene3d/scene_node_culling.hpp",
+        "flight/scene3d/scene_node_transform.hpp"
       ],
       "id": "scene3d-unqualified-types-names"
     },
     {
       "files": [
         "flight/scene3d_resources/anisotropy_pbr_scene3_dmaterial_textures.hpp",
+        "flight/scene3d_resources/awd2_load.hpp",
         "flight/scene3d_resources/clearcoat_pbr_scene3_dmaterial_textures.hpp",
+        "flight/scene3d_resources/enable_scene3_dresource_failure_guards.hpp",
         "flight/scene3d_resources/get_scene3_dresource_textures.hpp",
+        "flight/scene3d_resources/gltf_load.hpp",
         "flight/scene3d_resources/iridescence_pbr_scene3_dmaterial_textures.hpp",
+        "flight/scene3d_resources/load_scene3_dresources.hpp",
+        "flight/scene3d_resources/md2_load.hpp",
+        "flight/scene3d_resources/md5_load.hpp",
+        "flight/scene3d_resources/obj_load.hpp",
         "flight/scene3d_resources/resolve_scene3_dresources.hpp",
         "flight/scene3d_resources/reveal_scene3_dresources_on_resolve.hpp",
         "flight/scene3d_resources/scene_document_source.hpp",
         "flight/scene3d_resources/scene_material_texture_registry.hpp",
+        "flight/scene3d_resources/scene_resource_recovery.hpp",
         "flight/scene3d_resources/scene_resource_resolver.hpp",
         "flight/scene3d_resources/scene_resource_signals.hpp",
         "flight/scene3d_resources/shaded_scene3_dmaterial_textures.hpp",
         "flight/scene3d_resources/sheen_pbr_scene3_dmaterial_textures.hpp",
         "flight/scene3d_resources/specular_pbr_scene3_dmaterial_textures.hpp",
+        "flight/scene3d_resources/three_ds_load.hpp",
         "flight/scene3d_resources/transmission_volume_pbr_scene3_dmaterial_textures.hpp",
         "flight/scene3d_resources/wrapped_diffuse_pbr_scene3_dmaterial_textures.hpp"
       ],
@@ -1564,6 +1633,7 @@
         "flight/skeleton2d/deform_animation_target2_d.hpp",
         "flight/skeleton2d/deform_mesh_attachment2_d.hpp",
         "flight/skeleton2d/deform_path_attachment2_d.hpp",
+        "flight/skeleton2d/explain_skeleton2_dchannel.hpp",
         "flight/skeleton2d/ik_constraint2_d.hpp",
         "flight/skeleton2d/path_constraint2_d.hpp",
         "flight/skeleton2d/point_attachment2_d.hpp",
@@ -1613,6 +1683,1546 @@
         "flight/intl/relative_time.hpp"
       ],
       "id": "intl-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/gizmo/gizmo_state.hpp"
+      ],
+      "id": "gizmo-unqualified-node-names"
+    },
+    {
+      "files": [
+        "flight/render/render_appearance.hpp",
+        "flight/render/render_transform2d.hpp"
+      ],
+      "id": "render-unqualified-node-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/lottie_document.hpp",
+        "flight/scene2d_formats/svg_document.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-node-names"
+    },
+    {
+      "files": [
+        "flight/scene3d/clone_node3_dsubtree.hpp",
+        "flight/scene3d/scene_document.hpp"
+      ],
+      "id": "scene3d-unqualified-node-names"
+    },
+    {
+      "files": [
+        "flight/shape/morph_shape.hpp"
+      ],
+      "id": "shape-unqualified-node-names"
+    },
+    {
+      "files": [
+        "flight/textinput/text_input_editing.hpp"
+      ],
+      "id": "textinput-unqualified-node-names"
+    },
+    {
+      "files": [
+        "flight/app/app_render_view.hpp"
+      ],
+      "id": "app-entity-runtime-key-member"
+    },
+    {
+      "files": [
+        "flight/gizmo/gizmo_state.hpp"
+      ],
+      "id": "gizmo-entity-runtime-key-member"
+    },
+    {
+      "files": [
+        "flight/gui/gui_controller.hpp"
+      ],
+      "id": "gui-entity-runtime-key-member"
+    },
+    {
+      "files": [
+        "flight/interaction/node_interactive_state_binding.hpp"
+      ],
+      "id": "interaction-entity-runtime-key-member"
+    },
+    {
+      "files": [
+        "flight/mesh/mesh_geometry.hpp"
+      ],
+      "id": "mesh-entity-runtime-key-member"
+    },
+    {
+      "files": [],
+      "id": "render-entity-runtime-key-member"
+    },
+    {
+      "files": [
+        "flight/render_wgpu/wgpu_render_state.hpp"
+      ],
+      "id": "render-wgpu-entity-runtime-key-member"
+    },
+    {
+      "files": [
+        "flight/scene2d/scene2d.hpp"
+      ],
+      "id": "scene2d-entity-runtime-key-member"
+    },
+    {
+      "files": [
+        "flight/scene2d_canvas/canvas_render_state.hpp",
+        "flight/scene2d_canvas/canvas_texture_resolver.hpp"
+      ],
+      "id": "scene2d-canvas-entity-runtime-key-member"
+    },
+    {
+      "files": [
+        "flight/selection/lasso_selection.hpp",
+        "flight/selection/marquee_selection.hpp",
+        "flight/selection/selection_state.hpp"
+      ],
+      "id": "selection-entity-runtime-key-member"
+    },
+    {
+      "files": [
+        "flight/surface/surface.hpp"
+      ],
+      "id": "surface-entity-runtime-key-member"
+    },
+    {
+      "files": [
+        "flight/textshaper/text_shaper_cache.hpp"
+      ],
+      "id": "textshaper-entity-runtime-key-member"
+    },
+    {
+      "files": [
+        "flight/tray/tray.hpp"
+      ],
+      "id": "tray-entity-runtime-key-member"
+    },
+    {
+      "files": [
+        "flight/scene2d_canvas/canvas_bitmap_text.hpp",
+        "flight/scene2d_canvas/canvas_bitmap_texture_resolver.hpp",
+        "flight/scene2d_canvas/canvas_cache.hpp",
+        "flight/scene2d_canvas/canvas_clip.hpp",
+        "flight/scene2d_canvas/canvas_cssfilter_binding.hpp",
+        "flight/scene2d_canvas/canvas_element.hpp",
+        "flight/scene2d_canvas/canvas_fill_pattern.hpp",
+        "flight/scene2d_canvas/canvas_image_texture_resolver.hpp",
+        "flight/scene2d_canvas/canvas_material_registry.hpp",
+        "flight/scene2d_canvas/canvas_node2_d.hpp",
+        "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp",
+        "flight/scene2d_canvas/canvas_quad_batch.hpp",
+        "flight/scene2d_canvas/canvas_render_pass.hpp",
+        "flight/scene2d_canvas/canvas_render_state.hpp",
+        "flight/scene2d_canvas/canvas_render_surface.hpp",
+        "flight/scene2d_canvas/canvas_render_texture.hpp",
+        "flight/scene2d_canvas/canvas_render_texture_pool.hpp",
+        "flight/scene2d_canvas/canvas_render_texture_resolver.hpp",
+        "flight/scene2d_canvas/canvas_rich_text.hpp",
+        "flight/scene2d_canvas/canvas_scale9_mapper.hpp",
+        "flight/scene2d_canvas/canvas_scale9_shape.hpp",
+        "flight/scene2d_canvas/canvas_scale9_sprite.hpp",
+        "flight/scene2d_canvas/canvas_scale9_sprite_slices.hpp",
+        "flight/scene2d_canvas/canvas_screen_render_target.hpp",
+        "flight/scene2d_canvas/canvas_shape.hpp",
+        "flight/scene2d_canvas/canvas_shape_command_table.hpp",
+        "flight/scene2d_canvas/canvas_shape_commands.hpp",
+        "flight/scene2d_canvas/canvas_shape_rasterizer.hpp",
+        "flight/scene2d_canvas/canvas_shape_registry.hpp",
+        "flight/scene2d_canvas/canvas_sprite.hpp",
+        "flight/scene2d_canvas/canvas_test_support.hpp",
+        "flight/scene2d_canvas/canvas_text_input.hpp",
+        "flight/scene2d_canvas/canvas_text_measure.hpp",
+        "flight/scene2d_canvas/canvas_texture_render_target.hpp",
+        "flight/scene2d_canvas/canvas_texture_resolver.hpp",
+        "flight/scene2d_canvas/canvas_texture_window_source.hpp",
+        "flight/scene2d_canvas/canvas_tilemap.hpp",
+        "flight/scene2d_canvas/enable_canvas_texture_resolver_guards.hpp",
+        "flight/scene2d_canvas/explain_canvas_texture_resolution.hpp"
+      ],
+      "id": "scene2d-canvas-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/lottie_document.hpp",
+        "flight/scene2d_formats/rive_asset_binding.hpp",
+        "flight/scene2d_formats/rive_assets.hpp",
+        "flight/scene2d_formats/rive_clipping.hpp",
+        "flight/scene2d_formats/rive_core_types.hpp",
+        "flight/scene2d_formats/rive_draw_order.hpp",
+        "flight/scene2d_formats/rive_handlers.hpp",
+        "flight/scene2d_formats/rive_import_registry.hpp",
+        "flight/scene2d_formats/rive_layout.hpp",
+        "flight/scene2d_formats/rive_scene2_ddocument.hpp",
+        "flight/scene2d_formats/rive_shape_node.hpp",
+        "flight/scene2d_formats/rive_text.hpp",
+        "flight/scene2d_formats/svg_document.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/selection/lasso_selection.hpp",
+        "flight/selection/marquee_selection.hpp",
+        "flight/selection/pointer_selection_policy.hpp",
+        "flight/selection/selection_state.hpp"
+      ],
+      "id": "selection-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/particles_formats/libgdx_serialize.hpp",
+        "flight/particles_formats/particle_designer_parse.hpp",
+        "flight/particles_formats/particle_designer_serialize.hpp",
+        "flight/particles_formats/register_built_in_particle_formats.hpp",
+        "flight/particles_formats/spine_parse.hpp",
+        "flight/particles_formats/spine_serialize.hpp",
+        "flight/particles_formats/starling_pex_serialize.hpp",
+        "flight/particles_formats/unity_parse.hpp",
+        "flight/particles_formats/unity_serialize.hpp"
+      ],
+      "id": "particles-formats-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/spritesheet/spritesheet.hpp",
+        "flight/spritesheet/spritesheet_animation.hpp",
+        "flight/spritesheet/spritesheet_from.hpp",
+        "flight/spritesheet/spritesheet_player.hpp",
+        "flight/spritesheet/spritesheet_validation.hpp"
+      ],
+      "id": "spritesheet-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/scene_document/scene_document_interactive_state_bindings.hpp",
+        "flight/scene_document/scene_document_layout_bindings.hpp",
+        "flight/scene_document/scene_document_materialization_selection.hpp",
+        "flight/scene_document/scene_document_refusal.hpp",
+        "flight/scene_document/scene_document_scene2_dmaterialization.hpp",
+        "flight/scene_document/scene_document_scene3_dmaterialization.hpp"
+      ],
+      "id": "scene-document-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_wgpu/_internal_wgpu_scene3_dtest_helper.hpp",
+        "flight/scene3d_wgpu/render_wgpu_scene3_d.hpp",
+        "flight/scene3d_wgpu/wgpu_classic_prelude.hpp",
+        "flight/scene3d_wgpu/wgpu_debug_prelude.hpp",
+        "flight/scene3d_wgpu/wgpu_matcap_prelude.hpp",
+        "flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp",
+        "flight/scene3d_wgpu/wgpu_mesh_upload.hpp",
+        "flight/scene3d_wgpu/wgpu_particle_emitter3_d.hpp",
+        "flight/scene3d_wgpu/wgpu_pbr_prelude.hpp",
+        "flight/scene3d_wgpu/wgpu_scene3_druntime.hpp",
+        "flight/scene3d_wgpu/wgpu_shaded_prelude.hpp",
+        "flight/scene3d_wgpu/wgpu_skin_palette.hpp",
+        "flight/scene3d_wgpu/wgpu_toon_prelude.hpp",
+        "flight/scene3d_wgpu/wgpu_unlit_prelude.hpp",
+        "flight/scene3d_wgpu/wireframe_wgpu_mesh_material_renderer.hpp"
+      ],
+      "id": "scene3d-wgpu-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_wgpu/enable_wgpu_color_adjustment_guards.hpp",
+        "flight/scene2d_wgpu/enable_wgpu_stroke_path_tessellation.hpp",
+        "flight/scene2d_wgpu/wgpu_bitmap_text.hpp",
+        "flight/scene2d_wgpu/wgpu_cache.hpp",
+        "flight/scene2d_wgpu/wgpu_clip_contours.hpp",
+        "flight/scene2d_wgpu/wgpu_color_adjustment_material_feature.hpp",
+        "flight/scene2d_wgpu/wgpu_mesh_shape_renderer.hpp",
+        "flight/scene2d_wgpu/wgpu_node2_d.hpp",
+        "flight/scene2d_wgpu/wgpu_particle_emitter2_d.hpp",
+        "flight/scene2d_wgpu/wgpu_quad_batch.hpp",
+        "flight/scene2d_wgpu/wgpu_quad_batch_writer.hpp",
+        "flight/scene2d_wgpu/wgpu_raster_shape_renderer.hpp",
+        "flight/scene2d_wgpu/wgpu_render_stats.hpp",
+        "flight/scene2d_wgpu/wgpu_renderer_data.hpp",
+        "flight/scene2d_wgpu/wgpu_scale9_sprite.hpp",
+        "flight/scene2d_wgpu/wgpu_shape.hpp",
+        "flight/scene2d_wgpu/wgpu_shape_data.hpp",
+        "flight/scene2d_wgpu/wgpu_shape_mesh.hpp",
+        "flight/scene2d_wgpu/wgpu_shape_rasterizer.hpp",
+        "flight/scene2d_wgpu/wgpu_sprite.hpp",
+        "flight/scene2d_wgpu/wgpu_standard_material.hpp",
+        "flight/scene2d_wgpu/wgpu_tilemap.hpp",
+        "flight/scene2d_wgpu/wgpu_velocity.hpp"
+      ],
+      "id": "scene2d-wgpu-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_resources/load_scene2_daudio_resources.hpp",
+        "flight/scene2d_resources/load_scene2_dimage_resources.hpp"
+      ],
+      "id": "scene2d-resources-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_dom/dom_cache.hpp",
+        "flight/scene2d_dom/dom_clip.hpp",
+        "flight/scene2d_dom/dom_cssfilter_binding.hpp",
+        "flight/scene2d_dom/dom_html_view.hpp",
+        "flight/scene2d_dom/dom_native_text.hpp",
+        "flight/scene2d_dom/dom_node2_d.hpp",
+        "flight/scene2d_dom/dom_render_state.hpp",
+        "flight/scene2d_dom/dom_texture_resolver.hpp"
+      ],
+      "id": "scene2d-dom-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/render_wgpu/wgpu_compressed_texture.hpp",
+        "flight/render_wgpu/wgpu_device_loss.hpp",
+        "flight/render_wgpu/wgpu_external_texture.hpp",
+        "flight/render_wgpu/wgpu_frame.hpp",
+        "flight/render_wgpu/wgpu_fullscreen_pass.hpp",
+        "flight/render_wgpu/wgpu_render_pass.hpp",
+        "flight/render_wgpu/wgpu_render_state.hpp",
+        "flight/render_wgpu/wgpu_render_target_pool.hpp",
+        "flight/render_wgpu/wgpu_render_texture.hpp",
+        "flight/render_wgpu/wgpu_screen_antialias.hpp",
+        "flight/render_wgpu/wgpu_screen_capture.hpp",
+        "flight/render_wgpu/wgpu_screen_render_target.hpp",
+        "flight/render_wgpu/wgpu_shader_binding.hpp",
+        "flight/render_wgpu/wgpu_texture_resolver.hpp"
+      ],
+      "id": "render-wgpu-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/physics3d_abi/physics3_dabi.hpp",
+        "flight/physics3d_abi/physics3_dabi_buffer.hpp",
+        "flight/physics3d_abi/physics3_dabi_command.hpp",
+        "flight/physics3d_abi/physics3_dabi_query.hpp",
+        "flight/physics3d_abi/reference_physics3_dabi.hpp"
+      ],
+      "id": "physics3d-abi-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/physics2d_abi/physics2_dabi.hpp",
+        "flight/physics2d_abi/physics2_dabi_buffer.hpp",
+        "flight/physics2d_abi/physics2_dabi_command.hpp",
+        "flight/physics2d_abi/physics2_dabi_query.hpp",
+        "flight/physics2d_abi/reference_physics2_dabi.hpp"
+      ],
+      "id": "physics2d-abi-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/movieclip/enable_movie_clip_guards.hpp",
+        "flight/movieclip/movie_clip.hpp",
+        "flight/movieclip/spritesheet_timeline_source.hpp"
+      ],
+      "id": "movieclip-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/media/audio_mixer.hpp",
+        "flight/media/enable_audio_mixer_guards.hpp",
+        "flight/media/media_channel_signals.hpp",
+        "flight/media/video_channel.hpp"
+      ],
+      "id": "media-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/layout/anchor_layout.hpp",
+        "flight/layout/flex_layout.hpp",
+        "flight/layout/grid_layout.hpp",
+        "flight/layout/layout_state.hpp"
+      ],
+      "id": "layout-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/command/command.hpp",
+        "flight/command/command_binding.hpp",
+        "flight/command/command_history.hpp",
+        "flight/command/command_history_signals.hpp",
+        "flight/command/command_transaction.hpp",
+        "flight/command/explain_command_dispatch.hpp"
+      ],
+      "id": "command-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/video/video_format.hpp",
+        "flight/video/video_resource.hpp",
+        "flight/video/video_resource_from.hpp"
+      ],
+      "id": "video-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/velocity/transform_velocity.hpp",
+        "flight/velocity/velocity_field.hpp"
+      ],
+      "id": "velocity-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/useragent/user_agent_parse.hpp"
+      ],
+      "id": "useragent-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/updater/updater.hpp"
+      ],
+      "id": "updater-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/tray/tray.hpp"
+      ],
+      "id": "tray-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/tokens/flight_document_token_reference.hpp",
+        "flight/tokens/substitute_flight_document_scene_tokens.hpp"
+      ],
+      "id": "tokens-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/tilemap/tilemap.hpp"
+      ],
+      "id": "tilemap-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/textshaper/text_shaper_cache.hpp"
+      ],
+      "id": "textshaper-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/textsegment/text_segment_boundary.hpp",
+        "flight/textsegment/text_segmenter_backend.hpp"
+      ],
+      "id": "textsegment-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/text_markup/markup_class_styles.hpp",
+        "flight/text_markup/markup_named_colors.hpp",
+        "flight/text_markup/markup_tag_registry.hpp",
+        "flight/text_markup/text_markup.hpp"
+      ],
+      "id": "text-markup-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/surface/surface.hpp"
+      ],
+      "id": "surface-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/statusbar/statusbar.hpp"
+      ],
+      "id": "statusbar-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/snapshot/capture_snapshot.hpp",
+        "flight/snapshot/equals_snapshot.hpp",
+        "flight/snapshot/interpolate_snapshots.hpp",
+        "flight/snapshot/restore_snapshot.hpp"
+      ],
+      "id": "snapshot-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/skeleton3d/enable_skeleton3_dguards.hpp",
+        "flight/skeleton3d/get_mesh_skin_bounds.hpp",
+        "flight/skeleton3d/skeleton3d.hpp",
+        "flight/skeleton3d/skin_mesh_geometry.hpp"
+      ],
+      "id": "skeleton3d-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/shortcut/shortcut.hpp",
+        "flight/shortcut/shortcut_explicit_dependency.hpp"
+      ],
+      "id": "shortcut-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/share/share.hpp"
+      ],
+      "id": "share-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/shape/enable_shape_bounds_guards.hpp",
+        "flight/shape/morph_shape.hpp",
+        "flight/shape/shape.hpp",
+        "flight/shape/shape_bounds.hpp",
+        "flight/shape/shape_bounds_registry.hpp"
+      ],
+      "id": "shape-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/quadbatch/quad_batch.hpp"
+      ],
+      "id": "quadbatch-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/picking/pick_scene3_d.hpp"
+      ],
+      "id": "picking-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/physics2d/broadphase.hpp",
+        "flight/physics2d/collider_transform.hpp",
+        "flight/physics2d/debug_geometry.hpp",
+        "flight/physics2d/enable_physics2_dguards.hpp",
+        "flight/physics2d/explain_physics2_dcollision.hpp",
+        "flight/physics2d/explain_physics2_djoints.hpp",
+        "flight/physics2d/explain_physics2_dstep.hpp",
+        "flight/physics2d/islands.hpp",
+        "flight/physics2d/joint_collision_suppression.hpp",
+        "flight/physics2d/joint_factories.hpp",
+        "flight/physics2d/joint_reactions.hpp",
+        "flight/physics2d/joint_registry.hpp",
+        "flight/physics2d/joints.hpp",
+        "flight/physics2d/mass_properties.hpp",
+        "flight/physics2d/node_sync.hpp",
+        "flight/physics2d/ownership.hpp",
+        "flight/physics2d/register_built_in_physics2_djoint_solvers.hpp",
+        "flight/physics2d/solver.hpp",
+        "flight/physics2d/step.hpp",
+        "flight/physics2d/step_validation.hpp",
+        "flight/physics2d/world.hpp",
+        "flight/physics2d/world_queries.hpp"
+      ],
+      "id": "physics2d-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/notification/notification.hpp"
+      ],
+      "id": "notification-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/midi/midi_resource.hpp",
+        "flight/midi/midi_subscription.hpp"
+      ],
+      "id": "midi-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/menu/menu.hpp",
+        "flight/menu/menu_templates.hpp"
+      ],
+      "id": "menu-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/lifecycle/lifecycle.hpp"
+      ],
+      "id": "lifecycle-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/input/input_manager.hpp"
+      ],
+      "id": "input-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/image/image_resource_reference.hpp"
+      ],
+      "id": "image-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/gizmo/gizmo_state.hpp"
+      ],
+      "id": "gizmo-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/effects/bevel_effect.hpp",
+        "flight/effects/bitmap_displacement_effect.hpp",
+        "flight/effects/bloom_effect.hpp",
+        "flight/effects/blur_effect.hpp",
+        "flight/effects/bokeh_depth_of_field_effect.hpp",
+        "flight/effects/contact_shadows_effect.hpp",
+        "flight/effects/convolution_effect.hpp",
+        "flight/effects/directional_blur_effect.hpp",
+        "flight/effects/displacement_effect.hpp",
+        "flight/effects/drop_shadow_effect.hpp",
+        "flight/effects/edge_detect_math.hpp",
+        "flight/effects/glitch_effect.hpp",
+        "flight/effects/gradient_bevel_effect.hpp",
+        "flight/effects/gradient_glow_effect.hpp",
+        "flight/effects/inner_glow_effect.hpp",
+        "flight/effects/inner_shadow_effect.hpp",
+        "flight/effects/median_effect.hpp",
+        "flight/effects/outer_glow_effect.hpp",
+        "flight/effects/outline_effect.hpp",
+        "flight/effects/render_effect.hpp",
+        "flight/effects/render_effect_capture_geometry.hpp",
+        "flight/effects/render_effect_defaults.hpp",
+        "flight/effects/render_effect_inputs.hpp",
+        "flight/effects/render_effect_interpolation.hpp",
+        "flight/effects/render_effect_padding.hpp",
+        "flight/effects/render_effect_validation.hpp",
+        "flight/effects/tilt_shift_effect.hpp"
+      ],
+      "id": "effects-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/dialog/file_dialog.hpp"
+      ],
+      "id": "dialog-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/debug/debug.hpp"
+      ],
+      "id": "debug-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/connectivity/connectivity.hpp"
+      ],
+      "id": "connectivity-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/clip/clip_region.hpp",
+        "flight/clip/enable_clip_guards.hpp"
+      ],
+      "id": "clip-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/capture/capture_baseline.hpp"
+      ],
+      "id": "capture-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/bitmap_text.hpp",
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/bitmapfont_formats/explain_bitmap_font_parse.hpp"
+      ],
+      "id": "bitmapfont-formats-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/audio/audio_format.hpp",
+        "flight/audio/audio_resource_from.hpp"
+      ],
+      "id": "audio-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/assets/asset_library.hpp",
+        "flight/assets/enable_asset_guards.hpp",
+        "flight/assets/explain_asset_load.hpp"
+      ],
+      "id": "assets-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/app/app_render_view.hpp"
+      ],
+      "id": "app-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/effects_wgpu/enable_wgpu_render_effect_guards.hpp",
+        "flight/effects_wgpu/wgpu_bevel_effect.hpp",
+        "flight/effects_wgpu/wgpu_bitmap_displacement_effect.hpp",
+        "flight/effects_wgpu/wgpu_blend_effect.hpp",
+        "flight/effects_wgpu/wgpu_bloom_effect.hpp",
+        "flight/effects_wgpu/wgpu_blur_effect.hpp",
+        "flight/effects_wgpu/wgpu_camera_motion_blur_effect.hpp",
+        "flight/effects_wgpu/wgpu_chromatic_aberration_effect.hpp",
+        "flight/effects_wgpu/wgpu_color_lut_pass.hpp",
+        "flight/effects_wgpu/wgpu_color_matrix_pass.hpp",
+        "flight/effects_wgpu/wgpu_composite_effect.hpp",
+        "flight/effects_wgpu/wgpu_contact_shadows_effect.hpp",
+        "flight/effects_wgpu/wgpu_convolution_effect.hpp",
+        "flight/effects_wgpu/wgpu_crt_effect.hpp",
+        "flight/effects_wgpu/wgpu_directional_blur_effect.hpp",
+        "flight/effects_wgpu/wgpu_displacement_effect.hpp",
+        "flight/effects_wgpu/wgpu_dither_effect.hpp",
+        "flight/effects_wgpu/wgpu_drop_shadow_effect.hpp",
+        "flight/effects_wgpu/wgpu_effect_blit_shader.hpp",
+        "flight/effects_wgpu/wgpu_effect_box_blur.hpp",
+        "flight/effects_wgpu/wgpu_effect_pass.hpp",
+        "flight/effects_wgpu/wgpu_effect_program_cache.hpp",
+        "flight/effects_wgpu/wgpu_effect_state.hpp",
+        "flight/effects_wgpu/wgpu_effect_texel_scale.hpp",
+        "flight/effects_wgpu/wgpu_effect_tint_shader.hpp",
+        "flight/effects_wgpu/wgpu_film_grain_effect.hpp",
+        "flight/effects_wgpu/wgpu_fxaa_effect.hpp",
+        "flight/effects_wgpu/wgpu_glitch_effect.hpp",
+        "flight/effects_wgpu/wgpu_god_rays_effect.hpp",
+        "flight/effects_wgpu/wgpu_gradient_bevel_effect.hpp",
+        "flight/effects_wgpu/wgpu_gradient_glow_effect.hpp",
+        "flight/effects_wgpu/wgpu_halftone_effect.hpp",
+        "flight/effects_wgpu/wgpu_inner_glow_effect.hpp",
+        "flight/effects_wgpu/wgpu_inner_shadow_effect.hpp",
+        "flight/effects_wgpu/wgpu_kuwahara_effect.hpp",
+        "flight/effects_wgpu/wgpu_lens_dirt_effect.hpp",
+        "flight/effects_wgpu/wgpu_lens_distortion_effect.hpp",
+        "flight/effects_wgpu/wgpu_lens_flare_effect.hpp",
+        "flight/effects_wgpu/wgpu_median_effect.hpp",
+        "flight/effects_wgpu/wgpu_motion_blur_effect.hpp",
+        "flight/effects_wgpu/wgpu_outer_glow_effect.hpp",
+        "flight/effects_wgpu/wgpu_outline_effect.hpp",
+        "flight/effects_wgpu/wgpu_pixelate_effect.hpp",
+        "flight/effects_wgpu/wgpu_posterize_effect.hpp",
+        "flight/effects_wgpu/wgpu_radial_blur_effect.hpp",
+        "flight/effects_wgpu/wgpu_render_texture_effect.hpp",
+        "flight/effects_wgpu/wgpu_scanlines_effect.hpp",
+        "flight/effects_wgpu/wgpu_screen_space_fog_effect.hpp",
+        "flight/effects_wgpu/wgpu_sharpen_effect.hpp",
+        "flight/effects_wgpu/wgpu_sketch_effect.hpp",
+        "flight/effects_wgpu/wgpu_smaa_effect.hpp",
+        "flight/effects_wgpu/wgpu_ssao_effect.hpp",
+        "flight/effects_wgpu/wgpu_tilt_shift_effect.hpp",
+        "flight/effects_wgpu/wgpu_tone_map_effect.hpp",
+        "flight/effects_wgpu/wgpu_vignette_effect.hpp",
+        "flight/effects_wgpu/wgpu_white_balance_effect.hpp"
+      ],
+      "id": "effects-wgpu-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/selection/marquee_selection.hpp"
+      ],
+      "id": "selection-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/app/app.hpp",
+        "flight/app/app_loop.hpp",
+        "flight/app/app_window.hpp"
+      ],
+      "id": "app-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/connectivity/connectivity.hpp"
+      ],
+      "id": "connectivity-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/input/input_manager.hpp"
+      ],
+      "id": "input-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/interaction/interaction_manager.hpp"
+      ],
+      "id": "interaction-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/lifecycle/lifecycle.hpp"
+      ],
+      "id": "lifecycle-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/media/audio_channel.hpp",
+        "flight/media/media_channel_signals.hpp",
+        "flight/media/video_channel.hpp"
+      ],
+      "id": "media-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/menu/menu.hpp"
+      ],
+      "id": "menu-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/midi/midi_subscription.hpp"
+      ],
+      "id": "midi-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/notification/notification.hpp"
+      ],
+      "id": "notification-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/power/power.hpp"
+      ],
+      "id": "power-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/preferences/storage.hpp"
+      ],
+      "id": "preferences-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/quadbatch/quad_batch.hpp"
+      ],
+      "id": "quadbatch-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/render/render_cache.hpp",
+        "flight/render/render_registry_signals.hpp"
+      ],
+      "id": "render-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/render_wgpu/wgpu_device_loss.hpp"
+      ],
+      "id": "render-wgpu-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/scene2d/scene2d.hpp"
+      ],
+      "id": "scene2d-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/scene3d/instanced_mesh.hpp"
+      ],
+      "id": "scene3d-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/selection/selection_state.hpp"
+      ],
+      "id": "selection-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/share/share.hpp"
+      ],
+      "id": "share-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/shortcut/shortcut_explicit_dependency.hpp"
+      ],
+      "id": "shortcut-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/statusbar/statusbar.hpp"
+      ],
+      "id": "statusbar-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/text/rich_text.hpp"
+      ],
+      "id": "text-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/tilemap/tilemap.hpp"
+      ],
+      "id": "tilemap-create-signal-using-declaration"
+    },
+    {
+      "files": [
+        "flight/app/app_loop.hpp",
+        "flight/app/app_render_view.hpp"
+      ],
+      "id": "app-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/connectivity/connectivity.hpp"
+      ],
+      "id": "connectivity-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/gizmo/gizmo_state.hpp"
+      ],
+      "id": "gizmo-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/gui/gui_controller.hpp"
+      ],
+      "id": "gui-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/input/input_manager.hpp"
+      ],
+      "id": "input-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/interaction/focus_manager.hpp",
+        "flight/interaction/interaction_manager.hpp"
+      ],
+      "id": "interaction-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/lifecycle/lifecycle.hpp"
+      ],
+      "id": "lifecycle-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/log/log.hpp"
+      ],
+      "id": "log-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/menu/menu.hpp"
+      ],
+      "id": "menu-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/midi/midi_subscription.hpp"
+      ],
+      "id": "midi-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/notification/notification.hpp"
+      ],
+      "id": "notification-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/power/power.hpp"
+      ],
+      "id": "power-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/preferences/storage.hpp"
+      ],
+      "id": "preferences-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_resources/enable_scene3_dresource_failure_guards.hpp"
+      ],
+      "id": "scene3d-resources-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/share/share.hpp"
+      ],
+      "id": "share-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/shortcut/shortcut_explicit_dependency.hpp"
+      ],
+      "id": "shortcut-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/spritesheet/spritesheet_player.hpp"
+      ],
+      "id": "spritesheet-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/statusbar/statusbar.hpp"
+      ],
+      "id": "statusbar-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/command/command_binding.hpp"
+      ],
+      "id": "command-unqualified-registry-names"
+    },
+    {
+      "files": [
+        "flight/clip/clip_region.hpp"
+      ],
+      "id": "clip-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/clip/clip_region.hpp"
+      ],
+      "id": "clip-unqualified-path-names"
+    },
+    {
+      "files": [
+        "flight/picking/pick_scene3_d.hpp"
+      ],
+      "id": "picking-unqualified-camera-names"
+    },
+    {
+      "files": [
+        "flight/picking/pick_scene3_d.hpp"
+      ],
+      "id": "picking-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/power/power.hpp"
+      ],
+      "id": "power-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/mesh/mesh_geometry.hpp",
+        "flight/mesh/mesh_geometry_transforms.hpp"
+      ],
+      "id": "mesh-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/scene3d/billboard_camera.hpp",
+        "flight/scene3d/instanced_mesh.hpp",
+        "flight/scene3d/scene_document.hpp",
+        "flight/scene3d/scene_document_lights.hpp",
+        "flight/scene3d/scene_node_bounds.hpp",
+        "flight/scene3d/scene_node_culling.hpp"
+      ],
+      "id": "scene3d-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_resources/scene_document_source.hpp"
+      ],
+      "id": "scene3d-resources-unqualified-loader-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_resources/gltf_load.hpp"
+      ],
+      "id": "scene3d-resources-unqualified-scene3d-formats-names"
+    },
+    {
+      "files": [
+        "flight/physics2d/step.hpp",
+        "flight/physics2d/world_queries.hpp"
+      ],
+      "id": "physics2d-unqualified-collision-names"
+    },
+    {
+      "files": [
+        "flight/physics2d/world.hpp"
+      ],
+      "id": "physics2d-unqualified-spatial-names"
+    },
+    {
+      "files": [
+        "flight/physics3d/collider_transform.hpp",
+        "flight/physics3d/world_queries.hpp"
+      ],
+      "id": "physics3d-unqualified-collision-names"
+    },
+    {
+      "files": [
+        "flight/physics3d/enable_physics3_dguards.hpp"
+      ],
+      "id": "physics3d-unqualified-log-names"
+    },
+    {
+      "files": [
+        "flight/physics3d/world.hpp"
+      ],
+      "id": "physics3d-unqualified-spatial-names"
+    },
+    {
+      "files": [
+        "flight/gui/gui_controller.hpp"
+      ],
+      "id": "gui-unqualified-interaction-names"
+    },
+    {
+      "files": [
+        "flight/shape/morph_shape.hpp"
+      ],
+      "id": "shape-unqualified-path-names"
+    },
+    {
+      "files": [
+        "flight/effects/render_effect_capture_geometry.hpp"
+      ],
+      "id": "effects-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_canvas/canvas_cache.hpp"
+      ],
+      "id": "scene2d-canvas-unqualified-effects-canvas-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_canvas/canvas_cache.hpp",
+        "flight/scene2d_canvas/canvas_fill_pattern.hpp",
+        "flight/scene2d_canvas/canvas_shape_commands.hpp"
+      ],
+      "id": "scene2d-canvas-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_canvas/canvas_cache.hpp",
+        "flight/scene2d_canvas/canvas_render_state.hpp",
+        "flight/scene2d_canvas/canvas_shape.hpp",
+        "flight/scene2d_canvas/canvas_texture_resolver.hpp"
+      ],
+      "id": "scene2d-canvas-unqualified-render-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_canvas/canvas_scale9_shape.hpp"
+      ],
+      "id": "scene2d-canvas-unqualified-shape-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/awd2_parse.hpp",
+        "flight/scene3d_formats/three_ds_parse.hpp"
+      ],
+      "id": "scene3d-formats-unqualified-camera-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/collada_material.hpp",
+        "flight/scene3d_formats/gltf_parse.hpp",
+        "flight/scene3d_formats/gltf_transmission_volume.hpp"
+      ],
+      "id": "scene3d-formats-unqualified-color-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/awd2_parse.hpp",
+        "flight/scene3d_formats/collada_parse.hpp",
+        "flight/scene3d_formats/gltf_parse.hpp",
+        "flight/scene3d_formats/md5_parse.hpp",
+        "flight/scene3d_formats/three_ds_parse.hpp"
+      ],
+      "id": "scene3d-formats-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/awd2_parse.hpp"
+      ],
+      "id": "scene3d-formats-unqualified-image-codec-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/awd2_parse.hpp",
+        "flight/scene3d_formats/collada_material.hpp",
+        "flight/scene3d_formats/collada_parse.hpp",
+        "flight/scene3d_formats/gltf_parse.hpp",
+        "flight/scene3d_formats/gltf_punctual_lights.hpp",
+        "flight/scene3d_formats/md2_parse.hpp",
+        "flight/scene3d_formats/three_ds_parse.hpp"
+      ],
+      "id": "scene3d-formats-unqualified-importdiagnostics-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/awd2_parse.hpp",
+        "flight/scene3d_formats/collada_parse.hpp"
+      ],
+      "id": "scene3d-formats-unqualified-lighting-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/collada_material.hpp"
+      ],
+      "id": "scene3d-formats-unqualified-materials-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/gltf_parse.hpp",
+        "flight/scene3d_formats/md5_parse.hpp"
+      ],
+      "id": "scene3d-formats-unqualified-mesh-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/awd2_parse.hpp",
+        "flight/scene3d_formats/gltf_parse.hpp",
+        "flight/scene3d_formats/md2_parse.hpp",
+        "flight/scene3d_formats/md5_parse.hpp",
+        "flight/scene3d_formats/obj_parse.hpp",
+        "flight/scene3d_formats/three_ds_parse.hpp"
+      ],
+      "id": "scene3d-formats-unqualified-scene3d-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/collada_parse.hpp"
+      ],
+      "id": "scene3d-formats-unqualified-xml-names"
+    },
+    {
+      "files": [
+        "flight/effects_canvas/canvas_bloom_effect.hpp"
+      ],
+      "id": "effects-canvas-unqualified-effects-names"
+    },
+    {
+      "files": [
+        "flight/effects_canvas/canvas_blend_effect.hpp"
+      ],
+      "id": "effects-canvas-unqualified-scene2d-canvas-names"
+    },
+    {
+      "files": [
+        "flight/effects_canvas/canvas_bevel_effect.hpp",
+        "flight/effects_canvas/canvas_blend_effect.hpp",
+        "flight/effects_canvas/canvas_bloom_effect.hpp",
+        "flight/effects_canvas/canvas_blur_effect.hpp",
+        "flight/effects_canvas/canvas_color_lut_pass.hpp",
+        "flight/effects_canvas/canvas_color_matrix_pass.hpp",
+        "flight/effects_canvas/canvas_composite_effect.hpp",
+        "flight/effects_canvas/canvas_drop_shadow_effect.hpp",
+        "flight/effects_canvas/canvas_effect_compositing.hpp",
+        "flight/effects_canvas/canvas_effect_drop_shadow_css.hpp",
+        "flight/effects_canvas/canvas_effect_state.hpp",
+        "flight/effects_canvas/canvas_effect_test_support.hpp",
+        "flight/effects_canvas/canvas_film_grain_effect.hpp",
+        "flight/effects_canvas/canvas_gradient_bevel_effect.hpp",
+        "flight/effects_canvas/canvas_gradient_glow_effect.hpp",
+        "flight/effects_canvas/canvas_gradient_ramp.hpp",
+        "flight/effects_canvas/canvas_inner_glow_effect.hpp",
+        "flight/effects_canvas/canvas_inner_shadow_effect.hpp",
+        "flight/effects_canvas/canvas_lens_distortion_effect.hpp",
+        "flight/effects_canvas/canvas_outer_glow_effect.hpp",
+        "flight/effects_canvas/canvas_pixelate_effect.hpp",
+        "flight/effects_canvas/canvas_posterize_effect.hpp",
+        "flight/effects_canvas/canvas_render_texture_effect.hpp",
+        "flight/effects_canvas/canvas_scanlines_effect.hpp",
+        "flight/effects_canvas/canvas_source_mode_compositing.hpp",
+        "flight/effects_canvas/canvas_tilt_shift_effect.hpp",
+        "flight/effects_canvas/canvas_vignette_effect.hpp"
+      ],
+      "id": "effects-canvas-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/lottie_document.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-animation-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/rive_clipping.hpp",
+        "flight/scene2d_formats/svg_document.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-clip-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/rive_text.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-color-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/lottie_document.hpp",
+        "flight/scene2d_formats/rive_clipping.hpp",
+        "flight/scene2d_formats/svg_document.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/lottie_document.hpp",
+        "flight/scene2d_formats/rive_assets.hpp",
+        "flight/scene2d_formats/rive_clipping.hpp",
+        "flight/scene2d_formats/rive_layout.hpp",
+        "flight/scene2d_formats/rive_text.hpp",
+        "flight/scene2d_formats/svg_document.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-importdiagnostics-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/lottie_document.hpp",
+        "flight/scene2d_formats/rive_clipping.hpp",
+        "flight/scene2d_formats/rive_shape_paint.hpp",
+        "flight/scene2d_formats/svg_document.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-path-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/rive_clipping.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-path-boolean-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/svg_document.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-path-formats-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/lottie_document.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-scene2d-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/lottie_document.hpp",
+        "flight/scene2d_formats/svg_document.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-shape-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/rive_text.hpp",
+        "flight/scene2d_formats/svg_document.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-textlayout-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/svg_document.hpp"
+      ],
+      "id": "scene2d-formats-unqualified-xml-names"
+    },
+    {
+      "files": [
+        "flight/skeleton2d/skeleton2d.hpp"
+      ],
+      "id": "skeleton2d-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/skeleton2d/skeleton2d_draw_order_target.hpp"
+      ],
+      "id": "skeleton2d-unqualified-node-names"
+    },
+    {
+      "files": [
+        "flight/skeleton2d/skeleton2d_animation_target.hpp"
+      ],
+      "id": "skeleton2d-unqualified-registry-names"
+    },
+    {
+      "files": [
+        "flight/render/enable_color_adjustments.hpp"
+      ],
+      "id": "render-unqualified-adjustments-names"
+    },
+    {
+      "files": [
+        "flight/render/scene_render.hpp"
+      ],
+      "id": "render-unqualified-color-names"
+    },
+    {
+      "files": [
+        "flight/render/render_cache.hpp",
+        "flight/render/render_target.hpp",
+        "flight/render/render_viewport.hpp",
+        "flight/render/scene_render.hpp"
+      ],
+      "id": "render-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/render/enable_color_adjustment_guards.hpp"
+      ],
+      "id": "render-unqualified-log-names"
+    },
+    {
+      "files": [
+        "flight/render/enable_color_adjustments.hpp"
+      ],
+      "id": "render-unqualified-materials-names"
+    },
+    {
+      "files": [],
+      "id": "render-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/interaction/hit_tests.hpp",
+        "flight/interaction/interaction_manager.hpp",
+        "flight/interaction/register_quad_batch_hit_test.hpp"
+      ],
+      "id": "interaction-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/physics2d_abi/reference_physics2_dabi.hpp"
+      ],
+      "id": "physics2d-abi-unqualified-physics2d-names"
+    },
+    {
+      "files": [
+        "flight/physics3d_abi/physics3_dabi_command.hpp"
+      ],
+      "id": "physics3d-abi-unqualified-physics2d-abi-names"
+    },
+    {
+      "files": [
+        "flight/physics3d_abi/reference_physics3_dabi.hpp"
+      ],
+      "id": "physics3d-abi-unqualified-physics3d-names"
+    },
+    {
+      "files": [
+        "flight/text/native_text.hpp",
+        "flight/text/rich_text.hpp",
+        "flight/text/text_label.hpp"
+      ],
+      "id": "text-unqualified-node-names"
+    },
+    {
+      "files": [
+        "flight/text/rich_text.hpp",
+        "flight/text/text_label.hpp",
+        "flight/text/text_label_layout.hpp"
+      ],
+      "id": "text-unqualified-textlayout-names"
+    },
+    {
+      "files": [
+        "flight/textinput/text_input_editing.hpp"
+      ],
+      "id": "textinput-unqualified-text-names"
+    },
+    {
+      "files": [
+        "flight/textinput/text_input_editing.hpp"
+      ],
+      "id": "textinput-unqualified-textlayout-names"
+    },
+    {
+      "files": [
+        "flight/textinput/text_input_editing.hpp"
+      ],
+      "id": "textinput-unqualified-types-names"
+    },
+    {
+      "files": [],
+      "id": "scene2d-unqualified-signals-names"
+    },
+    {
+      "files": [
+        "flight/spritesheet_formats/aseprite_parse.hpp",
+        "flight/spritesheet_formats/texture_packer_parse.hpp"
+      ],
+      "id": "spritesheet-formats-unqualified-importdiagnostics-names"
+    },
+    {
+      "files": [
+        "flight/spritesheet_formats/spritesheet_detect.hpp"
+      ],
+      "id": "spritesheet-formats-unqualified-registry-names"
+    },
+    {
+      "files": [
+        "flight/spritesheet_formats/aseprite_parse.hpp",
+        "flight/spritesheet_formats/texture_packer_parse.hpp"
+      ],
+      "id": "spritesheet-formats-unqualified-spritesheet-names"
+    },
+    {
+      "files": [
+        "flight/spritesheet_formats/aseprite_parse.hpp",
+        "flight/spritesheet_formats/texture_packer_parse.hpp"
+      ],
+      "id": "spritesheet-formats-unqualified-textureatlas-formats-names"
+    },
+    {
+      "files": [
+        "flight/skeleton2d_formats/dragon_bones_parse.hpp"
+      ],
+      "id": "skeleton2d-formats-unqualified-animation-names"
+    },
+    {
+      "files": [
+        "flight/skeleton2d_formats/dragon_bones_parse.hpp",
+        "flight/skeleton2d_formats/spine_binary_parse.hpp",
+        "flight/skeleton2d_formats/spine_parse.hpp"
+      ],
+      "id": "skeleton2d-formats-unqualified-easing-names"
+    },
+    {
+      "files": [
+        "flight/skeleton2d_formats/dragon_bones_parse.hpp",
+        "flight/skeleton2d_formats/spine_binary_parse.hpp",
+        "flight/skeleton2d_formats/spine_parse.hpp"
+      ],
+      "id": "skeleton2d-formats-unqualified-importdiagnostics-names"
+    },
+    {
+      "files": [
+        "flight/skeleton2d_formats/skeleton_detect.hpp"
+      ],
+      "id": "skeleton2d-formats-unqualified-registry-names"
+    },
+    {
+      "files": [
+        "flight/skeleton2d_formats/dragon_bones_parse.hpp",
+        "flight/skeleton2d_formats/skeleton_detect.hpp",
+        "flight/skeleton2d_formats/spine_binary_parse.hpp",
+        "flight/skeleton2d_formats/spine_parse.hpp"
+      ],
+      "id": "skeleton2d-formats-unqualified-shortcut-names"
+    },
+    {
+      "files": [
+        "flight/skeleton2d_formats/dragon_bones_parse.hpp"
+      ],
+      "id": "skeleton2d-formats-unqualified-skeleton2d-names"
+    },
+    {
+      "files": [
+        "flight/particles_formats/particle_designer_parse.hpp",
+        "flight/particles_formats/spine_parse.hpp"
+      ],
+      "id": "particles-formats-unqualified-importdiagnostics-names"
+    },
+    {
+      "files": [
+        "flight/particles_formats/particle_designer_parse.hpp",
+        "flight/particles_formats/spine_parse.hpp"
+      ],
+      "id": "particles-formats-unqualified-particles-names"
     }
   ],
   "sourcePatches": [

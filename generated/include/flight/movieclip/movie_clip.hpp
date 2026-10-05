@@ -30,7 +30,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/movie_clip.hpp>
+
 namespace flight::movieclip {
+
+using flight::types::MovieClip;
 
 
 // NOT GENERATED: function addMovieClipFrameScript -- source line 34

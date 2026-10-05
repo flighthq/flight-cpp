@@ -25,9 +25,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/layout.hpp>
+
 #include "layout_state.hpp"
 
 namespace flight::layout {
+
+using flight::types::GridLayoutItemStyle;
+using flight::types::LayoutState;
+using flight::types::LayoutTree;
+using flight::types::grid_layout_kind;
 
 inline double get_grid_ordinal(flight::Ref<LayoutTree> tree, double parent_index, double child_index) {
   double ordinal = 0.0;

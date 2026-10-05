@@ -10,9 +10,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_quad_batch_writer.hpp"
 
 namespace flight::scene2d_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline void draw_wgpu_scene2_d(flight::Ref<WgpuRenderState> state, flight::Ref<RenderProxy2D> render_proxy) {
 }

@@ -17,10 +17,34 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/matrix.hpp>
+
+#include <flight/types/texture.hpp>
+
+#include <flight/types/shape_command.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/canvas_texture_resolver.hpp>
+
+#include <flight/types/canvas_render_surface.hpp>
+
 #include "canvas_texture_resolver.hpp"
 #include "canvas_texture_window_source.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::geometry::create_matrix;
+
+using flight::types::CanvasRenderSurface;
+using flight::types::CanvasRenderSurfaceOptions;
+using flight::types::CanvasTextureResolvers;
+using flight::types::GradientType;
+using flight::types::InterpolationMethod;
+using flight::types::Matrix;
+using flight::types::MatrixLike;
+using flight::types::SpreadMethod;
+using flight::types::Texture;
 
 inline const double gradient_half = 819.2;
 

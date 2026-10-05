@@ -20,6 +20,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/mesh_triangle_vertex_indices.hpp>
+
 #include <flight/types/mesh_geometry.hpp>
 
 #include "mesh_geometry.hpp"
@@ -30,6 +32,8 @@ namespace flight::mesh {
 
 using flight::types::MeshGeometry;
 using flight::types::MeshSubset;
+using flight::types::MeshTriangleVertexIndices;
+using flight::types::PrimitiveTopology;
 using flight::types::VertexAttribute;
 using flight::types::VertexAttributeLayout;
 

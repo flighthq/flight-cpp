@@ -15,11 +15,30 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/shape.hpp>
+
+#include <flight/types/rive_import_registry.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/display_object.hpp>
+
 #include "rive_import_registry.hpp"
 #include "rive_shape_paint.hpp"
 #include "rive_shape_path.hpp"
 
 namespace flight::scene2d_formats {
+
+using flight::types::DisplayObject;
+using flight::types::ImportDiagnostic;
+using flight::types::RiveArtboardImportContext;
+using flight::types::RiveCoreObject;
+using flight::types::RiveCoreObjectHandler;
+using flight::types::RiveImportRegistry;
+using flight::types::RivePathRecord;
+using flight::types::Shape;
 
 inline const double rive_shape = 3.0;
 

@@ -24,6 +24,12 @@ namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::command {
 
+using flight::types::Command;
+using flight::types::CommandBinding;
+using flight::types::CommandBindingTable;
+using flight::types::CommandHistory;
+using flight::types::CompositeCommand;
+
 inline bool abort_command_transaction(flight::Ref<flight::types::CommandHistory> history) {
   if ((history->transaction_depth == 0.0)) {
     return false;

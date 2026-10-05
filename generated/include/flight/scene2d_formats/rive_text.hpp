@@ -15,10 +15,51 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/textlayout/text_format_range.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/color/pack_color.hpp>
+
+#include <flight/types/text_format_range.hpp>
+
+#include <flight/types/text_format.hpp>
+
+#include <flight/types/rive_import_registry.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/rich_text.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/font_variation.hpp>
+
+#include <flight/types/display_object.hpp>
+
 #include "rive_core_types.hpp"
 #include "rive_import_registry.hpp"
 
 namespace flight::scene2d_formats {
+
+using flight::textlayout::create_text_format_range;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::color::pack_color;
+
+using flight::types::DisplayObject;
+using flight::types::FontVariation;
+using flight::types::ImportDiagnostic;
+using flight::types::RichText;
+using flight::types::RiveArtboardGraph;
+using flight::types::RiveArtboardImportContext;
+using flight::types::RiveCoreObject;
+using flight::types::RiveCoreObjectHandler;
+using flight::types::RiveImportRegistry;
+using flight::types::TextFormat;
+using flight::types::TextFormatRange;
+using flight::types::import_diagnostic_severity;
 
 inline flight::String to_rive_open_type_tag(double packed) {
   return flight::String::from_char_code(flight::bitwise_and(flight::unsigned_right_shift(packed, 24.0), 255.0), flight::bitwise_and(flight::unsigned_right_shift(packed, 16.0), 255.0), flight::bitwise_and(flight::unsigned_right_shift(packed, 8.0), 255.0), flight::bitwise_and(packed, 255.0));

@@ -27,10 +27,30 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/geometry/matrix.hpp>
+
+#include <flight/types/texture.hpp>
+
+#include <flight/types/shape_command.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/canvas_shape_registry.hpp>
+
+#include <flight/types/canvas_shape_draw_state.hpp>
+
 #include "canvas_fill_pattern.hpp"
 #include "canvas_texture_window_source.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::geometry::create_matrix;
+
+using flight::types::CanvasShapeCommand;
+using flight::types::CanvasShapeDrawState;
+using flight::types::LineScaleMode;
+using flight::types::Matrix;
+using flight::types::Texture;
 
 inline flight::Ref<Matrix> fill_matrix_inverse = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 

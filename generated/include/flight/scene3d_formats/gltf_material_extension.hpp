@@ -11,7 +11,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/standard_pbr_material.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/material.hpp>
+
 namespace flight::scene3d_formats {
+
+using flight::types::MaterialLike;
+using flight::types::Scene3DDocument;
+using flight::types::StandardPbrMaterial;
 
 
 // NOT GENERATED: function attachGltfPbrExtension -- source line 22

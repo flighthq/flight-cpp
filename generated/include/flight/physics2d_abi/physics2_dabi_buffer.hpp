@@ -29,6 +29,13 @@ namespace flight::types { struct Physics2DAbiQueryBuffer; }
 
 namespace flight::physics2d_abi {
 
+using flight::types::Physics2DAbiBodyBuffer;
+using flight::types::Physics2DAbiCommandBuffer;
+using flight::types::Physics2DAbiContactBuffer;
+using flight::types::Physics2DAbiExecutionResult;
+using flight::types::Physics2DAbiJointBuffer;
+using flight::types::Physics2DAbiQueryBuffer;
+
 inline void clear_physics2_dabi_command_buffer(flight::Ref<flight::types::Physics2DAbiCommandBuffer> out) {
   (out->byte_length = flight::physics2d_abi::physics2_dabi_command_header_byte_length);
   (out->command_count = 0.0);

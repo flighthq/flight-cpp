@@ -10,11 +10,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/render_proxy2_d.hpp>
+
 #include "dom_clip_contours.hpp"
 #include "dom_clip_rectangle.hpp"
 #include "dom_render_state.hpp"
 
 namespace flight::scene2d_dom {
+
+using flight::types::RenderProxy2D;
 
 
 // NOT GENERATED: variable (binding) -- source line 15

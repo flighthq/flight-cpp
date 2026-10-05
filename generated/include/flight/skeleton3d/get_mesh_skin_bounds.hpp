@@ -27,6 +27,8 @@ namespace flight::types { struct Vector3; }
 
 namespace flight::skeleton3d {
 
+using flight::types::Skeleton3D;
+
 inline void get_mesh_skin_exact_bounds(flight::Ref<flight::types::AabbLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSkinBindPose>>>> bind_pose, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton3D>>>> skeleton) {
   flight::skeleton3d::skin_vertices(flight::row_get<flight::RowKey<"skinnedPositions">>(bind_pose), flight::row_get<flight::RowKey<"skinnedNormals">>(bind_pose), flight::row_get<flight::RowKey<"positions">>(bind_pose), flight::row_get<flight::RowKey<"normals">>(bind_pose), flight::row_get<flight::RowKey<"joints">>(bind_pose), flight::row_get<flight::RowKey<"weights">>(bind_pose), flight::row_get<flight::RowKey<"jointMatrices">>(skeleton), flight::row_get<flight::RowKey<"normalMatrices">>(skeleton));
   flight::Float32Array skinned = flight::row_get<flight::RowKey<"skinnedPositions">>(bind_pose);

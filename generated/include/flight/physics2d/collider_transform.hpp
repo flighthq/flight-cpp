@@ -32,6 +32,11 @@ namespace flight::types { struct RigidBody2D; }
 
 namespace flight::physics2d {
 
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DCollisionFilter;
+using flight::types::Physics2DMaterial;
+using flight::types::RigidBody2D;
+
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS2D_X0_Y0_X1_Y1_RADIUS_KIND_ENTITY_RUNTIME_KEY_5162CF10C0C8ABD4
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS2D_X0_Y0_X1_Y1_RADIUS_KIND_ENTITY_RUNTIME_KEY_5162CF10C0C8ABD4
 struct x0_y0_x1_y1_radius_kind_entity_runtime_key_5162cf10c0c8abd4 : public flight::types::CollisionCapsule2D {

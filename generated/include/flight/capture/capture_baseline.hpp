@@ -18,7 +18,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/capture_baseline.hpp>
+
 namespace flight::capture {
+
+using flight::types::CaptureBaseline;
 
 inline flight::Ref<CaptureBaseline> create_capture_baseline() {
   return flight::make_ref<CaptureBaseline>(CaptureBaseline{});

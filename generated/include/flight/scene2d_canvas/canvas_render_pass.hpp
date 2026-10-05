@@ -13,12 +13,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/canvas_render_pass.hpp>
+
 #include <flight/entity/entity.hpp>
 #include <flight/geometry/matrix.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_canvas/canvas_render_state.hpp>
 
 namespace flight::scene2d_canvas {
+
+using flight::types::CanvasRenderPass;
 
 inline std::optional<flight::Ref<flight::types::CanvasRenderPass>> get_canvas_active_render_pass(flight::Ref<flight::types::CanvasRenderState> state) {
   return flight::scene2d_canvas::get_canvas_render_state_runtime(state)->pass_stack.at(-1.0);

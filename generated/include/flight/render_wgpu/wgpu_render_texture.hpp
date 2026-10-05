@@ -19,11 +19,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_render_pass.hpp"
 #include "wgpu_render_state.hpp"
 #include "wgpu_texture_render_target.hpp"
 
 namespace flight::render_wgpu {
+
+using flight::types::WgpuRenderState;
 
 
 // NOT GENERATED: function destroyWgpuRenderTexture -- source line 34

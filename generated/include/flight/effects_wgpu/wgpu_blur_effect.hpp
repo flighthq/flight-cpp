@@ -18,12 +18,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_effect_pass.hpp"
 #include "wgpu_effect_program_cache.hpp"
 #include "wgpu_effect_texel_scale.hpp"
 #include "wgpu_render_effect_registry.hpp"
 
 namespace flight::effects_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline const flight::String gaussian_blur_wgsl = flight::String("\nstruct Uniforms {\n  texelSize : vec2f,\n  direction : vec2f,\n  radius : f32,\n  sigma : f32,\n  _pad0 : f32, _pad1 : f32,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let r = i32(uni.radius);\n  if (r == 0) { return textureSampleLevel(tex, smp, uv, 0.0); }\n  let twoSigmaSq = 2.0 * uni.sigma * uni.sigma;\n  var sum = vec4f(0.0);\n  var weightSum = 0.0;\n  for (var i = -r; i <= r; i++) {\n    let w = exp(-f32(i * i) / twoSigmaSq);\n    sum += w * textureSampleLevel(tex, smp, uv + f32(i) * uni.texelSize * uni.direction, 0.0);\n    weightSum += w;\n  }\n  return sum / weightSum;\n}");
 

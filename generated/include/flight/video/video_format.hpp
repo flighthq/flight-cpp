@@ -12,7 +12,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/host_video.hpp>
+
 namespace flight::video {
+
+using flight::types::HostVideoCapability;
 
 inline std::optional<flight::String> detect_video_mime_type(std::variant<flight::ArrayBuffer, flight::Uint8Array> data) {
   flight::Uint8Array b = (data.index() == 1 ? std::get<1>(data) : flight::Uint8Array(std::get<0>(data)));

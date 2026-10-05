@@ -14,9 +14,34 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/scene3d_formats/gltf_parse.hpp>
+
+#include <flight/types/scene3_dresources.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/net.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/gltf_schema.hpp>
+
+#include <flight/types/gltf_extension.hpp>
+
 #include "scene_document_source.hpp"
 
 namespace flight::scene3d_resources {
+
+using flight::scene3d_formats::parse_glb;
+using flight::scene3d_formats::parse_gltf;
+
+using flight::types::GltfDocument;
+using flight::types::GltfImportOptions;
+using flight::types::GltfScene3DDocumentLoadOptions;
+using flight::types::HostNetCapability;
+using flight::types::ImportDiagnostic;
+using flight::types::Scene3DDocument;
+using flight::types::Scene3DDocumentLoadOptions;
 
 inline flight::Task<std::optional<flight::Ref<Scene3DDocument>>> load_scene3_ddocument_from_glb_url(flight::Ref<HostNetCapability> host_net, flight::String url, std::optional<flight::Ref<GltfScene3DDocumentLoadOptions>> options = std::nullopt) {
   std::optional<flight::Uint8Array> bytes = co_await load_scene3_ddocument_bytes_from_url(host_net, url, options);

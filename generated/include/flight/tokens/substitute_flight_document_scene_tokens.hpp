@@ -18,7 +18,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/flight_document_field_schema.hpp>
+
 namespace flight::tokens {
+
+using flight::types::FlightDocumentValue;
 struct SceneSubstitutionResult;
 struct SceneSubstitutionState;
 } // namespace flight::tokens

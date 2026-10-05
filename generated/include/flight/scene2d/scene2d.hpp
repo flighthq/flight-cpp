@@ -15,6 +15,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/signals/signal.hpp>
+
 #include <flight/types/scene2_dsignals.hpp>
 
 #include <flight/types/scene2_d.hpp>
@@ -29,11 +31,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d {
 
+using flight::signals::create_signal;
+
 using flight::types::EntityConstruction;
 using flight::types::Node2D;
 using flight::types::Scene2D;
 using flight::types::Scene2DRuntime;
 using flight::types::Scene2DSignals;
+using flight::types::entity_runtime_key;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
@@ -136,12 +141,12 @@ inline flight::Ref<Scene2DSignals> create_scene2_dsignals() {
 // result requires one represented member value domain
 
 inline flight::Ref<Scene2DRuntime> ensure_scene2_druntime(flight::Ref<Scene2D> source) {
-  std::optional<flight::Ref<Scene2DRuntime>> existing = static_cast<std::optional<flight::Ref<Scene2DRuntime>>>(source[entity_runtime_key]);
+  std::optional<flight::Ref<Scene2DRuntime>> existing = static_cast<std::optional<flight::Ref<Scene2DRuntime>>>(source->entity_runtime_key);
   if (existing.has_value()) {
     return existing.value();
   }
   flight::Ref<Scene2DRuntime> runtime = create_scene2_druntime();
-  (source[entity_runtime_key] = runtime);
+  (source->entity_runtime_key = runtime);
   return runtime;
 }
 

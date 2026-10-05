@@ -34,6 +34,17 @@ namespace flight::types { struct SpatialIndexBackend2D; }
 
 namespace flight::physics2d {
 
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DContact;
+using flight::types::Physics2DContactPoint;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DJointReaction;
+using flight::types::Physics2DJointSolver;
+using flight::types::Physics2DSolverConfig;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
+using flight::types::SpatialIndexBackend2D;
+
 inline void wake_physics2_dbody(flight::Ref<flight::types::RigidBody2D> body) {
   flight::physics2d::assert_physics2_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
   (body->sleeping = false);

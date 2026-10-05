@@ -18,7 +18,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spine_particle_schema.hpp>
+
+#include <flight/types/particle_emitter_config.hpp>
+
 namespace flight::particles_formats {
+
+using flight::types::ParticleEmitterConfig;
+using flight::types::SpineAlphaKeyframe;
+using flight::types::SpineParticleDocument;
+using flight::types::SpineTintKeyframe;
 
 inline flight::String rgb_to_hex(double r, double g, double b) {
   std::function<flight::String(double)> byte = [=](double v) { return flight::number_to_string(flight::round((flight::maximum(0.0, flight::minimum(1.0, v)) * 255.0)), 16.0).pad_start(2.0, flight::String("0")); };

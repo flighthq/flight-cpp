@@ -26,6 +26,15 @@ namespace flight::types { struct SpatialAabb3D; }
 
 namespace flight::physics3d_abi {
 
+using flight::types::Physics3DAbi;
+using flight::types::Physics3DAbiBodyBuffer;
+using flight::types::Physics3DAbiCommandBuffer;
+using flight::types::Physics3DAbiContactBuffer;
+using flight::types::Physics3DAbiContactHooks;
+using flight::types::Physics3DAbiExecutionResult;
+using flight::types::Physics3DAbiJointBuffer;
+using flight::types::Physics3DAbiQueryBuffer;
+
 inline flight::Ref<flight::types::Physics3DAbi> create_physics3_dabi() {
   return flight::physics3d_abi::create_reference_physics3_dabi();
 }

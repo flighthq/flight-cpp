@@ -14,9 +14,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/render_proxy2_d.hpp>
+
 #include "dom_style.hpp"
 
 namespace flight::scene2d_dom {
+
+using flight::types::RenderProxy2D;
 
 inline std::optional<flight::Ref<RendererData>> create_dom_native_text_data(flight::Ref<RenderState> state, flight::Ref<Renderable> source) {
   return std::nullopt;

@@ -22,7 +22,45 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/types/rive_import_registry.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/partial_node.hpp>
+
+#include <flight/types/layout.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/display_object.hpp>
+
 namespace flight::scene2d_formats {
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::types::DisplayObject;
+using flight::types::FlexLayoutAlign;
+using flight::types::FlexLayoutContainerStyle;
+using flight::types::FlexLayoutDirection;
+using flight::types::FlexLayoutItemStyle;
+using flight::types::FlexLayoutJustify;
+using flight::types::GridLayoutContainerStyle;
+using flight::types::GridLayoutItemStyle;
+using flight::types::GridLayoutTrack;
+using flight::types::ImportDiagnostic;
+using flight::types::LayoutNode;
+using flight::types::PartialNode;
+using flight::types::RiveArtboardGraph;
+using flight::types::RiveArtboardImportContext;
+using flight::types::RiveCoreObject;
+using flight::types::RiveCoreObjectHandler;
+using flight::types::RiveImportRegistry;
+using flight::types::RiveLayoutImport;
+using flight::types::flex_layout_kind;
+using flight::types::grid_layout_kind;
+using flight::types::import_diagnostic_severity;
 struct RiveLayoutProvider;
 struct RiveLayoutContext;
 struct RiveSizingValues;

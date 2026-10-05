@@ -28,6 +28,9 @@ namespace flight::types { struct ParticleSerializeResult; }
 
 namespace flight::particles_formats {
 
+using flight::types::ParticleDesignerDocument;
+using flight::types::ParticleEmitterConfig;
+
 inline flight::String escape_xml_flight_value_function_escape_u000058_ml_flight_private_0e515013f2ef4167(flight::String s) {
   return s.replace(flight::RegExp(flight::String("&"), flight::String("g")), flight::String("&amp;")).replace(flight::RegExp(flight::String("<"), flight::String("g")), flight::String("&lt;")).replace(flight::RegExp(flight::String(">"), flight::String("g")), flight::String("&gt;"));
 }

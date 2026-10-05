@@ -35,6 +35,17 @@ namespace flight::types { struct SpatialIndexBackend2D; }
 
 namespace flight::physics2d {
 
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DCollisionFilter;
+using flight::types::Physics2DContact;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DJointSolver;
+using flight::types::Physics2DMaterial;
+using flight::types::Physics2DSolverConfig;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
+using flight::types::SpatialIndexBackend2D;
+
 inline bool is_physics2_dcontact_supported_kind(flight::String kind) {
   return (((((kind == flight::String("circle")) || (kind == flight::String("capsule"))) || (kind == flight::String("aabb"))) || (kind == flight::String("obb"))) || (kind == flight::String("polygon")));
 }

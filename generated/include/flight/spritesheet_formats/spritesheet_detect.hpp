@@ -17,11 +17,24 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/registry/registry_table.hpp>
+
+#include <flight/types/spritesheet_parse_options.hpp>
+
+#include <flight/types/spritesheet_format.hpp>
+
 #include <flight/types/spritesheet_data.hpp>
+
+#include <flight/types/registry_table.hpp>
 
 namespace flight::spritesheet_formats {
 
+using flight::registry::get_registry_table_entry;
+
+using flight::types::KeyedTable;
 using flight::types::SpritesheetData;
+using flight::types::SpritesheetFormatKind;
+using flight::types::SpritesheetParseOptions;
 struct FormatEntry;
 struct RegisteredFormatEntry;
 } // namespace flight::spritesheet_formats

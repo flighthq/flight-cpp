@@ -27,11 +27,132 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/scene3d/scene_document.hpp>
+
+#include <flight/lighting/point_light.hpp>
+
+#include <flight/lighting/directional_light.hpp>
+
+#include <flight/lighting/ambient_light.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/image_codec/detect_image_mime_type.hpp>
+
+#include <flight/geometry/vector3.hpp>
+
+#include <flight/geometry/transform3d.hpp>
+
+#include <flight/geometry/quaternion.hpp>
+
+#include <flight/geometry/matrix4.hpp>
+
+#include <flight/camera/projection.hpp>
+
+#include <flight/types/vector3.hpp>
+
+#include <flight/types/transform3_d.hpp>
+
+#include <flight/types/texture.hpp>
+
 #include <flight/types/skin_influence.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/scene3_d.hpp>
+
+#include <flight/types/point_light_options.hpp>
+
+#include <flight/types/perspective_projection_options.hpp>
+
+#include <flight/types/orthographic_projection_options.hpp>
+
+#include <flight/types/node3_d.hpp>
+
+#include <flight/types/mesh_geometry.hpp>
+
+#include <flight/types/matrix4.hpp>
+
+#include <flight/types/material.hpp>
+
+#include <flight/types/light.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/image_resource_reference.hpp>
+
+#include <flight/types/easing_function.hpp>
+
+#include <flight/types/directional_light_options.hpp>
+
+#include <flight/types/compression.hpp>
+
+#include <flight/types/camera3_d.hpp>
+
+#include <flight/types/animation_interpolation.hpp>
+
+#include <flight/types/animation_clip.hpp>
 
 namespace flight::scene3d_formats {
 
+using flight::scene3d::create_scene3_dfrom_document;
+
+using flight::lighting::create_ambient_light;
+using flight::lighting::create_directional_light;
+using flight::lighting::create_point_light;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::image_codec::detect_image_mime_type;
+
+using flight::geometry::copy_matrix4;
+using flight::geometry::create_matrix4;
+using flight::geometry::create_transform3_d;
+using flight::geometry::create_vector3;
+using flight::geometry::decompose_matrix4_to_transform3_d;
+using flight::geometry::inverse_matrix4;
+using flight::geometry::multiply_matrix4;
+using flight::geometry::normalize_vector3;
+using flight::geometry::set_matrix4_identity;
+using flight::geometry::set_quaternion_from_unit_vectors;
+
+using flight::camera::create_orthographic_projection;
+using flight::camera::create_perspective_projection;
+
+using flight::types::AnimationClip;
+using flight::types::AnimationInterpolation;
+using flight::types::Decompressor;
+using flight::types::DirectionalLightOptions;
+using flight::types::EasingFunction;
+using flight::types::ImageResourceReference;
+using flight::types::ImportDiagnostic;
+using flight::types::ImportDiagnosticSeverity;
+using flight::types::Light;
+using flight::types::MaterialLike;
+using flight::types::Matrix4;
+using flight::types::MeshGeometry;
+using flight::types::Node3D;
+using flight::types::OrthographicProjectionOptions;
+using flight::types::PerspectiveProjectionOptions;
+using flight::types::PointLightOptions;
+using flight::types::Projection;
+using flight::types::Scene3D;
+using flight::types::Scene3DDocument;
+using flight::types::Scene3DDocumentAnimation;
+using flight::types::Scene3DDocumentAnimationChannel;
+using flight::types::Scene3DDocumentCamera;
+using flight::types::Scene3DDocumentLight;
+using flight::types::Scene3DDocumentMesh;
+using flight::types::Scene3DDocumentNode;
+using flight::types::Scene3DDocumentScene;
+using flight::types::Scene3DDocumentSkin;
 using flight::types::SkinInfluence;
+using flight::types::Texture;
+using flight::types::Transform3D;
+using flight::types::Vector3;
+using flight::types::compression;
+using flight::types::compression_framing;
+using flight::types::import_diagnostic_severity;
 struct ParsedGeometry;
 struct ParsedContainer;
 struct ParsedMeshInstance;

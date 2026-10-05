@@ -13,7 +13,32 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/standard_pbr_material.hpp>
+
+#include <flight/types/material.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/gltf_schema.hpp>
+
+#include <flight/types/gltf_extension.hpp>
+
 namespace flight::scene3d_formats {
+
+using flight::types::GltfExtensionHandler;
+using flight::types::GltfMaterialsAnisotropy;
+using flight::types::GltfMaterialsClearcoat;
+using flight::types::GltfMaterialsEmissiveStrength;
+using flight::types::GltfMaterialsIor;
+using flight::types::GltfMaterialsIridescence;
+using flight::types::GltfMaterialsPbrSpecularGlossiness;
+using flight::types::GltfMaterialsSheen;
+using flight::types::GltfMaterialsSpecular;
+using flight::types::GltfMaterialsTransmission;
+using flight::types::GltfMaterialsVolume;
+using flight::types::ImportDiagnosticSeverity;
+using flight::types::MaterialLike;
+using flight::types::StandardPbrMaterial;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_KHR_MATERIALS_ANISOTROPY_KHR_MATERIALS_CLEARCOAT_KHR_MATERIALS_EMISSIVE_STRENGTH_KHR_MATERIALS_IOR_KHR_MATERIALS_IRIDESCENCE_KHR_MATERIALS_PBR_SPECULAR_GLOSSINESS_KHR_MATERIALS_SHEEN_KHR_MATERIALS_UNLIT_KHR_MATERIALS_SPECULAR_KHR_MATERIALS_TRANSMISSION_KHR_MATERIALS_VOLUME_3424EC678FBF4C43
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_KHR_MATERIALS_ANISOTROPY_KHR_MATERIALS_CLEARCOAT_KHR_MATERIALS_EMISSIVE_STRENGTH_KHR_MATERIALS_IOR_KHR_MATERIALS_IRIDESCENCE_KHR_MATERIALS_PBR_SPECULAR_GLOSSINESS_KHR_MATERIALS_SHEEN_KHR_MATERIALS_UNLIT_KHR_MATERIALS_SPECULAR_KHR_MATERIALS_TRANSMISSION_KHR_MATERIALS_VOLUME_3424EC678FBF4C43

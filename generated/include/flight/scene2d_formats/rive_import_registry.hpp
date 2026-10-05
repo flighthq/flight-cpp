@@ -7,11 +7,33 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/rive_import_registry.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/display_object.hpp>
+
 #include <flight/entity/entity.hpp>
 
 #include "rive_core_types.hpp"
 
 namespace flight::scene2d_formats {
+
+using flight::types::DisplayObject;
+using flight::types::EntityConstruction;
+using flight::types::ImportDiagnostic;
+using flight::types::RiveArtboardGraph;
+using flight::types::RiveArtboardImportContext;
+using flight::types::RiveCoreObject;
+using flight::types::RiveCoreObjectHandler;
+using flight::types::RiveDocumentImportContext;
+using flight::types::RiveFileAsset;
+using flight::types::RiveImportRegistry;
+using flight::types::RiveLayoutImport;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

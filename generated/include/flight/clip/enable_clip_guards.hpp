@@ -21,6 +21,9 @@ namespace flight::types { struct ClipRegionContoursExplanation; }
 
 namespace flight::clip {
 
+using flight::types::ClipRegion;
+using flight::types::ClipRegionContoursExplanation;
+
 inline void disable_clip_guards() {
   flight::clip::set_clip_region_contours_guard(std::nullopt);
   flight::clip::set_clip_region_release_guard(std::nullopt);

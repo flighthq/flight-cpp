@@ -17,12 +17,25 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/canvas_render_target.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
+#include <flight/types/canvas_effect_state.hpp>
+
+#include <flight/types/bevel_effect.hpp>
+
 #include "canvas_effect_compositing.hpp"
 #include "canvas_effect_state.hpp"
 #include "canvas_render_effect_registry.hpp"
 #include "canvas_source_mode_compositing.hpp"
 
 namespace flight::effects_canvas {
+
+using flight::types::BevelEffect;
+using flight::types::CanvasRenderState;
+using flight::types::CanvasRenderTargetPool;
+using flight::types::CanvasTextureRenderTarget;
 
 
 // NOT GENERATED: function clipCanvasBevelBand -- source line 62

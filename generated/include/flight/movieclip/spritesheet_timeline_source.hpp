@@ -13,7 +13,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spritesheet_animation.hpp>
+
+#include <flight/types/movie_clip.hpp>
+
 namespace flight::movieclip {
+
+using flight::types::MovieClip;
+using flight::types::SpritesheetAnimation;
 
 inline flight::Array<double> materialize_spritesheet_timeline_frames(flight::Ref<SpritesheetAnimation> animation) {
   flight::Array<double> frames = animation->frames;

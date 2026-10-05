@@ -56,7 +56,115 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/shape/shape_commands.hpp>
+
+#include <flight/scene2d/display_object_animation.hpp>
+
+#include <flight/path/reverse_path.hpp>
+
+#include <flight/path/path.hpp>
+
+#include <flight/path/dash_path.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/geometry/matrix.hpp>
+
+#include <flight/animation/animation_clip.hpp>
+
+#include <flight/types/shape.hpp>
+
+#include <flight/types/path.hpp>
+
+#include <flight/types/node2_danimation_path.hpp>
+
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/lottie_document_import.hpp>
+
+#include <flight/types/lottie_document.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/easing_function.hpp>
+
+#include <flight/types/display_object.hpp>
+
+#include <flight/types/clip_region.hpp>
+
+#include <flight/types/blend_mode.hpp>
+
+#include <flight/types/animation_track.hpp>
+
+#include <flight/types/animation_clip.hpp>
+
+#include <flight/types/animation_channel.hpp>
+
+#include <flight/types/advanced_blend_mode.hpp>
+
+#include <flight/node/revision.hpp>
+
+#include <flight/node/hierarchy.hpp>
+
 namespace flight::scene2d_formats {
+
+using flight::shape::append_shape_begin_fill;
+using flight::shape::append_shape_begin_gradient_fill;
+using flight::shape::append_shape_end_fill;
+using flight::shape::append_shape_line_gradient_style;
+using flight::shape::append_shape_line_style;
+using flight::shape::append_shape_path;
+
+using flight::scene2d::apply_animation_clip_to_node2_d;
+
+using flight::path::append_path_cubic_curve_to;
+using flight::path::append_path_line_to;
+using flight::path::append_path_move_to;
+using flight::path::append_path_polygon;
+using flight::path::append_path_rectangle;
+using flight::path::create_path;
+using flight::path::dash_path;
+using flight::path::reverse_path;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::geometry::create_gradient_transform_matrix;
+
+using flight::animation::create_animation_channel;
+
+using flight::types::AnimationChannel;
+using flight::types::AnimationClip;
+using flight::types::AnimationTrack;
+using flight::types::ClipRegion;
+using flight::types::DisplayObject;
+using flight::types::EasingFunction;
+using flight::types::EntityConstruction;
+using flight::types::ImportDiagnostic;
+using flight::types::LottieAdvancedBlend;
+using flight::types::LottieAnimatable;
+using flight::types::LottieAsset;
+using flight::types::LottieDocument;
+using flight::types::LottieDocumentImportOptions;
+using flight::types::LottieDocumentImportResult;
+using flight::types::LottieKeyframe;
+using flight::types::LottieLayer;
+using flight::types::LottiePositionProperty;
+using flight::types::LottieShapePath;
+using flight::types::Matrix;
+using flight::types::Node2D;
+using flight::types::Node2DAnimationPath;
+using flight::types::Path;
+using flight::types::Shape;
+using flight::types::advanced_blend_mode;
+using flight::types::blend_mode;
+using flight::types::import_diagnostic_severity;
+
+using flight::node::add_node_child;
+using flight::node::invalidate_node_local_transform;
 
 struct LottieImportContext;
 struct LottieMutableAnimationTarget;

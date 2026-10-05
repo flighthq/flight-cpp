@@ -12,11 +12,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/rectangle.hpp>
+
+#include <flight/geometry/matrix.hpp>
+
+#include <flight/types/viewport.hpp>
+
+#include <flight/types/render_proxy2_d.hpp>
+
 #include <flight/types/rectangle.hpp>
+
+#include <flight/types/matrix.hpp>
 
 namespace flight::render {
 
+using flight::geometry::create_rectangle;
+using flight::geometry::matrix_transform_rectangle;
+
+using flight::types::Matrix;
 using flight::types::Rectangle;
+using flight::types::RenderProxy2D;
+using flight::types::Viewport;
 
 
 // NOT GENERATED: function isSpatial2DNode -- source line 74

@@ -19,6 +19,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/matrix.hpp>
+
 #include <flight/types/transform_inherit2_d.hpp>
 
 #include <flight/types/slot2_d.hpp>
@@ -36,6 +38,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "skeleton2d_constants.hpp"
 
 namespace flight::skeleton2d {
+
+using flight::geometry::inverse_matrix;
+using flight::geometry::multiply_matrix;
 
 using flight::types::AttachmentSkin2D;
 using flight::types::Bone2D;

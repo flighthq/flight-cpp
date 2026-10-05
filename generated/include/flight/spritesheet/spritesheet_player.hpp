@@ -25,7 +25,18 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/signals/slot.hpp>
+
+#include <flight/types/spritesheet_player.hpp>
+
+#include <flight/types/spritesheet.hpp>
+
 namespace flight::spritesheet {
+
+using flight::signals::clear_signal;
+
+using flight::types::Spritesheet;
+using flight::types::SpritesheetPlayer;
 
 
 // NOT GENERATED: function cloneSpritesheetPlayer -- source line 27

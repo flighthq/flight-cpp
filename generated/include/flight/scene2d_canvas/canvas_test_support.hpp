@@ -49,6 +49,15 @@ namespace flight::types { struct RenderTargetClear; }
 
 namespace flight::scene2d_canvas {
 
+using flight::types::CanvasRenderPass;
+using flight::types::CanvasRenderState;
+using flight::types::CanvasRenderSurface;
+using flight::types::CanvasRenderSurfaceCreator;
+using flight::types::CanvasRenderSurfaceOptions;
+using flight::types::CanvasTextureRenderTarget;
+using flight::types::CanvasTextureResolvers;
+using flight::types::Matrix;
+
 inline void initialize_canvas_render_surface_creator(flight::types::EntityConstruction<flight::Ref<flight::types::CanvasRenderSurfaceCreator>> out, std::function<std::optional<flight::host_sdl::GlCanvas>(double, double, double)> create_render_surface, std::function<void(flight::host_sdl::GlCanvas)> destroy_render_surface) {
   flight::row_set<flight::RowKey<"createRenderSurface">>(out, create_render_surface);
   flight::row_set<flight::RowKey<"destroyRenderSurface">>(out, destroy_render_surface);

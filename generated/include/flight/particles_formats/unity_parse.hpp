@@ -25,7 +25,26 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/unity_schema.hpp>
 
+#include <flight/types/particle_emitter_config.hpp>
+
+#include <flight/types/particle_curve.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
 namespace flight::particles_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::ParticleCurve;
+using flight::types::ParticleEmitterConfig;
+using flight::types::UnityColor;
+using flight::types::UnityColorOverLifetime;
+using flight::types::UnityMinMaxValue;
+using flight::types::UnityParseOptions;
+using flight::types::UnityParseResult;
+using flight::types::UnityParticleDocument;
+using flight::types::UnityRotationOverLifetime;
+using flight::types::UnityShape;
+using flight::types::UnitySizeOverLifetime;
 
 inline const double default_ppu = 100.0;
 

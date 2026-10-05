@@ -25,6 +25,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::physics3d {
 
 using flight::types::Physics3DCollider;
+using flight::types::Physics3DContact;
+using flight::types::Physics3DJoint;
+using flight::types::Physics3DSolverConfig;
+using flight::types::Physics3DWorld;
+using flight::types::RigidBody3D;
 
 
 // NOT GENERATED: function isPhysics3DStaticSurfaceCollider -- source line 43

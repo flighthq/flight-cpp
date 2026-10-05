@@ -25,6 +25,8 @@ namespace flight::types { struct WgpuRenderState; }
 
 namespace flight::effects_wgpu {
 
+using flight::types::WgpuRenderState;
+
 inline void warn_wgpu_effect_state_sample_count(flight::Ref<flight::types::WgpuRenderState> state, double requested_sample_count, double applied_sample_count) {
   flight::log::log_once(flight::String("effects-wgpu:pipeline-sample-count-substituted:") + flight::to_string(requested_sample_count) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{std::in_place_type<flight::Record<flight::String, flight::Any>>, flight::Record<flight::String, flight::Any>{{flight::String("appliedSampleCount"), applied_sample_count}, {flight::String("message"), flight::String("createWgpuEffectState: sampleCount ") + flight::to_string(requested_sample_count) + flight::String(" requested, but WGPU effect targets support 1 or 4 — continuing with sampleCount ") + flight::to_string(applied_sample_count) + flight::String("")}, {flight::String("requestedSampleCount"), requested_sample_count}}}, std::optional<flight::String>{flight::String("effects-wgpu")});
 }

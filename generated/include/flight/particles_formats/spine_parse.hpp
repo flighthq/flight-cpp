@@ -24,7 +24,33 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/particles/particle_emitter_config.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/types/spine_particle_schema.hpp>
+
+#include <flight/types/particle_emitter_config.hpp>
+
+#include <flight/types/particle_curve.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
 namespace flight::particles_formats {
+
+using flight::particles::create_particle_emitter_config;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::types::ImportDiagnostic;
+using flight::types::ParticleCurve;
+using flight::types::ParticleEmitterConfig;
+using flight::types::SpineAlphaKeyframe;
+using flight::types::SpineBlendMode;
+using flight::types::SpineParseResult;
+using flight::types::SpineParticleDocument;
+using flight::types::SpineTintKeyframe;
+using flight::types::import_diagnostic_severity;
 
 inline flight::Array<double> hex_to_rgb(flight::String hex) {
   const flight::String s = hex.replace(flight::String("#"), flight::String("")).pad_end(6.0, flight::String("f"));

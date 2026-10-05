@@ -31,6 +31,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/flight_document_refusal_explanation.hpp>
+
 #include "flight_document_text.hpp"
 #include "scene_document_interactive_state_bindings.hpp"
 #include "scene_document_layout_bindings.hpp"
@@ -38,6 +40,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "scene_document_refusal.hpp"
 
 namespace flight::scene_document {
+
+using flight::types::FlightDocumentRefusalExplanation;
 
 
 // NOT GENERATED: function initializeFlightDocumentFromScene3D -- source line 200

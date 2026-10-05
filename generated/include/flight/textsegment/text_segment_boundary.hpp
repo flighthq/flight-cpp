@@ -11,10 +11,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/text_segment.hpp>
+
 #include "text_segmenter_backend.hpp"
 #include "text_segment_guards.hpp"
 
 namespace flight::textsegment {
+
+using flight::types::TextSegmentGranularity;
 
 inline double clamp_index(double index, double length) {
   if ((index < 0.0)) {

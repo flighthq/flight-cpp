@@ -19,12 +19,22 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/physics3_d.hpp>
+
 #include "joint_math.hpp"
 #include "joint_reaction.hpp"
 #include "joint_rows.hpp"
 #include "world.hpp"
 
 namespace flight::physics3d {
+
+using flight::types::Physics3DConeTwistJoint;
+using flight::types::Physics3DGeneric6DofJoint;
+using flight::types::Physics3DJoint;
+using flight::types::Physics3DJointReaction;
+using flight::types::Physics3DJointSolver;
+using flight::types::Physics3DWorld;
+using flight::types::RigidBody3D;
 
 inline const flight::String physics3_dball_and_socket_joint_kind = flight::String("BallAndSocket");
 

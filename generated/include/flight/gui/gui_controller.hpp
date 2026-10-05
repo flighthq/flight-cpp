@@ -24,6 +24,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/interaction/node_interaction_state.hpp>
+
+#include <flight/signals/slot.hpp>
+
 #include <flight/types/signal.hpp>
 
 #include <flight/types/rectangle.hpp>
@@ -39,6 +43,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/entity.hpp>
 
 namespace flight::gui {
+
+using flight::interaction::set_node_hit_area;
+using flight::interaction::set_node_hit_test_enabled;
+
+using flight::signals::connect_signal;
+using flight::signals::disconnect_signal;
 
 using flight::types::Entity;
 using flight::types::GuiOrientation;
@@ -137,7 +147,7 @@ inline Controller create_gui_controller(Runtime runtime) {
 
 template <typename Runtime = flight::ErasedRef>
 inline flight::StructuralRef<flight::RowMerge<flight::RowOf<Runtime>, flight::RowOf<flight::Ref<GuiControllerRuntime>>>> get_gui_controller_runtime(flight::Ref<Entity> controller) {
-  return flight::structural_ref_cast<flight::StructuralRef<flight::RowMerge<flight::RowOf<Runtime>, flight::RowOf<flight::Ref<GuiControllerRuntime>>>>>(controller[entity_runtime_key]);
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowMerge<flight::RowOf<Runtime>, flight::RowOf<flight::Ref<GuiControllerRuntime>>>>>(controller->entity_runtime_key);
 }
 
 inline void dispose_gui_controller(flight::Ref<Entity> controller, std::function<void()> clear) {

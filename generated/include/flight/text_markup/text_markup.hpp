@@ -31,10 +31,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/markup_tag_registry.hpp>
+
 #include "markup_tag_registry.hpp"
 #include "text_markup_guards.hpp"
 
 namespace flight::text_markup {
+
+using flight::types::MarkupTagRegistry;
 
 inline flight::String code_point_to_string(double code, flight::String fallback) {
   if (((!std::isfinite(code) || (code < 0.0)) || (code > 1114111.0))) {

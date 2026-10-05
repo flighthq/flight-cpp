@@ -43,6 +43,17 @@ namespace flight::types { struct SpatialIndexBackend3D; }
 namespace flight::physics3d {
 
 using flight::types::Physics3DCollider;
+using flight::types::Physics3DCollisionExplanation;
+using flight::types::Physics3DCollisionFilter;
+using flight::types::Physics3DContact;
+using flight::types::Physics3DJoint;
+using flight::types::Physics3DJointEvents;
+using flight::types::Physics3DJointSolver;
+using flight::types::Physics3DMaterial;
+using flight::types::Physics3DSolverConfig;
+using flight::types::Physics3DWorld;
+using flight::types::RigidBody3D;
+using flight::types::SpatialIndexBackend3D;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_X_Y_Z_RADIUS_KIND_B0BC53CA3F0E8006
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_X_Y_Z_RADIUS_KIND_B0BC53CA3F0E8006

@@ -17,9 +17,41 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/signal.hpp>
+
+#include <flight/types/power_battery_health.hpp>
+
+#include <flight/types/power.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/signals/emitter.hpp>
+
+#include <flight/signals/signal.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::power {
+
+using flight::types::EntityConstruction;
+using flight::types::HostPowerBatteryHealthCapability;
+using flight::types::HostPowerIdleCapability;
+using flight::types::HostPowerKeepAwakeCapability;
+using flight::types::HostPowerStatusCapability;
+using flight::types::HostPowerThermalCapability;
+using flight::types::Power;
+using flight::types::PowerBatteryHealth;
+using flight::types::PowerIdleState;
+using flight::types::PowerKeepAwakeAcquireResult;
+using flight::types::PowerKeepAwakeMode;
+using flight::types::PowerKeepAwakeReleaseResult;
+using flight::types::PowerStatus;
+using flight::types::PowerThermalState;
+using flight::types::Signal;
+
+using flight::signals::emit_signal;
+
+using flight::signals::create_signal;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

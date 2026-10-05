@@ -14,6 +14,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/video_resource.hpp>
 
+#include <flight/types/texture_source_kind.hpp>
+
 #include <flight/types/texture.hpp>
 
 #include <flight/types/matrix3.hpp>
@@ -41,6 +43,7 @@ using flight::types::Texture;
 using flight::types::Texture2D;
 using flight::types::TextureLike;
 using flight::types::VideoResource;
+using flight::types::image_texture_source_kind;
 
 using flight::geometry::inverse_matrix3;
 

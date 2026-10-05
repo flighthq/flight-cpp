@@ -22,6 +22,8 @@ namespace flight::types { struct VideoResourceLoadOptions; }
 
 namespace flight::video {
 
+using flight::types::HostVideoCapability;
+
 inline double get_video_resource_duration(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>> resource) {
   std::optional<flight::host_sdl::ImageSource> element = flight::row_get<flight::RowKey<"element">>(resource);
   return (element.has_value() ? ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"getDuration">>(host_video); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(element.value()); }()).value_or(0.0) : 0.0);

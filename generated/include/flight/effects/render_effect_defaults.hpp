@@ -16,7 +16,68 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/tilt_shift_effect.hpp>
+
+#include <flight/types/render_effect.hpp>
+
+#include <flight/types/outline_effect.hpp>
+
+#include <flight/types/outer_glow_effect.hpp>
+
+#include <flight/types/median_effect.hpp>
+
+#include <flight/types/inner_shadow_effect.hpp>
+
+#include <flight/types/inner_glow_effect.hpp>
+
+#include <flight/types/gradient_glow_effect.hpp>
+
+#include <flight/types/gradient_bevel_effect.hpp>
+
+#include <flight/types/glitch_effect.hpp>
+
+#include <flight/types/drop_shadow_effect.hpp>
+
+#include <flight/types/displacement_effect.hpp>
+
+#include <flight/types/directional_blur_effect.hpp>
+
+#include <flight/types/convolution_effect.hpp>
+
+#include <flight/types/contact_shadows_effect.hpp>
+
+#include <flight/types/bokeh_depth_of_field_effect.hpp>
+
+#include <flight/types/blur_effect.hpp>
+
+#include <flight/types/bloom_effect.hpp>
+
+#include <flight/types/bitmap_displacement_effect.hpp>
+
+#include <flight/types/bevel_effect.hpp>
+
 namespace flight::effects {
+
+using flight::types::BevelEffect;
+using flight::types::BitmapDisplacementEffect;
+using flight::types::BloomEffect;
+using flight::types::BlurEffect;
+using flight::types::BokehDepthOfFieldEffect;
+using flight::types::ContactShadowsEffect;
+using flight::types::ConvolutionEffect;
+using flight::types::DirectionalBlurEffect;
+using flight::types::DisplacementEffect;
+using flight::types::DropShadowEffect;
+using flight::types::GlitchEffect;
+using flight::types::GradientBevelEffect;
+using flight::types::GradientGlowEffect;
+using flight::types::InnerGlowEffect;
+using flight::types::InnerShadowEffect;
+using flight::types::MedianEffect;
+using flight::types::OuterGlowEffect;
+using flight::types::OutlineEffect;
+using flight::types::RenderEffect;
+using flight::types::TiltShiftEffect;
 
 inline flight::Record<flight::String, flight::Record<flight::String, flight::Any>> defaults = {{flight::String("AutoExposureEffect"), {{flight::String("adaptationSpeed"), 1.0}, {flight::String("exposureCompensation"), 0.0}, {flight::String("maxExposure"), 2.0}, {flight::String("minExposure"), -2.0}}}, {flight::String("BarrelDistortionEffect"), {{flight::String("amount"), 0.5}, {flight::String("scale"), 0.9}}}, {flight::String("BevelEffect"), {{flight::String("angle"), 45.0}, {flight::String("bevelType"), flight::String("inner")}, {flight::String("blurX"), 4.0}, {flight::String("blurY"), 4.0}, {flight::String("distance"), 4.0}, {flight::String("highlightAlpha"), 1.0}, {flight::String("highlightColor"), 4294967295.0}, {flight::String("quality"), 1.0}, {flight::String("shadowAlpha"), 1.0}, {flight::String("shadowColor"), 255.0}, {flight::String("sourceMode"), flight::String("draw")}, {flight::String("strength"), 1.0}}}, {flight::String("BitmapDisplacementEffect"), {{flight::String("componentX"), 0.0}, {flight::String("componentY"), 1.0}, {flight::String("edgeMode"), flight::String("wrap")}, {flight::String("scaleX"), 0.0}, {flight::String("scaleY"), 0.0}}}, {flight::String("BlendEffect"), {{flight::String("opacity"), 1.0}}}, {flight::String("BloomEffect"), {{flight::String("brightness"), 1.0}, {flight::String("mipCount"), 0.0}, {flight::String("passes"), 1.0}, {flight::String("radius"), 8.0}, {flight::String("threshold"), 0.8}, {flight::String("thresholdKnee"), 0.5}}}, {flight::String("BlurEffect"), {{flight::String("blurX"), 4.0}, {flight::String("blurY"), 4.0}}}, {flight::String("BokehDepthOfFieldEffect"), {{flight::String("apertureBlades"), 6.0}, {flight::String("maxBlurRadius"), 16.0}, {flight::String("samples"), 16.0}}}, {flight::String("CameraMotionBlurEffect"), {{flight::String("samples"), 8.0}}}, {flight::String("ChromaticAberrationEffect"), {{flight::String("fringeStrength"), 0.01}, {flight::String("radial"), true}, {flight::String("samples"), 3.0}}}, {flight::String("ContactShadowsEffect"), {{flight::String("distance"), 0.5}, {flight::String("opacity"), 0.6}, {flight::String("samples"), 16.0}, {flight::String("smoothness"), 0.5}}}, {flight::String("ConvolutionEffect"), {{flight::String("bias"), 0.0}, {flight::String("clamp"), true}, {flight::String("preserveAlpha"), true}}}, {flight::String("CrtEffect"), {{flight::String("curvature"), 0.1}, {flight::String("scanlineIntensity"), 0.5}, {flight::String("vignette"), 0.4}, {flight::String("aberration"), 0.0}}}, {flight::String("DirectionalBlurEffect"), {{flight::String("angle"), 0.0}, {flight::String("samples"), 8.0}}}, {flight::String("DisplacementEffect"), {{flight::String("frequency"), 12.0}, {flight::String("intensity"), 8.0}}}, {flight::String("DitherEffect"), {{flight::String("levels"), 16.0}}}, {flight::String("DropShadowEffect"), {{flight::String("alpha"), 1.0}, {flight::String("angle"), 45.0}, {flight::String("blurX"), 4.0}, {flight::String("blurY"), 4.0}, {flight::String("distance"), 4.0}, {flight::String("quality"), 1.0}, {flight::String("sourceMode"), flight::String("draw")}, {flight::String("strength"), 1.0}}}, {flight::String("FilmEmulationEffect"), {{flight::String("gateWeave"), 0.0}, {flight::String("grainIntensity"), 0.1}, {flight::String("halationRadius"), 4.0}, {flight::String("halationStrength"), 0.3}}}, {flight::String("FilmGrainEffect"), {{flight::String("intensity"), 0.2}, {flight::String("size"), 1.0}, {flight::String("seed"), 0.0}}}, {flight::String("FxaaEffect"), {{flight::String("edgeThreshold"), 0.0312}, {flight::String("subpixel"), 0.75}}}, {flight::String("GlitchEffect"), {{flight::String("blockSize"), 24.0}, {flight::String("colorShift"), 8.0}, {flight::String("intensity"), 0.5}, {flight::String("seed"), 0.0}}}, {flight::String("GodRaysEffect"), {{flight::String("centerX"), 0.5}, {flight::String("centerY"), 0.5}, {flight::String("decay"), 0.96}, {flight::String("density"), 0.96}, {flight::String("exposure"), 0.1}, {flight::String("samples"), 100.0}, {flight::String("weight"), 0.4}}}, {flight::String("GradientBevelEffect"), {{flight::String("angle"), 45.0}, {flight::String("bevelType"), flight::String("inner")}, {flight::String("blurX"), 4.0}, {flight::String("blurY"), 4.0}, {flight::String("distance"), 4.0}, {flight::String("quality"), 1.0}, {flight::String("sourceMode"), flight::String("draw")}, {flight::String("strength"), 1.0}}}, {flight::String("GradientGlowEffect"), {{flight::String("blurX"), 6.0}, {flight::String("blurY"), 6.0}, {flight::String("quality"), 1.0}, {flight::String("sourceMode"), flight::String("draw")}, {flight::String("strength"), 1.0}}}, {flight::String("HalftoneEffect"), {{flight::String("angle"), 45.0}, {flight::String("scale"), 8.0}}}, {flight::String("InnerGlowEffect"), {{flight::String("alpha"), 1.0}, {flight::String("blurX"), 6.0}, {flight::String("blurY"), 6.0}, {flight::String("color"), 4278190335.0}, {flight::String("quality"), 1.0}, {flight::String("sourceMode"), flight::String("draw")}, {flight::String("strength"), 1.0}}}, {flight::String("InnerShadowEffect"), {{flight::String("alpha"), 1.0}, {flight::String("angle"), 45.0}, {flight::String("blurX"), 4.0}, {flight::String("blurY"), 4.0}, {flight::String("distance"), 4.0}, {flight::String("quality"), 1.0}, {flight::String("sourceMode"), flight::String("draw")}, {flight::String("strength"), 1.0}}}, {flight::String("KuwaharaEffect"), {{flight::String("radius"), 3.0}}}, {flight::String("LensDirtEffect"), {{flight::String("intensity"), 1.0}, {flight::String("threshold"), 0.55}}}, {flight::String("LensDistortionEffect"), {{flight::String("amount"), 0.5}, {flight::String("scale"), 0.9}}}, {flight::String("LensFlareEffect"), {{flight::String("ghosts"), 4.0}, {flight::String("halo"), 0.5}, {flight::String("intensity"), 1.0}, {flight::String("threshold"), 0.9}}}, {flight::String("MedianEffect"), {{flight::String("radius"), 1.0}}}, {flight::String("MotionBlurEffect"), {{flight::String("intensity"), 1.0}, {flight::String("samples"), 8.0}, {flight::String("shutterAngle"), 180.0}, {flight::String("target"), flight::String("both")}}}, {flight::String("OuterGlowEffect"), {{flight::String("alpha"), 1.0}, {flight::String("blurX"), 6.0}, {flight::String("blurY"), 6.0}, {flight::String("color"), 4278190335.0}, {flight::String("quality"), 1.0}, {flight::String("sourceMode"), flight::String("draw")}, {flight::String("strength"), 1.0}}}, {flight::String("OutlineEffect"), {{flight::String("color"), 255.0}, {flight::String("thickness"), 1.0}, {flight::String("threshold"), 0.1}}}, {flight::String("PanniniProjectionEffect"), {{flight::String("compression"), 0.5}, {flight::String("crop"), 0.0}}}, {flight::String("PixelateEffect"), {{flight::String("size"), 8.0}}}, {flight::String("PosterizeEffect"), {{flight::String("levels"), 8.0}}}, {flight::String("RadialBlurEffect"), {{flight::String("centerX"), 0.5}, {flight::String("centerY"), 0.5}, {flight::String("samples"), 8.0}, {flight::String("strength"), 0.1}}}, {flight::String("ScanlinesEffect"), {{flight::String("count"), 480.0}, {flight::String("intensity"), 0.25}}}, {flight::String("ScreenSpaceFogEffect"), {{flight::String("density"), 0.5}, {flight::String("far"), 1000.0}, {flight::String("near"), 10.0}}}, {flight::String("SharpenEffect"), {{flight::String("amount"), 0.5}}}, {flight::String("SketchEffect"), {{flight::String("strength"), 1.0}}}, {flight::String("SmaaEffect"), {{flight::String("threshold"), 0.1}}}, {flight::String("SsaoEffect"), {{flight::String("bias"), 0.025}, {flight::String("intensity"), 1.0}, {flight::String("radius"), 0.5}, {flight::String("samples"), 16.0}}}, {flight::String("SsrEffect"), {{flight::String("maxDistance"), 100.0}, {flight::String("maxSteps"), 64.0}, {flight::String("resolution"), 0.5}, {flight::String("steps"), 64.0}, {flight::String("thickness"), 0.1}}}, {flight::String("TaaEffect"), {{flight::String("feedback"), 0.9}}}, {flight::String("TiltShiftEffect"), {{flight::String("blur"), 1.0}, {flight::String("center"), 0.5}, {flight::String("width"), 0.2}}}, {flight::String("ToneMapEffect"), {{flight::String("exposure"), 0.0}, {flight::String("operator"), flight::String("aces")}}}, {flight::String("VignetteEffect"), {{flight::String("color"), 255.0}, {flight::String("intensity"), 0.5}, {flight::String("radius"), 1.0}, {flight::String("softness"), 0.5}}}, {flight::String("VolumetricLightEffect"), {{flight::String("density"), 0.5}, {flight::String("lightColor"), 4294967295.0}, {flight::String("lightX"), 0.5}, {flight::String("lightY"), 0.2}, {flight::String("samples"), 32.0}, {flight::String("scattering"), 0.7}}}, {flight::String("WhiteBalanceEffect"), {{flight::String("temperature"), 0.0}, {flight::String("tint"), 0.0}}}};
 

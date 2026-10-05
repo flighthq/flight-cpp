@@ -13,6 +13,8 @@ namespace flight::types { struct GltfCoreFeatureHandler; }
 
 namespace flight::scene3d_formats {
 
+using flight::types::GltfCoreFeatureHandler;
+
 inline void register_gltf_skin_handlers(flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> handlers) {
   flight::scene3d_formats::register_gltf_core_feature_handler(handlers, flight::scene3d_formats::gltf_skins_core_feature_handler);
 }

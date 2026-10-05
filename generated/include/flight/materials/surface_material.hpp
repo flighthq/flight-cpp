@@ -10,6 +10,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/surface_material.hpp>
+
 #include <flight/types/material.hpp>
 
 #include <flight/types/entity.hpp>
@@ -20,6 +22,8 @@ namespace flight::materials {
 
 using flight::types::Kind;
 using flight::types::Material;
+using flight::types::MaterialAlphaMode;
+using flight::types::SurfaceMaterial;
 
 inline flight::Ref<MaterialAlphaMode> get_surface_material_alpha_mode(flight::Ref<SurfaceMaterial> source) {
   return source->alpha_mode;

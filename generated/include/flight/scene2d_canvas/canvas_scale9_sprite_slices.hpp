@@ -16,6 +16,8 @@ namespace flight::types { struct Rectangle; }
 
 namespace flight::scene2d_canvas {
 
+using flight::types::Rectangle;
+
 inline const double canvas_scale9_sprite_slice_stride = 8.0;
 
 inline const double band_stride = 4.0;

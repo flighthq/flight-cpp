@@ -21,9 +21,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_target.hpp>
+
 #include <flight/types/wgpu_render_state.hpp>
 
 namespace flight::render_wgpu {
+
+using flight::types::WgpuRenderState;
+using flight::types::WgpuScreenRenderTarget;
 struct BorrowerFrameState;
 } // namespace flight::render_wgpu
 

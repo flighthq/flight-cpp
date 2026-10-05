@@ -39,6 +39,7 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/types/texture.hpp>
+
 #include <flight/types/wgpu_render_state.hpp>
 
 #include <flight/entity/entity.hpp>
@@ -49,6 +50,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "wgpu_shader.hpp"
 
 namespace flight::render_wgpu {
+
+using flight::types::WgpuRenderState;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
@@ -89,7 +92,7 @@ inline const double ring_slot_count = 4096.0;
 // replacement row, or invent side storage
 
 inline flight::Ref<WgpuDeviceRuntime> get_wgpu_device_runtime(flight::Ref<WgpuDeviceState> device_state) {
-  return static_cast<flight::Ref<WgpuDeviceRuntime>>(device_state[entity_runtime_key]);
+  return static_cast<flight::Ref<WgpuDeviceRuntime>>(device_state->entity_runtime_key);
 }
 
 
@@ -120,7 +123,7 @@ inline flight::Ref<WgpuDeviceRuntime> get_wgpu_device_runtime(flight::Ref<WgpuDe
 // in name is one carrier whatever the emitter does -- or provide that runtime contract
 
 inline flight::Ref<WgpuRenderStateRuntime> get_wgpu_render_state_runtime(flight::Ref<WgpuRenderState> state) {
-  return static_cast<flight::Ref<WgpuRenderStateRuntime>>(state[entity_runtime_key]);
+  return static_cast<flight::Ref<WgpuRenderStateRuntime>>(state->entity_runtime_key);
 }
 
 
@@ -566,7 +569,7 @@ inline flight::Ref<WgpuDeviceState> create_wgpu_device_state(flight::host_sdl::W
   flight::Ref<WgpuDeviceRuntime> device_runtime = create_minimal_device_runtime(device);
   flight::Ref<EntityConstruction<flight::Ref<WgpuDeviceState>>> state = allocate_entity<flight::Ref<WgpuDeviceState>>();
   initialize_wgpu_device_state(state, device);
-  (state[entity_runtime_key] = device_runtime);
+  (state->entity_runtime_key = device_runtime);
   return finish_entity(state);
 }
 

@@ -18,9 +18,12 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/types/texture.hpp>
+
 #include <flight/types/updater.hpp>
 
 namespace flight::updater {
+
+using flight::types::AppUpdateCheckOutcome;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_EC0850ECB1763718
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_EC0850ECB1763718

@@ -23,6 +23,12 @@ namespace flight::types { struct Transform3D; }
 
 namespace flight::scene3d_formats {
 
+using flight::types::GltfDocument;
+using flight::types::GltfExtensionHandler;
+using flight::types::ImportDiagnostic;
+using flight::types::Scene3DDocument;
+using flight::types::Transform3D;
+
 inline void register_gltf_extension_handler(flight::Array<flight::Ref<flight::types::GltfExtensionHandler>> handlers, flight::Ref<flight::types::GltfExtensionHandler> handler) {
   const double index = handlers.find_index([=](flight::Ref<flight::types::GltfExtensionHandler> registered) { return (registered->kind == handler->kind); });
   if ((index < 0.0)) {

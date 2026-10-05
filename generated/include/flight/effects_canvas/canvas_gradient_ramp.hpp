@@ -18,6 +18,8 @@ namespace flight::types { struct CanvasTextureRenderTarget; }
 
 namespace flight::effects_canvas {
 
+using flight::types::CanvasTextureRenderTarget;
+
 inline void apply_canvas_gradient_ramp_lookup(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>> dest, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>> source, flight::Uint8ClampedArray ramp, std::optional<double> bias = std::nullopt, std::optional<double> scale = std::nullopt) {
   bias = bias.value_or(0.0);
   scale = scale.value_or(1.0);

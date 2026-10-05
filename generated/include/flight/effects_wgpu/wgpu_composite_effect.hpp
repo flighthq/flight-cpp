@@ -15,11 +15,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_blend_effect.hpp"
 #include "wgpu_effect_pass.hpp"
 #include "wgpu_render_effect_registry.hpp"
 
 namespace flight::effects_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline flight::Record<flight::String, double> composite_operator_index = ([]() { flight::Record<flight::String, double> record_construction = {}; auto record_construction_key = composite_operator_values.source_over; auto record_construction_value = 0.0; record_construction.set(record_construction_key, record_construction_value); auto record_construction_key_2 = composite_operator_values.destination_over; auto record_construction_value_2 = 1.0; record_construction.set(record_construction_key_2, record_construction_value_2); auto record_construction_key_3 = composite_operator_values.source_in; auto record_construction_value_3 = 2.0; record_construction.set(record_construction_key_3, record_construction_value_3); auto record_construction_key_4 = composite_operator_values.destination_in; auto record_construction_value_4 = 3.0; record_construction.set(record_construction_key_4, record_construction_value_4); auto record_construction_key_5 = composite_operator_values.source_out; auto record_construction_value_5 = 4.0; record_construction.set(record_construction_key_5, record_construction_value_5); auto record_construction_key_6 = composite_operator_values.destination_out; auto record_construction_value_6 = 5.0; record_construction.set(record_construction_key_6, record_construction_value_6); auto record_construction_key_7 = composite_operator_values.source_atop; auto record_construction_value_7 = 6.0; record_construction.set(record_construction_key_7, record_construction_value_7); auto record_construction_key_8 = composite_operator_values.destination_atop; auto record_construction_value_8 = 7.0; record_construction.set(record_construction_key_8, record_construction_value_8); auto record_construction_key_9 = composite_operator_values.xor_; auto record_construction_value_9 = 8.0; record_construction.set(record_construction_key_9, record_construction_value_9); auto record_construction_key_10 = composite_operator_values.copy; auto record_construction_value_10 = 9.0; record_construction.set(record_construction_key_10, record_construction_value_10); auto record_construction_key_11 = composite_operator_values.clear; auto record_construction_value_11 = 10.0; record_construction.set(record_construction_key_11, record_construction_value_11); return record_construction; }());
 

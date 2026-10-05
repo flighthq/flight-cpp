@@ -43,9 +43,94 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/scene3d/scene_document.hpp>
+
+#include <flight/mesh/mesh_geometry_compute.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/geometry/transform3d.hpp>
+
+#include <flight/color/pack_color.hpp>
+
+#include <flight/types/transform3_d.hpp>
+
+#include <flight/types/texture.hpp>
+
+#include <flight/types/standard_pbr_material.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/scene3_d.hpp>
+
+#include <flight/types/sampler.hpp>
+
+#include <flight/types/morph_target.hpp>
+
+#include <flight/types/mesh_geometry.hpp>
+
+#include <flight/types/material.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/image_resource_reference.hpp>
+
 #include <flight/types/gltf_schema.hpp>
 
+#include <flight/types/gltf_extension.hpp>
+
+#include <flight/types/gltf_draco.hpp>
+
 namespace flight::scene3d_formats {
+
+using flight::scene3d::create_scene3_dfrom_document;
+using flight::scene3d::create_scene3_ds_from_document;
+
+using flight::mesh::compute_mesh_geometry_flat_normals;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::geometry::create_transform3_d;
+
+using flight::color::pack_linear_to_color;
+
+using flight::types::GltfAccessorData;
+using flight::types::GltfAccessorFault;
+using flight::types::GltfBufferView;
+using flight::types::GltfComponentType;
+using flight::types::GltfCoreFeatureHandler;
+using flight::types::GltfDocument;
+using flight::types::GltfDracoDecoder;
+using flight::types::GltfDracoMesh;
+using flight::types::GltfDracoMeshCompression;
+using flight::types::GltfExtensionHandler;
+using flight::types::GltfImportOptions;
+using flight::types::GltfPrimitive;
+using flight::types::GltfTextureTransform;
+using flight::types::ImageResourceReference;
+using flight::types::ImportDiagnostic;
+using flight::types::ImportDiagnosticSeverity;
+using flight::types::MaterialLike;
+using flight::types::MeshGeometry;
+using flight::types::MeshMorph;
+using flight::types::MorphTarget;
+using flight::types::PrimitiveTopology;
+using flight::types::Scene3D;
+using flight::types::Scene3DDocument;
+using flight::types::Scene3DDocumentAnimation;
+using flight::types::Scene3DDocumentCamera;
+using flight::types::Scene3DDocumentLight;
+using flight::types::Scene3DDocumentMesh;
+using flight::types::Scene3DDocumentNode;
+using flight::types::Scene3DDocumentScene;
+using flight::types::Scene3DDocumentSkin;
+using flight::types::StandardPbrMaterial;
+using flight::types::Texture;
+using flight::types::TextureColorSpace;
+using flight::types::TextureFilter;
+using flight::types::TextureWrap;
+using flight::types::Transform3D;
+using flight::types::import_diagnostic_severity;
 struct GltfDropTally;
 } // namespace flight::scene3d_formats
 

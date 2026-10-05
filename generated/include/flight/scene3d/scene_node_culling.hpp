@@ -11,12 +11,28 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/frustum.hpp>
+
+#include <flight/geometry/aabb.hpp>
+
 #include <flight/types/node3_d.hpp>
+
+#include <flight/types/matrix4.hpp>
+
+#include <flight/types/frustum.hpp>
+
+#include <flight/types/aabb.hpp>
 
 #include "mesh.hpp"
 
 namespace flight::scene3d {
 
+using flight::geometry::create_aabb;
+using flight::geometry::set_frustum_from_matrix4;
+
+using flight::types::Aabb;
+using flight::types::FrustumLike;
+using flight::types::Matrix4Like;
 using flight::types::Node3D;
 
 inline void build_scene3_dfrustum(flight::Ref<FrustumLike> out, flight::Ref<Matrix4Like> view_projection) {

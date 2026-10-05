@@ -14,10 +14,41 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/loader/load.hpp>
+
 #include <flight/types/texture.hpp>
+
+#include <flight/types/scene3_dresources.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/resource_resolution_state.hpp>
+
+#include <flight/types/net.hpp>
+
+#include <flight/types/load.hpp>
+
+#include <flight/types/image_resource_reference.hpp>
+
+#include <flight/types/image_bitmap_composition.hpp>
+
+#include <flight/types/alpha_type.hpp>
 
 namespace flight::scene3d_resources {
 
+using flight::types::resource_resolution_state;
+
+using flight::loader::load_bytes;
+using flight::loader::load_text;
+
+using flight::types::AlphaType;
+using flight::types::HostNetCapability;
+using flight::types::ImageBitmapComposition;
+using flight::types::ImageResourceFailureKind;
+using flight::types::LoadOptions;
+using flight::types::ResourceResolutionState;
+using flight::types::Scene3DDocument;
+using flight::types::Scene3DDocumentLoadOptions;
 using flight::types::Texture;
 
 inline std::optional<flight::String> get_scene3_ddocument_base_path_from_url(flight::String url) {

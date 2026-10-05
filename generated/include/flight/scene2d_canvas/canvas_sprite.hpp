@@ -12,6 +12,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/scene2_drenderer.hpp>
+
+#include <flight/types/render_proxy2_d.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
 #include "canvas_node2_d.hpp"
 #include "canvas_render_state.hpp"
 #include "canvas_texture_resolver.hpp"
@@ -19,6 +25,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "canvas_transform.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::types::CanvasRenderState;
+using flight::types::RenderProxy2D;
+using flight::types::Scene2DRenderer;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_X_Y_8365950BD60F783F
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_X_Y_8365950BD60F783F

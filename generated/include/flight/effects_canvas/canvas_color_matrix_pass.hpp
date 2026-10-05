@@ -15,6 +15,8 @@ namespace flight::types { struct CanvasTextureRenderTarget; }
 
 namespace flight::effects_canvas {
 
+using flight::types::CanvasTextureRenderTarget;
+
 inline void apply_color_matrix_to_image_data_bytes(flight::Uint8ClampedArray data, double pixel_count, flight::Array<double> matrix) {
   const double m0 = ([&]() -> double { auto nullish_coalesce_left = matrix.get(0.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
   const double m1 = ([&]() -> double { auto nullish_coalesce_left = matrix.get(1.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());

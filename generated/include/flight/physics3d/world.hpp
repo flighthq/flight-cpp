@@ -23,19 +23,42 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/spatial/uniform_grid3_d.hpp>
+
 #include <flight/entity/entity.hpp>
 
+#include <flight/types/spatial.hpp>
+
 #include <flight/types/physics3_d.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include <flight/types/collision.hpp>
 
 namespace flight::physics3d {
 
+using flight::spatial::create_uniform_grid_spatial_backend3_d;
+
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
 using flight::types::CollisionColliderShape3D;
+using flight::types::EntityConstruction;
+using flight::types::Physics3DBodyType;
 using flight::types::Physics3DCollider;
+using flight::types::Physics3DCollisionFilter;
+using flight::types::Physics3DContact;
+using flight::types::Physics3DContactConstraint;
+using flight::types::Physics3DJoint;
+using flight::types::Physics3DJointEvents;
+using flight::types::Physics3DJointSolver;
+using flight::types::Physics3DMassData;
+using flight::types::Physics3DMaterial;
+using flight::types::Physics3DSequentialImpulseConfig;
+using flight::types::Physics3DSolverConfig;
+using flight::types::Physics3DWorld;
+using flight::types::RigidBody3D;
+using flight::types::SpatialIndexBackend3D;
 struct SerializedPhysics3DWorld;
 struct SerializedPhysics3DBody;
 struct SerializedPhysics3DContact;

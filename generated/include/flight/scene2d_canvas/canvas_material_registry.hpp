@@ -11,11 +11,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/entity.hpp>
+
 #include <flight/registry/registry_table.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_canvas/canvas_render_state.hpp>
 
 namespace flight::scene2d_canvas {
+
+using flight::types::entity_runtime_key;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_STATE_VALUE_8C5DA957E9314C3B
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_STATE_VALUE_8C5DA957E9314C3B

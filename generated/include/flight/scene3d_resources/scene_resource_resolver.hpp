@@ -49,6 +49,13 @@ namespace flight::scene3d_resources {
 
 using flight::types::Material;
 using flight::types::Scene3DMaterialTextureRegistry;
+using flight::types::Scene3DResourceEvent;
+using flight::types::Scene3DResourceInFlight;
+using flight::types::Scene3DResourceResolverRuntime;
+using flight::types::Scene3DResourceResolverWithRuntime;
+using flight::types::Scene3DResourceSignals;
+using flight::types::TextureSource;
+using flight::types::scene3_dresource_resolver_runtime_key;
 
 inline void dispose_scene3_dresource_resolver(flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> resolver) {
   auto runtime = resolver->scene3_dresource_resolver_runtime_key;

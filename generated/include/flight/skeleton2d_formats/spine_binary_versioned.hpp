@@ -10,6 +10,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spine_binary_version.hpp>
+
+#include <flight/types/skeleton2_dimport.hpp>
+
 #include <flight/types/import_diagnostic.hpp>
 
 #include "spine_binary_version.hpp"
@@ -17,6 +21,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::skeleton2d_formats {
 
 using flight::types::ImportDiagnostic;
+using flight::types::Skeleton2DImport;
+using flight::types::SpineBinaryParser;
 
 inline flight::String to_spine_binary_layout_key(flight::String version) {
   flight::Array<flight::String> parts = version.split(flight::String("."));

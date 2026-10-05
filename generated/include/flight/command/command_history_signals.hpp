@@ -20,6 +20,10 @@ namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::command {
 
+using flight::types::Command;
+using flight::types::CommandBindingTable;
+using flight::types::CommandHistory;
+
 inline std::shared_ptr<flight::types::Signal<std::function<void()>>> enable_command_history_signals(flight::Ref<flight::types::CommandHistory> history) {
   if (!history->on_change.has_value()) {
     (history->on_change = std::optional<std::shared_ptr<flight::types::Signal<std::function<void()>>>>{flight::signals::create_signal<std::function<void()>>()});

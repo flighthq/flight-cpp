@@ -19,11 +19,18 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/glass_extended_pbr_material_options.hpp>
+
+#include <flight/types/extended_pbr_material.hpp>
+
 #include "extended_pbr_material.hpp"
 #include "pbr_materials.hpp"
 #include "transmission_volume_pbr_extension.hpp"
 
 namespace flight::materials {
+
+using flight::types::ExtendedPbrMaterial;
+using flight::types::GlassExtendedPbrMaterialOptions;
 
 
 // NOT GENERATED: function createAluminumStandardPbrMaterial -- source line 20

@@ -29,6 +29,16 @@ namespace flight::types { struct SpatialIndexingExplanation; }
 namespace flight::types { struct SpatialPair; }
 
 namespace flight::physics2d {
+
+using flight::types::Physics2DCollider;
+using flight::types::Physics2DContact;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DJointSolver;
+using flight::types::Physics2DSolverConfig;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
+using flight::types::SpatialIndexBackend2D;
+using flight::types::SpatialPair;
 struct Physics2DBroadphaseScratch;
 } // namespace flight::physics2d
 

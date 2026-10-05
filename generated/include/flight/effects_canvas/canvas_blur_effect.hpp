@@ -14,10 +14,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/canvas_render_target.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
+#include <flight/types/blur_effect.hpp>
+
 #include "canvas_effect_compositing.hpp"
 #include "canvas_render_effect_registry.hpp"
 
 namespace flight::effects_canvas {
+
+using flight::types::BlurEffect;
+using flight::types::CanvasRenderState;
+using flight::types::CanvasTextureRenderTarget;
 
 inline void apply_blur_effect_to_canvas(flight::Ref<CanvasTextureRenderTarget> source, flight::Ref<CanvasTextureRenderTarget> dest, flight::Ref<BlurEffect> effect) {
   const double blur_x = effect->blur_x.value_or(4.0);

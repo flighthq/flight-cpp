@@ -32,7 +32,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/capacitor_api.hpp>
 
+#include <flight/types/wgpu_skinning_adapter.hpp>
+
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuSkinningAdapter;
 struct ShadedModifierPlan;
 struct CachedShadedPlan;
 struct ShadedBinding;

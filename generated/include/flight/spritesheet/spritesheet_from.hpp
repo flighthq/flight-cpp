@@ -10,12 +10,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spritesheet.hpp>
+
 #include "spritesheet.hpp"
 #include "spritesheet_animation.hpp"
 #include "spritesheet_data.hpp"
 #include "spritesheet_frame.hpp"
 
 namespace flight::spritesheet {
+
+using flight::types::Spritesheet;
 
 
 // NOT GENERATED: function createSpritesheetFromData -- source line 13

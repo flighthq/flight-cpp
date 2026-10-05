@@ -29,6 +29,7 @@ using flight::types::Node;
 using flight::types::Node2D;
 using flight::types::Node2DTraits;
 using flight::types::NodeAny;
+using flight::types::node2_dtraits_key;
 
 using flight::node::invalidate_node_appearance;
 

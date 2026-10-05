@@ -14,14 +14,42 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/vector3.hpp>
+
+#include <flight/geometry/quaternion.hpp>
+
+#include <flight/geometry/matrix4.hpp>
+
+#include <flight/types/vector3.hpp>
+
+#include <flight/types/quaternion.hpp>
+
 #include <flight/types/node3_d.hpp>
+
+#include <flight/types/matrix4.hpp>
+
+#include <flight/types/camera3_d.hpp>
+
+#include <flight/types/billboard.hpp>
 
 #include "billboard.hpp"
 #include "scene_node.hpp"
 
 namespace flight::scene3d {
 
+using flight::geometry::create_matrix4;
+using flight::geometry::create_quaternion;
+using flight::geometry::create_vector3;
+using flight::geometry::inverse_matrix4;
+
+using flight::types::Billboard;
+using flight::types::BillboardMode;
+using flight::types::Camera3D;
+using flight::types::Matrix4;
+using flight::types::Matrix4Like;
 using flight::types::Node3D;
+using flight::types::Quaternion;
+using flight::types::Vector3;
 
 inline const double facing_epsilon = 0.000001;
 

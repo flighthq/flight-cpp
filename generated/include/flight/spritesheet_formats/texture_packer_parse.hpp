@@ -14,6 +14,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/textureatlas_formats/texture_packer_atlas_parse.hpp>
+
+#include <flight/spritesheet/spritesheet_data.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/types/texture_packer_schema.hpp>
+
 #include <flight/types/texture_atlas_region.hpp>
 
 #include <flight/types/spritesheet_frame_data.hpp>
@@ -26,11 +34,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::spritesheet_formats {
 
+using flight::textureatlas_formats::parse_texture_packer_atlas_document;
+
+using flight::spritesheet::create_spritesheet_animation_data;
+using flight::spritesheet::create_spritesheet_data;
+using flight::spritesheet::create_spritesheet_frame_data;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
 using flight::types::ImportDiagnostic;
 using flight::types::SpritesheetAnimationData;
 using flight::types::SpritesheetData;
 using flight::types::SpritesheetFrameData;
 using flight::types::TextureAtlasRegion;
+using flight::types::TexturePackerDocument;
+using flight::types::TexturePackerFrameTag;
+using flight::types::TexturePackerMeta;
+using flight::types::TexturePackerParsed;
 using flight::types::import_diagnostic_severity;
 
 inline flight::Ref<SpritesheetFrameData> frame_from_region(flight::Ref<TextureAtlasRegion> region) {

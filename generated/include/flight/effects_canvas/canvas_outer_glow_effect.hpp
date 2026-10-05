@@ -15,6 +15,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/outer_glow_effect.hpp>
+
+#include <flight/types/effect_source_mode.hpp>
+
+#include <flight/types/canvas_render_target.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
+#include <flight/types/canvas_effect_state.hpp>
+
 #include "canvas_effect_compositing.hpp"
 #include "canvas_effect_drop_shadow_css.hpp"
 #include "canvas_effect_state.hpp"
@@ -22,6 +32,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "canvas_source_mode_compositing.hpp"
 
 namespace flight::effects_canvas {
+
+using flight::types::CanvasRenderState;
+using flight::types::CanvasRenderTargetPool;
+using flight::types::CanvasTextureRenderTarget;
+using flight::types::EffectSourceMode;
+using flight::types::OuterGlowEffect;
 
 inline void apply_outer_glow_effect_to_canvas_with_pool(flight::Ref<CanvasTextureRenderTarget> source, flight::Ref<CanvasTextureRenderTarget> dest, flight::Ref<CanvasRenderTargetPool> pool, flight::Ref<OuterGlowEffect> effect) {
   flight::Ref<CanvasTextureRenderTarget> mask = acquire_canvas_render_target(pool, source->width, source->height);

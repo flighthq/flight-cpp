@@ -21,6 +21,7 @@ namespace flight::types { struct SpineBinaryRegistry; }
 namespace flight::skeleton2d_formats {
 
 using flight::types::ImportDiagnostic;
+using flight::types::Skeleton2DImport;
 
 inline std::optional<flight::Ref<flight::types::Skeleton2DImport>> parse_spine_skeleton_binary(flight::Uint8Array bytes, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   auto registry = flight::skeleton2d_formats::create_spine_binary_registry();

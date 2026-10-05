@@ -19,11 +19,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/capacitor_api.hpp>
 
+#include <flight/types/wgpu_skinning_adapter.hpp>
+
 #include "wgpu_mesh_fragment_tail.hpp"
 #include "wgpu_mesh_pipeline.hpp"
 #include "wgpu_scene3_druntime.hpp"
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuSkinningAdapter;
 
 inline flight::String build_wgpu_debug_define_key(flight::Ref<WgpuDebugDefineKey> key) {
   return flight::String("") + flight::to_string(((key->mode == flight::String("depth")) ? flight::String("d") : flight::String("n"))) + flight::String("") + flight::to_string((flight::to_boolean(key->has_normal_map) ? flight::String("m") : flight::String("-"))) + flight::String("");

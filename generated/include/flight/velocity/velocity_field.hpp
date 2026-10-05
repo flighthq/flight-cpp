@@ -26,6 +26,8 @@ namespace flight::types { struct VelocitySample; }
 
 namespace flight::velocity {
 
+using flight::types::VelocityField;
+
 inline flight::Ref<flight::types::Velocity2D> add_velocity(flight::Ref<flight::types::Velocity2D> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Velocity2D>>>> b) {
   const double ax = flight::row_get<flight::RowKey<"x">>(a);
   const double ay = flight::row_get<flight::RowKey<"y">>(a);

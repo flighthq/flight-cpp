@@ -11,12 +11,31 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/render_state.hpp>
+
+#include <flight/types/render_effect_padding.hpp>
+
+#include <flight/types/render_effect.hpp>
+
+#include <flight/types/gradient_glow_effect.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/effect_source_mode.hpp>
+
 #include <flight/entity/entity.hpp>
 
 #include "render_effect.hpp"
 #include "render_effect_padding.hpp"
 
 namespace flight::effects {
+
+using flight::types::EffectSourceMode;
+using flight::types::EntityConstruction;
+using flight::types::GradientGlowEffect;
+using flight::types::RenderEffect;
+using flight::types::RenderEffectPadding;
+using flight::types::RenderState;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

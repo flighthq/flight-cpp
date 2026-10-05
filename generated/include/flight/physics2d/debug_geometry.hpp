@@ -15,11 +15,28 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/physics2_d.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/collision.hpp>
+
 #include <flight/entity/entity.hpp>
 
 #include "world.hpp"
 
 namespace flight::physics2d {
+
+using flight::types::CollisionBuiltInShape2D;
+using flight::types::EntityConstruction;
+using flight::types::Physics2DDebugCircle;
+using flight::types::Physics2DDebugFeature;
+using flight::types::Physics2DDebugGeometry;
+using flight::types::Physics2DDebugGeometryOptions;
+using flight::types::Physics2DDebugLine;
+using flight::types::Physics2DJoint;
+using flight::types::Physics2DWorld;
+using flight::types::RigidBody2D;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

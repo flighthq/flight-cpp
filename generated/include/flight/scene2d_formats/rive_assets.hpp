@@ -13,11 +13,37 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/types/rive_import_registry.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/partial_node.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/display_object.hpp>
+
 #include "rive_asset_binding.hpp"
 #include "rive_core_types.hpp"
 #include "rive_import_registry.hpp"
 
 namespace flight::scene2d_formats {
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::types::DisplayObject;
+using flight::types::ImportDiagnostic;
+using flight::types::PartialNode;
+using flight::types::RiveArtboardImportContext;
+using flight::types::RiveCoreObject;
+using flight::types::RiveCoreObjectHandler;
+using flight::types::RiveDocumentImportContext;
+using flight::types::RiveFileAsset;
+using flight::types::RiveImportRegistry;
+using flight::types::RiveProperty;
+using flight::types::import_diagnostic_severity;
 
 inline std::optional<flight::Uint8Array> read_rive_bytes(flight::Ref<RiveCoreObject> source, double key) {
   std::optional<flight::Ref<RiveProperty>> property = source->properties.find([=](flight::Ref<RiveProperty> candidate) { return (candidate->key == key); });

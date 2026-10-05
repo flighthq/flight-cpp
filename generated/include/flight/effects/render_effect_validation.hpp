@@ -16,6 +16,8 @@ namespace flight::types { struct RenderEffect; }
 
 namespace flight::effects {
 
+using flight::types::RenderEffect;
+
 inline std::optional<flight::String> validate_render_effect_list(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffect>>>>> effects, flight::Array<flight::types::RenderEffectInput> available) {
   for (auto effect : effects) {
     flight::Array<flight::types::RenderEffectInput> required = flight::effects::get_render_effect_inputs(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffect>>>>>(effect));

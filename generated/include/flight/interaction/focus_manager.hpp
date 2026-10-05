@@ -27,18 +27,39 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/signals/slot.hpp>
+
 #include <flight/entity/entity.hpp>
 
 #include <flight/types/node.hpp>
+
+#include <flight/types/input_keyboard_data.hpp>
+
+#include <flight/types/focus_manager.hpp>
+
+#include <flight/types/focus_event_data.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include "interaction_manager.hpp"
 #include "node_interaction_state.hpp"
 
 namespace flight::interaction {
 
+using flight::signals::connect_signal;
+using flight::signals::disconnect_signal;
+
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
+using flight::types::EntityConstruction;
+using flight::types::FocusDirection;
+using flight::types::FocusEventData;
+using flight::types::FocusManager;
+using flight::types::FocusManagerOptions;
+using flight::types::FocusNavigationInput;
+using flight::types::FocusNavigationOptions;
+using flight::types::InputKeyboardData;
 using flight::types::NodeAny;
 
 

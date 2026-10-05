@@ -16,6 +16,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/particle_format_kind.hpp>
+
+#include <flight/types/particle_format_codec.hpp>
+
 #include "format_registry.hpp"
 #include "libgdx_parse.hpp"
 #include "libgdx_serialize.hpp"
@@ -30,6 +34,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "unity_serialize.hpp"
 
 namespace flight::particles_formats {
+
+using flight::types::ParticleFormatCodec;
+using flight::types::libgdx_particle_format_kind;
+using flight::types::particle_designer_format_kind;
+using flight::types::pixi_particle_format_kind;
+using flight::types::spine_particle_format_kind;
+using flight::types::starling_pex_format_kind;
+using flight::types::unity_particle_format_kind;
 
 
 // NOT GENERATED: variable (binding) -- source line 37

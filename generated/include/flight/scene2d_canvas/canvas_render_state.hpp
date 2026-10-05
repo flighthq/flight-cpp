@@ -13,9 +13,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/render/render_state.hpp>
+
+#include <flight/types/render_state.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/canvas_texture_resolver.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
 #include "canvas_texture_resolver.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::render::destroy_render_state;
+
+using flight::types::CanvasRenderState;
+using flight::types::CanvasRenderStateRuntime;
+using flight::types::CanvasTextureResolvers;
+using flight::types::RenderStateRuntime;
+using flight::types::entity_runtime_key;
 
 
 // NOT GENERATED: function createCanvasRenderStateRuntime -- source line 53
@@ -84,7 +102,7 @@ namespace flight::scene2d_canvas {
 // requires a statically resolvable C++ object shape; T is named
 
 inline flight::Ref<CanvasRenderStateRuntime> get_canvas_render_state_runtime(flight::Ref<CanvasRenderState> state) {
-  return static_cast<flight::Ref<CanvasRenderStateRuntime>>(state[entity_runtime_key]);
+  return static_cast<flight::Ref<CanvasRenderStateRuntime>>(state->entity_runtime_key);
 }
 
 inline flight::Ref<CanvasTextureResolvers> get_canvas_render_state_texture_resolvers(flight::Ref<CanvasRenderState> state) {

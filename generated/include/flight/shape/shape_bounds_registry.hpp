@@ -19,6 +19,9 @@ namespace flight::types { template <typename K> struct ShapeBoundsCommand; }
 
 namespace flight::shape {
 
+using flight::types::ShapeBoundsCommand;
+using flight::types::ShapeBoundsContext;
+
 inline flight::Map<flight::String, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeBoundsCommand<flight::types::ShapeCommandKey>>>>>> commands = flight::Map<flight::String, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeBoundsCommand<flight::types::ShapeCommandKey>>>>>>();
 
 inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeBoundsCommand<flight::types::ShapeCommandKey>>>>>> get_shape_bounds_command(flight::String key) {

@@ -18,13 +18,37 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/materials/color_scale_bias.hpp>
+
+#include <flight/adjustments/color_matrix_math.hpp>
+
+#include <flight/types/renderable.hpp>
+
 #include <flight/types/render_state.hpp>
+
+#include <flight/types/render_proxy.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/color_scale_bias.hpp>
 
 #include "render_state.hpp"
 
 namespace flight::render {
 
+using flight::materials::concat_color_scale_bias;
+using flight::materials::create_color_scale_bias;
+
+using flight::adjustments::multiply_color_matrix;
+
+using flight::types::ColorScaleBias;
+using flight::types::Matrix;
+using flight::types::Node;
+using flight::types::RenderProxy;
 using flight::types::RenderState;
+using flight::types::Renderable;
 
 
 // NOT GENERATED: function areColorAdjustmentsEnabled -- source line 18

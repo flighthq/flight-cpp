@@ -15,6 +15,9 @@ namespace flight::types { struct AcceleratorParseError; }
 namespace flight::types { struct ParsedAccelerator; }
 
 namespace flight::shortcut {
+
+using flight::types::AcceleratorParseError;
+using flight::types::ParsedAccelerator;
 struct Parsed;
 } // namespace flight::shortcut
 

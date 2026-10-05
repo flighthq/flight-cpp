@@ -27,6 +27,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::app {
 
+using flight::signals::create_signal;
+
 inline const flight::Symbol k_close = flight::Symbol(std::nullopt);
 
 inline const flight::Symbol k_drop_file = flight::Symbol(std::nullopt);

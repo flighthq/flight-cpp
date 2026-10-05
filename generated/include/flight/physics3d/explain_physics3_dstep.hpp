@@ -26,6 +26,16 @@ namespace flight::types { struct SpatialIndexBackend3D; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DContact;
+using flight::types::Physics3DJoint;
+using flight::types::Physics3DJointEvents;
+using flight::types::Physics3DJointSolver;
+using flight::types::Physics3DSolverConfig;
+using flight::types::Physics3DStepExplanation;
+using flight::types::Physics3DWorld;
+using flight::types::RigidBody3D;
+using flight::types::SpatialIndexBackend3D;
+
 inline flight::Ref<flight::types::Physics3DStepExplanation> explain_physics3_dstep(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, double dt) {
   auto config = flight::row_get<flight::RowKey<"config">>(world);
   const bool body_state_valid = flight::physics3d::is_physics3_dbody_state_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(world));

@@ -16,6 +16,8 @@ namespace flight::types { struct WgpuRenderStats; }
 
 namespace flight::scene2d_wgpu {
 
+using flight::types::WgpuRenderState;
+
 template <typename T>
 using Mutable = flight::StructuralRef<flight::RowWritable<flight::RowOf<T>>>;
 

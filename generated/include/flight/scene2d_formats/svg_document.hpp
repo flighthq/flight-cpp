@@ -35,7 +35,138 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/xml/xml_parse.hpp>
+
+#include <flight/textlayout/text_format_range.hpp>
+
+#include <flight/shape/shape_commands.hpp>
+
+#include <flight/shape/register_default_shape_bounds_commands.hpp>
+
+#include <flight/path_formats/svg_path_data.hpp>
+
+#include <flight/path/transform_path.hpp>
+
+#include <flight/path/path.hpp>
+
+#include <flight/path/get_path_bounds.hpp>
+
+#include <flight/path/dash_path.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/geometry/transform2d.hpp>
+
+#include <flight/geometry/rectangle.hpp>
+
+#include <flight/geometry/matrix.hpp>
+
+#include <flight/clip/clip_region.hpp>
+
+#include <flight/types/xml_element.hpp>
+
+#include <flight/types/transform2_d.hpp>
+
+#include <flight/types/texture.hpp>
+
+#include <flight/types/text_label.hpp>
+
+#include <flight/types/text_format_range.hpp>
+
+#include <flight/types/text_format.hpp>
+
+#include <flight/types/svg_document_import.hpp>
+
+#include <flight/types/sprite.hpp>
+
+#include <flight/types/shape_command.hpp>
+
+#include <flight/types/shape.hpp>
+
+#include <flight/types/rich_text.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/path.hpp>
+
+#include <flight/types/partial_node.hpp>
+
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/display_object.hpp>
+
+#include <flight/types/clip_region.hpp>
+
+#include <flight/node/hierarchy.hpp>
+
 namespace flight::scene2d_formats {
+
+using flight::xml::parse_xml_document;
+
+using flight::textlayout::create_text_format_range;
+
+using flight::shape::append_shape_begin_fill;
+using flight::shape::append_shape_begin_gradient_fill;
+using flight::shape::append_shape_end_fill;
+using flight::shape::append_shape_line_gradient_style;
+using flight::shape::append_shape_line_style;
+using flight::shape::append_shape_path;
+using flight::shape::register_default_shape_bounds_commands;
+
+using flight::path_formats::parse_svg_path_data;
+
+using flight::path::append_path_circle;
+using flight::path::append_path_ellipse;
+using flight::path::append_path_line_to;
+using flight::path::append_path_move_to;
+using flight::path::append_path_polygon;
+using flight::path::append_path_polyline;
+using flight::path::append_path_rectangle;
+using flight::path::append_path_rounded_rectangle;
+using flight::path::create_path;
+using flight::path::dash_path;
+using flight::path::get_path_bounds;
+using flight::path::transform_path;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::geometry::create_gradient_transform_matrix;
+using flight::geometry::create_matrix;
+using flight::geometry::create_rectangle;
+using flight::geometry::create_transform2_d;
+using flight::geometry::decompose_matrix_to_transform2_d;
+using flight::geometry::inverse_matrix;
+using flight::geometry::multiply_matrix;
+
+using flight::clip::create_clip_region_from_path;
+
+using flight::types::ClipRegion;
+using flight::types::DisplayObject;
+using flight::types::ImportDiagnostic;
+using flight::types::Matrix;
+using flight::types::Node2D;
+using flight::types::PartialNode;
+using flight::types::Path;
+using flight::types::PathWinding;
+using flight::types::Rectangle;
+using flight::types::RichText;
+using flight::types::Shape;
+using flight::types::SpreadMethod;
+using flight::types::Sprite;
+using flight::types::SvgDocumentImportOptions;
+using flight::types::TextFormat;
+using flight::types::TextFormatRange;
+using flight::types::TextLabel;
+using flight::types::Texture2D;
+using flight::types::Transform2D;
+using flight::types::XmlElement;
+using flight::types::import_diagnostic_severity;
+
+using flight::node::add_node_child;
 
 struct SvgColor;
 struct SvgClipGeometry;

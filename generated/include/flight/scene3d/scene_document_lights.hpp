@@ -10,7 +10,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/quaternion.hpp>
+
+#include <flight/types/vector3.hpp>
+
+#include <flight/types/transform3_d.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
 namespace flight::scene3d {
+
+using flight::geometry::rotate_vector3_by_quaternion;
+
+using flight::types::Scene3DDocument;
+using flight::types::Transform3DLike;
+using flight::types::Vector3Like;
 
 inline void transform_document_light_position(flight::Ref<Vector3Like> out, flight::Ref<Transform3DLike> transform) {
   (out->x *= transform->scale.x);

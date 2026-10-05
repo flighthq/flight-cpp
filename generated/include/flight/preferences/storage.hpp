@@ -17,6 +17,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/signals/slot.hpp>
+
+#include <flight/signals/emitter.hpp>
+
+#include <flight/signals/signal.hpp>
+
 #include <flight/entity/entity.hpp>
 
 #include <flight/types/storage.hpp>
@@ -24,6 +30,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/entity.hpp>
 
 namespace flight::preferences {
+
+using flight::signals::clear_signal;
+using flight::signals::emit_signal;
+using flight::signals::has_signal_slots;
+
+using flight::signals::create_signal;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

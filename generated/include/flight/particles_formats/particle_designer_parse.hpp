@@ -19,7 +19,29 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/particles/particle_emitter_config.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+
+#include <flight/types/particle_emitter_config.hpp>
+
+#include <flight/types/particle_designer_schema.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
 namespace flight::particles_formats {
+
+using flight::particles::create_particle_emitter_config;
+
+using flight::importdiagnostics::report_import_diagnostic;
+
+using flight::types::ImportDiagnostic;
+using flight::types::ParticleDesignerDocument;
+using flight::types::ParticleDesignerParseOptions;
+using flight::types::ParticleDesignerParseResult;
+using flight::types::ParticleDesignerRawDict;
+using flight::types::ParticleEmitterConfig;
+using flight::types::import_diagnostic_severity;
 
 inline flight::String unescape_xml(flight::String s) {
   return s.replace(flight::RegExp(flight::String("&lt;"), flight::String("g")), flight::String("<")).replace(flight::RegExp(flight::String("&gt;"), flight::String("g")), flight::String(">")).replace(flight::RegExp(flight::String("&quot;"), flight::String("g")), flight::String("\"")).replace(flight::RegExp(flight::String("&apos;"), flight::String("g")), flight::String("'")).replace(flight::RegExp(flight::String("&amp;"), flight::String("g")), flight::String("&"));

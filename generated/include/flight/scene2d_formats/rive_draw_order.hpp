@@ -10,6 +10,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/blend_mode.hpp>
+
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_order_list.hpp>
@@ -17,6 +19,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene2d_formats/rive_import_registry.hpp>
 
 namespace flight::scene2d_formats {
+
+using flight::types::blend_mode;
 
 inline std::optional<double> read_rive_draw_id(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> object, double key) {
   auto property = flight::row_get<flight::RowKey<"properties">>(object).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });

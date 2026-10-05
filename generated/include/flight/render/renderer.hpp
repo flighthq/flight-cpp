@@ -12,11 +12,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/renderer.hpp>
+
 #include <flight/registry/registry_table.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/render/render_state.hpp>
 
 namespace flight::render {
+
+using flight::types::Renderer;
 
 inline void copy_render_state_registrations(flight::Ref<flight::types::RenderState> target, flight::Ref<flight::types::RenderState> source) {
   auto target_runtime = flight::render::get_render_state_runtime(target);

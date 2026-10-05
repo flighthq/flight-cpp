@@ -17,6 +17,8 @@ namespace flight::types { template <typename NodeType> struct SelectionState; }
 
 namespace flight::selection {
 
+using flight::types::SelectionState;
+
 inline bool has_toggle_modifier(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SelectionModifierState>>>> modifiers) {
   return ((flight::row_get<flight::RowKey<"ctrlKey">>(modifiers) || flight::row_get<flight::RowKey<"metaKey">>(modifiers)) || flight::row_get<flight::RowKey<"shiftKey">>(modifiers));
 }

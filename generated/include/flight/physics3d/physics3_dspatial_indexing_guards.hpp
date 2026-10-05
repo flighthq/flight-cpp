@@ -14,6 +14,8 @@ namespace flight::types { struct Physics3DWorld; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DWorld;
+
 inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>)>> physics3_dspatial_indexing_guard = std::nullopt;
 
 inline void report_physics3_dspatial_indexing(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world) {
