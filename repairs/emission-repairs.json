@@ -682,6 +682,10 @@
       "symbols": [
         {
           "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
           "name": "finish_entity"
         }
       ],
