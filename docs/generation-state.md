@@ -4164,3 +4164,29 @@ bad one for identity.
 
 Consequence: the remaining blockers in `animation`, `text` and `gui` after the name repairs are refused
 declarations needing supplied functions, which is the override mechanism and not mine.
+
+### My own tooling hit the failure mode I had warned builder about
+
+The `insert-using-declaration` kind carries one `namespace` per declaration, so the natural id for a
+generated entry is package plus namespace. That collides.
+
+`animation-unqualified-entity-names` already existed, covering `finish_entity`. The iteration found
+`allocate_entity` in the same namespace, so the generator produced an entry with the same id — and the
+script that merged it into `repairs/` skipped the duplicate id and **silently dropped the name**. Four of
+five declarations landed and the fifth reported as "already declared" while covering something else
+entirely.
+
+This is exactly the hazard flagged for the hand-merge of `repairs/emission-repairs.json` between the two
+agents — "a JSON array conflict resolved carelessly silently drops declarations" — reproduced in my own
+tooling a few hours later, against myself. It surfaced only because the iteration had told me
+`allocate_entity` was needed and the tree then showed zero `using flight::entity::allocate_entity;`.
+
+Correct behaviour on an id collision is to **union the symbol lists**, because one declaration per
+(package, namespace) is the design rather than an accident. Merged: that declaration now carries
+`allocate_entity` and `finish_entity`. Checked the other seven new declarations for the same collision —
+`gui`, `physics3d`, `scene3d-formats`, `text`, `mesh`, `render`, `preferences` — and none had a pre-existing
+id, so only `animation` was affected.
+
+The general shape is worth keeping: **"already present, skipping" is only safe when the id identifies the
+same content.** Where an id is derived rather than authored, it identifies a slot, and two different sets
+can land in one slot.
