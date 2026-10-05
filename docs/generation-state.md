@@ -5288,3 +5288,51 @@ forward-declared across several headers, which suggested the same problem at the
 `ReferenceEnabled` struct; the pattern used to search for definitions simply did not match its spelling. The
 `getFirstTextureSource` refusal is `cpp-contextual-union-missing-expression-type:optionalSingle` — a
 contextual union construction, not an incomplete type.
+
+## The override lane is exhausted on this base, and that is the mechanism working
+
+Worth recording as a state rather than a complaint, because "write another override" will keep looking
+available and will not be.
+
+Across this arc the lane produced **two complete overrides, both on top-five blockers**:
+
+| blocked modules | header | result |
+| --- | --- | --- |
+| 131 | `log/log.hpp` (38 angle, 0 quoted) | complete, zero diagnostics, closes nineteen packages |
+| 126 | `registry/registry_table.hpp` (17 angle, 0 quoted) | complete, +1 direct and +4 downstream |
+
+and then **five parks and two declines**, every one with a measured reason:
+
+| target | why it was not written |
+| --- | --- |
+| `command/command_binding.hpp` | cascades from `Kind`/`CommandHistory`/`CommandBinding`, all already queued as declarations |
+| `texture/texture.hpp` | 111 occurrences of `->` on `Ref<variant>`; whole-header lowering, not six functions |
+| `texture/render_texture.hpp` | includes the failing texture union header; identity-preserving `Texture2D` → `RenderTexture` cast |
+| `particleemitter/update_particle_emitter2_d.hpp` | unrepresentable `ParticleEmitter2D` → `Node2D` identity cast |
+| `clip/clip_region.hpp` | 76 of its errors are cascades from `ClipRegion`/`Path`/`RectangleLike`, all queued |
+| `node/hierarchy.hpp` | header already compiles; of 18 refusals 7 are the identity wall, 2 are delegates to an omitted sibling, and only 4 of the remaining 9 have external callers — **+0 downstream, measured** |
+| `physics3d_abi` / `physics2d_abi` reference headers | **849 and 786 errors** before any behavioural work, dominated by repair-owned undeclared carriers, in 1490- and 1291-line files |
+
+### The pattern
+
+Every remaining target fails one of three tests, and the tests are cheap enough to run first:
+
+1. **Are its errors repair-owned?** If the dominant diagnostics are undeclared names, an override duplicates
+   the declaration lane and measures nothing honestly. 56% of all current failures are undeclared names, so
+   this catches most candidates.
+2. **Are its refusals representable?** 297 markers in 183 headers are
+   `cpp-reference-assertion-without-heritage`, which no override may fix.
+3. **Do the representable refusals have external callers, and are they independently implementable?**
+   `node/hierarchy.hpp` passed tests 1 and 2 and still failed this one: 165 blocked modules, +0 downstream.
+
+Test 3 is the one that was missing from the `best-effort.json` ranking, and it is the important correction:
+**module-dependency reachability is not closure.** A refused module can be reached by 165
+dependency-incomplete modules and still unblock none of them, because reachability counts the dependency edge
+while closure needs the specific omitted function to be the thing in the way.
+
+### What follows
+
+The lane reopens after a regeneration, not before: the targets parked for reason 1 become measurable once
+their queued declarations apply, and `clip/clip_region.hpp` and the two physics ABI headers are the first to
+re-measure. Until then, "the override lane is exhausted" is the honest state, and inventing a marginal target
+to stay busy is worse than reporting it.
