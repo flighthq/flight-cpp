@@ -23,6 +23,7 @@ const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration',
   'project-partial-row-absence',
   'unwrap-partial-row-three-state-member',
   'project-array-at-row-write',
+  'project-symbol-keyed-member',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -61,6 +62,7 @@ const REQUIRED_FIELDS = {
   'project-partial-row-absence': [...SHARED_FIELDS, 'keys', 'sourceDeclaration'],
   'unwrap-partial-row-three-state-member': [...SHARED_FIELDS, 'keys', 'sourceDeclaration'],
   'project-array-at-row-write': [...SHARED_FIELDS, 'keys', 'element', 'identityArgument', 'sourceDeclaration'],
+  'project-symbol-keyed-member': [...SHARED_FIELDS, 'symbol', 'member', 'sourceDeclaration'],
 };
 
 export function loadEmissionRepairs(root) {
@@ -188,6 +190,7 @@ const HANDLERS = {
   'project-partial-row-absence': projectPartialRowAbsence,
   'unwrap-partial-row-three-state-member': unwrapPartialRowThreeStateMember,
   'project-array-at-row-write': projectArrayAtRowWrite,
+  'project-symbol-keyed-member': projectSymbolKeyedMember,
 };
 
 function applyOneRound(repairs, files, applied) {
@@ -1076,6 +1079,56 @@ function projectArrayAtRowWrite(contents, repair) {
       changed = true;
       from = comma + 1 + replacement.length;
     }
+  }
+  return changed ? text : undefined;
+}
+
+// TypeScript's symbol-keyed `[EntityRuntimeKey]` lowers to a plain C++ member named
+// `entity_runtime_key`, and `flight/types/entity.hpp` emits a Symbol CONSTANT of the same name beside
+// the member it stands for. Most emitted code uses the member, which compiles --
+// `entity->entity_runtime_key = ...` in flight/entity/binding.hpp -- but some sites subscript the
+// receiver with the constant instead, which no type can answer: a Symbol is a runtime value, so a
+// subscript cannot select a member, and several receivers are `flight::Ref`, i.e. `std::shared_ptr`,
+// which cannot be given an `operator[]` at all. The runtime is already built around the member
+// spelling; `include/flight/structural_ref.hpp` probes for `object->entity_runtime_key` directly.
+//
+// So the rewrite is the emitter's OWN spelling of the same access: `receiver[key]` becomes
+// `receiver->member`. It adds no operation and no storage, and it preserves absence -- the member is
+// declared `std::optional<...>`, which is what `| undefined` lowered to.
+//
+// Restricted to a BARE IDENTIFIER receiver, which every declared site has. Anything else is left alone
+// rather than guessed at: finding the start of an arbitrary postfix expression by scanning backwards
+// through text is precisely where a textual repair begins changing meaning instead of spelling.
+//
+// Naturally idempotent -- the subscript it anchors to no longer exists after the first pass.
+function projectSymbolKeyedMember(contents, repair) {
+  const needle = `[${repair.symbol}]`;
+  let text = contents;
+  let changed = false;
+  let from = 0;
+  for (;;) {
+    const at = text.indexOf(needle, from);
+    if (at === -1) break;
+    let start = at;
+    while (start > 0 && /[A-Za-z0-9_]/u.test(text[start - 1])) start -= 1;
+    const receiver = text.slice(start, at);
+    const before = text.slice(Math.max(0, start - 2), start);
+    // Not a bare identifier: empty, digit-led, or reached through a member access or scope resolution,
+    // any of which means the real receiver is wider than this token.
+    if (
+      receiver.length === 0 ||
+      /^[0-9]/u.test(receiver) ||
+      before.endsWith('.') ||
+      before.endsWith('>') ||
+      before.endsWith(':')
+    ) {
+      from = at + needle.length;
+      continue;
+    }
+    const replacement = `${receiver}->${repair.member}`;
+    text = `${text.slice(0, start)}${replacement}${text.slice(at + needle.length)}`;
+    changed = true;
+    from = start + replacement.length;
   }
   return changed ? text : undefined;
 }
