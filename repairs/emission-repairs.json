@@ -3068,6 +3068,10 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "ImportDiagnostic"
+        },
+        {
           "include": "flight/types/tiled_parse_options.hpp",
           "name": "TiledCompression"
         },
@@ -3082,6 +3086,46 @@
         {
           "include": "flight/types/tiled_layer_data_explanation.hpp",
           "name": "TiledLayerDataFailure"
+        },
+        {
+          "include": "flight/types/tiled_object.hpp",
+          "name": "TiledObject"
+        },
+        {
+          "include": "flight/types/tiled_tileset.hpp",
+          "name": "TiledObjectAlignment"
+        },
+        {
+          "include": "flight/types/tiled_map.hpp",
+          "name": "TiledOrientation"
+        },
+        {
+          "include": "flight/types/tiled_parse_options.hpp",
+          "name": "TiledParseOptions"
+        },
+        {
+          "include": "flight/types/tiled_property.hpp",
+          "name": "TiledProperty"
+        },
+        {
+          "include": "flight/types/tiled_property.hpp",
+          "name": "TiledPropertyType"
+        },
+        {
+          "include": "flight/types/tiled_map.hpp",
+          "name": "TiledRenderOrder"
+        },
+        {
+          "include": "flight/types/tiled_tileset.hpp",
+          "name": "TiledTileset"
+        },
+        {
+          "include": "flight/types/tiled_tileset.hpp",
+          "name": "TiledTilesetRef"
+        },
+        {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "import_diagnostic_severity"
         }
       ],
       "diagnostic": "'TiledCompression' was not declared in this scope; did you mean 'flight::types::TiledCompression'?",
