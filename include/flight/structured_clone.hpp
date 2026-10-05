@@ -94,6 +94,20 @@ template <typename Value>
   return structured_clone(value, memo);
 }
 
+// `structuredClone(value, undefined)` is the one-argument call. The emitter writes the optional second
+// argument explicitly rather than dropping it, so the absent case needs a spelling here; an absent
+// `StructuredCloneOptions` selects no transfer list, which is what the one-argument overload already
+// does, so this adds a spelling and no behaviour.
+//
+// `std::nullopt_t` only, deliberately. A PRESENT options object carries a `transfer` list, and
+// transferring detaches the transferred objects from the source -- which this runtime does not
+// implement. Accepting an options object here would clone without transferring and report success,
+// turning a known gap into a wrong answer, so that call must keep failing to compile.
+template <typename Value>
+[[nodiscard]] Value structured_clone(const Value& value, std::nullopt_t) {
+  return structured_clone(value);
+}
+
 // Values that carry no interior structure are cloned by copying them.
 template <typename Value>
   requires(std::is_arithmetic_v<Value> || std::same_as<Value, String> ||

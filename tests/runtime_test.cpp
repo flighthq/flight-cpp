@@ -1245,6 +1245,12 @@ void test_attached_properties() {
         "a destroyed object never hands its attached entries to a later object");
 }
 
+// A requires-expression only absorbs failures during template substitution, so the operand types have
+// to arrive as template parameters for this to be a question rather than a hard error.
+template <typename Value, typename Options>
+concept structured_clone_accepts_second_argument =
+    requires(const Value& value, Options options) { flight::structured_clone(value, options); };
+
 void test_structured_clone() {
   const flight::Array<double> samples{1.0, 2.0};
   const auto cloned_samples = flight::structured_clone(samples);
@@ -1253,6 +1259,24 @@ void test_structured_clone() {
   cloned_samples.push(3.0);
   check(samples.size() == 2,
         "a cloned array has its own storage rather than sharing the source's");
+
+  // The emitter writes `structuredClone(value, undefined)` with the optional argument spelled out.
+  // An absent options object selects no transfer list, so it must agree with the one-argument call --
+  // same contents, and still its own storage.
+  const auto cloned_absent_options = flight::structured_clone(samples, std::nullopt);
+  check(cloned_absent_options.size() == 2 && cloned_absent_options[0] == 1.0,
+        "cloning with an absent options object dropped contents");
+  cloned_absent_options.push(4.0);
+  check(samples.size() == 2,
+        "cloning with an absent options object aliased the source instead of copying it");
+  // A PRESENT options object carries a transfer list this runtime does not implement, so it must not
+  // be accepted -- silently cloning without transferring would be a wrong answer, not a gap.
+  static_assert(
+      !structured_clone_accepts_second_argument<flight::Array<double>, std::optional<int>>,
+      "structured_clone must refuse a present options object rather than ignore its transfer list");
+  static_assert(
+      structured_clone_accepts_second_argument<flight::Array<double>, std::nullopt_t>,
+      "structured_clone must accept an absent options object");
 
   flight::Map<flight::String, flight::Array<double>> source;
   source.set(flight::String("a"), samples);
