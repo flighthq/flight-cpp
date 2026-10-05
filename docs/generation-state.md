@@ -5336,3 +5336,49 @@ The lane reopens after a regeneration, not before: the targets parked for reason
 their queued declarations apply, and `clip/clip_region.hpp` and the two physics ABI headers are the first to
 re-measure. Until then, "the override lane is exhausted" is the honest state, and inventing a marginal target
 to stay busy is worse than reporting it.
+
+## `flight::Function` drops in for a generated `std::function` alias with zero compile cost — but only 3 of 136 are cheap
+
+A positive result on the callback-identity boundary, with its limit measured so it is not over-read.
+
+`flight/types/log.hpp` declares `using LogSink = std::function<void(…)>`, and the `log/log.hpp` override
+records two divergences caused by `std::function` carrying no reference identity — `add_log_sink` losing
+idempotence because its dedupe was `sinks.includes(sink)`. The obvious fix is to make `LogSink` a
+`flight::Function`. The obvious objection is that `LogSink` is a **generated** type consumed by
+`debug/debug.hpp` as well, so a `log/log.hpp` override cannot change it.
+
+What rescues it in this one case: `flight/types/log.hpp` **is already overridden**
+(`types-log-sink-reference-parameter`, which respells the alias for an unrelated reason), with 41 angle
+includers and 0 quoted. So it is a one-line change in a file that already owns the decision.
+
+Measured by compiling every header that touches `LogSink` with `-fmax-errors=0`, before and after swapping
+the alias to `flight::Function<void(flight::Ref<LogEntry>)>` plus `#include <flight/callable.hpp>`:
+
+| header | before | after |
+| --- | --- | --- |
+| `log/log.hpp`, `types/file_log_sink.hpp`, `types/buffered_log_sink.hpp` | 0, 0, 0 | **0, 0, 0** |
+| `types/rate_limited_log_sink.hpp`, `types/memory_log_sink.hpp`, `types/debug.hpp` | 0, 0, 0 | **0, 0, 0** |
+| `debug/debug.hpp` | 95 | **95** (first error `'DebugSubsystemHooks' was not declared`, unrelated and queued) |
+
+**Identical in every row.** Nothing breaks, because `flight::Function`'s converting constructor accepts any
+compatible invocable, so all five sink constructors and all ten lambdas in the log override keep compiling
+untouched. The identity-bearing type is a drop-in for the erased one at the alias level.
+
+### The limit
+
+Counting generated type aliases that ARE a `std::function`:
+
+| | count |
+| --- | --- |
+| aliases of the form `using X = std::function<…>` in `flight/types/` | **136** |
+| of those, declared in a header that is ALREADY overridden | **3** (`LogSink`, `LogFormatter`, `LogDataProvider`) |
+
+So the cheap version of this fix reaches three aliases, all in one header. Closing the identity boundary
+generally would mean overriding **133 more** `flight/types/*.hpp` headers purely to respell a callback type —
+each one a copy of a widely included file, which is exactly the trade the override mechanism is supposed to
+be the last resort for. That is not worth it, and it is why this stays a compiler-side fix (one emitter
+spelling) rather than becoming an override campaign.
+
+What the measurement does establish: when the emitter does switch, **nothing downstream has to change**. The
+runtime type is compatible at every construction and call site that exists today. That removes the main risk
+from the change and is worth knowing before it is attempted at scale.
