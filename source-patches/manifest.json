@@ -151,6 +151,22 @@
       "unblocks": "Makes statechart.hpp compile. The companion complete guard override clears enable_statechart_guards.hpp and both aggregators.",
       "expires": "when assignment and narrowing of an optional structural reference preserve one optional layer, or Flight adopts the single binding.",
       "appliedOn": "2026-10-04"
+    },
+    {
+      "id": "node-runtime-owner-accessors",
+      "dependency": "flight",
+      "patch": "node-runtime-owner-accessors.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types/src/Node2D.ts, packages/types/src/HasBoundsRectangle.ts, packages/types/src/HasTransform2D.ts, packages/node/src/boundsRectangle.ts, and packages/node/src/nodeTransform2d.ts",
+      "package": "@flighthq/node",
+      "answers": "refusal",
+      "refusal": "full writable NodeRuntime<Traits> & HasBoundsRectangleRuntime row where initialization establishes those cells",
+      "rewrite": "Names the complete writable bounds, transform, and spatial runtime rows as interfaces, declares those exact rows on the existing runtime-symbol slots, and reads them through private mutable-owner accessors. Node2DTraits narrows its inherited slot to the complete spatial runtime view while the concrete Node2DRuntime retains the additional scene2d cell and the public Node2D alias remains unchanged. Transform recursion also uses a private nine-field transform role and preserves the declared NodeOf parent union, so it neither expands the unrelated NoInfer<Traits> conjunct nor splits one runtime object across independent structural carriers.",
+      "equivalence": "The named runtime rows, narrowed alias members, parent annotation, and private transform role are type-only and emit no JavaScript. They describe the same one runtime object already created by the Node2D runtime factory and initialized by initBoundsRectangleRuntimeTrait and initTransform2DRuntimeTrait; exposing its spatial base view does not remove the concrete scene2d cell. Each private accessor reads the same symbol property once that getEntityRuntime read, without copying or replacing the runtime owner; recursive transform calculation receives that same named owner and the same transform fields in the same mutation order. Read-only traversal APIs and every exported function signature remain unchanged, while only functions whose existing contract mutates derived caches recover the writable owner.",
+      "whyNotUpstreamFirst": "The source currently erases the trait runtime at the Entity accessor and then asserts writable cells back into existence. Naming those cells on their actual storage slot makes the TypeScript model more accurate and gives the compiler proof without relaxing its rule that a readonly row never becomes writable.",
+      "unblocks": "Removes the two @flighthq/node root refusals in boundsRectangle.ts and nodeTransform2d.ts, including the NoInfer<Traits> follow-on in transform recursion; their four dependency-only cascades can then be re-evaluated independently.",
+      "expires": "when Flight declares trait-specific runtime slots and mutable owner accessors itself.",
+      "appliedOn": "2026-10-04"
     }
   ]
 }
