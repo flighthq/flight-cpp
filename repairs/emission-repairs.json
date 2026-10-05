@@ -2960,6 +2960,134 @@
       "defect": "The emitter writes TextureAtlas unqualified inside namespace flight::textureatlas. It blocks the package itself and reaches outside it: bitmapfont/summarize_bitmap_font.hpp has its first error here.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies a types-owned name used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton2d-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/skeleton2d/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/attachment_skin2_d.hpp",
+          "name": "AttachmentSkin2D"
+        },
+        {
+          "include": "flight/types/bone2_d.hpp",
+          "name": "Bone2D"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/matrix.hpp",
+          "name": "MatrixLike"
+        },
+        {
+          "include": "flight/types/skeleton2_d.hpp",
+          "name": "Skeleton2D"
+        },
+        {
+          "include": "flight/types/slot2_d.hpp",
+          "name": "Slot2D"
+        },
+        {
+          "include": "flight/types/transform_inherit2_d.hpp",
+          "name": "TransformInherit2D"
+        }
+      ],
+      "diagnostic": "'AttachmentSkin2D' was not declared in this scope; did you mean 'flight::types::AttachmentSkin2D'?",
+      "defect": "The emitter writes 7 flight::types name(s) unqualified inside namespace flight::skeleton2d. Found by iterating the repair to a fixed point rather than reading the compile report, which lists only each header's first diagnostic.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "spritesheet-formats-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/spritesheet_formats/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/aseprite_schema.hpp",
+          "name": "AsepriteArrayFrame"
+        },
+        {
+          "include": "flight/types/aseprite_schema.hpp",
+          "name": "AsepriteDocument"
+        },
+        {
+          "include": "flight/types/aseprite_schema.hpp",
+          "name": "AsepriteFrameTag"
+        },
+        {
+          "include": "flight/types/aseprite_schema.hpp",
+          "name": "AsepriteMeta"
+        },
+        {
+          "include": "flight/types/aseprite_schema.hpp",
+          "name": "AsepriteParsed"
+        },
+        {
+          "include": "flight/types/aseprite_schema.hpp",
+          "name": "AsepriteSize"
+        },
+        {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "ImportDiagnostic"
+        },
+        {
+          "include": "flight/types/spritesheet_animation_data.hpp",
+          "name": "SpritesheetAnimationData"
+        },
+        {
+          "include": "flight/types/spritesheet_data.hpp",
+          "name": "SpritesheetData"
+        },
+        {
+          "include": "flight/types/spritesheet_frame_data.hpp",
+          "name": "SpritesheetFrameData"
+        },
+        {
+          "include": "flight/types/texture_atlas_region.hpp",
+          "name": "TextureAtlasRegion"
+        },
+        {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "import_diagnostic_severity"
+        }
+      ],
+      "diagnostic": "'AsepriteArrayFrame' was not declared in this scope; did you mean 'flight::types::AsepriteArrayFrame'?",
+      "defect": "The emitter writes 12 flight::types name(s) unqualified inside namespace flight::spritesheet_formats. Found by iterating the repair to a fixed point rather than reading the compile report, which lists only each header's first diagnostic.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "tilemap-formats-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/tilemap_formats/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/tiled_parse_options.hpp",
+          "name": "TiledCompression"
+        },
+        {
+          "include": "flight/types/tiled_parse_options.hpp",
+          "name": "TiledInflate"
+        },
+        {
+          "include": "flight/types/tiled_layer_data_explanation.hpp",
+          "name": "TiledLayerDataExplanation"
+        },
+        {
+          "include": "flight/types/tiled_layer_data_explanation.hpp",
+          "name": "TiledLayerDataFailure"
+        }
+      ],
+      "diagnostic": "'TiledCompression' was not declared in this scope; did you mean 'flight::types::TiledCompression'?",
+      "defect": "The emitter writes 4 flight::types name(s) unqualified inside namespace flight::tilemap_formats. Found by iterating the repair to a fixed point rather than reading the compile report, which lists only each header's first diagnostic.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
