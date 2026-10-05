@@ -4507,3 +4507,69 @@ consumer instantiates them — which is the same "passes the gate while breaking
 already recorded for `slot.hpp` elsewhere in this document. Treat the 12 as the floor, not the total.
 
 Recorded rather than ferried upstream, per the standing instruction to document and keep patching.
+
+## The symbol-keyed entity runtime slot: the emitter lowers the WRITE and leaves the READ as a subscript
+
+`flight/types/entity.hpp` emits two things with the **same name**:
+
+```cpp
+// line 27, a member of the Entity struct
+std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;
+// line 36, a namespace-scope Symbol constant
+inline const flight::Symbol entity_runtime_key = flight::Symbol::for_key(flight::String("EntityRuntime"));
+```
+
+The member is the lowering of TypeScript's symbol-keyed `[EntityRuntimeKey]: EntityRuntime | undefined`,
+and `include/flight/structural_ref.hpp:512` is built around exactly that spelling
+(`requires { object->entity_runtime_key; }`). The Symbol constant is the key itself, which the runtime
+keeps in a separate key space on purpose — see the note at `structural_ref.hpp:1641`, "the two key
+spaces stay separate".
+
+Some emitted code uses the member, which is correct and compiles:
+
+```cpp
+// flight/entity/binding.hpp:22
+(entity->entity_runtime_key = std::optional<flight::Ref<flight::types::EntityRuntime>>{...});
+```
+
+and some subscripts the receiver with the Symbol constant, which cannot compile:
+
+```cpp
+(state[entity_runtime_key] = runtime);                                            // write
+static_cast<std::optional<flight::Ref<Scene2DRuntime>>>(source[entity_runtime_key])  // read
+```
+
+`no match for 'operator[]' (operand types are 'flight::Ref<flight::FacetRef<...>>' and 'const flight::Symbol')`.
+
+### Size
+
+**28 sites in 17 headers across 14 packages**: selection 3, scene2d_canvas 2, and one each in app, gizmo,
+gui, interaction, mesh, render, render_wgpu, scene2d, scene2d_dom, surface, textshaper, tray. Both
+shapes appear — 7 of the sites shown are writes, 5 are reads inside a `static_cast`.
+
+### Why a runtime extension cannot cover it
+
+`FacetRef` could be given `operator[](const Symbol&)` — it is ours, in
+`include/flight/conditional_facet_ref.hpp`. But a Symbol is a **runtime value**, so a subscript cannot
+select a member at compile time, and the receivers are not all `FacetRef`: several are plain
+`flight::Ref<T>`, which is `std::shared_ptr<T>`, and `operator[]` cannot be added to a std type.
+Returning the member for any Symbol whatsoever would answer a question we did not check, and throwing
+for an unrecognized one invents an exception where TypeScript yields `undefined`.
+
+### The shape the repair should take, and the thing to verify first
+
+The target spelling is unambiguous and is the emitter's own write path: `X[entity_runtime_key]` becomes
+`X->entity_runtime_key`, uniformly for reads and writes, since every receiver is a `Ref` or a `FacetRef`
+and both have `operator->`. This repo already carries 14 expression-rewriting repair kinds beyond plain
+declarations, so a new kind is in keeping with the mechanism rather than a departure from it.
+
+**Verify before building it:** the read sites cast to `std::optional<flight::Ref<Scene2DRuntime>>` while
+the member is `std::optional<flight::Ref<EntityRuntime>>`. A `static_cast` between `std::optional`s of
+two different `shared_ptr`s does not compile even when the pointees are related — that needs
+`std::static_pointer_cast`. So the rewrite probably exposes a *second* diagnostic at the same sites
+rather than closing them, and the 7 write sites are the half likely to close outright. Measure the write
+sites and the read sites separately; do not assume 28 sites means 17 headers gained.
+
+This is the family builder's withdrawn `node-runtime-owner-accessors.patch` was reaching for. That patch
+narrowed `[EntityRuntimeKey]` on three sibling interfaces that `Node2D` inherits and cost 240 newly
+refused modules, so anything touching this slot needs a FULL generation rather than a package closure.
