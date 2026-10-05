@@ -8860,6 +8860,10 @@
           "name": "get_render_state_runtime"
         },
         {
+          "include": "flight/render/renderer.hpp",
+          "name": "noop_renderer_data"
+        },
+        {
           "include": "flight/render/render_proxy.hpp",
           "name": "prepare_scene2_drender"
         },
@@ -8882,6 +8886,14 @@
         {
           "include": "flight/shape/scale9_shape_commands.hpp",
           "name": "map_scale9_shape_commands"
+        },
+        {
+          "include": "flight/shape/shape_bounds.hpp",
+          "name": "normalize_shape_stroke_miter_limit"
+        },
+        {
+          "include": "flight/shape/shape_bounds.hpp",
+          "name": "normalize_shape_stroke_width"
         }
       ],
       "diagnostic": "'map_scale9_shape_commands' was not declared in this scope",
@@ -10646,6 +10658,22 @@
       ],
       "diagnostic": "'copy_matrix4' was not declared in this scope",
       "defect": "The emitter writes 7 function name(s) owned by flight::geometry unqualified inside namespace flight::skeleton3d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-unqualified-scene2d-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/",
+      "namespace": "flight::scene2d",
+      "symbols": [
+        {
+          "include": "flight/scene2d/sprite.hpp",
+          "name": "create_sprite_renderer_data"
+        }
+      ],
+      "diagnostic": "'create_sprite_renderer_data' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::scene2d unqualified inside namespace flight::scene2d_canvas. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     }
