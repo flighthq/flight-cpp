@@ -4726,3 +4726,43 @@ further cautions found while scanning:
 
 So the list above is a **candidate inventory to be drawn from one verified pair at a time**, as the
 precedent requires, and 25 of the 31 are in packages not blocked by the WGPU gap.
+
+## `flight/node/revision.hpp` takes a STRUCTURAL parameter to read and a NOMINAL one to mutate
+
+`shape/shape_commands.hpp` calls `flight::node::invalidate_content(shape)` **fully qualified** and still
+fails:
+
+```
+no matching function for call to 'invalidate_content(flight::Ref<flight::types::Shape>&)'
+```
+
+so this is not a qualification problem — it is argument deduction. The two helpers sit 53 lines apart in
+the same generated header and disagree about how a node is accepted:
+
+```cpp
+// flight/node/revision.hpp:20 -- STRUCTURAL, accepts anything whose row matches
+inline double get_node_appearance_revision(
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source);
+
+// flight/node/revision.hpp:73 -- NOMINAL, accepts only Node<Traits> itself
+inline void invalidate_content(std::shared_ptr<flight::types::Node<Traits>> target);
+```
+
+`flight::types::Shape` is declared `struct Shape : public flight::ReferenceEnabled` — it does **not**
+derive from `Node<Traits>`. In TypeScript it structurally satisfies the node interface, so
+`invalidateContent(shape)` type-checks there; C++ is nominal, so `Traits` cannot be deduced and the call
+is rejected. The runtime already models exactly this distinction, which is what `StructuralRef` and the
+`RowOf`/`RowReadonly` machinery exist for, and the read helper in the very same file uses it.
+
+So the defect is the emitter choosing a nominal parameter for the mutating helpers while choosing a
+structural one for the reading helper in the same module.
+
+**Scale: 6 headers**, all on `invalidate_content` — the only diagnostic of this shape in the tree, so it
+is contained rather than a family. Noted because it changes what the `shape-unqualified-node-names`
+declaration can be expected to do: that repair fixes the genuinely unqualified use in
+`shape/morph_shape.hpp`, and `shape/shape_commands.hpp` will still fail behind it for this reason. The two
+look identical in the compile report and are not the same defect.
+
+Fixing it means widening the mutating helpers' parameter to the structural form the reading helper already
+uses, which is a signature change and therefore an override of `flight/node/revision.hpp` rather than a
+declaration — worth costing against that header's angle/quoted reachability before attempting.
