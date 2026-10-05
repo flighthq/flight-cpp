@@ -5120,6 +5120,71 @@
       "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::statusbar, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "respell-reference-alias-interactionmanager",
+      "kind": "respell-reference-alias",
+      "appliesTo": "flight/",
+      "symbol": "InteractionManager",
+      "expansion": "shared-pointer",
+      "witness": "flight::types::InteractionManager<flight::types::NodeAny>",
+      "witnessInclude": "flight/types/interaction_manager.hpp",
+      "diagnostic": "couldn't deduce template parameter from a flight::Ref parameter",
+      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it sits in a NON-DEDUCED CONTEXT. flight::types::InteractionManager is used that way in a function template's parameter list at 15 site(s), so the declaration is well-formed and every CALL fails to deduce. InteractionManager derives from flight::ReferenceEnabled, so the alias resolves to std::shared_ptr<InteractionManager<...>> and the respelling is a spelling change with no behaviour of its own. The witness above was compile-checked before this entry was written, and referenceAliasIdentityProof turns the expansion claim into a static_assert, so a wrong claim fails the build rather than quietly changing a signature.",
+      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
+      "expectedWhen": "always"
+    },
+    {
+      "id": "respell-reference-alias-gizmostate",
+      "kind": "respell-reference-alias",
+      "appliesTo": "flight/",
+      "symbol": "GizmoState",
+      "expansion": "shared-pointer",
+      "witness": "flight::types::GizmoState<flight::types::NodeAny>",
+      "witnessInclude": "flight/types/gizmo_state.hpp",
+      "diagnostic": "couldn't deduce template parameter from a flight::Ref parameter",
+      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it sits in a NON-DEDUCED CONTEXT. flight::types::GizmoState is used that way in a function template's parameter list at 15 site(s), so the declaration is well-formed and every CALL fails to deduce. GizmoState derives from flight::ReferenceEnabled, so the alias resolves to std::shared_ptr<GizmoState<...>> and the respelling is a spelling change with no behaviour of its own. The witness above was compile-checked before this entry was written, and referenceAliasIdentityProof turns the expansion claim into a static_assert, so a wrong claim fails the build rather than quietly changing a signature.",
+      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
+      "expectedWhen": "always"
+    },
+    {
+      "id": "respell-reference-alias-selectionstate",
+      "kind": "respell-reference-alias",
+      "appliesTo": "flight/",
+      "symbol": "SelectionState",
+      "expansion": "shared-pointer",
+      "witness": "flight::types::SelectionState<flight::types::NodeAny>",
+      "witnessInclude": "flight/types/selection_state.hpp",
+      "diagnostic": "couldn't deduce template parameter from a flight::Ref parameter",
+      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it sits in a NON-DEDUCED CONTEXT. flight::types::SelectionState is used that way in a function template's parameter list at 9 site(s), so the declaration is well-formed and every CALL fails to deduce. SelectionState derives from flight::ReferenceEnabled, so the alias resolves to std::shared_ptr<SelectionState<...>> and the respelling is a spelling change with no behaviour of its own. The witness above was compile-checked before this entry was written, and referenceAliasIdentityProof turns the expansion claim into a static_assert, so a wrong claim fails the build rather than quietly changing a signature.",
+      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
+      "expectedWhen": "always"
+    },
+    {
+      "id": "respell-reference-alias-focusmanager",
+      "kind": "respell-reference-alias",
+      "appliesTo": "flight/",
+      "symbol": "FocusManager",
+      "expansion": "shared-pointer",
+      "witness": "flight::types::FocusManager<flight::types::NodeAny>",
+      "witnessInclude": "flight/types/focus_manager.hpp",
+      "diagnostic": "couldn't deduce template parameter from a flight::Ref parameter",
+      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it sits in a NON-DEDUCED CONTEXT. flight::types::FocusManager is used that way in a function template's parameter list at 7 site(s), so the declaration is well-formed and every CALL fails to deduce. FocusManager derives from flight::ReferenceEnabled, so the alias resolves to std::shared_ptr<FocusManager<...>> and the respelling is a spelling change with no behaviour of its own. The witness above was compile-checked before this entry was written, and referenceAliasIdentityProof turns the expansion claim into a static_assert, so a wrong claim fails the build rather than quietly changing a signature.",
+      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
+      "expectedWhen": "always"
+    },
+    {
+      "id": "respell-reference-alias-tween",
+      "kind": "respell-reference-alias",
+      "appliesTo": "flight/",
+      "symbol": "Tween",
+      "expansion": "shared-pointer",
+      "witness": "flight::types::Tween<double>",
+      "witnessInclude": "flight/types/tween.hpp",
+      "diagnostic": "couldn't deduce template parameter from a flight::Ref parameter",
+      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it sits in a NON-DEDUCED CONTEXT. flight::types::Tween is used that way in a function template's parameter list at 5 site(s), so the declaration is well-formed and every CALL fails to deduce. Tween derives from flight::ReferenceEnabled, so the alias resolves to std::shared_ptr<Tween<...>> and the respelling is a spelling change with no behaviour of its own. The witness above was compile-checked before this entry was written, and referenceAliasIdentityProof turns the expansion claim into a static_assert, so a wrong claim fails the build rather than quietly changing a signature.",
+      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
+      "expectedWhen": "always"
     }
   ]
 }
