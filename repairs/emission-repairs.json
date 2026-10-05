@@ -4790,6 +4790,18 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "connectivity-create-signal-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/connectivity/",
+      "symbol": "create_signal",
+      "declaration": "using flight::signals::create_signal;",
+      "include": "flight/signals/signal.hpp",
+      "diagnostic": "there are no arguments to 'create_signal' that depend on a template parameter, so a declaration of 'create_signal' must be available",
+      "defect": "The emitter writes flight::signals::create_signal unqualified inside namespace flight::connectivity (connectivity/connectivity.hpp), without the header that declares it. Because the call appears in a template and takes no arguments that depend on a template parameter, two-phase lookup requires the declaration to be visible at definition time, so this is a hard error rather than a deferred one. Same defect and same remedy as node-create-signal-using-declaration; the separate repair create-signal-argument-from-assignment supplies the type argument once the name resolves, and both are needed.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "input-create-signal-using-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/input/",
@@ -4810,6 +4822,18 @@
       "include": "flight/signals/signal.hpp",
       "diagnostic": "there are no arguments to 'create_signal' that depend on a template parameter, so a declaration of 'create_signal' must be available",
       "defect": "The emitter writes flight::signals::create_signal unqualified inside namespace flight::interaction (interaction/interaction_manager.hpp), without the header that declares it. Because the call appears in a template and takes no arguments that depend on a template parameter, two-phase lookup requires the declaration to be visible at definition time, so this is a hard error rather than a deferred one. Same defect and same remedy as node-create-signal-using-declaration; the separate repair create-signal-argument-from-assignment supplies the type argument once the name resolves, and both are needed.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "lifecycle-create-signal-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/lifecycle/",
+      "symbol": "create_signal",
+      "declaration": "using flight::signals::create_signal;",
+      "include": "flight/signals/signal.hpp",
+      "diagnostic": "there are no arguments to 'create_signal' that depend on a template parameter, so a declaration of 'create_signal' must be available",
+      "defect": "The emitter writes flight::signals::create_signal unqualified inside namespace flight::lifecycle (lifecycle/lifecycle.hpp), without the header that declares it. Because the call appears in a template and takes no arguments that depend on a template parameter, two-phase lookup requires the declaration to be visible at definition time, so this is a hard error rather than a deferred one. Same defect and same remedy as node-create-signal-using-declaration; the separate repair create-signal-argument-from-assignment supplies the type argument once the name resolves, and both are needed.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -4958,6 +4982,18 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "share-create-signal-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/share/",
+      "symbol": "create_signal",
+      "declaration": "using flight::signals::create_signal;",
+      "include": "flight/signals/signal.hpp",
+      "diagnostic": "there are no arguments to 'create_signal' that depend on a template parameter, so a declaration of 'create_signal' must be available",
+      "defect": "The emitter writes flight::signals::create_signal unqualified inside namespace flight::share (share/share.hpp), without the header that declares it. Because the call appears in a template and takes no arguments that depend on a template parameter, two-phase lookup requires the declaration to be visible at definition time, so this is a hard error rather than a deferred one. Same defect and same remedy as node-create-signal-using-declaration; the separate repair create-signal-argument-from-assignment supplies the type argument once the name resolves, and both are needed.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "shortcut-create-signal-using-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/shortcut/",
@@ -4966,6 +5002,18 @@
       "include": "flight/signals/signal.hpp",
       "diagnostic": "there are no arguments to 'create_signal' that depend on a template parameter, so a declaration of 'create_signal' must be available",
       "defect": "The emitter writes flight::signals::create_signal unqualified inside namespace flight::shortcut (shortcut/shortcut_explicit_dependency.hpp), without the header that declares it. Because the call appears in a template and takes no arguments that depend on a template parameter, two-phase lookup requires the declaration to be visible at definition time, so this is a hard error rather than a deferred one. Same defect and same remedy as node-create-signal-using-declaration; the separate repair create-signal-argument-from-assignment supplies the type argument once the name resolves, and both are needed.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "statusbar-create-signal-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/statusbar/",
+      "symbol": "create_signal",
+      "declaration": "using flight::signals::create_signal;",
+      "include": "flight/signals/signal.hpp",
+      "diagnostic": "there are no arguments to 'create_signal' that depend on a template parameter, so a declaration of 'create_signal' must be available",
+      "defect": "The emitter writes flight::signals::create_signal unqualified inside namespace flight::statusbar (statusbar/statusbar.hpp), without the header that declares it. Because the call appears in a template and takes no arguments that depend on a template parameter, two-phase lookup requires the declaration to be visible at definition time, so this is a hard error rather than a deferred one. Same defect and same remedy as node-create-signal-using-declaration; the separate repair create-signal-argument-from-assignment supplies the type argument once the name resolves, and both are needed.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -5014,6 +5062,22 @@
       ],
       "diagnostic": "'connect_signal' was not declared in this scope",
       "defect": "The emitter writes 3 name(s) owned by flight::signals unqualified inside namespace flight::app, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern. NOTE: disconnect_signal / is_slot_connected compare a slot to a handler by ECMAScript reference identity, which std::function cannot express, so these resolve the NAME and the call still fails on instantiation -- see the callback-identity section of docs/generation-state.md. Declared anyway because the name is genuinely unqualified and a using-declaration has no wrong-but-compiling outcome.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "connectivity-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/connectivity/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "clear_signal"
+        }
+      ],
+      "diagnostic": "'clear_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::connectivity, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -5102,6 +5166,38 @@
       ],
       "diagnostic": "'connect_signal' was not declared in this scope",
       "defect": "The emitter writes 2 name(s) owned by flight::signals unqualified inside namespace flight::interaction, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern. NOTE: disconnect_signal / is_slot_connected compare a slot to a handler by ECMAScript reference identity, which std::function cannot express, so these resolve the NAME and the call still fails on instantiation -- see the callback-identity section of docs/generation-state.md. Declared anyway because the name is genuinely unqualified and a using-declaration has no wrong-but-compiling outcome.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "lifecycle-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/lifecycle/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'emit_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::lifecycle, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "log-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/log/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'emit_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::log, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -5222,6 +5318,26 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "share-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/share/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "clear_signal"
+        },
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'clear_signal' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::signals unqualified inside namespace flight::share, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "shortcut-unqualified-signals-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/shortcut/",
@@ -5250,6 +5366,22 @@
       ],
       "diagnostic": "'clear_signal' was not declared in this scope",
       "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::spritesheet, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "statusbar-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/statusbar/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'emit_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::statusbar, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
