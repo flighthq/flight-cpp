@@ -4801,3 +4801,55 @@ making hand-run output byte-comparable with the committed report. Doing both is 
 This belongs with the two sibling lessons already recorded here: `-fmax-errors` capping made a working
 repair look inert, and `pgrep -f` watchers matched themselves and never fired. The common shape is a check
 whose failure is silent and whose silence reads as a pass. Prefer a check that can say "I did not know".
+
+## Driving one package's names to zero: `selection`, and why "unresolved" names are mostly cascade artifacts
+
+A worked example of the compile-driven loop, because it found 14 names where the committed compile report
+offered 3, and because two of its intermediate results would have been misread.
+
+| round | undeclared names seen | action |
+| --- | --- | --- |
+| 1 | **14** (11 flight::types, 2 package functions, 1 unresolved) | declared the 11 |
+| 2 | 1 (`create_rectangle` → `flight::geometry`) | — |
+| 3 | 1 (same) | — |
+| 4 | 1 | declared it; new entry `selection-unqualified-geometry-names` |
+| final | **0 declarable names remain** | |
+
+The report had named only `HierarchyNodeAny`, `LassoSelection` and `Rectangle` for this package. The other
+eleven — `EntityConstruction`, `MarqueeSelection`, `MarqueeSelectionMode`, `SelectionSignals`,
+`SelectionState`, `SelectionStateRuntime`, `Signal`, `Path`, `path_command`, and the two `*Runtime` types —
+were **masked**, each behind an earlier diagnostic in the same file.
+
+### "Unresolved" names are usually symptoms, not defects
+
+Round 1 reported `out` as unresolvable and `initialize_lasso_selection` as a same-package function, and both
+vanished in round 2 without anything being declared for them. The reason is visible in the source:
+
+```cpp
+// flight/selection/lasso_selection.hpp:18
+inline void initialize_lasso_selection(flight::Ref<EntityConstruction<flight::Ref<LassoSelection>>> out) {
+```
+
+`EntityConstruction` was undeclared, so the parameter type was invalid, so **`out` was undeclared
+throughout the body**, and the function's own name never got declared — which made every call site report
+`initialize_lasso_selection` missing too. One undeclared type produced three distinct "undeclared name"
+diagnostics at three different places.
+
+So: **do not treat a collector's unresolved list as work until the loop has converged**, and never conclude
+from one pass that a name needs an override. Same-package function hits are excluded from declaration for
+exactly this reason — a name defined in the package being compiled cannot need importing into it.
+
+### What the package is actually blocked on now
+
+Names are finished; two non-name defects remain, and both are informative:
+
+- `no match for 'operator=' (operand types are 'std::optional<std::shared_ptr<flight::types::EntityRuntime>>'
+  and …)` — this is the `project-symbol-keyed-member` rewrite working and revealing the next layer, exactly
+  as that repair's own `defect` text predicted it would. `selection->entity_runtime_key` is
+  `std::optional<Ref<EntityRuntime>>` and the assigned value is `Ref<MarqueeSelectionRuntime>`, which does
+  not derive from `EntityRuntime`. Same nominal-vs-structural root as the `node/revision.hpp` split above.
+- `there are no arguments to 'create_signal' that depend on a template parameter` — the contextual-typing
+  case `flight/template_argument.hpp` was written for. `flight/node/` has a
+  `node-create-signal-using-declaration` entry; `flight/selection/` needs the equivalent.
+
+Both are real next steps rather than guesses, which is the point of running the loop to convergence first.
