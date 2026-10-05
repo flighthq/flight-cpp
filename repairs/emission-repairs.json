@@ -1468,6 +1468,130 @@
       "defect": "The emitter writes 10 flight::types name(s) unqualified inside namespace flight::mesh. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/mesh/ holds the first error of 18 header(s). Each name carries its own defining header because they are spread across several files.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "gui-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/gui/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "Entity"
+        },
+        {
+          "include": "flight/types/gui_controller.hpp",
+          "name": "GuiOrientation"
+        },
+        {
+          "include": "flight/types/gui_controller.hpp",
+          "name": "GuiTransitionDescriptor"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2D"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "NodeAny"
+        },
+        {
+          "include": "flight/types/path.hpp",
+          "name": "Path"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        },
+        {
+          "include": "flight/types/signal.hpp",
+          "name": "Signal"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "entity_runtime_key"
+        }
+      ],
+      "diagnostic": "'Entity' was not declared in this scope; did you mean 'flight::types::Entity'? -- and the same for 8 further flight::types name(s) in this package",
+      "defect": "The emitter writes 9 flight::types name(s) unqualified inside namespace flight::gui. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/gui/ holds the first error of 12 header(s). Each name carries its own defining header because they are spread across several files.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics3d-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics3d/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/collision.hpp",
+          "name": "CollisionColliderShape3D"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DCollider"
+        },
+        {
+          "include": "flight/types/spatial.hpp",
+          "name": "SpatialAabb3D"
+        }
+      ],
+      "diagnostic": "'CollisionColliderShape3D' was not declared in this scope; did you mean 'flight::types::CollisionColliderShape3D'? -- and the same for 2 further flight::types name(s) in this package",
+      "defect": "The emitter writes 3 flight::types name(s) unqualified inside namespace flight::physics3d. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/physics3d/ holds the first error of 17 header(s). Each name carries its own defining header because they are spread across several files.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_formats/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/mutable_number_array.hpp",
+          "name": "MutableNumberArray"
+        },
+        {
+          "include": "flight/types/skin_influence.hpp",
+          "name": "SkinInfluence"
+        },
+        {
+          "include": "flight/types/mesh_geometry.hpp",
+          "name": "VertexAttribute"
+        },
+        {
+          "include": "flight/types/mesh_geometry.hpp",
+          "name": "VertexAttributeLayout"
+        }
+      ],
+      "diagnostic": "'MutableNumberArray' was not declared in this scope; did you mean 'flight::types::MutableNumberArray'? -- and the same for 3 further flight::types name(s) in this package",
+      "defect": "The emitter writes 4 flight::types name(s) unqualified inside namespace flight::scene3d_formats. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/scene3d_formats/ holds the first error of 16 header(s). Each name carries its own defining header because they are spread across several files.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "text-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/text/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/text_label.hpp",
+          "name": "TextLabel"
+        },
+        {
+          "include": "flight/types/text_layout.hpp",
+          "name": "TextLayoutResult"
+        },
+        {
+          "include": "flight/types/text_metrics.hpp",
+          "name": "TextMetrics"
+        }
+      ],
+      "diagnostic": "'TextLabel' was not declared in this scope; did you mean 'flight::types::TextLabel'? -- and the same for 2 further flight::types name(s) in this package",
+      "defect": "The emitter writes 3 flight::types name(s) unqualified inside namespace flight::text. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/text/ holds the first error of 14 header(s). Each name carries its own defining header because they are spread across several files.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
