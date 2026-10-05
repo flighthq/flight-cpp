@@ -1572,6 +1572,270 @@
       "defect": "The emitter writes 3 flight::types name(s) unqualified inside namespace flight::text. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/text/ holds the first error of 14 header(s). Each name carries its own defining header because they are spread across several files.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "materials-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/materials/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "Kind"
+        },
+        {
+          "include": "flight/types/material.hpp",
+          "name": "Material"
+        }
+      ],
+      "diagnostic": "'EntityConstruction' was not declared in this scope; did you mean 'flight::types::EntityConstruction'? -- and the same for 2 further flight::types name(s) in this package",
+      "defect": "The emitter writes 3 flight::types name(s) unqualified inside namespace flight::materials. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/materials/ holds the first error of 10 header(s). Each name carries its own defining header because they are spread across several files.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "particleemitter-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/particleemitter/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/has_bounds_rectangle.hpp",
+          "name": "BoundsNodeAny"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "Node"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2DTraits"
+        },
+        {
+          "include": "flight/types/partial_node.hpp",
+          "name": "PartialNode"
+        },
+        {
+          "include": "flight/types/particle_emitter2_d.hpp",
+          "name": "ParticleEmitter2D"
+        },
+        {
+          "include": "flight/types/particle_emitter2_d.hpp",
+          "name": "ParticleEmitterData"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        },
+        {
+          "include": "flight/types/texture_atlas.hpp",
+          "name": "TextureAtlas"
+        },
+        {
+          "include": "flight/types/vector2.hpp",
+          "name": "Vector2Like"
+        }
+      ],
+      "diagnostic": "'BoundsNodeAny' was not declared in this scope; did you mean 'flight::types::BoundsNodeAny'? -- and the same for 8 further flight::types name(s) in this package",
+      "defect": "The emitter writes 9 flight::types name(s) unqualified inside namespace flight::particleemitter. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/particleemitter/ holds the first error of 12 header(s). Each name carries its own defining header because they are spread across several files.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/node3_d.hpp",
+          "name": "Node3D"
+        },
+        {
+          "include": "flight/types/node_signals.hpp",
+          "name": "NodeSignals"
+        }
+      ],
+      "diagnostic": "'Node3D' was not declared in this scope; did you mean 'flight::types::Node3D'? -- and the same for 1 further flight::types name(s) in this package",
+      "defect": "The emitter writes 2 flight::types name(s) unqualified inside namespace flight::scene3d. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/scene3d/ holds the first error of 17 header(s). Each name carries its own defining header because they are spread across several files.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-resources-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_resources/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "Kind"
+        },
+        {
+          "include": "flight/types/material.hpp",
+          "name": "Material"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "Scene3DMaterialTextureLister"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "Scene3DMaterialTextureRegistry"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "Scene3DPbrExtensionTextureLister"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "Texture"
+        },
+        {
+          "include": "flight/types/standard_pbr_material.hpp",
+          "name": "standard_pbr_material_kind"
+        },
+        {
+          "include": "flight/types/unlit_material.hpp",
+          "name": "unlit_material_kind"
+        }
+      ],
+      "diagnostic": "'EntityConstruction' was not declared in this scope; did you mean 'flight::types::EntityConstruction'? -- and the same for 8 further flight::types name(s) in this package",
+      "defect": "The emitter writes 9 flight::types name(s) unqualified inside namespace flight::scene3d_resources. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/scene3d_resources/ holds the first error of 26 header(s). Each name carries its own defining header because they are spread across several files.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton2d-formats-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/skeleton2d_formats/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope; did you mean 'flight::entity::allocate_entity'? -- and the same for 1 further flight::entity name(s) in this package",
+      "defect": "The emitter writes 2 flight::entity name(s) unqualified inside namespace flight::skeleton2d_formats. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/skeleton2d_formats/ holds the first error of 11 header(s). Each name carries its own defining header because they are spread across several files.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton2d-formats-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/skeleton2d_formats/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/attachment2_d.hpp",
+          "name": "Attachment2D"
+        },
+        {
+          "include": "flight/types/attachment_skin2_d.hpp",
+          "name": "AttachmentSkin2D"
+        },
+        {
+          "include": "flight/types/bone2_d.hpp",
+          "name": "Bone2D"
+        },
+        {
+          "include": "flight/types/byte_reader.hpp",
+          "name": "ByteReader"
+        },
+        {
+          "include": "flight/types/easing_function.hpp",
+          "name": "EasingFunction"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "ImportDiagnostic"
+        },
+        {
+          "include": "flight/types/mesh_attachment2_d.hpp",
+          "name": "MeshAttachment2D"
+        },
+        {
+          "include": "flight/types/region_attachment2_d.hpp",
+          "name": "RegionAttachment2D"
+        },
+        {
+          "include": "flight/types/skeleton2_ddraw_order_timeline.hpp",
+          "name": "Skeleton2DDrawOrderTimeline"
+        },
+        {
+          "include": "flight/types/skeleton2_dimport.hpp",
+          "name": "Skeleton2DImportAnimation"
+        },
+        {
+          "include": "flight/types/skin2_d.hpp",
+          "name": "Skin2D"
+        },
+        {
+          "include": "flight/types/attachment_skin2_d.hpp",
+          "name": "SkinAttachment2D"
+        },
+        {
+          "include": "flight/types/slot2_d.hpp",
+          "name": "Slot2D"
+        },
+        {
+          "include": "flight/types/spine_binary_registry.hpp",
+          "name": "SpineBinarySectionContext"
+        },
+        {
+          "include": "flight/types/spine_binary_registry.hpp",
+          "name": "SpineBinaryTimelineContext"
+        },
+        {
+          "include": "flight/types/spine_binary_registry.hpp",
+          "name": "SpineBinaryTimelineHandler"
+        },
+        {
+          "include": "flight/types/spine_binary_registry.hpp",
+          "name": "SpineBinaryTimelineKind"
+        },
+        {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "import_diagnostic_severity"
+        },
+        {
+          "include": "flight/types/mesh_attachment2_d.hpp",
+          "name": "mesh_attachment2_dkind"
+        },
+        {
+          "include": "flight/types/region_attachment2_d.hpp",
+          "name": "region_attachment2_dkind"
+        },
+        {
+          "include": "flight/types/skeleton2_danimation_path.hpp",
+          "name": "skeleton2_danimation_path"
+        },
+        {
+          "include": "flight/types/transform_mode2_d.hpp",
+          "name": "transform_mode2_d"
+        }
+      ],
+      "diagnostic": "'Attachment2D' was not declared in this scope; did you mean 'flight::types::Attachment2D'? -- and the same for 22 further flight::types name(s) in this package",
+      "defect": "The emitter writes 23 flight::types name(s) unqualified inside namespace flight::skeleton2d_formats. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/skeleton2d_formats/ holds the first error of 11 header(s). Each name carries its own defining header because they are spread across several files.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
