@@ -5254,3 +5254,37 @@ Path 2 looks right and is implementable today, but it is a design decision about
 binding, not a defect to be fixed, so it is recorded here rather than acted on. Until it is decided, the four
 WGPU packages are blocked for a reason no declared mechanism touches, and they are **159 of the 918 current
 failures**.
+
+## Negative result: the 52 never-defined types are not a defect family
+
+Recorded so it is not investigated twice. Scanning the emitted tree for types that are forward-declared and
+never fully defined finds **52** of them, out of 2461 forward declarations against 4229 definitions:
+`AudioMixerRuntime`, `InteractiveStateRuntime`, `DirectedGraph`, `ResourceLoaderInternal`, `PendingEntry`,
+`SwfColorTransform`, several `Dom*Data`, and so on. An incomplete type looks alarming — nothing can
+construct it, access a member, or take its size.
+
+It is almost entirely benign, because these are **opaque handles held only as `std::shared_ptr`**, which is
+legal and complete enough for that use. Cross-referencing against the gate run:
+
+| failing headers | passing headers | needs completeness | type |
+| --- | --- | --- | --- |
+| 1 | 0 | 0 | `AudioMixerRuntime` |
+| 1 | 0 | 0 | `InteractiveStateRuntime` |
+| 0 | 1 | 1 | `DirectedGraph` |
+| 0 | 1 | 0 | the other twelve sampled |
+
+Only two appear in a failing header at all, one each, and neither needs completeness. The single type used
+in a way that *does* require it, `DirectedGraph`, sits in a header that **passes** — `path_boolean` carries
+an override that supplies it.
+
+So forward-declaring a runtime handle and never defining it is a deliberate working pattern here, not an
+emitter omission. The lesson generalises: in this tree, "a type is incomplete" is not evidence of a defect
+on its own, because `std::shared_ptr<Incomplete>` is exactly how an opaque provider handle is meant to be
+modelled. Check whether anything requires completeness before counting it as work.
+
+This also corrects a hypothesis formed while chasing it: `TextureSource` appeared to be only
+forward-declared across several headers, which suggested the same problem at the centre of
+`texture/texture.hpp`. It is **fully defined** at `flight/types/texture_source.hpp:23` as a
+`ReferenceEnabled` struct; the pattern used to search for definitions simply did not match its spelling. The
+`getFirstTextureSource` refusal is `cpp-contextual-union-missing-expression-type:optionalSingle` — a
+contextual union construction, not an incomplete type.
