@@ -4784,6 +4784,342 @@
       "defect": "The emitter writes flight::signals::create_signal unqualified inside namespace flight::tilemap (tilemap/tilemap.hpp), without the header that declares it. Because the call appears in a template and takes no arguments that depend on a template parameter, two-phase lookup requires the declaration to be visible at definition time, so this is a hard error rather than a deferred one. Same defect and same remedy as node-create-signal-using-declaration; the separate repair create-signal-argument-from-assignment supplies the type argument once the name resolves, and both are needed.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "app-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/app/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "connect_signal"
+        },
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "disconnect_signal"
+        },
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'connect_signal' was not declared in this scope",
+      "defect": "The emitter writes 3 name(s) owned by flight::signals unqualified inside namespace flight::app, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern. NOTE: disconnect_signal / is_slot_connected compare a slot to a handler by ECMAScript reference identity, which std::function cannot express, so these resolve the NAME and the call still fails on instantiation -- see the callback-identity section of docs/generation-state.md. Declared anyway because the name is genuinely unqualified and a using-declaration has no wrong-but-compiling outcome.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "connectivity-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/connectivity/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "clear_signal"
+        }
+      ],
+      "diagnostic": "'clear_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::connectivity, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "gizmo-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/gizmo/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "connect_signal"
+        },
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "disconnect_signal"
+        },
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'connect_signal' was not declared in this scope",
+      "defect": "The emitter writes 3 name(s) owned by flight::signals unqualified inside namespace flight::gizmo, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern. NOTE: disconnect_signal / is_slot_connected compare a slot to a handler by ECMAScript reference identity, which std::function cannot express, so these resolve the NAME and the call still fails on instantiation -- see the callback-identity section of docs/generation-state.md. Declared anyway because the name is genuinely unqualified and a using-declaration has no wrong-but-compiling outcome.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "gui-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/gui/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "connect_signal"
+        },
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "disconnect_signal"
+        }
+      ],
+      "diagnostic": "'connect_signal' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::signals unqualified inside namespace flight::gui, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern. NOTE: disconnect_signal / is_slot_connected compare a slot to a handler by ECMAScript reference identity, which std::function cannot express, so these resolve the NAME and the call still fails on instantiation -- see the callback-identity section of docs/generation-state.md. Declared anyway because the name is genuinely unqualified and a using-declaration has no wrong-but-compiling outcome.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "input-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/input/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "connect_signal"
+        },
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "disconnect_signal"
+        },
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'connect_signal' was not declared in this scope",
+      "defect": "The emitter writes 3 name(s) owned by flight::signals unqualified inside namespace flight::input, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern. NOTE: disconnect_signal / is_slot_connected compare a slot to a handler by ECMAScript reference identity, which std::function cannot express, so these resolve the NAME and the call still fails on instantiation -- see the callback-identity section of docs/generation-state.md. Declared anyway because the name is genuinely unqualified and a using-declaration has no wrong-but-compiling outcome.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "interaction-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/interaction/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "connect_signal"
+        },
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "disconnect_signal"
+        }
+      ],
+      "diagnostic": "'connect_signal' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::signals unqualified inside namespace flight::interaction, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern. NOTE: disconnect_signal / is_slot_connected compare a slot to a handler by ECMAScript reference identity, which std::function cannot express, so these resolve the NAME and the call still fails on instantiation -- see the callback-identity section of docs/generation-state.md. Declared anyway because the name is genuinely unqualified and a using-declaration has no wrong-but-compiling outcome.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "lifecycle-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/lifecycle/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'emit_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::lifecycle, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "log-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/log/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'emit_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::log, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "menu-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/menu/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "clear_signal"
+        },
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'clear_signal' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::signals unqualified inside namespace flight::menu, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "midi-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/midi/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'emit_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::midi, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "notification-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/notification/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'emit_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::notification, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "power-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/power/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'emit_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::power, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "preferences-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/preferences/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "clear_signal"
+        },
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        },
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "has_signal_slots"
+        }
+      ],
+      "diagnostic": "'clear_signal' was not declared in this scope",
+      "defect": "The emitter writes 3 name(s) owned by flight::signals unqualified inside namespace flight::preferences, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-resources-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_resources/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "disconnect_signal"
+        }
+      ],
+      "diagnostic": "'disconnect_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::scene3d_resources, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern. NOTE: disconnect_signal / is_slot_connected compare a slot to a handler by ECMAScript reference identity, which std::function cannot express, so these resolve the NAME and the call still fails on instantiation -- see the callback-identity section of docs/generation-state.md. Declared anyway because the name is genuinely unqualified and a using-declaration has no wrong-but-compiling outcome.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "share-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/share/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "clear_signal"
+        },
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'clear_signal' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::signals unqualified inside namespace flight::share, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "shortcut-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/shortcut/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "clear_signal"
+        }
+      ],
+      "diagnostic": "'clear_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::shortcut, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "spritesheet-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/spritesheet/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/slot.hpp",
+          "name": "clear_signal"
+        }
+      ],
+      "diagnostic": "'clear_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::spritesheet, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "statusbar-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/statusbar/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/emitter.hpp",
+          "name": "emit_signal"
+        }
+      ],
+      "diagnostic": "'emit_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::statusbar, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
