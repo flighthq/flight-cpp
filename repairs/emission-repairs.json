@@ -2812,8 +2812,20 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/bitmap_font.hpp",
+          "name": "BitmapFontGlyphData"
+        },
+        {
           "include": "flight/types/glyph_source.hpp",
           "name": "GlyphAtlas"
+        },
+        {
+          "include": "flight/types/glyph_source.hpp",
+          "name": "GlyphAtlasRuntime"
+        },
+        {
+          "include": "flight/types/texture_atlas.hpp",
+          "name": "TextureAtlas"
         }
       ],
       "diagnostic": "'GlyphAtlas' was not declared in this scope; did you mean 'flight::types::GlyphAtlas'?",
