@@ -4996,3 +4996,33 @@ the next regeneration, for a change the override does not care about. That is th
 true fact about a shadowed file, so the right response is the judgement described above — diff the
 generated file, confirm the change is one the override does not depend on, re-derive — and not to delete
 the repair to keep the check quiet.
+
+## A long-running collector holds a read-modify-write lock it does not own
+
+`repairs/emission-repairs.json` is a single file that the per-package collector reads at startup and
+writes at the end. A round over eight packages takes roughly half an hour under compile contention, so
+that read and that write are thirty minutes apart, and **any edit made to the file in between is silently
+discarded** when the collector writes back.
+
+This happened: a drive over `mesh scene3d scene3d_resources physics2d physics3d collision gui shape`
+started at 03:16 and read the ledger then. At 03:36 nine repairs were restored by a revert. The drive's
+round-1 write — still pending at the time of writing — will put back a tree computed from the 03:16 state
+plus its own additions, dropping the nine again. Each later round re-reads, so only the final write
+survives, and a run begun before an edit erases that edit no matter how many rounds follow.
+
+Nothing errors and nothing conflicts: the file is valid JSON, `sdk:check` passes, and the entries are
+simply gone. It is the same silent-failure shape as the quote-character and `-fmax-errors` traps recorded
+above.
+
+Three ways to avoid it, in order of preference:
+
+1. **Do not edit the ledger while a collector is running.** Cheapest, and usually possible.
+2. **Have the collector re-read immediately before writing** and union its additions into the current
+   file rather than the one it started from. This is the real fix and the collector should be changed to
+   do it; the write is additive by construction, so a last-moment re-read loses nothing.
+3. **Snapshot and reconcile afterwards**, which is what was done here: the pre-drive state is kept and a
+   small script re-adds anything the drive dropped, asserting no duplicate ids. Adequate only because the
+   exact set at risk was known.
+
+The general rule for this repository: a tool that takes tens of minutes and ends in a whole-file write is
+holding a lock on that file for its entire run, whether or not it says so.
