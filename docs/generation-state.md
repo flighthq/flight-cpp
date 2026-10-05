@@ -5781,3 +5781,30 @@ masking, not a broken repair.
 
 A useful property of this check: it is computable from the committed tree alone, with no regeneration and no
 compile. It costs seconds and it is the only honest answer to "has my declaration landed yet".
+
+## The heritage wall also exists one level deeper: a declared `extends` the emitted C++ does not have
+
+`cpp-reference-assertion-without-heritage` (297 markers, 183 headers) is the wall at a **cast site** — a
+TypeScript `x as Y` between two emitted structs with no inheritance relationship. There is a second form that
+produces different diagnostics and needs recording separately, because it does not look like the first.
+
+`@flighthq/mesh` declares, in TypeScript, that `MeshGeometryRuntime extends EntityRuntime`. The emitted
+`MeshGeometryRuntime` has **no `EntityRuntime` heritage at all**. So it is not one expression that cannot be
+represented — the entity slot cannot faithfully store or project the runtime at any site, and every use of it
+is unsound rather than one cast being unspellable. Measured consequence: at least **eight**
+`scene3d_formats` first failures trace to it.
+
+Why this matters for ranking:
+
+- The diagnostics it produces are ordinary-looking — `no matching function`, conversion failures — so it does
+  not self-identify the way a `refusal:` marker does.
+- **It is not override work.** An override supplying functions cannot give a struct a base class it was not
+  emitted with, and giving it one in a copy would make the override's type a different type from the one every
+  other header uses. This is compiler-owned type-model repair.
+- It means a package can fail the three tests *without* any of its refusal reasons being
+  `reference-assertion-without-heritage`, because the defect is in the type model rather than in a refused
+  function. `mesh_geometry.hpp` is the worked example: it has refused functions, they look representable, and
+  the override is still not viable.
+
+Found by builder while applying the three tests to a target I had ranked; recorded because the first form of
+the wall is now well documented and this second form would otherwise be rediscovered from its symptoms.
