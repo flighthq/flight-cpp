@@ -1640,8 +1640,16 @@
           "name": "CollisionColliderShape3D"
         },
         {
+          "include": "flight/types/collision.hpp",
+          "name": "CollisionContactManifold3D"
+        },
+        {
           "include": "flight/types/physics3_d.hpp",
           "name": "Physics3DCollider"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DWorld"
         },
         {
           "include": "flight/types/spatial.hpp",
@@ -1660,8 +1668,28 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/animation_interpolation.hpp",
+          "name": "AnimationInterpolation"
+        },
+        {
+          "include": "flight/types/gltf_extension.hpp",
+          "name": "GltfCoreFeatureHandler"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfMaterialsAnisotropy"
+        },
+        {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "ImportDiagnosticSeverity"
+        },
+        {
           "include": "flight/types/mutable_number_array.hpp",
           "name": "MutableNumberArray"
+        },
+        {
+          "include": "flight/types/obj_schema.hpp",
+          "name": "ObjMaterial"
         },
         {
           "include": "flight/types/skin_influence.hpp",
@@ -1687,6 +1715,10 @@
       "appliesTo": "flight/text/",
       "namespace": "flight::types",
       "symbols": [
+        {
+          "include": "flight/types/native_text.hpp",
+          "name": "NativeText"
+        },
         {
           "include": "flight/types/text_label.hpp",
           "name": "TextLabel"
@@ -1790,6 +1822,10 @@
         {
           "include": "flight/types/node_signals.hpp",
           "name": "NodeSignals"
+        },
+        {
+          "include": "flight/types/vector3.hpp",
+          "name": "Vector3Like"
         }
       ],
       "diagnostic": "'Node3D' was not declared in this scope; did you mean 'flight::types::Node3D'? -- and the same for 1 further flight::types name(s) in this package",
@@ -1806,6 +1842,10 @@
         {
           "include": "flight/types/entity.hpp",
           "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/net.hpp",
+          "name": "HostNetCapability"
         },
         {
           "include": "flight/types/entity.hpp",
@@ -1826,6 +1866,10 @@
         {
           "include": "flight/types/scene3_dresources.hpp",
           "name": "Scene3DPbrExtensionTextureLister"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "Scene3DResourceEvent"
         },
         {
           "include": "flight/types/texture.hpp",
@@ -1926,6 +1970,10 @@
         {
           "include": "flight/types/slot2_d.hpp",
           "name": "Slot2D"
+        },
+        {
+          "include": "flight/types/spine_binary_version.hpp",
+          "name": "SpineBinaryParser"
         },
         {
           "include": "flight/types/spine_binary_registry.hpp",
@@ -2988,6 +3036,10 @@
           "name": "Skeleton2D"
         },
         {
+          "include": "flight/types/skeleton2_danimation_target.hpp",
+          "name": "Skeleton2DAnimationTarget"
+        },
+        {
           "include": "flight/types/slot2_d.hpp",
           "name": "Slot2D"
         },
@@ -3010,6 +3062,10 @@
         {
           "include": "flight/types/aseprite_schema.hpp",
           "name": "AsepriteArrayFrame"
+        },
+        {
+          "include": "flight/types/aseprite_schema.hpp",
+          "name": "AsepriteBaseFrame"
         },
         {
           "include": "flight/types/aseprite_schema.hpp",
@@ -3050,6 +3106,10 @@
         {
           "include": "flight/types/texture_atlas_region.hpp",
           "name": "TextureAtlasRegion"
+        },
+        {
+          "include": "flight/types/texture_packer_schema.hpp",
+          "name": "TexturePackerHashFrame"
         },
         {
           "include": "flight/types/import_diagnostic.hpp",
@@ -3122,6 +3182,10 @@
         {
           "include": "flight/types/tiled_tileset.hpp",
           "name": "TiledTilesetRef"
+        },
+        {
+          "include": "flight/types/tilemap.hpp",
+          "name": "TilemapData"
         },
         {
           "include": "flight/types/import_diagnostic.hpp",
@@ -3404,6 +3468,982 @@
       "defect": "The emitter lowers TypeScript's symbol-keyed [EntityRuntimeKey] to a plain member named entity_runtime_key, and uses that member correctly in flight/entity/binding.hpp. At 1 site(s) in this package (tray/tray.hpp) it subscripts the receiver with the same-named Symbol constant instead, which nothing can answer: a Symbol is a runtime value so a subscript cannot select a member, and several receivers are flight::Ref, i.e. std::shared_ptr, which cannot be given an operator[]. The rewrite uses the emitter's own spelling and preserves absence, since the member is declared std::optional. GAIN NOT YET MEASURED: the read sites cast to std::optional<flight::Ref<SomeRuntime>> while the member is std::optional<flight::Ref<EntityRuntime>>, and a static_cast between two std::optionals of different shared_ptrs needs std::static_pointer_cast, so those sites likely expose a second diagnostic rather than closing.",
       "expectedWhen": "always",
       "expires": "when the emitter lowers a symbol-keyed read the way it already lowers the write; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/canvas_render_state.hpp",
+          "name": "CanvasRenderState"
+        },
+        {
+          "include": "flight/types/canvas_render_state.hpp",
+          "name": "CanvasRenderStateRuntime"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "Kind"
+        },
+        {
+          "include": "flight/types/render_proxy2_d.hpp",
+          "name": "RenderProxy2D"
+        },
+        {
+          "include": "flight/types/render_state.hpp",
+          "name": "RenderState"
+        }
+      ],
+      "diagnostic": "'CanvasRenderState' was not declared in this scope",
+      "defect": "The emitter writes 5 name(s) owned by flight::types unqualified inside namespace flight::scene2d_canvas, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/lottie_document_import.hpp",
+          "name": "LottieDocumentImportResult"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2D"
+        },
+        {
+          "include": "flight/types/path.hpp",
+          "name": "Path"
+        },
+        {
+          "include": "flight/types/rive_import_registry.hpp",
+          "name": "RiveArtboardImportContext"
+        }
+      ],
+      "diagnostic": "'LottieDocumentImportResult' was not declared in this scope",
+      "defect": "The emitter writes 4 name(s) owned by flight::types unqualified inside namespace flight::scene2d_formats, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "selection-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/selection/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/hierarchy_node.hpp",
+          "name": "HierarchyNodeAny"
+        },
+        {
+          "include": "flight/types/lasso_selection.hpp",
+          "name": "LassoSelection"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        }
+      ],
+      "diagnostic": "'HierarchyNodeAny' was not declared in this scope",
+      "defect": "The emitter writes 3 name(s) owned by flight::types unqualified inside namespace flight::selection, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "particles-formats-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/particles_formats/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/particle_designer_schema.hpp",
+          "name": "ParticleDesignerRawDict"
+        },
+        {
+          "include": "flight/types/particle_emitter_config.hpp",
+          "name": "ParticleEmitterConfig"
+        },
+        {
+          "include": "flight/types/starling_pex_schema.hpp",
+          "name": "StarlingPexColor"
+        }
+      ],
+      "diagnostic": "'ParticleDesignerRawDict' was not declared in this scope",
+      "defect": "The emitter writes 3 name(s) owned by flight::types unqualified inside namespace flight::particles_formats, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "spritesheet-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/spritesheet/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/spritesheet.hpp",
+          "name": "Spritesheet"
+        },
+        {
+          "include": "flight/types/spritesheet_player.hpp",
+          "name": "SpritesheetPlayer"
+        }
+      ],
+      "diagnostic": "'Spritesheet' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::spritesheet, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene-document-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene_document/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/flight_document_interactive_state.hpp",
+          "name": "FlightDocumentInteractiveStates"
+        },
+        {
+          "include": "flight/types/flight_document_refusal_explanation.hpp",
+          "name": "FlightDocumentRefusalExplanation"
+        }
+      ],
+      "diagnostic": "'FlightDocumentInteractiveStates' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::scene_document, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-wgpu-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_wgpu/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/particle_emitter3_d.hpp",
+          "name": "ParticleEmitter3D"
+        },
+        {
+          "include": "flight/types/wgpu_skinning_adapter.hpp",
+          "name": "WgpuSkinningAdapter"
+        }
+      ],
+      "diagnostic": "'ParticleEmitter3D' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::scene3d_wgpu, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-wgpu-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_wgpu/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/wgpu_render_state.hpp",
+          "name": "WgpuRenderState"
+        },
+        {
+          "include": "flight/types/wgpu_render_target.hpp",
+          "name": "WgpuTextureRenderTarget"
+        }
+      ],
+      "diagnostic": "'WgpuRenderState' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::scene2d_wgpu, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-resources-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_resources/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/audio_resource_reference.hpp",
+          "name": "AudioResourceFetch"
+        },
+        {
+          "include": "flight/types/image_resource_reference.hpp",
+          "name": "ImageResourceFetch"
+        }
+      ],
+      "diagnostic": "'AudioResourceFetch' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::scene2d_resources, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-dom-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_dom/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/dom_render_state.hpp",
+          "name": "DomRenderStateRuntime"
+        },
+        {
+          "include": "flight/types/render_proxy2_d.hpp",
+          "name": "RenderProxy2D"
+        }
+      ],
+      "diagnostic": "'DomRenderStateRuntime' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::scene2d_dom, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render_wgpu/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/wgpu_render_state.hpp",
+          "name": "WgpuRenderState"
+        },
+        {
+          "include": "flight/types/wgpu_render_target.hpp",
+          "name": "WgpuScreenRenderTarget"
+        }
+      ],
+      "diagnostic": "'WgpuRenderState' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::render_wgpu, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics3d-abi-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics3d_abi/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/physics3_dabi.hpp",
+          "name": "Physics3DAbiCommandBuffer"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DCollider"
+        }
+      ],
+      "diagnostic": "'Physics3DAbiCommandBuffer' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::physics3d_abi, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-abi-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics2d_abi/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DBodyType"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DCollider"
+        }
+      ],
+      "diagnostic": "'Physics2DBodyType' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::physics2d_abi, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "movieclip-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/movieclip/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/movie_clip.hpp",
+          "name": "MovieClip"
+        },
+        {
+          "include": "flight/types/spritesheet_animation.hpp",
+          "name": "SpritesheetAnimation"
+        }
+      ],
+      "diagnostic": "'MovieClip' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::movieclip, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "media-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/media/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/audio_bus.hpp",
+          "name": "AudioBus"
+        },
+        {
+          "include": "flight/types/video_resource.hpp",
+          "name": "VideoChannel"
+        }
+      ],
+      "diagnostic": "'AudioBus' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::media, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "layout-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/layout/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "LayoutTree"
+        },
+        {
+          "include": "flight/types/viewport_align.hpp",
+          "name": "ViewportAlign"
+        }
+      ],
+      "diagnostic": "'LayoutTree' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::layout, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "command-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/command/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/command.hpp",
+          "name": "AddNodeChildCommand"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "CommandBindingTable"
+        }
+      ],
+      "diagnostic": "'AddNodeChildCommand' was not declared in this scope",
+      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::command, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "video-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/video/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/host_video.hpp",
+          "name": "HostVideoCapability"
+        }
+      ],
+      "diagnostic": "'HostVideoCapability' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::video, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "velocity-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/velocity/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/velocity.hpp",
+          "name": "VelocityField"
+        }
+      ],
+      "diagnostic": "'VelocityField' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::velocity, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "useragent-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/useragent/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/device_form_factor.hpp",
+          "name": "DeviceFormFactor"
+        }
+      ],
+      "diagnostic": "'DeviceFormFactor' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::useragent, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "updater-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/updater/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/updater.hpp",
+          "name": "AppUpdateCheckOutcome"
+        }
+      ],
+      "diagnostic": "'AppUpdateCheckOutcome' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::updater, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "tray-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/tray/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/tray.hpp",
+          "name": "TrayReleaseResult"
+        }
+      ],
+      "diagnostic": "'TrayReleaseResult' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::tray, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "tokens-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/tokens/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/flight_document_field_schema.hpp",
+          "name": "FlightDocumentValue"
+        }
+      ],
+      "diagnostic": "'FlightDocumentValue' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::tokens, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "tilemap-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/tilemap/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/tilemap.hpp",
+          "name": "Tilemap"
+        }
+      ],
+      "diagnostic": "'Tilemap' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::tilemap, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "textshaper-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/textshaper/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/text_shaper_cache.hpp",
+          "name": "TextShaperCache"
+        }
+      ],
+      "diagnostic": "'TextShaperCache' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::textshaper, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "textsegment-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/textsegment/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/text_segment.hpp",
+          "name": "TextSegmentGranularity"
+        }
+      ],
+      "diagnostic": "'TextSegmentGranularity' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::textsegment, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "text-markup-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/text_markup/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/markup_tag_registry.hpp",
+          "name": "MarkupTagRegistry"
+        }
+      ],
+      "diagnostic": "'MarkupTagRegistry' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::text_markup, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "surface-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/surface/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/surface.hpp",
+          "name": "SurfaceRuntime"
+        }
+      ],
+      "diagnostic": "'SurfaceRuntime' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::surface, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "statusbar-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/statusbar/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/status_bar.hpp",
+          "name": "StatusBarInfo"
+        }
+      ],
+      "diagnostic": "'StatusBarInfo' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::statusbar, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "snapshot-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/snapshot/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/snapshot.hpp",
+          "name": "Snapshot"
+        }
+      ],
+      "diagnostic": "'Snapshot' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::snapshot, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton3d-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/skeleton3d/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/skeleton3_d.hpp",
+          "name": "Skeleton3D"
+        }
+      ],
+      "diagnostic": "'Skeleton3D' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::skeleton3d, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "shortcut-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/shortcut/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/shortcut.hpp",
+          "name": "HostShortcutTriggerCapability"
+        }
+      ],
+      "diagnostic": "'HostShortcutTriggerCapability' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::shortcut, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "share-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/share/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/share.hpp",
+          "name": "HostShareContentCapability"
+        }
+      ],
+      "diagnostic": "'HostShareContentCapability' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::share, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "shape-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/shape/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/shape_command.hpp",
+          "name": "CapsStyle"
+        }
+      ],
+      "diagnostic": "'CapsStyle' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::shape, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "quadbatch-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/quadbatch/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/quad_batch.hpp",
+          "name": "QuadBatch"
+        }
+      ],
+      "diagnostic": "'QuadBatch' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::quadbatch, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "picking-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/picking/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/scene3_dhit.hpp",
+          "name": "Scene3DHit"
+        }
+      ],
+      "diagnostic": "'Scene3DHit' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::picking, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics2d/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DWorld"
+        }
+      ],
+      "diagnostic": "'Physics2DWorld' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::physics2d, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "notification-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/notification/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationLifecycleOutcome"
+        }
+      ],
+      "diagnostic": "'NotificationLifecycleOutcome' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::notification, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "midi-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/midi/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/midi.hpp",
+          "name": "MidiAccessDisposeOutcome"
+        }
+      ],
+      "diagnostic": "'MidiAccessDisposeOutcome' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::midi, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "menu-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/menu/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/menu_highlight.hpp",
+          "name": "MenuHighlight"
+        }
+      ],
+      "diagnostic": "'MenuHighlight' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::menu, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "lifecycle-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/lifecycle/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/lifecycle.hpp",
+          "name": "AppLifecycleState"
+        }
+      ],
+      "diagnostic": "'AppLifecycleState' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::lifecycle, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "input-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/input/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/input_state.hpp",
+          "name": "InputState"
+        }
+      ],
+      "diagnostic": "'InputState' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::input, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "image-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/image/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/image_bitmap_composition.hpp",
+          "name": "ImageBitmapCompositionResolver"
+        }
+      ],
+      "diagnostic": "'ImageBitmapCompositionResolver' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::image, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "gizmo-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/gizmo/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/gizmo_state.hpp",
+          "name": "GizmoHandleKind"
+        }
+      ],
+      "diagnostic": "'GizmoHandleKind' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::gizmo, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/effects/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/render_effect.hpp",
+          "name": "RenderEffect"
+        }
+      ],
+      "diagnostic": "'RenderEffect' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::effects, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "dialog-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/dialog/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/dialog.hpp",
+          "name": "FileDialogHandle"
+        }
+      ],
+      "diagnostic": "'FileDialogHandle' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::dialog, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "debug-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/debug/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/debug.hpp",
+          "name": "DebugSubsystemHooks"
+        }
+      ],
+      "diagnostic": "'DebugSubsystemHooks' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::debug, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "connectivity-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/connectivity/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/connectivity.hpp",
+          "name": "HostConnectivityChangeCapability"
+        }
+      ],
+      "diagnostic": "'HostConnectivityChangeCapability' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::connectivity, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "clip-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/clip/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/clip_region.hpp",
+          "name": "ClipRegion"
+        }
+      ],
+      "diagnostic": "'ClipRegion' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::clip, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "capture-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/capture/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/capture_baseline.hpp",
+          "name": "CaptureBaseline"
+        }
+      ],
+      "diagnostic": "'CaptureBaseline' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::capture, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "bitmaptext-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/bitmaptext/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        }
+      ],
+      "diagnostic": "'Rectangle' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::bitmaptext, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "bitmapfont-formats-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/bitmapfont_formats/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/bitmap_font_parse_explanation.hpp",
+          "name": "BitmapFontParseExplanation"
+        }
+      ],
+      "diagnostic": "'BitmapFontParseExplanation' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::bitmapfont_formats, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "audio-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/audio/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/host_audio_codec.hpp",
+          "name": "HostAudioCodecCapability"
+        }
+      ],
+      "diagnostic": "'HostAudioCodecCapability' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::audio, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "assets-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/assets/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/assets.hpp",
+          "name": "AssetLibrary"
+        }
+      ],
+      "diagnostic": "'AssetLibrary' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::assets, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "app-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/app/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/render_state.hpp",
+          "name": "RenderState"
+        }
+      ],
+      "diagnostic": "'RenderState' was not declared in this scope",
+      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::app, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
