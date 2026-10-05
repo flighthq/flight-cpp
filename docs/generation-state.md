@@ -4384,3 +4384,44 @@ done about the designated-initializer-into-variant error sitting on the same exp
 
 So the honest end state for this package: **1 header closed, 1 module and 2 aggregates blocked on three
 refused declarations in `texture` and `textureatlas`.** Everything repair-shaped is done; nothing left is.
+
+## `has_value()` on a `StructuralRef` is NOT a safe runtime addition — it is a concept-detection hook
+
+`statechart/statechart.hpp` was down to one error, and 69 headers share its shape:
+
+```
+'flight::StructuralRef<flight::RowReadonly<RowOf<shared_ptr<types::StatechartTransition>>>>'
+  has no member named 'has_value'
+```
+
+The emitter writes `transition.value().has_value()` — unwrapping an `optional<StructuralRef>` and then
+asking the ROW whether it holds something. That looked like a pure naming gap, because `StructuralRef`
+already answers exactly that question: `explicit operator bool() const noexcept { return
+static_cast<bool>(owner_); }`. Adding `has_value()` defined AS `operator bool` adds a name, not a meaning,
+and cannot drift from it.
+
+**It broke JSON serialization of every structural row.** Five assertions in `structural_row_test.cpp` failed
+immediately — rows serializing as an empty object, key enumeration gone, indentation and ordering
+signatures changed. `json.hpp:274` is why:
+
+```cpp
+} else if constexpr (requires { value.has_value(); *value; } && !requires { value.index(); }) {
+  if (value.has_value()) append_json_value(output, *value, indentation, depth);
+```
+
+`Json::stringify` identifies an optional-like value by **probing for `has_value()` and `operator*`**.
+`StructuralRef` already has `operator*`, so supplying `has_value()` made every row match that branch and
+serialize as the thing it points at rather than as an object with members.
+
+Reverted; 20/20 pass again.
+
+**The general lesson is about naming, not about rows.** `has_value` is not a neutral identifier in this
+codebase — it is half of a duck-typed concept that generic code dispatches on. Adding a conventionally-named
+member to a type changes how every `requires`-based detection in the runtime classifies it, and nothing at
+the definition site says so. The runtime has several such probes (`json.hpp` twice, `optional_traits`,
+`flatten_ref`'s `*value` branch), so any new member whose name is part of a standard vocabulary —
+`has_value`, `value`, `begin`, `end`, `index`, `size` — has to be checked against them before it is added.
+
+So the 69-header family is **not a runtime gap**. It needs the emitter to test the row rather than call
+`has_value()` on it, or an emission repair rewriting the call at declared sites. `operator bool` is already
+the right predicate and is already there; what cannot happen is giving it the second name the emitter wants.
