@@ -3981,3 +3981,46 @@ header needs it.
 defined below the generated include, and then 84 specializations naming types the table cannot see. Anything
 the generated table calls into or names must be validated against a generated header — `ctest` passes in both
 cases, because the runtime's own tests do not include that table the way the SDK does.
+
+## The location field pays for itself immediately: 151 failures are attributed elsewhere
+
+The regenerated tree compiled: **1789/2710 headers (66.0%)**, up from 1752, and **47/146 shippable packages**
+(29 ready, 18 assisted), up from 44. The +37 headers are the 7 declared repairs plus builder's qualification
+repair, and nothing from builder's ten supplied packages is in these numbers — those are in its clone.
+
+The report now carries `location` per failure, and the first query answers a question that has cost more
+time than any other in this work: **of 921 failures, 151 have their first error in a DIFFERENT package than
+the header under test.** Every family count in this document was built without that.
+
+Ranking defect SITES by headers blocked, filtered to applicable packages and excluding the held-back
+wgpu/gl family and the four `flight.environment: "web"` packages:
+
+| defect site | headers blocked |
+|---|---|
+| `render/render_state.hpp` | **49** |
+| `mesh/mesh_geometry.hpp` | 18 |
+| `physics3d/collider_transform.hpp` | 17 |
+| `interaction/node_interaction_state.hpp` | 16 |
+| `scene3d_formats/shared.hpp` | 16 |
+| `text/text_label_layout.hpp` | 14 |
+| `scene3d_resources/scene_material_texture_registry.hpp` | 13 |
+| `animation/animation_track.hpp` | 12 |
+| `gui/gui_controller.hpp` | 12 |
+
+**213 distinct files hold a first error, and the top ten account for 293 of 921 failures.** That is the
+shape of the remaining work stated properly for the first time: not 921 independent problems, and not the
+flat family histogram this document has been using, but a long tail behind a short head.
+
+Two entries in that table are worth reading closely.
+
+`scene2d_canvas/canvas_render_surface.hpp` blocks 36 and is deliberately **absent** from the list above:
+`scene2d-canvas` declares `flight.environment: "web"`, so it is outside `applicableEnvironments` and out of
+the denominator. A ranking that did not filter on the declared environment would have put it second and sent
+someone at 36 headers that this profile is not required to ship. Applicability is derived, never inferred —
+and a leverage ranking has to apply it.
+
+`interaction/node_interaction_state.hpp` still blocks **16** with builder's complete override in place. That
+is the quoted-include override bypass measured rather than argued: the override reaches the angle-include
+consumers and cannot reach the ones including it with quotes. The specification recorded earlier for
+`overrides:check` — report the sites an override cannot cover — would have predicted it before the work was
+done.
