@@ -4912,3 +4912,43 @@ regeneration. So:
 
 Noted because the mechanism is working exactly as designed: it surfaced a real change to a shadowed file
 and demanded a human judgement. The failure mode to avoid is treating that demand as paperwork.
+
+### Addendum: deferring the four WGPU packages is mechanically available, and what deferral actually means
+
+Two facts were missing from the section above, and both change how the decision should be framed.
+
+**First, `kind: defect` does not remove a package from the denominator.** AGENTS.md is explicit: "A
+`defect` is a package that should work on this profile and does not; it stays in the shippable
+denominator." All seven existing deferrals are `kind: defect`, and six of them trace to one cause --
+`@flighthq/render-gl` generation not terminating -- with `@flighthq/sdk` deferred because its barrel
+re-exports it. So deferring the WGPU four would **not** make the fraction flatter or hide the work. What a
+deferral does is narrower: `scripts/sdkHeaderCompile.mjs:128` records that "a deferred package's headers
+are still compiled and still reported; they just do not decide the gate."
+
+So my earlier framing was wrong in one direction: deferral is not a way to stop the denominator implying
+work that cannot be done. It is a way to stop 176 known-blocked headers from deciding a gate, while the
+ledger keeps counting them. That is a more defensible thing to do than I first described, not less.
+
+**Second, the deferral would not be refused.** A deferral is rejected when a non-deferred required header
+still includes the deferred package (`refusedDeferrals`), which is what makes deferring a widely-depended-on
+package cascade. Scanning every header outside the four WGPU packages for an include of any of them:
+
+```
+NON-wgpu headers that include a wgpu package:   (none)
+```
+
+**Zero.** The four are leaves — `effects_wgpu`, `render_wgpu`, `scene2d_wgpu` and `scene3d_wgpu` are
+depended on by nothing outside themselves, so no consumer would have to be deferred alongside them and no
+deferral would be refused. That is the opposite of the `render-gl` situation, where one non-terminating
+package dragged five others plus the SDK barrel into the ledger with it.
+
+So the choice is clean and has no hidden cost on either side:
+
+- **write the WGPU host surface** — `WgpuDevice` and `WgpuRenderPassEncoder` first, since those are the two
+  carriers the diagnostics name, following `WebGl2Context` in `include/flight/host_sdl/webgl.hpp:418` with
+  its body in `src/host_sdl/webgl.cpp:452`; or
+- **defer the four with `kind: defect`**, which costs nothing structurally, keeps all 176 headers counted as
+  owed work, and stops them deciding the compile gate until the surface exists.
+
+Both are the user's call. What is NOT available is a declaration, a patch, or an override, for the reasons
+in the section above.
