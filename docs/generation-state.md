@@ -5751,3 +5751,33 @@ It is the same shape as the stale-report and the quote-character traps already r
 answers confidently and wrongly, where the wrong answer looks exactly like the right one. The repair ledger
 and the manifest agree, the handler is correct, every individual fact checks out, and the conclusion is still
 false — because the two sides are keyed on an identifier whose contents changed underneath it.
+
+### The correct way to size the pending backlog, and the number it gives
+
+The id-based check reported **11** repairs queued of 350. Counting by **text in the tree** instead — for every
+declared symbol, does some file in its `appliesTo` package use the name unqualified and lack the
+`using` declaration — gives:
+
+| pending symbols | package |
+| --- | --- |
+| 41 | scene_document |
+| 19 | midi |
+| 16 | bitmaptext |
+| 14 | scene2d_canvas |
+| 13 | skeleton3d |
+| 11 | textureatlas |
+| 11 | scene2d_formats |
+| 10 | text_markup |
+| 9 | scene3d_formats |
+| 8 | audio |
+| 7 | assets |
+| …and 4 more | |
+| **171 total** | |
+
+So the regeneration that follows a collector pass has **171 declarations to emit**, not 11. That is the
+figure to quote when asking "what will the next regeneration change", and it is also the right denominator
+for judging the result afterwards: if the pass count moves by far less than 171 headers, the explanation is
+masking, not a broken repair.
+
+A useful property of this check: it is computable from the committed tree alone, with no regeneration and no
+compile. It costs seconds and it is the only honest answer to "has my declaration landed yet".
