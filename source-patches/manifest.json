@@ -4,6 +4,22 @@
   "note": "Patches applied to a pinned sibling checkout before generation, so a module the compiler refuses to lower today can still ship. A patch here may only rewrite an expression into an equivalent the compiler does lower. It may NEVER change observable behavior -- absence, reference identity, equality, ordering, exception shape, task settlement -- because the generated header is then tested against the patched source, so a behavioral patch is a lie our own tests would certify. Each patch states the equivalence that makes it safe and the refusal it answers. The patch is applied after the pin integrity check and reverted when generation ends, so the checkout is only ever dirty inside one run. `baseCommit` pins the patch to the revision it was written against: a pin move that breaks the patch fails loudly instead of silently applying to different code.",
   "patches": [
     {
+      "id": "animation-track-explicit-initialization-defaults",
+      "dependency": "flight",
+      "patch": "animation-track-explicit-initialization-defaults.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/animation/src/animationTrack.ts",
+      "package": "@flighthq/animation",
+      "answers": "refusal",
+      "refusal": "dual-sentinel nullish-coalescing results lack named destination projections in initializeAnimationTrack, and the emitted imported default value is unqualified",
+      "rewrite": "Binds each initialization default to a local explicitly annotated with the destination field's existing type before assigning the fields, and spells the declared Linear interpolation constant as its exact literal value.",
+      "equivalence": "Each source property and fallback expression is evaluated once in the same order as before, and every annotated local has exactly the corresponding AnimationTrack field type. AnimationInterpolationLinear is declared as the primitive string 'Linear', so using that literal preserves strict equality and serialized value without observing a different reference. The subsequent assignments write identical values, including preserving null for both omitted and explicitly null easing fields.",
+      "whyNotUpstreamFirst": "The refusal explicitly identifies a local annotation as sufficient projection evidence. This is ordinary target-neutral TypeScript and documents the intended post-coalescing types without changing the public signature.",
+      "unblocks": "Supplies initializeAnimationTrack in animation/animation_track.hpp; direct and downstream closure are measured after targeted regeneration with the landed name repairs.",
+      "expires": "when the emitter infers and projects dual-sentinel coalescing into the assignment destination and qualifies imported primitive constants, or Flight adopts the annotated locals and literal.",
+      "appliedOn": "2026-10-05"
+    },
+    {
       "id": "render-state-runtime-owner-and-initialization",
       "dependency": "flight",
       "patch": "render-state-runtime-owner-and-initialization.patch",

@@ -1,0 +1,35 @@
+diff --git a/packages/animation/src/animationTrack.ts b/packages/animation/src/animationTrack.ts
+index a263bbf..72b87d2 100644
+--- a/packages/animation/src/animationTrack.ts
++++ b/packages/animation/src/animationTrack.ts
+@@ -5,7 +5,6 @@ import type {
+   AnimationTrackValidationDiagnostic,
+   EntityConstruction,
+ } from '@flighthq/types/contract';
+-import { AnimationInterpolationLinear } from '@flighthq/types/contract';
+-
++
+ // Deep-copies an AnimationTrack, allocating fresh `times` and `values` buffers (preserving Float32Array
+ // vs number[] backing) so the clone shares no mutable state with the source. Easing functions are
+@@ -51,11 +50,16 @@ export function initializeAnimationTrack(
+     segmentEasings?: AnimationTrack['segmentEasings'];
+   },
+ ): void {
+-  out.components = opts.components ?? 1;
+-  out.easing = opts.easing ?? null;
+-  out.interpolation = opts.interpolation ?? AnimationInterpolationLinear;
+-  out.quaternion = opts.quaternion ?? false;
+-  out.segmentEasings = opts.segmentEasings ?? null;
++  const components: number = opts.components ?? 1;
++  const easing: AnimationTrack['easing'] = opts.easing ?? null;
++  const interpolation: AnimationInterpolation = opts.interpolation ?? 'Linear';
++  const quaternion: boolean = opts.quaternion ?? false;
++  const segmentEasings: AnimationTrack['segmentEasings'] = opts.segmentEasings ?? null;
++  out.components = components;
++  out.easing = easing;
++  out.interpolation = interpolation;
++  out.quaternion = quaternion;
++  out.segmentEasings = segmentEasings;
+   out.times = opts.times;
+   out.values = opts.values;
+ }
