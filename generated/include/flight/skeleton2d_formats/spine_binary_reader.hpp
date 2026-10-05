@@ -15,6 +15,8 @@ namespace flight::types { struct ByteReader; }
 
 namespace flight::skeleton2d_formats {
 
+using flight::types::ByteReader;
+
 inline flight::Ref<flight::types::ByteReader> create_spine_binary_reader(flight::Uint8Array bytes) {
   return ([&]() { auto object_member_offset = 0.0; auto object_member_view = flight::DataView(bytes.buffer, static_cast<double>(bytes.byte_offset), static_cast<double>(bytes.byte_length)); return flight::make_ref<flight::types::ByteReader>(flight::types::ByteReader{.view = object_member_view, .offset = object_member_offset}); }());
 }

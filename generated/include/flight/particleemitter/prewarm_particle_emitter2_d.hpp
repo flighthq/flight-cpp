@@ -21,6 +21,8 @@ namespace flight::types { struct ParticleEmitterState; }
 
 namespace flight::particleemitter {
 
+using flight::types::ParticleEmitter2D;
+
 inline void prewarm_particle_emitter2_d(flight::Ref<flight::types::ParticleEmitter2D> emitter, flight::Ref<flight::types::ParticleEmitterState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitterConfig>>>> config, double duration, std::optional<double> step_delta_time = std::nullopt, std::optional<flight::Ref<flight::particleemitter::ParticleEmitterCallbacks>> callbacks = std::nullopt) {
   step_delta_time = step_delta_time.value_or((1.0 / 60.0));
   const double step = ((step_delta_time.value() > 0.0) ? step_delta_time.value() : duration);

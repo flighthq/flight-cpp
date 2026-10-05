@@ -20,6 +20,11 @@ namespace flight::types { struct VertexAttributeLayout; }
 
 namespace flight::mesh {
 
+using flight::types::Aabb;
+using flight::types::MeshGeometry;
+using flight::types::MeshSubset;
+using flight::types::VertexAttributeLayout;
+
 inline void add_mesh_geometry_subset(flight::Ref<flight::types::MeshGeometry> geometry, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSubset>>>> subset) {
   flight::Array<flight::Ref<flight::types::MeshSubset>> next = flight::Array<flight::Ref<flight::types::MeshSubset>>{};
   {

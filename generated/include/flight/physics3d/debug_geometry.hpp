@@ -51,6 +51,8 @@ namespace flight::types { struct SpatialIndexBackend3D; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DCollider;
+
 inline void initialize_physics3_ddebug_geometry(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DDebugGeometry>> out) {
   flight::row_set<flight::RowKey<"lines">>(out, flight::Array<flight::Ref<flight::types::Physics3DDebugLine>>{});
   flight::row_set<flight::RowKey<"lineCount">>(out, 0.0);

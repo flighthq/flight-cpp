@@ -29,6 +29,14 @@ namespace flight::types { struct VertexAttributeLayout; }
 
 namespace flight::mesh {
 
+using flight::types::Aabb;
+using flight::types::MeshGeometry;
+using flight::types::MeshMorphBindPose;
+using flight::types::MeshSkinBindPose;
+using flight::types::MeshSubset;
+using flight::types::VertexAttribute;
+using flight::types::VertexAttributeLayout;
+
 inline void restore_float3(flight::Ref<flight::types::MeshGeometry> geometry, flight::String semantic, flight::Float32Array source) {
   const double offset = flight::mesh::get_vertex_attribute_float_offset(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>>(geometry->layout)), semantic);
   if ((offset < 0.0)) {

@@ -9,9 +9,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/locale_input.hpp>
+
 #include "cache.hpp"
 
 namespace flight::intl {
+
+using flight::types::LocaleInput;
 
 inline flight::IntlNumberFormat get_number_format(flight::Ref<LocaleInput> locale, std::optional<flight::IntlNumberFormatOptions> options) {
   const flight::String key = get_cache_key(flight::String("number"), locale, options);

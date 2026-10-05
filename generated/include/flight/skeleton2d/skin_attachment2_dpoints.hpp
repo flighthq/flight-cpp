@@ -24,6 +24,11 @@ namespace flight::types { struct Slot2D; }
 
 namespace flight::skeleton2d {
 
+using flight::types::AttachmentSkin2D;
+using flight::types::Bone2D;
+using flight::types::Skeleton2D;
+using flight::types::Slot2D;
+
 inline void skin_skeleton2_dattachment_points(std::variant<flight::Array<double>, flight::Float32Array> out, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skin2D>>>>, flight::Null, flight::Undefined> skin, std::variant<flight::Float32Array, flight::Null, flight::Undefined> vertices, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index, std::optional<flight::Float32Array> deform, flight::String subject) {
   flight::Float32Array world = flight::row_get<flight::RowKey<"worldMatrices">>(skeleton);
   if ((!(std::holds_alternative<flight::Null>(skin)) && !(std::holds_alternative<flight::Undefined>(skin)))) {

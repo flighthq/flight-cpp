@@ -22,7 +22,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/shortcut.hpp>
 #include <flight/types/texture.hpp>
 
+#include <flight/entity/entity.hpp>
+
 namespace flight::shortcut {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 struct GlobalShortcutAttachment;
 } // namespace flight::shortcut
 

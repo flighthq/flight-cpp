@@ -247,20 +247,20 @@ inline StrokePathTessellationIssue append_join_sections(flight::Ref<StrokePathPi
   return stroke_path_tessellation_issue_none;
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PATH_ISSUE_PIECE_A2C6F7CA5718F006
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PATH_ISSUE_PIECE_A2C6F7CA5718F006
-struct issue_piece_a2c6f7ca5718f006 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PATH_ISSUE_PIECE_2377EED7E31A1453
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PATH_ISSUE_PIECE_2377EED7E31A1453
+struct issue_piece_2377eed7e31a1453 : public flight::ReferenceEnabled {
   StrokePathTessellationIssue issue;
   std::optional<flight::Ref<StrokePathPieceGeometry>> piece;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PATH_ISSUE_PIECE_A2C6F7CA5718F006
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PATH_ISSUE_PIECE_2377EED7E31A1453
 
-inline flight::Ref<issue_piece_a2c6f7ca5718f006> build_stroke_piece(flight::Ref<StrokeSubpath> subpath, double half_width, flight::String join, flight::String cap, double miter_limit, double tolerance) {
+inline flight::Ref<issue_piece_2377eed7e31a1453> build_stroke_piece(flight::Ref<StrokeSubpath> subpath, double half_width, flight::String join, flight::String cap, double miter_limit, double tolerance) {
   flight::Array<double> points = subpath->points;
   const double point_count = flight::signed_right_shift(static_cast<double>(points.size()), 1.0);
   const double segment_count = (point_count - 1.0);
   if ((segment_count < 1.0)) {
-    return flight::make_ref<issue_piece_a2c6f7ca5718f006>(issue_piece_a2c6f7ca5718f006{.issue = stroke_path_tessellation_issue_none, .piece = std::nullopt});
+    return flight::make_ref<issue_piece_2377eed7e31a1453>(issue_piece_2377eed7e31a1453{.issue = stroke_path_tessellation_issue_none, .piece = std::nullopt});
   }
   flight::Array<flight::Ref<SegmentFrame>> frames = flight::Array<flight::Ref<SegmentFrame>>{};
   {
@@ -284,7 +284,7 @@ inline flight::Ref<issue_piece_a2c6f7ca5718f006> build_stroke_piece(flight::Ref<
     }
   }
   if ((static_cast<double>(frames.size()) != segment_count)) {
-    return flight::make_ref<issue_piece_a2c6f7ca5718f006>(issue_piece_a2c6f7ca5718f006{.issue = stroke_path_tessellation_issue_invalid_path, .piece = std::nullopt});
+    return flight::make_ref<issue_piece_2377eed7e31a1453>(issue_piece_2377eed7e31a1453{.issue = stroke_path_tessellation_issue_invalid_path, .piece = std::nullopt});
   }
   flight::Ref<StrokePathPieceGeometry> piece = flight::make_ref<StrokePathPieceGeometry>(StrokePathPieceGeometry{.closed = subpath->closed, .end_cap = flight::Array<double>{}, .left = flight::Array<double>{}, .right = flight::Array<double>{}, .start_cap = flight::Array<double>{}});
   if (!subpath->closed) {
@@ -295,7 +295,7 @@ inline flight::Ref<issue_piece_a2c6f7ca5718f006> build_stroke_piece(flight::Ref<
         {
           StrokePathTessellationIssue issue = append_join_sections(piece, points.element((i_2 * 2.0)), points.element(((i_2 * 2.0) + 1.0)), frames.element((i_2 - 1.0)), frames.element(i_2), half_width, join, miter_limit, tolerance);
           if ((issue != stroke_path_tessellation_issue_none)) {
-            return flight::make_ref<issue_piece_a2c6f7ca5718f006>(issue_piece_a2c6f7ca5718f006{.issue = issue, .piece = std::optional<flight::Ref<StrokePathPieceGeometry>>{piece}});
+            return flight::make_ref<issue_piece_2377eed7e31a1453>(issue_piece_2377eed7e31a1453{.issue = issue, .piece = std::optional<flight::Ref<StrokePathPieceGeometry>>{piece}});
           }
         }
         (i_2 += 1.0);
@@ -311,14 +311,14 @@ inline flight::Ref<issue_piece_a2c6f7ca5718f006> build_stroke_piece(flight::Ref<
         {
           StrokePathTessellationIssue issue_2 = append_join_sections(piece, points.element((i_3 * 2.0)), points.element(((i_3 * 2.0) + 1.0)), frames.element(std::fmod(((i_3 + static_cast<double>(frames.size())) - 1.0), static_cast<double>(frames.size()))), frames.element(i_3), half_width, join, miter_limit, tolerance);
           if ((issue_2 != stroke_path_tessellation_issue_none)) {
-            return flight::make_ref<issue_piece_a2c6f7ca5718f006>(issue_piece_a2c6f7ca5718f006{.issue = issue_2, .piece = std::optional<flight::Ref<StrokePathPieceGeometry>>{piece}});
+            return flight::make_ref<issue_piece_2377eed7e31a1453>(issue_piece_2377eed7e31a1453{.issue = issue_2, .piece = std::optional<flight::Ref<StrokePathPieceGeometry>>{piece}});
           }
         }
         (i_3 += 1.0);
       }
     }
   }
-  return flight::make_ref<issue_piece_a2c6f7ca5718f006>(issue_piece_a2c6f7ca5718f006{.issue = stroke_path_tessellation_issue_none, .piece = std::optional<flight::Ref<StrokePathPieceGeometry>>{piece}});
+  return flight::make_ref<issue_piece_2377eed7e31a1453>(issue_piece_2377eed7e31a1453{.issue = stroke_path_tessellation_issue_none, .piece = std::optional<flight::Ref<StrokePathPieceGeometry>>{piece}});
 }
 
 inline flight::Array<flight::Ref<StrokeSubpath>> apply_dash(flight::Ref<StrokeSubpath> subpath, flight::Array<double> dash, double dash_offset) {

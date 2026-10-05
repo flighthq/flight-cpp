@@ -21,6 +21,12 @@ namespace flight::types { struct VertexAttributeLayout; }
 
 namespace flight::mesh {
 
+using flight::types::Aabb;
+using flight::types::MeshGeometry;
+using flight::types::MeshSubset;
+using flight::types::VertexAttribute;
+using flight::types::VertexAttributeLayout;
+
 inline void offset_mesh_geometry_uvs(flight::Ref<flight::types::MeshGeometry> geometry, double du, double dv) {
   const double float_offset = flight::mesh::get_vertex_attribute_float_offset(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>>(geometry->layout)), flight::String("uv0"));
   if ((float_offset < 0.0)) {

@@ -35,12 +35,12 @@ inline flight::Ref<flight::types::RenderEffectPadding> get_directional_render_ef
   return flight::make_ref<flight::types::RenderEffectPadding>(flight::types::RenderEffectPadding{.bottom = std::ceil((gaussian->bottom + flight::maximum(0.0, dy))), .left = std::ceil((gaussian->left + flight::maximum(0.0, -dx))), .right = std::ceil((gaussian->right + flight::maximum(0.0, dx))), .top = std::ceil((gaussian->top + flight::maximum(0.0, -dy)))});
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ON_MISS_REGISTRY_ENTRIES_SHAPE_ENTITY_RUNTIME_KEY_F9F2FAC4D8631558
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ON_MISS_REGISTRY_ENTRIES_SHAPE_ENTITY_RUNTIME_KEY_F9F2FAC4D8631558
-struct on_miss_registry_entries_shape_entity_runtime_key_f9f2fac4d8631558 : public flight::types::KeyedTable<flight::types::RenderEffectPaddingResolver> {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ON_MISS_REGISTRY_ENTRIES_SHAPE_ENTITY_RUNTIME_KEY_9C942A28EBE0B33C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ON_MISS_REGISTRY_ENTRIES_SHAPE_ENTITY_RUNTIME_KEY_9C942A28EBE0B33C
+struct on_miss_registry_entries_shape_entity_runtime_key_9c942a28ebe0b33c : public flight::types::KeyedTable<flight::types::RenderEffectPaddingResolver> {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ON_MISS_REGISTRY_ENTRIES_SHAPE_ENTITY_RUNTIME_KEY_F9F2FAC4D8631558
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ON_MISS_REGISTRY_ENTRIES_SHAPE_ENTITY_RUNTIME_KEY_9C942A28EBE0B33C
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ON_MISS_REGISTRY_ENTRIES_SHAPE_ENTITY_RUNTIME_KEY_62731D24C05A0AF8
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ON_MISS_REGISTRY_ENTRIES_SHAPE_ENTITY_RUNTIME_KEY_62731D24C05A0AF8

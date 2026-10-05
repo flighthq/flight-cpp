@@ -50,6 +50,7 @@ using flight::types::RenderState;
 using flight::types::Renderable;
 using flight::types::SpriteIdentityRendererData;
 
+using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
 

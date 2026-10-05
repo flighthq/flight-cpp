@@ -27,6 +27,8 @@ namespace flight::types { struct TextureAtlasRegion; }
 
 namespace flight::textureatlas {
 
+using flight::types::TextureAtlas;
+
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_ENTITY_RUNTIME_KEY_IMAGE_HEIGHT_IMAGE_NAME_IMAGE_WIDTH_REGIONS_SCALE_TEXTURE_3E2AAC69DE7F960D
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_ENTITY_RUNTIME_KEY_IMAGE_HEIGHT_IMAGE_NAME_IMAGE_WIDTH_REGIONS_SCALE_TEXTURE_3E2AAC69DE7F960D
 struct entity_runtime_key_image_height_image_name_image_width_regions_scale_texture_3e2aac69de7f960d : public flight::ReferenceEnabled {

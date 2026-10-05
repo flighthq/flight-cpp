@@ -25,6 +25,8 @@ namespace flight::types { struct RigidBody3D; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DCollider;
+
 inline const double row_length = 9.0;
 
 inline const double point_mass = 0.0;

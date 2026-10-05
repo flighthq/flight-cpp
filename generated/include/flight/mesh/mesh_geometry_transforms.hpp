@@ -15,10 +15,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/mesh_geometry.hpp>
+
+#include <flight/types/aabb.hpp>
+
 #include "mesh_geometry_attributes.hpp"
 #include "mesh_geometry_compute.hpp"
 
 namespace flight::mesh {
+
+using flight::types::Aabb;
+using flight::types::MeshGeometry;
 
 inline void translate_mesh_geometry(flight::Ref<MeshGeometry> geometry, double x, double y, double z) {
   const double pos_float_offset = get_vertex_attribute_float_offset(geometry->layout, flight::String("position"));

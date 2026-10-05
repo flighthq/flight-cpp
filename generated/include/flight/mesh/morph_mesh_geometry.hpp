@@ -27,6 +27,13 @@ namespace flight::types { struct VertexAttributeLayout; }
 
 namespace flight::mesh {
 
+using flight::types::Aabb;
+using flight::types::MeshGeometry;
+using flight::types::MeshMorphBindPose;
+using flight::types::MeshSubset;
+using flight::types::VertexAttribute;
+using flight::types::VertexAttributeLayout;
+
 inline flight::Ref<flight::types::MeshMorphBindPose> capture_mesh_morph_bind_pose(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>> geometry) {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>> object_pattern_value = geometry;
   auto layout = flight::row_get<flight::RowKey<"layout">>(object_pattern_value);

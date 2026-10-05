@@ -34,10 +34,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/texture.hpp>
 
+#include <flight/entity/entity.hpp>
+
+#include <flight/types/text_layout.hpp>
+
+#include <flight/types/text_label.hpp>
+
 #include "text_label.hpp"
 #include "text_label_layout.hpp"
 
 namespace flight::text {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
+
+using flight::types::TextLabel;
+using flight::types::TextLayoutResult;
 
 
 // NOT GENERATED: function computeRichTextLocalBoundsRectangle -- source line 91

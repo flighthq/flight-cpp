@@ -23,6 +23,8 @@ namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DCollider;
+
 inline void sync_physics3_dbody_to_node3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::types::Node3D node) {
   (flight::row_get<flight::RowKey<"position">>(node)->x = flight::row_get<flight::RowKey<"x">>(body));
   (flight::row_get<flight::RowKey<"position">>(node)->y = flight::row_get<flight::RowKey<"y">>(body));

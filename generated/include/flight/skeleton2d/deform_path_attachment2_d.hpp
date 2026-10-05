@@ -23,6 +23,8 @@ namespace flight::types { struct Skin2D; }
 
 namespace flight::skeleton2d {
 
+using flight::types::Skeleton2D;
+
 inline void deform_skeleton2_dpath_attachment(flight::Ref<flight::types::Path> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathAttachment2D>>>> attachment, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index, std::optional<std::optional<flight::Float32Array>> deform = std::nullopt) {
   deform = deform.value_or(std::nullopt);
   flight::Array<double> commands = flight::row_get<flight::RowKey<"commands">>(attachment);

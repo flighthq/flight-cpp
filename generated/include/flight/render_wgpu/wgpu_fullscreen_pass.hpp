@@ -16,9 +16,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/capacitor_api.hpp>
 
+#include <flight/entity/entity.hpp>
+
 #include "wgpu_render_state.hpp"
 
 namespace flight::render_wgpu {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline void destroy_wgpu_fullscreen_pipeline(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuFullscreenPipeline> pipeline) {
 }

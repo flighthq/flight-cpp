@@ -14,7 +14,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 namespace flight::command {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline void initialize_add_node_child_command(flight::Ref<EntityConstruction<flight::Ref<AddNodeChildCommand>>> out, flight::String label, flight::Ref<NodeAny> parent, flight::Ref<NodeAny> child, double index) {
   (out->child = child);

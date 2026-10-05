@@ -17,9 +17,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/text_label.hpp>
+
 #include "text_label_layout.hpp"
 
 namespace flight::text {
+
+using flight::types::TextLabel;
 
 inline flight::Ref<TextLayoutParams> build_text_label_layout_params(flight::Ref<TextLabel> source, flight::Ref<TextMeasureFunction> measure) {
   flight::Ref<TextLabelData> data = source->data;

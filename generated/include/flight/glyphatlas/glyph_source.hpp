@@ -27,6 +27,7 @@ using flight::types::GlyphAtlas;
 using flight::types::GlyphEntry;
 using flight::types::GlyphSource;
 
+using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
 inline void initialize_glyph_source_from_glyph_atlas(flight::Ref<EntityConstruction<flight::Ref<GlyphSource>>> out, flight::Ref<GlyphAtlas> atlas) {

@@ -16,7 +16,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 namespace flight::skeleton3d {
+
+using flight::entity::allocate_entity;
 
 inline void dispose_skeleton3_d(flight::Ref<Skeleton3D> skeleton) {
   ([&]() { auto&& assignment_receiver = skeleton->joints; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());

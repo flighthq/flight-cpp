@@ -15,7 +15,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/tiled_parse_options.hpp>
+
+#include <flight/types/tiled_layer_data_explanation.hpp>
+
 namespace flight::tilemap_formats {
+
+using flight::types::TiledCompression;
+using flight::types::TiledInflate;
+using flight::types::TiledLayerDataExplanation;
+using flight::types::TiledLayerDataFailure;
 
 
 // NOT GENERATED: function decodeTiledCsvLayer -- source line 45

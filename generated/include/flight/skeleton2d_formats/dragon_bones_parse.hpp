@@ -40,7 +40,46 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/slot2_d.hpp>
+
+#include <flight/types/skin2_d.hpp>
+
+#include <flight/types/skeleton2_dimport.hpp>
+
+#include <flight/types/skeleton2_danimation_path.hpp>
+
+#include <flight/types/region_attachment2_d.hpp>
+
+#include <flight/types/mesh_attachment2_d.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/easing_function.hpp>
+
+#include <flight/types/bone2_d.hpp>
+
+#include <flight/types/attachment_skin2_d.hpp>
+
+#include <flight/types/attachment2_d.hpp>
+
 namespace flight::skeleton2d_formats {
+
+using flight::types::Attachment2D;
+using flight::types::AttachmentSkin2D;
+using flight::types::Bone2D;
+using flight::types::EasingFunction;
+using flight::types::EntityConstruction;
+using flight::types::ImportDiagnostic;
+using flight::types::MeshAttachment2D;
+using flight::types::RegionAttachment2D;
+using flight::types::Skeleton2DImportAnimation;
+using flight::types::Skin2D;
+using flight::types::SkinAttachment2D;
+using flight::types::Slot2D;
+using flight::types::import_diagnostic_severity;
+using flight::types::skeleton2_danimation_path;
 
 using DragonBonesBoneRemap = std::function<double(double)>;
 

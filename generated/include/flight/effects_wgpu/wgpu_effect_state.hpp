@@ -19,6 +19,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 #include "wgpu_color_lut_pass.hpp"
 #include "wgpu_color_matrix_pass.hpp"
 #include "wgpu_effect_pass.hpp"
@@ -26,6 +28,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "wgpu_render_effect_registry.hpp"
 
 namespace flight::effects_wgpu {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 
 // NOT GENERATED: function destroyWgpuEffectState -- source line 86

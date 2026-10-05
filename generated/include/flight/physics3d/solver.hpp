@@ -46,6 +46,8 @@ namespace flight::types { struct RigidBody3D; }
 namespace flight::types { struct SpatialIndexBackend3D; }
 
 namespace flight::physics3d {
+
+using flight::types::Physics3DCollider;
 struct Physics3DPositionScratch;
 } // namespace flight::physics3d
 

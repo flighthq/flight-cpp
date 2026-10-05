@@ -17,14 +17,46 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 #include <flight/types/storage.hpp>
+
+#include <flight/types/entity.hpp>
 
 namespace flight::preferences {
 
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
+
+using flight::types::EntityConstruction;
 using flight::types::HostPreferencesCapability;
 using flight::types::HostPreferencesChangeCapability;
+using flight::types::StorageBooleanOrResult;
+using flight::types::StorageBooleanResult;
+using flight::types::StorageByteSizeResult;
+using flight::types::StorageChange;
+using flight::types::StorageClearNamespaceResult;
+using flight::types::StorageClearResult;
+using flight::types::StorageEntriesResult;
+using flight::types::StorageGetItemResult;
+using flight::types::StorageItemCountResult;
+using flight::types::StorageItemOrResult;
+using flight::types::StorageItemsResult;
+using flight::types::StorageJsonOrResult;
+using flight::types::StorageJsonResult;
+using flight::types::StorageJsonWriteResult;
 using flight::types::StorageKeysResult;
+using flight::types::StorageMigration;
+using flight::types::StorageMigrationResult;
 using flight::types::StorageNamespace;
+using flight::types::StorageNumberOrResult;
+using flight::types::StorageNumberResult;
+using flight::types::StoragePresenceResult;
+using flight::types::StorageRemoveItemResult;
+using flight::types::StorageRemoveItemsResult;
+using flight::types::StorageSetItemResult;
+using flight::types::StorageSetItemsResult;
+using flight::types::StorageSignals;
 
 inline void destroy_storage(flight::Ref<HostPreferencesChangeCapability> host_preferences_change) {
   host_preferences_change->destroy();

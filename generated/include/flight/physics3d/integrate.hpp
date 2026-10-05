@@ -20,6 +20,8 @@ namespace flight::types { struct RigidBody3D; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DCollider;
+
 inline void clear_rigid_body3_dforces(flight::Ref<flight::types::RigidBody3D> body) {
   (body->force_x = 0.0);
   (body->force_y = 0.0);

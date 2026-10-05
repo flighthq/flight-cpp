@@ -16,11 +16,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/node3_d.hpp>
+
 #include "mesh.hpp"
 #include "scene.hpp"
 #include "scene_node.hpp"
 
 namespace flight::scene3d {
+
+using flight::types::Node3D;
 
 inline void assign_skeleton3_dfields(flight::Ref<EntityConstruction<flight::Ref<Skeleton3D>>> out, flight::Float32Array inverse_bind_matrices, flight::Float32Array joint_matrices, flight::Array<flight::Ref<Node3D>> joints, std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined> names, flight::Float32Array normal_matrices) {
   (out->inverse_bind_matrices = inverse_bind_matrices);

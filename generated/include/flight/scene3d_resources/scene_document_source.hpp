@@ -18,6 +18,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene3d_resources {
 
+using flight::types::Texture;
+
 inline std::optional<flight::String> get_scene3_ddocument_base_path_from_url(flight::String url) {
   const double query = url.search(flight::RegExp(flight::String("[?#]"), flight::String("")));
   const flight::String source = ((query >= 0.0) ? url.slice(0.0, query) : url);

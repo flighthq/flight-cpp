@@ -21,10 +21,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 #include "text_format.hpp"
 #include "text_format_range.hpp"
 
 namespace flight::textlayout {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline void clear_rich_text_content(flight::Ref<RichTextRuntime> runtime) {
   (runtime->rich_text_content = nullptr);

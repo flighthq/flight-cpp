@@ -10,11 +10,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/text_label.hpp>
+
 #include <flight/log/log.hpp>
 #include <flight/types/log.hpp>
 #include <flight/text/text_label_layout.hpp>
 
 namespace flight::text {
+
+using flight::types::TextLabel;
 
 inline void disable_text_label_guards() {
   flight::text::set_text_label_guard(std::nullopt);

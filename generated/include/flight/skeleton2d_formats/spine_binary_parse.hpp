@@ -27,11 +27,70 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/transform_mode2_d.hpp>
 
+#include <flight/types/spine_binary_registry.hpp>
+
+#include <flight/types/slot2_d.hpp>
+
+#include <flight/types/skin2_d.hpp>
+
+#include <flight/types/skeleton2_dimport.hpp>
+
+#include <flight/types/skeleton2_ddraw_order_timeline.hpp>
+
+#include <flight/types/skeleton2_danimation_path.hpp>
+
+#include <flight/types/region_attachment2_d.hpp>
+
+#include <flight/types/mesh_attachment2_d.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/easing_function.hpp>
+
+#include <flight/types/byte_reader.hpp>
+
+#include <flight/types/bone2_d.hpp>
+
+#include <flight/types/attachment_skin2_d.hpp>
+
+#include <flight/types/attachment2_d.hpp>
+
+#include <flight/entity/entity.hpp>
+
 #include "spine_binary_reader.hpp"
 #include "spine_binary_registry.hpp"
 #include "spine_draw_order.hpp"
 
 namespace flight::skeleton2d_formats {
+
+using flight::types::Attachment2D;
+using flight::types::AttachmentSkin2D;
+using flight::types::Bone2D;
+using flight::types::ByteReader;
+using flight::types::EasingFunction;
+using flight::types::EntityConstruction;
+using flight::types::ImportDiagnostic;
+using flight::types::MeshAttachment2D;
+using flight::types::RegionAttachment2D;
+using flight::types::Skeleton2DDrawOrderTimeline;
+using flight::types::Skeleton2DImportAnimation;
+using flight::types::Skin2D;
+using flight::types::SkinAttachment2D;
+using flight::types::Slot2D;
+using flight::types::SpineBinarySectionContext;
+using flight::types::SpineBinaryTimelineContext;
+using flight::types::SpineBinaryTimelineHandler;
+using flight::types::SpineBinaryTimelineKind;
+using flight::types::import_diagnostic_severity;
+using flight::types::mesh_attachment2_dkind;
+using flight::types::region_attachment2_dkind;
+using flight::types::skeleton2_danimation_path;
+using flight::types::transform_mode2_d;
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline void initialize_mesh_attachment2_d(flight::Ref<EntityConstruction<flight::Ref<MeshAttachment2D>>> out, flight::String kind, std::variant<flight::String, flight::Null, flight::Undefined> name, std::variant<flight::Ref<Skin2D>, flight::Null, flight::Undefined> skin, flight::Uint16Array triangles, flight::Float32Array uvs, double vertex_count, std::variant<flight::Float32Array, flight::Null, flight::Undefined> vertices) {
   (out->kind = kind);

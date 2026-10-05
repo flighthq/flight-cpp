@@ -34,6 +34,9 @@ namespace flight::types { struct Vector2; }
 
 namespace flight::bitmapfont {
 
+using flight::types::GlyphMetrics;
+using flight::types::TextureAtlas;
+
 using flight::types::BitmapFont;
 
 inline void initialize_glyph_source_from_bitmap_font(flight::types::EntityConstruction<flight::Ref<flight::types::GlyphSource>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>> font) {

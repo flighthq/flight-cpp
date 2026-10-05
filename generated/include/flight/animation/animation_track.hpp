@@ -3,12 +3,11 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function initializeAnimationTrack -- source line 42
-//   missing: function cloneNumberBuffer -- source line 199
-//   missing: function cloneAnimationTrack -- source line 13
-//   missing: function trimAnimationTrack -- source line 127
-//   missing: function validateAnimationTrack -- source line 165
-//   missing: function sampleAnimationTrack -- source line 68
+//   missing: function cloneNumberBuffer -- source line 203
+//   missing: function cloneAnimationTrack -- source line 12
+//   missing: function trimAnimationTrack -- source line 131
+//   missing: function validateAnimationTrack -- source line 169
+//   missing: function sampleAnimationTrack -- source line 72
 #include <cmath>
 #include <cstdint>
 #include <flight/sequence_view.hpp>
@@ -37,11 +36,12 @@ using flight::types::AnimationTrack;
 using flight::types::EasingFunction;
 using flight::types::EntityConstruction;
 
+using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ANIMATION_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_3C26683290079166
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ANIMATION_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_3C26683290079166
-struct times_values_components_interpolation_quaternion_easing_segment_easings_3c26683290079166 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ANIMATION_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ANIMATION_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
+struct times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042 : public flight::ReferenceEnabled {
   flight::SequenceView<double> times;
   flight::SequenceView<double> values;
   std::optional<double> components;
@@ -50,53 +50,31 @@ struct times_values_components_interpolation_quaternion_easing_segment_easings_3
   std::variant<flight::Ref<EasingFunction>, flight::Null, flight::Undefined> easing = std::variant<flight::Ref<EasingFunction>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::variant<flight::Array<std::optional<flight::Ref<EasingFunction>>>, flight::Null, flight::Undefined> segment_easings = std::variant<flight::Array<std::optional<flight::Ref<EasingFunction>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ANIMATION_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_3C26683290079166
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ANIMATION_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
 
+inline void initialize_animation_track(flight::Ref<EntityConstruction<flight::Ref<AnimationTrack>>> out, flight::Ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042> opts) {
+  const double components = ([&]() -> double { auto nullish_coalesce_left = opts->components; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
+  std::optional<flight::Ref<EasingFunction>> easing = ([&]() -> std::optional<flight::Ref<EasingFunction>> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::Ref<EasingFunction>, flight::Null, flight::Undefined> { auto optional_property = opts->easing; if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<flight::Ref<EasingFunction>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<flight::Ref<EasingFunction>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<EasingFunction>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<EasingFunction>>, std::get<flight::Ref<EasingFunction>>(optional_property)}; }()); if (const auto* alternative = std::get_if<flight::Ref<EasingFunction>>(&nullish_coalesce_left)) return std::optional<flight::Ref<EasingFunction>>{*alternative}; return std::nullopt; }());
+  flight::Ref<AnimationInterpolation> interpolation = ([&]() -> flight::Ref<AnimationInterpolation> { auto nullish_coalesce_left = opts->interpolation; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("Linear"); }());
+  const bool quaternion = ([&]() -> bool { auto nullish_coalesce_left = opts->quaternion; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }());
+  std::optional<flight::Array<std::optional<flight::Ref<EasingFunction>>>> segment_easings = ([&]() -> std::optional<flight::Array<std::optional<flight::Ref<EasingFunction>>>> { auto nullish_coalesce_left_2 = ([&]() -> std::variant<flight::Array<std::optional<flight::Ref<EasingFunction>>>, flight::Null, flight::Undefined> { auto optional_property_2 = opts->segment_easings; if (std::holds_alternative<flight::Undefined>(optional_property_2)) return std::variant<flight::Array<std::optional<flight::Ref<EasingFunction>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_2)) return std::variant<flight::Array<std::optional<flight::Ref<EasingFunction>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<std::optional<flight::Ref<EasingFunction>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<std::optional<flight::Ref<EasingFunction>>>>, std::get<flight::Array<std::optional<flight::Ref<EasingFunction>>>>(optional_property_2)}; }()); if (const auto* alternative = std::get_if<flight::Array<std::optional<flight::Ref<EasingFunction>>>>(&nullish_coalesce_left_2)) return std::optional<flight::Array<std::optional<flight::Ref<EasingFunction>>>>{*alternative}; return std::nullopt; }());
+  (out->components = components);
+  (out->easing = easing);
+  (out->interpolation = interpolation);
+  (out->quaternion = quaternion);
+  (out->segment_easings = segment_easings);
+  (out->times = opts->times);
+  (out->values = opts->values);
+}
 
-// NOT GENERATED: function initializeAnimationTrack -- source line 42
-// refusal: cpp-dual-sentinel-coalesce-projection-unproven [compiler-restriction]
-//
-// The source it stood for:
-//   export function initializeAnimationTrack(
-//     out: EntityConstruction<AnimationTrack>,
-//     opts: {
-//       times: ArrayLike<number>;
-//       values: ArrayLike<number>;
-//       components?: number;
-//       interpolation?: AnimationInterpolation;
-//       quaternion?: boolean;
-//       easing?: AnimationTrack['easing'];
-//       segmentEasings?: AnimationTrack['segmentEasings'];
-//     },
-//   ): void {
-//     out.components = opts.components ?? 1;
-//     out.easing = opts.easing ?? null;
-//     out.interpolation = opts.interpolation ?? AnimationInterpolationLinear;
-//     out.quaternion = opts.quaternion ?? false;
-//     out.segmentEasings = opts.segmentEasings ?? null;
-//     out.times = opts.times;
-//     out.values = opts.values;
-//   }
-//   
-//   // Samples `track` at time `t`, writing `track.components` numbers into `out`. `t` is clamped to the
-//   // track's time range (before the first keyframe yields the first value; after the last yields the
-//   // last). Step holds the previous keyframe; Linear interpolates component-wise (or slerps a quaternion
-//   // track); Cubic is a glTF-style Hermite spline over the per-keyframe in/out tangents. A non-null
-//   // `track.easing` reshapes the per-segment alpha first. Alloc-free; safe for hot loops.
-// cpp emission failed for @flighthq/animation/packages/animation/src/animationTrack.ts: dual-sentinel nullish
-// coalescing requires presence projection lowering: the operand carries both null and undefined, so the coalesce
-// has to be projected into a destination the emitter can name. Declare the expression result -- a local
-// annotation, a parameter type, or a return type -- and the projection lowers; left as the source wrote it there
-// is no destination to project into
-
-inline flight::Ref<AnimationTrack> create_animation_track(flight::Ref<times_values_components_interpolation_quaternion_easing_segment_easings_3c26683290079166> opts) {
+inline flight::Ref<AnimationTrack> create_animation_track(flight::Ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042> opts) {
   flight::Ref<EntityConstruction<flight::Ref<AnimationTrack>>> out = allocate_entity<flight::Ref<AnimationTrack>>();
   initialize_animation_track(out, opts);
   return finish_entity(out);
 }
 
 
-// NOT GENERATED: function cloneNumberBuffer -- source line 199
+// NOT GENERATED: function cloneNumberBuffer -- source line 203
 // refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
@@ -111,7 +89,7 @@ inline flight::Ref<AnimationTrack> create_animation_track(flight::Ref<times_valu
 // type flight::SequenceView<double> is not a represented runtime domain
 
 
-// NOT GENERATED: function cloneAnimationTrack -- source line 13
+// NOT GENERATED: function cloneAnimationTrack -- source line 12
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -135,7 +113,7 @@ inline double keyframe_stride(flight::Ref<AnimationTrack> track) {
 }
 
 
-// NOT GENERATED: function trimAnimationTrack -- source line 127
+// NOT GENERATED: function trimAnimationTrack -- source line 131
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -181,7 +159,7 @@ inline double keyframe_stride(flight::Ref<AnimationTrack> track) {
 // null has no absence channel in the emitted C++ storage for property
 
 
-// NOT GENERATED: function validateAnimationTrack -- source line 165
+// NOT GENERATED: function validateAnimationTrack -- source line 169
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -320,7 +298,7 @@ inline void slerp_flat_quaternion(std::variant<flight::Array<double>, flight::Fl
 }
 
 
-// NOT GENERATED: function sampleAnimationTrack -- source line 68
+// NOT GENERATED: function sampleAnimationTrack -- source line 72
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:

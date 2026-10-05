@@ -12,7 +12,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/node_signals.hpp>
+
+#include <flight/types/node3_d.hpp>
+
 namespace flight::scene3d {
+
+using flight::types::Node3D;
+using flight::types::NodeSignals;
 
 
 // NOT GENERATED: function createNode3DRuntime -- source line 29

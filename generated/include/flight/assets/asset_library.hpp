@@ -25,7 +25,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 namespace flight::assets {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 template <typename T = flight::Any>
 inline flight::Task<T> acquire_asset(flight::Ref<AssetLibrary> library, flight::String id) {

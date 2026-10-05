@@ -14,7 +14,34 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
+#include <flight/types/unlit_material.hpp>
+
+#include <flight/types/texture.hpp>
+
+#include <flight/types/standard_pbr_material.hpp>
+
+#include <flight/types/scene3_dresources.hpp>
+
+#include <flight/types/material.hpp>
+
+#include <flight/types/entity.hpp>
+
 namespace flight::scene3d_resources {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
+
+using flight::types::EntityConstruction;
+using flight::types::Kind;
+using flight::types::Material;
+using flight::types::Scene3DMaterialTextureLister;
+using flight::types::Scene3DMaterialTextureRegistry;
+using flight::types::Scene3DPbrExtensionTextureLister;
+using flight::types::Texture;
+using flight::types::standard_pbr_material_kind;
+using flight::types::unlit_material_kind;
 
 inline void get_scene3_dmaterial_textures(flight::Ref<Scene3DMaterialTextureRegistry> registry, flight::Ref<Material> material, flight::Array<flight::Ref<Texture>> out) {
   std::optional<flight::Ref<Scene3DMaterialTextureLister>> lister = registry->listers.get(material->kind);

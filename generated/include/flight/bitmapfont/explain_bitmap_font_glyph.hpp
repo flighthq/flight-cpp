@@ -20,6 +20,9 @@ namespace flight::types { struct TextureAtlas; }
 
 namespace flight::bitmapfont {
 
+using flight::types::GlyphMetrics;
+using flight::types::TextureAtlas;
+
 using flight::types::BitmapFont;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_GLYPH_HEIGHT_GLYPH_WIDTH_PAGE_PAGE_COUNT_CA3DD572B8B129EE

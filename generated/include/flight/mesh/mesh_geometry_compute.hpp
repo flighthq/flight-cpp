@@ -18,9 +18,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/mesh_geometry.hpp>
+
+#include <flight/types/aabb.hpp>
+
 #include "mesh_geometry_operations.hpp"
 
 namespace flight::mesh {
+
+using flight::types::Aabb;
+using flight::types::MeshGeometry;
+using flight::types::MeshGeometryRuntime;
 
 inline void accumulate_normal(flight::Float64Array accum, double vertex, double nx, double ny, double nz) {
   const double base = (vertex * 3.0);

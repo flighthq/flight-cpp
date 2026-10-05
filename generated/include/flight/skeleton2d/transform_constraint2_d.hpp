@@ -15,11 +15,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/skeleton2_d.hpp>
+
 #include "skeleton2d.hpp"
 #include "skeleton2d_constants.hpp"
 #include "skeleton2d_constraint.hpp"
 
 namespace flight::skeleton2d {
+
+using flight::types::Skeleton2D;
 
 inline double wrap_skeleton2_dangle(double degrees) {
   double value = std::fmod(degrees, 360.0);

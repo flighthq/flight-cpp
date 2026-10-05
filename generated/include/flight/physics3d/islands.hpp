@@ -38,6 +38,8 @@ namespace flight::types { struct SpatialIndexBackend3D; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DCollider;
+
 inline void copy_island_starts(flight::Array<double> cursors, flight::Array<double> starts) {
   ([&]() { auto&& assignment_receiver = cursors; const auto assignment_value = static_cast<double>(starts.size()); assignment_receiver.resize(assignment_value); return assignment_value; }());
   {

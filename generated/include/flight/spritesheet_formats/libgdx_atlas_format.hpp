@@ -16,6 +16,10 @@ namespace flight::types { struct SpritesheetFrameData; }
 
 namespace flight::spritesheet_formats {
 
+using flight::types::SpritesheetAnimationData;
+using flight::types::SpritesheetData;
+using flight::types::SpritesheetFrameData;
+
 inline void append_libgdx_atlas_frame(flight::Array<flight::String> lines, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpritesheetFrameData>>>> frame) {
   const double packed_width = (flight::row_get<flight::RowKey<"rotated">>(frame) ? flight::row_get<flight::RowKey<"height">>(frame) : flight::row_get<flight::RowKey<"width">>(frame));
   const double packed_height = (flight::row_get<flight::RowKey<"rotated">>(frame) ? flight::row_get<flight::RowKey<"width">>(frame) : flight::row_get<flight::RowKey<"height">>(frame));

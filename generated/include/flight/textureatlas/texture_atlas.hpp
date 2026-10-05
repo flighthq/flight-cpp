@@ -13,7 +13,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture_atlas.hpp>
+
 namespace flight::textureatlas {
+
+using flight::types::TextureAtlas;
 
 inline void dispose_texture_atlas(flight::Ref<TextureAtlas> atlas) {
   ([&]() { auto&& assignment_receiver = atlas->regions; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());

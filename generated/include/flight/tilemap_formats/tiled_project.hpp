@@ -10,7 +10,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/import_diagnostic.hpp>
+
 namespace flight::tilemap_formats {
+
+using flight::types::ImportDiagnostic;
 struct TilesetGroup;
 } // namespace flight::tilemap_formats
 

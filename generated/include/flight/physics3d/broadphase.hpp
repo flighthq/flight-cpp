@@ -28,6 +28,9 @@ namespace flight::types { struct SpatialAabb3D; }
 namespace flight::types { struct SpatialIndexBackend3D; }
 
 namespace flight::physics3d {
+
+using flight::types::Physics3DCollider;
+using flight::types::SpatialAabb3D;
 struct Physics3DBroadphaseScratch;
 } // namespace flight::physics3d
 

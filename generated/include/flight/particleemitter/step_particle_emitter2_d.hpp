@@ -24,6 +24,8 @@ namespace flight::types { struct ParticleEmitterState; }
 
 namespace flight::particleemitter {
 
+using flight::types::ParticleEmitter2D;
+
 inline void step_particle_emitter2_d(flight::Ref<flight::types::ParticleEmitter2D> emitter, flight::Ref<flight::types::ParticleEmitterState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitterConfig>>>> config, double delta_time, std::optional<flight::Array<flight::types::ParticleForce>> forces = std::nullopt, std::optional<flight::Array<flight::types::ParticleCollider>> colliders = std::nullopt, std::optional<flight::Ref<flight::types::ParticleEmitterCallbacks>> callbacks = std::nullopt) {
   if ((forces.has_value() && (static_cast<double>(forces.value().size()) > 0.0))) {
     flight::particles::apply_particle_forces(emitter, state, forces.value(), delta_time);

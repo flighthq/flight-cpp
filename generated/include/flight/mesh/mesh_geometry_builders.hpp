@@ -30,6 +30,11 @@ namespace flight::types { struct VertexAttributeLayout; }
 
 namespace flight::mesh {
 
+using flight::types::MeshGeometry;
+using flight::types::MeshSubset;
+using flight::types::VertexAttribute;
+using flight::types::VertexAttributeLayout;
+
 inline void add_disc(flight::Array<double> positions, flight::Array<double> normals, flight::Array<double> uvs, flight::Array<double> indices, double segments, double radius, double y, double direction) {
   const double center = (static_cast<double>(positions.size()) / 3.0);
   positions.push(0.0, y, 0.0);

@@ -188,29 +188,25 @@ inline bool advance_statechart_region(flight::Ref<flight::types::StatechartInsta
   }
   ([&]() { auto&& typed_array_6 = instance->region_elapsed; const auto typed_index_6 = region_index; const auto typed_current = typed_array_6.get_index(typed_index_6); const auto typed_right = delta_time_ms; const auto typed_value_6 = typed_current + typed_right; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
   double transition_index = instance->region_transitions.get_index(region_index);
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StatechartTransition>>>>> transition;
-  if ((transition_index >= 0.0)) {
-    (transition = source_state.value()->transitions.element(transition_index));
-    if (!transition.value().has_value()) {
-      throw flight::RangeError(flight::String("Statechart region ") + flight::to_string(region_index) + flight::String(" has an invalid active transition"));
-    }
-  }
-  else {
+  if ((transition_index < 0.0)) {
     (transition_index = get_ready_transition_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StatechartInstance>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::StatechartInstance>>>>(instance)), region_index));
     if ((transition_index < 0.0)) {
       return false;
     }
-    (transition = source_state.value()->transitions.element(transition_index));
     ([&]() { auto&& typed_array_7 = instance->region_transitions; const auto typed_index_7 = region_index; const auto typed_value_7 = transition_index; return typed_array_7.set_index(typed_index_7, typed_value_7); }());
     ([&]() { auto&& typed_array_8 = instance->region_blend; const auto typed_index_8 = region_index; const auto typed_value_8 = 0.0; return typed_array_8.set_index(typed_index_8, typed_value_8); }());
   }
-  const double duration_ms = ((std::isfinite(flight::row_get<flight::RowKey<"durationMs">>(transition.value())) && (flight::row_get<flight::RowKey<"durationMs">>(transition.value()) > 0.0)) ? flight::row_get<flight::RowKey<"durationMs">>(transition.value()) : 0.0);
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StatechartTransition>>>>> transition = source_state.value()->transitions.get(transition_index);
+  if (!transition.has_value()) {
+    throw flight::RangeError(flight::String("Statechart region ") + flight::to_string(region_index) + flight::String(" has an invalid active transition"));
+  }
+  const double duration_ms = ((std::isfinite(transition.value()->duration_ms) && (transition.value()->duration_ms > 0.0)) ? transition.value()->duration_ms : 0.0);
   const double blend = ((duration_ms == 0.0) ? 1.0 : flight::minimum(1.0, (instance->region_blend.get_index(region_index) + (delta_time_ms / duration_ms))));
   ([&]() { auto&& typed_array_9 = instance->region_blend; const auto typed_index_9 = region_index; const auto typed_value_9 = blend; return typed_array_9.set_index(typed_index_9, typed_value_9); }());
   if ((blend < 1.0)) {
     return false;
   }
-  ([&]() { auto&& typed_array_10 = instance->region_states; const auto typed_index_10 = region_index; const auto typed_value_10 = flight::row_get<flight::RowKey<"targetStateIndex">>(transition.value()); return typed_array_10.set_index(typed_index_10, typed_value_10); }());
+  ([&]() { auto&& typed_array_10 = instance->region_states; const auto typed_index_10 = region_index; const auto typed_value_10 = transition.value()->target_state_index; return typed_array_10.set_index(typed_index_10, typed_value_10); }());
   ([&]() { auto&& typed_array_11 = instance->region_transitions; const auto typed_index_11 = region_index; const auto typed_value_11 = -1.0; return typed_array_11.set_index(typed_index_11, typed_value_11); }());
   ([&]() { auto&& typed_array_12 = instance->region_blend; const auto typed_index_12 = region_index; const auto typed_value_12 = 0.0; return typed_array_12.set_index(typed_index_12, typed_value_12); }());
   ([&]() { auto&& typed_array_13 = instance->region_duration; const auto typed_index_13 = region_index; const auto typed_value_13 = 0.0; return typed_array_13.set_index(typed_index_13, typed_value_13); }());

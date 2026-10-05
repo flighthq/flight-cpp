@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::path { struct StrokePathGeometry; }
+namespace flight::path { struct StrokePathPieceGeometry; }
+
 #include <flight/types/contract.hpp>
 #include <flight/path/path.hpp>
 #include <flight/path/stroke_path_geometry.hpp>
@@ -69,34 +72,14 @@ inline void append_piece_outline(flight::Ref<flight::types::Path> path, flight::
   }
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PATH_CLOSED_END_CAP_LEFT_RIGHT_START_CAP_A41F9E2EA90D2C0A
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PATH_CLOSED_END_CAP_LEFT_RIGHT_START_CAP_A41F9E2EA90D2C0A
-struct closed_end_cap_left_right_start_cap_a41f9e2ea90d2c0a : public flight::ReferenceEnabled {
-  bool closed;
-  flight::Array<double> end_cap;
-  flight::Array<double> left;
-  flight::Array<double> right;
-  flight::Array<double> start_cap;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PATH_CLOSED_END_CAP_LEFT_RIGHT_START_CAP_A41F9E2EA90D2C0A
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PATH_ISSUE_ISSUE_SUBPATH_PIECES_704ED4447DE90A30
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PATH_ISSUE_ISSUE_SUBPATH_PIECES_704ED4447DE90A30
-struct issue_issue_subpath_pieces_704ed4447de90a30 : public flight::ReferenceEnabled {
-  double issue;
-  std::optional<double> issue_subpath;
-  flight::Array<flight::Ref<closed_end_cap_left_right_start_cap_a41f9e2ea90d2c0a>> pieces;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PATH_ISSUE_ISSUE_SUBPATH_PIECES_704ED4447DE90A30
-
 inline flight::Ref<flight::types::Path> stroke_path(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>> path, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StrokeStyle>>>> style, std::optional<double> tolerance = std::nullopt) {
   tolerance = tolerance.value_or(0.25);
   auto result = flight::path::create_path(flight::String("nonZero"));
-  flight::Ref<issue_issue_subpath_pieces_704ed4447de90a30> geometry = flight::path::build_stroke_path_geometry(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(path), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StrokeStyle>>>>>(style), tolerance.value());
+  auto geometry = flight::path::build_stroke_path_geometry(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(path), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StrokeStyle>>>>>(style), tolerance.value());
   {
     double i = 0.0;
     while ((i < static_cast<double>(geometry->pieces.size()))) {
-      append_piece_outline(result, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<closed_end_cap_left_right_start_cap_fc447858b3c7881c>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<closed_end_cap_left_right_start_cap_a41f9e2ea90d2c0a>>>>(geometry->pieces.element(i))));
+      append_piece_outline(result, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<closed_end_cap_left_right_start_cap_fc447858b3c7881c>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::path::StrokePathPieceGeometry>>>>(geometry->pieces.element(i))));
       (i += 1.0);
     }
   }

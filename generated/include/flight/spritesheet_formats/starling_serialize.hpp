@@ -21,6 +21,10 @@ namespace flight::types { struct StarlingSubTexture; }
 
 namespace flight::spritesheet_formats {
 
+using flight::types::SpritesheetAnimationData;
+using flight::types::SpritesheetData;
+using flight::types::SpritesheetFrameData;
+
 inline flight::Ref<flight::types::StarlingSubTexture> frame_to_sub_texture(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpritesheetFrameData>>>> frame) {
   flight::Ref<flight::types::StarlingSubTexture> st = flight::make_ref<flight::types::StarlingSubTexture>(flight::types::StarlingSubTexture{.height = (flight::row_get<flight::RowKey<"rotated">>(frame) ? flight::row_get<flight::RowKey<"width">>(frame) : flight::row_get<flight::RowKey<"height">>(frame)), .name = flight::row_get<flight::RowKey<"name">>(frame), .width = (flight::row_get<flight::RowKey<"rotated">>(frame) ? flight::row_get<flight::RowKey<"height">>(frame) : flight::row_get<flight::RowKey<"width">>(frame)), .x = flight::row_get<flight::RowKey<"x">>(frame), .y = flight::row_get<flight::RowKey<"y">>(frame)});
   if ((flight::row_get<flight::RowKey<"offsetX">>(frame) != 0.0)) {

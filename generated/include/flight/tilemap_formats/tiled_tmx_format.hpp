@@ -22,9 +22,20 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/tiled_tileset.hpp>
+
+#include <flight/types/tiled_property.hpp>
+
+#include <flight/types/tiled_object.hpp>
+
 #include "tiled_color.hpp"
 
 namespace flight::tilemap_formats {
+
+using flight::types::TiledObject;
+using flight::types::TiledProperty;
+using flight::types::TiledTileset;
+using flight::types::TiledTilesetRef;
 
 inline flight::String escape_xml(flight::String value) {
   return value.replace(flight::RegExp(flight::String("&"), flight::String("g")), flight::String("&amp;")).replace(flight::RegExp(flight::String("<"), flight::String("g")), flight::String("&lt;")).replace(flight::RegExp(flight::String(">"), flight::String("g")), flight::String("&gt;")).replace(flight::RegExp(flight::String("\""), flight::String("g")), flight::String("&quot;"));

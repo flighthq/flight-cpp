@@ -17,6 +17,8 @@ namespace flight::types { struct SpineBinaryVersionFailure; }
 
 namespace flight::skeleton2d_formats {
 
+using flight::types::ByteReader;
+
 inline bool is_printable_ascii(flight::String value) {
   if ((static_cast<double>(value.length()) == 0.0)) {
     return false;

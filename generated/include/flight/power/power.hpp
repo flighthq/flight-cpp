@@ -17,7 +17,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 namespace flight::power {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline flight::Task<flight::Ref<PowerKeepAwakeAcquireResult>> acquire_power_keep_awake(flight::Ref<HostPowerKeepAwakeCapability> host_power_keep_awake, std::optional<flight::Ref<PowerKeepAwakeMode>> mode = std::nullopt) {
   mode = mode.value_or(flight::String("PreventDisplaySleep"));

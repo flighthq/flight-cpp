@@ -28,6 +28,11 @@ namespace flight::types { struct Slot2D; }
 
 namespace flight::skeleton2d {
 
+using flight::types::AttachmentSkin2D;
+using flight::types::Bone2D;
+using flight::types::Skeleton2D;
+using flight::types::Slot2D;
+
 inline flight::Ref<flight::types::Matrix> local = flight::make_ref<flight::types::Matrix>(flight::types::Matrix{.a = 1.0, .b = 0.0, .c = 0.0, .d = 1.0, .tx = 0.0, .ty = 0.0});
 
 inline flight::Ref<flight::types::Matrix> bone = flight::make_ref<flight::types::Matrix>(flight::types::Matrix{.a = 1.0, .b = 0.0, .c = 0.0, .d = 1.0, .tx = 0.0, .ty = 0.0});

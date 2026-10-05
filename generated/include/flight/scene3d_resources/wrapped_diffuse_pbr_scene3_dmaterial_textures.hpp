@@ -10,9 +10,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/scene3_dresources.hpp>
+
 #include "scene_material_texture_registry.hpp"
 
 namespace flight::scene3d_resources {
+
+using flight::types::Scene3DMaterialTextureRegistry;
 
 
 // NOT GENERATED: function registerWrappedDiffusePbrScene3DMaterialTextures -- source line 6

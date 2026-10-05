@@ -15,10 +15,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/entity.hpp>
+
+#include <flight/entity/entity.hpp>
+
 #include "skeleton2d_animation_target.hpp"
 #include "skeleton2d_guards.hpp"
 
 namespace flight::skeleton2d {
+
+using flight::types::EntityConstruction;
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 template <typename Traits = flight::Ref<NodeTraits>>
 inline void initialize_skeleton2_ddraw_order_animation_target(flight::Ref<EntityConstruction<flight::Ref<Skeleton2DDrawOrderAnimationTarget<Traits>>>> out, flight::Array<std::optional<std::shared_ptr<Node<Traits>>>> nodes, std::shared_ptr<NodeOrderList<Traits>> order_list) {

@@ -51,6 +51,9 @@ namespace flight::types { struct SpatialIndexingExplanation; }
 namespace flight::types { struct SpatialPair; }
 
 namespace flight::physics3d {
+
+using flight::types::Physics3DCollider;
+using flight::types::SpatialAabb3D;
 struct Physics3DContinuousScratch;
 } // namespace flight::physics3d
 

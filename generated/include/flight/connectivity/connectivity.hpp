@@ -13,7 +13,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 namespace flight::connectivity {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline void destroy_connectivity(flight::Ref<HostConnectivityChangeCapability> host_connectivity_change) {
   host_connectivity_change->destroy();

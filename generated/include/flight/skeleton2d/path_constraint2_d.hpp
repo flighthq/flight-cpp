@@ -17,12 +17,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/skeleton2_d.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/entity/entity.hpp>
+
 #include "deform_path_attachment2_d.hpp"
 #include "skeleton2d.hpp"
 #include "skeleton2d_constants.hpp"
 #include "skeleton2d_constraint.hpp"
 
 namespace flight::skeleton2d {
+
+using flight::types::EntityConstruction;
+using flight::types::Skeleton2D;
+
+using flight::entity::allocate_entity;
 
 inline void assign_path_fields(flight::Ref<EntityConstruction<flight::Ref<Path>>> out, flight::Array<double> commands, flight::Array<double> data, flight::Ref<PathWinding> winding) {
   (out->commands = commands);

@@ -17,6 +17,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene3d_resources {
 
+using flight::types::Texture;
+
 inline void get_scene3_dresource_textures(flight::Array<flight::Ref<Texture>> out, flight::Ref<Scene3D> scene) {
   ([&]() { auto&& assignment_receiver = out; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   auto seen = flight::Set<flight::Ref<Texture>>();

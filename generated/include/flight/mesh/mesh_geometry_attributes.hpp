@@ -17,9 +17,16 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/screen.hpp>
 #include <flight/types/unity_schema.hpp>
 
+#include <flight/types/mesh_geometry.hpp>
+
 #include "vertex_format.hpp"
 
 namespace flight::mesh {
+
+using flight::types::MeshGeometry;
+using flight::types::MeshGeometryRuntime;
+using flight::types::VertexAttribute;
+using flight::types::VertexAttributeLayout;
 
 inline std::optional<flight::Ref<VertexAttribute>> get_vertex_attribute(flight::Ref<VertexAttributeLayout> layout, flight::Ref<VertexSemantic> semantic) {
   flight::Array<flight::Ref<VertexAttribute>> attrs = layout->attributes;

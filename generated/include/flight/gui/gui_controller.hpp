@@ -5,9 +5,9 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function connectGuiInteraction -- source line 49
 //   missing: function createGuiControllerRuntime -- source line 80
-//   missing: function disposeGuiController -- source line 94
 //   missing: function setGuiVisualProperty -- source line 141
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <flight/any.hpp>
 #include <flight/erased_ref.hpp>
@@ -17,13 +17,38 @@
 #include <limits>
 #include <optional>
 #include <random>
+#include <tuple>
 #include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/signal.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/path.hpp>
+
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/gui_controller.hpp>
+
+#include <flight/types/entity.hpp>
+
 namespace flight::gui {
+
+using flight::types::Entity;
+using flight::types::GuiOrientation;
+using flight::types::GuiTransitionDescriptor;
+using flight::types::Node2D;
+using flight::types::NodeAny;
+using flight::types::Path;
+using flight::types::Rectangle;
+using flight::types::Signal;
+using flight::types::entity_runtime_key;
 
 struct GuiControllerRuntime;
 
@@ -115,25 +140,28 @@ inline flight::StructuralRef<flight::RowMerge<flight::RowOf<Runtime>, flight::Ro
   return flight::structural_ref_cast<flight::StructuralRef<flight::RowMerge<flight::RowOf<Runtime>, flight::RowOf<flight::Ref<GuiControllerRuntime>>>>>(controller[entity_runtime_key]);
 }
 
-
-// NOT GENERATED: function disposeGuiController -- source line 94
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   export function disposeGuiController(controller: Entity, clear: () => void): void {
-//     const runtime = getGuiControllerRuntime(controller);
-//     if (runtime.disposed) return;
-//     runtime.disposed = true;
-//     for (let i = runtime.cleanups.length - 1; i >= 0; i--) runtime.cleanups[i]();
-//     runtime.cleanups.length = 0;
-//     for (const [target, enabled] of runtime.hitStates) setNodeHitTestEnabled(target, enabled);
-//     runtime.hitStates.clear();
-//     clear();
-//   }
-//   
-// cpp emission failed for @flighthq/gui/packages/gui/src/guiController.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for unknown, GuiControllerRuntime. Declare the object shape the code
-// reads rather than intersecting a conjunct that has none
+inline void dispose_gui_controller(flight::Ref<Entity> controller, std::function<void()> clear) {
+  flight::Ref<GuiControllerRuntime> runtime = get_gui_controller_runtime<flight::Ref<GuiControllerRuntime>>(controller);
+  if (runtime->disposed) {
+    return;
+  }
+  (runtime->disposed = true);
+  {
+    double i = (static_cast<double>(runtime->cleanups.size()) - 1.0);
+    while ((i >= 0.0)) {
+      runtime->cleanups.element(i)();
+      (i -= 1.0);
+    }
+  }
+  ([&]() { auto&& assignment_receiver = runtime->cleanups; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
+  for (auto array_pattern_value : runtime->hit_states) {
+    flight::Ref<Node2D> target = std::get<0>(array_pattern_value);
+    const bool enabled = std::get<1>(array_pattern_value);
+    set_node_hit_test_enabled(target, enabled);
+  }
+  runtime->hit_states.clear();
+  clear();
+}
 
 inline double get_gui_length(flight::Ref<Node2D> target, flight::Ref<GuiOrientation> orientation) {
   return ((orientation == flight::String("horizontal")) ? get_node_width(target) : get_node_height(target));

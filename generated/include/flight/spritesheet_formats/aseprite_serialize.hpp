@@ -14,7 +14,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spritesheet_frame_data.hpp>
+
+#include <flight/types/spritesheet_data.hpp>
+
+#include <flight/types/aseprite_schema.hpp>
+
 namespace flight::spritesheet_formats {
+
+using flight::types::AsepriteArrayFrame;
+using flight::types::AsepriteDocument;
+using flight::types::AsepriteMeta;
+using flight::types::AsepriteSize;
+using flight::types::SpritesheetData;
+using flight::types::SpritesheetFrameData;
 
 
 // NOT GENERATED: function dataToMeta -- source line 12

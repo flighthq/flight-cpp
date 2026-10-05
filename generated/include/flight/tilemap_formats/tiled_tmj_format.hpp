@@ -22,9 +22,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/tiled_tileset.hpp>
+
+#include <flight/types/tiled_property.hpp>
+
+#include <flight/types/tiled_object.hpp>
+
 #include "tiled_color.hpp"
 
 namespace flight::tilemap_formats {
+
+using flight::types::TiledObject;
+using flight::types::TiledProperty;
+using flight::types::TiledTileset;
+using flight::types::TiledTilesetRef;
 
 inline flight::Record<flight::String, flight::Any> json_property(flight::Ref<TiledProperty> property) {
   return {{flight::String("name"), property->name}, {flight::String("type"), property->type}, {flight::String("value"), property->value}};

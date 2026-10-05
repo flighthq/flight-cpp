@@ -24,9 +24,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
+#include <flight/types/texture.hpp>
+
+#include <flight/types/entity.hpp>
+
 #include "get_scene3_dresource_textures.hpp"
 
 namespace flight::scene3d_resources {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
+
+using flight::types::EntityConstruction;
+using flight::types::Texture;
 
 inline void initialize_image_resource_failure(flight::Ref<EntityConstruction<flight::Ref<ImageResourceFailure>>> out, flight::Ref<image_resource_failure_kind> kind, flight::String message, std::optional<flight::String> name) {
   (out->kind = kind);

@@ -42,6 +42,8 @@ namespace flight::types { struct SpatialIndexBackend3D; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DCollider;
+
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_X_Y_Z_RADIUS_KIND_B0BC53CA3F0E8006
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_X_Y_Z_RADIUS_KIND_B0BC53CA3F0E8006
 using x_y_z_radius_kind_b0bc53ca3f0e8006 = flight::types::x_y_z_radius_kind_b0bc53ca3f0e8006;

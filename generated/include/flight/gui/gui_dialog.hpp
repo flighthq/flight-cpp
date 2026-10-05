@@ -24,6 +24,9 @@ namespace flight::types { template <typename T> struct Signal; }
 namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::gui {
+
+using flight::types::Entity;
+using flight::types::Signal;
 struct GuiDialogFields;
 } // namespace flight::gui
 

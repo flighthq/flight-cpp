@@ -23,7 +23,33 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/vector2.hpp>
+
+#include <flight/types/texture_atlas.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/particle_emitter2_d.hpp>
+
+#include <flight/types/partial_node.hpp>
+
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/has_bounds_rectangle.hpp>
+
 namespace flight::particleemitter {
+
+using flight::types::BoundsNodeAny;
+using flight::types::Node;
+using flight::types::Node2DTraits;
+using flight::types::PartialNode;
+using flight::types::ParticleEmitter2D;
+using flight::types::ParticleEmitterData;
+using flight::types::Rectangle;
+using flight::types::TextureAtlas;
+using flight::types::Vector2Like;
 
 inline const double particle_transform_stride = 4.0;
 

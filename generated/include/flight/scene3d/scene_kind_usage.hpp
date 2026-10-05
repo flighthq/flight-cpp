@@ -13,9 +13,18 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
+#include <flight/types/node3_d.hpp>
+
 #include "mesh.hpp"
 
 namespace flight::scene3d {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
+
+using flight::types::Node3D;
 
 inline void initialize_scene3_dkind_usage(flight::Ref<EntityConstruction<flight::Ref<Scene3DKindUsage>>> out) {
   (out->material_kinds = flight::Array<flight::Ref<Kind>>{});

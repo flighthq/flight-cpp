@@ -13,10 +13,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/mesh_geometry.hpp>
+
 #include "mesh_geometry.hpp"
 #include "morph_mesh_geometry.hpp"
 
 namespace flight::mesh {
+
+using flight::types::MeshGeometry;
+using flight::types::MeshGeometryRuntime;
 
 
 // NOT GENERATED: function hasMorphWeightsChanged -- source line 53

@@ -16,7 +16,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/texture.hpp>
 
 namespace flight::types { struct ColorScaleBias; }
-namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct GlContextRuntime; }
 namespace flight::types { struct GlContextState; }
 namespace flight::types { struct GlCubeRenderTarget; }
@@ -118,11 +117,11 @@ using GlColorAdjustmentMaterialFeatureGuard = std::function<void(flight::Ref<GlR
 #include <flight/types/path_mesh.hpp>
 #include <flight/types/render_proxy_adapter.hpp>
 #include <flight/types/render_registry_signals.hpp>
-#include <flight/types/entity.hpp>
-#include <flight/types/blend_mode.hpp>
 #include <flight/types/render_state.hpp>
+#include <flight/types/blend_mode.hpp>
 #include <flight/types/registry_table.hpp>
 #include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/entity.hpp>
 
 namespace flight::types {
 
@@ -214,7 +213,7 @@ struct GlViewportRect : public flight::ReferenceEnabled {
 };
 
 struct GlRenderState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::RenderStateRuntime>> entity_runtime_key;
   bool allow_smoothing;
   double current_clip_depth;
   std::optional<flight::Ref<flight::types::Scene2DClipHooks>> display_object_clip_hooks;
@@ -258,9 +257,9 @@ struct GlRenderRegistries : public flight::ReferenceEnabled {
   std::shared_ptr<flight::types::KeyedTable<flight::types::GlVelocityWriter>> velocity_writers;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_E2A80758C511C0BC
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_E2A80758C511C0BC
-struct callable_clear_signals_e2a80758c511c0bc : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_D33545783F2E3EBC
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_D33545783F2E3EBC
+struct callable_clear_signals_d33545783f2e3ebc : public flight::ReferenceEnabled {
   std::function<void(flight::Ref<flight::types::RenderRegistryTable>, flight::String)> callable;
   std::function<void()> clear;
   flight::Ref<flight::types::RenderRegistrySignals> signals;
@@ -268,7 +267,7 @@ struct callable_clear_signals_e2a80758c511c0bc : public flight::ReferenceEnabled
     return callable(argument_0, argument_1);
   }
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_E2A80758C511C0BC
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_D33545783F2E3EBC
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
@@ -287,7 +286,7 @@ struct GlRenderStateRuntime : public flight::ReferenceEnabled {
   flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxyAdapter>> render_proxy_adapter_map;
   flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxy>> render_proxy_map;
   flight::Set<flight::Ref<flight::types::Renderable>> render_proxy_sources;
-  flight::Ref<std::optional<flight::Ref<callable_clear_signals_e2a80758c511c0bc>>> registry_miss;
+  flight::Ref<std::optional<flight::Ref<callable_clear_signals_d33545783f2e3ebc>>> registry_miss;
   flight::Ref<GlRenderRegistries> registries;
   double renderer_map_id;
   flight::Array<flight::Ref<flight::types::Renderable>> temp_stack;

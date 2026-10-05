@@ -29,6 +29,11 @@ namespace flight::types { struct Vector2; }
 
 namespace flight::skeleton2d {
 
+using flight::types::AttachmentSkin2D;
+using flight::types::Bone2D;
+using flight::types::Skeleton2D;
+using flight::types::Slot2D;
+
 inline void compute_skeleton2_dpoint_attachment_position(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointAttachment2D>>>> attachment, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index) {
   flight::Float32Array world = flight::row_get<flight::RowKey<"worldMatrices">>(skeleton);
   if (((bone_index < 0.0) || ((bone_index * flight::skeleton2d::skeleton_2_d_matrix_stride) >= static_cast<double>(world.size())))) {

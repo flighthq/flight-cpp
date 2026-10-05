@@ -28,6 +28,10 @@ namespace flight::types { struct SpritesheetFrameData; }
 
 namespace flight::spritesheet_formats {
 
+using flight::types::SpritesheetAnimationData;
+using flight::types::SpritesheetData;
+using flight::types::SpritesheetFrameData;
+
 inline flight::String escape_xml(flight::String s) {
   return s.replace(flight::RegExp(flight::String("&"), flight::String("g")), flight::String("&amp;")).replace(flight::RegExp(flight::String("<"), flight::String("g")), flight::String("&lt;")).replace(flight::RegExp(flight::String(">"), flight::String("g")), flight::String("&gt;")).replace(flight::RegExp(flight::String("\""), flight::String("g")), flight::String("&quot;"));
 }

@@ -12,7 +12,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/text_metrics.hpp>
+
+#include <flight/types/text_layout.hpp>
+
+#include <flight/types/text_label.hpp>
+
 namespace flight::text {
+
+using flight::types::TextLabel;
+using flight::types::TextLayoutResult;
+using flight::types::TextMetrics;
 
 inline std::optional<std::function<void(flight::String, flight::String)>> text_label_guard = std::nullopt;
 

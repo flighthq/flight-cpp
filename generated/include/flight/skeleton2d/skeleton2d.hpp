@@ -19,9 +19,31 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/transform_inherit2_d.hpp>
+
+#include <flight/types/slot2_d.hpp>
+
+#include <flight/types/skeleton2_d.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/bone2_d.hpp>
+
+#include <flight/types/attachment_skin2_d.hpp>
+
 #include "skeleton2d_constants.hpp"
 
 namespace flight::skeleton2d {
+
+using flight::types::AttachmentSkin2D;
+using flight::types::Bone2D;
+using flight::types::EntityConstruction;
+using flight::types::MatrixLike;
+using flight::types::Skeleton2D;
+using flight::types::Slot2D;
+using flight::types::TransformInherit2D;
 
 inline void compute_skeleton2_dbone_world_transform(flight::Ref<Skeleton2D> skeleton, double bone_index) {
   flight::Array<flight::Ref<Bone2D>> bones = skeleton->bones;

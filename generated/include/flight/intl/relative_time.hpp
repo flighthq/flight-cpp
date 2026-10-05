@@ -9,9 +9,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/locale_input.hpp>
+
 #include "cache.hpp"
 
 namespace flight::intl {
+
+using flight::types::LocaleInput;
 
 inline flight::String format_relative_time(double value, flight::IntlRelativeTimeFormatUnit unit, flight::Ref<LocaleInput> locale, std::optional<flight::IntlRelativeTimeFormatOptions> options = std::nullopt) {
   const flight::String key = get_cache_key(flight::String("relativetime"), locale, options);

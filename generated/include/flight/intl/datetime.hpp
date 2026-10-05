@@ -12,9 +12,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/locale_input.hpp>
+
 #include "cache.hpp"
 
 namespace flight::intl {
+
+using flight::types::LocaleInput;
 
 inline flight::String format_date_value(std::variant<flight::Date, double> date, flight::Ref<LocaleInput> locale, flight::IntlDateTimeFormatOptions options) {
   const double time = (date.index() == 1 ? std::get<1>(date) : std::get<0>(date).get_time());

@@ -20,11 +20,18 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/mesh_geometry.hpp>
+
 #include "mesh_geometry.hpp"
 #include "mesh_geometry_compute.hpp"
 #include "mesh_geometry_layout.hpp"
 
 namespace flight::mesh {
+
+using flight::types::MeshGeometry;
+using flight::types::MeshSubset;
+using flight::types::VertexAttribute;
+using flight::types::VertexAttributeLayout;
 
 inline double get_mesh_geometry_triangle_count(flight::Ref<MeshGeometry> geometry) {
   if ((geometry->topology == flight::String("triangle-list"))) {

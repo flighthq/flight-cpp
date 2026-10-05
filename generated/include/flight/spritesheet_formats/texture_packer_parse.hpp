@@ -14,7 +14,24 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture_atlas_region.hpp>
+
+#include <flight/types/spritesheet_frame_data.hpp>
+
+#include <flight/types/spritesheet_data.hpp>
+
+#include <flight/types/spritesheet_animation_data.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
 namespace flight::spritesheet_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::SpritesheetAnimationData;
+using flight::types::SpritesheetData;
+using flight::types::SpritesheetFrameData;
+using flight::types::TextureAtlasRegion;
+using flight::types::import_diagnostic_severity;
 
 inline flight::Ref<SpritesheetFrameData> frame_from_region(flight::Ref<TextureAtlasRegion> region) {
   const bool rotated = (region->rotation != texture_atlas_rotation.none);

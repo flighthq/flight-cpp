@@ -41,12 +41,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/texture.hpp>
 #include <flight/types/wgpu_render_state.hpp>
 
+#include <flight/entity/entity.hpp>
+
 #include "wgpu_device_loss.hpp"
 #include "wgpu_draw.hpp"
 #include "wgpu_pipeline.hpp"
 #include "wgpu_shader.hpp"
 
 namespace flight::render_wgpu {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline const double ring_slot_count = 4096.0;
 

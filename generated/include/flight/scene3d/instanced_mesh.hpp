@@ -24,9 +24,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 #include "scene_node.hpp"
 
 namespace flight::scene3d {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline double get_instanced_mesh_capacity(flight::Ref<InstancedMesh> source) {
   return static_cast<double>(source->instance_matrices.size());

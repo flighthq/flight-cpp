@@ -22,10 +22,35 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/tiled_tileset.hpp>
+
+#include <flight/types/tiled_property.hpp>
+
+#include <flight/types/tiled_parse_options.hpp>
+
+#include <flight/types/tiled_object.hpp>
+
+#include <flight/types/tiled_map.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
 #include "tiled_color.hpp"
 #include "tiled_layer_data.hpp"
 
 namespace flight::tilemap_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::TiledCompression;
+using flight::types::TiledObject;
+using flight::types::TiledObjectAlignment;
+using flight::types::TiledOrientation;
+using flight::types::TiledParseOptions;
+using flight::types::TiledProperty;
+using flight::types::TiledPropertyType;
+using flight::types::TiledRenderOrder;
+using flight::types::TiledTileset;
+using flight::types::TiledTilesetRef;
+using flight::types::import_diagnostic_severity;
 
 inline bool attr_bool(flight::Ref<XmlElement> element, flight::String name, bool fallback) {
   const std::optional<flight::String> value = get_xml_element_attribute(element, name);

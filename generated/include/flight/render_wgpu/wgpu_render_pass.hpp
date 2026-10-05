@@ -16,12 +16,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 #include "wgpu_frame.hpp"
 #include "wgpu_render_state.hpp"
 #include "wgpu_render_target.hpp"
 #include "wgpu_screen_render_target.hpp"
 
 namespace flight::render_wgpu {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline std::optional<flight::Ref<WgpuRenderPass>> get_wgpu_active_render_pass(flight::Ref<WgpuRenderState> state) {
   return get_wgpu_render_state_runtime(state)->pass_stack.at(-1.0);

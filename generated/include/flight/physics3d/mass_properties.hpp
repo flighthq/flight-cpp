@@ -37,6 +37,8 @@ namespace flight::types { struct RigidBody3D; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DCollider;
+
 inline void initialize_physics3_dmass_data(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DMassData>> out) {
   flight::row_set<flight::RowKey<"mass">>(out, 0.0);
   flight::row_set<flight::RowKey<"inertiaXX">>(out, 0.0);

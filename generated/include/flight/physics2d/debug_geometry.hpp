@@ -15,9 +15,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 #include "world.hpp"
 
 namespace flight::physics2d {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline flight::Ref<Physics2DDebugGeometryOptions> default_options = flight::make_ref<Physics2DDebugGeometryOptions>(Physics2DDebugGeometryOptions{.draw_centers_of_mass = true, .draw_colliders = true, .draw_contacts = true, .draw_joints = true, .center_of_mass_radius = 0.08, .contact_normal_length = 0.5, .point_radius = 0.04});
 

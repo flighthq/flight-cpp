@@ -23,6 +23,11 @@ namespace flight::types { struct TiledTilesetRef; }
 
 namespace flight::tilemap_formats {
 
+using flight::types::TiledObject;
+using flight::types::TiledProperty;
+using flight::types::TiledTileset;
+using flight::types::TiledTilesetRef;
+
 inline std::optional<flight::Ref<flight::types::TiledTilesetRef>> get_tiled_tileset_ref_for_gid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TiledMap>>>> map, double tile_id) {
   if ((tile_id <= 0.0)) {
     return std::nullopt;

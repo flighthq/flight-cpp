@@ -51,9 +51,9 @@ using flight::types::RenderStateRuntime;
 
 using RenderRegistriesMissEmitter = typename decltype(std::declval<flight::types::RenderStateRuntime&>().registry_miss)::value_type;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_6BD9FE45A3E3AFF1
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_6BD9FE45A3E3AFF1
-struct callable_clear_signals_6bd9fe45a3e3aff1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_14E9CA6FE9F5D053
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_14E9CA6FE9F5D053
+struct callable_clear_signals_14e9ca6fe9f5d053 : public flight::ReferenceEnabled {
   std::function<void(flight::types::RenderRegistryTable, flight::String)> callable;
   std::function<void()> clear;
   flight::Ref<flight::types::RenderRegistrySignals> signals;
@@ -61,7 +61,7 @@ struct callable_clear_signals_6bd9fe45a3e3aff1 : public flight::ReferenceEnabled
     return callable(argument_0, argument_1);
   }
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_6BD9FE45A3E3AFF1
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_14E9CA6FE9F5D053
 
 inline flight::Ref<flight::types::RenderRegistrySignals> enable_render_registry_signals(flight::Ref<flight::types::RenderState> state) {
   auto runtime = flight::render::get_render_state_runtime(state);

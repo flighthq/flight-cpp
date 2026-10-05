@@ -20,6 +20,8 @@ namespace flight::types { template <typename N, typename P> struct NodeInteracti
 namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::gui {
+
+using flight::types::Entity;
 struct ProgressBarControllerFields;
 } // namespace flight::gui
 

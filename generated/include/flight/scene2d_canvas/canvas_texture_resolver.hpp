@@ -16,9 +16,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 #include "canvas_render_surface.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_CALLABLE_CLEAR_SIGNALS_5E1C1016838F6892
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_CALLABLE_CLEAR_SIGNALS_5E1C1016838F6892

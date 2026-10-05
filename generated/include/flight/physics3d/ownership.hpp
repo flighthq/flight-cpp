@@ -18,6 +18,8 @@ namespace flight::types { struct RigidBody3D; }
 
 namespace flight::physics3d {
 
+using flight::types::Physics3DCollider;
+
 inline flight::WeakMap<flight::Ref<flight::types::RigidBody3D>, flight::Ref<flight::types::Physics3DWorld>> physics3_dbody_owners = flight::WeakMap<flight::Ref<flight::types::RigidBody3D>, flight::Ref<flight::types::Physics3DWorld>>();
 
 inline flight::WeakMap<flight::Ref<flight::types::Physics3DJoint>, flight::Ref<flight::types::Physics3DWorld>> physics3_djoint_owners = flight::WeakMap<flight::Ref<flight::types::Physics3DJoint>, flight::Ref<flight::types::Physics3DWorld>>();

@@ -131,10 +131,10 @@ using WgpuColorAdjustmentMaterialFeatureGuard = std::function<void(flight::Ref<W
 #include <flight/types/path_mesh.hpp>
 #include <flight/types/render_proxy_adapter.hpp>
 #include <flight/types/render_registry_signals.hpp>
-#include <flight/types/entity.hpp>
-#include <flight/types/blend_mode.hpp>
 #include <flight/types/render_state.hpp>
+#include <flight/types/blend_mode.hpp>
 #include <flight/types/registry_table.hpp>
+#include <flight/types/entity.hpp>
 #include <flight/types/render_proxy2_d.hpp>
 
 namespace flight::types {
@@ -242,7 +242,7 @@ struct WgpuVideoTextureEntry : public flight::ReferenceEnabled {
 };
 
 struct WgpuRenderState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::RenderStateRuntime>> entity_runtime_key;
   bool allow_smoothing;
   double current_clip_depth;
   std::optional<flight::Ref<flight::types::Scene2DClipHooks>> display_object_clip_hooks;
@@ -314,9 +314,9 @@ struct WgpuRenderRegistries : public flight::ReferenceEnabled {
   std::shared_ptr<flight::types::KeyedTable<flight::types::WgpuVelocityWriter>> velocity_writers;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_9F8B7CF28538F226
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_9F8B7CF28538F226
-struct callable_clear_signals_9f8b7cf28538f226 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_C732ACEEB5D781C2
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_C732ACEEB5D781C2
+struct callable_clear_signals_c732aceeb5d781c2 : public flight::ReferenceEnabled {
   std::function<void(flight::Ref<flight::types::RenderRegistryTable>, flight::String)> callable;
   std::function<void()> clear;
   flight::Ref<flight::types::RenderRegistrySignals> signals;
@@ -324,7 +324,7 @@ struct callable_clear_signals_9f8b7cf28538f226 : public flight::ReferenceEnabled
     return callable(argument_0, argument_1);
   }
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_9F8B7CF28538F226
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_C732ACEEB5D781C2
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_HEIGHT_WIDTH_86F909D1D50ED705
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_HEIGHT_WIDTH_86F909D1D50ED705
@@ -350,7 +350,7 @@ struct WgpuRenderStateRuntime : public flight::ReferenceEnabled {
   flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxyAdapter>> render_proxy_adapter_map;
   flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxy>> render_proxy_map;
   flight::Set<flight::Ref<flight::types::Renderable>> render_proxy_sources;
-  flight::Ref<std::optional<flight::Ref<callable_clear_signals_9f8b7cf28538f226>>> registry_miss;
+  flight::Ref<std::optional<flight::Ref<callable_clear_signals_c732aceeb5d781c2>>> registry_miss;
   flight::Ref<WgpuRenderRegistries> registries;
   double renderer_map_id;
   flight::Array<flight::Ref<flight::types::Renderable>> temp_stack;

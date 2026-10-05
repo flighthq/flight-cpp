@@ -97,6 +97,30 @@ struct ExternalImageResourceReference : public flight::ReferenceEnabled {
   std::optional<flight::String> base_path;
 };
 
+inline std::optional<flight::Ref<EmbeddedImageResourceReference>> find_embedded_image_resource_reference(std::optional<flight::Array<ImageResourceReference>> resources, flight::Uint8Array bytes, std::optional<flight::String> mime_type) {
+  if (!resources.has_value()) {
+    return std::nullopt;
+  }
+  for (auto candidate : resources.value()) {
+    if (((candidate.index() == 0 && (std::get<0>(candidate)->bytes == bytes)) && (std::get<0>(candidate)->mime_type == mime_type))) {
+      return std::optional<flight::Ref<EmbeddedImageResourceReference>>{std::get<0>(candidate)};
+    }
+  }
+  return std::nullopt;
+}
+
+inline std::optional<flight::Ref<ExternalImageResourceReference>> find_external_image_resource_reference(std::optional<flight::Array<ImageResourceReference>> resources, flight::String uri, std::optional<flight::String> base_path) {
+  if (!resources.has_value()) {
+    return std::nullopt;
+  }
+  for (auto candidate : resources.value()) {
+    if (((candidate.index() == 1 && (std::get<1>(candidate)->uri == uri)) && (std::get<1>(candidate)->base_path == base_path))) {
+      return std::optional<flight::Ref<ExternalImageResourceReference>>{std::get<1>(candidate)};
+    }
+  }
+  return std::nullopt;
+}
+
 struct ImageResourceReferenceResolutionExplanation : public flight::ReferenceEnabled {
   std::optional<flight::Ref<ImageResourceFailure>> failure;
   ImageResourceReferenceKind kind;

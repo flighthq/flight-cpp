@@ -14,10 +14,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 #include "render_effect.hpp"
 #include "render_effect_padding.hpp"
 
 namespace flight::effects {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline flight::Ref<RenderEffectPadding> get_median_effect_padding(flight::Ref<MedianEffect> effect) {
   const double radius = flight::maximum(0.0, flight::round(effect->radius.value_or(1.0)));

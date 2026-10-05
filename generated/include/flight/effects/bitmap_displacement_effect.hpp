@@ -14,10 +14,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 #include "render_effect.hpp"
 #include "render_effect_padding.hpp"
 
 namespace flight::effects {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline flight::Ref<RenderEffectPadding> get_bitmap_displacement_effect_padding(flight::Ref<BitmapDisplacementEffect> effect) {
   const double horizontal = std::ceil((std::abs(effect->scale_x.value_or(0.0)) * 0.5));

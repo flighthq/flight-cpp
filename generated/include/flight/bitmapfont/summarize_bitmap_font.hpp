@@ -20,6 +20,9 @@ namespace flight::types { struct TextureAtlas; }
 
 namespace flight::bitmapfont {
 
+using flight::types::GlyphMetrics;
+using flight::types::TextureAtlas;
+
 using flight::types::BitmapFont;
 
 inline flight::Ref<flight::types::BitmapFontSummary> summarize_bitmap_font(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>> font) {

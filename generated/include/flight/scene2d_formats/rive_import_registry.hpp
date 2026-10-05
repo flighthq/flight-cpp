@@ -7,9 +7,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 #include "rive_core_types.hpp"
 
 namespace flight::scene2d_formats {
+
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
 
 inline void apply_rive_artboard_handlers(flight::Ref<RiveArtboardImportContext> context) {
   auto applied = flight::Set<flight::Ref<RiveCoreObjectHandler>>();

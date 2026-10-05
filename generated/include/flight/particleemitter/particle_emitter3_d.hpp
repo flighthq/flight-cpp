@@ -20,9 +20,22 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/layout.hpp>
 
+#include <flight/types/texture_atlas.hpp>
+
+#include <flight/types/particle_emitter2_d.hpp>
+
+#include <flight/types/partial_node.hpp>
+
+#include <flight/types/node.hpp>
+
 #include "particle_emitter.hpp"
 
 namespace flight::particleemitter {
+
+using flight::types::Node;
+using flight::types::PartialNode;
+using flight::types::ParticleEmitterData;
+using flight::types::TextureAtlas;
 
 inline const double particle_transform_stride = 4.0;
 

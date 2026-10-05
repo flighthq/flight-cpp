@@ -12,10 +12,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/skeleton2_d.hpp>
+
 #include "skeleton2d_animation_target.hpp"
 #include "slot_deform2_d.hpp"
 
 namespace flight::skeleton2d {
+
+using flight::types::Skeleton2D;
 
 inline flight::Float32Array scratch = flight::Float32Array(0.0);
 

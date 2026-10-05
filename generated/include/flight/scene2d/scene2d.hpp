@@ -35,6 +35,7 @@ using flight::types::Scene2D;
 using flight::types::Scene2DRuntime;
 using flight::types::Scene2DSignals;
 
+using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
 inline flight::Ref<Scene2DRuntime> create_scene2_druntime() {
