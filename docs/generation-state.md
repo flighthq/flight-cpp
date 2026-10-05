@@ -5626,3 +5626,30 @@ report — including the failure-family accounting in this document — inherits
 - Re-measure before building any strategy on a number. The accounting above was rebuilt for exactly this
   reason, and the fresh run deliberately excludes the `render_state.hpp` override, which is not merged yet —
   so its +51 is still to come on top.
+
+## Would `-pedantic-errors` in the gate cost anything? Sampled: probably nothing
+
+The gate passes `-std=c++20` and not `-pedantic-errors`, which is how an extension-dependent fix measured
+clean three times (see the corrected `render_state.hpp` recipe). The obvious follow-up is whether the gate
+should pass it — and the obvious objection is that it might reclassify currently-passing headers and move the
+baseline every number here is measured against. That objection is testable.
+
+Sampling 59 of the ~1800 currently-passing headers (seeded random, each re-confirmed as passing under the
+gate's own flags first, then recompiled with `-pedantic-errors`):
+
+```
+RESULT: of 59 gate-passing headers sampled, 0 also fail under -pedantic-errors (59 clean)
+```
+
+Stated honestly, that is a 3.3% sample with zero failures. By the rule of three the 95% upper bound on the
+failure rate is about **5%**, i.e. an upper bound near 90 headers with a point estimate of **zero**. It is
+not proof that nothing breaks; it is good evidence that the change is cheap, and the way to settle it is one
+full run with the flag added, which costs the same as any other gate run.
+
+Separately, the seven runtime headers changed in this arc — `symbol.hpp`, `error.hpp`, `typed_array.hpp`,
+`structured_clone.hpp`, `callable.hpp`, `sequence_view.hpp`, `host_sdl/wgpu.hpp` — compile under
+`-std=c++20 -pedantic-errors -Wall -Wextra` with **0 errors and 0 warnings**. So the runtime additions do not
+rely on extensions; the one that did was confined to a scratch overlay and never shipped.
+
+The decision is still the user's, because it changes the meaning of the project's headline number. The
+evidence says it changes it by very little.
