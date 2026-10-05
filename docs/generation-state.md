@@ -4853,3 +4853,62 @@ Names are finished; two non-name defects remain, and both are informative:
   `node-create-signal-using-declaration` entry; `flight/selection/` needs the equivalent.
 
 Both are real next steps rather than guesses, which is the point of running the loop to convergence first.
+
+## Emission repairs invalidate override hashes, and the four mechanisms have no protocol for that
+
+Two of the four declared mechanisms interact, which AGENTS.md does not mention and which cost eleven
+false drift reports on the first regeneration that exercised it.
+
+An override records `derivedFrom`, the sha256 of the generated file it shadows, so `npm run
+overrides:check` can say "the thing you replaced has changed; re-derive or drop it". An **emission repair
+rewrites that same generated file**. So any repair whose `appliesTo` covers an overridden header changes
+that file's hash and the override is reported as drifted — even when nothing about the override is wrong
+and nothing about the generated file matters to it.
+
+### What it looked like
+
+The regeneration that picked up a 51-package `flight::entity` declaration batch produced:
+
+```
+11 override(s) have drifted:
+- lifecycle-complete-module: flight/lifecycle/lifecycle.hpp now hashes to d432d1bcdf3e, derived from 5deed80b8213
+- interaction-node-interaction-state: flight/interaction/node_interaction_state.hpp now hashes to 15927d8474f9, …
+  … nine more
+```
+
+### Do not re-derive on sight — the hash is a question, not a chore
+
+A stale `derivedFrom` means "the file you copied from has changed", and the real question is whether the
+change matters to the copy. Here it was answered by diffing the committed generated file against the
+regenerated one for all eleven:
+
+| | |
+| --- | --- |
+| changed lines per file | **exactly 3**, in all eleven |
+| what they were | `using flight::entity::allocate_entity;`, `using flight::entity::finish_entity;`, `#include <flight/entity/entity.hpp>` |
+| overrides using those names **unqualified** | **0** |
+| overrides already writing `flight::entity::…` qualified | all eleven (2-4 occurrences each) |
+
+So the repair added a convenience the overrides never needed, because a hand-written override qualifies
+its names — it is not emitted code and has no reason not to. Re-deriving the hashes was therefore honest.
+
+The case that must be handled differently is the one this was NOT: if an override had used those names
+unqualified, the regenerated file would have gained a declaration the override lacks, and re-deriving the
+hash would have hidden a now-broken copy behind a green check. **The check to run is not "did the hash
+change" but "did the generated file change in a way the override depends on".**
+
+### The coordination rule this implies
+
+Whoever adds a repair can silently invalidate someone else's override, and will not notice until a
+regeneration. So:
+
+- before declaring a name for a package, check whether an override exists for the headers it touches
+  (`overrides/manifest.json` lists every `path`);
+- an override author should say which headers they hold, so repair targets can be checked against that
+  list rather than discovered through a failing expiry check;
+- when a hash does drift, record WHY it drifted in the commit, because `derivedFrom` only records the
+  value and not the reason — the eleven here drifted for a reason that made them safe, and a future
+  reader cannot tell that from the manifest alone.
+
+Noted because the mechanism is working exactly as designed: it surfaced a real change to a shadowed file
+and demanded a human judgement. The failure mode to avoid is treating that demand as paperwork.
