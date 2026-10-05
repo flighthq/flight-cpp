@@ -45,6 +45,10 @@ namespace flight::types { template <typename T> struct SlotTable; }
 
 namespace flight::render {
 
+using flight::types::RenderRegistrySignals;
+using flight::types::RenderState;
+using flight::types::RenderStateRuntime;
+
 using RenderRegistriesMissEmitter = typename decltype(std::declval<flight::types::RenderStateRuntime&>().registry_miss)::value_type;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_6BD9FE45A3E3AFF1

@@ -16,10 +16,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/render_state.hpp>
+
+#include <flight/types/render_cache.hpp>
+
 #include "renderer.hpp"
 #include "render_proxy_adapter.hpp"
 
 namespace flight::render {
+
+using flight::types::RenderCache;
+using flight::types::RenderState;
 
 inline void enable_render_cache_adapter_signals(flight::Ref<RenderCacheAdapter> adapter) {
   ([&]() { auto&& assignment_target = adapter->signals; if (!assignment_target.has_value()) assignment_target = {.on_prepare = create_signal()}; return assignment_target.value(); }());

@@ -1037,6 +1037,34 @@
         "flight/registry_codegen/registry_codegen.hpp"
       ],
       "id": "registry-codegen-row-write-array-projection"
+    },
+    {
+      "files": [
+        "flight/preferences/storage.hpp"
+      ],
+      "id": "preferences-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/render/enable_color_adjustment_guards.hpp",
+        "flight/render/enable_color_adjustments.hpp",
+        "flight/render/explain_scene2_dpipeline_coverage.hpp",
+        "flight/render/explain_scene3_dpipeline_coverage.hpp",
+        "flight/render/render_appearance.hpp",
+        "flight/render/render_cache.hpp",
+        "flight/render/render_material.hpp",
+        "flight/render/render_proxy.hpp",
+        "flight/render/render_proxy_adapter.hpp",
+        "flight/render/render_queue.hpp",
+        "flight/render/render_registry_guards.hpp",
+        "flight/render/render_registry_signals.hpp",
+        "flight/render/render_state.hpp",
+        "flight/render/render_target.hpp",
+        "flight/render/render_transform2d.hpp",
+        "flight/render/render_viewport.hpp",
+        "flight/render/scene_render.hpp"
+      ],
+      "id": "render-unqualified-types-names"
     }
   ],
   "sourcePatches": [

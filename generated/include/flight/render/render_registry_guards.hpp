@@ -29,6 +29,9 @@ namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::render {
 
+using flight::types::RenderRegistrySignals;
+using flight::types::RenderState;
+
 inline flight::String get_render_registries_miss_message(flight::Ref<flight::types::RenderState> state, flight::types::RenderRegistryTable registry) {
   {
     auto switch_value = registry;

@@ -17,7 +17,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/storage.hpp>
+
 namespace flight::preferences {
+
+using flight::types::HostPreferencesCapability;
+using flight::types::HostPreferencesChangeCapability;
+using flight::types::StorageKeysResult;
+using flight::types::StorageNamespace;
 
 inline void destroy_storage(flight::Ref<HostPreferencesChangeCapability> host_preferences_change) {
   host_preferences_change->destroy();

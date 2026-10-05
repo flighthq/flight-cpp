@@ -16,7 +16,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/matrix.hpp>
+
 namespace flight::render {
+
+using flight::types::MatrixLike;
 
 inline void compute_render_cache_transform(flight::Ref<MatrixLike> out_cache_transform, flight::Ref<RectangleLike> bounds, std::optional<double> content_x = std::nullopt, std::optional<double> content_y = std::nullopt) {
   content_x = content_x.value_or(0.0);

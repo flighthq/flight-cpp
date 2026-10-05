@@ -10,9 +10,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/render_state.hpp>
+
 #include "render_state.hpp"
 
 namespace flight::render {
+
+using flight::types::RenderState;
 
 inline bool are_color_adjustment_guards_enabled(flight::Ref<RenderState> state) {
   return get_color_adjustment_unsupported_guard(state).has_value();

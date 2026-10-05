@@ -18,7 +18,25 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/render_state.hpp>
+
+#include <flight/types/render_registry_signals.hpp>
+
+#include <flight/types/render_cache.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/entity.hpp>
+
 namespace flight::render {
+
+using flight::types::Kind;
+using flight::types::entity_runtime_key;
+using flight::types::NodeAny;
+using flight::types::RenderCache;
+using flight::types::RenderRegistrySignals;
+using flight::types::RenderState;
+using flight::types::RenderStateRuntime;
 
 
 // NOT GENERATED: function createRenderStateRuntime -- source line 23

@@ -10,10 +10,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/render_state.hpp>
+
 #include "render_proxy.hpp"
 #include "render_state.hpp"
 
 namespace flight::render {
+
+using flight::types::RenderState;
 
 inline void apply_render_proxy_adapter(flight::Ref<RenderState> state, flight::Ref<Renderable> source, flight::Ref<RenderProxy2D> data) {
   std::optional<flight::Ref<RenderProxyAdapter>> render_adapter = get_render_state_runtime(state)->render_proxy_adapter_map.get(source);

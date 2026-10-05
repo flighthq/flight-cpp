@@ -5509,10 +5509,15 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
       return false;                                                                            \
   }
 
+// Agreement between two declared member types is decided by the runtime, not spelled out here:
+// `row_member_widens_v` accepts identical types, and additionally a base key of std::optional<T>
+// satisfied by a derived member of plain T -- TypeScript assigns T to T | undefined. The reverse stays
+// refused. A bare std::same_as refused `textlayout`'s row over {auto_size, height, width, word_wrap}
+// from a RichTextData subject, which agrees on three keys and differs only in that optionality.
 #define FLIGHT_SDK_ROW_WIDENS(member)                                                          \
   if constexpr (requires(Base& base) { base.member; }) {                                       \
     if constexpr (!requires(Derived& derived) { derived.member; }) return false;                \
-    else if constexpr (!std::same_as<std::remove_cvref_t<decltype(std::declval<Base&>().member)>, \
+    else if constexpr (!row_member_widens_v<std::remove_cvref_t<decltype(std::declval<Base&>().member)>, \
                                      std::remove_cvref_t<decltype(std::declval<Derived&>().member)>>) \
       return false;                                                                            \
     else ++matched;                                                                            \
