@@ -5213,3 +5213,44 @@ So the dominant remaining family by a wide margin is the one the declaration eng
 those declarations are already queued. `->` on `Ref<variant>` is 31 first-diagnostics, which is far smaller
 than it looks from inside a single header — `texture/texture.hpp` alone contains 111 occurrences of it, and
 is one failure.
+
+## The WGPU surface is not buildable as it stands: there is no backend, and CMake does not look for one
+
+Before treating "write the WGPU host surface" as available work, this needs recording, because the member
+surface is small enough to look easy.
+
+Sampling six headers across the four WGPU packages with `-fmax-errors=0` and collecting every
+`has no member named` on a `WgpuObject<…Tag>` gives a bounded spec — **16 operations on 3 carriers**:
+
+| carrier | operations |
+| --- | --- |
+| `WgpuDevice` | `create_bind_group`, `create_bind_group_layout`, `create_buffer`, `create_pipeline_layout`, `create_render_pipeline`, `create_sampler`, `create_shader_module`, `create_texture` |
+| `WgpuTexture` | `create_view`, `destroy`, `height`, `width` |
+| `WgpuRenderPassEncoder` | `draw`, `end`, `set_bind_group`, `set_pipeline` |
+
+(A lower bound — six headers, not all 176.)
+
+**But no WebGPU backend exists in this environment.** No Dawn, no wgpu-native, no `webgpu.h` under
+`/usr/include` or `/usr/local/include`, nothing in `pkg-config`. And `CMakeLists.txt` does not look for one:
+
+```cmake
+target_link_libraries(flight_host_sdl_wgpu PUBLIC Flight::HostSdl Flight::HostSdlImage)
+```
+
+Compare the binding that *was* written: `src/host_sdl/webgl.cpp:5` includes `<SDL3/SDL_opengles2.h>`, a
+backend SDL3 ships, which is exactly why `WebGl2Context::create_buffer()` could have a real body.
+
+So the earlier framing — "the repo has the pattern, the WGPU equivalent was simply never written" — was
+incomplete. The pattern needs a backend, and WGPU has none. Two paths exist and neither is ours to choose:
+
+1. **Add a WebGPU backend** (Dawn or wgpu-native). This collides with AGENTS.md's "Keep the runtime
+   dependency-free", and installing a system dependency is not something to do uninvited.
+2. **Make the operations a provider callback surface**, which is dependency-free and is arguably what the
+   carriers were already designed for — `WgpuObject::adopt(void* object, WgpuObjectCallbacks)` already takes
+   a release function pointer supplied by the host, so the operations would be more of the same. This needs
+   no new dependency and no backend at build time.
+
+Path 2 looks right and is implementable today, but it is a design decision about the shape of the host
+binding, not a defect to be fixed, so it is recorded here rather than acted on. Until it is decided, the four
+WGPU packages are blocked for a reason no declared mechanism touches, and they are **159 of the 918 current
+failures**.
