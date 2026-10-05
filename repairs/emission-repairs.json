@@ -4444,6 +4444,22 @@
       "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::app, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/effects_wgpu/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/wgpu_render_state.hpp",
+          "name": "WgpuRenderState"
+        }
+      ],
+      "diagnostic": "'WgpuRenderState' was not declared in this scope",
+      "defect": "The emitter writes flight::types::WgpuRenderState unqualified inside namespace flight::effects_wgpu at wgpu_effect_pass.hpp:57, without the header that defines it. This was INVISIBLE in the compile report until the WgpuBlendComponent assignment at line 36 of the same file was fixed: the report stores only each header's FIRST diagnostic, and -fmax-errors caps the rest, so one defect site masked the next one in the same file. Measured by compiling the package directly rather than from the report.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
