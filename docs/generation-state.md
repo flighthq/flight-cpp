@@ -5653,3 +5653,57 @@ rely on extensions; the one that did was confined to a scratch overlay and never
 
 The decision is still the user's, because it changes the meaning of the project's headline number. The
 evidence says it changes it by very little.
+
+## Clean measurement: 1866 of 2710 headers compile
+
+A complete gate run, validated against the staleness trap this time.
+
+| | headers |
+| --- | --- |
+| pass | **1866** |
+| fail | 844 |
+| total | 2710 |
+
+This supersedes **1800/910**, which was taken across a merge and understated the tree by 66 headers. The
+difference is entirely the overrides that landed mid-run — the completed `registry_table.hpp` and the new
+`animation_track.hpp` — plus the `render_state.hpp` deferred-cycle override.
+
+**This run also spans a merge**, and the check matters more than the convenience of ignoring it: the
+`render_state.hpp` override landed at 09:09:20, three minutes into an 85-minute run that started at
+09:06:06. So it was validated two ways before being trusted:
+
+- the failure accounting contains **zero** `render_state.hpp:133/134` failures and zero other
+  incomplete-type failures, so no affected header was measured in the stale window;
+- a seeded random sample of 14 reported failures was recompiled directly — **0 of 14** now pass, so no
+  reported failure is stale.
+
+### Where the 844 sit
+
+| count | share | family | heaviest packages |
+| --- | --- | --- | --- |
+| 286 | 33.9% | **undeclared name** | scene2d_canvas 24, effects_canvas 23, interaction 15, gui 14, scene3d_formats 12 |
+| 156 | 18.5% | WGPU host-binding gap — **user decision** | effects_wgpu 60, scene3d_wgpu 46, render_wgpu 27, scene2d_wgpu 23 |
+| 134 | 15.9% | no matching function (mostly refused functions) | effects 23, scene3d_formats 14, mesh 10, materials 9 |
+| 101 | 12.0% | remainder | scene3d_resources 16, render 9, tween 8, shape 7 |
+| 57 | 6.8% | has no member | particleemitter 12, scene2d_formats 7, skeleton2d_formats 6 |
+| 51 | 6.0% | conversion | physics2d 15, particles_formats 11, bitmapfont_formats 7 |
+| 33 | 3.9% | `->` on `Ref<variant>` — no mechanism | physics3d 18, texture 6, physics3d_abi 4 |
+| 17 | 2.0% | not applicable (`environment: web`) | scene2d_dom 17 |
+| 9 | 1.1% | not a member of a namespace | scattered |
+
+**173 of the 844 are structurally unreachable right now** (WGPU 156 + not-applicable 17), leaving 671
+actionable.
+
+### The declaration lever is NOT exhausted — the cycle fix unmasked more of it
+
+This is the correction worth carrying forward. Before the `render_state.hpp` override, undeclared-name
+failures were 249 and the third collector pass had reported most packages converged with only refused
+functions left. After it, undeclared names are **286** — higher, because 251 headers that were failing on an
+incomplete type now report the next defect, and for many of them that defect is a name.
+
+So "the collector has converged on this package" is only true **relative to the defect that was masking
+everything behind it**. Each structural fix reopens the declaration lever on the headers it unblocks. The two
+heaviest packages now, `scene2d_canvas` (24) and `effects_canvas` (23), are precisely the ones the
+`render_state.hpp` override unblocked — they were in its 101-header reverse-include closure.
+
+The loop is therefore: declare to convergence, fix a structural blocker, declare again. Not declare once.
