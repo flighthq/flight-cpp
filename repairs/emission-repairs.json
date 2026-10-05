@@ -330,6 +330,18 @@
       "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "node-transform2dlike-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/node/",
+      "symbol": "Transform2DLike",
+      "declaration": "using flight::types::Transform2DLike;",
+      "include": "flight/types/transform2_d.hpp",
+      "diagnostic": "'Transform2DLike' was not declared in this scope; did you mean 'flight::types::Transform2DLike'?",
+      "defect": "The emitter writes Transform2DLike unqualified inside namespace flight::node, where the type is flight::types::Transform2DLike. The same defect as the four in flight/log/ and the two in flight/signals/: a types-owned name used from another package's namespace without qualification, and without the header that defines it.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "registry-ordinaltable-using-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/registry/",
@@ -422,6 +434,18 @@
       "include": "flight/types/entity.hpp",
       "diagnostic": "'Kind' was not declared in this scope; did you mean 'flight::types::Kind'?",
       "defect": "The emitter writes Kind unqualified inside namespace flight::registry, where the type is flight::types::Kind. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "node-vector2like-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/node/",
+      "symbol": "Vector2Like",
+      "declaration": "using flight::types::Vector2Like;",
+      "include": "flight/types/vector2.hpp",
+      "diagnostic": "'Vector2Like' was not declared in this scope; did you mean 'flight::types::Vector2Like'?",
+      "defect": "The emitter writes Vector2Like unqualified inside namespace flight::node, where the type is flight::types::Vector2Like. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
     },
