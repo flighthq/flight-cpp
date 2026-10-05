@@ -1356,6 +1356,10 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
           "include": "flight/types/storage.hpp",
           "name": "HostPreferencesCapability"
         },
@@ -1365,11 +1369,107 @@
         },
         {
           "include": "flight/types/storage.hpp",
+          "name": "StorageBooleanOrResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageBooleanResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageByteSizeResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageChange"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageClearNamespaceResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageClearResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageEntriesResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageGetItemResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageItemCountResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageItemOrResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageItemsResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageJsonOrResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageJsonResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageJsonWriteResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
           "name": "StorageKeysResult"
         },
         {
           "include": "flight/types/storage.hpp",
+          "name": "StorageMigration"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageMigrationResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
           "name": "StorageNamespace"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageNumberOrResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageNumberResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StoragePresenceResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageRemoveItemResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageRemoveItemsResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageSetItemResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageSetItemsResult"
+        },
+        {
+          "include": "flight/types/storage.hpp",
+          "name": "StorageSignals"
         }
       ],
       "diagnostic": "'HostPreferencesChangeCapability' was not declared in this scope -- and the same for StorageKeysResult, HostPreferencesCapability and StorageNamespace, each followed by 'template argument 1 is invalid' and 'base operand of -> is not a pointer' as the invalid type propagates",
