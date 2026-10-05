@@ -1364,6 +1364,58 @@
       "defect": "The emitter writes four flight::types names unqualified inside namespace flight::preferences. All four are declared in flight/types/storage.hpp and the defining header is not included, so both the qualification and the include are missing. They are the FIRST errors in flight/preferences/storage.hpp, which is the single broken module in an otherwise compiling package -- its contract.hpp and _internal_index.hpp fail only by including it -- so the package is three failures from shippable and all three are this one cause.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies a types-owned name used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "Kind"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "entity_runtime_key"
+        },
+        {
+          "include": "flight/types/matrix.hpp",
+          "name": "MatrixLike"
+        },
+        {
+          "include": "flight/types/matrix4.hpp",
+          "name": "Matrix4"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "NodeAny"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        },
+        {
+          "include": "flight/types/render_cache.hpp",
+          "name": "RenderCache"
+        },
+        {
+          "include": "flight/types/render_registry_signals.hpp",
+          "name": "RenderRegistrySignals"
+        },
+        {
+          "include": "flight/types/render_state.hpp",
+          "name": "RenderState"
+        },
+        {
+          "include": "flight/types/render_state.hpp",
+          "name": "RenderStateRuntime"
+        }
+      ],
+      "diagnostic": "'RenderStateRuntime' was not declared in this scope; did you mean 'flight::types::RenderStateRuntime'? -- and the same for nine further flight::types names across the package",
+      "defect": "The emitter writes ten flight::types names unqualified inside namespace flight::render. This is the highest-leverage instance of the defect in the tree: flight/render/render_state.hpp holds the FIRST error of 49 headers, more than any other file in the SDK. The set was found by ITERATING the repair to a fixed point rather than reading the compile report, which lists only each header's first diagnostic and showed four of the ten; compiling render_state.hpp directly surfaced eleven candidate names in one pass and settled after a second round. Measured on render_state.hpp: 37 errors to 4. It does NOT close the header -- the remaining four are three unrelated families, one of which is the refused declaration dispose_render_proxy_for_shutdown, so the header additionally needs a supplied function. `entity_runtime_key` is an inline const flight::Symbol rather than a type, which is why a declaration index that matches only struct/class/using misses it; gcc names it in its own diagnostic.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a types-owned name used from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
