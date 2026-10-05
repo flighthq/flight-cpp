@@ -4231,3 +4231,44 @@ The pattern is worth naming because it cost four rounds: **a name can be a type 
 namespace, declared in any of four syntactic forms.** Every narrowing of that produced a false
 "unresolvable", and a false unresolvable looks exactly like a refused declaration — which is a different
 mechanism with a different owner. Three of the four times, I nearly filed one as the other.
+
+### The fifth attempt at the name lookup was a REGRESSION, and it nearly shipped 78 wrong names
+
+The previous entry described widening the lookup to scan every package as the fix that "removes the whole
+class". It does not. It is unsound, and measuring caught it before anything was declared.
+
+Run against `flight/materials/material.hpp`, the broad fallback resolved **78 names** and took the header
+from **46 errors to 200** (the measurement cap). The namespaces it chose say why:
+
+```
+flight::types 58, flight::scene3d_wgpu 4, flight::scene2d_canvas 4, flight::geometry 3,
+flight::render_wgpu 2, flight::entity 1, flight::materials 1, flight::texture 1, …
+```
+
+It resolved `material`, `registry`, `create_matrix3`, `create_matrix4`, `create_rectangle`,
+`get_canvas_render_state_runtime` into **wgpu and canvas** namespaces — packages that are held back or
+outside `applicableEnvironments` — and then added their includes, pulling broken headers into a package that
+had nothing to do with them.
+
+The error is specific and obvious in hindsight: **common identifiers exist in many packages**, and an
+arbitrary first match is not a resolution, it is a guess with a namespace attached. `material` in
+`flight::materials` and `material` in `flight::scene3d_wgpu` are different things.
+
+Worse, it converted CORRECT unresolvables into wrong resolutions. `out`, `begin`, `end`, `argument_1`,
+`subset`, `a`, `b` are emitter locals and parameters, not importable symbols; "unresolvable" was the right
+answer for every one of them and the broad scan invented a home for several.
+
+**Reverted.** The lookup is back to two layers, which is where the third fix left it and where it should
+have stopped: gcc's suggested namespace, which is real compiler lookup, then `flight/types/`, which owns most
+names. Anything else stays unresolvable — and an unresolvable name is usually a refused declaration or an
+emitter local, neither of which a using-declaration can fix.
+
+Two lessons, and the second is the uncomfortable one:
+
+- **A lookup that always answers is worse than one that admits it does not know.** The narrow version's
+  false negatives were visible and cost a round each; the broad version's false positives were invisible and
+  would have been declared.
+- **I framed the fourth fix as "finally in the right place" one entry above this.** It was not measured
+  against a package before being written up that way. The measurement that caught it took one compile, and
+  came only because 78 resolved names in a 10-failure package did not look right. Confidence in a tool is
+  not evidence about it.
