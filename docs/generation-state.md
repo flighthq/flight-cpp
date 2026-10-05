@@ -4024,3 +4024,52 @@ is the quoted-include override bypass measured rather than argued: the override 
 consumers and cannot reach the ones including it with quotes. The specification recorded earlier for
 `overrides:check` — report the sites an override cannot cover — would have predicted it before the work was
 done.
+
+## The highest-leverage repair in the tree, and why a single pass would have found a third of it
+
+`flight/render/render_state.hpp` holds the **first error of 49 headers**, more than any other file in the
+SDK, and its own first error is an unqualified `RenderStateRuntime`. So the biggest single blocker on the
+board is an `insert-using-declaration`.
+
+Reading the compile report gave four names for the whole `render` package — `RenderStateRuntime`,
+`Matrix4`, `MatrixLike`, `Rectangle` — because the report lists each header's FIRST diagnostic. Declaring
+those four measured:
+
+| header | baseline | with four names |
+|---|---|---|
+| `render/render_state.hpp` | 37 | 26 |
+| `render/render_target.hpp` | 58 | 48 |
+| `render/render_viewport.hpp` | 55 | 35 |
+
+Real progress, no header closed, and the next errors were **more unqualified names**. So the set had to be
+found by ITERATING the repair to a fixed point rather than read off the report. Compiling
+`render_state.hpp` directly with a high error limit surfaced eleven candidates in one pass and settled
+after a second round:
+
+```
+round 0: 37 errors, 11 new name(s)
+round 1:  4 errors,  0 new name(s)
+```
+
+**37 errors to 4**, from seven names where the report had shown one. Ten are now declared for the package,
+combining these with the ones that were first errors in its other headers.
+
+One of the eleven needed a second look. `entity_runtime_key` came back "unresolvable" from my own lookup
+while gcc's diagnostic said `did you mean 'flight::types::entity_runtime_key'?` — it is an
+`inline const flight::Symbol`, not a type, so a declaration index matching only `struct`/`class`/`using`
+misses it. That is the third time that index gap has bitten, after `registry_entry_state` and
+`get_node_runtime`. **gcc's own suggestion is a more reliable index than mine**, and a sweep should prefer
+it where present.
+
+### It still does not close the header, and the remainder is not mine
+
+The four errors left in `render_state.hpp` are three unrelated families:
+
+- `no match for 'operator[]'` on a `flight::Ref<RenderState>` — indexing a `shared_ptr`;
+- `no matching function for call to 'flight::Array<std::variant<…>>'`;
+- **`dispose_render_proxy_for_shutdown' was not declared`** — a refused declaration, so the header needs a
+  supplied function and no repair can reach it.
+
+So the 49-header blocker splits cleanly: the names are a declared repair and measured at 37→4, and the
+remainder is a supply job plus two compiler-side shapes. Worth stating plainly because "the biggest blocker
+in the tree is one using-declaration" was true of its first diagnostic and false of the header.
