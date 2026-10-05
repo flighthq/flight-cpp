@@ -297,21 +297,7 @@ inline void register_log_serializer(flight::String kind, std::function<flight::R
 inline flight::Array<flight::Ref<LogSink>> sinks = flight::Array<flight::Ref<LogSink>>{};
 
 inline void add_log_sink(flight::Ref<LogSink> sink) {
-  // STUB WITH A NAMED DIVERGENCE. TypeScript reads `if (sinks.includes(sink)) return;` -- a dedupe by
-  // REFERENCE IDENTITY, so registering the same function twice is a no-op. `Ref<LogSink>` is a plain
-  // std::function (Ref<T> collapses to T for anything not deriving from flight::ReferenceEnabled), and
-  // std::function has no operator==, so `includes` instantiates flight::SameValueZero on a callable and
-  // does not compile.
-  //
-  // This one line was the ONLY reachable use of function equality in @flighthq/log. emit_signal does not
-  // compare slots -- it forwards to signal->emit -- so dropping the dedupe here closes the whole module.
-  // The genuine reference-identity blocker stays where it belongs, in @flighthq/signals: disconnect_signal
-  // and is_slot_connected in flight/signals/slot.hpp compare a stored slot against a passed one, which IS
-  // listener removal and cannot be faked. Those are templates, so they only fail where instantiated.
-  //
-  // Divergence, stated so nobody discovers it: add_log_sink is no longer idempotent. Registering the same
-  // sink twice appends twice and that sink then receives every entry twice. No caller in the SDK registers
-  // a sink more than once; a consumer that does gets duplicate lines, not a crash or wrong data.
+  if (sinks.includes(sink)) return;
   sinks.push(sink);
 }
 
@@ -320,26 +306,10 @@ inline void clear_log_sinks() {
 }
 
 inline bool remove_log_sink(flight::Ref<LogSink> sink) {
-  // STUB, and the one place in @flighthq/log where the refusal is load-bearing rather than incidental.
-  // TypeScript reads `const idx = sinks.indexOf(sink)` -- find a function by REFERENCE IDENTITY and
-  // remove it. `Ref<LogSink>` is a plain std::function (Ref<T> collapses to T for anything not deriving
-  // from flight::ReferenceEnabled) and std::function has no operator==, so index_of instantiates
-  // flight::SameValueZero on a callable and does not compile.
-  //
-  // Unlike add_log_sink's dedupe, this cannot be dropped: finding the sink IS the function. And it cannot
-  // be faked. std::function::target() looks like an answer and is not -- copies of one std::function hold
-  // distinct targets, so it would report "different" exactly where JavaScript reports "same" and remove
-  // nothing, silently, forever. Any equality invented here would be a semantics this repository asserted
-  // and its own tests then certified as true.
-  //
-  // So it throws, naming itself, which is the project's rule for a gap: visible at the moment it matters
-  // rather than a no-op that looks correct. Closing it needs function values that carry identity -- a
-  // shared_ptr-backed callable compared by pointer -- which is the emitter's representation choice for
-  // every std::function it writes, and the same blocker that stops @flighthq/signals' disconnect_signal.
-  (void)sink;
-  throw flight::Error(flight::String(
-      "flight::log::remove_log_sink is not implemented in this profile: removing a sink needs function "
-      "reference identity, which the emitted std::function representation does not carry."));
+  const double idx = sinks.index_of(sink);
+  if (idx < 0.0) return false;
+  static_cast<void>(sinks.splice(idx, 1.0));
+  return true;
 }
 
 inline void set_log_sink(std::optional<flight::Ref<LogSink>> sink) {
