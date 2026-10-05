@@ -730,6 +730,10 @@
       "symbols": [
         {
           "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
           "name": "finish_entity"
         }
       ],
@@ -1190,6 +1194,10 @@
       "appliesTo": "flight/glyphatlas/",
       "namespace": "flight::entity",
       "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
         {
           "include": "flight/entity/entity.hpp",
           "name": "finish_entity"
@@ -1860,6 +1868,942 @@
       "defect": "The emitter writes 23 flight::types name(s) unqualified inside namespace flight::skeleton2d_formats. The set was found by ITERATING the repair to a fixed point, not by reading the compile report, which lists only each header's first diagnostic and under-reports this family badly. flight/skeleton2d_formats/ holds the first error of 11 header(s). Each name carries its own defining header because they are spread across several files.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "app-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/app/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::app. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "assets-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/assets/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::assets. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "audio-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/audio/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::audio. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "clip-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/clip/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::clip. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "collision-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/collision/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::collision. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "command-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/command/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::command. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "connectivity-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/connectivity/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::connectivity. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "dialog-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/dialog/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::dialog. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/effects/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::effects. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/effects_wgpu/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::effects_wgpu. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "image-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/image/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::image. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "input-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/input/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::input. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "interaction-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/interaction/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::interaction. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "lifecycle-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/lifecycle/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::lifecycle. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "materials-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/materials/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::materials. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "media-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/media/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::media. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "menu-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/menu/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::menu. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "midi-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/midi/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::midi. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "notification-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/notification/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::notification. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "path-boolean-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/path_boolean/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::path_boolean. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics2d/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::physics2d. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-abi-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics2d_abi/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::physics2d_abi. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics3d-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics3d/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::physics3d. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics3d-abi-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics3d_abi/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::physics3d_abi. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "picking-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/picking/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::picking. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "power-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/power/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::power. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "preferences-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/preferences/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::preferences. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "quadbatch-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/quadbatch/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::quadbatch. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::render. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render_wgpu/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::render_wgpu. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::scene2d_canvas. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::scene2d_formats. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::scene3d. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-resources-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_resources/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::scene3d_resources. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-wgpu-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_wgpu/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::scene3d_wgpu. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene-document-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene_document/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::scene_document. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "selection-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/selection/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::selection. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "share-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/share/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::share. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "shortcut-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/shortcut/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::shortcut. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton2d-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/skeleton2d/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::skeleton2d. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton3d-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/skeleton3d/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::skeleton3d. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "statusbar-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/statusbar/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::statusbar. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "text-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/text/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::text. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "text-markup-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/text_markup/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::text_markup. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "textlayout-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/textlayout/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::textlayout. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "textshaper-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/textshaper/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::textshaper. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "tilemap-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/tilemap/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
+      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::tilemap. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
