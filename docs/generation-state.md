@@ -4952,3 +4952,40 @@ So the choice is clean and has no hidden cost on either side:
 
 Both are the user's call. What is NOT available is a declaration, a patch, or an override, for the reasons
 in the section above.
+
+### Corollary: do not declare a name whose only unqualified use is inside an OVERRIDDEN header
+
+The coordination rule above has a sharper form that is worth applying mechanically, because it removes work
+rather than adding it.
+
+An override shadows one generated header by include order. A repair that rewrites that same header therefore
+has **no effect on compilation at all** — every consumer reaching it by an angle include gets the override,
+never the repaired generated copy — while still changing the generated file's hash and drifting the override.
+Pure cost.
+
+Checking the 122 repairs queued for the next regeneration against the 43 override paths found **nine** in
+exactly that state:
+
+| repair | overridden header it would rewrite | names |
+| --- | --- | --- |
+| `connectivity-create-signal-using-declaration`, `connectivity-unqualified-signals-names` | `connectivity/connectivity.hpp` | `create_signal`, `clear_signal` |
+| `lifecycle-create-signal-using-declaration`, `lifecycle-unqualified-signals-names` | `lifecycle/lifecycle.hpp` | `create_signal`, `emit_signal` |
+| `share-create-signal-using-declaration`, `share-unqualified-signals-names` | `share/share.hpp` | `create_signal`, `clear_signal`, `emit_signal` |
+| `statusbar-create-signal-using-declaration`, `statusbar-unqualified-signals-names` | `statusbar/statusbar.hpp` | `create_signal`, `emit_signal` |
+| `log-unqualified-signals-names` | `log/log.hpp` | `emit_signal` |
+
+Two conditions make them inert, and **both** were checked rather than assumed:
+
+1. each of those five headers is reached by **angle includes only** — connectivity, lifecycle, share and
+   statusbar by 1 each, `log/log.hpp` by 38, and **0 quoted** in every case — so the override is never
+   bypassed and the generated copy is unreachable;
+2. in each package the overridden header is the **only** header using those names unqualified, so no
+   sibling benefits from the declaration either.
+
+Dropped all nine. Had either condition failed — a quoted sibling include reaching the generated copy, or a
+non-overridden header in the same package using the name — the repair would have been doing real work for
+some consumer and removing it would have been wrong.
+
+This is also why the static name sweep needs the override list: a sweep over emitted text finds unqualified
+names in files that nothing ever compiles. The compile-driven collector does not have this failure mode,
+because it only ever sees diagnostics from headers that were actually built through the override include path.
