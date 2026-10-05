@@ -850,6 +850,8 @@ void test_array_like_views() {
   const flight::SequenceView<double> array_view(array);
   check(array_view.identity() == array.identity() && array_view.length == 3 && array_view.element(1.0) == 2.0,
         "ArrayLike views preserve Array identity, length, and numeric access");
+  check(!array_view.is_float32_array_backed(),
+        "ArrayLike views distinguish ordinary Array storage from Float32Array storage");
   array[1] = 8.0;
   double total = 0.0;
   for (const auto value : array_view) total += value;
@@ -864,6 +866,15 @@ void test_array_like_views() {
   typed[1] = 9;
   check(typed_view.identity() == typed_tail.identity() && typed_view.length == 2 && typed_view[0] == 9.0,
         "ArrayLike typed-array adapters retain view identity and shared backing");
+  check(!typed_view.is_float32_array_backed(),
+        "ArrayLike views do not mistake another typed-array element type for Float32Array");
+
+  const flight::SequenceView<double> float32_view(flight::Float32Array{1.0f, 2.0f});
+  auto copied_float32_view = float32_view;
+  auto moved_float32_view = std::move(copied_float32_view);
+  check(float32_view.is_float32_array_backed() &&
+            moved_float32_view.is_float32_array_backed(),
+        "ArrayLike views retain Float32Array backing evidence through copies");
 
   auto owned_source = std::make_shared<std::vector<int>>(std::initializer_list<int>{7, 8});
   const auto erased_view = flight::SequenceView<double>::from_shared(owned_source);

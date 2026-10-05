@@ -67,16 +67,22 @@ class SequenceView {
         get_([](size_type) -> Value { throw std::out_of_range("empty Flight sequence view"); }) {}
 
   SequenceView(const SequenceView& other)
-      : length(this), identity_(other.identity_), size_(other.size_), get_(other.get_) {}
+      : length(this),
+        identity_(other.identity_),
+        float32_array_backed_(other.float32_array_backed_),
+        size_(other.size_),
+        get_(other.get_) {}
 
   SequenceView(SequenceView&& other) noexcept
       : length(this),
         identity_(std::exchange(other.identity_, nullptr)),
+        float32_array_backed_(std::exchange(other.float32_array_backed_, false)),
         size_(std::move(other.size_)),
         get_(std::move(other.get_)) {}
 
   SequenceView& operator=(const SequenceView& other) {
     identity_ = other.identity_;
+    float32_array_backed_ = other.float32_array_backed_;
     size_ = other.size_;
     get_ = other.get_;
     return *this;
@@ -84,6 +90,7 @@ class SequenceView {
 
   SequenceView& operator=(SequenceView&& other) noexcept {
     identity_ = std::exchange(other.identity_, nullptr);
+    float32_array_backed_ = std::exchange(other.float32_array_backed_, false);
     size_ = std::move(other.size_);
     get_ = std::move(other.get_);
     return *this;
@@ -100,6 +107,7 @@ class SequenceView {
     requires std::constructible_from<Value, const SourceValue&>
   SequenceView(TypedArray<SourceValue> source)
       : identity_(source.identity()),
+        float32_array_backed_(std::same_as<std::remove_cv_t<SourceValue>, float>),
         size_([source] { return source.size(); }),
         get_([source](size_type index) { return Value(source[index]); }) {}
 
@@ -150,6 +158,13 @@ class SequenceView {
   [[nodiscard]] size_type size() const { return size_(); }
   [[nodiscard]] bool empty() const { return size() == 0; }
   [[nodiscard]] const void* identity() const noexcept { return identity_; }
+  // ArrayLike<number> erases its concrete Array/typed-array carrier into SequenceView<double>.
+  // AnimationTrack's clone contract nevertheless promises to preserve Float32Array backing, so
+  // retain that one observable carrier fact alongside the already-retained identity. This is a
+  // query only: it introduces none of the optional- or index-like names used by generic probes.
+  [[nodiscard]] bool is_float32_array_backed() const noexcept {
+    return float32_array_backed_;
+  }
   [[nodiscard]] const_iterator begin() const noexcept { return const_iterator(this, 0); }
   [[nodiscard]] const_iterator end() const { return const_iterator(this, size()); }
 
@@ -190,6 +205,7 @@ class SequenceView {
   }
 
   const void* identity_{nullptr};
+  bool float32_array_backed_{false};
   std::function<size_type()> size_;
   std::function<Value(size_type)> get_;
 };

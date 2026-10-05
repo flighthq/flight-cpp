@@ -666,6 +666,22 @@
       "remaining": "None with the companion surface overrides.",
       "expires": "when computed-cell-only structural bases can prove derived-to-base row widening.",
       "authoredOn": "2026-10-04"
+    },
+    {
+      "id": "animation-track-complete-sampling-and-copy",
+      "path": "flight/animation/animation_track.hpp",
+      "package": "@flighthq/animation",
+      "status": "complete",
+      "supplies": "packages/animation/src/animationTrack.ts",
+      "derivedFrom": "0d44bd65d5915d5ff15067fd34494ebcf4fedd34c014b356b65c1d438aff8c70",
+      "reason": "After the localized initializer patch, the emitter still refuses cloneNumberBuffer because SequenceView erases the Array versus Float32Array carrier, cloneAnimationTrack, trimAnimationTrack, and validateAnimationTrack on nullable segment-easing tests, and sampleAnimationTrack on optional indexed easing projection. The retained helpers compile, but five public behaviors remain absent and five direct angle consumers call clone or sample.",
+      "change": "Completes the emitted module with explicit optional handling for segment easings, source-equivalent keyframe cloning, trimming, validation, linear/step/cubic sampling, and quaternion normalization. SequenceView retains one additional observable fact—whether its erased numeric input was a Float32Array—so cloneNumberBuffer can allocate the backing type the source promises without exposing or copying the original buffer.",
+      "equivalence": "Clones allocate independent time, value, and segment-easing storage while retaining easing callable identity and Float32Array versus Array backing. Sampling preserves boundary clamping, segment-first easing fallback, step, linear, Hermite cubic, shortest-arc quaternion slerp, and normalization. Trimming retains only in-range keyframes in source order, rebases time, slices the matching easing range, and always writes fresh Array buffers. Validation preserves diagnostic order, codes, indices, and the null-versus-array result. The retained initializer and helper bodies are unchanged.",
+      "whyNotAPatchOrRepair": "A repair cannot add five behavioral functions. Local annotations can recover the initializer and might recover the optional easing expression, but ordinary TypeScript cannot restore the Array-versus-Float32Array carrier after the target has erased both into SequenceView; always cloning to one backing would change a documented public behavior. The runtime query is deliberately narrow and was checked against requires-based duck typing before addition.",
+      "unblocks": "All five previously absent declarations compile. The partial generated animation_track.hpp already compiled by omitting them, so the direct compiled-header gain is +0. Across its five direct angle consumers in the current generated tree, animation_clip.hpp and animation_root_motion.hpp move from failing on the missing clone/sample declarations to compiling: +2 downstream headers, measured with unlimited diagnostics.",
+      "remaining": "animation_crossfade.hpp advances past sampleAnimationTrack to an incompatible structural Array write; animation_blend_tree.hpp retains its independent readonly-row Array projection; contract.hpp cascades from blend tree and other independently failing modules. Those three do not count toward the measured gain.",
+      "expires": "when the emitter represents ArrayLike<number> carrier discrimination, lowers nullable segment-easing tests and optional indexed fallback, and emits the full animationTrack module.",
+      "authoredOn": "2026-10-05"
     }
   ]
 }
