@@ -4605,3 +4605,65 @@ Related and already recorded: `has_value()` on a `StructuralRef` is likewise not
 because `json.hpp:274` duck-types `requires { value.has_value(); *value; }` to detect optional-like
 values. `has_value`, `value`, `begin`, `end`, `index`, `size` and now `to_string` are not neutral
 identifiers in this runtime.
+
+## The WGPU host binding carries handles and no operations, and 176 undeferred headers need the operations
+
+`include/flight/host_sdl/wgpu.hpp` declares 18 object tags and aliases each to `WgpuObject<Tag>`:
+
+```cpp
+struct WgpuDeviceTag; struct WgpuRenderPassEncoderTag; struct WgpuBufferTag; /* …15 more */
+using WgpuDevice = WgpuObject<WgpuDeviceTag>;
+using WgpuRenderPassEncoder = WgpuObject<WgpuRenderPassEncoderTag>;
+```
+
+`WgpuObject<Tag>` is a **lifetime carrier and nothing else**. Its entire member surface is `adopt`,
+`operator bool`, `operator==`, `identity()`, `native_handle()`, `weaken()` and `lock_weak()` — ownership,
+identity, and weak references. **Not one of the 18 tags carries a single WebGPU operation.**
+
+The emitted SDK calls the actual WebGPU API on these carriers. Compiling
+`flight/effects_wgpu/wgpu_effect_pass.hpp` with `-fmax-errors=0` names exactly what is missing:
+
+| carrier | missing members | occurrences |
+| --- | --- | --- |
+| `WgpuRenderPassEncoder` | `set_bind_group`, `end`, `set_pipeline`, `draw` | 12 |
+| `WgpuDevice` | `create_bind_group_layout`, `queue`, `create_sampler`, `create_buffer`, `create_bind_group` | 6 |
+
+These are core WebGPU calls, not exotic ones, and that one file is only the first to be looked at.
+
+### It is a capability to build, and the repo already contains the pattern
+
+The sibling binding shows how this is done here. `include/flight/host_sdl/webgl.hpp:418` declares
+
+```cpp
+[[nodiscard]] WebGlBuffer create_buffer() const;
+```
+
+and `src/host_sdl/webgl.cpp:452` implements it. `WebGl2Context` is a real API surface with a real body;
+the WGPU equivalent was never written. So this is not a design disagreement, it is unfinished work with
+an in-repo precedent — `webgl.hpp` / `webgl.cpp` is the shape the WGPU device and encoder surfaces should
+take, against whichever of Dawn or wgpu-native the `native_handle()` belongs to.
+
+### Scale, and why it is not deferrable as it stands
+
+| package | headers |
+| --- | --- |
+| effects_wgpu | 60 |
+| scene3d_wgpu | 50 |
+| render_wgpu | 33 |
+| scene2d_wgpu | 33 |
+| **total** | **176** |
+
+**None of the four appears in `deferred-packages.json`** (7 entries, none mentioning wgpu), so all 176 sit
+in the shippable denominator today — 6.5% of the 2711-header tree. AGENTS.md is explicit that this profile
+needs them: "inferring from web symbols appearing in a refusal would have parked `@flighthq/render-wgpu`,
+which this profile needs."
+
+None of the four declared mechanisms reaches it. A declaration cannot add an operation; a source patch
+cannot make the SDK stop calling the WebGPU API it is written against; an override would have to supply
+the API itself, in a copy, for every consumer — and `effects_wgpu/wgpu_effect_pass.hpp` is reached by 46
+QUOTED includes against 6 angle includes, so an override of it is bypassed by 46 of its 52 consumers
+anyway. This is AGENTS.md's "runtime capability to build", and it is the largest one outstanding.
+
+Either the WGPU host surface gets written, or these four packages need `deferred-packages.json` entries
+with `kind: defect` so the fraction stops implying work that no declared mechanism can do. Right now the
+denominator claims 176 headers are a declaration away, and they are not.
