@@ -1259,6 +1259,49 @@ concept structured_clone_accepts_second_argument =
 // `slots.element(i) != slot`, and `add_log_sink`'s dedupe was `sinks.includes(sink)`; both are ECMAScript
 // reference identity on a function value. This is that pattern written against flight::Function, so the
 // claim that the runtime already supports it is demonstrated rather than asserted.
+// `Symbol()` takes an optional description in ECMAScript and the emitter spells the absent case as
+// `flight::Symbol(std::nullopt)`. The property that matters is UNIQUENESS: `Symbol() !== Symbol()`.
+void test_symbol_absent_description() {
+  const flight::Symbol first(std::nullopt);
+  const flight::Symbol second(std::nullopt);
+  check(!(first == second), "two symbols with no description must be distinct, as Symbol() !== Symbol()");
+  check(first == first, "a symbol must equal itself");
+  const auto copied = first;
+  check(copied == first, "copying a symbol must preserve its identity");
+  check(first.key() == flight::String(), "a symbol with no description must carry an empty description");
+  // It must NOT be interned: for_key returns the same symbol for the same string, and these must not
+  // collide with the interned empty key.
+  check(!(first == flight::Symbol::for_key(flight::String())),
+        "an undescribed symbol must not be the interned symbol for the empty string");
+  check(flight::Symbol::for_key(flight::String("k")) == flight::Symbol::for_key(flight::String("k")),
+        "for_key must still intern, so the two constructors stay distinguishable");
+}
+
+// The emitter lowers `catch (e)` to `catch (const std::exception&)` and reaches `.message` through
+// `static_cast<flight::Error>(e)`. The message must survive that, not be replaced.
+void test_error_from_caught_exception() {
+  try {
+    throw std::runtime_error("plain what text");
+  } catch (const std::exception& caught) {
+    const auto wrapped = static_cast<flight::Error>(caught);
+    check(wrapped.message() == flight::String("plain what text"),
+          "wrapping a caught std::exception must take its what() as the message");
+  }
+  // A flight::Error caught as std::exception must round-trip its own message.
+  try {
+    throw flight::Error(flight::String("flight message"));
+  } catch (const std::exception& caught) {
+    const auto wrapped = static_cast<flight::Error>(caught);
+    check(wrapped.message() == flight::String("flight message"),
+          "a flight::Error caught as std::exception must round-trip its message");
+  }
+  // Copy construction must still win over the std::exception constructor for an Error argument.
+  const flight::Error original(flight::String("original"));
+  const flight::Error copied(original);
+  check(copied.message() == flight::String("original"),
+        "copying an Error must not route through the std::exception constructor");
+}
+
 void test_callable_identity_slot_list() {
   using Slot = flight::Function<void(double)>;
 
@@ -3577,6 +3620,8 @@ int main() {
   test_number_to_fixed();
   test_any_domain();
   test_attached_properties();
+  test_symbol_absent_description();
+  test_error_from_caught_exception();
   test_callable_identity_slot_list();
   test_structured_clone();
   test_settled_task_arms();
