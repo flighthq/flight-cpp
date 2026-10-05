@@ -5,22 +5,51 @@ replaces the practice of writing findings up as letters to flight-compiler: find
 and we keep patching. `docs/upstream-flight-compiler-request.md` is the historical correspondence and is
 no longer the place new work goes.
 
-Measured at flight `7e2fc7d` / flight-compiler `839d91e`, 2026-10-02.
+Measured at flight `7e2fc7d` / flight-compiler `2b687ea`. Sections are appended as findings land, so a
+later section supersedes an earlier one where they disagree; corrections are recorded rather than edited away.
 
-## Read the profiled tree, never the unbound one
+## Current state, measured
 
-`npm run sdk:generate` passes **no** binding profiles. The committed `generated/` tree is therefore the
-zero-bindings build, and its `manifest.json` says `bindingProfiles: []`. Anything measured there
-overstates how much is blocked, because every external symbol is missing by construction.
+| | |
+| --- | --- |
+| modules emitted | **2174 / 2709** (1689 complete + 485 dependency-incomplete) |
+| modules refused | **535** (1020 including dependency cascades) |
+| headers compiling | see the most recent gate section below |
+| emission repairs | 349 entries / 1604 symbols |
+| source patches | 13 |
+| overrides | 45 |
 
-| | `generated/` (unbound) | `out/sdk-sdl` (profiled) |
-|---|---|---|
-| modules emitted | 1153 / 2904 | **1506 / 2904** |
-| root refusals | 938 | **603** |
-| "binding plan incomplete" | 680 | **13** |
+Two standing cautions about any number in this document:
 
-Use `npm run sdk:generate:sdl` and read `out/sdk-sdl/manifest.json`. External binding coverage is
-roughly 98% complete; it is not the blocker it appears to be in the unbound ledger.
+- **`out/sdk-sdl-header-compilation.json` is gitignored**, so there is no committed baseline to diff. A figure
+  quoted from an earlier session is a note, not a reproducible measurement.
+- **A report whose run window contains a merge is internally inconsistent** — overrides apply at compile time
+  through the include path, so headers compiled before and after a merge saw different override sets. See the
+  section on 1800/910.
+
+## CORRECTED: `sdk:generate` now applies the SDL binding profiles by default
+
+This section previously said `npm run sdk:generate` passes **no** binding profiles, that the committed
+`generated/` tree was therefore the zero-bindings build, and that a reader should use
+`npm run sdk:generate:sdl` and read `out/sdk-sdl/manifest.json` instead. **That is no longer true and the
+advice is now wrong.**
+
+Commit `0b3f8f14` made the SDL profiles the default, so the committed tree is already the profiled one:
+
+```
+generated/manifest.json bindingProfiles:
+  bindings/runtime.json, bindings/headless.json, bindings/web-types.json,
+  bindings/sdl-image.json, bindings/sdl-gl.json, bindings/sdl-wgpu.json, bindings/sdl-app.json
+```
+
+An explicit `--binding-profile=` list still wins, which is how `sdk:generate:headless` and friends keep
+producing their own inventories. So **read `generated/` directly** — it is the profiled tree.
+
+The warning the old section existed to give still holds in its general form, and is worth keeping: a tree
+generated with no binding profiles overstates how much is blocked, because every external symbol is missing
+by construction. The old figures it quoted (1153/2904 emitted, 938 root refusals, 680 "binding plan
+incomplete") were measurements of that unbound build at an older pin and should not be compared against
+anything current.
 
 ## The three rungs
 
