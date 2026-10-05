@@ -5884,3 +5884,56 @@ few defect sites is not evidence of leverage.** `render_state.hpp:133` was 251 f
 +51 headers; `texture.hpp:108` is 11 failures at one line and worth zero. The difference is what else is wrong
 with the headers behind it, and the only way to know is to fix it on an overlay and recompile the affected set.
 Count the headers that reach **zero**, never the errors removed.
+
+## The declaration lever is exhausted: 350 repairs, and the last 112 bought zero headers
+
+The third regeneration applied **all 350 repairs**, repaired **1578 headers** after emission, emitted the ~112
+declarations that were genuinely pending, left the backlog at **0**, and was refusal-neutral with no override
+drift. The gate then returned:
+
+| | |
+| --- | --- |
+| passed | **1866** |
+| failed | 844 |
+
+**Identical to the previous clean run — the same 1866 headers, verified by comparing the passed sets**, not
+just the counts. The report is genuinely new (87.2 minutes, written three hours after the one it matches).
+
+### What actually moved the number this arc
+
+| measurement | passed | what changed since the previous row |
+| --- | --- | --- |
+| recorded note (not reproducible) | 1714 | — |
+| first clean run, 148 repairs | 1792 | the first 148 declarations |
+| clean run | **1866** | builder's overrides: registry (+4 downstream), animation (+2), render_state (+51) |
+| clean run, 350 repairs | **1866** | the remaining 202 declarations: **+0** |
+
+So declarations carried 1714 → 1792 and then stopped paying entirely. Every subsequent header gain came from
+**overrides and structural fixes**, and the runtime additions.
+
+### Why, and what it means for where effort goes
+
+A declaration fixes one diagnostic in one header. It pays only when that diagnostic is the **last** thing wrong
+with the header. Early on many headers were one name away; now none are. The 249 remaining undeclared-name
+failures are either refused functions wearing a not-declared diagnostic, cascades from an earlier defect in the
+same file, or names in headers with dozens of unrelated errors.
+
+The declarations are still **correct and worth keeping** — they are a faithful record of names the emitter
+writes unqualified, they cost nothing at runtime, and they are prerequisites that let the next structural fix
+land cleanly. `scene2d_canvas` and `effects_canvas` became measurable only after the `render_state` override,
+and they were measurable because their names were already declared. But as a lever on the headline number the
+declaration lane is finished, and further collector passes should be expected to find nothing until a
+structural fix reopens them.
+
+**The honest ranking of remaining effort, by measured yield:**
+
+1. **Structural fixes to shared headers** — `render_state.hpp` was one override worth +51. These are found by
+   grouping failures by defect *location* and looking for a shared header behind many packages.
+2. **Overrides supplying refused functions**, where the refusal mix is representable and the header has
+   external callers. Measured yield so far: +4, +2, +2.
+3. **The WGPU host surface** — 156 failures, blocked on a design decision, no backend present.
+4. **Declarations** — exhausted. Keep the ledger current; expect +0.
+
+And the counting rule that follows from both this and the `Ref<variant>` negative result: **count headers that
+reach zero, never errors removed, and never first-diagnostic counts.** Errors removed and masks lifted are both
+compatible with +0.
