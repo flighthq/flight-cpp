@@ -4272,3 +4272,69 @@ Two lessons, and the second is the uncomfortable one:
   against a package before being written up that way. The measurement that caught it took one compile, and
   came only because 78 resolved names in a 10-failure package did not look right. Confidence in a tool is
   not evidence about it.
+
+## A patch that gained +1 in its own closure cost 31 modules across the tree
+
+The first full generation carrying all eleven source patches regressed, and the regression is the clearest
+demonstration yet of why a subset measurement cannot stand in for a full one.
+
+| | previous | all 11 patches |
+|---|---|---|
+| modules emitted | 2172/2709 | **2141/2709** |
+| refusals recorded | 537 | **568** |
+
+Diffing the refusal ledgers: **240 newly refused, 0 recovered.** `@flighthq/types` 88, `@flighthq/path` 30,
+`@flighthq/shading` 16, `@flighthq/bitmap` 11, and a long tail — nearly all of it dependency cascades off
+`@flighthq/types/contract`, which almost everything reaches.
+
+Filtering to new ROOT refusals leaves **16**, every one identical in shape:
+
+```
+cpp emission failed for @flighthq/types/packages/types/src/BitmapText.ts:
+  Compiler lowering pass interface-inheritance failed:
+  interface Node2D inherits incompatible property EntityRuntimeKey (union-target-indeterminate)
+```
+
+— and the same for `DisplayObject`, `HtmlView`, `MorphShape`, `MovieClip`, `NativeText`,
+`ParticleEmitter2D`, `QuadBatch` and eight others.
+
+**Attribution is unambiguous.** `source-patches/node-runtime-owner-accessors.patch` introduces exactly that
+property, narrowed, on three separate interfaces:
+
+```
++  [EntityRuntimeKey]: BoundsNodeRuntime<Traits> | undefined;
++  [EntityRuntimeKey]: Spatial2DNodeRuntime<Traits> | undefined;
++  [EntityRuntimeKey]: Transform2DNodeRuntime<Traits> | undefined;
+```
+
+`Node2D` inherits from more than one, so the inheritance pass sees incompatible declarations of one
+symbol-keyed property and cannot choose a target.
+
+### Why it was not caught earlier, and the rule that follows
+
+The patch was measured on a TARGETED node generation: 1109/1143 modules with 34 refusals becoming 1110/1143
+with 33 — a real, correctly-reported +1 within its own closure. That closure does not contain the `types`
+modules whose `Node2D` inherits those interfaces, so the damage was invisible to it. Builder had already
+written down the general hazard — "subset generation omits unrelated row keys" — and this is the same gap
+with a much larger bill.
+
+Nor was the reasoning careless: the compiler's refusal text explicitly prescribed declaring the storage slot
+and the accessor result as the full writable row, and the patch does exactly that. What the prescription did
+not anticipate is three sibling interfaces each narrowing the same property.
+
+**The rule: any patch touching `types/contract`, `EntityRuntimeKey`, or `Node2D` has the entire tree
+downstream of it and must be measured by a FULL generation before it is trusted.** A targeted run is a fast
+way to find out whether a patch emits; it says nothing about what the patch costs elsewhere.
+
+### Not shipped
+
+The regenerated tree was **discarded** rather than committed — `generated/` is back at 2172 modules, and the
+regressed refusal ledger and manifest are kept at `/tmp/claude-1000/refusals-regressed.json` and
+`manifest-regressed.json` as evidence. The eight name declarations that applied correctly in that run are
+unmeasured as a result, which is the right trade: a 31-module regression is not worth shipping to measure a
+repair.
+
+The run also reported two of the node package's `insert-using-declaration` repairs as obsolete —
+`node-transform2dlike-using-declaration` and `node-vector2like-using-declaration` — which is the expiry check
+doing its job, since the patch changed the names they stood in for. Those deletions are on hold until the
+patch's fate is decided: withdrawing it would bring the defects back.
