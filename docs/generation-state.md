@@ -5026,3 +5026,60 @@ Three ways to avoid it, in order of preference:
 
 The general rule for this repository: a tool that takes tens of minutes and ends in a whole-file write is
 holding a lock on that file for its entire run, whether or not it says so.
+
+## `generated/best-effort.json` already holds the dependency graph, and it ranks the work better than anything we were using
+
+This file was being ignored. It is the best prioritisation source in the repository and it is committed.
+
+Every module carries a `status` and a `consumers` list, which together give both the real breakdown of the
+headline number and the dependency edges needed to rank blockers.
+
+### The headline "2174 emitted" is two different things
+
+| status | modules |
+| --- | --- |
+| `emitted` | **1689** |
+| `dependency-incomplete` | **485** |
+| `refused-placeholder` | **535** |
+| total | 2709 |
+
+`manifest.summary.emittedModules` is 2174, which is 1689 + 485. So **485 of the modules counted as emitted
+are emitted with an incomplete dependency** — files that exist and will usually fail to compile through no
+fault of their own. Reporting 2174/2709 without that split overstates how much is actually standing up;
+the honest reading is 1689 complete, 485 waiting on something else, 535 refused.
+
+### Ranking refused modules by what they actually block
+
+Walking `consumers` transitively from each refused module and counting how many
+**`dependency-incomplete`** modules it reaches gives the real priority order:
+
+| blocked | angle | quoted | header | refused fns | override |
+| --- | --- | --- | --- | --- | --- |
+| 165 | 7 | 4 | `node/node.hpp` | 7 | — |
+| 165 | 6 | 2 | `node/hierarchy.hpp` | 18 | — |
+| 165 | 2 | 1 | `node/node_transform2d.hpp` | 6 | — |
+| 131 | 38 | 0 | `log/log.hpp` | 21 | **complete** |
+| 126 | 17 | 0 | `registry/registry_table.hpp` | 12 | complete (just finished) |
+| 109 | 7 | 3 | `texture/texture.hpp` | 6 | — |
+| 72 | 1 | 5 | `scene2d/display_object.hpp` | 3 | — |
+| 72 | 4 | 1 | `scene2d/display_container.hpp` | 3 | — |
+| 52 | 6 | 0 | `node/bounds_rectangle.hpp` | **0** | — |
+| 47 | 2 | 1 | `textlayout/text_format.hpp` | 1 | complete |
+| 39 | 2 | 0 | `clip/clip_region.hpp` | 12 | — |
+
+Three things fall out of this that the refused-function counts never showed:
+
+- **`@flighthq/node` is the dominant blocker in the tree** — three refused modules each reaching 165
+  dependency-incomplete modules, 31 refused functions between them. Nothing else is close except `log`
+  and `registry`, both already overridden.
+- **A high refused-function count is not a high-value target and vice versa.**
+  `node/bounds_rectangle.hpp` blocks 52 modules with **zero** refused functions, so it is refused for
+  something other than a missing function and an override supplying functions would not fix it.
+  `clip/clip_region.hpp` blocks 39 with 12 refused functions and is **0 quoted**, so it is both valuable
+  and fully reachable.
+- **Blocking impact and override reachability are independent and both matter.** `node/node.hpp` blocks
+  165 but is reached by 4 quoted includes, so an override of it is bypassed by those consumers;
+  `log/log.hpp` blocks 131 with 0 quoted, which is why overriding it closed nineteen packages cleanly.
+
+So the ranking to work from is `blocked` × reachability, not the count of `NOT GENERATED` markers — and
+every number above comes from committed data rather than a scan.
