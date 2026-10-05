@@ -1,0 +1,88 @@
+diff --git a/packages/scene3d-formats/src/shared.ts b/packages/scene3d-formats/src/shared.ts
+index af35673..a36a4ee 100644
+--- a/packages/scene3d-formats/src/shared.ts
++++ b/packages/scene3d-formats/src/shared.ts
+@@ -2,15 +2,13 @@ import { createEmbeddedImageResourceReference, createExternalImageResourceRefere
+ import { CANONICAL_SKINNED_MESH_GEOMETRY_LAYOUT } from '@flighthq/mesh/contract';
+ import { createTexture } from '@flighthq/texture/contract';
+ import type {
+-  EmbeddedImageResourceReference,
+-  ExternalImageResourceReference,
+   ImageResourceReference,
+   MutableNumberArray,
+   SkinInfluence,
+   Texture,
+   VertexAttributeLayout,
+ } from '@flighthq/types/contract';
+-import { ImageResourceReferenceKind } from '@flighthq/types/contract';
++import { findEmbeddedImageResourceReference, findExternalImageResourceReference } from '@flighthq/types/contract';
+ 
+ export const CANONICAL_FLOATS_PER_VERTEX = 12;
+ export const CANONICAL_LAYOUT: VertexAttributeLayout = {
+@@ -78,12 +76,7 @@ export function createEmbeddedTextureRef(
+   mimeType: string | null,
+   resources?: ImageResourceReference[],
+ ): Texture {
+-  let resource = resources?.find(
+-    (candidate): candidate is EmbeddedImageResourceReference =>
+-      candidate.kind === ImageResourceReferenceKind.Embedded &&
+-      candidate.bytes === bytes &&
+-      candidate.mimeType === mimeType,
+-  );
++  let resource = findEmbeddedImageResourceReference(resources, bytes, mimeType);
+   if (resource === undefined) {
+     resource = createEmbeddedImageResourceReference(bytes, mimeType);
+     resources?.push(resource);
+@@ -101,12 +94,7 @@ export function createExternalTextureRef(
+   basePath: string | null = null,
+   resources?: ImageResourceReference[],
+ ): Texture {
+-  let resource = resources?.find(
+-    (candidate): candidate is ExternalImageResourceReference =>
+-      candidate.kind === ImageResourceReferenceKind.External &&
+-      candidate.uri === uri &&
+-      candidate.basePath === basePath,
+-  );
++  let resource = findExternalImageResourceReference(resources, uri, basePath);
+   if (resource === undefined) {
+     resource = createExternalImageResourceReference(uri, basePath);
+     resources?.push(resource);
+diff --git a/packages/types/src/ImageResourceReference.ts b/packages/types/src/ImageResourceReference.ts
+index 0e76704..6318089 100644
+--- a/packages/types/src/ImageResourceReference.ts
++++ b/packages/types/src/ImageResourceReference.ts
+@@ -88,6 +88,34 @@ export interface ExternalImageResourceReference extends ImageResourceReferenceBa
+ 
+ export type ImageResourceReference = EmbeddedImageResourceReference | ExternalImageResourceReference;
+ 
++export function findEmbeddedImageResourceReference(
++  resources: readonly ImageResourceReference[] | undefined,
++  bytes: Uint8Array,
++  mimeType: string | null,
++): EmbeddedImageResourceReference | undefined {
++  if (resources === undefined) return undefined;
++  for (const candidate of resources) {
++    if (candidate.kind === 'Embedded' && candidate.bytes === bytes && candidate.mimeType === mimeType) {
++      return candidate;
++    }
++  }
++  return undefined;
++}
++
++export function findExternalImageResourceReference(
++  resources: readonly ImageResourceReference[] | undefined,
++  uri: string,
++  basePath: string | null,
++): ExternalImageResourceReference | undefined {
++  if (resources === undefined) return undefined;
++  for (const candidate of resources) {
++    if (candidate.kind === 'External' && candidate.uri === uri && candidate.basePath === basePath) {
++      return candidate;
++    }
++  }
++  return undefined;
++}
++
+ // The swappable fetch seam an External reference resolves through. The web backend fetches a URL; a
+ // native host substitutes its own. This boundary deliberately remains ImageResource-only: External means fetching
+ // a URI into a host-drawable handle, while Embedded has bytes in hand and may decode to any TextureSource.

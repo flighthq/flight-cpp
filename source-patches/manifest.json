@@ -4,6 +4,22 @@
   "note": "Patches applied to a pinned sibling checkout before generation, so a module the compiler refuses to lower today can still ship. A patch here may only rewrite an expression into an equivalent the compiler does lower. It may NEVER change observable behavior -- absence, reference identity, equality, ordering, exception shape, task settlement -- because the generated header is then tested against the patched source, so a behavioral patch is a lie our own tests would certify. Each patch states the equivalence that makes it safe and the refusal it answers. The patch is applied after the pin integrity check and reverted when generation ends, so the checkout is only ever dirty inside one run. `baseCommit` pins the patch to the revision it was written against: a pin move that breaks the patch fails loudly instead of silently applying to different code.",
   "patches": [
     {
+      "id": "scene3d-formats-resource-ref-owner-lookup",
+      "dependency": "flight",
+      "patch": "scene3d-formats-resource-ref-owner-lookup.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d-formats/src/shared.ts plus ImageResourceReference owner lookups",
+      "package": "@flighthq/scene3d-formats",
+      "answers": "refusal",
+      "refusal": "ImageResourceReference union member tests lose their C++ variant binding after crossing the package boundary",
+      "rewrite": "Moves the two exact first-match predicates into explicit ascending loops beside the ImageResourceReference union declaration and calls those owner-side lookups from the texture factories.",
+      "equivalence": "Each helper retains Array.find's ascending order and first-match stop, the same Embedded or External discriminant, strict Uint8Array reference identity, strict string/null comparisons, and undefined result for an absent array or miss. The factories still allocate only on a miss, append the same new reference after construction, and create one fresh Texture around the identical selected reference.",
+      "whyNotUpstreamFirst": "The owner-side predicates are ordinary target-neutral TypeScript and make reusable resource deduplication explicit. The public texture factory signatures and behavior remain unchanged; the contract-only helpers are temporary representation evidence while the emitter cannot preserve a discriminated union binding across packages.",
+      "unblocks": "Supplies createEmbeddedTextureRef and createExternalTextureRef through exact owner-side lookups, removes the ImageResourceReference owner refusal (87 to 86 total), and makes types/image_resource_reference.hpp compile: +1 direct owner header. scene3d_formats/shared.hpp and all 9 immediate consumers remain 0/10 because the separately refused image module emits an unqualified ImageBitmapCompositionResolver dependency; gltf_parse additionally has its own AnimationInterpolation name diagnostic, so downstream closure is +0.",
+      "expires": "when the emitter preserves a discriminated union's variant binding across package boundaries, or Flight adopts these owner-side lookup helpers.",
+      "appliedOn": "2026-10-05"
+    },
+    {
       "id": "animation-track-explicit-initialization-defaults",
       "dependency": "flight",
       "patch": "animation-track-explicit-initialization-defaults.patch",
@@ -15,7 +31,7 @@
       "rewrite": "Binds each initialization default to a local explicitly annotated with the destination field's existing type before assigning the fields, and spells the declared Linear interpolation constant as its exact literal value.",
       "equivalence": "Each source property and fallback expression is evaluated once in the same order as before, and every annotated local has exactly the corresponding AnimationTrack field type. AnimationInterpolationLinear is declared as the primitive string 'Linear', so using that literal preserves strict equality and serialized value without observing a different reference. The subsequent assignments write identical values, including preserving null for both omitted and explicitly null easing fields.",
       "whyNotUpstreamFirst": "The refusal explicitly identifies a local annotation as sufficient projection evidence. This is ordinary target-neutral TypeScript and documents the intended post-coalescing types without changing the public signature.",
-      "unblocks": "Supplies initializeAnimationTrack in animation/animation_track.hpp; direct and downstream closure are measured after targeted regeneration with the landed name repairs.",
+      "unblocks": "Supplies initializeAnimationTrack and moves animation/animation_track.hpp from failing to compiling after the landed name repairs: +1 direct header. Its five in-package consumers remain 0/5 because they call the separately refused cloneAnimationTrack or sampleAnimationTrack (animation_blend_tree additionally has its own array conversion diagnostic); the two cross-package consumers also call sampleAnimationTrack, so downstream closure is +0.",
       "expires": "when the emitter infers and projects dual-sentinel coalescing into the assignment destination and qualifies imported primitive constants, or Flight adopts the annotated locals and literal.",
       "appliedOn": "2026-10-05"
     },
