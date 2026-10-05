@@ -3088,6 +3088,22 @@
       "defect": "The emitter writes 4 flight::types name(s) unqualified inside namespace flight::tilemap_formats. Found by iterating the repair to a fixed point rather than reading the compile report, which lists only each header's first diagnostic.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "intl-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/intl/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/locale_input.hpp",
+          "name": "LocaleInput"
+        }
+      ],
+      "diagnostic": "'LocaleInput' was not declared in this scope; did you mean 'flight::types::LocaleInput'?",
+      "defect": "The emitter writes 1 flight::types name(s) unqualified inside namespace flight::intl. The package's remaining blockers after this are the refused getCacheKey and getCached, which six of its headers share.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
