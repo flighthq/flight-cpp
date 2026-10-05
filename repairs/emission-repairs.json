@@ -2804,6 +2804,38 @@
       "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::tilemap. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "bitmapfont-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/bitmapfont/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/glyph_source.hpp",
+          "name": "GlyphAtlas"
+        }
+      ],
+      "diagnostic": "'GlyphAtlas' was not declared in this scope; did you mean 'flight::types::GlyphAtlas'?",
+      "defect": "The emitter writes GlyphAtlas unqualified inside namespace flight::bitmapfont. It is the first error of three of the package's five failing headers -- bitmap_font_from_glyph_atlas.hpp and the two aggregates that include it.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a types-owned name used from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "textureatlas-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/textureatlas/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/texture_atlas.hpp",
+          "name": "TextureAtlas"
+        }
+      ],
+      "diagnostic": "'TextureAtlas' was not declared in this scope; did you mean 'flight::types::TextureAtlas'?",
+      "defect": "The emitter writes TextureAtlas unqualified inside namespace flight::textureatlas. It blocks the package itself and reaches outside it: bitmapfont/summarize_bitmap_font.hpp has its first error here.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies a types-owned name used from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
