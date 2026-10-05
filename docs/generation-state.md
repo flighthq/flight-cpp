@@ -5146,3 +5146,70 @@ declarations, so it passes the gate while every consumer that calls them fails. 
 `contextual-union-missing-expression-type`, **7 `reference-assertion-without-heritage`**, 2
 `contextual-union-inequivalent`. So roughly eleven of the eighteen are representable and seven are not: a
 legitimate `status: incomplete` override that must say which seven remain and why, not a complete one.
+
+## Measured: 1792 of 2710 headers compile after the 148-repair regeneration
+
+A complete gate run, `run.complete: true`, 87.2 minutes, every header attempted:
+
+| | headers |
+| --- | --- |
+| pass | **1792** |
+| fail | 918 |
+| total attempted | 2710 |
+
+The figure recorded before this regeneration was 1714/2710, so this is roughly **+78 headers**. That
+comparison carries a caveat worth stating: `out/sdk-sdl-header-compilation.json` is gitignored, so there is
+no committed previous report to diff against — the 1714 came from a prior note, not from a file still on
+disk. Treat +78 as the best available reading rather than an audited delta, and from now on the number to
+compare against is this one, which is reproducible from the committed tree.
+
+What this run did and did not contain matters as much as the number:
+
+- `manifest.emissionRepairs` is a list of **148**, and the ledger now holds 270. So **122 repairs were
+  declared after generation started and are NOT in this measurement** — `loadEmissionRepairs` reads at
+  startup. Verified directly rather than assumed: the six `flight::node` declarations are absent from
+  `shape/morph_shape.hpp`, the six symbol-subscript sites in `selection` are still un-rewritten, and
+  `CapsStyle` and `create_signal` do not appear in their packages.
+- So 1792 is the baseline for the first 148 repairs only, and the next regeneration is where the queued 122
+  land.
+
+### Where the 918 failures are
+
+| fail | pass | package |
+| --- | --- | --- |
+| 60 | 0 | effects_wgpu |
+| 50 | 945 | types |
+| 47 | 3 | scene3d_wgpu |
+| 40 | 11 | scene2d_canvas |
+| 32 | 8 | scene3d_formats |
+| 28 | 5 | render_wgpu |
+| 26 | 2 | scene3d_resources |
+| 24 | 53 | effects |
+| 24 | 9 | scene2d_wgpu |
+| 24 | 6 | effects_canvas |
+
+**The four WGPU packages account for 159 of the 918 failures** — 17% of everything still failing, all of it
+behind the host-binding gap recorded above, none of it reachable by any declared mechanism. Subtracting
+them, 759 failures remain across everything else.
+
+`@flighthq/types` is the instructive entry: 945 passing against 50 failing, which is why it is worth
+remembering that a package's pass rate and its blocking weight are unrelated — `types` is nearly healthy and
+still the most depended-upon package in the tree.
+
+### What the 918 are made of
+
+Classifying first diagnostics across the failures:
+
+| share | family |
+| --- | --- |
+| **56%** | undeclared name (495 of 883 classified at the time of sampling) |
+| 5% | no matching function |
+| 5% | conversion |
+| 3% | `->` on `Ref<variant<…>>` (31 failures, 6 packages) |
+| 3% | no operator |
+| 2% | has no member |
+
+So the dominant remaining family by a wide margin is the one the declaration engine addresses, and 122 of
+those declarations are already queued. `->` on `Ref<variant>` is 31 first-diagnostics, which is far smaller
+than it looks from inside a single header — `texture/texture.hpp` alone contains 111 occurrences of it, and
+is one failure.
