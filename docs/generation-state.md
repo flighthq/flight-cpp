@@ -4073,3 +4073,55 @@ The four errors left in `render_state.hpp` are three unrelated families:
 So the 49-header blocker splits cleanly: the names are a declared repair and measured at 37→4, and the
 remainder is a supply job plus two compiler-side shapes. Worth stating plainly because "the biggest blocker
 in the tree is one using-declaration" was true of its first diagnostic and false of the header.
+
+## The head of the distribution is one family, and behind it is a second
+
+Every one of the top six actionable defect sites begins with an unqualified name:
+
+| site | blocks | first error |
+|---|---|---|
+| `mesh/mesh_geometry.hpp` | 18 | `MeshGeometry` |
+| `physics3d/collider_transform.hpp` | 17 | `Physics3DCollider` |
+| `scene3d_formats/shared.hpp` | 16 | `VertexAttributeLayout` |
+| `text/text_label_layout.hpp` | 14 | `TextMetrics` |
+| `animation/animation_track.hpp` | 12 | `allocate_entity` |
+| `gui/gui_controller.hpp` | 12 | `Node2D` |
+
+89 headers behind six sites. Iterating each to a fixed point and declaring the result is the largest block
+of addressable work remaining, and it is repair-shaped.
+
+`mesh` measured **105 errors to 29** from ten names, in two rounds. `render` measured **37 to 4** from ten.
+Neither closed its header, which is the pattern to expect and to report honestly: these declarations cut
+errors sharply and close few headers outright, because a second family sits behind them.
+
+### Fixing the lookup instead of the symptom
+
+`entity_runtime_key` came back "unresolvable" from my own index for the **third** time — after
+`registry_entry_state` and `get_node_runtime` — while gcc's diagnostic said
+`did you mean 'flight::types::entity_runtime_key'?` each time. The cause is always the same: a name can be a
+**type or a value**, and an index matching only `struct`/`class`/`enum class`/`using` sees neither an
+`inline const flight::Symbol` constant nor a template function sharing a line with its namespace opener.
+
+After hand-patching it twice, the third occurrence got the fix it should have had first: the lookup now also
+matches `inline <type> name =` and `(inline|constexpr|template)… name(`. Re-running `mesh` resolved 10 names
+instead of 9 and moved its first error off the name family entirely. **gcc's own suggestion is a better index
+than any regex over the tree**, and a sweep should prefer it where offered.
+
+### The second family: `operator[]` on a `flight::Ref`
+
+With the names resolved, both `render_state.hpp` and `mesh_geometry.hpp` stop on the same thing:
+
+```
+no match for 'operator[]' (operand types are 'flight::Ref<flight::types::MeshGeometry>'
+  {aka 'std::shared_ptr<flight::types::MeshGeometry>'})
+```
+
+TypeScript's `obj[key]` lowered onto a `shared_ptr`. Sized across the tree by finding names declared as
+`flight::Ref<…>` and then indexed: **20 headers, 35 sites** — `particles_formats` 4, `mesh` 4,
+`scene3d_resources` 4, `render_wgpu` 3, `scene2d` 2, two `selection` headers 2 each, `textshaper` 2.
+
+**Not fixable in the runtime.** `flight::Ref<T>` resolves to `std::shared_ptr<T>` for a `ReferenceEnabled`
+subject, and `operator[]` cannot be added to `std::shared_ptr`. Making `Ref` a custom wrapper to carry one
+would change the public reference type throughout the SDK, which is far beyond what these 20 headers justify
+and would touch reference identity. So this family is an override or a compiler fix, not a repair and not a
+runtime extension — recorded here with its size so the question is not re-opened from scratch.
