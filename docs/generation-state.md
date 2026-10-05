@@ -5561,3 +5561,39 @@ on it and are deferred to instantiation. Both public parameters stay exactly as 
   against a 146-line override of a header with 67 angle includers and 0 quoted.
 - The earlier estimate in this document was a ceiling of 91 from the first-diagnostic list. The reverse-include
   closure is the better denominator, and +51 of 101 is the real figure.
+
+## A compile report taken across a merge is internally inconsistent, and 1800/910 is one
+
+The gate run that measured 1792 → 1800 took **87 minutes**, and a merge landed partway through it. Overrides
+apply at compile time via the include path, so headers compiled before the merge saw the old override set and
+headers compiled after saw the new one. The resulting report is not a snapshot of any single tree state.
+
+It showed up as a family that made no sense. 64 failures said `'create_keyed_table' is not a member of
+'flight::registry'`, 61 of them located at one line, `flight/render/render_state.hpp:55`. But
+`render/render_state.hpp:24` includes `<flight/registry/registry_table.hpp>` by angle include, and the
+override at `overrides/include/flight/registry/registry_table.hpp:62` defines `create_keyed_table`. Both
+facts were verified before concluding anything.
+
+Recompiling the affected headers directly settled it:
+
+| header | the report says | recompiled now |
+| --- | --- | --- |
+| `flight/render/render_state.hpp` | FAIL | **0 errors** |
+| `flight/animation/animation_clip.hpp` | FAIL | **0 errors** |
+| `flight/media/audio_channel.hpp` | FAIL | 1 error (improved) |
+| `flight/render/render_proxy.hpp` | FAIL | 13 errors |
+
+So the completed `registry_table.hpp` override and the new `animation_track.hpp` override had already fixed
+headers the report counts as failing. **1800/910 understates the tree**, and any analysis derived from that
+report — including the failure-family accounting in this document — inherits the error.
+
+### The rules this gives
+
+- **Do not merge while a gate run is in flight**, and do not trust a report whose run window contains one.
+  The report records `run.elapsedSeconds`; compare it against when the tree last changed.
+- **A single failure family concentrated at one line, in a header that visibly includes what it needs, is
+  evidence of a stale report** rather than a defect. The instinct to go and find the defect is wrong here;
+  recompiling two headers costs seconds and settles it.
+- Re-measure before building any strategy on a number. The accounting above was rebuilt for exactly this
+  reason, and the fresh run deliberately excludes the `render_state.hpp` override, which is not merged yet —
+  so its +51 is still to come on top.
