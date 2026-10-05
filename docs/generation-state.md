@@ -5382,3 +5382,58 @@ spelling) rather than becoming an override campaign.
 What the measurement does establish: when the emitter does switch, **nothing downstream has to change**. The
 runtime type is compatible at every construction and call site that exists today. That removes the main risk
 from the change and is worth knowing before it is attempted at scale.
+
+## The declaration collector: algorithm, and why it is not in `scripts/`
+
+This found **1471 declared symbols across 342 repairs**, which is most of the repair ledger, so it is written
+down here rather than left in a scratch directory. It is deliberately NOT added to `scripts/`: that directory
+is homogeneous dependency-free ESM run by Node, and more importantly "gates read; nothing here rewrites a
+committed baseline except `rehydrate:update`" — a tool whose whole job is to write
+`repairs/emission-repairs.json` does not belong among the gates. Rebuild it as a scratch harness when needed.
+
+### Algorithm
+
+1. **Build a name index over `generated/include/flight/types/` only.** No any-package fallback — a lookup that
+   always answers is worse than one that admits it does not know. (An earlier broad version resolved
+   `material`, `registry` and `create_matrix3` into wgpu/canvas namespaces and took `materials` from 46 to 200
+   errors.) Resolve each name with **definition precedence**: a full definition (`struct X {`, `enum X {`,
+   `using X =`) beats an `inline` variable definition, which beats a forward declaration `struct X;`. Without
+   that precedence, 41 of 318 symbols pointed at a header that does not define the name — `WgpuRenderState`
+   resolved to `wgpu_compressed_texture_uploader.hpp`, which only forward-declares it.
+2. **Build a second index of package-namespace functions** — `inline` definitions at namespace scope inside
+   `namespace flight::<pkg>` — excluding C++ builtin type names. Without that exclusion `std::function<void(`
+   makes `void` look like a function and it is reported as a needed name in 101 packages.
+3. **Compile every header of the target package with `-fmax-errors=0`**, in a thread pool. Unlimited
+   diagnostics is the point: the committed compile report keeps only each header's FIRST diagnostic, so one
+   defect masks the next in the same file. Serial compilation took ~50 minutes for eight packages; a pool of
+   six is the whole fix.
+4. **Parse `'X' was not declared in this scope` accepting BOTH quote forms** — GCC uses U+2018/U+2019 under a
+   UTF-8 locale and ASCII under the C locale that Node spawns it with, so an ASCII-only pattern matches every
+   name in the JSON report and none in live output. Pin `LC_ALL=C` as well.
+5. **Attribute each name to the package of the file the error is IN**, not the header being compiled. A
+   consumer routinely reports a name that is unqualified in another package's header, and declaring it against
+   the consumer puts the using-declaration where the defect is not.
+6. **Resolve, never guess.** A name found in `flight/types/` becomes a `flight::types` declaration; a name
+   found in exactly ONE package namespace becomes a declaration for that namespace; a name in more than one is
+   reported and skipped. **Same-package function hits are excluded** — those are cascade artifacts.
+7. **Union into the existing per-package entry; never create a second entry with the same derived id.** A
+   collision silently dropped names once already.
+8. **Iterate to convergence**, re-applying all repairs to a pristine tree copy between rounds. Round 1 carries
+   most of the yield; round 2 found one name for thirty minutes in a 12-package batch.
+
+### Two properties that make it sound
+
+- **Diagnostic-driven, so it cannot redeclare a name already in scope.** The compiler saying "not declared in
+  this scope" IS the proof. A static sweep over emitted text reported 3711 names across 145 packages — roughly
+  5x over-counted — and a `using` for a name already present is a redeclaration conflict.
+- **Convergence before conclusions.** A single round's "unresolved" list is mostly symptoms. One undeclared
+  `EntityConstruction` made `initialize_lasso_selection(Ref<EntityConstruction<…>> out)` invalid, which made
+  `out` undeclared in the body AND the function's own name undeclared at every call site — three distinct
+  "undeclared name" diagnostics from one cause, all gone in round 2 with nothing declared for them.
+
+### The lock nobody declares
+
+The collector reads the ledger at startup and writes it at the end, tens of minutes apart, so **any edit in
+between is silently discarded**. Do not edit `repairs/emission-repairs.json` while one is running, and do not
+run two at once. The real fix is to re-read immediately before writing and union into the current file; until
+then, snapshot first.
