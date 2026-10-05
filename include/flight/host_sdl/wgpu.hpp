@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <cstddef>
 #include <functional>
 #include <memory>
@@ -223,6 +224,35 @@ struct WgpuBlendComponent final {
   std::optional<String> src_factor;
   std::optional<String> dst_factor;
   std::optional<String> operation;
+
+  // A GPUBlendComponent written as an object literal nested inside another dictionary reaches us as a
+  // reference to the emitted structural struct rather than as this type: the binding's
+  // field-assignment construction applies to the dictionary being constructed and does not recurse
+  // into a member whose own type is also bound, so `blendState.color = { srcFactor, dstFactor,
+  // operation }` emits `make_ref<src_factor_dst_factor_operation_...>(...)` and then has nothing to
+  // assign it to.
+  //
+  // Copying the three fields by name is exactly what field-assignment would have emitted, so this
+  // adds a spelling and no behaviour of its own. `ownership: value` in the binding already makes the
+  // assignment a copy, so no reference identity is observable here, and a field present in the
+  // source stays present here -- this never manufactures or discards absence. The operand is
+  // dereferenced without a null check because the binding declares `nullability: non-null` and every
+  // other `ref->member` in emitted code reads the same way; inventing a throw here would be an
+  // exception shape the emitted equivalent does not have.
+  //
+  // The constraint names all three fields, so only the GPUBlendComponent shape satisfies it.
+  template <typename Fields>
+    requires requires(const Fields& fields) {
+      { fields.src_factor } -> std::convertible_to<std::optional<String>>;
+      { fields.dst_factor } -> std::convertible_to<std::optional<String>>;
+      { fields.operation } -> std::convertible_to<std::optional<String>>;
+    }
+  WgpuBlendComponent& operator=(const std::shared_ptr<Fields>& fields) {
+    src_factor = fields->src_factor;
+    dst_factor = fields->dst_factor;
+    operation = fields->operation;
+    return *this;
+  }
 };
 
 struct WgpuBlendState final {

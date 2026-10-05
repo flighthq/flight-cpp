@@ -37,9 +37,11 @@
 #include <chrono>
 #include <concepts>
 #include <limits>
+#include <memory>
 #include <optional>
 #include <stdexcept>
 #include <thread>
+#include <type_traits>
 #include <utility>
 
 namespace {
@@ -1542,4 +1544,55 @@ int main() {
           flight::host_sdl::wgpu_color_write_all == 0xf &&
           flight::host_sdl::wgpu_map_mode_read == 0x1,
       "WGPU usage flags do not match the WebGPU constants");
+
+  // A nested GPUBlendComponent literal is emitted as a reference to a package-local structural
+  // struct, because the binding's field-assignment construction does not recurse into a member whose
+  // own type is also bound. This mirrors that emitted shape exactly.
+  {
+    struct BlendComponentFields final : flight::ReferenceEnabled {
+      flight::String src_factor;
+      flight::String dst_factor;
+      flight::String operation;
+    };
+    struct MissingOneField final : flight::ReferenceEnabled {
+      flight::String src_factor;
+      flight::String dst_factor;
+    };
+
+    static_assert(
+        std::is_aggregate_v<flight::host_sdl::WgpuBlendComponent>,
+        "the converting assignment must not cost WgpuBlendComponent its aggregate initialization");
+    static_assert(
+        std::is_assignable_v<
+            flight::host_sdl::WgpuBlendComponent&,
+            const std::shared_ptr<BlendComponentFields>&>,
+        "a reference to the emitted GPUBlendComponent shape must assign into the bound type");
+    static_assert(
+        !std::is_assignable_v<
+            flight::host_sdl::WgpuBlendComponent&,
+            const std::shared_ptr<MissingOneField>&>,
+        "the constraint must name all three fields, so a narrower shape is not accepted");
+
+    auto fields = flight::make_ref<BlendComponentFields>(BlendComponentFields{
+        .src_factor = flight::String("one"),
+        .dst_factor = flight::String("zero"),
+        .operation = flight::String("add"),
+    });
+    flight::host_sdl::WgpuBlendState blend_state{};
+    blend_state.color = fields;
+    blend_state.alpha = fields;
+    expect(
+        blend_state.color.src_factor == flight::String("one") &&
+            blend_state.color.dst_factor == flight::String("zero") &&
+            blend_state.color.operation == flight::String("add"),
+        "assigning the emitted GPUBlendComponent shape lost a field or its presence");
+
+    // `ownership: value` makes this a copy, so the dictionary must not observe a later write
+    // through the reference it was assigned from.
+    fields->operation = flight::String("subtract");
+    expect(
+        blend_state.color.operation == flight::String("add") &&
+            blend_state.alpha.operation == flight::String("add"),
+        "the bound dictionary aliased the reference it was assigned from instead of copying it");
+  }
 }
