@@ -5083,3 +5083,66 @@ Three things fall out of this that the refused-function counts never showed:
 
 So the ranking to work from is `blocked` × reachability, not the count of `NOT GENERATED` markers — and
 every number above comes from committed data rather than a scan.
+
+## The refusal taxonomy: 1605 markers, and the second-largest family is categorically out of reach
+
+Every `NOT GENERATED` marker carries a machine-readable `refusal:` reason. Counting them across the emitted
+tree gives the best map of the remaining work in this repository, and it is derived entirely from committed
+output.
+
+| markers | pkgs | headers | reason |
+| --- | --- | --- | --- |
+| 352 | 55 | 177 | `cpp-contextual-union-missing-expression-type` |
+| **297** | **41** | **183** | **`cpp-reference-assertion-without-heritage`** |
+| 195 | 44 | 84 | `cpp-presence-test-without-absence-storage` |
+| 184 | 36 | 113 | `cpp-intersection-member-shapeless` |
+| 125 | 29 | 54 | `cpp-partial-shape-unresolvable` |
+| 77 | 28 | 44 | `cpp-contextual-union-value-type-unrepresented` |
+| 49 | 14 | 27 | `cpp-weak-map-value-representation-unproven` |
+| 35 | 16 | 22 | `cpp-member-projection-without-present-storage` |
+| 34 | 12 | 18 | `cpp-type-assertion-unidentified` |
+| 30 | 10 | 16 | `cpp-typeof-runtime-domain-unrepresented` |
+| 26 | 12 | 19 | `cpp-contextual-union-inequivalent` |
+| | | | …16 more, 1605 total |
+
+### `cpp-reference-assertion-without-heritage` is why overrides keep getting parked
+
+This is a TypeScript reference assertion — `x as Y` — between two types that have no inheritance
+relationship in the emitted C++. The source relies on the two being the same object seen through a
+different interface; the emitter lowers each interface to an unrelated nominal struct, so there is no cast
+that preserves the identity. Four consecutive override attempts were parked on exactly this, each found
+independently by compiling with `-fmax-errors=0`:
+
+| target | the assertion that could not be represented |
+| --- | --- |
+| `texture/texture.hpp` | `getFirstTextureSource` cannot preserve the 3D `VoxelGrid` identity through the flattened `TextureSource` return type |
+| `texture/render_texture.hpp` | `createRenderTexture` needs an identity-preserving `Texture2D` → `RenderTexture` cast between flattened owners |
+| `particleemitter/update_particle_emitter2_d.hpp` | an unrepresentable `ParticleEmitter2D` → `Node2D` identity cast at the top of a 500-line body |
+| `command/command_binding.hpp` | a concrete-versus-generic registry table carrier mismatch, plus refused node hierarchy operations |
+
+An override cannot fix these, and that is not a limitation of the override mechanism — it is the rule.
+AGENTS.md: "None of the three may change absence, reference identity, equality, ordering, exception shape,
+or task settlement… A gap of that kind is a runtime capability to build or a compiler request to file,
+never a patch." Supplying a function that fabricates a new object where the source asserted an existing one
+changes reference identity, and our own tests would then certify it.
+
+So **297 markers in 183 headers are not override work**, and an override ranking that does not subtract them
+will keep producing targets that get parked. This is the same category as the two other boundaries recorded
+in this document — the `std::function` callback identity gap and the WGPU host surface — and the three
+together are the honest answer to "what is left".
+
+### What this changes about ranking override targets
+
+A target is worth taking only if its refusals are **representable** ones. Checking the reason mix first
+costs one `grep` and saves a day:
+
+```sh
+grep -A1 'NOT GENERATED: function' generated/include/flight/PKG/HEADER.hpp | grep -oE 'refusal: [a-z0-9-]+' | sort | uniq -c
+```
+
+`node/hierarchy.hpp` is the instructive case. It is the joint top blocker (165 dependency-incomplete modules
+reached) with 18 refused functions, and **the header itself compiles clean** — the refusals are absent
+declarations, so it passes the gate while every consumer that calls them fails. Its mix is 9
+`contextual-union-missing-expression-type`, **7 `reference-assertion-without-heritage`**, 2
+`contextual-union-inequivalent`. So roughly eleven of the eighteen are representable and seven are not: a
+legitimate `status: incomplete` override that must say which seven remain and why, not a complete one.
