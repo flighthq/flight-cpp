@@ -5841,3 +5841,46 @@ defect locations — `physics3d/collider_transform.hpp:445` (22), `texture/textu
 `preferences/storage.hpp:80` (3) — which is genuinely concentrated. But the fix at the texture site removes
 **two** errors from that header, not 131, so the family's value is "33 headers advance to their next
 diagnostic", not "33 headers pass".
+
+## Negative result: do NOT build a repair for `->` on `Ref<variant>`
+
+It looks like the ideal repair target and it is worthless. Recording it so the next person does not build it.
+
+The case for it is strong on every proxy measure:
+
+- the 33 failures come from just **three** defect locations — `physics3d/collider_transform.hpp:445` (22),
+  `texture/texture.hpp:108` (11), `preferences/storage.hpp:80` (3);
+- all three are the same construct, a discriminated-union member read — `shape->kind`, `source->dimension`,
+  `result->reason`;
+- soundness is **mechanically checkable**, because every variant alternative is a `shared_ptr<Struct>` whose
+  structural-struct name encodes its members, so `…_kind_…`, `reason_value_…` and `…_dimension_…` prove every
+  alternative carries the member being read;
+- the faithful lowering is obvious and local: `std::visit([](const auto& alt){ return alt->member; }, x)`;
+- it touches no identity and no absence — the member is a value.
+
+So it was implemented on a scratch overlay and measured against the ten headers whose first diagnostic is the
+texture site:
+
+```
+improved render_wgpu/explain_wgpu_texture_resolution.hpp   351 -> 349
+improved render_wgpu/wgpu_render_texture_pool.hpp          540 -> 538
+improved scene2d_canvas/canvas_render_texture_pool.hpp      182 -> 180
+improved scene2d_canvas/canvas_texture_view.hpp             134 -> 132
+improved scene2d_dom/explain_dom_texture_resolution.hpp     136 -> 134
+improved texture/_internal_index.hpp                        146 -> 144
+improved texture/contract.hpp                               146 -> 144
+improved texture/cube_texture.hpp                           134 -> 132
+improved texture/render_texture.hpp                         131 -> 129
+improved texture/texture.hpp                                131 -> 129
+RESULT: closed=0 improved=10 unchanged=0
+```
+
+**Every header improved by exactly two errors and not one closed.** They carry between 129 and 538 other
+errors. The rewrite is correct, cheap, and buys nothing, because this construct is never the last thing wrong
+with a header — it sits inside modules that are broken in many other ways.
+
+The general lesson, which is the reverse of the `render_state.hpp` cycle result: **concentration of a family at
+few defect sites is not evidence of leverage.** `render_state.hpp:133` was 251 failures at one line and worth
++51 headers; `texture.hpp:108` is 11 failures at one line and worth zero. The difference is what else is wrong
+with the headers behind it, and the only way to know is to fix it on an overlay and recompile the affected set.
+Count the headers that reach **zero**, never the errors removed.
