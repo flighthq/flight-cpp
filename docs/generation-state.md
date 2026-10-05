@@ -4338,3 +4338,49 @@ The run also reported two of the node package's `insert-using-declaration` repai
 `node-transform2dlike-using-declaration` and `node-vector2like-using-declaration` — which is the expiry check
 doing its job, since the patch changed the names they stood in for. Those deletions are on hold until the
 patch's fate is decided: withdrawing it would bring the defects back.
+
+## Driving `bitmapfont` to zero: what a package-at-a-time pass actually looks like
+
+Worth recording as a worked example, because the shape repeated at every step and it ends with a clean
+division of the remainder.
+
+It began at **5 failing headers**. Resolving them took two runtime fixes and seven declared names, and the
+package now divides into one closed header, two aggregates waiting on one module, and a remainder that is
+not repair-shaped at all.
+
+**One header closed by a runtime fix.** `bitmap_font_glyph_source.hpp` indexed `pages` with an index that
+arrives as `std::optional<double>` from an optional chain, and `Array::get` only took a `double`. In
+JavaScript `arr[undefined]` is `undefined` — not an error, and **not element zero** — so an overload taking
+an optional index and returning an empty optional is the faithful lowering. That header now COMPILES. The
+test pins the trap rather than the feature: an absent index must not silently read element zero, which is
+what a `value_or(0)` style unwrap would have done, and index zero must stay a real index.
+
+**A second runtime fix from the same pass.** `materials` stopped on `material->name = nullptr` where `name`
+is a `variant<String, Null, Undefined>`, which has no alternative constructible from `std::nullptr_t`. `Any`
+already carried exactly that conversion, so giving `Null` the same one makes the two agree rather than
+inventing a rule. Checked for ambiguity against `String(const char*)` — there is none. Its test pins that
+`nullptr` selects **Null** and not **Undefined**, because collapsing those two is the absence change this
+runtime exists to prevent.
+
+**Seven names, found by iterating rather than reading.** `GlyphAtlas` alone was the first error of three of
+the five headers; resolving it exposed `GlyphAtlasRuntime`, `TextureAtlas`, `BitmapFontGlyphData`, then
+`BitmapFontData`, `CreateTextureOptions` and `GlyphMetrics` — settled after three rounds. One of them,
+`TextureAtlas`, is needed by `bitmapfont` AND by `textureatlas` itself, so the same name wanted two
+declarations in two packages.
+
+**The remainder is supply work in two OTHER packages**, and that is where the package stops being mine:
+
+| refused declaration | refused in |
+|---|---|
+| `createTexture` | `texture/texture.hpp` |
+| `createTextureAtlas` | `textureatlas/texture_atlas.hpp` |
+| `getTextureAtlasByteSize` | `textureatlas/texture_atlas.hpp` |
+
+`bitmap_font_from_glyph_atlas.hpp`'s last four errors are all on one line —
+`create_texture_atlas(create_texture({…}))` — so it cannot compile until both functions exist, whatever is
+done about the designated-initializer-into-variant error sitting on the same expression. And
+`summarize_bitmap_font.hpp`'s single remaining error is `get_texture_atlas_byte_size` not being a member of
+`flight::textureatlas`.
+
+So the honest end state for this package: **1 header closed, 1 module and 2 aggregates blocked on three
+refused declarations in `texture` and `textureatlas`.** Everything repair-shaped is done; nothing left is.
