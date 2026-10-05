@@ -4,6 +4,22 @@
   "note": "Patches applied to a pinned sibling checkout before generation, so a module the compiler refuses to lower today can still ship. A patch here may only rewrite an expression into an equivalent the compiler does lower. It may NEVER change observable behavior -- absence, reference identity, equality, ordering, exception shape, task settlement -- because the generated header is then tested against the patched source, so a behavioral patch is a lie our own tests would certify. Each patch states the equivalence that makes it safe and the refusal it answers. The patch is applied after the pin integrity check and reverted when generation ends, so the checkout is only ever dirty inside one run. `baseCommit` pins the patch to the revision it was written against: a pin move that breaks the patch fails loudly instead of silently applying to different code.",
   "patches": [
     {
+      "id": "gui-controller-explicit-type-evidence",
+      "dependency": "flight",
+      "patch": "gui-controller-explicit-type-evidence.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/gui/src/guiController.ts",
+      "package": "@flighthq/gui",
+      "answers": "refusal",
+      "refusal": "default generic runtime recovery leaves disposeGuiController with a shapeless object intersection",
+      "rewrite": "Instantiates the existing runtime accessor with GuiControllerRuntime where that is the only shape disposal reads.",
+      "equivalence": "The accessor invocation performs the same runtime symbol read and assertion but names the already-assumed GuiControllerRuntime conjunct. Cleanup order, idempotence, hit-state restoration, map clearing, and clear callback timing are unchanged, and the public signature is identical.",
+      "whyNotUpstreamFirst": "The explicit generic argument is ordinary target-neutral TypeScript that makes the source's existing assumption explicit. It is temporary projection evidence while the emitter does not infer the concrete default generic conjunct.",
+      "unblocks": "Supplies disposeGuiController in gui/gui_controller.hpp and reduces that header's missing-declaration list from 4 to 3. Direct and downstream compile closure remain +0: gui_controller.hpp and all 16 immediate consumers are 0/17 before and after because the independent getNodeHitArea name binding fails first. The package remains at 95 refusals because its module-level Node2D carrier refusal and other missing declarations are unchanged.",
+      "expires": "when the emitter simplifies the defaulted generic intersection to its named conjunct, or Flight adopts the explicit generic argument.",
+      "appliedOn": "2026-10-05"
+    },
+    {
       "id": "scene3d-formats-resource-ref-owner-lookup",
       "dependency": "flight",
       "patch": "scene3d-formats-resource-ref-owner-lookup.patch",

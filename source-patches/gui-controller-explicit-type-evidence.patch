@@ -1,0 +1,13 @@
+diff --git a/packages/gui/src/guiController.ts b/packages/gui/src/guiController.ts
+index 6fc121f..65f01fd 100644
+--- a/packages/gui/src/guiController.ts
++++ b/packages/gui/src/guiController.ts
+@@ -92,7 +92,7 @@ export function createGuiControllerRuntime<Runtime extends object>(
+ }
+ 
+ export function disposeGuiController(controller: Entity, clear: () => void): void {
+-  const runtime = getGuiControllerRuntime(controller);
++  const runtime = getGuiControllerRuntime<GuiControllerRuntime>(controller);
+   if (runtime.disposed) return;
+   runtime.disposed = true;
+   for (let i = runtime.cleanups.length - 1; i >= 0; i--) runtime.cleanups[i]();
