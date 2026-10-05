@@ -4667,3 +4667,62 @@ anyway. This is AGENTS.md's "runtime capability to build", and it is the largest
 Either the WGPU host surface gets written, or these four packages need `deferred-packages.json` entries
 with `kind: defect` so the fraction stops implying work that no declared mechanism can do. Right now the
 denominator claims 176 headers are a declaration away, and they are not.
+
+## The effects_wgpu chain, measured one link at a time — and why its last link cannot be reached
+
+Worth recording as a worked example, because every step contradicted what the compile report implied.
+
+| step | first diagnostic on effects_wgpu's 60 headers | headers passing |
+| --- | --- | --- |
+| baseline | `WgpuBlendComponent` assignment, 55 of 60, ALL located at `wgpu_effect_pass.hpp:36` | 0 |
+| after the runtime fix (`c1ccc4f7`) | blend error gone, 55 → **0** | **0** |
+| after injecting the `WgpuRenderState` declaration | named/anonymous struct twin, 55 | **0** |
+| behind that | `WgpuDevice` / `WgpuRenderPassEncoder` have no WebGPU operations | unreachable |
+
+Three defects stacked in **one file**, at lines 36, 57 and 64, and the compile report could only ever show
+the first — it stores one diagnostic per header and the run uses `-fmax-errors=8`. Each fix was correct and
+each gained nothing, and the fourth link is the WGPU host binding gap recorded above, which no declared
+mechanism reaches. So `effects_wgpu` is not 55 headers away from compiling; it is blocked, and the first
+three fixes are only worth keeping because they are correct and because they were how the fourth was found.
+
+**The rule this gives us: a first-diagnostic count is a count of masks, not of headers to be gained.**
+Before costing a family, compile the package with `-fmax-errors=0` and read the whole list:
+
+```sh
+echo '#include <flight/PKG/HEADER.hpp>' | c++ -std=c++20 -fmax-errors=0 \
+  -Ioverrides/include -Igenerated/include -Iinclude -x c++ -fsyntax-only -
+```
+
+### The third link generalizes, and is deliberately NOT being bulk-declared
+
+`WgpuEffectPassState` and `uniform_buffer_uniform_data_uniform_data_i32_…` are declared in the same file,
+in the same namespace, with **byte-identical** bodies, and C++ makes them unrelated types. Scanning the
+tree for that shape — a named `ReferenceEnabled` struct and an anonymous structural struct with an
+identical body in the same file, excluding pairs that are alternatives of one variant — finds **31 pairs
+in 12 packages**:
+
+| package | pairs | | package | pairs |
+| --- | --- | --- | --- | --- |
+| types | 10 | | swf, path_boolean, media, app | 1 each |
+| scene2d_formats | 6 | | textureatlas_formats, spritesheet_formats | 1 each |
+| scene3d_wgpu | 5 *(wgpu-blocked)* | | scene3d_formats, effects_wgpu *(wgpu-blocked)* | 1 each |
+| collision | 3 | | | |
+
+This is **not** being turned into 31 declarations, for the reason the existing
+`wgpu-render-stats-anonymous-twin` entry already records: pairing by body was built, measured, and
+reverted, because structural assignability makes such an alias type-correct without making the NAME
+correct — `{a,b,c,d,tx,ty}` resolved to `SwfTagMatrix`, making a WGPU transform an SWF tag matrix. Two
+further cautions found while scanning:
+
+- `types/create_texture_options.hpp` pairs `CreateTexture2DOptions` against
+  `flip_x_flip_y_uv_offset_…_56b24da6433b9dfa`, which is **alternative 1 of the 4-alternative
+  `CreateTextureOptions` variant**. Aliasing one alternative is safe; aliasing two alternatives with the
+  same body to one name collapses the variant and breaks every `std::get_if` on it. A per-pair check that
+  only asks "are the anonymous and named types both in this variant" does not catch that case.
+- the existing `alias-anonymous-struct-to-named` handler hardcodes `flight::types::${replacement}`, so it
+  cannot express a same-file same-namespace pair at all. Supporting these 31 needs either an optional
+  target namespace on that kind or a sibling kind; neither is worth adding until a pair is wanted for a
+  package whose gain is real.
+
+So the list above is a **candidate inventory to be drawn from one verified pair at a time**, as the
+precedent requires, and 25 of the 31 are in packages not blocked by the WGPU gap.
