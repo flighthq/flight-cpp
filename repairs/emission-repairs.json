@@ -10,24 +10,140 @@
       "namespace": "flight::types",
       "symbols": [
         {
-          "include": "flight/types/flight_document_field_schema.hpp",
-          "name": "FlightDocumentFields"
+          "include": "flight/types/interaction_manager.hpp",
+          "name": "AnyInteractionSignalSlot"
         },
         {
-          "include": "flight/types/flight_document_interactive_state.hpp",
-          "name": "FlightDocumentInteractiveStates"
+          "include": "flight/types/cursor.hpp",
+          "name": "Cursor"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/flight_document_field_schema.hpp",
+          "name": "FlightDocumentFields"
         },
         {
           "include": "flight/types/flight_document_interactive_state.hpp",
           "name": "FlightDocumentInteractiveStateTransitionDescriptor"
         },
         {
+          "include": "flight/types/flight_document_interactive_state.hpp",
+          "name": "FlightDocumentInteractiveStates"
+        },
+        {
           "include": "flight/types/flight_document_schema_registry.hpp",
           "name": "FlightDocumentSchemaRegistry"
         },
         {
+          "include": "flight/types/focus_manager.hpp",
+          "name": "FocusDirection"
+        },
+        {
+          "include": "flight/types/focus_event_data.hpp",
+          "name": "FocusEventData"
+        },
+        {
+          "include": "flight/types/focus_manager.hpp",
+          "name": "FocusManager"
+        },
+        {
+          "include": "flight/types/focus_manager.hpp",
+          "name": "FocusManagerOptions"
+        },
+        {
+          "include": "flight/types/focus_manager.hpp",
+          "name": "FocusNavigationInput"
+        },
+        {
+          "include": "flight/types/focus_manager.hpp",
+          "name": "FocusNavigationOptions"
+        },
+        {
+          "include": "flight/types/node_interaction.hpp",
+          "name": "HitArea"
+        },
+        {
+          "include": "flight/types/hit_test_function.hpp",
+          "name": "HitTestFunction"
+        },
+        {
+          "include": "flight/types/hit_test_function.hpp",
+          "name": "HitTestPreciseFunction"
+        },
+        {
+          "include": "flight/types/host_bitmap_readback.hpp",
+          "name": "HostBitmapReadbackCapability"
+        },
+        {
+          "include": "flight/types/input_keyboard_data.hpp",
+          "name": "InputKeyboardData"
+        },
+        {
+          "include": "flight/types/input_pointer_data.hpp",
+          "name": "InputPointerData"
+        },
+        {
+          "include": "flight/types/interaction_connect_guard.hpp",
+          "name": "InteractionConnectGuard"
+        },
+        {
+          "include": "flight/types/interaction_manager.hpp",
+          "name": "InteractionDispatchLayer"
+        },
+        {
+          "include": "flight/types/interaction_manager.hpp",
+          "name": "InteractionInputSource"
+        },
+        {
+          "include": "flight/types/interaction_manager.hpp",
+          "name": "InteractionManager"
+        },
+        {
+          "include": "flight/types/interaction_manager.hpp",
+          "name": "InteractionManagerOptions"
+        },
+        {
+          "include": "flight/types/interaction_manager.hpp",
+          "name": "InteractionPointerOptions"
+        },
+        {
+          "include": "flight/types/interaction_manager.hpp",
+          "name": "InteractionPointerState"
+        },
+        {
+          "include": "flight/types/interaction_manager.hpp",
+          "name": "InteractionSignalName"
+        },
+        {
+          "include": "flight/types/interaction_signals.hpp",
+          "name": "InteractionSignals"
+        },
+        {
+          "include": "flight/types/keyboard_event_data.hpp",
+          "name": "KeyboardEventData"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "Kind"
+        },
+        {
+          "include": "flight/types/matrix.hpp",
+          "name": "Matrix"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2D"
+        },
+        {
           "include": "flight/types/node.hpp",
           "name": "NodeAny"
+        },
+        {
+          "include": "flight/types/node_interaction_state.hpp",
+          "name": "NodeInteractionState"
         },
         {
           "include": "flight/types/node_interactive_state_binding.hpp",
@@ -35,19 +151,75 @@
         },
         {
           "include": "flight/types/node_interactive_state_binding.hpp",
-          "name": "NodeInteractiveStateExtensionRuntime"
+          "name": "NodeInteractiveStateExplanation"
         },
         {
           "include": "flight/types/node_interactive_state_binding.hpp",
-          "name": "NodeInteractiveStateExplanation"
+          "name": "NodeInteractiveStateExtensionRuntime"
         },
         {
           "include": "flight/types/node_interactive_state_binding.hpp",
           "name": "NodeInteractiveStateFlags"
         },
         {
+          "include": "flight/types/node.hpp",
+          "name": "NodeRuntime"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "NodeTraits"
+        },
+        {
+          "include": "flight/types/pointer_event_data.hpp",
+          "name": "PointerEventData"
+        },
+        {
+          "include": "flight/types/pointer_event_data.hpp",
+          "name": "PointerType"
+        },
+        {
+          "include": "flight/types/spatial.hpp",
+          "name": "SpatialAabb2D"
+        },
+        {
+          "include": "flight/types/spatial.hpp",
+          "name": "SpatialObjectId"
+        },
+        {
           "include": "flight/types/entity.hpp",
           "name": "entity_runtime_key"
+        },
+        {
+          "include": "flight/types/morph_shape.hpp",
+          "name": "morph_shape_kind"
+        },
+        {
+          "include": "flight/types/quad_batch.hpp",
+          "name": "quad_batch_kind"
+        },
+        {
+          "include": "flight/types/rich_text.hpp",
+          "name": "rich_text_kind"
+        },
+        {
+          "include": "flight/types/scale9_shape.hpp",
+          "name": "scale9_shape_kind"
+        },
+        {
+          "include": "flight/types/shape.hpp",
+          "name": "shape_kind"
+        },
+        {
+          "include": "flight/types/sprite.hpp",
+          "name": "sprite_kind"
+        },
+        {
+          "include": "flight/types/text_label.hpp",
+          "name": "text_label_kind"
+        },
+        {
+          "include": "flight/types/tilemap.hpp",
+          "name": "tilemap_kind"
         }
       ],
       "diagnostic": "'NodeAny' was not declared in this scope; did you mean 'flight::types::NodeAny'?",
@@ -1484,36 +1656,132 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/aabb.hpp",
+          "name": "Aabb"
+        },
+        {
+          "include": "flight/types/ambient_light.hpp",
+          "name": "AmbientLight"
+        },
+        {
+          "include": "flight/types/camera3_d.hpp",
+          "name": "Camera3D"
+        },
+        {
+          "include": "flight/types/color_scale_bias.hpp",
+          "name": "ColorScaleBias"
+        },
+        {
+          "include": "flight/types/directional_light.hpp",
+          "name": "DirectionalLight"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/frustum.hpp",
+          "name": "Frustum"
+        },
+        {
+          "include": "flight/types/hemisphere_light.hpp",
+          "name": "HemisphereLight"
+        },
+        {
+          "include": "flight/types/instanced_mesh.hpp",
+          "name": "InstancedMesh"
+        },
+        {
           "include": "flight/types/entity.hpp",
           "name": "Kind"
         },
         {
-          "include": "flight/types/entity.hpp",
-          "name": "entity_runtime_key"
+          "include": "flight/types/linear_color.hpp",
+          "name": "LinearColor"
         },
         {
           "include": "flight/types/matrix.hpp",
-          "name": "MatrixLike"
+          "name": "Matrix"
         },
         {
           "include": "flight/types/matrix4.hpp",
           "name": "Matrix4"
         },
         {
+          "include": "flight/types/matrix.hpp",
+          "name": "MatrixLike"
+        },
+        {
+          "include": "flight/types/mesh.hpp",
+          "name": "Mesh"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "Node"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2D"
+        },
+        {
+          "include": "flight/types/node3_d.hpp",
+          "name": "Node3D"
+        },
+        {
           "include": "flight/types/node.hpp",
           "name": "NodeAny"
+        },
+        {
+          "include": "flight/types/point_light.hpp",
+          "name": "PointLight"
         },
         {
           "include": "flight/types/rectangle.hpp",
           "name": "Rectangle"
         },
         {
+          "include": "flight/types/rectangle.hpp",
+          "name": "RectangleLike"
+        },
+        {
           "include": "flight/types/render_cache.hpp",
           "name": "RenderCache"
         },
         {
+          "include": "flight/types/render_cache_adapter.hpp",
+          "name": "RenderCacheAdapter"
+        },
+        {
+          "include": "flight/types/render_effect_padding.hpp",
+          "name": "RenderEffectPadding"
+        },
+        {
+          "include": "flight/types/render_proxy.hpp",
+          "name": "RenderProxy"
+        },
+        {
+          "include": "flight/types/render_proxy2_d.hpp",
+          "name": "RenderProxy2D"
+        },
+        {
+          "include": "flight/types/render_proxy_adapter.hpp",
+          "name": "RenderProxyAdapter"
+        },
+        {
+          "include": "flight/types/render_queue.hpp",
+          "name": "RenderQueue"
+        },
+        {
+          "include": "flight/types/render_queue.hpp",
+          "name": "RenderQueueEntry"
+        },
+        {
           "include": "flight/types/render_registry_signals.hpp",
           "name": "RenderRegistrySignals"
+        },
+        {
+          "include": "flight/types/render_queue.hpp",
+          "name": "RenderSortKey"
         },
         {
           "include": "flight/types/render_state.hpp",
@@ -1522,6 +1790,54 @@
         {
           "include": "flight/types/render_state.hpp",
           "name": "RenderStateRuntime"
+        },
+        {
+          "include": "flight/types/renderable.hpp",
+          "name": "Renderable"
+        },
+        {
+          "include": "flight/types/renderer.hpp",
+          "name": "Renderer"
+        },
+        {
+          "include": "flight/types/scene3_dlights.hpp",
+          "name": "Scene3DLightsLike"
+        },
+        {
+          "include": "flight/types/scene3_drender_list.hpp",
+          "name": "Scene3DRenderList"
+        },
+        {
+          "include": "flight/types/spot_light.hpp",
+          "name": "SpotLight"
+        },
+        {
+          "include": "flight/types/viewport.hpp",
+          "name": "Viewport"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "entity_runtime_key"
+        },
+        {
+          "include": "flight/types/render_cache.hpp",
+          "name": "render_cache_kind"
+        },
+        {
+          "include": "flight/types/scene3_dlight_block.hpp",
+          "name": "scene_light_ambient_radiance_offset"
+        },
+        {
+          "include": "flight/types/scene3_dlight_block.hpp",
+          "name": "scene_light_block_floats"
+        },
+        {
+          "include": "flight/types/scene3_dlight_block.hpp",
+          "name": "scene_light_directional_direction_offset"
+        },
+        {
+          "include": "flight/types/scene3_dlight_block.hpp",
+          "name": "scene_light_directional_radiance_offset"
         }
       ],
       "diagnostic": "'RenderStateRuntime' was not declared in this scope; did you mean 'flight::types::RenderStateRuntime'? -- and the same for nine further flight::types names across the package",
@@ -1540,12 +1856,28 @@
           "name": "Aabb"
         },
         {
+          "include": "flight/types/aabb.hpp",
+          "name": "AabbLike"
+        },
+        {
+          "include": "flight/types/bounding_sphere.hpp",
+          "name": "BoundingSphereLike"
+        },
+        {
           "include": "flight/types/entity.hpp",
           "name": "EntityConstruction"
         },
         {
+          "include": "flight/types/matrix4.hpp",
+          "name": "Matrix4Like"
+        },
+        {
           "include": "flight/types/mesh_geometry.hpp",
           "name": "MeshGeometry"
+        },
+        {
+          "include": "flight/types/mesh_geometry_options.hpp",
+          "name": "MeshGeometryOptions"
         },
         {
           "include": "flight/types/mesh_geometry.hpp",
@@ -1564,12 +1896,28 @@
           "name": "MeshSubset"
         },
         {
+          "include": "flight/types/mesh_triangle_vertex_indices.hpp",
+          "name": "MeshTriangleVertexIndices"
+        },
+        {
+          "include": "flight/types/mesh_geometry.hpp",
+          "name": "PrimitiveTopology"
+        },
+        {
           "include": "flight/types/mesh_geometry.hpp",
           "name": "VertexAttribute"
         },
         {
           "include": "flight/types/mesh_geometry.hpp",
           "name": "VertexAttributeLayout"
+        },
+        {
+          "include": "flight/types/mesh_geometry.hpp",
+          "name": "VertexFormat"
+        },
+        {
+          "include": "flight/types/mesh_geometry.hpp",
+          "name": "VertexSemantic"
         },
         {
           "include": "flight/types/entity.hpp",
@@ -1616,6 +1964,14 @@
           "name": "Rectangle"
         },
         {
+          "include": "flight/types/scroll_bar_controller.hpp",
+          "name": "ScrollBarController"
+        },
+        {
+          "include": "flight/types/scroll_bar_controller.hpp",
+          "name": "ScrollBarControllerSignals"
+        },
+        {
           "include": "flight/types/signal.hpp",
           "name": "Signal"
         },
@@ -1637,6 +1993,10 @@
       "symbols": [
         {
           "include": "flight/types/collision.hpp",
+          "name": "CollisionBuiltInShape3D"
+        },
+        {
+          "include": "flight/types/collision.hpp",
           "name": "CollisionColliderShape3D"
         },
         {
@@ -1644,16 +2004,132 @@
           "name": "CollisionContactManifold3D"
         },
         {
+          "include": "flight/types/collision.hpp",
+          "name": "CollisionRaycastHit3D"
+        },
+        {
+          "include": "flight/types/collision.hpp",
+          "name": "CollisionTimeOfImpact3D"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DBodyType"
+        },
+        {
           "include": "flight/types/physics3_d.hpp",
           "name": "Physics3DCollider"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DCollisionExplanation"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DCollisionFilter"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DConeTwistJoint"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DContact"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DContactConstraint"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DGeneric6DofJoint"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DJoint"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DJointEvents"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DJointExplanation"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DJointReaction"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DJointSolver"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DMassData"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DMaterial"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DQueryFilter"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DQueryHit"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DQueryResult"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DRayHit"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DRayResult"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DSequentialImpulseConfig"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DShapeCastResult"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DSolverConfig"
+        },
+        {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "Physics3DStepExplanation"
         },
         {
           "include": "flight/types/physics3_d.hpp",
           "name": "Physics3DWorld"
         },
         {
+          "include": "flight/types/physics3_d.hpp",
+          "name": "RigidBody3D"
+        },
+        {
           "include": "flight/types/spatial.hpp",
           "name": "SpatialAabb3D"
+        },
+        {
+          "include": "flight/types/spatial.hpp",
+          "name": "SpatialIndexBackend3D"
+        },
+        {
+          "include": "flight/types/spatial_indexing.hpp",
+          "name": "SpatialIndexingExplanation"
         }
       ],
       "diagnostic": "'CollisionColliderShape3D' was not declared in this scope; did you mean 'flight::types::CollisionColliderShape3D'? -- and the same for 2 further flight::types name(s) in this package",
@@ -1668,8 +2144,40 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/animation_clip.hpp",
+          "name": "AnimationClip"
+        },
+        {
           "include": "flight/types/animation_interpolation.hpp",
           "name": "AnimationInterpolation"
+        },
+        {
+          "include": "flight/types/compression.hpp",
+          "name": "Decompressor"
+        },
+        {
+          "include": "flight/types/directional_light_options.hpp",
+          "name": "DirectionalLightOptions"
+        },
+        {
+          "include": "flight/types/easing_function.hpp",
+          "name": "EasingFunction"
+        },
+        {
+          "include": "flight/types/gltf_extension.hpp",
+          "name": "GltfAccessorData"
+        },
+        {
+          "include": "flight/types/gltf_extension.hpp",
+          "name": "GltfAccessorFault"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfBufferView"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfComponentType"
         },
         {
           "include": "flight/types/gltf_extension.hpp",
@@ -1677,23 +2185,291 @@
         },
         {
           "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfDocument"
+        },
+        {
+          "include": "flight/types/gltf_draco.hpp",
+          "name": "GltfDracoDecoder"
+        },
+        {
+          "include": "flight/types/gltf_draco.hpp",
+          "name": "GltfDracoMesh"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfDracoMeshCompression"
+        },
+        {
+          "include": "flight/types/gltf_extension.hpp",
+          "name": "GltfExtensionHandler"
+        },
+        {
+          "include": "flight/types/gltf_extension.hpp",
+          "name": "GltfImportOptions"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
           "name": "GltfMaterialsAnisotropy"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfMaterialsClearcoat"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfMaterialsEmissiveStrength"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfMaterialsIor"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfMaterialsIridescence"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfMaterialsPbrSpecularGlossiness"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfMaterialsSheen"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfMaterialsSpecular"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfMaterialsTransmission"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfMaterialsVolume"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfPrimitive"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfPunctualLight"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfTextureTransform"
+        },
+        {
+          "include": "flight/types/image_resource_reference.hpp",
+          "name": "ImageResourceReference"
+        },
+        {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "ImportDiagnostic"
         },
         {
           "include": "flight/types/import_diagnostic.hpp",
           "name": "ImportDiagnosticSeverity"
         },
         {
+          "include": "flight/types/light.hpp",
+          "name": "Light"
+        },
+        {
+          "include": "flight/types/linear_color.hpp",
+          "name": "LinearColor"
+        },
+        {
+          "include": "flight/types/material.hpp",
+          "name": "MaterialLike"
+        },
+        {
+          "include": "flight/types/matrix4.hpp",
+          "name": "Matrix4"
+        },
+        {
+          "include": "flight/types/matrix4.hpp",
+          "name": "Matrix4Like"
+        },
+        {
+          "include": "flight/types/md5_schema.hpp",
+          "name": "Md5Joint"
+        },
+        {
+          "include": "flight/types/md5_schema.hpp",
+          "name": "Md5Mesh"
+        },
+        {
+          "include": "flight/types/md5_schema.hpp",
+          "name": "Md5Vertex"
+        },
+        {
+          "include": "flight/types/md5_schema.hpp",
+          "name": "Md5Weight"
+        },
+        {
+          "include": "flight/types/mesh_geometry.hpp",
+          "name": "MeshGeometry"
+        },
+        {
+          "include": "flight/types/morph_target.hpp",
+          "name": "MeshMorph"
+        },
+        {
+          "include": "flight/types/mesh_triangle_vertex_indices.hpp",
+          "name": "MeshTriangleVertexIndices"
+        },
+        {
+          "include": "flight/types/morph_target.hpp",
+          "name": "MorphTarget"
+        },
+        {
           "include": "flight/types/mutable_number_array.hpp",
           "name": "MutableNumberArray"
+        },
+        {
+          "include": "flight/types/node3_d.hpp",
+          "name": "Node3D"
         },
         {
           "include": "flight/types/obj_schema.hpp",
           "name": "ObjMaterial"
         },
         {
+          "include": "flight/types/obj_schema.hpp",
+          "name": "ObjMaterialLibrary"
+        },
+        {
+          "include": "flight/types/orthographic_projection_options.hpp",
+          "name": "OrthographicProjectionOptions"
+        },
+        {
+          "include": "flight/types/perspective_projection_options.hpp",
+          "name": "PerspectiveProjectionOptions"
+        },
+        {
+          "include": "flight/types/point_light_options.hpp",
+          "name": "PointLightOptions"
+        },
+        {
+          "include": "flight/types/mesh_geometry.hpp",
+          "name": "PrimitiveTopology"
+        },
+        {
+          "include": "flight/types/camera3_d.hpp",
+          "name": "Projection"
+        },
+        {
+          "include": "flight/types/quaternion.hpp",
+          "name": "Quaternion"
+        },
+        {
+          "include": "flight/types/quaternion.hpp",
+          "name": "QuaternionLike"
+        },
+        {
+          "include": "flight/types/scene3_d.hpp",
+          "name": "Scene3D"
+        },
+        {
+          "include": "flight/types/scene3_danimation_path.hpp",
+          "name": "Scene3DAnimationPath"
+        },
+        {
+          "include": "flight/types/scene3_ddocument.hpp",
+          "name": "Scene3DDocument"
+        },
+        {
+          "include": "flight/types/scene3_ddocument.hpp",
+          "name": "Scene3DDocumentAnimation"
+        },
+        {
+          "include": "flight/types/scene3_ddocument.hpp",
+          "name": "Scene3DDocumentAnimationChannel"
+        },
+        {
+          "include": "flight/types/scene3_ddocument.hpp",
+          "name": "Scene3DDocumentCamera"
+        },
+        {
+          "include": "flight/types/scene3_ddocument.hpp",
+          "name": "Scene3DDocumentLight"
+        },
+        {
+          "include": "flight/types/scene3_ddocument.hpp",
+          "name": "Scene3DDocumentMesh"
+        },
+        {
+          "include": "flight/types/scene3_ddocument.hpp",
+          "name": "Scene3DDocumentNode"
+        },
+        {
+          "include": "flight/types/scene3_ddocument.hpp",
+          "name": "Scene3DDocumentScene"
+        },
+        {
+          "include": "flight/types/scene3_ddocument.hpp",
+          "name": "Scene3DDocumentSkin"
+        },
+        {
           "include": "flight/types/skin_influence.hpp",
           "name": "SkinInfluence"
+        },
+        {
+          "include": "flight/types/spot_light_options.hpp",
+          "name": "SpotLightOptions"
+        },
+        {
+          "include": "flight/types/standard_pbr_material.hpp",
+          "name": "StandardPbrMaterial"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "Texture"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "TextureColorSpace"
+        },
+        {
+          "include": "flight/types/sampler.hpp",
+          "name": "TextureFilter"
+        },
+        {
+          "include": "flight/types/sampler.hpp",
+          "name": "TextureWrap"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "ThreeDsCamera"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "ThreeDsLight"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "ThreeDsMaterial"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "ThreeDsMaterialGroup"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "ThreeDsMesh"
+        },
+        {
+          "include": "flight/types/transform3_d.hpp",
+          "name": "Transform3D"
+        },
+        {
+          "include": "flight/types/vector3.hpp",
+          "name": "Vector3"
+        },
+        {
+          "include": "flight/types/vector3.hpp",
+          "name": "Vector3Like"
         },
         {
           "include": "flight/types/mesh_geometry.hpp",
@@ -1702,6 +2478,174 @@
         {
           "include": "flight/types/mesh_geometry.hpp",
           "name": "VertexAttributeLayout"
+        },
+        {
+          "include": "flight/types/xml_element.hpp",
+          "name": "XmlElement"
+        },
+        {
+          "include": "flight/types/compression.hpp",
+          "name": "compression"
+        },
+        {
+          "include": "flight/types/compression.hpp",
+          "name": "compression_framing"
+        },
+        {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "import_diagnostic_severity"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_camera"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_camera_ranges"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_chunk_header_bytes"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_color_byte"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_color_float"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_editor"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_face_material"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_faces"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_keyframe"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_keyframe_node_header"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_keyframe_object_node"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_keyframe_pivot"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_light"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_light_inner_range"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_light_multiplier"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_light_off"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_light_outer_range"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_light_spot"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_main"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_material"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_material_ambient"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_material_bump_map"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_material_diffuse"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_material_name"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_material_opacity_map"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_material_shininess"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_material_specular"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_material_texture_filename"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_material_texture_map"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_material_transparency"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_object"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_percent_float"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_percent_int"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_smooth_group"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_transform_matrix"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_trimesh"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_uv_coords"
+        },
+        {
+          "include": "flight/types/three_ds_schema.hpp",
+          "name": "three_ds_vertices"
         }
       ],
       "diagnostic": "'MutableNumberArray' was not declared in this scope; did you mean 'flight::types::MutableNumberArray'? -- and the same for 3 further flight::types name(s) in this package",
@@ -1748,12 +2692,36 @@
           "name": "EntityConstruction"
         },
         {
+          "include": "flight/types/extended_pbr_material.hpp",
+          "name": "ExtendedPbrMaterial"
+        },
+        {
+          "include": "flight/types/glass_extended_pbr_material_options.hpp",
+          "name": "GlassExtendedPbrMaterialOptions"
+        },
+        {
           "include": "flight/types/entity.hpp",
           "name": "Kind"
         },
         {
           "include": "flight/types/material.hpp",
           "name": "Material"
+        },
+        {
+          "include": "flight/types/surface_material.hpp",
+          "name": "MaterialAlphaMode"
+        },
+        {
+          "include": "flight/types/material_conversion_explanation.hpp",
+          "name": "MaterialConversionExplanation"
+        },
+        {
+          "include": "flight/types/material_conversion_explanation.hpp",
+          "name": "MaterialConversionGuard"
+        },
+        {
+          "include": "flight/types/surface_material.hpp",
+          "name": "SurfaceMaterial"
         }
       ],
       "diagnostic": "'EntityConstruction' was not declared in this scope; did you mean 'flight::types::EntityConstruction'? -- and the same for 2 further flight::types name(s) in this package",
@@ -1816,6 +2784,66 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/aabb.hpp",
+          "name": "Aabb"
+        },
+        {
+          "include": "flight/types/aabb.hpp",
+          "name": "AabbLike"
+        },
+        {
+          "include": "flight/types/billboard.hpp",
+          "name": "Billboard"
+        },
+        {
+          "include": "flight/types/billboard.hpp",
+          "name": "BillboardMode"
+        },
+        {
+          "include": "flight/types/billboard.hpp",
+          "name": "BillboardRuntime"
+        },
+        {
+          "include": "flight/types/camera3_d.hpp",
+          "name": "Camera3D"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/frustum.hpp",
+          "name": "FrustumLike"
+        },
+        {
+          "include": "flight/types/instanced_mesh.hpp",
+          "name": "InstancedMesh"
+        },
+        {
+          "include": "flight/types/instanced_mesh_signals.hpp",
+          "name": "InstancedMeshSignals"
+        },
+        {
+          "include": "flight/types/material.hpp",
+          "name": "Material"
+        },
+        {
+          "include": "flight/types/material.hpp",
+          "name": "MaterialLike"
+        },
+        {
+          "include": "flight/types/matrix4.hpp",
+          "name": "Matrix4"
+        },
+        {
+          "include": "flight/types/matrix4.hpp",
+          "name": "Matrix4Like"
+        },
+        {
+          "include": "flight/types/modifier.hpp",
+          "name": "Modifier"
+        },
+        {
           "include": "flight/types/node3_d.hpp",
           "name": "Node3D"
         },
@@ -1824,8 +2852,48 @@
           "name": "NodeSignals"
         },
         {
+          "include": "flight/types/quaternion.hpp",
+          "name": "Quaternion"
+        },
+        {
+          "include": "flight/types/scene3_d.hpp",
+          "name": "Scene3D"
+        },
+        {
+          "include": "flight/types/scene3_ddocument.hpp",
+          "name": "Scene3DDocument"
+        },
+        {
+          "include": "flight/types/scene3_ddocument.hpp",
+          "name": "Scene3DDocumentNode"
+        },
+        {
+          "include": "flight/types/scene3_dkind_usage.hpp",
+          "name": "Scene3DKindUsage"
+        },
+        {
+          "include": "flight/types/skeleton3_d.hpp",
+          "name": "Skeleton3D"
+        },
+        {
+          "include": "flight/types/transform3_d.hpp",
+          "name": "Transform3D"
+        },
+        {
+          "include": "flight/types/transform3_d.hpp",
+          "name": "Transform3DLike"
+        },
+        {
+          "include": "flight/types/vector3.hpp",
+          "name": "Vector3"
+        },
+        {
           "include": "flight/types/vector3.hpp",
           "name": "Vector3Like"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "entity_runtime_key"
         }
       ],
       "diagnostic": "'Node3D' was not declared in this scope; did you mean 'flight::types::Node3D'? -- and the same for 1 further flight::types name(s) in this package",
@@ -1840,20 +2908,88 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/alpha_type.hpp",
+          "name": "AlphaType"
+        },
+        {
+          "include": "flight/types/easing_function.hpp",
+          "name": "EasingFunction"
+        },
+        {
           "include": "flight/types/entity.hpp",
           "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/gltf_schema.hpp",
+          "name": "GltfDocument"
+        },
+        {
+          "include": "flight/types/gltf_extension.hpp",
+          "name": "GltfImportOptions"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "GltfScene3DDocumentLoadOptions"
         },
         {
           "include": "flight/types/net.hpp",
           "name": "HostNetCapability"
         },
         {
+          "include": "flight/types/image_bitmap_composition.hpp",
+          "name": "ImageBitmapComposition"
+        },
+        {
+          "include": "flight/types/image_resource_reference.hpp",
+          "name": "ImageResourceFailure"
+        },
+        {
+          "include": "flight/types/image_resource_reference.hpp",
+          "name": "ImageResourceFailureKind"
+        },
+        {
+          "include": "flight/types/image_resource_reference.hpp",
+          "name": "ImageResourceReference"
+        },
+        {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "ImportDiagnostic"
+        },
+        {
           "include": "flight/types/entity.hpp",
           "name": "Kind"
         },
         {
+          "include": "flight/types/load.hpp",
+          "name": "LoadOptions"
+        },
+        {
           "include": "flight/types/material.hpp",
           "name": "Material"
+        },
+        {
+          "include": "flight/types/node3_d.hpp",
+          "name": "Node3D"
+        },
+        {
+          "include": "flight/types/resource_load_handle.hpp",
+          "name": "ResourceLoadHandle"
+        },
+        {
+          "include": "flight/types/resource_resolution_state.hpp",
+          "name": "ResourceResolutionState"
+        },
+        {
+          "include": "flight/types/scene3_d.hpp",
+          "name": "Scene3D"
+        },
+        {
+          "include": "flight/types/scene3_ddocument.hpp",
+          "name": "Scene3DDocument"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "Scene3DDocumentLoadOptions"
         },
         {
           "include": "flight/types/scene3_dresources.hpp",
@@ -1872,8 +3008,56 @@
           "name": "Scene3DResourceEvent"
         },
         {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "Scene3DResourceInFlight"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "Scene3DResourceResolver"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "Scene3DResourceResolverRuntime"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "Scene3DResourceResolverWithRuntime"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "Scene3DResourceSignals"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "Scene3DResourceWorkingSet"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "Scene3DResources"
+        },
+        {
           "include": "flight/types/texture.hpp",
           "name": "Texture"
+        },
+        {
+          "include": "flight/types/texture_source.hpp",
+          "name": "TextureSource"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "UpdateScene3DResourceStreamingOptions"
+        },
+        {
+          "include": "flight/types/image_resource_reference.hpp",
+          "name": "image_resource_failure_kind"
+        },
+        {
+          "include": "flight/types/resource_resolution_state.hpp",
+          "name": "resource_resolution_state"
+        },
+        {
+          "include": "flight/types/scene3_dresources.hpp",
+          "name": "scene3_dresource_resolver_runtime_key"
         },
         {
           "include": "flight/types/standard_pbr_material.hpp",
@@ -3016,6 +4200,18 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/animation_channel.hpp",
+          "name": "AnimationChannel"
+        },
+        {
+          "include": "flight/types/animation_track.hpp",
+          "name": "AnimationTrack"
+        },
+        {
+          "include": "flight/types/attachment2_d.hpp",
+          "name": "Attachment2D"
+        },
+        {
           "include": "flight/types/attachment_skin2_d.hpp",
           "name": "AttachmentSkin2D"
         },
@@ -3028,16 +4224,72 @@
           "name": "EntityConstruction"
         },
         {
+          "include": "flight/types/registry_table.hpp",
+          "name": "KeyedTable"
+        },
+        {
           "include": "flight/types/matrix.hpp",
           "name": "MatrixLike"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "Node"
+        },
+        {
+          "include": "flight/types/node_order_list.hpp",
+          "name": "NodeOrderList"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "NodeTraits"
+        },
+        {
+          "include": "flight/types/path.hpp",
+          "name": "Path"
+        },
+        {
+          "include": "flight/types/shape_command.hpp",
+          "name": "PathWinding"
         },
         {
           "include": "flight/types/skeleton2_d.hpp",
           "name": "Skeleton2D"
         },
         {
+          "include": "flight/types/skeleton2_danimation_path.hpp",
+          "name": "Skeleton2DAnimationPath"
+        },
+        {
           "include": "flight/types/skeleton2_danimation_target.hpp",
           "name": "Skeleton2DAnimationTarget"
+        },
+        {
+          "include": "flight/types/skeleton2_danimation_target_binder.hpp",
+          "name": "Skeleton2DAnimationTargetBinder"
+        },
+        {
+          "include": "flight/types/skeleton2_danimation_target_kind.hpp",
+          "name": "Skeleton2DAnimationTargetKind"
+        },
+        {
+          "include": "flight/types/skeleton2_ddraw_order_animation_target.hpp",
+          "name": "Skeleton2DDrawOrderAnimationTarget"
+        },
+        {
+          "include": "flight/types/skeleton2_dik_constraint.hpp",
+          "name": "Skeleton2DIkConstraint"
+        },
+        {
+          "include": "flight/types/skeleton2_dpath_constraint.hpp",
+          "name": "Skeleton2DPathConstraint"
+        },
+        {
+          "include": "flight/types/skeleton2_dslot_animation_target.hpp",
+          "name": "Skeleton2DSlotAnimationPath"
+        },
+        {
+          "include": "flight/types/skeleton2_dslot_animation_target.hpp",
+          "name": "Skeleton2DSlotAnimationTarget"
         },
         {
           "include": "flight/types/slot2_d.hpp",
@@ -3046,6 +4298,18 @@
         {
           "include": "flight/types/transform_inherit2_d.hpp",
           "name": "TransformInherit2D"
+        },
+        {
+          "include": "flight/types/skeleton2_danimation_target_kind.hpp",
+          "name": "skeleton2_danimation_target_kind"
+        },
+        {
+          "include": "flight/types/skeleton2_dconstraint.hpp",
+          "name": "skeleton2_dconstraint_kind"
+        },
+        {
+          "include": "flight/types/skeleton2_dpath_constraint.hpp",
+          "name": "skeleton2_dpath_spacing_mode"
         }
       ],
       "diagnostic": "'AttachmentSkin2D' was not declared in this scope; did you mean 'flight::types::AttachmentSkin2D'?",
@@ -3242,6 +4506,10 @@
         {
           "include": "flight/node/revision.hpp",
           "name": "get_node_appearance_revision"
+        },
+        {
+          "include": "flight/node/revision.hpp",
+          "name": "get_node_local_transform_revision"
         }
       ],
       "diagnostic": "'get_node_appearance_revision' was not declared in this scope -- flight::node::get_node_appearance_revision",
@@ -3255,6 +4523,10 @@
       "appliesTo": "flight/scene2d_formats/",
       "namespace": "flight::node",
       "symbols": [
+        {
+          "include": "flight/node/hierarchy.hpp",
+          "name": "add_node_child"
+        },
         {
           "include": "flight/node/revision.hpp",
           "name": "invalidate_node_local_transform"
@@ -3271,6 +4543,10 @@
       "appliesTo": "flight/scene3d/",
       "namespace": "flight::node",
       "symbols": [
+        {
+          "include": "flight/node/hierarchy.hpp",
+          "name": "add_node_child"
+        },
         {
           "include": "flight/node/revision.hpp",
           "name": "invalidate_node_local_transform"
@@ -3476,6 +4752,10 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/canvas_render_pass.hpp",
+          "name": "CanvasRenderPass"
+        },
+        {
           "include": "flight/types/canvas_render_state.hpp",
           "name": "CanvasRenderState"
         },
@@ -3484,16 +4764,164 @@
           "name": "CanvasRenderStateRuntime"
         },
         {
+          "include": "flight/types/canvas_render_surface.hpp",
+          "name": "CanvasRenderSurface"
+        },
+        {
+          "include": "flight/types/canvas_render_surface.hpp",
+          "name": "CanvasRenderSurfaceCreator"
+        },
+        {
+          "include": "flight/types/canvas_render_surface.hpp",
+          "name": "CanvasRenderSurfaceOptions"
+        },
+        {
+          "include": "flight/types/canvas_shape_registry.hpp",
+          "name": "CanvasShapeCommand"
+        },
+        {
+          "include": "flight/types/canvas_shape_draw_state.hpp",
+          "name": "CanvasShapeDrawState"
+        },
+        {
+          "include": "flight/types/canvas_text_input_overlay.hpp",
+          "name": "CanvasTextInputOverlay"
+        },
+        {
+          "include": "flight/types/canvas_render_target.hpp",
+          "name": "CanvasTextureRenderTarget"
+        },
+        {
+          "include": "flight/types/canvas_texture_resolver.hpp",
+          "name": "CanvasTextureResolver"
+        },
+        {
+          "include": "flight/types/canvas_texture_resolver.hpp",
+          "name": "CanvasTextureResolvers"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/shape_command.hpp",
+          "name": "GradientType"
+        },
+        {
+          "include": "flight/types/shape_command.hpp",
+          "name": "InterpolationMethod"
+        },
+        {
           "include": "flight/types/entity.hpp",
           "name": "Kind"
+        },
+        {
+          "include": "flight/types/shape_command.hpp",
+          "name": "LineScaleMode"
+        },
+        {
+          "include": "flight/types/matrix.hpp",
+          "name": "Matrix"
+        },
+        {
+          "include": "flight/types/matrix.hpp",
+          "name": "MatrixLike"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2D"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "RectangleLike"
+        },
+        {
+          "include": "flight/types/render_cache.hpp",
+          "name": "RenderCache"
+        },
+        {
+          "include": "flight/types/render_cache_refresh_options.hpp",
+          "name": "RenderCacheRefreshOptions"
+        },
+        {
+          "include": "flight/types/render_effect_padding.hpp",
+          "name": "RenderEffectPadding"
         },
         {
           "include": "flight/types/render_proxy2_d.hpp",
           "name": "RenderProxy2D"
         },
         {
+          "include": "flight/types/render_registry_signals.hpp",
+          "name": "RenderRegistrySignals"
+        },
+        {
           "include": "flight/types/render_state.hpp",
           "name": "RenderState"
+        },
+        {
+          "include": "flight/types/render_state.hpp",
+          "name": "RenderStateRuntime"
+        },
+        {
+          "include": "flight/types/scale9_mapper.hpp",
+          "name": "Scale9Mapper"
+        },
+        {
+          "include": "flight/types/scale9_shape.hpp",
+          "name": "Scale9Shape"
+        },
+        {
+          "include": "flight/types/scale9_shape.hpp",
+          "name": "Scale9ShapeData"
+        },
+        {
+          "include": "flight/types/scene2_drenderer.hpp",
+          "name": "Scene2DRenderer"
+        },
+        {
+          "include": "flight/types/shape.hpp",
+          "name": "Shape"
+        },
+        {
+          "include": "flight/types/shape_command.hpp",
+          "name": "ShapeCommandToken"
+        },
+        {
+          "include": "flight/types/shape.hpp",
+          "name": "ShapeData"
+        },
+        {
+          "include": "flight/types/shape_command.hpp",
+          "name": "SpreadMethod"
+        },
+        {
+          "include": "flight/types/sprite_renderer.hpp",
+          "name": "SpriteRenderer"
+        },
+        {
+          "include": "flight/types/text_selection_rectangle.hpp",
+          "name": "TextSelectionRectangle"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "Texture"
+        },
+        {
+          "include": "flight/types/texture_source_kind.hpp",
+          "name": "TextureSourceKind"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "entity_runtime_key"
+        },
+        {
+          "include": "flight/types/texture_source_kind.hpp",
+          "name": "image_texture_source_kind"
         }
       ],
       "diagnostic": "'CanvasRenderState' was not declared in this scope",
@@ -3508,20 +4936,264 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/animation_channel.hpp",
+          "name": "AnimationChannel"
+        },
+        {
+          "include": "flight/types/animation_clip.hpp",
+          "name": "AnimationClip"
+        },
+        {
+          "include": "flight/types/animation_track.hpp",
+          "name": "AnimationTrack"
+        },
+        {
+          "include": "flight/types/clip_region.hpp",
+          "name": "ClipRegion"
+        },
+        {
+          "include": "flight/types/create_texture_options.hpp",
+          "name": "CreateTextureOptions"
+        },
+        {
+          "include": "flight/types/display_object.hpp",
+          "name": "DisplayObject"
+        },
+        {
+          "include": "flight/types/easing_function.hpp",
+          "name": "EasingFunction"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "FlexLayoutAlign"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "FlexLayoutContainerStyle"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "FlexLayoutDirection"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "FlexLayoutItemStyle"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "FlexLayoutJustify"
+        },
+        {
+          "include": "flight/types/font_variation.hpp",
+          "name": "FontVariation"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "GridLayoutContainerStyle"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "GridLayoutItemStyle"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "GridLayoutTrack"
+        },
+        {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "ImportDiagnostic"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "LayoutNode"
+        },
+        {
+          "include": "flight/types/lottie_document_import.hpp",
+          "name": "LottieAdvancedBlend"
+        },
+        {
+          "include": "flight/types/lottie_document.hpp",
+          "name": "LottieAnimatable"
+        },
+        {
+          "include": "flight/types/lottie_document.hpp",
+          "name": "LottieAsset"
+        },
+        {
+          "include": "flight/types/lottie_document.hpp",
+          "name": "LottieDocument"
+        },
+        {
+          "include": "flight/types/lottie_document_import.hpp",
+          "name": "LottieDocumentImportOptions"
+        },
+        {
           "include": "flight/types/lottie_document_import.hpp",
           "name": "LottieDocumentImportResult"
+        },
+        {
+          "include": "flight/types/lottie_document.hpp",
+          "name": "LottieKeyframe"
+        },
+        {
+          "include": "flight/types/lottie_document.hpp",
+          "name": "LottieLayer"
+        },
+        {
+          "include": "flight/types/lottie_document.hpp",
+          "name": "LottiePositionProperty"
+        },
+        {
+          "include": "flight/types/lottie_document.hpp",
+          "name": "LottieShapePath"
+        },
+        {
+          "include": "flight/types/matrix.hpp",
+          "name": "Matrix"
         },
         {
           "include": "flight/types/node2_d.hpp",
           "name": "Node2D"
         },
         {
+          "include": "flight/types/node2_danimation_path.hpp",
+          "name": "Node2DAnimationPath"
+        },
+        {
+          "include": "flight/types/partial_node.hpp",
+          "name": "PartialNode"
+        },
+        {
           "include": "flight/types/path.hpp",
           "name": "Path"
         },
         {
+          "include": "flight/types/path_boolean_kernel.hpp",
+          "name": "PathBooleanKernel"
+        },
+        {
+          "include": "flight/types/path_boolean_options.hpp",
+          "name": "PathBooleanOptions"
+        },
+        {
+          "include": "flight/types/shape_command.hpp",
+          "name": "PathWinding"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        },
+        {
+          "include": "flight/types/rich_text.hpp",
+          "name": "RichText"
+        },
+        {
+          "include": "flight/types/rive_document.hpp",
+          "name": "RiveArtboardGraph"
+        },
+        {
           "include": "flight/types/rive_import_registry.hpp",
           "name": "RiveArtboardImportContext"
+        },
+        {
+          "include": "flight/types/rive_document.hpp",
+          "name": "RiveCoreObject"
+        },
+        {
+          "include": "flight/types/rive_import_registry.hpp",
+          "name": "RiveCoreObjectHandler"
+        },
+        {
+          "include": "flight/types/rive_import_registry.hpp",
+          "name": "RiveDocumentImportContext"
+        },
+        {
+          "include": "flight/types/rive_document.hpp",
+          "name": "RiveFileAsset"
+        },
+        {
+          "include": "flight/types/rive_import_registry.hpp",
+          "name": "RiveImportRegistry"
+        },
+        {
+          "include": "flight/types/rive_document.hpp",
+          "name": "RiveLayoutImport"
+        },
+        {
+          "include": "flight/types/rive_document.hpp",
+          "name": "RivePathRecord"
+        },
+        {
+          "include": "flight/types/rive_document.hpp",
+          "name": "RiveProperty"
+        },
+        {
+          "include": "flight/types/shape.hpp",
+          "name": "Shape"
+        },
+        {
+          "include": "flight/types/shape_command.hpp",
+          "name": "SpreadMethod"
+        },
+        {
+          "include": "flight/types/sprite.hpp",
+          "name": "Sprite"
+        },
+        {
+          "include": "flight/types/svg_document_import.hpp",
+          "name": "SvgDocumentImportOptions"
+        },
+        {
+          "include": "flight/types/text_format.hpp",
+          "name": "TextFormat"
+        },
+        {
+          "include": "flight/types/text_format_range.hpp",
+          "name": "TextFormatRange"
+        },
+        {
+          "include": "flight/types/text_label.hpp",
+          "name": "TextLabel"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "Texture"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "Texture2D"
+        },
+        {
+          "include": "flight/types/transform2_d.hpp",
+          "name": "Transform2D"
+        },
+        {
+          "include": "flight/types/xml_element.hpp",
+          "name": "XmlElement"
+        },
+        {
+          "include": "flight/types/advanced_blend_mode.hpp",
+          "name": "advanced_blend_mode"
+        },
+        {
+          "include": "flight/types/blend_mode.hpp",
+          "name": "blend_mode"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "flex_layout_kind"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "grid_layout_kind"
+        },
+        {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "import_diagnostic_severity"
         }
       ],
       "diagnostic": "'LottieDocumentImportResult' was not declared in this scope",
@@ -4298,6 +5970,62 @@
         {
           "include": "flight/types/shape_command.hpp",
           "name": "CapsStyle"
+        },
+        {
+          "include": "flight/types/shape_command.hpp",
+          "name": "JointStyle"
+        },
+        {
+          "include": "flight/types/morph_shape.hpp",
+          "name": "MorphShape"
+        },
+        {
+          "include": "flight/types/morph_shape.hpp",
+          "name": "MorphShapePathBinding"
+        },
+        {
+          "include": "flight/types/path.hpp",
+          "name": "Path"
+        },
+        {
+          "include": "flight/types/path_morph.hpp",
+          "name": "PathMorph"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        },
+        {
+          "include": "flight/types/shape.hpp",
+          "name": "Shape"
+        },
+        {
+          "include": "flight/types/shape_bounds.hpp",
+          "name": "ShapeBoundsCommand"
+        },
+        {
+          "include": "flight/types/shape_bounds.hpp",
+          "name": "ShapeBoundsCommandHandler"
+        },
+        {
+          "include": "flight/types/shape_bounds.hpp",
+          "name": "ShapeBoundsContext"
+        },
+        {
+          "include": "flight/types/shape_bounds.hpp",
+          "name": "ShapeBoundsExplanation"
+        },
+        {
+          "include": "flight/types/shape_bounds.hpp",
+          "name": "ShapeBoundsGuard"
+        },
+        {
+          "include": "flight/types/shape_bounds.hpp",
+          "name": "ShapeBoundsMode"
+        },
+        {
+          "include": "flight/types/shape_command.hpp",
+          "name": "ShapeCommandToken"
         }
       ],
       "diagnostic": "'CapsStyle' was not declared in this scope",
@@ -4380,8 +6108,120 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/collision.hpp",
+          "name": "CollisionBuiltInShape2D"
+        },
+        {
+          "include": "flight/types/collision.hpp",
+          "name": "CollisionContactManifold2D"
+        },
+        {
+          "include": "flight/types/collision.hpp",
+          "name": "CollisionContactPoint2D"
+        },
+        {
+          "include": "flight/types/collision.hpp",
+          "name": "CollisionTimeOfImpact2D"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DBodyType"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DBrokenJoint"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DCollider"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DCollisionFilter"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DContact"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DContactIntakeGuard"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DContactPoint"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DDebugCircle"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DDebugFeature"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DDebugGeometry"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DDebugGeometryOptions"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DDebugLine"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DGearCoordinateKind"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DJoint"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DJointReaction"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DJointResolutionGuard"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DJointSolver"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DMaterial"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DSolverConfig"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "Physics2DStepGuard"
+        },
+        {
           "include": "flight/types/physics2_d.hpp",
           "name": "Physics2DWorld"
+        },
+        {
+          "include": "flight/types/physics2_d.hpp",
+          "name": "RigidBody2D"
+        },
+        {
+          "include": "flight/types/spatial.hpp",
+          "name": "SpatialIndexBackend2D"
+        },
+        {
+          "include": "flight/types/spatial.hpp",
+          "name": "SpatialPair"
         }
       ],
       "diagnostic": "'Physics2DWorld' was not declared in this scope",
@@ -4540,8 +6380,124 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/bevel_effect.hpp",
+          "name": "BevelEffect"
+        },
+        {
+          "include": "flight/types/bitmap_displacement_effect.hpp",
+          "name": "BitmapDisplacementEffect"
+        },
+        {
+          "include": "flight/types/bloom_effect.hpp",
+          "name": "BloomEffect"
+        },
+        {
+          "include": "flight/types/blur_effect.hpp",
+          "name": "BlurEffect"
+        },
+        {
+          "include": "flight/types/bokeh_depth_of_field_effect.hpp",
+          "name": "BokehDepthOfFieldEffect"
+        },
+        {
+          "include": "flight/types/contact_shadows_effect.hpp",
+          "name": "ContactShadowsEffect"
+        },
+        {
+          "include": "flight/types/convolution_effect.hpp",
+          "name": "ConvolutionEffect"
+        },
+        {
+          "include": "flight/types/directional_blur_effect.hpp",
+          "name": "DirectionalBlurEffect"
+        },
+        {
+          "include": "flight/types/displacement_effect.hpp",
+          "name": "DisplacementEffect"
+        },
+        {
+          "include": "flight/types/drop_shadow_effect.hpp",
+          "name": "DropShadowEffect"
+        },
+        {
+          "include": "flight/types/effect_source_mode.hpp",
+          "name": "EffectSourceMode"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/glitch_effect.hpp",
+          "name": "GlitchEffect"
+        },
+        {
+          "include": "flight/types/gradient_bevel_effect.hpp",
+          "name": "GradientBevelEffect"
+        },
+        {
+          "include": "flight/types/gradient_glow_effect.hpp",
+          "name": "GradientGlowEffect"
+        },
+        {
+          "include": "flight/types/image_channel.hpp",
+          "name": "ImageChannel"
+        },
+        {
+          "include": "flight/types/effect_source_mode.hpp",
+          "name": "InnerEffectSourceMode"
+        },
+        {
+          "include": "flight/types/inner_glow_effect.hpp",
+          "name": "InnerGlowEffect"
+        },
+        {
+          "include": "flight/types/inner_shadow_effect.hpp",
+          "name": "InnerShadowEffect"
+        },
+        {
+          "include": "flight/types/matrix.hpp",
+          "name": "Matrix"
+        },
+        {
+          "include": "flight/types/median_effect.hpp",
+          "name": "MedianEffect"
+        },
+        {
+          "include": "flight/types/outer_glow_effect.hpp",
+          "name": "OuterGlowEffect"
+        },
+        {
+          "include": "flight/types/outline_effect.hpp",
+          "name": "OutlineEffect"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        },
+        {
           "include": "flight/types/render_effect.hpp",
           "name": "RenderEffect"
+        },
+        {
+          "include": "flight/types/render_effect_field_role.hpp",
+          "name": "RenderEffectFieldRoles"
+        },
+        {
+          "include": "flight/types/render_effect_padding.hpp",
+          "name": "RenderEffectPadding"
+        },
+        {
+          "include": "flight/types/render_state.hpp",
+          "name": "RenderState"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "Texture2D"
+        },
+        {
+          "include": "flight/types/tilt_shift_effect.hpp",
+          "name": "TiltShiftEffect"
         }
       ],
       "diagnostic": "'RenderEffect' was not declared in this scope",
@@ -5578,6 +7534,1310 @@
       ],
       "diagnostic": "'EntityConstruction' was not declared in this scope",
       "defect": "The emitter writes 15 name(s) owned by flight::types unqualified inside namespace flight::power. Collected by compiling every header in the package with -fmax-errors=0, so names MASKED behind an earlier diagnostic in the same file are included -- the compile report keeps only the first.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "mesh-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/mesh/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/aabb.hpp",
+          "name": "create_aabb"
+        }
+      ],
+      "diagnostic": "'create_aabb' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::geometry unqualified inside namespace flight::mesh. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "copy_matrix4"
+        },
+        {
+          "include": "flight/geometry/aabb.hpp",
+          "name": "create_aabb"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "create_matrix4"
+        },
+        {
+          "include": "flight/geometry/quaternion.hpp",
+          "name": "create_quaternion"
+        },
+        {
+          "include": "flight/geometry/vector3.hpp",
+          "name": "create_vector3"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "inverse_matrix4"
+        },
+        {
+          "include": "flight/geometry/quaternion.hpp",
+          "name": "rotate_vector3_by_quaternion"
+        },
+        {
+          "include": "flight/geometry/aabb.hpp",
+          "name": "set_aabb"
+        },
+        {
+          "include": "flight/geometry/frustum.hpp",
+          "name": "set_frustum_from_matrix4"
+        },
+        {
+          "include": "flight/geometry/quaternion.hpp",
+          "name": "set_quaternion"
+        },
+        {
+          "include": "flight/geometry/vector3.hpp",
+          "name": "set_vector3"
+        },
+        {
+          "include": "flight/geometry/aabb.hpp",
+          "name": "transform_aabb_by_matrix4"
+        },
+        {
+          "include": "flight/geometry/aabb.hpp",
+          "name": "union_aabb"
+        }
+      ],
+      "diagnostic": "'copy_matrix4' was not declared in this scope",
+      "defect": "The emitter writes 13 function name(s) owned by flight::geometry unqualified inside namespace flight::scene3d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-resources-unqualified-loader-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_resources/",
+      "namespace": "flight::loader",
+      "symbols": [
+        {
+          "include": "flight/loader/load.hpp",
+          "name": "load_bytes"
+        },
+        {
+          "include": "flight/loader/load.hpp",
+          "name": "load_text"
+        }
+      ],
+      "diagnostic": "'load_bytes' was not declared in this scope",
+      "defect": "The emitter writes 2 function name(s) owned by flight::loader unqualified inside namespace flight::scene3d_resources. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-resources-unqualified-scene3d-formats-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_resources/",
+      "namespace": "flight::scene3d_formats",
+      "symbols": [
+        {
+          "include": "flight/scene3d_formats/gltf_parse.hpp",
+          "name": "parse_glb"
+        },
+        {
+          "include": "flight/scene3d_formats/gltf_parse.hpp",
+          "name": "parse_gltf"
+        }
+      ],
+      "diagnostic": "'parse_glb' was not declared in this scope",
+      "defect": "The emitter writes 2 function name(s) owned by flight::scene3d_formats unqualified inside namespace flight::scene3d_resources. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-unqualified-collision-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics2d/",
+      "namespace": "flight::collision",
+      "symbols": [
+        {
+          "include": "flight/collision/collide_contact_manifold2_d.hpp",
+          "name": "collide_contact_manifold2_d"
+        },
+        {
+          "include": "flight/collision/contact_manifold2_d.hpp",
+          "name": "create_collision_contact_manifold2_d"
+        },
+        {
+          "include": "flight/collision/sweep_collision_shape2_d.hpp",
+          "name": "create_collision_time_of_impact2_d"
+        },
+        {
+          "include": "flight/collision/sweep_collision_shape2_d.hpp",
+          "name": "sweep_collision_shape2_d"
+        }
+      ],
+      "diagnostic": "'collide_contact_manifold2_d' was not declared in this scope",
+      "defect": "The emitter writes 4 function name(s) owned by flight::collision unqualified inside namespace flight::physics2d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-unqualified-spatial-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics2d/",
+      "namespace": "flight::spatial",
+      "symbols": [
+        {
+          "include": "flight/spatial/uniform_grid.hpp",
+          "name": "create_uniform_grid_spatial_backend2_d"
+        }
+      ],
+      "diagnostic": "'create_uniform_grid_spatial_backend2_d' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::spatial unqualified inside namespace flight::physics2d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics3d-unqualified-collision-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics3d/",
+      "namespace": "flight::collision",
+      "symbols": [
+        {
+          "include": "flight/collision/raycast_collision_shape3_d.hpp",
+          "name": "create_collision_raycast_hit3_d"
+        },
+        {
+          "include": "flight/collision/sweep_collision_shape3_d.hpp",
+          "name": "create_collision_time_of_impact3_d"
+        },
+        {
+          "include": "flight/collision/triangle_mesh3_d.hpp",
+          "name": "write_collision_heightfield_bounds3_d"
+        },
+        {
+          "include": "flight/collision/triangle_mesh3_d.hpp",
+          "name": "write_collision_triangle_mesh_bounds3_d"
+        }
+      ],
+      "diagnostic": "'create_collision_raycast_hit3_d' was not declared in this scope",
+      "defect": "The emitter writes 4 function name(s) owned by flight::collision unqualified inside namespace flight::physics3d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics3d-unqualified-log-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics3d/",
+      "namespace": "flight::log",
+      "symbols": [
+        {
+          "include": "flight/log/log.hpp",
+          "name": "log_once"
+        }
+      ],
+      "diagnostic": "'log_once' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::log unqualified inside namespace flight::physics3d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics3d-unqualified-spatial-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics3d/",
+      "namespace": "flight::spatial",
+      "symbols": [
+        {
+          "include": "flight/spatial/uniform_grid3_d.hpp",
+          "name": "create_uniform_grid_spatial_backend3_d"
+        }
+      ],
+      "diagnostic": "'create_uniform_grid_spatial_backend3_d' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::spatial unqualified inside namespace flight::physics3d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "gui-unqualified-interaction-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/gui/",
+      "namespace": "flight::interaction",
+      "symbols": [
+        {
+          "include": "flight/interaction/node_interaction_state.hpp",
+          "name": "set_node_hit_area"
+        },
+        {
+          "include": "flight/interaction/node_interaction_state.hpp",
+          "name": "set_node_hit_test_enabled"
+        }
+      ],
+      "diagnostic": "'set_node_hit_area' was not declared in this scope",
+      "defect": "The emitter writes 2 function name(s) owned by flight::interaction unqualified inside namespace flight::gui. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "shape-unqualified-path-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/shape/",
+      "namespace": "flight::path",
+      "symbols": [
+        {
+          "include": "flight/path/path.hpp",
+          "name": "create_path"
+        },
+        {
+          "include": "flight/path/path_morph.hpp",
+          "name": "sample_path_morph"
+        }
+      ],
+      "diagnostic": "'create_path' was not declared in this scope",
+      "defect": "The emitter writes 2 function name(s) owned by flight::path unqualified inside namespace flight::shape. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/effects/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "create_matrix"
+        },
+        {
+          "include": "flight/geometry/rectangle.hpp",
+          "name": "create_rectangle"
+        }
+      ],
+      "diagnostic": "'create_matrix' was not declared in this scope",
+      "defect": "The emitter writes 2 function name(s) owned by flight::geometry unqualified inside namespace flight::effects. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-unqualified-effects-canvas-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/",
+      "namespace": "flight::effects_canvas",
+      "symbols": [
+        {
+          "include": "flight/effects_canvas/canvas_effect_test_support.hpp",
+          "name": "create_canvas_texture_render_target"
+        }
+      ],
+      "diagnostic": "'create_canvas_texture_render_target' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::effects_canvas unqualified inside namespace flight::scene2d_canvas. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "create_matrix"
+        },
+        {
+          "include": "flight/geometry/rectangle.hpp",
+          "name": "create_rectangle"
+        }
+      ],
+      "diagnostic": "'create_matrix' was not declared in this scope",
+      "defect": "The emitter writes 2 function name(s) owned by flight::geometry unqualified inside namespace flight::scene2d_canvas. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-unqualified-render-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/",
+      "namespace": "flight::render",
+      "symbols": [
+        {
+          "include": "flight/render/render_target.hpp",
+          "name": "compute_render_cache_transform"
+        },
+        {
+          "include": "flight/render/render_target.hpp",
+          "name": "compute_render_target_size"
+        },
+        {
+          "include": "flight/render/render_target.hpp",
+          "name": "compute_scene2_drender_target_transform"
+        },
+        {
+          "include": "flight/render/render_state.hpp",
+          "name": "destroy_render_state"
+        },
+        {
+          "include": "flight/render/render_state.hpp",
+          "name": "get_render_state_runtime"
+        },
+        {
+          "include": "flight/render/render_proxy.hpp",
+          "name": "prepare_scene2_drender"
+        },
+        {
+          "include": "flight/render/render_cache.hpp",
+          "name": "register_render_cache_renderer"
+        }
+      ],
+      "diagnostic": "'compute_render_cache_transform' was not declared in this scope",
+      "defect": "The emitter writes 7 function name(s) owned by flight::render unqualified inside namespace flight::scene2d_canvas. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-unqualified-shape-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/",
+      "namespace": "flight::shape",
+      "symbols": [
+        {
+          "include": "flight/shape/scale9_shape_commands.hpp",
+          "name": "map_scale9_shape_commands"
+        }
+      ],
+      "diagnostic": "'map_scale9_shape_commands' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::shape unqualified inside namespace flight::scene2d_canvas. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-unqualified-camera-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_formats/",
+      "namespace": "flight::camera",
+      "symbols": [
+        {
+          "include": "flight/camera/projection.hpp",
+          "name": "create_orthographic_projection"
+        },
+        {
+          "include": "flight/camera/projection.hpp",
+          "name": "create_perspective_projection"
+        }
+      ],
+      "diagnostic": "'create_orthographic_projection' was not declared in this scope",
+      "defect": "The emitter writes 2 function name(s) owned by flight::camera unqualified inside namespace flight::scene3d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-unqualified-color-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_formats/",
+      "namespace": "flight::color",
+      "symbols": [
+        {
+          "include": "flight/color/pack_color.hpp",
+          "name": "pack_linear_to_color"
+        }
+      ],
+      "diagnostic": "'pack_linear_to_color' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::color unqualified inside namespace flight::scene3d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_formats/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "compose_matrix4"
+        },
+        {
+          "include": "flight/geometry/transform3d.hpp",
+          "name": "compose_matrix4_from_transform3_d"
+        },
+        {
+          "include": "flight/geometry/quaternion.hpp",
+          "name": "conjugate_quaternion"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "copy_matrix4"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "create_matrix4"
+        },
+        {
+          "include": "flight/geometry/quaternion.hpp",
+          "name": "create_quaternion"
+        },
+        {
+          "include": "flight/geometry/transform3d.hpp",
+          "name": "create_transform3_d"
+        },
+        {
+          "include": "flight/geometry/vector3.hpp",
+          "name": "create_vector3"
+        },
+        {
+          "include": "flight/geometry/transform3d.hpp",
+          "name": "decompose_matrix4_to_transform3_d"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "inverse_matrix4"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "matrix4_transform_point"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "multiply_matrix4"
+        },
+        {
+          "include": "flight/geometry/quaternion.hpp",
+          "name": "multiply_quaternion"
+        },
+        {
+          "include": "flight/geometry/vector3.hpp",
+          "name": "normalize_vector3"
+        },
+        {
+          "include": "flight/geometry/quaternion.hpp",
+          "name": "rotate_vector3_by_quaternion"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "set_matrix4"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "set_matrix4_identity"
+        },
+        {
+          "include": "flight/geometry/quaternion.hpp",
+          "name": "set_quaternion"
+        },
+        {
+          "include": "flight/geometry/quaternion.hpp",
+          "name": "set_quaternion_from_axis_angle"
+        },
+        {
+          "include": "flight/geometry/quaternion.hpp",
+          "name": "set_quaternion_from_unit_vectors"
+        },
+        {
+          "include": "flight/geometry/vector3.hpp",
+          "name": "set_vector3"
+        },
+        {
+          "include": "flight/geometry/vector3.hpp",
+          "name": "subtract_vector3"
+        }
+      ],
+      "diagnostic": "'compose_matrix4' was not declared in this scope",
+      "defect": "The emitter writes 22 function name(s) owned by flight::geometry unqualified inside namespace flight::scene3d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-unqualified-image-codec-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_formats/",
+      "namespace": "flight::image_codec",
+      "symbols": [
+        {
+          "include": "flight/image_codec/detect_image_mime_type.hpp",
+          "name": "detect_image_mime_type"
+        }
+      ],
+      "diagnostic": "'detect_image_mime_type' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::image_codec unqualified inside namespace flight::scene3d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-unqualified-importdiagnostics-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_formats/",
+      "namespace": "flight::importdiagnostics",
+      "symbols": [
+        {
+          "include": "flight/importdiagnostics/import_diagnostic_collector.hpp",
+          "name": "report_import_diagnostic"
+        }
+      ],
+      "diagnostic": "'report_import_diagnostic' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::importdiagnostics unqualified inside namespace flight::scene3d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-unqualified-lighting-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_formats/",
+      "namespace": "flight::lighting",
+      "symbols": [
+        {
+          "include": "flight/lighting/ambient_light.hpp",
+          "name": "create_ambient_light"
+        },
+        {
+          "include": "flight/lighting/directional_light.hpp",
+          "name": "create_directional_light"
+        },
+        {
+          "include": "flight/lighting/point_light.hpp",
+          "name": "create_point_light"
+        },
+        {
+          "include": "flight/lighting/spot_light.hpp",
+          "name": "create_spot_light"
+        }
+      ],
+      "diagnostic": "'create_ambient_light' was not declared in this scope",
+      "defect": "The emitter writes 4 function name(s) owned by flight::lighting unqualified inside namespace flight::scene3d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-unqualified-materials-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_formats/",
+      "namespace": "flight::materials",
+      "symbols": [
+        {
+          "include": "flight/materials/phong_to_pbr.hpp",
+          "name": "get_pbr_roughness_from_phong_shininess"
+        }
+      ],
+      "diagnostic": "'get_pbr_roughness_from_phong_shininess' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::materials unqualified inside namespace flight::scene3d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-unqualified-mesh-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_formats/",
+      "namespace": "flight::mesh",
+      "symbols": [
+        {
+          "include": "flight/mesh/mesh_geometry_compute.hpp",
+          "name": "compute_mesh_geometry_flat_normals"
+        },
+        {
+          "include": "flight/mesh/mesh_geometry_operations.hpp",
+          "name": "get_mesh_geometry_triangle_count"
+        },
+        {
+          "include": "flight/mesh/mesh_geometry_attributes.hpp",
+          "name": "get_vertex_attribute_float_offset"
+        }
+      ],
+      "diagnostic": "'compute_mesh_geometry_flat_normals' was not declared in this scope",
+      "defect": "The emitter writes 3 function name(s) owned by flight::mesh unqualified inside namespace flight::scene3d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-unqualified-scene3d-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_formats/",
+      "namespace": "flight::scene3d",
+      "symbols": [
+        {
+          "include": "flight/scene3d/scene_document.hpp",
+          "name": "create_scene3_dfrom_document"
+        },
+        {
+          "include": "flight/scene3d/scene_document.hpp",
+          "name": "create_scene3_ds_from_document"
+        }
+      ],
+      "diagnostic": "'create_scene3_dfrom_document' was not declared in this scope",
+      "defect": "The emitter writes 2 function name(s) owned by flight::scene3d unqualified inside namespace flight::scene3d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-unqualified-xml-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene3d_formats/",
+      "namespace": "flight::xml",
+      "symbols": [
+        {
+          "include": "flight/xml/xml_parse.hpp",
+          "name": "parse_xml_document"
+        }
+      ],
+      "diagnostic": "'parse_xml_document' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::xml unqualified inside namespace flight::scene3d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-canvas-unqualified-effects-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/effects_canvas/",
+      "namespace": "flight::effects",
+      "symbols": [
+        {
+          "include": "flight/effects/bloom_effect.hpp",
+          "name": "compute_bloom_blur_radius"
+        }
+      ],
+      "diagnostic": "'compute_bloom_blur_radius' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::effects unqualified inside namespace flight::effects_canvas. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-canvas-unqualified-scene2d-canvas-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/effects_canvas/",
+      "namespace": "flight::scene2d_canvas",
+      "symbols": [
+        {
+          "include": "flight/scene2d_canvas/canvas_render_state.hpp",
+          "name": "get_canvas_render_state_runtime"
+        }
+      ],
+      "diagnostic": "'get_canvas_render_state_runtime' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::scene2d_canvas unqualified inside namespace flight::effects_canvas. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-canvas-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/effects_canvas/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/advanced_blend_mode.hpp",
+          "name": "AdvancedBlendMode"
+        },
+        {
+          "include": "flight/types/bevel_effect.hpp",
+          "name": "BevelEffect"
+        },
+        {
+          "include": "flight/types/bloom_effect.hpp",
+          "name": "BloomEffect"
+        },
+        {
+          "include": "flight/types/blur_effect.hpp",
+          "name": "BlurEffect"
+        },
+        {
+          "include": "flight/types/canvas_render_state.hpp",
+          "name": "CanvasRenderState"
+        },
+        {
+          "include": "flight/types/canvas_render_state.hpp",
+          "name": "CanvasRenderStateRuntime"
+        },
+        {
+          "include": "flight/types/canvas_effect_state.hpp",
+          "name": "CanvasRenderTargetPool"
+        },
+        {
+          "include": "flight/types/canvas_render_target.hpp",
+          "name": "CanvasTextureRenderTarget"
+        },
+        {
+          "include": "flight/types/composite_effect.hpp",
+          "name": "CompositeEffect"
+        },
+        {
+          "include": "flight/types/composite_operator.hpp",
+          "name": "CompositeOperator"
+        },
+        {
+          "include": "flight/types/drop_shadow_effect.hpp",
+          "name": "DropShadowEffect"
+        },
+        {
+          "include": "flight/types/effect_source_mode.hpp",
+          "name": "EffectSourceMode"
+        },
+        {
+          "include": "flight/types/film_grain_effect.hpp",
+          "name": "FilmGrainEffect"
+        },
+        {
+          "include": "flight/types/gradient_bevel_effect.hpp",
+          "name": "GradientBevelEffect"
+        },
+        {
+          "include": "flight/types/gradient_glow_effect.hpp",
+          "name": "GradientGlowEffect"
+        },
+        {
+          "include": "flight/types/inner_glow_effect.hpp",
+          "name": "InnerGlowEffect"
+        },
+        {
+          "include": "flight/types/inner_shadow_effect.hpp",
+          "name": "InnerShadowEffect"
+        },
+        {
+          "include": "flight/types/lens_distortion_effect.hpp",
+          "name": "LensDistortionEffect"
+        },
+        {
+          "include": "flight/types/outer_glow_effect.hpp",
+          "name": "OuterGlowEffect"
+        },
+        {
+          "include": "flight/types/pixelate_effect.hpp",
+          "name": "PixelateEffect"
+        },
+        {
+          "include": "flight/types/posterize_effect.hpp",
+          "name": "PosterizeEffect"
+        },
+        {
+          "include": "flight/types/scanlines_effect.hpp",
+          "name": "ScanlinesEffect"
+        },
+        {
+          "include": "flight/types/tilt_shift_effect.hpp",
+          "name": "TiltShiftEffect"
+        },
+        {
+          "include": "flight/types/vignette_effect.hpp",
+          "name": "VignetteEffect"
+        }
+      ],
+      "diagnostic": "'AdvancedBlendMode' was not declared in this scope",
+      "defect": "The emitter writes 24 name(s) owned by flight::types unqualified inside namespace flight::effects_canvas. Collected by compiling every header in the package with -fmax-errors=0, so names MASKED behind an earlier diagnostic in the same file are included -- the compile report keeps only the first.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-animation-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::animation",
+      "symbols": [
+        {
+          "include": "flight/animation/animation_clip.hpp",
+          "name": "create_animation_channel"
+        }
+      ],
+      "diagnostic": "'create_animation_channel' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::animation unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-clip-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::clip",
+      "symbols": [
+        {
+          "include": "flight/clip/clip_region.hpp",
+          "name": "create_clip_region_from_path"
+        }
+      ],
+      "diagnostic": "'create_clip_region_from_path' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::clip unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-color-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::color",
+      "symbols": [
+        {
+          "include": "flight/color/pack_color.hpp",
+          "name": "pack_color"
+        }
+      ],
+      "diagnostic": "'pack_color' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::color unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "create_gradient_transform_matrix"
+        },
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "create_matrix"
+        },
+        {
+          "include": "flight/geometry/rectangle.hpp",
+          "name": "create_rectangle"
+        },
+        {
+          "include": "flight/geometry/transform2d.hpp",
+          "name": "create_transform2_d"
+        },
+        {
+          "include": "flight/geometry/transform2d.hpp",
+          "name": "decompose_matrix_to_transform2_d"
+        },
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "inverse_matrix"
+        },
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "multiply_matrix"
+        }
+      ],
+      "diagnostic": "'create_gradient_transform_matrix' was not declared in this scope",
+      "defect": "The emitter writes 7 function name(s) owned by flight::geometry unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-importdiagnostics-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::importdiagnostics",
+      "symbols": [
+        {
+          "include": "flight/importdiagnostics/import_diagnostic_collector.hpp",
+          "name": "report_import_diagnostic"
+        }
+      ],
+      "diagnostic": "'report_import_diagnostic' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::importdiagnostics unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-path-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::path",
+      "symbols": [
+        {
+          "include": "flight/path/path.hpp",
+          "name": "append_path_circle"
+        },
+        {
+          "include": "flight/path/path.hpp",
+          "name": "append_path_cubic_curve_to"
+        },
+        {
+          "include": "flight/path/path.hpp",
+          "name": "append_path_ellipse"
+        },
+        {
+          "include": "flight/path/path.hpp",
+          "name": "append_path_line_to"
+        },
+        {
+          "include": "flight/path/path.hpp",
+          "name": "append_path_move_to"
+        },
+        {
+          "include": "flight/path/path.hpp",
+          "name": "append_path_polygon"
+        },
+        {
+          "include": "flight/path/path.hpp",
+          "name": "append_path_polyline"
+        },
+        {
+          "include": "flight/path/path.hpp",
+          "name": "append_path_rectangle"
+        },
+        {
+          "include": "flight/path/path.hpp",
+          "name": "append_path_rounded_rectangle"
+        },
+        {
+          "include": "flight/path/path.hpp",
+          "name": "create_path"
+        },
+        {
+          "include": "flight/path/dash_path.hpp",
+          "name": "dash_path"
+        },
+        {
+          "include": "flight/path/get_path_bounds.hpp",
+          "name": "get_path_bounds"
+        },
+        {
+          "include": "flight/path/reverse_path.hpp",
+          "name": "reverse_path"
+        },
+        {
+          "include": "flight/path/transform_path.hpp",
+          "name": "transform_path"
+        }
+      ],
+      "diagnostic": "'append_path_circle' was not declared in this scope",
+      "defect": "The emitter writes 14 function name(s) owned by flight::path unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-path-boolean-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::path_boolean",
+      "symbols": [
+        {
+          "include": "flight/path_boolean/boolean_paths.hpp",
+          "name": "intersect_paths"
+        },
+        {
+          "include": "flight/path_boolean/simplify_path.hpp",
+          "name": "simplify_path"
+        }
+      ],
+      "diagnostic": "'intersect_paths' was not declared in this scope",
+      "defect": "The emitter writes 2 function name(s) owned by flight::path_boolean unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-path-formats-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::path_formats",
+      "symbols": [
+        {
+          "include": "flight/path_formats/svg_path_data.hpp",
+          "name": "parse_svg_path_data"
+        }
+      ],
+      "diagnostic": "'parse_svg_path_data' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::path_formats unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-scene2d-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::scene2d",
+      "symbols": [
+        {
+          "include": "flight/scene2d/display_object_animation.hpp",
+          "name": "apply_animation_clip_to_node2_d"
+        }
+      ],
+      "diagnostic": "'apply_animation_clip_to_node2_d' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::scene2d unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-shape-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::shape",
+      "symbols": [
+        {
+          "include": "flight/shape/shape_commands.hpp",
+          "name": "append_shape_begin_fill"
+        },
+        {
+          "include": "flight/shape/shape_commands.hpp",
+          "name": "append_shape_begin_gradient_fill"
+        },
+        {
+          "include": "flight/shape/shape_commands.hpp",
+          "name": "append_shape_end_fill"
+        },
+        {
+          "include": "flight/shape/shape_commands.hpp",
+          "name": "append_shape_line_gradient_style"
+        },
+        {
+          "include": "flight/shape/shape_commands.hpp",
+          "name": "append_shape_line_style"
+        },
+        {
+          "include": "flight/shape/shape_commands.hpp",
+          "name": "append_shape_path"
+        },
+        {
+          "include": "flight/shape/register_default_shape_bounds_commands.hpp",
+          "name": "register_default_shape_bounds_commands"
+        }
+      ],
+      "diagnostic": "'append_shape_begin_fill' was not declared in this scope",
+      "defect": "The emitter writes 7 function name(s) owned by flight::shape unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-textlayout-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::textlayout",
+      "symbols": [
+        {
+          "include": "flight/textlayout/text_format_range.hpp",
+          "name": "create_text_format_range"
+        }
+      ],
+      "diagnostic": "'create_text_format_range' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::textlayout unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-unqualified-xml-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_formats/",
+      "namespace": "flight::xml",
+      "symbols": [
+        {
+          "include": "flight/xml/xml_parse.hpp",
+          "name": "parse_xml_document"
+        }
+      ],
+      "diagnostic": "'parse_xml_document' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::xml unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton2d-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/skeleton2d/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "inverse_matrix"
+        },
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "multiply_matrix"
+        }
+      ],
+      "diagnostic": "'inverse_matrix' was not declared in this scope",
+      "defect": "The emitter writes 2 function name(s) owned by flight::geometry unqualified inside namespace flight::skeleton2d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton2d-unqualified-node-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/skeleton2d/",
+      "namespace": "flight::node",
+      "symbols": [
+        {
+          "include": "flight/node/node_order_list.hpp",
+          "name": "add_node_order_list_entry"
+        },
+        {
+          "include": "flight/node/node_order_list.hpp",
+          "name": "clear_node_order_list"
+        }
+      ],
+      "diagnostic": "'add_node_order_list_entry' was not declared in this scope",
+      "defect": "The emitter writes 2 function name(s) owned by flight::node unqualified inside namespace flight::skeleton2d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton2d-unqualified-registry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/skeleton2d/",
+      "namespace": "flight::registry",
+      "symbols": [
+        {
+          "include": "flight/registry/registry_table.hpp",
+          "name": "get_registry_table_entry"
+        }
+      ],
+      "diagnostic": "'get_registry_table_entry' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::registry unqualified inside namespace flight::skeleton2d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-unqualified-adjustments-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/",
+      "namespace": "flight::adjustments",
+      "symbols": [
+        {
+          "include": "flight/adjustments/color_matrix_math.hpp",
+          "name": "multiply_color_matrix"
+        }
+      ],
+      "diagnostic": "'multiply_color_matrix' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::adjustments unqualified inside namespace flight::render. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-unqualified-color-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/",
+      "namespace": "flight::color",
+      "symbols": [
+        {
+          "include": "flight/color/pack_color.hpp",
+          "name": "unpack_color_to_linear"
+        }
+      ],
+      "diagnostic": "'unpack_color_to_linear' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::color unqualified inside namespace flight::render. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/aabb.hpp",
+          "name": "create_aabb"
+        },
+        {
+          "include": "flight/geometry/frustum.hpp",
+          "name": "create_frustum"
+        },
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "create_matrix"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "create_matrix4"
+        },
+        {
+          "include": "flight/geometry/rectangle.hpp",
+          "name": "create_rectangle"
+        },
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "inverse_matrix"
+        },
+        {
+          "include": "flight/geometry/frustum.hpp",
+          "name": "is_frustum_intersecting_aabb"
+        },
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "matrix_transform_rectangle"
+        },
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "multiply_matrix"
+        },
+        {
+          "include": "flight/geometry/frustum.hpp",
+          "name": "set_frustum_from_matrix4"
+        },
+        {
+          "include": "flight/geometry/aabb.hpp",
+          "name": "transform_aabb_by_matrix4"
+        }
+      ],
+      "diagnostic": "'create_aabb' was not declared in this scope",
+      "defect": "The emitter writes 11 function name(s) owned by flight::geometry unqualified inside namespace flight::render. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-unqualified-log-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/",
+      "namespace": "flight::log",
+      "symbols": [
+        {
+          "include": "flight/log/log.hpp",
+          "name": "log_once"
+        }
+      ],
+      "diagnostic": "'log_once' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::log unqualified inside namespace flight::render. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-unqualified-materials-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/",
+      "namespace": "flight::materials",
+      "symbols": [
+        {
+          "include": "flight/materials/color_scale_bias.hpp",
+          "name": "concat_color_scale_bias"
+        },
+        {
+          "include": "flight/materials/color_scale_bias.hpp",
+          "name": "create_color_scale_bias"
+        }
+      ],
+      "diagnostic": "'concat_color_scale_bias' was not declared in this scope",
+      "defect": "The emitter writes 2 function name(s) owned by flight::materials unqualified inside namespace flight::render. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-unqualified-signals-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/",
+      "namespace": "flight::signals",
+      "symbols": [
+        {
+          "include": "flight/signals/signal.hpp",
+          "name": "create_signal"
+        }
+      ],
+      "diagnostic": "'create_signal' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::signals unqualified inside namespace flight::render. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "interaction-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/interaction/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "create_matrix"
+        },
+        {
+          "include": "flight/geometry/rectangle.hpp",
+          "name": "intersects_rectangle"
+        },
+        {
+          "include": "flight/geometry/matrix.hpp",
+          "name": "inverse_matrix_transform_point_xy"
+        }
+      ],
+      "diagnostic": "'create_matrix' was not declared in this scope",
+      "defect": "The emitter writes 3 function name(s) owned by flight::geometry unqualified inside namespace flight::interaction. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     }
