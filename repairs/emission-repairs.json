@@ -3849,11 +3849,47 @@
       "symbols": [
         {
           "include": "flight/types/layout.hpp",
+          "name": "FlexLayoutAlign"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "FlexLayoutItemStyle"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "FlexLayoutJustify"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "GridLayoutItemStyle"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "LayoutNode"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "LayoutState"
+        },
+        {
+          "include": "flight/types/layout.hpp",
           "name": "LayoutTree"
         },
         {
           "include": "flight/types/viewport_align.hpp",
           "name": "ViewportAlign"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "anchor_layout_kind"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "flex_layout_kind"
+        },
+        {
+          "include": "flight/types/layout.hpp",
+          "name": "grid_layout_kind"
         }
       ],
       "diagnostic": "'LayoutTree' was not declared in this scope",
@@ -3873,7 +3909,79 @@
         },
         {
           "include": "flight/types/command.hpp",
+          "name": "Command"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "CommandBinding"
+        },
+        {
+          "include": "flight/types/command.hpp",
           "name": "CommandBindingTable"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "CommandHistory"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "CommandPropertyEntry"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "CompositeCommand"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "Kind"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "NodeAny"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "RemoveNodeChildCommand"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "ReorderNodeChildCommand"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "SetNodePropertyCommand"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "add_node_child_command_kind"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "command_binding_miss_policy"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "command_binding_registry_id"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "composite_command_kind"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "remove_node_child_command_kind"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "reorder_node_child_command_kind"
+        },
+        {
+          "include": "flight/types/command.hpp",
+          "name": "set_node_property_command_kind"
         }
       ],
       "diagnostic": "'AddNodeChildCommand' was not declared in this scope",
@@ -4112,8 +4220,52 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/accelerator.hpp",
+          "name": "Accelerator"
+        },
+        {
+          "include": "flight/types/accelerator_parse_error.hpp",
+          "name": "AcceleratorParseError"
+        },
+        {
+          "include": "flight/types/shortcut.hpp",
+          "name": "CreateGlobalShortcutOutcome"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/shortcut.hpp",
+          "name": "GlobalShortcut"
+        },
+        {
+          "include": "flight/types/shortcut.hpp",
+          "name": "GlobalShortcutAttachOutcome"
+        },
+        {
+          "include": "flight/types/shortcut.hpp",
+          "name": "GlobalShortcutDetachOutcome"
+        },
+        {
+          "include": "flight/types/shortcut.hpp",
+          "name": "GlobalShortcutQueryOutcome"
+        },
+        {
+          "include": "flight/types/shortcut.hpp",
+          "name": "HostShortcutQueryCapability"
+        },
+        {
           "include": "flight/types/shortcut.hpp",
           "name": "HostShortcutTriggerCapability"
+        },
+        {
+          "include": "flight/types/parsed_accelerator.hpp",
+          "name": "ParsedAccelerator"
+        },
+        {
+          "include": "flight/types/shortcut.hpp",
+          "name": "ShortcutTriggerSubscription"
         }
       ],
       "diagnostic": "'HostShortcutTriggerCapability' was not declared in this scope",
@@ -4176,8 +4328,44 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/aabb.hpp",
+          "name": "Aabb"
+        },
+        {
+          "include": "flight/types/camera3_d.hpp",
+          "name": "Camera3D"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/matrix4.hpp",
+          "name": "Matrix4"
+        },
+        {
+          "include": "flight/types/mesh.hpp",
+          "name": "Mesh"
+        },
+        {
+          "include": "flight/types/node3_d.hpp",
+          "name": "Node3D"
+        },
+        {
+          "include": "flight/types/ray3_d.hpp",
+          "name": "Ray3D"
+        },
+        {
           "include": "flight/types/scene3_dhit.hpp",
           "name": "Scene3DHit"
+        },
+        {
+          "include": "flight/types/scene3_dpick_options.hpp",
+          "name": "Scene3DPickOptions"
+        },
+        {
+          "include": "flight/types/vector3.hpp",
+          "name": "Vector3"
         }
       ],
       "diagnostic": "'Scene3DHit' was not declared in this scope",
@@ -4240,8 +4428,40 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/menu.hpp",
+          "name": "HostAppMenuCapability"
+        },
+        {
+          "include": "flight/types/menu.hpp",
+          "name": "HostMenuHighlightCapability"
+        },
+        {
+          "include": "flight/types/menu.hpp",
+          "name": "HostMenuPopupCapability"
+        },
+        {
+          "include": "flight/types/menu.hpp",
+          "name": "HostMenuSelectCapability"
+        },
+        {
           "include": "flight/types/menu_highlight.hpp",
           "name": "MenuHighlight"
+        },
+        {
+          "include": "flight/types/menu.hpp",
+          "name": "MenuItemTemplate"
+        },
+        {
+          "include": "flight/types/menu_select.hpp",
+          "name": "MenuSelect"
+        },
+        {
+          "include": "flight/types/menu_signals.hpp",
+          "name": "MenuSignals"
         }
       ],
       "diagnostic": "'MenuHighlight' was not declared in this scope",
@@ -4386,6 +4606,42 @@
         {
           "include": "flight/types/clip_region.hpp",
           "name": "ClipRegion"
+        },
+        {
+          "include": "flight/types/clip_region.hpp",
+          "name": "ClipRegionContoursExplanation"
+        },
+        {
+          "include": "flight/types/clip_region.hpp",
+          "name": "ClipRegionContoursGuard"
+        },
+        {
+          "include": "flight/types/clip_region.hpp",
+          "name": "ClipRegionReleaseGuard"
+        },
+        {
+          "include": "flight/types/clip_region.hpp",
+          "name": "ClipRegionUseGuard"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/path.hpp",
+          "name": "Path"
+        },
+        {
+          "include": "flight/types/shape_command.hpp",
+          "name": "PathWinding"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "RectangleLike"
         }
       ],
       "diagnostic": "'ClipRegion' was not declared in this scope",
@@ -4956,6 +5212,10 @@
           "name": "clear_signal"
         },
         {
+          "include": "flight/signals/signal.hpp",
+          "name": "create_signal"
+        },
+        {
           "include": "flight/signals/emitter.hpp",
           "name": "emit_signal"
         }
@@ -5003,6 +5263,10 @@
       "appliesTo": "flight/power/",
       "namespace": "flight::signals",
       "symbols": [
+        {
+          "include": "flight/signals/signal.hpp",
+          "name": "create_signal"
+        },
         {
           "include": "flight/signals/emitter.hpp",
           "name": "emit_signal"
@@ -5122,69 +5386,200 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "respell-reference-alias-interactionmanager",
-      "kind": "respell-reference-alias",
-      "appliesTo": "flight/",
-      "symbol": "InteractionManager",
-      "expansion": "shared-pointer",
-      "witness": "flight::types::InteractionManager<flight::types::NodeAny>",
-      "witnessInclude": "flight/types/interaction_manager.hpp",
-      "diagnostic": "couldn't deduce template parameter from a flight::Ref parameter",
-      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it sits in a NON-DEDUCED CONTEXT. flight::types::InteractionManager is used that way in a function template's parameter list at 15 site(s), so the declaration is well-formed and every CALL fails to deduce. InteractionManager derives from flight::ReferenceEnabled, so the alias resolves to std::shared_ptr<InteractionManager<...>> and the respelling is a spelling change with no behaviour of its own. The witness above was compile-checked before this entry was written, and referenceAliasIdentityProof turns the expansion claim into a static_assert, so a wrong claim fails the build rather than quietly changing a signature.",
-      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
-      "expectedWhen": "always"
+      "id": "command-unqualified-registry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/command/",
+      "namespace": "flight::registry",
+      "symbols": [
+        {
+          "include": "flight/registry/registry_table.hpp",
+          "name": "get_registry_table_entry"
+        }
+      ],
+      "diagnostic": "'get_registry_table_entry' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::registry unqualified inside namespace flight::command. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "respell-reference-alias-gizmostate",
-      "kind": "respell-reference-alias",
-      "appliesTo": "flight/",
-      "symbol": "GizmoState",
-      "expansion": "shared-pointer",
-      "witness": "flight::types::GizmoState<flight::types::NodeAny>",
-      "witnessInclude": "flight/types/gizmo_state.hpp",
-      "diagnostic": "couldn't deduce template parameter from a flight::Ref parameter",
-      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it sits in a NON-DEDUCED CONTEXT. flight::types::GizmoState is used that way in a function template's parameter list at 15 site(s), so the declaration is well-formed and every CALL fails to deduce. GizmoState derives from flight::ReferenceEnabled, so the alias resolves to std::shared_ptr<GizmoState<...>> and the respelling is a spelling change with no behaviour of its own. The witness above was compile-checked before this entry was written, and referenceAliasIdentityProof turns the expansion claim into a static_assert, so a wrong claim fails the build rather than quietly changing a signature.",
-      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
-      "expectedWhen": "always"
+      "id": "clip-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/clip/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/rectangle.hpp",
+          "name": "clone_rectangle"
+        },
+        {
+          "include": "flight/geometry/rectangle.hpp",
+          "name": "copy_rectangle"
+        },
+        {
+          "include": "flight/geometry/rectangle.hpp",
+          "name": "create_rectangle"
+        },
+        {
+          "include": "flight/geometry/rectangle.hpp",
+          "name": "encloses_rectangle"
+        },
+        {
+          "include": "flight/geometry/rectangle.hpp",
+          "name": "intersects_rectangle"
+        }
+      ],
+      "diagnostic": "'copy_rectangle' was not declared in this scope",
+      "defect": "The emitter writes 4 function name(s) owned by flight::geometry unqualified inside namespace flight::clip. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "respell-reference-alias-selectionstate",
-      "kind": "respell-reference-alias",
-      "appliesTo": "flight/",
-      "symbol": "SelectionState",
-      "expansion": "shared-pointer",
-      "witness": "flight::types::SelectionState<flight::types::NodeAny>",
-      "witnessInclude": "flight/types/selection_state.hpp",
-      "diagnostic": "couldn't deduce template parameter from a flight::Ref parameter",
-      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it sits in a NON-DEDUCED CONTEXT. flight::types::SelectionState is used that way in a function template's parameter list at 9 site(s), so the declaration is well-formed and every CALL fails to deduce. SelectionState derives from flight::ReferenceEnabled, so the alias resolves to std::shared_ptr<SelectionState<...>> and the respelling is a spelling change with no behaviour of its own. The witness above was compile-checked before this entry was written, and referenceAliasIdentityProof turns the expansion claim into a static_assert, so a wrong claim fails the build rather than quietly changing a signature.",
-      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
-      "expectedWhen": "always"
+      "id": "clip-unqualified-path-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/clip/",
+      "namespace": "flight::path",
+      "symbols": [
+        {
+          "include": "flight/path/path.hpp",
+          "name": "append_path_cubic_curve_to"
+        },
+        {
+          "include": "flight/path/path.hpp",
+          "name": "append_path_line_to"
+        },
+        {
+          "include": "flight/path/path.hpp",
+          "name": "append_path_move_to"
+        },
+        {
+          "include": "flight/path/path.hpp",
+          "name": "create_path"
+        },
+        {
+          "include": "flight/path/flatten_path.hpp",
+          "name": "flatten_path"
+        }
+      ],
+      "diagnostic": "'append_path_cubic_curve_to' was not declared in this scope",
+      "defect": "The emitter writes 4 function name(s) owned by flight::path unqualified inside namespace flight::clip. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "respell-reference-alias-focusmanager",
-      "kind": "respell-reference-alias",
-      "appliesTo": "flight/",
-      "symbol": "FocusManager",
-      "expansion": "shared-pointer",
-      "witness": "flight::types::FocusManager<flight::types::NodeAny>",
-      "witnessInclude": "flight/types/focus_manager.hpp",
-      "diagnostic": "couldn't deduce template parameter from a flight::Ref parameter",
-      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it sits in a NON-DEDUCED CONTEXT. flight::types::FocusManager is used that way in a function template's parameter list at 7 site(s), so the declaration is well-formed and every CALL fails to deduce. FocusManager derives from flight::ReferenceEnabled, so the alias resolves to std::shared_ptr<FocusManager<...>> and the respelling is a spelling change with no behaviour of its own. The witness above was compile-checked before this entry was written, and referenceAliasIdentityProof turns the expansion claim into a static_assert, so a wrong claim fails the build rather than quietly changing a signature.",
-      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
-      "expectedWhen": "always"
+      "id": "picking-unqualified-camera-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/picking/",
+      "namespace": "flight::camera",
+      "symbols": [
+        {
+          "include": "flight/camera/picking.hpp",
+          "name": "get_camera3_dscreen_to_world_ray"
+        }
+      ],
+      "diagnostic": "'get_camera3_dscreen_to_world_ray' was not declared in this scope",
+      "defect": "The emitter writes 1 function name(s) owned by flight::camera unqualified inside namespace flight::picking. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "respell-reference-alias-tween",
-      "kind": "respell-reference-alias",
-      "appliesTo": "flight/",
-      "symbol": "Tween",
-      "expansion": "shared-pointer",
-      "witness": "flight::types::Tween<double>",
-      "witnessInclude": "flight/types/tween.hpp",
-      "diagnostic": "couldn't deduce template parameter from a flight::Ref parameter",
-      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it sits in a NON-DEDUCED CONTEXT. flight::types::Tween is used that way in a function template's parameter list at 5 site(s), so the declaration is well-formed and every CALL fails to deduce. Tween derives from flight::ReferenceEnabled, so the alias resolves to std::shared_ptr<Tween<...>> and the respelling is a spelling change with no behaviour of its own. The witness above was compile-checked before this entry was written, and referenceAliasIdentityProof turns the expansion claim into a static_assert, so a wrong claim fails the build rather than quietly changing a signature.",
-      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
-      "expectedWhen": "always"
+      "id": "picking-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/picking/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/aabb.hpp",
+          "name": "create_aabb"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "create_matrix4"
+        },
+        {
+          "include": "flight/geometry/ray3d.hpp",
+          "name": "create_ray3_d"
+        },
+        {
+          "include": "flight/geometry/vector3.hpp",
+          "name": "create_vector3"
+        }
+      ],
+      "diagnostic": "'create_aabb' was not declared in this scope",
+      "defect": "The emitter writes 4 function name(s) owned by flight::geometry unqualified inside namespace flight::picking. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "power-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/power/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/power.hpp",
+          "name": "HostPowerBatteryHealthCapability"
+        },
+        {
+          "include": "flight/types/power.hpp",
+          "name": "HostPowerIdleCapability"
+        },
+        {
+          "include": "flight/types/power.hpp",
+          "name": "HostPowerKeepAwakeCapability"
+        },
+        {
+          "include": "flight/types/power.hpp",
+          "name": "HostPowerStatusCapability"
+        },
+        {
+          "include": "flight/types/power.hpp",
+          "name": "HostPowerThermalCapability"
+        },
+        {
+          "include": "flight/types/power.hpp",
+          "name": "Power"
+        },
+        {
+          "include": "flight/types/power_battery_health.hpp",
+          "name": "PowerBatteryHealth"
+        },
+        {
+          "include": "flight/types/power.hpp",
+          "name": "PowerIdleState"
+        },
+        {
+          "include": "flight/types/power.hpp",
+          "name": "PowerKeepAwakeAcquireResult"
+        },
+        {
+          "include": "flight/types/power.hpp",
+          "name": "PowerKeepAwakeMode"
+        },
+        {
+          "include": "flight/types/power.hpp",
+          "name": "PowerKeepAwakeReleaseResult"
+        },
+        {
+          "include": "flight/types/power.hpp",
+          "name": "PowerStatus"
+        },
+        {
+          "include": "flight/types/power.hpp",
+          "name": "PowerThermalState"
+        },
+        {
+          "include": "flight/types/signal.hpp",
+          "name": "Signal"
+        }
+      ],
+      "diagnostic": "'EntityConstruction' was not declared in this scope",
+      "defect": "The emitter writes 15 name(s) owned by flight::types unqualified inside namespace flight::power. Collected by compiling every header in the package with -fmax-errors=0, so names MASKED behind an earlier diagnostic in the same file are included -- the compile report keeps only the first.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     }
   ]
 }
