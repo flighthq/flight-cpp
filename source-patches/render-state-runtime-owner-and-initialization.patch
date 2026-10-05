@@ -1,0 +1,246 @@
+diff --git a/packages/render/src/renderState.ts b/packages/render/src/renderState.ts
+index 2b34bc6..7202793 100644
+--- a/packages/render/src/renderState.ts
++++ b/packages/render/src/renderState.ts
+@@ -1,15 +1,39 @@
+-import { allocateEntity, createEntityRuntime, finishEntity } from '@flighthq/entity/contract';
+-import { createKeyedTable } from '@flighthq/registry/contract';
++import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
++import { createKeyedTable, getRegistryTableEntry } from '@flighthq/registry/contract';
+ import type {
+   ColorAdjustmentUnsupportedGuard,
++  ImageSurfaceCreator,
++  Matrix,
+   RenderState,
+   RenderStateRuntime,
+   Renderable,
++  Scene2DClipHooks,
+   EntityConstruction,
+ } from '@flighthq/types/contract';
+-import { BlendMode, EntityRuntimeKey, RegistryEntryState } from '@flighthq/types/contract';
++import {
++  BlendMode,
++  createRenderProxyAdapterWeakMap,
++  createRenderProxyWeakMap,
++  invokeRenderProxyDestroyData,
++  readRenderStateRuntimeOwner,
++  writeRenderStateRuntimeOwner,
++} from '@flighthq/types/contract';
++
++interface RenderStateInitialization {
++  allowSmoothing?: boolean;
++  currentClipDepth?: number;
++  displayObjectClipHooks?: Scene2DClipHooks | null;
++  pixelRatio?: number;
++  imageSurfaceProvider?: Readonly<ImageSurfaceCreator> | null;
++  renderAlpha?: number;
++  renderBlendMode?: string | null;
++  renderTransform2D?: Matrix | null;
++  sceneGraphSyncPolicy?: 'refreshDerivedState' | 'requiresInvalidation';
++  roundPixels?: boolean;
++}
+ 
+-export function createRenderState(obj?: Partial<RenderState>): RenderState {
++export function createRenderState(obj?: Partial<RenderState>): RenderState;
++export function createRenderState(obj?: RenderStateInitialization): RenderState {
+   const state = allocateEntity<RenderState>();
+   initializeRenderState(state, obj);
+   return finishEntity(state);
+@@ -21,67 +45,111 @@ export function createRenderState(obj?: Partial<RenderState>): RenderState {
+ // on top of this. The render path writes the returned object every frame, so the return is
+ // intentionally mutable (not Readonly).
+ export function createRenderStateRuntime(): RenderStateRuntime {
+-  const runtime = createEntityRuntime() as RenderStateRuntime;
+-  runtime.currentFrameId = 0;
+-  runtime.renderAdaptHook = null;
+-  runtime.renderProxyAdapterMap = new WeakMap();
+-  runtime.renderProxyMap = new WeakMap();
+-  runtime.renderProxySources = new Set();
+-  runtime.registryMiss = null;
+-  runtime.registries = {
+-    renderers: createKeyedTable('NodeRenderer', 'Unregistered'),
+-    // Written as null rather than left off: the field's presence is what keeps every registries object
+-    // one hidden class, so the per-shape reads on the draw path stay monomorphic. The opt-in registrar
+-    // fills the slot; nothing allocates a table for a state that never opts in.
+-    strokeTessellator: null,
++  return {
++    binding: null,
++    currentFrameId: 0,
++    renderAdaptHook: null,
++    renderProxyAdapterMap: createRenderProxyAdapterWeakMap(),
++    renderProxyMap: createRenderProxyWeakMap(),
++    renderProxySources: new Set<Renderable>(),
++    registryMiss: null,
++    registries: {
++      renderers: createKeyedTable('NodeRenderer', 'Unregistered'),
++      // Written as null rather than left off: the field's presence is what keeps every registries object
++      // one hidden class, so the per-shape reads on the draw path stay monomorphic. The opt-in registrar
++      // fills the slot; nothing allocates a table for a state that never opts in.
++      strokeTessellator: null,
++    },
++    rendererMapId: 0,
++    tempStack: [],
+   };
+-  runtime.rendererMapId = 0;
+-  runtime.tempStack = [];
+-  return runtime;
+ }
+ 
+ // Runs every live proxy's renderer teardown hook and clears the state-owned traversal bookkeeping.
+ // Backend destroy* functions call this before releasing their own state/context tiers.
+ export function destroyRenderState(state: RenderState): void {
+   const runtime = getRenderStateRuntime(state);
+-  for (const source of [...runtime.renderProxySources]) disposeRenderProxyForShutdown(state, source);
++  const sources: Renderable[] = [];
++  for (const source of runtime.renderProxySources) sources.push(source);
++  for (const source of sources) disposeRenderProxyForShutdown(state, source);
+   runtime.registryMiss?.clear();
+   runtime.registryMiss = null;
+-  runtime.registries.effectPaddingResolvers = undefined;
++  const registries = runtime.registries;
++  registries.effectPaddingResolvers = undefined;
+   runtime.tempStack.length = 0;
+ }
+ 
+ export function getColorAdjustmentUnsupportedGuard(state: RenderState): ColorAdjustmentUnsupportedGuard | null {
+-  const entry = getRenderStateRuntime(state).registries.colorAdjustmentUnsupportedGuard?.entry;
+-  return entry?.state === RegistryEntryState.Bound ? entry.value : null;
++  const table = getRenderStateRuntime(state).registries.colorAdjustmentUnsupportedGuard;
++  if (table === undefined) return null;
++  return getRegistryTableEntry<ColorAdjustmentUnsupportedGuard>(table, table.registry);
+ }
+ 
+ // Resolves the package-private machinery runtime attached to a RenderState. Mutable by design: the
+ // render path writes its fields every frame.
+ export function getRenderStateRuntime(state: RenderState): RenderStateRuntime {
+-  return state[EntityRuntimeKey] as RenderStateRuntime;
++  return readRenderStateRuntimeOwner(state);
+ }
+ 
+-export function initializeRenderState(state: EntityConstruction<RenderState>, obj?: Partial<RenderState>): void {
+-  state.allowSmoothing = obj?.allowSmoothing ?? true;
+-  state.currentClipDepth = obj?.currentClipDepth ?? 0;
+-  state.displayObjectClipHooks = obj?.displayObjectClipHooks ?? null;
+-  state.pixelRatio = obj?.pixelRatio ?? 1;
+-  state.imageSurfaceProvider = obj?.imageSurfaceProvider ?? null;
+-  state.renderAlpha = obj?.renderAlpha ?? 1;
+-  state.renderBlendMode = obj?.renderBlendMode ?? BlendMode.Normal;
+-  state.renderTransform2D = obj?.renderTransform2D ?? null;
+-  state.roundPixels = obj?.roundPixels ?? false;
+-  state.sceneGraphSyncPolicy = obj?.sceneGraphSyncPolicy ?? 'refreshDerivedState';
+-  state[EntityRuntimeKey] = createRenderStateRuntime();
++export function initializeRenderState(state: EntityConstruction<RenderState>, obj?: Partial<RenderState>): void;
++export function initializeRenderState(
++  state: EntityConstruction<RenderState>,
++  obj?: RenderStateInitialization,
++): void {
++  if (obj == null) {
++    state.allowSmoothing = true;
++    state.currentClipDepth = 0;
++    state.displayObjectClipHooks = null;
++    state.pixelRatio = 1;
++    state.imageSurfaceProvider = null;
++    state.renderAlpha = 1;
++    state.renderBlendMode = BlendMode.Normal;
++    state.renderTransform2D = null;
++    state.roundPixels = false;
++    state.sceneGraphSyncPolicy = 'refreshDerivedState';
++  } else {
++    const allowSmoothing = obj.allowSmoothing;
++    if (allowSmoothing == null) state.allowSmoothing = true;
++    else state.allowSmoothing = allowSmoothing;
++    const currentClipDepth = obj.currentClipDepth;
++    if (currentClipDepth == null) state.currentClipDepth = 0;
++    else state.currentClipDepth = currentClipDepth;
++    const displayObjectClipHooks = obj.displayObjectClipHooks;
++    if (displayObjectClipHooks === undefined) state.displayObjectClipHooks = null;
++    else if (displayObjectClipHooks === null) state.displayObjectClipHooks = null;
++    else state.displayObjectClipHooks = displayObjectClipHooks;
++    const pixelRatio = obj.pixelRatio;
++    if (pixelRatio == null) state.pixelRatio = 1;
++    else state.pixelRatio = pixelRatio;
++    const imageSurfaceProvider = obj.imageSurfaceProvider;
++    if (imageSurfaceProvider === undefined) state.imageSurfaceProvider = null;
++    else if (imageSurfaceProvider === null) state.imageSurfaceProvider = null;
++    else state.imageSurfaceProvider = imageSurfaceProvider;
++    const renderAlpha = obj.renderAlpha;
++    if (renderAlpha == null) state.renderAlpha = 1;
++    else state.renderAlpha = renderAlpha;
++    const renderBlendMode = obj.renderBlendMode;
++    if (renderBlendMode === undefined) state.renderBlendMode = BlendMode.Normal;
++    else if (renderBlendMode === null) state.renderBlendMode = BlendMode.Normal;
++    else state.renderBlendMode = renderBlendMode;
++    const renderTransform2D = obj.renderTransform2D;
++    if (renderTransform2D === undefined) state.renderTransform2D = null;
++    else if (renderTransform2D === null) state.renderTransform2D = null;
++    else state.renderTransform2D = renderTransform2D;
++    const roundPixels = obj.roundPixels;
++    if (roundPixels == null) state.roundPixels = false;
++    else state.roundPixels = roundPixels;
++    const sceneGraphSyncPolicy = obj.sceneGraphSyncPolicy;
++    if (sceneGraphSyncPolicy == null) state.sceneGraphSyncPolicy = 'refreshDerivedState';
++    else state.sceneGraphSyncPolicy = sceneGraphSyncPolicy;
++  }
++  writeRenderStateRuntimeOwner(state, createRenderStateRuntime());
+ }
+ 
+ function disposeRenderProxyForShutdown(state: RenderState, source: Renderable): void {
+   const runtime = getRenderStateRuntime(state);
+   const proxy = runtime.renderProxyMap.get(source);
+-  if (proxy?.rendererData !== null && proxy?.rendererData !== undefined) {
+-    proxy.renderer?.destroyData?.(state, proxy.rendererData);
+-  }
++  invokeRenderProxyDestroyData(proxy, state);
+   runtime.renderProxyMap.delete(source);
+   runtime.renderProxySources.delete(source);
+ }
+diff --git a/packages/types/src/RenderState.ts b/packages/types/src/RenderState.ts
+index bf653ce..940e9b0 100644
+--- a/packages/types/src/RenderState.ts
++++ b/packages/types/src/RenderState.ts
+@@ -1,6 +1,7 @@
+ import type { BlendMode } from './BlendMode';
+ import type { CanvasShapeCommand } from './CanvasShapeRegistry';
+-import type { Entity, EntityRuntime, Kind } from './Entity';
++import type { Entity, EntityConstruction, EntityRuntime, Kind } from './Entity';
++import { EntityRuntimeKey } from './Entity';
+ import type { ImageSurfaceCreator } from './ImageSurface';
+ import type { Matrix } from './Matrix';
+ import type { Path } from './Path';
+@@ -26,6 +27,7 @@ import type { StrokeStyle } from './StrokeStyle';
+ export type Scene3DGraphSyncPolicy = 'refreshDerivedState' | 'requiresInvalidation';
+ 
+ export interface RenderState extends Entity {
++  [EntityRuntimeKey]: RenderStateRuntime | undefined;
+   allowSmoothing: boolean;
+   // Active clip nesting depth (rect + path). Masks were retired into clips, so the mask pass / renderer
+   // map / currentMaskDepth are gone. Backends additionally keep their own per-form unwind stack.
+@@ -117,3 +119,28 @@ export interface RenderStateRuntime extends EntityRuntime {
+   rendererMapId: number;
+   tempStack: Renderable[];
+ }
++
++export function createRenderProxyAdapterWeakMap(): WeakMap<Renderable, RenderProxyAdapter> {
++  return new WeakMap();
++}
++
++export function createRenderProxyWeakMap(): WeakMap<Renderable, RenderProxy> {
++  return new WeakMap();
++}
++
++export function invokeRenderProxyDestroyData(proxy: RenderProxy | undefined, state: RenderState): void {
++  if (proxy?.rendererData !== null && proxy?.rendererData !== undefined) {
++    proxy.renderer?.destroyData?.(state, proxy.rendererData);
++  }
++}
++
++export function readRenderStateRuntimeOwner(owner: RenderState): RenderStateRuntime {
++  return owner[EntityRuntimeKey]!;
++}
++
++export function writeRenderStateRuntimeOwner(
++  owner: EntityConstruction<RenderState>,
++  runtime: RenderStateRuntime,
++): void {
++  owner[EntityRuntimeKey] = runtime;
++}

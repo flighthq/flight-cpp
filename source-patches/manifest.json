@@ -4,6 +4,22 @@
   "note": "Patches applied to a pinned sibling checkout before generation, so a module the compiler refuses to lower today can still ship. A patch here may only rewrite an expression into an equivalent the compiler does lower. It may NEVER change observable behavior -- absence, reference identity, equality, ordering, exception shape, task settlement -- because the generated header is then tested against the patched source, so a behavioral patch is a lie our own tests would certify. Each patch states the equivalence that makes it safe and the refusal it answers. The patch is applied after the pin integrity check and reverted when generation ends, so the checkout is only ever dirty inside one run. `baseCommit` pins the patch to the revision it was written against: a pin move that breaks the patch fails loudly instead of silently applying to different code.",
   "patches": [
     {
+      "id": "render-state-runtime-owner-and-initialization",
+      "dependency": "flight",
+      "patch": "render-state-runtime-owner-and-initialization.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/render/src/renderState.ts",
+      "package": "@flighthq/render",
+      "answers": "refusal",
+      "refusal": "renderState runtime-owner, Partial initialization, WeakMap value, and contextual optionalSingle lowering",
+      "rewrite": "Declares RenderState's exact runtime-symbol owner, constructs that owner directly, preserves the two public Partial<RenderState> signatures as overloads over a closed implementation shape, snapshots the source set with an explicitly typed array, and moves cross-package optional reads beside their owning declarations.",
+      "equivalence": "The runtime object has the same own fields, values, insertion order, and single reference identity as the former createEntityRuntime result plus writes; only its target type is established at allocation. The RenderState slot names that same owner and the owner-side accessors read or write it once without copying. Public overloads retain the exact Partial<RenderState> call surface, while the implementation-only shape lists precisely the ten string-keyed fields initialization reads; explicit branches preserve every nullish-coalescing default. The typed snapshot preserves Set order and prevents teardown callbacks from changing the current traversal. Guard resolution returns the same bound callback or null, and proxy teardown preserves callback argument identity, read order, deletion order, and null/undefined behavior.",
+      "whyNotUpstreamFirst": "All rewrites are ordinary target-neutral TypeScript and make the private ownership and initialization contract more explicit. The render package's existing public functions retain their signatures. Small representation helpers are exported from the types contract solely so their reads lower beside the declarations that own them; the patch is intentionally temporary while the emitter cannot carry that evidence across a package boundary.",
+      "unblocks": "Makes renderState.ts fully emit instead of leaving five declarations absent from render/render_state.hpp, improving the package-only inventory from 1151/1208 modules with 57 refusals to 1152/1208 with 56. Header closure remains zero: the direct header first reaches the pre-existing refused DisplayObject dependency, and with that dependency stubbed it reaches the separately refused createKeyedTable declaration.",
+      "expires": "when the emitter resolves Partial<RenderState>, preserves symbol-owner and WeakMap value evidence across package boundaries, projects the optional callback chains, and types array spreads from Set elements, or Flight adopts these equivalent forms.",
+      "appliedOn": "2026-10-04"
+    },
+    {
       "id": "registry-bound-discriminant-literal",
       "dependency": "flight",
       "patch": "registry-bound-discriminant-literal.patch",
