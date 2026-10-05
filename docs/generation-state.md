@@ -5707,3 +5707,47 @@ heaviest packages now, `scene2d_canvas` (24) and `effects_canvas` (23), are prec
 `render_state.hpp` override unblocked — they were in its 101-header reverse-include closure.
 
 The loop is therefore: declare to convergence, fix a structural blocker, declare again. Not declare once.
+
+## `manifest.emissionRepairs` records repair IDs, not their contents — a grown repair looks applied
+
+This cost an hour of chasing a handler bug that did not exist, and it will mislead anyone who checks
+"has my repair landed?" the obvious way.
+
+`generated/manifest.json` lists the repairs a run applied **by id**. The collector unions new symbols into an
+existing per-package entry rather than creating a second entry with a colliding id — which is correct, and
+was adopted after a collision silently dropped names. The consequence is that a repair whose symbol list
+**grew** since the last generation still appears in `manifest.emissionRepairs`, so an id-based check reports
+it as applied while its new symbols are nowhere in the tree.
+
+It surfaced as 72 failures of the form "this name has a declaration for exactly this package, the declaration
+is listed as applied, and the name is still not declared in this scope". Concretely:
+
+| | |
+| --- | --- |
+| repair | `bitmaptext-unqualified-types-names`, 12 symbols, `appliesTo: flight/bitmaptext/` |
+| in `manifest.emissionRepairs` | **yes** |
+| declarations actually in `generated/include/flight/bitmaptext/bitmap_text.hpp` | **one** — `using flight::types::Rectangle;` |
+| symbols still needed there | 10 |
+
+The entry held only `Rectangle` at the time of the last regeneration; the other eleven were unioned in
+afterwards. Running the handler against the current file proves it is not a handler defect — it inserts all
+ten declarations and their six includes correctly.
+
+### How to check properly
+
+Do not ask whether the id is in `manifest.emissionRepairs`. Ask whether the **text** is in the tree:
+
+```sh
+grep -c 'using flight::types::BitmapText;' generated/include/flight/bitmaptext/bitmap_text.hpp
+```
+
+or, for a whole repair, compare its symbol list against the declarations present in the files its
+`appliesTo` matches. An id-based "queued vs applied" split reported 11 queued of 350 when the true figure —
+counting grown entries — was far higher.
+
+### The shape of this mistake
+
+It is the same shape as the stale-report and the quote-character traps already recorded: a check that
+answers confidently and wrongly, where the wrong answer looks exactly like the right one. The repair ledger
+and the manifest agree, the handler is correct, every individual fact checks out, and the conclusion is still
+false — because the two sides are keyed on an identifier whose contents changed underneath it.
