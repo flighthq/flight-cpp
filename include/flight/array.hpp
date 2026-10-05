@@ -185,6 +185,15 @@ class Array {
     return normalized ? std::optional<Value>((*values_)[*normalized]) : std::nullopt;
   }
 
+  // An ABSENT index reads as absent, which is what `arr[undefined]` does in JavaScript -- it is not an
+  // error and it is not element zero. The emitter reaches this when an index comes from a partial row read
+  // or an optional chain and arrives as `std::optional<double>`; `bitmapfont/bitmap_font_glyph_source.hpp`
+  // indexes `pages` with one. Returning `nullopt` keeps the two absences distinguishable at the call site,
+  // because the result is already an optional for the out-of-range case.
+  [[nodiscard]] std::optional<Value> get(const std::optional<double>& index) const {
+    return index ? get(*index) : std::nullopt;
+  }
+
   [[nodiscard]] const_iterator begin() const noexcept { return values_->begin(); }
   [[nodiscard]] iterator begin() noexcept { return values_->begin(); }
   [[nodiscard]] const_iterator cbegin() const noexcept { return values_->cbegin(); }

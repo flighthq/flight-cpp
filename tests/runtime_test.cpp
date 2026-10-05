@@ -198,6 +198,23 @@ void test_locale_compare() {
 // already carried that conversion, so giving `Null` the same one makes the two agree rather than
 // inventing a rule -- and the pair of assertions that matter are that `nullptr` selects NULL and not
 // Undefined, since collapsing those two is the absence change this runtime exists to prevent.
+// Indexing an Array with an ABSENT index.
+//
+// `arr[undefined]` is `undefined` in JavaScript -- not an error, and not element zero. The emitter reaches
+// this when an index comes from a partial row read or an optional chain and arrives as
+// `std::optional<double>`. The assertion that matters is the last one: an absent index must not silently
+// read the first element, which is what a `value_or(0)` style unwrap would have done.
+void test_array_get_optional_index() {
+  flight::Array<double> values;
+  values.push(10.0);
+  values.push(20.0);
+  check(values.get(std::optional<double>(1.0)).value() == 20.0, "a present index reads its element");
+  check(!values.get(std::optional<double>{}).has_value(), "an absent index reads as absent");
+  check(!values.get(5.0).has_value(), "and an out-of-range index is still absent, as before");
+  check(values.get(std::optional<double>(0.0)).value() == 10.0,
+        "index zero is a real index, not confused with absence");
+}
+
 void test_null_from_nullptr() {
   std::variant<flight::String, flight::Null, flight::Undefined> value = nullptr;
   check(std::holds_alternative<flight::Null>(value), "nullptr selects the Null alternative");
@@ -3418,6 +3435,7 @@ static void test_self_reference() {
 
 int main() {
   test_array();
+  test_array_get_optional_index();
   test_null_from_nullptr();
   test_structural_ref_from_variant();
   test_array_of();
