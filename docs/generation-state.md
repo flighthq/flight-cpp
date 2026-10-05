@@ -4766,3 +4766,38 @@ look identical in the compile report and are not the same defect.
 Fixing it means widening the mutating helpers' parameter to the structural form the reading helper already
 uses, which is a signature change and therefore an override of `flight/node/revision.hpp` rather than a
 declaration — worth costing against that header's angle/quoted reachability before attempting.
+
+## The same GCC diagnostic has two different quote characters depending on who invoked it
+
+A tooling trap that cost a full iteration loop, and the failure mode is the dangerous one: it finds
+nothing and reports success.
+
+GCC quotes identifiers with U+2018/U+2019 (`‘EntityConstruction’`) under a UTF-8 locale, and with ASCII
+`'` under the C locale. `scripts/sdkHeaderCompile.mjs` spawns the compiler from Node, which does not
+inherit this shell's UTF-8 environment, so **every diagnostic stored in `out/sdk-*-header-compilation.json`
+uses ASCII `0x27`** — verified by reading the codepoints out of the committed report. A compile run by hand
+from an interactive shell produces the curly form for the identical diagnostic.
+
+So a pattern written against the report:
+
+```python
+re.compile(r"'(\w+)' was not declared in this scope")
+```
+
+matches every name in the JSON and **zero** names in raw compiler output. A per-package collector built on
+it reported "0 undeclared names" for `flight/selection/` across four iteration rounds while the headers
+were plainly failing with `‘EntityConstruction’ was not declared in this scope`. Nothing errored; the
+regex simply never matched, and "no names to declare" is indistinguishable from "package is clean".
+
+Anything parsing compiler output must either accept both quote forms:
+
+```python
+re.compile(r"['‘](\w+)['’] was not declared in this scope")
+```
+
+or pin the locale on the subprocess (`env={**os.environ, "LC_ALL": "C"}`), which has the added benefit of
+making hand-run output byte-comparable with the committed report. Doing both is cheap.
+
+This belongs with the two sibling lessons already recorded here: `-fmax-errors` capping made a working
+repair look inert, and `pgrep -f` watchers matched themselves and never fired. The common shape is a check
+whose failure is silent and whose silence reads as a pass. Prefer a check that can say "I did not know".
