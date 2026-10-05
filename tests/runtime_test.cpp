@@ -191,6 +191,31 @@ void test_locale_compare() {
 // takes the structural-widening branch instead, which needs the generated proof and so is covered in
 // structural_row_test.cpp, where that table is in scope. The two branches are not interchangeable, and
 // that test asserts the difference.
+// `x.name = null` on a three-state member.
+//
+// TypeScript assigns the bare literal and the emitter lowers it to `nullptr`, so a
+// `variant<Value, Null, Undefined>` needs an alternative constructible from `std::nullptr_t`. `Any`
+// already carried that conversion, so giving `Null` the same one makes the two agree rather than
+// inventing a rule -- and the pair of assertions that matter are that `nullptr` selects NULL and not
+// Undefined, since collapsing those two is the absence change this runtime exists to prevent.
+void test_null_from_nullptr() {
+  std::variant<flight::String, flight::Null, flight::Undefined> value = nullptr;
+  check(std::holds_alternative<flight::Null>(value), "nullptr selects the Null alternative");
+  check(!std::holds_alternative<flight::Undefined>(value), "and NOT Undefined, which is a different state");
+
+  std::variant<flight::String, flight::Null, flight::Undefined> absent = flight::undefined;
+  check(!std::holds_alternative<flight::Null>(absent), "undefined stays distinct from null");
+  check(!(value == absent), "so the two states do not compare equal");
+
+  // The conversion must not disturb Null's own equality or the String alternative's selection.
+  check(flight::Null{nullptr} == flight::null, "a nullptr-constructed Null equals the null constant");
+  std::variant<flight::String, flight::Null, flight::Undefined> text = flight::String("s");
+  check(std::holds_alternative<flight::String>(text), "a String still selects the String alternative");
+
+  // Any's existing reading of nullptr is unchanged.
+  check(flight::Any(nullptr).kind() == flight::AnyKind::null, "Any(nullptr) still reads as null");
+}
+
 void test_structural_ref_from_variant() {
   struct Common : flight::ReferenceEnabled {
     flight::String state;
@@ -3393,6 +3418,7 @@ static void test_self_reference() {
 
 int main() {
   test_array();
+  test_null_from_nullptr();
   test_structural_ref_from_variant();
   test_array_of();
   test_copy_within();
