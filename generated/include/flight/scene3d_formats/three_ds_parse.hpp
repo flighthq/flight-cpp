@@ -107,6 +107,7 @@ using flight::types::Transform3D;
 using flight::types::Vector3;
 using flight::types::import_diagnostic_severity;
 using flight::types::three_ds_camera;
+using flight::types::three_ds_camera_aperture_mm;
 using flight::types::three_ds_camera_ranges;
 using flight::types::three_ds_chunk_header_bytes;
 using flight::types::three_ds_color_byte;

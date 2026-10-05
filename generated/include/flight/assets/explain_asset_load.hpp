@@ -18,7 +18,12 @@ namespace flight::types { template <typename T> struct AssetLoaderAdapter; }
 
 namespace flight::assets {
 
+using flight::types::AssetDescriptor;
+using flight::types::AssetEntry;
 using flight::types::AssetLibrary;
+using flight::types::AssetLibraryRuntime;
+using flight::types::AssetLoadExplanation;
+using flight::types::AssetLoaderAdapter;
 
 inline flight::Ref<flight::types::AssetLoadExplanation> explain_asset_load(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AssetLibrary>>>> library, flight::String id) {
   auto runtime = flight::row_get<flight::RowKey<"runtime">>(library);

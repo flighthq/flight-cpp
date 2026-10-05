@@ -22,11 +22,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/node.hpp>
+
+#include <flight/types/flight_document_schema_registry.hpp>
+
 #include <flight/types/flight_document_interactive_state.hpp>
+
+#include <flight/types/flight_document_field_schema.hpp>
+
+#include <flight/types/flight_document.hpp>
 
 namespace flight::scene_document {
 
+using flight::types::FlightDocument;
+using flight::types::FlightDocumentFields;
+using flight::types::FlightDocumentInteractiveStateBinding;
+using flight::types::FlightDocumentInteractiveStateTransitionDescriptor;
 using flight::types::FlightDocumentInteractiveStates;
+using flight::types::FlightDocumentNode;
+using flight::types::FlightDocumentSchemaRegistry;
+using flight::types::FlightDocumentValue;
+using flight::types::NodeAny;
 
 struct FlightDocumentInteractiveStateMetadata;
 

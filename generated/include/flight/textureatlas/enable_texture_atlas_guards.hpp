@@ -6,13 +6,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/log/log.hpp>
+
+#include <flight/types/texture_atlas_region_texture_explanation.hpp>
+
 #include <flight/types/texture_atlas.hpp>
 
 #include "texture_atlas_region.hpp"
 
 namespace flight::textureatlas {
 
+using flight::log::log_once;
+
 using flight::types::TextureAtlas;
+using flight::types::TextureAtlasRegionTextureExplanation;
 
 inline void warn_texture_atlas_region_texture_unavailable(flight::Ref<TextureAtlas> atlas, double region_id, flight::Ref<TextureAtlasRegionTextureExplanation> explanation) {
   if ((explanation->status != flight::String("rotated-page"))) {

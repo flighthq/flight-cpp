@@ -17,13 +17,27 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/texture.hpp>
 
+#include <flight/types/scene3_d.hpp>
+
+#include <flight/types/scene2_d.hpp>
+
 #include <flight/types/flight_document_refusal_explanation.hpp>
+
+#include <flight/types/flight_document.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include "scene_document_refusal.hpp"
 
 namespace flight::scene_document {
 
+using flight::types::FlightDocument;
 using flight::types::FlightDocumentRefusalExplanation;
+using flight::types::FlightDocumentRefusalReason;
+using flight::types::FlightDocumentScene;
+using flight::types::Kind;
+using flight::types::Scene2D;
+using flight::types::Scene3D;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE_DOCUMENT_REFUSAL_SCENE_SCENE_INDEX_F7E03B9F62AFC3BB
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE_DOCUMENT_REFUSAL_SCENE_SCENE_INDEX_F7E03B9F62AFC3BB

@@ -1534,7 +1534,9 @@
     },
     {
       "files": [
-        "flight/scene_document/scene_document_refusal.hpp"
+        "flight/scene_document/scene_document_refusal.hpp",
+        "flight/scene_document/scene_document_scene2_dmaterialization.hpp",
+        "flight/scene_document/scene_document_scene3_dmaterialization.hpp"
       ],
       "id": "scene-document-unqualified-entity-names"
     },
@@ -1754,10 +1756,6 @@
       "id": "mesh-entity-runtime-key-member"
     },
     {
-      "files": [],
-      "id": "render-entity-runtime-key-member"
-    },
-    {
       "files": [
         "flight/render_wgpu/wgpu_render_state.hpp"
       ],
@@ -1899,6 +1897,7 @@
     },
     {
       "files": [
+        "flight/scene_document/flight_document_resource_dependencies.hpp",
         "flight/scene_document/scene_document_interactive_state_bindings.hpp",
         "flight/scene_document/scene_document_layout_bindings.hpp",
         "flight/scene_document/scene_document_materialization_selection.hpp",
@@ -2113,10 +2112,12 @@
     },
     {
       "files": [
+        "flight/text_markup/enable_text_markup_guards.hpp",
         "flight/text_markup/markup_class_styles.hpp",
         "flight/text_markup/markup_named_colors.hpp",
         "flight/text_markup/markup_tag_registry.hpp",
-        "flight/text_markup/text_markup.hpp"
+        "flight/text_markup/text_markup.hpp",
+        "flight/text_markup/text_markup_guards.hpp"
       ],
       "id": "text-markup-unqualified-types-names"
     },
@@ -2220,6 +2221,7 @@
     },
     {
       "files": [
+        "flight/midi/midi_access.hpp",
         "flight/midi/midi_resource.hpp",
         "flight/midi/midi_subscription.hpp"
       ],
@@ -2322,6 +2324,7 @@
     {
       "files": [
         "flight/bitmaptext/bitmap_text.hpp",
+        "flight/bitmaptext/explain_bitmap_text_missing_glyphs.hpp",
         "flight/bitmaptext/update_bitmap_text.hpp"
       ],
       "id": "bitmaptext-unqualified-types-names"
@@ -2334,8 +2337,12 @@
     },
     {
       "files": [
+        "flight/audio/audio_decoder_registry.hpp",
         "flight/audio/audio_format.hpp",
-        "flight/audio/audio_resource_from.hpp"
+        "flight/audio/audio_resource.hpp",
+        "flight/audio/audio_resource_from.hpp",
+        "flight/audio/audio_resource_reference.hpp",
+        "flight/audio/decode_audio_resource_bytes.hpp"
       ],
       "id": "audio-unqualified-types-names"
     },
@@ -2799,16 +2806,24 @@
     },
     {
       "files": [
+        "flight/scene2d_canvas/canvas_bitmap_text.hpp",
         "flight/scene2d_canvas/canvas_cache.hpp",
+        "flight/scene2d_canvas/canvas_node2_d.hpp",
+        "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp",
+        "flight/scene2d_canvas/canvas_quad_batch.hpp",
         "flight/scene2d_canvas/canvas_render_state.hpp",
+        "flight/scene2d_canvas/canvas_rich_text.hpp",
+        "flight/scene2d_canvas/canvas_scale9_shape.hpp",
         "flight/scene2d_canvas/canvas_shape.hpp",
-        "flight/scene2d_canvas/canvas_texture_resolver.hpp"
+        "flight/scene2d_canvas/canvas_texture_resolver.hpp",
+        "flight/scene2d_canvas/canvas_tilemap.hpp"
       ],
       "id": "scene2d-canvas-unqualified-render-names"
     },
     {
       "files": [
-        "flight/scene2d_canvas/canvas_scale9_shape.hpp"
+        "flight/scene2d_canvas/canvas_scale9_shape.hpp",
+        "flight/scene2d_canvas/canvas_shape_commands.hpp"
       ],
       "id": "scene2d-canvas-unqualified-shape-names"
     },
@@ -3073,10 +3088,6 @@
       "id": "render-unqualified-materials-names"
     },
     {
-      "files": [],
-      "id": "render-unqualified-signals-names"
-    },
-    {
       "files": [
         "flight/interaction/hit_tests.hpp",
         "flight/interaction/interaction_manager.hpp",
@@ -3135,10 +3146,6 @@
         "flight/textinput/text_input_editing.hpp"
       ],
       "id": "textinput-unqualified-types-names"
-    },
-    {
-      "files": [],
-      "id": "scene2d-unqualified-signals-names"
     },
     {
       "files": [
@@ -3223,6 +3230,77 @@
         "flight/particles_formats/spine_parse.hpp"
       ],
       "id": "particles-formats-unqualified-particles-names"
+    },
+    {
+      "files": [
+        "flight/textureatlas/enable_texture_atlas_guards.hpp"
+      ],
+      "id": "textureatlas-unqualified-log-names"
+    },
+    {
+      "files": [
+        "flight/textureatlas/texture_atlas_region.hpp"
+      ],
+      "id": "textureatlas-unqualified-texture-names"
+    },
+    {
+      "files": [
+        "flight/scene_document/scene_document_refusal.hpp",
+        "flight/scene_document/scene_document_scene2_dmaterialization.hpp",
+        "flight/scene_document/scene_document_scene3_dmaterialization.hpp"
+      ],
+      "id": "scene-document-unqualified-registry-names"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/collada_parse.hpp"
+      ],
+      "id": "scene3d-formats-unqualified-animation-names"
+    },
+    {
+      "files": [
+        "flight/text_markup/markup_tag_registry.hpp",
+        "flight/text_markup/text_markup.hpp"
+      ],
+      "id": "text-markup-unqualified-color-names"
+    },
+    {
+      "files": [
+        "flight/text_markup/text_markup.hpp"
+      ],
+      "id": "text-markup-unqualified-textlayout-names"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/bitmap_text.hpp",
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-unqualified-node-names"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-unqualified-textureatlas-names"
+    },
+    {
+      "files": [
+        "flight/skeleton3d/skeleton3d.hpp"
+      ],
+      "id": "skeleton3d-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_canvas/canvas_scale9_sprite.hpp",
+        "flight/scene2d_canvas/canvas_sprite.hpp"
+      ],
+      "id": "scene2d-canvas-unqualified-scene2d-names"
     }
   ],
   "sourcePatches": [

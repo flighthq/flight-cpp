@@ -16,7 +16,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::midi {
 
+using flight::types::MidiAccess;
 using flight::types::MidiAccessDisposeOutcome;
+using flight::types::MidiAccessResourceOperations;
+using flight::types::MidiAccessStateSubscription;
+using flight::types::MidiInputMessageSubscription;
+using flight::types::MidiInputPort;
+using flight::types::MidiInputPortResourceOperations;
+using flight::types::MidiOutputPort;
+using flight::types::MidiOutputPortResourceOperations;
+using flight::types::MidiPort;
+using flight::types::MidiPortDisposeOutcome;
+using flight::types::MidiPortStateSubscription;
 
 struct MidiAccessResourceState;
 struct MidiPortResourceStateBase;

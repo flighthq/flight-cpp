@@ -19,13 +19,43 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/registry/registry_table.hpp>
+
+#include <flight/types/scene3_d.hpp>
+
+#include <flight/types/scene2_d.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/flight_document_schema_registry.hpp>
+
 #include <flight/types/flight_document_refusal_explanation.hpp>
+
+#include <flight/types/flight_document_node_schema.hpp>
+
+#include <flight/types/flight_document_field_schema.hpp>
+
+#include <flight/types/flight_document.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include <flight/entity/entity.hpp>
 
 namespace flight::scene_document {
 
+using flight::registry::get_registry_table_entry;
+
+using flight::types::EntityConstruction;
+using flight::types::FlightDocumentFields;
+using flight::types::FlightDocumentNode;
+using flight::types::FlightDocumentNodeSchema;
 using flight::types::FlightDocumentRefusalExplanation;
+using flight::types::FlightDocumentRefusalReason;
+using flight::types::FlightDocumentSchemaRegistry;
+using flight::types::NodeAny;
+using flight::types::Scene2D;
+using flight::types::Scene3D;
+using flight::types::flight_document_refusal_reason;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

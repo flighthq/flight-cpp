@@ -49,6 +49,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/quaternion.hpp>
 
+#include <flight/types/node3_d.hpp>
+
 #include <flight/types/mesh_triangle_vertex_indices.hpp>
 
 #include <flight/types/mesh_geometry.hpp>
@@ -106,6 +108,7 @@ using flight::types::Scene3DDocumentSkin;
 using flight::types::Transform3D;
 using flight::types::Vector3Like;
 using flight::types::import_diagnostic_severity;
+using flight::types::node3_dkind;
 struct Md5WeightInfluence;
 struct Md5DropTally;
 } // namespace flight::scene3d_formats

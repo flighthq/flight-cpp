@@ -17,6 +17,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/render/renderer.hpp>
+
 #include <flight/render/render_state.hpp>
 
 #include <flight/types/shape_command.hpp>
@@ -49,6 +51,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::scene2d_canvas {
 
 using flight::render::get_render_state_runtime;
+using flight::render::noop_renderer_data;
 
 using flight::types::CanvasRenderState;
 using flight::types::CanvasShapeCommand;

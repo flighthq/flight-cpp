@@ -21,6 +21,7 @@ namespace flight::types { struct TextFormat; }
 namespace flight::text_markup {
 
 using flight::types::MarkupTagRegistry;
+using flight::types::TextFormat;
 
 inline void register_markup_class_styles(flight::Ref<flight::types::MarkupTagRegistry> registry, flight::Record<flight::String, flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>> styles) {
   flight::types::MarkupClassResolver resolver = [=](flight::String class_name) -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>> { return styles.get(class_name); };

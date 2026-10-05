@@ -93,6 +93,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/animation_clip.hpp>
 
+#include <flight/types/ambient_light_options.hpp>
+
 namespace flight::scene3d_formats {
 
 using flight::scene3d::create_scene3_dfrom_document;
@@ -119,6 +121,7 @@ using flight::geometry::set_quaternion_from_unit_vectors;
 using flight::camera::create_orthographic_projection;
 using flight::camera::create_perspective_projection;
 
+using flight::types::AmbientLightOptions;
 using flight::types::AnimationClip;
 using flight::types::AnimationInterpolation;
 using flight::types::Decompressor;
@@ -153,6 +156,7 @@ using flight::types::Vector3;
 using flight::types::compression;
 using flight::types::compression_framing;
 using flight::types::import_diagnostic_severity;
+using flight::types::node3_dkind;
 struct ParsedGeometry;
 struct ParsedContainer;
 struct ParsedMeshInstance;

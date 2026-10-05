@@ -25,6 +25,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/midi.hpp>
 
+#include <flight/types/entity.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::midi {
@@ -33,7 +35,25 @@ using flight::signals::emit_signal;
 
 using flight::signals::create_signal;
 
+using flight::types::Entity;
+using flight::types::EntityConstruction;
+using flight::types::MidiAccess;
 using flight::types::MidiAccessDisposeOutcome;
+using flight::types::MidiAccessResourceOperations;
+using flight::types::MidiAccessStateSubscription;
+using flight::types::MidiEventAttachment;
+using flight::types::MidiEventBackendAttachOutcome;
+using flight::types::MidiInputMessage;
+using flight::types::MidiInputMessageSubscription;
+using flight::types::MidiInputPort;
+using flight::types::MidiInputPortResourceOperations;
+using flight::types::MidiOutputPortResourceOperations;
+using flight::types::MidiPort;
+using flight::types::MidiPortDisposeOutcome;
+using flight::types::MidiPortStateSubscription;
+using flight::types::MidiSubscriptionAttachOutcome;
+using flight::types::MidiSubscriptionDetachOutcome;
+using flight::types::MidiSubscriptionDisposeOutcome;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

@@ -21,6 +21,8 @@ namespace flight::types { struct AudioResource; }
 
 namespace flight::audio {
 
+using flight::types::AudioResource;
+
 inline flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>> decode_audio_resource_bytes(std::optional<flight::AudioContext> context, flight::Uint8Array bytes, std::optional<flight::String> mime_type, flight::AbortSignal signal) {
   signal.throw_if_aborted();
   if (mime_type.has_value()) {

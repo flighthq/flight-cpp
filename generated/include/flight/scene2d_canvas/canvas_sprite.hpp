@@ -12,6 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/scene2d/sprite.hpp>
+
 #include <flight/types/scene2_drenderer.hpp>
 
 #include <flight/types/render_proxy2_d.hpp>
@@ -25,6 +27,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "canvas_transform.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::scene2d::create_sprite_renderer_data;
 
 using flight::types::CanvasRenderState;
 using flight::types::RenderProxy2D;

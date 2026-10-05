@@ -25,13 +25,26 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/color/pack_color.hpp>
+
+#include <flight/types/text_format.hpp>
+
 #include <flight/types/markup_tag_registry.hpp>
+
+#include <flight/types/markup_tag_handler.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include <flight/entity/entity.hpp>
 
 namespace flight::text_markup {
 
+using flight::color::pack_opaque_color;
+
+using flight::types::EntityConstruction;
+using flight::types::MarkupTagHandler;
 using flight::types::MarkupTagRegistry;
+using flight::types::TextFormat;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

@@ -23,10 +23,33 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/rectangle.hpp>
+
 #include <flight/types/rectangle.hpp>
+
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/has_bounds_rectangle.hpp>
+
+#include <flight/types/glyph_source.hpp>
+
+#include <flight/types/bitmap_text.hpp>
 
 namespace flight::bitmaptext {
 
+using flight::geometry::create_rectangle;
+
+using flight::types::BitmapText;
+using flight::types::BitmapTextAlign;
+using flight::types::BitmapTextData;
+using flight::types::BitmapTextPage;
+using flight::types::BitmapTextRuntime;
+using flight::types::BoundsNodeAny;
+using flight::types::GlyphSource;
+using flight::types::Node;
+using flight::types::Node2DTraits;
 using flight::types::Rectangle;
 
 inline const double bitmap_text_transform_stride = 2.0;

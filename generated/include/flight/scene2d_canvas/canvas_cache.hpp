@@ -16,6 +16,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/render/renderer.hpp>
+
 #include <flight/render/render_target.hpp>
 
 #include <flight/render/render_proxy.hpp>
@@ -68,6 +70,7 @@ namespace flight::scene2d_canvas {
 using flight::render::compute_render_cache_transform;
 using flight::render::compute_render_target_size;
 using flight::render::compute_scene2_drender_target_transform;
+using flight::render::noop_renderer_data;
 using flight::render::prepare_scene2_drender;
 using flight::render::register_render_cache_renderer;
 

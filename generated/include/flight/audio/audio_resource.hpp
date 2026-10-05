@@ -17,6 +17,8 @@ namespace flight::types { struct Entity; }
 
 namespace flight::audio {
 
+using flight::types::AudioResource;
+
 inline flight::Ref<flight::types::AudioResource> clone_audio_resource(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioResource>>>> resource) {
   flight::types::EntityConstruction<flight::Ref<flight::types::AudioResource>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AudioResource>>();
   flight::row_set<flight::RowKey<"buffer">>(out, flight::row_get<flight::RowKey<"buffer">>(resource));

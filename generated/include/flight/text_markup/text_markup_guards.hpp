@@ -14,6 +14,8 @@ namespace flight::types { struct TextMarkupIssue; }
 
 namespace flight::text_markup {
 
+using flight::types::TextMarkupIssue;
+
 inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextMarkupIssue>>>>)>> guard = std::nullopt;
 
 inline void report_text_markup_issue(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextMarkupIssue>>>> issue) {

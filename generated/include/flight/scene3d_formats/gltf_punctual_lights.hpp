@@ -30,7 +30,9 @@ namespace flight::scene3d_formats {
 
 using flight::importdiagnostics::report_import_diagnostic;
 
+using flight::types::GltfExtensionContext;
 using flight::types::GltfExtensionHandler;
+using flight::types::GltfNode;
 using flight::types::GltfPunctualLight;
 using flight::types::ImportDiagnosticSeverity;
 using flight::types::Light;

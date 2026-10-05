@@ -31,14 +31,38 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/textlayout/text_format_range.hpp>
+
+#include <flight/color/pack_color.hpp>
+
+#include <flight/types/text_markup_explanation.hpp>
+
+#include <flight/types/text_format_range.hpp>
+
+#include <flight/types/text_format.hpp>
+
+#include <flight/types/rich_text_content.hpp>
+
 #include <flight/types/markup_tag_registry.hpp>
+
+#include <flight/types/markup_tag_handler.hpp>
 
 #include "markup_tag_registry.hpp"
 #include "text_markup_guards.hpp"
 
 namespace flight::text_markup {
 
+using flight::textlayout::create_text_format_range;
+
+using flight::color::get_color_rgb;
+
+using flight::types::MarkupTagHandler;
 using flight::types::MarkupTagRegistry;
+using flight::types::RichTextContent;
+using flight::types::TextFormat;
+using flight::types::TextFormatRange;
+using flight::types::TextMarkupExplanation;
+using flight::types::TextMarkupIssue;
 
 inline flight::String code_point_to_string(double code, flight::String fallback) {
   if (((!std::isfinite(code) || (code < 0.0)) || (code > 1114111.0))) {

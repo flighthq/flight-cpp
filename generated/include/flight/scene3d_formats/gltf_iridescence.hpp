@@ -65,7 +65,9 @@ namespace flight::scene3d_formats {
 
 using flight::types::GltfBufferView;
 using flight::types::GltfDocument;
+using flight::types::GltfExtensionContext;
 using flight::types::GltfExtensionHandler;
+using flight::types::GltfMaterial;
 using flight::types::GltfMaterialsAnisotropy;
 using flight::types::GltfMaterialsClearcoat;
 using flight::types::GltfMaterialsEmissiveStrength;
@@ -76,6 +78,7 @@ using flight::types::GltfMaterialsSheen;
 using flight::types::GltfMaterialsSpecular;
 using flight::types::GltfMaterialsTransmission;
 using flight::types::GltfMaterialsVolume;
+using flight::types::GltfNode;
 using flight::types::ImportDiagnostic;
 using flight::types::Scene3DDocument;
 using flight::types::Transform3D;

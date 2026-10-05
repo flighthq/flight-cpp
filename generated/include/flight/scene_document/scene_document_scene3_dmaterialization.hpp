@@ -31,7 +31,43 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/registry/registry_table.hpp>
+
+#include <flight/types/scene3_dlights.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/scene3_d.hpp>
+
+#include <flight/types/node3_d.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/flight_document_schema_registry.hpp>
+
+#include <flight/types/flight_document_resource.hpp>
+
 #include <flight/types/flight_document_refusal_explanation.hpp>
+
+#include <flight/types/flight_document_node_schema.hpp>
+
+#include <flight/types/flight_document_layout.hpp>
+
+#include <flight/types/flight_document_interactive_state.hpp>
+
+#include <flight/types/flight_document_field_schema.hpp>
+
+#include <flight/types/flight_document.hpp>
+
+#include <flight/types/entity.hpp>
+
+#include <flight/types/directional_light.hpp>
+
+#include <flight/types/camera3_d.hpp>
+
+#include <flight/types/ambient_light.hpp>
+
+#include <flight/entity/runtime.hpp>
 
 #include "flight_document_text.hpp"
 #include "scene_document_interactive_state_bindings.hpp"
@@ -41,7 +77,36 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene_document {
 
+using flight::registry::get_registry_table_entry;
+
+using flight::types::Camera3D;
+using flight::types::EntityConstruction;
+using flight::types::FlightDocument;
+using flight::types::FlightDocumentFields;
+using flight::types::FlightDocumentInteractiveStateBinding;
+using flight::types::FlightDocumentLayoutBinding;
+using flight::types::FlightDocumentNode;
+using flight::types::FlightDocumentNodeSchema;
 using flight::types::FlightDocumentRefusalExplanation;
+using flight::types::FlightDocumentResourceLookup;
+using flight::types::FlightDocumentResourceResolverRegistry;
+using flight::types::FlightDocumentScene2D;
+using flight::types::FlightDocumentScene3D;
+using flight::types::FlightDocumentScene3DMaterialization;
+using flight::types::FlightDocumentSchemaRegistry;
+using flight::types::Node3D;
+using flight::types::NodeAny;
+using flight::types::NodeOf;
+using flight::types::NodeTraits;
+using flight::types::Scene3D;
+using flight::types::Scene3DDocumentLight;
+using flight::types::Scene3DLights;
+using flight::types::ambient_light_kind;
+using flight::types::directional_light_kind;
+using flight::types::flight_document_refusal_reason;
+using flight::types::node3_dtraits_key;
+
+using flight::entity::get_entity_runtime;
 
 
 // NOT GENERATED: function initializeFlightDocumentFromScene3D -- source line 200

@@ -30,6 +30,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/animation/animation_track.hpp>
+
 #include <flight/xml/xml_parse.hpp>
 
 #include <flight/lighting/spot_light.hpp>
@@ -60,6 +62,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/point_light_options.hpp>
 
+#include <flight/types/node3_d.hpp>
+
 #include <flight/types/morph_target.hpp>
 
 #include <flight/types/matrix4.hpp>
@@ -79,6 +83,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/animation_interpolation.hpp>
 
 namespace flight::scene3d_formats {
+
+using flight::animation::create_animation_track;
 
 using flight::xml::parse_xml_document;
 
@@ -124,6 +130,7 @@ using flight::types::Transform3D;
 using flight::types::Vector3Like;
 using flight::types::XmlElement;
 using flight::types::import_diagnostic_severity;
+using flight::types::node3_dkind;
 struct ColladaDecodedSkin;
 struct ColladaDecodedAnimationChannel;
 struct ColladaPerspectiveCameraDefinition;

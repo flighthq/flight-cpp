@@ -16,6 +16,8 @@ namespace flight::types { struct AudioResource; }
 
 namespace flight::audio {
 
+using flight::types::AudioResource;
+
 inline flight::Map<flight::String, flight::types::AudioDecoder> decoders = flight::Map<flight::String, flight::types::AudioDecoder>();
 
 inline std::optional<std::function<flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>(flight::Uint8Array, flight::String, flight::AbortSignal)>> get_audio_decoder(flight::String mime_type) {

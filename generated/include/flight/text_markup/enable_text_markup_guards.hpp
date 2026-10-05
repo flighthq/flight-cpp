@@ -20,6 +20,8 @@ namespace flight::types { struct TextMarkupIssue; }
 
 namespace flight::text_markup {
 
+using flight::types::TextMarkupIssue;
+
 inline void disable_text_markup_guards() {
   flight::text_markup::set_text_markup_guard(std::nullopt);
 }

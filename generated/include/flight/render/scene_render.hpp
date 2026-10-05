@@ -91,6 +91,7 @@ using flight::types::Mesh;
 using flight::types::Node3D;
 using flight::types::PointLight;
 using flight::types::RenderState;
+using flight::types::Scene3DLightBlock;
 using flight::types::Scene3DLightsLike;
 using flight::types::Scene3DRenderList;
 using flight::types::SpotLight;

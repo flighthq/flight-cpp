@@ -14,6 +14,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/shape/scale9_shape_commands.hpp>
 
+#include <flight/render/renderer.hpp>
+
 #include <flight/types/shape_command.hpp>
 
 #include <flight/types/scene2_drenderer.hpp>
@@ -39,6 +41,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::scene2d_canvas {
 
 using flight::shape::map_scale9_shape_commands;
+
+using flight::render::noop_renderer_data;
 
 using flight::types::CanvasRenderState;
 using flight::types::MatrixLike;

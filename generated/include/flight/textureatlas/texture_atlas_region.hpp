@@ -29,11 +29,29 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/texture/texture.hpp>
+
+#include <flight/types/texture_atlas_region_texture_explanation.hpp>
+
+#include <flight/types/texture_atlas_region.hpp>
+
 #include <flight/types/texture_atlas.hpp>
+
+#include <flight/types/texture.hpp>
+
+#include <flight/types/rectangle.hpp>
 
 namespace flight::textureatlas {
 
+using flight::texture::get_texture_height;
+using flight::texture::get_texture_width;
+
+using flight::types::RectangleLike;
+using flight::types::Texture2D;
 using flight::types::TextureAtlas;
+using flight::types::TextureAtlasRegion;
+using flight::types::TextureAtlasRegionTextureExplanation;
+using flight::types::TextureAtlasRegionTextureGuard;
 
 
 // NOT GENERATED: function buildTextureAtlasRegionIndex -- source line 109

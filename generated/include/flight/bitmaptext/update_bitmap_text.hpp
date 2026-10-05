@@ -21,10 +21,34 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/textureatlas/texture_atlas_region.hpp>
+
+#include <flight/node/revision.hpp>
+
+#include <flight/geometry/typedarray.hpp>
+
 #include <flight/types/rectangle.hpp>
+
+#include <flight/types/glyph_source.hpp>
+
+#include <flight/types/bitmap_text.hpp>
 
 namespace flight::bitmaptext {
 
+using flight::textureatlas::add_texture_atlas_region;
+
+using flight::node::invalidate_node_local_bounds;
+
+using flight::geometry::reserve_float32_array;
+using flight::geometry::reserve_uint16_array;
+
+using flight::types::BitmapText;
+using flight::types::BitmapTextData;
+using flight::types::BitmapTextPage;
+using flight::types::BitmapTextRuntime;
+using flight::types::GlyphEntry;
+using flight::types::GlyphMetrics;
+using flight::types::GlyphSource;
 using flight::types::Rectangle;
 struct BitmapTextLayoutResult;
 struct BitmapTextGlyph;

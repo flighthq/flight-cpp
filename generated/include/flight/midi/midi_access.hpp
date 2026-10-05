@@ -31,6 +31,13 @@ namespace flight::types { struct MidiPortLifecycleFailure; }
 
 namespace flight::midi {
 
+using flight::types::Entity;
+using flight::types::MidiAccess;
+using flight::types::MidiAccessResourceOperations;
+using flight::types::MidiAccessStateSubscription;
+using flight::types::MidiInputPort;
+using flight::types::MidiOutputPort;
+
 inline void initialize_midi_access_resource(flight::types::EntityConstruction<flight::Ref<flight::types::MidiAccess>> out) {
 }
 

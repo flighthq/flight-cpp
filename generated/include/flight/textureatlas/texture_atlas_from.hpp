@@ -11,10 +11,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/texture_atlas.hpp>
 
+#include <flight/types/image_resource.hpp>
+
+#include <flight/types/create_texture_options.hpp>
+
 #include "texture_atlas.hpp"
 
 namespace flight::textureatlas {
 
+using flight::types::CreateTextureOptions;
+using flight::types::HostImageCapability;
+using flight::types::ImageResource;
 using flight::types::TextureAtlas;
 
 inline flight::Ref<TextureAtlas> create_texture_atlas_from_image_resource(flight::Ref<ImageResource> resource) {

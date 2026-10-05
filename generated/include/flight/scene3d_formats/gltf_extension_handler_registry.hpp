@@ -24,6 +24,7 @@ namespace flight::types { struct Transform3D; }
 namespace flight::scene3d_formats {
 
 using flight::types::GltfDocument;
+using flight::types::GltfExtensionContext;
 using flight::types::GltfExtensionHandler;
 using flight::types::ImportDiagnostic;
 using flight::types::Scene3DDocument;

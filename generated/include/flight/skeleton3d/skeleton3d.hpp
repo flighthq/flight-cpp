@@ -16,13 +16,41 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/matrix4.hpp>
+
+#include <flight/geometry/matrix3.hpp>
+
+#include <flight/types/skeleton3_dvalidation_diagnostic.hpp>
+
 #include <flight/types/skeleton3_d.hpp>
+
+#include <flight/types/node3_d.hpp>
+
+#include <flight/types/matrix4.hpp>
+
+#include <flight/types/matrix3.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include <flight/entity/entity.hpp>
 
 namespace flight::skeleton3d {
 
+using flight::geometry::copy_matrix4;
+using flight::geometry::create_matrix3;
+using flight::geometry::create_matrix4;
+using flight::geometry::inverse_matrix4;
+using flight::geometry::multiply_matrix4;
+using flight::geometry::set_matrix3_normal_from_matrix4;
+using flight::geometry::set_matrix4_identity;
+
+using flight::types::EntityConstruction;
+using flight::types::Matrix3;
+using flight::types::Matrix4;
+using flight::types::Matrix4Like;
+using flight::types::Node3D;
 using flight::types::Skeleton3D;
+using flight::types::Skeleton3DValidationDiagnostic;
 
 using flight::entity::allocate_entity;
 

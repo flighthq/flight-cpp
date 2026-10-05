@@ -29,6 +29,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::scene3d_formats {
 
 using flight::types::AnimationInterpolation;
+using flight::types::GltfCoreFeatureContext;
 using flight::types::GltfCoreFeatureHandler;
 using flight::types::ImportDiagnosticSeverity;
 using flight::types::Scene3DAnimationPath;

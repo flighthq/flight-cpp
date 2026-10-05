@@ -27,6 +27,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/shape/shape_bounds.hpp>
+
 #include <flight/geometry/matrix.hpp>
 
 #include <flight/types/texture.hpp>
@@ -43,6 +45,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "canvas_texture_window_source.hpp"
 
 namespace flight::scene2d_canvas {
+
+using flight::shape::normalize_shape_stroke_miter_limit;
+using flight::shape::normalize_shape_stroke_width;
 
 using flight::geometry::create_matrix;
 

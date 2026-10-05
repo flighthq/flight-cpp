@@ -62,6 +62,7 @@ using flight::types::Aabb;
 using flight::types::EntityConstruction;
 using flight::types::InstancedMesh;
 using flight::types::InstancedMeshSignals;
+using flight::types::Kind;
 using flight::types::Material;
 using flight::types::Matrix4;
 
