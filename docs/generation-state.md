@@ -4425,3 +4425,85 @@ the definition site says so. The runtime has several such probes (`json.hpp` twi
 So the 69-header family is **not a runtime gap**. It needs the emitter to test the row rather than call
 `has_value()` on it, or an emission repair rewriting the call at declared sites. `operator bool` is already
 the right predicate and is already there; what cannot happen is giving it the second name the emitter wants.
+
+## `flight::Function` is complete, identity-bearing, and used by the emitted tree exactly zero times
+
+This is the one defect found so far that **none of the four mechanisms can reach**, and it is worth
+stating precisely, because the runtime half of the fix is already built and shipped.
+
+`flight/signals/slot.hpp` cannot compile `disconnect_signal`:
+
+```cpp
+template <typename T>
+inline void disconnect_signal(std::shared_ptr<flight::types::Signal<T>> signal, T slot) {
+  ...
+  if ((data.value()->slots.element(i) != slot)) { continue; }
+```
+
+with the diagnostic
+
+```
+no match for 'operator!=' (operand types are
+  'std::optional<std::function<void(flight::Array<flight::Any>)> >' and
+  'std::function<void(flight::Array<flight::Any>)>')
+```
+
+The TypeScript it stands for is `slots[i] !== slot` — ECMAScript **reference identity** on a function
+value. `std::function` has no `operator==` at all (only against `nullptr`), and it cannot have one:
+copies of one callable are indistinguishable from distinct callables, and `target<T>()` returns the
+address of the *stored copy*, which differs per element in the slot array. So identity is not merely
+unimplemented for `std::function`, it is unrecoverable.
+
+### The runtime already solved this
+
+`include/flight/callable.hpp` defines `flight::Function<Signature>`, which is exactly the right type:
+
+- it holds its callable in a `shared_ptr<State>`, so copies share one identity;
+- `operator==` compares `state_`, which is reference identity and nothing else;
+- `identity()` exposes that as a `const void*`, `weaken()`/`lock_weak()` give the weak half, and
+  `std::hash<flight::Function<...>>` hashes the identity, so it is usable as a map key.
+
+Every piece `disconnect_signal` and `is_slot_connected` need is present and tested.
+
+### It is never used
+
+Counted over the committed tree (2711 headers):
+
+| spelling in `flight/types/` | occurrences |
+| --- | --- |
+| `std::function<` | 1749 |
+| `flight::Function<` | **0** |
+
+All 300 `Signal<...>` instantiations in the tree use `std::function`. The emitter maps a TypeScript
+function type to `std::function` unconditionally, so the identity-bearing type the runtime provides is
+dead code from the emitted tree's point of view.
+
+### Why no mechanism reaches it
+
+- **Extend the runtime** — nothing to extend; the capability exists. Adding an `operator!=` between
+  `std::optional<std::function<…>>` and `std::function<…>` would have to invent an equality that
+  `std::function` does not possess, which is precisely the "may not change equality or reference
+  identity" rule. It would also be certified true by our own tests, which is the specific failure the
+  contract names.
+- **Declare the external binding** — this is not an external binding; both types are ours.
+- **Source patch** — the comparison *is* the operation. `disconnect_signal` exists to remove the slot
+  that is identical to the argument; there is no equivalent TypeScript that avoids comparing them.
+- **Override `slot.hpp`** — an override still receives `T = std::function<…>` from the instantiating
+  header, and no body can recover identity from that type. The override would have to change the
+  signal types themselves, which means overriding `flight/types/signal.hpp` and everything that names a
+  callback — far past the point where a copy is defensible.
+
+So this is AGENTS.md's explicit carve-out: "a runtime capability to build or a compiler request to
+file, never a patch." The capability is built. What remains is the emitter spelling callbacks
+`flight::Function<R(Args...)>` instead of `std::function<R(Args...)>`; on the day it does, signals
+close with no further runtime work and no debt instrument of any kind.
+
+### What it costs today
+
+47 headers include `flight/signals/slot.hpp` transitively; 12 actually call `disconnect_signal` or
+`is_slot_connected` (signals 3, app 2, interaction 2, and one each in textinput, gui, gizmo, input,
+scene3d_resources). Because these are templates, the other 35 compile and will fail only when a
+consumer instantiates them — which is the same "passes the gate while breaking consumers" effect
+already recorded for `slot.hpp` elsewhere in this document. Treat the 12 as the floor, not the total.
+
+Recorded rather than ferried upstream, per the standing instruction to document and keep patching.
