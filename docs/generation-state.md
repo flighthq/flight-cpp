@@ -4953,39 +4953,46 @@ So the choice is clean and has no hidden cost on either side:
 Both are the user's call. What is NOT available is a declaration, a patch, or an override, for the reasons
 in the section above.
 
-### Corollary: do not declare a name whose only unqualified use is inside an OVERRIDDEN header
+### Corollary, CORRECTED: a declaration for an overridden header is latent, not inert — keep it
 
-The coordination rule above has a sharper form that is worth applying mechanically, because it removes work
-rather than adding it.
+This section first concluded the opposite and nine repairs were dropped on that basis. The drop was
+reverted; the reasoning below is the corrected version, and the wrong turn is left recorded because the
+argument for it is superficially strong.
 
-An override shadows one generated header by include order. A repair that rewrites that same header therefore
-has **no effect on compilation at all** — every consumer reaching it by an angle include gets the override,
-never the repaired generated copy — while still changing the generated file's hash and drifting the override.
-Pure cost.
+An override shadows one generated header by include order, so a repair that rewrites that same header has
+no effect on the build today: every consumer reaching it by an angle include gets the override, never the
+repaired generated copy. Checking the repair ledger against the 43 override paths finds **twenty** repairs
+in that state — nine queued and eleven already applied:
 
-Checking the 122 repairs queued for the next regeneration against the 43 override paths found **nine** in
-exactly that state:
-
-| repair | overridden header it would rewrite | names |
+| repair group | overridden header(s) its names land in | names |
 | --- | --- | --- |
-| `connectivity-create-signal-using-declaration`, `connectivity-unqualified-signals-names` | `connectivity/connectivity.hpp` | `create_signal`, `clear_signal` |
-| `lifecycle-create-signal-using-declaration`, `lifecycle-unqualified-signals-names` | `lifecycle/lifecycle.hpp` | `create_signal`, `emit_signal` |
-| `share-create-signal-using-declaration`, `share-unqualified-signals-names` | `share/share.hpp` | `create_signal`, `clear_signal`, `emit_signal` |
-| `statusbar-create-signal-using-declaration`, `statusbar-unqualified-signals-names` | `statusbar/statusbar.hpp` | `create_signal`, `emit_signal` |
-| `log-unqualified-signals-names` | `log/log.hpp` | `emit_signal` |
+| `connectivity`, `lifecycle`, `share`, `statusbar` (create-signal + signals) | that package's `*.hpp` module | `create_signal`, `clear_signal`, `emit_signal` |
+| `log-unqualified-signals-names` | `log/log.hpp` (38 angle consumers, 0 quoted) | `emit_signal` |
+| `collision-unqualified-entity-names` | `sweep_collision_shape2_d.hpp`, `triangle_mesh3_d.hpp` | `allocate_entity`, `finish_entity` |
+| `connectivity`/`dialog`/`lifecycle`/`path_boolean`/`share`/`statusbar`/`textlayout`/`textshaper` entity names | that package's overridden module | same |
+| `registry-ordinaltable-…`, `registry-registrytable-…` | `registry/registry_table.hpp` | `OrdinalTable`, `RegistryTable` |
 
-Two conditions make them inert, and **both** were checked rather than assumed:
+Verified per case rather than assumed: every one of those headers is reached by **angle includes only**
+(0 quoted everywhere), so no quoted sibling bypasses the override, and in each package the overridden
+header is the only one using those names unqualified.
 
-1. each of those five headers is reached by **angle includes only** — connectivity, lifecycle, share and
-   statusbar by 1 each, `log/log.hpp` by 38, and **0 quoted** in every case — so the override is never
-   bypassed and the generated copy is unreachable;
-2. in each package the overridden header is the **only** header using those names unqualified, so no
-   sibling benefits from the declaration either.
+**They are kept anyway, for two reasons that outweigh the drift they cause.**
 
-Dropped all nine. Had either condition failed — a quoted sibling include reaching the generated copy, or a
-non-overridden header in the same package using the name — the repair would have been doing real work for
-some consumer and removing it would have been wrong.
+First, AGENTS.md states the criterion: "`sdk:check` fails when a repair matches no generated header." The
+test is whether the repair matches a GENERATED header, not whether it changes the build. These do match.
 
-This is also why the static name sweep needs the override list: a sweep over emitted text finds unqualified
-names in files that nothing ever compiles. The compile-driven collector does not have this failure mode,
-because it only ever sees diagnostics from headers that were actually built through the override include path.
+Second and decisively, they are **latent rather than dead**. An override is a debt instrument with an
+expiry; when the emitter improves and an override is retired, the generated header underneath it needs
+exactly these declarations again. Dropping them means rediscovering the same names later, with no record
+that they were ever known — `collision`'s two entity names, for instance, are needed the moment either
+`sweep_collision_shape2_d.hpp` or `triangle_mesh3_d.hpp` stops being overridden.
+
+So the repair ledger should describe **what the generated tree needs**, not what today's build needs. The
+alternative couples it to the override set, which means editing repairs every time an override is added or
+retired — strictly more churn, and it would make the ledger a worse description of emitter defects.
+
+The cost is real and must be paid knowingly: adding such a repair drifts the override's `derivedFrom` on
+the next regeneration, for a change the override does not care about. That is the mechanism reporting a
+true fact about a shadowed file, so the right response is the judgement described above — diff the
+generated file, confirm the change is one the override does not depend on, re-derive — and not to delete
+the repair to keep the check quiet.
