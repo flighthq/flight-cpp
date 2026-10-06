@@ -1020,6 +1020,34 @@
       "unblocks": "wgpu_texture_upload.hpp compiles independently.",
       "expires": "when the SDL-WGPU profile exposes queue texture upload and external-image copy operations.",
       "authoredOn": "2026-10-06"
+    },
+    {
+      "id": "mesh-geometry-runtime-owner",
+      "path": "flight/mesh/mesh_geometry.hpp",
+      "package": "@flighthq/mesh",
+      "status": "complete",
+      "derivedFrom": "085e9bbfa8fb0834bccacc9dba77e09ea1024596c1b891d90e3cd589715d9c32",
+      "reason": "The emitter converts optional<Ref<EntityRuntime>> directly to optional<Ref<MeshGeometryRuntime>>, although the flattened generated owners have no C++ heritage. Additional retained expressions visit optional storage, dereference Ref values with '.', and copy a typed-array variant without selecting its active alternative.",
+      "change": "Uses identity-keyed exact MeshGeometryRuntime side storage, fails loudly when only the unrecoverable base carrier is present, corrects optional visitation and Ref access, and copies index variants element-by-element into the selected output width.",
+      "equivalence": "Missing runtime storage remains absent; an exact side-stored runtime preserves reference identity and mutation visibility. A base owner that cannot be safely recovered is reported instead of cast with undefined behavior. Index promotion preserves order and numeric values, and initialization reads the same referenced field object.",
+      "whyNotAPatchOrRepair": "The source assertion depends on interface heritage erased by the emitter. A target-neutral annotation cannot restore that C++ owner relationship, and declaration insertion cannot supply checked recovery or replace the invalid expressions.",
+      "unblocks": "mesh_geometry.hpp compiles independently and exposes the runtime-backed mutation boundary without unsafe pointer casting.",
+      "expires": "when runtime extensions retain their exact owner through EntityRuntimeKey or the runtime exposes a checked owner-recovery contract.",
+      "authoredOn": "2026-10-06"
+    },
+    {
+      "id": "mesh-geometry-attribute-reference-access",
+      "path": "flight/mesh/mesh_geometry_attributes.hpp",
+      "package": "@flighthq/mesh",
+      "status": "complete",
+      "derivedFrom": "4522e5928e04a8ace427e7e258e6815998e00f68a36a16a4889cf91beebf0bcf",
+      "reason": "The emitter uses value member access for the reference-backed VertexAttributeLayout at eleven sites and refuses a private cached DataView helper because MeshGeometryRuntime cannot be recovered from EntityRuntime.",
+      "change": "Dereferences layout before reading stride, switches the sibling include to its package-qualified path so the override compiles directly, and constructs the private DataView over the same typed-array buffer slice without the unrepresentable runtime cache.",
+      "equivalence": "Every stride read observes the same layout object. A freshly constructed DataView shares the same ArrayBufferLike, byte offset, and byte length as the cached view, so all reads and writes affect identical bytes; the private cache changes only allocation reuse and has no observable identity surface.",
+      "whyNotAPatchOrRepair": "A repair cannot change member-access operators or supply the refused helper body. Rewriting the source to avoid its internal cache solely for C++ would impose a backend storage limitation on the target-neutral implementation.",
+      "unblocks": "mesh_geometry_attributes.hpp compiles independently.",
+      "expires": "when Ref member access emits -> and exact MeshGeometryRuntime recovery allows the original cached DataView helper to lower.",
+      "authoredOn": "2026-10-06"
     }
   ]
 }
