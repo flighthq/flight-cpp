@@ -7410,9 +7410,13 @@
         {
           "include": "flight/types/debug.hpp",
           "name": "DebugSubsystemHooks"
+        },
+        {
+          "include": "flight/types/debug.hpp",
+          "name": "DebugSubsystemName"
         }
       ],
-      "diagnostic": "'DebugSubsystemHooks' was not declared in this scope",
+      "diagnostic": "'DebugSubsystemName' was not declared in this scope; did you mean 'flight::types::DebugSubsystemName'?",
       "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::debug, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
@@ -7570,9 +7574,13 @@
         {
           "include": "flight/types/bitmap_font_parse_explanation.hpp",
           "name": "BitmapFontParseExplanation"
+        },
+        {
+          "include": "flight/types/bitmap_font_parse_explanation.hpp",
+          "name": "BitmapFontParseExplanationFormat"
         }
       ],
-      "diagnostic": "'BitmapFontParseExplanation' was not declared in this scope",
+      "diagnostic": "'BitmapFontParseExplanationFormat' was not declared in this scope; did you mean 'flight::types::BitmapFontParseExplanationFormat'?",
       "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::bitmapfont_formats, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
@@ -8326,9 +8334,13 @@
         {
           "include": "flight/registry/registry_table.hpp",
           "name": "get_registry_table_entry"
+        },
+        {
+          "include": "flight/registry/registry_table.hpp",
+          "name": "create_keyed_table"
         }
       ],
-      "diagnostic": "'get_registry_table_entry' was not declared in this scope",
+      "diagnostic": "'create_keyed_table' was not declared in this scope; did you mean 'flight::registry::create_keyed_table'?",
       "defect": "The emitter writes 1 function name(s) owned by flight::registry unqualified inside namespace flight::command. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
@@ -9202,6 +9214,22 @@
       ],
       "diagnostic": "'get_canvas_render_state_runtime' was not declared in this scope",
       "defect": "The emitter writes 1 function name(s) owned by flight::scene2d_canvas unqualified inside namespace flight::effects_canvas. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-unqualified-scene2d-canvas-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/",
+      "namespace": "flight::scene2d_canvas",
+      "symbols": [
+        {
+          "include": "flight/scene2d_canvas/canvas_render_state.hpp",
+          "name": "get_canvas_render_state_runtime"
+        }
+      ],
+      "diagnostic": "'get_canvas_render_state_runtime' was not declared in this scope",
+      "defect": "The emitter writes get_canvas_render_state_runtime unqualified inside namespace flight::scene2d_canvas without the angle-bracket include that defines it. The using-declaration is redundant within the same namespace but the include hoisting is the operative fix.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
