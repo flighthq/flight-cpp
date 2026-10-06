@@ -5836,12 +5836,20 @@
           "name": "ParticleEmitter3D"
         },
         {
+          "include": "flight/types/particle_emitter_config.hpp",
+          "name": "ParticleBlendMode"
+        },
+        {
+          "include": "flight/types/wgpu_render_state.hpp",
+          "name": "WgpuRenderState"
+        },
+        {
           "include": "flight/types/wgpu_skinning_adapter.hpp",
           "name": "WgpuSkinningAdapter"
         }
       ],
-      "diagnostic": "'ParticleEmitter3D' was not declared in this scope",
-      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::scene3d_wgpu, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "diagnostic": "'WgpuRenderState' was not declared in this scope",
+      "defect": "The emitter writes four names owned by flight::types unqualified inside namespace flight::scene3d_wgpu, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
