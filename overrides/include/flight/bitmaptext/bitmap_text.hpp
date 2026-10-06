@@ -1,0 +1,398 @@
+// Override of generated/include/flight/bitmaptext/bitmap_text.hpp
+// Fixes:
+//   1. Stub for compute_bitmap_text_local_bounds_rectangle (refused: cpp-reference-assertion-without-heritage)
+//   2. target->data.member -> target->data->member (data is Ref<BitmapTextData>, not BitmapTextData)
+//   3. Stub for create_texture_atlas (refused: cpp-partial-shape-unresolvable)
+#pragma once
+
+// PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
+// omission is marked NOT GENERATED below with the reason. This file is NOT complete.
+//   missing: function computeBitmapTextLocalBoundsRectangle -- source line 26
+//   missing: function getBitmapTextLineCount -- source line 87
+//   missing: function getBitmapTextPages -- source line 93
+//   missing: function initializeBitmapTextData -- source line 97
+//   missing: function createBitmapTextData -- source line 61
+//   missing: function isBitmapTextGlyphLayoutStale -- source line 116
+//   missing: function isBitmapTextTruncated -- source line 122
+//   missing: function reserveBitmapText -- source line 129
+//   missing: function applyBitmapTextOptions -- source line 170
+//   missing: function copyLocalBoundsRectangle -- source line 180
+//   missing: variable (binding) -- source line 190
+//   missing: function createBitmapTextRuntime -- source line 67
+//   missing: function createBitmapText -- source line 46
+#include <functional>
+#include <optional>
+#include <flight/runtime.hpp>
+
+static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
+static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
+
+#include <flight/geometry/rectangle.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/has_bounds_rectangle.hpp>
+
+#include <flight/types/glyph_source.hpp>
+
+#include <flight/types/bitmap_text.hpp>
+
+#include <flight/types/texture_atlas.hpp>
+
+#include <flight/types/texture_atlas_region.hpp>
+
+#include <flight/entity/entity.hpp>
+
+namespace flight::bitmaptext {
+
+using flight::geometry::create_rectangle;
+
+using flight::types::BitmapText;
+using flight::types::BitmapTextAlign;
+using flight::types::BitmapTextData;
+using flight::types::BitmapTextPage;
+using flight::types::BitmapTextRuntime;
+using flight::types::BoundsNodeAny;
+using flight::types::GlyphSource;
+using flight::types::Node;
+using flight::types::Node2DTraits;
+using flight::types::Rectangle;
+using flight::types::TextureAtlas;
+
+inline const double bitmap_text_transform_stride = 2.0;
+
+
+// NOT GENERATED: function computeBitmapTextLocalBoundsRectangle -- source line 26
+// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+//
+// The source it stood for:
+//   export function computeBitmapTextLocalBoundsRectangle(out: Rectangle, source: Readonly<BitmapText>): void {
+//     const runtime = getNode2DRuntime(source) as BitmapTextRuntime;
+//     const bounds = runtime.localBoundsRectangle;
+//     if (bounds === null) {
+//       out.x = 0;
+//       out.y = 0;
+//       out.width = 0;
+//       out.height = 0;
+//       return;
+//     }
+//     copyRectangle(out, bounds);
+//   }
+//
+// Stub: the runtime cast cannot be performed in C++; zeros the output rectangle (the null-bounds path).
+// A proper implementation requires a runtime contract that recovers BitmapTextRuntime from the node.
+inline void compute_bitmap_text_local_bounds_rectangle(flight::Ref<Rectangle> out, flight::Ref<BitmapText> source) {
+  // Cannot recover BitmapTextRuntime from the node without heritage-based casting.
+  // Fall back to the null-bounds path: zero the output rectangle.
+  out->x = 0.0;
+  out->y = 0.0;
+  out->width = 0.0;
+  out->height = 0.0;
+}
+
+inline flight::Ref<Rectangle> get_bitmap_text_bounds(flight::Ref<BitmapText> source) {
+  flight::Ref<Rectangle> out = create_rectangle(std::nullopt, std::nullopt, std::nullopt, std::nullopt);
+  compute_bitmap_text_local_bounds_rectangle(out, source);
+  return out;
+}
+
+
+// NOT GENERATED: function getBitmapTextLineCount -- source line 87
+// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+//
+// The source it stood for:
+//   export function getBitmapTextLineCount(source: Readonly<BitmapText>): number {
+//     return (getNode2DRuntime(source) as BitmapTextRuntime).lineCount;
+//   }
+//
+//   // The glyph-quad pages the node draws -- one per glyph-atlas page in page order. A single-page source
+//   // yields exactly one; the array is never empty after construction.
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: a reference assertion from
+// flight::Ref<Node2DRuntime> to flight::Ref<BitmapTextRuntime> has no heritage to cast along: the declarations
+// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
+// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
+// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
+// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
+// invent side storage
+
+
+// NOT GENERATED: function getBitmapTextPages -- source line 93
+// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+//
+// The source it stood for:
+//   export function getBitmapTextPages(source: Readonly<BitmapText>): readonly BitmapTextPage[] {
+//     return (getNode2DRuntime(source) as BitmapTextRuntime).pages;
+//   }
+//
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: a reference assertion from
+// flight::Ref<Node2DRuntime> to flight::Ref<BitmapTextRuntime> has no heritage to cast along: the declarations
+// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
+// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
+// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
+// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
+// invent side storage
+
+
+// NOT GENERATED: function initializeBitmapTextData -- source line 97
+// refusal: cpp-partial-shape-unresolvable [source-portability]
+//
+// The source it stood for:
+//   export function initializeBitmapTextData(
+//     out: EntityConstruction<BitmapTextData>,
+//     data?: Readonly<Partial<BitmapTextData>>,
+//   ): void {
+//     out.align = data?.align ?? 'left';
+//     out.ellipsis = data?.ellipsis ?? '';
+//     out.glyphSource = data?.glyphSource ?? null;
+//     out.letterSpacing = data?.letterSpacing ?? 0;
+//     out.lineHeight = data?.lineHeight ?? 1;
+//     out.maxLines = data?.maxLines ?? null;
+//     out.text = data?.text ?? '';
+//     out.wrapWidth = data?.wrapWidth ?? null;
+//   }
+//
+//   // True when the page regions baked by the last `updateBitmapText` no longer describe the glyphs they
+//   // were built for, because the bound glyph source has repacked since. Rects that have gone stale stay
+//   // well-formed -- they simply cover other glyphs now -- so this version comparison is the only way to
+//   // tell, and it is the check `refreshBitmapTextGlyphLayout` performs. A node that has never been laid
+//   // out reads true; a node with no glyph source, or one bound to a static font, reads false forever.
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: Partial<T> requires a
+// statically resolvable C++ object shape; T is named
+
+
+// NOT GENERATED: function createBitmapTextData -- source line 61
+// refusal: cpp-partial-shape-unresolvable [source-portability]
+//
+// The source it stood for:
+//   export function createBitmapTextData(data?: Readonly<Partial<BitmapTextData>>): BitmapTextData {
+//     const out = allocateEntity<BitmapTextData>();
+//     initializeBitmapTextData(out, data);
+//     return finishEntity(out);
+//   }
+//
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: Partial<T> requires a
+// statically resolvable C++ object shape; T is named
+
+
+// NOT GENERATED: function isBitmapTextGlyphLayoutStale -- source line 116
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+//
+// The source it stood for:
+//   export function isBitmapTextGlyphLayoutStale(source: Readonly<BitmapText>): boolean {
+//     const glyphSource = source.data.glyphSource;
+//     if (glyphSource === null) return false;
+//     return (getNode2DRuntime(source) as BitmapTextRuntime).glyphLayoutVersion !== glyphSource.getGlyphLayoutVersion();
+//   }
+//
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: contextual optionalSingle
+// construction requires expression type evidence
+
+
+// NOT GENERATED: function isBitmapTextTruncated -- source line 122
+// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+//
+// The source it stood for:
+//   export function isBitmapTextTruncated(source: Readonly<BitmapText>): boolean {
+//     return (getNode2DRuntime(source) as BitmapTextRuntime).truncated;
+//   }
+//
+//   // Grows each page's quad arrays to hold at least `glyphCapacity` glyph quads without reallocating during
+//   // layout. Optional -- `updateBitmapText` auto-grows -- but avoids incremental reallocation for large
+//   // strings. Reserving every page over-allocates for multi-page text but never under-sizes.
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: a reference assertion from
+// flight::Ref<Node2DRuntime> to flight::Ref<BitmapTextRuntime> has no heritage to cast along: the declarations
+// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
+// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
+// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
+// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
+// invent side storage
+
+
+// NOT GENERATED: function reserveBitmapText -- source line 129
+// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+//
+// The source it stood for:
+//   export function reserveBitmapText(target: BitmapText, glyphCapacity: number): void {
+//     const runtime = getNode2DRuntime(target) as BitmapTextRuntime;
+//     for (const page of runtime.pages) {
+//       page.ids = reserveUint16Array(page.ids, glyphCapacity);
+//       page.transforms = reserveFloat32Array(page.transforms, glyphCapacity * BITMAP_TEXT_TRANSFORM_STRIDE);
+//     }
+//   }
+//
+//   // The setters below mutate node data only; call `updateBitmapText` afterward to re-lay-out the pages.
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: a reference assertion from
+// flight::Ref<Node2DRuntime> to flight::Ref<BitmapTextRuntime> has no heritage to cast along: the declarations
+// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
+// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
+// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
+// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
+// invent side storage
+
+inline void set_bitmap_text_align(flight::Ref<BitmapText> target, flight::Ref<BitmapTextAlign> align) {
+  (target->data->align = align);
+}
+
+inline void set_bitmap_text_ellipsis(flight::Ref<BitmapText> target, flight::String ellipsis) {
+  (target->data->ellipsis = ellipsis);
+}
+
+inline void set_bitmap_text_glyph_source(flight::Ref<BitmapText> target, std::optional<flight::Ref<GlyphSource>> glyph_source) {
+  (target->data->glyph_source = glyph_source);
+}
+
+inline void set_bitmap_text_letter_spacing(flight::Ref<BitmapText> target, double letter_spacing) {
+  (target->data->letter_spacing = letter_spacing);
+}
+
+inline void set_bitmap_text_line_height(flight::Ref<BitmapText> target, double line_height) {
+  (target->data->line_height = line_height);
+}
+
+inline void set_bitmap_text_max_lines(flight::Ref<BitmapText> target, std::optional<double> max_lines) {
+  (target->data->max_lines = max_lines);
+}
+
+inline void set_bitmap_text_text(flight::Ref<BitmapText> target, flight::String text) {
+  (target->data->text = text);
+}
+
+inline void set_bitmap_text_wrap_width(flight::Ref<BitmapText> target, std::optional<double> wrap_width) {
+  (target->data->wrap_width = wrap_width);
+}
+
+
+// NOT GENERATED: function applyBitmapTextOptions -- source line 170
+// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
+//
+// The source it stood for:
+//   function applyBitmapTextOptions(data: BitmapTextData, options: Readonly<BitmapTextOptions>): void {
+//     if (options.align !== undefined) data.align = options.align;
+//     if (options.ellipsis !== undefined) data.ellipsis = options.ellipsis;
+//     if (options.letterSpacing !== undefined) data.letterSpacing = options.letterSpacing;
+//     if (options.lineHeight !== undefined) data.lineHeight = options.lineHeight;
+//     if (options.maxLines !== undefined) data.maxLines = options.maxLines;
+//     if (options.text !== undefined) data.text = options.text;
+//     if (options.wrapWidth !== undefined) data.wrapWidth = options.wrapWidth;
+//   }
+//
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: a presence test against
+// undefined has no absence channel in the emitted C++ storage for property
+
+
+// NOT GENERATED: function copyLocalBoundsRectangle -- source line 180
+// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+//
+// The source it stood for:
+//   function copyLocalBoundsRectangle(out: Rectangle, source: Readonly<Node>): void {
+//     const runtime = getNode2DRuntime(source as BitmapText) as BitmapTextRuntime;
+//     if (runtime.localBoundsRectangle !== null) copyRectangle(out, runtime.localBoundsRectangle);
+//   }
+//
+//   // Allocates an empty page bound to a fresh atlas. Its image and regions are set by `updateBitmapText`.
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: a reference assertion from
+// flight::Ref<Node2DRuntime> to flight::Ref<BitmapTextRuntime> has no heritage to cast along: the declarations
+// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
+// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
+// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
+// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
+// invent side storage
+
+// Stub for create_texture_atlas: creates a TextureAtlas with default field values.
+// The original createTextureAtlas was refused due to cpp-partial-shape-unresolvable.
+// This stub is local to this override; the canonical definition lives in flight::textureatlas.
+inline flight::Ref<TextureAtlas> create_texture_atlas(std::nullopt_t) {
+  auto out = flight::entity::allocate_entity<flight::Ref<TextureAtlas>>();
+  out->image_height = 0.0;
+  out->image_name = std::nullopt;
+  out->image_width = 0.0;
+  out->regions = flight::Array<flight::Ref<flight::types::TextureAtlasRegion>>();
+  out->scale = 1.0;
+  out->texture = std::nullopt;
+  return flight::entity::finish_entity<flight::Ref<TextureAtlas>>(out);
+}
+
+inline flight::Ref<BitmapTextPage> create_bitmap_text_page() {
+  return flight::make_ref<BitmapTextPage>(BitmapTextPage{.atlas = create_texture_atlas(std::nullopt), .ids = flight::Uint16Array(), .instance_count = 0.0, .transforms = flight::Float32Array()});
+}
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPTEXT_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_3EDA99593C3E5445
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPTEXT_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_3EDA99593C3E5445
+struct can_add_child_compute_local_bounds_rectangle_3eda99593c3e5445 : public flight::ReferenceEnabled {
+  std::optional<std::function<bool(std::shared_ptr<Node<flight::Ref<Node2DTraits>>>, std::shared_ptr<Node<flight::Ref<Node2DTraits>>>)>> can_add_child;
+  std::optional<std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>> compute_local_bounds_rectangle;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPTEXT_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_3EDA99593C3E5445
+
+
+// NOT GENERATED: variable (binding) -- source line 190
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+//
+// The source it stood for:
+//   const defaultMethods: Partial<MethodsOf<BitmapTextRuntime>> = {
+//     computeLocalBoundsRectangle: copyLocalBoundsRectangle,
+//   };
+//
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: contextual union callable
+// value type std::function<void(flight::Ref<Rectangle>, flight::Ref<Node>)> agrees with no alternative's
+// signature: the destination holds [std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>]. A
+// callable is a represented domain, so the obstacle is that the destination's signature cannot call this one.
+// Declare the value's parameters so the destination's signature supplies them, and its result as one the
+// destination holds
+
+
+// NOT GENERATED: function createBitmapTextRuntime -- source line 67
+// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+//
+// The source it stood for:
+//   export function createBitmapTextRuntime(): BitmapTextRuntime {
+//     const runtime = createNode2DRuntime(defaultMethods) as BitmapTextRuntime;
+//     // -1 is below every real version, so a node that has never been laid out reads stale and one
+//     // `refreshBitmapTextGlyphLayout` brings it up -- no separate "was it ever updated" flag.
+//     runtime.glyphLayoutVersion = -1;
+//     runtime.lineCount = 0;
+//     runtime.localBoundsRectangle = null;
+//     runtime.pages = [];
+//     runtime.truncated = false;
+//     return runtime;
+//   }
+//
+//   // Allocates a fresh Rectangle holding the laid-out text extent. Use
+//   // `computeBitmapTextLocalBoundsRectangle` with an owned `out` in hot paths.
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: a reference assertion from
+// flight::Ref<Node2DRuntime> to flight::Ref<BitmapTextRuntime> has no heritage to cast along: the declarations
+// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
+// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
+// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
+// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
+// invent side storage
+
+
+// NOT GENERATED: function createBitmapText -- source line 46
+// refusal: cpp-intersection-member-shapeless [source-portability]
+//
+// The source it stood for:
+//   export function createBitmapText(glyphSource: GlyphSource | null, options?: Readonly<BitmapTextOptions>): BitmapText {
+//     const bitmapText = createNode2D(
+//       BitmapTextKind,
+//       undefined,
+//       createBitmapTextData,
+//       createBitmapTextRuntime,
+//     ) as BitmapText;
+//     const data = bitmapText.data;
+//     data.glyphSource = glyphSource;
+//     if (options !== undefined) applyBitmapTextOptions(data, options);
+//     const runtime = getNode2DRuntime(bitmapText) as BitmapTextRuntime;
+//     runtime.pages.push(createBitmapTextPage());
+//     return bitmapText;
+//   }
+//
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: intersection types require
+// C++ multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape either),
+// Node2DTraits. Declare the object shape the code reads rather than intersecting a conjunct that has none
+
+} // namespace flight::bitmaptext
