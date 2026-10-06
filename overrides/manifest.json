@@ -1176,6 +1176,38 @@
       "remaining": "None in this module.",
       "expires": "when optional union narrowing emits access to the contained variant.",
       "authoredOn": "2026-10-06"
+    },
+    {
+      "id": "textureatlas-region-enum-and-retained-helpers",
+      "path": "flight/textureatlas/texture_atlas_region.hpp",
+      "package": "@flighthq/textureatlas",
+      "status": "complete",
+      "supplies": "packages/textureatlas/src/textureAtlasRegion.ts",
+      "derivedFrom": "b226e1b1edd35d03cabf099c9e15e1b3efb3d2f1de5ea1430ef60b7a0b234200",
+      "reason": "The emitter refers to TextureAtlasRotation through a nonexistent lower-camel object, refuses the ordinal reader and next-id WeakMap, uses value access on Vector2 references, passes Texture2D to an unrelated flattened TextureLike carrier, and retains a call to the refused region constructor.",
+      "change": "Uses the generated enum directly, supplies exact ordinal parsing and identity-keyed next-id storage, corrects reference access, reads page dimensions from Texture2D source storage, and constructs newly added regions with the generated concrete owner.",
+      "equivalence": "Rotation comparisons and quarter turns retain enum values; ordinal parsing follows trailing UTF-16 digits; next ids remain monotonic per live atlas identity; UV writes mutate the same Vector2 objects; source dimensions and region defaults match the source functions.",
+      "whyNotAPatchOrRepair": "A using declaration cannot repair the emitter's nonexistent value object or the independent missing behaviors and invalid expressions. Rewriting target-neutral atlas code to expose C++ flattened owner details would change the source design.",
+      "unblocks": "texture_atlas_region.hpp compiles independently.",
+      "remaining": "Generated same-directory quoted consumers still select the generated partial copy rather than this include-path override.",
+      "expires": "when enum member access, Ref member access, Texture2D union projection, WeakMap keys, and the refused region helpers lower directly.",
+      "authoredOn": "2026-10-06"
+    },
+    {
+      "id": "textureatlas-image-resource-construction",
+      "path": "flight/textureatlas/texture_atlas_from.hpp",
+      "package": "@flighthq/textureatlas",
+      "status": "complete",
+      "supplies": "packages/textureatlas/src/textureAtlasFrom.ts",
+      "derivedFrom": "8969f54a6c23ec9c9453f378267976c192890e22dcafb83350b5cc53c70c1d14",
+      "reason": "The emitter applies designated initializers to the CreateTextureOptions variant and calls refused createTextureAtlas, createTexture, and image byte-loading declarations.",
+      "change": "Constructs the elected 2D options arm explicitly, preserves the ImageResource texture-source fields, builds the default atlas owner directly, delegates URL loading to the host, and rejects unavailable byte-decoding paths without fabricating resources.",
+      "equivalence": "The 2D texture receives the same source metadata and the atlas retains the returned texture with source defaults. URL loading preserves the host Task. Byte formats have no emitted image decoder, so those Tasks reject at that boundary rather than return a false image or atlas.",
+      "whyNotAPatchOrRepair": "Declaration insertion cannot replace an invalid variant initializer or supply three refused behaviors. The TypeScript object literal is the correct target-neutral representation and should not encode C++ variant arms.",
+      "unblocks": "texture_atlas_from.hpp compiles independently.",
+      "remaining": "Base64, Blob, and byte decoding remain unavailable until the image module emits.",
+      "expires": "when contextual object literals construct variant alternatives and the atlas, texture, and image-resource factories emit.",
+      "authoredOn": "2026-10-06"
     }
   ]
 }
