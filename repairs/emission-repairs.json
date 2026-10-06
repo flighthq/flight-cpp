@@ -3438,26 +3438,6 @@
       "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "clip-unqualified-entity-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/clip/",
-      "namespace": "flight::entity",
-      "symbols": [
-        {
-          "include": "flight/entity/entity.hpp",
-          "name": "allocate_entity"
-        },
-        {
-          "include": "flight/entity/entity.hpp",
-          "name": "finish_entity"
-        }
-      ],
-      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
-      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::clip. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "collision-unqualified-entity-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/collision/",
@@ -5872,6 +5852,46 @@
       "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::scene2d_wgpu, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "interaction-node-state-accessor-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/interaction/",
+      "symbol": "get_node_interaction_state",
+      "declaration": "std::optional<flight::Ref<flight::types::NodeInteractionState>> get_node_interaction_state(flight::Ref<flight::types::NodeAny> source);",
+      "include": "flight/types/node_interaction_state.hpp",
+      "diagnostic": "'get_node_interaction_state' was not declared in this scope",
+      "defect": "The emitter refuses getNodeInteractionState but retains calls to it in the same module and quoted sibling consumers. Declaring the exact retained function after the defining type headers lets every consumer type-check while the complete override supplies its implementation.",
+      "expectedWhen": "always",
+      "expires": "when getNodeInteractionState emits or refused sibling calls carry its declaration; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-collision-sweep-include-order",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/physics2d/",
+      "symbol": "sweep_collision_shape2_d",
+      "declaration": "using flight::collision::sweep_collision_shape2_d; // repair: defining include precedes the emitter's early using-declaration",
+      "include": "flight/collision/sweep_collision_shape2_d.hpp",
+      "diagnostic": "'flight::collision' has not been declared",
+      "defect": "world_queries.hpp emits a using-declaration for sweepCollisionShape2D in its forward-declaration block but includes the defining collision header only after that block. Hoisting the same defining include and repeating the legal using-declaration restores declaration order without changing behavior.",
+      "expectedWhen": "always",
+      "expires": "when imported function includes precede emitter-written using-declarations; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-runtime-accessor-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d/",
+      "namespace": "flight::node",
+      "symbols": [
+        {
+          "include": "flight/node/revision.hpp",
+          "name": "get_node_runtime"
+        }
+      ],
+      "diagnostic": "'get_node_runtime' was not declared in this scope",
+      "defect": "The emitter retains an unqualified call to the node runtime accessor in scene2d without importing the same function it already declares through node revision. The using declaration restores source import binding without changing behavior.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies imported node functions; sdk:check fails if this repair matches no header."
     },
     {
       "id": "scene2d-resources-unqualified-types-names",
@@ -8366,38 +8386,6 @@
       ],
       "diagnostic": "'create_keyed_table' was not declared in this scope; did you mean 'flight::registry::create_keyed_table'?",
       "defect": "The emitter writes 1 function name(s) owned by flight::registry unqualified inside namespace flight::command. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "clip-unqualified-geometry-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/clip/",
-      "namespace": "flight::geometry",
-      "symbols": [
-        {
-          "include": "flight/geometry/rectangle.hpp",
-          "name": "clone_rectangle"
-        },
-        {
-          "include": "flight/geometry/rectangle.hpp",
-          "name": "copy_rectangle"
-        },
-        {
-          "include": "flight/geometry/rectangle.hpp",
-          "name": "create_rectangle"
-        },
-        {
-          "include": "flight/geometry/rectangle.hpp",
-          "name": "encloses_rectangle"
-        },
-        {
-          "include": "flight/geometry/rectangle.hpp",
-          "name": "intersects_rectangle"
-        }
-      ],
-      "diagnostic": "'copy_rectangle' was not declared in this scope",
-      "defect": "The emitter writes 4 function name(s) owned by flight::geometry unqualified inside namespace flight::clip. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
