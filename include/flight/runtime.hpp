@@ -32,6 +32,7 @@
 #include <flight/math.hpp>
 #include <flight/number.hpp>
 #include <flight/object.hpp>
+#include <flight/optional_variant.hpp>
 #include <flight/presence.hpp>
 #include <flight/reference.hpp>
 #include <flight/regexp.hpp>

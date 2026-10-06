@@ -153,6 +153,30 @@ void test_any_optional_shape() {
   check(&number_value.value() == &number_value, "value() returns the Any itself");
 }
 
+void test_optional_variant_get_if() {
+  using Value = std::variant<int, std::string>;
+
+  std::optional<Value> absent;
+  check(flight::optional_variant_get_if<int>(&absent) == nullptr,
+        "optional variant access preserves absence");
+
+  std::optional<Value> number{std::in_place, std::in_place_type<int>, 42};
+  auto* integer = flight::optional_variant_get_if<int>(&number);
+  check(integer != nullptr && *integer == 42,
+        "optional variant access returns the active alternative");
+  check(flight::optional_variant_get_if<std::string>(&number) == nullptr,
+        "optional variant access rejects an inactive alternative");
+
+  const std::optional<Value> text{
+      std::in_place, std::in_place_type<std::string>, "flight"};
+  const auto* string = flight::optional_variant_get_if<std::string>(&text);
+  check(string != nullptr && *string == "flight",
+        "optional variant const access returns the active alternative");
+  check(flight::optional_variant_get_if<int>(
+            static_cast<std::optional<Value>*>(nullptr)) == nullptr,
+        "optional variant access accepts a null optional pointer");
+}
+
 void test_locale_compare() {
   const auto a = flight::String::from_utf8("a");
   const auto b = flight::String::from_utf8("b");
@@ -3597,6 +3621,7 @@ int main() {
   test_copy_within();
   test_locale_compare();
   test_any_optional_shape();
+  test_optional_variant_get_if();
   test_sequence_view_map();
   test_string_search();
   test_array_buffer_like();
