@@ -950,6 +950,34 @@
       "whyNotAPatchOrRepair": "Both functions were refused by the compiler; a repair cannot add function bodies.",
       "unblocks": "command.hpp and its 3 downstream includers.",
       "authoredOn": "2026-10-06"
+    },
+    {
+      "id": "effects-wgpu-effect-pass-profile-boundary",
+      "path": "flight/effects_wgpu/wgpu_effect_pass.hpp",
+      "package": "@flighthq/effects-wgpu",
+      "status": "complete",
+      "derivedFrom": "a210b8a2e20217d1a8ad7f286459a3a4b14080e8a6e6f19a19e80db7f39152e0",
+      "reason": "The emitter assigns optional<Ref<WgpuEffectPassState>> to an unrelated anonymous structural owner, leaves imported WGPU effect types unqualified, omits four helpers, and retains WebGPU device, queue, pipeline, and render-pass member calls that the native handle-only profile does not expose.",
+      "change": "Uses the exact cached WgpuEffectPassState owner, qualifies the public effect types, supplies fail-loud signatures for refused helpers, and makes every unavailable host operation throw a profile-specific Error instead of manufacturing invalid GPU handles.",
+      "equivalence": "An already-cached pass state retains its reference identity. Calls that require an unbound WebGPU host operation now fail deterministically at that boundary; no default handle, altered absence state, or fabricated successful GPU result is returned.",
+      "whyNotAPatchOrRepair": "A source annotation can name the cache owner but cannot supply the refused functions or add operations to an opaque native WgpuObject. Declaration insertion cannot replace retained invalid bodies, and adding permissive fake operations to the shared runtime would misrepresent the host ABI.",
+      "unblocks": "wgpu_effect_pass.hpp compiles independently; angle-bracket consumers select the corrected module. Generated siblings that use quoted relative includes still select the generated copy and remain separately measurable.",
+      "expires": "when the emitter retains WgpuEffectPassState identity and the SDL-WGPU profile supplies the device, queue, pipeline, and render-pass operation ABI used by this module.",
+      "authoredOn": "2026-10-06"
+    },
+    {
+      "id": "effects-wgpu-gradient-ramp-profile-boundary",
+      "path": "flight/effects_wgpu/wgpu_effect_gradient_ramp.hpp",
+      "package": "@flighthq/effects-wgpu",
+      "status": "complete",
+      "derivedFrom": "3d923dfce95bda337eb53f0be275c36c3bff1ba8c7aa98eee6a071357b4f3a74",
+      "reason": "The retained gradient upload calls create_texture and queue.write_texture on the SDL profile's identity-only WgpuDevice handle, which has neither member.",
+      "change": "Keeps CPU ramp generation and cache behavior unchanged while making the unavailable GPU upload helper throw a profile-specific Error.",
+      "equivalence": "No GPU texture can be created through the current host ABI. The override therefore returns no fabricated handle and changes no cache on failure; supported CPU ramp construction remains byte-for-byte emitted code.",
+      "whyNotAPatchOrRepair": "The TypeScript correctly calls the WebGPU API. A source rewrite cannot create missing native host operations, and a text-only repair cannot replace the invalid member-call body.",
+      "unblocks": "wgpu_effect_gradient_ramp.hpp compiles independently.",
+      "expires": "when the SDL-WGPU profile exposes texture creation and queue upload operations.",
+      "authoredOn": "2026-10-06"
     }
   ]
 }
