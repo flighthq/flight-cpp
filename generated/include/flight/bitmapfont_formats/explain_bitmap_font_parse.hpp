@@ -24,6 +24,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::bitmapfont_formats {
 
 using flight::types::BitmapFontParseExplanation;
+using flight::types::BitmapFontParseExplanationFormat;
 
 struct ProbeResult;
 

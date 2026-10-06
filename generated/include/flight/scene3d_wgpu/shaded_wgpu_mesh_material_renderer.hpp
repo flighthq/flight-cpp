@@ -12,11 +12,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_mesh_material_registry.hpp"
 #include "wgpu_mesh_pipeline.hpp"
 #include "wgpu_shaded_prelude.hpp"
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuRenderState;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ALPHA_MASK_ENABLED_DOUBLE_SIDED_HAS_DIFFUSE_MAP_HAS_NORMAL_MAP_HAS_SPECULAR_MAP_9DD81EAFDF2A6AEB
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ALPHA_MASK_ENABLED_DOUBLE_SIDED_HAS_DIFFUSE_MAP_HAS_NORMAL_MAP_HAS_SPECULAR_MAP_9DD81EAFDF2A6AEB

@@ -13,6 +13,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spatial.hpp>
+
+#include <flight/types/physics2_d.hpp>
+
+#include <flight/types/collision.hpp>
+
+#include <flight/collision/sweep_collision_shape2_d.hpp>
+
 namespace flight::types { struct CollisionAabb2D; }
 namespace flight::types { struct CollisionCapsule2D; }
 namespace flight::types { struct CollisionCircle2D; }
@@ -48,8 +56,6 @@ namespace flight::types { struct SpatialPair; }
 
 namespace flight::physics2d {
 
-using flight::collision::sweep_collision_shape2_d;
-
 using flight::types::CollisionTimeOfImpact2D;
 using flight::types::Physics2DCollider;
 using flight::types::Physics2DCollisionFilter;
@@ -62,6 +68,8 @@ using flight::types::Physics2DWorld;
 using flight::types::RigidBody2D;
 using flight::types::SpatialIndexBackend2D;
 using flight::types::SpatialPair;
+
+using flight::collision::sweep_collision_shape2_d; // repair: defining include precedes the emitter's early using-declaration
 struct Physics2DQueryScratch;
 } // namespace flight::physics2d
 

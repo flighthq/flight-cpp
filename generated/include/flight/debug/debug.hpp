@@ -21,6 +21,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::debug {
 
 using flight::types::DebugSubsystemHooks;
+using flight::types::DebugSubsystemName;
 
 inline flight::Map<flight::String, flight::Ref<DebugSubsystemHooks>> subsystems = flight::Map<flight::String, flight::Ref<DebugSubsystemHooks>>();
 

@@ -36,6 +36,10 @@ struct ClipRegion : public flight::ReferenceEnabled {
   double version;
 };
 
+inline std::optional<flight::Array<flight::Array<double>>> read_clip_region_contours(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ClipRegion>>>> clip) {
+  return flight::row_get<flight::RowKey<"contours">>(clip);
+}
+
 struct ClipRegionExplanation : public flight::ReferenceEnabled {
   bool conservative;
   flight::String status;

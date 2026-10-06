@@ -14,6 +14,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/wgpu_skinning_adapter.hpp>
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_mesh_material_registry.hpp"
 #include "wgpu_mesh_pipeline.hpp"
 #include "wgpu_scene3_druntime.hpp"
@@ -22,6 +24,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene3d_wgpu {
 
+using flight::types::WgpuRenderState;
 using flight::types::WgpuSkinningAdapter;
 
 inline flight::Ref<LinearColor> scratch = flight::Array{0.0, 0.0, 0.0, 0.0};

@@ -2448,7 +2448,6 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/clip/packages/clip/src/contract.ts",
         "@flighthq/clip/packages/clip/src/enableClipGuards.ts",
@@ -2458,62 +2457,13 @@
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
       ],
-      "declarationFingerprints": [
-        "sha256:00db58cd6c352c6b8c8c583c0aab6b730f370c923a89bf534760c7e721926e66",
-        "sha256:04a5916d06ccee68f9f6d2974599668a0c63164e508ccbe6b7a360a4fd2346d9",
-        "sha256:086f22855fe7bacdf71999d7be5f2032b38b054c1b2bf5fc7f64ad6f83f8516e",
-        "sha256:08d9bee036af7a0a31a9371596591c012ee0a15cbab7fd7408fcd707927b5b7c",
-        "sha256:160f6a396bcaa7b70e329a60124f11a4441707a55ae2b2fcbf72c539836197fe",
-        "sha256:2a4084740feb9ab28ae14b351fb00c2aab7b09848761aa1760737f8d5b203276",
-        "sha256:3a86525985bbca249a78f53e4305991a8ca4f3f305149ae16712ef5c697b8eb0",
-        "sha256:4fe39ce9646e3c82316b9ba7e2560779d1c29f2f5d773bde146c8314c7f4a55f",
-        "sha256:504de481134f4ed663eb941ebfeecc1fdd4f6d0bd53124618540f33e7085c05b",
-        "sha256:52582c1162474e28599d501338065b09bb57ac8d3ca051164e609be43aa7159e",
-        "sha256:556ae20c90a74d1f1cea3fba8c8f998b557b40526d36f0178bf90516b42c63bd",
-        "sha256:5fe00ca9d690f84b579dcbfb1e74d4af54f02494031aec63cf6f7c1dc3706e16",
-        "sha256:6f94022f5cbbcf1a6d30f54f2446d2cb0457c925e99cc1fe065029e5040c1706",
-        "sha256:72724cfc91cf453580c2328f76b5f76b95cf46af9e33a5e0f227e5f57acc1262",
-        "sha256:73d8fe4b2473a86194c2ea623b9020a9e9767a35c520ddeb9a62d39983b26618",
-        "sha256:7d18131a1cfafde6ccdceabac0139b4e02a0bc752f30ecac72780ae342f14cd9",
-        "sha256:839ff42e6ba248ba0374a8bbc2aae778e1dcc8f1b9ba5ddd57444df6bd5d377b",
-        "sha256:8c9112b7232da642ddc7db0c6b611e53a3c1598ce4f24f30907b338fa377bec0",
-        "sha256:8dcfee9dea308be8e15a559f2ef8dc47399e6359e0de8b507b63bdf00ac39027",
-        "sha256:916adb16959847dc88610a15b60b5f22c33086d4699d36408281d1cb1295b95a",
-        "sha256:98562d4c6ae8111ffcd8bac8a0778e862c46d3224869b9ca45c5e0224d003ee4",
-        "sha256:9d1e2a1dac95206a2689fc96a79a118214a8904e10e153ec57c34ca9f5ffebb7",
-        "sha256:a0267ee943bc50f88e93700d40732d252ff7dab1b348d566e509bab18548d38e",
-        "sha256:a112881723d585a3b5007ead1f72dc88c79b39dd2fe0e4d37ad7b12dca59e133",
-        "sha256:a38aceaecfb90e1c3f3182e00e40ce46865c03aca40ff42d9b8f04c03f60a018",
-        "sha256:a39488710f0e4ecf7ad8f7e5b2c85cd722a482d1c371adb425f19c4c0bb46352",
-        "sha256:ac5f172c51d383755a1905bf0f6c9786490ced09d6db48c028e894e1366c195b",
-        "sha256:ade167119accc2b2006d7d61d23090318ddabd86ce87315ad5026a510070a71b",
-        "sha256:b43cb3d59ddb5451f3ca58f373a16a8133196db37394dae516b88987f09833f2",
-        "sha256:b5dbc01bf78944779b88a99cbeea3dd2decb7d3d1bb98167a32e56f0b776261e",
-        "sha256:bb461d3172c877a07f607a681be899554d2b92b1efec79eadd176964a26b68a3",
-        "sha256:c2695dc2307a3f8ffdb3b68643715186d262ea5731559248576102796d6ad421",
-        "sha256:c61d987b1bc550f102403147dde5e252756d25b9e100552196e628bb04f36ef5",
-        "sha256:c7803c7e7df61ebde7e6179979697b75c5ceae132e894d712ef76b35ca7a0d9f",
-        "sha256:cdcfae58b08e6d833866393d2f1bc355d51a03354707894ec6007f9569f558c7",
-        "sha256:cfe76929b91781e47ddc977dd5d9db2b232463ac4db09b7b994f70d0d6bdceb6",
-        "sha256:d12dc006858532225e29cf72c9bc60d258ae57b15ae415a5734054b3b8e20d18",
-        "sha256:d13d806bc74471d364e5b379600959fb3c8ed069d288a3c50b85d55ececbfdfb",
-        "sha256:d1ce25642489792592f76e07872ca43d9eaeaf6a8ce25643b91bfdaba4a60df7",
-        "sha256:d28ff511607c990b75b1f26bbb6ca1a95fafe0029f5905bbdb11a322c226673f",
-        "sha256:d62338e236e9b0383f77c34098998bf221a0ba4ad1b5b4dfb599fcf0d57cc4f8",
-        "sha256:d749636f2f71134b7c6d34279155bf80daff6abc29ef4928b5c891bf218cde2d",
-        "sha256:e239793f119e4e1c6f3dcea28bcff9594cbb4bfab83c38fd2060d8ab597cb054",
-        "sha256:eec8bfca6d8ad5c84760f3fedde9112403af38a5f0ec6aecc903cede2d07a1ea",
-        "sha256:f3b787961e8886ba95c42156bcc3945f3efc92b7b01376227ad462d24060eb39",
-        "sha256:f5ddfb5973633c1372d6b3f27ea89fc89e8f5dba7e5ec7512fa29e9c76fcdfcb"
-      ],
       "module": {
         "name": "ClipRegion",
         "packageName": "@flighthq/clip",
         "source": "packages/clip/src/clipRegion.ts"
       },
       "path": "flight/clip/clip_region.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -2526,7 +2476,6 @@
       },
       "path": "flight/clip/contract.hpp",
       "refusedDependencies": [
-        "@flighthq/clip/packages/clip/src/clipRegion.ts",
         "@flighthq/clip/packages/clip/src/enableClipGuards.ts"
       ],
       "status": "dependency-incomplete"
@@ -2542,7 +2491,6 @@
       },
       "path": "flight/clip/enable_clip_guards.hpp",
       "refusedDependencies": [
-        "@flighthq/clip/packages/clip/src/clipRegion.ts",
         "@flighthq/log/packages/log/src/log.ts"
       ],
       "status": "dependency-incomplete"

@@ -307,6 +307,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("content") && requires { object.content; }) return (object.content);
   else if constexpr (Key::name.view() == std::string_view("context") && requires { object.context; }) return (object.context);
   else if constexpr (Key::name.view() == std::string_view("contourIndex") && requires { object.contour_index; }) return (object.contour_index);
+  else if constexpr (Key::name.view() == std::string_view("contours") && requires { object.contours; }) return (object.contours);
   else if constexpr (Key::name.view() == std::string_view("contrast") && requires { object.contrast; }) return (object.contrast);
   else if constexpr (Key::name.view() == std::string_view("controlX") && requires { object.control_x; }) return (object.control_x);
   else if constexpr (Key::name.view() == std::string_view("controlX1") && requires { object.control_x1; }) return (object.control_x1);
@@ -1275,6 +1276,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("readRTF") && requires { object.read_rtf; }) return (object.read_rtf);
   else if constexpr (Key::name.view() == std::string_view("readText") && requires { object.read_text; }) return (object.read_text);
   else if constexpr (Key::name.view() == std::string_view("reason") && requires { object.reason; }) return (object.reason);
+  else if constexpr (Key::name.view() == std::string_view("rect") && requires { object.rect; }) return (object.rect);
   else if constexpr (Key::name.view() == std::string_view("red") && requires { object.red; }) return (object.red);
   else if constexpr (Key::name.view() == std::string_view("redBias") && requires { object.red_bias; }) return (object.red_bias);
   else if constexpr (Key::name.view() == std::string_view("redScale") && requires { object.red_scale; }) return (object.red_scale);
@@ -2142,6 +2144,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("content") && requires(Object& object) { object.content; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().content)>>{};
   else if constexpr (Key::name.view() == std::string_view("context") && requires(Object& object) { object.context; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().context)>>{};
   else if constexpr (Key::name.view() == std::string_view("contourIndex") && requires(Object& object) { object.contour_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().contour_index)>>{};
+  else if constexpr (Key::name.view() == std::string_view("contours") && requires(Object& object) { object.contours; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().contours)>>{};
   else if constexpr (Key::name.view() == std::string_view("contrast") && requires(Object& object) { object.contrast; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().contrast)>>{};
   else if constexpr (Key::name.view() == std::string_view("controlX") && requires(Object& object) { object.control_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().control_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("controlX1") && requires(Object& object) { object.control_x1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().control_x1)>>{};
@@ -3110,6 +3113,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("readRTF") && requires(Object& object) { object.read_rtf; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_rtf)>>{};
   else if constexpr (Key::name.view() == std::string_view("readText") && requires(Object& object) { object.read_text; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_text)>>{};
   else if constexpr (Key::name.view() == std::string_view("reason") && requires(Object& object) { object.reason; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().reason)>>{};
+  else if constexpr (Key::name.view() == std::string_view("rect") && requires(Object& object) { object.rect; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rect)>>{};
   else if constexpr (Key::name.view() == std::string_view("red") && requires(Object& object) { object.red; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().red)>>{};
   else if constexpr (Key::name.view() == std::string_view("redBias") && requires(Object& object) { object.red_bias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().red_bias)>>{};
   else if constexpr (Key::name.view() == std::string_view("redScale") && requires(Object& object) { object.red_scale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().red_scale)>>{};
@@ -3980,6 +3984,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->content; }) owner.bind_named("content", [object]() -> decltype(auto) { return (object->content); });
   if constexpr (requires { object->context; }) owner.bind_named("context", [object]() -> decltype(auto) { return (object->context); });
   if constexpr (requires { object->contour_index; }) owner.bind_named("contourIndex", [object]() -> decltype(auto) { return (object->contour_index); });
+  if constexpr (requires { object->contours; }) owner.bind_named("contours", [object]() -> decltype(auto) { return (object->contours); });
   if constexpr (requires { object->contrast; }) owner.bind_named("contrast", [object]() -> decltype(auto) { return (object->contrast); });
   if constexpr (requires { object->control_x; }) owner.bind_named("controlX", [object]() -> decltype(auto) { return (object->control_x); });
   if constexpr (requires { object->control_x1; }) owner.bind_named("controlX1", [object]() -> decltype(auto) { return (object->control_x1); });
@@ -4948,6 +4953,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->read_rtf; }) owner.bind_named("readRTF", [object]() -> decltype(auto) { return (object->read_rtf); });
   if constexpr (requires { object->read_text; }) owner.bind_named("readText", [object]() -> decltype(auto) { return (object->read_text); });
   if constexpr (requires { object->reason; }) owner.bind_named("reason", [object]() -> decltype(auto) { return (object->reason); });
+  if constexpr (requires { object->rect; }) owner.bind_named("rect", [object]() -> decltype(auto) { return (object->rect); });
   if constexpr (requires { object->red; }) owner.bind_named("red", [object]() -> decltype(auto) { return (object->red); });
   if constexpr (requires { object->red_bias; }) owner.bind_named("redBias", [object]() -> decltype(auto) { return (object->red_bias); });
   if constexpr (requires { object->red_scale; }) owner.bind_named("redScale", [object]() -> decltype(auto) { return (object->red_scale); });
@@ -5851,6 +5857,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(content)
   FLIGHT_SDK_ROW_WIDENS(context)
   FLIGHT_SDK_ROW_WIDENS(contour_index)
+  FLIGHT_SDK_ROW_WIDENS(contours)
   FLIGHT_SDK_ROW_WIDENS(contrast)
   FLIGHT_SDK_ROW_WIDENS(control_x)
   FLIGHT_SDK_ROW_WIDENS(control_x1)
@@ -6819,6 +6826,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(read_rtf)
   FLIGHT_SDK_ROW_WIDENS(read_text)
   FLIGHT_SDK_ROW_WIDENS(reason)
+  FLIGHT_SDK_ROW_WIDENS(rect)
   FLIGHT_SDK_ROW_WIDENS(red)
   FLIGHT_SDK_ROW_WIDENS(red_bias)
   FLIGHT_SDK_ROW_WIDENS(red_scale)

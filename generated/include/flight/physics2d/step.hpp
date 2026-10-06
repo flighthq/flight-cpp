@@ -28,8 +28,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
-#include <flight/collision/sweep_collision_shape2_d.hpp>
-
 #include <flight/collision/contact_manifold2_d.hpp>
 
 #include <flight/collision/collide_contact_manifold2_d.hpp>
@@ -40,12 +38,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/collision.hpp>
 
+#include <flight/collision/sweep_collision_shape2_d.hpp>
+
 namespace flight::physics2d {
 
 using flight::collision::collide_contact_manifold2_d;
 using flight::collision::create_collision_contact_manifold2_d;
 using flight::collision::create_collision_time_of_impact2_d;
-using flight::collision::sweep_collision_shape2_d;
 
 using flight::types::CollisionBuiltInShape2D;
 using flight::types::CollisionContactManifold2D;
@@ -64,6 +63,8 @@ using flight::types::Physics2DStepGuard;
 using flight::types::Physics2DWorld;
 using flight::types::RigidBody2D;
 using flight::types::SpatialPair;
+
+using flight::collision::sweep_collision_shape2_d; // repair: defining include precedes the emitter's early using-declaration
 struct Physics2DStepScratch;
 } // namespace flight::physics2d
 

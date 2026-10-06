@@ -13,6 +13,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spatial.hpp>
+
+#include <flight/types/physics2_d.hpp>
+
 namespace flight::types { struct Physics2DCollider; }
 namespace flight::types { struct Physics2DContact; }
 namespace flight::types { struct Physics2DContactEvents; }

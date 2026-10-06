@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/number.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <limits>
@@ -34,7 +35,8 @@ inline flight::Array<flight::Ref<flight::types::Scene3DDocumentCamera>> build_gl
         }
         std::optional<flight::Ref<flight::types::GltfCamera>> definition = definitions.get(camera_index.value());
         if (!definition.has_value()) {
-          flight::row_get<flight::RowKey<"reportDiagnostic">>(context)(flight::types::import_diagnostic_severity->drop, flight::String("gltf.camera-missing"), {{flight::String("firstCamera"), std::variant<bool, double, flight::String>{std::in_place_type<double>, camera_index.value()}}, {flight::String("firstNode"), std::variant<bool, double, flight::String>{std::in_place_type<double>, node}}}, std::nullopt);
+          flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = {{flight::String("firstCamera"), std::variant<bool, double, flight::String>{std::in_place_type<double>, camera_index.value()}}, {flight::String("firstNode"), std::variant<bool, double, flight::String>{std::in_place_type<double>, node}}};
+          flight::row_get<flight::RowKey<"reportDiagnostic">>(context)(flight::types::import_diagnostic_severity->drop, flight::String("gltf.camera-missing"), detail, std::nullopt);
           {
             (node += 1.0);
             continue;
@@ -43,7 +45,8 @@ inline flight::Array<flight::Ref<flight::types::Scene3DDocumentCamera>> build_gl
         if (((definition.value()->type == flight::String("perspective")) && definition.value()->perspective.has_value())) {
           auto perspective = definition.value()->perspective.value();
           if (((((!(perspective->yfov > 0.0) || (perspective->yfov >= flight::pi)) || !(perspective->znear > 0.0)) || (perspective->zfar.has_value() && !(perspective->zfar.value() > perspective->znear))) || (perspective->aspect_ratio.has_value() && !(perspective->aspect_ratio.value() > 0.0)))) {
-            flight::row_get<flight::RowKey<"reportDiagnostic">>(context)(flight::types::import_diagnostic_severity->drop, flight::String("gltf.camera-invalid-perspective"), {{flight::String("firstCamera"), std::variant<bool, double, flight::String>{std::in_place_type<double>, camera_index.value()}}}, std::nullopt);
+            flight::Record<flight::String, std::variant<bool, double, flight::String>> detail_2 = {{flight::String("firstCamera"), std::variant<bool, double, flight::String>{std::in_place_type<double>, camera_index.value()}}};
+            flight::row_get<flight::RowKey<"reportDiagnostic">>(context)(flight::types::import_diagnostic_severity->drop, flight::String("gltf.camera-invalid-perspective"), detail_2, std::nullopt);
             {
               (node += 1.0);
               continue;
@@ -58,7 +61,8 @@ inline flight::Array<flight::Ref<flight::types::Scene3DDocumentCamera>> build_gl
         if (((definition.value()->type == flight::String("orthographic")) && definition.value()->orthographic.has_value())) {
           auto orthographic = definition.value()->orthographic.value();
           if ((((!(orthographic->xmag > 0.0) || !(orthographic->ymag > 0.0)) || !(orthographic->znear >= 0.0)) || !(orthographic->zfar > orthographic->znear))) {
-            flight::row_get<flight::RowKey<"reportDiagnostic">>(context)(flight::types::import_diagnostic_severity->drop, flight::String("gltf.camera-invalid-orthographic"), {{flight::String("firstCamera"), std::variant<bool, double, flight::String>{std::in_place_type<double>, camera_index.value()}}}, std::nullopt);
+            flight::Record<flight::String, std::variant<bool, double, flight::String>> detail_3 = {{flight::String("firstCamera"), std::variant<bool, double, flight::String>{std::in_place_type<double>, camera_index.value()}}};
+            flight::row_get<flight::RowKey<"reportDiagnostic">>(context)(flight::types::import_diagnostic_severity->drop, flight::String("gltf.camera-invalid-orthographic"), detail_3, std::nullopt);
             {
               (node += 1.0);
               continue;
@@ -70,7 +74,8 @@ inline flight::Array<flight::Ref<flight::types::Scene3DDocumentCamera>> build_gl
             continue;
           }
         }
-        flight::row_get<flight::RowKey<"reportDiagnostic">>(context)(flight::types::import_diagnostic_severity->drop, flight::String("gltf.camera-missing-descriptor"), {{flight::String("firstCamera"), std::variant<bool, double, flight::String>{std::in_place_type<double>, camera_index.value()}}, {flight::String("firstType"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, definition.value()->type}}}, std::nullopt);
+        flight::Record<flight::String, std::variant<bool, double, flight::String>> detail_4 = {{flight::String("firstCamera"), std::variant<bool, double, flight::String>{std::in_place_type<double>, camera_index.value()}}, {flight::String("firstType"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, definition.value()->type}}};
+        flight::row_get<flight::RowKey<"reportDiagnostic">>(context)(flight::types::import_diagnostic_severity->drop, flight::String("gltf.camera-missing-descriptor"), detail_4, std::nullopt);
       }
       (node += 1.0);
     }

@@ -143,6 +143,8 @@ using flight::geometry::inverse_matrix;
 using flight::geometry::multiply_matrix;
 
 using flight::clip::create_clip_region_from_path;
+using flight::clip::transform_clip_region;
+using flight::clip::union_clip_regions;
 
 using flight::types::ClipRegion;
 using flight::types::DisplayObject;

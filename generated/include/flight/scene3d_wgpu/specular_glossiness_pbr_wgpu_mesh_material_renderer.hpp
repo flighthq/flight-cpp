@@ -16,12 +16,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "standard_pbr_wgpu_mesh_material_renderer.hpp"
 #include "wgpu_mesh_material_registry.hpp"
 #include "wgpu_mesh_pipeline.hpp"
 #include "wgpu_pbr_pipeline_cache.hpp"
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline double lerp(double a, double b, double t) {
   return (a + ((b - a) * t));

@@ -12,11 +12,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_classic_prelude.hpp"
 #include "wgpu_mesh_material_registry.hpp"
 #include "wgpu_mesh_pipeline.hpp"
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline flight::Ref<WgpuClassicDefineKey> define_key_for_material(std::optional<flight::Ref<BlinnPhongMaterial>> material) {
   return flight::make_ref<WgpuClassicDefineKey>(WgpuClassicDefineKey{.alpha_mask_enabled = (material.has_value() && (material.value()->alpha_mode == flight::String("mask"))), .double_sided = (material.has_value() && material.value()->double_sided), .has_alpha_map = ((material.has_value() && (material.value()->alpha_mode != flight::String("opaque"))) && is_wgpu_texture_ready(material.value()->alpha_map)), .has_diffuse_map = (material.has_value() && is_wgpu_texture_ready(material.value()->diffuse_map)), .has_normal_map = (material.has_value() && is_wgpu_texture_ready(material.value()->normal_map)), .has_specular_map = (material.has_value() && is_wgpu_texture_ready(material.value()->specular_map)), .lighting_model = flight::String("blinnphong")});

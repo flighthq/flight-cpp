@@ -28,6 +28,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::interaction {
 
+std::optional<flight::Ref<flight::types::NodeInteractionState>> get_node_interaction_state(flight::Ref<flight::types::NodeAny> source);
+
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 

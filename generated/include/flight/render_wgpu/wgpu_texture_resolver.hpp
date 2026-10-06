@@ -20,6 +20,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/render_wgpu/wgpu_render_state.hpp>
+
 #include <flight/types/wgpu_render_state.hpp>
 
 #include "wgpu_draw.hpp"
@@ -27,6 +29,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "wgpu_render_texture.hpp"
 
 namespace flight::render_wgpu {
+
+using flight::render_wgpu::get_wgpu_render_state_runtime;
 
 using flight::types::WgpuRenderState;
 

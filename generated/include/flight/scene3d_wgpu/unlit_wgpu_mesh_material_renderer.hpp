@@ -12,11 +12,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_mesh_material_registry.hpp"
 #include "wgpu_mesh_pipeline.hpp"
 #include "wgpu_unlit_prelude.hpp"
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline flight::Ref<WgpuUnlitDefineKey> define_key_for_material(std::optional<flight::Ref<UnlitMaterial>> material) {
   return flight::make_ref<WgpuUnlitDefineKey>(WgpuUnlitDefineKey{.alpha_mask_enabled = (material.has_value() && (material.value()->alpha_mode == flight::String("mask"))), .double_sided = (material.has_value() && material.value()->double_sided), .has_color_map = (material.has_value() && is_wgpu_texture_ready(material.value()->base_color_map))});

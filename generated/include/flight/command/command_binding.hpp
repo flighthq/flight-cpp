@@ -28,6 +28,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::command {
 
 using flight::registry::get_registry_table_entry;
+using flight::registry::create_keyed_table;
 
 using flight::types::AddNodeChildCommand;
 using flight::types::Command;

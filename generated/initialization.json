@@ -591,6 +591,11 @@
       "source": "packages/capture/src/captureComparison.ts"
     },
     {
+      "name": "ClipRegion",
+      "packageName": "@flighthq/clip",
+      "source": "packages/clip/src/clipRegion.ts"
+    },
+    {
       "name": "Clipboard",
       "packageName": "@flighthq/clipboard",
       "source": "packages/clipboard/src/clipboard.ts"
@@ -19776,6 +19781,36 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "FlattenPath",
+          "packageName": "@flighthq/path",
+          "source": "packages/path/src/flattenPath.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Path",
+          "packageName": "@flighthq/path",
+          "source": "packages/path/src/path.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "ClipRegion",
+          "packageName": "@flighthq/clip",
+          "source": "packages/clip/src/clipRegion.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "Clipboard",
           "packageName": "@flighthq/clipboard",
           "source": "packages/clipboard/src/clipboard.ts"
@@ -21176,29 +21211,9 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "FlattenPath",
-          "packageName": "@flighthq/path",
-          "source": "packages/path/src/flattenPath.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
           "name": "GetPathBounds",
           "packageName": "@flighthq/path",
           "source": "packages/path/src/getPathBounds.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "Path",
-          "packageName": "@flighthq/path",
-          "source": "packages/path/src/path.ts"
         }
       ]
     },
@@ -71614,7 +71629,1830 @@
       ]
     },
     {
-      "bindings": [],
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
+            "line": 1,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",9]",
+            "kind": "import",
+            "name": "allocateEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "allocateEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 26,
+            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
+            "line": 1,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",25]",
+            "kind": "import",
+            "name": "finishEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "finishEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:e8409a53a71149f618bd985bb926475c3c63c0630086c1bcea096e153a749cab",
+            "line": 3,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",85]",
+            "kind": "import",
+            "name": "cloneRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "cloneRectangle",
+            "kind": "dependency",
+            "module": {
+              "name": "Rectangle",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/rectangle.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:3b23521641a2e21fe8f756e8f270778745eeb4a8362163f5dbf99976a00e6042",
+            "line": 4,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",103]",
+            "kind": "import",
+            "name": "containsRectanglePointXY",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "containsRectanglePointXY",
+            "kind": "dependency",
+            "module": {
+              "name": "Rectangle",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/rectangle.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:efb19a44c9f53d03d61a3896ec136c9e90d639b70258aac0e20a08e7691f8b6c",
+            "line": 5,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",131]",
+            "kind": "import",
+            "name": "copyRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "copyRectangle",
+            "kind": "dependency",
+            "module": {
+              "name": "Rectangle",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/rectangle.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:06a8b1e5eb1a0c0f452aa367cb689848dd716a4e1576fb2b39c7266ea49c14c0",
+            "line": 6,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",148]",
+            "kind": "import",
+            "name": "createRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createRectangle",
+            "kind": "dependency",
+            "module": {
+              "name": "Rectangle",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/rectangle.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:71a04f9875c0c27fe54fc47189d0ee3ccf436c2aac2c698d4ab81b7664549bb2",
+            "line": 7,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",167]",
+            "kind": "import",
+            "name": "enclosesRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "enclosesRectangle",
+            "kind": "dependency",
+            "module": {
+              "name": "Rectangle",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/rectangle.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:1e9d953875a16f0104b24ed208dc8b18190448ed95878c0cbf1b5254ab7cc775",
+            "line": 8,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",188]",
+            "kind": "import",
+            "name": "intersectsRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "intersectsRectangle",
+            "kind": "dependency",
+            "module": {
+              "name": "Rectangle",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/rectangle.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:5af34e91bc06baf3d593b14a1cc57f65fd5d41e0978ee295ed44000e0a2b5ccf",
+            "line": 9,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",211]",
+            "kind": "import",
+            "name": "isEmptyRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "isEmptyRectangle",
+            "kind": "dependency",
+            "module": {
+              "name": "Rectangle",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/rectangle.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:fbc48e8b26f24f5565f25ab34518459e39bbb7f6561959050d039debc1616253",
+            "line": 10,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",231]",
+            "kind": "import",
+            "name": "matrixTransformRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "matrixTransformRectangle",
+            "kind": "dependency",
+            "module": {
+              "name": "Matrix",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/matrix.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:455d7af0cc4f673315a85de2983d57e01c16249dc37785cec44d0db1092d5051",
+            "line": 11,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",259]",
+            "kind": "import",
+            "name": "mergeRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "mergeRectangle",
+            "kind": "dependency",
+            "module": {
+              "name": "Rectangle",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/rectangle.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f11046e59347852a4f1c0bf4017e9854d7caf80aebe7afffa60ae70c76e4691c",
+            "line": 13,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",322]",
+            "kind": "import",
+            "name": "CIRCLE_KAPPA",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "CIRCLE_KAPPA",
+            "kind": "dependency",
+            "module": {
+              "name": "Constants",
+              "packageName": "@flighthq/math",
+              "source": "packages/math/src/constants.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:902068c04b69f247234b5673fc88fc99e073e340828afa62f407b91f8cc9f3b9",
+            "line": 15,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",380]",
+            "kind": "import",
+            "name": "appendPathCubicCurveTo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "appendPathCubicCurveTo",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:7444f3154a32d9ac4199e79de8de3de390a4c02444fdae037409567f9e1b1d8d",
+            "line": 16,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",406]",
+            "kind": "import",
+            "name": "appendPathLineTo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "appendPathLineTo",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:e70e4ce155190f19cfd2c336bc8c5095cc19024c33823ac6e294a24a629a8fa2",
+            "line": 17,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",426]",
+            "kind": "import",
+            "name": "appendPathMoveTo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "appendPathMoveTo",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:f1bbd57e2256294655dfbe0b55aa92b7afcd6bcfbd05ee0d0d85e0982bbf6b09",
+            "line": 18,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",446]",
+            "kind": "import",
+            "name": "createPath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createPath",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:eaddf96a56df362592d6381dd743b7cbe070ca83d2c55f92c5344bacef6b505c",
+            "line": 19,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",460]",
+            "kind": "import",
+            "name": "flattenPath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "flattenPath",
+            "kind": "dependency",
+            "module": {
+              "name": "FlattenPath",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/flattenPath.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:98144e04f1696fd2334d743f0e28f307d262ec10ac8a5d44c07ecd7a558d5a8a",
+            "line": 34,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",788]",
+            "kind": "import",
+            "name": "readClipRegionContours",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "readClipRegionContours",
+            "kind": "dependency",
+            "module": {
+              "name": "ClipRegion",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/ClipRegion.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8b371cace196ffcc6117ec05fc0d7a175896965c9294aa2650dba438a5568364",
+            "line": 39,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",1121]",
+            "kind": "function",
+            "name": "acquireClipRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:53e668d0a681dc407699262c50907c06369c2a2adbb0d1be445feca15ccae348",
+            "line": 56,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",1678]",
+            "kind": "function",
+            "name": "clipRegionContainsClipRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:936940919e89434bfbbc92c91300d826c3f17da89457ecb65ef130410d4f2ce5",
+            "line": 65,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",2115]",
+            "kind": "function",
+            "name": "clipRegionContainsPoint",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:de218863061fa1e9ad890b4c7d08e233185f1b6e6ec6833644f82b6213329244",
+            "line": 75,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",2622]",
+            "kind": "function",
+            "name": "clipRegionContainsRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3372a032569ee1e4b853ae92e84f104ebd87f2ac42a814a5c42ef54b77cc96b8",
+            "line": 82,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",2976]",
+            "kind": "function",
+            "name": "clipRegionIntersectsClipRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c91ff66f36c7b088e61c7b843afec9ee533b5b9a52422bba8fecd9b2548e01d3",
+            "line": 90,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",3355]",
+            "kind": "function",
+            "name": "clipRegionIntersectsRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:5d2b4e69710e2f3f2936b1d51ed99b6b4beb8e490c3b404b1f3238e6bcecd95e",
+            "line": 97,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",3744]",
+            "kind": "function",
+            "name": "cloneClipRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:b42f1cf9b1453151966de4c84a122f8330194c4fd8a86d29b3d08108ca5cff65",
+            "line": 112,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",4401]",
+            "kind": "function",
+            "name": "copyClipRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:cc621af163920aedeed5a48e821219610fcd7362010bf22e5fe419bf1b7603a4",
+            "line": 124,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",4952]",
+            "kind": "function",
+            "name": "createClipRegionFromCircle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6c78c2430b859b7be2870a2215b6788c6ab430446cc4b4ae6818ed9237d0cb8b",
+            "line": 130,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",5200]",
+            "kind": "function",
+            "name": "createClipRegionFromContours",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:754367c153a671af665d2542be73c3faefe18c0c996168fa6cd8bf8ac93d1ef7",
+            "line": 141,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",5641]",
+            "kind": "function",
+            "name": "createClipRegionFromEllipse",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ebe34cd36cf3afa26d67960b4500f9479f57ea682ac2490e42d180440ec03e23",
+            "line": 147,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",5936]",
+            "kind": "function",
+            "name": "createClipRegionFromPath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:820792e1822ecc07abbb78f57e920419034d0c5701a6e8dac5baa9107b485d34",
+            "line": 153,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",6160]",
+            "kind": "function",
+            "name": "createClipRegionFromRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9b924d81baf93fb947d04083061bf46c1f2ddefe6324f19356cbf1f438328497",
+            "line": 161,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",6516]",
+            "kind": "function",
+            "name": "createClipRegionFromRoundedRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:b8c6166fea308890b8077de0c514c1a562aabb7dcd99f05954730ceeeca8a7c9",
+            "line": 174,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",7126]",
+            "kind": "function",
+            "name": "equalsClipRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:5e9b23d5959e8af2afe5da870febf996e3487d4a2a2a1ec9059deb86d0932b3e",
+            "line": 200,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",8154]",
+            "kind": "function",
+            "name": "explainClipRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:72a63d3dc85d7c4eeafd15c6f9af128e6835d5df4384351fdca842c199e5a38a",
+            "line": 210,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",8632]",
+            "kind": "function",
+            "name": "explainClipRegionContours",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:54a073611e8e73930da0a4aa67046754e026542de753d9fdcf614dcef48f21be",
+            "line": 223,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",9211]",
+            "kind": "function",
+            "name": "getClipRegionBounds",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:45505424810dce4c17ea85787e0284dc70f7a5224d49b3eacab047af856710d4",
+            "line": 236,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",9827]",
+            "kind": "function",
+            "name": "initializeClipRegionFromContours",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3c5dc2a27d45d820754641675c157fc7cd36e5bc991dabdab48e1a7b98774275",
+            "line": 256,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",10739]",
+            "kind": "function",
+            "name": "initializeClipRegionFromPath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:27b8bf0fd47066167af2196b7500b835ab3f7663dad1ae63ff5244b9ce5ae27a",
+            "line": 272,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",11315]",
+            "kind": "function",
+            "name": "initializeClipRegionFromRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:db6a2b07fee465ba319b4c3a36c552905a97e59675e8c334cc42b329d87e15b2",
+            "line": 286,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",11904]",
+            "kind": "function",
+            "name": "intersectClipRegions",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4125bf5a7ce6926b9fbeb4f9ac4b82e4e102234a493df8c421740d0ab1d4fe8b",
+            "line": 352,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",14175]",
+            "kind": "function",
+            "name": "invalidateClipRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1366e9fc8fa6807dacf05d851d6356c725ce53db038dfeca3ef7de35628fbbee",
+            "line": 359,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",14450]",
+            "kind": "function",
+            "name": "isClipRegionEmpty",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a4e195f1274bfbaf26a8f9f25f706649c5b4aa5d790a468bbf48470f3c85b1df",
+            "line": 368,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",14823]",
+            "kind": "function",
+            "name": "isClipRegionRectangular",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:29a6e1f3ed241e4d8480ba1b1aba19d8a9bd9622329cb6c09d88e9ab2782bbcf",
+            "line": 381,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",15668]",
+            "kind": "function",
+            "name": "normalizeClipRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:50e914e0cc1f0727e134180db0bcb5d7f83994ba03c51a9e6de9dab41b01ae2b",
+            "line": 455,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",18357]",
+            "kind": "function",
+            "name": "releaseClipRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:728d9ddfd16c77ac41f2a1f79bd538bf13ec78abe96e56377dd6872b4823d67e",
+            "line": 460,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",18533]",
+            "kind": "function",
+            "name": "setClipRegionContoursGuard",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2db36cf94944ba250d6030f9cd83bcd1a4242bd06bf396c480a95c900a4b4ba8",
+            "line": 466,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",18835]",
+            "kind": "function",
+            "name": "setClipRegionReleaseGuard",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ec9a42eb3da7ed1493896c136a3e19e6279c509bb55393798d928a800271a7c2",
+            "line": 472,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",19130]",
+            "kind": "function",
+            "name": "setClipRegionToContours",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d265e78bf74ba94475984b1fd59242c33303c8f3f598e58f7dda4c931c2c468e",
+            "line": 488,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",19784]",
+            "kind": "function",
+            "name": "setClipRegionToRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:b5c6fc8440f6b20e648ff633febc45317d9240e969f3015991e88dadf657630c",
+            "line": 496,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",20053]",
+            "kind": "function",
+            "name": "setClipRegionUseGuard",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8e0a321ec4fd98a2f4fdbee73f32136956bfc257e1ddeeb0c386b10c10c7e581",
+            "line": 505,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",20620]",
+            "kind": "function",
+            "name": "transformClipRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3aaaa34361e286ff99c6fb9b856ff645b863534328745c75d619fc14f48a1570",
+            "line": 571,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",23088]",
+            "kind": "function",
+            "name": "unionClipRegions",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8a1c9182df54f40f39084f0db33cb08016319b8d662aee5bf3068d65c63bcd56",
+            "line": 607,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",24407]",
+            "kind": "function",
+            "name": "noContours",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:d4cebc5292039437d3e83b3740e5db5b95522b3b2da272a30a3f7b5c8dcd31fe",
+            "line": 610,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",24464]",
+            "kind": "variable",
+            "name": "NORMALIZE_EPSILON",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:efa6e983c59f92334dcb55af66bb7303a8725ad2f2abe447256ce375b8645a27",
+            "line": 614,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",24563]",
+            "kind": "variable",
+            "name": "clipRegionPool",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 5,
+            "fingerprint": "sha256:f452da19195813afda47a2d0d2ff174c960a1fb129b397420632733ca2b339ab",
+            "line": 616,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",24603]",
+            "kind": "variable",
+            "name": "_contoursGuard",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 5,
+            "fingerprint": "sha256:94dd9a190e86c0b2b43823b57e4848eb547878caf57bb7c21873c62528f5bd22",
+            "line": 617,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",24662]",
+            "kind": "variable",
+            "name": "_releaseGuard",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 3
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 5,
+            "fingerprint": "sha256:5cd550ad62b01ecb58c511dc117ce1e4cc5ab2592e5e5ee96b23aad1d39529e4",
+            "line": 618,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",24719]",
+            "kind": "variable",
+            "name": "_useGuard",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 4
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:087ce9588d996c38e62fb8217be44889513ed6d0c7924e9e42e30569caa0cb8c",
+            "line": 620,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",24774]",
+            "kind": "function",
+            "name": "makeEmptyClipRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:2666dccd3c3dd260f67c28cb9588ca24d8ee1f72937014b3f7bfd4cbff1f12af",
+            "line": 629,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",25003]",
+            "kind": "function",
+            "name": "guardClipRegionUse",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:1f1647a6a85e69780527aac520c06f669e3859acc324fd178c8f893b4d287282",
+            "line": 635,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",25336]",
+            "kind": "function",
+            "name": "pointInContours",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0b188e1d6a179711a16fdf24b22ae126592420f36514092b3010edb00bf71fe2",
+            "line": 674,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",26376]",
+            "kind": "function",
+            "name": "appendCircleToPath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:46e77799d7b3a161382bea9ecc6291264eaede0e179967b0ae80e94288ceef23",
+            "line": 683,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",26834]",
+            "kind": "function",
+            "name": "appendEllipseToPath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:3226ef5e75df3e6f78192f44f626efb30b3944d737740d10f21e0844ceceacde",
+            "line": 697,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",27445]",
+            "kind": "function",
+            "name": "appendRoundedRectToPath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:099d3c94bd3a0a6ff5fdc987bb39ac4029d3f329af5667dfd358a9076ab9037e",
+            "line": 716,
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts",
+            "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",28187]",
+            "kind": "function",
+            "name": "setRectangleToContoursBounds",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts"
+          },
+          "specifier": "@flighthq/entity/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/entity",
+            "source": "packages/entity/src/entity.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts"
+          },
+          "importedNames": [
+            "matrixTransformRectangle"
+          ],
+          "specifier": "@flighthq/geometry/contract",
+          "target": {
+            "name": "Matrix",
+            "packageName": "@flighthq/geometry",
+            "source": "packages/geometry/src/matrix.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts"
+          },
+          "importedNames": [
+            "cloneRectangle",
+            "containsRectanglePointXY",
+            "copyRectangle",
+            "createRectangle",
+            "enclosesRectangle",
+            "intersectsRectangle",
+            "isEmptyRectangle",
+            "mergeRectangle"
+          ],
+          "specifier": "@flighthq/geometry/contract",
+          "target": {
+            "name": "Rectangle",
+            "packageName": "@flighthq/geometry",
+            "source": "packages/geometry/src/rectangle.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts"
+          },
+          "specifier": "@flighthq/math/contract",
+          "target": {
+            "name": "Constants",
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/constants.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts"
+          },
+          "importedNames": [
+            "flattenPath"
+          ],
+          "specifier": "@flighthq/path/contract",
+          "target": {
+            "name": "FlattenPath",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/flattenPath.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts"
+          },
+          "importedNames": [
+            "appendPathCubicCurveTo",
+            "appendPathLineTo",
+            "appendPathMoveTo",
+            "createPath"
+          ],
+          "specifier": "@flighthq/path/contract",
+          "target": {
+            "name": "Path",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/path.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts"
+          },
+          "importedNames": [
+            "ClipRegion",
+            "ClipRegionContoursExplanation",
+            "ClipRegionContoursGuard",
+            "ClipRegionExplanation",
+            "ClipRegionReleaseGuard",
+            "ClipRegionUseGuard",
+            "readClipRegionContours"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ClipRegion.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts"
+          },
+          "importedNames": [
+            "Entity",
+            "EntityConstruction",
+            "EntityWithoutRuntime"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts"
+          },
+          "importedNames": [
+            "Matrix",
+            "MatrixLike"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Matrix",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Matrix.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts"
+          },
+          "importedNames": [
+            "Path"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Path",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Path.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts"
+          },
+          "importedNames": [
+            "Rectangle",
+            "RectangleLike"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Rectangle",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Rectangle.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ClipRegion",
+            "packageName": "@flighthq/clip",
+            "source": "packages/clip/src/clipRegion.ts"
+          },
+          "importedNames": [
+            "PathWinding"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ShapeCommand",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ShapeCommand.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "ClipRegion",
+        "packageName": "@flighthq/clip",
+        "source": "packages/clip/src/clipRegion.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:d4cebc5292039437d3e83b3740e5db5b95522b3b2da272a30a3f7b5c8dcd31fe",
+              "line": 610,
+              "packageName": "@flighthq/clip",
+              "source": "packages/clip/src/clipRegion.ts",
+              "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",24464]",
+              "kind": "variable",
+              "name": "NORMALIZE_EPSILON",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            35
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:efa6e983c59f92334dcb55af66bb7303a8725ad2f2abe447256ce375b8645a27",
+              "line": 614,
+              "packageName": "@flighthq/clip",
+              "source": "packages/clip/src/clipRegion.ts",
+              "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",24563]",
+              "kind": "variable",
+              "name": "clipRegionPool",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            36
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 5,
+              "fingerprint": "sha256:f452da19195813afda47a2d0d2ff174c960a1fb129b397420632733ca2b339ab",
+              "line": 616,
+              "packageName": "@flighthq/clip",
+              "source": "packages/clip/src/clipRegion.ts",
+              "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",24603]",
+              "kind": "variable",
+              "name": "_contoursGuard",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            37
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 5,
+              "fingerprint": "sha256:94dd9a190e86c0b2b43823b57e4848eb547878caf57bb7c21873c62528f5bd22",
+              "line": 617,
+              "packageName": "@flighthq/clip",
+              "source": "packages/clip/src/clipRegion.ts",
+              "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",24662]",
+              "kind": "variable",
+              "name": "_releaseGuard",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            38
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 5,
+              "fingerprint": "sha256:5cd550ad62b01ecb58c511dc117ce1e4cc5ab2592e5e5ee96b23aad1d39529e4",
+              "line": 618,
+              "packageName": "@flighthq/clip",
+              "source": "packages/clip/src/clipRegion.ts",
+              "id": "binding:[\"@flighthq/clip\",\"packages/clip/src/clipRegion.ts\",24719]",
+              "kind": "variable",
+              "name": "_useGuard",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            39
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:98144e04f1696fd2334d743f0e28f307d262ec10ac8a5d44c07ecd7a558d5a8a",
+            "line": 28,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ClipRegion.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/ClipRegion.ts\",1359]",
+            "kind": "function",
+            "name": "readClipRegionContours",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
       "dependencies": [
         {
           "evaluation": "type-only",

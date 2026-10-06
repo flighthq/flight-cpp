@@ -21,12 +21,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/wgpu_skinning_adapter.hpp>
 
+#include <flight/types/wgpu_render_state.hpp>
+
 #include "wgpu_mesh_fragment_tail.hpp"
 #include "wgpu_mesh_pipeline.hpp"
 #include "wgpu_scene3_druntime.hpp"
 
 namespace flight::scene3d_wgpu {
 
+using flight::types::WgpuRenderState;
 using flight::types::WgpuSkinningAdapter;
 
 inline flight::String build_wgpu_toon_define_key(flight::Ref<WgpuToonDefineKey> key) {

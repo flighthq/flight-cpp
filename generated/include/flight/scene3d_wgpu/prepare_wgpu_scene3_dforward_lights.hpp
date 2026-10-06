@@ -9,6 +9,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
 namespace flight::types { struct Aabb; }
 namespace flight::types { struct AmbientLight; }
 namespace flight::types { struct BoundingSphere; }
@@ -32,6 +34,8 @@ namespace flight::types { struct WgpuScene3DForwardLightList; }
 namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuRenderState;
 struct PreparedBlock;
 struct Prepared;
 } // namespace flight::scene3d_wgpu

@@ -14,6 +14,8 @@ namespace flight::types { struct WgpuRenderState; }
 
 namespace flight::scene3d_wgpu {
 
+using flight::types::WgpuRenderState;
+
 inline flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, double> scene_times = flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, double>();
 
 inline double get_wgpu_scene3_dtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderState>>>> state) {

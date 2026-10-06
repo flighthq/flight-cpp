@@ -24,6 +24,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d {
 
+using flight::node::get_node_runtime;
+
 using flight::types::ClipRegion;
 using flight::types::Node;
 using flight::types::Node2D;

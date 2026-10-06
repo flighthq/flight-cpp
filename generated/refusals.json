@@ -347,26 +347,17 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 205,
-      "module": "packages/clip/src/clipRegion.ts",
-      "package": "@flighthq/clip",
-      "reason": "cpp emission failed for @flighthq/clip/packages/clip/src/clipRegion.ts: member length on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
-      "stage": "emission"
-    },
-    {
       "code": "dependency-refused",
       "module": "packages/clip/src/contract.ts",
       "package": "@flighthq/clip",
-      "reason": "dependency ./clipRegion was refused for @flighthq/clip/packages/clip/src/clipRegion.ts",
+      "reason": "dependency ./enableClipGuards was refused for @flighthq/clip/packages/clip/src/enableClipGuards.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/clip/src/enableClipGuards.ts",
       "package": "@flighthq/clip",
-      "reason": "dependency ./clipRegion was refused for @flighthq/clip/packages/clip/src/clipRegion.ts",
+      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
       "stage": "dependency"
     },
     {

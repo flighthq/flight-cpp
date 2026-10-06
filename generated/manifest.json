@@ -1312,12 +1312,6 @@
     },
     {
       "files": [
-        "flight/clip/clip_region.hpp"
-      ],
-      "id": "clip-unqualified-entity-names"
-    },
-    {
-      "files": [
         "flight/collision/sweep_collision_shape2_d.hpp",
         "flight/collision/triangle_mesh3_d.hpp"
       ],
@@ -1910,19 +1904,42 @@
     {
       "files": [
         "flight/scene3d_wgpu/_internal_wgpu_scene3_dtest_helper.hpp",
+        "flight/scene3d_wgpu/blinn_phong_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/custom_shader_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/depth_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/emissive_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/enable_wgpu_scene3_dcustom_shader_guards.hpp",
+        "flight/scene3d_wgpu/lambert_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/matcap_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/normal_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/phong_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/prepare_wgpu_scene3_dforward_lights.hpp",
+        "flight/scene3d_wgpu/register_wgpu_standard_pbr_material.hpp",
         "flight/scene3d_wgpu/render_wgpu_scene3_d.hpp",
+        "flight/scene3d_wgpu/shaded_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/specular_glossiness_pbr_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/standard_pbr_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/toon_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/unlit_wgpu_mesh_material_renderer.hpp",
+        "flight/scene3d_wgpu/vertex_color_wgpu_mesh_material_renderer.hpp",
         "flight/scene3d_wgpu/wgpu_classic_prelude.hpp",
         "flight/scene3d_wgpu/wgpu_debug_prelude.hpp",
+        "flight/scene3d_wgpu/wgpu_environment_cube.hpp",
+        "flight/scene3d_wgpu/wgpu_environment_ibl_bake.hpp",
+        "flight/scene3d_wgpu/wgpu_environment_skybox.hpp",
         "flight/scene3d_wgpu/wgpu_matcap_prelude.hpp",
         "flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp",
         "flight/scene3d_wgpu/wgpu_mesh_upload.hpp",
         "flight/scene3d_wgpu/wgpu_particle_emitter3_d.hpp",
         "flight/scene3d_wgpu/wgpu_pbr_prelude.hpp",
         "flight/scene3d_wgpu/wgpu_scene3_druntime.hpp",
+        "flight/scene3d_wgpu/wgpu_scene3_dtime.hpp",
         "flight/scene3d_wgpu/wgpu_shaded_prelude.hpp",
+        "flight/scene3d_wgpu/wgpu_shadow_map.hpp",
         "flight/scene3d_wgpu/wgpu_skin_palette.hpp",
         "flight/scene3d_wgpu/wgpu_toon_prelude.hpp",
         "flight/scene3d_wgpu/wgpu_unlit_prelude.hpp",
+        "flight/scene3d_wgpu/wgpu_wireframe_upload.hpp",
         "flight/scene3d_wgpu/wireframe_wgpu_mesh_material_renderer.hpp"
       ],
       "id": "scene3d-wgpu-unqualified-types-names"
@@ -1954,6 +1971,26 @@
         "flight/scene2d_wgpu/wgpu_velocity.hpp"
       ],
       "id": "scene2d-wgpu-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/interaction/interaction_manager.hpp",
+        "flight/interaction/node_interaction_state.hpp"
+      ],
+      "id": "interaction-node-state-accessor-declaration"
+    },
+    {
+      "files": [
+        "flight/physics2d/step.hpp",
+        "flight/physics2d/world_queries.hpp"
+      ],
+      "id": "physics2d-collision-sweep-include-order"
+    },
+    {
+      "files": [
+        "flight/scene2d/display_object.hpp"
+      ],
+      "id": "scene2d-runtime-accessor-declaration"
     },
     {
       "files": [
@@ -1993,6 +2030,18 @@
         "flight/render_wgpu/wgpu_texture_resolver.hpp"
       ],
       "id": "render-wgpu-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/render_wgpu/wgpu_device_loss.hpp",
+        "flight/render_wgpu/wgpu_render_pass.hpp",
+        "flight/render_wgpu/wgpu_render_state.hpp",
+        "flight/render_wgpu/wgpu_render_texture.hpp",
+        "flight/render_wgpu/wgpu_shader.hpp",
+        "flight/render_wgpu/wgpu_shader_binding.hpp",
+        "flight/render_wgpu/wgpu_texture_resolver.hpp"
+      ],
+      "id": "render-wgpu-runtime-accessor-declaration"
     },
     {
       "files": [
@@ -2684,12 +2733,6 @@
       "files": [
         "flight/clip/clip_region.hpp"
       ],
-      "id": "clip-unqualified-geometry-names"
-    },
-    {
-      "files": [
-        "flight/clip/clip_region.hpp"
-      ],
       "id": "clip-unqualified-path-names"
     },
     {
@@ -2742,8 +2785,7 @@
     },
     {
       "files": [
-        "flight/physics2d/step.hpp",
-        "flight/physics2d/world_queries.hpp"
+        "flight/physics2d/step.hpp"
       ],
       "id": "physics2d-unqualified-collision-names"
     },
@@ -2918,6 +2960,13 @@
         "flight/effects_canvas/canvas_blend_effect.hpp"
       ],
       "id": "effects-canvas-unqualified-scene2d-canvas-names"
+    },
+    {
+      "files": [
+        "flight/scene2d_canvas/canvas_render_state.hpp",
+        "flight/scene2d_canvas/canvas_render_surface.hpp"
+      ],
+      "id": "scene2d-canvas-unqualified-scene2d-canvas-names"
     },
     {
       "files": [
@@ -3320,6 +3369,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "afa77d9a7641776ab4a9218f2d7e8542db5fd96b5d5358d50c76bfb25183a826",
+      "id": "scene3d-formats-gltf-camera-diagnostic-details",
+      "module": "packages/scene3d-formats/src/gltfCameras.ts",
+      "package": "@flighthq/scene3d-formats"
+    },
+    {
+      "dependency": "flight",
       "digest": "f5d3b89bd3d5a4ca98ea4c740d4673f6a12191fddb872438fc6a5924b28277b0",
       "id": "animation-track-explicit-initialization-defaults",
       "module": "packages/animation/src/animationTrack.ts",
@@ -3394,6 +3450,13 @@
       "id": "statechart-single-transition-binding",
       "module": "packages/statechart/src/statechart.ts",
       "package": "@flighthq/statechart"
+    },
+    {
+      "dependency": "flight",
+      "digest": "330d92ca6686d718f434cb1ec035cc047bafd3087372ff52a27aac7310faec19",
+      "id": "clip-explicit-contours-storage",
+      "module": "packages/types/src/ClipRegion.ts plus packages/clip/src/clipRegion.ts",
+      "package": "@flighthq/clip"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -3656,9 +3719,9 @@
     {
       "cppIncludePrefix": "flight/clip",
       "cppNamespace": "flight::clip",
-      "emittedModules": 3,
+      "emittedModules": 4,
       "package": "@flighthq/clip",
-      "refusedModules": 1,
+      "refusedModules": 0,
       "sourceModules": 4
     },
     {
@@ -4746,8 +4809,8 @@
   },
   "summary": {
     "packages": 150,
-    "emittedModules": 2174,
-    "refusedModules": 535,
+    "emittedModules": 2175,
+    "refusedModules": 534,
     "sourceModules": 2709
   }
 }

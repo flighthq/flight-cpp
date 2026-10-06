@@ -25,11 +25,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+#include <flight/types/particle_emitter_config.hpp>
+
 #include <flight/types/particle_emitter3_d.hpp>
 
 namespace flight::scene3d_wgpu {
 
 using flight::types::ParticleEmitter3D;
+using flight::types::ParticleBlendMode;
+using flight::types::WgpuRenderState;
 
 struct WgpuParticle3DInstanceBuffer;
 struct WgpuParticle3DResources;

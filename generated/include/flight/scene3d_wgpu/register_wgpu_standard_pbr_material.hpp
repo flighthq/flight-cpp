@@ -18,6 +18,8 @@ namespace flight::types { struct WgpuRenderState; }
 
 namespace flight::scene3d_wgpu {
 
+using flight::types::WgpuRenderState;
+
 inline void register_wgpu_standard_pbr_material(flight::Ref<flight::types::WgpuRenderState> state) {
   flight::render_wgpu::register_wgpu_bitmap_texture_resolver(state);
   flight::render_wgpu::register_wgpu_image_texture_resolver(state);

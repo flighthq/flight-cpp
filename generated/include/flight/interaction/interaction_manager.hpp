@@ -91,6 +91,8 @@ using flight::signals::disconnect_signal;
 
 using flight::signals::create_signal;
 
+std::optional<flight::Ref<flight::types::NodeInteractionState>> get_node_interaction_state(flight::Ref<flight::types::NodeAny> source);
+
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 

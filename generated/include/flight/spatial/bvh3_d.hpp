@@ -14,6 +14,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spatial_indexing.hpp>
+
 namespace flight::types { struct Entity; }
 namespace flight::types { struct SpatialAabb3D; }
 namespace flight::types { struct SpatialIndexBackend3D; }

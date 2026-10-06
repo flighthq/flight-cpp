@@ -25,6 +25,7 @@ namespace flight::types { struct WgpuSkinningAdapter; }
 
 namespace flight::scene3d_wgpu {
 
+using flight::types::WgpuRenderState;
 using flight::types::WgpuSkinningAdapter;
 
 inline flight::String build_wgpu_pbr_define_key(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuPbrDefineKey>>>> key) {
