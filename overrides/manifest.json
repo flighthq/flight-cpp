@@ -978,6 +978,48 @@
       "unblocks": "wgpu_effect_gradient_ramp.hpp compiles independently.",
       "expires": "when the SDL-WGPU profile exposes texture creation and queue upload operations.",
       "authoredOn": "2026-10-06"
+    },
+    {
+      "id": "render-wgpu-screen-target-optional-and-profile-boundary",
+      "path": "flight/render_wgpu/wgpu_screen_render_target.hpp",
+      "package": "@flighthq/render-wgpu",
+      "status": "complete",
+      "derivedFrom": "2820aabd5da51ccef1344fe08b1d49955c2eecb0119478a3e55f451c06f1a1c6",
+      "reason": "The emitter assigns nullptr to optional<WgpuTextureView>, leaves screen-target imports unqualified, uses value access on the reference-backed presentation surface, and retains texture operations absent from the SDL-WGPU handle ABI.",
+      "change": "Uses std::nullopt for the released presentation view, qualifies the public types, corrects presentation-surface dereferences, and makes unavailable attachment and texture operations fail loudly.",
+      "equivalence": "std::nullopt preserves the source null assignment and the surface reads observe the same referenced object. Unsupported host calls return no fabricated texture or target and mutate no target state before reporting the missing profile operation.",
+      "whyNotAPatchOrRepair": "Only name binding is insertion-only. The optional assignment, reference access, refused initializer, and missing host methods require replacing expressions or bodies; a source rewrite cannot add the native WebGPU ABI.",
+      "unblocks": "wgpu_screen_render_target.hpp compiles independently.",
+      "expires": "when optional null assignments and Ref member access lower correctly and the SDL-WGPU profile supplies screen attachment and texture operations.",
+      "authoredOn": "2026-10-06"
+    },
+    {
+      "id": "render-wgpu-screen-capture-refused-helpers",
+      "path": "flight/render_wgpu/wgpu_screen_capture.hpp",
+      "package": "@flighthq/render-wgpu",
+      "status": "complete",
+      "derivedFrom": "fa449ef97275c33d6fb5984a2c26f13a69e590e821ca4dddf751a5a2d86fad18",
+      "reason": "The compiler refuses both helpers retained by enable_wgpu_screen_render_target_capture, leaving its function assignments undeclared.",
+      "change": "Supplies the exact helper signatures as fail-loud profile boundaries for capture texture acquisition and command encoding.",
+      "equivalence": "The current native profile cannot create the required texture or encode the copy. Both helpers therefore report the unavailable operation without fabricating handles, changing optional storage, or claiming a successful capture.",
+      "whyNotAPatchOrRepair": "A declaration repair cannot supply behavioral function bodies, and the refusals depend on both optional projection and native WebGPU operations absent from the runtime ABI.",
+      "unblocks": "wgpu_screen_capture.hpp compiles independently and enable_wgpu_screen_render_target_capture retains callable assignments.",
+      "expires": "when capture optional projection emits and the SDL-WGPU profile supplies capture texture and command-encoder operations.",
+      "authoredOn": "2026-10-06"
+    },
+    {
+      "id": "render-wgpu-texture-upload-profile-boundary",
+      "path": "flight/render_wgpu/wgpu_texture_upload.hpp",
+      "package": "@flighthq/render-wgpu",
+      "status": "complete",
+      "derivedFrom": "e71fec83bc9f6d4653ac69a9a5ac81e6fd1b2ff7ade1b4971f957cc2a27c877a",
+      "reason": "The emitter accesses queue on the SDL-WGPU WgpuDevice identity handle, but this profile exposes no queue member or texture-upload operations.",
+      "change": "Replaces both invalid queue-member bodies with explicit profile errors while preserving their public signatures and the image-resource forwarding helper.",
+      "equivalence": "No upload can complete through the current ABI. The override reports that boundary without returning success, fabricating queue identity, or mutating the destination texture.",
+      "whyNotAPatchOrRepair": "The TypeScript correctly uses GPUDevice.queue. A source patch cannot add the missing native host ABI, and declaration insertion cannot replace invalid member-call bodies.",
+      "unblocks": "wgpu_texture_upload.hpp compiles independently.",
+      "expires": "when the SDL-WGPU profile exposes queue texture upload and external-image copy operations.",
+      "authoredOn": "2026-10-06"
     }
   ]
 }

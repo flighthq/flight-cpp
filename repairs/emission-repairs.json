@@ -5926,6 +5926,22 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "render-wgpu-runtime-accessor-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render_wgpu/",
+      "namespace": "flight::render_wgpu",
+      "symbols": [
+        {
+          "include": "flight/render_wgpu/wgpu_render_state.hpp",
+          "name": "get_wgpu_render_state_runtime"
+        }
+      ],
+      "diagnostic": "'get_wgpu_render_state_runtime' was not declared in this scope",
+      "defect": "The emitter retains calls to the render-wgpu runtime accessor without including the same-package header that declares it. The using-declaration is redundant inside the owning namespace; include hoisting is the operative repair.",
+      "expectedWhen": "always",
+      "expires": "when the emitter includes the module that owns a retained same-package function call; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "physics3d-abi-unqualified-types-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/physics3d_abi/",
