@@ -861,7 +861,7 @@ function insertUsingDeclarations(contents, repair) {
     .filter((declaration) => !contents.includes(declaration));
   if (declarations.length === 0) return undefined;
   const headers = [...new Set(needed.map((entry) => entry.include))]
-    .filter((header) => !contents.includes(`#include <${header}>`))
+    .filter((header) => !includePrecedesFirstPackageNamespace(contents, header))
     .sort();
   let withIncludes = contents;
   for (const header of headers) {
@@ -886,7 +886,7 @@ function insertUsingDeclaration(contents, repair) {
   // bare using-declaration fails with "'flight::types' has not been declared". A repair that introduces
   // a name has to bring its definition with it.
   const withInclude =
-    repair.include === undefined || contents.includes(`#include <${repair.include}>`)
+    repair.include === undefined || includePrecedesFirstPackageNamespace(contents, repair.include)
       ? contents
       : hoistInclude(contents, repair.include);
   if (withInclude === undefined) return undefined;
@@ -895,6 +895,17 @@ function insertUsingDeclaration(contents, repair) {
   if (anchor === null) return undefined;
   const at = anchor.index + anchor[0].length;
   return `${withInclude.slice(0, at)}\n${repair.declaration}\n${withInclude.slice(at)}`;
+}
+
+// A generated header can already include the defining header after its forward-declaration namespace.
+// Presence alone is insufficient for a using-declaration inserted in that earlier namespace: C++ must
+// have seen the declaration first. In that shape, hoist a second (pragma-once guarded) include into the
+// prologue rather than treating the later include as satisfying the repair.
+function includePrecedesFirstPackageNamespace(contents, header) {
+  const includeAt = contents.indexOf(`#include <${header}>`);
+  if (includeAt === -1) return false;
+  const namespace = /^namespace flight::[a-z0-9_]+ \{\n/mu.exec(contents);
+  return namespace === null || includeAt < namespace.index;
 }
 
 // At file scope, on the emitter's own boundary between the include prologue and the declarations. It
