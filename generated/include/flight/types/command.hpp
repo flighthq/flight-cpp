@@ -78,45 +78,30 @@ struct CommandPropertyEntry : public flight::ReferenceEnabled {
   flight::types::NodeAny target;
 };
 
-struct CompositeCommand : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String label;
+struct CompositeCommand : public Command {
   flight::Array<flight::Ref<Command>> children;
 };
 
-struct AddNodeChildCommand : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String label;
+struct AddNodeChildCommand : public Command {
   flight::types::NodeAny child;
   double index;
   flight::types::NodeAny parent;
 };
 
-struct RemoveNodeChildCommand : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String label;
+struct RemoveNodeChildCommand : public Command {
   flight::types::NodeAny child;
   double index;
   flight::types::NodeAny parent;
 };
 
-struct ReorderNodeChildCommand : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String label;
+struct ReorderNodeChildCommand : public Command {
   flight::types::NodeAny child;
   double from_index;
   flight::types::NodeAny parent;
   double to_index;
 };
 
-struct SetNodePropertyCommand : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String label;
+struct SetNodePropertyCommand : public Command {
   flight::Array<flight::Ref<CommandPropertyEntry>> entries;
   double merge_window;
   double time;

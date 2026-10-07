@@ -982,14 +982,15 @@
       "id": "app-render-view-unqualified-types-and-member-access",
       "path": "flight/app/app_render_view.hpp",
       "package": "@flighthq/app",
-      "status": "complete",
+      "status": "incomplete",
       "derivedFrom": "b74f2d8aad1af9d54b54097c7d6ee2f1c59d31b4b87865a217c0dddb37a5ac38",
-      "reason": "The emitter leaves RenderTargetDimensions, AppRenderView, and AppRenderViewResize unqualified, uses . instead of -> on Ref members, and static_casts from optional without unwrapping.",
+      "reason": "The emitter leaves RenderTargetDimensions, AppRenderView, and AppRenderViewResize unqualified, uses . instead of -> on Ref members, and flattens the source AppRenderViewRuntime assertion to an unrelated EntityRuntime owner that cannot be cast safely.",
       "expires": "when the emitter qualifies types and handles Ref/optional member access correctly.",
-      "change": "Added includes and using declarations for RenderTargetDimensions, AppRenderView, AppRenderViewResize. Fixed Ref member access (. to ->), optional unwrapping, and provided synchronize_app_render_view stub.",
-      "equivalence": "Type qualification resolves to the same types. Member access correction reaches the same fields. The stub matches the expected signature.",
-      "whyNotAPatchOrRepair": "The fixes include Ref member access corrections and function stubs that a repair cannot express.",
-      "unblocks": "app_render_view.hpp.",
+      "change": "Adds the required includes and using declarations, corrects Ref member access, retains the public signatures, and fails loudly when an AppRenderView runtime operation reaches the unavailable checked owner boundary.",
+      "equivalence": "Type qualification and member-access corrections resolve to the source-declared values. Runtime-dependent operations do not fabricate an AppRenderViewRuntime from an unrelated EntityRuntime object; they fail before reading or mutating invalid storage.",
+      "whyNotAPatchOrRepair": "The portable TypeScript assertion is valid through interface extension, but the flattened C++ owners have no heritage or checked recovery path. A token repair cannot create that runtime authority.",
+      "unblocks": "app_render_view.hpp and its app package aggregators compile without an invalid native pointer cast.",
+      "remaining": "AppRenderView attach, detach, and synchronization require a checked projection from the generated EntityRuntime carrier to AppRenderViewRuntime. They fail loudly until that authority exists.",
       "authoredOn": "2026-10-06"
     },
     {
@@ -1918,6 +1919,20 @@
       "whyNotAPatchOrRepair": "The defect is an implementation include cycle plus omitted state, not a local misspelling. Retaining the two emitted operations in a narrow override prevents unrelated canvas implementation modules from becoming prerequisites.",
       "unblocks": "canvas_render_surface.hpp and its combined-header consumers compile independently even though the canvas package remains non-applicable in the current host profile.",
       "expires": "when module imports distinguish type-only dependencies from implementation dependencies and the weak-map binding emits.",
+      "authoredOn": "2026-10-07"
+    },
+    {
+      "id": "render-wgpu-render-pass-profile-boundary",
+      "path": "flight/render_wgpu/wgpu_render_pass.hpp",
+      "package": "@flighthq/render-wgpu",
+      "status": "complete",
+      "derivedFrom": "5c37958debb1d4f92cba46f3bc6af69fed173f682a8b4f1c89bc0683cb409f2a",
+      "reason": "The emitted render-pass module retains encoder and pass-recording operations that the SDL WGPU profile represents only as identity-bearing opaque handles, and its generated implementation also crosses incomplete render-state dependencies before those APIs are available.",
+      "change": "Preserves active-pass and viewport queries plus the CPU-side transform copy, while every operation that begins, ends, or suspends native render-pass recording fails loudly at the unsupported profile boundary.",
+      "equivalence": "Queries observe the same render-state runtime and transform updates retain a copied Matrix owner. No command encoder, pass handle, attachment, or successful recording result is fabricated when the native profile cannot execute the source operation.",
+      "whyNotAPatchOrRepair": "The TypeScript is valid for a WebGPU implementation, but the selected native profile has no encoder ABI. Token repairs cannot implement or safely simulate the missing host operations.",
+      "unblocks": "wgpu_render_pass.hpp and the WGPU effect/render-state consumers compile through an explicit profile boundary.",
+      "expires": "when the SDL WGPU profile exposes the encoder and render-pass operation ABI used by this module.",
       "authoredOn": "2026-10-07"
     }
   ]

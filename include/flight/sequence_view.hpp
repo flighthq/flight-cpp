@@ -12,9 +12,25 @@
 #include <utility>
 
 #include <flight/array.hpp>
+#include <flight/structural_ref.hpp>
 #include <flight/typed_array.hpp>
 
 namespace flight {
+
+namespace detail {
+
+template <typename Target, typename Source>
+[[nodiscard]] Target sequence_view_project(const Source& source) {
+  using SourceType = std::remove_cvref_t<Source>;
+  if constexpr (requires { typename Target::schema_type; } && is_shared_ptr<SourceType>) {
+    return structural_ref_cast<Target>(
+        StructuralRef<RowWritable<RowOf<SourceType>>>(source));
+  } else {
+    return Target(source);
+  }
+}
+
+}  // namespace detail
 
 template <typename Value>
 class SequenceView {
@@ -101,7 +117,9 @@ class SequenceView {
   SequenceView(Array<SourceValue> source)
       : identity_(source.identity()),
         size_([source] { return source.size(); }),
-        get_([source](size_type index) { return Value(source[index]); }) {}
+        get_([source](size_type index) {
+          return detail::sequence_view_project<Value>(source[index]);
+        }) {}
 
   template <typename SourceValue>
     requires std::constructible_from<Value, const SourceValue&>

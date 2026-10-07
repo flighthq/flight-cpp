@@ -53,8 +53,9 @@ struct AppRenderViewRuntime : public flight::ReferenceEnabled {
 
 // Override: AppRenderView is a class template; use AppRenderView<> with default template arguments
 inline flight::Ref<AppRenderViewRuntime<flight::Ref<RenderState>, flight::Ref<RenderTargetDimensions>>> get_app_render_view_runtime(flight::Ref<AppRenderView<>> view) {
-  // Override: unwrap optional and use static_pointer_cast for EntityRuntime downcast
-  return std::static_pointer_cast<AppRenderViewRuntime<flight::Ref<RenderState>, flight::Ref<RenderTargetDimensions>>>(view->entity_runtime_key.value());
+  (void)view;
+  throw flight::Error(flight::String(
+      "app: the generated EntityRuntime carrier cannot recover AppRenderViewRuntime"));
 }
 
 inline void detach_app_render_view(flight::Ref<AppRenderView<>> view) {

@@ -38,26 +38,8 @@ struct CanvasRenderTarget : public flight::ReferenceEnabled {
   CanvasRenderTargetSurfaceOwnership surface_ownership;
 };
 
-struct CanvasScreenRenderTarget : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  double height;
-  double width;
-  flight::host_sdl::GlCanvas canvas;
-  double color_attachments;
-  flight::CanvasRenderingContext2D context;
-  flight::Ref<flight::types::CanvasRenderSurface> surface;
-  flight::String surface_ownership;
-};
+struct CanvasScreenRenderTarget : public CanvasRenderTarget {};
 
-struct CanvasTextureRenderTarget : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  double height;
-  double width;
-  flight::host_sdl::GlCanvas canvas;
-  double color_attachments;
-  flight::CanvasRenderingContext2D context;
-  flight::Ref<flight::types::CanvasRenderSurface> surface;
-  flight::String surface_ownership;
-};
+struct CanvasTextureRenderTarget : public CanvasRenderTarget {};
 
 } // namespace flight::types

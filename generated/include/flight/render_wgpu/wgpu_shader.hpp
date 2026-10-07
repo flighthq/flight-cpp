@@ -34,7 +34,7 @@ inline const flight::String mask_fragment_src = flight::String("\nstruct Uniform
 using StencilMode = flight::String;
 
 inline flight::host_sdl::WgpuPipelineLayout create_wgpu_pipeline_layout(flight::host_sdl::WgpuDevice device, flight::host_sdl::WgpuBindGroupLayout uniform_bind_group_layout, flight::host_sdl::WgpuBindGroupLayout texture_bind_group_layout) {
-  return device.create_pipeline_layout({.bind_group_layouts = flight::Array{uniform_bind_group_layout, texture_bind_group_layout}});
+  throw flight::Error(flight::String("render-wgpu: pipeline layout creation is unavailable in this profile"));
 }
 
 inline flight::host_sdl::WgpuStencilFaceState build_stencil_face_state(StencilMode stencil_mode) {
@@ -78,10 +78,7 @@ using type_da5eb69d1c0ee021 = flight::types::type_da5eb69d1c0ee021;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TYPE_DA5EB69D1C0EE021
 
 inline void initialize_wgpu_bind_group_layouts(flight::types::EntityConstruction<flight::Ref<flight::types::WgpuBindGroupLayouts>> out, flight::host_sdl::WgpuDevice device) {
-  auto uniform_bind_group_layout = device.create_bind_group_layout({.entries = flight::Array{flight::make_ref<binding_visibility_buffer_7c5cac3def5d8fe9>(binding_visibility_buffer_7c5cac3def5d8fe9{.binding = 0.0, .visibility = flight::bitwise_or(flight::host_sdl::wgpu_shader_stage_vertex, flight::host_sdl::wgpu_shader_stage_fragment), .buffer = flight::make_ref<type_has_dynamic_offset_min_binding_size_a55e7836cce8db82>(type_has_dynamic_offset_min_binding_size_a55e7836cce8db82{.type = flight::String("uniform"), .has_dynamic_offset = true, .min_binding_size = uniform_byte_size})})}});
-  auto texture_bind_group_layout = device.create_bind_group_layout({.entries = flight::Array{{.binding = 0.0, .visibility = flight::host_sdl::wgpu_shader_stage_fragment, .texture = flight::make_ref<sample_type_056ee483a28c4f4f>(sample_type_056ee483a28c4f4f{.sample_type = flight::String("float")})}, {.binding = 1.0, .visibility = flight::host_sdl::wgpu_shader_stage_fragment, .sampler = flight::make_ref<type_da5eb69d1c0ee021>(type_da5eb69d1c0ee021{.type = flight::String("filtering")})}}});
-  flight::row_set<flight::RowKey<"uniformBindGroupLayout">>(out, uniform_bind_group_layout);
-  flight::row_set<flight::RowKey<"textureBindGroupLayout">>(out, texture_bind_group_layout);
+  throw flight::Error(flight::String("render-wgpu: bind group layout creation is unavailable in this profile"));
 }
 
 inline flight::Ref<flight::types::WgpuBindGroupLayouts> create_wgpu_bind_group_layouts(flight::host_sdl::WgpuDevice device) {
@@ -142,7 +139,7 @@ inline double write_wgpu_quad_uniforms(flight::Ref<flight::types::WgpuRenderStat
   flight::Uint32Array uniform_data_u32 = object_pattern_value->uniform_data_u32;
   flight::Float32Array matrix_array = object_pattern_value->matrix_array;
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderPassViewport>>>> viewport = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderPassViewport>>>>>(flight::render_wgpu::get_wgpu_render_pass_viewport(state));
-  set_wgpu_matrix_from_transform(matrix_array, render_proxy->transform2_d, viewport);
+  set_wgpu_matrix_from_transform(matrix_array, render_proxy->transform2_d, flight::make_ref<width_height_6a2b928b7d011b27>(width_height_6a2b928b7d011b27{.width = flight::row_get<flight::RowKey<"width">>(viewport), .height = flight::row_get<flight::RowKey<"height">>(viewport)}));
   ([&]() { auto&& typed_array_10 = uniform_data; const auto typed_index_10 = (float_base + 0.0); const auto typed_value_10 = matrix_array.get_index(0.0); return typed_array_10.set_index(typed_index_10, typed_value_10); }());
   ([&]() { auto&& typed_array_11 = uniform_data; const auto typed_index_11 = (float_base + 1.0); const auto typed_value_11 = matrix_array.get_index(1.0); return typed_array_11.set_index(typed_index_11, typed_value_11); }());
   ([&]() { auto&& typed_array_12 = uniform_data; const auto typed_index_12 = (float_base + 2.0); const auto typed_value_12 = matrix_array.get_index(2.0); return typed_array_12.set_index(typed_index_12, typed_value_12); }());
@@ -194,7 +191,10 @@ inline flight::host_sdl::WgpuBlendState normal_blend = create_wgpu_blend_state(f
 inline flight::Record<flight::String, std::optional<flight::host_sdl::WgpuBlendState>> blend_modes = ([]() { flight::Record<flight::String, std::optional<flight::host_sdl::WgpuBlendState>> record_construction = {}; auto record_construction_key = flight::types::blend_mode->add; auto record_construction_value = std::optional<flight::host_sdl::WgpuBlendState>{create_wgpu_blend_state(flight::String("one"), flight::String("one"), std::nullopt)}; record_construction.set(record_construction_key, record_construction_value); auto record_construction_key_2 = flight::types::blend_mode->darken; auto record_construction_value_2 = std::optional<flight::host_sdl::WgpuBlendState>{create_wgpu_blend_state(flight::String("one"), flight::String("one"), flight::String("min"))}; record_construction.set(record_construction_key_2, record_construction_value_2); auto record_construction_key_3 = flight::types::blend_mode->lighten; auto record_construction_value_3 = std::optional<flight::host_sdl::WgpuBlendState>{create_wgpu_blend_state(flight::String("one"), flight::String("one"), flight::String("max"))}; record_construction.set(record_construction_key_3, record_construction_value_3); auto record_construction_key_4 = flight::types::blend_mode->multiply; auto record_construction_value_4 = std::optional<flight::host_sdl::WgpuBlendState>{create_wgpu_blend_state(flight::String("dst"), flight::String("one-minus-src-alpha"), std::nullopt)}; record_construction.set(record_construction_key_4, record_construction_value_4); auto record_construction_key_5 = flight::types::blend_mode->normal; auto record_construction_value_5 = std::optional<flight::host_sdl::WgpuBlendState>{normal_blend}; record_construction.set(record_construction_key_5, record_construction_value_5); auto record_construction_key_6 = flight::types::blend_mode->screen; auto record_construction_value_6 = std::optional<flight::host_sdl::WgpuBlendState>{create_wgpu_blend_state(flight::String("one"), flight::String("one-minus-src"), std::nullopt)}; record_construction.set(record_construction_key_6, record_construction_value_6); return record_construction; }());
 
 inline flight::host_sdl::WgpuBlendState get_wgpu_blend_state(std::optional<flight::String> blend_mode_2) {
-  return ([&]() -> flight::host_sdl::WgpuBlendState { auto nullish_coalesce_left = (blend_mode_2.has_value() ? blend_modes.get(std::optional<flight::String>{blend_mode_2.value()}.value()).value() : nullptr); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return normal_blend; }());
+  if (!blend_mode_2.has_value()) return normal_blend;
+  const auto selected = blend_modes.get(blend_mode_2.value());
+  if (selected.has_value() && selected.value().has_value()) return selected.value().value();
+  return normal_blend;
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_4D3C337401507620
@@ -244,26 +244,7 @@ struct topology_7c8278728b18051e : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TOPOLOGY_7C8278728B18051E
 
 inline flight::host_sdl::WgpuRenderPipeline get_wgpu_pipeline(flight::Ref<flight::types::WgpuRenderState> state, std::optional<flight::String> blend_mode_2, StencilMode stencil_mode) {
-  auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);
-  flight::String format = ([&]() -> flight::String { auto nullish_coalesce_left = runtime->current_color_format; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return state->format; }());
-  const flight::String key = flight::String("") + flight::to_string((blend_mode_2.has_value() ? blend_mode_2.value() : flight::String("null"))) + flight::String("-") + flight::to_string(stencil_mode) + flight::String("-") + flight::to_string(format) + flight::String("");
-  auto ctx = runtime->context;
-  std::optional<flight::host_sdl::WgpuRenderPipeline> cached = ctx->pipeline_cache.get(key);
-  if (cached.has_value()) {
-    return cached.value();
-  }
-  flight::host_sdl::WgpuBlendState blend = get_wgpu_blend_state(blend_mode_2);
-  const bool is_mask_write = (stencil_mode == flight::String("maskwrite"));
-  flight::host_sdl::WgpuStencilFaceState stencil_face = build_stencil_face_state(stencil_mode);
-  auto object_pattern_value = state;
-  flight::host_sdl::WgpuDevice device = object_pattern_value->device;
-  auto resources = flight::render_wgpu::get_wgpu_render_state_device_resources(state);
-  const flight::String shader_src = (is_mask_write ? mask_fragment_src : bitmap_shader_src);
-  auto module = device.create_shader_module({.code = shader_src});
-  flight::host_sdl::WgpuPipelineLayout layout = create_wgpu_pipeline_layout(device, resources->uniform_bind_group_layout, resources->texture_bind_group_layout);
-  auto pipeline = device.create_render_pipeline({.layout = layout, .vertex = flight::make_ref<module_entry_point_4d3c337401507620>(module_entry_point_4d3c337401507620{.module = module, .entry_point = flight::String("vs_main")}), .fragment = flight::make_ref<module_entry_point_targets_de50f6f3c9e838df>(module_entry_point_targets_de50f6f3c9e838df{.module = module, .entry_point = flight::String("fs_main"), .targets = flight::Array<flight::Ref<format_blend_write_mask_72cc2ab0fb1e2804>>{flight::make_ref<format_blend_write_mask_72cc2ab0fb1e2804>(format_blend_write_mask_72cc2ab0fb1e2804{.format = format, .blend = (is_mask_write ? flight::undefined : blend), .write_mask = (is_mask_write ? 0.0 : flight::host_sdl::wgpu_color_write_all)})}}), .depth_stencil = flight::make_ref<format_depth_write_enabled_depth_compare_stencil_front_stencil_back_stencil_read_mask_stencil_write_mask_c100c5f55bd7eea9>(format_depth_write_enabled_depth_compare_stencil_front_stencil_back_stencil_read_mask_stencil_write_mask_c100c5f55bd7eea9{.format = flight::String("depth24plus-stencil8"), .depth_write_enabled = false, .depth_compare = flight::String("always"), .stencil_front = stencil_face, .stencil_back = stencil_face, .stencil_read_mask = 255.0, .stencil_write_mask = (is_mask_write ? 255.0 : 0.0)}), .primitive = flight::make_ref<topology_7c8278728b18051e>(topology_7c8278728b18051e{.topology = flight::String("triangle-list")})});
-  ctx->pipeline_cache.set(key, pipeline);
-  return pipeline;
+  throw flight::Error(flight::String("render-wgpu: render pipeline creation is unavailable in this profile"));
 }
 
 inline flight::host_sdl::WgpuRenderPipeline get_active_wgpu_pipeline(flight::Ref<flight::types::WgpuRenderState> state) {

@@ -60,9 +60,7 @@ struct bind_group_layout_pipeline_833b0848238ca1cc : public flight::ReferenceEna
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BIND_GROUP_LAYOUT_PIPELINE_833B0848238CA1CC
 
-struct WgpuDeviceRuntime : public flight::ReferenceEnabled {
-  std::optional<flight::ErasedRef> binding;
-  std::optional<flight::String> uid;
+struct WgpuDeviceRuntime : public EntityRuntime {
   flight::host_sdl::WgpuDevice device;
   double references;
   flight::Array<std::function<void(flight::host_sdl::WgpuDevice)>> teardowns;

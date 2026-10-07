@@ -77,18 +77,7 @@ struct CanvasRenderStateRuntime;
 
 namespace flight::types {
 
-struct CanvasRenderState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::RenderStateRuntime>> entity_runtime_key;
-  bool allow_smoothing;
-  double current_clip_depth;
-  std::optional<flight::Ref<flight::types::Scene2DClipHooks>> display_object_clip_hooks;
-  double pixel_ratio;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageSurfaceCreator>>>>> image_surface_provider;
-  double render_alpha;
-  std::optional<flight::String> render_blend_mode;
-  std::optional<flight::Ref<flight::types::Matrix>> render_transform2_d;
-  flight::Ref<flight::types::Scene3DGraphSyncPolicy> scene_graph_sync_policy;
-  bool round_pixels;
+struct CanvasRenderState : public RenderState {
   std::optional<std::function<void(flight::Ref<CanvasRenderState>, std::optional<flight::String>)>> apply_blend_mode;
   std::optional<std::function<std::optional<flight::String>(flight::Ref<CanvasRenderState>, flight::Ref<flight::types::RenderProxy2D>)>> canvas_css_filter_resolver;
   flight::host_sdl::GlCanvas canvas;
@@ -96,14 +85,7 @@ struct CanvasRenderState : public flight::ReferenceEnabled {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CanvasRenderRegistries>>>> registries;
 };
 
-struct CanvasRenderRegistries : public flight::ReferenceEnabled {
-  std::optional<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasShapeCommand<flight::types::ShapeCommandKey>>>>> canvas_shape_commands;
-  std::optional<std::shared_ptr<flight::types::SlotTable<std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::RenderProxy>, std::optional<flight::Ref<flight::types::RenderProxy>>)>>>> color_adjustments;
-  std::optional<std::shared_ptr<flight::types::SlotTable<flight::Ref<flight::types::ColorAdjustmentUnsupportedGuard>>>> color_adjustment_unsupported_guard;
-  std::optional<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::RenderEffectPaddingResolver>>>> effect_padding_resolvers;
-  std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::Renderer>>> renderers;
-  std::optional<std::shared_ptr<flight::types::SlotTable<flight::Ref<flight::types::RenderRootGuard>>>> render_root_guard;
-  std::optional<std::shared_ptr<flight::types::SlotTable<flight::Ref<flight::types::StrokeTessellator>>>> stroke_tessellator;
+struct CanvasRenderRegistries : public RenderRegistries {
   std::variant<std::function<void(flight::Ref<CanvasRenderState>, std::optional<flight::String>)>, flight::Null, flight::Undefined> blend_mode_application = std::variant<std::function<void(flight::Ref<CanvasRenderState>, std::optional<flight::String>)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>>> material_renderers;
   std::shared_ptr<flight::types::KeyedTable<flight::types::CanvasRenderEffectRunner>> render_effects;
@@ -121,18 +103,8 @@ struct callable_clear_signals_28eb95ef35da39db : public flight::ReferenceEnabled
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_28EB95EF35DA39DB
 
-struct CanvasRenderStateRuntime : public flight::ReferenceEnabled {
-  std::optional<flight::ErasedRef> binding;
-  std::optional<flight::String> uid;
-  double current_frame_id;
-  std::optional<std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxy2D>)>> render_adapt_hook;
-  flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxyAdapter>> render_proxy_adapter_map;
-  flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxy>> render_proxy_map;
-  flight::Set<flight::Ref<flight::types::Renderable>> render_proxy_sources;
-  flight::Ref<std::optional<flight::Ref<callable_clear_signals_28eb95ef35da39db>>> registry_miss;
+struct CanvasRenderStateRuntime : public RenderStateRuntime {
   flight::Ref<CanvasRenderRegistries> registries;
-  double renderer_map_id;
-  flight::Array<flight::Ref<flight::types::Renderable>> temp_stack;
   flight::Array<flight::Ref<flight::types::CanvasRenderPass>> pass_stack;
   std::optional<flight::Ref<flight::types::CanvasRenderTarget>> current_render_target;
   double current_alpha;

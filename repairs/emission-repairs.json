@@ -12109,6 +12109,54 @@
       "expires": "when generic interface members retain their declared template parameter through nullable array element lowering; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "signals-generic-slot-operations",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/signals/slot.hpp",
+      "from": "std::function<void(flight::Array<flight::Any>)>",
+      "to": "T",
+      "sourceDeclaration": "packages/signals/src/slot.ts -- every slot local, initializer, and insertion uses the surrounding Signal<T> callback parameter",
+      "diagnostic": "optional<std::function<void(Array<Any>)>> cannot be constructed from the concrete signal slot T",
+      "defect": "The emitter erases the generic callback parameter to its unconstrained fallback signature in three slot operations even though the surrounding generated functions retain T.",
+      "expectedWhen": "always",
+      "expires": "when generic signal slot operations retain their surrounding template parameter; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "signals-flatten-generic-slot-read",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/signals/slot.hpp",
+      "from": "std::optional<std::optional<T>> slot = data->slots.get(i);",
+      "to": "std::optional<T> slot = data->slots.get(i).value_or(std::nullopt);",
+      "sourceDeclaration": "packages/signals/src/slot.ts -- data.slots[i] has exactly the one null absence channel declared by `(T | null)[]`",
+      "diagnostic": "the bounds optional from Array::get nests the slot element optional and leaves optional<T> at the call site",
+      "defect": "Array<optional<T>>::get distinguishes an out-of-range read from an empty in-range element, while JavaScript exposes both as the same nullish slot value in this length-bounded loop.",
+      "expectedWhen": "always",
+      "expires": "when length-bounded reads from nullable generic arrays flatten the bounds absence into the element absence; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "signals-slot-identity-comparison",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/signals/slot.hpp",
+      "from": "if ((data.value()->slots.element(i) != slot))",
+      "to": "if ((!data.value()->slots.element(i).has_value() || !flight::callable_identity_equal(data.value()->slots.element(i).value(), slot)))",
+      "sourceDeclaration": "packages/signals/src/slot.ts -- disconnectSignal compares each present slot to the requested JavaScript function by reference identity",
+      "diagnostic": "optional<T> and callback T have no valid inequality when T is std::function",
+      "defect": "The emitter compares the nullable slot carrier directly to its callback argument, and identity-erased std::function instantiations provide no equality operator. The runtime helper preserves identity-bearing carriers and fails loudly where the emitter has already discarded identity.",
+      "expectedWhen": "always",
+      "expires": "when signal callbacks retain an identity-bearing carrier and nullable slot comparison unwraps the present value; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "signals-slot-connected-identity-search",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/signals/slot.hpp",
+      "from": "(flight::row_get<flight::RowKey<\"data\">>(signal).has_value() && (flight::row_get<flight::RowKey<\"data\">>(signal).value()->slots.index_of(slot) != -1.0))",
+      "to": "(flight::row_get<flight::RowKey<\"data\">>(signal).has_value() && [&]() { for (const auto& candidate : flight::row_get<flight::RowKey<\"data\">>(signal).value()->slots) { if (candidate.has_value() && flight::callable_identity_equal(candidate.value(), slot)) return true; } return false; }())",
+      "sourceDeclaration": "packages/signals/src/slot.ts -- isSlotConnected searches the nullable slot array for the same JavaScript function object",
+      "diagnostic": "Array<optional<T>>::index_of requires equality for an optional callback element and loses JavaScript function identity under std::function",
+      "defect": "The emitter sends the non-null callback through generic optional-element Array equality instead of unwrapping present slots and using callback identity.",
+      "expectedWhen": "always",
+      "expires": "when signal callback lookup retains an identity-bearing carrier and searches present nullable elements by function identity; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "bitmapfont-formats-json-encoding-qualification",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/bitmapfont_formats/bitmap_font_json.hpp",
@@ -12148,6 +12196,18 @@
       "defect": "The emitter refuses parseBitmapFontJsonRecord at an owner-preserving JSON member boundary but retains parseBitmapFontJson calling that omitted private function.",
       "expectedWhen": "always",
       "expires": "when parseBitmapFontJsonRecord emits or callers of refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "bitmapfont-formats-json-private-object-name",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/bitmapfont_formats/bitmap_font_json.hpp",
+      "from": "is_object",
+      "to": "bitmap_font_json_is_object",
+      "sourceDeclaration": "packages/bitmapfont-formats/src/bitmapFontJson.ts -- isObject is a module-private helper distinct from the same private spelling in explainBitmapFontParse.ts",
+      "diagnostic": "redefinition of bool flight::bitmapfont_formats::is_object(flight::Any) in package aggregators",
+      "defect": "The emitter flattens two module-private helpers with the same source spelling into one package namespace.",
+      "expectedWhen": "always",
+      "expires": "when module-private functions receive module-distinct C++ names; sdk:check fails if this repair matches no header."
     },
     {
       "id": "bitmaptext-update-atlas-reference-access",
@@ -12335,6 +12395,18 @@
       "defect": "The emitter lowers a JavaScript function value whose identity is observed to std::function, which erases identity and makes the source's strict equality operation unrepresentable. The runtime Function carrier retains one shared callable identity across copies.",
       "expectedWhen": "always",
       "expires": "when function-valued fields whose identity is observed lower to flight::Function; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "command-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/command.hpp",
+      "from": "struct CompositeCommand : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  flight::String label;\n  flight::Array<flight::Ref<Command>> children;\n};\n\nstruct AddNodeChildCommand : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  flight::String label;\n  flight::types::NodeAny child;\n  double index;\n  flight::types::NodeAny parent;\n};\n\nstruct RemoveNodeChildCommand : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  flight::String label;\n  flight::types::NodeAny child;\n  double index;\n  flight::types::NodeAny parent;\n};\n\nstruct ReorderNodeChildCommand : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  flight::String label;\n  flight::types::NodeAny child;\n  double from_index;\n  flight::types::NodeAny parent;\n  double to_index;\n};\n\nstruct SetNodePropertyCommand : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  flight::String label;\n  flight::Array<flight::Ref<CommandPropertyEntry>> entries;\n  double merge_window;\n  double time;\n};",
+      "to": "struct CompositeCommand : public Command {\n  flight::Array<flight::Ref<Command>> children;\n};\n\nstruct AddNodeChildCommand : public Command {\n  flight::types::NodeAny child;\n  double index;\n  flight::types::NodeAny parent;\n};\n\nstruct RemoveNodeChildCommand : public Command {\n  flight::types::NodeAny child;\n  double index;\n  flight::types::NodeAny parent;\n};\n\nstruct ReorderNodeChildCommand : public Command {\n  flight::types::NodeAny child;\n  double from_index;\n  flight::types::NodeAny parent;\n  double to_index;\n};\n\nstruct SetNodePropertyCommand : public Command {\n  flight::Array<flight::Ref<CommandPropertyEntry>> entries;\n  double merge_window;\n  double time;\n};",
+      "sourceDeclaration": "packages/types/src/Command.ts -- CompositeCommand, AddNodeChildCommand, RemoveNodeChildCommand, ReorderNodeChildCommand, and SetNodePropertyCommand each extend Command",
+      "diagnostic": "conditional expression between Ref<Command> and Ref<CompositeCommand> has no common type",
+      "defect": "The type emitter flattens inherited interface fields into five unrelated C++ owners, discarding the declared Command heritage and preventing identity-preserving shared_ptr widening from each concrete command to its base interface.",
+      "expectedWhen": "always",
+      "expires": "when emitted reference-backed interfaces retain declared interface heritage instead of duplicating inherited fields; sdk:check fails if this repair matches no header."
     }
   ]
 }

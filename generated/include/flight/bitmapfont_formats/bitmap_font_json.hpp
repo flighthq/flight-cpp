@@ -38,12 +38,12 @@ using flight::types::ImportDiagnostic;
 
 using flight::types::BitmapFontParseOptions;
 
-inline bool is_object(flight::Any value) {
+inline bool bitmap_font_json_is_object(flight::Any value) {
   return (((value.type_of() == flight::String("object")) && ([&]() { const auto& presence_operand = value; return !presence_operand.is_null(); }())) && !flight::is_array(value));
 }
 
 inline flight::Ref<BitmapFontEncoding> read_json_encoding(flight::Any distance_field) {
-  if (is_object(distance_field)) {
+  if (bitmap_font_json_is_object(distance_field)) {
     auto field_type = flight::named_properties(distance_field).get(flight::String("fieldType"));
     if (((field_type == flight::String("msdf")) || (field_type == flight::String("sdf")))) {
       return field_type.as_string();
@@ -57,7 +57,7 @@ inline std::optional<double> read_json_number(flight::Any value) {
 }
 
 inline std::optional<flight::Ref<BitmapFontCharRecord>> read_json_char(flight::Any raw) {
-  if (!is_object(raw)) {
+  if (!bitmap_font_json_is_object(raw)) {
     return std::nullopt;
   }
   const std::optional<double> id = read_json_number(flight::named_properties(raw).get(flight::String("id")));
@@ -75,7 +75,7 @@ inline std::optional<flight::Ref<BitmapFontCharRecord>> read_json_char(flight::A
 }
 
 inline std::optional<flight::Ref<BitmapFontKerningRecord>> read_json_kerning(flight::Any raw) {
-  if (!is_object(raw)) {
+  if (!bitmap_font_json_is_object(raw)) {
     return std::nullopt;
   }
   const std::optional<double> first = read_json_number(flight::named_properties(raw).get(flight::String("first")));

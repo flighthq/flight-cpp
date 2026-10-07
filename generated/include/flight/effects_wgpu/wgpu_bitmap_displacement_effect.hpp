@@ -26,6 +26,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::effects_wgpu {
 
 using flight::types::WgpuRenderState;
+using flight::types::Sampler;
+using flight::types::TextureFilter;
+using flight::render_wgpu::get_wgpu_sampler;
 
 inline void initialize_wgpu_effect_pipeline(flight::Ref<EntityConstruction<flight::Ref<WgpuEffectPipeline>>> out, flight::Ref<WgpuEffectBlendMode> blend_mode, flight::host_sdl::WgpuRenderPipeline pipeline) {
   (out->blend_mode = blend_mode);
@@ -50,15 +53,15 @@ inline void initialize_wgpu_effect_pipeline(flight::Ref<EntityConstruction<fligh
 // cpp emission failed for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuBitmapDisplacementEffect.ts:
 // contextual optionalSingle construction requires expression type evidence
 
-inline flight::String get_filter(flight::Ref<TextureFilter> filter) {
-  return (filter->starts_with(flight::String("nearest")) ? flight::String("nearest") : flight::String("linear"));
+inline flight::String get_filter(TextureFilter filter) {
+  return (filter.starts_with(flight::String("nearest")) ? flight::String("nearest") : flight::String("linear"));
 }
 
-inline std::optional<flight::String> get_mipmap_filter(flight::Ref<TextureFilter> filter, bool mipmaps) {
-  if ((!mipmaps || !filter->includes(flight::String("mipmap")))) {
+inline std::optional<flight::String> get_mipmap_filter(TextureFilter filter, bool mipmaps) {
+  if ((!mipmaps || !filter.includes(flight::String("mipmap")))) {
     return std::nullopt;
   }
-  return (filter->ends_with(flight::String("nearest")) ? std::optional<flight::String>{flight::String("nearest")} : std::optional<flight::String>{flight::String("linear")});
+  return (filter.ends_with(flight::String("nearest")) ? std::optional<flight::String>{flight::String("nearest")} : std::optional<flight::String>{flight::String("linear")});
 }
 
 inline flight::host_sdl::WgpuSampler get_bitmap_displacement_map_sampler(flight::Ref<WgpuRenderState> state, flight::Ref<Sampler> sampler) {
@@ -83,7 +86,7 @@ struct src_factor_dst_factor_operation_734d8e3fcc3c03fb : public flight::Referen
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_SRC_FACTOR_DST_FACTOR_OPERATION_734D8E3FCC3C03FB
 
-inline flight::host_sdl::WgpuBlendState replace_blend = ([]() { flight::host_sdl::WgpuBlendState external_gpublend_state{}; external_gpublend_state.color = flight::make_ref<src_factor_dst_factor_operation_734d8e3fcc3c03fb>(src_factor_dst_factor_operation_734d8e3fcc3c03fb{.src_factor = flight::String("one"), .dst_factor = flight::String("zero"), .operation = flight::String("add")}); external_gpublend_state.alpha = flight::make_ref<src_factor_dst_factor_operation_734d8e3fcc3c03fb>(src_factor_dst_factor_operation_734d8e3fcc3c03fb{.src_factor = flight::String("one"), .dst_factor = flight::String("zero"), .operation = flight::String("add")}); return external_gpublend_state; }());
+inline flight::host_sdl::WgpuBlendState bitmap_displacement_replace_blend = ([]() { flight::host_sdl::WgpuBlendState external_gpublend_state{}; external_gpublend_state.color = flight::make_ref<src_factor_dst_factor_operation_734d8e3fcc3c03fb>(src_factor_dst_factor_operation_734d8e3fcc3c03fb{.src_factor = flight::String("one"), .dst_factor = flight::String("zero"), .operation = flight::String("add")}); external_gpublend_state.alpha = flight::make_ref<src_factor_dst_factor_operation_734d8e3fcc3c03fb>(src_factor_dst_factor_operation_734d8e3fcc3c03fb{.src_factor = flight::String("one"), .dst_factor = flight::String("zero"), .operation = flight::String("add")}); return external_gpublend_state; }());
 
 inline flight::WeakMap<flight::Ref<WgpuRenderState>, flight::Map<flight::String, flight::Ref<WgpuEffectPipeline>>> pipelines = flight::WeakMap<flight::Ref<WgpuRenderState>, flight::Map<flight::String, flight::Ref<WgpuEffectPipeline>>>();
 
@@ -217,6 +220,23 @@ inline flight::WeakMap<flight::Ref<WgpuRenderState>, flight::Map<flight::String,
 // that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
 // validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
 // replacement row, or invent side storage
+
+inline bool is_wgpu_bitmap_displacement_effect_resolvable(
+    flight::Ref<WgpuRenderState>,
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<
+        flight::Ref<flight::types::RenderEffect>>>>) {
+  return false;
+}
+
+inline const flight::types::WgpuRenderEffectRunner
+    default_wgpu_bitmap_displacement_effect_runner =
+        [](flight::StructuralRef<flight::RowReadonly<flight::RowOf<
+               flight::Ref<flight::types::WgpuRenderEffectContext>>>>,
+           flight::StructuralRef<flight::RowReadonly<flight::RowOf<
+               flight::Ref<flight::types::RenderEffect>>>>) {
+          throw flight::Error(flight::String(
+              "effects-wgpu: bitmap displacement is unavailable in this profile"));
+        };
 
 inline void register_wgpu_bitmap_displacement_effect(flight::Ref<WgpuRenderState> state) {
   register_wgpu_render_effect(state, flight::String("BitmapDisplacementEffect"), default_wgpu_bitmap_displacement_effect_runner, is_wgpu_bitmap_displacement_effect_resolvable);

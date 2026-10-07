@@ -39,7 +39,7 @@ inline void disconnect_signal(std::shared_ptr<flight::types::Signal<T>> signal, 
   const bool dispatching = (data.value()->depth > 0.0);
   double i = static_cast<double>(data.value()->slots.size());
   while ((--i >= 0.0)) {
-    if ((data.value()->slots.element(i) != slot)) {
+    if ((!data.value()->slots.element(i).has_value() || !flight::callable_identity_equal(data.value()->slots.element(i).value(), slot))) {
       continue;
     }
     if (dispatching) {
@@ -58,7 +58,7 @@ inline void disconnect_signal(std::shared_ptr<flight::types::Signal<T>> signal, 
 
 template <typename T>
 inline bool is_slot_connected(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Signal<T>>>>> signal, T slot) {
-  return (flight::row_get<flight::RowKey<"data">>(signal).has_value() && (flight::row_get<flight::RowKey<"data">>(signal).value()->slots.index_of(slot) != -1.0));
+  return (flight::row_get<flight::RowKey<"data">>(signal).has_value() && [&]() { for (const auto& candidate : flight::row_get<flight::RowKey<"data">>(signal).value()->slots) { if (candidate.has_value() && flight::callable_identity_equal(candidate.value(), slot)) return true; } return false; }());
 }
 
 template <typename T>
@@ -101,7 +101,7 @@ inline T make_dispatch(std::shared_ptr<flight::types::Signal<T>> signal, std::sh
   data->depth++;
   double i = 0.0;
   while ((i < static_cast<double>(data->slots.size()))) {
-    std::optional<std::optional<std::function<void(flight::Array<flight::Any>)>>> slot = data->slots.get(i);
+    std::optional<T> slot = data->slots.get(i).value_or(std::nullopt);
     if (!slot.has_value()) {
       i++;
       continue;
@@ -127,7 +127,7 @@ inline void init_signal(std::shared_ptr<flight::types::Signal<T>> signal) {
   if (signal->data.has_value()) {
     return;
   }
-  auto data = flight::make_ref<flight::types::SignalData<T>>(flight::types::SignalData<T>{.slots = flight::Array<std::optional<std::function<void(flight::Array<flight::Any>)>>>{}, .priorities = flight::Array<double>{}, .repeat = flight::Array<bool>{}, .cancelled = false, .depth = 0.0});
+  auto data = flight::make_ref<flight::types::SignalData<T>>(flight::types::SignalData<T>{.slots = flight::Array<std::optional<T>>{}, .priorities = flight::Array<double>{}, .repeat = flight::Array<bool>{}, .cancelled = false, .depth = 0.0});
   (signal->data = std::optional<std::shared_ptr<flight::types::SignalData<T>>>{data});
   (signal->emit = make_dispatch<T>(signal, data));
 }
@@ -152,7 +152,7 @@ inline void connect_signal(std::shared_ptr<flight::types::Signal<T>> signal, T s
       (i += 1.0);
     }
   }
-  data->slots.push(std::optional<std::function<void(flight::Array<flight::Any>)>>{slot});
+  data->slots.push(std::optional<T>{slot});
   data->priorities.push(priority);
   data->repeat.push(repeat);
 }

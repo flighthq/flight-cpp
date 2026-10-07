@@ -32,6 +32,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::effects_wgpu {
 
 using flight::types::WgpuRenderState;
+using flight::types::EffectStateOptions;
+using flight::types::EntityConstruction;
+using flight::types::WgpuColorLutTextureCache;
+using flight::types::WgpuEffectState;
+using flight::types::WgpuEffectStateSampleCountGuard;
+using flight::types::WgpuEffectStateSkipGuard;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
@@ -149,7 +155,10 @@ inline const flight::String linear_present_fragment_wgsl = flight::String("\nstr
 // cpp emission failed for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuEffectState.ts: flight-cpp
 // WeakMap value requires a proven C++ representation
 
-inline void set_wgpu_effect_state_skip_guard(flight::Ref<WgpuRenderState> state, std::optional<flight::Ref<WgpuEffectStateSkipGuard>> guard) {
+inline flight::WeakMap<flight::Ref<WgpuRenderState>, WgpuEffectStateSkipGuard>
+    skip_guards{};
+
+inline void set_wgpu_effect_state_skip_guard(flight::Ref<WgpuRenderState> state, std::optional<WgpuEffectStateSkipGuard> guard) {
   if (!guard.has_value()) {
     skip_guards.erase(state);
   }
@@ -266,6 +275,9 @@ inline void report_wgpu_effect_state_skip(flight::Ref<WgpuRenderState> state, fl
 // cpp emission failed for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuEffectState.ts: flight-cpp
 // WeakMap value requires a proven C++ representation
 
+inline flight::WeakMap<flight::Ref<WgpuRenderState>, WgpuEffectStateSampleCountGuard>
+    sample_count_guards{};
+
 inline void initialize_wgpu_effect_state(flight::Ref<EntityConstruction<flight::Ref<WgpuEffectState>>> out, flight::Ref<WgpuRenderState> state, std::optional<flight::Ref<EffectStateOptions>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<EffectStateOptions>(EffectStateOptions{}));
   const double requested_sample_count = options.value()->sample_count.value_or(1.0);
@@ -275,10 +287,10 @@ inline void initialize_wgpu_effect_state(flight::Ref<EntityConstruction<flight::
   }
   (out->options = flight::make_ref<EffectStateOptions>(EffectStateOptions{.sample_count = applied_sample_count}));
   (out->scene_target = nullptr);
-  (out->pool = create_wgpu_render_target_pool());
-  (out->lut_cache = create_color_lut_cache());
-  (out->lut_texture = flight::make_ref<WgpuColorLutTextureCache>(WgpuColorLutTextureCache{.texture = nullptr, .size = 0.0, .lut = nullptr}));
-  (out->velocity_texture = nullptr);
+  (out->pool = flight::make_ref<flight::types::WgpuRenderTargetPool>(flight::types::WgpuRenderTargetPool{}));
+  (out->lut_cache = flight::make_ref<flight::types::ColorLutCache>(flight::types::ColorLutCache{}));
+  (out->lut_texture = flight::make_ref<WgpuColorLutTextureCache>(WgpuColorLutTextureCache{.texture = std::nullopt, .size = 0.0, .lut = std::nullopt}));
+  (out->velocity_texture = std::nullopt);
 }
 
 inline flight::Ref<WgpuEffectState> create_wgpu_effect_state(flight::Ref<WgpuRenderState> state, std::optional<flight::Ref<EffectStateOptions>> options = std::nullopt) {
@@ -288,7 +300,7 @@ inline flight::Ref<WgpuEffectState> create_wgpu_effect_state(flight::Ref<WgpuRen
   return finish_entity(out);
 }
 
-inline void set_wgpu_effect_state_sample_count_guard(flight::Ref<WgpuRenderState> state, std::optional<flight::Ref<WgpuEffectStateSampleCountGuard>> guard) {
+inline void set_wgpu_effect_state_sample_count_guard(flight::Ref<WgpuRenderState> state, std::optional<WgpuEffectStateSampleCountGuard> guard) {
   if (!guard.has_value()) {
     sample_count_guards.erase(state);
   }

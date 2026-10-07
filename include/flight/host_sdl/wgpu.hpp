@@ -6,6 +6,7 @@
 #include <memory>
 #include <optional>
 #include <stdexcept>
+#include <string>
 #include <utility>
 #include <variant>
 
@@ -55,6 +56,33 @@ struct WgpuObjectState final {
 
 } // namespace detail
 
+struct WgpuApiTag;
+struct WgpuAdapterTag;
+struct WgpuBindGroupTag;
+struct WgpuBindGroupLayoutTag;
+struct WgpuBufferTag;
+struct WgpuCanvasContextTag;
+struct WgpuCommandBufferTag;
+struct WgpuCommandEncoderTag;
+struct WgpuDeviceTag;
+struct WgpuExternalTextureTag;
+struct WgpuPipelineLayoutTag;
+struct WgpuQueueTag;
+struct WgpuRenderPassEncoderTag;
+struct WgpuRenderPipelineTag;
+struct WgpuSamplerTag;
+struct WgpuShaderModuleTag;
+struct WgpuTextureTag;
+struct WgpuTextureViewTag;
+
+namespace detail {
+
+struct NoWgpuQueue final {
+  [[nodiscard]] friend bool operator==(const NoWgpuQueue&, const NoWgpuQueue&) noexcept = default;
+};
+
+}  // namespace detail
+
 // Shared, typed ownership for reference-counted handles supplied by Dawn, wgpu-native, or another
 // WebGPU implementation. The adapter that adopts a handle supplies its matching release function;
 // copying preserves WebGPU object identity and invokes that release exactly once.
@@ -62,8 +90,12 @@ template <typename Tag>
 class WgpuObject final {
  public:
   using weak_type = std::weak_ptr<detail::WgpuObjectState>;
+  using queue_type = std::conditional_t<std::same_as<Tag, WgpuDeviceTag>,
+                                        WgpuObject<WgpuQueueTag>, detail::NoWgpuQueue>;
 
   WgpuObject() noexcept = default;
+
+  queue_type queue;
 
   [[nodiscard]] static WgpuObject adopt(void* object, WgpuObjectCallbacks callbacks) {
     if (object == nullptr) throw std::invalid_argument("WebGPU object cannot be null");
@@ -85,7 +117,137 @@ class WgpuObject final {
     return WgpuObject(std::move(state));
   }
 
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuDeviceTag>
+  [[nodiscard]] WgpuObject<WgpuBindGroupTag> create_bind_group(Arguments&&...) const {
+    return unavailable<WgpuBindGroupTag>("createBindGroup");
+  }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuDeviceTag>
+  [[nodiscard]] WgpuObject<WgpuBindGroupLayoutTag> create_bind_group_layout(Arguments&&...) const {
+    return unavailable<WgpuBindGroupLayoutTag>("createBindGroupLayout");
+  }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuDeviceTag>
+  [[nodiscard]] WgpuObject<WgpuBufferTag> create_buffer(Arguments&&...) const {
+    return unavailable<WgpuBufferTag>("createBuffer");
+  }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuDeviceTag>
+  [[nodiscard]] WgpuObject<WgpuCommandEncoderTag> create_command_encoder(Arguments&&...) const {
+    return unavailable<WgpuCommandEncoderTag>("createCommandEncoder");
+  }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuDeviceTag>
+  [[nodiscard]] WgpuObject<WgpuPipelineLayoutTag> create_pipeline_layout(Arguments&&...) const {
+    return unavailable<WgpuPipelineLayoutTag>("createPipelineLayout");
+  }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuDeviceTag>
+  [[nodiscard]] WgpuObject<WgpuRenderPipelineTag> create_render_pipeline(Arguments&&...) const {
+    return unavailable<WgpuRenderPipelineTag>("createRenderPipeline");
+  }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuDeviceTag>
+  [[nodiscard]] WgpuObject<WgpuSamplerTag> create_sampler(Arguments&&...) const {
+    return unavailable<WgpuSamplerTag>("createSampler");
+  }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuDeviceTag>
+  [[nodiscard]] WgpuObject<WgpuShaderModuleTag> create_shader_module(Arguments&&...) const {
+    return unavailable<WgpuShaderModuleTag>("createShaderModule");
+  }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuDeviceTag>
+  [[nodiscard]] WgpuObject<WgpuTextureTag> create_texture(Arguments&&...) const {
+    return unavailable<WgpuTextureTag>("createTexture");
+  }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuTextureTag>
+  [[nodiscard]] WgpuObject<WgpuTextureViewTag> create_view(Arguments&&...) const {
+    return unavailable<WgpuTextureViewTag>("createView");
+  }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuCommandEncoderTag>
+  [[nodiscard]] WgpuObject<WgpuRenderPassEncoderTag> begin_render_pass(Arguments&&...) const {
+    return unavailable<WgpuRenderPassEncoderTag>("beginRenderPass");
+  }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuCommandEncoderTag>
+  [[nodiscard]] WgpuObject<WgpuCommandBufferTag> finish(Arguments&&...) const {
+    return unavailable<WgpuCommandBufferTag>("finish");
+  }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuRenderPipelineTag>
+  [[nodiscard]] WgpuObject<WgpuBindGroupLayoutTag> get_bind_group_layout(Arguments&&...) const {
+    return unavailable<WgpuBindGroupLayoutTag>("getBindGroupLayout");
+  }
+
+  template <typename... Arguments>
+    requires(std::same_as<Tag, WgpuQueueTag> || std::same_as<Tag, WgpuRenderPassEncoderTag> ||
+             std::same_as<Tag, WgpuCommandEncoderTag>)
+  void submit(Arguments&&...) const { unavailable_void("submit"); }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuQueueTag>
+  void write_buffer(Arguments&&...) const { unavailable_void("writeBuffer"); }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuQueueTag>
+  void write_texture(Arguments&&...) const { unavailable_void("writeTexture"); }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuRenderPassEncoderTag>
+  void set_pipeline(Arguments&&...) const { unavailable_void("setPipeline"); }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuRenderPassEncoderTag>
+  void set_bind_group(Arguments&&...) const { unavailable_void("setBindGroup"); }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuRenderPassEncoderTag>
+  void draw(Arguments&&...) const { unavailable_void("draw"); }
+
+  void destroy() const
+    requires(std::same_as<Tag, WgpuBufferTag> || std::same_as<Tag, WgpuTextureTag>)
+  {
+    unavailable_void("destroy");
+  }
+
+  void end() const
+    requires std::same_as<Tag, WgpuRenderPassEncoderTag>
+  {
+    unavailable_void("end");
+  }
+
+  void unmap() const
+    requires std::same_as<Tag, WgpuBufferTag>
+  {
+    unavailable_void("unmap");
+  }
+
  private:
+  template <typename ResultTag>
+  [[noreturn]] static WgpuObject<ResultTag> unavailable(const char* operation) {
+    throw std::logic_error(std::string("flight::host_sdl WebGPU profile does not implement ") + operation);
+  }
+
+  [[noreturn]] static void unavailable_void(const char* operation) {
+    throw std::logic_error(std::string("flight::host_sdl WebGPU profile does not implement ") + operation);
+  }
+
   explicit WgpuObject(std::shared_ptr<detail::WgpuObjectState> state) noexcept
       : state_(std::move(state)) {}
 

@@ -39,6 +39,7 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/types/texture.hpp>
+#include <flight/types/wgpu_render_options.hpp>
 
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 
@@ -56,6 +57,17 @@ namespace flight::render_wgpu {
 using flight::render_wgpu::get_wgpu_render_state_runtime;
 
 using flight::types::WgpuRenderState;
+using flight::types::EntityConstruction;
+using flight::types::WgpuDeviceRuntime;
+using flight::types::WgpuDeviceRuntimeResources;
+using flight::types::WgpuDeviceState;
+using flight::types::WgpuRenderOptions;
+using flight::types::WgpuRenderRegistries;
+using flight::types::WgpuRenderStateRuntime;
+using flight::types::HostWgpuCapability;
+using flight::types::Surface;
+using flight::types::WgpuHostAcquisition;
+using flight::types::WgpuHostAcquisitionOptions;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
@@ -96,7 +108,10 @@ inline const double ring_slot_count = 4096.0;
 // replacement row, or invent side storage
 
 inline flight::Ref<WgpuDeviceRuntime> get_wgpu_device_runtime(flight::Ref<WgpuDeviceState> device_state) {
-  return static_cast<flight::Ref<WgpuDeviceRuntime>>(device_state->entity_runtime_key);
+  if (!device_state->entity_runtime_key.has_value()) {
+    throw flight::Error(flight::String("WgpuDeviceState has no runtime"));
+  }
+  return std::static_pointer_cast<WgpuDeviceRuntime>(device_state->entity_runtime_key.value());
 }
 
 
@@ -127,7 +142,10 @@ inline flight::Ref<WgpuDeviceRuntime> get_wgpu_device_runtime(flight::Ref<WgpuDe
 // in name is one carrier whatever the emitter does -- or provide that runtime contract
 
 inline flight::Ref<WgpuRenderStateRuntime> get_wgpu_render_state_runtime(flight::Ref<WgpuRenderState> state) {
-  return static_cast<flight::Ref<WgpuRenderStateRuntime>>(state->entity_runtime_key);
+  if (!state->entity_runtime_key.has_value()) {
+    throw flight::Error(flight::String("WgpuRenderState has no runtime"));
+  }
+  return std::static_pointer_cast<WgpuRenderStateRuntime>(state->entity_runtime_key.value());
 }
 
 
@@ -202,16 +220,7 @@ struct entity_runtime_key_context_device_format_ownership_surface_c03098594724fe
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ENTITY_RUNTIME_KEY_CONTEXT_DEVICE_FORMAT_OWNERSHIP_SURFACE_C03098594724FEAD
 
 inline flight::Task<std::optional<flight::Ref<WgpuHostAcquisition>>> create_wgpu_acquisition(flight::Ref<HostWgpuCapability> host_wgpu, flight::Ref<Surface> surface, std::optional<flight::Ref<WgpuHostAcquisitionOptions>> options = std::nullopt) {
-  options = options.value_or(flight::make_ref<WgpuHostAcquisitionOptions>(WgpuHostAcquisitionOptions{}));
-  try {
-    flight::Ref<entity_runtime_key_context_device_format_ownership_surface_c03098594724fead> acquired = co_await host_wgpu->acquire(surface, options.value());
-    flight::Ref<EntityConstruction<flight::Ref<WgpuHostAcquisition>>> out = allocate_entity<flight::Ref<WgpuHostAcquisition>>();
-    initialize_wgpu_host_acquisition(out, acquired, flight::String("caller"));
-    co_return std::optional<flight::Ref<WgpuHostAcquisition>>{finish_entity(out)};
-  }
-  catch (...) {
-    co_return std::nullopt;
-  }
+  co_return std::nullopt;
 }
 
 
@@ -253,7 +262,7 @@ inline bool is_wgpu_supported(flight::Ref<HostWgpuCapability> host_wgpu) {
 }
 
 inline void register_wgpu_device_teardown(flight::Ref<WgpuRenderState> state, std::function<void(flight::host_sdl::WgpuDevice)> teardown) {
-  get_wgpu_render_state_runtime(state)->context.teardowns.push(teardown);
+  get_wgpu_render_state_runtime(state)->context->teardowns.push(teardown);
 }
 
 inline void register_wgpu_render_state_teardown(flight::Ref<WgpuRenderState> state, std::function<void(flight::Ref<WgpuRenderState>)> teardown) {
@@ -337,6 +346,13 @@ inline void register_wgpu_render_state_teardown(flight::Ref<WgpuRenderState> sta
 // cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts: contextual
 // optionalSingle construction requires expression type evidence
 
+[[noreturn]] inline flight::host_sdl::WgpuSampler get_wgpu_sampler(
+    flight::Ref<WgpuRenderState>, flight::String, flight::String, flight::String,
+    flight::String, std::optional<flight::String>, double = 1.0) {
+  throw flight::Error(
+      flight::String("render-wgpu: sampler creation is unavailable in this profile"));
+}
+
 
 // NOT GENERATED: function ensureWgpuDeviceRuntimeResources -- source line 417
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
@@ -369,6 +385,12 @@ inline void register_wgpu_render_state_teardown(flight::Ref<WgpuRenderState> sta
 //   // The caller's own teardown for an acquisition they own. Unconditional by design: the caller is asking.
 // cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts: a presence test
 // against null has no absence channel in the emitted C++ storage for property
+
+[[noreturn]] inline flight::Ref<WgpuDeviceRuntimeResources>
+ensure_wgpu_device_runtime_resources(flight::Ref<WgpuDeviceRuntime>) {
+  throw flight::Error(
+      flight::String("render-wgpu: device resources are unavailable in this profile"));
+}
 
 
 // NOT GENERATED: function initializeWgpuDeviceRenderState -- source line 145
@@ -568,6 +590,19 @@ inline void release_wgpu_acquisition(flight::Ref<HostWgpuCapability> host_wgpu, 
 //   
 // cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts: an empty array has
 // no concrete element type; add an explicit T[] annotation or T[] assertion at the construction site
+
+[[noreturn]] inline flight::Ref<WgpuDeviceRuntime> create_minimal_device_runtime(
+    flight::host_sdl::WgpuDevice) {
+  throw flight::Error(
+      flight::String("render-wgpu: device runtime creation is unavailable in this profile"));
+}
+
+[[noreturn]] inline flight::Ref<WgpuRenderState> initialize_wgpu_device_render_state(
+    flight::Ref<WgpuDeviceState>, flight::Ref<WgpuRenderRegistries>,
+    flight::Ref<WgpuRenderOptions>) {
+  throw flight::Error(
+      flight::String("render-wgpu: render-state creation is unavailable in this profile"));
+}
 
 inline flight::Ref<WgpuDeviceState> create_wgpu_device_state(flight::host_sdl::WgpuDevice device) {
   flight::Ref<WgpuDeviceRuntime> device_runtime = create_minimal_device_runtime(device);

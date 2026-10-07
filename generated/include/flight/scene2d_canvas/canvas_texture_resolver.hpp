@@ -71,11 +71,15 @@ struct callable_clear_signals_5e1c1016838f6892 : public flight::ReferenceEnabled
 
 inline void connect_canvas_texture_resolver_misses(flight::Ref<CanvasTextureResolvers> resolvers, flight::Ref<RenderState> state) {
   flight::Ref<RenderStateRuntime> runtime = get_render_state_runtime(state);
-  (resolvers->registry_miss = [=](flight::Ref<render_registry_table> registry, flight::String kind) -> std::optional<void> { return ([&]() { auto optional_chain_receiver = runtime->registry_miss; if (!optional_chain_receiver.has_value()) return; (*optional_chain_receiver.value())(registry, kind); }()); });
+  (resolvers->registry_miss = [=](flight::types::RenderRegistryTable registry, flight::String kind) { auto optional_chain_receiver = runtime->registry_miss; if (!optional_chain_receiver.has_value()) return; (*optional_chain_receiver.value())(registry, kind); });
 }
 
 inline void register_canvas_texture_resolver(flight::Ref<CanvasTextureResolvers> resolvers, flight::Ref<TextureSourceKind> source_kind, std::optional<flight::Ref<CanvasTextureResolver>> resolver) {
-  flight::Map<flight::String, flight::Ref<CanvasTextureResolver>> registry = ([&]() { auto&& assignment_target = resolvers->registry; if (!assignment_target.has_value()) assignment_target = flight::Map(); return assignment_target.value(); }());
+  using Registry = flight::Map<flight::String, CanvasTextureResolver>;
+  if (!std::holds_alternative<Registry>(resolvers->registry)) {
+    resolvers->registry = Registry{};
+  }
+  Registry registry = std::get<Registry>(resolvers->registry);
   if (!resolver.has_value()) {
     registry.erase(source_kind);
   }
@@ -137,18 +141,30 @@ inline std::optional<flight::Ref<CanvasRenderSurface>> acquire_canvas_texture_re
 // cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts:
 // optional property call clear requires callable result evidence
 
-inline void initialize_canvas_texture_resolvers(flight::Ref<EntityConstruction<flight::Ref<CanvasTextureResolvers>>> resolvers, flight::Ref<CanvasRenderSurfaceCreator> surface_creator) {
-  (resolvers->registry = nullptr);
-  (resolvers->registry_miss = nullptr);
-  (resolvers->surface_creator = surface_creator);
-  (resolvers->entity_runtime_key = {.binding = nullptr});
-  owned_surfaces.set(resolvers, flight::Set<flight::Ref<CanvasRenderSurface>>());
+inline void destroy_canvas_texture_resolvers(flight::Ref<CanvasTextureResolvers> resolvers) {
+  const auto surfaces = owned_surfaces.get(resolvers);
+  if (!surfaces.has_value()) return;
+  owned_surfaces.erase(resolvers);
+  for (const auto& surface : surfaces.value()) destroy_canvas_render_surface(surface);
+  surfaces.value().clear();
+  using Registry = flight::Map<flight::String, CanvasTextureResolver>;
+  if (auto* registry = std::get_if<Registry>(&resolvers->registry)) registry->clear();
+  resolvers->registry = decltype(CanvasTextureResolvers::registry){std::in_place_type<flight::Null>, flight::null};
+  resolvers->registry_miss = decltype(CanvasTextureResolvers::registry_miss){std::in_place_type<flight::Null>, flight::null};
+}
+
+inline void initialize_canvas_texture_resolvers(flight::Ref<CanvasTextureResolvers> resolvers, flight::Ref<CanvasRenderSurfaceCreator> surface_creator) {
+  resolvers->registry = decltype(CanvasTextureResolvers::registry){std::in_place_type<flight::Null>, flight::null};
+  resolvers->registry_miss = decltype(CanvasTextureResolvers::registry_miss){std::in_place_type<flight::Null>, flight::null};
+  resolvers->surface_creator = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CanvasRenderSurfaceCreator>>>>>(surface_creator);
+  resolvers->entity_runtime_key = flight::make_ref<flight::types::EntityRuntime>(flight::types::EntityRuntime{.binding = std::nullopt, .uid = std::nullopt});
 }
 
 inline flight::Ref<CanvasTextureResolvers> create_canvas_texture_resolvers(flight::Ref<CanvasRenderSurfaceCreator> surface_creator) {
-  flight::Ref<EntityConstruction<flight::Ref<CanvasTextureResolvers>>> resolvers = allocate_entity<flight::Ref<CanvasTextureResolvers>>();
+  auto resolvers = flight::make_ref<CanvasTextureResolvers>();
   initialize_canvas_texture_resolvers(resolvers, surface_creator);
-  return finish_entity(resolvers);
+  owned_surfaces.set(resolvers, flight::Set<flight::Ref<CanvasRenderSurface>>());
+  return resolvers;
 }
 
 } // namespace flight::scene2d_canvas

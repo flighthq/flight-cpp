@@ -5,6 +5,7 @@
 #include <functional>
 #include <memory>
 #include <optional>
+#include <stdexcept>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -96,6 +97,35 @@ class Function<Result(Parameters...)> {
 
   std::shared_ptr<State> state_;
 };
+
+// JavaScript function equality is reference identity. Identity-bearing runtime callables answer it
+// directly; an emitter-erased std::function cannot do so for stateful targets, and guessing from its
+// target type would silently disconnect a different closure. Keep that boundary explicit and fail
+// before reporting a false match. Plain function pointers are the one std::function target whose
+// identity remains recoverable after erasure.
+template <typename Callable>
+[[nodiscard]] bool callable_identity_equal(const Callable& left, const Callable& right) {
+  if constexpr (requires { { left == right } -> std::convertible_to<bool>; }) {
+    return left == right;
+  } else {
+    throw std::logic_error(
+        "callable identity is unavailable for this erased callback carrier");
+  }
+}
+
+template <typename Result, typename... Parameters>
+[[nodiscard]] bool callable_identity_equal(
+    const std::function<Result(Parameters...)>& left,
+    const std::function<Result(Parameters...)>& right) {
+  using Pointer = Result (*)(Parameters...);
+  const auto* left_pointer = left.template target<Pointer>();
+  const auto* right_pointer = right.template target<Pointer>();
+  if (left_pointer != nullptr && right_pointer != nullptr) {
+    return *left_pointer == *right_pointer;
+  }
+  throw std::logic_error(
+      "callable identity is unavailable after std::function erasure");
+}
 
 // Whether one argument satisfies one callback parameter.
 //

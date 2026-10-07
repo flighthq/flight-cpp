@@ -106,7 +106,10 @@ using flight::types::entity_runtime_key;
 // requires a statically resolvable C++ object shape; T is named
 
 inline flight::Ref<CanvasRenderStateRuntime> get_canvas_render_state_runtime(flight::Ref<CanvasRenderState> state) {
-  return static_cast<flight::Ref<CanvasRenderStateRuntime>>(state->entity_runtime_key);
+  if (!state->entity_runtime_key.has_value()) {
+    throw flight::Error(flight::String("CanvasRenderState has no runtime"));
+  }
+  return std::static_pointer_cast<CanvasRenderStateRuntime>(state->entity_runtime_key.value());
 }
 
 inline flight::Ref<CanvasTextureResolvers> get_canvas_render_state_texture_resolvers(flight::Ref<CanvasRenderState> state) {

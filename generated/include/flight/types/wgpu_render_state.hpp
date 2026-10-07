@@ -241,18 +241,7 @@ struct WgpuVideoTextureEntry : public flight::ReferenceEnabled {
   double width;
 };
 
-struct WgpuRenderState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::RenderStateRuntime>> entity_runtime_key;
-  bool allow_smoothing;
-  double current_clip_depth;
-  std::optional<flight::Ref<flight::types::Scene2DClipHooks>> display_object_clip_hooks;
-  double pixel_ratio;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageSurfaceCreator>>>>> image_surface_provider;
-  double render_alpha;
-  std::optional<flight::String> render_blend_mode;
-  std::optional<flight::Ref<flight::types::Matrix>> render_transform2_d;
-  flight::Ref<flight::types::Scene3DGraphSyncPolicy> scene_graph_sync_policy;
-  bool round_pixels;
+struct WgpuRenderState : public RenderState {
   std::optional<std::function<void(flight::Ref<WgpuRenderState>, std::optional<flight::String>)>> apply_blend_mode;
   flight::Ref<flight::types::WgpuDeviceState> device_state;
   flight::host_sdl::WgpuDevice device;
@@ -290,14 +279,7 @@ struct WgpuBitmapShader : public flight::ReferenceEnabled {
   std::function<void(flight::Ref<WgpuRenderState>, flight::Ref<alpha_5f8492cbcea5bcc7>)> bind;
 };
 
-struct WgpuRenderRegistries : public flight::ReferenceEnabled {
-  std::optional<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasShapeCommand<flight::types::ShapeCommandKey>>>>> canvas_shape_commands;
-  std::optional<std::shared_ptr<flight::types::SlotTable<std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::RenderProxy>, std::optional<flight::Ref<flight::types::RenderProxy>>)>>>> color_adjustments;
-  std::optional<std::shared_ptr<flight::types::SlotTable<flight::Ref<flight::types::ColorAdjustmentUnsupportedGuard>>>> color_adjustment_unsupported_guard;
-  std::optional<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::RenderEffectPaddingResolver>>>> effect_padding_resolvers;
-  std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::Renderer>>> renderers;
-  std::optional<std::shared_ptr<flight::types::SlotTable<flight::Ref<flight::types::RenderRootGuard>>>> render_root_guard;
-  std::optional<std::shared_ptr<flight::types::SlotTable<flight::Ref<flight::types::StrokeTessellator>>>> stroke_tessellator;
+struct WgpuRenderRegistries : public RenderRegistries {
   std::optional<std::shared_ptr<flight::types::SlotTable<flight::Ref<WgpuColorAdjustmentMaterialFeature>>>> color_adjustment_feature;
   std::optional<std::shared_ptr<flight::types::SlotTable<WgpuColorAdjustmentMaterialFeatureGuard>>> color_adjustment_feature_guard;
   std::optional<std::shared_ptr<flight::types::SlotTable<flight::types::WgpuCompressedTextureDecoder>>> compressed_texture_decoder;
@@ -342,18 +324,8 @@ struct bind_group_layout_pipeline_833b0848238ca1cc : public flight::ReferenceEna
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BIND_GROUP_LAYOUT_PIPELINE_833B0848238CA1CC
 
-struct WgpuRenderStateRuntime : public flight::ReferenceEnabled {
-  std::optional<flight::ErasedRef> binding;
-  std::optional<flight::String> uid;
-  double current_frame_id;
-  std::optional<std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxy2D>)>> render_adapt_hook;
-  flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxyAdapter>> render_proxy_adapter_map;
-  flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxy>> render_proxy_map;
-  flight::Set<flight::Ref<flight::types::Renderable>> render_proxy_sources;
-  flight::Ref<std::optional<flight::Ref<callable_clear_signals_c732aceeb5d781c2>>> registry_miss;
+struct WgpuRenderStateRuntime : public RenderStateRuntime {
   flight::Ref<WgpuRenderRegistries> registries;
-  double renderer_map_id;
-  flight::Array<flight::Ref<flight::types::Renderable>> temp_stack;
   flight::Ref<flight::types::WgpuDeviceRuntime> context;
   std::optional<flight::Ref<WgpuRenderState>> apply_blend_mode_parent;
   std::optional<flight::String> current_blend_mode;

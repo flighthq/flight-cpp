@@ -66,6 +66,17 @@ inline void end_wgpu_screen_render_target_frame(flight::Ref<WgpuScreenRenderTarg
   (target->presentation_view = std::nullopt);
 }
 
+inline bool is_wgpu_screen_render_target(
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderTarget>>>> target) {
+  const auto& owner = target.shared_owner();
+  if (!owner) return false;
+  if (const auto* context =
+          owner->named_value_if<std::optional<flight::host_sdl::WgpuCanvasContext>>("context")) {
+    return context->has_value();
+  }
+  return owner->named_value_if<flight::host_sdl::WgpuCanvasContext>("context") != nullptr;
+}
+
 
 // NOT GENERATED: function isWgpuScreenRenderTarget -- source line 117
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
