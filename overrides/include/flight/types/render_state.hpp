@@ -58,12 +58,7 @@ using RenderRootGuard = std::function<void(flight::Ref<RenderState>, std::varian
 #include <flight/types/registry_table.hpp>
 #include <flight/types/renderable.hpp>
 #include <flight/types/render_effect_padding.hpp>
-#include <flight/types/renderer.hpp>
-#include <flight/types/render_proxy.hpp>
-#include <flight/types/render_proxy2_d.hpp>
-#include <flight/types/render_proxy_adapter.hpp>
 #include <flight/types/render_registry_signals.hpp>
-#include <flight/types/scene2_drenderer.hpp>
 #include <flight/types/stroke_style.hpp>
 #include <flight/types/color_scale_bias.hpp>
 #include <flight/types/material.hpp>
