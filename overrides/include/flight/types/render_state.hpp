@@ -30,6 +30,7 @@ namespace flight::types { struct PathMesh; }
 namespace flight::types { struct RenderEffectPadding; }
 namespace flight::types { struct RenderProxy2D; }
 namespace flight::types { struct RenderProxy; }
+namespace flight::types { struct RenderProxyAdapter; }
 namespace flight::types { struct RenderRegistrySignals; }
 namespace flight::types { struct Renderer; }
 namespace flight::types { struct RendererData; }
