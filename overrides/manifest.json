@@ -1610,6 +1610,38 @@
       "remaining": "None in this module for the SDL profile.",
       "expires": "when the profiled HostImageSource structural width/height read emits against the SDL carrier.",
       "authoredOn": "2026-10-06"
+    },
+    {
+      "id": "textsegment-portable-intl-boundary",
+      "path": "flight/textsegment/text_segmenter_backend.hpp",
+      "package": "@flighthq/textsegment",
+      "status": "complete",
+      "supplies": "packages/textsegment/src/textSegmenterBackend.ts",
+      "derivedFrom": "afd7cead3da6dde555e385ac88d7e45cb692ce2feeef1b30991aed15504aa861",
+      "reason": "The source probes and constructs the ambient web Intl.Segmenter, while the dependency-free portable runtime deliberately exposes only a host-supplied segmenter type carrier and the emitter omits both probe and cache functions.",
+      "change": "Implements the portable profile's unavailable web-Intl branch, including guard reporting, empty segmentation, stable web capability identity, and backend explanation.",
+      "equivalence": "On this profile the ambient Intl.Segmenter constructor is not bound, so the source probe is always false. Each segmentation request reports through the same guard and returns an empty array; explanation marks only the bundled web backend unavailable while custom host capabilities remain available.",
+      "whyNotAPatchOrRepair": "A declaration repair cannot supply the refused probe and cache behavior, and rewriting portable TypeScript to pretend the browser global is absent would change web builds. The override states only the selected profile's already-declared host boundary.",
+      "unblocks": "text_segmenter_backend.hpp and all four @flighthq/textsegment headers compile independently.",
+      "remaining": "None for the portable profile; real Unicode segmentation remains a host capability.",
+      "expires": "when the binding profile supplies an Intl.Segmenter constructor or the emitted backend preserves the unavailable ambient branch.",
+      "authoredOn": "2026-10-07"
+    },
+    {
+      "id": "textsegment-portable-boundary-queries",
+      "path": "flight/textsegment/text_segment_boundary.hpp",
+      "package": "@flighthq/textsegment",
+      "status": "complete",
+      "supplies": "packages/textsegment/src/textSegmentBoundary.ts",
+      "derivedFrom": "a93657af5d2a2d693aa6315c76e682617299fb7acf9318bf835576cef24a878b",
+      "reason": "The generated boundary module includes the partial generated web backend by a same-directory quoted include, uses reference carriers for string aliases, and omits the ambient Intl.Segmenter constructor probe and cache.",
+      "change": "Implements boundary navigation with the generated value carriers, delegates custom capabilities exactly, and supplies the portable profile's unavailable bundled-web branch with guard reporting.",
+      "equivalence": "Custom capabilities receive the same text, granularity, and locale and their ordered segments drive the same clamping, next/previous, and word-range rules. On the bundled web capability this profile has no Intl.Segmenter binding, so the source reports the guard and returns null, zero, or text length at the same branches.",
+      "whyNotAPatchOrRepair": "A declaration cannot supply the refused ambient probe, while a source rewrite that hard-codes the portable profile would change browser behavior. The override also corrects emitted string-alias reference carriers that portable TypeScript cannot name.",
+      "unblocks": "text_segment_boundary.hpp and the package aggregators compile through the portable backend override.",
+      "remaining": "None for the portable profile; real Unicode boundary data remains a host capability.",
+      "expires": "when string aliases retain value carriers and the selected profile emits the unavailable ambient branch without quoted-include bypass.",
+      "authoredOn": "2026-10-07"
     }
   ]
 }
