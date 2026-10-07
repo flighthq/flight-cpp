@@ -1,0 +1,36 @@
+diff --git a/packages/spritesheet/src/spritesheetPlayer.ts b/packages/spritesheet/src/spritesheetPlayer.ts
+--- a/packages/spritesheet/src/spritesheetPlayer.ts
++++ b/packages/spritesheet/src/spritesheetPlayer.ts
+@@ -7,4 +7,16 @@ import type {
+   EntityConstruction,
+ } from '@flighthq/types/contract';
+ 
++interface SpritesheetPlayerOptions {
++  animation?: SpritesheetAnimation | null;
++  complete?: boolean;
++  elapsed?: number;
++  frameIndex?: number;
++  onComplete?: SpritesheetPlayer['onComplete'];
++  onLoop?: SpritesheetPlayer['onLoop'];
++  paused?: boolean;
++  queue?: SpritesheetAnimation[];
++  speed?: number;
++}
++
+ export function acquireSpritesheetPlayer(): SpritesheetPlayer {
+@@ -38,6 +50,6 @@ export function cloneSpritesheetPlayer(player: Readonly<SpritesheetPlayer>): Spri
+   return finishEntity(out);
+ }
+ 
+-export function createSpritesheetPlayer(obj?: Partial<SpritesheetPlayer>): SpritesheetPlayer {
++export function createSpritesheetPlayer(obj?: SpritesheetPlayerOptions): SpritesheetPlayer {
+   const out = allocateEntity<SpritesheetPlayer>();
+   initializeSpritesheetPlayer(out, obj);
+@@ -83,6 +95,6 @@ export function getSpritesheetPlayerFrameAt(
+ 
+ export function initializeSpritesheetPlayer(
+   out: EntityConstruction<SpritesheetPlayer>,
+-  obj?: Partial<SpritesheetPlayer>,
++  obj?: SpritesheetPlayerOptions,
+ ): void {
+   out.animation = obj?.animation ?? null;

@@ -1,0 +1,16 @@
+diff --git a/packages/video/src/videoFormat.ts b/packages/video/src/videoFormat.ts
+--- a/packages/video/src/videoFormat.ts
++++ b/packages/video/src/videoFormat.ts
+@@ -17,7 +17,11 @@ export function detectVideoMimeType(data: ArrayBuffer | Uint8Array): string | nul
+ }
+ 
+ export function inferVideoMimeType(url: string): string | null {
+-  const ext = url.split('?')[0].split('.').pop()?.toLowerCase();
++  const path = url.split('?')[0];
++  const parts = path.split('.');
++  const tail = parts[parts.length - 1];
++  if (tail === undefined) return null;
++  const ext = tail.toLowerCase();
+   switch (ext) {
+     case 'mp4':
+     case 'm4v':

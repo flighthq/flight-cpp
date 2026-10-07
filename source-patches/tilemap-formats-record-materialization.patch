@@ -1,0 +1,39 @@
+diff --git a/packages/tilemap-formats/src/tiledJsonParse.ts b/packages/tilemap-formats/src/tiledJsonParse.ts
+--- a/packages/tilemap-formats/src/tiledJsonParse.ts
++++ b/packages/tilemap-formats/src/tiledJsonParse.ts
+@@ -304,6 +304,7 @@ function buildTiledPropertiesFromJson(obj: JsonObject): TiledProperty[] {
+   return arrayField(obj, 'properties').map((property) => {
+     const type = asPropertyType(strField(property, 'type'));
+     const raw = property.value;
+-    return { name: strField(property, 'name') ?? '', type, value: coercePropertyValue(type, raw) };
++    const value: TiledProperty = { name: strField(property, 'name') ?? '', type, value: coercePropertyValue(type, raw) };
++    return value;
+   });
+ }
+diff --git a/packages/tilemap-formats/src/tiledTmjFormat.ts b/packages/tilemap-formats/src/tiledTmjFormat.ts
+--- a/packages/tilemap-formats/src/tiledTmjFormat.ts
++++ b/packages/tilemap-formats/src/tiledTmjFormat.ts
+@@ -111,7 +111,8 @@ function jsonObject(object: Readonly<TiledObject>): Record<string, unknown> {
+ }
+ 
+ function jsonProperty(property: Readonly<TiledProperty>): Record<string, unknown> {
+-  return { name: property.name, type: property.type, value: property.value };
++  const out: Record<string, unknown> = { name: property.name, type: property.type, value: property.value };
++  return out;
+ }
+ 
+ function jsonTileset(tileset: Readonly<TiledTileset>): Record<string, unknown> {
+diff --git a/packages/tilemap-formats/src/tiledXmlParse.ts b/packages/tilemap-formats/src/tiledXmlParse.ts
+--- a/packages/tilemap-formats/src/tiledXmlParse.ts
++++ b/packages/tilemap-formats/src/tiledXmlParse.ts
+@@ -390,8 +390,9 @@ function buildTiledTileFromXml(element: Readonly<XmlElement>): TiledTilesetTile {
+ }
+ 
+ function parseTiledPoints(text: string): Vector2Like[] {
++  const normalized = text.trim().replace(/\s+/g, ' ');
+   const points: Vector2Like[] = [];
+-  for (const pair of text.trim().split(/\s+/)) {
++  for (const pair of normalized.split(' ')) {
+     if (pair === '') continue;
+     const [x, y] = pair.split(',');
+     points.push({ x: Number(x) || 0, y: Number(y) || 0 });

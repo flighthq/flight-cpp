@@ -1,0 +1,40 @@
+diff --git a/packages/shading/src/createShadedMaterial.ts b/packages/shading/src/createShadedMaterial.ts
+--- a/packages/shading/src/createShadedMaterial.ts
++++ b/packages/shading/src/createShadedMaterial.ts
+@@ -1,3 +1,3 @@
+ import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+-import type { EntityConstruction, ShadedMaterial, ShadedMaterialOptions } from '@flighthq/types/contract';
++import type { EntityConstruction, ShadedMaterial, ShadedMaterialOptions, Texture } from '@flighthq/types/contract';
+ import { BlendMode, ShadedMaterialKind } from '@flighthq/types/contract';
+@@ -30,12 +30,15 @@ export function initializeShadedMaterial(
+   out.alphaMode = options.alphaMode ?? 'opaque';
+   out.blendMode = options.blendMode ?? BlendMode.Normal;
+   out.diffuse = options.diffuse ?? 0xffffffff;
+-  out.diffuseMap = options.diffuseMap ?? null;
++  const diffuseMap: Texture | null = options.diffuseMap ?? null;
++  out.diffuseMap = diffuseMap;
+   out.doubleSided = options.doubleSided ?? false;
+   out.modifiers = options.modifiers ?? [];
+-  out.normalMap = options.normalMap ?? null;
++  const normalMap: Texture | null = options.normalMap ?? null;
++  out.normalMap = normalMap;
+   out.normalScale = options.normalScale ?? 1;
+   out.shininess = options.shininess ?? 32;
+   out.specular = options.specular ?? 0xffffffff;
+-  out.specularMap = options.specularMap ?? null;
++  const specularMap: Texture | null = options.specularMap ?? null;
++  out.specularMap = specularMap;
+ }
+diff --git a/packages/shading/src/getModifierDefineKey.ts b/packages/shading/src/getModifierDefineKey.ts
+--- a/packages/shading/src/getModifierDefineKey.ts
++++ b/packages/shading/src/getModifierDefineKey.ts
+@@ -32,7 +32,8 @@ export function getModifierDefineKey(stack: readonly Modifier[], registry?: Reado
+ 
+ function getDefineSignature(modifier: Readonly<Modifier>, registry?: Readonly<ModifierRegistry>): string {
+   if (registry === undefined) return '';
+-  const definition = resolveModifier(registry, modifier.kind);
++  const selected: Readonly<ModifierRegistry> = registry;
++  const definition = resolveModifier(selected, modifier.kind);
+   if (definition === null || definition.getDefineSignature === undefined) return '';
+   return definition.getDefineSignature(modifier);
+ }

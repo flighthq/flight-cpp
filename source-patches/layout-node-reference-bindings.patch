@@ -1,0 +1,39 @@
+diff --git a/packages/layout/src/flexLayout.ts b/packages/layout/src/flexLayout.ts
+--- a/packages/layout/src/flexLayout.ts
++++ b/packages/layout/src/flexLayout.ts
+@@ -59,8 +59,9 @@ const flexLayoutResolver: LayoutResolver = (out, tree, intrinsicSizes, parentInde
+   let containsTarget = false;
+   const nodes = tree.nodes;
+ 
+   for (let i = 0; i < nodes.length; i++) {
+-    if (nodes[i].parentIndex !== parentIndex) continue;
+-    const base = getFlexBase(nodes[i], intrinsicSizes, i, row);
++    const node = nodes[i];
++    if (node.parentIndex !== parentIndex) continue;
++    const base = getFlexBase(node, intrinsicSizes, i, row);
+     if (wrap !== 'nowrap' && lineCount > 0 && lineUsedForWrap + gap + base > mainSize) {
+       if (containsTarget) break;
+@@ -224,5 +225,8 @@ function countFlexSiblings(
+ ): number {
+   let count = 0;
+-  for (let i = startIndex; i < endIndex; i++) if (tree.nodes[i].parentIndex === parentIndex) count++;
++  for (let i = startIndex; i < endIndex; i++) {
++    const node = tree.nodes[i];
++    if (node.parentIndex === parentIndex) count++;
++  }
+   return count;
+ }
+diff --git a/packages/layout/src/gridLayout.ts b/packages/layout/src/gridLayout.ts
+--- a/packages/layout/src/gridLayout.ts
++++ b/packages/layout/src/gridLayout.ts
+@@ -158,6 +158,9 @@ function getGridRow(tree: Readonly<LayoutTree>, parentIndex: number, childIndex:
+ 
+ function getGridOrdinal(tree: Readonly<LayoutTree>, parentIndex: number, childIndex: number): number {
+   let ordinal = 0;
+-  for (let i = 0; i < childIndex; i++) if (tree.nodes[i].parentIndex === parentIndex) ordinal++;
++  for (let i = 0; i < childIndex; i++) {
++    const node = tree.nodes[i];
++    if (node.parentIndex === parentIndex) ordinal++;
++  }
+   return ordinal;
+ }

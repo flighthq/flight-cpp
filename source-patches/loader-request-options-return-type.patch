@@ -1,0 +1,19 @@
+diff --git a/packages/loader/src/load.ts b/packages/loader/src/load.ts
+--- a/packages/loader/src/load.ts
++++ b/packages/loader/src/load.ts
+@@ -1,7 +1,13 @@
+ import { sendNetRequest } from '@flighthq/net/contract';
+ import { connectSignal, createSignal, emitSignal } from '@flighthq/signals/contract';
+-import type { HostNetCapability, LoadOptions, LoadProgress, NetProgress } from '@flighthq/types/contract';
+-function requestOptions(url: string, input?: Readonly<LoadOptions>) {
++import type {
++  HostNetCapability,
++  LoadOptions,
++  LoadProgress,
++  NetProgress,
++  NetRequestOptions,
++} from '@flighthq/types/contract';
++function requestOptions(url: string, input?: Readonly<LoadOptions>): Readonly<NetRequestOptions> | undefined {
+   if (!input) return undefined;
+   if (!input.progress) return { signal: input.signal };
+   const progress = createSignal<(p: Readonly<NetProgress>) => void>();

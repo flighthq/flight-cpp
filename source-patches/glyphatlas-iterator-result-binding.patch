@@ -1,0 +1,12 @@
+diff --git a/packages/glyphatlas/src/glyphAtlasEntry.ts b/packages/glyphatlas/src/glyphAtlasEntry.ts
+--- a/packages/glyphatlas/src/glyphAtlasEntry.ts
++++ b/packages/glyphatlas/src/glyphAtlasEntry.ts
+@@ -93,7 +93,7 @@ function _blitGlyphIntoAtlasBitmap(
+ // cached.
+ function _evictLeastRecentlyUsedGlyph(runtime: GlyphAtlasRuntime): boolean {
+   // Insertion order makes the first key the least recently used, since every touch re-inserts.
+-  const oldest = runtime.lru.keys().next();
++  const oldest: IteratorResult<number> = runtime.lru.keys().next();
+   if (oldest.done === true) return false;
+   const codepoint = oldest.value;
+   runtime.lru.delete(codepoint);

@@ -1,0 +1,13 @@
+diff --git a/packages/tokens/src/flightDocumentTokenReference.ts b/packages/tokens/src/flightDocumentTokenReference.ts
+--- a/packages/tokens/src/flightDocumentTokenReference.ts
++++ b/packages/tokens/src/flightDocumentTokenReference.ts
+@@ -5,6 +5,8 @@ import type { FlightDocumentValue } from '@flighthq/types/contract';
+ // same hazard the shape-command schema ruling names.
+ export function isFlightDocumentTokenReference(value: FlightDocumentValue): value is string {
+-  return typeof value === 'string' && value.startsWith(REFERENCE_SIGIL) && !value.startsWith(REFERENCE_ESCAPE);
++  if (typeof value !== 'string') return false;
++  const text: string = value;
++  return text.startsWith(REFERENCE_SIGIL) && !text.startsWith(REFERENCE_ESCAPE);
+ }
+ 
+ // The token key a reference names, or null when the scalar is a malformed reference. A caller must

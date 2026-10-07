@@ -1,0 +1,77 @@
+diff --git a/packages/skeleton3d/src/skeleton3d.ts b/packages/skeleton3d/src/skeleton3d.ts
+--- a/packages/skeleton3d/src/skeleton3d.ts
++++ b/packages/skeleton3d/src/skeleton3d.ts
+@@ -18,12 +18,15 @@ import type {
+ } from '@flighthq/types/contract';
+ 
+ export function cloneSkeleton3D(skeleton: Readonly<Skeleton3D>): Skeleton3D {
++  const joints: Node3D[] = skeleton.joints.slice();
++  const names: Skeleton3D['names'] =
++    skeleton.names === undefined ? undefined : skeleton.names === null ? null : skeleton.names.slice();
+   const clone = allocateEntity<Skeleton3D>();
+   initializeSkeleton3D(
+     clone,
+     new Float32Array(skeleton.inverseBindMatrices),
+     new Float32Array(skeleton.jointMatrices),
+-    skeleton.joints.slice(),
+-    skeleton.names === undefined ? undefined : skeleton.names === null ? null : skeleton.names.slice(),
++    joints,
++    names,
+     new Float32Array(skeleton.normalMatrices),
+   );
+@@ -40,11 +43,11 @@ export function cloneSkeleton3DJointHierarchy(
+   cloneJoint: (joint: Readonly<Node3D>, jointIndex: number) => Node3D,
+ ): Skeleton3D {
+   const sourceJoints = skeleton.joints;
+-  const joints = new Array<Node3D>(sourceJoints.length);
++  const joints: Node3D[] = [];
+   const clonesBySource = new Map<Node3D, Node3D>();
+   for (let i = 0; i < sourceJoints.length; i++) {
+     const source = sourceJoints[i];
+     const clone = cloneJoint(source, i);
+-    joints[i] = clone;
++    joints.push(clone);
+     clonesBySource.set(source, clone);
+   }
+@@ -55,11 +58,13 @@ export function cloneSkeleton3DJointHierarchy(
+     if (parentClone !== undefined) addNodeChild(parentClone, joints[i]);
+   }
++  const names: Skeleton3D['names'] =
++    skeleton.names === undefined ? undefined : skeleton.names === null ? null : skeleton.names.slice();
+   const out = allocateEntity<Skeleton3D>();
+   initializeSkeleton3D(
+     out,
+     new Float32Array(skeleton.inverseBindMatrices),
+     new Float32Array(skeleton.jointMatrices),
+     joints,
+-    skeleton.names === undefined ? undefined : skeleton.names === null ? null : skeleton.names.slice(),
++    names,
+     new Float32Array(skeleton.normalMatrices),
+   );
+@@ -120,6 +125,6 @@ export function equalsSkeleton3D(a: Readonly<Skeleton3D>, b: Readonly<Skeleton3D
+   for (let i = 0; i < a.inverseBindMatrices.length; i++) {
+     if (a.inverseBindMatrices[i] !== b.inverseBindMatrices[i]) return false;
+   }
+-  const aNames = a.names ?? null;
+-  const bNames = b.names ?? null;
++  const aNames: readonly string[] | null = a.names ?? null;
++  const bNames: readonly string[] | null = b.names ?? null;
+   if (aNames === null || bNames === null) return aNames === bNames;
+@@ -132,5 +137,5 @@ export function equalsSkeleton3D(a: Readonly<Skeleton3D>, b: Readonly<Skeleton3D
+ 
+ export function getSkeleton3DJointIndexByName(skeleton: Readonly<Skeleton3D>, name: string): number {
+-  const { names } = skeleton;
++  const names: readonly string[] | null | undefined = skeleton.names;
+   if (names == null) return -1;
+   return names.indexOf(name);
+@@ -206,8 +211,8 @@ export function validateSkeleton3D(skeleton: Readonly<Skeleton3D>): Skeleton3DVal
+   const inverseBindMatricesLength = skeleton.inverseBindMatrices.length;
+   if (inverseBindMatricesLength === expectedInverseBindMatricesLength) return null;
+   return {
+-    expectedInverseBindMatricesLength,
+-    inverseBindMatricesLength,
+     jointCount,
++    inverseBindMatricesLength,
++    expectedInverseBindMatricesLength,
+     message: `Skeleton3D inverseBindMatrices length ${inverseBindMatricesLength} does not match jointCount ${jointCount} * 16 = ${expectedInverseBindMatricesLength}.`,
+   };

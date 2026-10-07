@@ -1,0 +1,46 @@
+diff --git a/packages/midi/src/midiResource.ts b/packages/midi/src/midiResource.ts
+--- a/packages/midi/src/midiResource.ts
++++ b/packages/midi/src/midiResource.ts
+@@ -69,27 +69,31 @@ export function retainMidiInputPortResourceState(
+   port: MidiInputPort,
+   operations: MidiInputPortResourceOperations,
+ ): void {
+-  portStates.set(port, { ...createMidiPortState('input', operations), messageSubscriptions: new Set() });
++  const state: MidiInputPortResourceState = {
++    disposeCompleted: false,
++    disposePending: null,
++    disposed: false,
++    flightOpened: false,
++    kind: 'input',
++    messageSubscriptions: new Set(),
++    operations,
++    stateSubscriptions: new Set(),
++  };
++  portStates.set(port, state);
+ }
+ 
+ export function retainMidiOutputPortResourceState(
+   port: MidiOutputPort,
+   operations: MidiOutputPortResourceOperations,
+ ): void {
+-  portStates.set(port, createMidiPortState('output', operations));
+-}
+-
+-function createMidiPortState<
+-  Kind extends MidiPortResourceState['kind'],
+-  Operations extends MidiPortResourceState['operations'],
+->(kind: Kind, operations: Operations) {
+-  return {
++  const state: MidiOutputPortResourceState = {
+     disposeCompleted: false,
+     disposePending: null,
+     disposed: false,
+     flightOpened: false,
+-    kind,
++    kind: 'output',
+     operations,
+     stateSubscriptions: new Set(),
+-  } as Extract<MidiPortResourceState, { kind: Kind }>;
++  };
++  portStates.set(port, state);
+ }

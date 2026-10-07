@@ -1,0 +1,13 @@
+diff --git a/packages/spritesheet-formats/src/libgdxAtlasParse.ts b/packages/spritesheet-formats/src/libgdxAtlasParse.ts
+--- a/packages/spritesheet-formats/src/libgdxAtlasParse.ts
++++ b/packages/spritesheet-formats/src/libgdxAtlasParse.ts
+@@ -40,7 +40,8 @@ function isFilename(line: string): boolean {
+ }
+ 
+ function parseLibgdxAtlas(text: string): { pages: LibgdxPage[]; regions: LibgdxRegion[] } {
+-  const lines = text.split(/\r?\n/);
++  const normalized = text.replace(/\r\n/g, '\n');
++  const lines = normalized.split('\n');
+   const pages: LibgdxPage[] = [];
+   const regions: LibgdxRegion[] = [];
+ 
