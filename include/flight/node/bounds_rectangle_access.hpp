@@ -15,4 +15,13 @@ get_node_world_bounds_rectangle(flight::types::Node2D target) {
       "World bounds require the unavailable checked HasBoundsRectangleRuntime owner"));
 }
 
+template <typename Schema>
+inline flight::StructuralRef<
+    flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>
+get_node_world_bounds_rectangle(flight::StructuralRef<Schema> target) {
+  (void)target;
+  throw flight::Error(flight::String(
+      "World bounds require the unavailable checked HasBoundsRectangleRuntime owner"));
+}
+
 } // namespace flight::node
