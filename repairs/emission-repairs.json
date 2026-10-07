@@ -8062,6 +8062,10 @@
         {
           "include": "flight/types/log.hpp",
           "name": "LogSink"
+        },
+        {
+          "include": "flight/types/render_state.hpp",
+          "name": "RenderState"
         }
       ],
       "diagnostic": "'DebugSubsystemName' was not declared in this scope; did you mean 'flight::types::DebugSubsystemName'?",
@@ -11966,6 +11970,131 @@
       "defect": "The emitter erases the generic helper's pipeline members to Any and then reifies that view as an unrelated anonymous owner. The source declaration and both surrounding cache types require the named WgpuEffectPipeline owner, so the anonymous spelling is an erased projection of that same object rather than a distinct allocation.",
       "expectedWhen": "always",
       "expires": "when generic structural projections retain WgpuEffectPipeline at this cache boundary; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "bitmapfont-formats-probe-json-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/bitmapfont_formats/explain_bitmap_font_parse.hpp",
+      "symbol": "probe_json",
+      "declaration": "namespace flight::bitmapfont_formats { struct ProbeResult; inline std::optional<flight::Ref<ProbeResult>> probe_json(flight::String text); }",
+      "diagnostic": "'probe_json' was not declared in this scope",
+      "defect": "The emitter refuses probeJson because JsonValue has no owner-preserving named-property view, but it still emits explain_bitmap_font_parse calling the omitted function. Declaring the exact refused boundary keeps the partial header usable without claiming an implementation; the generated refusal and source body remain adjacent documentation of the missing runtime capability.",
+      "expectedWhen": "always",
+      "expires": "when probeJson emits or callers of refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "animation-state-machine-flatten-channel-index-read",
+      "kind": "flatten-nested-optional-array-read",
+      "appliesTo": "flight/animation/animation_state_machine.hpp",
+      "sourceDeclaration": "packages/animation/src/animationStateMachine.ts -- stateChannelIndices is `(number | undefined)[]`, and each indexed read is immediately stored as `number | undefined`",
+      "diagnostic": "cannot convert 'std::optional<double>' to 'double' when passing current_channel_index.value(), from_channel_index.value(), or to_channel_index.value()",
+      "defect": "Array<optional<double>>::get adds an outer optional for bounds, producing optional<optional<double>> where the source has one absence channel. Both an out-of-range read and an empty in-range element are JavaScript undefined here, so value_or(nullopt) restores the declared number-or-undefined value before it is tested and passed.",
+      "expectedWhen": "always",
+      "expires": "when the emitter flattens Array.get's bounds absence into an optional element's existing undefined channel at assignments declared with one optional layer; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "animation-state-machine-optional-fill",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/animation/animation_state_machine.hpp",
+      "from": "flight::Array<std::optional<double>>(static_cast<double>(states.size())).fill(nullptr)",
+      "to": "flight::Array<std::optional<double>>(static_cast<double>(states.size())).fill(std::nullopt)",
+      "sourceDeclaration": "packages/animation/src/animationStateMachine.ts -- new Array<number | undefined>(states.length).fill(undefined)",
+      "diagnostic": "cannot convert 'std::nullptr_t' to 'const std::optional<double>&'",
+      "defect": "The emitter lowers undefined to nullptr inside Array<optional<double>>::fill even though std::nullopt is the runtime's represented absence for that carrier. The exact replacement changes only the spelling of that already-declared absence value.",
+      "expectedWhen": "always",
+      "expires": "when undefined passed to an optional-valued Array method lowers to std::nullopt; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "animation-state-machine-channel-row-projection",
+      "kind": "project-array-at-row-write",
+      "appliesTo": "flight/animation/animation_state_machine.hpp",
+      "keys": [
+        "channels"
+      ],
+      "element": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationStateMachineChannel>>>>",
+      "identityArgument": "`channels` is a local created by create_animation_state_machine_channels and written once into the construction row at the end of initialization. It is not returned, captured, or otherwise retained, and the write is its final use, so no caller can observe the local array handle. array_of preserves every channel object's identity while projecting only the unobservable container handle.",
+      "sourceDeclaration": "packages/animation/src/animationStateMachine.ts -- initializeAnimationStateMachine stores the locally constructed channels array into the machine's readonly-row channel member",
+      "diagnostic": "static assertion failed: structural row write has an incompatible value type -- Array<Ref<AnimationStateMachineChannel>> written where Array<StructuralRef<RowReadonly<RowOf<Ref<AnimationStateMachineChannel>>>>> is declared",
+      "defect": "The emitter retains concrete owners for the locally constructed channel array but declares the destination as readonly structural rows. The elements are the same objects and array_of performs the required row projection without copying them; the declared identity precondition makes rebuilding the local container safe.",
+      "expectedWhen": "always",
+      "expires": "when the emitter projects arrays of concrete references to the readonly structural-row element type required by a construction-row member; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "debug-log-level-value-carrier",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/debug/debug.hpp",
+      "from": "flight::Ref<log_level>",
+      "to": "flight::types::LogLevel",
+      "sourceDeclaration": "packages/debug/src/debug.ts -- _savedGlobalLevel, _savedChannelLevels, and _applyDebugLevels use the LogLevel enum value type",
+      "diagnostic": "'log_level' was not declared in this scope",
+      "defect": "The emitter treats the imported LogLevel enum object as a reference-backed lower-case owner even though flight::types::LogLevel is the emitted enum value carrier and the log override APIs use that value type.",
+      "expectedWhen": "always",
+      "expires": "when imported enum values retain their emitted enum carrier instead of becoming Ref<lower_case_object>; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "debug-log-level-enum-member",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/debug/debug.hpp",
+      "from": "log_level.verbose",
+      "to": "flight::types::LogLevel::Verbose",
+      "sourceDeclaration": "packages/debug/src/debug.ts -- let _savedGlobalLevel: LogLevel = LogLevel.Verbose",
+      "diagnostic": "'log_level' was not declared in this scope",
+      "defect": "The emitter writes a JavaScript object-style member access for a native enum constant. The replacement is the generated enum's exact enumerator spelling.",
+      "expectedWhen": "always",
+      "expires": "when imported enum member access lowers to the C++ enum enumerator spelling; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "debug-unqualified-log-functions",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/debug/",
+      "namespace": "flight::log",
+      "symbols": [
+        { "include": "flight/log/log.hpp", "name": "add_log_sink" },
+        { "include": "flight/log/log.hpp", "name": "clear_log_channel_level" },
+        { "include": "flight/log/log.hpp", "name": "remove_log_sink" },
+        { "include": "flight/log/log.hpp", "name": "set_log_channel_level" },
+        { "include": "flight/log/log.hpp", "name": "set_log_level" }
+      ],
+      "diagnostic": "log helpers such as 'set_log_level' were not declared in this scope",
+      "defect": "The emitter leaves functions imported from @flighthq/log unqualified inside namespace flight::debug and does not include their defining header.",
+      "expectedWhen": "always",
+      "expires": "when imported log functions retain their flight::log qualification and include; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "debug-unqualified-render-functions",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/debug/",
+      "namespace": "flight::render",
+      "symbols": [
+        { "include": "flight/render/enable_color_adjustment_guards.hpp", "name": "enable_color_adjustment_guards" },
+        { "include": "flight/render/render_registry_guards.hpp", "name": "enable_render_registries_guards" }
+      ],
+      "diagnostic": "render guard helpers were not declared in this scope",
+      "defect": "The emitter leaves functions imported from @flighthq/render unqualified inside namespace flight::debug and does not include their defining headers.",
+      "expectedWhen": "always",
+      "expires": "when imported render functions retain their flight::render qualification and includes; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "debug-color-adjustment-guard-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/debug/debug.hpp",
+      "symbol": "enable_color_adjustment_guards",
+      "declaration": "namespace flight::types { struct RenderState; } namespace flight::render { inline void enable_color_adjustment_guards(flight::Ref<flight::types::RenderState> state); }",
+      "diagnostic": "'enable_color_adjustment_guards' has not been declared in 'flight::render'",
+      "defect": "The render module refuses enableColorAdjustmentGuards at an unshaped intersection, while debug's emitted enable_flight_diagnostics still imports and calls that omitted boundary. Declaring it here preserves the partial-header contract without inventing an implementation.",
+      "expectedWhen": "always",
+      "expires": "when enableColorAdjustmentGuards emits or callers of refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "debug-enable-debug-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/debug/debug.hpp",
+      "symbol": "enable_debug",
+      "declaration": "namespace flight::types { struct DebugOptions; } namespace flight::debug { inline void enable_debug(std::optional<flight::Ref<flight::types::DebugOptions>> options); }",
+      "diagnostic": "'enable_debug' was not declared in this scope",
+      "defect": "The emitter refuses enableDebug's body at its optional default-object construction but still emits enable_flight_diagnostics calling that omitted boundary. Declaring the refused function keeps the partial header usable without inventing an implementation.",
+      "expectedWhen": "always",
+      "expires": "when enableDebug emits or callers of refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
     }
   ]
 }

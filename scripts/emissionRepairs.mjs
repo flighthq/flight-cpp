@@ -24,6 +24,7 @@ const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration',
   'unwrap-partial-row-three-state-member',
   'project-array-at-row-write',
   'project-symbol-keyed-member',
+  'flatten-nested-optional-array-read',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -66,6 +67,7 @@ const REQUIRED_FIELDS = {
   'unwrap-partial-row-three-state-member': [...SHARED_FIELDS, 'keys', 'sourceDeclaration'],
   'project-array-at-row-write': [...SHARED_FIELDS, 'keys', 'element', 'identityArgument', 'sourceDeclaration'],
   'project-symbol-keyed-member': [...SHARED_FIELDS, 'symbol', 'member', 'sourceDeclaration'],
+  'flatten-nested-optional-array-read': [...SHARED_FIELDS, 'sourceDeclaration'],
 };
 
 export function loadEmissionRepairs(root) {
@@ -197,7 +199,24 @@ const HANDLERS = {
   'unwrap-partial-row-three-state-member': unwrapPartialRowThreeStateMember,
   'project-array-at-row-write': projectArrayAtRowWrite,
   'project-symbol-keyed-member': projectSymbolKeyedMember,
+  'flatten-nested-optional-array-read': flattenNestedOptionalArrayRead,
 };
+
+// An Array<optional<T>>::get(index) distinguishes an out-of-range read (outer nullopt) from an
+// in-range empty element (inner nullopt), while TypeScript's indexed read exposes both as the same
+// `undefined` value. When the source immediately stores that read as `T | undefined`, flattening the
+// two absence layers is therefore required rather than lossy. This repair is deliberately anchored to
+// declared headers: nested optional values are meaningful elsewhere and must not be flattened merely
+// because their spelling looks similar.
+function flattenNestedOptionalArrayRead(contents) {
+  const declaration = /const std::optional<std::optional<([^>\n]+)>> ([A-Za-z_]\w*) = ([^;\n]+);/gu;
+  if (!declaration.test(contents)) return undefined;
+  return contents.replace(
+    declaration,
+    (_match, value, name, expression) =>
+      `const std::optional<${value}> ${name} = (${expression}).value_or(std::nullopt);`,
+  );
+}
 
 // Respells one exact runtime call name when the emitter's ABI spelling collides with a package
 // namespace. The opening parenthesis is part of the declared symbol, so fields and unrelated

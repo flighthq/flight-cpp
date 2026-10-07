@@ -53,7 +53,7 @@ inline flight::Task<T> acquire_asset(flight::Ref<AssetLibrary> library, flight::
     ([&]() { auto optional_chain_receiver = runtime->acquire_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(library, flight::make_ref<AssetLoadExplanation>(AssetLoadExplanation{.id = id, .ref_count = 0.0, .status = flight::String("missing-descriptor"), .type = nullptr})); }());
     return flight::reject_task<T>(flight::Error(flight::String("assets: no descriptor for id \"") + flight::to_string(id) + flight::String("\"")));
   }
-  std::optional<flight::Ref<AssetLoaderAdapter>> adapter = runtime->adapters.get(descriptor.value()->type);
+  std::optional<flight::Ref<AssetLoaderAdapter<>>> adapter = runtime->adapters.get(descriptor.value()->type);
   if (!adapter.has_value()) {
     ([&]() { auto optional_chain_receiver = runtime->acquire_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(library, flight::make_ref<AssetLoadExplanation>(AssetLoadExplanation{.id = id, .ref_count = 0.0, .status = flight::String("missing-loader"), .type = descriptor.value()->type})); }());
     return flight::reject_task<T>(flight::Error(flight::String("assets: no loader for type \"") + flight::to_string(descriptor.value()->type) + flight::String("\"")));
@@ -66,7 +66,7 @@ inline flight::Task<T> acquire_asset(flight::Ref<AssetLibrary> library, flight::
     }
     return static_cast<flight::Task<T>>(existing.value()->load_promise);
   }
-  flight::Ref<AssetEntry> entry = flight::make_ref<AssetEntry>(AssetEntry{.value = std::nullopt, .refcount = 1.0, .load_promise = nullptr, .resident = false});
+  flight::Ref<AssetEntry> entry = flight::make_ref<AssetEntry>(AssetEntry{.value = flight::Any{}, .refcount = 1.0, .load_promise = std::nullopt, .resident = false});
   runtime->freed_ids.erase(id);
   runtime->entries.set(id, entry);
   flight::Task<flight::Any> load_promise = adapter.value()->load(descriptor.value()).then([=](flight::Any value) {
@@ -76,7 +76,7 @@ inline flight::Task<T> acquire_asset(flight::Ref<AssetLibrary> library, flight::
   }
   (entry->value = value);
   (entry->resident = true);
-  (entry->load_promise = nullptr);
+  (entry->load_promise = std::nullopt);
   return value;
 }, [=](flight::Any error) {
   if ((runtime->entries.get(id) == entry)) {
@@ -122,12 +122,12 @@ inline flight::Task<T> acquire_asset(flight::Ref<AssetLibrary> library, flight::
 
 template <typename T = flight::Any>
 inline std::optional<T> get_asset(flight::Ref<AssetLibrary> library, flight::String id) {
-  std::optional<flight::Ref<AssetEntry>> entry = library->runtime.entries.get(id);
+  std::optional<flight::Ref<AssetEntry>> entry = library->runtime->entries.get(id);
   return ((entry.has_value() && entry.value()->resident) ? std::optional<T>{static_cast<T>(entry.value()->value)} : std::nullopt);
 }
 
 inline flight::Array<flight::String> get_asset_group_ids(flight::Ref<AssetLibrary> library, flight::String name) {
-  return ([&]() -> flight::Array<flight::String> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::String>> { auto optional_chain_receiver = library->runtime.groups.get(name); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().slice(); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::String>{}; }());
+  return ([&]() -> flight::Array<flight::String> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::String>> { auto optional_chain_receiver = library->runtime->groups.get(name); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().slice(); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::String>{}; }());
 }
 
 
@@ -144,12 +144,18 @@ inline flight::Array<flight::String> get_asset_group_ids(flight::Ref<AssetLibrar
 // has no C++ binding
 
 inline double get_asset_ref_count(flight::Ref<AssetLibrary> library, flight::String id) {
-  std::optional<flight::Ref<AssetEntry>> entry = library->runtime.entries.get(id);
+  std::optional<flight::Ref<AssetEntry>> entry = library->runtime->entries.get(id);
   return (entry.has_value() ? entry.value()->refcount : 0.0);
 }
 
 inline void initialize_asset_library(flight::Ref<EntityConstruction<flight::Ref<AssetLibrary>>> out) {
-  flight::Ref<AssetLibraryRuntime> runtime = flight::make_ref<AssetLibraryRuntime>(AssetLibraryRuntime{.acquire_guard = nullptr, .adapters = flight::Map(), .descriptors = flight::Map(), .entries = flight::Map(), .freed_ids = flight::Set(), .groups = flight::Map()});
+  flight::Ref<AssetLibraryRuntime> runtime = flight::make_ref<AssetLibraryRuntime>(AssetLibraryRuntime{
+      .acquire_guard = std::nullopt,
+      .adapters = flight::Map<flight::String, flight::Ref<AssetLoaderAdapter<>>>{},
+      .descriptors = flight::Map<flight::String, flight::Ref<AssetDescriptor>>{},
+      .entries = flight::Map<flight::String, flight::Ref<AssetEntry>>{},
+      .freed_ids = flight::Set<flight::String>{},
+      .groups = flight::Map<flight::String, flight::Array<flight::String>>{}});
   (out->runtime = runtime);
 }
 
@@ -244,7 +250,7 @@ inline flight::Ref<AssetLibrary> create_asset_library() {
 // invent side storage
 
 inline void set_asset_acquire_guard(flight::Ref<AssetLibrary> library, std::optional<flight::Ref<AssetAcquireGuard>> guard) {
-  (library->runtime.acquire_guard = guard);
+  (library->runtime->acquire_guard = guard);
 }
 
 
@@ -270,6 +276,17 @@ inline void set_asset_acquire_guard(flight::Ref<AssetLibrary> library, std::opti
 // followed by a rebind, ensure every rebound member already has the declared value owner member's carrier -- a
 // Readonly structural view does not become a mutable nominal Ref.
 
+inline void dispose_asset_entry(flight::Ref<AssetLibraryRuntime> runtime, flight::String id,
+                                flight::Ref<AssetEntry> entry) {
+  runtime->entries.erase(id);
+  runtime->freed_ids.add(id);
+  if (!entry->resident) return;
+  const auto descriptor = runtime->descriptors.get(id);
+  if (!descriptor.has_value()) return;
+  const auto adapter = runtime->adapters.get(descriptor.value()->type);
+  if (adapter.has_value()) adapter.value()->dispose(entry->value);
+}
+
 inline void release_asset(flight::Ref<AssetLibrary> library, flight::String id) {
   flight::Ref<AssetLibraryRuntime> runtime = library->runtime;
   std::optional<flight::Ref<AssetEntry>> entry = runtime->entries.get(id);
@@ -284,7 +301,7 @@ inline void release_asset(flight::Ref<AssetLibrary> library, flight::String id) 
 }
 
 inline void release_asset_group(flight::Ref<AssetLibrary> library, flight::String name) {
-  std::optional<flight::Array<flight::String>> ids = library->runtime.groups.get(name);
+  std::optional<flight::Array<flight::String>> ids = library->runtime->groups.get(name);
   if (!ids.has_value()) {
     return;
   }
