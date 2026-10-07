@@ -1366,6 +1366,16 @@ template <typename Target, typename Schema>
   }
 }
 
+// The emitter also spells a TypeScript structural assertion directly from a nominal object
+// reference. Enter the same row-backed assertion path as an explicitly constructed writable row;
+// this preserves the exact shared owner and does not perform a native pointer cast.
+template <typename Target, typename Object>
+  requires requires { typename Target::schema_type; }
+[[nodiscard]] Target structural_ref_cast(const std::shared_ptr<Object>& source) {
+  return structural_ref_cast<Target>(
+      StructuralRef<RowWritable<RowOf<std::shared_ptr<Object>>>>(source));
+}
+
 // A property whose value this runtime has no erased reading of.
 //
 // It is raised rather than papered over: the alternative is inventing an `Any` for a value the

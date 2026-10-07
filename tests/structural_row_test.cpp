@@ -268,7 +268,7 @@ struct TestExplainHost final : public flight::ReferenceEnabled {
 
 // A member whose type the runtime has no erased reading of.
 struct TestUnrepresentedMember final : public flight::ReferenceEnabled {
-  flight::Array<double> value;
+  std::vector<double> value;
   double height{};
 };
 

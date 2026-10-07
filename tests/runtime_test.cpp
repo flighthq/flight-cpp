@@ -2654,6 +2654,12 @@ void test_new_runtime_services() {
             asserted_reference.shared_owner() == entity_view.shared_owner() &&
             !asserted_reference.shared_object(),
         "an explicit structural assertion preserves owner identity without reinterpreting its native object");
+  const auto asserted_nominal_reference =
+      flight::structural_ref_cast<AssertedReferenceView>(entity);
+  check(asserted_nominal_reference == entity_view &&
+            asserted_nominal_reference.shared_owner() == entity_view.shared_owner() &&
+            !asserted_nominal_reference.shared_object(),
+        "an explicit structural assertion from a nominal reference preserves the existing row owner");
   auto entity_runtime = flight::make_ref<TestReference>(TestReference{.value = 9});
   const auto entity_runtime_symbol = flight::Symbol::for_key("EntityRuntime");
   flight::row_set(entity_view, entity_runtime_symbol, entity_runtime);
