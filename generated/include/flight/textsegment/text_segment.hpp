@@ -14,6 +14,8 @@ namespace flight::types { struct TextSegment; }
 
 namespace flight::textsegment {
 
+using flight::types::TextSegment;
+
 inline flight::Array<flight::Ref<flight::types::TextSegment>> segment_graphemes(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>> host_text_segmenter, flight::String text, std::optional<flight::String> locale = std::nullopt) {
   return flight::row_get<flight::RowKey<"segment">>(host_text_segmenter)(text, flight::String("grapheme"), locale);
 }

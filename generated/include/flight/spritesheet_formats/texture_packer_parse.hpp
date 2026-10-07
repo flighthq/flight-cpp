@@ -51,6 +51,7 @@ using flight::types::TexturePackerDocument;
 using flight::types::TexturePackerFrameTag;
 using flight::types::TexturePackerMeta;
 using flight::types::TexturePackerParsed;
+using flight::types::TexturePackerSize;
 using flight::types::import_diagnostic_severity;
 
 inline flight::Ref<SpritesheetFrameData> frame_from_region(flight::Ref<TextureAtlasRegion> region) {

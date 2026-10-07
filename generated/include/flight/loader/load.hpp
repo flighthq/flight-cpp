@@ -33,32 +33,16 @@ namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::loader {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOADER_SIGNAL_PROGRESS_445C06F76C6FC70B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOADER_SIGNAL_PROGRESS_445C06F76C6FC70B
-struct signal_progress_445c06f76c6fc70b : public flight::ReferenceEnabled {
-  std::optional<flight::AbortSignal> signal;
-  flight::Undefined progress;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOADER_SIGNAL_PROGRESS_445C06F76C6FC70B
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOADER_SIGNAL_PROGRESS_D998C418A2C9168C
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOADER_SIGNAL_PROGRESS_D998C418A2C9168C
-struct signal_progress_d998c418a2c9168c : public flight::ReferenceEnabled {
-  std::optional<flight::AbortSignal> signal;
-  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetProgress>>>>)>>> progress;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOADER_SIGNAL_PROGRESS_D998C418A2C9168C
-
-inline std::optional<std::variant<flight::Ref<signal_progress_d998c418a2c9168c>, flight::Ref<signal_progress_445c06f76c6fc70b>>> request_options(flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LoadOptions>>>>> input = std::nullopt) {
+inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetRequestOptions>>>>> request_options(flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LoadOptions>>>>> input = std::nullopt) {
   if (!input.has_value()) {
     return std::nullopt;
   }
   if (!flight::row_get<flight::RowKey<"progress">>(input.value()).has_value()) {
-    return std::optional<std::variant<flight::Ref<signal_progress_d998c418a2c9168c>, flight::Ref<signal_progress_445c06f76c6fc70b>>>{std::in_place, std::in_place_type<flight::Ref<signal_progress_445c06f76c6fc70b>>, flight::make_ref<signal_progress_445c06f76c6fc70b>(signal_progress_445c06f76c6fc70b{.signal = flight::row_get<flight::RowKey<"signal">>(input.value())})};
+    return flight::make_ref<flight::types::NetRequestOptions>(flight::types::NetRequestOptions{.signal = flight::row_get<flight::RowKey<"signal">>(input.value())});
   }
   auto progress = flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetProgress>>>>)>>();
   flight::signals::connect_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetProgress>>>>)>>(progress, [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetProgress>>>> event) { return flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LoadProgress>>>>)>>(flight::row_get<flight::RowKey<"progress">>(input.value()).value(), flight::make_ref<flight::types::LoadProgress>(flight::types::LoadProgress{.url = url, .loaded = flight::row_get<flight::RowKey<"loaded">>(event), .total = flight::row_get<flight::RowKey<"total">>(event), .phase = flight::row_get<flight::RowKey<"phase">>(event)})); }, std::nullopt);
-  return std::optional<std::variant<flight::Ref<signal_progress_d998c418a2c9168c>, flight::Ref<signal_progress_445c06f76c6fc70b>>>{std::in_place, std::in_place_type<flight::Ref<signal_progress_d998c418a2c9168c>>, flight::make_ref<signal_progress_d998c418a2c9168c>(signal_progress_d998c418a2c9168c{.signal = flight::row_get<flight::RowKey<"signal">>(input.value()), .progress = progress})};
+  return ([&]() { auto object_member_signal = flight::row_get<flight::RowKey<"signal">>(input.value()); auto object_member_progress = std::optional<std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetProgress>>>>)>>>>{progress}; return flight::make_ref<flight::types::NetRequestOptions>(flight::types::NetRequestOptions{.progress = object_member_progress, .signal = object_member_signal}); }());
 }
 
 inline flight::Task<std::optional<flight::Uint8Array>> load_bytes(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>> host_net, flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LoadOptions>>>>> input = std::nullopt) {

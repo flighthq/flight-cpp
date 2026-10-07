@@ -33,22 +33,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/audio_bus.hpp>
 
-#include <flight/types/audio_bus.hpp>
-
 #include <flight/entity/entity.hpp>
 
 namespace flight::media {
 
-using flight::types::HostAudioMixerCapability;
-
-using flight::types::AudioBusMixerOperation;
-
-using flight::types::AudioBusMixerGuard;
-
 using flight::types::AudioBus;
 using flight::types::AudioBusOptions;
+using flight::types::AudioBusMixerGuard;
+using flight::types::AudioBusMixerOperation;
 using flight::types::AudioMixer;
 using flight::types::EntityConstruction;
+using flight::types::HostAudioMixerCapability;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

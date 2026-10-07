@@ -4,14 +4,14 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function asCompression -- source line 105
-//   missing: function asStaggerAxis -- source line 395
-//   missing: function asStaggerIndex -- source line 399
-//   missing: function objectField -- source line 403
-//   missing: function parseJson -- source line 419
-//   missing: function parsePointsField -- source line 429
+//   missing: function asStaggerAxis -- source line 396
+//   missing: function asStaggerIndex -- source line 400
+//   missing: function objectField -- source line 404
+//   missing: function parseJson -- source line 420
+//   missing: function parsePointsField -- source line 430
 //   missing: function buildTiledLayerDataFromJson -- source line 163
 //   missing: function buildTiledLayerFromJson -- source line 212
-//   missing: function buildTiledTilesetTileFromJson -- source line 347
+//   missing: function buildTiledTilesetTileFromJson -- source line 348
 //   missing: function parseTiledTmj -- source line 52
 #include <cmath>
 #include <flight/any.hpp>
@@ -27,6 +27,8 @@
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
+
+#include <flight/types/vector2.hpp>
 
 #include <flight/types/tiled_tileset.hpp>
 
@@ -56,6 +58,7 @@ using flight::types::TiledPropertyType;
 using flight::types::TiledRenderOrder;
 using flight::types::TiledTileset;
 using flight::types::TiledTilesetRef;
+using flight::types::Vector2Like;
 using flight::types::import_diagnostic_severity;
 
 
@@ -101,7 +104,7 @@ inline flight::Ref<TiledObjectAlignment> as_object_alignment(std::optional<fligh
 }
 
 
-// NOT GENERATED: function asStaggerAxis -- source line 395
+// NOT GENERATED: function asStaggerAxis -- source line 396
 // refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
@@ -113,7 +116,7 @@ inline flight::Ref<TiledObjectAlignment> as_object_alignment(std::optional<fligh
 // union value type flight::String is not a represented runtime domain
 
 
-// NOT GENERATED: function asStaggerIndex -- source line 399
+// NOT GENERATED: function asStaggerIndex -- source line 400
 // refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
@@ -161,7 +164,7 @@ inline bool bool_field(JsonObject obj, flight::String key, bool fallback) {
 }
 
 
-// NOT GENERATED: function objectField -- source line 403
+// NOT GENERATED: function objectField -- source line 404
 // refusal: cpp-contextual-union-value-type-unrepresented [target-runtime]
 //
 // The source it stood for:
@@ -179,7 +182,7 @@ inline double num_field(JsonObject obj, flight::String key, double fallback) {
 }
 
 
-// NOT GENERATED: function parseJson -- source line 419
+// NOT GENERATED: function parseJson -- source line 420
 //
 // The source it stood for:
 //   function parseJson(text: string): JsonObject | null {
@@ -196,7 +199,7 @@ inline double num_field(JsonObject obj, flight::String key, double fallback) {
 // call result type flight::JsonValue is not one represented contextual runtime domain
 
 
-// NOT GENERATED: function parsePointsField -- source line 429
+// NOT GENERATED: function parsePointsField -- source line 430
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -281,7 +284,8 @@ inline flight::Array<flight::Ref<TiledProperty>> build_tiled_properties_from_jso
   return array_field(obj, flight::String("properties")).map([=](JsonObject property) {
   flight::Ref<TiledPropertyType> type = as_property_type(str_field(property, flight::String("type")));
   auto raw = property.get(flight::String("value")).value();
-  return flight::make_ref<TiledProperty>(TiledProperty{.name = ([&]() -> flight::String { auto nullish_coalesce_left = str_field(property, flight::String("name")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()), .type = type, .value = coerce_property_value(type, raw)});
+  flight::Ref<TiledProperty> value = flight::make_ref<TiledProperty>(TiledProperty{.name = ([&]() -> flight::String { auto nullish_coalesce_left = str_field(property, flight::String("name")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()), .type = type, .value = coerce_property_value(type, raw)});
+  return value;
 });
 }
 
@@ -398,7 +402,7 @@ inline flight::Ref<TiledObject> build_tiled_object_from_json(JsonObject obj) {
 // nominal Ref.
 
 
-// NOT GENERATED: function buildTiledTilesetTileFromJson -- source line 347
+// NOT GENERATED: function buildTiledTilesetTileFromJson -- source line 348
 // refusal: cpp-contextual-union-value-type-unrepresented [target-runtime]
 //
 // The source it stood for:

@@ -1820,11 +1820,9 @@
     },
     {
       "code": "unsupported-ir",
-      "column": 1,
-      "line": 173,
       "module": "packages/glyphatlas/src/glyphAtlasEntry.ts",
       "package": "@flighthq/glyphatlas",
-      "reason": "cpp emission failed for @flighthq/glyphatlas/packages/glyphatlas/src/glyphAtlasEntry.ts: property width on C++ absence-carrying storage requires narrowed access: no present-value proof reaches this read. Guard this exact receiver (bind a property or call result to a local first if evaluating it again would produce a different value), then read the member only in the present branch. The compiler will not discard the absence state or call value() without that proof",
+      "reason": "cpp emission failed for @flighthq/glyphatlas/packages/glyphatlas/src/glyphAtlasEntry.ts: runtime external symbol binding plan is incomplete (missing: IteratorResult[type], IteratorYieldResult[type])",
       "stage": "emission"
     },
     {
@@ -2325,7 +2323,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 250,
+      "line": 254,
       "module": "packages/layout/src/flexLayout.ts",
       "package": "@flighthq/layout",
       "reason": "cpp emission failed for @flighthq/layout/packages/layout/src/flexLayout.ts: type assertion target must identify exactly one C++ variant alternative: target flight::Ref<align_direction_gap_justify_padding_bottom_padding_left_padding_right_padding_top_wrap_00b432e40c6f19c0> against [flight::ErasedRef]",
@@ -2748,15 +2746,6 @@
       "module": "packages/midi/src/midiPort.ts",
       "package": "@flighthq/midi",
       "reason": "cpp emission failed for @flighthq/midi/packages/midi/src/midiPort.ts: captured referent mutation of state requires a shared C++ reference representation",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 82,
-      "module": "packages/midi/src/midiResource.ts",
-      "package": "@flighthq/midi",
-      "reason": "cpp emission failed for @flighthq/midi/packages/midi/src/midiResource.ts: Extract cannot make the C++ function return type depend on runtime discriminant Kind: property kind admits \"input\", \"output\", whose literal types all use the same C++ string carrier. The runtime value can choose a variant alternative only after one return carrier is fixed, and a variant return would change the asserted Extract contract. Return one complete declared union arm from each source branch, or split the generic declaration by arm; the compiler will not choose an arm with an unchecked cast or materialize a replacement structural row",
       "stage": "emission"
     },
     {
@@ -5058,7 +5047,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 17,
+      "line": 18,
       "module": "packages/scene2d-resources/src/loadScene2DAudioResources.ts",
       "package": "@flighthq/scene2d-resources",
       "reason": "cpp emission failed for @flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DAudioResources.ts: async closures require C++ coroutine lowering",
@@ -5067,7 +5056,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 18,
+      "line": 20,
       "module": "packages/scene2d-resources/src/loadScene2DImageResources.ts",
       "package": "@flighthq/scene2d-resources",
       "reason": "cpp emission failed for @flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DImageResources.ts: async closures require C++ coroutine lowering",
@@ -6869,7 +6858,7 @@
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/enableSkeleton3DGuards.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./skeleton3d was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
+      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
       "stage": "dependency"
     },
     {
@@ -6889,13 +6878,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 38,
+      "code": "dependency-refused",
       "module": "packages/skeleton3d/src/skeleton3d.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "cpp emission failed for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts: Array length construction is outside the dense flight-cpp array profile because its runtime contract cannot represent holes; use an explicit fill value, build the array with push, or use Array.from when every element should be present",
-      "stage": "emission"
+      "reason": "dependency @flighthq/node/contract was refused for @flighthq/node/packages/node/src/hierarchy.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -7047,7 +7034,7 @@
     {
       "code": "unsupported-ir",
       "column": 7,
-      "line": 327,
+      "line": 339,
       "module": "packages/spritesheet/src/spritesheetPlayer.ts",
       "package": "@flighthq/spritesheet",
       "reason": "cpp emission failed for @flighthq/spritesheet/packages/spritesheet/src/spritesheetPlayer.ts: flight-cpp WeakMap key requires a proven Flight reference or external weak-key policy",
@@ -7408,7 +7395,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 111,
+      "line": 112,
       "module": "packages/text-markup/src/markupTagRegistry.ts",
       "package": "@flighthq/text-markup",
       "reason": "cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts: Object.assign requires one closed callable-object target and an exact compatible object literal source",
@@ -7889,7 +7876,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 403,
+      "line": 404,
       "module": "packages/tilemap-formats/src/tiledJsonParse.ts",
       "package": "@flighthq/tilemap-formats",
       "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledJsonParse.ts: contextual union value type flight::Any is not a represented runtime domain",
@@ -7959,7 +7946,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 20,
+      "line": 22,
       "module": "packages/tokens/src/flightDocumentTokenReference.ts",
       "package": "@flighthq/tokens",
       "reason": "cpp emission failed for @flighthq/tokens/packages/tokens/src/flightDocumentTokenReference.ts: property length on C++ absence-carrying storage requires narrowed access: no present-value proof reaches this read. Guard this exact receiver (bind a property or call result to a local first if evaluating it again would produce a different value), then read the member only in the present branch. The compiler will not discard the absence state or call value() without that proof",
@@ -8130,7 +8117,7 @@
       "code": "dependency-refused",
       "module": "packages/video/src/contract.ts",
       "package": "@flighthq/video",
-      "reason": "dependency ./videoFormat was refused for @flighthq/video/packages/video/src/videoFormat.ts",
+      "reason": "dependency ./videoResourceFrom was refused for @flighthq/video/packages/video/src/videoResourceFrom.ts",
       "stage": "dependency"
     },
     {
@@ -8139,15 +8126,6 @@
       "package": "@flighthq/video",
       "reason": "dependency ./contract was refused for @flighthq/video/packages/video/src/contract.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 19,
-      "module": "packages/video/src/videoFormat.ts",
-      "package": "@flighthq/video",
-      "reason": "cpp emission failed for @flighthq/video/packages/video/src/videoFormat.ts: member split on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
-      "stage": "emission"
     },
     {
       "code": "unsupported-ir",

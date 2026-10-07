@@ -6,7 +6,7 @@
 //   missing: function createImageResourceFailure -- source line 67
 //   missing: function explainImageResourceReferenceResolution -- source line 84
 //   missing: function decodeEmbeddedImageResourceReference -- source line 40
-//   missing: function resolveImageResourceReference -- source line 154
+//   missing: function resolveImageResourceReference -- source line 155
 #include <coroutine>
 #include <flight/abort.hpp>
 #include <flight/any.hpp>
@@ -176,7 +176,7 @@ inline bool reset_failed_image_resource_reference(flight::Ref<ImageResourceRefer
 }
 
 
-// NOT GENERATED: function resolveImageResourceReference -- source line 154
+// NOT GENERATED: function resolveImageResourceReference -- source line 155
 //
 // The source it stood for:
 //   export async function resolveImageResourceReference(

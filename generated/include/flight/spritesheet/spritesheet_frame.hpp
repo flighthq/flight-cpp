@@ -17,6 +17,8 @@ namespace flight::types { struct SpritesheetFrame; }
 
 namespace flight::spritesheet {
 
+using flight::types::SpritesheetFrame;
+
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ID_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_CC00688A45C5FE5E
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ID_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_CC00688A45C5FE5E
 struct entity_runtime_key_id_offset_x_offset_y_pivot_x_pivot_y_rotated_cc00688a45c5fe5e : public flight::ReferenceEnabled {

@@ -16,12 +16,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/log.hpp>
+
 #include <flight/types/debug.hpp>
 
 namespace flight::debug {
 
 using flight::types::DebugSubsystemHooks;
 using flight::types::DebugSubsystemName;
+using flight::types::LogSink;
 
 inline flight::Map<flight::String, flight::Ref<DebugSubsystemHooks>> subsystems = flight::Map<flight::String, flight::Ref<DebugSubsystemHooks>>();
 

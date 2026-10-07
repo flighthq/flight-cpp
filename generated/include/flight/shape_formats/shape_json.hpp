@@ -34,8 +34,9 @@ inline bool is_finite_number_array(flight::Any value) {
   if (!flight::is_array(value)) {
     return false;
   }
-  for (auto entry : value) {
-    if (((flight::String("number") != flight::String("number")) || !std::isfinite(entry))) {
+  flight::Array<flight::Any> entries = value;
+  for (auto entry : entries) {
+    if (((entry.type_of() != flight::String("number")) || !std::isfinite(entry.as_number()))) {
       return false;
     }
   }

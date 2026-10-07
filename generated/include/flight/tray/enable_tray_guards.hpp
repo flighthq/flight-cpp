@@ -19,6 +19,8 @@ namespace flight::types { struct TrayIcon; }
 
 namespace flight::tray {
 
+using flight::types::TrayIcon;
+
 inline void disable_tray_guards() {
   flight::tray::set_tray_animation_guard(std::nullopt);
 }

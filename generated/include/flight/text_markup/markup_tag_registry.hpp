@@ -3,16 +3,8 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function createMarkupSpanTagHandler -- source line 111
-//   missing: function markupAnchorTagHandler -- source line 181
-//   missing: function markupBoldTagHandler -- source line 188
-//   missing: function markupItalicTagHandler -- source line 196
-//   missing: function markupListItemTagHandler -- source line 200
-//   missing: function markupParagraphTagHandler -- source line 211
-//   missing: function markupStrikethroughTagHandler -- source line 221
-//   missing: function markupUnderlineTagHandler -- source line 242
-//   missing: function createMarkupFontTagHandler -- source line 130
-//   missing: function markupTextformatTagHandler -- source line 225
+//   missing: function createMarkupSpanTagHandler -- source line 112
+//   missing: function createMarkupFontTagHandler -- source line 131
 #include <cmath>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
@@ -42,15 +34,18 @@ namespace flight::text_markup {
 using flight::color::pack_opaque_color;
 
 using flight::types::EntityConstruction;
+using flight::types::MarkupTagEffect;
 using flight::types::MarkupTagHandler;
 using flight::types::MarkupTagRegistry;
 using flight::types::TextFormat;
+using flight::types::TextFormatAlign;
+using flight::types::TextFormatListMarker;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
 inline void initialize_markup_tag_registry(flight::Ref<EntityConstruction<flight::Ref<MarkupTagRegistry>>> out) {
-  (out->handlers = flight::Map());
+  (out->handlers = flight::Map<flight::String, flight::Ref<MarkupTagHandler>>());
 }
 
 inline flight::Ref<MarkupTagRegistry> create_markup_tag_registry() {
@@ -89,12 +84,12 @@ inline std::optional<double> resolve_markup_hex_color(flight::String value) {
 }
 
 
-// NOT GENERATED: function createMarkupSpanTagHandler -- source line 111
+// NOT GENERATED: function createMarkupSpanTagHandler -- source line 112
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   function createMarkupSpanTagHandler(registry: Readonly<MarkupTagRegistry>): MarkupTagHandler {
-//     return (attributes: Readonly<Record<string, string>>): Partial<TextFormat> => {
+//     return (attributes: Readonly<Record<string, string>>, _enclosingFormat: Readonly<TextFormat>): TextFormat => {
 //       const resolve: MarkupClassResolver | undefined = registry.classResolver;
 //       const classes = attributes.class;
 //       if (resolve === undefined || classes === undefined) return {};
@@ -168,116 +163,54 @@ inline bool is_markup_list_marker(flight::String value) {
   throw std::logic_error("Flight function completed without a value");
 }
 
-
-// NOT GENERATED: function markupAnchorTagHandler -- source line 181
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   function markupAnchorTagHandler(attributes: Readonly<Record<string, string>>): Partial<TextFormat> {
-//     const format: TextFormat = {};
-//     if (attributes.href !== undefined) format.url = attributes.href;
-//     if (attributes.target !== undefined) format.target = attributes.target;
-//     return format;
-//   }
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts: Partial<T>
-// requires a statically resolvable C++ object shape; T is named
-
-
-// NOT GENERATED: function markupBoldTagHandler -- source line 188
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   function markupBoldTagHandler(): Partial<TextFormat> {
-//     return { bold: true };
-//   }
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts: Partial<T>
-// requires a statically resolvable C++ object shape; T is named
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_TEXT_CDDD22C83B96C8E4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_TEXT_CDDD22C83B96C8E4
-struct text_cddd22c83b96c8e4 : public flight::ReferenceEnabled {
-  flight::String text;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_TEXT_CDDD22C83B96C8E4
-
-inline flight::Ref<text_cddd22c83b96c8e4> markup_break_tag_handler() {
-  return flight::make_ref<text_cddd22c83b96c8e4>(text_cddd22c83b96c8e4{.text = flight::String("\n")});
+inline flight::Ref<TextFormat> markup_anchor_tag_handler(flight::Record<flight::String, flight::String> attributes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::TextFormat>>>> enclosing_format) {
+  flight::Ref<TextFormat> format = flight::make_ref<TextFormat>(TextFormat{});
+  if (true) {
+    (format->url = attributes.get(flight::String("href")).value());
+  }
+  if (true) {
+    (format->target = attributes.get(flight::String("target")).value());
+  }
+  return format;
 }
 
+inline flight::Ref<TextFormat> markup_bold_tag_handler(flight::Record<flight::String, flight::String> attributes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::TextFormat>>>> enclosing_format) {
+  return flight::make_ref<TextFormat>(TextFormat{.bold = true});
+}
 
-// NOT GENERATED: function markupItalicTagHandler -- source line 196
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   function markupItalicTagHandler(): Partial<TextFormat> {
-//     return { italic: true };
-//   }
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts: Partial<T>
-// requires a statically resolvable C++ object shape; T is named
+inline flight::Ref<MarkupTagEffect> markup_break_tag_handler(flight::Record<flight::String, flight::String> attributes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::TextFormat>>>> enclosing_format) {
+  return flight::make_ref<MarkupTagEffect>(MarkupTagEffect{.text = flight::String("\n")});
+}
 
+inline flight::Ref<TextFormat> markup_italic_tag_handler(flight::Record<flight::String, flight::String> attributes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::TextFormat>>>> enclosing_format) {
+  return flight::make_ref<TextFormat>(TextFormat{.italic = true});
+}
 
-// NOT GENERATED: function markupListItemTagHandler -- source line 200
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   function markupListItemTagHandler(attributes: Readonly<Record<string, string>>): {
-//     breakBefore: boolean;
-//     format: Partial<TextFormat>;
-//   } {
-//     const format: TextFormat = { bullet: true };
-//     const marker = attributes.type;
-//     if (marker !== undefined && isMarkupListMarker(marker))
-//       format.listMarker = marker.toLowerCase() as TextFormatListMarker;
-//     return { breakBefore: true, format };
-//   }
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts: Partial<T>
-// requires a statically resolvable C++ object shape; T is named
+inline flight::Ref<MarkupTagEffect> markup_list_item_tag_handler(flight::Record<flight::String, flight::String> attributes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::TextFormat>>>> enclosing_format) {
+  flight::Ref<TextFormat> format = flight::make_ref<TextFormat>(TextFormat{.bullet = true});
+  const flight::String marker = attributes.get(flight::String("type")).value();
+  if ((true && is_markup_list_marker(marker))) {
+    (format->list_marker = static_cast<flight::Ref<TextFormatListMarker>>(marker.to_lower()));
+  }
+  return flight::make_ref<MarkupTagEffect>(MarkupTagEffect{.break_before = true, .format = format});
+}
 
+inline flight::Ref<MarkupTagEffect> markup_paragraph_tag_handler(flight::Record<flight::String, flight::String> attributes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::TextFormat>>>> enclosing_format) {
+  flight::Ref<TextFormat> format = flight::make_ref<TextFormat>(TextFormat{});
+  const flight::String align = attributes.get(flight::String("align")).value();
+  if ((true && is_markup_align(align))) {
+    (format->align = static_cast<flight::Ref<TextFormatAlign>>(align.to_lower()));
+  }
+  return flight::make_ref<MarkupTagEffect>(MarkupTagEffect{.break_before = true, .format = format});
+}
 
-// NOT GENERATED: function markupParagraphTagHandler -- source line 211
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   function markupParagraphTagHandler(attributes: Readonly<Record<string, string>>): {
-//     breakBefore: boolean;
-//     format: Partial<TextFormat>;
-//   } {
-//     const format: TextFormat = {};
-//     const align = attributes.align;
-//     if (align !== undefined && isMarkupAlign(align)) format.align = align.toLowerCase() as TextFormatAlign;
-//     return { breakBefore: true, format };
-//   }
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts: Partial<T>
-// requires a statically resolvable C++ object shape; T is named
+inline flight::Ref<TextFormat> markup_strikethrough_tag_handler(flight::Record<flight::String, flight::String> attributes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::TextFormat>>>> enclosing_format) {
+  return flight::make_ref<TextFormat>(TextFormat{.strikethrough = true});
+}
 
-
-// NOT GENERATED: function markupStrikethroughTagHandler -- source line 221
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   function markupStrikethroughTagHandler(): Partial<TextFormat> {
-//     return { strikethrough: true };
-//   }
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts: Partial<T>
-// requires a statically resolvable C++ object shape; T is named
-
-
-// NOT GENERATED: function markupUnderlineTagHandler -- source line 242
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   function markupUnderlineTagHandler(): Partial<TextFormat> {
-//     return { underline: true };
-//   }
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts: Partial<T>
-// requires a statically resolvable C++ object shape; T is named
+inline flight::Ref<TextFormat> markup_underline_tag_handler(flight::Record<flight::String, flight::String> attributes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::TextFormat>>>> enclosing_format) {
+  return flight::make_ref<TextFormat>(TextFormat{.underline = true});
+}
 
 inline std::optional<double> parse_markup_number(flight::String value) {
   const double parsed = flight::parse_float(value);
@@ -285,12 +218,12 @@ inline std::optional<double> parse_markup_number(flight::String value) {
 }
 
 
-// NOT GENERATED: function createMarkupFontTagHandler -- source line 130
+// NOT GENERATED: function createMarkupFontTagHandler -- source line 131
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
 //   function createMarkupFontTagHandler(registry: Readonly<MarkupTagRegistry>): MarkupTagHandler {
-//     return (attributes: Readonly<Record<string, string>>, enclosingFormat: Readonly<TextFormat>): Partial<TextFormat> => {
+//     return (attributes: Readonly<Record<string, string>>, enclosingFormat: Readonly<TextFormat>): TextFormat => {
 //       const format: TextFormat = {};
 //       const color = attributes.color;
 //       if (color !== undefined) {
@@ -336,30 +269,34 @@ inline std::optional<flight::Array<double>> read_markup_tab_stops_attribute(flig
   return std::optional<flight::Array<double>>{stops};
 }
 
-
-// NOT GENERATED: function markupTextformatTagHandler -- source line 225
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   function markupTextformatTagHandler(attributes: Readonly<Record<string, string>>): Partial<TextFormat> {
-//     const format: TextFormat = {};
-//     const blockIndent = readMarkupNumberAttribute(attributes, 'blockindent');
-//     if (blockIndent !== null) format.blockIndent = blockIndent;
-//     const indent = readMarkupNumberAttribute(attributes, 'indent');
-//     if (indent !== null) format.indent = indent;
-//     const leading = readMarkupNumberAttribute(attributes, 'leading');
-//     if (leading !== null) format.leading = leading;
-//     const leftMargin = readMarkupNumberAttribute(attributes, 'leftmargin');
-//     if (leftMargin !== null) format.leftMargin = leftMargin;
-//     const rightMargin = readMarkupNumberAttribute(attributes, 'rightmargin');
-//     if (rightMargin !== null) format.rightMargin = rightMargin;
-//     const tabStops = readMarkupTabStopsAttribute(attributes, 'tabstops');
-//     if (tabStops !== null) format.tabStops = tabStops;
-//     return format;
-//   }
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts: Partial<T>
-// requires a statically resolvable C++ object shape; T is named
+inline flight::Ref<TextFormat> markup_textformat_tag_handler(flight::Record<flight::String, flight::String> attributes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::TextFormat>>>> enclosing_format) {
+  flight::Ref<TextFormat> format = flight::make_ref<TextFormat>(TextFormat{});
+  const std::optional<double> block_indent = read_markup_number_attribute(attributes, flight::String("blockindent"));
+  if (block_indent.has_value()) {
+    (format->block_indent = block_indent.value());
+  }
+  const std::optional<double> indent = read_markup_number_attribute(attributes, flight::String("indent"));
+  if (indent.has_value()) {
+    (format->indent = indent.value());
+  }
+  const std::optional<double> leading = read_markup_number_attribute(attributes, flight::String("leading"));
+  if (leading.has_value()) {
+    (format->leading = leading.value());
+  }
+  const std::optional<double> left_margin = read_markup_number_attribute(attributes, flight::String("leftmargin"));
+  if (left_margin.has_value()) {
+    (format->left_margin = left_margin.value());
+  }
+  const std::optional<double> right_margin = read_markup_number_attribute(attributes, flight::String("rightmargin"));
+  if (right_margin.has_value()) {
+    (format->right_margin = right_margin.value());
+  }
+  std::optional<flight::Array<double>> tab_stops = read_markup_tab_stops_attribute(attributes, flight::String("tabstops"));
+  if (tab_stops.has_value()) {
+    (format->tab_stops = tab_stops.value());
+  }
+  return format;
+}
 
 inline void register_standard_markup_tags(flight::Ref<MarkupTagRegistry> registry) {
   (registry->color_resolver = resolve_markup_hex_color);

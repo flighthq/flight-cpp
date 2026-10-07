@@ -24,10 +24,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d_dom {
 
-using flight::types::Scene2DRenderer;
-
 using flight::types::DomRenderState;
 using flight::types::RenderProxy2D;
+using flight::types::Scene2DRenderer;
 
 inline std::optional<flight::Ref<RendererData>> create_dom_native_text_data(flight::Ref<RenderState> state, flight::Ref<Renderable> source) {
   return std::nullopt;

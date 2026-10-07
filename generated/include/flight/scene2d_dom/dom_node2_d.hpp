@@ -24,11 +24,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d_dom {
 
-using flight::types::Scene2DRenderer;
-
 using flight::types::DomRenderState;
 using flight::types::Node2D;
 using flight::types::RenderProxy2D;
+using flight::types::Scene2DRenderer;
 
 inline void draw_dom_scene2_d(flight::Ref<DomRenderState> state, flight::Ref<RenderProxy2D> render_proxy) {
 }

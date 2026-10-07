@@ -26,6 +26,8 @@ using flight::types::SpritesheetFrameData;
 using flight::types::TexturePackerDocument;
 using flight::types::TexturePackerHashFrame;
 using flight::types::TexturePackerMeta;
+using flight::types::TexturePackerRect;
+using flight::types::TexturePackerSize;
 
 
 // NOT GENERATED: function dataToMeta -- source line 12

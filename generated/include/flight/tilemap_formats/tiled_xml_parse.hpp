@@ -3,10 +3,10 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function asCompression -- source line 424
+//   missing: function asCompression -- source line 425
 //   missing: function buildTiledLayerDataFromXml -- source line 243
-//   missing: function asStaggerAxis -- source line 450
-//   missing: function asStaggerIndex -- source line 454
+//   missing: function asStaggerAxis -- source line 451
+//   missing: function asStaggerIndex -- source line 455
 //   missing: function parseTiledTileset -- source line 40
 //   missing: function parseTiledTmx -- source line 64
 #include <cmath>
@@ -21,6 +21,12 @@
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
+
+#include <flight/xml/xml_query.hpp>
+
+#include <flight/types/xml_element.hpp>
+
+#include <flight/types/vector2.hpp>
 
 #include <flight/types/tiled_tileset.hpp>
 
@@ -39,6 +45,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::tilemap_formats {
 
+using flight::xml::get_xml_element_attribute;
+using flight::xml::get_xml_element_child_by_name;
+using flight::xml::get_xml_element_children_by_name;
+
 using flight::types::ImportDiagnostic;
 using flight::types::TiledCompression;
 using flight::types::TiledObject;
@@ -50,6 +60,8 @@ using flight::types::TiledPropertyType;
 using flight::types::TiledRenderOrder;
 using flight::types::TiledTileset;
 using flight::types::TiledTilesetRef;
+using flight::types::XmlElement;
+using flight::types::Vector2Like;
 using flight::types::import_diagnostic_severity;
 
 inline bool attr_bool(flight::Ref<XmlElement> element, flight::String name, bool fallback) {
@@ -75,8 +87,9 @@ inline flight::String attr_string(flight::Ref<XmlElement> element, flight::Strin
 }
 
 inline flight::Array<flight::Ref<Vector2Like>> parse_tiled_points(flight::String text) {
+  const flight::String normalized = text.trim().replace(flight::RegExp(flight::String("\\s+"), flight::String("g")), flight::String(" "));
   flight::Array<flight::Ref<Vector2Like>> points = flight::Array<flight::Ref<Vector2Like>>{};
-  for (auto pair : text.trim().split(flight::RegExp(flight::String("\\s+"), flight::String("")))) {
+  for (auto pair : normalized.split(flight::String(" "))) {
     if ((pair == flight::String(""))) {
       continue;
     }
@@ -100,7 +113,7 @@ inline void report_missing_xml_attribute(flight::Ref<XmlElement> element, flight
 }
 
 
-// NOT GENERATED: function asCompression -- source line 424
+// NOT GENERATED: function asCompression -- source line 425
 // refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
@@ -178,7 +191,7 @@ inline flight::Ref<TiledObjectAlignment> as_object_alignment(std::optional<fligh
 }
 
 
-// NOT GENERATED: function asStaggerAxis -- source line 450
+// NOT GENERATED: function asStaggerAxis -- source line 451
 // refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
@@ -190,7 +203,7 @@ inline flight::Ref<TiledObjectAlignment> as_object_alignment(std::optional<fligh
 // union value type flight::String is not a represented runtime domain
 
 
-// NOT GENERATED: function asStaggerIndex -- source line 454
+// NOT GENERATED: function asStaggerIndex -- source line 455
 // refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:

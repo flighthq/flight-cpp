@@ -10,7 +10,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/textureatlas/factory_access.hpp>
+
+#include <flight/types/texture_atlas_region.hpp>
+
+#include <flight/types/texture_atlas.hpp>
+
+#include <flight/types/spritesheet_frame.hpp>
+
+#include <flight/types/spritesheet_animation.hpp>
+
 #include <flight/types/spritesheet.hpp>
+
+#include <flight/types/grid_slice_options.hpp>
 
 #include "spritesheet.hpp"
 #include "spritesheet_animation.hpp"
@@ -19,7 +31,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::spritesheet {
 
+using flight::textureatlas::create_texture_atlas_from_grid;
+
+using flight::types::GridSliceOptions;
+using flight::types::SpritesheetAnimation;
+using flight::types::SpritesheetFrame;
 using flight::types::Spritesheet;
+using flight::types::TextureAtlas;
+using flight::types::TextureAtlasRegion;
 
 
 // NOT GENERATED: function createSpritesheetFromData -- source line 13

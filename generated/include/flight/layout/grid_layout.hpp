@@ -3,9 +3,9 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function isTrackList -- source line 180
-//   missing: function isGridLayoutContainerStyle -- source line 165
-//   missing: function isGridLayoutItemStyle -- source line 193
+//   missing: function isTrackList -- source line 183
+//   missing: function isGridLayoutContainerStyle -- source line 168
+//   missing: function isGridLayoutItemStyle -- source line 196
 //   missing: function getGridAutoTrackSize -- source line 105
 //   missing: function getGridTrackSize -- source line 76
 //   missing: variable (binding) -- source line 17
@@ -32,6 +32,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::layout {
 
 using flight::types::GridLayoutItemStyle;
+using flight::types::LayoutNode;
 using flight::types::LayoutState;
 using flight::types::LayoutTree;
 using flight::types::grid_layout_kind;
@@ -41,8 +42,11 @@ inline double get_grid_ordinal(flight::Ref<LayoutTree> tree, double parent_index
   {
     double i = 0.0;
     while ((i < child_index)) {
-      if ((tree->nodes.element(i).parent_index == parent_index)) {
-        ordinal++;
+      {
+        flight::Ref<LayoutNode<flight::ErasedRef, flight::ErasedRef>> node = tree->nodes.element(i);
+        if ((node->parent_index == parent_index)) {
+          ordinal++;
+        }
       }
       (i += 1.0);
     }
@@ -79,7 +83,7 @@ inline bool is_positive_number(flight::Any value) {
 }
 
 
-// NOT GENERATED: function isTrackList -- source line 180
+// NOT GENERATED: function isTrackList -- source line 183
 // refusal: cpp-typeof-runtime-domain-unrepresented [source-portability]
 //
 // The source it stood for:
@@ -103,7 +107,7 @@ inline bool is_positive_number(flight::Any value) {
 // answered by the runtime's own `typeof`
 
 
-// NOT GENERATED: function isGridLayoutContainerStyle -- source line 165
+// NOT GENERATED: function isGridLayoutContainerStyle -- source line 168
 // refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
@@ -134,7 +138,7 @@ inline bool is_positive_optional_integer(flight::Any value) {
 }
 
 
-// NOT GENERATED: function isGridLayoutItemStyle -- source line 193
+// NOT GENERATED: function isGridLayoutItemStyle -- source line 196
 // refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:

@@ -31,9 +31,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/tray.hpp>
 
+#include <flight/types/signal.hpp>
+
 namespace flight::tray {
 
+using flight::types::TrayDestroyResult;
+using flight::types::HostTrayLifecycleCapability;
+using flight::types::TrayIcon;
 using flight::types::TrayReleaseResult;
+using flight::types::Signal;
 
 struct TrayRuntime;
 struct TrayReleaseRuntime;

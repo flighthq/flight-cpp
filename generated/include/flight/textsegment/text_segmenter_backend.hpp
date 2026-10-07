@@ -18,6 +18,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::textsegment {
 
+using flight::types::TextSegment;
 using flight::types::TextSegmentGranularity;
 
 inline flight::Map<flight::String, flight::IntlSegmenter> segmenter_cache = flight::Map<flight::String, flight::IntlSegmenter>();

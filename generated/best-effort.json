@@ -9621,7 +9621,7 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
+      "classification": "target-runtime",
       "consumers": [
         "@flighthq/glyphatlas/packages/glyphatlas/src/contract.ts",
         "@flighthq/glyphatlas/packages/glyphatlas/src/enableGlyphAtlasGuards.ts",
@@ -9635,10 +9635,10 @@
         "sha256:91431b6559316d2dda506b10d65d8942d605c96c711cad6e154868276991d22f",
         "sha256:9f45f67db9cfcdb60883b371cea2f2f36b9467c62c191678cfab5ac8de85b70f",
         "sha256:a4fc8c55ac5fe32740c2435de0c823c0dd78341820494ab4153b7a5997f721e2",
-        "sha256:a79fa90c3776cd6116efe03e08c6659d48513337e0cd37a9204d92b2860c8913",
         "sha256:abbeff1ed13c5b7ff5c8ee375474010e378baf0398c0bc75a7a8c6ab46a2596a",
         "sha256:b3157c81de5730cdf5f2681c33c215286ed181c847312cf023add4d6f1a83945",
-        "sha256:e6d8b481a5f1f76bb92daf29b62f67132f50b3e72cc3a4a72f74a1a1315d1408"
+        "sha256:e6d8b481a5f1f76bb92daf29b62f67132f50b3e72cc3a4a72f74a1a1315d1408",
+        "sha256:f75457205c34c4c8886a32315c915eadeea0c2711c5a33aa522e516fa4ff3723"
       ],
       "module": {
         "name": "GlyphAtlasEntry",
@@ -9646,7 +9646,7 @@
         "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
       },
       "path": "flight/glyphatlas/glyph_atlas_entry.hpp",
-      "rule": "cpp-optional-member-access-unproven",
+      "rule": "cpp-runtime-external-symbol-binding-incomplete",
       "status": "refused-placeholder"
     },
     {
@@ -10283,9 +10283,9 @@
         "sha256:6012f619cb06bc4c8c11ccc657b623cf5645716d3e3e517b32913182bec4829e",
         "sha256:6ce80592c0bf894b1272f77f8c186708a549e055c38d4db224aaee68033312a7",
         "sha256:7a7d5be124f2fa7ab29a0762c264bd36af0d78ca5e02999cbc2dcf7bf8654e0a",
+        "sha256:91c7115ade406084cd09180eebb8597848f0dc855af364cb166a8bd9be2292cb",
         "sha256:9b2c498eaccec755ab12e46213d62f14bc8ef46f4f03c651f77e306535c9e35d",
         "sha256:a0bb4890609414d3e8bd3d01e2ca71a96e7ba31e410c174a20320d2d4358bc98",
-        "sha256:d45bc53ba394a9e537c13c1e8de99d5b9e3858ae1f0a49529a08f65905f03978",
         "sha256:e8903a56b60ba4f73ebb4d47fb4c7824e0994d9cc095c9711d27be5a8f8a7054"
       ],
       "module": {
@@ -11479,12 +11479,12 @@
       ],
       "declarationFingerprints": [
         "sha256:018401d322bbd4b85ee04defa6d433ae45080746e53346f803674425b13d601c",
-        "sha256:11f6afcc79e86d4bfa3b4f7bf4951b69ff37dc9f7e9253351a2f7d90ff29d590",
         "sha256:2433007f139ddfd590bf53258fa9e20018c75ffe5cc0658ef0e122deac1fddb3",
         "sha256:2efeb8f8c2dd850f04e8d55013f4393e98ab1be36b15ad52d14ef6d7b591ee80",
         "sha256:4d08deaa0cc3da05bdcb6e6e16ba6c07fb1ee1bab498489e4979d5605dd71a74",
         "sha256:4ffc7cecdc9a68bd6637188692151eab7b7ad9d0aa7282c8888b79944cd0c476",
         "sha256:6bbc2c5b7f434b32c5b025cac25fb4b76e00d695d8315c916a75bbae23d7e1ba",
+        "sha256:6c74a003124f10871aa603dade9b7248a31e7b2e11c7b3a2abf757a3e4544a37",
         "sha256:7b1b32bde1bbb7ad3f65f3bc3da11a7918eb3d5ffef65f4ad758ad40920336f0",
         "sha256:7cf3d7947cc9900e46a8b4793f1c3ff0959af71ac7da34d4fa97eafe1b690574",
         "sha256:9bb89755768bec6348c310d166c9ef9a507345ab8de218b43c8afb94c9378436",
@@ -11492,9 +11492,9 @@
         "sha256:a8e3dc79e9004032c73debb4815d86f7ed4a108974e0bc3ac200dbfdb322c411",
         "sha256:d5ee23cc067e1d41e3c8e0a49a5d01bf69d2ba5c7cf6b34f56d95c7a5638271c",
         "sha256:db60a3a045c6706cb9291518babde0a31e352e52a6869cf034eed982156007d4",
+        "sha256:e3643a2cd94520304b5685d9e1aabd182408e4c6669b9713447cedd8dc3ee0c8",
         "sha256:f0a75ed7da3ed1fe92a4f1f9748483c658f958a1407d1c67d211b2257c3a922c",
         "sha256:f47ffa926f6b55a4f54e5955453b5549d0ee86a21b2221ef79b7410ad3ac9dd6",
-        "sha256:f6232cc8460500b922243e6859728fef3664fca3bc6c1e1a6634128ec6f4f555",
         "sha256:f852774c2ad953125cd5b924a7193fc31f01d2090624fdb29499e3d40c56c004",
         "sha256:fe3dcd3f5686a45cb867e5719d889fc200a45b1ff292bf2d3c61e1c6b5409a65"
       ],
@@ -11517,13 +11517,13 @@
         "sha256:035e5d8ab351d6cfb33c3495684bb3c798cbbdce9e156f69529d650093ed6c71",
         "sha256:2a2fcfc510ee0e7a3472b2ba3c189b5626301f94cb99e8224347a2ac64eee8bc",
         "sha256:5e962b2c53ae3eeceecab5311e2916631e00aeec3302b493a7c90d285125bdfb",
-        "sha256:66c1b489dbd005d4d58ae8fc83c21ff0357f52870a53241d0b6f353658383c7e",
         "sha256:69d95e4105bd16e9fe352c6d8606459eaf251a1e115230ea65378ba29d3f4e1c",
         "sha256:6b19e1bcec664cd8d7bf00c4c11b24f6e893738320df99b27234aea484afa65a",
         "sha256:8a7b8ba75998006e8a55a4d5b9199f88630bf944ea9cb78b71274b9964498be0",
         "sha256:92da5e8af0147207c439e65a487d58b1ab2ed582f84c61c47b176b20dbd4046c",
         "sha256:9cdb7b1d9be39c4eb35c903d3a5e65fa9637309d253cc79ac446623ce80b9a82",
         "sha256:d175244fa495a3d9fbd38c76f196072be9b651b5b6da4ad91d16a66ec0e8a660",
+        "sha256:d3ce5354110dd3bb21df2a275cd469ca6fb3ff734f2da0a513c74b5edc1b8698",
         "sha256:d43511c8cb8c32086cb77f9c18fc79e702af2de17c4d4639e8559987670c2be7",
         "sha256:d5ee23cc067e1d41e3c8e0a49a5d01bf69d2ba5c7cf6b34f56d95c7a5638271c",
         "sha256:da8a77cda00c1acf2cc3a602854c7da3748b07c4562d5ee78cb216bc0baf065f",
@@ -13558,7 +13558,6 @@
       "path": "flight/midi/midi_access.hpp",
       "refusedDependencies": [
         "@flighthq/midi/packages/midi/src/midiPort.ts",
-        "@flighthq/midi/packages/midi/src/midiResource.ts",
         "@flighthq/midi/packages/midi/src/midiSubscription.ts"
       ],
       "status": "dependency-incomplete"
@@ -13607,26 +13606,10 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "source-portability",
       "consumers": [
         "@flighthq/midi/packages/midi/src/midiAccess.ts",
         "@flighthq/midi/packages/midi/src/midiPort.ts",
         "@flighthq/midi/packages/midi/src/midiSubscription.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:09f767a30264be919654ceb9f9fd5141f5ddbfe7a288a5381d436712c6d4d38a",
-        "sha256:17906a378ddd430ad06b672399593fe2fd8987d4f0645dbe49add77e8d89e4f3",
-        "sha256:504da84ee2d25158dcf7daf4a9c258c09a3ca3699f4714216581648cf441a42b",
-        "sha256:6250b9839c451cbaea01ea6e924191a60340cba99df86e01f775f3bd6697cb7c",
-        "sha256:6a684688d148f3e167eea430508def3f7d7b0afe6b2b7531a9e58f54f7fd7d47",
-        "sha256:7ed4a4e967b4ee4b0f4eda4257cbb04eba3f858f537c9a6cc23f6cdb975c66b8",
-        "sha256:9cc4bb85645f6ef1b47b82568ba238cfe1b79a8e5f7d44da466437729b9acb9c",
-        "sha256:a7e09d60db18e8538b25a8ab7f9a6470fc87f51973d04abcfcf801c11055f004",
-        "sha256:b1e877714ec9f59fef1747443f0e7969a724b1ba4ef49535d7fb8f1f781e09cd",
-        "sha256:ccc1afcc057d3e38bdc917e475329a1be2e0b1e62cb0f3cdae4fc1b106c40f7b",
-        "sha256:db2dbe31fad939fde3e3e16b70eff06338892dc05d71d7008e5bd3efeeca2f1f",
-        "sha256:eb6b49423a99aa23d6ce6abe3539b4c8a4ff04dd74c948bf6ca08467144d9081",
-        "sha256:fd689a0572d7a7ec9ef5da221296d05cabb502c56b25db0229bc254e63ed3783"
       ],
       "module": {
         "name": "MidiResource",
@@ -13634,8 +13617,7 @@
         "source": "packages/midi/src/midiResource.ts"
       },
       "path": "flight/midi/midi_resource.hpp",
-      "rule": "cpp-extract-dependent-discriminant-unrepresented",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "classification": "compiler-restriction",
@@ -23631,7 +23613,7 @@
       ],
       "declarationFingerprints": [
         "sha256:0ba1fe5368a7e5508398489dbcfaf8223de4de3d9d2c56913a3aa0f40a5eff2a",
-        "sha256:a38321e5e541e7ab9bb329e96e16218e2e5e081b537910534cb2664f66dce687"
+        "sha256:8923280a2f5fd36f88adc397c0514116df6e408a7aa4e872b9ac0553e08f2e71"
       ],
       "module": {
         "name": "LoadScene2DAudioResources",
@@ -23649,7 +23631,7 @@
       "declarationFingerprints": [
         "sha256:0b764f330cef64760612c85521974fed32ddb5d9efd87680eb5b0d209b2b4297",
         "sha256:78ed9dcd425d2bdcb0aa683bac1516b355d1cec40d31131260ef8e27a009f4be",
-        "sha256:d6ddac8a6f555f6458109dbeeeaad0fcfc824737189efe7dca34538e36561f37"
+        "sha256:e04e551c9eba320154259373e35ad55177043d6dce501cf84eee7405826b7942"
       ],
       "module": {
         "name": "LoadScene2DImageResources",
@@ -25813,8 +25795,8 @@
       ],
       "declarationFingerprints": [
         "sha256:06634ffcb0c106090f223086cb42390e6ed3cff6bcd17f4f37c05a5fadc958d7",
+        "sha256:1d4d7884eb0eb668f40d46b27cd4a4faa2d47ea956cb75861997ed65a8c1843d",
         "sha256:1d5d9b1dcf06c3ba3ce37066e445cbc3250902238f5c11a0c290e1c70855b391",
-        "sha256:77ba677d5149834d09a7545f525de265e2bd7bef28a01c84a0fddf85560f2e74",
         "sha256:a0caa103ce7b9603b41dea825fcbae9bd63d3ec114d3c3a288c2789136b22b90",
         "sha256:a9df1cedebfc9fa694a9987c7b9dc0ebc8a9f9969f7e75fd70de3a6efbd392ed",
         "sha256:b5d45a80674fd947db9087c1d8811c71933d9e42cd0dee49766d1011751c5a4d",
@@ -28914,8 +28896,8 @@
         "sha256:72e3183d2805c22df5ff3328c64a079dbffc24319911f6e5b9a6040f8b2cc6ac",
         "sha256:76cceff9ec05834227425027cbb737f6049c9d476ab4a89e754a25a39e78932d",
         "sha256:978e6b590c40cac42119d6d8311912fa285edccd1477c8e9b22837c22326548f",
-        "sha256:aab70011944141f9d69cf44791fbe4f99a0498ce0407a5c3822780d39f26989c",
         "sha256:b86e3786f11137df8cdbfed8c15657859be157e4ee7c70ff947c2e0db6f0955d",
+        "sha256:c4d05fc0c8fbf6e646807cf413fa27aa5f9f38c58340179436434c2c7ee6a9fe",
         "sha256:ca50ce1920cf3044ada25207ee718929ff3dd6793b771250b5befabb6a8fee24",
         "sha256:d2b541960d68f2581c5956f5f8c4d6a43031a32e6a2a628331f7362cfa3737a2",
         "sha256:f2d8c6cba6ee7fe77aa310f21575e81861d0473b75d12b068a49d76b60c0e7c1"
@@ -30414,31 +30396,11 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/enableSkeleton3DGuards.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/prepareScene3DSkinning.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/updateMeshSkin.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:09754634722bc97ca284fd6f2765d6b129b9d14546921a40ef2fa2f14ee5f3a0",
-        "sha256:1058429325724392a4b765f6b25989f5990486d49d84f867a3f797289e6959a2",
-        "sha256:14c4d409fc0c72696598dbfc3b8b631fc6399f0bdff06702914c71da87c084c1",
-        "sha256:29f4f509574d0d3f4dbdc68621579ccd42918d78be7fe9ca5dbb9153d444f6ee",
-        "sha256:39a0da4b0b487a6771d8c2957c223c54dbefc61b7dffae0dd1bd3f217432096c",
-        "sha256:41f821426f4bc861926c88351ec76a97210f14442303f99e2ec930e1e668ce15",
-        "sha256:450a21a282fbf1e53650800f2efb269283cf85859e5e05e3e1e3f3290402bd33",
-        "sha256:59fe7ed664d557db10e7ffd68dbd96cef80fb2f64b12277ebe90df7a60112723",
-        "sha256:645dad3eb585b160c0e00d0afbcefff7959a7c09a27d0dd99062b6a100600b35",
-        "sha256:72265becd8f6524fcaf016e42eecd5dd60d177aaee16509c4af12eba2acf8ab9",
-        "sha256:7fc875212b9924f9b723942f786e2e54eba44581b2875471ecb809a7481b352f",
-        "sha256:89824bb75f260184f40fb2f87180cef662c85b7b4c2add9ad4d2eb1d3d5aba0e",
-        "sha256:957fa3e35f8e6e84d7b55b085f7d2746776879239832375e1300e69bf01ce608",
-        "sha256:980259b2f4e0ae8edb9094a86d499b1b59e41d1640a97d4d40d072295a08ef1e",
-        "sha256:9d9d383dec4572daa8caacb91988bc0b77abb5f1d0f6d968c0fbee6daf6e858e",
-        "sha256:c186baf6bac50719372d1613cd867e41bb4ceed7feffb5b90bce6b11ab498da8",
-        "sha256:ddd8a163e4f897b3e6c2c5888fa67c06163ffa98b84add198d5876d438f6f23f"
       ],
       "module": {
         "name": "Skeleton3d",
@@ -30446,8 +30408,11 @@
         "source": "packages/skeleton3d/src/skeleton3d.ts"
       },
       "path": "flight/skeleton3d/skeleton3d.hpp",
-      "rule": "cpp-array-length-sparse-runtime-required",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/node/packages/node/src/hierarchy.ts",
+        "@flighthq/node/packages/node/src/nodeTransform3d.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
@@ -31049,19 +31014,20 @@
       "declarationFingerprints": [
         "sha256:0bb470a3617482fa9814a315b6b09bd9fbf63702056a4cf7cd41f42c261747e6",
         "sha256:0ea52c78116572ebc11d7805bd6f53bbede507fd1340a1fa0b86dc29a3b469bc",
+        "sha256:0f32108973e087a492e9e945246540a0077773196fe40f2e9dce4624e43a41f5",
         "sha256:136dd9944f7abb713e45faf77dfe5b74d8f1a66ac64d4af7477661143baebbb9",
         "sha256:19f21d312796bc5bb107265885efd6ecfefd9e9c22abd3dac80f3d6552cf5bdc",
         "sha256:1acd93fa2501d012cd73caad1cb1fd09a882028a778bd5fa7e6832bf8b521a41",
         "sha256:1c08432a75d31a5e5e7d171a4542b1fe9e7368b21e914a994cc70b3f84425892",
         "sha256:1df3d058ab9432a65e429fa209bfaea8a85bebea2fc0baadc214a62a96d58331",
         "sha256:25511178fa001aaa6af1ef8b31e4ba27afeda148c0d897f5d622a5e5c6bc7652",
+        "sha256:2effc4182fcbbfe908a5d003d94a834b81b4f5a5f9bb1ecb5cc9264881a7fbc1",
         "sha256:302687ee3e4a7b20a491b3fe6bf6c6e0aa5bac0aecdcd5aa68ccaf308ce170c4",
         "sha256:356faee8657b4f54cbd880b27c2e97c21ff388ba58a015f891c7198c572a8802",
         "sha256:358f184bbd1cbcc7374b372544d82822d20f77acc803b27a179377cd76279cc9",
-        "sha256:3b0868236fba2da5ff4e7e3616e27e6c3c8de95fa63128ea3144e941dd8d53c3",
-        "sha256:4beebf9a1c7302ed18e0ac7b3fbb6616da8e62b7aa839192f1700d094b6be47f",
         "sha256:51cf31d748c002f9951ee1279668973d2cbe9c53974bea164474eaafaf0c0c69",
         "sha256:5bab3baf4f59d3669ed497286397fedee4cb2d5c84b7df3b56389196248ea9d4",
+        "sha256:6542110893b5b82fb7647b06d5fa219c68339db37570b893094f1379fa5ea9eb",
         "sha256:74381b5e1c43ebcf4cf378fce7780ba6eefbb49409fa8da11af6d7c9576541cf",
         "sha256:7c6d114c5474927ba620d03995bc1915da2d3e1f2b0aaf16b77ece941ba16aff",
         "sha256:82e5a3c881357a8e1cdfca425a49d35523cd5ec2ace861e0b3aeaffd7ec00648",
@@ -32571,27 +32537,27 @@
         "@flighthq/text-markup/packages/text-markup/src/textMarkup.ts"
       ],
       "declarationFingerprints": [
-        "sha256:18d8d14c1f3c0ef18260399115a3f43864f90b80910818cc77e6411f5dbcb5fa",
+        "sha256:054a80d80ce787ae96a4e0b5895b50fcf17b251791c29bd2bb70f7ab1c5e08c8",
+        "sha256:19814245584e8cd5d05994e0916c3ee78edd5302aa74dc3602eb065585a31858",
         "sha256:2890c731d2979c6074f413c830fded40916404b8412055b6a102185e4fa15b27",
         "sha256:29f8e9e2c162875d240e1846fa94bfe8bc37f5bc8292278885bc82177b727a11",
         "sha256:2bf9c9954ae51269967f1b0fcc2bf72ead368c0efbb256e1ff42f8f725223935",
         "sha256:332c019fee25f5e29a31d265f7239d75e20250b693cc759ee5d9c67bcbfb6c82",
-        "sha256:37b0afc7a5bfbc0f938f73f3d44a2efbe94652168f20e730d01f9247911b4dd5",
-        "sha256:3d3d0bdf10209b71bca51ab69d03f2a9af5dcdb8d2b72dfae38b676408f360d3",
-        "sha256:3e0047dea768be81bbb5f1b63d630e8b327ca8eb64eeeb3328e84e60354618c2",
+        "sha256:34588f5650fa8a1df2057420ef7b2036bc4410cabcfda30ee6380981b9620251",
         "sha256:4647c9dbc92e96299c5e692d36152ba4237a766b62e90644480c03f851451bbc",
-        "sha256:5774a22daebcc9d5104f78c59111d031c59d754bd51264ebff3f9fa5a85165a3",
-        "sha256:6be2f4aa921bf16759db345337ee8f35dc640dd5c87b42d41bc4295b25aee762",
-        "sha256:70e0dc702ec07bbe754c0714652d20e7036ebdb4e8792b982baa4dcdac82f0d6",
+        "sha256:47b4766acec8eaf80648b4f2da18d52c8a91a4b2cb78aaaf3353932e1bf380d9",
         "sha256:776afce8a281358061e3641017178bbc353951f650720d865cd2eee10c5329d1",
+        "sha256:a3f123bbe1519a1134439ec34a13354f7af196c0907a9d3e1c0fc8f533dc1939",
+        "sha256:a79d40572df4de7445818fc2198861ffa36a52113d813f481507375a2911eba1",
+        "sha256:a97154fa5495c825c5750949e62e75cb21ddcb4fba388d38a8a7aca33a2b93ce",
+        "sha256:ac004be06eab1823aaed0969fd6d5a5b8c1706c9cf654a85ea41bc63346268d3",
         "sha256:ac1d947a167abba5f70def5b670239883cd80b1956fb138db894b4002a810df5",
         "sha256:b807ebfe68dae2f2404a86facd95e36761f96cf556c9d953db4d0c430fbe906c",
-        "sha256:c42fae422d38cc50555bee22a2ad2f66be406e40b3777486cbb0b2ec39b216a9",
+        "sha256:cca2076365e5e605849034171f7fa08919ee0d48d53fb05e326a8dfa6912b157",
         "sha256:d5bddaa22f92e543718c096d87388c0294c247c39a3204abb43122660582695d",
-        "sha256:dd41c9136f261710f02dd78b57931875f69c22035ca53d86beca28557b168fc8",
-        "sha256:debd4f41ac86ceb0a816a579f0fb606d401d67c0111c04807f74351731993daf",
-        "sha256:e0181ee4be51303cf70114d024d0278342890a6c1660af0900e7dabc4eb8bf8a",
-        "sha256:e76c83da7ff6fd4a61661a3d6b4fce33169834fa816e3e58590a86ff045e6bc0"
+        "sha256:e6e6db4bd1441d17c977eafbae74f3b52fb2dc052824ff6b1c35ae20646a31ec",
+        "sha256:ea2edfdc738937435c4311f11becd726eec8c1448941f9cbdbc843cc2d26fdf4",
+        "sha256:ea90d0cb9a5452a7c572f4a7855878e426542fd3fb56e371ff2bc5955aef08be"
       ],
       "module": {
         "name": "MarkupTagRegistry",
@@ -34467,7 +34433,7 @@
       "declarationFingerprints": [
         "sha256:00d4b322f354c0d8e8f07228830079fd6c6f80165642c154d59061ded8b86b0e",
         "sha256:0310f8242a5ae6a6fafa5980450be0b48e788d94ce7e95c32d2e5fd8bd3176ac",
-        "sha256:0c5ce8f3881e4d44336ec5756b42d22d25e62062d2ba6bb64bb2004e26429d8e",
+        "sha256:1b01522ec09f3f3a2fadf79de387a0933c0bdfee13686c72862bdf4f8e6c35e6",
         "sha256:219f78722903b19697738455a973610dbb081708382a0167410bb81b1059de7b",
         "sha256:224d5642013b04a1d20ab632174b800bc8bd45a6ead36dd166c71a92d39cc711",
         "sha256:252498106e2e89da47767653db8cad36c7a33c5250e9c0ac8bb6fd632aa5712c",
@@ -34557,7 +34523,7 @@
       "declarationFingerprints": [
         "sha256:11a69e1c6af547cc5580aa637844a52959ded4da4ea8c5cc7dd41a692219af8d",
         "sha256:289b3cc68ac9c589d437f5470b92e5734f4e75ba4bf4f0c05dba69fef0eb29fd",
-        "sha256:5dd9b041648449c3d185421ce5f9db0c322318dfae8834e21de3f239c9da8d5b",
+        "sha256:60da4603a455102c09ca7dfea087c68e25820ea61578a7ea69e96cf67a1e2b28",
         "sha256:9ac4cee2e5d47e372335e5f141173b09b4bfb9cf5d2dd2edcd3f2495e79676fa",
         "sha256:9bbbddd334d5056d58b8fcaf6edf7829f67c693b69a4d13afe350a69e452d30a",
         "sha256:aa7c960f90a0cd4c710e54d780edc450f4735950e88c3252e7e11c156f5e2c44",
@@ -34627,9 +34593,9 @@
         "sha256:8e2f7f97a20ca26a8a14742cc334e4c5e9c0bca234f078e16c0558983a55c13c",
         "sha256:a424fb14fcc645b59f151ccb3e2eaba8f18b20b345652bd9e81f6aa9b1d8cbaa",
         "sha256:a93ff5d7609eacd1a6c5cf0ae8f6e1d8d45bc9078d058d1fb34974b7cb18fb3e",
-        "sha256:ba17e930ba877f8dc5666a57aee6d1f8905e0d086721e93affe7fff33870b7cd",
         "sha256:c21d2fcc24dcc7a14ccfae4734358b8533764eda8c528af641b31e6ab1537305",
         "sha256:e3bb7c540a16c56632b2f1d5a3c2ff9992eeb33605a272000c65b2a17c1076f5",
+        "sha256:f8be101ac487687e0c53a7e64a974f2106f3d02fa4f138c46b1cbafdcff2c3f4",
         "sha256:fecfe379096579e8fb146cbf5418a93bd37d4e0f0e55e43940748960b1c252c8"
       ],
       "module": {
@@ -34731,9 +34697,9 @@
         "@flighthq/tokens/packages/tokens/src/substituteFlightDocumentSceneTokens.ts"
       ],
       "declarationFingerprints": [
+        "sha256:07e76ec0ba080a9fc2308ccb996c2567248614e997d3377d32ea7cb4dfda3d75",
         "sha256:176a17481cdaff1ac8a26b7c3e140bcc0675a96e8ab7ccdabc0bc069f523645e",
         "sha256:38b2b7e8fb185fa4cf412d32bd05b4cdb4dcd695d9c29342b8e9d20e976e20aa",
-        "sha256:55012ef31754b8406a687d65d96623e1ff2dcd24a929e7583a7ff367578cd264",
         "sha256:676e6a300a64b8882759094c6a1d9a190a06d0e1fa779e95881215ff7198b78c",
         "sha256:97fb40863bae61afec57f1e1f79c7a4fe6ad376d7fba5d41cbc987b308798275",
         "sha256:b91f878e8225183f4040ce66ebc26653ec5c6e7055ae00d1cf752fc8d2b29522",
@@ -34971,6 +34937,7 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/revealScene3DResourcesOnResolve.ts",
         "@flighthq/tween/packages/tween/src/contract.ts",
         "@flighthq/tween/packages/tween/src/timer.ts",
         "@flighthq/tween/packages/tween/src/tweenStagger.ts"
@@ -54915,7 +54882,6 @@
       },
       "path": "flight/video/contract.hpp",
       "refusedDependencies": [
-        "@flighthq/video/packages/video/src/videoFormat.ts",
         "@flighthq/video/packages/video/src/videoResourceFrom.ts"
       ],
       "status": "dependency-incomplete"
@@ -54934,17 +54900,9 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/video/packages/video/src/contract.ts",
         "@flighthq/video/packages/video/src/videoResourceFrom.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:21aeac204cdc3b0d4ff5d6f0339db1e2558d385878819b17c04ef63c86c8a23d",
-        "sha256:29960b30269aa69b8b921b0d9c881cf78b2536b6942f3c4cc6a52a160e727cac",
-        "sha256:3e1ba8dd59220ba1cb7b0bd97896f8339c4e46e41372eb42b545643907993732",
-        "sha256:aa0e2cdfcf9a1dba25e7454cde67ea7eee9a8c57e02a01d5e23b9b0280f379bf",
-        "sha256:e335d607e6e0744e898d64764246a083cae1d1182cc8cfab8207095e04fee4e1"
       ],
       "module": {
         "name": "VideoFormat",
@@ -54952,8 +54910,7 @@
         "source": "packages/video/src/videoFormat.ts"
       },
       "path": "flight/video/video_format.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [

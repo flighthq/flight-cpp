@@ -29,7 +29,11 @@ namespace flight::types { struct TextureAtlasRegion; }
 
 namespace flight::spritesheet {
 
+using flight::types::SpritesheetAnimation;
+using flight::types::SpritesheetFrame;
 using flight::types::Spritesheet;
+using flight::types::TextureAtlas;
+using flight::types::TextureAtlasRegion;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_FRAMES_FRAME_DURATION_FRAME_DURATIONS_DIRECTION_REPEAT_COUNT_ORIGIN_X_ORIGIN_Y_0B000CF350971A9F
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_FRAMES_FRAME_DURATION_FRAME_DURATIONS_DIRECTION_REPEAT_COUNT_ORIGIN_X_ORIGIN_Y_0B000CF350971A9F

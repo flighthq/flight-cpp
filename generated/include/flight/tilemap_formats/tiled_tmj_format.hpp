@@ -5,9 +5,9 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function jsonObject -- source line 92
 //   missing: function jsonLayer -- source line 54
-//   missing: function jsonTilesetTile -- source line 147
-//   missing: function jsonTileset -- source line 117
-//   missing: function jsonTilesetRef -- source line 141
+//   missing: function jsonTilesetTile -- source line 148
+//   missing: function jsonTileset -- source line 118
+//   missing: function jsonTilesetRef -- source line 142
 //   missing: function formatTiledTmj -- source line 28
 #include <cmath>
 #include <cstdint>
@@ -38,7 +38,8 @@ using flight::types::TiledTileset;
 using flight::types::TiledTilesetRef;
 
 inline flight::Record<flight::String, flight::Any> json_property(flight::Ref<TiledProperty> property) {
-  return {{flight::String("name"), property->name}, {flight::String("type"), property->type}, {flight::String("value"), property->value}};
+  flight::Record<flight::String, flight::Any> out = {{flight::String("name"), property->name}, {flight::String("type"), property->type}, {flight::String("value"), property->value}};
+  return out;
 }
 
 
@@ -117,7 +118,7 @@ inline flight::Record<flight::String, flight::Any> json_property(flight::Ref<Til
 // test against null has no absence channel in the emitted C++ storage for property
 
 
-// NOT GENERATED: function jsonTilesetTile -- source line 147
+// NOT GENERATED: function jsonTilesetTile -- source line 148
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -142,7 +143,7 @@ inline flight::Record<flight::String, flight::Any> json_property(flight::Ref<Til
 // test against null has no absence channel in the emitted C++ storage for property
 
 
-// NOT GENERATED: function jsonTileset -- source line 117
+// NOT GENERATED: function jsonTileset -- source line 118
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -178,7 +179,7 @@ inline flight::String format_tiled_tileset_json(flight::Ref<TiledTileset> tilese
 }
 
 
-// NOT GENERATED: function jsonTilesetRef -- source line 141
+// NOT GENERATED: function jsonTilesetRef -- source line 142
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:

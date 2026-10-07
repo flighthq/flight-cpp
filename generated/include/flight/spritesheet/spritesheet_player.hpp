@@ -3,43 +3,78 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function cloneSpritesheetPlayer -- source line 27
-//   missing: function getSpritesheetPlayerFrame -- source line 55
-//   missing: function getSpritesheetPlayerFrameAt -- source line 70
-//   missing: function initializeSpritesheetPlayer -- source line 84
-//   missing: function createSpritesheetPlayer -- source line 41
-//   missing: variable (binding) -- source line 327
-//   missing: function getCumulativeDurations -- source line 217
-//   missing: function resolveAnimationTotalTime -- source line 237
-//   missing: function resolveVirtualIndexFromTime -- source line 267
-//   missing: function updateSpritesheetPlayer -- source line 164
-//   missing: function seekSpritesheetPlayerToTime -- source line 149
-//   missing: function resolveVirtualIndexStartTime -- source line 290
-//   missing: function seekSpritesheetPlayerToFrame -- source line 140
+//   missing: function cloneSpritesheetPlayer -- source line 39
+//   missing: function getSpritesheetPlayerFrame -- source line 67
+//   missing: function getSpritesheetPlayerFrameAt -- source line 82
+//   missing: function initializeSpritesheetPlayer -- source line 96
+//   missing: variable (binding) -- source line 339
+//   missing: function getCumulativeDurations -- source line 229
+//   missing: function resolveAnimationTotalTime -- source line 249
+//   missing: function resolveVirtualIndexFromTime -- source line 279
+//   missing: function updateSpritesheetPlayer -- source line 176
+//   missing: function seekSpritesheetPlayerToTime -- source line 161
+//   missing: function resolveVirtualIndexStartTime -- source line 302
+//   missing: function seekSpritesheetPlayerToFrame -- source line 152
 #include <cmath>
 #include <cstddef>
+#include <functional>
 #include <optional>
 #include <stdexcept>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/entity/entity.hpp>
+
 #include <flight/signals/slot.hpp>
 
 #include <flight/types/spritesheet_player.hpp>
 
+#include <flight/types/spritesheet_frame.hpp>
+
+#include <flight/types/spritesheet_animation_direction.hpp>
+
+#include <flight/types/spritesheet_animation.hpp>
+
 #include <flight/types/spritesheet.hpp>
+
+#include <flight/types/signal.hpp>
+
+#include <flight/types/entity.hpp>
 
 namespace flight::spritesheet {
 
+using flight::entity::allocate_entity;
+using flight::entity::finish_entity;
+
 using flight::signals::clear_signal;
 
+using flight::types::EntityConstruction;
+using flight::types::Signal;
+using flight::types::SpritesheetAnimation;
+using flight::types::SpritesheetAnimationDirection;
+using flight::types::SpritesheetFrame;
 using flight::types::Spritesheet;
 using flight::types::SpritesheetPlayer;
 
+struct SpritesheetPlayerOptions;
 
-// NOT GENERATED: function cloneSpritesheetPlayer -- source line 27
+struct SpritesheetPlayerOptions : public flight::ReferenceEnabled {
+  std::variant<flight::Ref<SpritesheetAnimation>, flight::Null, flight::Undefined> animation = std::variant<flight::Ref<SpritesheetAnimation>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<bool> complete;
+  std::optional<double> elapsed;
+  std::optional<double> frame_index;
+  std::optional<std::shared_ptr<Signal<std::function<void()>>>> on_complete;
+  std::optional<std::shared_ptr<Signal<std::function<void()>>>> on_loop;
+  std::optional<bool> paused;
+  std::optional<flight::Array<flight::Ref<SpritesheetAnimation>>> queue;
+  std::optional<double> speed;
+};
+
+
+// NOT GENERATED: function cloneSpritesheetPlayer -- source line 39
 //
 // The source it stood for:
 //   export function cloneSpritesheetPlayer(player: Readonly<SpritesheetPlayer>): SpritesheetPlayer {
@@ -68,7 +103,7 @@ inline void dispose_spritesheet_player(flight::Ref<SpritesheetPlayer> player) {
 }
 
 
-// NOT GENERATED: function getSpritesheetPlayerFrame -- source line 55
+// NOT GENERATED: function getSpritesheetPlayerFrame -- source line 67
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -91,7 +126,7 @@ inline void dispose_spritesheet_player(flight::Ref<SpritesheetPlayer> player) {
 // optionalSingle construction requires expression type evidence
 
 
-// NOT GENERATED: function getSpritesheetPlayerFrameAt -- source line 70
+// NOT GENERATED: function getSpritesheetPlayerFrameAt -- source line 82
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -113,13 +148,13 @@ inline void dispose_spritesheet_player(flight::Ref<SpritesheetPlayer> player) {
 // optionalSingle construction requires expression type evidence
 
 
-// NOT GENERATED: function initializeSpritesheetPlayer -- source line 84
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// NOT GENERATED: function initializeSpritesheetPlayer -- source line 96
+// refusal: cpp-dual-sentinel-coalesce-projection-unproven [compiler-restriction]
 //
 // The source it stood for:
 //   export function initializeSpritesheetPlayer(
 //     out: EntityConstruction<SpritesheetPlayer>,
-//     obj?: Partial<SpritesheetPlayer>,
+//     obj?: SpritesheetPlayerOptions,
 //   ): void {
 //     out.animation = obj?.animation ?? null;
 //     out.complete = obj?.complete ?? true;
@@ -132,22 +167,17 @@ inline void dispose_spritesheet_player(flight::Ref<SpritesheetPlayer> player) {
 //     out.speed = obj?.speed ?? 1;
 //   }
 //   
-// cpp emission failed for @flighthq/spritesheet/packages/spritesheet/src/spritesheetPlayer.ts: Partial<T>
-// requires a statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/spritesheet/packages/spritesheet/src/spritesheetPlayer.ts: dual-sentinel
+// nullish coalescing requires presence projection lowering: the operand carries both null and undefined, so the
+// coalesce has to be projected into a destination the emitter can name. Declare the expression result -- a local
+// annotation, a parameter type, or a return type -- and the projection lowers; left as the source wrote it there
+// is no destination to project into
 
-
-// NOT GENERATED: function createSpritesheetPlayer -- source line 41
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function createSpritesheetPlayer(obj?: Partial<SpritesheetPlayer>): SpritesheetPlayer {
-//     const out = allocateEntity<SpritesheetPlayer>();
-//     initializeSpritesheetPlayer(out, obj);
-//     return finishEntity(out);
-//   }
-//   
-// cpp emission failed for @flighthq/spritesheet/packages/spritesheet/src/spritesheetPlayer.ts: Partial<T>
-// requires a statically resolvable C++ object shape; T is named
+inline flight::Ref<SpritesheetPlayer> create_spritesheet_player(std::optional<flight::Ref<SpritesheetPlayerOptions>> obj = std::nullopt) {
+  flight::Ref<EntityConstruction<flight::Ref<SpritesheetPlayer>>> out = allocate_entity<flight::Ref<SpritesheetPlayer>>();
+  initialize_spritesheet_player(out, obj);
+  return finish_entity(out);
+}
 
 inline void pause_spritesheet_player(flight::Ref<SpritesheetPlayer> player) {
   (player->paused = true);
@@ -268,7 +298,7 @@ inline void release_spritesheet_player(flight::Ref<SpritesheetPlayer> player) {
 }
 
 
-// NOT GENERATED: variable (binding) -- source line 327
+// NOT GENERATED: variable (binding) -- source line 339
 // refusal: cpp-weak-map-key-representation-unproven [target-runtime]
 //
 // The source it stood for:
@@ -278,7 +308,7 @@ inline void release_spritesheet_player(flight::Ref<SpritesheetPlayer> player) {
 // WeakMap key requires a proven Flight reference or external weak-key policy
 
 
-// NOT GENERATED: function getCumulativeDurations -- source line 217
+// NOT GENERATED: function getCumulativeDurations -- source line 229
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -306,7 +336,7 @@ inline void release_spritesheet_player(flight::Ref<SpritesheetPlayer> player) {
 // optionalSingle construction requires expression type evidence
 
 
-// NOT GENERATED: function resolveAnimationTotalTime -- source line 237
+// NOT GENERATED: function resolveAnimationTotalTime -- source line 249
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -326,7 +356,7 @@ inline void release_spritesheet_player(flight::Ref<SpritesheetPlayer> player) {
 // optionalSingle construction requires expression type evidence
 
 
-// NOT GENERATED: function resolveVirtualIndexFromTime -- source line 267
+// NOT GENERATED: function resolveVirtualIndexFromTime -- source line 279
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -357,7 +387,7 @@ inline void release_spritesheet_player(flight::Ref<SpritesheetPlayer> player) {
 // optionalSingle construction requires expression type evidence
 
 
-// NOT GENERATED: function updateSpritesheetPlayer -- source line 164
+// NOT GENERATED: function updateSpritesheetPlayer -- source line 176
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -407,7 +437,7 @@ inline double resolve_frame_index_from_elapsed(flight::Ref<SpritesheetAnimation>
 }
 
 
-// NOT GENERATED: function seekSpritesheetPlayerToTime -- source line 149
+// NOT GENERATED: function seekSpritesheetPlayerToTime -- source line 161
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -423,7 +453,7 @@ inline double resolve_frame_index_from_elapsed(flight::Ref<SpritesheetAnimation>
 // optionalSingle construction requires expression type evidence
 
 
-// NOT GENERATED: function resolveVirtualIndexStartTime -- source line 290
+// NOT GENERATED: function resolveVirtualIndexStartTime -- source line 302
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -442,7 +472,7 @@ inline double resolve_frame_index_from_elapsed(flight::Ref<SpritesheetAnimation>
 // optionalSingle construction requires expression type evidence
 
 
-// NOT GENERATED: function seekSpritesheetPlayerToFrame -- source line 140
+// NOT GENERATED: function seekSpritesheetPlayerToFrame -- source line 152
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:

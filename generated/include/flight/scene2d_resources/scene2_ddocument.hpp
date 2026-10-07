@@ -27,6 +27,9 @@ namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::scene2d_resources {
 
+using flight::types::ExternalAudioResourceReference;
+using flight::types::ExternalImageResourceReference;
+
 inline void initialize_scene2_ddocument(flight::types::EntityConstruction<flight::Ref<flight::types::Scene2DDocument>> out, flight::types::Node2D root, std::optional<flight::Array<flight::Ref<flight::types::Scene2DSlotReference>>> slots = std::nullopt, std::optional<std::optional<flight::String>> source_kind = std::nullopt, std::optional<std::optional<double>> background_color = std::nullopt, std::optional<flight::Array<flight::types::ImageResourceReference>> image_resources = std::nullopt, std::optional<flight::Array<flight::types::AudioResourceReference>> audio_resources = std::nullopt) {
   slots = slots.value_or(flight::Array<flight::Ref<flight::types::Scene2DSlotReference>>{});
   source_kind = source_kind.value_or(std::nullopt);

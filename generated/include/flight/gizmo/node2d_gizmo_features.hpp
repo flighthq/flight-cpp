@@ -9,6 +9,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/node/transform2d_access.hpp>
+
+#include <flight/node/bounds_rectangle_access.hpp>
+
 namespace flight::types { struct Entity; }
 namespace flight::types { struct HasBoundsRectangle; }
 namespace flight::types { struct HasTransform2D; }
@@ -37,6 +41,14 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/types/vector2.hpp>
 
 namespace flight::gizmo {
+
+using flight::node::get_node_world_matrix;
+
+using flight::node::get_node_world_bounds_rectangle;
+
+using flight::types::GizmoNode2DFeatures;
+using flight::types::Rectangle;
+using flight::types::Node2DTraits;
 
 inline bool get_node2_dgizmo_world_bounds_rectangle(flight::Ref<flight::types::Rectangle> out, flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>> node) {
   flight::geometry::copy_rectangle(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::node::get_node_world_bounds_rectangle(node)));

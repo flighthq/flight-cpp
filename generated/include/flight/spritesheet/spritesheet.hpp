@@ -26,7 +26,10 @@ namespace flight::types { struct TextureAtlas; }
 
 namespace flight::spritesheet {
 
+using flight::types::SpritesheetAnimation;
+using flight::types::SpritesheetFrame;
 using flight::types::Spritesheet;
+using flight::types::TextureAtlas;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ID_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_CC00688A45C5FE5E
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_ENTITY_RUNTIME_KEY_ID_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_CC00688A45C5FE5E

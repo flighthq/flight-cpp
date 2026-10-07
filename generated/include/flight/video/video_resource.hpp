@@ -22,6 +22,8 @@ namespace flight::types { struct VideoResourceLoadOptions; }
 
 namespace flight::video {
 
+using flight::types::VideoResource;
+using flight::types::VideoResourceLoadOptions;
 using flight::types::HostVideoCapability;
 
 inline double get_video_resource_duration(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>> resource) {

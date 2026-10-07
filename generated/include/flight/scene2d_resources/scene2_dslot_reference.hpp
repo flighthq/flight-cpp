@@ -7,6 +7,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/node/hierarchy_access.hpp>
+
 namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct Scene2DSlotReference; }
 namespace flight::types { template <typename Traits> struct Node; }
@@ -17,6 +19,10 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/types/scene2_ddocument.hpp>
 
 namespace flight::scene2d_resources {
+
+using flight::node::remove_node_child;
+
+using flight::node::get_node_parent;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_RESOURCES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_384866E1C072C53D
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_RESOURCES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_384866E1C072C53D

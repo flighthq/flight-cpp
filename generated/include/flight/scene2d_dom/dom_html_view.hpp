@@ -22,10 +22,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d_dom {
 
-using flight::types::Scene2DRenderer;
-
 using flight::types::DomRenderState;
 using flight::types::RenderProxy2D;
+using flight::types::Scene2DRenderer;
 
 
 // NOT GENERATED: function drawDomHtmlView -- source line 7

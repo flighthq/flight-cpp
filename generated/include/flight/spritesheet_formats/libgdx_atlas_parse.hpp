@@ -65,7 +65,8 @@ struct pages_regions_9bef0d4ea51a073a : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_PAGES_REGIONS_9BEF0D4EA51A073A
 
 inline flight::Ref<pages_regions_9bef0d4ea51a073a> parse_libgdx_atlas(flight::String text) {
-  flight::Array<flight::String> lines = text.split(flight::RegExp(flight::String("\\r?\\n"), flight::String("")));
+  const flight::String normalized = text.replace(flight::RegExp(flight::String("\\r\\n"), flight::String("g")), flight::String("\n"));
+  flight::Array<flight::String> lines = normalized.split(flight::String("\n"));
   flight::Array<flight::Ref<LibgdxPage>> pages = flight::Array<flight::Ref<LibgdxPage>>{};
   flight::Array<flight::Ref<LibgdxRegion>> regions = flight::Array<flight::Ref<LibgdxRegion>>{};
   std::optional<flight::Ref<LibgdxPage>> current_page = std::nullopt;

@@ -14,6 +14,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/video_resource.hpp>
+
 #include <flight/types/host_video.hpp>
 
 #include "video_format.hpp"
@@ -21,7 +23,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::video {
 
+using flight::types::VideoResource;
+using flight::types::VideoResourceLoadOptions;
 using flight::types::HostVideoCapability;
+using flight::types::VideoResourceUrl;
 
 
 // NOT GENERATED: function loadVideoResourceFromUrl -- source line 32

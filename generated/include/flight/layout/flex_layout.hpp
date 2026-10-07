@@ -3,8 +3,8 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function isFlexLayoutContainerStyle -- source line 250
-//   missing: function isFlexLayoutItemStyle -- source line 266
+//   missing: function isFlexLayoutContainerStyle -- source line 254
+//   missing: function isFlexLayoutItemStyle -- source line 270
 //   missing: variable (binding) -- source line 21
 #include <cmath>
 #include <cstdint>
@@ -53,8 +53,11 @@ inline double count_flex_siblings(flight::Ref<LayoutTree> tree, double parent_in
   {
     double i = start_index;
     while ((i < end_index)) {
-      if ((tree->nodes.element(i).parent_index == parent_index)) {
-        count++;
+      {
+        flight::Ref<LayoutNode<flight::ErasedRef, flight::ErasedRef>> node = tree->nodes.element(i);
+        if ((node->parent_index == parent_index)) {
+          count++;
+        }
       }
       (i += 1.0);
     }
@@ -126,7 +129,7 @@ inline bool is_non_negative_optional_number(flight::Any value) {
 }
 
 
-// NOT GENERATED: function isFlexLayoutContainerStyle -- source line 250
+// NOT GENERATED: function isFlexLayoutContainerStyle -- source line 254
 // refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
@@ -150,7 +153,7 @@ inline bool is_non_negative_optional_number(flight::Any value) {
 // resolvable C++ object shape; T is named
 
 
-// NOT GENERATED: function isFlexLayoutItemStyle -- source line 266
+// NOT GENERATED: function isFlexLayoutItemStyle -- source line 270
 // refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
@@ -172,7 +175,7 @@ inline double finite_size(double value) {
   return ((std::isfinite(value) && (value > 0.0)) ? value : 0.0);
 }
 
-inline double get_flex_base(flight::Ref<LayoutNode> node, flight::SequenceView<double> intrinsic_sizes, double node_index, bool row) {
+inline double get_flex_base(flight::Ref<LayoutNode<flight::ErasedRef, flight::ErasedRef>> node, flight::SequenceView<double> intrinsic_sizes, double node_index, bool row) {
   std::optional<flight::Ref<FlexLayoutItemStyle>> item = static_cast<std::optional<flight::Ref<FlexLayoutItemStyle>>>(node->item_style);
   const std::variant<double, flight::String> basis = ([&]() -> std::optional<std::variant<double, flight::String>> { auto optional_chain_receiver = item; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->basis; }()).value_or(std::variant<double, flight::String>{std::in_place_type<flight::String>, flight::String("auto")});
   return ((basis == flight::String("auto")) ? finite_size(intrinsic_sizes[((node_index * 2.0) + (row ? 0.0 : 1.0))]) : std::get<0>(basis));
@@ -194,7 +197,7 @@ inline double get_flex_shrink_scale(flight::Ref<LayoutTree> tree, flight::Sequen
           double i = line_start_index;
           while ((i <= line_last_index)) {
             {
-              flight::Ref<LayoutNode> node = tree->nodes.element(i);
+              flight::Ref<LayoutNode<flight::ErasedRef, flight::ErasedRef>> node = tree->nodes.element(i);
               if ((node->parent_index != parent_index)) {
                 (i += 1.0);
                 continue;
@@ -278,8 +281,9 @@ inline double get_flex_cross(flight::SequenceView<double> intrinsic_sizes, doubl
 //     const nodes = tree.nodes;
 //   
 //     for (let i = 0; i < nodes.length; i++) {
-//       if (nodes[i].parentIndex !== parentIndex) continue;
-//       const base = getFlexBase(nodes[i], intrinsicSizes, i, row);
+//       const node = nodes[i];
+//       if (node.parentIndex !== parentIndex) continue;
+//       const base = getFlexBase(node, intrinsicSizes, i, row);
 //       if (wrap !== 'nowrap' && lineCount > 0 && lineUsedForWrap + gap + base > mainSize) {
 //         if (containsTarget) break;
 //         crossOffset += lineCross + gap;

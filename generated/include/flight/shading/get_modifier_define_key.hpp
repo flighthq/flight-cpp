@@ -18,7 +18,8 @@ inline flight::String get_define_signature(flight::StructuralRef<flight::RowRead
   if (!registry.has_value()) {
     return flight::String("");
   }
-  auto definition = flight::shading::resolve_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>(registry.value())), flight::row_get<flight::RowKey<"kind">>(modifier));
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> selected = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>(registry.value()));
+  auto definition = flight::shading::resolve_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(selected), flight::row_get<flight::RowKey<"kind">>(modifier));
   if ((!definition.has_value() || !definition.value()->get_define_signature.has_value())) {
     return flight::String("");
   }

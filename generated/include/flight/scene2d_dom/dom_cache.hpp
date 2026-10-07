@@ -22,10 +22,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d_dom {
 
-using flight::types::Scene2DRenderer;
-
 using flight::types::DomRenderState;
 using flight::types::RenderProxy2D;
+using flight::types::Scene2DRenderer;
 
 inline flight::WeakMap<flight::Ref<DomRenderState>, flight::Map<flight::Ref<RenderCache>, flight::Ref<CanvasTextureRenderTarget>>> render_cache_targets = flight::WeakMap<flight::Ref<DomRenderState>, flight::Map<flight::Ref<RenderCache>, flight::Ref<CanvasTextureRenderTarget>>>();
 

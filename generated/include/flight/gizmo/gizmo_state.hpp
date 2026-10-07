@@ -19,21 +19,60 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/math/constants.hpp>
+
+#include <flight/types/node.hpp>
+
 #include <flight/signals/slot.hpp>
 
 #include <flight/signals/emitter.hpp>
 
+#include <flight/types/vector2.hpp>
+
+#include <flight/types/shape.hpp>
+
+#include <flight/types/selection_state.hpp>
+
+#include <flight/types/scene2_d.hpp>
+
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/node2_d.hpp>
+
 #include <flight/types/gizmo_state.hpp>
+
+#include <flight/types/camera2_d.hpp>
 
 #include <flight/node/revision.hpp>
 
 namespace flight::gizmo {
+
+inline const double& rad_to_deg = flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3;
+
+inline const double& deg_to_rad = flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3;
+
+using flight::types::NodeOf;
 
 using flight::signals::connect_signal;
 using flight::signals::disconnect_signal;
 using flight::signals::emit_signal;
 
 using flight::types::GizmoHandleKind;
+using flight::types::GizmoTransformMode;
+using flight::types::Camera2D;
+using flight::types::GizmoMode;
+using flight::types::GizmoNode2DFeatures;
+using flight::types::GizmoPivot;
+using flight::types::GizmoSignals;
+using flight::types::GizmoSpace;
+using flight::types::GizmoState;
+using flight::types::Node2D;
+using flight::types::Rectangle;
+using flight::types::Scene2D;
+using flight::types::SelectionState;
+using flight::types::Shape;
+using flight::types::Vector2Like;
+using flight::types::Node2DTraits;
 
 using flight::node::invalidate_node_appearance;
 using flight::node::invalidate_node_local_transform;

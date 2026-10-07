@@ -11,11 +11,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture_source_kind.hpp>
+
 #include <flight/types/registry_table.hpp>
 
 #include <flight/types/dom_texture_resolver.hpp>
-
-#include <flight/types/texture_source_kind.hpp>
 
 #include <flight/types/dom_render_state.hpp>
 
@@ -23,16 +23,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d_dom {
 
+using flight::types::DomRenderState;
+using flight::types::DomRenderStateRuntime;
+using flight::types::DomTextureResolver;
 using flight::types::KeyedTable;
 using flight::types::RegistryTableEntry;
 using flight::types::registry_entry_state;
-
-using flight::types::DomTextureResolver;
-
 using flight::types::TextureSourceKind;
-
-using flight::types::DomRenderState;
-using flight::types::DomRenderStateRuntime;
 
 inline void register_dom_texture_resolver(flight::Ref<DomRenderState> state, flight::Ref<TextureSourceKind> source_kind, std::optional<flight::Ref<DomTextureResolver>> resolver) {
   flight::Ref<DomRenderStateRuntime> runtime = get_dom_render_state_runtime(state);

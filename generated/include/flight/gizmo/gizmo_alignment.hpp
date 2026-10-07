@@ -25,6 +25,8 @@ namespace flight::types { struct Rectangle; }
 
 namespace flight::gizmo {
 
+using flight::types::Rectangle;
+
 inline void compute_gizmo_alignment_deltas(flight::Array<double> out, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>> bounds, flight::types::GizmoAlignment alignment) {
   ([&]() { auto&& assignment_receiver = out; const auto assignment_value = (static_cast<double>(bounds.size()) * 2.0); assignment_receiver.resize(assignment_value); return assignment_value; }());
   if ((static_cast<double>(bounds.size()) == 0.0)) {

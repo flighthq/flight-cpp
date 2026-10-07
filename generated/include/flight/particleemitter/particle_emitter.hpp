@@ -55,6 +55,7 @@ using flight::types::ParticleEmitterData;
 using flight::types::Rectangle;
 using flight::types::TextureAtlas;
 using flight::types::Vector2Like;
+using flight::types::Node2DTraits;
 
 inline const double particle_transform_stride = 4.0;
 

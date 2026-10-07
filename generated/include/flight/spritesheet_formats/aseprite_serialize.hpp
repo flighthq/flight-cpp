@@ -23,6 +23,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::spritesheet_formats {
 
 using flight::types::AsepriteArrayFrame;
+using flight::types::AsepriteRect;
 using flight::types::AsepriteBaseFrame;
 using flight::types::AsepriteDocument;
 using flight::types::AsepriteMeta;

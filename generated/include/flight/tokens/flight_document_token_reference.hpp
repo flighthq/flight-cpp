@@ -3,7 +3,7 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function substituteFlightDocumentTokenValue -- source line 20
+//   missing: function substituteFlightDocumentTokenValue -- source line 22
 #include <flight/regexp.hpp>
 #include <flight/symbol.hpp>
 #include <functional>
@@ -29,7 +29,11 @@ inline const flight::String reference_escape = flight::String("$$");
 inline const flight::String reference_sigil = flight::String("$");
 
 inline bool is_flight_document_token_reference(flight::Ref<FlightDocumentValue> value) {
-  return (((flight::String("object") == flight::String("string")) && value.starts_with(reference_sigil)) && !value.starts_with(reference_escape));
+  if ((flight::String("object") != flight::String("string"))) {
+    return false;
+  }
+  const flight::String text = value;
+  return (text.starts_with(reference_sigil) && !text.starts_with(reference_escape));
 }
 
 inline std::optional<flight::String> read_flight_document_token_reference_key(flight::String value) {
@@ -38,7 +42,7 @@ inline std::optional<flight::String> read_flight_document_token_reference_key(fl
 }
 
 
-// NOT GENERATED: function substituteFlightDocumentTokenValue -- source line 20
+// NOT GENERATED: function substituteFlightDocumentTokenValue -- source line 22
 // refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:

@@ -18,18 +18,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/frame_script.hpp>
-
 #include <flight/types/movie_clip.hpp>
+
+#include <flight/types/frame_script.hpp>
 
 namespace flight::movieclip {
 
+using flight::types::MovieClip;
 using flight::types::MovieClipData;
 using flight::types::MovieClipRuntime;
-
 using flight::types::FrameScript;
-
-using flight::types::MovieClip;
 
 inline void add_movie_clip_frame_script(flight::Ref<MovieClip> clip, std::variant<double, flight::String> frame, flight::Ref<FrameScript> script) {
   flight::Ref<MovieClipData> data = clip->data;

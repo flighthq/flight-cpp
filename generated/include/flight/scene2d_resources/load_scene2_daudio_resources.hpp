@@ -3,7 +3,7 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function loadScene2DAudioResources -- source line 17
+//   missing: function loadScene2DAudioResources -- source line 18
 #include <coroutine>
 #include <flight/abort.hpp>
 #include <flight/audio_context.hpp>
@@ -17,16 +17,20 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/audio_resource_reference.hpp>
 
+#include <flight/types/audio_resource.hpp>
+
 #include "scene2_dresource_diagnostics.hpp"
 
 namespace flight::scene2d_resources {
 
+using flight::types::AudioResource;
+using flight::types::ExternalAudioResourceReference;
 using flight::types::AudioResourceFetch;
 
-inline flight::Ref<AudioResourceFetch> reject_external_audio_resource = []() { return flight::resolve_task(flight::null); };
+inline flight::Ref<AudioResourceFetch> reject_external_audio_resource = [](flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::ExternalAudioResourceReference>>>> reference, flight::AbortSignal signal) { return flight::resolve_task<std::optional<flight::Ref<AudioResource>>>(std::nullopt); };
 
 
-// NOT GENERATED: function loadScene2DAudioResources -- source line 17
+// NOT GENERATED: function loadScene2DAudioResources -- source line 18
 //
 // The source it stood for:
 //   export async function loadScene2DAudioResources(

@@ -56,6 +56,7 @@ using flight::textlayout::create_text_format_range;
 
 using flight::color::get_color_rgb;
 
+using flight::types::MarkupTagEffect;
 using flight::types::MarkupTagHandler;
 using flight::types::MarkupTagRegistry;
 using flight::types::RichTextContent;
@@ -446,7 +447,7 @@ inline void append_markup_text(flight::Ref<RichTextContent> content, flight::Str
 
 
 // NOT GENERATED: function handleMarkupToken -- source line 285
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
 //   function handleMarkupToken(
@@ -511,8 +512,8 @@ inline void append_markup_text(flight::Ref<RichTextContent> content, flight::Str
 //   // Normalizes a handler result to the `MarkupTagEffect` shape. The common `Partial<TextFormat>` return
 //   // carries none of the reserved effect keys, so it is wrapped as `{ format }`; a richer return is used
 //   // as-is. `TextFormat` shares no field name with `format`/`breakBefore`/`text`, so the test is exact.
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: a presence test against
+// undefined has no absence channel in the emitted C++ storage for property
 
 
 // NOT GENERATED: function parseTextMarkupInternal -- source line 79

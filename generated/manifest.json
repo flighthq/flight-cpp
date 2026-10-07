@@ -159,6 +159,7 @@
         "flight/signals/signal.hpp",
         "flight/signals/slot.hpp",
         "flight/signals/throttle.hpp",
+        "flight/spritesheet/spritesheet_player.hpp",
         "flight/tray/tray.hpp",
         "flight/types/animation_player.hpp",
         "flight/types/app.hpp",
@@ -297,6 +298,7 @@
         "flight/scene3d_resources/reveal_scene3_dresources_on_resolve.hpp",
         "flight/selection/pointer_selection_policy.hpp",
         "flight/skeleton2d/skeleton2d_draw_order_target.hpp",
+        "flight/skeleton3d/skeleton3d.hpp",
         "flight/text/native_text.hpp",
         "flight/text/rich_text.hpp",
         "flight/text/text_label.hpp",
@@ -377,6 +379,7 @@
         "flight/scene3d/mesh.hpp",
         "flight/scene3d/scene_node.hpp",
         "flight/scene3d/scene_node_appearance.hpp",
+        "flight/skeleton3d/skeleton3d.hpp",
         "flight/types/billboard.hpp",
         "flight/types/bitmap_text.hpp",
         "flight/types/display_object.hpp",
@@ -969,16 +972,9 @@
       "files": [
         "flight/glyphatlas/glyph_atlas.hpp",
         "flight/glyphatlas/glyph_atlas_dirty.hpp",
-        "flight/glyphatlas/glyph_atlas_entry.hpp",
         "flight/glyphatlas/glyph_atlas_metrics.hpp"
       ],
       "id": "glyphatlas-glyphatlasruntime-using-declaration"
-    },
-    {
-      "files": [
-        "flight/glyphatlas/glyph_atlas_entry.hpp"
-      ],
-      "id": "glyphatlas-unqualified-bitmap-names"
     },
     {
       "files": [
@@ -991,7 +987,6 @@
         "flight/glyphatlas/explain_glyph_atlas_entry.hpp",
         "flight/glyphatlas/glyph_atlas.hpp",
         "flight/glyphatlas/glyph_atlas_dirty.hpp",
-        "flight/glyphatlas/glyph_atlas_entry.hpp",
         "flight/glyphatlas/glyph_atlas_metrics.hpp",
         "flight/glyphatlas/glyph_rasterizer_backend.hpp",
         "flight/glyphatlas/glyph_source.hpp"
@@ -1561,12 +1556,6 @@
     },
     {
       "files": [
-        "flight/skeleton3d/skeleton3d.hpp"
-      ],
-      "id": "skeleton3d-unqualified-entity-names"
-    },
-    {
-      "files": [
         "flight/statusbar/statusbar.hpp"
       ],
       "id": "statusbar-unqualified-entity-names"
@@ -1701,7 +1690,6 @@
     },
     {
       "files": [
-        "flight/scene3d/billboard.hpp",
         "flight/scene3d/clone_node3_dsubtree.hpp",
         "flight/scene3d/scene_document.hpp"
       ],
@@ -1883,6 +1871,7 @@
       "files": [
         "flight/spritesheet/spritesheet.hpp",
         "flight/spritesheet/spritesheet_animation.hpp",
+        "flight/spritesheet/spritesheet_frame.hpp",
         "flight/spritesheet/spritesheet_from.hpp",
         "flight/spritesheet/spritesheet_player.hpp",
         "flight/spritesheet/spritesheet_validation.hpp"
@@ -1995,7 +1984,8 @@
     {
       "files": [
         "flight/scene2d_resources/load_scene2_daudio_resources.hpp",
-        "flight/scene2d_resources/load_scene2_dimage_resources.hpp"
+        "flight/scene2d_resources/load_scene2_dimage_resources.hpp",
+        "flight/scene2d_resources/scene2_ddocument.hpp"
       ],
       "id": "scene2d-resources-unqualified-types-names"
     },
@@ -2133,6 +2123,7 @@
     },
     {
       "files": [
+        "flight/tray/enable_tray_guards.hpp",
         "flight/tray/tray.hpp"
       ],
       "id": "tray-unqualified-types-names"
@@ -2158,6 +2149,7 @@
     },
     {
       "files": [
+        "flight/textsegment/text_segment.hpp",
         "flight/textsegment/text_segment_boundary.hpp",
         "flight/textsegment/text_segmenter_backend.hpp"
       ],
@@ -2307,7 +2299,9 @@
     },
     {
       "files": [
-        "flight/gizmo/gizmo_state.hpp"
+        "flight/gizmo/gizmo_alignment.hpp",
+        "flight/gizmo/gizmo_state.hpp",
+        "flight/gizmo/node2d_gizmo_features.hpp"
       ],
       "id": "gizmo-unqualified-types-names"
     },
@@ -3344,12 +3338,6 @@
     },
     {
       "files": [
-        "flight/skeleton3d/skeleton3d.hpp"
-      ],
-      "id": "skeleton3d-unqualified-geometry-names"
-    },
-    {
-      "files": [
         "flight/scene2d_canvas/canvas_scale9_sprite.hpp",
         "flight/scene2d_canvas/canvas_sprite.hpp"
       ],
@@ -3426,9 +3414,204 @@
         "flight/image/_internal_image_test_helper.hpp"
       ],
       "id": "image-test-dimension-resolver-declaration"
+    },
+    {
+      "files": [
+        "flight/tilemap_formats/tiled_xml_parse.hpp"
+      ],
+      "id": "tilemap-formats-unqualified-xml-names"
+    },
+    {
+      "files": [
+        "flight/gizmo/node2d_gizmo_features.hpp"
+      ],
+      "id": "gizmo-node-bounds-access"
+    },
+    {
+      "files": [
+        "flight/spritesheet/spritesheet_from.hpp"
+      ],
+      "id": "spritesheet-unqualified-textureatlas-names"
+    },
+    {
+      "files": [
+        "flight/spritesheet/spritesheet_player.hpp"
+      ],
+      "id": "spritesheet-unqualified-entity-names"
+    },
+    {
+      "files": [
+        "flight/skeleton3d/skeleton3d.hpp"
+      ],
+      "id": "skeleton3d-node-transform-access"
+    },
+    {
+      "files": [
+        "flight/skeleton3d/skeleton3d.hpp"
+      ],
+      "id": "skeleton3d-node-hierarchy-access"
+    },
+    {
+      "files": [
+        "flight/layout/flex_layout.hpp",
+        "flight/layout/grid_layout.hpp"
+      ],
+      "id": "layout-bare-layout-node-template-argument"
+    },
+    {
+      "files": [
+        "flight/scene2d_resources/scene2_dslot_reference.hpp"
+      ],
+      "id": "scene2d-resources-node-hierarchy-access"
+    },
+    {
+      "files": [
+        "flight/scene2d_resources/scene2_dslot_reference.hpp"
+      ],
+      "id": "scene2d-resources-node-remove-access"
+    },
+    {
+      "files": [
+        "flight/gizmo/gizmo_state.hpp"
+      ],
+      "id": "gizmo-nodeof-type-name"
+    },
+    {
+      "files": [
+        "flight/gizmo/node2d_gizmo_features.hpp"
+      ],
+      "id": "gizmo-node-transform-access"
+    },
+    {
+      "files": [
+        "flight/gizmo/gizmo_state.hpp"
+      ],
+      "id": "gizmo-deg-to-rad-binding"
+    },
+    {
+      "files": [
+        "flight/gizmo/gizmo_state.hpp"
+      ],
+      "id": "gizmo-rad-to-deg-binding"
+    },
+    {
+      "files": [
+        "flight/text_markup/markup_tag_registry.hpp"
+      ],
+      "id": "text-markup-readonly-handler-parameter"
+    },
+    {
+      "files": [
+        "flight/scene2d_resources/load_scene2_daudio_resources.hpp"
+      ],
+      "id": "scene2d-resources-readonly-audio-fetch-parameter"
+    },
+    {
+      "files": [
+        "flight/scene2d_resources/load_scene2_dimage_resources.hpp"
+      ],
+      "id": "scene2d-resources-readonly-image-fetch-parameter"
     }
   ],
   "sourcePatches": [
+    {
+      "dependency": "flight",
+      "digest": "9763557fa54ca3a7656befe1ec1e5a8534e79810f4a7aa7bc7a43feff7be0bb0",
+      "id": "text-markup-handler-map-type",
+      "module": "packages/text-markup/src/markupTagRegistry.ts plus packages/types/src/MarkupTagHandler.ts",
+      "package": "@flighthq/text-markup"
+    },
+    {
+      "dependency": "flight",
+      "digest": "8f71e828e194f9af6abbe37958ae7fba9f34affac9b2c9d62b1ccfe317b84362",
+      "id": "glyphatlas-iterator-result-binding",
+      "module": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+      "package": "@flighthq/glyphatlas"
+    },
+    {
+      "dependency": "flight",
+      "digest": "ebc67544ae29ad17d6ab6cf54629b1325584c7ff733537360174358b13571af6",
+      "id": "midi-explicit-port-state-arms",
+      "module": "packages/midi/src/midiResource.ts",
+      "package": "@flighthq/midi"
+    },
+    {
+      "dependency": "flight",
+      "digest": "cfee5309ac1273a21742f6edcd8405530e813a9038678d553a3c5fb2df930290",
+      "id": "loader-request-options-return-type",
+      "module": "packages/loader/src/load.ts",
+      "package": "@flighthq/loader"
+    },
+    {
+      "dependency": "flight",
+      "digest": "a7c1ee29961f620fce057de52c0e0cfaba87bcda4c9fdd43ad7cef5ee2374ae9",
+      "id": "scene2d-resources-fetch-arity",
+      "module": "packages/scene2d-resources/src/loadScene2DAudioResources.ts and packages/scene2d-resources/src/loadScene2DImageResources.ts",
+      "package": "@flighthq/scene2d-resources"
+    },
+    {
+      "dependency": "flight",
+      "digest": "baa5bc61561c8272f11e7ce09911a98b356f5183f203b951dbda4477d8f2d268",
+      "id": "shape-formats-keyed-table-owner",
+      "module": "packages/shape-formats/src/shapeCommandSchemas.ts plus packages/shape-formats/src/shapeJson.ts",
+      "package": "@flighthq/shape-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "e31ae36c89e6655d5ea9452c4b209c6e5e33cf5cf3329738f8f81ff7d7c5547c",
+      "id": "tokens-string-narrowing-binding",
+      "module": "packages/tokens/src/flightDocumentTokenReference.ts",
+      "package": "@flighthq/tokens"
+    },
+    {
+      "dependency": "flight",
+      "digest": "c234f1a13bc60e2919b34ca64f846c391c45a361ae7f530f4dc7abaf603f192d",
+      "id": "video-extension-array-binding",
+      "module": "packages/video/src/videoFormat.ts",
+      "package": "@flighthq/video"
+    },
+    {
+      "dependency": "flight",
+      "digest": "70f0a417d166875e148c56facc1d6d3040284e8959c1d584077ac89d21b269e4",
+      "id": "spritesheet-formats-line-normalization",
+      "module": "packages/spritesheet-formats/src/libgdxAtlasParse.ts",
+      "package": "@flighthq/spritesheet-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "f6e3a267c0060d609bf0bf726770be46dc1c57099255ea75656e3e357e97818b",
+      "id": "tilemap-formats-record-materialization",
+      "module": "packages/tilemap-formats/src/tiledJsonParse.ts, packages/tilemap-formats/src/tiledTmjFormat.ts, and packages/tilemap-formats/src/tiledXmlParse.ts",
+      "package": "@flighthq/tilemap-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "c63ff611ecbc19ecd8e761ecf5a82af38a1ca7c94648aa2de63d96ee4435ca5d",
+      "id": "spritesheet-player-options-shape",
+      "module": "packages/spritesheet/src/spritesheetPlayer.ts",
+      "package": "@flighthq/spritesheet"
+    },
+    {
+      "dependency": "flight",
+      "digest": "5ebac51263c9dcc509eb0df7584a06485b8e3b8cf2a8adfe97187b8b262219b4",
+      "id": "layout-node-reference-bindings",
+      "module": "packages/layout/src/flexLayout.ts and packages/layout/src/gridLayout.ts",
+      "package": "@flighthq/layout"
+    },
+    {
+      "dependency": "flight",
+      "digest": "c04826f86c5bb3658a48971cfff3d29ab9f3ee14af37de9a349e8905f7fcda20",
+      "id": "skeleton3d-explicit-storage",
+      "module": "packages/skeleton3d/src/skeleton3d.ts",
+      "package": "@flighthq/skeleton3d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "0c7af8ccfb9956ed11c4133ada89f32dad3548e9465c4d72b2ee33816eb0cee7",
+      "id": "shading-explicit-reference-storage",
+      "module": "packages/shading/src/createShadedMaterial.ts and packages/shading/src/getModifierDefineKey.ts",
+      "package": "@flighthq/shading"
+    },
     {
       "dependency": "flight",
       "digest": "d9c9de3e768dcfd7b11117f6a94d04aacd6fbe268a6e13fb27ba885d529a9181",
@@ -3675,7 +3858,6 @@
       "flight/collision/test_collision3_d.hpp",
       "flight/effects/render_effect_interpolation.hpp",
       "flight/effects_canvas/canvas_effect_state.hpp",
-      "flight/glyphatlas/glyph_atlas_entry.hpp",
       "flight/input/input_manager.hpp",
       "flight/interaction/focus_manager.hpp",
       "flight/interaction/hit_tests.hpp",
@@ -4291,9 +4473,9 @@
     {
       "cppIncludePrefix": "flight/midi",
       "cppNamespace": "flight::midi",
-      "emittedModules": 4,
+      "emittedModules": 5,
       "package": "@flighthq/midi",
-      "refusedModules": 3,
+      "refusedModules": 2,
       "sourceModules": 7
     },
     {
@@ -4709,9 +4891,9 @@
     {
       "cppIncludePrefix": "flight/skeleton3d",
       "cppNamespace": "flight::skeleton3d",
-      "emittedModules": 8,
+      "emittedModules": 9,
       "package": "@flighthq/skeleton3d",
-      "refusedModules": 2,
+      "refusedModules": 1,
       "sourceModules": 10
     },
     {
@@ -4974,9 +5156,9 @@
     {
       "cppIncludePrefix": "flight/video",
       "cppNamespace": "flight::video",
-      "emittedModules": 3,
+      "emittedModules": 4,
       "package": "@flighthq/video",
-      "refusedModules": 2,
+      "refusedModules": 1,
       "sourceModules": 5
     },
     {
@@ -5004,8 +5186,8 @@
   },
   "summary": {
     "packages": 150,
-    "emittedModules": 2175,
-    "refusedModules": 534,
+    "emittedModules": 2178,
+    "refusedModules": 531,
     "sourceModules": 2709
   }
 }

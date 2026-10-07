@@ -3,8 +3,8 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function bindScene2DImageResourceTextures -- source line 69
-//   missing: function loadScene2DImageResources -- source line 18
+//   missing: function bindScene2DImageResourceTextures -- source line 71
+//   missing: function loadScene2DImageResources -- source line 20
 #include <coroutine>
 #include <flight/abort.hpp>
 #include <functional>
@@ -16,14 +16,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/image_resource_reference.hpp>
 
+#include <flight/types/image_resource.hpp>
+
 #include "scene2_dresource_diagnostics.hpp"
 
 namespace flight::scene2d_resources {
 
+using flight::types::ImageResource;
+using flight::types::ExternalImageResourceReference;
 using flight::types::ImageResourceFetch;
 
 
-// NOT GENERATED: function bindScene2DImageResourceTextures -- source line 69
+// NOT GENERATED: function bindScene2DImageResourceTextures -- source line 71
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -39,10 +43,10 @@ using flight::types::ImageResourceFetch;
 // @flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DImageResources.ts: contextual
 // optionalSingle construction requires expression type evidence
 
-inline flight::Ref<ImageResourceFetch> reject_external_image_resource = []() { return flight::resolve_task(flight::null); };
+inline flight::Ref<ImageResourceFetch> reject_external_image_resource = [](flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::ExternalImageResourceReference>>>> reference, flight::AbortSignal signal) { return flight::resolve_task<std::optional<flight::Ref<ImageResource>>>(std::nullopt); };
 
 
-// NOT GENERATED: function loadScene2DImageResources -- source line 18
+// NOT GENERATED: function loadScene2DImageResources -- source line 20
 //
 // The source it stood for:
 //   export async function loadScene2DImageResources(

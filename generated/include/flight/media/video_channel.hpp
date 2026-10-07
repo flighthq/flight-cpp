@@ -38,14 +38,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::media {
 
-using flight::types::VideoPlayOptions;
-
 using flight::signals::create_signal;
 
 using flight::types::HostImageSource;
 using flight::types::HostVideoCapability;
 using flight::types::VideoChannel;
 using flight::types::VideoResource;
+using flight::types::VideoPlayOptions;
 struct VideoChannelRuntime;
 } // namespace flight::media
 
