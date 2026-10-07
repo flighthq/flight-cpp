@@ -23,14 +23,14 @@ inline flight::types::EasingFunction ease_in_elastic = [](double t) {
   if (((t == 0.0) || (t == 1.0))) {
     return t;
   }
-  return -(flight::power(2.0, (10.0 * (t -= 1.0))) * std::sin((((t - s_flight_value_variable_s_flight_private_798cf0766d45b1ea) * (2.0 * flight::pi)) / p)));
+  return -(flight::number_power(2.0, (10.0 * (t -= 1.0))) * std::sin((((t - s_flight_value_variable_s_flight_private_798cf0766d45b1ea) * (2.0 * flight::pi)) / p)));
 };
 
 inline flight::types::EasingFunction ease_out_elastic = [](double t) {
   if (((t == 0.0) || (t == 1.0))) {
     return t;
   }
-  return ((flight::power(2.0, (-10.0 * t)) * std::sin((((t - s_flight_value_variable_s_flight_private_798cf0766d45b1ea) * (2.0 * flight::pi)) / p))) + 1.0);
+  return ((flight::number_power(2.0, (-10.0 * t)) * std::sin((((t - s_flight_value_variable_s_flight_private_798cf0766d45b1ea) * (2.0 * flight::pi)) / p))) + 1.0);
 };
 
 inline const double s2_flight_value_variable_s2_flight_private_798cf0766d45b1ea = ((p2 / (2.0 * flight::pi)) * std::asin(1.0));
@@ -40,9 +40,9 @@ inline flight::types::EasingFunction ease_in_out_elastic = [](double t) {
     return t;
   }
   if (((t *= 2.0) < 1.0)) {
-    return (-0.5 * (flight::power(2.0, (10.0 * (t -= 1.0))) * std::sin((((t - s2_flight_value_variable_s2_flight_private_798cf0766d45b1ea) * (2.0 * flight::pi)) / p2))));
+    return (-0.5 * (flight::number_power(2.0, (10.0 * (t -= 1.0))) * std::sin((((t - s2_flight_value_variable_s2_flight_private_798cf0766d45b1ea) * (2.0 * flight::pi)) / p2))));
   }
-  return (((0.5 * flight::power(2.0, (-10.0 * (t -= 1.0)))) * std::sin((((t - s2_flight_value_variable_s2_flight_private_798cf0766d45b1ea) * (2.0 * flight::pi)) / p2))) + 1.0);
+  return (((0.5 * flight::number_power(2.0, (-10.0 * (t -= 1.0)))) * std::sin((((t - s2_flight_value_variable_s2_flight_private_798cf0766d45b1ea) * (2.0 * flight::pi)) / p2))) + 1.0);
 };
 
 } // namespace flight::easing

@@ -311,7 +311,7 @@ inline flight::Ref<flight::types::Path> offset_path(flight::StructuralRef<flight
   const double miter_limit = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"miterLimit">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_miter_limit; }());
   const double arc_tolerance = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"arcTolerance">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_arc_tolerance; }());
   flight::Array<flight::Array<double>> contours = flight::path::flatten_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(path), ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"tolerance">>(optional_chain_receiver.value()); }()));
-  const double point_eps_sq = flight::power(get_contour_point_eps(contours), 2.0);
+  const double point_eps_sq = flight::number_power(get_contour_point_eps(contours), 2.0);
   flight::Array<flight::Array<double>> raw_rings = flight::Array<flight::Array<double>>{};
   for (auto contour : contours) {
     const bool closed = is_closed_contour(contour, point_eps_sq);

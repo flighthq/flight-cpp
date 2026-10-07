@@ -28,7 +28,7 @@ inline double compute_aces_tone_map(double x) {
 }
 
 inline double compute_exposure_scale(double exposure) {
-  return flight::power(2.0, exposure);
+  return flight::number_power(2.0, exposure);
 }
 
 inline double compute_reinhard_extended_tone_map(double x, double white) {
@@ -109,7 +109,7 @@ inline double compute_filmic_tone_map(double x, std::optional<flight::Structural
   const double c2 = (contrast / (max_brightness - s1));
   const double cp = (-c2 / std::log(2.0));
   const double w0 = (1.0 - smoothstep01(linear_start, s0, x));
-  const double t = ((linear_start * flight::power((x / linear_start), black_tighten)) + pedestal);
+  const double t = ((linear_start * flight::number_power((x / linear_start), black_tighten)) + pedestal);
   const double l = (linear_start + (contrast * (x - linear_start)));
   const double s = (max_brightness - ((max_brightness - s1) * std::exp((cp * (x - s0)))));
   return flight::maximum(0.0, ((((w0 * (1.0 - smoothstep01(l0_2, l1, x))) * t) + (smoothstep01(l0_2, l1, x) * l)) + ((1.0 - w0) * s)));

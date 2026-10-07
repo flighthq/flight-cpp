@@ -16,18 +16,18 @@ namespace flight::easing {
 inline flight::types::EasingFunction ease_in_out_power(double exponent) {
   return [=](double t) {
   if ((t < 0.5)) {
-    return (flight::power((t * 2.0), exponent) * 0.5);
+    return (flight::number_power((t * 2.0), exponent) * 0.5);
   }
-  return (1.0 - (flight::power(((1.0 - t) * 2.0), exponent) * 0.5));
+  return (1.0 - (flight::number_power(((1.0 - t) * 2.0), exponent) * 0.5));
 };
 }
 
 inline flight::types::EasingFunction ease_in_power(double exponent) {
-  return [=](double t) { return flight::power(t, exponent); };
+  return [=](double t) { return flight::number_power(t, exponent); };
 }
 
 inline flight::types::EasingFunction ease_out_power(double exponent) {
-  return [=](double t) { return (1.0 - flight::power((1.0 - t), exponent)); };
+  return [=](double t) { return (1.0 - flight::number_power((1.0 - t), exponent)); };
 }
 
 } // namespace flight::easing

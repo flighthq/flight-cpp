@@ -15,7 +15,7 @@ namespace flight::easing {
 
 inline flight::types::EasingFunction ease_in_circular = [](double t) { return (1.0 - std::sqrt((1.0 - (t * t)))); };
 
-inline flight::types::EasingFunction ease_in_out_circular = [](double t) { return ((t < 0.5) ? ((1.0 - std::sqrt((1.0 - ((4.0 * t) * t)))) / 2.0) : ((std::sqrt((1.0 - flight::power(((-2.0 * t) + 2.0), 2.0))) + 1.0) / 2.0)); };
+inline flight::types::EasingFunction ease_in_out_circular = [](double t) { return ((t < 0.5) ? ((1.0 - std::sqrt((1.0 - ((4.0 * t) * t)))) / 2.0) : ((std::sqrt((1.0 - flight::number_power(((-2.0 * t) + 2.0), 2.0))) + 1.0) / 2.0)); };
 
 inline flight::types::EasingFunction ease_out_circular = [](double t) { return std::sqrt((1.0 - ((t - 1.0) * (t - 1.0)))); };
 

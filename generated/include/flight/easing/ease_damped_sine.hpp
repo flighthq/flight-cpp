@@ -38,7 +38,7 @@ inline flight::types::EasingFunction ease_in_damped_sine(double amplitude, doubl
     return t;
   }
   const double time = (t - 1.0);
-  return -((overshoot * flight::power(2.0, (10.0 * time))) * std::sin((((time - phase) * tau) / wavelength)));
+  return -((overshoot * flight::number_power(2.0, (10.0 * time))) * std::sin((((time - phase) * tau) / wavelength)));
 };
 }
 
@@ -52,9 +52,9 @@ inline flight::types::EasingFunction ease_in_out_damped_sine(double amplitude, d
   }
   const double time = ((t * 2.0) - 1.0);
   if ((time < 0.0)) {
-    return (((-0.5 * overshoot) * flight::power(2.0, (10.0 * time))) * std::sin((((time - phase) * tau) / wavelength)));
+    return (((-0.5 * overshoot) * flight::number_power(2.0, (10.0 * time))) * std::sin((((time - phase) * tau) / wavelength)));
   }
-  return ((((0.5 * overshoot) * flight::power(2.0, (-10.0 * time))) * std::sin((((time - phase) * tau) / wavelength))) + 1.0);
+  return ((((0.5 * overshoot) * flight::number_power(2.0, (-10.0 * time))) * std::sin((((time - phase) * tau) / wavelength))) + 1.0);
 };
 }
 
@@ -66,7 +66,7 @@ inline flight::types::EasingFunction ease_out_damped_sine(double amplitude, doub
   if (((t == 0.0) || (t == 1.0))) {
     return t;
   }
-  return (((overshoot * flight::power(2.0, (-10.0 * t))) * std::sin((((t - phase) * tau) / wavelength))) + 1.0);
+  return (((overshoot * flight::number_power(2.0, (-10.0 * t))) * std::sin((((t - phase) * tau) / wavelength))) + 1.0);
 };
 }
 

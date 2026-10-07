@@ -44,7 +44,7 @@ inline double read_rive_var_uint(flight::Ref<RiveCursor> cursor) {
           return 0.0;
         }
         const double byte = cursor->bytes.get_index(cursor->position++);
-        (result += (flight::bitwise_and(byte, 127.0) * flight::power(2.0, shift)));
+        (result += (flight::bitwise_and(byte, 127.0) * flight::number_power(2.0, shift)));
         if ((flight::bitwise_and(byte, 128.0) == 0.0)) {
           return result;
         }

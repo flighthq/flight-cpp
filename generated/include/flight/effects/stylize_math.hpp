@@ -31,7 +31,7 @@ inline void compute_scanline_params(double resolution, double intensity, flight:
 }
 
 inline double create_bayer_matrix(double order, flight::Float32Array out) {
-  const double size = flight::power(2.0, flight::maximum(1.0, flight::round(order)));
+  const double size = flight::number_power(2.0, flight::maximum(1.0, flight::round(order)));
   const double size_sq = (size * size);
   flight::Float32Array raw = flight::Float32Array(size_sq);
   ([&]() { auto&& typed_array = raw; const auto typed_index = 0.0; const auto typed_value = 0.0; return typed_array.set_index(typed_index, typed_value); }());

@@ -33,7 +33,7 @@ inline flight::Array<double> unpack_rgb_flight_value_function_unpack_u000052_gb_
 
 inline void initialize_color_grade_adjustment(flight::types::EntityConstruction<flight::Ref<flight::types::ColorGradeAdjustment>> out, std::optional<flight::Ref<flight::types::ColorGradeAdjustment>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<flight::types::ColorGradeAdjustment>(flight::types::ColorGradeAdjustment{}));
-  const double exposure = flight::power(2.0, ([&]() -> double { auto nullish_coalesce_left = options.value()->exposure; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  const double exposure = flight::number_power(2.0, ([&]() -> double { auto nullish_coalesce_left = options.value()->exposure; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   const double brightness = ([&]() -> double { auto nullish_coalesce_left = options.value()->brightness; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
   const double contrast = ([&]() -> double { auto nullish_coalesce_left = options.value()->contrast; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
   const double saturation = ([&]() -> double { auto nullish_coalesce_left = options.value()->saturation; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
@@ -54,9 +54,9 @@ inline void initialize_color_grade_adjustment(flight::types::EntityConstruction<
   (cr = (((cr - 0.5) * contrast) + 0.5));
   (cg = (((cg - 0.5) * contrast) + 0.5));
   (cb = (((cb - 0.5) * contrast) + 0.5));
-  (cr = flight::power(flight::maximum(((cr * gain.element(0.0)) + (lift.element(0.0) * (1.0 - cr))), 0.0), gamma_exp.element(0.0)));
-  (cg = flight::power(flight::maximum(((cg * gain.element(1.0)) + (lift.element(1.0) * (1.0 - cg))), 0.0), gamma_exp.element(1.0)));
-  (cb = flight::power(flight::maximum(((cb * gain.element(2.0)) + (lift.element(2.0) * (1.0 - cb))), 0.0), gamma_exp.element(2.0)));
+  (cr = flight::number_power(flight::maximum(((cr * gain.element(0.0)) + (lift.element(0.0) * (1.0 - cr))), 0.0), gamma_exp.element(0.0)));
+  (cg = flight::number_power(flight::maximum(((cg * gain.element(1.0)) + (lift.element(1.0) * (1.0 - cg))), 0.0), gamma_exp.element(1.0)));
+  (cb = flight::number_power(flight::maximum(((cb * gain.element(2.0)) + (lift.element(2.0) * (1.0 - cb))), 0.0), gamma_exp.element(2.0)));
   (out.element(0.0) = clamp01_flight_value_function_clamp01_flight_private_8b56492dba576551(cr));
   (out.element(1.0) = clamp01_flight_value_function_clamp01_flight_private_8b56492dba576551(cg));
   (out.element(2.0) = clamp01_flight_value_function_clamp01_flight_private_8b56492dba576551(cb));

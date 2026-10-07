@@ -119,14 +119,14 @@ inline flight::Array<double> generate_bezier(flight::Array<double> pts, double f
   double alpha1;
   double alpha2;
   if ((std::abs(det) < 1e-12)) {
-    const double dist = std::sqrt((flight::power((pts.element((last * 2.0)) - pts.element((first * 2.0))), 2.0) + flight::power((pts.element(((last * 2.0) + 1.0)) - pts.element(((first * 2.0) + 1.0))), 2.0)));
+    const double dist = std::sqrt((flight::number_power((pts.element((last * 2.0)) - pts.element((first * 2.0))), 2.0) + flight::number_power((pts.element(((last * 2.0) + 1.0)) - pts.element(((first * 2.0) + 1.0))), 2.0)));
     (alpha1 = (alpha2 = (dist / 3.0)));
   }
   else {
     (alpha1 = (((c11 * x0) - (c01 * x1)) / det));
     (alpha2 = (((c00 * x1) - (c01 * x0)) / det));
   }
-  const double seg_length = std::sqrt((flight::power((pts.element((last * 2.0)) - pts.element((first * 2.0))), 2.0) + flight::power((pts.element(((last * 2.0) + 1.0)) - pts.element(((first * 2.0) + 1.0))), 2.0)));
+  const double seg_length = std::sqrt((flight::number_power((pts.element((last * 2.0)) - pts.element((first * 2.0))), 2.0) + flight::number_power((pts.element(((last * 2.0) + 1.0)) - pts.element(((first * 2.0) + 1.0))), 2.0)));
   const double epsilon = (0.000001 * seg_length);
   if (((alpha1 < epsilon) || (alpha2 < epsilon))) {
     (alpha1 = (alpha2 = (seg_length / 3.0)));
@@ -199,7 +199,7 @@ inline flight::Array<double> compute_center_tangent(flight::Array<double> pts, d
 inline void fit_cubic(flight::Array<double> pts, double first, double last, flight::Array<double> t_hat1, flight::Array<double> t_hat2, double tolerance_sq, flight::Ref<flight::types::Path> out) {
   const double n_pts = ((last - first) + 1.0);
   if ((n_pts == 2.0)) {
-    const double dist = std::sqrt((flight::power((pts.element((last * 2.0)) - pts.element((first * 2.0))), 2.0) + flight::power((pts.element(((last * 2.0) + 1.0)) - pts.element(((first * 2.0) + 1.0))), 2.0)));
+    const double dist = std::sqrt((flight::number_power((pts.element((last * 2.0)) - pts.element((first * 2.0))), 2.0) + flight::number_power((pts.element(((last * 2.0) + 1.0)) - pts.element(((first * 2.0) + 1.0))), 2.0)));
     const double d = (dist / 3.0);
     out->commands.push(flight::types::path_command->cubic_curve_to);
     out->data.push((pts.element((first * 2.0)) + (t_hat1.element(0.0) * d)), (pts.element(((first * 2.0) + 1.0)) + (t_hat1.element(1.0) * d)), (pts.element((last * 2.0)) + (t_hat2.element(0.0) * d)), (pts.element(((last * 2.0) + 1.0)) + (t_hat2.element(1.0) * d)), pts.element((last * 2.0)), pts.element(((last * 2.0) + 1.0)));

@@ -16,6 +16,7 @@
 #include <utility>
 #include <variant>
 
+#include <flight/array.hpp>
 #include <flight/equality.hpp>
 #include <flight/error.hpp>
 #include <flight/number.hpp>
@@ -112,6 +113,19 @@ struct AnyObject final {
   }
 };
 
+// An erased Flight array retains the array's own shared-storage identity. The std::any owns a typed
+// Array handle for exact recovery, while `identity` points at the shared vector rather than at this
+// boxing operation: boxing the same JavaScript array twice must still produce one object identity.
+struct AnyArray final {
+  std::shared_ptr<const std::any> value;
+  std::type_index type{typeid(void)};
+  const void* identity{nullptr};
+
+  [[nodiscard]] friend bool operator==(const AnyArray& left, const AnyArray& right) noexcept {
+    return left.identity == right.identity;
+  }
+};
+
 // A callable, or a host value that is neither a primitive nor a Flight-owned object. The shared
 // holder gives it the reference identity JavaScript gives every non-primitive.
 struct AnyOpaque final {
@@ -141,6 +155,15 @@ class Any final {
   Any(String value) : value_(std::move(value)) {}
   Any(const char* value) : value_(String(value)) {}
   Any(Symbol value) : value_(std::move(value)) {}
+
+  template <typename Value>
+  Any(Array<Value> value)
+      : value_(detail::AnyArray{
+            std::make_shared<const std::any>(std::in_place_type<Array<Value>>, value),
+            std::type_index(typeid(Array<Value>)), value.identity()}) {}
+
+  template <typename Value>
+  Any(const std::optional<Value>& value) : Any(value ? Any(*value) : Any(undefined)) {}
 
   // An object reference keeps its concrete type. A null reference is `null`, not an object,
   // because that is what a JavaScript object-typed binding holding nothing is.
@@ -191,6 +214,8 @@ class Any final {
       case 6:
         return AnyKind::object;
       case 7:
+        return AnyKind::object;
+      case 8:
         return AnyKind::function;
       default:
         return AnyKind::external;
@@ -293,6 +318,9 @@ class Any final {
   // Recovers a host value or a callable at the exact type it was stored as.
   template <typename External>
   [[nodiscard]] const External* external_if() const noexcept {
+    if (const auto* array = std::get_if<detail::AnyArray>(&value_)) {
+      return array->value ? std::any_cast<External>(array->value.get()) : nullptr;
+    }
     if (const auto* opaque = std::get_if<detail::AnyOpaque>(&value_)) {
       return opaque->value ? std::any_cast<External>(opaque->value.get()) : nullptr;
     }
@@ -313,6 +341,7 @@ class Any final {
 
   [[nodiscard]] std::type_index held_type() const noexcept {
     if (const auto* stored = std::get_if<detail::AnyObject>(&value_)) return stored->type;
+    if (const auto* array = std::get_if<detail::AnyArray>(&value_)) return array->type;
     if (const auto* opaque = std::get_if<detail::AnyOpaque>(&value_)) {
       return opaque->value ? std::type_index(opaque->value->type()) : std::type_index(typeid(void));
     }
@@ -327,6 +356,7 @@ class Any final {
   // do not have it.
   [[nodiscard]] const void* identity() const noexcept {
     if (const auto* stored = std::get_if<detail::AnyObject>(&value_)) return stored->object.get();
+    if (const auto* array = std::get_if<detail::AnyArray>(&value_)) return array->identity;
     if (const auto* opaque = std::get_if<detail::AnyOpaque>(&value_)) return opaque->value.get();
     if (const auto* callable = std::get_if<Callable_>(&value_)) return callable->held.value.get();
     return nullptr;
@@ -401,7 +431,7 @@ class Any final {
     return *held;
   }
 
-  std::variant<Undefined, Null, bool, double, String, Symbol, detail::AnyObject, Callable_,
+  std::variant<Undefined, Null, bool, double, String, Symbol, detail::AnyObject, detail::AnyArray, Callable_,
                detail::AnyOpaque>
       value_;
 };
@@ -498,6 +528,12 @@ struct is_shared_reference : std::false_type {};
 template <typename Value>
 struct is_shared_reference<std::shared_ptr<Value>> : std::true_type {};
 
+template <typename Value>
+struct is_flight_array : std::false_type {};
+
+template <typename Value>
+struct is_flight_array<Array<Value>> : std::true_type {};
+
 // The erased reading of one stored value, or nothing when this runtime has no honest erased
 // reading of it.
 //
@@ -521,6 +557,8 @@ template <typename Value>
     return Any(value);
   } else if constexpr (is_shared_reference<Stored>::value) {
     return Any::object(value);
+  } else if constexpr (is_flight_array<Stored>::value) {
+    return Any(value);
   } else if constexpr (is_std_function<Stored>::value) {
     // An unset callable member is `null` rather than a function nobody can call.
     return value ? std::optional<Any>(Any::function(value)) : std::optional<Any>(Any(null));
@@ -563,6 +601,9 @@ template <typename Value>
     // Object identity is preserved: this hands back the very reference the `Any` holds, not a copy.
     auto reference = value.template object_if<typename Stored::element_type>();
     if (reference) return reference;
+    return std::nullopt;
+  } else if constexpr (is_flight_array<Stored>::value) {
+    if (const auto* array = value.template external_if<Stored>()) return *array;
     return std::nullopt;
   } else if constexpr (is_std_optional<Stored>::value) {
     // `undefined` and `null` both write an absent optional, which is what assigning either to an

@@ -19,13 +19,13 @@ inline double color_from_kelvin(double kelvin) {
     (r = 255.0);
   }
   else {
-    (r = (329.698727446 * flight::power((temp - 60.0), -0.1332047592)));
+    (r = (329.698727446 * flight::number_power((temp - 60.0), -0.1332047592)));
   }
   if ((temp <= 66.0)) {
     (g = ((99.4708025861 * std::log(temp)) - 161.1195681661));
   }
   else {
-    (g = (288.1221695283 * flight::power((temp - 60.0), -0.0755148492)));
+    (g = (288.1221695283 * flight::number_power((temp - 60.0), -0.0755148492)));
   }
   if ((temp >= 66.0)) {
     (b = 255.0);

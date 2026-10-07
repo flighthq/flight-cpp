@@ -21,8 +21,8 @@ inline void compute_color_temperature_rgb(double kelvin, flight::Array<double> o
     (b = ((temp <= 19.0) ? 0.0 : (((138.5177312231 * std::log((temp - 10.0))) - 305.0447927307) / 255.0)));
   }
   else {
-    (r = ((329.698727446 * flight::power((temp - 60.0), -0.1332047592)) / 255.0));
-    (g = ((288.1221695283 * flight::power((temp - 60.0), -0.0755148492)) / 255.0));
+    (r = ((329.698727446 * flight::number_power((temp - 60.0), -0.1332047592)) / 255.0));
+    (g = ((288.1221695283 * flight::number_power((temp - 60.0), -0.0755148492)) / 255.0));
     (b = 1.0);
   }
   (out.element(0.0) = flight::maximum(0.0, flight::minimum(1.0, r)));

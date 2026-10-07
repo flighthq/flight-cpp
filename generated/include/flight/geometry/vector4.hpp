@@ -95,7 +95,7 @@ inline double get_vector4_distance(flight::StructuralRef<flight::RowReadonly<fli
   const double y = (flight::row_get<flight::RowKey<"y">>(b) - flight::row_get<flight::RowKey<"y">>(a));
   const double z = (flight::row_get<flight::RowKey<"z">>(b) - flight::row_get<flight::RowKey<"z">>(a));
   const double w = (flight::row_get<flight::RowKey<"w">>(b) - flight::row_get<flight::RowKey<"w">>(a));
-  return std::sqrt((((flight::power(x, 2.0) + flight::power(y, 2.0)) + flight::power(z, 2.0)) + flight::power(w, 2.0)));
+  return std::sqrt((((flight::number_power(x, 2.0) + flight::number_power(y, 2.0)) + flight::number_power(z, 2.0)) + flight::number_power(w, 2.0)));
 }
 
 inline double get_vector4_distance_squared(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> b) {
@@ -103,7 +103,7 @@ inline double get_vector4_distance_squared(flight::StructuralRef<flight::RowRead
   const double y = (flight::row_get<flight::RowKey<"y">>(b) - flight::row_get<flight::RowKey<"y">>(a));
   const double z = (flight::row_get<flight::RowKey<"z">>(b) - flight::row_get<flight::RowKey<"z">>(a));
   const double w = (flight::row_get<flight::RowKey<"w">>(b) - flight::row_get<flight::RowKey<"w">>(a));
-  return (((flight::power(x, 2.0) + flight::power(y, 2.0)) + flight::power(z, 2.0)) + flight::power(w, 2.0));
+  return (((flight::number_power(x, 2.0) + flight::number_power(y, 2.0)) + flight::number_power(z, 2.0)) + flight::number_power(w, 2.0));
 }
 
 inline double get_vector4_dot(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> b) {
@@ -111,7 +111,7 @@ inline double get_vector4_dot(flight::StructuralRef<flight::RowReadonly<flight::
 }
 
 inline double get_vector4_length(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> source) {
-  return std::sqrt((((flight::power(flight::row_get<flight::RowKey<"x">>(source), 2.0) + flight::power(flight::row_get<flight::RowKey<"y">>(source), 2.0)) + flight::power(flight::row_get<flight::RowKey<"z">>(source), 2.0)) + flight::power(flight::row_get<flight::RowKey<"w">>(source), 2.0)));
+  return std::sqrt((((flight::number_power(flight::row_get<flight::RowKey<"x">>(source), 2.0) + flight::number_power(flight::row_get<flight::RowKey<"y">>(source), 2.0)) + flight::number_power(flight::row_get<flight::RowKey<"z">>(source), 2.0)) + flight::number_power(flight::row_get<flight::RowKey<"w">>(source), 2.0)));
 }
 
 inline double get_vector4_angle_between(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> b) {
@@ -125,7 +125,7 @@ inline double get_vector4_angle_between(flight::StructuralRef<flight::RowReadonl
 }
 
 inline double get_vector4_length_squared(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector4Like>>> source) {
-  return (((flight::power(flight::row_get<flight::RowKey<"x">>(source), 2.0) + flight::power(flight::row_get<flight::RowKey<"y">>(source), 2.0)) + flight::power(flight::row_get<flight::RowKey<"z">>(source), 2.0)) + flight::power(flight::row_get<flight::RowKey<"w">>(source), 2.0));
+  return (((flight::number_power(flight::row_get<flight::RowKey<"x">>(source), 2.0) + flight::number_power(flight::row_get<flight::RowKey<"y">>(source), 2.0)) + flight::number_power(flight::row_get<flight::RowKey<"z">>(source), 2.0)) + flight::number_power(flight::row_get<flight::RowKey<"w">>(source), 2.0));
 }
 
 inline void initialize_vector4(flight::types::EntityConstruction<flight::Ref<flight::types::Vector4>> out, double x, double y, double z, double w) {
@@ -226,7 +226,7 @@ inline double normalize_vector4(flight::types::Vector4Like out, flight::Structur
   const double y = flight::row_get<flight::RowKey<"y">>(source);
   const double z = flight::row_get<flight::RowKey<"z">>(source);
   const double w = flight::row_get<flight::RowKey<"w">>(source);
-  const double l = std::sqrt((((flight::power(x, 2.0) + flight::power(y, 2.0)) + flight::power(z, 2.0)) + flight::power(w, 2.0)));
+  const double l = std::sqrt((((flight::number_power(x, 2.0) + flight::number_power(y, 2.0)) + flight::number_power(z, 2.0)) + flight::number_power(w, 2.0)));
   if ((l != 0.0)) {
     (out->x = (x / l));
     (out->y = (y / l));

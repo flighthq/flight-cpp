@@ -33,7 +33,7 @@ inline double compute_god_rays_sample_weight(flight::StructuralRef<flight::RowRe
   const double decay = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"decay">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.96; }());
   const double weight = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"weight">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.4; }());
   const double exposure = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"exposure">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.1; }());
-  return ((flight::power(decay, sample_index) * weight) * exposure);
+  return ((flight::number_power(decay, sample_index) * weight) * exposure);
 }
 
 inline void compute_god_rays_step_size(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GodRaysEffect>>>> effect, double px, double py, flight::Array<double> out) {

@@ -13,7 +13,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::easing {
 
-inline flight::types::EasingFunction ease_in_out_quadratic = [](double t) { return ((t < 0.5) ? ((2.0 * t) * t) : (1.0 - (flight::power(((-2.0 * t) + 2.0), 2.0) / 2.0))); };
+inline flight::types::EasingFunction ease_in_out_quadratic = [](double t) { return ((t < 0.5) ? ((2.0 * t) * t) : (1.0 - (flight::number_power(((-2.0 * t) + 2.0), 2.0) / 2.0))); };
 
 inline flight::types::EasingFunction ease_in_quadratic = [](double t) { return (t * t); };
 

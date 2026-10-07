@@ -1271,6 +1271,25 @@ void test_attached_properties() {
         "a destroyed object never hands its attached entries to a later object");
 }
 
+void test_any_array_and_optional_boxing() {
+  flight::Array<flight::String> values{flight::String("one"), flight::String("two")};
+  const flight::Any first(values);
+  const flight::Any second(values);
+  const flight::Any distinct(flight::Array<flight::String>{flight::String("one"), flight::String("two")});
+  check(first.kind() == flight::AnyKind::object && first.strict_equals(second) &&
+            !first.strict_equals(distinct),
+        "Any boxes Flight arrays as objects while preserving their shared-storage identity");
+  const auto* recovered = first.external_if<flight::Array<flight::String>>();
+  check(recovered && *recovered == values && recovered->element(1.0) == flight::String("two"),
+        "Any recovers an erased Flight array at its exact element type");
+
+  const flight::Any absent(std::optional<double>{});
+  const flight::Any present(std::optional<double>{4.0});
+  check(absent.is_undefined() && present.kind() == flight::AnyKind::number &&
+            present.as_number() == 4.0,
+        "Any maps an empty optional to undefined and a present optional to its value");
+}
+
 // A requires-expression only absorbs failures during template substitution, so the operand types have
 // to arrive as template parameters for this to be a question rather than a hard error.
 template <typename Value, typename Options>
@@ -2628,6 +2647,13 @@ void test_new_runtime_services() {
   EntityView second_entity_view(entity);
   check(entity_view == second_entity_view,
         "structural views over one source object reuse one row owner");
+  using AssertedReferenceView =
+      flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestReference>>>>;
+  const auto asserted_reference = flight::structural_ref_cast<AssertedReferenceView>(entity_view);
+  check(asserted_reference == entity_view &&
+            asserted_reference.shared_owner() == entity_view.shared_owner() &&
+            !asserted_reference.shared_object(),
+        "an explicit structural assertion preserves owner identity without reinterpreting its native object");
   auto entity_runtime = flight::make_ref<TestReference>(TestReference{.value = 9});
   const auto entity_runtime_symbol = flight::Symbol::for_key("EntityRuntime");
   flight::row_set(entity_view, entity_runtime_symbol, entity_runtime);
@@ -2840,7 +2866,7 @@ void test_presence_and_math() {
   check(std::signbit(flight::sign(-0.0)), "Math.sign preserves negative zero");
   check(std::isnan(flight::sign(std::numeric_limits<double>::quiet_NaN())),
         "Math.sign preserves NaN");
-  check(flight::power(2.0, 10.0) == 1024.0 && flight::power(4.0, -0.5) == 0.5,
+  check(flight::number_power(2.0, 10.0) == 1024.0 && flight::number_power(4.0, -0.5) == 0.5,
         "exponentiation uses the compiler runtime spelling");
   check(flight::minimum(3.0, 2.0) == 2.0 && flight::maximum(3.0, 2.0) == 3.0 &&
             std::signbit(flight::minimum(0.0, -0.0)) &&
@@ -3645,6 +3671,7 @@ int main() {
   test_number_to_fixed();
   test_any_domain();
   test_attached_properties();
+  test_any_array_and_optional_boxing();
   test_symbol_absent_description();
   test_error_from_caught_exception();
   test_callable_identity_slot_list();

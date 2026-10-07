@@ -12,7 +12,7 @@ import path from 'node:path';
 // a patched build into a silent fork of the generator.
 
 const SCHEMA = 'flight-cpp-emission-repairs/1';
-const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias', 'respell-readonly-parameter', 'name-in-place-alternative', 'name-defaulted-template-argument',
+const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias', 'respell-readonly-parameter', 'respell-runtime-call', 'name-in-place-alternative', 'name-defaulted-template-argument',
   'deduce-call-argument-from-assignment',
   'respell-flattened-union',
   'wrap-conditional-absent-branch',
@@ -55,6 +55,7 @@ const REQUIRED_FIELDS = {
   'respell-flattened-union': [...SHARED_FIELDS, 'symbol', 'replacement', 'requiredSuffix', 'sourceDeclaration'],
   'respell-reference-alias': [...SHARED_FIELDS, 'symbol', 'expansion', 'witness', 'witnessInclude'],
   'respell-readonly-parameter': [...SHARED_FIELDS, 'from', 'to', 'sourceDeclaration'],
+  'respell-runtime-call': [...SHARED_FIELDS, 'symbol', 'replacement', 'sourceDeclaration'],
   'name-array-from-tuple-construction': [...SHARED_FIELDS, 'symbol', 'sourceDeclaration'],
   'record-from-designated-initializer': [...SHARED_FIELDS, 'symbol', 'recordType', 'replacement', 'sourceDeclaration'],
   'alias-anonymous-struct-to-named': [...SHARED_FIELDS, 'symbol', 'replacement', 'canonicalInclude', 'sourceDeclaration'],
@@ -188,12 +189,21 @@ const HANDLERS = {
   'respell-flattened-union': respellFlattenedUnion,
   'respell-reference-alias': respellReferenceAlias,
   'respell-readonly-parameter': respellReadonlyParameter,
+  'respell-runtime-call': respellRuntimeCall,
   'wrap-conditional-absent-branch': (contents) => wrapConditionalAbsentBranch(contents),
   'project-partial-row-absence': projectPartialRowAbsence,
   'unwrap-partial-row-three-state-member': unwrapPartialRowThreeStateMember,
   'project-array-at-row-write': projectArrayAtRowWrite,
   'project-symbol-keyed-member': projectSymbolKeyedMember,
 };
+
+// Respells one exact runtime call name when the emitter's ABI spelling collides with a package
+// namespace. The opening parenthesis is part of the declared symbol, so fields and unrelated
+// identifiers with the same word are never touched. Replacement is naturally idempotent.
+function respellRuntimeCall(contents, repair) {
+  if (!contents.includes(repair.symbol)) return undefined;
+  return contents.replaceAll(repair.symbol, repair.replacement);
+}
 
 function applyOneRound(repairs, files, applied) {
   let changed = false;
@@ -670,18 +680,27 @@ function respellFlattenedUnion(contents, repair) {
 // this computes it. It is also self-checking in a way the other repairs are not -- if the expression
 // named the wrong type the assignment would not compile, so a wrong rewrite cannot reach a built header.
 //
-// Only the assignment form is matched. The one non-assignment call in the tree
-// (flight/render/render_cache.hpp, inside a nullish-assignment lambda) has no target to read and is
-// deliberately left for its own repair or an override rather than guessed at.
+// A nullish-assignment lambda still carries the same evidence in its local `assignment_target`, whose
+// type is optional<shared_ptr<Signal<T>>>. Its value_type and then element_type recover Signal<T> and
+// the same template_argument_t recovers T. Both forms therefore read the answer from the exact storage
+// receiving the call; neither guesses from a callback elsewhere in the file.
 function deduceCallArgumentFromAssignment(contents, repair) {
-  const pattern = new RegExp(`\\(([A-Za-z_][\\w]*(?:(?:->|\\.)[A-Za-z_]\\w*)+) = ${repair.symbol}\\(\\)\\)`, 'gu');
-  if (!pattern.test(contents)) return undefined;
-  return contents.replace(
-    pattern,
+  const assignment = new RegExp(`\\(([A-Za-z_][\\w]*(?:(?:->|\\.)[A-Za-z_]\\w*)+) = ${repair.symbol}\\(\\)\\)`, 'gu');
+  const nullish = new RegExp(`\\b(assignment_target) = ${repair.symbol}\\(\\)`, 'gu');
+  if (!assignment.test(contents) && !nullish.test(contents)) return undefined;
+  let repaired = contents.replace(
+    assignment,
     (_match, target) =>
       `(${target} = ${repair.symbol}<flight::template_argument_t<` +
       `typename std::remove_cvref_t<decltype(${target})>::element_type>>())`,
   );
+  repaired = repaired.replace(
+    nullish,
+    (_match, target) =>
+      `${target} = ${repair.symbol}<flight::template_argument_t<` +
+      `typename std::remove_cvref_t<decltype(${target})>::value_type::element_type>>()`,
+  );
+  return repaired;
 }
 
 // Writes the default template argument the TypeScript declares and the emitter dropped.

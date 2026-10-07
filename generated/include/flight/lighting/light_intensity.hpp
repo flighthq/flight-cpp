@@ -18,7 +18,7 @@ namespace flight::types { struct PhotometricLightLike; }
 namespace flight::lighting {
 
 inline double apply_light_exposure(double intensity, double ev) {
-  return (intensity * flight::power(2.0, ev));
+  return (intensity * flight::number_power(2.0, ev));
 }
 
 inline const double reference_photometric_level = 100000.0;

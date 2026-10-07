@@ -39,7 +39,7 @@ struct SwfReader : public flight::ReferenceEnabled {
       while ((i < encoded_uint32_max_bytes)) {
         {
           const double byte = this->read_uint8();
-          (value += (flight::bitwise_and(byte, 127.0) * flight::power(2.0, (7.0 * i))));
+          (value += (flight::bitwise_and(byte, 127.0) * flight::number_power(2.0, (7.0 * i))));
           if ((flight::bitwise_and(byte, 128.0) == 0.0)) {
             break;
           }
@@ -58,8 +58,8 @@ struct SwfReader : public flight::ReferenceEnabled {
     if ((count == 0.0)) {
       return 0.0;
     }
-    const double sign = flight::power(2.0, (count - 1.0));
-    return ((value >= sign) ? (value - flight::power(2.0, count)) : value);
+    const double sign = flight::number_power(2.0, (count - 1.0));
+    return ((value >= sign) ? (value - flight::number_power(2.0, count)) : value);
   }
   flight::String read_string() {
     this->align_to_byte();

@@ -818,7 +818,7 @@
       "symbol": "create_signal",
       "sourceDeclaration": "packages/signals/src/signal.ts:8 -- export function createSignal<T extends (...args: any[]) => void>(): Signal<T>",
       "diagnostic": "no matching function for call to 'create_signal()'",
-      "defect": "createSignal<T>() takes its type argument from TypeScript's CONTEXTUAL TYPING -- T is read off the type being assigned to -- and C++ has no equivalent, so the emitted call has nothing to deduce from. Eight assignment-shaped calls across @flighthq/node (5) and @flighthq/scene2d (3); it was the sole remaining cause in twelve of node's 21 headers. The repair recovers the argument from the assignment target, which is the same rule TypeScript applies, and is self-checking: a wrong type would not compile.",
+      "defect": "createSignal<T>() takes its type argument from TypeScript's CONTEXTUAL TYPING -- T is read off the type being assigned to -- and C++ has no equivalent, so the emitted call has nothing to deduce from. The repair recovers the argument from either a direct shared_ptr<Signal<T>> assignment target or the optional<shared_ptr<Signal<T>>> target of an emitted nullish-assignment lambda. This is the same rule TypeScript applies and is self-checking: a wrong type would not compile.",
       "expectedWhen": "always",
       "expires": "when the emitter supplies the type argument it resolved from the assignment context; sdk:check fails if this repair matches no header."
     },
@@ -6600,12 +6600,16 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/has_transform2_d.hpp",
+          "name": "Transform2DNode"
+        },
+        {
           "include": "flight/types/velocity.hpp",
           "name": "VelocityField"
         }
       ],
-      "diagnostic": "'VelocityField' was not declared in this scope",
-      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::velocity, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "diagnostic": "'Transform2DNode' was not declared in this scope",
+      "defect": "The emitter writes the imported Transform2DNode and VelocityField type names unqualified inside namespace flight::velocity, without the headers that define them. Each name here was named by an actual compiler diagnostic and resolved to its definition in flight/types/, so no name already in scope is redeclared.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -7236,12 +7240,156 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/entity.hpp",
+          "name": "Entity"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "HostNotificationActionCapability"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "HostNotificationActiveListCapability"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "HostNotificationClickCapability"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "HostNotificationCloseCapability"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "HostNotificationDeliveryCapability"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "HostNotificationDismissCapability"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "HostNotificationLifecycleCapability"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "HostNotificationPermissionCapability"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "HostNotificationReceivedCapability"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "HostNotificationReplyCapability"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "HostNotificationSchedulingCapability"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "Notification"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationActionSubscription"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationActiveListOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationCancelOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationClickSubscription"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationCloseOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationDeliveryOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationDismissSubscription"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationEventAttachment"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationEventBackendAttachOutcome"
+        },
+        {
           "include": "flight/types/notification.hpp",
           "name": "NotificationLifecycleOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationPendingListOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationPermissionQueryOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationPermissionRequestOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationReceivedSubscription"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationReplySubscription"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationRequest"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationSchedule"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationScheduleOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationSubscriptionAttachOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationSubscriptionDetachOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationSubscriptionDisposeOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "ScheduledNotification"
+        },
+        {
+          "include": "flight/types/signal.hpp",
+          "name": "Signal"
         }
       ],
-      "diagnostic": "'NotificationLifecycleOutcome' was not declared in this scope",
-      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::notification, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "diagnostic": "'HostNotificationCloseCapability' was not declared in this scope",
+      "defect": "The emitter writes the imported notification and entity type names unqualified inside namespace flight::notification. The full import set is listed because later names were masked behind the first compiler diagnostic; every name resolves to the pinned source import and its generated flight/types definition.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -7408,12 +7556,80 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/input_manager.hpp",
+          "name": "AttachInputOptions"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/gamepad_axis_kind.hpp",
+          "name": "GamepadAxisKind"
+        },
+        {
+          "include": "flight/types/gamepad_button_kind.hpp",
+          "name": "GamepadButtonKind"
+        },
+        {
+          "include": "flight/types/gamepad_mapping_kind.hpp",
+          "name": "GamepadMappingKind"
+        },
+        {
+          "include": "flight/types/host_input_ingress.hpp",
+          "name": "HostInputIngressCapability"
+        },
+        {
+          "include": "flight/types/input_gamepad_data.hpp",
+          "name": "InputGamepadAxisData"
+        },
+        {
+          "include": "flight/types/input_gamepad_data.hpp",
+          "name": "InputGamepadButtonData"
+        },
+        {
+          "include": "flight/types/input_gamepad_data.hpp",
+          "name": "InputGamepadConnectData"
+        },
+        {
+          "include": "flight/types/host_input_ingress.hpp",
+          "name": "InputIngressSink"
+        },
+        {
+          "include": "flight/types/host_input_ingress.hpp",
+          "name": "InputIngressSource"
+        },
+        {
+          "include": "flight/types/input_keyboard_data.hpp",
+          "name": "InputKeyboardData"
+        },
+        {
+          "include": "flight/types/input_key_repeat_options.hpp",
+          "name": "InputKeyRepeatOptions"
+        },
+        {
+          "include": "flight/types/input_key_repeat_timer.hpp",
+          "name": "InputKeyRepeatTimer"
+        },
+        {
+          "include": "flight/types/input_manager.hpp",
+          "name": "InputManager"
+        },
+        {
+          "include": "flight/types/input_pointer_data.hpp",
+          "name": "InputPointerData"
+        },
+        {
+          "include": "flight/types/input_signals.hpp",
+          "name": "InputSignals"
+        },
+        {
           "include": "flight/types/input_state.hpp",
           "name": "InputState"
         }
       ],
-      "diagnostic": "'InputState' was not declared in this scope",
-      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::input, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "diagnostic": "'InputManager' was not declared in this scope",
+      "defect": "The emitter writes the imported input and entity type names unqualified inside namespace flight::input. The full import set is listed because later names were masked behind the first compiler diagnostic; every name resolves to the pinned source import and its generated flight/types definition.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -11296,6 +11512,18 @@
       "defect": "The emitter lowers the explicitly read-only parameter of the default image fetch lambda as an owning Ref even though the declared ImageResourceFetch carrier is emitted with the canonical structural read-only spelling.",
       "expectedWhen": "always",
       "expires": "when contextual callback parameters retain the carrier's canonical Readonly spelling; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "math-power-runtime-call-namespace-collision",
+      "kind": "respell-runtime-call",
+      "appliesTo": "flight/",
+      "symbol": "flight::power(",
+      "replacement": "flight::number_power(",
+      "sourceDeclaration": "the compiler's exponentiation lowering emits flight::power(base, exponent)",
+      "diagnostic": "namespace flight::power redeclared as different kind of entity",
+      "defect": "The compiler's exponentiation helper spelling occupies flight::power as a function, while @flighthq/power necessarily emits its public package namespace as flight::power. C++ cannot declare both in one scope. The runtime helper is renamed to the collision-free number_power spelling and this exact call-site repair follows that ABI rename without touching fields or package names.",
+      "expectedWhen": "always",
+      "expires": "when the emitter targets flight::number_power (or another collision-free runtime ABI spelling) for exponentiation; sdk:check fails if this repair matches no header."
     }
   ]
 }

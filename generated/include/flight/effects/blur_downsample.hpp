@@ -14,7 +14,7 @@ inline double get_blur_residual_sigma(double sigma, double level) {
   if ((sigma <= 0.0)) {
     return 0.0;
   }
-  return (sigma / flight::power(2.0, level));
+  return (sigma / flight::number_power(2.0, level));
 }
 
 inline const double blur_downsample_max_sigma = 4.0;

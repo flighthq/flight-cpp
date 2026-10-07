@@ -60,7 +60,7 @@ inline std::optional<flight::Ref<pos_value_6ebae327b7648e8b>> read_abc_var_uint(
           return std::nullopt;
         }
         const double byte = source.get_index(cursor++);
-        (value += (flight::bitwise_and(byte, 127.0) * flight::power(2.0, (7.0 * i))));
+        (value += (flight::bitwise_and(byte, 127.0) * flight::number_power(2.0, (7.0 * i))));
         if ((flight::bitwise_and(byte, 128.0) == 0.0)) {
           return std::optional<flight::Ref<pos_value_6ebae327b7648e8b>>{flight::make_ref<pos_value_6ebae327b7648e8b>(pos_value_6ebae327b7648e8b{.pos = cursor, .value = value})};
         }

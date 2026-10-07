@@ -71,7 +71,7 @@ inline flight::Array<double> create_levels_color_matrix(double in_black, double 
   gamma = gamma.value_or(1.0);
   const double in_range = (in_white - in_black);
   const double scale = ((in_range == 0.0) ? 1.0 : ((out_white - out_black) / in_range));
-  const double gamma_corrected_scale = (scale * ((gamma.value() == 1.0) ? 1.0 : flight::power(0.5, ((1.0 / gamma.value()) - 1.0))));
+  const double gamma_corrected_scale = (scale * ((gamma.value() == 1.0) ? 1.0 : flight::number_power(0.5, ((1.0 / gamma.value()) - 1.0))));
   const double offset = (out_black - (in_black * gamma_corrected_scale));
   return flight::Array<double>{gamma_corrected_scale, 0.0, 0.0, 0.0, offset, 0.0, gamma_corrected_scale, 0.0, 0.0, offset, 0.0, 0.0, gamma_corrected_scale, 0.0, offset, 0.0, 0.0, 0.0, 1.0, 0.0};
 }

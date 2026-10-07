@@ -13,15 +13,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::easing {
 
-inline flight::types::EasingFunction ease_in_exponential = [](double t) { return ((t == 0.0) ? 0.0 : flight::power(2.0, ((10.0 * t) - 10.0))); };
+inline flight::types::EasingFunction ease_in_exponential = [](double t) { return ((t == 0.0) ? 0.0 : flight::number_power(2.0, ((10.0 * t) - 10.0))); };
 
 inline flight::types::EasingFunction ease_in_out_exponential = [](double t) {
   if (((t == 0.0) || (t == 1.0))) {
     return t;
   }
-  return ((t < 0.5) ? (flight::power(2.0, ((20.0 * t) - 10.0)) / 2.0) : ((2.0 - flight::power(2.0, ((-20.0 * t) + 10.0))) / 2.0));
+  return ((t < 0.5) ? (flight::number_power(2.0, ((20.0 * t) - 10.0)) / 2.0) : ((2.0 - flight::number_power(2.0, ((-20.0 * t) + 10.0))) / 2.0));
 };
 
-inline flight::types::EasingFunction ease_out_exponential = [](double t) { return ((t == 1.0) ? 1.0 : (1.0 - flight::power(2.0, (-10.0 * t)))); };
+inline flight::types::EasingFunction ease_out_exponential = [](double t) { return ((t == 1.0) ? 1.0 : (1.0 - flight::number_power(2.0, (-10.0 * t)))); };
 
 } // namespace flight::easing

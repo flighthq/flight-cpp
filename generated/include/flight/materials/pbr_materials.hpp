@@ -121,7 +121,7 @@ using flight::types::MaterialConversionGuard;
 // statically resolvable C++ object shape; T is named
 
 inline double linear_channel_to_srgb8(double value) {
-  const double srgb = ((value <= 0.0031308) ? (value * 12.92) : ((1.055 * flight::power(value, (1.0 / 2.4))) - 0.055));
+  const double srgb = ((value <= 0.0031308) ? (value * 12.92) : ((1.055 * flight::number_power(value, (1.0 / 2.4))) - 0.055));
   return flight::round((flight::minimum(1.0, flight::maximum(0.0, srgb)) * 255.0));
 }
 

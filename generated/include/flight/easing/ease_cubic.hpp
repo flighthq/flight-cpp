@@ -15,8 +15,8 @@ namespace flight::easing {
 
 inline flight::types::EasingFunction ease_in_cubic = [](double t) { return ((t * t) * t); };
 
-inline flight::types::EasingFunction ease_in_out_cubic = [](double t) { return ((t < 0.5) ? (((4.0 * t) * t) * t) : (1.0 - (flight::power(((-2.0 * t) + 2.0), 3.0) / 2.0))); };
+inline flight::types::EasingFunction ease_in_out_cubic = [](double t) { return ((t < 0.5) ? (((4.0 * t) * t) * t) : (1.0 - (flight::number_power(((-2.0 * t) + 2.0), 3.0) / 2.0))); };
 
-inline flight::types::EasingFunction ease_out_cubic = [](double t) { return (1.0 - flight::power((1.0 - t), 3.0)); };
+inline flight::types::EasingFunction ease_out_cubic = [](double t) { return (1.0 - flight::number_power((1.0 - t), 3.0)); };
 
 } // namespace flight::easing

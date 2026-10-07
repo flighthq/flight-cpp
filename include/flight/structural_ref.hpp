@@ -1345,7 +1345,14 @@ template <typename Target, typename Schema>
     if constexpr (detail::row_materializes_from<To, From>) {
       return Target(detail::materialize_row<To>(source));
     } else {
-      return Target(source);
+      // This is the explicit assertion path emitted for a source `as Target`, not the implicit row
+      // conversion above. TypeScript permits that assertion even when the two nominal carriers are
+      // structurally unrelated -- notably InputTargetHandle asserted as the otherwise-empty Surface
+      // interface. Keep the one live owner and let the target schema project it, rather than asking
+      // the constrained converting constructor to prove a relationship the source explicitly asserted.
+      // Reads and writes remain checked by the owner's typed cells; this grants no reinterpret-cast of
+      // the native object, and `shared_object()` still returns null for a different native type.
+      return Target::from_owner(source.shared_owner());
     }
   } else {
     using Object = typename StructuralRef<Schema>::object_type;

@@ -279,7 +279,7 @@ inline const double lottie_spatial_curve_samples = 150.0;
 
 inline flight::Array<double> sample_lottie_spatial_bezier(flight::Array<double> start, flight::Array<double> end, flight::Array<double> outgoing, flight::Array<double> incoming, double time) {
   const double inverse = (1.0 - time);
-  return start.map([=](double value, double component) { return ((((flight::power(inverse, 3.0) * value) + (((3.0 * flight::power(inverse, 2.0)) * time) * (value + outgoing.element(component)))) + (((3.0 * inverse) * flight::power(time, 2.0)) * (end.element(component) + incoming.element(component)))) + (flight::power(time, 3.0) * end.element(component))); });
+  return start.map([=](double value, double component) { return ((((flight::number_power(inverse, 3.0) * value) + (((3.0 * flight::number_power(inverse, 2.0)) * time) * (value + outgoing.element(component)))) + (((3.0 * inverse) * flight::number_power(time, 2.0)) * (end.element(component) + incoming.element(component)))) + (flight::number_power(time, 3.0) * end.element(component))); });
 }
 
 inline flight::Ref<EasingFunction> create_lottie_spatial_segment_easing(std::optional<flight::Ref<EasingFunction>> temporal, flight::Array<double> start, flight::Array<double> end, flight::Array<double> outgoing, flight::Array<double> incoming) {
@@ -295,7 +295,7 @@ inline flight::Ref<EasingFunction> create_lottie_spatial_segment_easing(std::opt
           double component = 0.0;
           while ((component < static_cast<double>(start.size()))) {
             {
-              (distance_squared += flight::power((point.element(component) - previous.element(component)), 2.0));
+              (distance_squared += flight::number_power((point.element(component) - previous.element(component)), 2.0));
             }
             (component += 1.0);
           }

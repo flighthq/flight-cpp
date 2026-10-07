@@ -30,7 +30,7 @@ inline flight::String format_svg_number(double value, std::optional<double> prec
   if (!precision.has_value()) {
     return flight::to_string(value);
   }
-  const double factor = flight::power(10.0, precision.value());
+  const double factor = flight::number_power(10.0, precision.value());
   return flight::to_string((flight::round((value * factor)) / factor));
 }
 

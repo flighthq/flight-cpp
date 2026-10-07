@@ -34,7 +34,7 @@ inline double lerp(double a, double b, double t) {
 inline double pack_linear_rgba(double r, double g, double b, double a) {
   std::function<double(double)> to_byte = [=](double linear) {
   const double clamped = flight::minimum(flight::maximum(linear, 0.0), 1.0);
-  const double srgb = ((clamped <= 0.0031308) ? (clamped * 12.92) : ((1.055 * flight::power(clamped, (1.0 / 2.4))) - 0.055));
+  const double srgb = ((clamped <= 0.0031308) ? (clamped * 12.92) : ((1.055 * flight::number_power(clamped, (1.0 / 2.4))) - 0.055));
   return flight::bitwise_and(flight::round((srgb * 255.0)), 255.0);
 };
   const double alpha = flight::bitwise_and(flight::round((flight::minimum(flight::maximum(a, 0.0), 1.0) * 255.0)), 255.0);

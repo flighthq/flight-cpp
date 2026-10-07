@@ -38,9 +38,9 @@ inline void initialize_lift_gamma_gain_adjustment(flight::types::EntityConstruct
   flight::Array<double> gain = unpack_rgb_flight_value_function_unpack_u000052_gb_flight_private_fa56a48ec9468a92(([&]() -> double { auto nullish_coalesce_left = options.value()->gain; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4294967295.0; }()));
   flight::Array<double> gamma_exp = flight::Array<double>{(1.0 / flight::maximum((gamma_raw.element(0.0) * 2.0), 0.001)), (1.0 / flight::maximum((gamma_raw.element(1.0) * 2.0), 0.001)), (1.0 / flight::maximum((gamma_raw.element(2.0) * 2.0), 0.001))};
   flight::types::ColorTransformFunction transform = [=](flight::Array<double> out, double r, double g, double b) {
-  (out.element(0.0) = clamp01_flight_value_function_clamp01_flight_private_fa56a48ec9468a92(flight::power(flight::maximum(((r * gain.element(0.0)) + (lift.element(0.0) * (1.0 - r))), 0.0), gamma_exp.element(0.0))));
-  (out.element(1.0) = clamp01_flight_value_function_clamp01_flight_private_fa56a48ec9468a92(flight::power(flight::maximum(((g * gain.element(1.0)) + (lift.element(1.0) * (1.0 - g))), 0.0), gamma_exp.element(1.0))));
-  (out.element(2.0) = clamp01_flight_value_function_clamp01_flight_private_fa56a48ec9468a92(flight::power(flight::maximum(((b * gain.element(2.0)) + (lift.element(2.0) * (1.0 - b))), 0.0), gamma_exp.element(2.0))));
+  (out.element(0.0) = clamp01_flight_value_function_clamp01_flight_private_fa56a48ec9468a92(flight::number_power(flight::maximum(((r * gain.element(0.0)) + (lift.element(0.0) * (1.0 - r))), 0.0), gamma_exp.element(0.0))));
+  (out.element(1.0) = clamp01_flight_value_function_clamp01_flight_private_fa56a48ec9468a92(flight::number_power(flight::maximum(((g * gain.element(1.0)) + (lift.element(1.0) * (1.0 - g))), 0.0), gamma_exp.element(1.0))));
+  (out.element(2.0) = clamp01_flight_value_function_clamp01_flight_private_fa56a48ec9468a92(flight::number_power(flight::maximum(((b * gain.element(2.0)) + (lift.element(2.0) * (1.0 - b))), 0.0), gamma_exp.element(2.0))));
 };
   flight::adjustments::initialize_color_lut_adjustment<flight::Ref<flight::types::LiftGammaGainAdjustment>>(out, flight::String("LiftGammaGainAdjustment"), transform);
   flight::row_set<flight::RowKey<"lift">>(out, ([&]() -> std::optional<double> { auto nullish_coalesce_left = options.value()->lift; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<double>{255.0}; }()));

@@ -26,8 +26,8 @@ inline double signed_bit_count(flight::Array<double> values) {
     double bits = 2.0;
     while ((bits < 32.0)) {
       {
-        const double minimum = -flight::power(2.0, (bits - 1.0));
-        const double maximum = (flight::power(2.0, (bits - 1.0)) - 1.0);
+        const double minimum = -flight::number_power(2.0, (bits - 1.0));
+        const double maximum = (flight::number_power(2.0, (bits - 1.0)) - 1.0);
         if (values.every([=](double value) { return ((value >= minimum) && (value <= maximum)); })) {
           return bits;
         }
@@ -208,13 +208,13 @@ struct ShapeWriter : public flight::ReferenceEnabled {
     }
   }
   void write_signed(double value, double count) {
-    this->write_unsigned(((value < 0.0) ? (value + flight::power(2.0, count)) : value), count);
+    this->write_unsigned(((value < 0.0) ? (value + flight::number_power(2.0, count)) : value), count);
   }
   void write_unsigned(double value, double count) {
     {
       double i = (count - 1.0);
       while ((i >= 0.0)) {
-        this->bits.push(flight::bitwise_and(std::floor((value / flight::power(2.0, i))), 1.0));
+        this->bits.push(flight::bitwise_and(std::floor((value / flight::number_power(2.0, i))), 1.0));
         (i -= 1.0);
       }
     }

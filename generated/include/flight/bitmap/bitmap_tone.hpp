@@ -84,7 +84,7 @@ inline void apply_bitmap_levels(flight::StructuralRef<flight::RowReadonly<flight
     while ((i < 256.0)) {
       {
         const double normalized = flight::maximum(0.0, flight::minimum(1.0, ((i - bp) / span)));
-        ([&]() { auto&& typed_array_5 = lut; const auto typed_index_5 = i; const auto typed_value_5 = flight::round((flight::power(normalized, inv_gamma) * 255.0)); return typed_array_5.set_index(typed_index_5, typed_value_5); }());
+        ([&]() { auto&& typed_array_5 = lut; const auto typed_index_5 = i; const auto typed_value_5 = flight::round((flight::number_power(normalized, inv_gamma) * 255.0)); return typed_array_5.set_index(typed_index_5, typed_value_5); }());
       }
       (i += 1.0);
     }

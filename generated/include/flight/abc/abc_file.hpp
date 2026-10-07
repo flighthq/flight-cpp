@@ -88,7 +88,7 @@ struct AbcReader : public flight::ReferenceEnabled {
       while ((i < var_uint_max_bytes_flight_value_variable__u000056__u000041__u000052__u00005f__u000055__u000049__u00004e__u000054__u00005f__u00004d__u000041__u000058__u00005f__u000042__u000059__u000054__u000045__u000053__flight_private_8767de3a6038bbb6)) {
         {
           const double byte = this->read_uint8();
-          (value += (flight::bitwise_and(byte, 127.0) * flight::power(2.0, (7.0 * i))));
+          (value += (flight::bitwise_and(byte, 127.0) * flight::number_power(2.0, (7.0 * i))));
           if ((flight::bitwise_and(byte, 128.0) == 0.0)) {
             break;
           }

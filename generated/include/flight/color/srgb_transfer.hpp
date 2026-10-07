@@ -8,11 +8,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::color {
 
 inline double linear_channel_to_srgb(double value) {
-  return ((value <= 0.0031308) ? (value * 12.92) : ((1.055 * flight::power(value, (1.0 / 2.4))) - 0.055));
+  return ((value <= 0.0031308) ? (value * 12.92) : ((1.055 * flight::number_power(value, (1.0 / 2.4))) - 0.055));
 }
 
 inline double srgb_channel_to_linear(double value) {
-  return ((value <= 0.04045) ? (value / 12.92) : flight::power(((value + 0.055) / 1.055), 2.4));
+  return ((value <= 0.04045) ? (value / 12.92) : flight::number_power(((value + 0.055) / 1.055), 2.4));
 }
 
 } // namespace flight::color
