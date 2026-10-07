@@ -20,6 +20,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_wgpu {
 
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_convolution_effect_runner;
+
 using flight::types::WgpuRenderState;
 
 inline const double max_convolution_effect_wgpu_kernel_size = 49.0;

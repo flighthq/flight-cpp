@@ -57,7 +57,7 @@ inline flight::WeakMap<flight::Ref<flight::types::CanvasRenderState>, flight::Ma
 
 inline void destroy_canvas_render_texture(flight::Ref<flight::types::CanvasRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTexture>>>> render_texture) {
   std::optional<flight::Map<flight::Ref<flight::types::RenderTexture>, flight::Ref<flight::types::CanvasRenderTextureEntry>>> targets = targets_by_state.get(state);
-  auto entry = ([&]() -> std::optional<flight::Ref<flight::types::CanvasRenderTextureEntry>> { auto optional_chain_receiver = targets; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(render_texture); }());
+  auto entry = ([&]() -> std::optional<flight::Ref<flight::types::CanvasRenderTextureEntry>> { auto optional_chain_receiver = targets; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(flight::structural_ref_cast<flight::Ref<flight::types::RenderTexture>>(render_texture)); }());
   if (!entry.has_value()) {
     return;
   }
@@ -66,7 +66,7 @@ inline void destroy_canvas_render_texture(flight::Ref<flight::types::CanvasRende
 }
 
 inline std::optional<flight::Ref<flight::types::CanvasRenderTextureEntry>> get_entry(flight::Ref<flight::types::CanvasRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTexture>>>> render_texture) {
-  return ([&]() -> std::optional<flight::Ref<flight::types::CanvasRenderTextureEntry>> { auto optional_chain_receiver = targets_by_state.get(state); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(render_texture); }());
+  return ([&]() -> std::optional<flight::Ref<flight::types::CanvasRenderTextureEntry>> { auto optional_chain_receiver = targets_by_state.get(state); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(flight::structural_ref_cast<flight::Ref<flight::types::RenderTexture>>(render_texture)); }());
 }
 
 inline std::optional<flight::host_sdl::GlCanvas> bind_canvas_render_texture(flight::Ref<flight::types::CanvasRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTexture>>>> render_texture) {
@@ -140,12 +140,18 @@ inline T write_canvas_render_texture_target(flight::Ref<flight::types::CanvasRen
   flight::types::CanvasRenderTextureStatus previous_status = entry->status;
   (entry->status = flight::String("writing"));
   bool rendered = false;
-  std::optional<T> finally_return;
+  std::optional<std::conditional_t<std::is_void_v<T>, flight::Undefined, T>> finally_return;
   std::exception_ptr finally_exception;
   try {
-    T result = callback(entry->target);
-    (rendered = true);
-    finally_return = result;
+    if constexpr (std::is_void_v<T>) {
+      callback(entry->target);
+      (rendered = true);
+      finally_return = flight::undefined;
+    } else {
+      T result = callback(entry->target);
+      (rendered = true);
+      finally_return = result;
+    }
   }
   catch (...) {
     finally_exception = std::current_exception();
@@ -155,13 +161,17 @@ inline T write_canvas_render_texture_target(flight::Ref<flight::types::CanvasRen
     (render_texture->version = flight::unsigned_right_shift((render_texture->version + 1.0), 0.0));
   }
   if (finally_exception) std::rethrow_exception(finally_exception);
-  if (finally_return.has_value()) return finally_return.value();
-  throw std::logic_error("Flight function completed without a value");
+  if constexpr (std::is_void_v<T>) {
+    return;
+  } else {
+    if (finally_return.has_value()) return finally_return.value();
+    throw std::logic_error("Flight function completed without a value");
+  }
 }
 
 inline void render_into_canvas_render_texture(flight::Ref<flight::types::CanvasRenderState> owner_state, flight::Ref<flight::types::CanvasRenderState> render_state, flight::Ref<flight::types::RenderTexture> render_texture, std::function<void(flight::Ref<flight::types::CanvasRenderPass>)> callback) {
   write_canvas_render_texture_target<void>(owner_state, render_texture, [=](flight::Ref<flight::types::CanvasTextureRenderTarget> target) {
-  auto pass = flight::scene2d_canvas::begin_canvas_render_pass(render_state, ([&]() -> flight::Ref<flight::types::CanvasRenderTarget> { const auto structural_record_source = target; return flight::make_ref<flight::types::CanvasRenderTarget>(flight::types::CanvasRenderTarget{.EntityRuntimeKey = structural_record_source->EntityRuntimeKey, .height = structural_record_source->height, .width = structural_record_source->width, .canvas = structural_record_source->canvas, .colorAttachments = structural_record_source->colorAttachments, .context = structural_record_source->context, .surface = structural_record_source->surface, .surfaceOwnership = structural_record_source->surfaceOwnership}); }()), flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTargetClear>>>>(flight::row_field<flight::RowKey<"color">>(std::optional<flight::Array<double>>{flight::Array<double>{0.0, 0.0, 0.0, 0.0}})));
+  auto pass = flight::scene2d_canvas::begin_canvas_render_pass(render_state, ([&]() -> flight::Ref<flight::types::CanvasRenderTarget> { const auto structural_record_source = target; return flight::make_ref<flight::types::CanvasRenderTarget>(flight::types::CanvasRenderTarget{.entity_runtime_key = structural_record_source->entity_runtime_key, .height = structural_record_source->height, .width = structural_record_source->width, .canvas = structural_record_source->canvas, .color_attachments = structural_record_source->color_attachments, .context = structural_record_source->context, .surface = structural_record_source->surface, .surface_ownership = structural_record_source->surface_ownership}); }()), flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTargetClear>>>>(flight::row_field<flight::RowKey<"color">>(std::optional<flight::Array<double>>{flight::Array<double>{0.0, 0.0, 0.0, 0.0}})));
   std::exception_ptr finally_exception_2;
   try {
     callback(pass);

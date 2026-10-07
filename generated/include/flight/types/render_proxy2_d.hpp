@@ -33,30 +33,7 @@ struct RenderProxy2D;
 
 namespace flight::types {
 
-struct RenderProxy2D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::Renderable> source;
-  flight::String kind;
-  std::optional<flight::Ref<flight::types::RenderProxy>> next;
-  double alpha;
-  double appearance_frame_id;
-  std::optional<flight::String> blend_mode;
-  std::optional<flight::Ref<flight::types::ColorScaleBias>> color_scale_bias;
-  std::variant<flight::Array<double>, flight::Null, flight::Undefined> color_matrix = std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<flight::Ref<flight::types::Material>> material;
-  std::optional<flight::Ref<flight::types::MaterialData>> material_data;
-  double last_appearance_id;
-  double last_children_id;
-  double last_local_content_id;
-  double last_local_transform_id;
-  double last_parent_reference_id;
-  std::optional<flight::String> name;
-  std::optional<flight::Ref<flight::types::Renderer>> renderer;
-  std::optional<flight::Ref<flight::types::RendererData>> renderer_data;
-  std::optional<flight::Ref<flight::types::Renderable>> renderer_data_source;
-  double renderer_map_id;
-  double transform_frame_id;
-  bool visible;
+struct RenderProxy2D : public RenderProxy {
   flight::Ref<flight::types::Matrix> transform2_d;
   bool traverse_children;
   double clip_depth;

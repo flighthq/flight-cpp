@@ -16,6 +16,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/scene2_drenderer.hpp>
+
+namespace flight::types { struct RenderCache; struct RenderCacheAdapter; } namespace flight::render { inline flight::Ref<flight::types::RenderCacheAdapter> create_render_cache_adapter(std::optional<flight::Ref<flight::types::RenderCache>> cache = std::nullopt); }
+
+namespace flight::types { struct RenderProxyAdapter; } namespace flight::render { inline bool is_render_cache_adapter(std::optional<flight::Ref<flight::types::RenderProxyAdapter>> value); }
+
 #include <flight/geometry/matrix.hpp>
 
 #include <flight/signals/signal.hpp>
@@ -45,6 +51,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::render {
 
+inline void register_render_cache_renderer(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Scene2DRenderer> renderer);
+
+inline void set_render_proxy_adapter(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source, std::optional<flight::Ref<flight::types::RenderProxyAdapter>> adapter);
+
 using flight::geometry::create_matrix;
 
 using flight::signals::create_signal;
@@ -64,7 +74,7 @@ using flight::types::Renderer;
 using flight::types::render_cache_kind;
 
 inline void enable_render_cache_adapter_signals(flight::Ref<RenderCacheAdapter> adapter) {
-  ([&]() { auto&& assignment_target = adapter->signals; if (!assignment_target.has_value()) assignment_target = {.on_prepare = create_signal()}; return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = adapter->signals; if (!assignment_target.has_value()) assignment_target = flight::make_ref<flight::types::on_prepare_23aa797e79ba8482>(flight::types::on_prepare_23aa797e79ba8482{.on_prepare = create_signal<std::function<void()>>()}); return assignment_target.value(); }());
 }
 
 inline void initialize_render_cache(flight::Ref<EntityConstruction<flight::Ref<RenderCache>>> out) {
@@ -177,8 +187,9 @@ inline void register_render_cache_renderer(flight::Ref<RenderState> state, fligh
 inline flight::Ref<RenderCacheAdapter> use_render_cache(flight::Ref<RenderState> state, flight::Ref<Renderable> source, flight::Ref<RenderCache> cache) {
   std::optional<flight::Ref<RenderProxyAdapter>> existing = get_render_proxy_adapter(state, source);
   if (is_render_cache_adapter(existing)) {
-    (existing.value().cache = cache);
-    return existing.value();
+    auto cache_adapter = std::static_pointer_cast<RenderCacheAdapter>(existing.value());
+    (cache_adapter->cache = cache);
+    return cache_adapter;
   }
   flight::Ref<RenderCacheAdapter> adapter = create_render_cache_adapter(std::optional<flight::Ref<RenderCache>>{cache});
   set_render_proxy_adapter(state, source, adapter);

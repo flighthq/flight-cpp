@@ -28,6 +28,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_canvas {
 
+extern const flight::types::CanvasRenderEffectRunner default_canvas_pixelate_effect_runner;
+
 using flight::types::CanvasRenderState;
 using flight::types::CanvasRenderTargetPool;
 using flight::types::CanvasTextureRenderTarget;

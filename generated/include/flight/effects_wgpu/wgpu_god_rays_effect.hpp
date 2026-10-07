@@ -23,6 +23,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_wgpu {
 
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_god_rays_effect_runner;
+
 using flight::types::WgpuRenderState;
 
 inline const flight::String god_rays_fragment_head = flight::String("\nstruct Uniforms {\n  u_centerX : f32,\n  u_centerY : f32,\n  u_density : f32,\n  u_decay : f32,\n  u_weight : f32,\n  u_exposure : f32,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\nconst SAMPLES : i32 = ");

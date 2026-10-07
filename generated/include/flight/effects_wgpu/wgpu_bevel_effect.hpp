@@ -19,6 +19,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/color/pack_color.hpp>
+
+#include <flight/render_wgpu/wgpu_render_target_pool.hpp>
+
+#include <flight/types/bevel_effect.hpp>
+
+namespace flight::types { struct WgpuEffectPipeline; struct WgpuRenderState; } namespace flight::effects_wgpu { inline flight::Ref<flight::types::WgpuEffectPipeline> get_wgpu_bevel_composite_shader(flight::Ref<flight::types::WgpuRenderState> state); }
+
+#include <flight/types/wgpu_render_target.hpp>
+
 #include <flight/types/wgpu_render_state.hpp>
 
 #include <flight/effects_wgpu/wgpu_effect_blit_shader.hpp>
@@ -28,6 +38,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/effects_wgpu/wgpu_render_effect_registry.hpp>
 
 namespace flight::effects_wgpu {
+
+using flight::color::get_color_alpha;
+using flight::color::get_color_rgb;
+
+using flight::render_wgpu::acquire_wgpu_texture_render_target;
+using flight::render_wgpu::release_wgpu_texture_render_target;
+
+using flight::types::BevelEffect;
+
+using flight::types::WgpuRenderTargetPool;
+
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_bevel_effect_runner;
 
 using flight::types::WgpuRenderState;
 
@@ -79,7 +101,7 @@ using BevelCompositeParams = flight::StructuralRef<flight::RowReadonly<flight::R
 
 inline void apply_wgpu_bevel_composite_pass(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuTextureRenderTarget> field, flight::Ref<WgpuTextureRenderTarget> source, flight::Ref<WgpuTextureRenderTarget> dest, BevelCompositeParams params) {
   flight::Ref<WgpuDualSourceEffectPipeline> pipeline = get_wgpu_bevel_composite_shader(state);
-  draw_wgpu_dual_source_effect_pass(state, field, source, dest, pipeline, [=](flight::Float32Array f32) {
+  draw_wgpu_dual_source_effect_pass(state, field, source, dest, pipeline, [=](flight::Float32Array f32, flight::Int32Array) {
   ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = (flight::bitwise_and(flight::signed_right_shift(flight::row_get<flight::RowKey<"highlightColor">>(params), 16.0), 255.0) / 255.0); return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 1.0; const auto typed_value_2 = (flight::bitwise_and(flight::signed_right_shift(flight::row_get<flight::RowKey<"highlightColor">>(params), 8.0), 255.0) / 255.0); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
   ([&]() { auto&& typed_array_3 = f32; const auto typed_index_3 = 2.0; const auto typed_value_3 = (flight::bitwise_and(flight::row_get<flight::RowKey<"highlightColor">>(params), 255.0) / 255.0); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
@@ -97,11 +119,7 @@ inline void apply_wgpu_bevel_composite_pass(flight::Ref<WgpuRenderState> state, 
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
-struct width_height_format_3e01490122355edd : public flight::ReferenceEnabled {
-  double width;
-  double height;
-  flight::String format;
-};
+using width_height_format_3e01490122355edd = flight::render_wgpu::width_height_format_color_space_sample_count_d7147b6683ba8eda;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_BLUR_X_BLUR_Y_PASSES_EDGE_COLOR_4494165180BBAC95
@@ -133,7 +151,7 @@ inline void apply_bevel_effect_to_wgpu(flight::Ref<WgpuRenderState> state, fligh
   const double highlight_alpha = (effect->highlight_alpha.value_or(1.0) * get_color_alpha(highlight_packed));
   const double strength = effect->strength.value_or(1.0);
   const double quality = flight::maximum(1.0, flight::round(effect->quality.value_or(1.0)));
-  std::variant<flight::Ref<EffectSourceMode>, flight::String> source_mode = std::variant<flight::Ref<EffectSourceMode>, flight::String>{std::in_place_type<flight::String>, effect->source_mode.value_or(flight::String("draw"))};
+  flight::String source_mode = effect->source_mode.value_or(flight::String("draw"));
   const flight::String bevel_type = effect->bevel_type.value_or(flight::String("inner"));
   apply_wgpu_effect_tint_pass(state, src, tinted, 4294967295.0, 1.0, 1.0);
   apply_wgpu_effect_box_blur(state, tinted, blurred, blur_temp, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<blur_x_blur_y_passes_edge_color_4494165180bbac95>>>>(flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{effect->blur_x.value_or(4.0)}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{effect->blur_y.value_or(4.0)}), flight::row_field<flight::RowKey<"passes">>(std::optional<double>{quality})));

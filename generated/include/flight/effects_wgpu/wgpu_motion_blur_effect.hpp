@@ -14,6 +14,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct WgpuEffectPipeline; struct WgpuRenderState; } namespace flight::effects_wgpu { inline flight::Ref<flight::types::WgpuEffectPipeline> get_motion_blur_pipeline(flight::Ref<flight::types::WgpuRenderState> state); }
+
+#include <flight/types/motion_blur_effect.hpp>
+
 #include <flight/types/wgpu_render_state.hpp>
 
 #include <flight/effects_wgpu/wgpu_effect_pass.hpp>
@@ -21,6 +25,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/effects_wgpu/wgpu_render_effect_registry.hpp>
 
 namespace flight::effects_wgpu {
+
+using flight::types::MotionBlurEffect;
+
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_motion_blur_effect_runner;
 
 using flight::types::WgpuRenderState;
 
@@ -62,7 +70,7 @@ inline void apply_motion_blur_effect_to_wgpu(flight::Ref<WgpuRenderState> state,
   auto resolution = get_wgpu_effect_logical_resolution(state, source);
   flight::Ref<WgpuDualSourceEffectPipeline> pipeline = get_motion_blur_pipeline(state);
   if (!velocity_texture.has_value()) {
-    draw_wgpu_dual_source_effect_pass(state, source, source, dest, pipeline, [=](flight::Float32Array f32) {
+    draw_wgpu_dual_source_effect_pass(state, source, source, dest, pipeline, [=](flight::Float32Array f32, flight::Int32Array) {
   ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = intensity; return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 1.0; const auto typed_value_2 = samples; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
   ([&]() { auto&& typed_array_3 = f32; const auto typed_index_3 = 2.0; const auto typed_value_3 = resolution->width; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
@@ -72,7 +80,7 @@ inline void apply_motion_blur_effect_to_wgpu(flight::Ref<WgpuRenderState> state,
     return;
   }
   flight::Ref<WgpuTextureRenderTarget> velocity_source = flight::make_ref<WgpuTextureRenderTarget>(WgpuTextureRenderTarget{.view = velocity_texture.value().create_view()});
-  draw_wgpu_dual_source_effect_pass(state, source, velocity_source, dest, pipeline, [=](flight::Float32Array f32) {
+  draw_wgpu_dual_source_effect_pass(state, source, velocity_source, dest, pipeline, [=](flight::Float32Array f32, flight::Int32Array) {
   ([&]() { auto&& typed_array_6 = f32; const auto typed_index_6 = 0.0; const auto typed_value_6 = intensity; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
   ([&]() { auto&& typed_array_7 = f32; const auto typed_index_7 = 1.0; const auto typed_value_7 = samples; return typed_array_7.set_index(typed_index_7, typed_value_7); }());
   ([&]() { auto&& typed_array_8 = f32; const auto typed_index_8 = 2.0; const auto typed_value_8 = resolution->width; return typed_array_8.set_index(typed_index_8, typed_value_8); }());

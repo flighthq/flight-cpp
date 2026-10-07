@@ -17,6 +17,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CanvasShapeDrawState; } namespace flight::scene2d_canvas { inline void flush_canvas_shape_path(flight::CanvasRenderingContext2D context, flight::Ref<flight::types::CanvasShapeDrawState> state); }
+
 #include <flight/render/renderer.hpp>
 
 #include <flight/render/render_state.hpp>
@@ -123,7 +125,7 @@ inline double resolve_stroke_width(flight::CanvasRenderingContext2D context, dou
 // against null has no absence channel in the emitted C++ storage for property
 
 inline flight::Ref<CanvasShapeDrawState> create_canvas_shape_draw_state(flight::CanvasRenderingContext2D context, flight::Ref<CanvasTextureResolvers> resolvers, bool allow_smoothing) {
-  flight::Ref<CanvasShapeDrawState> state = flight::make_ref<CanvasShapeDrawState>(CanvasShapeDrawState{.allow_smoothing = allow_smoothing, .bitmap_h = 0.0, .bitmap_src = nullptr, .bitmap_w = 0.0, .canvas_texture_resolvers = resolvers, .current_x = 0.0, .current_y = 0.0, .fill_matrix = nullptr, .fill_matrix_inverse = nullptr, .fill_style = flight::String(""), .has_fill = false, .has_pending_path = false, .has_current_point = false, .has_stroke = false, .line_scale_mode = flight::String("normal"), .stroke_style = flight::String(""), .stroke_width = 1.0, .subpath_start_x = 0.0, .subpath_start_y = 0.0, .winding_rule = flight::String("evenodd"), .flush = [=]() { return flush_canvas_shape_path(context, state); }});
+  flight::Ref<CanvasShapeDrawState> state = flight::make_ref<CanvasShapeDrawState>(CanvasShapeDrawState{.canvas_texture_resolvers = resolvers, .allow_smoothing = allow_smoothing, .has_fill = false, .fill_style = flight::String(""), .fill_matrix = nullptr, .fill_matrix_inverse = nullptr, .has_stroke = false, .line_scale_mode = flight::String("normal"), .stroke_style = flight::String(""), .stroke_width = 1.0, .current_x = 0.0, .current_y = 0.0, .has_pending_path = false, .has_current_point = false, .subpath_start_x = 0.0, .subpath_start_y = 0.0, .winding_rule = flight::String("evenodd"), .bitmap_src = std::nullopt, .bitmap_w = 0.0, .bitmap_h = 0.0, .flush = [=]() { return flush_canvas_shape_path(context, state); }});
   return state;
 }
 
@@ -151,7 +153,7 @@ inline void render_canvas_shape_commands(flight::CanvasRenderingContext2D contex
       def.value()->draw(context, draw_state, commands, (i + 2.0));
     }
     else {
-      ([&]() { auto optional_chain_receiver = get_render_state_runtime(state)->registry_miss; if (!optional_chain_receiver.has_value()) return; (*optional_chain_receiver.value())(render_registry_table.shape_command_handler, key); }());
+      ([&]() { auto optional_chain_receiver = get_render_state_runtime(state)->registry_miss; if (!optional_chain_receiver.has_value()) return; (*optional_chain_receiver.value())(flight::types::RenderRegistryTable::ShapeCommandHandler, key); }());
     }
     (i += (arg_count + 2.0));
   }

@@ -33,6 +33,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_canvas {
 
+extern const flight::types::CanvasRenderEffectRunner default_canvas_drop_shadow_effect_runner;
+
 using flight::types::CanvasRenderState;
 using flight::types::CanvasRenderTargetPool;
 using flight::types::CanvasTextureRenderTarget;
@@ -50,7 +52,7 @@ inline void apply_drop_shadow_effect_to_canvas_with_pool(flight::Ref<CanvasTextu
   const double tint_strength = flight::minimum(1.0, strength);
   const double shadow_passes = flight::maximum(1.0, std::floor(strength));
   const double blur = flight::maximum(0.0, ((effect->blur_x.value_or(4.0) + effect->blur_y.value_or(4.0)) / 2.0));
-  std::variant<flight::Ref<EffectSourceMode>, flight::String> source_mode = std::variant<flight::Ref<EffectSourceMode>, flight::String>{std::in_place_type<flight::String>, effect->source_mode.value_or(flight::String("draw"))};
+  flight::String source_mode = effect->source_mode.value_or(flight::String("draw"));
   draw_canvas_tinted_alpha_mask(mask, source, effect->color.value_or(255.0), effect->alpha.value_or(1.0), tint_strength);
   draw_canvas_effect_pass(blurred, mask, ((blur > 0.0) ? flight::String("blur(") + flight::to_string(blur) + flight::String("px)") : flight::String("none")));
   clear_canvas_target(dest);
@@ -75,7 +77,7 @@ inline void apply_drop_shadow_effect_to_canvas(flight::Ref<CanvasTextureRenderTa
     draw_canvas_effect_pass(dest, source, css.value());
     return;
   }
-  flight::Ref<CanvasRenderTargetPool> pool = (!maybe_effect.has_value() ? create_canvas_texture_render_target_pool(source->surface.creator) : std::get<flight::Ref<CanvasRenderTargetPool>>(pool_or_effect));
+  flight::Ref<CanvasRenderTargetPool> pool = (!maybe_effect.has_value() ? create_canvas_texture_render_target_pool(source->surface->creator) : std::get<flight::Ref<CanvasRenderTargetPool>>(pool_or_effect));
   apply_drop_shadow_effect_to_canvas_with_pool(source, dest, pool, effect);
 }
 

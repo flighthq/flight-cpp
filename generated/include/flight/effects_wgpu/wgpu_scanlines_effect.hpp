@@ -20,6 +20,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_wgpu {
 
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_scanlines_effect_runner;
+
 using flight::types::WgpuRenderState;
 
 inline const flight::String scanlines_fragment_wgsl = flight::String("\nstruct Uniforms {\n  u_count : f32,\n  u_intensity : f32,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let c = textureSampleLevel(tex, smp, uv, 0.0);\n  let line = sin(uv.y * uni.u_count * 3.14159265) * 0.5 + 0.5;\n  return vec4f(c.rgb * (1.0 - uni.u_intensity * (1.0 - line)), c.a);\n}");

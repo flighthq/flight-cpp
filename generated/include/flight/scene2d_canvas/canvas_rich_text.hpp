@@ -13,6 +13,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CanvasRenderState; struct RenderProxy2D; } namespace flight::scene2d_canvas { inline void draw_canvas_rich_text(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy); }
+
 #include <flight/render/renderer.hpp>
 
 #include <flight/types/text_selection_rectangle.hpp>
@@ -206,6 +208,6 @@ inline void register_canvas_text_input_overlay(flight::Ref<CanvasTextInputOverla
   (canvas_text_input_overlay = std::optional<flight::Ref<CanvasTextInputOverlay>>{overlay});
 }
 
-inline flight::Ref<Scene2DRenderer> default_canvas_rich_text_renderer = flight::make_ref<Scene2DRenderer>(Scene2DRenderer{.create_data = noop_renderer_data, .submit = draw_canvas_rich_text});
+inline flight::Ref<Scene2DRenderer> default_canvas_rich_text_renderer = flight::make_ref<Scene2DRenderer>(Scene2DRenderer{.create_data = [](flight::Ref<flight::types::RenderState>, flight::types::Node2D) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }, .submit = [](flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> node) { draw_canvas_rich_text(std::static_pointer_cast<flight::types::CanvasRenderState>(state), node); }});
 
 } // namespace flight::scene2d_canvas

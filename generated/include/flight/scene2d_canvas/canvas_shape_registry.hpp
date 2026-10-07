@@ -18,6 +18,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d_canvas {
 
+inline std::optional<flight::Ref<flight::types::CanvasShapeCommand<flight::String>>> get_canvas_shape_command(flight::Ref<flight::types::RenderState> state, flight::String key);
+
+inline void register_canvas_shape_command(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::CanvasShapeCommand<>> command);
+
 using flight::types::CanvasShapeCommand;
 using flight::types::RenderState;
 
@@ -53,7 +57,7 @@ using flight::types::RenderState;
 // CanvasShapeCommand has no shape either), Entity. Declare the object shape the code reads rather than
 // intersecting a conjunct that has none
 
-inline void register_canvas_shape_commands(flight::Ref<RenderState> state, flight::Array<flight::Ref<CanvasShapeCommand>> commands) {
+inline void register_canvas_shape_commands(flight::Ref<RenderState> state, flight::Array<flight::Ref<CanvasShapeCommand<>>> commands) {
   for (auto command : commands) {
     register_canvas_shape_command(state, command);
   }

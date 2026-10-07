@@ -22,6 +22,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct RenderProxy; struct RenderState; } namespace flight::render { inline void update_render_proxy_renderer(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy> node); }
+
+namespace flight::types { struct RenderState; } namespace flight::render { inline void walk_render_subtree(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> root, std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Renderable>)> visit); }
+
+namespace flight::types { struct RenderState; } namespace flight::render { inline void dispose_render_proxy(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source); }
+
+namespace flight::types { struct RenderState; } namespace flight::render { inline bool walk_node(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> root, flight::types::RenderProxyVisitor visit); }
+
+namespace flight::types { struct RenderProxy2D; struct RenderState; } namespace flight::render { inline void update_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data = std::nullopt); }
+
+#include <flight/types/render_proxy_visitor.hpp>
+
+namespace flight::types { struct RenderProxy; struct RenderState; } namespace flight::render { inline void initialize_render_proxy(flight::Ref<flight::types::EntityConstruction<flight::Ref<flight::types::RenderProxy>>> out, flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source); }
+
 #include <flight/entity/entity.hpp>
 
 #include <flight/types/renderable.hpp>
@@ -44,6 +58,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/render/render_transform2d.hpp>
 
 namespace flight::render {
+
+inline bool prepare_scene2_drender(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Node2D> source);
+
+inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Node2D> source);
+
+inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source);
+
+using flight::types::RenderProxyVisitor;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
@@ -135,7 +157,7 @@ inline void install_render_adapt_hook(flight::Ref<RenderState> state, AdaptHook 
 // the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
 
 inline bool is_render_proxy_visible(flight::Ref<RenderProxy2D> data) {
-  return ((data->visible && (data->alpha > 0.0)) && !((data->transform2_d.a == 0.0) && (data->transform2_d.d == 0.0)));
+  return ((data->visible && (data->alpha > 0.0)) && !((data->transform2_d->a == 0.0) && (data->transform2_d->d == 0.0)));
 }
 
 

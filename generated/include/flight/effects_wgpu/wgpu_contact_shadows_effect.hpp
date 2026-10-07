@@ -12,12 +12,24 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct SsaoEffect; struct WgpuRenderState; struct WgpuTextureRenderTarget; } namespace flight::effects_wgpu { inline void apply_ssao_effect_to_wgpu(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::WgpuTextureRenderTarget> source, flight::Ref<flight::types::WgpuTextureRenderTarget> dest, flight::Ref<flight::types::SsaoEffect> effect); }
+
+#include <flight/effects/ssao_effect.hpp>
+
+#include <flight/types/contact_shadows_effect.hpp>
+
 #include <flight/types/wgpu_render_state.hpp>
 
 #include <flight/effects_wgpu/wgpu_render_effect_registry.hpp>
 #include <flight/effects_wgpu/wgpu_ssao_effect.hpp>
 
 namespace flight::effects_wgpu {
+
+using flight::effects::create_ssao_effect;
+
+using flight::types::ContactShadowsEffect;
+
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_contact_shadows_effect_runner;
 
 using flight::types::WgpuRenderState;
 

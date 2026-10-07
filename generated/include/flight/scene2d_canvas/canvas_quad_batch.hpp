@@ -10,6 +10,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CanvasRenderState; struct RenderProxy2D; } namespace flight::scene2d_canvas { inline void draw_canvas_quad_batch(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> quad_batch); }
+
 #include <flight/render/renderer.hpp>
 
 #include <flight/types/sprite_renderer.hpp>
@@ -130,6 +132,6 @@ using flight::types::SpriteRenderer;
 // cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasQuadBatch.ts: contextual
 // optionalSingle construction requires expression type evidence
 
-inline flight::Ref<SpriteRenderer> default_canvas_quad_batch_renderer = flight::make_ref<SpriteRenderer>(SpriteRenderer{.create_data = noop_renderer_data, .submit = draw_canvas_quad_batch});
+inline flight::Ref<SpriteRenderer> default_canvas_quad_batch_renderer = flight::make_ref<SpriteRenderer>(SpriteRenderer{.create_data = [](flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Sprite>) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }, .submit = [](flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> node) { draw_canvas_quad_batch(std::static_pointer_cast<flight::types::CanvasRenderState>(state), node); }});
 
 } // namespace flight::scene2d_canvas

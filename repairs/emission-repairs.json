@@ -1768,6 +1768,10 @@
           "name": "RenderProxyAdapter"
         },
         {
+          "include": "flight/types/render_proxy_visitor.hpp",
+          "name": "RenderProxyVisitor"
+        },
+        {
           "include": "flight/types/render_queue.hpp",
           "name": "RenderQueue"
         },
@@ -6056,8 +6060,44 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/render_target.hpp",
+          "name": "RenderTargetColorSpace"
+        },
+        {
+          "include": "flight/types/wgpu_render_state.hpp",
+          "name": "WgpuTextureBindings"
+        },
+        {
           "include": "flight/types/wgpu_render_state.hpp",
           "name": "WgpuRenderState"
+        },
+        {
+          "include": "flight/types/wgpu_render_texture.hpp",
+          "name": "WgpuRenderTextureGuard"
+        },
+        {
+          "include": "flight/types/wgpu_render_texture.hpp",
+          "name": "WgpuRenderTextureExplanation"
+        },
+        {
+          "include": "flight/types/wgpu_render_texture.hpp",
+          "name": "WgpuRenderTextureEntry"
+        },
+        {
+          "include": "flight/types/wgpu_render_texture.hpp",
+          "name": "WgpuRenderTextureStatus"
+        },
+        {
+          "include": "flight/types/render_texture.hpp",
+          "name": "RenderTexture"
+        },
+        {
+          "include": "flight/types/render_target.hpp",
+          "name": "RenderTargetFormat"
+        },
+        {
+          "include": "flight/types/render_target_clear.hpp",
+          "name": "RenderTargetClear"
         },
         {
           "include": "flight/types/wgpu_render_target.hpp",
@@ -6072,12 +6112,20 @@
           "name": "WgpuRenderTarget"
         },
         {
+          "include": "flight/types/wgpu_render_target.hpp",
+          "name": "WgpuRenderTargetPool"
+        },
+        {
+          "include": "flight/types/wgpu_render_target.hpp",
+          "name": "WgpuTextureRenderTarget"
+        },
+        {
           "include": "flight/types/wgpu_render_pass.hpp",
           "name": "WgpuRenderPass"
         }
       ],
       "diagnostic": "'WgpuRenderState' was not declared in this scope",
-      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::render_wgpu, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "defect": "The emitter writes names owned by flight::types unqualified inside namespace flight::render_wgpu, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -8364,12 +8412,56 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/bevel_effect.hpp",
+          "name": "BevelEffect"
+        },
+        {
+          "include": "flight/types/advanced_blend_mode.hpp",
+          "name": "AdvancedBlendMode"
+        },
+        {
+          "include": "flight/types/advanced_blend_mode.hpp",
+          "name": "advanced_blend_mode"
+        },
+        {
+          "include": "flight/types/contact_shadows_effect.hpp",
+          "name": "ContactShadowsEffect"
+        },
+        {
+          "include": "flight/types/composite_operator.hpp",
+          "name": "CompositeOperator"
+        },
+        {
+          "include": "flight/types/drop_shadow_effect.hpp",
+          "name": "DropShadowEffect"
+        },
+        {
+          "include": "flight/types/inner_glow_effect.hpp",
+          "name": "InnerGlowEffect"
+        },
+        {
+          "include": "flight/types/inner_shadow_effect.hpp",
+          "name": "InnerShadowEffect"
+        },
+        {
+          "include": "flight/types/motion_blur_effect.hpp",
+          "name": "MotionBlurEffect"
+        },
+        {
+          "include": "flight/types/outer_glow_effect.hpp",
+          "name": "OuterGlowEffect"
+        },
+        {
+          "include": "flight/types/wgpu_render_target.hpp",
+          "name": "WgpuRenderTargetPool"
+        },
+        {
           "include": "flight/types/wgpu_render_state.hpp",
           "name": "WgpuRenderState"
         }
       ],
-      "diagnostic": "'WgpuRenderState' was not declared in this scope",
-      "defect": "The emitter writes flight::types::WgpuRenderState unqualified inside namespace flight::effects_wgpu at wgpu_effect_pass.hpp:57, without the header that defines it. This was INVISIBLE in the compile report until the WgpuBlendComponent assignment at line 36 of the same file was fixed: the report stores only each header's FIRST diagnostic, and -fmax-errors caps the rest, so one defect site masked the next one in the same file. Measured by compiling the package directly rather than from the report.",
+      "diagnostic": "a flight::types-owned effect or render type was not declared in namespace flight::effects_wgpu",
+      "defect": "The emitter writes imported names owned by flight::types unqualified inside namespace flight::effects_wgpu, without consistently retaining the defining headers. The initial WgpuRenderState site was invisible until an earlier assignment failed; the additional effect and render-target names were exposed after refused default runner declarations made the downstream effect headers parse far enough to reach them.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -9457,17 +9549,14 @@
       "id": "scene2d-canvas-unqualified-effects-canvas-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/scene2d_canvas/",
-      "namespace": "flight::effects_canvas",
-      "symbols": [
-        {
-          "include": "flight/effects_canvas/canvas_effect_test_support.hpp",
-          "name": "create_canvas_texture_render_target"
-        }
-      ],
+      "symbol": "create_canvas_texture_render_target",
+      "declaration": "inline const auto& create_canvas_texture_render_target = flight::scene2d_canvas::create_canvas_texture_render_target_flight_value_function_create_u000043_anvas_u000054_exture_u000052_ender_u000054_arget_flight_source_572fee2374c05737;",
+      "include": "flight/scene2d_canvas/canvas_texture_render_target.hpp",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasCache.ts imports createCanvasTextureRenderTarget from its sibling canvasTextureRenderTarget module; the emitted definition has the compiler's collision-safe binding name",
       "diagnostic": "'create_canvas_texture_render_target' was not declared in this scope",
-      "defect": "The emitter writes 1 function name(s) owned by flight::effects_canvas unqualified inside namespace flight::scene2d_canvas. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
+      "defect": "The inventory resolver incorrectly associated the unqualified call with an effects-canvas test wrapper of the same source export name, creating a circular include. The source import resolves to the scene2d-canvas definition's collision-safe binding.",
       "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+      "expires": "when same-package imported calls retain the compiler-assigned collision-safe binding; sdk:check fails if this repair matches no header."
     },
     {
       "id": "scene2d-canvas-unqualified-geometry-names",
@@ -12373,6 +12462,1161 @@
       "defect": "The emitter flattens two distinct module-private constants with the same source spelling into one package namespace, so including both otherwise independent modules produces a duplicate definition.",
       "expectedWhen": "always",
       "expires": "when module-private bindings receive module-distinct C++ names; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-canvas-render-surface-creator-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_canvas/",
+      "from": "source->surface.creator",
+      "to": "source->surface->creator",
+      "sourceDeclaration": "packages/types/src/CanvasRenderTarget.ts -- CanvasTextureRenderTarget.surface is a CanvasRenderSurface reference; packages/effects-canvas/src/*Effect.ts read that surface's creator",
+      "diagnostic": "shared_ptr<CanvasRenderSurface> has no member named creator",
+      "defect": "The emitter retains value-style member access for the creator field after lowering the containing CanvasRenderSurface to a shared reference.",
+      "expectedWhen": "always",
+      "expires": "when member access through a reference-backed CanvasRenderSurface uses pointer syntax; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-render-texture-readonly-map-key",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_render_texture.hpp",
+      "from": ".get(render_texture)",
+      "to": ".get(flight::structural_ref_cast<flight::Ref<flight::types::RenderTexture>>(render_texture))",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasRenderTexture.ts -- each cache lookup uses the same Readonly<RenderTexture> owner as the Map<RenderTexture, ...> key",
+      "diagnostic": "cannot convert StructuralRef<RowReadonly<RowOf<Ref<RenderTexture>>>> to const Ref<RenderTexture>&",
+      "defect": "The emitter correctly represents the readonly parameter as a structural view but does not project that view back to its retained owner identity for Map lookup. The adjacent erase path already emits the same structural_ref_cast for this key.",
+      "expectedWhen": "always",
+      "expires": "when readonly object views used as identity-map keys retain their shared owner for lookup as they already do for erase; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-material-registry-nullish-table",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_material_registry.hpp",
+      "from": "std::variant<flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_663c6e0d48719ee1>, std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>>> table = ([&]() -> std::variant<flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_663c6e0d48719ee1>, std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>>> { auto contextual_union_source = runtime->registries->material_renderers; if (contextual_union_source.has_value()) return std::variant<flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_663c6e0d48719ee1>, std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>>>{std::in_place_type<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>>>, contextual_union_source.value()}; return std::variant<flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_663c6e0d48719ee1>, std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>>>{std::in_place_type<flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_663c6e0d48719ee1>>, flight::registry::create_keyed_table<flight::Ref<flight::types::CanvasMaterialRenderer>>(flight::String(\"CanvasMaterialRenderer\"), flight::String(\"StandardMaterial\"))}; }());",
+      "to": "flight::Ref<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>> table = runtime->registries->material_renderers.value_or(flight::registry::create_keyed_table<flight::Ref<flight::types::CanvasMaterialRenderer>>(flight::String(\"CanvasMaterialRenderer\"), flight::String(\"StandardMaterial\")));",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasMaterialRegistry.ts -- materialRenderers and createKeyedTable both have KeyedTable<CanvasMaterialRenderer> identity and are combined only by nullish coalescing",
+      "diagnostic": "cannot construct the anonymous derived KeyedTable variant arm from create_keyed_table's canonical KeyedTable owner",
+      "defect": "The contextual-union emitter flattens the absent branch into an anonymous structural subtype even though both sides of the nullish expression are the same named KeyedTable owner. Keeping the canonical owner preserves the source's one table identity and matches with_registry_table_entry's parameter.",
+      "expectedWhen": "always",
+      "expires": "when nullish coalescing normalizes two spellings of the same named reference owner before constructing a contextual union; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "structural-record-entity-runtime-key-member-spelling",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/",
+      "from": ".EntityRuntimeKey = structural_record_source->EntityRuntimeKey",
+      "to": ".entity_runtime_key = structural_record_source->entity_runtime_key",
+      "sourceDeclaration": "packages/types/src/Entity.ts -- the symbol-keyed EntityRuntimeKey slot is emitted as the C++ member entity_runtime_key",
+      "diagnostic": "a structural-record materialization names EntityRuntimeKey instead of the emitted entity_runtime_key member",
+      "defect": "The structural-record materializer retains the TypeScript symbol binding's source spelling in a C++ designated initializer and member read even though the owner type declares the normalized entity_runtime_key member.",
+      "expectedWhen": "always",
+      "expires": "when structural-record materialization uses emitted C++ member names for symbol-keyed fields; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "structural-record-color-attachments-member-spelling",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/",
+      "from": ".colorAttachments = structural_record_source->colorAttachments",
+      "to": ".color_attachments = structural_record_source->color_attachments",
+      "sourceDeclaration": "packages/types/src/CanvasRenderTarget.ts -- colorAttachments is emitted as the C++ member color_attachments",
+      "diagnostic": "a structural-record materialization names colorAttachments instead of the emitted color_attachments member",
+      "defect": "The structural-record materializer retains the TypeScript field spelling in both sides of a C++ designated member copy instead of using the normalized emitted member name.",
+      "expectedWhen": "always",
+      "expires": "when structural-record materialization consistently uses normalized emitted C++ member names; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "structural-record-surface-ownership-member-spelling",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/",
+      "from": ".surfaceOwnership = structural_record_source->surfaceOwnership",
+      "to": ".surface_ownership = structural_record_source->surface_ownership",
+      "sourceDeclaration": "packages/types/src/CanvasRenderTarget.ts -- surfaceOwnership is emitted as the C++ member surface_ownership",
+      "diagnostic": "a structural-record materialization names surfaceOwnership instead of the emitted surface_ownership member",
+      "defect": "The structural-record materializer retains the TypeScript field spelling in both sides of a C++ designated member copy instead of using the normalized emitted member name.",
+      "expectedWhen": "always",
+      "expires": "when structural-record materialization consistently uses normalized emitted C++ member names; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-bitmap-text-draw-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/scene2d_canvas/canvas_bitmap_text.hpp",
+      "symbol": "draw_canvas_sprite_text",
+      "declaration": "namespace flight::types { struct CanvasRenderState; struct RenderProxy2D; } namespace flight::scene2d_canvas { inline void draw_canvas_sprite_text(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> node); }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasBitmapText.ts -- export function drawCanvasSpriteText(state: CanvasRenderState, node: RenderProxy2D): void",
+      "diagnostic": "draw_canvas_sprite_text was not declared in this scope",
+      "defect": "The emitter refuses drawCanvasSpriteText at an unsafe reference assertion but retains the exported default renderer value that stores the function under its exact declared signature.",
+      "expectedWhen": "always",
+      "expires": "when refused declarations referenced by retained exported bindings receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-bitmap-text-noop-renderer-adapter",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_bitmap_text.hpp",
+      "from": ".create_data = noop_renderer_data",
+      "to": ".create_data = [](flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Sprite>) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasBitmapText.ts -- defaultCanvasBitmapTextRenderer.createData is noopRendererData, whose implementation always returns null and ignores both parameters",
+      "diagnostic": "noop_renderer_data's Renderable parameter cannot convert to SpriteRenderer.create_data's Sprite parameter",
+      "defect": "The emitter retains the wider generic helper signature instead of contextualizing the function reference to SpriteRenderer.createData. A typed lambda preserves the helper's exact no-op result while matching the declared callback boundary.",
+      "expectedWhen": "always",
+      "expires": "when function references are contextually adapted to the destination callback parameter types; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-bitmap-text-submit-render-state-adapter",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_bitmap_text.hpp",
+      "from": ".submit = draw_canvas_sprite_text",
+      "to": ".submit = [](flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> node) { draw_canvas_sprite_text(std::static_pointer_cast<flight::types::CanvasRenderState>(state), node); }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasBitmapText.ts -- the renderer is installed only in CanvasRenderState and drawCanvasSpriteText narrows the generic SpriteRenderer submit state to that backend",
+      "diagnostic": "draw_canvas_sprite_text's CanvasRenderState parameter cannot convert to SpriteRenderer.submit's RenderState parameter",
+      "defect": "The emitter retains the narrowed backend callback as a bare function reference instead of contextually adapting the generic renderer state parameter to the Canvas state that owns this renderer.",
+      "expectedWhen": "always",
+      "expires": "when contextually assigned callbacks preserve safe backend state narrowing at renderer registration boundaries; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-particle-emitter-draw-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp",
+      "symbol": "draw_canvas_particle_emitter2_d",
+      "declaration": "namespace flight::types { struct CanvasRenderState; struct RenderProxy2D; } namespace flight::scene2d_canvas { inline void draw_canvas_particle_emitter2_d(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy); }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasParticleEmitter2D.ts -- export function drawCanvasParticleEmitter2D(state: CanvasRenderState, renderProxy: RenderProxy2D): void",
+      "diagnostic": "draw_canvas_particle_emitter2_d was not declared in this scope",
+      "defect": "The emitter refuses the particle draw implementation at a contextual optional construction but retains the exported default renderer value that stores the exact callback boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused declarations referenced by retained exported bindings receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-particle-emitter-noop-renderer-adapter",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp",
+      "from": ".create_data = noop_renderer_data",
+      "to": ".create_data = [](flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Sprite>) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasParticleEmitter2D.ts -- defaultCanvasParticleEmitter2DRenderer.createData is noopRendererData, whose implementation always returns null and ignores both parameters",
+      "diagnostic": "noop_renderer_data's Renderable parameter cannot convert to SpriteRenderer.create_data's Sprite parameter",
+      "defect": "The emitter retains the wider generic helper signature instead of contextualizing the function reference to SpriteRenderer.createData.",
+      "expectedWhen": "always",
+      "expires": "when function references are contextually adapted to the destination callback parameter types; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-particle-emitter-submit-render-state-adapter",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp",
+      "from": ".submit = draw_canvas_particle_emitter2_d",
+      "to": ".submit = [](flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> node) { draw_canvas_particle_emitter2_d(std::static_pointer_cast<flight::types::CanvasRenderState>(state), node); }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasParticleEmitter2D.ts -- the renderer is installed only in CanvasRenderState and drawCanvasParticleEmitter2D narrows the generic SpriteRenderer submit state to that backend",
+      "diagnostic": "draw_canvas_particle_emitter2_d's CanvasRenderState parameter cannot convert to SpriteRenderer.submit's RenderState parameter",
+      "defect": "The emitter retains the narrowed backend callback as a bare function reference instead of contextually adapting the generic renderer state parameter to the Canvas state that owns this renderer.",
+      "expectedWhen": "always",
+      "expires": "when contextually assigned callbacks preserve safe backend state narrowing at renderer registration boundaries; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-quad-batch-draw-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/scene2d_canvas/canvas_quad_batch.hpp",
+      "symbol": "draw_canvas_quad_batch",
+      "declaration": "namespace flight::types { struct CanvasRenderState; struct RenderProxy2D; } namespace flight::scene2d_canvas { inline void draw_canvas_quad_batch(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> quad_batch); }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasQuadBatch.ts -- export function drawCanvasQuadBatch(state: CanvasRenderState, quadBatch: RenderProxy2D): void",
+      "diagnostic": "draw_canvas_quad_batch was not declared in this scope",
+      "defect": "The emitter refuses the quad-batch draw implementation at a contextual optional construction but retains the exported default renderer value that stores the exact callback boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused declarations referenced by retained exported bindings receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-quad-batch-noop-renderer-adapter",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_quad_batch.hpp",
+      "from": ".create_data = noop_renderer_data",
+      "to": ".create_data = [](flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Sprite>) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasQuadBatch.ts -- defaultCanvasQuadBatchRenderer.createData is noopRendererData, whose implementation always returns null and ignores both parameters",
+      "diagnostic": "noop_renderer_data's Renderable parameter cannot convert to SpriteRenderer.create_data's Sprite parameter",
+      "defect": "The emitter retains the wider generic helper signature instead of contextualizing the function reference to SpriteRenderer.createData.",
+      "expectedWhen": "always",
+      "expires": "when function references are contextually adapted to the destination callback parameter types; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-quad-batch-submit-render-state-adapter",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_quad_batch.hpp",
+      "from": ".submit = draw_canvas_quad_batch",
+      "to": ".submit = [](flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> node) { draw_canvas_quad_batch(std::static_pointer_cast<flight::types::CanvasRenderState>(state), node); }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasQuadBatch.ts -- the renderer is installed only in CanvasRenderState and drawCanvasQuadBatch narrows the generic SpriteRenderer submit state to that backend",
+      "diagnostic": "draw_canvas_quad_batch's CanvasRenderState parameter cannot convert to SpriteRenderer.submit's RenderState parameter",
+      "defect": "The emitter retains the narrowed backend callback as a bare function reference instead of contextually adapting the generic renderer state parameter to the Canvas state that owns this renderer.",
+      "expectedWhen": "always",
+      "expires": "when contextually assigned callbacks preserve safe backend state narrowing at renderer registration boundaries; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-rich-text-draw-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/scene2d_canvas/canvas_rich_text.hpp",
+      "symbol": "draw_canvas_rich_text",
+      "declaration": "namespace flight::types { struct CanvasRenderState; struct RenderProxy2D; } namespace flight::scene2d_canvas { inline void draw_canvas_rich_text(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy); }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasRichText.ts -- export function drawCanvasRichText(state: CanvasRenderState, renderProxy: RenderProxy2D): void",
+      "diagnostic": "draw_canvas_rich_text was not declared in this scope",
+      "defect": "The emitter refuses the rich-text draw implementation at a nullable runtime slot test but retains the exported default renderer value that stores the exact callback boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused declarations referenced by retained exported bindings receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-rich-text-renderer-callback-adapters",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_rich_text.hpp",
+      "from": "Scene2DRenderer{.create_data = noop_renderer_data, .submit = draw_canvas_rich_text}",
+      "to": "Scene2DRenderer{.create_data = [](flight::Ref<flight::types::RenderState>, flight::types::Node2D) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }, .submit = [](flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> node) { draw_canvas_rich_text(std::static_pointer_cast<flight::types::CanvasRenderState>(state), node); }}",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasRichText.ts -- defaultCanvasRichTextRenderer assigns noopRendererData and drawCanvasRichText to Scene2DRenderer callbacks; the former always returns null and the latter runs only for CanvasRenderState",
+      "diagnostic": "generic noop and CanvasRenderState draw callbacks cannot convert to the invariant Scene2DRenderer std::function fields",
+      "defect": "The emitter loses TypeScript's callback parameter adaptation when lowering structurally narrowed renderer methods to invariant std::function signatures.",
+      "expectedWhen": "always",
+      "expires": "when callback assignment adapts contravariant parameters and backend state narrowing explicitly; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-canvas-source-target-readonly-binding-cell",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_canvas/canvas_render_texture_effect.hpp",
+      "from": "flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>>(source_target.value()))",
+      "to": "source_target.value()",
+      "sourceDeclaration": "packages/effects-canvas/src/canvasRenderTextureEffect.ts -- sourceTarget is the existing readonly target returned by getCanvasRenderTextureTarget and initializes the mutable local binding without mutation of the target",
+      "diagnostic": "cannot construct a writable StructuralRef from the readonly source_target view",
+      "defect": "The emitter round-trips an already-readonly structural view through a writable row solely to recreate the same readonly type, which is an invalid const upgrade and has no semantic role.",
+      "expectedWhen": "always",
+      "expires": "when structural casts recognize an expression already has the requested readonly row type; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-render-texture-void-return-slot",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_render_texture.hpp",
+      "from": "std::optional<T> finally_return;",
+      "to": "std::optional<std::conditional_t<std::is_void_v<T>, flight::Undefined, T>> finally_return;",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasRenderTexture.ts -- writeCanvasRenderTextureTarget<T> returns the callback result and is instantiated with T = void by renderIntoCanvasRenderTexture",
+      "diagnostic": "std::optional<void> is ill-formed when write_canvas_render_texture_target<void> is instantiated",
+      "defect": "The generic try/finally lowering always allocates optional<T> return storage even when T is void. Using Undefined as the unobservable storage arm preserves the success marker without attempting to instantiate optional<void>.",
+      "expectedWhen": "always",
+      "expires": "when generic try/finally return storage specializes void callback results; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-render-texture-void-callback-result",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_render_texture.hpp",
+      "from": "T result = callback(entry->target);\n    (rendered = true);\n    finally_return = result;",
+      "to": "if constexpr (std::is_void_v<T>) {\n      callback(entry->target);\n      (rendered = true);\n      finally_return = flight::undefined;\n    } else {\n      T result = callback(entry->target);\n      (rendered = true);\n      finally_return = result;\n    }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasRenderTexture.ts -- the generic callback result may be void and rendered becomes true only after the callback completes",
+      "diagnostic": "a variable cannot have type void in the generic callback result path",
+      "defect": "The generic return lowering materializes a T local unconditionally. A compile-time void arm invokes the callback without a result while preserving the same post-success rendered transition.",
+      "expectedWhen": "always",
+      "expires": "when generic callback invocation specializes void results; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-render-texture-void-return",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_render_texture.hpp",
+      "from": "if (finally_return.has_value()) return finally_return.value();\n  throw std::logic_error(\"Flight function completed without a value\");",
+      "to": "if constexpr (std::is_void_v<T>) {\n    return;\n  } else {\n    if (finally_return.has_value()) return finally_return.value();\n    throw std::logic_error(\"Flight function completed without a value\");\n  }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasRenderTexture.ts -- writeCanvasRenderTextureTarget returns the callback result, including the no-value result of a void callback",
+      "diagnostic": "optional void return storage has no value member to return",
+      "defect": "The generic return lowering always reads a stored result. The void specialization must return without a value after the shared finally logic completes.",
+      "expectedWhen": "always",
+      "expires": "when generic try/finally return lowering specializes void return statements; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-proxy-transform-reference-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render/render_proxy.hpp",
+      "from": "data->transform2_d.a",
+      "to": "data->transform2_d->a",
+      "sourceDeclaration": "packages/types/src/RenderProxy2D.ts -- transform2D is a Matrix reference; packages/render/src/renderProxy.ts reads its a component",
+      "diagnostic": "shared_ptr<Matrix> has no member named a",
+      "defect": "The emitter lowers Matrix to a reference-backed owner but retains value-style access for one visibility test.",
+      "expectedWhen": "always",
+      "expires": "when member access through RenderProxy2D.transform2D uses pointer syntax; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-cache-signal-construction-context",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render/render_cache.hpp",
+      "from": "assignment_target = {.on_prepare = create_signal()}",
+      "to": "assignment_target = flight::make_ref<flight::types::on_prepare_23aa797e79ba8482>(flight::types::on_prepare_23aa797e79ba8482{.on_prepare = create_signal<std::function<void()>>()})",
+      "sourceDeclaration": "packages/render/src/renderCache.ts -- adapter.signals ??= { onPrepare: createSignal() }, where RenderCacheAdapterSignals.onPrepare is Signal<() => void>",
+      "diagnostic": "create_signal template argument cannot be deduced inside the optional reference designated initializer",
+      "defect": "The contextual-call emitter drops both the Signal callback type needed by the generic createSignal call and the reference construction required by the optional reference-backed record destination.",
+      "expectedWhen": "always",
+      "expires": "when contextual generic calls and object literals retain the destination optional reference type; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "types-render-cache-adapter-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/render_cache_adapter.hpp",
+      "from": "struct RenderCacheAdapter : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;\n  std::function<std::optional<bool>(flight::Ref<flight::types::RenderState>, flight::types::Renderable, flight::Ref<flight::types::RenderProxy2D>)> adapt;\n  std::optional<flight::Ref<flight::types::RenderCache>> cache;\n  std::optional<flight::Ref<on_prepare_23aa797e79ba8482>> signals;\n};",
+      "to": "struct RenderCacheAdapter : public RenderProxyAdapter {\n  std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;\n  std::optional<flight::Ref<flight::types::RenderCache>> cache;\n  std::optional<flight::Ref<on_prepare_23aa797e79ba8482>> signals;\n};",
+      "sourceDeclaration": "packages/types/src/RenderCacheAdapter.ts -- RenderCacheAdapter is Entity & RenderProxyAdapter & { cache; signals }, so adapt is inherited from RenderProxyAdapter while entity runtime, cache, and signals remain its added storage",
+      "diagnostic": "RenderCacheAdapter cannot narrow or convert through the RenderProxyAdapter value returned by getRenderProxyAdapter",
+      "defect": "The intersection type emitter duplicates RenderProxyAdapter.adapt into an unrelated reference owner, losing the shared owner conversion and creating separate behavioural-contract storage.",
+      "expectedWhen": "always",
+      "expires": "when emitted reference-backed intersections retain their reference-owner heritage without duplicating inherited fields; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-cache-adapter-type-guard-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/render/render_cache.hpp",
+      "symbol": "is_render_cache_adapter",
+      "declaration": "namespace flight::types { struct RenderProxyAdapter; } namespace flight::render { inline bool is_render_cache_adapter(std::optional<flight::Ref<flight::types::RenderProxyAdapter>> value); }",
+      "sourceDeclaration": "packages/render/src/renderCache.ts -- export function isRenderCacheAdapter(value: unknown): value is RenderCacheAdapter; its retained caller supplies RenderProxyAdapter | null",
+      "diagnostic": "is_render_cache_adapter was not declared in this scope",
+      "defect": "The emitter refuses the exported type guard at its open runtime-domain test but retains useRenderCache, whose closed optional RenderProxyAdapter input calls that exact narrowing boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused type-guard declarations referenced by retained functions receive declarations specialized to their closed call boundary; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-cache-adapter-factory-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/render/render_cache.hpp",
+      "symbol": "create_render_cache_adapter",
+      "declaration": "namespace flight::types { struct RenderCache; struct RenderCacheAdapter; } namespace flight::render { inline flight::Ref<flight::types::RenderCacheAdapter> create_render_cache_adapter(std::optional<flight::Ref<flight::types::RenderCache>> cache = std::nullopt); }",
+      "sourceDeclaration": "packages/render/src/renderCache.ts -- export function createRenderCacheAdapter(cache: RenderCache | null = null): RenderCacheAdapter",
+      "diagnostic": "create_render_cache_adapter was not declared in this scope",
+      "defect": "The emitter refuses the factory because its initializer is refused, but retains useRenderCache, which calls the declared factory boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused factory declarations referenced by retained functions receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-cache-set-adapter-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/render_cache.hpp",
+      "symbol": "set_render_proxy_adapter",
+      "declaration": "inline void set_render_proxy_adapter(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source, std::optional<flight::Ref<flight::types::RenderProxyAdapter>> adapter);",
+      "sourceDeclaration": "packages/render/src/renderProxyAdapter.ts -- export function setRenderProxyAdapter(state: RenderState, source: Renderable, adapter: RenderProxyAdapter | null): void",
+      "diagnostic": "set_render_proxy_adapter was not declared in this scope",
+      "defect": "The emitter refuses the exported adapter setter at a reference assertion but retains useRenderCache, which calls that exact declared boundary after all parameter types are closed.",
+      "expectedWhen": "always",
+      "expires": "when refused declarations referenced by retained cross-module functions receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-cache-register-scene2d-renderer-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/render_cache.hpp",
+      "symbol": "register_render_cache_renderer",
+      "declaration": "inline void register_render_cache_renderer(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Scene2DRenderer> renderer);",
+      "include": "flight/types/scene2_drenderer.hpp",
+      "sourceDeclaration": "packages/types/src/Scene2DRenderer.ts -- Scene2DRenderer extends Renderer; packages/scene2d-canvas/src/canvasCache.ts passes its Scene2DRenderer to registerRenderCacheRenderer(RenderState, Renderer)",
+      "diagnostic": "shared_ptr<Scene2DRenderer> cannot convert to shared_ptr<Renderer>",
+      "defect": "The emitter loses the reference-owner heritage of Scene2DRenderer's structurally narrowed callback interface, so the retained registration call needs the same source boundary projected onto its closed Scene2DRenderer carrier.",
+      "expectedWhen": "always",
+      "expires": "when Scene2DRenderer retains a sound Renderer owner conversion or structural renderer parameters accept it directly; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-cache-adapter-type-guard-narrowing",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render/render_cache.hpp",
+      "from": "if (is_render_cache_adapter(existing)) {\n    (existing.value().cache = cache);\n    return existing.value();\n  }",
+      "to": "if (is_render_cache_adapter(existing)) {\n    auto cache_adapter = std::static_pointer_cast<RenderCacheAdapter>(existing.value());\n    (cache_adapter->cache = cache);\n    return cache_adapter;\n  }",
+      "sourceDeclaration": "packages/render/src/renderCache.ts -- a successful isRenderCacheAdapter(existing) type predicate narrows existing from RenderProxyAdapter | null to RenderCacheAdapter before cache is written and the owner is returned",
+      "diagnostic": "RenderProxyAdapter has no cache member and cannot return as RenderCacheAdapter after the emitted predicate call",
+      "defect": "The emitter retains the boolean type-guard call but discards its control-flow narrowing, leaving the source binding at its pre-guard base owner type inside the true branch.",
+      "expectedWhen": "always",
+      "expires": "when emitted type-predicate calls narrow reference owners in dominated true branches; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "types-render-proxy2d-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/render_proxy2_d.hpp",
+      "from": "struct RenderProxy2D : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::Ref<flight::types::Renderable> source;\n  flight::String kind;\n  std::optional<flight::Ref<flight::types::RenderProxy>> next;\n  double alpha;\n  double appearance_frame_id;\n  std::optional<flight::String> blend_mode;\n  std::optional<flight::Ref<flight::types::ColorScaleBias>> color_scale_bias;\n  std::variant<flight::Array<double>, flight::Null, flight::Undefined> color_matrix = std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};\n  std::optional<flight::Ref<flight::types::Material>> material;\n  std::optional<flight::Ref<flight::types::MaterialData>> material_data;\n  double last_appearance_id;\n  double last_children_id;\n  double last_local_content_id;\n  double last_local_transform_id;\n  double last_parent_reference_id;\n  std::optional<flight::String> name;\n  std::optional<flight::Ref<flight::types::Renderer>> renderer;\n  std::optional<flight::Ref<flight::types::RendererData>> renderer_data;\n  std::optional<flight::Ref<flight::types::Renderable>> renderer_data_source;\n  double renderer_map_id;\n  double transform_frame_id;\n  bool visible;\n  flight::Ref<flight::types::Matrix> transform2_d;\n  bool traverse_children;\n  double clip_depth;\n};",
+      "to": "struct RenderProxy2D : public RenderProxy {\n  flight::Ref<flight::types::Matrix> transform2_d;\n  bool traverse_children;\n  double clip_depth;\n};",
+      "sourceDeclaration": "packages/types/src/RenderProxy2D.ts -- export interface RenderProxy2D extends RenderProxy and declares only transform2D, traverseChildren, and clipDepth",
+      "diagnostic": "shared_ptr<RenderProxy2D> cannot convert to shared_ptr<RenderProxy>",
+      "defect": "The type emitter flattens the inherited RenderProxy fields into an unrelated reference owner, losing both the declared base conversion and the single shared storage that the source interface heritage requires.",
+      "expectedWhen": "always",
+      "expires": "when emitted reference-backed interfaces retain declared interface heritage instead of duplicating inherited fields; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-proxy-transform-reference-member-access-d",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render/render_proxy.hpp",
+      "from": "data->transform2_d.d",
+      "to": "data->transform2_d->d",
+      "sourceDeclaration": "packages/types/src/RenderProxy2D.ts -- transform2D is a Matrix reference; packages/render/src/renderProxy.ts reads its d component",
+      "diagnostic": "shared_ptr<Matrix> has no member named d",
+      "defect": "The emitter lowers Matrix to a reference-backed owner but retains value-style access for one visibility test.",
+      "expectedWhen": "always",
+      "expires": "when member access through RenderProxy2D.transform2D uses pointer syntax; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-proxy-initialize-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/render/render_proxy.hpp",
+      "symbol": "initialize_render_proxy",
+      "declaration": "namespace flight::types { struct RenderProxy; struct RenderState; } namespace flight::render { inline void initialize_render_proxy(flight::Ref<flight::types::EntityConstruction<flight::Ref<flight::types::RenderProxy>>> out, flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source); }",
+      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function initializeRenderProxy(out: EntityConstruction<RenderProxy>, state: RenderState, source: Renderable): void",
+      "diagnostic": "initialize_render_proxy was not declared in this scope",
+      "defect": "The emitter refuses initializeRenderProxy at a dual-sentinel coalesce but retains createRenderProxy, which calls that exact declared initialization boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-proxy-update-2d-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/render/render_proxy.hpp",
+      "symbol": "update_render_proxy2_d",
+      "declaration": "namespace flight::types { struct RenderProxy2D; struct RenderState; } namespace flight::render { inline void update_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data = std::nullopt); }",
+      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function updateRenderProxy2D(state: RenderState, source: Renderable, data: RenderProxy2D, parentData: RenderProxy2D | undefined): void",
+      "diagnostic": "update_render_proxy2_d was not declared in this scope",
+      "defect": "The emitter refuses updateRenderProxy2D at an unsafe reference assertion but retains prepareScene2DRender, which passes that exact declared visitor to walkNode.",
+      "expectedWhen": "always",
+      "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-proxy-walk-node-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/render/render_proxy.hpp",
+      "symbol": "walk_node",
+      "declaration": "namespace flight::types { struct RenderState; } namespace flight::render { inline bool walk_node(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> root, flight::types::RenderProxyVisitor visit); }",
+      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function walkNode(state: RenderState, root: Renderable, visit: RenderProxyVisitor): boolean",
+      "diagnostic": "walk_node was not declared in this scope",
+      "defect": "The emitter refuses walkNode at a contextual optional construction but retains prepareScene2DRender, which calls that exact declared traversal boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-proxy-dispose-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/render/render_proxy.hpp",
+      "symbol": "dispose_render_proxy",
+      "declaration": "namespace flight::types { struct RenderState; } namespace flight::render { inline void dispose_render_proxy(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source); }",
+      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function disposeRenderProxy(state: RenderState, source: Renderable): void",
+      "diagnostic": "dispose_render_proxy was not declared in this scope",
+      "defect": "The emitter refuses disposeRenderProxy at a WeakMap boundary but retains disposeScene2DRender, which passes that exact declared visitor to walkRenderSubtree.",
+      "expectedWhen": "always",
+      "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-proxy-walk-subtree-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/render/render_proxy.hpp",
+      "symbol": "walk_render_subtree",
+      "declaration": "namespace flight::types { struct RenderState; } namespace flight::render { inline void walk_render_subtree(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> root, std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Renderable>)> visit); }",
+      "sourceDeclaration": "packages/render/src/renderProxy.ts -- function walkRenderSubtree(state: RenderState, root: Renderable, visit: (state: RenderState, node: Renderable) => void): void",
+      "diagnostic": "walk_render_subtree was not declared in this scope",
+      "defect": "The emitter refuses the private teardown traversal at a contextual optional construction but retains disposeScene2DRender, which calls that exact declared boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-proxy-update-renderer-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/render/render_proxy.hpp",
+      "symbol": "update_render_proxy_renderer",
+      "requiredText": "// NOT GENERATED: function updateRenderProxyRenderer -- source line 213",
+      "declaration": "namespace flight::types { struct RenderProxy; struct RenderState; } namespace flight::render { inline void update_render_proxy_renderer(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy> node); }",
+      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function updateRenderProxyRenderer(state: RenderState, node: RenderProxy): void",
+      "diagnostic": "update_render_proxy_renderer was not declared in this scope",
+      "defect": "The emitter refuses updateRenderProxyRenderer at an unsafe reference assertion but retains updateRenderProxy2D, which calls that exact declared renderer-selection boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused declarations referenced by retained functions receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-proxy-get-or-create-2d-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/render_proxy.hpp",
+      "symbol": "get_or_create_render_proxy2_d",
+      "requiredText": "// NOT GENERATED: function getOrCreateRenderProxy2D -- source line 79",
+      "declaration": "inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source);",
+      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function getOrCreateRenderProxy2D(state: RenderState, source: Renderable): RenderProxy2D",
+      "diagnostic": "get_or_create_render_proxy2_d was not declared in this scope",
+      "defect": "The emitter refuses the exported render-proxy cache accessor at an unsafe reference assertion while cross-package CSS-filter bindings retain calls to that exact declared boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused exported declarations referenced across packages receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-proxy-get-or-create-node2d-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/render_proxy.hpp",
+      "symbol": "get_or_create_render_proxy2_d",
+      "declaration": "inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Node2D> source);",
+      "sourceDeclaration": "packages/types/src/Node2D.ts declares Node2D as a Node specialization and packages/scene2d-canvas/src/canvasCSSFilterBinding.ts passes Node2D to getOrCreateRenderProxy2D's Renderable parameter",
+      "diagnostic": "Node2D's structural reference cannot convert to the emitted Renderable variant parameter",
+      "defect": "The emitter loses the source structural subtype relationship between Node2D and Renderable, so the imported call needs the same declared boundary projected onto the closed Node2D carrier used by the caller.",
+      "expectedWhen": "always",
+      "expires": "when Node2D-to-Renderable structural subtyping is represented by the runtime carrier; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-proxy-prepare-node2d-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/render/render_proxy.hpp",
+      "symbol": "prepare_scene2_drender",
+      "declaration": "inline bool prepare_scene2_drender(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Node2D> source);",
+      "sourceDeclaration": "packages/types/src/Node2D.ts declares Node2D as a Node specialization and packages/scene2d-canvas/src/canvasCache.ts passes Node2D to prepareScene2DRender's Renderable parameter",
+      "diagnostic": "Node2D's structural reference cannot convert to prepare_scene2_drender's emitted Renderable variant parameter",
+      "defect": "The emitter loses the source structural subtype relationship between Node2D and Renderable, so the imported call needs the same declared boundary projected onto the closed Node2D carrier used by the caller.",
+      "expectedWhen": "always",
+      "expires": "when Node2D-to-Renderable structural subtyping is represented by the runtime carrier; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-render-proxy-accessor",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/",
+      "symbol": "get_or_create_render_proxy2_d",
+      "declaration": "using flight::render::get_or_create_render_proxy2_d;",
+      "include": "flight/render/render_proxy.hpp",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasCSSFilterBinding.ts imports getOrCreateRenderProxy2D from @flighthq/render/contract",
+      "diagnostic": "get_or_create_render_proxy2_d was not declared in namespace flight::scene2d_canvas",
+      "defect": "The emitter drops both the defining cross-package include and namespace qualification for the imported render-proxy accessor.",
+      "expectedWhen": "always",
+      "expires": "when imported cross-package functions retain their defining header and namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-default-renderer-callback-adapters",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_node2_d.hpp",
+      "from": "Scene2DRenderer{.create_data = noop_renderer_data, .submit = draw_canvas_scene2_d}",
+      "to": "Scene2DRenderer{.create_data = [](flight::Ref<flight::types::RenderState>, flight::types::Node2D) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }, .submit = [](flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> node) { draw_canvas_scene2_d(std::static_pointer_cast<flight::types::CanvasRenderState>(state), node); }}",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasNode2D.ts -- defaultCanvasScene2DRenderer assigns noopRendererData and drawCanvasScene2D to Scene2DRenderer callbacks; the former always returns null and the latter runs only for its CanvasRenderState backend",
+      "diagnostic": "broad Renderable noop callback and CanvasRenderState submit callback cannot convert to the narrowed Scene2DRenderer std::function fields",
+      "defect": "The emitter loses TypeScript's safe callback parameter adaptation when lowering the structurally narrowed Scene2DRenderer methods to invariant std::function signatures.",
+      "expectedWhen": "always",
+      "expires": "when callback assignment adapts contravariant parameters and backend state narrowing explicitly; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-render-scene-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/canvas_node2_d.hpp",
+      "symbol": "render_canvas_scene2_d",
+      "requiredText": "// NOT GENERATED: function renderCanvasScene2D -- source line 25",
+      "declaration": "inline void render_canvas_scene2_d(flight::Ref<flight::types::CanvasRenderPass> pass, flight::Ref<flight::types::Node2D> source);",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasNode2D.ts -- export function renderCanvasScene2D(pass: CanvasRenderPass, source: Node2D): void",
+      "diagnostic": "render_canvas_scene2_d was not declared in this scope",
+      "defect": "The emitter refuses the scene traversal at a Renderable-to-Node2D assertion but retains canvas cache refresh code that calls the exact exported boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused exported declarations referenced across retained same-package modules receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-cache-readonly-surface-creator",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_cache.hpp",
+      "from": "flight::Ref<CanvasRenderSurfaceCreator> creator = get_canvas_surface_creator(state);",
+      "to": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CanvasRenderSurfaceCreator>>>> creator = get_canvas_surface_creator(state);",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasRenderSurface.ts -- getCanvasSurfaceCreator returns Readonly<CanvasRenderSurfaceCreator>; packages/scene2d-canvas/src/canvasCache.ts passes that readonly creator to createCanvasTextureRenderTarget",
+      "diagnostic": "readonly CanvasRenderSurfaceCreator StructuralRef cannot initialize a mutable Ref local",
+      "defect": "The local-variable emitter drops the imported function's readonly structural return carrier and invents a mutable nominal reference for the creator binding.",
+      "expectedWhen": "always",
+      "expires": "when inferred locals preserve readonly structural return types; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-cache-draw-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/canvas_cache.hpp",
+      "symbol": "draw_canvas_render_cache",
+      "requiredText": "// NOT GENERATED: function drawCanvasRenderCache -- source line 177",
+      "declaration": "inline void draw_canvas_render_cache(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy);",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasCache.ts -- function drawCanvasRenderCache(state: RenderState, renderProxy: RenderProxy2D): void",
+      "diagnostic": "draw_canvas_render_cache was not declared in this scope",
+      "defect": "The emitter refuses the cache draw implementation at a RenderState-to-CanvasRenderState assertion but retains the default renderer binding that stores this exact callback boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused callback declarations referenced by retained bindings receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-cache-noop-data-adapter",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_cache.hpp",
+      "from": ".create_data = noop_renderer_data, .submit = draw_canvas_render_cache",
+      "to": ".create_data = [](flight::Ref<flight::types::RenderState>, flight::types::Node2D) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }, .submit = draw_canvas_render_cache",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasCache.ts -- defaultCanvasRenderCacheRenderer assigns noopRendererData, which always returns null, to Scene2DRenderer.createData",
+      "diagnostic": "noop_renderer_data's broad Renderable parameter cannot convert to Scene2DRenderer's Node2D std::function parameter",
+      "defect": "The emitter loses TypeScript's safe contravariant callback adaptation when lowering the structurally narrowed Scene2DRenderer createData method to std::function.",
+      "expectedWhen": "always",
+      "expires": "when callback assignment adapts contravariant parameter carriers; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-node-bounds-boundary",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/canvas_cache.hpp",
+      "symbol": "compute_node_bounds_rectangle",
+      "declaration": "using flight::node::compute_node_bounds_rectangle;",
+      "include": "flight/node/bounds_rectangle_access.hpp",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasCache.ts imports computeNodeBoundsRectangle from @flighthq/node/contract and calls it with its Node2D source and target coordinate space",
+      "diagnostic": "compute_node_bounds_rectangle was not declared in this scope",
+      "defect": "The emitter omits the imported node-bounds boundary after the node module is refused at its checked mutable runtime owner; the checked override supplies an explicit unavailable runtime outcome.",
+      "expectedWhen": "always",
+      "expires": "when node bounds emit with their checked runtime owner or the import automatically selects the override boundary; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-render-target-size-owner",
+      "kind": "alias-anonymous-struct-to-named",
+      "appliesTo": "flight/scene2d_canvas/canvas_cache.hpp",
+      "symbol": "width_height_6a2b928b7d011b27",
+      "replacement": "width_height_6a2b928b7d011b27",
+      "replacementNamespace": "flight::render",
+      "canonicalInclude": "flight/render/render_target.hpp",
+      "sourceDeclaration": "packages/render/src/renderTarget.ts -- computeRenderTargetSize mutates and returns the caller-provided { width, height } object; packages/scene2d-canvas/src/canvasCache.ts passes its module scratch object as that same owner",
+      "diagnostic": "scene2d_canvas width/height anonymous owner cannot convert to render's byte-identical width/height anonymous owner",
+      "defect": "The emitter creates unrelated package-owned nominal structs for the same structural scratch object at the caller and callee boundary, despite the source function preserving the input object's identity.",
+      "expectedWhen": "always",
+      "expires": "when cross-package structural object parameters retain the caller's owner or a shared canonical shape; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-material-nullish-optional",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_materials.hpp",
+      "from": "canvas_blend_mode.get(std::optional<flight::String>{value.value()}.value()).value() : nullptr",
+      "to": "canvas_blend_mode.get(std::optional<flight::String>{value.value()}.value()).value() : std::nullopt",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasMaterials.ts -- value === null ? null : (CanvasBlendMode.get(value) ?? null) produces string | null before coalescing to source-over",
+      "diagnostic": "conditional operands optional<String> and nullptr have no common type",
+      "defect": "The nullish conditional emitter uses a pointer null literal for an optional string arm instead of the optional carrier's empty value.",
+      "expectedWhen": "always",
+      "expires": "when null arms for optional string expressions lower to std::nullopt; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-shape-command-default-argument",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_shape_registry.hpp",
+      "from": "flight::Ref<CanvasShapeCommand>",
+      "to": "flight::Ref<CanvasShapeCommand<>>",
+      "sourceDeclaration": "packages/types/src/CanvasShapeRegistry.ts -- CanvasShapeCommand<K extends ShapeCommandKey = ShapeCommandKey> has a default generic argument, and registerCanvasShapeCommands accepts readonly CanvasShapeCommand[]",
+      "diagnostic": "CanvasShapeCommand template is used as a type without a template argument",
+      "defect": "The emitter drops the declared default template argument when a generic interface appears bare inside Ref in an array element type.",
+      "expectedWhen": "always",
+      "expires": "when bare generic references preserve declared default template arguments; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-register-shape-command-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/canvas_shape_registry.hpp",
+      "symbol": "register_canvas_shape_command",
+      "declaration": "inline void register_canvas_shape_command(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::CanvasShapeCommand<>> command);",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasShapeRegistry.ts -- registerCanvasShapeCommand<K extends ShapeCommandKey>(state: RenderState, command: CanvasShapeCommand<K>): void; registerCanvasShapeCommands calls it through the default ShapeCommandKey specialization",
+      "diagnostic": "register_canvas_shape_command was not declared in this scope",
+      "defect": "The emitter refuses the generic registration implementation at an intersection table boundary but retains the bulk registration loop calling its closed default specialization.",
+      "expectedWhen": "always",
+      "expires": "when refused generic declarations referenced by retained closed-specialization callers receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-get-shape-command-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_canvas/canvas_shape_registry.hpp",
+      "symbol": "get_canvas_shape_command",
+      "declaration": "inline std::optional<flight::Ref<flight::types::CanvasShapeCommand<flight::String>>> get_canvas_shape_command(flight::Ref<flight::types::RenderState> state, flight::String key);",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasShapeRegistry.ts -- getCanvasShapeCommand(state: RenderState, key: string): CanvasShapeCommand | null; ShapeCommandKey is the string alias used by the default CanvasShapeCommand specialization",
+      "diagnostic": "get_canvas_shape_command was not declared in this scope",
+      "defect": "The emitter refuses the registry lookup at its typeOf boundary but retains canvas command rendering that calls the exact closed string-key specialization.",
+      "expectedWhen": "always",
+      "expires": "when refused registry lookup declarations referenced by retained callers receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-flush-shape-path-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/scene2d_canvas/canvas_shape.hpp",
+      "symbol": "flush_canvas_shape_path",
+      "declaration": "namespace flight::types { struct CanvasShapeDrawState; } namespace flight::scene2d_canvas { inline void flush_canvas_shape_path(flight::CanvasRenderingContext2D context, flight::Ref<flight::types::CanvasShapeDrawState> state); }",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasShape.ts -- function flushCanvasShapePath(context: CanvasRenderingContext2D, state: CanvasShapeDrawState): void",
+      "diagnostic": "flush_canvas_shape_path was not declared in this scope",
+      "defect": "The emitter refuses the private path flush implementation at nullable Canvas shape matrix storage but retains both the draw-state callback and command loop that call its exact source signature.",
+      "expectedWhen": "always",
+      "expires": "when refused private declarations referenced by retained functions receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-shape-draw-state-designator-order",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_shape.hpp",
+      "from": "CanvasShapeDrawState{.allow_smoothing = allow_smoothing, .bitmap_h = 0.0, .bitmap_src = nullptr, .bitmap_w = 0.0, .canvas_texture_resolvers = resolvers, .current_x = 0.0, .current_y = 0.0, .fill_matrix = nullptr, .fill_matrix_inverse = nullptr, .fill_style = flight::String(\"\"), .has_fill = false, .has_pending_path = false, .has_current_point = false, .has_stroke = false, .line_scale_mode = flight::String(\"normal\"), .stroke_style = flight::String(\"\"), .stroke_width = 1.0, .subpath_start_x = 0.0, .subpath_start_y = 0.0, .winding_rule = flight::String(\"evenodd\"), .flush = [=]() { return flush_canvas_shape_path(context, state); }}",
+      "to": "CanvasShapeDrawState{.canvas_texture_resolvers = resolvers, .allow_smoothing = allow_smoothing, .has_fill = false, .fill_style = flight::String(\"\"), .fill_matrix = nullptr, .fill_matrix_inverse = nullptr, .has_stroke = false, .line_scale_mode = flight::String(\"normal\"), .stroke_style = flight::String(\"\"), .stroke_width = 1.0, .current_x = 0.0, .current_y = 0.0, .has_pending_path = false, .has_current_point = false, .subpath_start_x = 0.0, .subpath_start_y = 0.0, .winding_rule = flight::String(\"evenodd\"), .bitmap_src = std::nullopt, .bitmap_w = 0.0, .bitmap_h = 0.0, .flush = [=]() { return flush_canvas_shape_path(context, state); }}",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasShape.ts -- createCanvasShapeDrawState initializes every CanvasShapeDrawState field; packages/types/src/CanvasShapeDrawState.ts fixes the emitted aggregate member order",
+      "diagnostic": "designator order for CanvasShapeDrawState::bitmap_src does not match declaration order",
+      "defect": "The emitter preserves source object-literal property order in a C++20 designated initializer even when the target interface declaration has a different member order, and lowers the nullable non-reference bitmap source as nullptr instead of the optional carrier's empty value.",
+      "expectedWhen": "always",
+      "expires": "when aggregate initialization follows the emitted target member order and nullable value members use their optional empty value; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-canvas-render-registry-enum-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_canvas/canvas_shape.hpp",
+      "from": "render_registry_table.shape_command_handler",
+      "to": "flight::types::RenderRegistryTable::ShapeCommandHandler",
+      "sourceDeclaration": "packages/types/src/RenderRegistrySignals.ts -- RenderRegistryTable is a numeric enum with member ShapeCommandHandler; packages/scene2d-canvas/src/canvasShape.ts passes that member to registryMiss",
+      "diagnostic": "render_registry_table was not declared in this scope",
+      "defect": "The emitter lowers a TypeScript enum member as snake-cased object property access instead of the emitted scoped C++ enum type and member.",
+      "expectedWhen": "always",
+      "expires": "when enum member expressions lower to scoped C++ enum access; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-render-texture-guard-nullable-assignment",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render_wgpu/wgpu_render_texture.hpp",
+      "from": "(get_wgpu_render_state_runtime(state)->wgpu_render_texture_guard = guard);",
+      "to": "(get_wgpu_render_state_runtime(state)->wgpu_render_texture_guard = guard.has_value() ? decltype(get_wgpu_render_state_runtime(state)->wgpu_render_texture_guard){std::in_place_type<flight::Ref<WgpuRenderTextureGuard>>, guard.value()} : decltype(get_wgpu_render_state_runtime(state)->wgpu_render_texture_guard){std::in_place_type<flight::Null>, flight::null});",
+      "sourceDeclaration": "packages/render-wgpu/src/wgpuRenderTexture.ts -- setWgpuRenderTextureGuard assigns WgpuRenderTextureGuard | null into the runtime's optional nullable guard slot",
+      "diagnostic": "cannot assign optional<WgpuRenderTextureGuard> to variant<WgpuRenderTextureGuard, Null, Undefined>",
+      "defect": "The parameter emitter represents the nullable function as optional while the member emitter preserves the full nullable/undefined variant, but the assignment does not project presence to the function arm and absence to the explicit Null arm.",
+      "expectedWhen": "always",
+      "expires": "when nullable values assigned to optional object members retain the destination union's null arm; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-render-texture-entry-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/render_wgpu/wgpu_render_texture.hpp",
+      "symbol": "get_wgpu_render_texture_entry",
+      "declaration": "namespace flight::types { struct RenderTexture; struct WgpuRenderState; struct WgpuRenderTextureEntry; } namespace flight::render_wgpu { inline std::optional<flight::Ref<flight::types::WgpuRenderTextureEntry>> get_wgpu_render_texture_entry(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderTexture> render_texture); }",
+      "sourceDeclaration": "packages/render-wgpu/src/wgpuRenderTexture.ts -- function getWgpuRenderTextureEntry(state: WgpuRenderState, renderTexture: Readonly<RenderTexture>): WgpuRenderTextureEntry | undefined",
+      "diagnostic": "get_wgpu_render_texture_entry was not declared in this scope",
+      "defect": "The emitter refuses the private render-texture cache lookup at its WeakMap value boundary but retains three functions that call it with the shared RenderTexture owner already available.",
+      "expectedWhen": "always",
+      "expires": "when refused helper declarations referenced by retained functions receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-render-texture-target-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/render_wgpu/wgpu_render_texture.hpp",
+      "symbol": "get_wgpu_render_texture_target",
+      "requiredText": "// NOT GENERATED: function getWgpuRenderTextureTarget -- source line 56",
+      "declaration": "namespace flight::types { struct RenderTexture; struct WgpuRenderState; struct WgpuTextureRenderTarget; } namespace flight::render_wgpu { inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>> get_wgpu_render_texture_target(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTexture>>>> render_texture); }",
+      "sourceDeclaration": "packages/render-wgpu/src/wgpuRenderTexture.ts -- export function getWgpuRenderTextureTarget(state: WgpuRenderState, renderTexture: Readonly<RenderTexture>): Readonly<WgpuRenderTextureEntry['target']> | null",
+      "diagnostic": "get_wgpu_render_texture_target is not a member of flight::render_wgpu",
+      "defect": "The emitter refuses the exported render-texture target lookup at its WeakMap value boundary but retains cross-package effect functions that call that exact declared readonly boundary.",
+      "expectedWhen": "always",
+      "expires": "when refused exported declarations referenced across packages receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-render-texture-source-reference-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render_wgpu/wgpu_render_texture.hpp",
+      "from": "render_texture->source.",
+      "to": "render_texture->source->",
+      "sourceDeclaration": "packages/types/src/RenderTexture.ts -- source is a RenderTarget reference; packages/render-wgpu/src/wgpuRenderTexture.ts reads its width and height",
+      "diagnostic": "shared_ptr<RenderTarget> has no member named height",
+      "defect": "The emitter lowers RenderTexture.source to a reference-backed owner but retains value-style member access in the fallback dimensions.",
+      "expectedWhen": "always",
+      "expires": "when member access through RenderTexture.source uses pointer syntax; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-render-texture-ensure-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/render_wgpu/wgpu_render_texture.hpp",
+      "symbol": "ensure_wgpu_render_texture_entry",
+      "declaration": "namespace flight::types { struct RenderTexture; struct WgpuRenderState; struct WgpuRenderTextureEntry; } namespace flight::render_wgpu { inline flight::Ref<flight::types::WgpuRenderTextureEntry> ensure_wgpu_render_texture_entry(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderTexture> render_texture); }",
+      "sourceDeclaration": "packages/render-wgpu/src/wgpuRenderTexture.ts -- function ensureWgpuRenderTextureEntry(state: WgpuRenderState, renderTexture: Readonly<RenderTexture>): WgpuRenderTextureEntry",
+      "diagnostic": "ensure_wgpu_render_texture_entry was not declared in this scope",
+      "defect": "The emitter refuses the private render-texture cache creator at a contextual optional construction but retains the generic write function that calls it with the shared RenderTexture owner.",
+      "expectedWhen": "always",
+      "expires": "when refused helper declarations referenced by retained functions receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-render-texture-target-reference-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render_wgpu/wgpu_render_texture.hpp",
+      "from": "entry->target.color_space",
+      "to": "entry->target->color_space",
+      "sourceDeclaration": "packages/types/src/WgpuRenderTexture.ts -- WgpuRenderTextureEntry.target is a WgpuTextureRenderTarget reference; packages/render-wgpu/src/wgpuRenderTexture.ts reads its colorSpace",
+      "diagnostic": "shared_ptr<WgpuTextureRenderTarget> has no member named color_space",
+      "defect": "The emitter lowers the retained target to a reference-backed owner but leaves value-style access when publishing its color space.",
+      "expectedWhen": "always",
+      "expires": "when member access through WgpuRenderTextureEntry.target uses pointer syntax; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-current-target-preserves-readonly",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_wgpu/wgpu_render_texture_effect.hpp",
+      "from": "flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>(source_target.value()))",
+      "to": "source_target.value()",
+      "sourceDeclaration": "packages/effects-wgpu/src/wgpuRenderTextureEffect.ts -- sourceTarget is returned as Readonly<WgpuTextureRenderTarget> and let current = sourceTarget preserves that readonly target",
+      "diagnostic": "cannot construct writable WgpuTextureRenderTarget StructuralRef from readonly source_target.value()",
+      "defect": "The mutable-local lowering confuses rebinding the current variable with mutating its readonly referent and inserts an invalid readonly-to-writable structural conversion before storing the value in a binding cell.",
+      "expectedWhen": "always",
+      "expires": "when mutable bindings preserve the readonly structural carrier of their initializer; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-render-texture-void-return-slot",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render_wgpu/wgpu_render_texture.hpp",
+      "from": "std::optional<T> finally_return;",
+      "to": "std::optional<std::conditional_t<std::is_void_v<T>, flight::Undefined, T>> finally_return;",
+      "sourceDeclaration": "packages/render-wgpu/src/wgpuRenderTexture.ts -- writeWgpuRenderTextureTarget<T> returns the callback result and is instantiated with T = void by renderIntoWgpuRenderTexture",
+      "diagnostic": "std::optional<void> is ill-formed when write_wgpu_render_texture_target<void> is instantiated",
+      "defect": "The generic try/finally lowering always allocates optional<T> return storage even when T is void. Using Undefined as the unobservable storage arm preserves the success marker without attempting to instantiate optional<void>.",
+      "expectedWhen": "always",
+      "expires": "when generic try/finally return storage specializes void callback results; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-render-texture-void-callback-result",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render_wgpu/wgpu_render_texture.hpp",
+      "from": "T result = callback(entry->target);\n    (rendered = true);\n    finally_return = result;",
+      "to": "if constexpr (std::is_void_v<T>) {\n      callback(entry->target);\n      (rendered = true);\n      finally_return = flight::undefined;\n    } else {\n      T result = callback(entry->target);\n      (rendered = true);\n      finally_return = result;\n    }",
+      "sourceDeclaration": "packages/render-wgpu/src/wgpuRenderTexture.ts -- the generic callback result may be void and rendered becomes true only after the callback completes",
+      "diagnostic": "a variable cannot have type void in the generic callback result path",
+      "defect": "The generic return lowering materializes a T local unconditionally. A compile-time void arm invokes the callback without a result while preserving the same post-success rendered transition.",
+      "expectedWhen": "always",
+      "expires": "when generic callback invocation specializes void results; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-render-texture-void-return",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render_wgpu/wgpu_render_texture.hpp",
+      "from": "if (finally_return.has_value()) return finally_return.value();\n  throw std::logic_error(\"Flight function completed without a value\");",
+      "to": "if constexpr (std::is_void_v<T>) {\n    return;\n  } else {\n    if (finally_return.has_value()) return finally_return.value();\n    throw std::logic_error(\"Flight function completed without a value\");\n  }",
+      "sourceDeclaration": "packages/render-wgpu/src/wgpuRenderTexture.ts -- writeWgpuRenderTextureTarget returns the callback result, including the no-value result of a void callback",
+      "diagnostic": "optional void return storage has no value member to return",
+      "defect": "The generic return lowering always reads a stored result. The void specialization must return without a value after the shared finally logic completes.",
+      "expectedWhen": "always",
+      "expires": "when generic try/finally return lowering specializes void return statements; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-source-mode-alias-union",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_",
+      "from": "std::variant<flight::Ref<EffectSourceMode>, flight::String> source_mode = std::variant<flight::Ref<EffectSourceMode>, flight::String>{std::in_place_type<flight::String>, effect->source_mode.value_or(flight::String(\"draw\"))};",
+      "to": "flight::String source_mode = effect->source_mode.value_or(flight::String(\"draw\"));",
+      "sourceDeclaration": "packages/types/src/EffectSourceMode.ts declares EffectSourceMode as a string union; Canvas and WGPU effect paths coalesce that optional string with the literal 'draw'",
+      "diagnostic": "std::variant<flight::String, flight::String> cannot select an in_place_type alternative",
+      "defect": "The emitter wraps a string-alias branch in flight::Ref before union normalization, leaving two identical flight::String alternatives and an ambiguous in_place_type construction for a source expression whose declared result is one string union.",
+      "expectedWhen": "always",
+      "expires": "when unions normalize aliases after reference lowering and collapse identical string alternatives; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-source-mode-normalized-read",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_",
+      "from": "std::get<1>(source_mode)",
+      "to": "source_mode",
+      "sourceDeclaration": "packages/types/src/EffectSourceMode.ts declares EffectSourceMode as a string union; the repaired source_mode local is therefore the string value itself",
+      "diagnostic": "no matching function for call to get<1>(flight::String&)",
+      "defect": "After normalizing the duplicate string-alias union, the emitter leaves a variant-arm projection on two draw-mode reads. The local is now the source string directly, so retaining the projection is ill-typed and semantically redundant.",
+      "expectedWhen": "always",
+      "expires": "when alias-union normalization also rewrites reads of the normalized local; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-canvas-bloom-omitted-image-data-settings",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_canvas/canvas_bloom_effect.hpp",
+      "from": "blurred->context.get_image_data(0.0, 0.0, blurred->width, blurred->height, std::nullopt)",
+      "to": "blurred->context.get_image_data(0.0, 0.0, blurred->width, blurred->height)",
+      "sourceDeclaration": "packages/effects-canvas/src/canvasBloomEffect.ts -- getImageData is called with four arguments and omits its optional settings dictionary",
+      "diagnostic": "cannot convert const std::nullopt_t to const flight::ImageDataSettings&",
+      "defect": "The emitter materializes an omitted Web API dictionary argument as std::nullopt even though the runtime represents omission with the get_image_data parameter's default ImageDataSettings value.",
+      "expectedWhen": "always",
+      "expires": "when omitted non-optional Web API dictionary parameters remain omitted or lower to their declared default value; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-canvas-blend-backdrop-map-construction",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_canvas/canvas_blend_effect.hpp",
+      "from": "assignment_target = flight::Map();",
+      "to": "assignment_target = flight::Map<flight::String, flight::Ref<CanvasTextureRenderTarget>>();",
+      "sourceDeclaration": "packages/types/src/CanvasRenderState.ts -- canvasBlendEffectBackdrops is Map<string, CanvasTextureRenderTarget>; packages/effects-canvas/src/canvasBlendEffect.ts initializes it with new Map()",
+      "diagnostic": "class template argument deduction failed for flight::Map()",
+      "defect": "The emitter drops the contextual key and value types from a zero-argument Map construction assigned into the declared optional backdrop map.",
+      "expectedWhen": "always",
+      "expires": "when empty generic constructions retain their assignment target's declared type arguments; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-advanced-blend-mode-binding-name",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_wgpu/wgpu_blend_effect.hpp",
+      "from": "advanced_blend_mode_values.",
+      "to": "advanced_blend_mode->",
+      "sourceDeclaration": "packages/types/src/AdvancedBlendMode.ts exports the AdvancedBlendMode value object; packages/effects-wgpu/src/wgpuBlendEffect.ts reads its members to build blendModeIndex",
+      "diagnostic": "advanced_blend_mode_values was not declared in this scope",
+      "defect": "The expression emitter uses a synthetic imported enum-values name that the type module does not emit, and retains value-style access even though the canonical AdvancedBlendMode object is reference-backed.",
+      "expectedWhen": "always",
+      "expires": "when imported string-union value objects use their emitted binding name and reference member access; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-color-using-declarations",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/effects_wgpu/",
+      "namespace": "flight::color",
+      "symbols": [
+        {
+          "include": "flight/color/pack_color.hpp",
+          "name": "get_color_alpha"
+        },
+        {
+          "include": "flight/color/pack_color.hpp",
+          "name": "get_color_rgb"
+        },
+        {
+          "include": "flight/color/pack_color.hpp",
+          "name": "unpack_color_rgba"
+        }
+      ],
+      "diagnostic": "a flight::color helper was not declared in namespace flight::effects_wgpu",
+      "defect": "The emitter writes imported flight::color helpers unqualified inside namespace flight::effects_wgpu and omits their defining header.",
+      "expectedWhen": "always",
+      "expires": "when imported cross-package functions are qualified and retain their defining headers; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-gaussian-blur-pass-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/effects_wgpu/wgpu_blur_effect.hpp",
+      "symbol": "apply_wgpu_gaussian_blur_pass",
+      "declaration": "namespace flight::types { struct WgpuRenderState; struct WgpuTextureRenderTarget; } namespace flight::effects_wgpu { inline void apply_wgpu_gaussian_blur_pass(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::WgpuTextureRenderTarget> source, flight::Ref<flight::types::WgpuTextureRenderTarget> dest, double sigma, double radius, double dir_x, double dir_y); }",
+      "diagnostic": "apply_wgpu_gaussian_blur_pass was not declared in this scope",
+      "defect": "The emitter refuses the private Gaussian blur pass at an intersection member boundary but retains applyGaussianBlurToWgpu calling that exact boundary.",
+      "expectedWhen": "always",
+      "expires": "when applyWgpuGaussianBlurPass emits or callers of refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-bevel-composite-shader-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/effects_wgpu/wgpu_bevel_effect.hpp",
+      "symbol": "get_wgpu_bevel_composite_shader",
+      "declaration": "namespace flight::types { struct WgpuEffectPipeline; struct WgpuRenderState; } namespace flight::effects_wgpu { inline flight::Ref<flight::types::WgpuEffectPipeline> get_wgpu_bevel_composite_shader(flight::Ref<flight::types::WgpuRenderState> state); }",
+      "diagnostic": "get_wgpu_bevel_composite_shader was not declared in this scope",
+      "defect": "The emitter refuses the private bevel pipeline-cache accessor at an intersection member boundary but retains the composite pass calling that exact boundary.",
+      "expectedWhen": "always",
+      "expires": "when getWgpuBevelCompositeShader emits or callers of refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-composite-operator-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/effects_",
+      "symbol": "composite_operator_values",
+      "declaration": "using flight::types::composite_operator;",
+      "include": "flight/types/composite_operator.hpp",
+      "diagnostic": "composite_operator_values was not declared in this scope",
+      "defect": "The expression emitter uses a synthetic imported enum-values name inside Canvas and WGPU effect namespaces, while the canonical CompositeOperator value object is emitted in flight::types.",
+      "expectedWhen": "always",
+      "expires": "when imported string-union value objects use their emitted binding name; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-composite-operator-binding-name",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_",
+      "from": "composite_operator_values.",
+      "to": "composite_operator->",
+      "sourceDeclaration": "packages/types/src/CompositeOperator.ts exports the CompositeOperator value object; Canvas and WGPU composite effects read its members to construct lookup tables and test Clear",
+      "diagnostic": "composite_operator_values was not declared in this scope",
+      "defect": "The emitter uses a synthetic imported enum-values binding and value-style access instead of the emitted reference-backed composite_operator object.",
+      "expectedWhen": "always",
+      "expires": "when imported string-union value objects use their emitted binding name and reference member access; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-canvas-bevel-with-pool-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/effects_canvas/canvas_bevel_effect.hpp",
+      "symbol": "apply_bevel_effect_to_canvas_with_pool",
+      "declaration": "namespace flight::types { struct BevelEffect; struct CanvasRenderTargetPool; struct CanvasTextureRenderTarget; } namespace flight::effects_canvas { inline void apply_bevel_effect_to_canvas_with_pool(flight::Ref<flight::types::CanvasTextureRenderTarget> source, flight::Ref<flight::types::CanvasTextureRenderTarget> dest, flight::Ref<flight::types::CanvasRenderTargetPool> pool, flight::Ref<flight::types::BevelEffect> effect); }",
+      "diagnostic": "apply_bevel_effect_to_canvas_with_pool was not declared in this scope",
+      "defect": "The emitter refuses the private pooled bevel implementation at an optional construction boundary but retains the exported overload calling that exact boundary.",
+      "expectedWhen": "always",
+      "expires": "when applyBevelEffectToCanvasWithPool emits or callers of refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-contact-shadows-create-ssao-using-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/effects_wgpu/wgpu_contact_shadows_effect.hpp",
+      "symbol": "create_ssao_effect",
+      "declaration": "using flight::effects::create_ssao_effect;",
+      "include": "flight/effects/ssao_effect.hpp",
+      "diagnostic": "create_ssao_effect was not declared in this scope",
+      "defect": "The emitter writes the imported flight::effects construction helper unqualified inside namespace flight::effects_wgpu and omits its defining header.",
+      "expectedWhen": "always",
+      "expires": "when imported cross-package helpers are qualified and retain their defining headers; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-dual-source-uniform-callback-arity",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_wgpu/wgpu_bevel_effect.hpp",
+      "from": "[=](flight::Float32Array f32) {",
+      "to": "[=](flight::Float32Array f32, flight::Int32Array) {",
+      "sourceDeclaration": "packages/effects-wgpu/src/wgpuBevelEffect.ts -- the setUniforms callback uses only f32 while drawWgpuDualSourceEffectPass supplies both f32 and i32 views",
+      "diagnostic": "one-argument lambda cannot convert to Function<void(Float32Array, Int32Array)>",
+      "defect": "The contextual callback emitter omits unused parameters from a lambda even though the declared dual-source pass callback retains both typed-array arguments.",
+      "expectedWhen": "always",
+      "expires": "when contextually typed callbacks retain unused declared parameters required by their function carrier; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-motion-blur-pipeline-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/effects_wgpu/wgpu_motion_blur_effect.hpp",
+      "symbol": "get_motion_blur_pipeline",
+      "declaration": "namespace flight::types { struct WgpuEffectPipeline; struct WgpuRenderState; } namespace flight::effects_wgpu { inline flight::Ref<flight::types::WgpuEffectPipeline> get_motion_blur_pipeline(flight::Ref<flight::types::WgpuRenderState> state); }",
+      "diagnostic": "get_motion_blur_pipeline was not declared in this scope",
+      "defect": "The emitter refuses the private motion-blur pipeline-cache accessor at an intersection member boundary but retains the render pass calling that exact boundary.",
+      "expectedWhen": "always",
+      "expires": "when getMotionBlurPipeline emits or callers of refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-motion-blur-callback-arity",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_wgpu/wgpu_motion_blur_effect.hpp",
+      "from": "[=](flight::Float32Array f32) {",
+      "to": "[=](flight::Float32Array f32, flight::Int32Array) {",
+      "sourceDeclaration": "packages/effects-wgpu/src/wgpuMotionBlurEffect.ts -- both setUniforms callbacks use only f32 while drawWgpuDualSourceEffectPass supplies f32 and i32 views",
+      "diagnostic": "one-argument lambda cannot convert to Function<void(Float32Array, Int32Array)>",
+      "defect": "The contextual callback emitter omits the unused integer typed-array parameter required by the dual-source pass callback carrier.",
+      "expectedWhen": "always",
+      "expires": "when contextually typed callbacks retain unused declared parameters required by their function carrier; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-canvas-composite-optional-backdrop-key",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_canvas/canvas_composite_effect.hpp",
+      "from": "effect->backdrop_key.value_or(nullptr)",
+      "to": "effect->backdrop_key",
+      "sourceDeclaration": "packages/effects-canvas/src/canvasCompositeEffect.ts -- effect.backdropKey ?? null is passed to a parameter declared string | null",
+      "diagnostic": "optional<String>::value_or(nullptr) static assertion failed",
+      "defect": "The emitter unwraps an optional string with nullptr before passing it to an optional-string parameter, even though the existing optional already represents the source's string-or-null value.",
+      "expectedWhen": "always",
+      "expires": "when nullish coalescing to null preserves an existing optional carrier at an optional parameter boundary; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-canvas-bevel-clip-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/effects_canvas/canvas_gradient_bevel_effect.hpp",
+      "symbol": "clip_canvas_bevel_band",
+      "declaration": "namespace flight::types { struct CanvasTextureRenderTarget; } namespace flight::effects_canvas { inline void clip_canvas_bevel_band(flight::Ref<flight::types::CanvasTextureRenderTarget> band, flight::Ref<flight::types::CanvasTextureRenderTarget> source, std::optional<flight::String> bevel_type); }",
+      "diagnostic": "clip_canvas_bevel_band was not declared in this scope",
+      "defect": "The emitter refuses the exported bevel clipping helper at an optional union projection but retains the gradient-bevel implementation calling that exact boundary through this header.",
+      "expectedWhen": "always",
+      "expires": "when clipCanvasBevelBand emits or callers of refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-ssao-apply-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/effects_wgpu/wgpu_contact_shadows_effect.hpp",
+      "symbol": "apply_ssao_effect_to_wgpu",
+      "declaration": "namespace flight::types { struct SsaoEffect; struct WgpuRenderState; struct WgpuTextureRenderTarget; } namespace flight::effects_wgpu { inline void apply_ssao_effect_to_wgpu(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::WgpuTextureRenderTarget> source, flight::Ref<flight::types::WgpuTextureRenderTarget> dest, flight::Ref<flight::types::SsaoEffect> effect); }",
+      "diagnostic": "apply_ssao_effect_to_wgpu was not declared in this scope",
+      "defect": "The emitter refuses the exported SSAO implementation at an intersection member boundary but retains contact shadows calling that exact boundary through this header.",
+      "expectedWhen": "always",
+      "expires": "when applySsaoEffectToWgpu emits or callers of refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-render-target-pool-functions",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/effects_wgpu/",
+      "namespace": "flight::render_wgpu",
+      "requiredText": " = acquire_wgpu_texture_render_target(",
+      "symbols": [
+        {
+          "include": "flight/render_wgpu/wgpu_render_target_pool.hpp",
+          "name": "acquire_wgpu_texture_render_target"
+        },
+        {
+          "include": "flight/render_wgpu/wgpu_render_target_pool.hpp",
+          "name": "release_wgpu_texture_render_target"
+        }
+      ],
+      "diagnostic": "acquire_wgpu_texture_render_target was not declared in namespace flight::effects_wgpu",
+      "defect": "The emitter writes render_wgpu's target-pool acquire and release helpers unqualified inside effect implementations and omits their defining header.",
+      "expectedWhen": "always",
+      "expires": "when imported cross-package functions are qualified and retain their defining headers; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-render-target-descriptor-alias",
+      "kind": "alias-anonymous-struct-to-named",
+      "appliesTo": "flight/effects_wgpu/",
+      "symbol": "width_height_format_3e01490122355edd",
+      "replacement": "width_height_format_color_space_sample_count_d7147b6683ba8eda",
+      "replacementNamespace": "flight::render_wgpu",
+      "canonicalInclude": "flight/render_wgpu/wgpu_render_target_pool.hpp",
+      "requiredText": " = acquire_wgpu_texture_render_target(",
+      "sourceDeclaration": "packages/render-wgpu/src/wgpuRenderTargetPool.ts accepts width, height, format and optional colorSpace/sampleCount; the effects-wgpu callers pass the compatible width/height/format object literal",
+      "diagnostic": "effect-local width/height/format StructuralRef cannot bind to acquire_wgpu_texture_render_target's descriptor StructuralRef",
+      "defect": "The emitter reifies the effect-side projection of the render-target descriptor as an unrelated anonymous owner rather than retaining the canonical render_wgpu descriptor shape accepted by the imported helper.",
+      "expectedWhen": "always",
+      "expires": "when structural projections passed across package boundaries retain their canonical descriptor owner; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-pooled-texture-target-alias",
+      "kind": "alias-anonymous-struct-to-named",
+      "appliesTo": "flight/render_wgpu/wgpu_render_target_pool.hpp",
+      "symbol": "height_width_entity_runtime_key_color_attachments_color_space_context_depth_stencil_texture_depth_stencil_view_format_sample_count_bindings_mip_level_count_texture_view_2da0d4718aa8491d",
+      "replacement": "WgpuTextureRenderTarget",
+      "canonicalInclude": "flight/types/wgpu_render_target.hpp",
+      "requiredText": "pool->free.element(i)",
+      "sourceDeclaration": "packages/render-wgpu/src/wgpuRenderTargetPool.ts -- pool.free is WgpuTextureRenderTarget[] and the candidate read from it is therefore WgpuTextureRenderTarget",
+      "diagnostic": "shared_ptr<flight::types::WgpuTextureRenderTarget> cannot convert to the anonymous flattened render-target owner",
+      "defect": "The emitter flattens the named WgpuTextureRenderTarget returned by pool.free.element(i) into an unrelated anonymous owner. The source container fixes the element's nominal identity, so retaining the canonical type is required rather than inferred from coincidentally similar fields.",
+      "expectedWhen": "always",
+      "expires": "when indexed reads from arrays of named imported owners retain the array element's nominal type; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-inner-source-mode-alias-union",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_wgpu/",
+      "from": "std::variant<flight::Ref<InnerEffectSourceMode>, flight::String> source_mode = std::variant<flight::Ref<InnerEffectSourceMode>, flight::String>{std::in_place_type<flight::String>, effect->source_mode.value_or(flight::String(\"draw\"))};",
+      "to": "flight::String source_mode = effect->source_mode.value_or(flight::String(\"draw\"));",
+      "sourceDeclaration": "packages/types/src/EffectSourceMode.ts declares InnerEffectSourceMode as a string union; WGPU inner glow and shadow paths coalesce that optional string with 'draw'",
+      "diagnostic": "std::variant<flight::String, flight::String> cannot select an in_place_type alternative",
+      "defect": "The emitter wraps a string-alias branch in flight::Ref before union normalization, leaving duplicate flight::String alternatives for a source expression whose declared result is one string union.",
+      "expectedWhen": "always",
+      "expires": "when unions normalize aliases after reference lowering and collapse identical string alternatives; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-inner-glow-module-scratch-name",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_wgpu/wgpu_inner_glow_effect.hpp",
+      "from": "scratch_edge",
+      "to": "inner_glow_edge_rgba",
+      "sourceDeclaration": "packages/effects-wgpu/src/wgpuInnerGlowEffect.ts -- scratchEdge is a file-local scratch array used only by the inner-glow color helper",
+      "diagnostic": "scratch_edge is redefined when the effects-wgpu aggregate includes both inner-glow and inner-shadow modules",
+      "defect": "The emitter places module-local bindings directly in the shared package namespace without a module-unique spelling, so identically named private bindings from separate source files collide in aggregate headers.",
+      "expectedWhen": "always",
+      "expires": "when file-local emitted bindings receive module-unique linkage or spelling; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-inner-shadow-module-scratch-name",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_wgpu/wgpu_inner_shadow_effect.hpp",
+      "from": "scratch_edge",
+      "to": "inner_shadow_edge_rgba",
+      "sourceDeclaration": "packages/effects-wgpu/src/wgpuInnerShadowEffect.ts -- scratchEdge is a file-local scratch array used only by the inner-shadow color helper",
+      "diagnostic": "scratch_edge is redefined when the effects-wgpu aggregate includes both inner-glow and inner-shadow modules",
+      "defect": "The emitter places module-local bindings directly in the shared package namespace without a module-unique spelling, so identically named private bindings from separate source files collide in aggregate headers.",
+      "expectedWhen": "always",
+      "expires": "when file-local emitted bindings receive module-unique linkage or spelling; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-inner-glow-module-helper-name",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_wgpu/wgpu_inner_glow_effect.hpp",
+      "from": "get_invert_tint_edge_color",
+      "to": "get_inner_glow_invert_tint_edge_color",
+      "sourceDeclaration": "packages/effects-wgpu/src/wgpuInnerGlowEffect.ts -- getInvertTintEdgeColor is a file-local helper used only by the inner-glow implementation",
+      "diagnostic": "get_invert_tint_edge_color is redefined when the effects-wgpu aggregate includes both inner-glow and inner-shadow modules",
+      "defect": "The emitter places module-local helpers directly in the shared package namespace without a module-unique spelling, so identically named private functions from separate source files collide in aggregate headers.",
+      "expectedWhen": "always",
+      "expires": "when file-local emitted helpers receive module-unique linkage or spelling; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-inner-shadow-module-helper-name",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_wgpu/wgpu_inner_shadow_effect.hpp",
+      "from": "get_invert_tint_edge_color",
+      "to": "get_inner_shadow_invert_tint_edge_color",
+      "sourceDeclaration": "packages/effects-wgpu/src/wgpuInnerShadowEffect.ts -- getInvertTintEdgeColor is a file-local helper used only by the inner-shadow implementation",
+      "diagnostic": "get_invert_tint_edge_color is redefined when the effects-wgpu aggregate includes both inner-glow and inner-shadow modules",
+      "defect": "The emitter places module-local helpers directly in the shared package namespace without a module-unique spelling, so identically named private functions from separate source files collide in aggregate headers.",
+      "expectedWhen": "always",
+      "expires": "when file-local emitted helpers receive module-unique linkage or spelling; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-quad-transform-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/render_wgpu/wgpu_texture_render_target.hpp",
+      "symbol": "draw_wgpu_quad_with_transform",
+      "declaration": "namespace flight::types { struct WgpuRenderState; struct WgpuTextureEntry; } namespace flight::render_wgpu { template <typename RenderProxy, typename Transform> inline void draw_wgpu_quad_with_transform(flight::Ref<flight::types::WgpuRenderState> state, RenderProxy render_proxy, Transform transform, flight::Ref<flight::types::WgpuTextureEntry> texture_entry, double x0, double y0, double x1, double y1, double u0, double v0, double u1, double v1); }",
+      "diagnostic": "draw_wgpu_quad_with_transform is not a member of flight::render_wgpu",
+      "defect": "The WGPU draw module is wholly refused at unavailable browser image bindings, but the independently emitted texture-render-target module retains its call to this declared draw boundary.",
+      "expectedWhen": "always",
+      "expires": "when wgpuDraw emits for the native profile or callers of its refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-wgpu-never-assertion-preserves-argument",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render_wgpu/wgpu_texture_render_target.hpp",
+      "from": "static_cast<void>(render_proxy)",
+      "to": "render_proxy",
+      "sourceDeclaration": "packages/render-wgpu/src/wgpuTextureRenderTarget.ts -- renderProxy as never is a TypeScript-only assertion passed unchanged to drawWgpuQuadWithTransform",
+      "diagnostic": "invalid use of void expression at draw_wgpu_quad_with_transform",
+      "defect": "The emitter lowers a TypeScript never assertion to a C++ cast-to-void expression, discarding the argument instead of preserving the source value through the static assertion.",
+      "expectedWhen": "always",
+      "expires": "when TypeScript never assertions erase without changing the emitted value expression; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-refused-default-runner-declarations",
+      "kind": "declare-refused-effect-runners",
+      "appliesTo": "flight/effects_",
+      "sourceDeclaration": "packages/effects-canvas/src/*Effect.ts and packages/effects-wgpu/src/*Effect.ts -- each register*Effect function passes its exported default*EffectRunner callback",
+      "diagnostic": "default_canvas_*_effect_runner or default_wgpu_*_effect_runner was not declared in this scope",
+      "defect": "The emitter refuses the exported default runner bindings at structural RenderEffect-to-concrete-effect assertions but retains the public registration functions that pass those exact callback boundaries.",
+      "expectedWhen": "always",
+      "expires": "when the default Canvas and WGPU effect runners emit or callers of refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
     },
     {
       "id": "effects-refused-padding-resolver-declarations",

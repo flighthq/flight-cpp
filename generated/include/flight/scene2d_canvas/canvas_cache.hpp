@@ -16,6 +16,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/node/bounds_rectangle_access.hpp>
+
 #include <flight/render/renderer.hpp>
 
 #include <flight/render/render_target.hpp>
@@ -27,8 +29,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/geometry/rectangle.hpp>
 
 #include <flight/geometry/matrix.hpp>
-
-#include <flight/effects_canvas/canvas_effect_test_support.hpp>
 
 #include <flight/types/scene2_drenderer.hpp>
 
@@ -67,6 +67,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d_canvas {
 
+using flight::node::compute_node_bounds_rectangle;
+
+inline void draw_canvas_render_cache(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy);
+
+inline const auto& create_canvas_texture_render_target = flight::scene2d_canvas::create_canvas_texture_render_target_flight_value_function_create_u000043_anvas_u000054_exture_u000052_ender_u000054_arget_flight_source_572fee2374c05737;
+
 using flight::render::compute_render_cache_transform;
 using flight::render::compute_render_target_size;
 using flight::render::compute_scene2_drender_target_transform;
@@ -76,8 +82,6 @@ using flight::render::register_render_cache_renderer;
 
 using flight::geometry::create_matrix;
 using flight::geometry::create_rectangle;
-
-using flight::effects_canvas::create_canvas_texture_render_target;
 
 using flight::types::CanvasRenderPass;
 using flight::types::CanvasRenderState;
@@ -184,7 +188,7 @@ inline void destroy_canvas_render_cache_target(flight::Ref<CanvasRenderState> st
 }
 
 inline flight::Ref<CanvasTextureRenderTarget> ensure_canvas_render_cache_target(flight::Ref<CanvasRenderState> state, flight::Ref<RenderCache> cache, double width, double height) {
-  flight::Ref<CanvasRenderSurfaceCreator> creator = get_canvas_surface_creator(state);
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CanvasRenderSurfaceCreator>>>> creator = get_canvas_surface_creator(state);
   flight::Map<flight::Ref<RenderCache>, flight::Ref<CanvasTextureRenderTarget>> targets = get_targets(state);
   std::optional<flight::Ref<CanvasTextureRenderTarget>> target = targets.get(cache);
   if (!target.has_value()) {
@@ -222,7 +226,7 @@ inline flight::Ref<CanvasTextureRenderTarget> ensure_canvas_render_cache_target(
 // recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
 // invent side storage
 
-inline flight::Ref<Scene2DRenderer> default_canvas_render_cache_renderer = flight::make_ref<Scene2DRenderer>(Scene2DRenderer{.create_data = noop_renderer_data, .submit = draw_canvas_render_cache});
+inline flight::Ref<Scene2DRenderer> default_canvas_render_cache_renderer = flight::make_ref<Scene2DRenderer>(Scene2DRenderer{.create_data = [](flight::Ref<flight::types::RenderState>, flight::types::Node2D) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }, .submit = draw_canvas_render_cache});
 
 inline void enable_canvas_render_cache(flight::Ref<RenderState> state) {
   register_render_cache_renderer(state, default_canvas_render_cache_renderer);
@@ -234,10 +238,7 @@ inline flight::Ref<Matrix> render_transform = create_matrix(std::nullopt, std::n
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_WIDTH_HEIGHT_6A2B928B7D011B27
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_WIDTH_HEIGHT_6A2B928B7D011B27
-struct width_height_6a2b928b7d011b27 : public flight::ReferenceEnabled {
-  double width;
-  double height;
-};
+using width_height_6a2b928b7d011b27 = flight::render::width_height_6a2b928b7d011b27;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_WIDTH_HEIGHT_6A2B928B7D011B27
 
 inline flight::Ref<width_height_6a2b928b7d011b27> target_size = flight::make_ref<width_height_6a2b928b7d011b27>(width_height_6a2b928b7d011b27{.width = 0.0, .height = 0.0});

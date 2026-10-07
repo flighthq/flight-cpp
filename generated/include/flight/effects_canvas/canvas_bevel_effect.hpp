@@ -17,6 +17,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BevelEffect; struct CanvasRenderTargetPool; struct CanvasTextureRenderTarget; } namespace flight::effects_canvas { inline void apply_bevel_effect_to_canvas_with_pool(flight::Ref<flight::types::CanvasTextureRenderTarget> source, flight::Ref<flight::types::CanvasTextureRenderTarget> dest, flight::Ref<flight::types::CanvasRenderTargetPool> pool, flight::Ref<flight::types::BevelEffect> effect); }
+
 #include <flight/types/canvas_render_target.hpp>
 
 #include <flight/types/canvas_render_state.hpp>
@@ -31,6 +33,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/effects_canvas/canvas_source_mode_compositing.hpp>
 
 namespace flight::effects_canvas {
+
+extern const flight::types::CanvasRenderEffectRunner default_canvas_bevel_effect_runner;
 
 using flight::types::BevelEffect;
 using flight::types::CanvasRenderState;
@@ -147,7 +151,7 @@ using flight::types::CanvasTextureRenderTarget;
 
 inline void apply_bevel_effect_to_canvas(flight::Ref<CanvasTextureRenderTarget> source, flight::Ref<CanvasTextureRenderTarget> dest, std::variant<flight::Ref<CanvasRenderTargetPool>, flight::Ref<BevelEffect>> pool_or_effect, std::optional<flight::Ref<BevelEffect>> maybe_effect = std::nullopt) {
   flight::Ref<BevelEffect> effect = (maybe_effect.has_value() ? maybe_effect.value() : std::get<flight::Ref<BevelEffect>>(pool_or_effect));
-  flight::Ref<CanvasRenderTargetPool> pool = (!maybe_effect.has_value() ? create_canvas_texture_render_target_pool(source->surface.creator) : std::get<flight::Ref<CanvasRenderTargetPool>>(pool_or_effect));
+  flight::Ref<CanvasRenderTargetPool> pool = (!maybe_effect.has_value() ? create_canvas_texture_render_target_pool(source->surface->creator) : std::get<flight::Ref<CanvasRenderTargetPool>>(pool_or_effect));
   apply_bevel_effect_to_canvas_with_pool(source, dest, pool, effect);
 }
 

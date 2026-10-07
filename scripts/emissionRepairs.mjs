@@ -26,6 +26,7 @@ const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration',
   'project-symbol-keyed-member',
   'flatten-nested-optional-array-read',
   'declare-refused-effect-padding-resolvers',
+  'declare-refused-effect-runners',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -70,6 +71,7 @@ const REQUIRED_FIELDS = {
   'project-symbol-keyed-member': [...SHARED_FIELDS, 'symbol', 'member', 'sourceDeclaration'],
   'flatten-nested-optional-array-read': [...SHARED_FIELDS, 'sourceDeclaration'],
   'declare-refused-effect-padding-resolvers': [...SHARED_FIELDS, 'sourceDeclaration'],
+  'declare-refused-effect-runners': [...SHARED_FIELDS, 'sourceDeclaration'],
 };
 
 export function loadEmissionRepairs(root) {
@@ -141,6 +143,18 @@ export function loadEmissionRepairs(root) {
     if (repair.kind === 'respell-reference-alias' && !EXPANSIONS.has(repair.expansion)) {
       throw new Error(`Emission repair ${repair.id} has unknown expansion ${repair.expansion}`);
     }
+    for (const field of ['requiredText']) {
+      if (repair[field] !== undefined && (typeof repair[field] !== 'string' || repair[field].length === 0)) {
+        throw new Error(`Emission repair ${repair.id} has an invalid optional field ${field}`);
+      }
+    }
+    if (
+      repair.kind === 'alias-anonymous-struct-to-named' &&
+      repair.replacementNamespace !== undefined &&
+      (typeof repair.replacementNamespace !== 'string' || repair.replacementNamespace.length === 0)
+    ) {
+      throw new Error(`Emission repair ${repair.id} has an invalid optional field replacementNamespace`);
+    }
     repair.expectedWhen ??= 'always';
     if (!EXPECTATIONS.has(repair.expectedWhen)) {
       throw new Error(`Emission repair ${repair.id} has unknown expectedWhen ${repair.expectedWhen}`);
@@ -203,7 +217,48 @@ const HANDLERS = {
   'project-symbol-keyed-member': projectSymbolKeyedMember,
   'flatten-nested-optional-array-read': flattenNestedOptionalArrayRead,
   'declare-refused-effect-padding-resolvers': declareRefusedEffectPaddingResolvers,
+  'declare-refused-effect-runners': declareRefusedEffectRunners,
 };
+
+// Canvas and WGPU effect modules retain their public registration function after the emitter refuses
+// the default runner binding at a concrete RenderEffect downcast. The registration is valid partial
+// output, but C++ still needs the refused callback boundary declared. The retained call supplies the
+// exact emitted symbol, and the source excerpt supplies the declared callback family, so this repair
+// does not invent a callable signature or wildcard unrelated missing bindings.
+function declareRefusedEffectRunners(contents) {
+  if (
+    !/\/\/ NOT GENERATED: variable \(binding\)[\s\S]*?export const default(?:Canvas|Wgpu)[A-Za-z0-9]+EffectRunner: (?:Canvas|Wgpu)RenderEffectRunner\b/u.test(
+      contents,
+    )
+  ) {
+    return undefined;
+  }
+  const names = [
+    ...new Map(
+      [...contents.matchAll(/\b(default_(canvas|wgpu)_[a-z0-9_]+_effect_runner)\b/gu)].map(
+        (match) => [match[1], [match[1], match[2]]],
+      ),
+    ).values(),
+  ].filter(
+    ([name]) =>
+      !new RegExp(`\\b${name}\\s*=`, 'u').test(contents) &&
+      !new RegExp(`\\bextern\\s+const[\\s\\S]{0,160}\\b${name}\\s*;`, 'u').test(contents),
+  );
+  if (names.length === 0) return undefined;
+
+  const families = new Set(names.map(([, family]) => family));
+  if (families.size !== 1) return undefined;
+  const family = names[0][1];
+  const namespace = family === 'canvas' ? 'effects_canvas' : 'effects_wgpu';
+  const type = family === 'canvas' ? 'CanvasRenderEffectRunner' : 'WgpuRenderEffectRunner';
+  const anchor = new RegExp(`^namespace flight::${namespace} \\{\\n`, 'mu').exec(contents);
+  if (anchor === null) return undefined;
+  const declarations = names
+    .map(([name]) => `extern const flight::types::${type} ${name};`)
+    .join('\n');
+  const at = anchor.index + anchor[0].length;
+  return `${contents.slice(0, at)}\n${declarations}\n${contents.slice(at)}`;
+}
 
 // A family of effect modules registers a private padding resolver after the emitter has refused that
 // resolver's body at the same structural downcast. The retained registration is valid partial output,
@@ -271,6 +326,7 @@ function applyOneRound(repairs, files, applied) {
     for (const [index, repair] of repairs.entries()) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
+      if (repair.requiredText !== undefined && !contents.includes(repair.requiredText)) continue;
       const handler = HANDLERS[repair.kind] ?? insertForwardDeclaration;
       const repaired = handler(contents, repair);
       if (repaired === undefined) continue;
@@ -360,9 +416,10 @@ function aliasAnonymousStructToNamed(contents, repair) {
   if (hoisted === undefined) return undefined;
   const again = guard.exec(hoisted);
   if (again === null) return undefined;
+  const replacementNamespace = repair.replacementNamespace ?? 'flight::types';
   return (
     hoisted.slice(0, again.index) +
-    `${again[1]}using ${repair.symbol} = flight::types::${repair.replacement};\n${again[3]}` +
+    `${again[1]}using ${repair.symbol} = ${replacementNamespace}::${repair.replacement};\n${again[3]}` +
     hoisted.slice(again.index + again[0].length)
   );
 }
@@ -970,7 +1027,14 @@ function insertUsingDeclaration(contents, repair) {
   if (repair.symbols !== undefined) return insertUsingDeclarations(contents, repair);
   const { symbol } = repair;
   // Unqualified use only. A file that always writes types::X is already correct.
-  if (!new RegExp(`(?<!types::)\\b${symbol}\\b`, 'u').test(contents)) return undefined;
+  // As with forward declarations, a wholly refused exported binding can be witnessed only by its
+  // exact NOT GENERATED marker; requiredText is checked by the dispatcher before this handler.
+  if (
+    !new RegExp(`(?<!types::)\\b${symbol}\\b`, 'u').test(contents) &&
+    repair.requiredText === undefined
+  ) {
+    return undefined;
+  }
   if (contents.includes(repair.declaration)) return undefined;
   // The declaration needs the name to EXIST, and the emitter does not always include the header that
   // defines it -- flight/log/log.hpp names four flight::types aliases and includes none of them, so a
@@ -1018,7 +1082,10 @@ function insertForwardDeclaration(contents, repair) {
   // The emitter writes the name both qualified and bare -- a header inside namespace flight::types
   // says `Ref<Node<Any>>`, a sibling says `flight::types::Node<...>` -- so the reference test is
   // unqualified. Word boundaries keep it off longer names: \bNode\b does not match Node2D or NodeData.
-  const names = new RegExp(`\\b${symbol}\\b`).test(contents);
+  // A wholly refused exported function has no emitted snake-case reference in its own header; its
+  // NOT GENERATED marker is the only local witness. Such repairs provide requiredText, which the
+  // shared dispatcher has already matched exactly before this handler runs.
+  const names = new RegExp(`\\b${symbol}\\b`).test(contents) || repair.requiredText !== undefined;
   if (!names) return undefined;
   const declares = new RegExp(`\\bstruct ${symbol}\\s*[;:{]`).test(contents);
   if (declares) return undefined;

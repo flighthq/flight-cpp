@@ -35,11 +35,21 @@ struct WgpuObjectCallbacks final {
   WgpuObjectRelease release{nullptr};
 };
 
+// maxTextureDimension2D is required on GPUDevice.limits. 8192 is WebGPU's portable baseline;
+// providers can publish a larger value when adopting a device or adapter.
+struct WgpuSupportedLimits final {
+  double max_texture_dimension2_d{8192.0};
+
+  [[nodiscard]] friend bool operator==(const WgpuSupportedLimits&,
+                                       const WgpuSupportedLimits&) noexcept = default;
+};
+
 namespace detail {
 
 struct WgpuObjectState final {
-  WgpuObjectState(void* native_object, WgpuObjectCallbacks native_callbacks)
-      : object(native_object), callbacks(native_callbacks) {}
+  WgpuObjectState(void* native_object, WgpuObjectCallbacks native_callbacks,
+                  WgpuSupportedLimits native_limits)
+      : object(native_object), callbacks(native_callbacks), limits(std::move(native_limits)) {}
 
   ~WgpuObjectState() noexcept {
     if (object != nullptr && callbacks.release != nullptr) {
@@ -52,6 +62,7 @@ struct WgpuObjectState final {
 
   void* object;
   WgpuObjectCallbacks callbacks;
+  WgpuSupportedLimits limits;
 };
 
 } // namespace detail
@@ -74,6 +85,7 @@ struct WgpuSamplerTag;
 struct WgpuShaderModuleTag;
 struct WgpuTextureTag;
 struct WgpuTextureViewTag;
+struct WgpuTextureDescriptor;
 
 namespace detail {
 
@@ -96,13 +108,16 @@ class WgpuObject final {
   WgpuObject() noexcept = default;
 
   queue_type queue;
+  WgpuSupportedLimits limits;
 
-  [[nodiscard]] static WgpuObject adopt(void* object, WgpuObjectCallbacks callbacks) {
+  [[nodiscard]] static WgpuObject adopt(void* object, WgpuObjectCallbacks callbacks,
+                                        WgpuSupportedLimits limits = {}) {
     if (object == nullptr) throw std::invalid_argument("WebGPU object cannot be null");
     if (callbacks.release == nullptr) {
       throw std::invalid_argument("WebGPU object requires a release callback");
     }
-    return WgpuObject(std::make_shared<detail::WgpuObjectState>(object, callbacks));
+    return WgpuObject(
+        std::make_shared<detail::WgpuObjectState>(object, callbacks, std::move(limits)));
   }
 
   [[nodiscard]] explicit operator bool() const noexcept { return state_ != nullptr; }
@@ -170,6 +185,9 @@ class WgpuObject final {
   [[nodiscard]] WgpuObject<WgpuTextureTag> create_texture(Arguments&&...) const {
     return unavailable<WgpuTextureTag>("createTexture");
   }
+
+  [[nodiscard]] WgpuObject<WgpuTextureTag> create_texture(WgpuTextureDescriptor descriptor) const
+    requires std::same_as<Tag, WgpuDeviceTag>;
 
   template <typename... Arguments>
     requires std::same_as<Tag, WgpuTextureTag>
@@ -249,7 +267,7 @@ class WgpuObject final {
   }
 
   explicit WgpuObject(std::shared_ptr<detail::WgpuObjectState> state) noexcept
-      : state_(std::move(state)) {}
+      : limits(state->limits), state_(std::move(state)) {}
 
   std::shared_ptr<detail::WgpuObjectState> state_;
 };
@@ -312,10 +330,6 @@ using WgpuSampler = WgpuObject<WgpuSamplerTag>;
 using WgpuShaderModule = WgpuObject<WgpuShaderModuleTag>;
 using WgpuTexture = WgpuObject<WgpuTextureTag>;
 using WgpuTextureView = WgpuObject<WgpuTextureViewTag>;
-
-struct WgpuSupportedLimits final {
-  std::optional<double> max_texture_dimension2_d;
-};
 
 class WgpuAdapter final {
  public:
@@ -566,6 +580,14 @@ struct WgpuTextureDescriptor final {
   std::optional<String> texture_binding_view_dimension;
   std::optional<String> label;
 };
+
+template <typename Tag>
+inline WgpuObject<WgpuTextureTag> WgpuObject<Tag>::create_texture(
+    WgpuTextureDescriptor) const
+  requires std::same_as<Tag, WgpuDeviceTag>
+{
+  return unavailable<WgpuTextureTag>("createTexture");
+}
 
 struct WgpuDeviceLostInfo final {
   String message;

@@ -23,6 +23,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_wgpu {
 
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_median_effect_runner;
+
 using flight::types::WgpuRenderState;
 
 inline const double max_median_effect_wgpu_radius = 2.0;

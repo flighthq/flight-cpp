@@ -28,6 +28,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_canvas {
 
+extern const flight::types::CanvasRenderEffectRunner default_canvas_bloom_effect_runner;
+
 using flight::types::BloomEffect;
 using flight::types::CanvasRenderState;
 using flight::types::CanvasRenderTargetPool;
@@ -67,7 +69,7 @@ inline void apply_bloom_effect_to_canvas(flight::Ref<CanvasTextureRenderTarget> 
     draw_canvas_effect_pass(blurred, bright, flight::String("none"));
   }
   draw_canvas_effect_pass(dest, source, flight::String("none"));
-  flight::Uint8ClampedArray bloom = blurred->context.get_image_data(0.0, 0.0, blurred->width, blurred->height, std::nullopt).data;
+  flight::Uint8ClampedArray bloom = blurred->context.get_image_data(0.0, 0.0, blurred->width, blurred->height).data;
   draw_canvas_image_data_pass(dest, dest, [=](flight::Uint8ClampedArray data, double pixel_count) {
   {
     double pixel = 0.0;

@@ -30,6 +30,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_canvas {
 
+extern const flight::types::CanvasRenderEffectRunner default_canvas_inner_shadow_effect_runner;
+
 using flight::types::CanvasRenderState;
 using flight::types::CanvasRenderTargetPool;
 using flight::types::CanvasTextureRenderTarget;
@@ -69,7 +71,7 @@ inline void apply_inner_shadow_effect_to_canvas_with_pool(flight::Ref<CanvasText
 
 inline void apply_inner_shadow_effect_to_canvas(flight::Ref<CanvasTextureRenderTarget> source, flight::Ref<CanvasTextureRenderTarget> dest, std::variant<flight::Ref<CanvasRenderTargetPool>, flight::Ref<InnerShadowEffect>> pool_or_effect, std::optional<flight::Ref<InnerShadowEffect>> maybe_effect = std::nullopt) {
   flight::Ref<InnerShadowEffect> effect = (maybe_effect.has_value() ? maybe_effect.value() : std::get<flight::Ref<InnerShadowEffect>>(pool_or_effect));
-  flight::Ref<CanvasRenderTargetPool> pool = (!maybe_effect.has_value() ? create_canvas_texture_render_target_pool(source->surface.creator) : std::get<flight::Ref<CanvasRenderTargetPool>>(pool_or_effect));
+  flight::Ref<CanvasRenderTargetPool> pool = (!maybe_effect.has_value() ? create_canvas_texture_render_target_pool(source->surface->creator) : std::get<flight::Ref<CanvasRenderTargetPool>>(pool_or_effect));
   apply_inner_shadow_effect_to_canvas_with_pool(source, dest, pool, effect);
 }
 

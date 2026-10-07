@@ -13,12 +13,18 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct WgpuRenderState; struct WgpuTextureEntry; } namespace flight::render_wgpu { template <typename RenderProxy, typename Transform> inline void draw_wgpu_quad_with_transform(flight::Ref<flight::types::WgpuRenderState> state, RenderProxy render_proxy, Transform transform, flight::Ref<flight::types::WgpuTextureEntry> texture_entry, double x0, double y0, double x1, double y1, double u0, double v0, double u1, double v1); }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/render_wgpu/wgpu_draw.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 
 namespace flight::render_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline void destroy_wgpu_texture_render_target(flight::Ref<flight::types::WgpuTextureRenderTarget> target) {
   target->texture.destroy();
@@ -69,7 +75,7 @@ inline void draw_wgpu_texture_render_target_result(flight::Ref<flight::types::Wg
   const double ttx = flight::row_get<flight::RowKey<"tx">>(object_pattern_value_2);
   const double tty = flight::row_get<flight::RowKey<"ty">>(object_pattern_value_2);
   flight::Ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5> composed_transform = flight::make_ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5>(a_b_c_d_tx_ty_d975cba1d9c9e6b5{.a = ((a * ta) + (c * tb)), .b = ((b * ta) + (d * tb)), .c = ((a * tc) + (c * td)), .d = ((b * tc) + (d * td)), .tx = (((a * ttx) + (c * tty)) + tx), .ty = (((b * ttx) + (d * tty)) + ty)});
-  flight::render_wgpu::draw_wgpu_quad_with_transform(state, static_cast<void>(render_proxy), composed_transform, ([=]() {
+  flight::render_wgpu::draw_wgpu_quad_with_transform(state, render_proxy, composed_transform, ([=]() {
   flight::types::EntityConstruction<flight::Ref<flight::types::WgpuTextureEntry>> out = flight::entity::allocate_entity<flight::Ref<flight::types::WgpuTextureEntry>>();
   flight::row_set<flight::RowKey<"bindings">>(out, flight::row_get<flight::RowKey<"bindings">>(target));
   flight::row_set<flight::RowKey<"mipLevelCount">>(out, flight::row_get<flight::RowKey<"mipLevelCount">>(target));

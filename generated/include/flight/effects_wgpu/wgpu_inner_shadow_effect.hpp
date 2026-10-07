@@ -17,6 +17,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/render_wgpu/wgpu_render_target_pool.hpp>
+
+#include <flight/types/inner_shadow_effect.hpp>
+
+#include <flight/color/pack_color.hpp>
+
+#include <flight/types/wgpu_render_target.hpp>
+
 #include <flight/types/wgpu_render_state.hpp>
 
 #include <flight/effects_wgpu/wgpu_effect_blit_shader.hpp>
@@ -27,23 +35,30 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_wgpu {
 
+using flight::render_wgpu::acquire_wgpu_texture_render_target;
+using flight::render_wgpu::release_wgpu_texture_render_target;
+
+using flight::types::InnerShadowEffect;
+
+using flight::color::unpack_color_rgba;
+
+using flight::types::WgpuRenderTargetPool;
+
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_inner_shadow_effect_runner;
+
 using flight::types::WgpuRenderState;
 
-inline flight::Array<double> scratch_edge = flight::Array<double>{0.0, 0.0, 0.0, 0.0};
+inline flight::Array<double> inner_shadow_edge_rgba = flight::Array<double>{0.0, 0.0, 0.0, 0.0};
 
-inline flight::Array<double> get_invert_tint_edge_color(double color, double alpha, double strength) {
-  unpack_color_rgba(scratch_edge, color);
-  const double edge_alpha = flight::minimum(1.0, ((alpha * scratch_edge.element(3.0)) * strength));
-  return flight::Array<double>{(scratch_edge.element(0.0) * edge_alpha), (scratch_edge.element(1.0) * edge_alpha), (scratch_edge.element(2.0) * edge_alpha), edge_alpha};
+inline flight::Array<double> get_inner_shadow_invert_tint_edge_color(double color, double alpha, double strength) {
+  unpack_color_rgba(inner_shadow_edge_rgba, color);
+  const double edge_alpha = flight::minimum(1.0, ((alpha * inner_shadow_edge_rgba.element(3.0)) * strength));
+  return flight::Array<double>{(inner_shadow_edge_rgba.element(0.0) * edge_alpha), (inner_shadow_edge_rgba.element(1.0) * edge_alpha), (inner_shadow_edge_rgba.element(2.0) * edge_alpha), edge_alpha};
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
-struct width_height_format_3e01490122355edd : public flight::ReferenceEnabled {
-  double width;
-  double height;
-  flight::String format;
-};
+using width_height_format_3e01490122355edd = flight::render_wgpu::width_height_format_color_space_sample_count_d7147b6683ba8eda;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_BLUR_X_BLUR_Y_PASSES_EDGE_COLOR_4494165180BBAC95
@@ -71,9 +86,9 @@ inline void apply_inner_shadow_effect_to_wgpu(flight::Ref<WgpuRenderState> state
   const double alpha = effect->alpha.value_or(1.0);
   const double strength = effect->strength.value_or(1.0);
   const double quality = flight::maximum(1.0, flight::round(effect->quality.value_or(1.0)));
-  std::variant<flight::Ref<InnerEffectSourceMode>, flight::String> source_mode = std::variant<flight::Ref<InnerEffectSourceMode>, flight::String>{std::in_place_type<flight::String>, effect->source_mode.value_or(flight::String("draw"))};
+  flight::String source_mode = effect->source_mode.value_or(flight::String("draw"));
   apply_wgpu_effect_invert_tint_pass(state, src, s0, color, alpha, strength);
-  apply_wgpu_effect_box_blur(state, s0, s1, s2, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<blur_x_blur_y_passes_edge_color_4494165180bbac95>>>>(flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{effect->blur_x.value_or(4.0)}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{effect->blur_y.value_or(4.0)}), flight::row_field<flight::RowKey<"edgeColor">>(std::optional<flight::Array<double>>{get_invert_tint_edge_color(color, alpha, strength)}), flight::row_field<flight::RowKey<"passes">>(std::optional<double>{quality})));
+  apply_wgpu_effect_box_blur(state, s0, s1, s2, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<blur_x_blur_y_passes_edge_color_4494165180bbac95>>>>(flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{effect->blur_x.value_or(4.0)}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{effect->blur_y.value_or(4.0)}), flight::row_field<flight::RowKey<"edgeColor">>(std::optional<flight::Array<double>>{get_inner_shadow_invert_tint_edge_color(color, alpha, strength)}), flight::row_field<flight::RowKey<"passes">>(std::optional<double>{quality})));
   apply_wgpu_effect_blit_offset_pass(state, s1, s0, dx, dy);
   apply_wgpu_effect_inner_clip_pass(state, s0, src, s1);
   clear_wgpu_effect_target(state, dst);

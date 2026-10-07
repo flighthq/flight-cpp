@@ -22,6 +22,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_target.hpp>
+
 #include <flight/types/wgpu_render_state.hpp>
 
 #include <flight/effects_wgpu/wgpu_bitmap_displacement_effect.hpp>
@@ -33,6 +35,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/effects_wgpu/wgpu_render_effect_registry.hpp>
 
 namespace flight::effects_wgpu {
+
+using flight::types::WgpuRenderTargetPool;
+
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_gradient_glow_effect_runner;
 
 using flight::types::WgpuRenderState;
 

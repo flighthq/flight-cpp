@@ -22,7 +22,7 @@ inline void apply_canvas_blend_mode(flight::Ref<flight::types::CanvasRenderState
     return;
   }
   (runtime->current_blend_mode = value);
-  (state->context.global_composite_operation = ([&]() -> flight::String { auto nullish_coalesce_left = (value.has_value() ? canvas_blend_mode.get(std::optional<flight::String>{value.value()}.value()).value() : nullptr); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("source-over"); }()));
+  (state->context.global_composite_operation = ([&]() -> flight::String { auto nullish_coalesce_left = (value.has_value() ? canvas_blend_mode.get(std::optional<flight::String>{value.value()}.value()).value() : std::nullopt); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("source-over"); }()));
 }
 
 inline void enable_canvas_blend_mode(flight::Ref<flight::types::CanvasRenderState> state) {

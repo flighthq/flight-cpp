@@ -17,6 +17,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/render_wgpu/wgpu_render_target_pool.hpp>
+
+#include <flight/types/drop_shadow_effect.hpp>
+
+#include <flight/types/wgpu_render_target.hpp>
+
 #include <flight/types/wgpu_render_state.hpp>
 
 #include <flight/effects_wgpu/wgpu_effect_blit_shader.hpp>
@@ -27,15 +33,20 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_wgpu {
 
+using flight::render_wgpu::acquire_wgpu_texture_render_target;
+using flight::render_wgpu::release_wgpu_texture_render_target;
+
+using flight::types::DropShadowEffect;
+
+using flight::types::WgpuRenderTargetPool;
+
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_drop_shadow_effect_runner;
+
 using flight::types::WgpuRenderState;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
-struct width_height_format_3e01490122355edd : public flight::ReferenceEnabled {
-  double width;
-  double height;
-  flight::String format;
-};
+using width_height_format_3e01490122355edd = flight::render_wgpu::width_height_format_color_space_sample_count_d7147b6683ba8eda;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_BLUR_X_BLUR_Y_PASSES_EDGE_COLOR_4494165180BBAC95
@@ -63,7 +74,7 @@ inline void apply_drop_shadow_effect_to_wgpu(flight::Ref<WgpuRenderState> state,
   const double alpha = effect->alpha.value_or(1.0);
   const double strength = effect->strength.value_or(1.0);
   const double quality = flight::maximum(1.0, flight::round(effect->quality.value_or(1.0)));
-  std::variant<flight::Ref<EffectSourceMode>, flight::String> source_mode = std::variant<flight::Ref<EffectSourceMode>, flight::String>{std::in_place_type<flight::String>, effect->source_mode.value_or(flight::String("draw"))};
+  flight::String source_mode = effect->source_mode.value_or(flight::String("draw"));
   const double tint_strength = flight::minimum(1.0, strength);
   const double shadow_passes = flight::maximum(1.0, std::floor(strength));
   apply_wgpu_effect_tint_pass(state, src, mask, color, alpha, tint_strength);
@@ -82,7 +93,7 @@ inline void apply_drop_shadow_effect_to_wgpu(flight::Ref<WgpuRenderState> state,
     apply_wgpu_effect_erase_pass(state, src, dst);
   }
   else {
-    if ((std::get<1>(source_mode) == flight::String("draw"))) {
+    if ((source_mode == flight::String("draw"))) {
       apply_wgpu_effect_blit_pass(state, src, dst);
     }
   }

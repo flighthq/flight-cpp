@@ -28,9 +28,8 @@ struct on_prepare_23aa797e79ba8482 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ON_PREPARE_23AA797E79BA8482
 
-struct RenderCacheAdapter : public flight::ReferenceEnabled {
+struct RenderCacheAdapter : public RenderProxyAdapter {
   std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;
-  std::function<std::optional<bool>(flight::Ref<flight::types::RenderState>, flight::types::Renderable, flight::Ref<flight::types::RenderProxy2D>)> adapt;
   std::optional<flight::Ref<flight::types::RenderCache>> cache;
   std::optional<flight::Ref<on_prepare_23aa797e79ba8482>> signals;
 };

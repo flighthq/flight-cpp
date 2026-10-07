@@ -1266,14 +1266,17 @@ int main() {
   {
     auto device = flight::host_sdl::WgpuDevice::adopt(
         &object_state,
-        flight::host_sdl::WgpuObjectCallbacks{&object_state, release_wgpu_object});
+        flight::host_sdl::WgpuObjectCallbacks{&object_state, release_wgpu_object},
+        flight::host_sdl::WgpuSupportedLimits{16'384.0});
     const auto alias = device;
     weak_device = device.weaken();
+    const auto locked = flight::host_sdl::WgpuDeviceWeakPolicy::lock(weak_device);
     expect(
         alias == device && device.identity() == alias.identity() &&
             device.native_handle() == &object_state &&
-            flight::host_sdl::WgpuDeviceWeakPolicy::lock(weak_device).has_value(),
-        "WGPU object carrier lost shared native identity");
+            device.limits.max_texture_dimension2_d == 16'384.0 && locked.has_value() &&
+            locked->limits.max_texture_dimension2_d == 16'384.0,
+        "WGPU object carrier lost shared native identity or provider limits");
   }
   expect(
       object_state.releases == 1 && !flight::host_sdl::WgpuDevice::lock_weak(weak_device),

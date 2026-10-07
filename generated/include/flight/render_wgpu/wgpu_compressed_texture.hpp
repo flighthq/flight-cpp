@@ -30,6 +30,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::render_wgpu {
 
+using flight::types::WgpuTextureBindings;
+
 using flight::types::WgpuRenderState;
 struct WgpuCompressedFormatInfo;
 } // namespace flight::render_wgpu

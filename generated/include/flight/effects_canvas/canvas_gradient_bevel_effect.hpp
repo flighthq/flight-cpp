@@ -15,6 +15,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CanvasTextureRenderTarget; } namespace flight::effects_canvas { inline void clip_canvas_bevel_band(flight::Ref<flight::types::CanvasTextureRenderTarget> band, flight::Ref<flight::types::CanvasTextureRenderTarget> source, std::optional<flight::String> bevel_type); }
+
 #include <flight/types/gradient_bevel_effect.hpp>
 
 #include <flight/types/canvas_render_target.hpp>
@@ -31,6 +33,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/effects_canvas/canvas_source_mode_compositing.hpp>
 
 namespace flight::effects_canvas {
+
+extern const flight::types::CanvasRenderEffectRunner default_canvas_gradient_bevel_effect_runner;
 
 using flight::types::CanvasRenderState;
 using flight::types::CanvasRenderTargetPool;
@@ -83,7 +87,7 @@ inline void apply_gradient_bevel_effect_to_canvas_with_pool(flight::Ref<CanvasTe
 
 inline void apply_gradient_bevel_effect_to_canvas(flight::Ref<CanvasTextureRenderTarget> source, flight::Ref<CanvasTextureRenderTarget> dest, std::variant<flight::Ref<CanvasRenderTargetPool>, flight::Ref<GradientBevelEffect>> pool_or_effect, std::optional<flight::Ref<GradientBevelEffect>> maybe_effect = std::nullopt) {
   flight::Ref<GradientBevelEffect> effect = (maybe_effect.has_value() ? maybe_effect.value() : std::get<flight::Ref<GradientBevelEffect>>(pool_or_effect));
-  flight::Ref<CanvasRenderTargetPool> pool = (!maybe_effect.has_value() ? create_canvas_texture_render_target_pool(source->surface.creator) : std::get<flight::Ref<CanvasRenderTargetPool>>(pool_or_effect));
+  flight::Ref<CanvasRenderTargetPool> pool = (!maybe_effect.has_value() ? create_canvas_texture_render_target_pool(source->surface->creator) : std::get<flight::Ref<CanvasRenderTargetPool>>(pool_or_effect));
   apply_gradient_bevel_effect_to_canvas_with_pool(source, dest, pool, effect);
 }
 

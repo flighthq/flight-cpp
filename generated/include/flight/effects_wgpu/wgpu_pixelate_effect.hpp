@@ -21,6 +21,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_wgpu {
 
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_pixelate_effect_runner;
+
 using flight::types::WgpuRenderState;
 
 inline const flight::String pixelate_fragment_wgsl = flight::String("\nstruct Uniforms {\n  u_size : f32,\n  _pad0 : f32,\n  u_resolution : vec2f,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\n@fragment\nfn fs_main(@location(0) uvIn : vec2f) -> @location(0) vec4f {\n  let blocks = uni.u_resolution / uni.u_size;\n  let uv = (floor(uvIn * blocks) + 0.5) / blocks;\n  return textureSampleLevel(tex, smp, uv, 0.0);\n}");

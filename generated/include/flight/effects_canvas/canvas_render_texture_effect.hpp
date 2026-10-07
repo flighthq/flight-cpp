@@ -59,7 +59,7 @@ inline bool apply_canvas_render_effects_to_render_texture(flight::Ref<flight::ty
   if ((static_cast<double>(operations.size()) == 0.0)) {
     return false;
   }
-  const auto current_capture = flight::make_binding_cell(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>>(source_target.value()))});
+  const auto current_capture = flight::make_binding_cell(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasTextureRenderTarget>>>>{source_target.value()});
   {
     double index = 0.0;
     while ((index < static_cast<double>(operations.size()))) {

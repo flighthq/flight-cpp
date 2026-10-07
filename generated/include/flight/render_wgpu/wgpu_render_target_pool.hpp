@@ -19,6 +19,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_target.hpp>
+
+#include <flight/types/render_target.hpp>
+
 #include <flight/types/texture.hpp>
 
 #include <flight/types/wgpu_render_state.hpp>
@@ -26,6 +30,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/render_wgpu/wgpu_texture_render_target.hpp>
 
 namespace flight::render_wgpu {
+
+using flight::types::WgpuRenderTargetPool;
+using flight::types::WgpuTextureRenderTarget;
+
+using flight::types::WgpuTextureBindings;
+
+using flight::types::RenderTargetColorSpace;
 
 using flight::types::WgpuRenderState;
 
@@ -47,22 +58,7 @@ using binding_uid_06e64a362b012722 = flight::types::binding_uid_06e64a362b012722
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_HEIGHT_WIDTH_ENTITY_RUNTIME_KEY_COLOR_ATTACHMENTS_COLOR_SPACE_CONTEXT_DEPTH_STENCIL_TEXTURE_DEPTH_STENCIL_VIEW_FORMAT_SAMPLE_COUNT_BINDINGS_MIP_LEVEL_COUNT_TEXTURE_VIEW_2DA0D4718AA8491D
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_HEIGHT_WIDTH_ENTITY_RUNTIME_KEY_COLOR_ATTACHMENTS_COLOR_SPACE_CONTEXT_DEPTH_STENCIL_TEXTURE_DEPTH_STENCIL_VIEW_FORMAT_SAMPLE_COUNT_BINDINGS_MIP_LEVEL_COUNT_TEXTURE_VIEW_2DA0D4718AA8491D
-struct height_width_entity_runtime_key_color_attachments_color_space_context_depth_stencil_texture_depth_stencil_view_format_sample_count_bindings_mip_level_count_texture_view_2da0d4718aa8491d : public flight::ReferenceEnabled {
-  double height;
-  double width;
-  std::optional<flight::Ref<binding_uid_06e64a362b012722>> entity_runtime_key;
-  double color_attachments;
-  flight::Ref<RenderTargetColorSpace> color_space;
-  flight::Null context;
-  flight::host_sdl::WgpuTexture depth_stencil_texture;
-  flight::host_sdl::WgpuTextureView depth_stencil_view;
-  flight::String format;
-  double sample_count;
-  flight::Ref<WgpuTextureBindings> bindings;
-  double mip_level_count;
-  flight::host_sdl::WgpuTexture texture;
-  flight::host_sdl::WgpuTextureView view;
-};
+using height_width_entity_runtime_key_color_attachments_color_space_context_depth_stencil_texture_depth_stencil_view_format_sample_count_bindings_mip_level_count_texture_view_2da0d4718aa8491d = flight::types::WgpuTextureRenderTarget;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_HEIGHT_WIDTH_ENTITY_RUNTIME_KEY_COLOR_ATTACHMENTS_COLOR_SPACE_CONTEXT_DEPTH_STENCIL_TEXTURE_DEPTH_STENCIL_VIEW_FORMAT_SAMPLE_COUNT_BINDINGS_MIP_LEVEL_COUNT_TEXTURE_VIEW_2DA0D4718AA8491D
 
 inline flight::Ref<WgpuTextureRenderTarget> acquire_wgpu_texture_render_target(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuRenderTargetPool> pool, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<width_height_format_color_space_sample_count_d7147b6683ba8eda>>>> descriptor) {

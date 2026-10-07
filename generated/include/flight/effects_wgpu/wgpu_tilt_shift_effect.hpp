@@ -21,6 +21,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_wgpu {
 
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_tilt_shift_effect_runner;
+
 using flight::types::WgpuRenderState;
 
 inline const flight::String tilt_shift_fragment_wgsl = flight::String("\nstruct Uniforms {\n  u_center : f32,\n  u_width : f32,\n  u_blur : f32,\n  _pad0 : f32,\n  u_resolution : vec2f,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let texel = vec2f(1.0) / uni.u_resolution;\n  let dist = abs(uv.y - uni.u_center);\n  let edge = uni.u_width * 0.5;\n  let amount = smoothstep(edge, edge + uni.u_width, dist);\n  let radius = amount * uni.u_blur;\n  var sum = vec4f(0.0);\n  var total = 0.0;\n  for (var i = -3; i <= 3; i = i + 1) {\n    let offset = vec2f(0.0, f32(i)) * radius * texel;\n    sum = sum + textureSampleLevel(tex, smp, uv + offset, 0.0);\n    total = total + 1.0;\n  }\n  return sum / total;\n}");

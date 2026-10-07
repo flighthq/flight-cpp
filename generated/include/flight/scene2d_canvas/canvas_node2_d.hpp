@@ -29,6 +29,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d_canvas {
 
+inline void render_canvas_scene2_d(flight::Ref<flight::types::CanvasRenderPass> pass, flight::Ref<flight::types::Node2D> source);
+
 using flight::render::noop_renderer_data;
 
 using flight::types::CanvasRenderPass;
@@ -41,7 +43,7 @@ using flight::types::Scene2DRenderer;
 inline void draw_canvas_scene2_d(flight::Ref<CanvasRenderState> state, flight::Ref<RenderProxy2D> render_proxy) {
 }
 
-inline flight::Ref<Scene2DRenderer> default_canvas_scene2_drenderer = flight::make_ref<Scene2DRenderer>(Scene2DRenderer{.create_data = noop_renderer_data, .submit = draw_canvas_scene2_d});
+inline flight::Ref<Scene2DRenderer> default_canvas_scene2_drenderer = flight::make_ref<Scene2DRenderer>(Scene2DRenderer{.create_data = [](flight::Ref<flight::types::RenderState>, flight::types::Node2D) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }, .submit = [](flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> node) { draw_canvas_scene2_d(std::static_pointer_cast<flight::types::CanvasRenderState>(state), node); }});
 
 inline bool is_canvas_transform_degenerate(flight::Ref<RenderProxy2D> data) {
   flight::Ref<Matrix> t = data->transform2_d;

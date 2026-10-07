@@ -377,6 +377,21 @@ class Array {
   }
 
   template <typename Transform>
+  [[nodiscard]] auto flat_map(Transform&& transform) const
+      -> Array<typename std::remove_cvref_t<decltype(detail::invoke_array_callback(
+          transform, std::declval<const Value&>(), std::declval<size_type>()))>::value_type> {
+    using Mapped = std::remove_cvref_t<decltype(detail::invoke_array_callback(
+        transform, std::declval<const Value&>(), std::declval<size_type>()))>;
+    using Result = typename Mapped::value_type;
+    Array<Result> result;
+    for (size_type index = 0; index < size(); ++index) {
+      const auto mapped = detail::invoke_array_callback(transform, (*values_)[index], index);
+      for (const auto& value : mapped) result.push(value);
+    }
+    return result;
+  }
+
+  template <typename Transform>
   [[nodiscard]] auto map(Transform&& transform) const
       -> Array<std::remove_cvref_t<decltype(detail::invoke_array_callback(
           transform, std::declval<const Value&>(), std::declval<size_type>()))>> {

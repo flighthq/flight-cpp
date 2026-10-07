@@ -28,6 +28,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_canvas {
 
+extern const flight::types::CanvasRenderEffectRunner default_canvas_blend_effect_runner;
+
 using flight::types::AdvancedBlendMode;
 using flight::types::CanvasRenderState;
 using flight::types::CanvasRenderStateRuntime;
@@ -44,7 +46,7 @@ inline std::optional<flight::Ref<CanvasTextureRenderTarget>> get_canvas_blend_ef
 
 inline void register_canvas_blend_effect_backdrop(flight::Ref<CanvasRenderState> state, flight::String backdrop_key, flight::Ref<CanvasTextureRenderTarget> target) {
   flight::Ref<CanvasRenderStateRuntime> runtime = get_canvas_render_state_runtime(state);
-  ([&]() { auto&& assignment_target = runtime->canvas_blend_effect_backdrops; if (!assignment_target.has_value()) assignment_target = flight::Map(); return assignment_target.value(); }()).set(backdrop_key, target);
+  ([&]() { auto&& assignment_target = runtime->canvas_blend_effect_backdrops; if (!assignment_target.has_value()) assignment_target = flight::Map<flight::String, flight::Ref<CanvasTextureRenderTarget>>(); return assignment_target.value(); }()).set(backdrop_key, target);
 }
 
 

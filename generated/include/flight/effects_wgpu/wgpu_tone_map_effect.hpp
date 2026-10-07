@@ -22,6 +22,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_wgpu {
 
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_tone_map_effect_runner;
+
 using flight::types::WgpuRenderState;
 
 inline const flight::String tonemap_fragment_head = flight::String("\nstruct Uniforms { u_exposure : f32, u_white : f32, _pad0 : f32, _pad1 : f32, }\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\nfn tonemap(x : vec3f) -> vec3f {");

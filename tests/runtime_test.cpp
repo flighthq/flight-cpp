@@ -399,6 +399,12 @@ void test_sequence_view_map() {
   const auto texts = view.map([](double value) { return flight::String::from_utf8(value == 2.0 ? "two" : "other"); });
   check(texts.element(0.0) == flight::String::from_utf8("two"), "a view map deduces the result type");
   check(backing->size() == 3 && (*backing)[0] == 2.0, "mapping a view does not touch the source");
+
+  const auto flattened = view.flat_map([](double value, std::size_t index) {
+    return index == 1 ? flight::Array<double>{} : flight::Array<double>{value, value + 1.0};
+  });
+  check(flattened.size() == 4 && flattened.element(0.0) == 2.0 && flattened.element(3.0) == 9.0,
+        "a view flat-maps returned arrays in order and omits empty results");
 }
 
 void test_string_search() {
@@ -499,6 +505,11 @@ void test_array() {
 
   const auto mapped = values.map([](double value) { return std::isnan(value) ? 0.0 : value + 1.0; });
   check(mapped.size() == 3 && mapped[2] == 5.0, "array map creates transformed storage");
+  const auto flattened = mapped.flat_map([](double value) {
+    return value == 0.0 ? flight::Array<double>{} : flight::Array<double>{value, -value};
+  });
+  check(flattened.size() == 4 && flattened[0] == 1.0 && flattened[3] == -5.0,
+        "array flat_map concatenates callback arrays and omits empty results");
   const auto filtered = mapped.filter([](double value) { return value > 0.0; });
   check(filtered.size() == 2, "array filter preserves matching values");
   check(mapped.every([](double value, double index) { return value >= index; }),
