@@ -284,7 +284,7 @@ function variantListingBoth(contents, symbol, replacement) {
 
 function aliasAnonymousStructToNamed(contents, repair) {
   const guard = new RegExp(
-    `^(#ifndef (FLIGHT_COMPILER_ANONYMOUS__[A-Z0-9_]+)\\n#define \\2\\n)struct ${repair.symbol} : public flight::ReferenceEnabled \\{\\n[\\s\\S]*?^\\};\\n(#endif[^\\n]*\\n)`,
+    `^(#ifndef (FLIGHT_COMPILER_ANONYMOUS__[A-Z0-9_]+)\\n#define \\2\\n)struct ${repair.symbol} : public (?:flight::ReferenceEnabled|flight::types::Entity) \\{\\n[\\s\\S]*?^\\};\\n(#endif[^\\n]*\\n)`,
     'mu',
   );
   const found = guard.exec(contents);

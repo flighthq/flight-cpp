@@ -3045,6 +3045,17 @@ void test_string() {
   const auto pieces = text.trim().split(",");
   check(pieces.size() == 2 && pieces[0] == flight::String("one") && pieces[1] == flight::String("two"),
         "trim and split use TypeScript string boundaries");
+  check(flight::String(u"\u00A0 left ").trim_start() == flight::String("left ") &&
+            flight::String(u" right \uFEFF").trim_end() == flight::String(" right"),
+        "trim_start and trim_end preserve the opposite boundary");
+  const auto regexp_pieces = flight::String("one\r\ntwo\nthree").split(flight::RegExp("\\r\\n?|\\n"));
+  check(regexp_pieces.size() == 3 && regexp_pieces[0] == flight::String("one") &&
+            regexp_pieces[1] == flight::String("two") && regexp_pieces[2] == flight::String("three"),
+        "regexp split uses each match as a TypeScript string boundary");
+  const auto limited_regexp_pieces = flight::String("a  b c").split(flight::RegExp("(\\s+)"), 3);
+  check(limited_regexp_pieces.size() == 3 && limited_regexp_pieces[0] == flight::String("a") &&
+            limited_regexp_pieces[1] == flight::String("  ") && limited_regexp_pieces[2] == flight::String("b"),
+        "regexp split includes captures and applies the result limit");
   check(flight::String("prefix").starts_with("pre") && flight::String("prefix").ends_with("fix"),
         "string prefix and suffix checks accept UTF-8 boundaries");
   check(flight::String("ABC").to_lower() == flight::String("abc"),

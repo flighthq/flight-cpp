@@ -24,6 +24,7 @@ import {
   obsoleteRepairs,
   referenceAliasIdentityProof,
 } from './emissionRepairs.mjs';
+import { canonicalizeGeneratedIncludes } from './generatedIncludes.mjs';
 import {
   applySourcePatches,
   ineffectivePatches,
@@ -322,6 +323,10 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   // Needs the whole file set rather than one file at a time, because it has to find the canonical
   // definition before it can alias a duplicate to it.
   const aliasedStructs = aliasDuplicateStructuralStructs(compilation.compilation.files);
+  // Package-local quoted includes search the generated sibling directory before the override include
+  // root. Canonical installed paths preserve the same dependency while allowing an override to shadow
+  // nested includes exactly as it shadows a consumer's top-level include.
+  const canonicalIncludes = canonicalizeGeneratedIncludes(compilation.compilation.files);
   // The respell repairs claim that `flight::Ref<X>` and the spelling they write are the same type. This
   // turns that claim into static_asserts compiled by the same gate that compiles the headers, so a
   // wrong expansion fails the build instead of quietly changing a signature. It is emitted as a header
@@ -402,6 +407,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       files: aliasedStructs.files,
       structs: aliasedStructs.structs,
     },
+    canonicalPackageLocalIncludes: canonicalIncludes,
     packages: packageResults,
     source: {
       package: String(sdkPackage.name),
@@ -731,7 +737,9 @@ ${manifest.summary.packages} SDK packages and refused ${manifest.summary.refused
 This is a bring-up inventory. It is intentionally committed before it forms a completely compilable SDK closure.
 CMake exposes the full inventory as \`Flight::SdkPreview\`, and Bazel exposes \`//:sdk_preview\`; the preview name
 keeps the remaining native compile failures visible. The package graph applies the public C++ \`flight\` namespaces
-and installed include prefixes. \`initialization.json\` records the compiler's dependency and module-evaluation plan.
+and installed include prefixes. Package-local imports are written with their canonical installed paths so nested
+includes honor the override directory's precedence. \`initialization.json\` records the compiler's dependency and
+module-evaluation plan.
 
 Regenerate and verify the tree from the repository root:
 

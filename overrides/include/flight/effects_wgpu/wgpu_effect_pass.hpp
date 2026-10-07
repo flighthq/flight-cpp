@@ -326,6 +326,15 @@ inline void initialize_wgpu_dual_source_effect_pipeline(flight::Ref<EntityConstr
   throw flight::Error(flight::String("effects-wgpu: pipeline creation is unavailable in this profile"));
 }
 
+inline flight::Ref<WgpuEffectPipeline> create_wgpu_dual_source_effect_pipeline(
+    flight::Ref<WgpuRenderState> state,
+    flight::String fragment_wgsl,
+    std::optional<WgpuEffectBlendMode> blend = std::nullopt) {
+  auto out = flight::make_ref<WgpuEffectPipeline>();
+  initialize_wgpu_dual_source_effect_pipeline(out, state, fragment_wgsl, blend);
+  return out;
+}
+
 
 // NOT GENERATED: function createWgpuDualSourceEffectPipeline -- source line 238
 // refusal: cpp-intersection-member-shapeless [source-portability]
@@ -347,6 +356,15 @@ inline void initialize_wgpu_dual_source_effect_pipeline(flight::Ref<EntityConstr
 
 inline void initialize_wgpu_effect_pipeline(flight::Ref<EntityConstruction<flight::Ref<WgpuEffectPipeline>>> out, flight::Ref<WgpuRenderState> state, flight::String fragment_wgsl, std::optional<WgpuEffectBlendMode> blend = std::nullopt) {
   throw flight::Error(flight::String("effects-wgpu: pipeline creation is unavailable in this profile"));
+}
+
+inline flight::Ref<WgpuEffectPipeline> create_wgpu_effect_pipeline(
+    flight::Ref<WgpuRenderState> state,
+    flight::String fragment_wgsl,
+    std::optional<WgpuEffectBlendMode> blend = std::nullopt) {
+  auto out = flight::make_ref<WgpuEffectPipeline>();
+  initialize_wgpu_effect_pipeline(out, state, fragment_wgsl, blend);
+  return out;
 }
 
 

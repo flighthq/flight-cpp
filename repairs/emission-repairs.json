@@ -6062,6 +6062,18 @@
         {
           "include": "flight/types/wgpu_render_target.hpp",
           "name": "WgpuScreenRenderTarget"
+        },
+        {
+          "include": "flight/types/wgpu_render_pass.hpp",
+          "name": "WgpuRenderPassViewport"
+        },
+        {
+          "include": "flight/types/wgpu_render_target.hpp",
+          "name": "WgpuRenderTarget"
+        },
+        {
+          "include": "flight/types/wgpu_render_pass.hpp",
+          "name": "WgpuRenderPass"
         }
       ],
       "diagnostic": "'WgpuRenderState' was not declared in this scope",
@@ -8214,6 +8226,18 @@
         {
           "include": "flight/types/bitmap_font_parse_explanation.hpp",
           "name": "BitmapFontParseExplanationFormat"
+        },
+        {
+          "include": "flight/types/bitmap_font_parse_explanation.hpp",
+          "name": "BitmapFontParseExplanationReason"
+        },
+        {
+          "include": "flight/types/bitmap_font.hpp",
+          "name": "BitmapFontParseOptions"
+        },
+        {
+          "include": "flight/types/texture_atlas.hpp",
+          "name": "TextureAtlas"
         }
       ],
       "diagnostic": "'BitmapFontParseExplanationFormat' was not declared in this scope; did you mean 'flight::types::BitmapFontParseExplanationFormat'?",
@@ -11916,6 +11940,32 @@
       "defect": "The emitted constant is a reference-backed anonymous object, but its imported member reads retain value-style access.",
       "expectedWhen": "always",
       "expires": "when imported reference-backed object constants use pointer member access; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-effect-pipeline-structural-alias",
+      "kind": "alias-anonymous-struct-to-named",
+      "appliesTo": "flight/effects_wgpu/",
+      "symbol": "entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_183787019555c435",
+      "replacement": "WgpuEffectPipeline",
+      "canonicalInclude": "flight/types/wgpu_effect_pipeline.hpp",
+      "sourceDeclaration": "packages/types/src/WgpuEffectPipeline.ts and packages/effects-wgpu pipeline caches -- the anonymous projection has the same Entity runtime key, pipeline, blendMode, compileForFormat, and variants members",
+      "diagnostic": "optional<Ref<WgpuEffectPipeline>> cannot convert to optional<Ref<entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_183787019555c435>>",
+      "defect": "The emitter reifies the structural WgpuEffectPipeline projection as an unrelated anonymous owner even though the source values and cache declarations retain the named WgpuEffectPipeline owner. Aliasing the projection to that named type preserves the existing owner and makes the two emitted spellings denote the source's one object shape.",
+      "expectedWhen": "always",
+      "expires": "when structural projections of WgpuEffectPipeline retain the named owner; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-wgpu-erased-effect-pipeline-structural-alias",
+      "kind": "alias-anonymous-struct-to-named",
+      "appliesTo": "flight/effects_wgpu/",
+      "symbol": "entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_9408b42a0bfddbbe",
+      "replacement": "WgpuEffectPipeline",
+      "canonicalInclude": "flight/types/wgpu_effect_pipeline.hpp",
+      "sourceDeclaration": "packages/effects-wgpu/src/wgpuEffectProgramCache.ts -- createWgpuEffectPipeline returns WgpuEffectPipeline and the cache stores WgpuEffectPipeline",
+      "diagnostic": "Ref<WgpuEffectPipeline> cannot convert to Ref<entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_9408b42a0bfddbbe>",
+      "defect": "The emitter erases the generic helper's pipeline members to Any and then reifies that view as an unrelated anonymous owner. The source declaration and both surrounding cache types require the named WgpuEffectPipeline owner, so the anonymous spelling is an erased projection of that same object rather than a distinct allocation.",
+      "expectedWhen": "always",
+      "expires": "when generic structural projections retain WgpuEffectPipeline at this cache boundary; sdk:check fails if this repair matches no header."
     }
   ]
 }

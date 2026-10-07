@@ -305,6 +305,27 @@ inline std::optional<RegExpExecArray> String::match(const RegExp& expression) co
   return result.empty() ? std::nullopt : std::optional<RegExpExecArray>(std::move(result));
 }
 
+inline Array<String> String::split(const RegExp& separator, size_type limit) const {
+  Array<String> result;
+  if (limit == 0) return result;
+
+  const auto encoded = to_utf8();
+  std::size_t cursor = 0;
+  for (auto iterator = std::sregex_iterator(encoded.cbegin(), encoded.cend(), separator.native_expression());
+       iterator != std::sregex_iterator() && result.size() < limit; ++iterator) {
+    const auto& match = *iterator;
+    const auto position = static_cast<std::size_t>(match.position());
+    result.push(String::from_utf8(encoded.substr(cursor, position - cursor)));
+    if (result.size() == limit) return result;
+    for (std::size_t capture = 1; capture < match.size() && result.size() < limit; ++capture) {
+      result.push(match[capture].matched ? String::from_utf8(match[capture].str()) : String());
+    }
+    cursor = position + static_cast<std::size_t>(match.length());
+  }
+  if (result.size() < limit) result.push(String::from_utf8(encoded.substr(cursor)));
+  return result;
+}
+
 inline String String::replace(const RegExp& expression, const String& replacement) const {
   return detail::regexp_replace(*this, expression, [&](const std::smatch& match) {
     return detail::regexp_string_replacement(match, to_utf8(), replacement);

@@ -291,6 +291,10 @@ class String {
     return result;
   }
 
+  [[nodiscard]] Array<String> split(
+      const RegExp& separator,
+      size_type limit = std::numeric_limits<size_type>::max()) const;
+
   [[nodiscard]] bool starts_with(const String& prefix) const noexcept {
     return value_.starts_with(prefix.value_);
   }
@@ -343,6 +347,18 @@ class String {
     size_type last = value_.size();
     while (last > first && is_whitespace(value_[last - 1])) --last;
     return String(value_.substr(first, last - first));
+  }
+
+  [[nodiscard]] String trim_start() const {
+    size_type first = 0;
+    while (first < value_.size() && is_whitespace(value_[first])) ++first;
+    return String(value_.substr(first));
+  }
+
+  [[nodiscard]] String trim_end() const {
+    size_type last = value_.size();
+    while (last > 0 && is_whitespace(value_[last - 1])) --last;
+    return String(value_.substr(0, last));
   }
 
   [[nodiscard]] friend bool operator==(const String&, const String&) noexcept = default;
