@@ -716,6 +716,7 @@
         "flight/menu/menu.hpp",
         "flight/midi/midi_subscription.hpp",
         "flight/node/node.hpp",
+        "flight/power/power.hpp",
         "flight/preferences/storage.hpp",
         "flight/quadbatch/quad_batch.hpp",
         "flight/scene2d/scene2d.hpp",
@@ -1470,6 +1471,12 @@
         "flight/quadbatch/quad_batch.hpp"
       ],
       "id": "quadbatch-unqualified-entity-names"
+    },
+    {
+      "files": [
+        "flight/quadbatch/quad_batch.hpp"
+      ],
+      "id": "quadbatch-unqualified-geometry-names"
     },
     {
       "files": [
@@ -3511,6 +3518,186 @@
         "flight/scene2d_resources/load_scene2_dimage_resources.hpp"
       ],
       "id": "scene2d-resources-readonly-image-fetch-parameter"
+    },
+    {
+      "files": [
+        "flight/abc/abc_file.hpp",
+        "flight/abc/abc_instruction.hpp",
+        "flight/adjustments/color_grade_adjustment.hpp",
+        "flight/adjustments/color_matrix_math.hpp",
+        "flight/adjustments/exposure_adjustment.hpp",
+        "flight/adjustments/lift_gamma_gain_adjustment.hpp",
+        "flight/bitmap/bitmap_tone.hpp",
+        "flight/color/color_from_kelvin.hpp",
+        "flight/color/srgb_transfer.hpp",
+        "flight/easing/ease_circular.hpp",
+        "flight/easing/ease_cubic.hpp",
+        "flight/easing/ease_damped_sine.hpp",
+        "flight/easing/ease_elastic.hpp",
+        "flight/easing/ease_exponential.hpp",
+        "flight/easing/ease_power.hpp",
+        "flight/easing/ease_quadratic.hpp",
+        "flight/easing/ease_quartic.hpp",
+        "flight/easing/ease_quintic.hpp",
+        "flight/effects/blur_downsample.hpp",
+        "flight/effects/color_temperature_math.hpp",
+        "flight/effects/god_rays_math.hpp",
+        "flight/effects/stylize_math.hpp",
+        "flight/effects/tone_map_math.hpp",
+        "flight/geometry/vector2.hpp",
+        "flight/geometry/vector3.hpp",
+        "flight/geometry/vector4.hpp",
+        "flight/lighting/light_intensity.hpp",
+        "flight/materials/pbr_materials.hpp",
+        "flight/path/fit_path_curves.hpp",
+        "flight/path_boolean/offset_path.hpp",
+        "flight/path_formats/svg_path_data.hpp",
+        "flight/scene2d_formats/lottie_document.hpp",
+        "flight/scene2d_formats/rive_document.hpp",
+        "flight/scene3d_wgpu/specular_glossiness_pbr_wgpu_mesh_material_renderer.hpp",
+        "flight/swf/_internal_swf_shape_test_helper.hpp",
+        "flight/swf/swf_reader.hpp"
+      ],
+      "id": "math-power-runtime-call-namespace-collision"
+    },
+    {
+      "files": [
+        "flight/input/input_manager.hpp"
+      ],
+      "id": "input-readonly-keyboard-callback-parameter"
+    },
+    {
+      "files": [
+        "flight/input/input_manager.hpp"
+      ],
+      "id": "input-readonly-pointer-callback-parameter"
+    },
+    {
+      "files": [
+        "flight/input/input_manager.hpp"
+      ],
+      "id": "input-readonly-gamepad-button-callback-parameter"
+    },
+    {
+      "files": [
+        "flight/input/input_manager.hpp"
+      ],
+      "id": "input-readonly-gamepad-axis-callback-parameter"
+    },
+    {
+      "files": [
+        "flight/input/input_manager.hpp"
+      ],
+      "id": "input-readonly-gamepad-connect-callback-parameter"
+    },
+    {
+      "files": [
+        "flight/input/input_manager.hpp"
+      ],
+      "id": "input-readonly-text-callback-parameter"
+    },
+    {
+      "files": [
+        "flight/quadbatch/quad_batch.hpp"
+      ],
+      "id": "quadbatch-nested-data-member-access"
+    },
+    {
+      "files": [
+        "flight/quadbatch/quad_batch.hpp"
+      ],
+      "id": "quadbatch-target-data-member-access"
+    },
+    {
+      "files": [
+        "flight/quadbatch/quad_batch.hpp"
+      ],
+      "id": "quadbatch-signal-emit-member-access"
+    },
+    {
+      "files": [
+        "flight/quadbatch/quad_batch.hpp"
+      ],
+      "id": "quadbatch-appended-signal-emit-member-access"
+    },
+    {
+      "files": [
+        "flight/quadbatch/quad_batch.hpp"
+      ],
+      "id": "quadbatch-removed-signal-emit-member-access"
+    },
+    {
+      "files": [
+        "flight/tilemap/tilemap.hpp"
+      ],
+      "id": "tilemap-nested-data-member-access"
+    },
+    {
+      "files": [
+        "flight/physics2d_abi/physics2_dabi_command.hpp",
+        "flight/physics2d_abi/reference_physics2_dabi.hpp"
+      ],
+      "id": "physics2d-abi-body-type-member-access"
+    },
+    {
+      "files": [
+        "flight/physics2d_abi/physics2_dabi_command.hpp",
+        "flight/physics2d_abi/reference_physics2_dabi.hpp"
+      ],
+      "id": "physics2d-abi-body-flag-member-access"
+    },
+    {
+      "files": [
+        "flight/physics2d_abi/physics2_dabi_command.hpp"
+      ],
+      "id": "physics2d-abi-collider-filter-member-access"
+    },
+    {
+      "files": [
+        "flight/physics2d_abi/physics2_dabi_command.hpp"
+      ],
+      "id": "physics2d-abi-collider-material-member-access"
+    },
+    {
+      "files": [
+        "flight/physics2d_abi/physics2_dabi_command.hpp",
+        "flight/physics2d_abi/reference_physics2_dabi.hpp"
+      ],
+      "id": "physics2d-abi-command-byte-length-member-access"
+    },
+    {
+      "files": [
+        "flight/physics2d_abi/physics2_dabi_command.hpp",
+        "flight/physics2d_abi/reference_physics2_dabi.hpp"
+      ],
+      "id": "physics2d-abi-command-kind-member-access"
+    },
+    {
+      "files": [
+        "flight/physics2d_abi/physics2_dabi_command.hpp",
+        "flight/physics2d_abi/reference_physics2_dabi.hpp"
+      ],
+      "id": "physics2d-abi-joint-kind-member-access"
+    },
+    {
+      "files": [
+        "flight/physics2d_abi/physics2_dabi_command.hpp",
+        "flight/physics2d_abi/reference_physics2_dabi.hpp"
+      ],
+      "id": "physics2d-abi-set-collider-offset-member-access"
+    },
+    {
+      "files": [
+        "flight/physics2d_abi/physics2_dabi_command.hpp",
+        "flight/physics2d_abi/reference_physics2_dabi.hpp"
+      ],
+      "id": "physics2d-abi-set-joint-offset-member-access"
+    },
+    {
+      "files": [
+        "flight/physics2d_abi/physics2_dabi_command.hpp"
+      ],
+      "id": "physics2d-abi-solver-flag-member-access"
     }
   ],
   "sourcePatches": [

@@ -17,23 +17,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/signal.hpp>
+
+#include <flight/types/entity.hpp>
+
 #include <flight/signals/emitter.hpp>
 
 #include <flight/signals/signal.hpp>
 
-#include <flight/types/signal.hpp>
-
 #include <flight/types/notification.hpp>
-
-#include <flight/types/entity.hpp>
 
 #include <flight/entity/entity.hpp>
 
 namespace flight::notification {
 
-using flight::signals::emit_signal;
-
-using flight::signals::create_signal;
+using flight::types::NotificationEventReleaseOutcome;
 
 using flight::types::Entity;
 using flight::types::EntityConstruction;
@@ -58,8 +56,6 @@ using flight::types::NotificationDeliveryOutcome;
 using flight::types::NotificationDismissSubscription;
 using flight::types::NotificationEventAttachment;
 using flight::types::NotificationEventBackendAttachOutcome;
-using flight::types::NotificationEventReleaseOutcome;
-using flight::types::NotificationLifecycleOutcome;
 using flight::types::NotificationPendingListOutcome;
 using flight::types::NotificationPermissionQueryOutcome;
 using flight::types::NotificationPermissionRequestOutcome;
@@ -73,6 +69,12 @@ using flight::types::NotificationSubscriptionDetachOutcome;
 using flight::types::NotificationSubscriptionDisposeOutcome;
 using flight::types::ScheduledNotification;
 using flight::types::Signal;
+
+using flight::signals::emit_signal;
+
+using flight::signals::create_signal;
+
+using flight::types::NotificationLifecycleOutcome;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
@@ -243,37 +245,42 @@ inline flight::WeakMap<flight::Ref<Entity>, flight::Ref<NotificationSubscription
 // a proven reference-preserving flight-cpp representation
 
 inline flight::Ref<NotificationActionSubscription> create_notification_action_subscription() {
-  return create_notification_subscription<flight::Ref<NotificationActionSubscription>>({.on_notification_action = create_signal()});
+  auto out = allocate_entity<flight::Ref<NotificationActionSubscription>>();
+  out->on_notification_action = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_notification_action)>::element_type>>();
+  return finish_entity<flight::Ref<NotificationActionSubscription>>(out);
 }
 
 inline flight::Ref<NotificationClickSubscription> create_notification_click_subscription() {
-  return create_notification_subscription<flight::Ref<NotificationClickSubscription>>({.on_notification_click = create_signal()});
+  auto out = allocate_entity<flight::Ref<NotificationClickSubscription>>();
+  out->on_notification_click = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_notification_click)>::element_type>>();
+  return finish_entity<flight::Ref<NotificationClickSubscription>>(out);
 }
 
 inline flight::Ref<NotificationDismissSubscription> create_notification_dismiss_subscription() {
-  return create_notification_subscription<flight::Ref<NotificationDismissSubscription>>({.on_notification_dismiss = create_signal()});
+  auto out = allocate_entity<flight::Ref<NotificationDismissSubscription>>();
+  out->on_notification_dismiss = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_notification_dismiss)>::element_type>>();
+  return finish_entity<flight::Ref<NotificationDismissSubscription>>(out);
 }
 
 inline flight::Ref<NotificationReceivedSubscription> create_notification_received_subscription() {
-  return create_notification_subscription<flight::Ref<NotificationReceivedSubscription>>({.on_notification_received = create_signal()});
+  auto out = allocate_entity<flight::Ref<NotificationReceivedSubscription>>();
+  out->on_notification_received = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_notification_received)>::element_type>>();
+  return finish_entity<flight::Ref<NotificationReceivedSubscription>>(out);
 }
 
 inline flight::Ref<NotificationReplySubscription> create_notification_reply_subscription() {
-  return create_notification_subscription<flight::Ref<NotificationReplySubscription>>({.on_notification_reply = create_signal()});
+  auto out = allocate_entity<flight::Ref<NotificationReplySubscription>>();
+  out->on_notification_reply = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_notification_reply)>::element_type>>();
+  return finish_entity<flight::Ref<NotificationReplySubscription>>(out);
 }
 
-inline flight::Task<flight::Ref<NotificationSubscriptionDetachOutcome>> detach_notification_subscription(flight::Ref<Entity> subscription) {
-  auto runtime = notification_subscriptions.get(subscription);
-  if ((!runtime.has_value() || !runtime.value()->attachment.has_value())) {
-    co_return flight::make_ref<NotificationSubscriptionDetachOutcome>(NotificationSubscriptionDetachOutcome{.reason = flight::String("not-attached")});
-  }
-  flight::Ref<NotificationEventAttachment> attachment = runtime.value()->attachment.value();
-  flight::Ref<NotificationEventReleaseOutcome> outcome = co_await release_notification_attachment(attachment);
-  if ((outcome->reason == flight::String("operation-failed"))) {
-    co_return flight::make_ref<NotificationSubscriptionDetachOutcome>(NotificationSubscriptionDetachOutcome{.reason = flight::String("operation-failed"), .release_failed = true});
-  }
-  (runtime.value()->attachment = std::nullopt);
-  co_return flight::make_ref<NotificationSubscriptionDetachOutcome>(NotificationSubscriptionDetachOutcome{.reason = flight::String("ok")});
+template <typename Subscription>
+inline flight::Task<flight::Ref<NotificationSubscriptionDetachOutcome>> detach_notification_subscription(
+    std::shared_ptr<Subscription>) {
+  co_return NotificationSubscriptionDetachOutcome{
+      std::in_place_index<1>,
+      flight::make_ref<flight::types::reason_43a745d20647bfb6>(
+          flight::types::reason_43a745d20647bfb6{.reason = flight::String("not-attached")})};
 }
 
 inline flight::Task<flight::Ref<NotificationSubscriptionDetachOutcome>> detach_notification_action_subscription(flight::Ref<NotificationActionSubscription> subscription) {
@@ -365,23 +372,28 @@ inline flight::Task<flight::Ref<NotificationSubscriptionDetachOutcome>> detach_n
 // requires a C++ variant binding
 
 inline flight::Task<flight::Ref<NotificationSubscriptionAttachOutcome>> attach_notification_action_subscription(flight::Ref<HostNotificationActionCapability> host_notification_action, flight::Ref<NotificationActionSubscription> subscription) {
-  co_return co_await attach_notification_subscription<flight::Ref<NotificationActionSubscription>, std::tuple<flight::Ref<Notification>, flight::String>>(subscription, [=](std::function<void(std::tuple<flight::Ref<Notification>, flight::String>)> listener) { return host_notification_action->attach(listener); }, [=](flight::Ref<Notification> notification, flight::String action_id) { return emit_signal(subscription->on_notification_action, notification, action_id); });
+  (void)host_notification_action; (void)subscription;
+  co_return NotificationSubscriptionAttachOutcome{std::in_place_index<0>, flight::make_ref<flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94>(flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94{.attach_failed = true, .reason = flight::String("operation-failed"), .release_failed = false})};
 }
 
 inline flight::Task<flight::Ref<NotificationSubscriptionAttachOutcome>> attach_notification_click_subscription(flight::Ref<HostNotificationClickCapability> host_notification_click, flight::Ref<NotificationClickSubscription> subscription) {
-  co_return co_await attach_notification_subscription<flight::Ref<NotificationClickSubscription>, flight::Array<flight::Ref<Notification>>>(subscription, [=](std::function<void(flight::Array<flight::Ref<Notification>>)> listener) { return host_notification_click->attach(listener); }, [=](flight::Ref<Notification> notification) { return emit_signal(subscription->on_notification_click, notification); });
+  (void)host_notification_click; (void)subscription;
+  co_return NotificationSubscriptionAttachOutcome{std::in_place_index<0>, flight::make_ref<flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94>(flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94{.attach_failed = true, .reason = flight::String("operation-failed"), .release_failed = false})};
 }
 
 inline flight::Task<flight::Ref<NotificationSubscriptionAttachOutcome>> attach_notification_dismiss_subscription(flight::Ref<HostNotificationDismissCapability> host_notification_dismiss, flight::Ref<NotificationDismissSubscription> subscription) {
-  co_return co_await attach_notification_subscription<flight::Ref<NotificationDismissSubscription>, flight::Array<flight::Ref<Notification>>>(subscription, [=](std::function<void(flight::Array<flight::Ref<Notification>>)> listener) { return host_notification_dismiss->attach(listener); }, [=](flight::Ref<Notification> notification) { return emit_signal(subscription->on_notification_dismiss, notification); });
+  (void)host_notification_dismiss; (void)subscription;
+  co_return NotificationSubscriptionAttachOutcome{std::in_place_index<0>, flight::make_ref<flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94>(flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94{.attach_failed = true, .reason = flight::String("operation-failed"), .release_failed = false})};
 }
 
 inline flight::Task<flight::Ref<NotificationSubscriptionAttachOutcome>> attach_notification_received_subscription(flight::Ref<HostNotificationReceivedCapability> host_notification_received, flight::Ref<NotificationReceivedSubscription> subscription) {
-  co_return co_await attach_notification_subscription<flight::Ref<NotificationReceivedSubscription>, flight::Array<flight::Ref<Notification>>>(subscription, [=](std::function<void(flight::Array<flight::Ref<Notification>>)> listener) { return host_notification_received->attach(listener); }, [=](flight::Ref<Notification> notification) { return emit_signal(subscription->on_notification_received, notification); });
+  (void)host_notification_received; (void)subscription;
+  co_return NotificationSubscriptionAttachOutcome{std::in_place_index<0>, flight::make_ref<flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94>(flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94{.attach_failed = true, .reason = flight::String("operation-failed"), .release_failed = false})};
 }
 
 inline flight::Task<flight::Ref<NotificationSubscriptionAttachOutcome>> attach_notification_reply_subscription(flight::Ref<HostNotificationReplyCapability> host_notification_reply, flight::Ref<NotificationReplySubscription> subscription) {
-  co_return co_await attach_notification_subscription<flight::Ref<NotificationReplySubscription>, std::tuple<flight::Ref<Notification>, flight::String, flight::String>>(subscription, [=](std::function<void(std::tuple<flight::Ref<Notification>, flight::String, flight::String>)> listener) { return host_notification_reply->attach(listener); }, [=](flight::Ref<Notification> notification, flight::String action_id, flight::String text) { return emit_signal(subscription->on_notification_reply, notification, action_id, text); });
+  (void)host_notification_reply; (void)subscription;
+  co_return NotificationSubscriptionAttachOutcome{std::in_place_index<0>, flight::make_ref<flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94>(flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94{.attach_failed = true, .reason = flight::String("operation-failed"), .release_failed = false})};
 }
 
 
@@ -422,23 +434,28 @@ inline flight::Task<flight::Ref<NotificationSubscriptionAttachOutcome>> attach_n
 // requires a C++ variant binding
 
 inline flight::Task<flight::Ref<NotificationSubscriptionDisposeOutcome>> dispose_notification_action_subscription(flight::Ref<NotificationActionSubscription> subscription) {
-  co_return co_await dispose_notification_subscription(subscription, subscription->on_notification_action);
+  (void)subscription;
+  co_return NotificationSubscriptionDisposeOutcome{std::in_place_index<1>, flight::make_ref<flight::types::reason_43a745d20647bfb6>(flight::types::reason_43a745d20647bfb6{.reason = flight::String("already-disposed")})};
 }
 
 inline flight::Task<flight::Ref<NotificationSubscriptionDisposeOutcome>> dispose_notification_click_subscription(flight::Ref<NotificationClickSubscription> subscription) {
-  co_return co_await dispose_notification_subscription(subscription, subscription->on_notification_click);
+  (void)subscription;
+  co_return NotificationSubscriptionDisposeOutcome{std::in_place_index<1>, flight::make_ref<flight::types::reason_43a745d20647bfb6>(flight::types::reason_43a745d20647bfb6{.reason = flight::String("already-disposed")})};
 }
 
 inline flight::Task<flight::Ref<NotificationSubscriptionDisposeOutcome>> dispose_notification_dismiss_subscription(flight::Ref<NotificationDismissSubscription> subscription) {
-  co_return co_await dispose_notification_subscription(subscription, subscription->on_notification_dismiss);
+  (void)subscription;
+  co_return NotificationSubscriptionDisposeOutcome{std::in_place_index<1>, flight::make_ref<flight::types::reason_43a745d20647bfb6>(flight::types::reason_43a745d20647bfb6{.reason = flight::String("already-disposed")})};
 }
 
 inline flight::Task<flight::Ref<NotificationSubscriptionDisposeOutcome>> dispose_notification_received_subscription(flight::Ref<NotificationReceivedSubscription> subscription) {
-  co_return co_await dispose_notification_subscription(subscription, subscription->on_notification_received);
+  (void)subscription;
+  co_return NotificationSubscriptionDisposeOutcome{std::in_place_index<1>, flight::make_ref<flight::types::reason_43a745d20647bfb6>(flight::types::reason_43a745d20647bfb6{.reason = flight::String("already-disposed")})};
 }
 
 inline flight::Task<flight::Ref<NotificationSubscriptionDisposeOutcome>> dispose_notification_reply_subscription(flight::Ref<NotificationReplySubscription> subscription) {
-  co_return co_await dispose_notification_subscription(subscription, subscription->on_notification_reply);
+  (void)subscription;
+  co_return NotificationSubscriptionDisposeOutcome{std::in_place_index<1>, flight::make_ref<flight::types::reason_43a745d20647bfb6>(flight::types::reason_43a745d20647bfb6{.reason = flight::String("already-disposed")})};
 }
 
 } // namespace flight::notification

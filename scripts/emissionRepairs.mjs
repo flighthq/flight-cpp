@@ -12,7 +12,7 @@ import path from 'node:path';
 // a patched build into a silent fork of the generator.
 
 const SCHEMA = 'flight-cpp-emission-repairs/1';
-const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias', 'respell-readonly-parameter', 'respell-runtime-call', 'name-in-place-alternative', 'name-defaulted-template-argument',
+const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias', 'respell-readonly-parameter', 'respell-reference-member-access', 'respell-runtime-call', 'name-in-place-alternative', 'name-defaulted-template-argument',
   'deduce-call-argument-from-assignment',
   'respell-flattened-union',
   'wrap-conditional-absent-branch',
@@ -55,6 +55,7 @@ const REQUIRED_FIELDS = {
   'respell-flattened-union': [...SHARED_FIELDS, 'symbol', 'replacement', 'requiredSuffix', 'sourceDeclaration'],
   'respell-reference-alias': [...SHARED_FIELDS, 'symbol', 'expansion', 'witness', 'witnessInclude'],
   'respell-readonly-parameter': [...SHARED_FIELDS, 'from', 'to', 'sourceDeclaration'],
+  'respell-reference-member-access': [...SHARED_FIELDS, 'from', 'to', 'sourceDeclaration'],
   'respell-runtime-call': [...SHARED_FIELDS, 'symbol', 'replacement', 'sourceDeclaration'],
   'name-array-from-tuple-construction': [...SHARED_FIELDS, 'symbol', 'sourceDeclaration'],
   'record-from-designated-initializer': [...SHARED_FIELDS, 'symbol', 'recordType', 'replacement', 'sourceDeclaration'],
@@ -189,6 +190,7 @@ const HANDLERS = {
   'respell-flattened-union': respellFlattenedUnion,
   'respell-reference-alias': respellReferenceAlias,
   'respell-readonly-parameter': respellReadonlyParameter,
+  'respell-reference-member-access': respellExact,
   'respell-runtime-call': respellRuntimeCall,
   'wrap-conditional-absent-branch': (contents) => wrapConditionalAbsentBranch(contents),
   'project-partial-row-absence': projectPartialRowAbsence,
@@ -203,6 +205,13 @@ const HANDLERS = {
 function respellRuntimeCall(contents, repair) {
   if (!contents.includes(repair.symbol)) return undefined;
   return contents.replaceAll(repair.symbol, repair.replacement);
+}
+
+// Exact spellings for value-style member access on a generated reference carrier. The manifest
+// supplies the full old and new token sequences, keeping each repair local and idempotent.
+function respellExact(contents, repair) {
+  if (!contents.includes(repair.from)) return undefined;
+  return contents.replaceAll(repair.from, repair.to);
 }
 
 function applyOneRound(repairs, files, applied) {

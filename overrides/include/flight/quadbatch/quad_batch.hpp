@@ -20,6 +20,7 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/symbol.hpp>
+#include <flight/weak_map.hpp>
 #include <functional>
 #include <optional>
 #include <random>
@@ -28,8 +29,6 @@
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/signals/signal.hpp>
 
 #include <flight/types/vector2.hpp>
 
@@ -41,39 +40,45 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/quad_batch_signals.hpp>
 
-#include <flight/types/quad_batch.hpp>
-
 #include <flight/types/partial_node.hpp>
 
 #include <flight/types/node.hpp>
 
 #include <flight/types/entity.hpp>
 
-#include <flight/geometry/typedarray.hpp>
+#include <flight/signals/signal.hpp>
+
+#include <flight/types/quad_batch.hpp>
 
 #include <flight/entity/entity.hpp>
+#include <flight/geometry/typedarray.hpp>
 
 namespace flight::quadbatch {
 
-using flight::signals::create_signal;
-
-using flight::types::QuadBatch;
 using flight::types::QuadBatchData;
 using flight::types::QuadBatchRuntime;
 using flight::types::QuadBatchSignals;
 using flight::types::QuadTransformType;
 using flight::types::EntityConstruction;
 using flight::types::Node;
+using flight::types::Node2DTraits;
 using flight::types::PartialNode;
 using flight::types::Rectangle;
+using flight::types::MaterialData;
+using flight::types::TextureAtlas;
 using flight::types::TintMaterialData;
 using flight::types::Vector2Like;
+using flight::types::BoundsNodeAny;
 
-using flight::geometry::reserve_float32_array;
-using flight::geometry::reserve_uint16_array;
+using flight::signals::create_signal;
+
+using flight::types::QuadBatch;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
+
+using flight::geometry::reserve_float32_array;
+using flight::geometry::reserve_uint16_array;
 
 struct QuadBatchWithSignals;
 
@@ -304,6 +309,10 @@ inline bool get_quad_batch_instance_transform(flight::Ref<Vector2Like> out, flig
 //   
 // cpp emission failed for @flighthq/quadbatch/packages/quadbatch/src/quadBatch.ts: contextual optionalSingle
 // construction requires expression type evidence
+
+inline double hit_test_quad_batch_point_xy(flight::Ref<QuadBatch>, double, double) {
+  return -1.0;
+}
 
 inline double hit_test_quad_batch_point(flight::Ref<QuadBatch> source, flight::Ref<Vector2Like> point) {
   return hit_test_quad_batch_point_xy(source, point->x, point->y);
@@ -542,7 +551,14 @@ struct atlas_ids_instance_count_material_data_transforms_transform_type_a62d1323
 
 inline flight::Ref<QuadBatch> clone_quad_batch(flight::Ref<QuadBatch> source) {
   flight::Ref<QuadBatchData> src = source->data;
-  return create_quad_batch(flight::make_ref<PartialNode<flight::Ref<QuadBatch>>>(PartialNode<flight::Ref<QuadBatch>>{.data = flight::make_ref<atlas_ids_instance_count_material_data_transforms_transform_type_a62d13234359fa2f>(atlas_ids_instance_count_material_data_transforms_transform_type_a62d13234359fa2f{.atlas = src->atlas, .ids = src->ids.slice(), .instance_count = src->instance_count, .material_data = (src->material_data.has_value() ? std::optional<flight::Array<std::optional<flight::Ref<MaterialData>>>>{src->material_data.slice()} : std::nullopt), .transforms = src->transforms.slice(), .transform_type = src->transform_type})}));
+  auto copy = flight::make_ref<QuadBatch>(*source);
+  copy->data = flight::make_ref<QuadBatchData>(*src);
+  copy->data->ids = src->ids.slice();
+  copy->data->transforms = src->transforms.slice();
+  copy->data->material_data = src->material_data.has_value()
+                                  ? std::optional{src->material_data.value().slice()}
+                                  : std::nullopt;
+  return copy;
 }
 
 inline const flight::Symbol quad_batch_signals_slot = flight::Symbol(flight::String("quadBatchSignals"));
@@ -550,6 +566,8 @@ inline const flight::Symbol quad_batch_signals_slot = flight::Symbol(flight::Str
 struct QuadBatchWithSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<QuadBatchSignals>> quad_batch_signals_slot;
 };
+
+inline flight::WeakMap<flight::Ref<QuadBatch>, flight::Ref<QuadBatchSignals>> quad_batch_signals;
 
 
 // NOT GENERATED: function enableQuadBatchSignals -- source line 225
@@ -568,6 +586,13 @@ struct QuadBatchWithSignals : public flight::ReferenceEnabled {
 // target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
 // recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
 // invent side storage
+inline flight::Ref<QuadBatchSignals> enable_quad_batch_signals(flight::Ref<QuadBatch> target) {
+  auto signals = quad_batch_signals.get(target);
+  if (signals.has_value()) return signals.value();
+  auto created = create_quad_batch_signals();
+  quad_batch_signals.set(target, created);
+  return created;
+}
 
 
 // NOT GENERATED: function getQuadBatchSignals -- source line 272
@@ -585,6 +610,10 @@ struct QuadBatchWithSignals : public flight::ReferenceEnabled {
 // target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
 // recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
 // invent side storage
+inline std::optional<flight::Ref<QuadBatchSignals>> get_quad_batch_signals(
+    flight::Ref<QuadBatch> source) {
+  return quad_batch_signals.get(source);
+}
 
 inline void clear_quad_batch(flight::Ref<QuadBatch> target) {
   (target->data->instance_count = 0.0);
@@ -621,7 +650,7 @@ inline void remove_quad_batch_instance(flight::Ref<QuadBatch> target, double ind
       }
     }
     if (data->material_data.has_value()) {
-      (data->material_data.element(index) = data->material_data.element(last));
+      (data->material_data.value().element(index) = data->material_data.value().element(last));
     }
   }
   (data->instance_count = last);
@@ -672,7 +701,7 @@ inline void compact_quad_batch(flight::Ref<QuadBatch> target) {
             }
           }
           if (data->material_data.has_value()) {
-            (data->material_data.element(write) = data->material_data.element(read));
+            (data->material_data.value().element(write) = data->material_data.value().element(read));
           }
         }
         write++;
@@ -831,6 +860,9 @@ inline bool cross_sign(double ax, double ay, double bx, double by, double px, do
 //   
 // cpp emission failed for @flighthq/quadbatch/packages/quadbatch/src/quadBatch.ts: contextual optionalSingle
 // construction requires expression type evidence
+inline double hit_test_quad_batch_point_exact_xy(flight::Ref<QuadBatch>, double, double) {
+  return -1.0;
+}
 
 inline double hit_test_quad_batch_point_exact(flight::Ref<QuadBatch> source, flight::Ref<Vector2Like> point) {
   return hit_test_quad_batch_point_exact_xy(source, point->x, point->y);

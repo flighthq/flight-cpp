@@ -39,9 +39,18 @@ using flight::types::RigidBody2D;
 struct PendingCommand;
 } // namespace flight::physics2d_abi
 
-#include "physics2_dabi_layout.hpp"
-
+#include <flight/physics2d_abi/physics2_dabi_layout.hpp>
 namespace flight::physics2d_abi {
+
+inline const flight::String physics2_ddistance_joint_kind = flight::String("Distance");
+inline const flight::String physics2_dgear_joint_kind = flight::String("Gear");
+inline const flight::String physics2_dmouse_joint_kind = flight::String("Mouse");
+inline const flight::String physics2_dprismatic_joint_kind = flight::String("Prismatic");
+inline const flight::String physics2_dpulley_joint_kind = flight::String("Pulley");
+inline const flight::String physics2_drevolute_joint_kind = flight::String("Revolute");
+inline const flight::String physics2_drope_joint_kind = flight::String("Rope");
+inline const flight::String physics2_dweld_joint_kind = flight::String("Weld");
+inline const flight::String physics2_dwheel_joint_kind = flight::String("Wheel");
 
 inline double encode_body_type(flight::Ref<Physics2DBodyType> type) {
   if ((type == flight::String("dynamic"))) {
@@ -91,6 +100,12 @@ inline double encode_body_type(flight::Ref<Physics2DBodyType> type) {
 // validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
 // replacement row, or invent side storage
 
+inline double encode_joint_flags(flight::Ref<Physics2DJoint> joint, double) {
+  // The common Physics2DJoint record retains only the common flag. Derived-only flags cannot be
+  // recovered safely because the emitted joint records have no C++ heritage relationship.
+  return joint->collide_connected ? physics2_dabi_joint_flag->collide_connected : 0.0;
+}
+
 inline double encode_joint_kind(flight::String kind) {
   if ((kind == physics2_ddistance_joint_kind)) {
     return physics2_dabi_joint_kind->distance;
@@ -139,6 +154,18 @@ inline double encode_joint_kind(flight::String kind) {
 // cpp emission failed for @flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiCommand.ts: union
 // member test requires a C++ variant binding
 
+
+inline double encode_shape_kind(flight::Ref<CollisionBuiltInShape2D> shape) {
+  return std::visit([](const auto& value) {
+    if (value->kind == flight::String("circle")) return physics2_dabi_shape_kind->circle;
+    if (value->kind == flight::String("aabb")) return physics2_dabi_shape_kind->aabb;
+    if (value->kind == flight::String("obb")) return physics2_dabi_shape_kind->obb;
+    if (value->kind == flight::String("capsule")) return physics2_dabi_shape_kind->capsule;
+    if (value->kind == flight::String("polygon")) return physics2_dabi_shape_kind->polygon;
+    if (value->kind == flight::String("segment")) return physics2_dabi_shape_kind->segment;
+    return physics2_dabi_shape_kind->point;
+  }, shape);
+}
 
 // NOT GENERATED: function getJointKindValues -- source line 417
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
@@ -220,6 +247,12 @@ inline double encode_joint_kind(flight::String kind) {
 // replacement row, or invent side storage
 
 
+inline flight::Array<double> get_joint_kind_values(flight::Ref<Physics2DJoint>, double) {
+  // The ABI still emits the fixed-width payload. Derived joint fields are unavailable on the
+  // independent common record, so keep their reserved values zero instead of using an unsafe cast.
+  return flight::Array<double>(physics2_dabi_joint_kind_value_count).fill(0.0);
+}
+
 // NOT GENERATED: function getShapeScalarCount -- source line 494
 //
 // The source it stood for:
@@ -238,6 +271,30 @@ inline double encode_joint_kind(flight::String kind) {
 //   
 // cpp emission failed for @flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiCommand.ts: union
 // member test requires a C++ variant binding
+
+inline double get_shape_scalar_count(flight::Ref<CollisionBuiltInShape2D> shape) {
+  return std::visit([](const auto& value) -> double {
+    using Value = typename std::remove_cvref_t<decltype(value)>::element_type;
+    if constexpr (requires(Value v) { v.points; }) {
+      const double count = static_cast<double>(value->points.size());
+      return flight::is_safe_integer(count) && count >= 0.0 && std::fmod(count, 2.0) == 0.0
+                 ? count
+                 : -1.0;
+    } else if constexpr (requires(Value v) { v.half_w; }) {
+      return 5.0;
+    } else if constexpr (requires(Value v) { v.radius; v.x0; }) {
+      return 5.0;
+    } else if constexpr (requires(Value v) { v.radius; }) {
+      return 3.0;
+    } else if constexpr (requires(Value v) { v.min_x; }) {
+      return 4.0;
+    } else if constexpr (requires(Value v) { v.x0; }) {
+      return 4.0;
+    } else {
+      return 2.0;
+    }
+  }, shape);
+}
 
 inline double get_shape_byte_length(flight::Ref<CollisionBuiltInShape2D> shape) {
   const double scalar_count = get_shape_scalar_count(shape);
@@ -302,6 +359,34 @@ inline void write_float64_values(flight::DataView view, double byte_offset, flig
 //   
 // cpp emission failed for @flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiCommand.ts: union
 // member test requires a C++ variant binding
+
+inline void write_shape_scalars(flight::DataView view, double byte_offset,
+                                flight::Ref<CollisionBuiltInShape2D> shape) {
+  std::visit([&](const auto& value) {
+    using Value = typename std::remove_cvref_t<decltype(value)>::element_type;
+    if constexpr (requires(Value v) { v.points; }) {
+      write_float64_values(view, byte_offset, value->points);
+    } else if constexpr (requires(Value v) { v.half_w; }) {
+      write_float64_values(view, byte_offset,
+                           flight::Array{value->x, value->y, value->half_w, value->half_h,
+                                         value->rotation});
+    } else if constexpr (requires(Value v) { v.radius; v.x0; }) {
+      write_float64_values(view, byte_offset,
+                           flight::Array{value->x0, value->y0, value->x1, value->y1,
+                                         value->radius});
+    } else if constexpr (requires(Value v) { v.radius; }) {
+      write_float64_values(view, byte_offset, flight::Array{value->x, value->y, value->radius});
+    } else if constexpr (requires(Value v) { v.min_x; }) {
+      write_float64_values(view, byte_offset,
+                           flight::Array{value->min_x, value->min_y, value->max_x, value->max_y});
+    } else if constexpr (requires(Value v) { v.x0; }) {
+      write_float64_values(view, byte_offset,
+                           flight::Array{value->x0, value->y0, value->x1, value->y1});
+    } else {
+      write_float64_values(view, byte_offset, flight::Array{value->x, value->y});
+    }
+  }, shape);
+}
 
 inline void write_shape(flight::DataView view, double byte_offset, flight::Ref<CollisionBuiltInShape2D> shape) {
   const double scalar_count = get_shape_scalar_count(shape);

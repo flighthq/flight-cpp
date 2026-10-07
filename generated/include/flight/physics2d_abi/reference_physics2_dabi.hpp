@@ -165,7 +165,7 @@ struct CommandRecord : public flight::ReferenceEnabled {
 };
 
 inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_gravity(flight::Ref<ReferencePhysics2DAbiWorld> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandRecord>>>> command) {
-  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length.set_gravity) || (flight::row_get<flight::RowKey<"objectId">>(command) != 0.0)) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
+  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length->set_gravity) || (flight::row_get<flight::RowKey<"objectId">>(command) != 0.0)) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
     return flight::String("InvalidCommand");
   }
   const double x = flight::row_get<flight::RowKey<"view">>(command).get_float64(flight::row_get<flight::RowKey<"payload">>(command), true);
@@ -179,7 +179,7 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_gravity(flight::Ref<
 }
 
 inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_solver_config(flight::Ref<ReferencePhysics2DAbiWorld> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandRecord>>>> command) {
-  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length.set_solver_config) || (flight::row_get<flight::RowKey<"objectId">>(command) != 0.0)) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
+  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length->set_solver_config) || (flight::row_get<flight::RowKey<"objectId">>(command) != 0.0)) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
     return flight::String("InvalidCommand");
   }
   const double flags = flight::row_get<flight::RowKey<"view">>(command).get_uint32(flight::row_get<flight::RowKey<"payload">>(command), true);
@@ -725,18 +725,18 @@ inline flight::Array<double> read_float64_values(flight::StructuralRef<flight::R
 // contextual union value type flight::String is not a represented runtime domain
 
 inline double encode_body_flags(flight::Ref<RigidBody2D> body) {
-  double flags = ((body->type == flight::String("dynamic")) ? physics2_dabi_body_type.dynamic : ((body->type == flight::String("kinematic")) ? physics2_dabi_body_type.kinematic : physics2_dabi_body_type.static_));
+  double flags = ((body->type == flight::String("dynamic")) ? physics2_dabi_body_type->dynamic : ((body->type == flight::String("kinematic")) ? physics2_dabi_body_type->kinematic : physics2_dabi_body_type->static_));
   if (flight::to_boolean(body->fixed_rotation)) {
-    ([&]() { auto&& assignment_target = flags; assignment_target = flight::bitwise_or(assignment_target, physics2_dabi_body_flag.fixed_rotation); return assignment_target; }());
+    ([&]() { auto&& assignment_target = flags; assignment_target = flight::bitwise_or(assignment_target, physics2_dabi_body_flag->fixed_rotation); return assignment_target; }());
   }
   if (flight::to_boolean(body->bullet)) {
-    ([&]() { auto&& assignment_target = flags; assignment_target = flight::bitwise_or(assignment_target, physics2_dabi_body_flag.bullet); return assignment_target; }());
+    ([&]() { auto&& assignment_target = flags; assignment_target = flight::bitwise_or(assignment_target, physics2_dabi_body_flag->bullet); return assignment_target; }());
   }
   if (flight::to_boolean(body->sleeping)) {
-    ([&]() { auto&& assignment_target = flags; assignment_target = flight::bitwise_or(assignment_target, physics2_dabi_body_flag.sleeping); return assignment_target; }());
+    ([&]() { auto&& assignment_target = flags; assignment_target = flight::bitwise_or(assignment_target, physics2_dabi_body_flag->sleeping); return assignment_target; }());
   }
   if (flight::to_boolean(body->sleep_enabled)) {
-    ([&]() { auto&& assignment_target = flags; assignment_target = flight::bitwise_or(assignment_target, physics2_dabi_body_flag.sleep_enabled); return assignment_target; }());
+    ([&]() { auto&& assignment_target = flags; assignment_target = flight::bitwise_or(assignment_target, physics2_dabi_body_flag->sleep_enabled); return assignment_target; }());
   }
   return flags;
 }
@@ -848,7 +848,7 @@ inline bool is_object_id(double value) {
 }
 
 inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_collider(flight::Ref<ReferencePhysics2DAbiWorld> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandRecord>>>> command) {
-  if (((!is_object_id(flight::row_get<flight::RowKey<"objectId">>(command)) || !is_object_id(flight::row_get<flight::RowKey<"relatedId">>(command))) || (flight::row_get<flight::RowKey<"byteLength">>(command) < physics2_dabi_command_byte_length.set_collider_minimum))) {
+  if (((!is_object_id(flight::row_get<flight::RowKey<"objectId">>(command)) || !is_object_id(flight::row_get<flight::RowKey<"relatedId">>(command))) || (flight::row_get<flight::RowKey<"byteLength">>(command) < physics2_dabi_command_byte_length->set_collider_minimum))) {
     return flight::String("InvalidCommand");
   }
   std::optional<flight::Ref<RigidBody2D>> body = state->body_by_id.get(flight::row_get<flight::RowKey<"relatedId">>(command));
@@ -859,11 +859,11 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_collider(flight::Ref
   if ((sensor_flag > 1.0)) {
     return flight::String("InvalidCommand");
   }
-  const double shape_kind = flight::row_get<flight::RowKey<"view">>(command).get_uint32((flight::row_get<flight::RowKey<"payload">>(command) + physics2_dabi_set_collider_payload_offset.shape), true);
+  const double shape_kind = flight::row_get<flight::RowKey<"view">>(command).get_uint32((flight::row_get<flight::RowKey<"payload">>(command) + physics2_dabi_set_collider_payload_offset->shape), true);
   if (((shape_kind < physics2_dabi_shape_kind.circle) || (shape_kind > physics2_dabi_shape_kind.point))) {
     return flight::String("UnsupportedShape");
   }
-  std::optional<flight::Ref<CollisionBuiltInShape2D>> shape = read_shape(command, (flight::row_get<flight::RowKey<"payload">>(command) + physics2_dabi_set_collider_payload_offset.shape));
+  std::optional<flight::Ref<CollisionBuiltInShape2D>> shape = read_shape(command, (flight::row_get<flight::RowKey<"payload">>(command) + physics2_dabi_set_collider_payload_offset->shape));
   if (!shape.has_value()) {
     return flight::String("InvalidCommand");
   }
@@ -892,7 +892,7 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_collider(flight::Ref
 }
 
 inline flight::Ref<Physics2DAbiExecutionStatus> execute_destroy_collider(flight::Ref<ReferencePhysics2DAbiWorld> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandRecord>>>> command) {
-  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length.destroy_collider) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
+  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length->destroy_collider) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
     return flight::String("InvalidCommand");
   }
   auto held = state->collider_by_id.get(flight::row_get<flight::RowKey<"objectId">>(command));
@@ -910,7 +910,7 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_destroy_collider(flight:
 
 inline flight::Ref<Physics2DAbiExecutionStatus> execute_body_action(flight::Ref<ReferencePhysics2DAbiWorld> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandRecord>>>> command, std::function<bool(flight::Ref<RigidBody2D>, double, double)> apply, std::optional<bool> scalar_only = std::nullopt) {
   scalar_only = scalar_only.value_or(false);
-  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length.body_action) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
+  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length->body_action) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
     return flight::String("InvalidCommand");
   }
   const double x = flight::row_get<flight::RowKey<"view">>(command).get_float64(flight::row_get<flight::RowKey<"payload">>(command), true);
@@ -926,7 +926,7 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_body_action(flight::Ref<
 }
 
 inline flight::Ref<Physics2DAbiExecutionStatus> execute_body_point_action(flight::Ref<ReferencePhysics2DAbiWorld> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandRecord>>>> command, std::function<bool(flight::Ref<RigidBody2D>, double, double, double, double)> apply) {
-  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length.body_action) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
+  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length->body_action) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
     return flight::String("InvalidCommand");
   }
   std::optional<flight::Ref<RigidBody2D>> body = state->body_by_id.get(flight::row_get<flight::RowKey<"objectId">>(command));
@@ -938,7 +938,7 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_body_point_action(flight
 }
 
 inline flight::Ref<Physics2DAbiExecutionStatus> execute_wake_body(flight::Ref<ReferencePhysics2DAbiWorld> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandRecord>>>> command) {
-  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length.wake_body) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
+  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length->wake_body) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
     return flight::String("InvalidCommand");
   }
   std::optional<flight::Ref<RigidBody2D>> body = state->body_by_id.get(flight::row_get<flight::RowKey<"objectId">>(command));
@@ -951,13 +951,13 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_wake_body(flight::Ref<Re
 
 inline double get_joint_flag_mask(double kind) {
   const double common = physics2_dabi_joint_flag.collide_connected;
-  if (((kind == physics2_dabi_joint_kind.revolute) || (kind == physics2_dabi_joint_kind.prismatic))) {
+  if (((kind == physics2_dabi_joint_kind->revolute) || (kind == physics2_dabi_joint_kind->prismatic))) {
     return flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(common, physics2_dabi_joint_flag.enable_motor), physics2_dabi_joint_flag.enable_limit), physics2_dabi_joint_flag.enable_limit_spring);
   }
-  if ((kind == physics2_dabi_joint_kind.wheel)) {
+  if ((kind == physics2_dabi_joint_kind->wheel)) {
     return flight::bitwise_or(common, physics2_dabi_joint_flag.enable_motor);
   }
-  if ((kind == physics2_dabi_joint_kind.gear)) {
+  if ((kind == physics2_dabi_joint_kind->gear)) {
     return flight::bitwise_or(flight::bitwise_or(common, physics2_dabi_joint_flag.linear_coordinate_a), physics2_dabi_joint_flag.linear_coordinate_b);
   }
   return common;
@@ -979,7 +979,7 @@ inline void remove_sorted(flight::Array<double> values, double value) {
 }
 
 inline flight::Ref<Physics2DAbiExecutionStatus> execute_destroy_body(flight::Ref<ReferencePhysics2DAbiWorld> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandRecord>>>> command) {
-  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length.destroy_body) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
+  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length->destroy_body) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
     return flight::String("InvalidCommand");
   }
   std::optional<flight::Ref<RigidBody2D>> body = state->body_by_id.get(flight::row_get<flight::RowKey<"objectId">>(command));
@@ -1013,19 +1013,19 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_destroy_body(flight::Ref
 }
 
 inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_joint(flight::Ref<ReferencePhysics2DAbiWorld> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandRecord>>>> command) {
-  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length.set_joint) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
+  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length->set_joint) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
     return flight::String("InvalidCommand");
   }
-  const double kind = flight::row_get<flight::RowKey<"view">>(command).get_uint32((flight::row_get<flight::RowKey<"payload">>(command) + physics2_dabi_set_joint_payload_offset.kind), true);
-  const double body_aid = flight::row_get<flight::RowKey<"view">>(command).get_uint32((flight::row_get<flight::RowKey<"payload">>(command) + physics2_dabi_set_joint_payload_offset.body_a), true);
-  const double body_bid = flight::row_get<flight::RowKey<"view">>(command).get_uint32((flight::row_get<flight::RowKey<"payload">>(command) + physics2_dabi_set_joint_payload_offset.body_b), true);
-  if (((kind < physics2_dabi_joint_kind.distance) || (kind > physics2_dabi_joint_kind.gear))) {
+  const double kind = flight::row_get<flight::RowKey<"view">>(command).get_uint32((flight::row_get<flight::RowKey<"payload">>(command) + physics2_dabi_set_joint_payload_offset->kind), true);
+  const double body_aid = flight::row_get<flight::RowKey<"view">>(command).get_uint32((flight::row_get<flight::RowKey<"payload">>(command) + physics2_dabi_set_joint_payload_offset->body_a), true);
+  const double body_bid = flight::row_get<flight::RowKey<"view">>(command).get_uint32((flight::row_get<flight::RowKey<"payload">>(command) + physics2_dabi_set_joint_payload_offset->body_b), true);
+  if (((kind < physics2_dabi_joint_kind->distance) || (kind > physics2_dabi_joint_kind->gear))) {
     return flight::String("UnsupportedJoint");
   }
   if ((!is_object_id(body_aid) || !is_object_id(body_bid))) {
     return flight::String("InvalidCommand");
   }
-  const double flags = flight::row_get<flight::RowKey<"view">>(command).get_uint32((flight::row_get<flight::RowKey<"payload">>(command) + physics2_dabi_set_joint_payload_offset.flags), true);
+  const double flags = flight::row_get<flight::RowKey<"view">>(command).get_uint32((flight::row_get<flight::RowKey<"payload">>(command) + physics2_dabi_set_joint_payload_offset->flags), true);
   if ((flight::bitwise_and(flags, get_joint_flag_mask(kind)) != flags)) {
     return flight::String("InvalidCommand");
   }
@@ -1034,8 +1034,8 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_joint(flight::Ref<Re
   if ((!body_a.has_value() || !body_b.has_value())) {
     return flight::String("MissingBody");
   }
-  flight::Array<double> common = read_float64_values(command, physics2_dabi_set_joint_payload_offset.common_values, state->joint_common_values);
-  flight::Array<double> values = read_float64_values(command, physics2_dabi_set_joint_payload_offset.kind_values, state->joint_kind_values);
+  flight::Array<double> common = read_float64_values(command, physics2_dabi_set_joint_payload_offset->common_values, state->joint_common_values);
+  flight::Array<double> values = read_float64_values(command, physics2_dabi_set_joint_payload_offset->kind_values, state->joint_kind_values);
   if (!is_joint_value_block_valid(common, values)) {
     return flight::String("RejectedMutation");
   }
@@ -1058,7 +1058,7 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_joint(flight::Ref<Re
 }
 
 inline flight::Ref<Physics2DAbiExecutionStatus> execute_destroy_joint(flight::Ref<ReferencePhysics2DAbiWorld> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandRecord>>>> command) {
-  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length.destroy_joint) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
+  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length->destroy_joint) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
     return flight::String("InvalidCommand");
   }
   std::optional<flight::Ref<Physics2DJoint>> joint = state->joint_by_id.get(flight::row_get<flight::RowKey<"objectId">>(command));
@@ -1125,17 +1125,17 @@ inline void collect_broken_joints(flight::Ref<ReferencePhysics2DAbiWorld> state)
 // cpp emission failed for @flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts: a
 // presence test against null has no absence channel in the emitted C++ storage for property
 
-inline const double physics2_d_abi_body_flag_mask = flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(physics2_dabi_body_flag.type_mask, physics2_dabi_body_flag.fixed_rotation), physics2_dabi_body_flag.bullet), physics2_dabi_body_flag.sleeping), physics2_dabi_body_flag.sleep_enabled);
+inline const double physics2_d_abi_body_flag_mask = flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(physics2_dabi_body_flag->type_mask, physics2_dabi_body_flag->fixed_rotation), physics2_dabi_body_flag->bullet), physics2_dabi_body_flag->sleeping), physics2_dabi_body_flag->sleep_enabled);
 
 inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_body(flight::Ref<ReferencePhysics2DAbiWorld> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandRecord>>>> command) {
-  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length.set_body) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
+  if ((((flight::row_get<flight::RowKey<"byteLength">>(command) != physics2_dabi_command_byte_length->set_body) || !is_object_id(flight::row_get<flight::RowKey<"objectId">>(command))) || (flight::row_get<flight::RowKey<"relatedId">>(command) != 0.0))) {
     return flight::String("InvalidCommand");
   }
   const double flags = flight::row_get<flight::RowKey<"view">>(command).get_uint32(flight::row_get<flight::RowKey<"payload">>(command), true);
   if (((flight::bitwise_and(flags, physics2_d_abi_body_flag_mask) != flags) || (flight::row_get<flight::RowKey<"view">>(command).get_uint32((flight::row_get<flight::RowKey<"payload">>(command) + 4.0), true) != 0.0))) {
     return flight::String("InvalidCommand");
   }
-  std::optional<flight::Ref<Physics2DBodyType>> type = decode_body_type(flight::bitwise_and(flags, physics2_dabi_body_flag.type_mask));
+  std::optional<flight::Ref<Physics2DBodyType>> type = decode_body_type(flight::bitwise_and(flags, physics2_dabi_body_flag->type_mask));
   flight::Array<double> values = read_float64_values(command, 8.0, state->body_values);
   if ((!type.has_value() || !is_body_value_block_valid(values))) {
     return flight::String("RejectedMutation");
@@ -1151,13 +1151,13 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_body(flight::Ref<Ref
   if (!set_physics2_dbody_type(state->world, body, type.value())) {
     return flight::String("RejectedMutation");
   }
-  if (!set_physics2_dbody_fixed_rotation(state->world, body, (flight::bitwise_and(flags, physics2_dabi_body_flag.fixed_rotation) != 0.0))) {
+  if (!set_physics2_dbody_fixed_rotation(state->world, body, (flight::bitwise_and(flags, physics2_dabi_body_flag->fixed_rotation) != 0.0))) {
     return flight::String("RejectedMutation");
   }
-  if (!set_physics2_dbody_bullet(state->world, body, (flight::bitwise_and(flags, physics2_dabi_body_flag.bullet) != 0.0))) {
+  if (!set_physics2_dbody_bullet(state->world, body, (flight::bitwise_and(flags, physics2_dabi_body_flag->bullet) != 0.0))) {
     return flight::String("RejectedMutation");
   }
-  if (!set_physics2_dbody_sleep_enabled(state->world, body, (flight::bitwise_and(flags, physics2_dabi_body_flag.sleep_enabled) != 0.0))) {
+  if (!set_physics2_dbody_sleep_enabled(state->world, body, (flight::bitwise_and(flags, physics2_dabi_body_flag->sleep_enabled) != 0.0))) {
     return flight::String("RejectedMutation");
   }
   if (!set_physics2_dbody_transform(state->world, body, values.element(0.0), values.element(1.0), values.element(2.0))) {
@@ -1173,7 +1173,7 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_body(flight::Ref<Ref
   (body->angular_damping = values.element(14.0));
   (body->gravity_scale = values.element(15.0));
   (body->sleep_timer = values.element(16.0));
-  if ((flight::bitwise_and(flags, physics2_dabi_body_flag.sleeping) == 0.0)) {
+  if ((flight::bitwise_and(flags, physics2_dabi_body_flag->sleeping) == 0.0)) {
     wake_physics2_dbody(body);
   }
   else {
@@ -1183,46 +1183,46 @@ inline flight::Ref<Physics2DAbiExecutionStatus> execute_set_body(flight::Ref<Ref
 }
 
 inline flight::Ref<Physics2DAbiExecutionStatus> execute_command(flight::Ref<ReferencePhysics2DAbiWorld> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandRecord>>>> command) {
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.set_gravity)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->set_gravity)) {
     return execute_set_gravity(state, command);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.set_solver_config)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->set_solver_config)) {
     return execute_set_solver_config(state, command);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.set_body)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->set_body)) {
     return execute_set_body(state, command);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.destroy_body)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->destroy_body)) {
     return execute_destroy_body(state, command);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.set_collider)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->set_collider)) {
     return execute_set_collider(state, command);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.destroy_collider)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->destroy_collider)) {
     return execute_destroy_collider(state, command);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.set_joint)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->set_joint)) {
     return execute_set_joint(state, command);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.destroy_joint)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->destroy_joint)) {
     return execute_destroy_joint(state, command);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.apply_force)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->apply_force)) {
     return execute_body_action(state, command, [=](flight::Ref<RigidBody2D> body, double x, double y) { return apply_physics2_dforce(body, x, y); }, std::nullopt);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.apply_force_at_point)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->apply_force_at_point)) {
     return execute_body_point_action(state, command, apply_physics2_dforce_at_point);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.apply_linear_impulse)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->apply_linear_impulse)) {
     return execute_body_action(state, command, [=](flight::Ref<RigidBody2D> body, double x, double y) { return apply_physics2_dlinear_impulse(body, x, y); }, std::nullopt);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.apply_linear_impulse_at_point)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->apply_linear_impulse_at_point)) {
     return execute_body_point_action(state, command, apply_physics2_dlinear_impulse_at_point);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.apply_torque)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->apply_torque)) {
     return execute_body_action(state, command, [=](flight::Ref<RigidBody2D> body, double x, double ignored_callback_argument) { (void)ignored_callback_argument; return apply_physics2_dtorque(body, x); }, true);
   }
-  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind.wake_body)) {
+  if ((flight::row_get<flight::RowKey<"kind">>(command) == physics2_dabi_command_kind->wake_body)) {
     return execute_wake_body(state, command);
   }
   return flight::String("InvalidCommand");

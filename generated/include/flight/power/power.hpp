@@ -62,15 +62,15 @@ inline flight::Task<flight::Ref<PowerKeepAwakeAcquireResult>> acquire_power_keep
 }
 
 inline void enable_power_signals(flight::Ref<Power> power) {
-  ([&]() { auto&& assignment_target = power->on_change; if (!assignment_target.has_value()) assignment_target = create_signal(); return assignment_target.value(); }());
-  ([&]() { auto&& assignment_target = power->on_charging; if (!assignment_target.has_value()) assignment_target = create_signal(); return assignment_target.value(); }());
-  ([&]() { auto&& assignment_target = power->on_discharging; if (!assignment_target.has_value()) assignment_target = create_signal(); return assignment_target.value(); }());
-  ([&]() { auto&& assignment_target = power->on_idle_state_change; if (!assignment_target.has_value()) assignment_target = create_signal(); return assignment_target.value(); }());
-  ([&]() { auto&& assignment_target = power->on_lock_screen; if (!assignment_target.has_value()) assignment_target = create_signal(); return assignment_target.value(); }());
-  ([&]() { auto&& assignment_target = power->on_resume; if (!assignment_target.has_value()) assignment_target = create_signal(); return assignment_target.value(); }());
-  ([&]() { auto&& assignment_target = power->on_suspend; if (!assignment_target.has_value()) assignment_target = create_signal(); return assignment_target.value(); }());
-  ([&]() { auto&& assignment_target = power->on_thermal_state_change; if (!assignment_target.has_value()) assignment_target = create_signal(); return assignment_target.value(); }());
-  ([&]() { auto&& assignment_target = power->on_unlock_screen; if (!assignment_target.has_value()) assignment_target = create_signal(); return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = power->on_change; if (!assignment_target.has_value()) assignment_target = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(assignment_target)>::value_type::element_type>>(); return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = power->on_charging; if (!assignment_target.has_value()) assignment_target = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(assignment_target)>::value_type::element_type>>(); return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = power->on_discharging; if (!assignment_target.has_value()) assignment_target = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(assignment_target)>::value_type::element_type>>(); return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = power->on_idle_state_change; if (!assignment_target.has_value()) assignment_target = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(assignment_target)>::value_type::element_type>>(); return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = power->on_lock_screen; if (!assignment_target.has_value()) assignment_target = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(assignment_target)>::value_type::element_type>>(); return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = power->on_resume; if (!assignment_target.has_value()) assignment_target = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(assignment_target)>::value_type::element_type>>(); return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = power->on_suspend; if (!assignment_target.has_value()) assignment_target = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(assignment_target)>::value_type::element_type>>(); return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = power->on_thermal_state_change; if (!assignment_target.has_value()) assignment_target = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(assignment_target)>::value_type::element_type>>(); return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = power->on_unlock_screen; if (!assignment_target.has_value()) assignment_target = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(assignment_target)>::value_type::element_type>>(); return assignment_target.value(); }());
 }
 
 inline flight::Ref<PowerBatteryHealth> get_power_battery_health(flight::Ref<HostPowerBatteryHealthCapability> host_power_battery_health, flight::Ref<PowerBatteryHealth> out) {

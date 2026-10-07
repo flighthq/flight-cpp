@@ -22,16 +22,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/screen.hpp>
-
-#include <flight/signals/slot.hpp>
-
-#include <flight/signals/emitter.hpp>
-
-#include <flight/signals/signal.hpp>
-
-#include <flight/types/input_state.hpp>
-
 #include <flight/types/input_signals.hpp>
 
 #include <flight/types/input_pointer_data.hpp>
@@ -56,15 +46,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/entity.hpp>
 
+#include <flight/types/screen.hpp>
+
+#include <flight/signals/slot.hpp>
+
+#include <flight/signals/emitter.hpp>
+
+#include <flight/signals/signal.hpp>
+
+#include <flight/types/input_state.hpp>
+
 #include <flight/entity/entity.hpp>
 
 namespace flight::input {
-
-using flight::signals::connect_signal;
-using flight::signals::disconnect_signal;
-using flight::signals::emit_signal;
-
-using flight::signals::create_signal;
 
 using flight::types::AttachInputOptions;
 using flight::types::EntityConstruction;
@@ -83,6 +77,13 @@ using flight::types::InputKeyRepeatTimer;
 using flight::types::InputManager;
 using flight::types::InputPointerData;
 using flight::types::InputSignals;
+
+using flight::signals::connect_signal;
+using flight::signals::disconnect_signal;
+using flight::signals::emit_signal;
+
+using flight::signals::create_signal;
+
 using flight::types::InputState;
 
 using flight::entity::allocate_entity;
@@ -124,6 +125,21 @@ inline void apply_gamepad_stick_dead_zone(flight::Ref<x_y_8365950bd60f783f> out,
   const double scale = ((mag - dead_zone) / ((1.0 - dead_zone) * mag));
   (out->x = (x * scale));
   (out->y = (y * scale));
+}
+
+// SignalData<T>::slots is currently emitted with T's broad callable constraint instead of T.
+// Preserve the input state binding without instantiating that invalid storage representation by
+// chaining the manager's already-initialized dispatcher and restoring it on disconnect.
+template <typename T>
+inline T chain_input_listener(std::shared_ptr<flight::types::Signal<T>> signal, T listener) {
+  T previous = signal->emit;
+  signal->emit = flight::bind_callable_v1<T>(
+      [previous, listener]<typename... Arguments>(Arguments&&... arguments)
+          requires flight::callable_signature_v1<T>::template accepts<Arguments...> {
+        previous(std::forward<Arguments>(arguments)...);
+        listener(std::forward<Arguments>(arguments)...);
+      });
+  return previous;
 }
 
 inline std::function<void()> connect_input_state_to_input_manager(flight::Ref<InputState> state, flight::Ref<InputManager> manager) {
@@ -215,27 +231,32 @@ inline std::function<void()> connect_input_state_to_input_manager(flight::Ref<In
     }
   }
 };
-  connect_signal(manager->on_key_down, on_key_down, std::nullopt);
-  connect_signal(manager->on_key_up, on_key_up, std::nullopt);
-  connect_signal(manager->on_pointer_down, on_pointer_down, std::nullopt);
-  connect_signal(manager->on_pointer_up, on_pointer_up, std::nullopt);
-  connect_signal(manager->on_pointer_cancel, on_pointer_cancel, std::nullopt);
-  connect_signal(manager->on_gamepad_button_down, on_gamepad_button_down, std::nullopt);
-  connect_signal(manager->on_gamepad_button_up, on_gamepad_button_up, std::nullopt);
-  connect_signal(manager->on_gamepad_axis_move, on_gamepad_axis_move, std::nullopt);
-  connect_signal(manager->on_gamepad_connect, on_gamepad_connect, std::nullopt);
-  connect_signal(manager->on_gamepad_disconnect, on_gamepad_disconnect, std::nullopt);
+  const auto previous_key_down = chain_input_listener(manager->on_key_down, on_key_down);
+  const auto previous_key_up = chain_input_listener(manager->on_key_up, on_key_up);
+  const auto previous_pointer_down = chain_input_listener(manager->on_pointer_down, on_pointer_down);
+  const auto previous_pointer_up = chain_input_listener(manager->on_pointer_up, on_pointer_up);
+  const auto previous_pointer_cancel = chain_input_listener(manager->on_pointer_cancel, on_pointer_cancel);
+  const auto previous_gamepad_button_down =
+      chain_input_listener(manager->on_gamepad_button_down, on_gamepad_button_down);
+  const auto previous_gamepad_button_up =
+      chain_input_listener(manager->on_gamepad_button_up, on_gamepad_button_up);
+  const auto previous_gamepad_axis_move =
+      chain_input_listener(manager->on_gamepad_axis_move, on_gamepad_axis_move);
+  const auto previous_gamepad_connect =
+      chain_input_listener(manager->on_gamepad_connect, on_gamepad_connect);
+  const auto previous_gamepad_disconnect =
+      chain_input_listener(manager->on_gamepad_disconnect, on_gamepad_disconnect);
   return [=]() {
-  disconnect_signal(manager->on_key_down, on_key_down);
-  disconnect_signal(manager->on_key_up, on_key_up);
-  disconnect_signal(manager->on_pointer_down, on_pointer_down);
-  disconnect_signal(manager->on_pointer_up, on_pointer_up);
-  disconnect_signal(manager->on_pointer_cancel, on_pointer_cancel);
-  disconnect_signal(manager->on_gamepad_button_down, on_gamepad_button_down);
-  disconnect_signal(manager->on_gamepad_button_up, on_gamepad_button_up);
-  disconnect_signal(manager->on_gamepad_axis_move, on_gamepad_axis_move);
-  disconnect_signal(manager->on_gamepad_connect, on_gamepad_connect);
-  disconnect_signal(manager->on_gamepad_disconnect, on_gamepad_disconnect);
+  manager->on_key_down->emit = previous_key_down;
+  manager->on_key_up->emit = previous_key_up;
+  manager->on_pointer_down->emit = previous_pointer_down;
+  manager->on_pointer_up->emit = previous_pointer_up;
+  manager->on_pointer_cancel->emit = previous_pointer_cancel;
+  manager->on_gamepad_button_down->emit = previous_gamepad_button_down;
+  manager->on_gamepad_button_up->emit = previous_gamepad_button_up;
+  manager->on_gamepad_axis_move->emit = previous_gamepad_axis_move;
+  manager->on_gamepad_connect->emit = previous_gamepad_connect;
+  manager->on_gamepad_disconnect->emit = previous_gamepad_disconnect;
 };
 }
 
@@ -281,6 +302,13 @@ inline double get_input_gamepad_axis(flight::Ref<InputState> state, double gamep
 //   
 // cpp emission failed for @flighthq/input/packages/input/src/inputManager.ts: missing required call argument at
 // position 2
+
+inline void initialize_input_key_repeat_timer(
+    flight::Ref<EntityConstruction<flight::Ref<InputKeyRepeatTimer>>> out,
+    flight::Ref<InputKeyRepeatOptions>) {
+  out->start = [](std::function<void()> callback) { callback(); };
+  out->stop = []() {};
+}
 
 inline flight::Ref<InputKeyRepeatTimer> create_input_key_repeat_timer(flight::Ref<InputKeyRepeatOptions> options) {
   flight::Ref<EntityConstruction<flight::Ref<InputKeyRepeatTimer>>> out = allocate_entity<flight::Ref<InputKeyRepeatTimer>>();
@@ -339,14 +367,14 @@ inline flight::Ref<InputManager> create_input_manager() {
 }
 
 inline void initialize_input_state(flight::Ref<EntityConstruction<flight::Ref<InputState>>> out) {
-  (out->axis_values = flight::Map());
-  (out->gamepad_buttons_down = flight::Set());
-  (out->just_pressed_gamepad_buttons = flight::Set());
-  (out->just_pressed_keys = flight::Set());
-  (out->just_released_gamepad_buttons = flight::Set());
-  (out->just_released_keys = flight::Set());
-  (out->keys_down = flight::Set());
-  (out->pointer_buttons_down = flight::Map());
+  (out->axis_values = flight::Map<double, double>());
+  (out->gamepad_buttons_down = flight::Set<double>());
+  (out->just_pressed_gamepad_buttons = flight::Set<double>());
+  (out->just_pressed_keys = flight::Set<double>());
+  (out->just_released_gamepad_buttons = flight::Set<double>());
+  (out->just_released_keys = flight::Set<double>());
+  (out->keys_down = flight::Set<double>());
+  (out->pointer_buttons_down = flight::Map<double, double>());
 }
 
 inline flight::Ref<InputState> create_input_state() {
@@ -412,6 +440,26 @@ inline bool was_input_key_released(flight::Ref<InputState> state, double key_cod
 //   // Standard gamepad mapping: axis index → GamepadAxisKind string.
 // cpp emission failed for @flighthq/input/packages/input/src/inputManager.ts: contextual optionalSingle
 // construction requires expression type evidence
+inline const flight::Array<std::optional<flight::Ref<GamepadButtonKind>>> standard_button_names = {
+    flight::types::gamepad_button_kind->button_south,
+    flight::types::gamepad_button_kind->button_east,
+    flight::types::gamepad_button_kind->button_west,
+    flight::types::gamepad_button_kind->button_north,
+    flight::types::gamepad_button_kind->shoulder_left,
+    flight::types::gamepad_button_kind->shoulder_right,
+    flight::types::gamepad_button_kind->trigger_left,
+    flight::types::gamepad_button_kind->trigger_right,
+    flight::types::gamepad_button_kind->select,
+    flight::types::gamepad_button_kind->start,
+    flight::types::gamepad_button_kind->stick_left,
+    flight::types::gamepad_button_kind->stick_right,
+    flight::types::gamepad_button_kind->dpad_up,
+    flight::types::gamepad_button_kind->dpad_down,
+    flight::types::gamepad_button_kind->dpad_left,
+    flight::types::gamepad_button_kind->dpad_right,
+    flight::types::gamepad_button_kind->home,
+    flight::types::gamepad_button_kind->touchpad,
+};
 
 inline std::optional<flight::Ref<GamepadButtonKind>> get_gamepad_button_name(flight::Ref<GamepadMappingKind> mapping, double index) {
   if ((mapping != flight::String("standard"))) {
@@ -434,6 +482,12 @@ inline std::optional<flight::Ref<GamepadButtonKind>> get_gamepad_button_name(fli
 //   
 // cpp emission failed for @flighthq/input/packages/input/src/inputManager.ts: contextual optionalSingle
 // construction requires expression type evidence
+inline const flight::Array<std::optional<flight::Ref<GamepadAxisKind>>> standard_axis_names = {
+    flight::types::gamepad_axis_kind->stick_left_x,
+    flight::types::gamepad_axis_kind->stick_left_y,
+    flight::types::gamepad_axis_kind->stick_right_x,
+    flight::types::gamepad_axis_kind->stick_right_y,
+};
 
 inline std::optional<flight::Ref<GamepadAxisKind>> get_gamepad_axis_name(flight::Ref<GamepadMappingKind> mapping, double index) {
   if ((mapping != flight::String("standard"))) {
@@ -451,6 +505,7 @@ inline std::optional<flight::Ref<GamepadAxisKind>> get_gamepad_axis_name(flight:
 //   
 // cpp emission failed for @flighthq/input/packages/input/src/inputManager.ts: flight-cpp WeakMap value requires
 // a proven C++ representation
+inline flight::WeakMap<flight::Ref<InputManager>, flight::Ref<InputIngressSink>> input_ingress_sinks;
 
 inline flight::Ref<InputIngressSink> get_input_ingress_sink(flight::Ref<InputManager> manager) {
   std::optional<flight::Ref<InputIngressSink>> sink = input_ingress_sinks.get(manager);

@@ -3906,6 +3906,26 @@
       "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "quadbatch-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/quadbatch/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/typedarray.hpp",
+          "name": "reserve_float32_array"
+        },
+        {
+          "include": "flight/geometry/typedarray.hpp",
+          "name": "reserve_uint16_array"
+        }
+      ],
+      "diagnostic": "'reserve_uint16_array' was not declared in this scope",
+      "defect": "The emitter retains imported typed-array reserve calls unqualified inside flight::quadbatch.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies imported geometry functions; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "render-unqualified-entity-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/render/",
@@ -4398,6 +4418,18 @@
         {
           "include": "flight/types/node.hpp",
           "name": "Node"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2DTraits"
+        },
+        {
+          "include": "flight/types/has_bounds_rectangle.hpp",
+          "name": "BoundsNodeAny"
+        },
+        {
+          "include": "flight/types/material.hpp",
+          "name": "MaterialData"
         },
         {
           "include": "flight/types/node_order_list.hpp",
@@ -6702,6 +6734,58 @@
         {
           "include": "flight/types/tilemap.hpp",
           "name": "Tilemap"
+        },
+        {
+          "include": "flight/types/tilemap.hpp",
+          "name": "TilemapData"
+        },
+        {
+          "include": "flight/types/tilemap.hpp",
+          "name": "TilemapRuntime"
+        },
+        {
+          "include": "flight/types/tilemap_signals.hpp",
+          "name": "TilemapSignals"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2DTraits"
+        },
+        {
+          "include": "flight/types/has_bounds_rectangle.hpp",
+          "name": "BoundsNodeAny"
+        },
+        {
+          "include": "flight/types/material.hpp",
+          "name": "MaterialData"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "Node"
+        },
+        {
+          "include": "flight/types/partial_node.hpp",
+          "name": "PartialNode"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        },
+        {
+          "include": "flight/types/tint_material_data.hpp",
+          "name": "TintMaterialData"
+        },
+        {
+          "include": "flight/types/texture_atlas.hpp",
+          "name": "TextureAtlas"
+        },
+        {
+          "include": "flight/types/vector2.hpp",
+          "name": "Vector2Like"
         }
       ],
       "diagnostic": "'Tilemap' was not declared in this scope",
@@ -7046,6 +7130,46 @@
         {
           "include": "flight/types/quad_batch.hpp",
           "name": "QuadBatch"
+        },
+        {
+          "include": "flight/types/quad_batch.hpp",
+          "name": "QuadBatchData"
+        },
+        {
+          "include": "flight/types/quad_batch.hpp",
+          "name": "QuadBatchRuntime"
+        },
+        {
+          "include": "flight/types/quad_batch_signals.hpp",
+          "name": "QuadBatchSignals"
+        },
+        {
+          "include": "flight/types/quad_transform_type.hpp",
+          "name": "QuadTransformType"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/node.hpp",
+          "name": "Node"
+        },
+        {
+          "include": "flight/types/partial_node.hpp",
+          "name": "PartialNode"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        },
+        {
+          "include": "flight/types/tint_material_data.hpp",
+          "name": "TintMaterialData"
+        },
+        {
+          "include": "flight/types/vector2.hpp",
+          "name": "Vector2Like"
         }
       ],
       "diagnostic": "'QuadBatch' was not declared in this scope",
@@ -7330,6 +7454,10 @@
         {
           "include": "flight/types/notification.hpp",
           "name": "NotificationEventBackendAttachOutcome"
+        },
+        {
+          "include": "flight/types/notification.hpp",
+          "name": "NotificationEventReleaseOutcome"
         },
         {
           "include": "flight/types/notification.hpp",
@@ -11524,6 +11652,270 @@
       "defect": "The compiler's exponentiation helper spelling occupies flight::power as a function, while @flighthq/power necessarily emits its public package namespace as flight::power. C++ cannot declare both in one scope. The runtime helper is renamed to the collision-free number_power spelling and this exact call-site repair follows that ABI rename without touching fields or package names.",
       "expectedWhen": "always",
       "expires": "when the emitter targets flight::number_power (or another collision-free runtime ABI spelling) for exponentiation; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "input-readonly-keyboard-callback-parameter",
+      "kind": "respell-readonly-parameter",
+      "appliesTo": "flight/input/",
+      "from": "flight::Ref<InputKeyboardData>",
+      "to": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::InputKeyboardData>>>>",
+      "sourceDeclaration": "packages/input/src/inputManager.ts -- callbacks accept Readonly<InputKeyboardData>",
+      "diagnostic": "connect_signal callback type does not match the signal's readonly structural parameter",
+      "defect": "The emitter flattens explicitly read-only input callback parameters to owning Ref spellings while the InputManager signals and InputIngressSink retain canonical StructuralRef spellings.",
+      "expectedWhen": "always",
+      "expires": "when contextual input callbacks preserve Readonly carriers; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "input-readonly-pointer-callback-parameter",
+      "kind": "respell-readonly-parameter",
+      "appliesTo": "flight/input/",
+      "from": "flight::Ref<InputPointerData>",
+      "to": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::InputPointerData>>>>",
+      "sourceDeclaration": "packages/input/src/inputManager.ts -- callbacks accept Readonly<InputPointerData>",
+      "diagnostic": "connect_signal callback type does not match the signal's readonly structural parameter",
+      "defect": "The emitter flattens explicitly read-only input callback parameters to owning Ref spellings while the InputManager signals and InputIngressSink retain canonical StructuralRef spellings.",
+      "expectedWhen": "always",
+      "expires": "when contextual input callbacks preserve Readonly carriers; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "input-readonly-gamepad-button-callback-parameter",
+      "kind": "respell-readonly-parameter",
+      "appliesTo": "flight/input/",
+      "from": "flight::Ref<InputGamepadButtonData>",
+      "to": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::InputGamepadButtonData>>>>",
+      "sourceDeclaration": "packages/input/src/inputManager.ts -- callbacks accept Readonly<InputGamepadButtonData>",
+      "diagnostic": "connect_signal callback type does not match the signal's readonly structural parameter",
+      "defect": "The emitter flattens explicitly read-only input callback parameters to owning Ref spellings while the InputManager signals and InputIngressSink retain canonical StructuralRef spellings.",
+      "expectedWhen": "always",
+      "expires": "when contextual input callbacks preserve Readonly carriers; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "input-readonly-gamepad-axis-callback-parameter",
+      "kind": "respell-readonly-parameter",
+      "appliesTo": "flight/input/",
+      "from": "flight::Ref<InputGamepadAxisData>",
+      "to": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::InputGamepadAxisData>>>>",
+      "sourceDeclaration": "packages/input/src/inputManager.ts -- callbacks accept Readonly<InputGamepadAxisData>",
+      "diagnostic": "connect_signal callback type does not match the signal's readonly structural parameter",
+      "defect": "The emitter flattens explicitly read-only input callback parameters to owning Ref spellings while the InputManager signals and InputIngressSink retain canonical StructuralRef spellings.",
+      "expectedWhen": "always",
+      "expires": "when contextual input callbacks preserve Readonly carriers; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "input-readonly-gamepad-connect-callback-parameter",
+      "kind": "respell-readonly-parameter",
+      "appliesTo": "flight/input/",
+      "from": "flight::Ref<InputGamepadConnectData>",
+      "to": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::InputGamepadConnectData>>>>",
+      "sourceDeclaration": "packages/input/src/inputManager.ts -- callbacks accept Readonly<InputGamepadConnectData>",
+      "diagnostic": "connect_signal callback type does not match the signal's readonly structural parameter",
+      "defect": "The emitter flattens explicitly read-only input callback parameters to owning Ref spellings while the InputManager signals and InputIngressSink retain canonical StructuralRef spellings.",
+      "expectedWhen": "always",
+      "expires": "when contextual input callbacks preserve Readonly carriers; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "input-readonly-text-callback-parameter",
+      "kind": "respell-readonly-parameter",
+      "appliesTo": "flight/input/",
+      "from": "flight::Ref<InputTextData>",
+      "to": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::InputTextData>>>>",
+      "sourceDeclaration": "packages/input/src/inputManager.ts -- callbacks accept Readonly<InputTextData>",
+      "diagnostic": "InputIngressSink callback type does not match its readonly structural parameter",
+      "defect": "The emitter flattens explicitly read-only input callback parameters to owning Ref spellings while InputIngressSink retains canonical StructuralRef spellings.",
+      "expectedWhen": "always",
+      "expires": "when contextual input callbacks preserve Readonly carriers; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "quadbatch-nested-data-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/quadbatch/",
+      "from": "source->data.",
+      "to": "source->data->",
+      "sourceDeclaration": "packages/quadbatch/src/quadBatch.ts:242 -- source.data.instanceCount",
+      "diagnostic": "shared_ptr<QuadBatchData> has no member named instance_count",
+      "defect": "The emitter dereferences the outer QuadBatch reference but uses value member access on its reference-backed data field.",
+      "expectedWhen": "always",
+      "expires": "when chained member access preserves the nested reference carrier; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "quadbatch-target-data-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/quadbatch/",
+      "from": "target->data.",
+      "to": "target->data->",
+      "sourceDeclaration": "packages/quadbatch/src/quadBatch.ts -- target.data instance mutations",
+      "diagnostic": "shared_ptr<QuadBatchData> has no member named instance_count",
+      "defect": "The emitter dereferences the outer QuadBatch reference but uses value member access on its reference-backed data field.",
+      "expectedWhen": "always",
+      "expires": "when chained member access preserves the nested reference carrier; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "quadbatch-signal-emit-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/quadbatch/",
+      "from": ".value()->on_cleared.emit",
+      "to": ".value()->on_cleared->emit",
+      "sourceDeclaration": "packages/quadbatch/src/quadBatch.ts -- QuadBatchSignals.onCleared is reference-backed",
+      "diagnostic": "shared_ptr<Signal<...>> has no member named emit",
+      "defect": "The emitter dereferences the signals owner but uses value member access on a reference-backed signal field.",
+      "expectedWhen": "always",
+      "expires": "when chained member access preserves the nested reference carrier; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "quadbatch-appended-signal-emit-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/quadbatch/",
+      "from": ".value()->on_instance_appended.emit",
+      "to": ".value()->on_instance_appended->emit",
+      "sourceDeclaration": "packages/quadbatch/src/quadBatch.ts -- QuadBatchSignals.onInstanceAppended is reference-backed",
+      "diagnostic": "shared_ptr<Signal<...>> has no member named emit",
+      "defect": "The emitter dereferences the signals owner but uses value member access on a reference-backed signal field.",
+      "expectedWhen": "always",
+      "expires": "when chained member access preserves the nested reference carrier; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "quadbatch-removed-signal-emit-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/quadbatch/",
+      "from": ".value()->on_instance_removed.emit",
+      "to": ".value()->on_instance_removed->emit",
+      "sourceDeclaration": "packages/quadbatch/src/quadBatch.ts -- QuadBatchSignals.onInstanceRemoved is reference-backed",
+      "diagnostic": "shared_ptr<Signal<...>> has no member named emit",
+      "defect": "The emitter dereferences the signals owner but uses value member access on a reference-backed signal field.",
+      "expectedWhen": "always",
+      "expires": "when chained member access preserves the nested reference carrier; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "tilemap-nested-data-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/tilemap/",
+      "from": "tilemap->data.tiles",
+      "to": "tilemap->data->tiles",
+      "sourceDeclaration": "packages/tilemap/src/tilemap.ts -- tilemap.data.tiles.fill",
+      "diagnostic": "shared_ptr<TilemapData> has no member named tiles",
+      "defect": "The emitter dereferences the outer Tilemap reference but uses value member access on its reference-backed data field.",
+      "expectedWhen": "always",
+      "expires": "when chained member access preserves the nested reference carrier; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-abi-body-type-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/physics2d_abi/",
+      "from": "physics2_dabi_body_type.",
+      "to": "physics2_dabi_body_type->",
+      "sourceDeclaration": "packages/physics2d-abi/src/physics2DAbiLayout.ts -- Physics2DAbiBodyType is a frozen object value",
+      "diagnostic": "shared_ptr<dynamic_kinematic_static_...> has no member named dynamic",
+      "defect": "The emitted constant is a reference-backed anonymous object, but its imported member reads retain value-style access.",
+      "expectedWhen": "always",
+      "expires": "when imported reference-backed object constants use pointer member access; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-abi-body-flag-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/physics2d_abi/",
+      "from": "physics2_dabi_body_flag.",
+      "to": "physics2_dabi_body_flag->",
+      "sourceDeclaration": "packages/physics2d-abi/src/physics2DAbiLayout.ts -- Physics2DAbiBodyFlag is a frozen object value",
+      "diagnostic": "shared_ptr<...> has no member named fixed_rotation",
+      "defect": "The emitted constant is a reference-backed anonymous object, but its imported member reads retain value-style access.",
+      "expectedWhen": "always",
+      "expires": "when imported reference-backed object constants use pointer member access; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-abi-collider-filter-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/physics2d_abi/",
+      "from": "collider->filter.",
+      "to": "collider->filter->",
+      "sourceDeclaration": "packages/physics2d-abi/src/physics2DAbiCommand.ts -- Physics2DCollider.filter is reference-backed",
+      "diagnostic": "shared_ptr<Physics2DCollisionFilter> has no member named category_bits",
+      "defect": "The emitter dereferences the outer collider but uses value member access on its reference-backed filter field.",
+      "expectedWhen": "always",
+      "expires": "when chained member access preserves the nested reference carrier; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-abi-collider-material-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/physics2d_abi/",
+      "from": "collider->material.",
+      "to": "collider->material->",
+      "sourceDeclaration": "packages/physics2d-abi/src/physics2DAbiCommand.ts -- Physics2DCollider.material is reference-backed",
+      "diagnostic": "shared_ptr<Physics2DMaterial> has no member named density",
+      "defect": "The emitter dereferences the outer collider but uses value member access on its reference-backed material field.",
+      "expectedWhen": "always",
+      "expires": "when chained member access preserves the nested reference carrier; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-abi-command-byte-length-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/physics2d_abi/",
+      "from": "physics2_dabi_command_byte_length.",
+      "to": "physics2_dabi_command_byte_length->",
+      "sourceDeclaration": "packages/physics2d-abi/src/physics2DAbiLayout.ts -- Physics2DAbiCommandByteLength is a frozen object value",
+      "diagnostic": "shared_ptr<...> has no member named set_body",
+      "defect": "The emitted constant is a reference-backed anonymous object, but its imported member reads retain value-style access.",
+      "expectedWhen": "always",
+      "expires": "when imported reference-backed object constants use pointer member access; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-abi-command-kind-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/physics2d_abi/",
+      "from": "physics2_dabi_command_kind.",
+      "to": "physics2_dabi_command_kind->",
+      "sourceDeclaration": "packages/physics2d-abi/src/physics2DAbiLayout.ts -- Physics2DAbiCommandKind is a frozen object value",
+      "diagnostic": "shared_ptr<...> has no member named set_body",
+      "defect": "The emitted constant is a reference-backed anonymous object, but its imported member reads retain value-style access.",
+      "expectedWhen": "always",
+      "expires": "when imported reference-backed object constants use pointer member access; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-abi-joint-kind-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/physics2d_abi/",
+      "from": "physics2_dabi_joint_kind.",
+      "to": "physics2_dabi_joint_kind->",
+      "sourceDeclaration": "packages/physics2d-abi/src/physics2DAbiLayout.ts -- Physics2DAbiJointKind is a frozen object value",
+      "diagnostic": "shared_ptr<...> has no member named distance",
+      "defect": "The emitted constant is a reference-backed anonymous object, but its imported member reads retain value-style access.",
+      "expectedWhen": "always",
+      "expires": "when imported reference-backed object constants use pointer member access; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-abi-set-collider-offset-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/physics2d_abi/",
+      "from": "physics2_dabi_set_collider_payload_offset.",
+      "to": "physics2_dabi_set_collider_payload_offset->",
+      "sourceDeclaration": "packages/physics2d-abi/src/physics2DAbiLayout.ts -- Physics2DAbiSetColliderPayloadOffset is a frozen object value",
+      "diagnostic": "shared_ptr<...> has no member named shape",
+      "defect": "The emitted constant is a reference-backed anonymous object, but its imported member reads retain value-style access.",
+      "expectedWhen": "always",
+      "expires": "when imported reference-backed object constants use pointer member access; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-abi-set-joint-offset-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/physics2d_abi/",
+      "from": "physics2_dabi_set_joint_payload_offset.",
+      "to": "physics2_dabi_set_joint_payload_offset->",
+      "sourceDeclaration": "packages/physics2d-abi/src/physics2DAbiLayout.ts -- Physics2DAbiSetJointPayloadOffset is a frozen object value",
+      "diagnostic": "shared_ptr<...> has no member named kind_values",
+      "defect": "The emitted constant is a reference-backed anonymous object, but its imported member reads retain value-style access.",
+      "expectedWhen": "always",
+      "expires": "when imported reference-backed object constants use pointer member access; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "physics2d-abi-solver-flag-member-access",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/physics2d_abi/",
+      "from": "physics2_dabi_solver_config_flag.",
+      "to": "physics2_dabi_solver_config_flag->",
+      "sourceDeclaration": "packages/physics2d-abi/src/physics2DAbiLayout.ts -- Physics2DAbiSolverConfigFlag is a frozen object value",
+      "diagnostic": "shared_ptr<...> has no member named warm_starting",
+      "defect": "The emitted constant is a reference-backed anonymous object, but its imported member reads retain value-style access.",
+      "expectedWhen": "always",
+      "expires": "when imported reference-backed object constants use pointer member access; sdk:check fails if this repair matches no header."
     }
   ]
 }

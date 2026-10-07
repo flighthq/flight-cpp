@@ -20,6 +20,7 @@
 #include <cstdint>
 #include <flight/sequence_view.hpp>
 #include <flight/symbol.hpp>
+#include <flight/weak_map.hpp>
 #include <functional>
 #include <optional>
 #include <random>
@@ -28,52 +29,45 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/signals/signal.hpp>
-
 #include <flight/types/vector2.hpp>
 
 #include <flight/types/tint_material_data.hpp>
 
 #include <flight/types/tilemap_signals.hpp>
 
-#include <flight/types/tilemap.hpp>
-
-#include <flight/types/texture_atlas.hpp>
-
 #include <flight/types/rectangle.hpp>
 
 #include <flight/types/partial_node.hpp>
 
-#include <flight/types/node2_d.hpp>
-
 #include <flight/types/node.hpp>
 
-#include <flight/types/material.hpp>
-
-#include <flight/types/has_bounds_rectangle.hpp>
-
 #include <flight/types/entity.hpp>
+
+#include <flight/signals/signal.hpp>
+
+#include <flight/types/tilemap.hpp>
 
 #include <flight/entity/entity.hpp>
 
 namespace flight::tilemap {
 
-using flight::signals::create_signal;
-
-using flight::types::Tilemap;
 using flight::types::TilemapData;
 using flight::types::TilemapRuntime;
 using flight::types::TilemapSignals;
-using flight::types::Node2DTraits;
-using flight::types::BoundsNodeAny;
-using flight::types::MaterialData;
 using flight::types::EntityConstruction;
 using flight::types::Node;
+using flight::types::Node2DTraits;
 using flight::types::PartialNode;
 using flight::types::Rectangle;
-using flight::types::TintMaterialData;
+using flight::types::BoundsNodeAny;
 using flight::types::TextureAtlas;
+using flight::types::MaterialData;
+using flight::types::TintMaterialData;
 using flight::types::Vector2Like;
+
+using flight::signals::create_signal;
+
+using flight::types::Tilemap;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
@@ -125,6 +119,12 @@ inline void fill_tilemap_tiles(flight::Ref<Tilemap> tilemap, double id) {
 //    */
 // cpp emission failed for @flighthq/tilemap/packages/tilemap/src/tilemap.ts: contextual optionalSingle
 // construction requires expression type evidence
+inline double get_tilemap_column_at_x(flight::Ref<Tilemap> source, double x) {
+  const auto& data = source->data;
+  if (!data->atlas.has_value() || data->tile_width <= 0.0) return -1.0;
+  const double column = std::floor(x / data->tile_width);
+  return column < 0.0 || column >= data->columns ? -1.0 : column;
+}
 
 
 // NOT GENERATED: function getTilemapRowAtY -- source line 119
@@ -141,6 +141,12 @@ inline void fill_tilemap_tiles(flight::Ref<Tilemap> tilemap, double id) {
 //   
 // cpp emission failed for @flighthq/tilemap/packages/tilemap/src/tilemap.ts: contextual optionalSingle
 // construction requires expression type evidence
+inline double get_tilemap_row_at_y(flight::Ref<Tilemap> source, double y) {
+  const auto& data = source->data;
+  if (!data->atlas.has_value() || data->tile_height <= 0.0) return -1.0;
+  const double row = std::floor(y / data->tile_height);
+  return row < 0.0 || row >= data->rows ? -1.0 : row;
+}
 
 inline bool get_tilemap_column_row_at_point(flight::Ref<Vector2Like> out, flight::Ref<Tilemap> source, double x, double y) {
   const double col = get_tilemap_column_at_x(source, x);
@@ -376,7 +382,13 @@ struct atlas_columns_material_data_rows_tile_height_tile_width_tiles_eea73d249b5
 
 inline flight::Ref<Tilemap> clone_tilemap(flight::Ref<Tilemap> source) {
   flight::Ref<TilemapData> src = source->data;
-  return create_tilemap(flight::make_ref<PartialNode<flight::Ref<Tilemap>>>(PartialNode<flight::Ref<Tilemap>>{.data = flight::make_ref<atlas_columns_material_data_rows_tile_height_tile_width_tiles_eea73d249b5c14d8>(atlas_columns_material_data_rows_tile_height_tile_width_tiles_eea73d249b5c14d8{.atlas = src->atlas, .columns = src->columns, .material_data = (src->material_data.has_value() ? std::optional<flight::Array<std::optional<flight::Ref<MaterialData>>>>{src->material_data.slice()} : std::nullopt), .rows = src->rows, .tile_height = src->tile_height, .tile_width = src->tile_width, .tiles = src->tiles.slice()})}));
+  auto copy = flight::make_ref<Tilemap>(*source);
+  copy->data = flight::make_ref<TilemapData>(*src);
+  copy->data->tiles = src->tiles.slice();
+  copy->data->material_data = src->material_data.has_value()
+                                  ? std::optional{src->material_data.value().slice()}
+                                  : std::nullopt;
+  return copy;
 }
 
 inline const flight::Symbol tilemap_signals_slot = flight::Symbol(flight::String("tilemapSignals"));
@@ -384,6 +396,8 @@ inline const flight::Symbol tilemap_signals_slot = flight::Symbol(flight::String
 struct TilemapWithSignals : public flight::ReferenceEnabled {
   std::optional<flight::Ref<TilemapSignals>> tilemap_signals_slot;
 };
+
+inline flight::WeakMap<flight::Ref<Tilemap>, flight::Ref<TilemapSignals>> tilemap_signals;
 
 
 // NOT GENERATED: function enableTilemapSignals -- source line 80
@@ -401,6 +415,13 @@ struct TilemapWithSignals : public flight::ReferenceEnabled {
 // owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
 // exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
 // owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+inline flight::Ref<TilemapSignals> enable_tilemap_signals(flight::Ref<Tilemap> target) {
+  auto signals = tilemap_signals.get(target);
+  if (signals.has_value()) return signals.value();
+  auto created = create_tilemap_signals();
+  tilemap_signals.set(target, created);
+  return created;
+}
 
 
 // NOT GENERATED: function getTilemapSignals -- source line 132
@@ -417,12 +438,15 @@ struct TilemapWithSignals : public flight::ReferenceEnabled {
 // owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
 // exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
 // owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+inline std::optional<flight::Ref<TilemapSignals>> get_tilemap_signals(flight::Ref<Tilemap> source) {
+  return tilemap_signals.get(source);
+}
 
 inline void clear_tilemap(flight::Ref<Tilemap> tilemap) {
   tilemap->data->tiles.fill(-1.0);
   std::optional<flight::Ref<TilemapSignals>> signals = get_tilemap_signals(tilemap);
   if (signals.has_value()) {
-    signals.value()->on_cleared.emit();
+    signals.value()->on_cleared->emit();
   }
 }
 
@@ -437,7 +461,7 @@ inline void set_tilemap_tile(flight::Ref<Tilemap> tilemap, double column, double
   ([&]() { auto&& typed_array_2 = tiles; const auto typed_index_2 = ((row * columns) + column); const auto typed_value_2 = id; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
   std::optional<flight::Ref<TilemapSignals>> signals = get_tilemap_signals(tilemap);
   if (signals.has_value()) {
-    signals.value()->on_tile_changed.emit(column, row, id);
+    signals.value()->on_tile_changed->emit(column, row, id);
   }
 }
 
@@ -475,7 +499,7 @@ inline void set_tilemap_tiles(flight::Ref<Tilemap> tilemap, flight::SequenceView
   }
   std::optional<flight::Ref<TilemapSignals>> signals = get_tilemap_signals(tilemap);
   if (signals.has_value()) {
-    signals.value()->on_tiles_changed.emit(offset_column, offset_row, width, height);
+    signals.value()->on_tiles_changed->emit(offset_column, offset_row, width, height);
   }
 }
 
