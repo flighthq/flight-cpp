@@ -982,6 +982,10 @@
         },
         {
           "include": "flight/types/node.hpp",
+          "name": "NodeOf"
+        },
+        {
+          "include": "flight/types/node.hpp",
           "name": "NodeAny"
         },
         {
@@ -1355,26 +1359,6 @@
       "defect": "The emitter writes GlyphAtlasRuntime unqualified inside namespace flight::glyphatlas, where the type is flight::types::GlyphAtlasRuntime, and without the header that defines it.\n\nFound by builder's audit of the modules whose refusal reports ZERO missing declarations. Those placeholders withhold nothing -- the complete source surface is retained and the refusal is recorded at module level only -- so there is nothing for an override to supply and the first failure is ordinary qualification. That is a correction to the assumption that a refused-placeholder module is always a replaceable stub.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "glyphatlas-unqualified-bitmap-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/glyphatlas/",
-      "namespace": "flight::bitmap",
-      "symbols": [
-        {
-          "include": "flight/bitmap/bitmap_region.hpp",
-          "name": "create_bitmap_region"
-        },
-        {
-          "include": "flight/bitmap/bitmap_composite.hpp",
-          "name": "write_bitmap_pixels"
-        }
-      ],
-      "diagnostic": "'create_bitmap_region' was not declared in this scope; did you mean 'flight::bitmap::create_bitmap_region'?",
-      "defect": "The emitter writes 2 name(s) owned by flight::bitmap unqualified inside namespace flight::glyphatlas, and without the headers that define them. Each name carries its own defining header and is introduced only into the files that use it unqualified.\n\n@flighthq/glyphatlas is a zero-marker package: builder's audit established that its refused modules withhold no declarations, so by the synthesis recorded in docs/generation-state.md qualification is the whole fix here rather than half of it -- the same shape as @flighthq/spatial, which went 8/11 to 11/11 on one using-declaration. Found by sweeping every unqualified name in one pass: the first repair (GlyphAtlasRuntime) moved the diagnostic to GlyphEntry rather than clearing the header, which is the iterative-revelation pattern this file warns about.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
       "id": "glyphatlas-unqualified-entity-names",
@@ -2898,6 +2882,10 @@
         {
           "include": "flight/types/vector2.hpp",
           "name": "Vector2Like"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2DTraits"
         }
       ],
       "diagnostic": "'BoundsNodeAny' was not declared in this scope; did you mean 'flight::types::BoundsNodeAny'? -- and the same for 8 further flight::types name(s) in this package",
@@ -4162,22 +4150,6 @@
       "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "skeleton3d-unqualified-entity-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/skeleton3d/",
-      "namespace": "flight::entity",
-      "symbols": [
-        {
-          "include": "flight/entity/entity.hpp",
-          "name": "allocate_entity"
-        }
-      ],
-      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
-      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::skeleton3d. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "statusbar-unqualified-entity-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/statusbar/",
@@ -4521,6 +4493,10 @@
         },
         {
           "include": "flight/types/aseprite_schema.hpp",
+          "name": "AsepriteRect"
+        },
+        {
+          "include": "flight/types/aseprite_schema.hpp",
           "name": "AsepriteBaseFrame"
         },
         {
@@ -4594,6 +4570,14 @@
         {
           "include": "flight/types/texture_packer_schema.hpp",
           "name": "TexturePackerParsed"
+        },
+        {
+          "include": "flight/types/texture_packer_schema.hpp",
+          "name": "TexturePackerRect"
+        },
+        {
+          "include": "flight/types/texture_packer_schema.hpp",
+          "name": "TexturePackerSize"
         },
         {
           "include": "flight/types/import_diagnostic.hpp",
@@ -4670,6 +4654,14 @@
         {
           "include": "flight/types/tilemap.hpp",
           "name": "TilemapData"
+        },
+        {
+          "include": "flight/types/xml_element.hpp",
+          "name": "XmlElement"
+        },
+        {
+          "include": "flight/types/vector2.hpp",
+          "name": "Vector2Like"
         },
         {
           "include": "flight/types/import_diagnostic.hpp",
@@ -5624,12 +5616,44 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/signal.hpp",
+          "name": "Signal"
+        },
+        {
+          "include": "flight/types/grid_slice_options.hpp",
+          "name": "GridSliceOptions"
+        },
+        {
+          "include": "flight/types/spritesheet_animation.hpp",
+          "name": "SpritesheetAnimation"
+        },
+        {
+          "include": "flight/types/spritesheet_animation_direction.hpp",
+          "name": "SpritesheetAnimationDirection"
+        },
+        {
+          "include": "flight/types/spritesheet_frame.hpp",
+          "name": "SpritesheetFrame"
+        },
+        {
           "include": "flight/types/spritesheet.hpp",
           "name": "Spritesheet"
         },
         {
           "include": "flight/types/spritesheet_player.hpp",
           "name": "SpritesheetPlayer"
+        },
+        {
+          "include": "flight/types/texture_atlas.hpp",
+          "name": "TextureAtlas"
+        },
+        {
+          "include": "flight/types/texture_atlas_region.hpp",
+          "name": "TextureAtlasRegion"
         }
       ],
       "diagnostic": "'Spritesheet' was not declared in this scope",
@@ -5907,6 +5931,22 @@
       "appliesTo": "flight/scene2d_resources/",
       "namespace": "flight::types",
       "symbols": [
+        {
+          "include": "flight/types/audio_resource.hpp",
+          "name": "AudioResource"
+        },
+        {
+          "include": "flight/types/image_resource.hpp",
+          "name": "ImageResource"
+        },
+        {
+          "include": "flight/types/audio_resource_reference.hpp",
+          "name": "ExternalAudioResourceReference"
+        },
+        {
+          "include": "flight/types/image_resource_reference.hpp",
+          "name": "ExternalImageResourceReference"
+        },
         {
           "include": "flight/types/audio_resource_reference.hpp",
           "name": "AudioResourceFetch"
@@ -6532,8 +6572,20 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/video_resource.hpp",
+          "name": "VideoResource"
+        },
+        {
+          "include": "flight/types/video_resource.hpp",
+          "name": "VideoResourceLoadOptions"
+        },
+        {
           "include": "flight/types/host_video.hpp",
           "name": "HostVideoCapability"
+        },
+        {
+          "include": "flight/types/video_resource.hpp",
+          "name": "VideoResourceUrl"
         }
       ],
       "diagnostic": "'HostVideoCapability' was not declared in this scope",
@@ -6597,7 +6649,23 @@
       "symbols": [
         {
           "include": "flight/types/tray.hpp",
+          "name": "TrayDestroyResult"
+        },
+        {
+          "include": "flight/types/tray.hpp",
+          "name": "HostTrayLifecycleCapability"
+        },
+        {
+          "include": "flight/types/tray.hpp",
+          "name": "TrayIcon"
+        },
+        {
+          "include": "flight/types/tray.hpp",
           "name": "TrayReleaseResult"
+        },
+        {
+          "include": "flight/types/signal.hpp",
+          "name": "Signal"
         }
       ],
       "diagnostic": "'TrayReleaseResult' was not declared in this scope",
@@ -6661,6 +6729,10 @@
       "symbols": [
         {
           "include": "flight/types/text_segment.hpp",
+          "name": "TextSegment"
+        },
+        {
+          "include": "flight/types/text_segment.hpp",
           "name": "TextSegmentGranularity"
         }
       ],
@@ -6681,6 +6753,10 @@
         },
         {
           "include": "flight/types/markup_tag_handler.hpp",
+          "name": "MarkupTagEffect"
+        },
+        {
+          "include": "flight/types/markup_tag_handler.hpp",
           "name": "MarkupTagHandler"
         },
         {
@@ -6694,6 +6770,14 @@
         {
           "include": "flight/types/text_format.hpp",
           "name": "TextFormat"
+        },
+        {
+          "include": "flight/types/text_format.hpp",
+          "name": "TextFormatAlign"
+        },
+        {
+          "include": "flight/types/text_format.hpp",
+          "name": "TextFormatListMarker"
         },
         {
           "include": "flight/types/text_format_range.hpp",
@@ -7390,6 +7474,66 @@
         {
           "include": "flight/types/gizmo_state.hpp",
           "name": "GizmoHandleKind"
+        },
+        {
+          "include": "flight/types/gizmo_state.hpp",
+          "name": "GizmoTransformMode"
+        },
+        {
+          "include": "flight/types/camera2_d.hpp",
+          "name": "Camera2D"
+        },
+        {
+          "include": "flight/types/gizmo_state.hpp",
+          "name": "GizmoMode"
+        },
+        {
+          "include": "flight/types/gizmo_state.hpp",
+          "name": "GizmoNode2DFeatures"
+        },
+        {
+          "include": "flight/types/gizmo_state.hpp",
+          "name": "GizmoPivot"
+        },
+        {
+          "include": "flight/types/gizmo_state.hpp",
+          "name": "GizmoSignals"
+        },
+        {
+          "include": "flight/types/gizmo_state.hpp",
+          "name": "GizmoSpace"
+        },
+        {
+          "include": "flight/types/gizmo_state.hpp",
+          "name": "GizmoState"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2D"
+        },
+        {
+          "include": "flight/types/rectangle.hpp",
+          "name": "Rectangle"
+        },
+        {
+          "include": "flight/types/scene2_d.hpp",
+          "name": "Scene2D"
+        },
+        {
+          "include": "flight/types/selection_state.hpp",
+          "name": "SelectionState"
+        },
+        {
+          "include": "flight/types/shape.hpp",
+          "name": "Shape"
+        },
+        {
+          "include": "flight/types/vector2.hpp",
+          "name": "Vector2Like"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2DTraits"
         }
       ],
       "diagnostic": "'GizmoHandleKind' was not declared in this scope",
@@ -7558,6 +7702,10 @@
         {
           "include": "flight/types/debug.hpp",
           "name": "DebugSubsystemName"
+        },
+        {
+          "include": "flight/types/log.hpp",
+          "name": "LogSink"
         }
       ],
       "diagnostic": "'DebugSubsystemName' was not declared in this scope; did you mean 'flight::types::DebugSubsystemName'?",
@@ -10782,46 +10930,6 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "skeleton3d-unqualified-geometry-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/skeleton3d/",
-      "namespace": "flight::geometry",
-      "symbols": [
-        {
-          "include": "flight/geometry/matrix4.hpp",
-          "name": "copy_matrix4"
-        },
-        {
-          "include": "flight/geometry/matrix3.hpp",
-          "name": "create_matrix3"
-        },
-        {
-          "include": "flight/geometry/matrix4.hpp",
-          "name": "create_matrix4"
-        },
-        {
-          "include": "flight/geometry/matrix4.hpp",
-          "name": "inverse_matrix4"
-        },
-        {
-          "include": "flight/geometry/matrix4.hpp",
-          "name": "multiply_matrix4"
-        },
-        {
-          "include": "flight/geometry/matrix3.hpp",
-          "name": "set_matrix3_normal_from_matrix4"
-        },
-        {
-          "include": "flight/geometry/matrix4.hpp",
-          "name": "set_matrix4_identity"
-        }
-      ],
-      "diagnostic": "'copy_matrix4' was not declared in this scope",
-      "defect": "The emitter writes 7 function name(s) owned by flight::geometry unqualified inside namespace flight::skeleton3d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "scene2d-canvas-unqualified-scene2d-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/scene2d_canvas/",
@@ -10972,6 +11080,222 @@
       "defect": "The emitter refuses the image test resolver after the SDL profile collapses its source union to one host carrier but retains the registration call. Declaring the exact resolver slot lets quoted consumers type-check while the complete helper override supplies its host-profile implementation.",
       "expectedWhen": "always",
       "expires": "when the profiled resolver function emits or retained same-module calls carry its declaration; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "tilemap-formats-unqualified-xml-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/tilemap_formats/",
+      "namespace": "flight::xml",
+      "symbols": [
+        {
+          "include": "flight/xml/xml_query.hpp",
+          "name": "get_xml_element_attribute"
+        },
+        {
+          "include": "flight/xml/xml_query.hpp",
+          "name": "get_xml_element_child_by_name"
+        },
+        {
+          "include": "flight/xml/xml_query.hpp",
+          "name": "get_xml_element_children_by_name"
+        }
+      ],
+      "diagnostic": "'get_xml_element_attribute' was not declared in this scope; did you mean 'flight::xml::get_xml_element_attribute'?",
+      "defect": "The emitter retains three imported XML query functions unqualified inside flight::tilemap_formats and omits both the defining header and using declarations.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies imported XML query functions or emits their using declarations; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "gizmo-node-bounds-access",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/gizmo/",
+      "symbol": "get_node_world_bounds_rectangle",
+      "declaration": "using flight::node::get_node_world_bounds_rectangle;",
+      "include": "flight/node/bounds_rectangle_access.hpp",
+      "diagnostic": "'get_node_world_bounds_rectangle' is not a member of 'flight::node'",
+      "defect": "The gizmo emitter retains a qualified call to the node world-bounds boundary without including the runtime extension that declares that boundary.",
+      "expectedWhen": "always",
+      "expires": "when the emitter includes the node world-bounds runtime boundary for gizmo consumers; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "spritesheet-unqualified-textureatlas-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/spritesheet/",
+      "namespace": "flight::textureatlas",
+      "symbols": [
+        {
+          "include": "flight/textureatlas/factory_access.hpp",
+          "name": "create_texture_atlas_from_grid"
+        }
+      ],
+      "diagnostic": "'create_texture_atlas_from_grid' was not declared in this scope",
+      "defect": "The emitter retains the imported texture-atlas grid factory unqualified inside flight::spritesheet and omits the defining header and using declaration.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies the imported texture-atlas grid factory or emits its using declaration; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "spritesheet-unqualified-entity-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/spritesheet/",
+      "namespace": "flight::entity",
+      "symbols": [
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "allocate_entity"
+        },
+        {
+          "include": "flight/entity/entity.hpp",
+          "name": "finish_entity"
+        }
+      ],
+      "diagnostic": "'allocate_entity' was not declared in this scope",
+      "defect": "The emitter retains the two imported entity construction functions unqualified in spritesheet_player.hpp and omits their defining bindings.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies imported entity functions in spritesheet; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton3d-node-transform-access",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/skeleton3d/",
+      "symbol": "get_node_world_matrix4",
+      "declaration": "using flight::node::get_node_world_matrix4;",
+      "include": "flight/skeleton3d/runtime_access.hpp",
+      "diagnostic": "'get_node_world_matrix4' was not declared in this scope",
+      "defect": "The skeleton emitter retains calls to the refused node world-transform boundary without including the runtime extension that states the unavailable checked owner.",
+      "expectedWhen": "always",
+      "expires": "when getNodeWorldMatrix4 emits with its checked runtime owner or skeleton consumers include that boundary; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton3d-node-hierarchy-access",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/skeleton3d/",
+      "symbol": "get_node_parent",
+      "declaration": "using flight::node::get_node_parent;",
+      "include": "flight/node/hierarchy_access.hpp",
+      "diagnostic": "'get_node_parent' is not a member of 'flight::node'",
+      "defect": "The skeleton emitter retains qualified calls to the refused node-parent boundary without including a portable declaration of its checked runtime-owner requirement.",
+      "expectedWhen": "always",
+      "expires": "when getNodeParent emits with its NodeRuntime owner or skeleton consumers include that boundary; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "layout-bare-layout-node-template-argument",
+      "kind": "name-defaulted-template-argument",
+      "appliesTo": "flight/layout/",
+      "symbol": "LayoutNode",
+      "defaultArgument": "flight::ErasedRef, flight::ErasedRef",
+      "sourceDeclaration": "packages/types/src/Layout.ts:72 -- export interface LayoutNode<ContainerStyle extends object = object, ItemStyle extends object = object>",
+      "diagnostic": "type/value mismatch at argument 1 in template parameter list for 'flight::Ref'; note: expected a type, got 'LayoutNode'",
+      "defect": "The emitter drops LayoutNode's two default object arguments at inferred local use sites and writes the bare template name inside flight::Ref. Naming the emitted defaults restores the exact source instantiation.",
+      "expectedWhen": "always",
+      "expires": "when the emitter carries LayoutNode's declared defaults through inferred locals; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-resources-node-hierarchy-access",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_resources/",
+      "symbol": "get_node_parent",
+      "declaration": "using flight::node::get_node_parent;",
+      "include": "flight/node/hierarchy_access.hpp",
+      "diagnostic": "'get_node_parent' is not a member of 'flight::node'",
+      "defect": "The scene-resource emitter retains qualified calls to the refused node-parent boundary without including a portable declaration of its checked runtime-owner requirement.",
+      "expectedWhen": "always",
+      "expires": "when getNodeParent emits with its NodeRuntime owner or scene-resource consumers include that boundary; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-resources-node-remove-access",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_resources/",
+      "symbol": "remove_node_child",
+      "declaration": "using flight::node::remove_node_child;",
+      "include": "flight/node/hierarchy_access.hpp",
+      "diagnostic": "'remove_node_child' is not a member of 'flight::node'",
+      "defect": "The scene-resource emitter retains qualified calls to the refused node-child mutation boundary without including the portable checked-owner refusal.",
+      "expectedWhen": "always",
+      "expires": "when removeNodeChild emits with its NodeRuntime owner or scene-resource consumers include that boundary; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "gizmo-nodeof-type-name",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/gizmo/",
+      "symbol": "NodeOf",
+      "declaration": "using flight::types::NodeOf;",
+      "include": "flight/types/node.hpp",
+      "diagnostic": "'NodeOf' was not declared in this scope",
+      "defect": "The emitter retains the imported NodeOf alias unqualified inside gizmo_state.hpp and omits its defining header and using declaration.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies the imported NodeOf alias; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "gizmo-node-transform-access",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/gizmo/",
+      "symbol": "get_node_world_matrix",
+      "declaration": "using flight::node::get_node_world_matrix;",
+      "include": "flight/node/transform2d_access.hpp",
+      "diagnostic": "'get_node_world_matrix' is not a member of 'flight::node'",
+      "defect": "The gizmo emitter retains qualified calls to the refused node world-transform boundary without including the runtime extension that states the unavailable checked owner.",
+      "expectedWhen": "always",
+      "expires": "when getNodeWorldMatrix emits with its checked runtime owner or gizmo consumers include that boundary; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "gizmo-deg-to-rad-binding",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/gizmo/",
+      "symbol": "deg_to_rad",
+      "declaration": "inline const double& deg_to_rad = flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3;",
+      "include": "flight/math/constants.hpp",
+      "diagnostic": "'deg_to_rad' was not declared in this scope",
+      "defect": "The emitter retains the source import name DEG_TO_RAD as deg_to_rad in gizmo_state.hpp even though the exported constant is emitted under its collision-safe ABI spelling. This reference restores the exact imported binding.",
+      "expectedWhen": "always",
+      "expires": "when the emitter resolves imported constants to their emitted ABI names; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "gizmo-rad-to-deg-binding",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/gizmo/",
+      "symbol": "rad_to_deg",
+      "declaration": "inline const double& rad_to_deg = flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3;",
+      "include": "flight/math/constants.hpp",
+      "diagnostic": "'rad_to_deg' was not declared in this scope",
+      "defect": "The emitter retains the source import name RAD_TO_DEG as rad_to_deg in gizmo_state.hpp even though the exported constant is emitted under its collision-safe ABI spelling. This reference restores the exact imported binding.",
+      "expectedWhen": "always",
+      "expires": "when the emitter resolves imported constants to their emitted ABI names; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "text-markup-readonly-handler-parameter",
+      "kind": "respell-readonly-parameter",
+      "appliesTo": "flight/text_markup/",
+      "from": "flight::Ref<TextFormat> enclosing_format",
+      "to": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::TextFormat>>>> enclosing_format",
+      "sourceDeclaration": "packages/types/src/MarkupTagHandler.ts:30 -- enclosingFormat: Readonly<TextFormat>",
+      "diagnostic": "could not convert a markup handler taking flight::Ref<TextFormat> to MarkupTagHandler, whose read-only parameter is StructuralRef<RowReadonly<RowOf<shared_ptr<TextFormat>>>>",
+      "defect": "The emitter preserves the callback arity but flattens the explicitly read-only enclosing-format parameter on each handler implementation to an owning Ref spelling, while emitting the declared MarkupTagHandler carrier with its canonical structural read-only spelling.",
+      "expectedWhen": "always",
+      "expires": "when callback implementations and their declared function carriers emit the same canonical spelling for Readonly<TextFormat>; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-resources-readonly-audio-fetch-parameter",
+      "kind": "respell-readonly-parameter",
+      "appliesTo": "flight/scene2d_resources/",
+      "from": "flight::Ref<ExternalAudioResourceReference> reference",
+      "to": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::ExternalAudioResourceReference>>>> reference",
+      "sourceDeclaration": "packages/types/src/Scene2DResources.ts -- AudioResourceFetch(reference: Readonly<ExternalAudioResourceReference>, signal: AbortSignal)",
+      "diagnostic": "conversion from a lambda taking flight::Ref<ExternalAudioResourceReference> to the AudioResourceFetch structural read-only parameter is requested",
+      "defect": "The emitter lowers the explicitly read-only parameter of the default audio fetch lambda as an owning Ref even though the declared AudioResourceFetch carrier is emitted with the canonical structural read-only spelling.",
+      "expectedWhen": "always",
+      "expires": "when contextual callback parameters retain the carrier's canonical Readonly spelling; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-resources-readonly-image-fetch-parameter",
+      "kind": "respell-readonly-parameter",
+      "appliesTo": "flight/scene2d_resources/",
+      "from": "flight::Ref<ExternalImageResourceReference> reference",
+      "to": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::ExternalImageResourceReference>>>> reference",
+      "sourceDeclaration": "packages/types/src/Scene2DResources.ts -- ImageResourceFetch(reference: Readonly<ExternalImageResourceReference>, signal: AbortSignal)",
+      "diagnostic": "conversion from a lambda taking flight::Ref<ExternalImageResourceReference> to the ImageResourceFetch structural read-only parameter is requested",
+      "defect": "The emitter lowers the explicitly read-only parameter of the default image fetch lambda as an owning Ref even though the declared ImageResourceFetch carrier is emitted with the canonical structural read-only spelling.",
+      "expectedWhen": "always",
+      "expires": "when contextual callback parameters retain the carrier's canonical Readonly spelling; sdk:check fails if this repair matches no header."
     }
   ]
 }

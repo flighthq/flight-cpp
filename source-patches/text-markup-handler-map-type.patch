@@ -1,7 +1,15 @@
 diff --git a/packages/text-markup/src/markupTagRegistry.ts b/packages/text-markup/src/markupTagRegistry.ts
 --- a/packages/text-markup/src/markupTagRegistry.ts
 +++ b/packages/text-markup/src/markupTagRegistry.ts
-@@ -24,7 +24,7 @@ export function createMarkupTagRegistry(): MarkupTagRegistry {
+@@ -4,6 +4,7 @@ import type {
+   EntityConstruction,
+   MarkupClassResolver,
+   MarkupColorResolver,
++  MarkupTagEffect,
+   MarkupTagHandler,
+   MarkupTagRegistry,
+   TextFormat,
+@@ -24,7 +25,7 @@ export function createMarkupTagRegistry(): MarkupTagRegistry {
   * registry that omits the standard tags lets them tree-shake out.
   */
  export function initializeMarkupTagRegistry(out: EntityConstruction<MarkupTagRegistry>): void {
@@ -10,17 +18,16 @@ diff --git a/packages/text-markup/src/markupTagRegistry.ts b/packages/text-marku
  }
  
  /**
-@@ -110,6 +110,6 @@ export function resolveMarkupHexColor(value: string): number | null {
+@@ -109,7 +110,7 @@ export function resolveMarkupHexColor(value: string): number | null {
+ // contributes nothing (a transparent grouping element). Space-separated class names in one `class`
  // attribute merge left to right, so a later class overrides an earlier one on a shared field.
  function createMarkupSpanTagHandler(registry: Readonly<MarkupTagRegistry>): MarkupTagHandler {
 -  return (attributes: Readonly<Record<string, string>>): Partial<TextFormat> => {
-+  return (attributes: Readonly<Record<string, string>>): TextFormat => {
++  return (attributes: Readonly<Record<string, string>>, _enclosingFormat: Readonly<TextFormat>): TextFormat => {
      const resolve: MarkupClassResolver | undefined = registry.classResolver;
      const classes = attributes.class;
      if (resolve === undefined || classes === undefined) return {};
-@@ -126,9 +126,9 @@ function createMarkupSpanTagHandler(registry: Readonly<MarkupTagRegistry>): Mar
- // Builds the `<font>` handler bound to `registry`, so it can consult the live `colorResolver` seam at
- // parse time — letting `registerMarkupNamedColors` widen color support after registration without
+@@ -128,7 +129,7 @@ function createMarkupSpanTagHandler(registry: Readonly<MarkupTagRegistry>): Mark
  // re-registering the handler. Color parsing goes through the seam only (`resolveMarkupHexColor` when
  // unset), which is what keeps the named-color table off this handler's import graph.
  function createMarkupFontTagHandler(registry: Readonly<MarkupTagRegistry>): MarkupTagHandler {
@@ -29,12 +36,12 @@ diff --git a/packages/text-markup/src/markupTagRegistry.ts b/packages/text-marku
      const format: TextFormat = {};
      const color = attributes.color;
      if (color !== undefined) {
-@@ -178,14 +178,14 @@ function isMarkupListMarker(value: string): boolean {
+@@ -178,29 +179,26 @@ function isMarkupListMarker(value: string): boolean {
    }
  }
  
 -function markupAnchorTagHandler(attributes: Readonly<Record<string, string>>): Partial<TextFormat> {
-+function markupAnchorTagHandler(attributes: Readonly<Record<string, string>>): TextFormat {
++function markupAnchorTagHandler(attributes: Readonly<Record<string, string>>, _enclosingFormat: Readonly<TextFormat>): TextFormat {
    const format: TextFormat = {};
    if (attributes.href !== undefined) format.url = attributes.href;
    if (attributes.target !== undefined) format.target = attributes.target;
@@ -42,70 +49,75 @@ diff --git a/packages/text-markup/src/markupTagRegistry.ts b/packages/text-marku
  }
  
 -function markupBoldTagHandler(): Partial<TextFormat> {
-+function markupBoldTagHandler(): TextFormat {
++function markupBoldTagHandler(_attributes: Readonly<Record<string, string>>, _enclosingFormat: Readonly<TextFormat>): TextFormat {
    return { bold: true };
  }
  
-@@ -193,13 +193,13 @@ function markupBreakTagHandler(): { text: string } {
+-function markupBreakTagHandler(): { text: string } {
++function markupBreakTagHandler(_attributes: Readonly<Record<string, string>>, _enclosingFormat: Readonly<TextFormat>): MarkupTagEffect {
    return { text: '\n' };
  }
  
 -function markupItalicTagHandler(): Partial<TextFormat> {
-+function markupItalicTagHandler(): TextFormat {
++function markupItalicTagHandler(_attributes: Readonly<Record<string, string>>, _enclosingFormat: Readonly<TextFormat>): TextFormat {
    return { italic: true };
  }
  
- function markupListItemTagHandler(attributes: Readonly<Record<string, string>>): {
-   breakBefore: boolean;
+-function markupListItemTagHandler(attributes: Readonly<Record<string, string>>): {
+-  breakBefore: boolean;
 -  format: Partial<TextFormat>;
-+  format: TextFormat;
- } {
+-} {
++function markupListItemTagHandler(attributes: Readonly<Record<string, string>>, _enclosingFormat: Readonly<TextFormat>): MarkupTagEffect {
    const format: TextFormat = { bullet: true };
    const marker = attributes.type;
-@@ -210,7 +210,7 @@ function markupListItemTagHandler(attributes: Readonly<Record<string, string>>):
+   if (marker !== undefined && isMarkupListMarker(marker))
+@@ -208,21 +206,18 @@ function markupListItemTagHandler(attributes: Readonly<Record<string, string>>):
+   return { breakBefore: true, format };
+ }
  
- function markupParagraphTagHandler(attributes: Readonly<Record<string, string>>): {
-   breakBefore: boolean;
+-function markupParagraphTagHandler(attributes: Readonly<Record<string, string>>): {
+-  breakBefore: boolean;
 -  format: Partial<TextFormat>;
-+  format: TextFormat;
- } {
+-} {
++function markupParagraphTagHandler(attributes: Readonly<Record<string, string>>, _enclosingFormat: Readonly<TextFormat>): MarkupTagEffect {
    const format: TextFormat = {};
    const align = attributes.align;
-@@ -218,11 +218,11 @@ function markupParagraphTagHandler(attributes: Readonly<Record<string, string>>)
+   if (align !== undefined && isMarkupAlign(align)) format.align = align.toLowerCase() as TextFormatAlign;
    return { breakBefore: true, format };
  }
  
 -function markupStrikethroughTagHandler(): Partial<TextFormat> {
-+function markupStrikethroughTagHandler(): TextFormat {
++function markupStrikethroughTagHandler(_attributes: Readonly<Record<string, string>>, _enclosingFormat: Readonly<TextFormat>): TextFormat {
    return { strikethrough: true };
  }
  
 -function markupTextformatTagHandler(attributes: Readonly<Record<string, string>>): Partial<TextFormat> {
-+function markupTextformatTagHandler(attributes: Readonly<Record<string, string>>): TextFormat {
++function markupTextformatTagHandler(attributes: Readonly<Record<string, string>>, _enclosingFormat: Readonly<TextFormat>): TextFormat {
    const format: TextFormat = {};
    const blockIndent = readMarkupNumberAttribute(attributes, 'blockindent');
    if (blockIndent !== null) format.blockIndent = blockIndent;
-@@ -239,7 +239,7 @@ function markupTextformatTagHandler(attributes: Readonly<Record<string, string>>)
+@@ -239,7 +234,7 @@ function markupTextformatTagHandler(attributes: Readonly<Record<string, string>>
    return format;
  }
  
 -function markupUnderlineTagHandler(): Partial<TextFormat> {
-+function markupUnderlineTagHandler(): TextFormat {
++function markupUnderlineTagHandler(_attributes: Readonly<Record<string, string>>, _enclosingFormat: Readonly<TextFormat>): TextFormat {
    return { underline: true };
  }
  
 diff --git a/packages/types/src/MarkupTagHandler.ts b/packages/types/src/MarkupTagHandler.ts
 --- a/packages/types/src/MarkupTagHandler.ts
 +++ b/packages/types/src/MarkupTagHandler.ts
-@@ -12,5 +12,5 @@ import type { TextFormat } from './TextFormat';
+@@ -11,7 +11,7 @@ import type { TextFormat } from './TextFormat';
+ // `Partial<TextFormat>` is never mistaken for an effect. Handlers stay pure and small — a handler
  // never sees spans, ranges, or the surrounding text; the parser owns composition and the format
  // stack, so a handler only maps this tag's attributes to its own contribution.
 -export type MarkupTagResult = Partial<TextFormat> | MarkupTagEffect;
 +export type MarkupTagResult = TextFormat | MarkupTagEffect;
  
  export interface MarkupTagEffect {
-@@ -18,7 +18,7 @@ export interface MarkupTagEffect {
-   // is suppressed at the very start of the output and against an existing trailing newline, so block
+   // Insert a collapsing line break before the tag's content (block tags: `<p>`, `<li>`). The break
+@@ -19,7 +19,7 @@ export interface MarkupTagEffect {
    // tags never stack blank lines — this keeps the markup losslessly round-trippable.
    breakBefore?: boolean;
    // Format merged onto the stack for the tag's enclosed text. Absent for a pure insertion tag.
@@ -113,3 +125,4 @@ diff --git a/packages/types/src/MarkupTagHandler.ts b/packages/types/src/MarkupT
 +  format?: TextFormat;
    // Literal text emitted in place of the tag (void insertion tags: `<br>` → `'\n'`). A result with
    // `text` and no `format` is treated as a void tag and never pushes a format frame.
+   text?: string;

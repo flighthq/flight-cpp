@@ -12,7 +12,7 @@ import path from 'node:path';
 // a patched build into a silent fork of the generator.
 
 const SCHEMA = 'flight-cpp-emission-repairs/1';
-const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias', 'name-in-place-alternative', 'name-defaulted-template-argument',
+const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration', 'respell-reference-alias', 'respell-readonly-parameter', 'name-in-place-alternative', 'name-defaulted-template-argument',
   'deduce-call-argument-from-assignment',
   'respell-flattened-union',
   'wrap-conditional-absent-branch',
@@ -54,6 +54,7 @@ const REQUIRED_FIELDS = {
   'name-in-place-alternative': [...SHARED_FIELDS, 'symbol'],
   'respell-flattened-union': [...SHARED_FIELDS, 'symbol', 'replacement', 'requiredSuffix', 'sourceDeclaration'],
   'respell-reference-alias': [...SHARED_FIELDS, 'symbol', 'expansion', 'witness', 'witnessInclude'],
+  'respell-readonly-parameter': [...SHARED_FIELDS, 'from', 'to', 'sourceDeclaration'],
   'name-array-from-tuple-construction': [...SHARED_FIELDS, 'symbol', 'sourceDeclaration'],
   'record-from-designated-initializer': [...SHARED_FIELDS, 'symbol', 'recordType', 'replacement', 'sourceDeclaration'],
   'alias-anonymous-struct-to-named': [...SHARED_FIELDS, 'symbol', 'replacement', 'canonicalInclude', 'sourceDeclaration'],
@@ -186,6 +187,7 @@ const HANDLERS = {
   'repeat-alias-declaration': repeatAliasDeclaration,
   'respell-flattened-union': respellFlattenedUnion,
   'respell-reference-alias': respellReferenceAlias,
+  'respell-readonly-parameter': respellReadonlyParameter,
   'wrap-conditional-absent-branch': (contents) => wrapConditionalAbsentBranch(contents),
   'project-partial-row-absence': projectPartialRowAbsence,
   'unwrap-partial-row-three-state-member': unwrapPartialRowThreeStateMember,
@@ -779,6 +781,16 @@ function respellReferenceAlias(contents, repair) {
     changed = true;
   }
   return changed ? out : undefined;
+}
+
+// Restores a read-only structural parameter after the emitter has flattened its source annotation to an
+// owning Ref spelling. The declaration carries the exact emitted parameter text, including its name, so
+// this cannot rewrite returns, members, or an unrelated parameter of the same underlying source type.
+// The replacement is the canonical StructuralRef<RowReadonly<RowOf<shared_ptr<T>>>> spelling already
+// emitted for the corresponding function carrier; this changes no source behavior or intended ABI type.
+function respellReadonlyParameter(contents, repair) {
+  if (!contents.includes(repair.from)) return undefined;
+  return contents.replaceAll(repair.from, repair.to);
 }
 
 // Index of the `>` closing the `<` at `open`, counting nesting. `>>` is plain text here -- the emitter

@@ -1,18 +1,43 @@
 diff --git a/packages/scene2d-resources/src/loadScene2DAudioResources.ts b/packages/scene2d-resources/src/loadScene2DAudioResources.ts
 --- a/packages/scene2d-resources/src/loadScene2DAudioResources.ts
 +++ b/packages/scene2d-resources/src/loadScene2DAudioResources.ts
-@@ -60,4 +60,4 @@ export async function loadScene2DAudioResources(
+@@ -4,6 +4,7 @@ import type {
+   AudioResource,
+   AudioResourceFetch,
+   AudioResourceReference,
++  ExternalAudioResourceReference,
+   LoadScene2DAudioResourcesOptions,
+   Scene2DAudioResources,
+   Scene2DDocument,
+@@ -60,4 +61,7 @@ export async function loadScene2DAudioResources(
  
  // A document with no external sounds never needs a fetch seam, so the default reports the miss rather than
  // making the caller supply a fetcher it has no use for.
 -const rejectExternalAudioResource: AudioResourceFetch = () => Promise.resolve(null);
-+const rejectExternalAudioResource: AudioResourceFetch = (_reference, _signal) => Promise.resolve(null);
++const rejectExternalAudioResource: AudioResourceFetch = (
++  _reference: Readonly<ExternalAudioResourceReference>,
++  _signal,
++) => Promise.resolve<AudioResource | null>(null);
 diff --git a/packages/scene2d-resources/src/loadScene2DImageResources.ts b/packages/scene2d-resources/src/loadScene2DImageResources.ts
 --- a/packages/scene2d-resources/src/loadScene2DImageResources.ts
 +++ b/packages/scene2d-resources/src/loadScene2DImageResources.ts
-@@ -74,4 +74,4 @@ function bindScene2DImageResourceTextures(reference: Readonly<ImageResourceRefere
+@@ -2,8 +2,10 @@ import { resolveImageResourceReference } from '@flighthq/image/contract';
+ import { emitSignal } from '@flighthq/signals/contract';
+ import { setTextureSource } from '@flighthq/texture/contract';
+ import type {
++  ImageResource,
+   ImageResourceFetch,
+   ImageResourceReference,
++  ExternalImageResourceReference,
+   LoadScene2DImageResourcesOptions,
+   Scene2DDocument,
+   Scene2DImageResources,
+@@ -74,4 +76,7 @@ function bindScene2DImageResourceTextures(reference: Readonly<ImageResourceRefer
  
  // A document with no external images never needs a fetch seam, so the default reports the miss rather than
  // making the caller supply a fetcher it has no use for.
 -const rejectExternalImageResource: ImageResourceFetch = () => Promise.resolve(null);
-+const rejectExternalImageResource: ImageResourceFetch = (_reference, _signal) => Promise.resolve(null);
++const rejectExternalImageResource: ImageResourceFetch = (
++  _reference: Readonly<ExternalImageResourceReference>,
++  _signal,
++) => Promise.resolve<ImageResource | null>(null);
