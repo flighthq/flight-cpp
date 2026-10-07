@@ -50,7 +50,9 @@ add_library(Flight::SdkPreview ALIAS flight_sdk_preview)
 target_sources(flight_sdk_preview INTERFACE ${FLIGHT_SDK_GENERATED_HEADERS})
 target_include_directories(
   flight_sdk_preview
-  INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/generated/include>"
+  INTERFACE
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/overrides/include>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/generated/include>"
 )
 target_link_libraries(flight_sdk_preview INTERFACE Flight::Cpp)
 
