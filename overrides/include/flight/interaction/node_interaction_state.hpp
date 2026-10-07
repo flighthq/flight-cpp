@@ -9,6 +9,7 @@
 #include <flight/types/cursor.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/node.hpp>
+#include <flight/types/node2_d.hpp>
 #include <flight/types/node_interaction.hpp>
 #include <flight/types/node_interaction_state.hpp>
 
@@ -25,10 +26,24 @@ using flight::types::Cursor;
 using flight::types::EntityConstruction;
 using flight::types::HitArea;
 using flight::types::NodeAny;
+using flight::types::Node2D;
 using flight::types::NodeInteractionState;
 
 inline std::optional<flight::Ref<NodeInteractionState>> get_node_interaction_state(NodeAny source) {
   return source->entity_runtime_key.value()->interaction_state;
+}
+
+// Node2D is an owner-preserving structural view rather than Node<Any>. Read its exact
+// NodeRuntime<Node2DTraits> cell through the registered EntityRuntime symbol so GUI callers do not
+// have to retype the owner or materialize a second node.
+inline flight::Ref<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>
+get_node2_dinteraction_runtime(Node2D source) {
+  using Runtime = flight::Ref<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>;
+  return flight::row_get<std::optional<Runtime>>(source, flight::types::entity_runtime_key).value();
+}
+
+inline std::optional<flight::Ref<NodeInteractionState>> get_node_interaction_state(Node2D source) {
+  return get_node2_dinteraction_runtime(source)->interaction_state;
 }
 
 inline bool are_node_children_hit_test_enabled(NodeAny source) {
@@ -42,6 +57,11 @@ inline std::optional<Cursor> get_node_cursor(NodeAny source) {
 }
 
 inline std::optional<HitArea> get_node_hit_area(NodeAny source) {
+  const auto state = get_node_interaction_state(source);
+  return state.has_value() ? state.value()->hit_area : std::nullopt;
+}
+
+inline std::optional<HitArea> get_node_hit_area(Node2D source) {
   const auto state = get_node_interaction_state(source);
   return state.has_value() ? state.value()->hit_area : std::nullopt;
 }
@@ -76,12 +96,25 @@ inline flight::Ref<NodeInteractionState> enable_node_interaction_state(NodeAny s
   return runtime->interaction_state.value();
 }
 
+inline flight::Ref<NodeInteractionState> enable_node_interaction_state(Node2D source) {
+  auto runtime = get_node2_dinteraction_runtime(source);
+  if (!runtime->interaction_state.has_value()) {
+    runtime->interaction_state = create_node_interaction_state();
+  }
+  return runtime->interaction_state.value();
+}
+
 inline bool is_node_focusable(NodeAny source) {
   const auto state = get_node_interaction_state(source);
   return state.has_value() && state.value()->focusable;
 }
 
 inline bool is_node_hit_test_enabled(NodeAny source) {
+  const auto state = get_node_interaction_state(source);
+  return state.has_value() && state.value()->hit_test_enabled;
+}
+
+inline bool is_node_hit_test_enabled(Node2D source) {
   const auto state = get_node_interaction_state(source);
   return state.has_value() && state.value()->hit_test_enabled;
 }
@@ -107,7 +140,15 @@ inline void set_node_hit_area(NodeAny source, std::optional<HitArea> hit_area) {
   enable_node_interaction_state(source)->hit_area = std::move(hit_area);
 }
 
+inline void set_node_hit_area(Node2D source, std::optional<HitArea> hit_area) {
+  enable_node_interaction_state(source)->hit_area = std::move(hit_area);
+}
+
 inline void set_node_hit_test_enabled(NodeAny source, bool enabled) {
+  enable_node_interaction_state(source)->hit_test_enabled = enabled;
+}
+
+inline void set_node_hit_test_enabled(Node2D source, bool enabled) {
   enable_node_interaction_state(source)->hit_test_enabled = enabled;
 }
 

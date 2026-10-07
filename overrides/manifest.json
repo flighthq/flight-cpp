@@ -155,10 +155,10 @@
       "supplies": "packages/interaction/src/nodeInteractionState.ts",
       "derivedFrom": "7a8ada82522a0a4b4dc0b489cce37ce3131b4ece40793267e0ff0fdcc1b53d69",
       "reason": "The emitter refuses the raw state reader on optional construction, the cursor and hit-area readers on dual-sentinel optional projection, and the state enabler on a reference assertion between flattened NodeRuntime owners. Every retained query and setter calls one of the missing functions, so the partial header does not compile.",
-      "change": "Supplies the complete module over the generated Node<Any> and NodeRuntime<Any> carriers. The raw reader observes the node's existing runtime slot, enable initializes the optional state exactly once, the typed readers collapse absent state to their declared null result, and all retained default queries and setters are transcribed with qualified generated names.",
-      "equivalence": "The node retains its generated NodeRuntime<Any> owner in entity_runtime_key; reading and writing that exact owner avoids the source assertion's flattened-owner mismatch without casting, copying, or side storage. An absent runtime still throws through optional::value, matching the source non-null assertion. Enabling preserves an existing state reference or creates one initialized with the source's seven defaults. Cursor, hit area, focus, hit-test, child-gating, double-click, and tab-index reads and writes preserve absence, reference identity, and mutation visibility.",
+      "change": "Supplies the complete module over the generated Node<Any> and NodeRuntime<Any> carriers, plus exact Node2D overloads used by GUI. The raw readers observe each node's existing runtime slot, enable initializes the optional state exactly once, the typed readers collapse absent state to their declared null result, and all retained default queries and setters are transcribed with qualified generated names.",
+      "equivalence": "Each node retains its generated runtime owner in entity_runtime_key; Node2D reaches its exact NodeRuntime<Node2DTraits> cell through the registered symbol on the same structural owner. Reading and writing those exact owners avoids the source assertion's flattened-owner mismatch without casting, copying, or side storage. An absent runtime still throws through optional::value, matching the source non-null assertion. Enabling preserves an existing state reference or creates one initialized with the source's seven defaults. Cursor, hit area, focus, hit-test, child-gating, double-click, and tab-index reads and writes preserve absence, reference identity, and mutation visibility.",
       "whyNotAPatchOrRepair": "Qualification defects are handled separately by the package using-declaration repair, but text insertion cannot add four refused function bodies. Two equivalent source trials were compiled and removed: direct EntityRuntimeKey access made the enabler emit, while explicit branches and then typed nullable locals still left all three readers refused for missing optional expression evidence. Carrying a partial rewrite plus this override would add source divergence without another header gain.",
-      "unblocks": "The header compiles and supplies every source declaration. The companion interaction-node-state-accessor-declaration repair now gives quoted generated siblings the exact declaration they need to type-check against this implementation.",
+      "unblocks": "The header compiles and supplies every source declaration. The companion interaction-node-state-accessor-declaration repair gives quoted generated siblings the exact declaration they need, and the Node2D overloads allow GUI hit-area calls to preserve their structural owner.",
       "remaining": "The binding and node-bounds roots are handled by separate explicit overrides; runtime operations that require unrepresented open records or derived bounds-runtime ownership fail loudly there.",
       "expires": "when the emitter preserves the exact NodeRuntime owner through getNodeRuntime, projects optional members through one represented value domain, and emits all declarations in nodeInteractionState.ts.",
       "authoredOn": "2026-10-04"
@@ -1577,6 +1577,38 @@
       "unblocks": "texture_atlas_from.hpp compiles independently.",
       "remaining": "Base64, Blob, and byte decoding remain unavailable until the image module emits.",
       "expires": "when contextual object literals construct variant alternatives and the atlas, texture, and image-resource factories emit.",
+      "authoredOn": "2026-10-06"
+    },
+    {
+      "id": "intl-formatter-cache",
+      "path": "flight/intl/cache.hpp",
+      "package": "@flighthq/intl",
+      "status": "complete",
+      "supplies": "packages/intl/src/cache.ts",
+      "derivedFrom": "0f377835cdf8b674379334da96d96e228feedef0a3b4b1197fba776c5d2f6fb5",
+      "reason": "The emitter refuses the generic cache builder after losing Map lookup absence and refuses cache-key serialization after losing the LocaleInput union, while every formatter retains calls to both functions.",
+      "change": "Supplies a bounded FIFO cache over type-erased immutable formatter values and the source JSON key shape for each represented Intl option record and locale arm.",
+      "equivalence": "Keys preserve the source kind, locale ordering, omitted undefined fields, JSON escaping, booleans, and the insertion order used by every represented formatter option object. Cache hits return the stored formatter value, misses invoke the builder once, and inserting at capacity evicts the oldest key exactly as the source Map does.",
+      "whyNotAPatchOrRepair": "Declaration repairs let retained formatter calls type-check but cannot provide serialization, type-erased storage, lookup, or FIFO eviction. The source is already valid generic TypeScript; rewriting it around target-specific variant and Any representations would expose C++ implementation details upstream.",
+      "unblocks": "cache.hpp supplies both refused functions and all emitted Intl formatter headers compile against their declared call surface.",
+      "remaining": "None in this module.",
+      "expires": "when generic Map-backed caching, LocaleInput narrowing, JSON option serialization, and generic callback return inference emit directly.",
+      "authoredOn": "2026-10-06"
+    },
+    {
+      "id": "image-test-dimension-resolver",
+      "path": "flight/image/_internal_image_test_helper.hpp",
+      "package": "@flighthq/image",
+      "status": "complete",
+      "supplies": "packages/image/src/imageTestHelper.ts",
+      "derivedFrom": "07701b54bc838191714c003fc332f4a6961219d2f9c7130c7a9544e250057b4d",
+      "reason": "The emitter refuses the test dimension resolver when the SDL binding collapses HostImageSource to its native carrier, then retains registration code that names the missing resolver.",
+      "change": "Defines the exact host resolver slot, reads dimensions from the SDL image carrier, rejects an empty source, and preserves the source registration and cleanup functions.",
+      "equivalence": "Every non-empty SDL image source has numeric width and height and writes those exact values to the caller-owned output before returning true. An empty carrier has no dimensions and returns false without mutating output. Registration installs the same function object and cleanup clears the shared slot.",
+      "whyNotAPatchOrRepair": "The declaration repair closes quoted generated consumers but cannot supply resolver behavior. The portable source intentionally reads a structural host handle; rewriting it to the C++ SDL carrier would invert the host abstraction.",
+      "unblocks": "The internal image helper compiles and its registration lifecycle resolves native image dimensions in semantic tests.",
+      "remaining": "None in this module for the SDL profile.",
+      "expires": "when the profiled HostImageSource structural width/height read emits against the SDL carrier.",
       "authoredOn": "2026-10-06"
     }
   ]

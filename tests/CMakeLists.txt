@@ -79,6 +79,28 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_interaction_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_interaction COMMAND flight_cpp_generated_interaction_tests)
 
+add_executable(flight_cpp_generated_intl_cache_tests generated_intl_cache_test.cpp)
+target_include_directories(
+  flight_cpp_generated_intl_cache_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_intl_cache_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_intl_cache COMMAND flight_cpp_generated_intl_cache_tests)
+
+add_executable(flight_cpp_generated_image_test_helper_tests generated_image_test_helper_test.cpp)
+target_include_directories(
+  flight_cpp_generated_image_test_helper_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_image_test_helper_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_image_test_helper
+  COMMAND flight_cpp_generated_image_test_helper_tests
+)
+
 add_executable(flight_cpp_generated_statusbar_tests generated_statusbar_test.cpp)
 target_include_directories(
   flight_cpp_generated_statusbar_tests
