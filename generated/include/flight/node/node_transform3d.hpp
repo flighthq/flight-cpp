@@ -17,6 +17,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/geometry/matrix4_pool.hpp>
+
+#include <flight/geometry/matrix4.hpp>
+
 #include <flight/types/vector3.hpp>
 
 #include <flight/types/has_transform3_d.hpp>
@@ -30,6 +34,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "revision.hpp"
 
 namespace flight::node {
+
+using flight::geometry::acquire_matrix4;
+using flight::geometry::matrix4_transform_point;
+using flight::geometry::release_matrix4;
 
 using flight::types::Vector3Like;
 

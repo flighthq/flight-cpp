@@ -25,6 +25,8 @@ namespace flight::types { template <typename T> struct Tween; }
 
 namespace flight::tween {
 
+using flight::types::Tween;
+
 inline void initialize_tween_manager(flight::types::EntityConstruction<flight::Ref<flight::types::TweenManager>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TweenManagerOptions>>>>> options = std::nullopt) {
   flight::row_set<flight::RowKey<"__brand">>(out, flight::String("TweenManager"));
   flight::row_set<flight::RowKey<"defaultEase">>(out, ([&]() -> std::function<double(double)> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::EasingFunction> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"defaultEase">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::easing::ease_out_exponential; }()));

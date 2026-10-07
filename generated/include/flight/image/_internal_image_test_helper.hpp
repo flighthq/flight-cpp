@@ -12,9 +12,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/host_image_dimensions.hpp>
+
 #include "image_source_dimensions.hpp"
 
 namespace flight::image {
+
+extern flight::types::HostImageDimensionResolver test_image_dimension_resolver;
 
 
 // NOT GENERATED: variable (binding) -- source line 21

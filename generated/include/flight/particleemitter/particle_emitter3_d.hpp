@@ -20,6 +20,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/layout.hpp>
 
+#include <flight/geometry/typedarray.hpp>
+
 #include <flight/types/texture_atlas.hpp>
 
 #include <flight/types/particle_emitter2_d.hpp>
@@ -31,6 +33,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "particle_emitter.hpp"
 
 namespace flight::particleemitter {
+
+using flight::geometry::reserve_float32_array;
+using flight::geometry::reserve_uint16_array;
 
 using flight::types::Node;
 using flight::types::PartialNode;

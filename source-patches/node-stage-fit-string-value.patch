@@ -1,0 +1,26 @@
+diff --git a/packages/node/src/stageFit.ts b/packages/node/src/stageFit.ts
+index bfe7aaa..4bc328a 100644
+--- a/packages/node/src/stageFit.ts
++++ b/packages/node/src/stageFit.ts
+@@ -16,15 +16,17 @@ import { getNodeRuntime } from './node';
+ // `@flighthq/node` without depending on the display-object `Scene2D` type.
+ // Horizontal alignment offset of scaled content within the view, per the `align` anchor.
+ export function computeScene2DFitAlignX(scaledContentWidth: number, viewWidth: number, align: ViewportAlign): number {
+-  if (align.includes('left')) return 0;
+-  if (align.includes('right')) return viewWidth - scaledContentWidth;
++  const value: string = align;
++  if (value.includes('left')) return 0;
++  if (value.includes('right')) return viewWidth - scaledContentWidth;
+   return (viewWidth - scaledContentWidth) / 2;
+ }
+ 
+ // Vertical alignment offset of scaled content within the view, per the `align` anchor.
+ export function computeScene2DFitAlignY(scaledContentHeight: number, viewHeight: number, align: ViewportAlign): number {
+-  if (align.includes('top')) return 0;
+-  if (align.includes('bottom')) return viewHeight - scaledContentHeight;
++  const value: string = align;
++  if (value.includes('top')) return 0;
++  if (value.includes('bottom')) return viewHeight - scaledContentHeight;
+   return (viewHeight - scaledContentHeight) / 2;
+ }
+ 

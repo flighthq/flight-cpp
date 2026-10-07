@@ -3,26 +3,14 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function addMovieClipFrameScript -- source line 34
-//   missing: function createMovieClipRuntime -- source line 49
-//   missing: function disposeMovieClipSignals -- source line 55
-//   missing: function enableMovieClipSignals -- source line 64
-//   missing: function getMovieClipCurrentLabel -- source line 78
-//   missing: function getMovieClipFrameScript -- source line 83
-//   missing: function getMovieClipRuntime -- source line 88
-//   missing: function getMovieClipSignals -- source line 92
-//   missing: function getMovieClipTotalFrames -- source line 97
-//   missing: function gotoAndPlayMovieClip -- source line 101
-//   missing: function gotoAndStopMovieClip -- source line 106
-//   missing: function initializeMovieClipData -- source line 111
-//   missing: function createMovieClipData -- source line 43
-//   missing: function createMovieClip -- source line 39
-//   missing: function nextFrameMovieClip -- source line 122
-//   missing: function playMovieClip -- source line 127
-//   missing: function prevFrameMovieClip -- source line 132
-//   missing: function removeMovieClipFrameScript -- source line 137
-//   missing: function stopMovieClip -- source line 156
-//   missing: function updateMovieClip -- source line 161
+//   missing: function createMovieClipRuntime -- source line 50
+//   missing: function enableMovieClipSignals -- source line 66
+//   missing: function getMovieClipRuntime -- source line 94
+//   missing: function getMovieClipSignals -- source line 98
+//   missing: function getMovieClipTotalFrames -- source line 103
+//   missing: function initializeMovieClipData -- source line 120
+//   missing: function createMovieClipData -- source line 44
+//   missing: function createMovieClip -- source line 40
 #include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
@@ -30,27 +18,29 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/frame_script.hpp>
+
 #include <flight/types/movie_clip.hpp>
 
 namespace flight::movieclip {
 
+using flight::types::MovieClipData;
+using flight::types::MovieClipRuntime;
+
+using flight::types::FrameScript;
+
 using flight::types::MovieClip;
 
-
-// NOT GENERATED: function addMovieClipFrameScript -- source line 34
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function addMovieClipFrameScript(clip: MovieClip, frame: number | string, script: FrameScript): void {
-//     if (clip.data.timeline === null) return;
-//     addTimelineFrameScript(clip.data.timeline, frame, script);
-//   }
-//   
-// cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
+inline void add_movie_clip_frame_script(flight::Ref<MovieClip> clip, std::variant<double, flight::String> frame, flight::Ref<FrameScript> script) {
+  flight::Ref<MovieClipData> data = clip->data;
+  if (!data->timeline.has_value()) {
+    return;
+  }
+  add_timeline_frame_script(data->timeline, frame, script);
+}
 
 
-// NOT GENERATED: function createMovieClipRuntime -- source line 49
+// NOT GENERATED: function createMovieClipRuntime -- source line 50
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
@@ -68,34 +58,27 @@ using flight::types::MovieClip;
 // recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
 // invent side storage
 
-
-// NOT GENERATED: function disposeMovieClipSignals -- source line 55
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function disposeMovieClipSignals(clip: MovieClip): void {
-//     const runtime = clip[EntityRuntimeKey] as MovieClipRuntime;
-//     if (clip.data.timeline !== null) disposeTimelineSignals(clip.data.timeline);
-//     runtime.movieClipSignals = null;
-//   }
-//   
-//   // Allocates a MovieClipSignals group on the clip and arms per-frame signal emission. Idempotent —
-//   // returns the same group on subsequent calls. Also enables the underlying timeline signals so the
-//   // clip's signals fire when the timeline advances.
-// cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
+inline void dispose_movie_clip_signals(flight::Ref<MovieClip> clip) {
+  flight::Ref<MovieClipRuntime> runtime = static_cast<flight::Ref<MovieClipRuntime>>(clip[entity_runtime_key]);
+  flight::Ref<MovieClipData> data = clip->data;
+  if (data->timeline.has_value()) {
+    dispose_timeline_signals(data->timeline);
+  }
+  (runtime->movie_clip_signals = nullptr);
+}
 
 
-// NOT GENERATED: function enableMovieClipSignals -- source line 64
+// NOT GENERATED: function enableMovieClipSignals -- source line 66
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
 //   export function enableMovieClipSignals(clip: MovieClip): MovieClipSignals {
 //     const runtime = clip[EntityRuntimeKey] as MovieClipRuntime;
 //     if (runtime.movieClipSignals !== null) return runtime.movieClipSignals;
+//     const data = clip.data;
 //     // Ensure the timeline exists so signals can be armed even before setMovieClipSource is called.
-//     if (clip.data.timeline === null) clip.data.timeline = createTimeline();
-//     const signals = enableTimelineSignals(clip.data.timeline);
+//     if (data.timeline === null) data.timeline = createTimeline();
+//     const signals = enableTimelineSignals(data.timeline);
 //     runtime.movieClipSignals = signals;
 //     return signals;
 //   }
@@ -104,37 +87,28 @@ using flight::types::MovieClip;
 // has no absence channel in the emitted C++ storage for property
 
 inline double get_movie_clip_current_frame(flight::Ref<MovieClip> clip) {
-  return ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = clip->data.timeline; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->current_frame; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
+  flight::Ref<MovieClipData> data = clip->data;
+  return ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = data->timeline; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->current_frame; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
+}
+
+inline std::optional<flight::Ref<TimelineLabel>> get_movie_clip_current_label(flight::Ref<MovieClip> clip) {
+  flight::Ref<MovieClipData> data = clip->data;
+  if (!data->timeline.has_value()) {
+    return std::nullopt;
+  }
+  return get_timeline_current_label(data->timeline);
+}
+
+inline std::optional<flight::Ref<FrameScript>> get_movie_clip_frame_script(flight::Ref<MovieClip> clip, std::variant<double, flight::String> frame) {
+  flight::Ref<MovieClipData> data = clip->data;
+  if (!data->timeline.has_value()) {
+    return std::nullopt;
+  }
+  return get_timeline_frame_script(data->timeline, frame);
 }
 
 
-// NOT GENERATED: function getMovieClipCurrentLabel -- source line 78
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function getMovieClipCurrentLabel(clip: MovieClip): TimelineLabel | null {
-//     if (clip.data.timeline === null) return null;
-//     return getTimelineCurrentLabel(clip.data.timeline);
-//   }
-//   
-// cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
-
-
-// NOT GENERATED: function getMovieClipFrameScript -- source line 83
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function getMovieClipFrameScript(clip: MovieClip, frame: number | string): FrameScript | null {
-//     if (clip.data.timeline === null) return null;
-//     return getTimelineFrameScript(clip.data.timeline, frame);
-//   }
-//   
-// cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
-
-
-// NOT GENERATED: function getMovieClipRuntime -- source line 88
+// NOT GENERATED: function getMovieClipRuntime -- source line 94
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
@@ -151,7 +125,7 @@ inline double get_movie_clip_current_frame(flight::Ref<MovieClip> clip) {
 // invent side storage
 
 
-// NOT GENERATED: function getMovieClipSignals -- source line 92
+// NOT GENERATED: function getMovieClipSignals -- source line 98
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -164,44 +138,35 @@ inline double get_movie_clip_current_frame(flight::Ref<MovieClip> clip) {
 // construction requires expression type evidence
 
 
-// NOT GENERATED: function getMovieClipTotalFrames -- source line 97
+// NOT GENERATED: function getMovieClipTotalFrames -- source line 103
 //
 // The source it stood for:
 //   export function getMovieClipTotalFrames(clip: MovieClip): number {
-//     return clip.data.timeline?.source?.totalFrames ?? 1;
+//     const data = clip.data;
+//     return data.timeline?.source?.totalFrames ?? 1;
 //   }
 //   
 // cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: dual-sentinel optional
 // property result requires one represented member value domain
 
+inline void goto_and_play_movie_clip(flight::Ref<MovieClip> clip, std::variant<double, flight::String> frame) {
+  flight::Ref<MovieClipData> data = clip->data;
+  if (!data->timeline.has_value()) {
+    return;
+  }
+  goto_and_play_timeline(data->timeline, frame);
+}
 
-// NOT GENERATED: function gotoAndPlayMovieClip -- source line 101
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function gotoAndPlayMovieClip(clip: MovieClip, frame: number | string): void {
-//     if (clip.data.timeline === null) return;
-//     gotoAndPlayTimeline(clip.data.timeline, frame);
-//   }
-//   
-// cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
-
-
-// NOT GENERATED: function gotoAndStopMovieClip -- source line 106
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function gotoAndStopMovieClip(clip: MovieClip, frame: number | string): void {
-//     if (clip.data.timeline === null) return;
-//     gotoAndStopTimeline(clip.data.timeline, frame);
-//   }
-//   
-// cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
+inline void goto_and_stop_movie_clip(flight::Ref<MovieClip> clip, std::variant<double, flight::String> frame) {
+  flight::Ref<MovieClipData> data = clip->data;
+  if (!data->timeline.has_value()) {
+    return;
+  }
+  goto_and_stop_timeline(data->timeline, frame);
+}
 
 
-// NOT GENERATED: function initializeMovieClipData -- source line 111
+// NOT GENERATED: function initializeMovieClipData -- source line 120
 // refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
@@ -216,7 +181,7 @@ inline double get_movie_clip_current_frame(flight::Ref<MovieClip> clip) {
 // statically resolvable C++ object shape; T is named
 
 
-// NOT GENERATED: function createMovieClipData -- source line 43
+// NOT GENERATED: function createMovieClipData -- source line 44
 // refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
@@ -230,7 +195,7 @@ inline double get_movie_clip_current_frame(flight::Ref<MovieClip> clip) {
 // statically resolvable C++ object shape; T is named
 
 
-// NOT GENERATED: function createMovieClip -- source line 39
+// NOT GENERATED: function createMovieClip -- source line 40
 // refusal: cpp-intersection-member-shapeless [source-portability]
 //
 // The source it stood for:
@@ -243,96 +208,65 @@ inline double get_movie_clip_current_frame(flight::Ref<MovieClip> clip) {
 // Node2DTraits. Declare the object shape the code reads rather than intersecting a conjunct that has none
 
 inline bool is_movie_clip_playing(flight::Ref<MovieClip> clip) {
-  return ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = clip->data.timeline; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->is_playing; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }());
+  flight::Ref<MovieClipData> data = clip->data;
+  return ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = data->timeline; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->is_playing; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }());
 }
 
+inline void next_frame_movie_clip(flight::Ref<MovieClip> clip) {
+  flight::Ref<MovieClipData> data = clip->data;
+  if (!data->timeline.has_value()) {
+    return;
+  }
+  next_frame_timeline(data->timeline);
+}
 
-// NOT GENERATED: function nextFrameMovieClip -- source line 122
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function nextFrameMovieClip(clip: MovieClip): void {
-//     if (clip.data.timeline === null) return;
-//     nextFrameTimeline(clip.data.timeline);
-//   }
-//   
-// cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
+inline void play_movie_clip(flight::Ref<MovieClip> clip) {
+  flight::Ref<MovieClipData> data = clip->data;
+  if (!data->timeline.has_value()) {
+    return;
+  }
+  play_timeline(data->timeline);
+}
 
+inline void prev_frame_movie_clip(flight::Ref<MovieClip> clip) {
+  flight::Ref<MovieClipData> data = clip->data;
+  if (!data->timeline.has_value()) {
+    return;
+  }
+  prev_frame_timeline(data->timeline);
+}
 
-// NOT GENERATED: function playMovieClip -- source line 127
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function playMovieClip(clip: MovieClip): void {
-//     if (clip.data.timeline === null) return;
-//     playTimeline(clip.data.timeline);
-//   }
-//   
-// cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
-
-
-// NOT GENERATED: function prevFrameMovieClip -- source line 132
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function prevFrameMovieClip(clip: MovieClip): void {
-//     if (clip.data.timeline === null) return;
-//     prevFrameTimeline(clip.data.timeline);
-//   }
-//   
-// cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
-
-
-// NOT GENERATED: function removeMovieClipFrameScript -- source line 137
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function removeMovieClipFrameScript(clip: MovieClip, frame: number | string): void {
-//     if (clip.data.timeline === null) return;
-//     removeTimelineFrameScript(clip.data.timeline, frame);
-//   }
-//   
-//   // Binds a TimelineSource to `clip`: gives it a timeline (reusing an existing one) pointed at the clip as
-//   // its construct target, and realizes the initial frame so the clip isn't blank before play. The source
-//   // comes from a format — createTimelineSource (hand-authored), createSpritesheetTimelineSource, etc.
-// cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
+inline void remove_movie_clip_frame_script(flight::Ref<MovieClip> clip, std::variant<double, flight::String> frame) {
+  flight::Ref<MovieClipData> data = clip->data;
+  if (!data->timeline.has_value()) {
+    return;
+  }
+  remove_timeline_frame_script(data->timeline, frame);
+}
 
 inline void set_movie_clip_source(flight::Ref<MovieClip> clip, flight::Ref<TimelineSource> source) {
-  flight::Ref<Timeline> timeline = clip->data.timeline.value_or(create_timeline(std::nullopt));
+  flight::Ref<MovieClipData> data = clip->data;
+  flight::Ref<Timeline> timeline = ([&]() -> flight::Ref<Timeline> { auto nullish_coalesce_left = data->timeline; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_timeline(std::nullopt); }());
   (timeline->source = source);
   (timeline->target = clip);
-  (clip->data.timeline = timeline);
+  (data->timeline = std::optional<flight::Ref<Timeline>>{timeline});
   goto_and_stop_timeline(timeline, timeline->current_frame);
 }
 
+inline void stop_movie_clip(flight::Ref<MovieClip> clip) {
+  flight::Ref<MovieClipData> data = clip->data;
+  if (!data->timeline.has_value()) {
+    return;
+  }
+  stop_timeline(data->timeline);
+}
 
-// NOT GENERATED: function stopMovieClip -- source line 156
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function stopMovieClip(clip: MovieClip): void {
-//     if (clip.data.timeline === null) return;
-//     stopTimeline(clip.data.timeline);
-//   }
-//   
-// cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
-
-
-// NOT GENERATED: function updateMovieClip -- source line 161
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function updateMovieClip(clip: MovieClip, deltaTime: number): void {
-//     if (clip.data.timeline === null) return;
-//     updateTimeline(clip.data.timeline, deltaTime);
-//   }
-//   
-// cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
+inline void update_movie_clip(flight::Ref<MovieClip> clip, double delta_time) {
+  flight::Ref<MovieClipData> data = clip->data;
+  if (!data->timeline.has_value()) {
+    return;
+  }
+  update_timeline(data->timeline, delta_time);
+}
 
 } // namespace flight::movieclip

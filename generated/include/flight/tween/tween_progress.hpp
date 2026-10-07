@@ -25,6 +25,8 @@ namespace flight::types { template <typename T> struct Tween; }
 
 namespace flight::tween {
 
+using flight::types::Tween;
+
 inline double get_tween_progress(flight::Ref<flight::types::Tween<flight::Any>> tween) {
   if (tween->complete) {
     return 1.0;

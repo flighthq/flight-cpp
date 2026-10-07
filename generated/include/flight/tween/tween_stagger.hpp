@@ -11,9 +11,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/tween.hpp>
+
 #include "tween.hpp"
 
 namespace flight::tween {
+
+using flight::types::NumericProps;
+using flight::types::Tween;
 
 
 // NOT GENERATED: function computeStaggerDelay -- source line 45

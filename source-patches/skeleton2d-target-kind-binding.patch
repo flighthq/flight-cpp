@@ -1,0 +1,48 @@
+diff --git a/packages/skeleton2d/src/skeleton2dAnimationTarget.ts b/packages/skeleton2d/src/skeleton2dAnimationTarget.ts
+index 7f575d5..a8450aa 100644
+--- a/packages/skeleton2d/src/skeleton2dAnimationTarget.ts
++++ b/packages/skeleton2d/src/skeleton2dAnimationTarget.ts
+@@ -16,15 +16,14 @@ import type {
+   Skeleton2D,
+   Skeleton2DAnimationPath,
+   Skeleton2DAnimationTarget,
+   Skeleton2DAnimationTargetBinder,
+-  Skeleton2DAnimationTargetKind,
+   Skeleton2DSlotAnimationPath,
+   Skeleton2DSlotAnimationTarget,
+   Slot2D,
+ } from '@flighthq/types/contract';
+ import {
+   Skeleton2DAnimationPath as BonePath,
+-  Skeleton2DAnimationTargetKind as TargetKind,
++  Skeleton2DAnimationTargetKind,
+   Skeleton2DSlotAnimationPath as SlotPath,
+ } from '@flighthq/types/contract';
+ 
+@@ -88,7 +89,7 @@ export function initializeSkeleton2DBoneAnimationTarget(
+   path: Skeleton2DAnimationPath,
+ ): void {
+   out.boneIndex = boneIndex;
+-  out.kind = TargetKind.Bone;
++  out.kind = Skeleton2DAnimationTargetKind.Bone;
+   out.path = path;
+ }
+ 
+@@ -101,7 +102,7 @@ export function initializeSkeleton2DSlotAnimationTarget(
+   attachments: readonly (Attachment2D | null)[] | null = null,
+ ): void {
+   out.attachments = attachments;
+-  out.kind = TargetKind.Slot;
++  out.kind = Skeleton2DAnimationTargetKind.Slot;
+   out.path = path;
+   out.slotIndex = slotIndex;
+ }
+@@ -257,6 +258,6 @@ function getSkeleton2DAnimationTargetBinderRegistry(): KeyedTable<Skeleton2DAnima
+   if (_binders !== null) return _binders;
+   _binders = createKeyedTable('Skeleton2DAnimationTargetBinder', 'Unclaimed');
+-  _binders = withRegistryTableEntry(_binders, TargetKind.Bone, bindSkeleton2DBoneChannel);
+-  _binders = withRegistryTableEntry(_binders, TargetKind.Slot, bindSkeleton2DSlotChannel);
++  _binders = withRegistryTableEntry(_binders, Skeleton2DAnimationTargetKind.Bone, bindSkeleton2DBoneChannel);
++  _binders = withRegistryTableEntry(_binders, Skeleton2DAnimationTargetKind.Slot, bindSkeleton2DSlotChannel);
+   return _binders;
+ }

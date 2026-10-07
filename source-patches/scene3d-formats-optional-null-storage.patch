@@ -1,0 +1,54 @@
+diff --git a/packages/scene3d-formats/src/mtlParse.ts b/packages/scene3d-formats/src/mtlParse.ts
+index eca19d3..3e9dbb7 100644
+--- a/packages/scene3d-formats/src/mtlParse.ts
++++ b/packages/scene3d-formats/src/mtlParse.ts
+@@ -321,29 +321,32 @@ export function parseObjMaterialLibrary(source: string, diagnostics?: ImportDiagn
+ }
+ 
+ function createDefaultObjMaterial(name: string): ObjMaterial {
++  const noNumber: number | null = null;
++  const noColor: readonly number[] | null = null;
++  const noString: string | null = null;
+   return {
+     ambient: [0, 0, 0],
+-    anisotropy: null,
+-    anisotropyRotation: null,
+-    clearcoat: null,
+-    clearcoatRoughness: null,
++    anisotropy: noNumber,
++    anisotropyRotation: noNumber,
++    clearcoat: noNumber,
++    clearcoatRoughness: noNumber,
+     diffuse: [0.8, 0.8, 0.8],
+     dissolve: 1,
+-    emissive: null,
++    emissive: noColor,
+     illumination: 2,
+-    mapAmbient: null,
+-    mapBump: null,
+-    mapDiffuse: null,
+-    mapDissolve: null,
+-    mapEmissive: null,
+-    mapMetallic: null,
+-    mapNormal: null,
+-    mapRoughness: null,
+-    mapSpecular: null,
+-    metallic: null,
++    mapAmbient: noString,
++    mapBump: noString,
++    mapDiffuse: noString,
++    mapDissolve: noString,
++    mapEmissive: noString,
++    mapMetallic: noString,
++    mapNormal: noString,
++    mapRoughness: noString,
++    mapSpecular: noString,
++    metallic: noNumber,
+     name,
+-    roughness: null,
+-    sheen: null,
++    roughness: noNumber,
++    sheen: noNumber,
+     specular: [0, 0, 0],
+     specularExponent: 0,
+   };

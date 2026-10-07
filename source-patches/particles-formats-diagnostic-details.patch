@@ -1,0 +1,44 @@
+diff --git a/packages/particles-formats/src/formatRegistry.ts b/packages/particles-formats/src/formatRegistry.ts
+index 9457544..de7a9d9 100644
+--- a/packages/particles-formats/src/formatRegistry.ts
++++ b/packages/particles-formats/src/formatRegistry.ts
+@@ -50,6 +50,9 @@ export function parseRegisteredParticleFormat(
+   const codec = _registry.get(kind);
+   if (!codec) {
+     const diagnostics: ImportDiagnostic[] = [];
++    const details: Record<string, boolean | number | string> = {
++      reason: 'no-registered-codec',
++    };
+     reportImportDiagnostic(
+       diagnostics,
+       ImportDiagnosticSeverity.Reject,
+@@ -57,8 +60,6 @@ export function parseRegisteredParticleFormat(
+       'particles.unknown-format',
+       'parseRegisteredParticleFormat',
+-      {
+-        reason: 'no-registered-codec',
+-      },
++      details,
+     );
+     return { config: createParticleEmitterConfig(), diagnostics, format: kind };
+   }
+@@ -69,6 +70,9 @@ export function parseRegisteredParticleFormat(
+     return { config: result.config, diagnostics: result.diagnostics, format: kind };
+   } catch (err) {
+     const diagnostics: ImportDiagnostic[] = [];
++    const details: Record<string, boolean | number | string> = {
++      message: (err as Error).message,
++    };
+     reportImportDiagnostic(
+       diagnostics,
+       ImportDiagnosticSeverity.Reject,
+@@ -76,8 +80,6 @@ export function parseRegisteredParticleFormat(
+       'particles.parse-error',
+       'parseRegisteredParticleFormat',
+-      {
+-        message: (err as Error).message,
+-      },
++      details,
+     );
+     return { config: createParticleEmitterConfig(), diagnostics, format: kind };
+   }

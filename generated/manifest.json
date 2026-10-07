@@ -154,7 +154,6 @@
         "flight/net/net.hpp",
         "flight/power/power.hpp",
         "flight/scene2d_resources/scene2_ddocument_source.hpp",
-        "flight/selection/selection_state.hpp",
         "flight/signals/emitter.hpp",
         "flight/signals/safe.hpp",
         "flight/signals/signal.hpp",
@@ -738,6 +737,7 @@
         "flight/glyphatlas/enable_glyph_atlas_guards.hpp",
         "flight/interaction/enable_interaction_guards.hpp",
         "flight/media/enable_audio_mixer_guards.hpp",
+        "flight/movieclip/enable_movie_clip_guards.hpp",
         "flight/node/enable_node_guards.hpp",
         "flight/render/enable_scene_render_guards.hpp",
         "flight/render_wgpu/enable_wgpu_texture_resolver_guards.hpp",
@@ -861,7 +861,6 @@
         "flight/flow/flow_guards.hpp",
         "flight/host/enable_host_guards.hpp",
         "flight/materials/enable_material_conversion_guards.hpp",
-        "flight/movieclip/enable_movie_clip_guards.hpp",
         "flight/net/enable_net_guards.hpp",
         "flight/physics2d/enable_physics2_dguards.hpp",
         "flight/physics3d/enable_physics3_dguards.hpp",
@@ -1702,6 +1701,7 @@
     },
     {
       "files": [
+        "flight/scene3d/billboard.hpp",
         "flight/scene3d/clone_node3_dsubtree.hpp",
         "flight/scene3d/scene_document.hpp"
       ],
@@ -2001,14 +2001,18 @@
     },
     {
       "files": [
+        "flight/scene2d_dom/dom_bitmap_texture_resolver.hpp",
         "flight/scene2d_dom/dom_cache.hpp",
         "flight/scene2d_dom/dom_clip.hpp",
         "flight/scene2d_dom/dom_cssfilter_binding.hpp",
         "flight/scene2d_dom/dom_html_view.hpp",
+        "flight/scene2d_dom/dom_image_texture_resolver.hpp",
         "flight/scene2d_dom/dom_native_text.hpp",
         "flight/scene2d_dom/dom_node2_d.hpp",
         "flight/scene2d_dom/dom_render_state.hpp",
-        "flight/scene2d_dom/dom_texture_resolver.hpp"
+        "flight/scene2d_dom/dom_shape_rasterizer.hpp",
+        "flight/scene2d_dom/dom_texture_resolver.hpp",
+        "flight/scene2d_dom/enable_dom_texture_resolver_guards.hpp"
       ],
       "id": "scene2d-dom-unqualified-types-names"
     },
@@ -3350,9 +3354,200 @@
         "flight/scene2d_canvas/canvas_sprite.hpp"
       ],
       "id": "scene2d-canvas-unqualified-scene2d-names"
+    },
+    {
+      "files": [
+        "flight/scene_document/scene_document_refusal.hpp"
+      ],
+      "id": "scene-document-refusal-reason-import-alias"
+    },
+    {
+      "files": [
+        "flight/node/node_transform3d.hpp"
+      ],
+      "id": "node-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/particleemitter/particle_emitter.hpp",
+        "flight/particleemitter/particle_emitter3_d.hpp"
+      ],
+      "id": "particleemitter-unqualified-geometry-names"
+    },
+    {
+      "files": [
+        "flight/tween/_internal_internal.hpp",
+        "flight/tween/timer.hpp",
+        "flight/tween/tween.hpp",
+        "flight/tween/tween_manager.hpp",
+        "flight/tween/tween_progress.hpp",
+        "flight/tween/tween_stagger.hpp",
+        "flight/tween/update_tweens.hpp"
+      ],
+      "id": "tween-unqualified-types-names"
+    },
+    {
+      "files": [
+        "flight/text/rich_text.hpp",
+        "flight/text/text_label_layout.hpp"
+      ],
+      "id": "text-layout-accessor-declaration"
+    },
+    {
+      "files": [
+        "flight/scene2d_wgpu/wgpu_quad_batch_writer.hpp"
+      ],
+      "id": "scene2d-wgpu-blend-mode-type-alias"
+    },
+    {
+      "files": [
+        "flight/intl/collator.hpp",
+        "flight/intl/datetime.hpp",
+        "flight/intl/list.hpp",
+        "flight/intl/number.hpp",
+        "flight/intl/plural.hpp",
+        "flight/intl/relative_time.hpp"
+      ],
+      "id": "intl-cache-key-declaration"
+    },
+    {
+      "files": [
+        "flight/intl/collator.hpp",
+        "flight/intl/datetime.hpp",
+        "flight/intl/list.hpp",
+        "flight/intl/number.hpp",
+        "flight/intl/plural.hpp",
+        "flight/intl/relative_time.hpp"
+      ],
+      "id": "intl-cached-builder-declaration"
+    },
+    {
+      "files": [
+        "flight/image/_internal_image_test_helper.hpp"
+      ],
+      "id": "image-test-dimension-resolver-declaration"
     }
   ],
   "sourcePatches": [
+    {
+      "dependency": "flight",
+      "digest": "d9c9de3e768dcfd7b11117f6a94d04aacd6fbe268a6e13fb27ba885d529a9181",
+      "id": "scene2d-dom-runtime-accessor",
+      "module": "packages/scene2d-dom/src/domRenderState.ts",
+      "package": "@flighthq/scene2d-dom"
+    },
+    {
+      "dependency": "flight",
+      "digest": "f3faaa8c14ebf6d2a27cc458788f8be448e226009d5cccef134311f1d7b5b003",
+      "id": "optional-null-storage-evidence",
+      "module": "packages/scene-document/src/sceneDocumentRefusal.ts",
+      "package": "@flighthq/scene-document"
+    },
+    {
+      "dependency": "flight",
+      "digest": "d442b9157942116151bd701485d4691523b7a27051cd0a72be9835dda088dc0b",
+      "id": "scene3d-formats-optional-null-storage",
+      "module": "packages/scene3d-formats/src/mtlParse.ts",
+      "package": "@flighthq/scene3d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "dd741a243f66c6c4bd17152ec3086e8e600b2ff45be1071bb3d4cbcbc35bebad",
+      "id": "skeleton2d-target-kind-binding",
+      "module": "packages/skeleton2d/src/skeleton2dAnimationTarget.ts",
+      "package": "@flighthq/skeleton2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "7d53ff4c20ec3b2a3384036ce096a8d48a235432cf4e8eadd61206942de1d2e2",
+      "id": "particles-formats-string-operations",
+      "module": "packages/particles-formats/src/libgdxParse.ts and packages/particles-formats/src/particleDesignerParse.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "8a2548fd6e11ea2bb17cb34233230015c8194abcc7a6ff47ba1281ee147abf1a",
+      "id": "particles-formats-diagnostic-details",
+      "module": "packages/particles-formats/src/formatRegistry.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "a50d46ce2a5a708b637d16daa6ce0fce933b434cdac62d4ead2e310f867cd761",
+      "id": "gui-hit-area-type-evidence",
+      "module": "packages/gui/src/guiController.ts",
+      "package": "@flighthq/gui"
+    },
+    {
+      "dependency": "flight",
+      "digest": "dbf20e57aca4430995790549cc09b4a3e322c91beb64d1cf36196cd8b1b43cc4",
+      "id": "skeleton2d-local-numeric-constants",
+      "module": "packages/skeleton2d/src/skeleton2d.ts",
+      "package": "@flighthq/skeleton2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "37bd4ffd372307696f5f7cd7f07cda0d61e8a7e952a6a075ceec6096c5456cb9",
+      "id": "selection-runtime-type-evidence",
+      "module": "packages/selection/src/lassoSelection.ts, packages/selection/src/marqueeSelection.ts, and packages/selection/src/selectionState.ts",
+      "package": "@flighthq/selection"
+    },
+    {
+      "dependency": "flight",
+      "digest": "af236bccd4ab1889bcef0fe1344798290b8cd3f896bc15f12f2010d94fa196d2",
+      "id": "movieclip-guard-log-data",
+      "module": "packages/movieclip/src/enableMovieClipGuards.ts",
+      "package": "@flighthq/movieclip"
+    },
+    {
+      "dependency": "flight",
+      "digest": "8a11dcbd4be7abfbc37cef1c44569fbfe101a5cbf76f11c750d68a17fb084419",
+      "id": "movieclip-data-binding",
+      "module": "packages/movieclip/src/movieClip.ts",
+      "package": "@flighthq/movieclip"
+    },
+    {
+      "dependency": "flight",
+      "digest": "8930556bc87334b618653ee31790c548bb7abf2689a06be6ec4fa1795bbabcc9",
+      "id": "image-resource-discriminant-literals",
+      "module": "packages/image/src/imageResourceReference.ts",
+      "package": "@flighthq/image"
+    },
+    {
+      "dependency": "flight",
+      "digest": "8079bb530e9ef406ca937b1b4674ed8c78ee6b3d8a870299b1d7bd729f8ceb25",
+      "id": "text-data-binding",
+      "module": "packages/text/src/textLabel.ts and packages/text/src/nativeText.ts",
+      "package": "@flighthq/text"
+    },
+    {
+      "dependency": "flight",
+      "digest": "9ea83d5a1a5db382f53befe999d558ca1ea6c370c46a87002f6a58b6fa4acc85",
+      "id": "node-traversal-typed-empty-children",
+      "module": "packages/node/src/traversal.ts",
+      "package": "@flighthq/node"
+    },
+    {
+      "dependency": "flight",
+      "digest": "2afcb51dd10482e742c06de8705b7f8e95b0132d3af9dac569f046e8703c66f0",
+      "id": "particleemitter-data-binding",
+      "module": "packages/particleemitter/src/particleEmitter.ts",
+      "package": "@flighthq/particleemitter"
+    },
+    {
+      "dependency": "flight",
+      "digest": "32734d1c72c7139364e7cf96786993f2ba81821e6837e4e88636553be2806725",
+      "id": "node-stage-fit-string-value",
+      "module": "packages/node/src/stageFit.ts",
+      "package": "@flighthq/node"
+    },
+    {
+      "dependency": "flight",
+      "digest": "c9330c83a870baae9d1e060884fbd22d535e95ed04d225c7cbb84d6939aeb30a",
+      "id": "tween-record-membership",
+      "module": "packages/tween/src/internal.ts",
+      "package": "@flighthq/tween"
+    },
     {
       "dependency": "flight",
       "digest": "a37d651c58380515762deb9626c89ca97b49067e319a99cae3bedf73b2d5658a",

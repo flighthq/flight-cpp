@@ -12,12 +12,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/render_proxy2_d.hpp>
 
+#include <flight/types/node2_d.hpp>
+
+#include <flight/types/dom_render_state.hpp>
+
 #include "dom_clip_contours.hpp"
 #include "dom_clip_rectangle.hpp"
 #include "dom_render_state.hpp"
 
 namespace flight::scene2d_dom {
 
+using flight::types::DomRenderState;
+using flight::types::Node2D;
 using flight::types::RenderProxy2D;
 
 

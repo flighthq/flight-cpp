@@ -35,8 +35,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/attachment_skin2_d.hpp>
 
-#include "skeleton2d_constants.hpp"
-
 namespace flight::skeleton2d {
 
 using flight::geometry::inverse_matrix;
@@ -49,6 +47,10 @@ using flight::types::MatrixLike;
 using flight::types::Skeleton2D;
 using flight::types::Slot2D;
 using flight::types::TransformInherit2D;
+
+inline const double deg_to_rad = (flight::pi / 180.0);
+
+inline const double matrix_stride = 6.0;
 
 inline void compute_skeleton2_dbone_world_transform(flight::Ref<Skeleton2D> skeleton, double bone_index) {
   flight::Array<flight::Ref<Bone2D>> bones = skeleton->bones;

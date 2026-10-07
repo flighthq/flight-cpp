@@ -1,0 +1,21 @@
+diff --git a/packages/gui/src/guiController.ts b/packages/gui/src/guiController.ts
+index 0e266c9..004b2c4 100644
+--- a/packages/gui/src/guiController.ts
++++ b/packages/gui/src/guiController.ts
+@@ -15,6 +15,7 @@ import type {
+   GuiTransitionDescriptor,
+   GuiTransitionProperty,
+   GuiTransitionValue,
++  HitArea,
+   InteractionSignals,
+   Node2D,
+   Signal,
+@@ -36,7 +37,7 @@ export function clampGuiValue(value: number, minimum: number, maximum: number): n
+ }
+ 
+ export function configureGuiHitArea(runtime: GuiControllerRuntime, target: Node2D, hitArea: Node2D): void {
+-  const previous = getNodeHitArea(target);
++  const previous: HitArea | null = getNodeHitArea(target);
+   setNodeHitArea(target, hitArea);
+   runtime.cleanups.push(() => setNodeHitArea(target, previous));
+ }

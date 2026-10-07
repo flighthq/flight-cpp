@@ -1,0 +1,67 @@
+diff --git a/packages/selection/src/lassoSelection.ts b/packages/selection/src/lassoSelection.ts
+index 9db2ddc..5c008ac 100644
+--- a/packages/selection/src/lassoSelection.ts
++++ b/packages/selection/src/lassoSelection.ts
+@@ -28,7 +28,7 @@ export function beginLassoSelection(selection: LassoSelection, startX: number, s
+ export function createLassoSelection(): LassoSelection {
+   const selection = allocateEntity<LassoSelection>();
+   initializeLassoSelection(selection);
+-  const runtime = {
++  const runtime: LassoSelectionRuntime = {
+     active: false,
+     binding: null,
+     path: (() => {
+@@ -38,7 +38,7 @@ export function createLassoSelection(): LassoSelection {
+       out.winding = 'evenOdd' as const;
+       return finishEntity(out);
+     })(),
+-  } satisfies LassoSelectionRuntime;
++  };
+   selection[EntityRuntimeKey] = runtime;
+   return finishEntity(selection);
+ }
+diff --git a/packages/selection/src/marqueeSelection.ts b/packages/selection/src/marqueeSelection.ts
+index 8f52f17..3e0757d 100644
+--- a/packages/selection/src/marqueeSelection.ts
++++ b/packages/selection/src/marqueeSelection.ts
+@@ -19,13 +19,13 @@ export function beginMarqueeSelection(selection: MarqueeSelection, startX: numbe
+ 
+ export function createMarqueeSelection(): MarqueeSelection {
+   const selection = { [EntityRuntimeKey]: undefined } as MarqueeSelection;
+-  const runtime = {
++  const runtime: MarqueeSelectionRuntime = {
+     active: false,
+     binding: null,
+     rectangle: createRectangle(),
+     startX: 0,
+     startY: 0,
+-  } satisfies MarqueeSelectionRuntime;
++  };
+   selection[EntityRuntimeKey] = runtime;
+   return selection;
+ }
+diff --git a/packages/selection/src/selectionState.ts b/packages/selection/src/selectionState.ts
+index f2f67b3..ec87df8 100644
+--- a/packages/selection/src/selectionState.ts
++++ b/packages/selection/src/selectionState.ts
+@@ -34,16 +34,16 @@ export function clearSelection<NodeType extends HierarchyNodeAny>(state: Selecti
+ 
+ export function createSelectionState<NodeType extends HierarchyNodeAny = HierarchyNodeAny>(): SelectionState<NodeType> {
+   const state = { [EntityRuntimeKey]: undefined } as SelectionState<NodeType>;
+-  const runtime = {
++  const runtime: SelectionStateRuntime<NodeType> = {
+     activeNode: null,
+     binding: null,
+     selectedNodeSet: new Set<NodeType>(),
+     selectedNodes: [],
+     signals: {
+-      onActiveChange: createSignal(),
+-      onChange: createSignal(),
++      onActiveChange: createSignal<(active: NodeType | null) => void>(),
++      onChange: createSignal<(selected: readonly NodeType[]) => void>(),
+     },
+-  } satisfies SelectionStateRuntime<NodeType>;
++  };
+   state[EntityRuntimeKey] = runtime;
+   return state;
+ }

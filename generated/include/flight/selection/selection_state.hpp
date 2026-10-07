@@ -10,7 +10,6 @@
 //   missing: function removeNodeFromSelection -- source line 82
 //   missing: function selectAllNodes -- source line 98
 //   missing: function selectNode -- source line 130
-#include <flight/any.hpp>
 #include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
@@ -19,8 +18,6 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/signals/signal.hpp>
-
-#include <flight/types/signal.hpp>
 
 #include <flight/types/selection_state_runtime.hpp>
 
@@ -36,33 +33,11 @@ using flight::types::HierarchyNodeAny;
 using flight::types::SelectionSignals;
 using flight::types::SelectionState;
 using flight::types::SelectionStateRuntime;
-using flight::types::Signal;
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ON_ACTIVE_CHANGE_ON_CHANGE_0CEEE09FDBB896CB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ON_ACTIVE_CHANGE_ON_CHANGE_0CEEE09FDBB896CB
-template <typename NodeType>
-struct on_active_change_on_change_0ceee09fdbb896cb : public flight::ReferenceEnabled {
-  std::shared_ptr<Signal<std::function<void(std::optional<flight::Ref<HierarchyNodeAny>>)>>> on_active_change;
-  std::shared_ptr<Signal<std::function<void(flight::Array<NodeType>)>>> on_change;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ON_ACTIVE_CHANGE_ON_CHANGE_0CEEE09FDBB896CB
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ACTIVE_NODE_BINDING_SELECTED_NODE_SET_SELECTED_NODES_SIGNALS_692D586B414F8777
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ACTIVE_NODE_BINDING_SELECTED_NODE_SET_SELECTED_NODES_SIGNALS_692D586B414F8777
-template <typename NodeType>
-struct active_node_binding_selected_node_set_selected_nodes_signals_692d586b414f8777 : public flight::ReferenceEnabled {
-  flight::Null active_node;
-  flight::Null binding;
-  flight::Set<NodeType> selected_node_set;
-  flight::Array<flight::Any> selected_nodes;
-  flight::Ref<on_active_change_on_change_0ceee09fdbb896cb<NodeType>> signals;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ACTIVE_NODE_BINDING_SELECTED_NODE_SET_SELECTED_NODES_SIGNALS_692D586B414F8777
 
 template <typename NodeType = flight::Ref<HierarchyNodeAny>>
 inline flight::Ref<SelectionState<NodeType>> create_selection_state() {
   flight::Ref<SelectionState<NodeType>> state = flight::make_ref<SelectionState<NodeType>>(SelectionState<NodeType>{});
-  flight::Ref<active_node_binding_selected_node_set_selected_nodes_signals_692d586b414f8777<NodeType>> runtime = flight::make_ref<active_node_binding_selected_node_set_selected_nodes_signals_692d586b414f8777<NodeType>>(active_node_binding_selected_node_set_selected_nodes_signals_692d586b414f8777<NodeType>{.active_node = flight::null, .binding = flight::null, .selected_node_set = flight::Set<NodeType>(), .selected_nodes = flight::Array<flight::Any>{}, .signals = flight::make_ref<on_active_change_on_change_0ceee09fdbb896cb<NodeType>>(on_active_change_on_change_0ceee09fdbb896cb<NodeType>{.on_active_change = create_signal(), .on_change = create_signal()})});
+  flight::Ref<SelectionStateRuntime<NodeType>> runtime = flight::make_ref<SelectionStateRuntime<NodeType>>(SelectionStateRuntime<NodeType>{.active_node = nullptr, .binding = nullptr, .selected_node_set = flight::Set<NodeType>(), .selected_nodes = flight::Array<NodeType>{}, .signals = flight::make_ref<SelectionSignals<NodeType>>(SelectionSignals<NodeType>{.on_active_change = create_signal<std::function<void(std::optional<flight::Ref<HierarchyNodeAny>>)>>(), .on_change = create_signal<std::function<void(flight::Array<NodeType>)>>()})});
   (state->entity_runtime_key = runtime);
   return state;
 }

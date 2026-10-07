@@ -50,6 +50,7 @@ using DomClipEntry = std::variant<flight::Ref<flight::types::DomScene2DRectangle
 
 #include <flight/types/bitmap.hpp>
 #include <flight/types/blend_mode.hpp>
+#include <flight/types/entity.hpp>
 #include <flight/types/dom_scene2_drectangle.hpp>
 #include <flight/types/dom_texture_resolver.hpp>
 #include <flight/types/registry_table.hpp>
@@ -69,31 +70,14 @@ using DomClipEntry = std::variant<flight::Ref<flight::types::DomScene2DRectangle
 #include <flight/types/stroke_style.hpp>
 #include <flight/types/path_mesh.hpp>
 #include <flight/types/render_proxy_adapter.hpp>
-#include <flight/types/entity.hpp>
 #include <flight/types/render_registry_signals.hpp>
-#include <flight/types/render_state.hpp>
 #include <flight/types/blend_mode.hpp>
+#include <flight/types/render_state.hpp>
 #include <flight/types/registry_table.hpp>
 #include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/entity.hpp>
 
 namespace flight::types {
-
-struct DomRenderState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::RenderStateRuntime>> entity_runtime_key;
-  bool allow_smoothing;
-  double current_clip_depth;
-  std::optional<flight::Ref<flight::types::Scene2DClipHooks>> display_object_clip_hooks;
-  double pixel_ratio;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageSurfaceCreator>>>>> image_surface_provider;
-  double render_alpha;
-  std::optional<flight::String> render_blend_mode;
-  std::optional<flight::Ref<flight::types::Matrix>> render_transform2_d;
-  flight::Ref<flight::types::Scene3DGraphSyncPolicy> scene_graph_sync_policy;
-  bool round_pixels;
-  std::optional<std::function<void(flight::host_sdl::HtmlElement, std::optional<flight::String>)>> apply_blend_mode;
-  std::optional<std::function<std::optional<flight::String>(flight::Ref<flight::types::RenderProxy2D>)>> dom_css_filter_resolver;
-  flight::host_sdl::HtmlElement element;
-};
 
 struct DomRenderRegistries : public flight::ReferenceEnabled {
   std::optional<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasShapeCommand<flight::types::ShapeCommandKey>>>>> canvas_shape_commands;
@@ -113,13 +97,30 @@ struct DomClipContourEntry : public flight::ReferenceEnabled {
   flight::types::PathWinding winding;
 };
 
+struct DomRenderState : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<DomRenderStateRuntime>> entity_runtime_key;
+  bool allow_smoothing;
+  double current_clip_depth;
+  std::optional<flight::Ref<flight::types::Scene2DClipHooks>> display_object_clip_hooks;
+  double pixel_ratio;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageSurfaceCreator>>>>> image_surface_provider;
+  double render_alpha;
+  std::optional<flight::String> render_blend_mode;
+  std::optional<flight::Ref<flight::types::Matrix>> render_transform2_d;
+  flight::Ref<flight::types::Scene3DGraphSyncPolicy> scene_graph_sync_policy;
+  bool round_pixels;
+  std::optional<std::function<void(flight::host_sdl::HtmlElement, std::optional<flight::String>)>> apply_blend_mode;
+  std::optional<std::function<std::optional<flight::String>(flight::Ref<flight::types::RenderProxy2D>)>> dom_css_filter_resolver;
+  flight::host_sdl::HtmlElement element;
+};
+
 struct DomClipHooks : public flight::ReferenceEnabled {
   std::function<void(flight::Ref<DomRenderState>, flight::Ref<flight::types::RenderProxy2D>)> apply;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_2A7BDD7D94CAAC81
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_2A7BDD7D94CAAC81
-struct callable_clear_signals_2a7bdd7d94caac81 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_8E4D255B5E28ACAF
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_8E4D255B5E28ACAF
+struct callable_clear_signals_8e4d255b5e28acaf : public flight::ReferenceEnabled {
   std::function<void(flight::Ref<flight::types::RenderRegistryTable>, flight::String)> callable;
   std::function<void()> clear;
   flight::Ref<flight::types::RenderRegistrySignals> signals;
@@ -127,7 +128,7 @@ struct callable_clear_signals_2a7bdd7d94caac81 : public flight::ReferenceEnabled
     return callable(argument_0, argument_1);
   }
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_2A7BDD7D94CAAC81
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_8E4D255B5E28ACAF
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ELEMENT_VERSION_02719FB3B3A4E4E7
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ELEMENT_VERSION_02719FB3B3A4E4E7
@@ -145,7 +146,7 @@ struct DomRenderStateRuntime : public flight::ReferenceEnabled {
   flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxyAdapter>> render_proxy_adapter_map;
   flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxy>> render_proxy_map;
   flight::Set<flight::Ref<flight::types::Renderable>> render_proxy_sources;
-  flight::Ref<std::optional<flight::Ref<callable_clear_signals_2a7bdd7d94caac81>>> registry_miss;
+  flight::Ref<std::optional<flight::Ref<callable_clear_signals_8e4d255b5e28acaf>>> registry_miss;
   flight::Ref<DomRenderRegistries> registries;
   double renderer_map_id;
   flight::Array<flight::Ref<flight::types::Renderable>> temp_stack;
@@ -159,5 +160,9 @@ struct DomRenderStateRuntime : public flight::ReferenceEnabled {
   double dom_order_length;
   flight::Array<flight::Ref<flight::types::RenderProxy2D>> dom_order_list;
 };
+
+inline flight::Ref<DomRenderStateRuntime> read_dom_render_state_runtime_owner(flight::Ref<DomRenderState> owner) {
+  return owner->entity_runtime_key.value();
+}
 
 } // namespace flight::types

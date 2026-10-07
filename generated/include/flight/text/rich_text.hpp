@@ -79,6 +79,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::text {
 
+std::optional<flight::Ref<flight::types::TextLayoutResult>> get_text_layout(flight::Ref<flight::types::TextLabel> source);
+
 using flight::textlayout::compute_rich_text_bottom_scroll_v;
 using flight::textlayout::compute_rich_text_char_index_at_point;
 using flight::textlayout::compute_rich_text_line_count;

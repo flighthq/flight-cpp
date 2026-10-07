@@ -11,6 +11,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/node/node.hpp>
+
 #include <flight/types/node_signals.hpp>
 
 #include <flight/types/node3_d.hpp>
@@ -24,6 +26,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include "scene_node.hpp"
 
 namespace flight::scene3d {
+
+using flight::node::enable_node_signals;
 
 using flight::types::Billboard;
 using flight::types::BillboardMode;

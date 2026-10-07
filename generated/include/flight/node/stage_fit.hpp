@@ -3,7 +3,7 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function computeScene2DFitTransform -- source line 55
+//   missing: function computeScene2DFitTransform -- source line 57
 #include <cmath>
 #include <cstdint>
 #include <optional>
@@ -38,20 +38,22 @@ using flight::types::NodeTraits;
 using flight::types::MatrixLike;
 
 inline double compute_scene2_dfit_align_x(double scaled_content_width, double view_width, flight::Ref<ViewportAlign> align) {
-  if (align->includes(flight::String("left"))) {
+  const flight::String value = align;
+  if (value.includes(flight::String("left"))) {
     return 0.0;
   }
-  if (align->includes(flight::String("right"))) {
+  if (value.includes(flight::String("right"))) {
     return (view_width - scaled_content_width);
   }
   return ((view_width - scaled_content_width) / 2.0);
 }
 
 inline double compute_scene2_dfit_align_y(double scaled_content_height, double view_height, flight::Ref<ViewportAlign> align) {
-  if (align->includes(flight::String("top"))) {
+  const flight::String value = align;
+  if (value.includes(flight::String("top"))) {
     return 0.0;
   }
-  if (align->includes(flight::String("bottom"))) {
+  if (value.includes(flight::String("bottom"))) {
     return (view_height - scaled_content_height);
   }
   return ((view_height - scaled_content_height) / 2.0);
@@ -68,7 +70,7 @@ inline double compute_scene2_dfit_scale(double content_width, double content_hei
 inline flight::Ref<Rectangle> temp_rectangle = create_rectangle(std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
 
-// NOT GENERATED: function computeScene2DFitTransform -- source line 55
+// NOT GENERATED: function computeScene2DFitTransform -- source line 57
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:

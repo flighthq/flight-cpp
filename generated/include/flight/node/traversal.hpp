@@ -191,7 +191,7 @@ inline double get_node_depth(std::shared_ptr<Node<Traits>> source) {
 // cpp emission failed for @flighthq/node/packages/node/src/traversal.ts: contextual optionalSingle construction
 // requires expression type evidence
 
-inline flight::Array<void> empty_children = flight::Array<void>{};
+inline flight::Array<flight::Ref<NodeOf<flight::Ref<NodeTraits>>>> empty_children = flight::Array<flight::Ref<NodeOf<flight::Ref<NodeTraits>>>>{};
 
 
 // NOT GENERATED: function getNodeChildren -- source line 82

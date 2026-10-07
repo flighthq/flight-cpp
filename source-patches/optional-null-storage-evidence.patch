@@ -1,0 +1,35 @@
+diff --git a/packages/scene-document/src/sceneDocumentRefusal.ts b/packages/scene-document/src/sceneDocumentRefusal.ts
+index 0da0e15..4cfe25e 100644
+--- a/packages/scene-document/src/sceneDocumentRefusal.ts
++++ b/packages/scene-document/src/sceneDocumentRefusal.ts
+@@ -283,18 +283,20 @@ export function initializeDocumentRefusal(
+   reason: FlightDocumentRefusalReasonType,
+   path: string,
+ ): void {
+-  out.actual = null;
+-  out.column = null;
+-  out.kind = null;
+-  out.limit = null;
+-  out.line = null;
+-  out.mode = null;
+-  out.offset = null;
++  const noNumber: number | null = null;
++  const noString: string | null = null;
++  out.actual = noNumber;
++  out.column = noNumber;
++  out.kind = noString;
++  out.limit = noNumber;
++  out.line = noNumber;
++  out.mode = noString;
++  out.offset = noNumber;
+   out.path = path;
+   out.reason = reason;
+-  out.resourceKey = null;
+-  out.tokenKey = null;
+-  out.version = null;
++  out.resourceKey = noString;
++  out.tokenKey = noString;
++  out.version = noNumber;
+ }
+ 
+ function createKindRefusal(

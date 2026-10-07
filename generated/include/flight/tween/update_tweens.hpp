@@ -27,6 +27,8 @@ namespace flight::types { template <typename T> struct Tween; }
 
 namespace flight::tween {
 
+using flight::types::Tween;
+
 template <typename T>
 inline void complete_tween(flight::Ref<flight::types::Tween<T>> tween) {
   if (tween->complete) {

@@ -1,0 +1,132 @@
+diff --git a/packages/image/src/imageResourceReference.ts b/packages/image/src/imageResourceReference.ts
+index 7d18143..b576d99 100644
+--- a/packages/image/src/imageResourceReference.ts
++++ b/packages/image/src/imageResourceReference.ts
+@@ -13,12 +13,6 @@ import type {
+   TextureSource,
+   EntityConstruction,
+ } from '@flighthq/types/contract';
+-import {
+-  BitmapTextureSourceKind,
+-  ImageResourceFailureKind,
+-  ImageResourceReferenceKind,
+-  ResourceResolutionState,
+-} from '@flighthq/types/contract';
+ 
+ export function createEmbeddedImageResourceReference(
+   bytes: Uint8Array,
+@@ -62,7 +56,7 @@ async function decodeEmbeddedImageResourceReference(
+   out.format = 'rgba8unorm' as const;
+   out.gamut = 'srgb' as const;
+   out.height = decoded.height;
+-  out.kind = BitmapTextureSourceKind;
++  out.kind = 'bitmap';
+   out.version = 0;
+   out.width = decoded.width;
+   return finishEntity(out);
+@@ -73,13 +67,13 @@ async function decodeEmbeddedImageResourceReference(
+ export function createImageResourceFailure(cause: unknown): ImageResourceFailure {
+   if (cause instanceof Error) {
+     const out = allocateEntity<ImageResourceFailure>();
+-    out.kind = ImageResourceFailureKind.Error;
++    out.kind = 'Error';
+     out.message = cause.message;
+     out.name = cause.name;
+     return finishEntity(out);
+   }
+   const out = allocateEntity<ImageResourceFailure>();
+-  out.kind = ImageResourceFailureKind.Error;
++  out.kind = 'Error';
+   out.message = String(cause);
+   out.name = null;
+   return finishEntity(out);
+@@ -93,7 +87,7 @@ export function explainImageResourceReferenceResolution(
+   return {
+     failure: ref.failure === null ? null : { ...ref.failure },
+     kind: ref.kind,
+-    retryable: ref.state === ResourceResolutionState.Failed,
++    retryable: ref.state === 'Failed',
+     state: ref.state,
+   };
+ }
+@@ -112,9 +106,9 @@ export function initializeEmbeddedImageResourceReference(
+   out.alphaType = alphaType;
+   out.bytes = bytes;
+   out.failure = null;
+-  out.kind = ImageResourceReferenceKind.Embedded;
++  out.kind = 'Embedded';
+   out.mimeType = mimeType;
+-  out.state = ResourceResolutionState.Unresolved;
++  out.state = 'Unresolved';
+   out.textures = [];
+ }
+ 
+@@ -125,8 +119,9 @@ export function initializeExternalImageResourceReference(
+   out.basePath = basePath;
+   out.failure = null;
+-  out.kind = ImageResourceReferenceKind.External;
++  out.kind = 'External';
+-  out.mimeType = null;
++  const noMimeType: string | null = null;
++  out.mimeType = noMimeType;
+-  out.state = ResourceResolutionState.Unresolved;
++  out.state = 'Unresolved';
+   out.textures = [];
+   out.uri = uri;
+ }
+@@ -143,9 +137,9 @@ export function registerImageBitmapCompositionResolver(resolver: ImageBitmapComp
+ // Returns a failed reference to the requestable state. Loading/resolved/unresolved references are unchanged
+ // so this atom cannot invalidate live work or a successfully bound resource accidentally.
+ export function resetFailedImageResourceReference(ref: ImageResourceReference): boolean {
+-  if (ref.state !== ResourceResolutionState.Failed) return false;
++  if (ref.state !== 'Failed') return false;
+   ref.failure = null;
+-  ref.state = ResourceResolutionState.Unresolved;
++  ref.state = 'Unresolved';
+   return true;
+ }
+ 
+@@ -163,12 +157,12 @@ export async function resolveImageResourceReference(
+   signal: AbortSignal,
+ ): Promise<TextureSource | null> {
+   ref.failure = null;
+-  ref.state = ResourceResolutionState.Loading;
++  ref.state = 'Loading';
+   try {
+     const usesOrdinaryEmbeddedDecode =
+-      ref.kind === ImageResourceReferenceKind.Embedded &&
++      ref.kind === 'Embedded' &&
+       (ref.bitmapComposition === undefined || _resolveImageBitmapComposition === null);
+     const source =
+-      ref.kind === ImageResourceReferenceKind.Embedded
++      ref.kind === 'Embedded'
+         ? await decodeEmbeddedImageResourceReference(ref, signal)
+         : await fetch(ref, signal);
+@@ -177,22 +171,22 @@ export async function resolveImageResourceReference(
+         ? explainImageDecodeFailure(ref.bytes, ref.mimeType ?? undefined)
+         : null;
+       const out = allocateEntity<ImageResourceFailure>();
+-      out.kind = ImageResourceFailureKind.Unavailable;
++      out.kind = 'Unavailable';
+       out.message = decodeFailure?.reason ?? 'Image resource unavailable';
+       out.name = null;
+       ref.failure = finishEntity(out);
+-      ref.state = ResourceResolutionState.Failed;
++      ref.state = 'Failed';
+       return null;
+     }
+-    ref.state = ResourceResolutionState.Resolved;
++    ref.state = 'Resolved';
+     return source;
+   } catch (cause) {
+     if (signal.aborted) {
+-      ref.state = ResourceResolutionState.Unresolved;
++      ref.state = 'Unresolved';
+       throw cause;
+     }
+     ref.failure = createImageResourceFailure(cause);
+-    ref.state = ResourceResolutionState.Failed;
++    ref.state = 'Failed';
+     return null;
+   }
+ }

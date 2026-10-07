@@ -32,6 +32,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::scene2d_wgpu {
 
 using flight::types::WgpuRenderState;
+using flight::types::WgpuRenderStateRuntime;
 
 inline const double color_scale_bias_floats = 8.0;
 

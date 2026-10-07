@@ -33,7 +33,10 @@ using flight::types::import_diagnostic_severity;
 struct MtlDropTally;
 
 inline flight::Ref<ObjMaterial> create_default_obj_material(flight::String name) {
-  return flight::make_ref<ObjMaterial>(ObjMaterial{.ambient = flight::Array{0.0, 0.0, 0.0}, .anisotropy = nullptr, .anisotropy_rotation = nullptr, .clearcoat = nullptr, .clearcoat_roughness = nullptr, .diffuse = flight::Array{0.8, 0.8, 0.8}, .dissolve = 1.0, .emissive = nullptr, .illumination = 2.0, .map_ambient = nullptr, .map_bump = nullptr, .map_diffuse = nullptr, .map_dissolve = nullptr, .map_emissive = nullptr, .map_metallic = nullptr, .map_normal = nullptr, .map_roughness = nullptr, .map_specular = nullptr, .metallic = nullptr, .name = name, .roughness = nullptr, .sheen = nullptr, .specular = flight::Array{0.0, 0.0, 0.0}, .specular_exponent = 0.0});
+  const std::optional<double> no_number = std::nullopt;
+  const std::optional<flight::Array<double>> no_color = std::nullopt;
+  const std::optional<flight::String> no_string = std::nullopt;
+  return flight::make_ref<ObjMaterial>(ObjMaterial{.ambient = flight::Array{0.0, 0.0, 0.0}, .anisotropy = no_number, .anisotropy_rotation = no_number, .clearcoat = no_number, .clearcoat_roughness = no_number, .diffuse = flight::Array{0.8, 0.8, 0.8}, .dissolve = 1.0, .emissive = no_color, .illumination = 2.0, .map_ambient = no_string, .map_bump = no_string, .map_diffuse = no_string, .map_dissolve = no_string, .map_emissive = no_string, .map_metallic = no_string, .map_normal = no_string, .map_roughness = no_string, .map_specular = no_string, .metallic = no_number, .name = name, .roughness = no_number, .sheen = no_number, .specular = flight::Array{0.0, 0.0, 0.0}, .specular_exponent = 0.0});
 }
 
 struct MtlDropTally : public flight::ReferenceEnabled {

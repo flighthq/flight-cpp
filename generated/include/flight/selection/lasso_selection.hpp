@@ -40,19 +40,10 @@ using flight::entity::finish_entity;
 inline void initialize_lasso_selection(flight::Ref<EntityConstruction<flight::Ref<LassoSelection>>> out) {
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ACTIVE_BINDING_PATH_814C3F6592E9DE69
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ACTIVE_BINDING_PATH_814C3F6592E9DE69
-struct active_binding_path_814c3f6592e9de69 : public flight::ReferenceEnabled {
-  bool active;
-  flight::Null binding;
-  flight::Ref<Path> path;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ACTIVE_BINDING_PATH_814C3F6592E9DE69
-
 inline flight::Ref<LassoSelection> create_lasso_selection() {
   flight::Ref<EntityConstruction<flight::Ref<LassoSelection>>> selection = allocate_entity<flight::Ref<LassoSelection>>();
   initialize_lasso_selection(selection);
-  flight::Ref<active_binding_path_814c3f6592e9de69> runtime = flight::make_ref<active_binding_path_814c3f6592e9de69>(active_binding_path_814c3f6592e9de69{.active = false, .binding = flight::null, .path = ([=]() {
+  flight::Ref<LassoSelectionRuntime> runtime = flight::make_ref<LassoSelectionRuntime>(LassoSelectionRuntime{.active = false, .binding = nullptr, .path = ([=]() {
   flight::Ref<EntityConstruction<flight::Ref<Path>>> out = allocate_entity<flight::Ref<Path>>();
   (out->commands = static_cast<flight::Array<double>>(flight::Array<double>{}));
   (out->data = static_cast<flight::Array<double>>(flight::Array<double>{}));

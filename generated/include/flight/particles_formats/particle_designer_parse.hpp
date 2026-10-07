@@ -60,7 +60,7 @@ inline flight::Ref<ParticleDesignerRawDict> parse_plist_raw_dict(flight::String 
     const flight::String close = array_pattern_value.element(1.0);
     const flight::String name = array_pattern_value.element(2.0);
     const flight::String attrs = array_pattern_value.element(3.0);
-    const bool is_self_close = (attrs.trim_end().ends_with(flight::String("/")) || full.ends_with(flight::String("/>")));
+    const bool is_self_close = (attrs.trim().ends_with(flight::String("/")) || full.ends_with(flight::String("/>")));
     const flight::String text = xml.slice(last_tag_end, m.value().index).trim();
     (last_tag_end = (m.value().index + static_cast<double>(full.length())));
     if ((!flight::to_boolean(close) && !is_self_close)) {

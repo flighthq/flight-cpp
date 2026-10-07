@@ -3,13 +3,13 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function computeTextLabelLocalBoundsRectangle -- source line 52
-//   missing: function getTextLabelRuntime -- source line 101
-//   missing: function initializeTextLabelData -- source line 109
-//   missing: function createTextLabelData -- source line 80
-//   missing: variable (binding) -- source line 178
-//   missing: function createTextLabelRuntime -- source line 86
-//   missing: function createTextLabel -- source line 76
+//   missing: function computeTextLabelLocalBoundsRectangle -- source line 53
+//   missing: function getTextLabelRuntime -- source line 103
+//   missing: function initializeTextLabelData -- source line 112
+//   missing: function createTextLabelData -- source line 81
+//   missing: variable (binding) -- source line 183
+//   missing: function createTextLabelRuntime -- source line 87
+//   missing: function createTextLabel -- source line 77
 #include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
@@ -69,7 +69,7 @@ inline flight::Ref<TextLayoutParams> build_text_label_layout_params(flight::Ref<
 }
 
 
-// NOT GENERATED: function computeTextLabelLocalBoundsRectangle -- source line 52
+// NOT GENERATED: function computeTextLabelLocalBoundsRectangle -- source line 53
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
@@ -105,11 +105,12 @@ inline flight::Ref<TextLayoutParams> build_text_label_layout_params(flight::Ref<
 // the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
 
 inline flight::Ref<TextFormat> get_text_label_format(flight::Ref<TextLabel> source) {
-  return source->data.text_format;
+  flight::Ref<TextLabelData> data = source->data;
+  return data->text_format;
 }
 
 
-// NOT GENERATED: function getTextLabelRuntime -- source line 101
+// NOT GENERATED: function getTextLabelRuntime -- source line 103
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
@@ -126,11 +127,12 @@ inline flight::Ref<TextFormat> get_text_label_format(flight::Ref<TextLabel> sour
 // invent side storage
 
 inline flight::String get_text_label_string(flight::Ref<TextLabel> source) {
-  return source->data.text;
+  flight::Ref<TextLabelData> data = source->data;
+  return data->text;
 }
 
 
-// NOT GENERATED: function initializeTextLabelData -- source line 109
+// NOT GENERATED: function initializeTextLabelData -- source line 112
 // refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
@@ -150,7 +152,7 @@ inline flight::String get_text_label_string(flight::Ref<TextLabel> source) {
 // resolvable C++ object shape; T is named
 
 
-// NOT GENERATED: function createTextLabelData -- source line 80
+// NOT GENERATED: function createTextLabelData -- source line 81
 // refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
@@ -203,8 +205,9 @@ inline void set_text_label_width(flight::Ref<TextLabel> source, double value) {
 }
 
 inline void invalidate_text_label_content(flight::Ref<TextLabel> source) {
+  flight::Ref<TextLabelData> data = source->data;
   invalidate_node_local_content(source);
-  if ((source->data.auto_size != flight::String("none"))) {
+  if ((data->auto_size != flight::String("none"))) {
     invalidate_node_local_bounds(source);
   }
 }
@@ -213,12 +216,14 @@ inline void append_text_label_string(flight::Ref<TextLabel> source, flight::Stri
   if ((static_cast<double>(value.length()) == 0.0)) {
     return;
   }
-  (source->data.text += value);
+  flight::Ref<TextLabelData> data = source->data;
+  (data->text += value);
   invalidate_text_label_content(source);
 }
 
 inline void set_text_label_format(flight::Ref<TextLabel> source, flight::Ref<TextFormat> value) {
-  (source->data.text_format = value);
+  flight::Ref<TextLabelData> data = source->data;
+  (data->text_format = value);
   invalidate_text_label_content(source);
 }
 
@@ -241,7 +246,7 @@ struct build_text_layout_params_can_add_child_compute_local_bounds_rectangle_13e
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BUILD_TEXT_LAYOUT_PARAMS_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_13ED388D9625AAD1
 
 
-// NOT GENERATED: variable (binding) -- source line 178
+// NOT GENERATED: variable (binding) -- source line 183
 // refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
@@ -256,7 +261,7 @@ struct build_text_layout_params_can_add_child_compute_local_bounds_rectangle_13e
 // value's parameters so the destination's signature supplies them, and its result as one the destination holds
 
 
-// NOT GENERATED: function createTextLabelRuntime -- source line 86
+// NOT GENERATED: function createTextLabelRuntime -- source line 87
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
@@ -280,7 +285,7 @@ struct build_text_layout_params_can_add_child_compute_local_bounds_rectangle_13e
 // invent side storage
 
 
-// NOT GENERATED: function createTextLabel -- source line 76
+// NOT GENERATED: function createTextLabel -- source line 77
 // refusal: cpp-intersection-member-shapeless [source-portability]
 //
 // The source it stood for:

@@ -1,0 +1,16 @@
+diff --git a/packages/skeleton2d/src/skeleton2d.ts b/packages/skeleton2d/src/skeleton2d.ts
+index 2cb7c7b..c36d486 100644
+--- a/packages/skeleton2d/src/skeleton2d.ts
++++ b/packages/skeleton2d/src/skeleton2d.ts
+@@ -1,9 +1,9 @@
+ import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+ import { inverseMatrix, multiplyMatrix } from '@flighthq/geometry/contract';
+-import { DEG_TO_RAD } from '@flighthq/math/contract';
+ import type { AttachmentSkin2D, Bone2D, EntityConstruction, MatrixLike, Skeleton2D } from '@flighthq/types/contract';
+ 
+-import { SKELETON_2D_MATRIX_STRIDE as MATRIX_STRIDE } from './skeleton2dConstants';
++const DEG_TO_RAD = Math.PI / 180;
++const MATRIX_STRIDE = 6;
+ 
+ // Deep-copies the bone array (each Bone2D cloned) and the transform buffers, producing an independently
+ // posable skeleton. Slots and their attachments are SHARED (attachments are immutable setup data); use a

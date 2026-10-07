@@ -27,20 +27,9 @@ using flight::types::MarqueeSelectionMode;
 using flight::types::MarqueeSelectionRuntime;
 using flight::types::Rectangle;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ACTIVE_BINDING_RECTANGLE_START_X_START_Y_C43167517B729DAD
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ACTIVE_BINDING_RECTANGLE_START_X_START_Y_C43167517B729DAD
-struct active_binding_rectangle_start_x_start_y_c43167517b729dad : public flight::ReferenceEnabled {
-  bool active;
-  flight::Null binding;
-  flight::Ref<Rectangle> rectangle;
-  double start_x;
-  double start_y;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SELECTION_ACTIVE_BINDING_RECTANGLE_START_X_START_Y_C43167517B729DAD
-
 inline flight::Ref<MarqueeSelection> create_marquee_selection() {
   flight::Ref<MarqueeSelection> selection = flight::make_ref<MarqueeSelection>(MarqueeSelection{});
-  flight::Ref<active_binding_rectangle_start_x_start_y_c43167517b729dad> runtime = flight::make_ref<active_binding_rectangle_start_x_start_y_c43167517b729dad>(active_binding_rectangle_start_x_start_y_c43167517b729dad{.active = false, .binding = flight::null, .rectangle = create_rectangle(std::nullopt, std::nullopt, std::nullopt, std::nullopt), .start_x = 0.0, .start_y = 0.0});
+  flight::Ref<MarqueeSelectionRuntime> runtime = flight::make_ref<MarqueeSelectionRuntime>(MarqueeSelectionRuntime{.active = false, .binding = nullptr, .rectangle = create_rectangle(std::nullopt, std::nullopt, std::nullopt, std::nullopt), .start_x = 0.0, .start_y = 0.0});
   (selection->entity_runtime_key = runtime);
   return selection;
 }

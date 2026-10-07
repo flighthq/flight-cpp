@@ -43,6 +43,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene_document {
 
+using FlightDocumentRefusalReasonType = flight::types::FlightDocumentRefusalReason;
+
 using flight::registry::get_registry_table_entry;
 
 using flight::types::EntityConstruction;
@@ -61,18 +63,20 @@ using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
 inline void initialize_document_refusal(flight::Ref<EntityConstruction<flight::Ref<FlightDocumentRefusalExplanation>>> out, flight::Ref<FlightDocumentRefusalReasonType> reason, flight::String path) {
-  (out->actual = nullptr);
-  (out->column = nullptr);
-  (out->kind = nullptr);
-  (out->limit = nullptr);
-  (out->line = nullptr);
-  (out->mode = nullptr);
-  (out->offset = nullptr);
+  const std::optional<double> no_number = std::nullopt;
+  const std::optional<flight::String> no_string = std::nullopt;
+  (out->actual = no_number);
+  (out->column = no_number);
+  (out->kind = no_string);
+  (out->limit = no_number);
+  (out->line = no_number);
+  (out->mode = no_string);
+  (out->offset = no_number);
   (out->path = path);
   (out->reason = reason);
-  (out->resource_key = nullptr);
-  (out->token_key = nullptr);
-  (out->version = nullptr);
+  (out->resource_key = no_string);
+  (out->token_key = no_string);
+  (out->version = no_number);
 }
 
 inline flight::Ref<FlightDocumentRefusalExplanation> create_document_refusal(flight::Ref<FlightDocumentRefusalReasonType> reason, flight::String path) {

@@ -22,6 +22,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::text {
 
+std::optional<flight::Ref<flight::types::TextLayoutResult>> get_text_layout(flight::Ref<flight::types::TextLabel> source);
+
 using flight::textlayout::get_text_metrics;
 
 using flight::types::TextLabel;

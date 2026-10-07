@@ -1,0 +1,154 @@
+diff --git a/packages/movieclip/src/movieClip.ts b/packages/movieclip/src/movieClip.ts
+index 15053c9..151d98c 100644
+--- a/packages/movieclip/src/movieClip.ts
++++ b/packages/movieclip/src/movieClip.ts
+@@ -32,8 +32,9 @@ import { EntityRuntimeKey, MovieClipKind } from '@flighthq/types/contract';
+ // The MovieClip display node lives here, with its playback engine — a MovieClip is a Node2D whose
+ // content is driven by a timeline, so the node and the engine that constructs its frames are one feature.
+ export function addMovieClipFrameScript(clip: MovieClip, frame: number | string, script: FrameScript): void {
+-  if (clip.data.timeline === null) return;
+-  addTimelineFrameScript(clip.data.timeline, frame, script);
++  const data = clip.data;
++  if (data.timeline === null) return;
++  addTimelineFrameScript(data.timeline, frame, script);
+ }
+ 
+ export function createMovieClip(obj?: Readonly<PartialNode<MovieClip>>): MovieClip {
+@@ -54,6 +55,7 @@ export function createMovieClipRuntime(): MovieClipRuntime {
+ 
+ export function disposeMovieClipSignals(clip: MovieClip): void {
+   const runtime = clip[EntityRuntimeKey] as MovieClipRuntime;
+-  if (clip.data.timeline !== null) disposeTimelineSignals(clip.data.timeline);
++  const data = clip.data;
++  if (data.timeline !== null) disposeTimelineSignals(data.timeline);
+   runtime.movieClipSignals = null;
+ }
+@@ -64,23 +66,27 @@ export function disposeMovieClipSignals(clip: MovieClip): void {
+ export function enableMovieClipSignals(clip: MovieClip): MovieClipSignals {
+   const runtime = clip[EntityRuntimeKey] as MovieClipRuntime;
+   if (runtime.movieClipSignals !== null) return runtime.movieClipSignals;
++  const data = clip.data;
+   // Ensure the timeline exists so signals can be armed even before setMovieClipSource is called.
+-  if (clip.data.timeline === null) clip.data.timeline = createTimeline();
+-  const signals = enableTimelineSignals(clip.data.timeline);
++  if (data.timeline === null) data.timeline = createTimeline();
++  const signals = enableTimelineSignals(data.timeline);
+   runtime.movieClipSignals = signals;
+   return signals;
+ }
+ 
+ export function getMovieClipCurrentFrame(clip: MovieClip): number {
+-  return clip.data.timeline?.currentFrame ?? 1;
++  const data = clip.data;
++  return data.timeline?.currentFrame ?? 1;
+ }
+ 
+ export function getMovieClipCurrentLabel(clip: MovieClip): TimelineLabel | null {
+-  if (clip.data.timeline === null) return null;
+-  return getTimelineCurrentLabel(clip.data.timeline);
++  const data = clip.data;
++  if (data.timeline === null) return null;
++  return getTimelineCurrentLabel(data.timeline);
+ }
+ 
+ export function getMovieClipFrameScript(clip: MovieClip, frame: number | string): FrameScript | null {
+-  if (clip.data.timeline === null) return null;
+-  return getTimelineFrameScript(clip.data.timeline, frame);
++  const data = clip.data;
++  if (data.timeline === null) return null;
++  return getTimelineFrameScript(data.timeline, frame);
+ }
+@@ -95,15 +101,18 @@ export function getMovieClipSignals(clip: MovieClip): MovieClipSignals | null {
+ }
+ 
+ export function getMovieClipTotalFrames(clip: MovieClip): number {
+-  return clip.data.timeline?.source?.totalFrames ?? 1;
++  const data = clip.data;
++  return data.timeline?.source?.totalFrames ?? 1;
+ }
+ 
+ export function gotoAndPlayMovieClip(clip: MovieClip, frame: number | string): void {
+-  if (clip.data.timeline === null) return;
+-  gotoAndPlayTimeline(clip.data.timeline, frame);
++  const data = clip.data;
++  if (data.timeline === null) return;
++  gotoAndPlayTimeline(data.timeline, frame);
+ }
+ 
+ export function gotoAndStopMovieClip(clip: MovieClip, frame: number | string): void {
+-  if (clip.data.timeline === null) return;
+-  gotoAndStopTimeline(clip.data.timeline, frame);
++  const data = clip.data;
++  if (data.timeline === null) return;
++  gotoAndStopTimeline(data.timeline, frame);
+ }
+@@ -116,25 +125,30 @@ export function initializeMovieClipData(
+ }
+ 
+ export function isMovieClipPlaying(clip: MovieClip): boolean {
+-  return clip.data.timeline?.isPlaying ?? false;
++  const data = clip.data;
++  return data.timeline?.isPlaying ?? false;
+ }
+ 
+ export function nextFrameMovieClip(clip: MovieClip): void {
+-  if (clip.data.timeline === null) return;
+-  nextFrameTimeline(clip.data.timeline);
++  const data = clip.data;
++  if (data.timeline === null) return;
++  nextFrameTimeline(data.timeline);
+ }
+ 
+ export function playMovieClip(clip: MovieClip): void {
+-  if (clip.data.timeline === null) return;
+-  playTimeline(clip.data.timeline);
++  const data = clip.data;
++  if (data.timeline === null) return;
++  playTimeline(data.timeline);
+ }
+ 
+ export function prevFrameMovieClip(clip: MovieClip): void {
+-  if (clip.data.timeline === null) return;
+-  prevFrameTimeline(clip.data.timeline);
++  const data = clip.data;
++  if (data.timeline === null) return;
++  prevFrameTimeline(data.timeline);
+ }
+ 
+ export function removeMovieClipFrameScript(clip: MovieClip, frame: number | string): void {
+-  if (clip.data.timeline === null) return;
+-  removeTimelineFrameScript(clip.data.timeline, frame);
++  const data = clip.data;
++  if (data.timeline === null) return;
++  removeTimelineFrameScript(data.timeline, frame);
+ }
+@@ -146,20 +160,23 @@ export function setMovieClipSource(clip: MovieClip, source: TimelineSource): voi
+ export function setMovieClipSource(clip: MovieClip, source: TimelineSource): void {
+   // Reuse the clip's existing timeline if it has one: enableMovieClipSignals may have already created and
+   // armed it (storing the same group in runtime.movieClipSignals), so pointing a source at the same object
+   // keeps those signals live with no re-wire needed — the runtime slot and timeline.signals are one group.
+-  const timeline = clip.data.timeline ?? createTimeline();
++  const data = clip.data;
++  const timeline = data.timeline ?? createTimeline();
+   timeline.source = source;
+   timeline.target = clip;
+-  clip.data.timeline = timeline;
++  data.timeline = timeline;
+   gotoAndStopTimeline(timeline, timeline.currentFrame);
+ }
+ 
+ export function stopMovieClip(clip: MovieClip): void {
+-  if (clip.data.timeline === null) return;
+-  stopTimeline(clip.data.timeline);
++  const data = clip.data;
++  if (data.timeline === null) return;
++  stopTimeline(data.timeline);
+ }
+ 
+ export function updateMovieClip(clip: MovieClip, deltaTime: number): void {
+-  if (clip.data.timeline === null) return;
+-  updateTimeline(clip.data.timeline, deltaTime);
++  const data = clip.data;
++  if (data.timeline === null) return;
++  updateTimeline(data.timeline, deltaTime);
+ }

@@ -7,9 +7,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/tween.hpp>
+
 #include "tween.hpp"
 
 namespace flight::tween {
+
+using flight::types::NumericProps;
+using flight::types::Tween;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TWEEN_ANONYMOUS_3E6B344A3B6BD77E
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TWEEN_ANONYMOUS_3E6B344A3B6BD77E

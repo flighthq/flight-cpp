@@ -15,6 +15,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::intl {
 
+template <typename Build> auto get_cached(flight::String key, Build build) -> std::invoke_result_t<Build>;
+
+template <typename Options> flight::String get_cache_key(flight::String kind, flight::types::LocaleInput locale, Options options);
+
 using flight::types::LocaleInput;
 
 inline flight::String format_list(flight::Array<flight::String> items, flight::Ref<LocaleInput> locale, std::optional<flight::IntlListFormatOptions> options = std::nullopt) {

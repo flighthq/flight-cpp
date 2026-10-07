@@ -1,0 +1,140 @@
+diff --git a/packages/particleemitter/src/particleEmitter.ts b/packages/particleemitter/src/particleEmitter.ts
+index 14c1a72..6fa28ce 100644
+--- a/packages/particleemitter/src/particleEmitter.ts
++++ b/packages/particleemitter/src/particleEmitter.ts
+@@ -43,34 +43,36 @@ export function appendParticleEmitter2DParticle(
+   rotation: number,
+   scale: number,
+ ): number {
+-  const index = target.data.particleCount;
++  const data = target.data;
++  const index = data.particleCount;
+   const needed = index + 1;
+   if (getParticleEmitter2DCapacity(target) < needed) {
+-    const newCapacity = Math.max(needed, target.data.particleCount * 2 || 8);
++    const newCapacity = Math.max(needed, data.particleCount * 2 || 8);
+     reserveParticleEmitter2D(target, newCapacity);
+   }
+-  target.data.particleCount = needed;
+-  target.data.ids[index] = id;
++  data.particleCount = needed;
++  data.ids[index] = id;
+   const tt = index * PARTICLE_TRANSFORM_STRIDE;
+-  target.data.transforms[tt] = x;
+-  target.data.transforms[tt + 1] = y;
+-  target.data.transforms[tt + 2] = rotation;
+-  target.data.transforms[tt + 3] = scale;
+-  target.data.alphas[index] = 1;
++  data.transforms[tt] = x;
++  data.transforms[tt + 1] = y;
++  data.transforms[tt + 2] = rotation;
++  data.transforms[tt + 3] = scale;
++  data.alphas[index] = 1;
+   const ct = index * PARTICLE_COLOR_STRIDE;
+-  target.data.colors[ct] = 1;
+-  target.data.colors[ct + 1] = 1;
+-  target.data.colors[ct + 2] = 1;
++  data.colors[ct] = 1;
++  data.colors[ct + 1] = 1;
++  data.colors[ct + 2] = 1;
+   const vt = index * PARTICLE_VELOCITY_STRIDE;
+-  target.data.velocities[vt] = 0;
+-  target.data.velocities[vt + 1] = 0;
+-  target.data.positionsZ[index] = 0;
++  data.velocities[vt] = 0;
++  data.velocities[vt + 1] = 0;
++  data.positionsZ[index] = 0;
+   return index;
+ }
+ 
+ /** Sets `target.data.particleCount = 0`, keeping allocated capacity. */
+ export function clearParticleEmitter2D(target: ParticleEmitter2D): void {
+-  target.data.particleCount = 0;
++  const data = target.data;
++  data.particleCount = 0;
+ }
+ 
+ /**
+@@ -230,8 +232,9 @@ export function getParticleEmitter2DCapacity(source: Readonly<ParticleEmitter2D>
+  * Bounds-checked against `particleCount`.
+  */
+ export function getParticleEmitter2DParticleAlpha(source: Readonly<ParticleEmitter2D>, index: number): number {
+-  if (index < 0 || index >= source.data.particleCount) return -1;
+-  return source.data.alphas[index];
++  const data = source.data;
++  if (index < 0 || index >= data.particleCount) return -1;
++  return data.alphas[index];
+ }
+ 
+ /**
+@@ -239,8 +242,9 @@ export function getParticleEmitter2DParticleAlpha(source: Readonly<ParticleEmitt
+  * Bounds-checked against `particleCount`.
+  */
+ export function getParticleEmitter2DParticleId(source: Readonly<ParticleEmitter2D>, index: number): number {
+-  if (index < 0 || index >= source.data.particleCount) return -1;
+-  return source.data.ids[index];
++  const data = source.data;
++  if (index < 0 || index >= data.particleCount) return -1;
++  return data.ids[index];
+ }
+ 
+ /**
+@@ -252,10 +256,11 @@ export function getParticleEmitter2DParticleVelocity(
+   source: Readonly<ParticleEmitter2D>,
+   index: number,
+ ): boolean {
+-  if (index < 0 || index >= source.data.particleCount) return false;
++  const data = source.data;
++  if (index < 0 || index >= data.particleCount) return false;
+   const vt = index * PARTICLE_VELOCITY_STRIDE;
+-  out.x = source.data.velocities[vt];
+-  out.y = source.data.velocities[vt + 1];
++  out.x = data.velocities[vt];
++  out.y = data.velocities[vt + 1];
+   return true;
+ }
+ 
+@@ -356,8 +361,9 @@ export function setParticleEmitter2DParticle(
+  * Sets the alpha of particle `index`. No-ops when `index` is out of range.
+  */
+ export function setParticleEmitter2DParticleAlpha(target: ParticleEmitter2D, index: number, alpha: number): void {
+-  if (index < 0 || index >= target.data.particleCount) return;
+-  target.data.alphas[index] = alpha;
++  const data = target.data;
++  if (index < 0 || index >= data.particleCount) return;
++  data.alphas[index] = alpha;
+ }
+ 
+ /**
+@@ -370,11 +376,12 @@ export function setParticleEmitter2DParticleColor(
+   g: number,
+   b: number,
+ ): void {
+-  if (index < 0 || index >= target.data.particleCount) return;
++  const data = target.data;
++  if (index < 0 || index >= data.particleCount) return;
+   const ct = index * PARTICLE_COLOR_STRIDE;
+-  target.data.colors[ct] = r;
+-  target.data.colors[ct + 1] = g;
+-  target.data.colors[ct + 2] = b;
++  data.colors[ct] = r;
++  data.colors[ct + 1] = g;
++  data.colors[ct + 2] = b;
+ }
+ 
+ /**
+@@ -386,10 +393,11 @@ export function setParticleEmitter2DParticleVelocity(
+   vx: number,
+   vy: number,
+ ): void {
+-  if (index < 0 || index >= target.data.particleCount) return;
++  const data = target.data;
++  if (index < 0 || index >= data.particleCount) return;
+   const vt = index * PARTICLE_VELOCITY_STRIDE;
+-  target.data.velocities[vt] = vx;
+-  target.data.velocities[vt + 1] = vy;
++  data.velocities[vt] = vx;
++  data.velocities[vt + 1] = vy;
+ }
+ 
+ const defaultMethods: Partial<MethodsOf<ParticleEmitter2DRuntime>> = {

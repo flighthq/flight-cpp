@@ -11,10 +11,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/dom_texture_resolver.hpp>
+
 #include <flight/types/dom_render_state.hpp>
 
 namespace flight::scene2d_dom {
 
+using flight::types::DomTextureResolver;
+
+using flight::types::DomRenderState;
 using flight::types::DomRenderStateRuntime;
 
 
@@ -91,7 +96,7 @@ using flight::types::DomRenderStateRuntime;
 // a statically resolvable C++ object shape; T is named
 
 inline flight::Ref<DomRenderStateRuntime> get_dom_render_state_runtime(flight::Ref<DomRenderState> state) {
-  return static_cast<flight::Ref<DomRenderStateRuntime>>(state[entity_runtime_key]);
+  return read_dom_render_state_runtime_owner(state);
 }
 
 } // namespace flight::scene2d_dom

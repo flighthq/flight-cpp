@@ -1867,7 +1867,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 43,
+      "line": 44,
       "module": "packages/gui/src/guiController.ts",
       "package": "@flighthq/gui",
       "reason": "cpp emission failed for @flighthq/types/packages/types/src/NodeInteraction.ts: contextual union source carrier flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>> can enter Readonly<NodeAny> in TypeScript through structural and generic assignability, but required members EntityRuntimeKey and data use incompatible C++ cell carriers; EntityRuntimeKey crosses into target any erasure. flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>> therefore has no checked identity-preserving structural row conversion from the source owner; an unchecked cast would reinterpret the owner's cells, while copying or materializing a row, or adding side storage, would change its identity. Keep the union arm on the exact declared source owner, or add a runtime checked concrete-to-erased generic cell projection that preserves the owner",
@@ -2029,7 +2029,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 73,
+      "line": 67,
       "module": "packages/image/src/imageResourceReference.ts",
       "package": "@flighthq/image",
       "reason": "cpp emission failed for @flighthq/image/packages/image/src/imageResourceReference.ts: reading Error.message after narrowing an erased value requires flight::Any to expose a checked Error view that accepts Error subclasses; keep the value typed as Error before erasure or add that runtime contract",
@@ -2792,7 +2792,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 49,
+      "line": 50,
       "module": "packages/movieclip/src/movieClip.ts",
       "package": "@flighthq/movieclip",
       "reason": "cpp emission failed for @flighthq/movieclip/packages/movieclip/src/movieClip.ts: a reference assertion from flight::Ref<flight::types::Node2DRuntime> to flight::Ref<flight::types::MovieClipRuntime> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",
@@ -2920,7 +2920,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 55,
+      "line": 57,
       "module": "packages/node/src/stageFit.ts",
       "package": "@flighthq/node",
       "reason": "cpp emission failed for @flighthq/node/packages/node/src/stageFit.ts: a structural assertion from the readonly row Readonly<NodeRuntime<Traits>> to the writable row Partial<HasBoundsRectangleRuntime> claims mutation the source refused: a readonly row never becomes writable, because the boundary the value came through said its subject must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the writable type where that object may really be mutated. Choosing between those two repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read path and a separate mutable entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is insufficient here: the source owner does not declare binding, boundsRectangle, computeLocalBoundsRectangle, isLocalBoundsRectangleValid, localBoundsRectangle and worldBoundsRectangle, so it has no cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the full writable Partial<HasBoundsRectangleRuntime> row where initialization establishes those cells, rather than widening Readonly<NodeRuntime<Traits>> at the use site.",
@@ -6732,13 +6732,13 @@
       "line": 11,
       "module": "packages/skeleton2d/src/skeleton2d.ts",
       "package": "@flighthq/skeleton2d",
-      "reason": "cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2d.ts: contextual union value type flight::Array<flight::Ref<attachment_deform_bone_index_color_name_1a622758a085cf14>> is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2d.ts: contextual union value type flight::Array<flight::Ref<attachment_deform_bone_index_color_name_04874bb6aa21a4ba>> is not a represented runtime domain",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 127,
+      "line": 126,
       "module": "packages/skeleton2d/src/skeleton2dAnimationTarget.ts",
       "package": "@flighthq/skeleton2d",
       "reason": "cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts: an actually erased value cannot be asserted as structural row Readonly: flight::Any has no structural-row alternative or checked row projection. Preserve the represented row through the assertion, or keep the API typed to the structural source before erasure; the compiler will not cast, copy, or materialize a replacement row",
@@ -7362,7 +7362,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 52,
+      "line": 53,
       "module": "packages/text/src/textLabel.ts",
       "package": "@flighthq/text",
       "reason": "cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: a structural assertion from the readonly row Readonly<Node> to the writable row TextLabel claims mutation the source refused: a readonly row never becomes writable, because the boundary the value came through said its subject must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the writable type where that object may really be mutated. Choosing between those two repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read path and a separate mutable entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is insufficient here: the source owner does not declare EntityRuntimeKey, alpha, blendMode, clip, data, material, materialData, pivotX, pivotY, rotation, scaleX, scaleY, skewX, skewY, visible, x and y, so it has no cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the full writable TextLabel row where initialization establishes those cells, rather than widening Readonly<Node> at the use site.",

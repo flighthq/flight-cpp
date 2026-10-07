@@ -1,0 +1,24 @@
+diff --git a/packages/particles-formats/src/libgdxParse.ts b/packages/particles-formats/src/libgdxParse.ts
+index 3868b13..511c450 100644
+--- a/packages/particles-formats/src/libgdxParse.ts
++++ b/packages/particles-formats/src/libgdxParse.ts
+@@ -255,4 +255,5 @@ function parseLibgdxText(text: string): { header: string; sections: Map<string, L
+-  const lines = text.split(/\r?\n/);
++  const normalized = text.replace(/\r\n/g, '\n');
++  const lines = normalized.split('\n');
+   const sections = new Map<string, LibgdxSection>();
+   let currentSection = '';
+   let current: LibgdxSection = new Map();
+diff --git a/packages/particles-formats/src/particleDesignerParse.ts b/packages/particles-formats/src/particleDesignerParse.ts
+index fe2826e..fbac56d 100644
+--- a/packages/particles-formats/src/particleDesignerParse.ts
++++ b/packages/particles-formats/src/particleDesignerParse.ts
+@@ -21,7 +21,7 @@ function parseXmlDict(xml: string): ParticleDesignerRawDict {
+   let m: RegExpExecArray | null;
+   while ((m = TAG_RE.exec(xml)) !== null) {
+     const [full, close, name, attrs] = m;
+-    const isSelfClose = attrs.trimEnd().endsWith('/') || full.endsWith('/>');
++    const isSelfClose = attrs.trim().endsWith('/') || full.endsWith('/>');
+     const text = xml.slice(lastTagEnd, m.index).trim();
+     lastTagEnd = m.index + full.length;
+     if (!close && !isSelfClose) {

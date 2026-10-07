@@ -7,10 +7,10 @@
 //   missing: function getNativeTextMeasuredWidth -- source line 64
 //   missing: function getNativeTextRuntime -- source line 68
 //   missing: function computeNativeTextLocalBoundsRectangle -- source line 27
-//   missing: function initializeNativeTextData -- source line 80
+//   missing: function initializeNativeTextData -- source line 82
 //   missing: function createNativeTextData -- source line 46
-//   missing: function patchNativeTextStyle -- source line 94
-//   missing: variable (binding) -- source line 151
+//   missing: function patchNativeTextStyle -- source line 96
+//   missing: variable (binding) -- source line 155
 //   missing: function createNativeTextRuntime -- source line 52
 //   missing: function createNativeText -- source line 42
 #include <functional>
@@ -133,15 +133,17 @@ using flight::types::TextVerticalAlign;
 // the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
 
 inline flight::String get_native_text_string(flight::Ref<NativeText> source) {
-  return source->data.text;
+  flight::Ref<NativeTextData> data = source->data;
+  return data->text;
 }
 
 inline flight::Ref<NativeTextStyle> get_native_text_style(flight::Ref<NativeText> source) {
-  return source->data.style;
+  flight::Ref<NativeTextData> data = source->data;
+  return data->style;
 }
 
 
-// NOT GENERATED: function initializeNativeTextData -- source line 80
+// NOT GENERATED: function initializeNativeTextData -- source line 82
 // refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
@@ -177,12 +179,13 @@ inline flight::Ref<NativeTextStyle> get_native_text_style(flight::Ref<NativeText
 // resolvable C++ object shape; T is named
 
 
-// NOT GENERATED: function patchNativeTextStyle -- source line 94
+// NOT GENERATED: function patchNativeTextStyle -- source line 96
 // refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   export function patchNativeTextStyle(source: NativeText, patch: Readonly<Partial<NativeTextStyle>>): void {
-//     source.data.style = { ...source.data.style, ...patch };
+//     const data = source.data;
+//     data.style = { ...data.style, ...patch };
 //     invalidateNodeLocalContent(source);
 //     invalidateNodeLocalBounds(source);
 //   }
@@ -221,7 +224,8 @@ inline void set_native_text_string(flight::Ref<NativeText> source, flight::Strin
 }
 
 inline void set_native_text_style(flight::Ref<NativeText> source, flight::Ref<NativeTextStyle> value) {
-  (source->data.style = value);
+  flight::Ref<NativeTextData> data = source->data;
+  (data->style = value);
   invalidate_node_local_content(source);
   invalidate_node_local_bounds(source);
 }
@@ -254,7 +258,7 @@ struct can_add_child_compute_local_bounds_rectangle_b497c908967ca23c : public fl
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_B497C908967CA23C
 
 
-// NOT GENERATED: variable (binding) -- source line 151
+// NOT GENERATED: variable (binding) -- source line 155
 // refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:

@@ -34,6 +34,8 @@ namespace flight::types { template <typename T> struct Tween; }
 
 namespace flight::tween {
 
+using flight::types::Tween;
+
 template <typename T>
 inline void initialize_tween(flight::Ref<flight::types::Tween<T>> tween) {
   flight::Record<flight::String, double> target = static_cast<flight::Record<flight::String, double>>(tween->target);
@@ -89,7 +91,8 @@ inline bool has_tween_property(flight::Ref<flight::types::Tween<T>> tween, fligh
   if (registration_property_keys_2.has_value()) {
     return registration_property_keys_2.value().includes(key);
   }
-  return (key in tween->property_map);
+  flight::Record<flight::String, double> property_map = static_cast<flight::Record<flight::String, double>>(tween->property_map);
+  return property_map.has(key);
 }
 
 template <typename T>

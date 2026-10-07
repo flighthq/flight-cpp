@@ -10506,6 +10506,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "Entity",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/Entity.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "DomRenderState",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/DomRenderState.ts"
@@ -10679,16 +10689,6 @@
           "name": "EmissiveModifierOptions",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/EmissiveModifierOptions.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "Entity",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/Entity.ts"
         }
       ]
     },
@@ -112790,7 +112790,55 @@
       "steps": []
     },
     {
-      "bindings": [],
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8dbd9a7a5a2bbacbe8a8f1b2c515bdfce0b4062e3b92fcac4e71e01f6dd140a3",
+            "line": 3,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/DomRenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/DomRenderState.ts\",95]",
+            "kind": "import",
+            "name": "EntityRuntimeKey",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "EntityRuntimeKey",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/Entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f11ba902a320ca8f0578e0a81f538cf13b2f794465687b58b390e01de5bc5d21",
+            "line": 56,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/DomRenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/DomRenderState.ts\",3174]",
+            "kind": "function",
+            "name": "readDomRenderStateRuntimeOwner",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
       "dependencies": [
         {
           "evaluation": "type-only",
@@ -112863,13 +112911,13 @@
           }
         },
         {
-          "evaluation": "type-only",
+          "evaluation": "runtime",
           "importer": {
             "name": "DomRenderState",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/DomRenderState.ts"
           },
-          "specifier": "./Entity.js",
+          "specifier": "./Entity",
           "target": {
             "name": "Entity",
             "packageName": "@flighthq/types",
@@ -126966,10 +127014,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:a71a9a1c85d75e1b41c10a46ebfe36a21329144c1f5c986989978b6b57381eec",
-            "line": 88,
+            "line": 90,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/formatRegistry.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/formatRegistry.ts\",3327]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/formatRegistry.ts\",3463]",
             "kind": "function",
             "name": "registerParticleFormat",
             "scope": "module",
@@ -126987,10 +127035,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:d9bee7ffeba867276ed348797528c9ad40c247928df6435bd52c94b41237d5c4",
-            "line": 94,
+            "line": 96,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/formatRegistry.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/formatRegistry.ts\",3601]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/formatRegistry.ts\",3737]",
             "kind": "function",
             "name": "unregisterParticleFormat",
             "scope": "module",
@@ -127008,10 +127056,10 @@
           "binding": {
             "column": 7,
             "fingerprint": "sha256:d8bc81e6165da56a1fce2aca9747dbf453bb13e319429b8cfd95a71333532b97",
-            "line": 99,
+            "line": 101,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/formatRegistry.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/formatRegistry.ts\",3801]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/formatRegistry.ts\",3937]",
             "kind": "variable",
             "name": "_registry",
             "scope": "module",
@@ -127081,10 +127129,10 @@
             {
               "column": 7,
               "fingerprint": "sha256:d8bc81e6165da56a1fce2aca9747dbf453bb13e319429b8cfd95a71333532b97",
-              "line": 99,
+              "line": 101,
               "packageName": "@flighthq/particles-formats",
               "source": "packages/particles-formats/src/formatRegistry.ts",
-              "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/formatRegistry.ts\",3801]",
+              "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/formatRegistry.ts\",3937]",
               "kind": "variable",
               "name": "_registry",
               "scope": "module",
@@ -164149,374 +164197,6 @@
     {
       "bindings": [
         {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
-            "line": 1,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",9]",
-            "kind": "import",
-            "name": "allocateEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "allocateEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 26,
-            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
-            "line": 1,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",25]",
-            "kind": "import",
-            "name": "finishEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "finishEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:f695125ef15fca88aad4ca9f4017858873dc8acecca23873c3db6d3f8d8ac3da",
-            "line": 2,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",83]",
-            "kind": "import",
-            "name": "createSignal",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "createSignal",
-            "kind": "dependency",
-            "module": {
-              "name": "Signal",
-              "packageName": "@flighthq/signals",
-              "source": "packages/signals/src/signal.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:b28fae49b52d1b4b2e16c222c01d3e5a539a72c9a42f37ccf360243a2f9aabf8",
-            "line": 12,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",297]",
-            "kind": "function",
-            "name": "addTweenToManager",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:2c394de2e86079b8fd390b30a12b80f5408b1f72c646f84acc8b1151a0525fb2",
-            "line": 53,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",1420]",
-            "kind": "function",
-            "name": "hasTweenProperty",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:88aa57f18ce1dec3369bb7bccfb7ba3dbfd8b79231dae8bd573e089dd9b9f985",
-            "line": 59,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",1716]",
-            "kind": "function",
-            "name": "initializeTween",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:9c4c56258e7f021af83f89b424c26c691b1aff7d242c32c41f69ada9bec020e5",
-            "line": 76,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",2303]",
-            "kind": "function",
-            "name": "makeTween",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 7,
-            "fingerprint": "sha256:a84ad35862d7d13f9294bf917fb8baecbe2f44168055d6786df9cdd7c7bf96c8",
-            "line": 111,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",3618]",
-            "kind": "variable",
-            "name": "_registrationPropertyKeys",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 0
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "Internal",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts"
-          },
-          "specifier": "@flighthq/entity/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/entity",
-            "source": "packages/entity/src/entity.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "Internal",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts"
-          },
-          "specifier": "@flighthq/signals/contract",
-          "target": {
-            "name": "Signal",
-            "packageName": "@flighthq/signals",
-            "source": "packages/signals/src/signal.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Internal",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts"
-          },
-          "importedNames": [
-            "EasingFunction"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "EasingFunction",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/EasingFunction.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Internal",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts"
-          },
-          "importedNames": [
-            "Entity",
-            "EntityConstruction"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Entity.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Internal",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts"
-          },
-          "importedNames": [
-            "Signal"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Signal",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Signal.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Internal",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts"
-          },
-          "importedNames": [
-            "NumericProps",
-            "Tween"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Tween",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Tween.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Internal",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts"
-          },
-          "importedNames": [
-            "TweenManager"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "TweenManager",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TweenManager.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Internal",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts"
-          },
-          "importedNames": [
-            "TweenOptions"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "TweenOptions",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TweenOptions.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Internal",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts"
-          },
-          "importedNames": [
-            "TweenPropertyDetail"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "TweenPropertyDetail",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TweenPropertyDetail.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "Internal",
-        "packageName": "@flighthq/tween",
-        "source": "packages/tween/src/internal.ts"
-      },
-      "steps": [
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 7,
-              "fingerprint": "sha256:a84ad35862d7d13f9294bf917fb8baecbe2f44168055d6786df9cdd7c7bf96c8",
-              "line": 111,
-              "packageName": "@flighthq/tween",
-              "source": "packages/tween/src/internal.ts",
-              "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",3618]",
-              "kind": "variable",
-              "name": "_registrationPropertyKeys",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            4
-          ]
-        }
-      ]
-    },
-    {
-      "bindings": [
-        {
           "access": "available-after-instantiation",
           "binding": {
             "column": 17,
@@ -173819,10 +173499,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:4082bd32c252530f31d20cb054a2c220e694ce0c9bee74fe634bbba5e41a0cfc",
-            "line": 285,
+            "line": 286,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/libgdxParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxParse.ts\",10904]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxParse.ts\",10957]",
             "kind": "function",
             "name": "rangeToMinMax",
             "scope": "module",
@@ -173840,10 +173520,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:86149788dcd5dc846851d1b47f2506a9a52f9ce4e326d6898edcf3995e63efa4",
-            "line": 293,
+            "line": 294,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/libgdxParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxParse.ts\",11266]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxParse.ts\",11319]",
             "kind": "function",
             "name": "readRange",
             "scope": "module",
@@ -173861,10 +173541,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:008a19b00e672c2a7f6c4c38949d42d6e7d4139567c78cd4549a8dc86cbec3c5",
-            "line": 311,
+            "line": 312,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/libgdxParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxParse.ts\",12057]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxParse.ts\",12110]",
             "kind": "function",
             "name": "sectionsToDocument",
             "scope": "module",
@@ -173882,10 +173562,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:240a65f7c7888a718b3f302557af03b28c2f100cee287cb596d12f960a0371c2",
-            "line": 400,
+            "line": 401,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/libgdxParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxParse.ts\",16522]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxParse.ts\",16575]",
             "kind": "function",
             "name": "strKey",
             "scope": "module",
@@ -281679,6 +281359,441 @@
       ]
     },
     {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Tween",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Tween.ts"
+          },
+          "specifier": "./EasingFunction",
+          "target": {
+            "name": "EasingFunction",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EasingFunction.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Tween",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Tween.ts"
+          },
+          "specifier": "./Entity",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Tween",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Tween.ts"
+          },
+          "specifier": "./Signal",
+          "target": {
+            "name": "Signal",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Signal.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Tween",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Tween.ts"
+          },
+          "specifier": "./TweenPropertyDetail",
+          "target": {
+            "name": "TweenPropertyDetail",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TweenPropertyDetail.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Tween",
+        "packageName": "@flighthq/types",
+        "source": "packages/types/src/Tween.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
+            "line": 1,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",9]",
+            "kind": "import",
+            "name": "allocateEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "allocateEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 26,
+            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
+            "line": 1,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",25]",
+            "kind": "import",
+            "name": "finishEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "finishEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f695125ef15fca88aad4ca9f4017858873dc8acecca23873c3db6d3f8d8ac3da",
+            "line": 2,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",83]",
+            "kind": "import",
+            "name": "createSignal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createSignal",
+            "kind": "dependency",
+            "module": {
+              "name": "Signal",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/signal.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:b28fae49b52d1b4b2e16c222c01d3e5a539a72c9a42f37ccf360243a2f9aabf8",
+            "line": 12,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",297]",
+            "kind": "function",
+            "name": "addTweenToManager",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2c394de2e86079b8fd390b30a12b80f5408b1f72c646f84acc8b1151a0525fb2",
+            "line": 53,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",1420]",
+            "kind": "function",
+            "name": "hasTweenProperty",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:88aa57f18ce1dec3369bb7bccfb7ba3dbfd8b79231dae8bd573e089dd9b9f985",
+            "line": 60,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",1790]",
+            "kind": "function",
+            "name": "initializeTween",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9c4c56258e7f021af83f89b424c26c691b1aff7d242c32c41f69ada9bec020e5",
+            "line": 77,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",2377]",
+            "kind": "function",
+            "name": "makeTween",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:a84ad35862d7d13f9294bf917fb8baecbe2f44168055d6786df9cdd7c7bf96c8",
+            "line": 112,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",3692]",
+            "kind": "variable",
+            "name": "_registrationPropertyKeys",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Internal",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts"
+          },
+          "specifier": "@flighthq/entity/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/entity",
+            "source": "packages/entity/src/entity.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Internal",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts"
+          },
+          "specifier": "@flighthq/signals/contract",
+          "target": {
+            "name": "Signal",
+            "packageName": "@flighthq/signals",
+            "source": "packages/signals/src/signal.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Internal",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts"
+          },
+          "importedNames": [
+            "EasingFunction"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "EasingFunction",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EasingFunction.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Internal",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts"
+          },
+          "importedNames": [
+            "Entity",
+            "EntityConstruction"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Internal",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts"
+          },
+          "importedNames": [
+            "Signal"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Signal",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Signal.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Internal",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts"
+          },
+          "importedNames": [
+            "NumericProps",
+            "Tween"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Tween",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Tween.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Internal",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts"
+          },
+          "importedNames": [
+            "TweenManager"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TweenManager",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TweenManager.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Internal",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts"
+          },
+          "importedNames": [
+            "TweenOptions"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TweenOptions",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TweenOptions.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Internal",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts"
+          },
+          "importedNames": [
+            "TweenPropertyDetail"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TweenPropertyDetail",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TweenPropertyDetail.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Internal",
+        "packageName": "@flighthq/tween",
+        "source": "packages/tween/src/internal.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:a84ad35862d7d13f9294bf917fb8baecbe2f44168055d6786df9cdd7c7bf96c8",
+              "line": 112,
+              "packageName": "@flighthq/tween",
+              "source": "packages/tween/src/internal.ts",
+              "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/internal.ts\",3692]",
+              "kind": "variable",
+              "name": "_registrationPropertyKeys",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            4
+          ]
+        }
+      ]
+    },
+    {
       "bindings": [
         {
           "access": "dependency-live",
@@ -282366,73 +282481,6 @@
       "steps": []
     },
     {
-      "bindings": [],
-      "dependencies": [
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Tween",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Tween.ts"
-          },
-          "specifier": "./EasingFunction",
-          "target": {
-            "name": "EasingFunction",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/EasingFunction.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Tween",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Tween.ts"
-          },
-          "specifier": "./Entity",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Entity.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Tween",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Tween.ts"
-          },
-          "specifier": "./Signal",
-          "target": {
-            "name": "Signal",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Signal.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Tween",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Tween.ts"
-          },
-          "specifier": "./TweenPropertyDetail",
-          "target": {
-            "name": "TweenPropertyDetail",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TweenPropertyDetail.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "Tween",
-        "packageName": "@flighthq/types",
-        "source": "packages/types/src/Tween.ts"
-      },
-      "steps": []
-    },
-    {
       "bindings": [
         {
           "access": "dependency-live",
@@ -282724,109 +282772,6 @@
       ]
     },
     {
-      "bindings": [],
-      "dependencies": [
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "TweenManager",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TweenManager.ts"
-          },
-          "specifier": "./EasingFunction",
-          "target": {
-            "name": "EasingFunction",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/EasingFunction.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "TweenManager",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TweenManager.ts"
-          },
-          "specifier": "./Entity",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Entity.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "TweenManager",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TweenManager.ts"
-          },
-          "specifier": "./Tween",
-          "target": {
-            "name": "Tween",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Tween.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "TweenManager",
-        "packageName": "@flighthq/types",
-        "source": "packages/types/src/TweenManager.ts"
-      },
-      "steps": []
-    },
-    {
-      "bindings": [],
-      "dependencies": [
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "TweenManagerOptions",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TweenManagerOptions.ts"
-          },
-          "specifier": "./EasingFunction",
-          "target": {
-            "name": "EasingFunction",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/EasingFunction.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "TweenManagerOptions",
-        "packageName": "@flighthq/types",
-        "source": "packages/types/src/TweenManagerOptions.ts"
-      },
-      "steps": []
-    },
-    {
-      "bindings": [],
-      "dependencies": [
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "TweenOptions",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TweenOptions.ts"
-          },
-          "specifier": "./EasingFunction",
-          "target": {
-            "name": "EasingFunction",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/EasingFunction.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "TweenOptions",
-        "packageName": "@flighthq/types",
-        "source": "packages/types/src/TweenOptions.ts"
-      },
-      "steps": []
-    },
-    {
       "bindings": [
         {
           "access": "dependency-live",
@@ -283089,6 +283034,350 @@
         "name": "TweenProgress",
         "packageName": "@flighthq/tween",
         "source": "packages/tween/src/tweenProgress.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:fa9bc748aa318de911894b591045e72bbc661d8809c2bf90f79bb60e7707dce8",
+            "line": 1,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/updateTweens.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/updateTweens.ts\",9]",
+            "kind": "import",
+            "name": "emitSignal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "emitSignal",
+            "kind": "dependency",
+            "module": {
+              "name": "Emitter",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/emitter.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:88aa57f18ce1dec3369bb7bccfb7ba3dbfd8b79231dae8bd573e089dd9b9f985",
+            "line": 4,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/updateTweens.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/updateTweens.ts\",136]",
+            "kind": "import",
+            "name": "initializeTween",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "initializeTween",
+            "kind": "dependency",
+            "module": {
+              "name": "Internal",
+              "packageName": "@flighthq/tween",
+              "source": "packages/tween/src/internal.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:22cbe3ea56dbf918adb983779688c94217f1eb36e24feab8c7b8b5ea5b86de80",
+            "line": 6,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/updateTweens.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/updateTweens.ts\",190]",
+            "kind": "function",
+            "name": "completeTween",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:56ca76ff500192ebbd9296dc82900fd1ee97ec03d935057d455a69c8ba666a99",
+            "line": 21,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/updateTweens.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/updateTweens.ts\",723]",
+            "kind": "function",
+            "name": "updateTween",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c7613b00d6b38c68d6fd08f03bb41454666e3436b943aa2fb9d3ea446501ce14",
+            "line": 65,
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/updateTweens.ts",
+            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/updateTweens.ts\",2209]",
+            "kind": "function",
+            "name": "updateTweens",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "UpdateTweens",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/updateTweens.ts"
+          },
+          "specifier": "./internal",
+          "target": {
+            "name": "Internal",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/internal.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "UpdateTweens",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/updateTweens.ts"
+          },
+          "specifier": "@flighthq/signals/contract",
+          "target": {
+            "name": "Emitter",
+            "packageName": "@flighthq/signals",
+            "source": "packages/signals/src/emitter.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "UpdateTweens",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/updateTweens.ts"
+          },
+          "importedNames": [
+            "EasingFunction"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "EasingFunction",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EasingFunction.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "UpdateTweens",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/updateTweens.ts"
+          },
+          "importedNames": [
+            "Signal"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Signal",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Signal.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "UpdateTweens",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/updateTweens.ts"
+          },
+          "importedNames": [
+            "NumericProps",
+            "Tween"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Tween",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Tween.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "UpdateTweens",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/updateTweens.ts"
+          },
+          "importedNames": [
+            "TweenManager"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TweenManager",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TweenManager.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "UpdateTweens",
+            "packageName": "@flighthq/tween",
+            "source": "packages/tween/src/updateTweens.ts"
+          },
+          "importedNames": [
+            "TweenPropertyDetail"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TweenPropertyDetail",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TweenPropertyDetail.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "UpdateTweens",
+        "packageName": "@flighthq/tween",
+        "source": "packages/tween/src/updateTweens.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TweenManager",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TweenManager.ts"
+          },
+          "specifier": "./EasingFunction",
+          "target": {
+            "name": "EasingFunction",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EasingFunction.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TweenManager",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TweenManager.ts"
+          },
+          "specifier": "./Entity",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TweenManager",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TweenManager.ts"
+          },
+          "specifier": "./Tween",
+          "target": {
+            "name": "Tween",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Tween.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "TweenManager",
+        "packageName": "@flighthq/types",
+        "source": "packages/types/src/TweenManager.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TweenManagerOptions",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TweenManagerOptions.ts"
+          },
+          "specifier": "./EasingFunction",
+          "target": {
+            "name": "EasingFunction",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EasingFunction.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "TweenManagerOptions",
+        "packageName": "@flighthq/types",
+        "source": "packages/types/src/TweenManagerOptions.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TweenOptions",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TweenOptions.ts"
+          },
+          "specifier": "./EasingFunction",
+          "target": {
+            "name": "EasingFunction",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EasingFunction.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "TweenOptions",
+        "packageName": "@flighthq/types",
+        "source": "packages/types/src/TweenOptions.ts"
       },
       "steps": []
     },
@@ -285677,247 +285966,6 @@
           ]
         }
       ]
-    },
-    {
-      "bindings": [
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:fa9bc748aa318de911894b591045e72bbc661d8809c2bf90f79bb60e7707dce8",
-            "line": 1,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/updateTweens.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/updateTweens.ts\",9]",
-            "kind": "import",
-            "name": "emitSignal",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "emitSignal",
-            "kind": "dependency",
-            "module": {
-              "name": "Emitter",
-              "packageName": "@flighthq/signals",
-              "source": "packages/signals/src/emitter.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:88aa57f18ce1dec3369bb7bccfb7ba3dbfd8b79231dae8bd573e089dd9b9f985",
-            "line": 4,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/updateTweens.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/updateTweens.ts\",136]",
-            "kind": "import",
-            "name": "initializeTween",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "initializeTween",
-            "kind": "dependency",
-            "module": {
-              "name": "Internal",
-              "packageName": "@flighthq/tween",
-              "source": "packages/tween/src/internal.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:22cbe3ea56dbf918adb983779688c94217f1eb36e24feab8c7b8b5ea5b86de80",
-            "line": 6,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/updateTweens.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/updateTweens.ts\",190]",
-            "kind": "function",
-            "name": "completeTween",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:56ca76ff500192ebbd9296dc82900fd1ee97ec03d935057d455a69c8ba666a99",
-            "line": 21,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/updateTweens.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/updateTweens.ts\",723]",
-            "kind": "function",
-            "name": "updateTween",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:c7613b00d6b38c68d6fd08f03bb41454666e3436b943aa2fb9d3ea446501ce14",
-            "line": 65,
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/updateTweens.ts",
-            "id": "binding:[\"@flighthq/tween\",\"packages/tween/src/updateTweens.ts\",2209]",
-            "kind": "function",
-            "name": "updateTweens",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "UpdateTweens",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/updateTweens.ts"
-          },
-          "specifier": "./internal",
-          "target": {
-            "name": "Internal",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/internal.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "UpdateTweens",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/updateTweens.ts"
-          },
-          "specifier": "@flighthq/signals/contract",
-          "target": {
-            "name": "Emitter",
-            "packageName": "@flighthq/signals",
-            "source": "packages/signals/src/emitter.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "UpdateTweens",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/updateTweens.ts"
-          },
-          "importedNames": [
-            "EasingFunction"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "EasingFunction",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/EasingFunction.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "UpdateTweens",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/updateTweens.ts"
-          },
-          "importedNames": [
-            "Signal"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Signal",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Signal.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "UpdateTweens",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/updateTweens.ts"
-          },
-          "importedNames": [
-            "NumericProps",
-            "Tween"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Tween",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Tween.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "UpdateTweens",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/updateTweens.ts"
-          },
-          "importedNames": [
-            "TweenManager"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "TweenManager",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TweenManager.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "UpdateTweens",
-            "packageName": "@flighthq/tween",
-            "source": "packages/tween/src/updateTweens.ts"
-          },
-          "importedNames": [
-            "TweenPropertyDetail"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "TweenPropertyDetail",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TweenPropertyDetail.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "UpdateTweens",
-        "packageName": "@flighthq/tween",
-        "source": "packages/tween/src/updateTweens.ts"
-      },
-      "steps": []
     },
     {
       "bindings": [],

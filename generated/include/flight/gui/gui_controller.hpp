@@ -3,9 +3,10 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function connectGuiInteraction -- source line 49
-//   missing: function createGuiControllerRuntime -- source line 80
-//   missing: function setGuiVisualProperty -- source line 141
+//   missing: function configureGuiHitArea -- source line 44
+//   missing: function connectGuiInteraction -- source line 50
+//   missing: function createGuiControllerRuntime -- source line 81
+//   missing: function setGuiVisualProperty -- source line 142
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -44,7 +45,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::gui {
 
-using flight::interaction::set_node_hit_area;
 using flight::interaction::set_node_hit_test_enabled;
 
 using flight::signals::connect_signal;
@@ -83,14 +83,28 @@ inline double clamp_gui_value(double value, double minimum, double maximum) {
   return flight::maximum(minimum, flight::minimum(maximum, value));
 }
 
-inline void configure_gui_hit_area(flight::Ref<GuiControllerRuntime> runtime, flight::Ref<Node2D> target, flight::Ref<Node2D> hit_area) {
-  std::optional<std::variant<flight::Ref<NodeAny>, flight::Ref<Path>, flight::Ref<Rectangle>, flight::String>> previous = get_node_hit_area(target);
-  set_node_hit_area(target, hit_area);
-  runtime->cleanups.push([=]() { return set_node_hit_area(target, previous); });
-}
+
+// NOT GENERATED: function configureGuiHitArea -- source line 44
+// refusal: cpp-contextual-union-inequivalent [source-portability]
+//
+// The source it stood for:
+//   export function configureGuiHitArea(runtime: GuiControllerRuntime, target: Node2D, hitArea: Node2D): void {
+//     const previous: HitArea | null = getNodeHitArea(target);
+//     setNodeHitArea(target, hitArea);
+//     runtime.cleanups.push(() => setNodeHitArea(target, previous));
+//   }
+//   
+// cpp emission failed for @flighthq/gui/packages/gui/src/guiController.ts: contextual C++ union conversion
+// requires equivalent source union evidence: target optionalSingle carriers [flight::Ref<HitArea>] from call
+// source optionalVariant carriers [flight::Ref<NodeAny>, flight::Ref<Path>, flight::Ref<Rectangle>,
+// flight::String]. Narrow or convert the source expression so each of its alternatives names exactly one
+// destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the
+// declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a
+// rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly
+// structural view does not become a mutable nominal Ref.
 
 
-// NOT GENERATED: function connectGuiInteraction -- source line 49
+// NOT GENERATED: function connectGuiInteraction -- source line 50
 //
 // The source it stood for:
 //   export function connectGuiInteraction(
@@ -124,7 +138,7 @@ inline Controller create_gui_controller(Runtime runtime) {
 }
 
 
-// NOT GENERATED: function createGuiControllerRuntime -- source line 80
+// NOT GENERATED: function createGuiControllerRuntime -- source line 81
 // refusal: cpp-structural-open-row-construction-unproven [compiler-restriction]
 //
 // The source it stood for:
@@ -182,7 +196,7 @@ inline double get_gui_position(flight::Ref<Node2D> target, flight::Ref<GuiOrient
 }
 
 
-// NOT GENERATED: function setGuiVisualProperty -- source line 141
+// NOT GENERATED: function setGuiVisualProperty -- source line 142
 // refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
 //
 // The source it stood for:

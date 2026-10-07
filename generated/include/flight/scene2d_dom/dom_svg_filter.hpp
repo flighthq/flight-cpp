@@ -52,6 +52,12 @@
 //   type { ImageSurfaceCreator } from '@flighthq/types/contract'
 //   type { BlendMode } from '@flighthq/types/contract'
 //   type { Matrix } from '@flighthq/types/contract'
+//   type { ShapeRasterizer } from '@flighthq/types/contract'
+//   type { DomTextureResolver } from '@flighthq/types/contract'
+//   type { PathWinding } from '@flighthq/types/contract'
+//   type { DomScene2DRectangle } from '@flighthq/types/contract'
+//   type { Bitmap } from '@flighthq/types/contract'
+//   type { DomRenderStateRuntime } from '@flighthq/types/contract'
 
 namespace flight::scene2d_dom {
 

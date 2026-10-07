@@ -4,14 +4,14 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function copyLocalBoundsRectangle -- source line 28
-//   missing: function computeParticleEmitter2DLocalBoundsRectangle -- source line 137
-//   missing: function getParticleEmitter2DRuntime -- source line 262
-//   missing: function initializeParticleEmitterData -- source line 266
-//   missing: function createParticleEmitterData -- source line 216
-//   missing: function setParticleEmitter2DLocalBoundsRectangle -- source line 325
-//   missing: variable (binding) -- source line 395
-//   missing: function createParticleEmitter2DRuntime -- source line 210
-//   missing: function createParticleEmitter2D -- source line 201
+//   missing: function computeParticleEmitter2DLocalBoundsRectangle -- source line 139
+//   missing: function getParticleEmitter2DRuntime -- source line 267
+//   missing: function initializeParticleEmitterData -- source line 271
+//   missing: function createParticleEmitterData -- source line 218
+//   missing: function setParticleEmitter2DLocalBoundsRectangle -- source line 330
+//   missing: variable (binding) -- source line 403
+//   missing: function createParticleEmitter2DRuntime -- source line 212
+//   missing: function createParticleEmitter2D -- source line 203
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
@@ -22,6 +22,8 @@
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
+
+#include <flight/geometry/typedarray.hpp>
 
 #include <flight/types/vector2.hpp>
 
@@ -40,6 +42,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/has_bounds_rectangle.hpp>
 
 namespace flight::particleemitter {
+
+using flight::geometry::reserve_float32_array;
+using flight::geometry::reserve_uint16_array;
 
 using flight::types::BoundsNodeAny;
 using flight::types::Node;
@@ -83,7 +88,8 @@ inline const double particle_emitter_deleted_id = 65535.0;
 // replacement row, or invent side storage
 
 inline void clear_particle_emitter2_d(flight::Ref<ParticleEmitter2D> target) {
-  (target->data.particle_count = 0.0);
+  flight::Ref<ParticleEmitterData> data = target->data;
+  (data->particle_count = 0.0);
 }
 
 inline void compact_particle_emitter2_d(flight::Ref<ParticleEmitter2D> target) {
@@ -129,7 +135,7 @@ inline void compact_particle_emitter2_d(flight::Ref<ParticleEmitter2D> target) {
 }
 
 
-// NOT GENERATED: function computeParticleEmitter2DLocalBoundsRectangle -- source line 137
+// NOT GENERATED: function computeParticleEmitter2DLocalBoundsRectangle -- source line 139
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -207,31 +213,34 @@ inline double get_particle_emitter2_dcapacity(flight::Ref<ParticleEmitter2D> sou
 }
 
 inline double get_particle_emitter2_dparticle_alpha(flight::Ref<ParticleEmitter2D> source, double index) {
-  if (((index < 0.0) || (index >= source->data.particle_count))) {
+  flight::Ref<ParticleEmitterData> data = source->data;
+  if (((index < 0.0) || (index >= data->particle_count))) {
     return -1.0;
   }
-  return source->data.alphas.get_index(index);
+  return data->alphas.get_index(index);
 }
 
 inline double get_particle_emitter2_dparticle_id(flight::Ref<ParticleEmitter2D> source, double index) {
-  if (((index < 0.0) || (index >= source->data.particle_count))) {
+  flight::Ref<ParticleEmitterData> data = source->data;
+  if (((index < 0.0) || (index >= data->particle_count))) {
     return -1.0;
   }
-  return source->data.ids.get_index(index);
+  return data->ids.get_index(index);
 }
 
 inline bool get_particle_emitter2_dparticle_velocity(flight::Ref<Vector2Like> out, flight::Ref<ParticleEmitter2D> source, double index) {
-  if (((index < 0.0) || (index >= source->data.particle_count))) {
+  flight::Ref<ParticleEmitterData> data = source->data;
+  if (((index < 0.0) || (index >= data->particle_count))) {
     return false;
   }
   const double vt = (index * particle_velocity_stride);
-  (out->x = source->data.velocities.get_index(vt));
-  (out->y = source->data.velocities.get_index((vt + 1.0)));
+  (out->x = data->velocities.get_index(vt));
+  (out->y = data->velocities.get_index((vt + 1.0)));
   return true;
 }
 
 
-// NOT GENERATED: function getParticleEmitter2DRuntime -- source line 262
+// NOT GENERATED: function getParticleEmitter2DRuntime -- source line 267
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
@@ -248,7 +257,7 @@ inline bool get_particle_emitter2_dparticle_velocity(flight::Ref<Vector2Like> ou
 // replacement row, or invent side storage
 
 
-// NOT GENERATED: function initializeParticleEmitterData -- source line 266
+// NOT GENERATED: function initializeParticleEmitterData -- source line 271
 // refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
@@ -276,7 +285,7 @@ inline bool get_particle_emitter2_dparticle_velocity(flight::Ref<Vector2Like> ou
 // requires a statically resolvable C++ object shape; T is named
 
 
-// NOT GENERATED: function createParticleEmitterData -- source line 216
+// NOT GENERATED: function createParticleEmitterData -- source line 218
 // refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
@@ -332,33 +341,34 @@ inline void reserve_particle_emitter2_d(flight::Ref<ParticleEmitter2D> target, d
 }
 
 inline double append_particle_emitter2_dparticle(flight::Ref<ParticleEmitter2D> target, double id, double x, double y, double rotation, double scale) {
-  const double index = target->data.particle_count;
+  flight::Ref<ParticleEmitterData> data = target->data;
+  const double index = data->particle_count;
   const double needed = (index + 1.0);
   if ((get_particle_emitter2_dcapacity(target) < needed)) {
-    const double new_capacity = flight::maximum(needed, ([&]() -> double { auto logical_or_value = (target->data.particle_count * 2.0); if (flight::to_boolean(logical_or_value)) return logical_or_value; return 8.0; }()));
+    const double new_capacity = flight::maximum(needed, ([&]() -> double { auto logical_or_value = (data->particle_count * 2.0); if (flight::to_boolean(logical_or_value)) return logical_or_value; return 8.0; }()));
     reserve_particle_emitter2_d(target, new_capacity);
   }
-  (target->data.particle_count = needed);
-  ([&]() { auto&& typed_array_25 = target->data.ids; const auto typed_index_25 = index; const auto typed_value_25 = id; return typed_array_25.set_index(typed_index_25, typed_value_25); }());
+  (data->particle_count = needed);
+  ([&]() { auto&& typed_array_25 = data->ids; const auto typed_index_25 = index; const auto typed_value_25 = id; return typed_array_25.set_index(typed_index_25, typed_value_25); }());
   const double tt = (index * particle_transform_stride);
-  ([&]() { auto&& typed_array_26 = target->data.transforms; const auto typed_index_26 = tt; const auto typed_value_26 = x; return typed_array_26.set_index(typed_index_26, typed_value_26); }());
-  ([&]() { auto&& typed_array_27 = target->data.transforms; const auto typed_index_27 = (tt + 1.0); const auto typed_value_27 = y; return typed_array_27.set_index(typed_index_27, typed_value_27); }());
-  ([&]() { auto&& typed_array_28 = target->data.transforms; const auto typed_index_28 = (tt + 2.0); const auto typed_value_28 = rotation; return typed_array_28.set_index(typed_index_28, typed_value_28); }());
-  ([&]() { auto&& typed_array_29 = target->data.transforms; const auto typed_index_29 = (tt + 3.0); const auto typed_value_29 = scale; return typed_array_29.set_index(typed_index_29, typed_value_29); }());
-  ([&]() { auto&& typed_array_30 = target->data.alphas; const auto typed_index_30 = index; const auto typed_value_30 = 1.0; return typed_array_30.set_index(typed_index_30, typed_value_30); }());
+  ([&]() { auto&& typed_array_26 = data->transforms; const auto typed_index_26 = tt; const auto typed_value_26 = x; return typed_array_26.set_index(typed_index_26, typed_value_26); }());
+  ([&]() { auto&& typed_array_27 = data->transforms; const auto typed_index_27 = (tt + 1.0); const auto typed_value_27 = y; return typed_array_27.set_index(typed_index_27, typed_value_27); }());
+  ([&]() { auto&& typed_array_28 = data->transforms; const auto typed_index_28 = (tt + 2.0); const auto typed_value_28 = rotation; return typed_array_28.set_index(typed_index_28, typed_value_28); }());
+  ([&]() { auto&& typed_array_29 = data->transforms; const auto typed_index_29 = (tt + 3.0); const auto typed_value_29 = scale; return typed_array_29.set_index(typed_index_29, typed_value_29); }());
+  ([&]() { auto&& typed_array_30 = data->alphas; const auto typed_index_30 = index; const auto typed_value_30 = 1.0; return typed_array_30.set_index(typed_index_30, typed_value_30); }());
   const double ct = (index * particle_color_stride);
-  ([&]() { auto&& typed_array_31 = target->data.colors; const auto typed_index_31 = ct; const auto typed_value_31 = 1.0; return typed_array_31.set_index(typed_index_31, typed_value_31); }());
-  ([&]() { auto&& typed_array_32 = target->data.colors; const auto typed_index_32 = (ct + 1.0); const auto typed_value_32 = 1.0; return typed_array_32.set_index(typed_index_32, typed_value_32); }());
-  ([&]() { auto&& typed_array_33 = target->data.colors; const auto typed_index_33 = (ct + 2.0); const auto typed_value_33 = 1.0; return typed_array_33.set_index(typed_index_33, typed_value_33); }());
+  ([&]() { auto&& typed_array_31 = data->colors; const auto typed_index_31 = ct; const auto typed_value_31 = 1.0; return typed_array_31.set_index(typed_index_31, typed_value_31); }());
+  ([&]() { auto&& typed_array_32 = data->colors; const auto typed_index_32 = (ct + 1.0); const auto typed_value_32 = 1.0; return typed_array_32.set_index(typed_index_32, typed_value_32); }());
+  ([&]() { auto&& typed_array_33 = data->colors; const auto typed_index_33 = (ct + 2.0); const auto typed_value_33 = 1.0; return typed_array_33.set_index(typed_index_33, typed_value_33); }());
   const double vt = (index * particle_velocity_stride);
-  ([&]() { auto&& typed_array_34 = target->data.velocities; const auto typed_index_34 = vt; const auto typed_value_34 = 0.0; return typed_array_34.set_index(typed_index_34, typed_value_34); }());
-  ([&]() { auto&& typed_array_35 = target->data.velocities; const auto typed_index_35 = (vt + 1.0); const auto typed_value_35 = 0.0; return typed_array_35.set_index(typed_index_35, typed_value_35); }());
-  ([&]() { auto&& typed_array_36 = target->data.positions_z; const auto typed_index_36 = index; const auto typed_value_36 = 0.0; return typed_array_36.set_index(typed_index_36, typed_value_36); }());
+  ([&]() { auto&& typed_array_34 = data->velocities; const auto typed_index_34 = vt; const auto typed_value_34 = 0.0; return typed_array_34.set_index(typed_index_34, typed_value_34); }());
+  ([&]() { auto&& typed_array_35 = data->velocities; const auto typed_index_35 = (vt + 1.0); const auto typed_value_35 = 0.0; return typed_array_35.set_index(typed_index_35, typed_value_35); }());
+  ([&]() { auto&& typed_array_36 = data->positions_z; const auto typed_index_36 = index; const auto typed_value_36 = 0.0; return typed_array_36.set_index(typed_index_36, typed_value_36); }());
   return index;
 }
 
 
-// NOT GENERATED: function setParticleEmitter2DLocalBoundsRectangle -- source line 325
+// NOT GENERATED: function setParticleEmitter2DLocalBoundsRectangle -- source line 330
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
@@ -395,29 +405,32 @@ inline void set_particle_emitter2_dparticle(flight::Ref<ParticleEmitter2D> targe
 }
 
 inline void set_particle_emitter2_dparticle_alpha(flight::Ref<ParticleEmitter2D> target, double index, double alpha) {
-  if (((index < 0.0) || (index >= target->data.particle_count))) {
+  flight::Ref<ParticleEmitterData> data = target->data;
+  if (((index < 0.0) || (index >= data->particle_count))) {
     return;
   }
-  ([&]() { auto&& typed_array_42 = target->data.alphas; const auto typed_index_42 = index; const auto typed_value_42 = alpha; return typed_array_42.set_index(typed_index_42, typed_value_42); }());
+  ([&]() { auto&& typed_array_42 = data->alphas; const auto typed_index_42 = index; const auto typed_value_42 = alpha; return typed_array_42.set_index(typed_index_42, typed_value_42); }());
 }
 
 inline void set_particle_emitter2_dparticle_color(flight::Ref<ParticleEmitter2D> target, double index, double r, double g, double b) {
-  if (((index < 0.0) || (index >= target->data.particle_count))) {
+  flight::Ref<ParticleEmitterData> data = target->data;
+  if (((index < 0.0) || (index >= data->particle_count))) {
     return;
   }
   const double ct = (index * particle_color_stride);
-  ([&]() { auto&& typed_array_43 = target->data.colors; const auto typed_index_43 = ct; const auto typed_value_43 = r; return typed_array_43.set_index(typed_index_43, typed_value_43); }());
-  ([&]() { auto&& typed_array_44 = target->data.colors; const auto typed_index_44 = (ct + 1.0); const auto typed_value_44 = g; return typed_array_44.set_index(typed_index_44, typed_value_44); }());
-  ([&]() { auto&& typed_array_45 = target->data.colors; const auto typed_index_45 = (ct + 2.0); const auto typed_value_45 = b; return typed_array_45.set_index(typed_index_45, typed_value_45); }());
+  ([&]() { auto&& typed_array_43 = data->colors; const auto typed_index_43 = ct; const auto typed_value_43 = r; return typed_array_43.set_index(typed_index_43, typed_value_43); }());
+  ([&]() { auto&& typed_array_44 = data->colors; const auto typed_index_44 = (ct + 1.0); const auto typed_value_44 = g; return typed_array_44.set_index(typed_index_44, typed_value_44); }());
+  ([&]() { auto&& typed_array_45 = data->colors; const auto typed_index_45 = (ct + 2.0); const auto typed_value_45 = b; return typed_array_45.set_index(typed_index_45, typed_value_45); }());
 }
 
 inline void set_particle_emitter2_dparticle_velocity(flight::Ref<ParticleEmitter2D> target, double index, double vx, double vy) {
-  if (((index < 0.0) || (index >= target->data.particle_count))) {
+  flight::Ref<ParticleEmitterData> data = target->data;
+  if (((index < 0.0) || (index >= data->particle_count))) {
     return;
   }
   const double vt = (index * particle_velocity_stride);
-  ([&]() { auto&& typed_array_46 = target->data.velocities; const auto typed_index_46 = vt; const auto typed_value_46 = vx; return typed_array_46.set_index(typed_index_46, typed_value_46); }());
-  ([&]() { auto&& typed_array_47 = target->data.velocities; const auto typed_index_47 = (vt + 1.0); const auto typed_value_47 = vy; return typed_array_47.set_index(typed_index_47, typed_value_47); }());
+  ([&]() { auto&& typed_array_46 = data->velocities; const auto typed_index_46 = vt; const auto typed_value_46 = vx; return typed_array_46.set_index(typed_index_46, typed_value_46); }());
+  ([&]() { auto&& typed_array_47 = data->velocities; const auto typed_index_47 = (vt + 1.0); const auto typed_value_47 = vy; return typed_array_47.set_index(typed_index_47, typed_value_47); }());
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_D21A83B4E8018D48
@@ -429,7 +442,7 @@ struct can_add_child_compute_local_bounds_rectangle_d21a83b4e8018d48 : public fl
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_D21A83B4E8018D48
 
 
-// NOT GENERATED: variable (binding) -- source line 395
+// NOT GENERATED: variable (binding) -- source line 403
 // refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
@@ -445,7 +458,7 @@ struct can_add_child_compute_local_bounds_rectangle_d21a83b4e8018d48 : public fl
 // and its result as one the destination holds
 
 
-// NOT GENERATED: function createParticleEmitter2DRuntime -- source line 210
+// NOT GENERATED: function createParticleEmitter2DRuntime -- source line 212
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
@@ -464,7 +477,7 @@ struct can_add_child_compute_local_bounds_rectangle_d21a83b4e8018d48 : public fl
 // replacement row, or invent side storage
 
 
-// NOT GENERATED: function createParticleEmitter2D -- source line 201
+// NOT GENERATED: function createParticleEmitter2D -- source line 203
 // refusal: cpp-intersection-member-shapeless [source-portability]
 //
 // The source it stood for:

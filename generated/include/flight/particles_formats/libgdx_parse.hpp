@@ -95,7 +95,8 @@ struct header_sections_f25db3c3e7a96e17 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_FORMATS_HEADER_SECTIONS_F25DB3C3E7A96E17
 
 inline flight::Ref<header_sections_f25db3c3e7a96e17> parse_libgdx_text(flight::String text) {
-  flight::Array<flight::String> lines = text.split(flight::RegExp(flight::String("\\r?\\n"), flight::String("")));
+  const flight::String normalized = text.replace(flight::RegExp(flight::String("\\r\\n"), flight::String("g")), flight::String("\n"));
+  flight::Array<flight::String> lines = normalized.split(flight::String("\n"));
   auto sections = flight::Map<flight::String, LibgdxSection>();
   flight::String current_section = flight::String("");
   LibgdxSection current = flight::Map<flight::String, flight::String>();

@@ -1,0 +1,93 @@
+diff --git a/packages/text/src/nativeText.ts b/packages/text/src/nativeText.ts
+index ac859d7..016dace 100644
+--- a/packages/text/src/nativeText.ts
++++ b/packages/text/src/nativeText.ts
+@@ -70,11 +70,13 @@ export function getNativeTextRuntime(source: Readonly<NativeText>): Readonly<Nat
+ }
+ 
+ export function getNativeTextString(source: Readonly<NativeText>): string {
+-  return source.data.text;
++  const data = source.data;
++  return data.text;
+ }
+ 
+ export function getNativeTextStyle(source: Readonly<NativeText>): Readonly<NativeTextStyle> {
+-  return source.data.style;
++  const data = source.data;
++  return data.style;
+ }
+ 
+ export function initializeNativeTextData(
+@@ -92,7 +94,8 @@ export function initializeNativeTextData(
+ // Merges individual style properties into the existing style without replacing the whole object.
+ // Useful for single-property style changes that would otherwise force rebuilding the full NativeTextStyle.
+ export function patchNativeTextStyle(source: NativeText, patch: Readonly<Partial<NativeTextStyle>>): void {
+-  source.data.style = { ...source.data.style, ...patch };
++  const data = source.data;
++  data.style = { ...data.style, ...patch };
+   invalidateNodeLocalContent(source);
+   invalidateNodeLocalBounds(source);
+ }
+@@ -124,7 +127,8 @@ export function setNativeTextString(source: NativeText, value: string): void {
+ // Replaces the style descriptor wholesale (it is an object reference); the content revision bumps
+ // unconditionally because field-level equality is not tracked, mirroring setTextLabelFormat.
+ export function setNativeTextStyle(source: NativeText, value: NativeTextStyle): void {
+-  source.data.style = value;
++  const data = source.data;
++  data.style = value;
+   invalidateNodeLocalContent(source);
+   invalidateNodeLocalBounds(source);
+ }
+diff --git a/packages/text/src/textLabel.ts b/packages/text/src/textLabel.ts
+index d36f0fc..231369c 100644
+--- a/packages/text/src/textLabel.ts
++++ b/packages/text/src/textLabel.ts
+@@ -40,6 +40,7 @@ function buildTextLabelLayoutParams(source: Readonly<TextLabel>, measure: TextMea
+ 
+ export function appendTextLabelString(source: TextLabel, value: string): void {
+   if (value.length === 0) return;
+-  source.data.text += value;
++  const data = source.data;
++  data.text += value;
+   invalidateTextLabelContent(source);
+ }
+@@ -95,7 +96,8 @@ export function createTextLabelRuntime(): TextLabelRuntime {
+ }
+ 
+ export function getTextLabelFormat(source: Readonly<TextLabel>): Readonly<TextFormat> {
+-  return source.data.textFormat;
++  const data = source.data;
++  return data.textFormat;
+ }
+ 
+ export function getTextLabelRuntime(source: Readonly<TextLabel>): Readonly<TextLabelRuntime> {
+@@ -103,7 +105,8 @@ export function getTextLabelRuntime(source: Readonly<TextLabel>): Readonly<TextLa
+ }
+ 
+ export function getTextLabelString(source: Readonly<TextLabel>): string {
+-  return source.data.text;
++  const data = source.data;
++  return data.text;
+ }
+ 
+ export function initializeTextLabelData(
+@@ -129,6 +132,7 @@ export function setTextLabelAutoSize(source: TextLabel, value: TextAutoSize): voi
+ // Replaces the format wholesale. textFormat is an object reference, so callers pass a new format to
+ // apply; the content revision bumps unconditionally because field-level equality is not tracked.
+ export function setTextLabelFormat(source: TextLabel, value: TextFormat): void {
+-  source.data.textFormat = value;
++  const data = source.data;
++  data.textFormat = value;
+   invalidateTextLabelContent(source);
+ }
+@@ -171,8 +175,9 @@ export function setTextLabelWidth(source: TextLabel, value: number): void {
+ // the extent then depends on the content. Under `autoSize 'none'` the box is the fixed user
+ // width/height, so bounds are untouched. Mirrors invalidateRichTextContent in this package's richText.
+ function invalidateTextLabelContent(source: TextLabel): void {
++  const data = source.data;
+   invalidateNodeLocalContent(source);
+-  if (source.data.autoSize !== 'none') invalidateNodeLocalBounds(source);
++  if (data.autoSize !== 'none') invalidateNodeLocalBounds(source);
+ }
+ 
+ const defaultMethods: Partial<MethodsOf<TextLabelRuntime>> = {

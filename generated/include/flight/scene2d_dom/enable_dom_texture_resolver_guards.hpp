@@ -14,6 +14,8 @@ namespace flight::types { struct RenderState; }
 
 namespace flight::scene2d_dom {
 
+using flight::types::DomRenderState;
+
 inline bool are_dom_texture_resolver_guards_enabled(flight::Ref<flight::types::DomRenderState> state) {
   return flight::render::are_render_registries_guards_enabled(state);
 }

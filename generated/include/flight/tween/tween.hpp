@@ -38,6 +38,8 @@ namespace flight::types { template <typename T> struct Tween; }
 
 namespace flight::tween {
 
+using flight::types::Tween;
+
 inline double get_active_tween_count(flight::Ref<flight::types::TweenManager> manager) {
   double count = 0.0;
   for (const auto& [for_of_key, for_of_value] : manager->tweens) {

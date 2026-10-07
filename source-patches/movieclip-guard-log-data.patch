@@ -1,0 +1,29 @@
+diff --git a/packages/movieclip/src/enableMovieClipGuards.ts b/packages/movieclip/src/enableMovieClipGuards.ts
+index 5049ec4..39e1a9a 100644
+--- a/packages/movieclip/src/enableMovieClipGuards.ts
++++ b/packages/movieclip/src/enableMovieClipGuards.ts
+@@ -26,16 +26,17 @@ function warnOnUnsupportedSpritesheetTimelineFields(
+   explanation: Readonly<SpritesheetTimelineSourceExplanation>,
+ ): void {
+   if (explanation.unsupportedFields.length === 0) return;
++  const details: Record<string, unknown> = {
++    direction: animation.direction,
++    message:
++      'createSpritesheetTimelineSource: authored repeat or per-frame timing cannot be represented by TimelineSource and will not control MovieClip playback — call explainSpritesheetTimelineSource(animation), or use playSpritesheetAnimation with a SpritesheetPlayer when those semantics must be preserved.',
++    repeatCount: animation.repeatCount,
++    unsupportedFields: explanation.unsupportedFields,
++  };
+   logOnce(
+     `movieclip:spritesheet-timeline-source:${explanation.unsupportedFields.join(',')}`,
+     LogLevel.Warn,
+-    {
+-      direction: animation.direction,
+-      message:
+-        'createSpritesheetTimelineSource: authored repeat or per-frame timing cannot be represented by TimelineSource and will not control MovieClip playback — call explainSpritesheetTimelineSource(animation), or use playSpritesheetAnimation with a SpritesheetPlayer when those semantics must be preserved.',
+-      repeatCount: animation.repeatCount,
+-      unsupportedFields: explanation.unsupportedFields,
+-    },
++    details,
+     'movieclip',
+   );
+ }

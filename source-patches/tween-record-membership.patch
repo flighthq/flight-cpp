@@ -1,0 +1,13 @@
+diff --git a/packages/tween/src/internal.ts b/packages/tween/src/internal.ts
+--- a/packages/tween/src/internal.ts
++++ b/packages/tween/src/internal.ts
+@@ -53,7 +53,8 @@
+ export function hasTweenProperty<T extends object>(tween: Tween<T>, key: string): boolean {
+   const registrationPropertyKeys = _registrationPropertyKeys.get(tween);
+   if (registrationPropertyKeys !== undefined) return registrationPropertyKeys.includes(key);
+-  return key in tween.propertyMap;
++  const propertyMap = tween.propertyMap as Record<string, number>;
++  return Object.hasOwn(propertyMap, key);
+ }
+ 
+ export function initializeTween<T extends object>(tween: Tween<T>): void {

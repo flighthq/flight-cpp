@@ -3,10 +3,10 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function createImageResourceFailure -- source line 73
-//   missing: function explainImageResourceReferenceResolution -- source line 90
-//   missing: function decodeEmbeddedImageResourceReference -- source line 46
-//   missing: function resolveImageResourceReference -- source line 160
+//   missing: function createImageResourceFailure -- source line 67
+//   missing: function explainImageResourceReferenceResolution -- source line 84
+//   missing: function decodeEmbeddedImageResourceReference -- source line 40
+//   missing: function resolveImageResourceReference -- source line 154
 #include <coroutine>
 #include <flight/abort.hpp>
 #include <flight/any.hpp>
@@ -17,8 +17,6 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/types/texture.hpp>
-
-#include <flight/types/resource_resolution_state.hpp>
 
 #include <flight/types/image_resource_reference.hpp>
 
@@ -39,27 +37,25 @@ using flight::types::ExternalImageResourceReference;
 using flight::types::ImageBitmapCompositionResolver;
 using flight::types::ImageResourceReference;
 using flight::types::Texture;
-using flight::types::image_resource_reference_kind;
-using flight::types::resource_resolution_state;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
 
-// NOT GENERATED: function createImageResourceFailure -- source line 73
+// NOT GENERATED: function createImageResourceFailure -- source line 67
 // refusal: cpp-erased-error-view-runtime-required [target-runtime]
 //
 // The source it stood for:
 //   export function createImageResourceFailure(cause: unknown): ImageResourceFailure {
 //     if (cause instanceof Error) {
 //       const out = allocateEntity<ImageResourceFailure>();
-//       out.kind = ImageResourceFailureKind.Error;
+//       out.kind = 'Error';
 //       out.message = cause.message;
 //       out.name = cause.name;
 //       return finishEntity(out);
 //     }
 //     const out = allocateEntity<ImageResourceFailure>();
-//     out.kind = ImageResourceFailureKind.Error;
+//     out.kind = 'Error';
 //     out.message = String(cause);
 //     out.name = null;
 //     return finishEntity(out);
@@ -72,7 +68,7 @@ using flight::entity::finish_entity;
 // subclasses; keep the value typed as Error before erasure or add that runtime contract
 
 
-// NOT GENERATED: function explainImageResourceReferenceResolution -- source line 90
+// NOT GENERATED: function explainImageResourceReferenceResolution -- source line 84
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -82,7 +78,7 @@ using flight::entity::finish_entity;
 //     return {
 //       failure: ref.failure === null ? null : { ...ref.failure },
 //       kind: ref.kind,
-//       retryable: ref.state === ResourceResolutionState.Failed,
+//       retryable: ref.state === 'Failed',
 //       state: ref.state,
 //     };
 //   }
@@ -93,7 +89,7 @@ using flight::entity::finish_entity;
 inline std::optional<flight::Ref<ImageBitmapCompositionResolver>> resolve_image_bitmap_composition = std::nullopt;
 
 
-// NOT GENERATED: function decodeEmbeddedImageResourceReference -- source line 46
+// NOT GENERATED: function decodeEmbeddedImageResourceReference -- source line 40
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -116,7 +112,7 @@ inline std::optional<flight::Ref<ImageBitmapCompositionResolver>> resolve_image_
 //     out.format = 'rgba8unorm' as const;
 //     out.gamut = 'srgb' as const;
 //     out.height = decoded.height;
-//     out.kind = BitmapTextureSourceKind;
+//     out.kind = 'bitmap';
 //     out.version = 0;
 //     out.width = decoded.width;
 //     return finishEntity(out);
@@ -133,9 +129,9 @@ inline void initialize_embedded_image_resource_reference(flight::Ref<EntityConst
   (out->alpha_type = alpha_type.value());
   (out->bytes = bytes);
   (out->failure = nullptr);
-  (out->kind = image_resource_reference_kind.embedded);
+  (out->kind = flight::String("Embedded"));
   (out->mime_type = mime_type.value());
-  (out->state = resource_resolution_state.unresolved);
+  (out->state = flight::String("Unresolved"));
   (out->textures = flight::Array<flight::Ref<Texture>>{});
 }
 
@@ -151,9 +147,10 @@ inline void initialize_external_image_resource_reference(flight::Ref<EntityConst
   base_path = base_path.value_or(std::nullopt);
   (out->base_path = base_path.value());
   (out->failure = nullptr);
-  (out->kind = image_resource_reference_kind.external);
-  (out->mime_type = nullptr);
-  (out->state = resource_resolution_state.unresolved);
+  (out->kind = flight::String("External"));
+  const std::optional<flight::String> no_mime_type = std::nullopt;
+  (out->mime_type = no_mime_type);
+  (out->state = flight::String("Unresolved"));
   (out->textures = flight::Array<flight::Ref<Texture>>{});
   (out->uri = uri);
 }
@@ -170,16 +167,16 @@ inline void register_image_bitmap_composition_resolver(std::optional<flight::Ref
 }
 
 inline bool reset_failed_image_resource_reference(flight::Ref<ImageResourceReference> ref) {
-  if ((ref->state != resource_resolution_state.failed)) {
+  if ((ref->state != flight::String("Failed"))) {
     return false;
   }
   (ref->failure = nullptr);
-  (ref->state = resource_resolution_state.unresolved);
+  (ref->state = flight::String("Unresolved"));
   return true;
 }
 
 
-// NOT GENERATED: function resolveImageResourceReference -- source line 160
+// NOT GENERATED: function resolveImageResourceReference -- source line 154
 //
 // The source it stood for:
 //   export async function resolveImageResourceReference(
@@ -188,13 +185,13 @@ inline bool reset_failed_image_resource_reference(flight::Ref<ImageResourceRefer
 //     signal: AbortSignal,
 //   ): Promise<TextureSource | null> {
 //     ref.failure = null;
-//     ref.state = ResourceResolutionState.Loading;
+//     ref.state = 'Loading';
 //     try {
 //       const usesOrdinaryEmbeddedDecode =
-//         ref.kind === ImageResourceReferenceKind.Embedded &&
+//         ref.kind === 'Embedded' &&
 //         (ref.bitmapComposition === undefined || _resolveImageBitmapComposition === null);
 //       const source =
-//         ref.kind === ImageResourceReferenceKind.Embedded
+//         ref.kind === 'Embedded'
 //           ? await decodeEmbeddedImageResourceReference(ref, signal)
 //           : await fetch(ref, signal);
 //       if (source === null) {
@@ -202,22 +199,22 @@ inline bool reset_failed_image_resource_reference(flight::Ref<ImageResourceRefer
 //           ? explainImageDecodeFailure(ref.bytes, ref.mimeType ?? undefined)
 //           : null;
 //         const out = allocateEntity<ImageResourceFailure>();
-//         out.kind = ImageResourceFailureKind.Unavailable;
+//         out.kind = 'Unavailable';
 //         out.message = decodeFailure?.reason ?? 'Image resource unavailable';
 //         out.name = null;
 //         ref.failure = finishEntity(out);
-//         ref.state = ResourceResolutionState.Failed;
+//         ref.state = 'Failed';
 //         return null;
 //       }
-//       ref.state = ResourceResolutionState.Resolved;
+//       ref.state = 'Resolved';
 //       return source;
 //     } catch (cause) {
 //       if (signal.aborted) {
-//         ref.state = ResourceResolutionState.Unresolved;
+//         ref.state = 'Unresolved';
 //         throw cause;
 //       }
 //       ref.failure = createImageResourceFailure(cause);
-//       ref.state = ResourceResolutionState.Failed;
+//       ref.state = 'Failed';
 //       return null;
 //     }
 //   }

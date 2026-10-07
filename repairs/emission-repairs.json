@@ -4772,8 +4772,8 @@
           "name": "invalidate_node_local_transform"
         }
       ],
-      "diagnostic": "'invalidate_node_local_transform' was not declared in this scope -- flight::node::invalidate_node_local_transform",
-      "defect": "The emitter writes 1 name(s) owned by flight::node unqualified inside namespace flight::scene3d, and without the header that defines them. All of them are template functions declared in flight/node/revision.hpp; the 2D and 3D transform headers only call them, so revision.hpp is the single defining include. Unqualified at flight/scene3d/scene_document.hpp. GAIN NOT YET MEASURED: declared after the in-flight generation started, so it takes effect on the next run (loadEmissionRepairs reads at startup).",
+      "diagnostic": "'enable_node_signals' was not declared in this scope; did you mean 'enable_node3_dsignals'?",
+      "defect": "The emitter writes imported node helpers unqualified inside namespace flight::scene3d and omits their defining bindings. The using declarations restore the exact imported functions; overload resolution and template deduction remain unchanged.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -5840,8 +5840,16 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/wgpu_quad_batch_resources.hpp",
+          "name": "WgpuQuadBatchResources"
+        },
+        {
           "include": "flight/types/wgpu_render_state.hpp",
           "name": "WgpuRenderState"
+        },
+        {
+          "include": "flight/types/wgpu_render_state.hpp",
+          "name": "WgpuRenderStateRuntime"
         },
         {
           "include": "flight/types/wgpu_render_target.hpp",
@@ -5920,12 +5928,48 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/entity.hpp",
+          "name": "entity_runtime_key"
+        },
+        {
+          "include": "flight/types/dom_render_state.hpp",
+          "name": "DomRenderState"
+        },
+        {
           "include": "flight/types/dom_render_state.hpp",
           "name": "DomRenderStateRuntime"
         },
         {
+          "include": "flight/types/dom_texture_resolver.hpp",
+          "name": "DomTextureResolver"
+        },
+        {
+          "include": "flight/types/registry_table.hpp",
+          "name": "KeyedTable"
+        },
+        {
+          "include": "flight/types/registry_table.hpp",
+          "name": "RegistryTableEntry"
+        },
+        {
+          "include": "flight/types/registry_table.hpp",
+          "name": "registry_entry_state"
+        },
+        {
+          "include": "flight/types/node2_d.hpp",
+          "name": "Node2D"
+        },
+        {
           "include": "flight/types/render_proxy2_d.hpp",
           "name": "RenderProxy2D"
+        },
+        {
+          "include": "flight/types/scene2_drenderer.hpp",
+          "name": "Scene2DRenderer"
+        },
+        {
+          "include": "flight/types/texture_source_kind.hpp",
+          "name": "TextureSourceKind"
         }
       ],
       "diagnostic": "'DomRenderStateRuntime' was not declared in this scope",
@@ -6248,6 +6292,22 @@
           "name": "MovieClip"
         },
         {
+          "include": "flight/types/movie_clip.hpp",
+          "name": "MovieClipData"
+        },
+        {
+          "include": "flight/types/movie_clip.hpp",
+          "name": "MovieClipRuntime"
+        },
+        {
+          "include": "flight/types/frame_script.hpp",
+          "name": "FrameScript"
+        },
+        {
+          "include": "flight/types/spritesheet_timeline_source_explanation.hpp",
+          "name": "SpritesheetTimelineSourceGuard"
+        },
+        {
           "include": "flight/types/spritesheet_animation.hpp",
           "name": "SpritesheetAnimation"
         }
@@ -6268,12 +6328,52 @@
           "name": "AudioBus"
         },
         {
+          "include": "flight/types/audio_bus.hpp",
+          "name": "AudioBusOptions"
+        },
+        {
+          "include": "flight/types/audio_bus.hpp",
+          "name": "AudioBusMixerGuard"
+        },
+        {
+          "include": "flight/types/audio_bus.hpp",
+          "name": "AudioBusMixerOperation"
+        },
+        {
+          "include": "flight/types/audio_bus.hpp",
+          "name": "AudioMixer"
+        },
+        {
+          "include": "flight/types/entity.hpp",
+          "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/host_image_source.hpp",
+          "name": "HostImageSource"
+        },
+        {
+          "include": "flight/types/host_audio_mixer.hpp",
+          "name": "HostAudioMixerCapability"
+        },
+        {
+          "include": "flight/types/host_video.hpp",
+          "name": "HostVideoCapability"
+        },
+        {
           "include": "flight/types/video_resource.hpp",
           "name": "VideoChannel"
+        },
+        {
+          "include": "flight/types/video_resource.hpp",
+          "name": "VideoResource"
+        },
+        {
+          "include": "flight/types/video_resource.hpp",
+          "name": "VideoPlayOptions"
         }
       ],
       "diagnostic": "'AudioBus' was not declared in this scope",
-      "defect": "The emitter writes 2 name(s) owned by flight::types unqualified inside namespace flight::media, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
+      "defect": "The emitter writes the listed names owned by flight::types unqualified inside namespace flight::media, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -8560,6 +8660,10 @@
       "namespace": "flight::geometry",
       "symbols": [
         {
+          "include": "flight/geometry/matrix4_pool.hpp",
+          "name": "acquire_matrix4"
+        },
+        {
           "include": "flight/geometry/matrix4.hpp",
           "name": "copy_matrix4"
         },
@@ -8582,6 +8686,10 @@
         {
           "include": "flight/geometry/matrix4.hpp",
           "name": "inverse_matrix4"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "matrix4_transform_point"
         },
         {
           "include": "flight/geometry/quaternion.hpp",
@@ -8767,6 +8875,10 @@
       "appliesTo": "flight/gui/",
       "namespace": "flight::interaction",
       "symbols": [
+        {
+          "include": "flight/interaction/node_interaction_state.hpp",
+          "name": "get_node_hit_area"
+        },
         {
           "include": "flight/interaction/node_interaction_state.hpp",
           "name": "set_node_hit_area"
@@ -10724,6 +10836,142 @@
       "defect": "The emitter writes 1 function name(s) owned by flight::scene2d unqualified inside namespace flight::scene2d_canvas. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene-document-refusal-reason-import-alias",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene_document/",
+      "symbol": "FlightDocumentRefusalReasonType",
+      "declaration": "using FlightDocumentRefusalReasonType = flight::types::FlightDocumentRefusalReason;",
+      "include": "flight/types/flight_document_refusal_explanation.hpp",
+      "diagnostic": "'FlightDocumentRefusalReasonType' was not declared in this scope",
+      "defect": "The emitter retains the source import alias FlightDocumentRefusalReasonType at use sites but emits only the underlying flight::types::FlightDocumentRefusalReason alias. Repeating that exact type alias restores the source binding without creating a new type.",
+      "expectedWhen": "always",
+      "expires": "when the emitter preserves imported type aliases or spells their underlying type; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "node-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/node/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/matrix4_pool.hpp",
+          "name": "acquire_matrix4"
+        },
+        {
+          "include": "flight/geometry/matrix4.hpp",
+          "name": "matrix4_transform_point"
+        },
+        {
+          "include": "flight/geometry/matrix4_pool.hpp",
+          "name": "release_matrix4"
+        }
+      ],
+      "diagnostic": "there are no arguments to 'acquire_matrix4' that depend on a template parameter, so a declaration of 'acquire_matrix4' must be available",
+      "defect": "The emitter retains the imported acquireMatrix4 call unqualified inside flight::node and does not bring the defining matrix-pool header into the template definition context. The using declaration restores the exact imported binding.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies imported geometry functions and orders their includes before template definitions; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "particleemitter-unqualified-geometry-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/particleemitter/",
+      "namespace": "flight::geometry",
+      "symbols": [
+        {
+          "include": "flight/geometry/typedarray.hpp",
+          "name": "reserve_float32_array"
+        },
+        {
+          "include": "flight/geometry/typedarray.hpp",
+          "name": "reserve_uint16_array"
+        }
+      ],
+      "diagnostic": "'reserve_float32_array' was not declared in this scope; did you mean 'flight::geometry::reserve_float32_array'?",
+      "defect": "The emitter retains reserveFloat32Array calls unqualified inside flight::particleemitter and omits their geometry-owned binding. The using declaration restores the exact imported function without changing any call or result.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies imported geometry functions in particle-emitter modules; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "tween-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/tween/",
+      "namespace": "flight::types",
+      "symbols": [
+        {
+          "include": "flight/types/tween.hpp",
+          "name": "NumericProps"
+        },
+        {
+          "include": "flight/types/tween.hpp",
+          "name": "Tween"
+        }
+      ],
+      "diagnostic": "'Tween' was not declared in this scope; did you mean 'flight::types::Tween'?",
+      "defect": "The emitter retains the imported Tween record name unqualified inside flight::tween's shared internal helper and omits the defining types binding. The using declaration restores the exact imported record type without changing its representation.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies the imported Tween record or emits its using declaration; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "text-layout-accessor-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/text/",
+      "symbol": "get_text_layout",
+      "declaration": "std::optional<flight::Ref<flight::types::TextLayoutResult>> get_text_layout(flight::Ref<flight::types::TextLabel> source);",
+      "include": "flight/types/text_label.hpp",
+      "diagnostic": "'get_text_layout' was not declared in this scope",
+      "defect": "The emitter refuses getTextLayout but retains calls in its own module and sibling consumers. Declaring its exact generated signature lets those consumers type-check while the complete text_label_layout override supplies the implementation.",
+      "expectedWhen": "always",
+      "expires": "when getTextLayout emits or retained same-package calls carry its declaration; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-wgpu-blend-mode-type-alias",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/scene2d_wgpu/",
+      "symbol": "BlendMode_2",
+      "declaration": "using BlendMode_2 = flight::types::BlendMode;",
+      "include": "flight/types/blend_mode.hpp",
+      "diagnostic": "'BlendMode_2' was not declared in this scope",
+      "defect": "The emitter disambiguates the imported BlendMode type from its same-spelled value as BlendMode_2 at use sites but emits no corresponding alias. Repeating the exact underlying string type alias restores the source type binding.",
+      "expectedWhen": "always",
+      "expires": "when value/type import disambiguation emits the selected type alias consistently; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "intl-cache-key-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/intl/",
+      "symbol": "get_cache_key",
+      "declaration": "template <typename Options> flight::String get_cache_key(flight::String kind, flight::types::LocaleInput locale, Options options);",
+      "include": "flight/types/locale_input.hpp",
+      "diagnostic": "'get_cache_key' was not declared in this scope",
+      "defect": "The emitter refuses getCacheKey after losing the LocaleInput variant binding but retains calls from every formatter module. Declaring its generic generated call surface lets those consumers type-check while the complete cache override supplies behavior.",
+      "expectedWhen": "always",
+      "expires": "when getCacheKey emits or retained same-package calls carry its declaration; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "intl-cached-builder-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/intl/",
+      "symbol": "get_cached",
+      "declaration": "template <typename Build> auto get_cached(flight::String key, Build build) -> std::invoke_result_t<Build>;",
+      "include": "flight/runtime.hpp",
+      "diagnostic": "'get_cached' was not declared in this scope",
+      "defect": "The emitter refuses generic getCached after collapsing its Map lookup absence channel but retains calls from every formatter module. The callback return type is the exact generated T evidence, so this declaration preserves source inference while the cache override supplies behavior.",
+      "expectedWhen": "always",
+      "expires": "when getCached emits or retained same-package calls carry its declaration; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "image-test-dimension-resolver-declaration",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/image/",
+      "symbol": "test_image_dimension_resolver",
+      "declaration": "extern flight::types::HostImageDimensionResolver test_image_dimension_resolver;",
+      "include": "flight/types/host_image_dimensions.hpp",
+      "diagnostic": "'test_image_dimension_resolver' was not declared in this scope",
+      "defect": "The emitter refuses the image test resolver after the SDL profile collapses its source union to one host carrier but retains the registration call. Declaring the exact resolver slot lets quoted consumers type-check while the complete helper override supplies its host-profile implementation.",
+      "expectedWhen": "always",
+      "expires": "when the profiled resolver function emits or retained same-module calls carry its declaration; sdk:check fails if this repair matches no header."
     }
   ]
 }

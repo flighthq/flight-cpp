@@ -3,11 +3,11 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function bindSkeleton2DSlotAttachment -- source line 229
-//   missing: function bindSkeleton2DSlotChannel -- source line 194
-//   missing: function getSkeleton2DAnimationTargetBinderRegistry -- source line 257
-//   missing: function registerSkeleton2DAnimationTargetBinder -- source line 113
-//   missing: function unregisterSkeleton2DAnimationTargetBinder -- source line 120
+//   missing: function bindSkeleton2DSlotAttachment -- source line 228
+//   missing: function bindSkeleton2DSlotChannel -- source line 193
+//   missing: function getSkeleton2DAnimationTargetBinderRegistry -- source line 256
+//   missing: function registerSkeleton2DAnimationTargetBinder -- source line 112
+//   missing: function unregisterSkeleton2DAnimationTargetBinder -- source line 119
 #include <cmath>
 #include <cstdint>
 #include <flight/any.hpp>
@@ -53,8 +53,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::skeleton2d {
 
-using flight::types::skeleton2_danimation_target_kind;
-
 using flight::registry::get_registry_table_entry;
 
 using flight::types::AnimationChannel;
@@ -70,6 +68,7 @@ using flight::types::Skeleton2DAnimationTargetKind;
 using flight::types::Skeleton2DSlotAnimationPath;
 using flight::types::Skeleton2DSlotAnimationTarget;
 using flight::types::Slot2D;
+using flight::types::skeleton2_danimation_target_kind;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
@@ -95,7 +94,7 @@ inline double find_skeleton2_dstep_keyframe(flight::SequenceView<double> times, 
 
 inline void initialize_skeleton2_dbone_animation_target(flight::Ref<EntityConstruction<flight::Ref<Skeleton2DAnimationTarget>>> out, double bone_index, flight::Ref<Skeleton2DAnimationPath> path) {
   (out->bone_index = bone_index);
-  (out->kind = target_kind.bone);
+  (out->kind = skeleton2_danimation_target_kind.bone);
   (out->path = path);
 }
 
@@ -108,7 +107,7 @@ inline flight::Ref<Skeleton2DAnimationTarget> create_skeleton2_dbone_animation_t
 inline void initialize_skeleton2_dslot_animation_target(flight::Ref<EntityConstruction<flight::Ref<Skeleton2DSlotAnimationTarget>>> out, double slot_index, flight::Ref<Skeleton2DSlotAnimationPath> path, std::optional<std::optional<flight::Array<std::optional<flight::Ref<Attachment2D>>>>> attachments = std::nullopt) {
   attachments = attachments.value_or(std::nullopt);
   (out->attachments = attachments.value());
-  (out->kind = target_kind.slot);
+  (out->kind = skeleton2_danimation_target_kind.slot);
   (out->path = path);
   (out->slot_index = slot_index);
 }
@@ -185,7 +184,7 @@ inline void bind_skeleton2_dbone_channel(flight::Ref<AnimationChannel> channel, 
 inline const flight::String step_interpolation = flight::String("Step");
 
 
-// NOT GENERATED: function bindSkeleton2DSlotAttachment -- source line 229
+// NOT GENERATED: function bindSkeleton2DSlotAttachment -- source line 228
 // refusal: cpp-contextual-union-missing-expression-type:dualSentinelVariant [compiler-restriction]
 //
 // The source it stood for:
@@ -212,7 +211,7 @@ inline const flight::String step_interpolation = flight::String("Step");
 // dualSentinelVariant construction requires expression type evidence
 
 
-// NOT GENERATED: function bindSkeleton2DSlotChannel -- source line 194
+// NOT GENERATED: function bindSkeleton2DSlotChannel -- source line 193
 // refusal: cpp-contextual-union-missing-expression-type:dualSentinelVariant [compiler-restriction]
 //
 // The source it stood for:
@@ -255,15 +254,15 @@ inline const flight::String step_interpolation = flight::String("Step");
 // dualSentinelVariant construction requires expression type evidence
 
 
-// NOT GENERATED: function getSkeleton2DAnimationTargetBinderRegistry -- source line 257
+// NOT GENERATED: function getSkeleton2DAnimationTargetBinderRegistry -- source line 256
 // refusal: cpp-intersection-member-shapeless [source-portability]
 //
 // The source it stood for:
 //   function getSkeleton2DAnimationTargetBinderRegistry(): KeyedTable<Skeleton2DAnimationTargetBinder> {
 //     if (_binders !== null) return _binders;
 //     _binders = createKeyedTable('Skeleton2DAnimationTargetBinder', 'Unclaimed');
-//     _binders = withRegistryTableEntry(_binders, TargetKind.Bone, bindSkeleton2DBoneChannel);
-//     _binders = withRegistryTableEntry(_binders, TargetKind.Slot, bindSkeleton2DSlotChannel);
+//     _binders = withRegistryTableEntry(_binders, Skeleton2DAnimationTargetKind.Bone, bindSkeleton2DBoneChannel);
+//     _binders = withRegistryTableEntry(_binders, Skeleton2DAnimationTargetKind.Slot, bindSkeleton2DSlotChannel);
 //     return _binders;
 //   }
 //   
@@ -283,7 +282,7 @@ inline flight::Array<flight::Ref<Skeleton2DAnimationTargetKind>> get_skeleton2_d
 }
 
 
-// NOT GENERATED: function registerSkeleton2DAnimationTargetBinder -- source line 113
+// NOT GENERATED: function registerSkeleton2DAnimationTargetBinder -- source line 112
 // refusal: cpp-intersection-member-shapeless [source-portability]
 //
 // The source it stood for:
@@ -300,7 +299,7 @@ inline flight::Array<flight::Ref<Skeleton2DAnimationTargetKind>> get_skeleton2_d
 // than intersecting a conjunct that has none
 
 
-// NOT GENERATED: function unregisterSkeleton2DAnimationTargetBinder -- source line 120
+// NOT GENERATED: function unregisterSkeleton2DAnimationTargetBinder -- source line 119
 // refusal: cpp-intersection-member-shapeless [source-portability]
 //
 // The source it stood for:

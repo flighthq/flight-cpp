@@ -27,6 +27,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::scene2d_wgpu {
 
 using flight::types::WgpuRenderState;
+using flight::types::WgpuRenderStateRuntime;
 using flight::types::WgpuTextureRenderTarget;
 
 struct WgpuVelocityPipeline;

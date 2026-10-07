@@ -1,0 +1,10 @@
+diff --git a/packages/node/src/traversal.ts b/packages/node/src/traversal.ts
+index 6171cce..570f676 100644
+--- a/packages/node/src/traversal.ts
++++ b/packages/node/src/traversal.ts
+@@ -144,4 +144,4 @@ export function walkNodeDescendants<Traits extends object = NodeTraits>(
+   return true;
+ }
+ 
+-const _emptyChildren: readonly never[] = [];
++const _emptyChildren: readonly NodeOf<NodeTraits>[] = [];

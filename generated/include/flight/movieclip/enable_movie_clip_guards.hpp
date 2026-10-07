@@ -5,6 +5,7 @@
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -31,7 +32,8 @@ inline void warn_on_unsupported_spritesheet_timeline_fields(flight::StructuralRe
   if ((static_cast<double>(flight::row_get<flight::RowKey<"unsupportedFields">>(explanation).size()) == 0.0)) {
     return;
   }
-  flight::log::log_once(flight::String("movieclip:spritesheet-timeline-source:") + flight::to_string(flight::row_get<flight::RowKey<"unsupportedFields">>(explanation).join(flight::String(","))) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{flight::Record<flight::String, flight::Any>{{flight::String("direction"), flight::row_get<flight::RowKey<"direction">>(animation)}, {flight::String("message"), flight::String("createSpritesheetTimelineSource: authored repeat or per-frame timing cannot be represented by TimelineSource and will not control MovieClip playback — call explainSpritesheetTimelineSource(animation), or use playSpritesheetAnimation with a SpritesheetPlayer when those semantics must be preserved.")}, {flight::String("repeatCount"), flight::row_get<flight::RowKey<"repeatCount">>(animation)}, {flight::String("unsupportedFields"), flight::row_get<flight::RowKey<"unsupportedFields">>(explanation)}}}, std::optional<flight::String>{flight::String("movieclip")});
+  flight::Record<flight::String, flight::Any> details = {{flight::String("direction"), flight::row_get<flight::RowKey<"direction">>(animation)}, {flight::String("message"), flight::String("createSpritesheetTimelineSource: authored repeat or per-frame timing cannot be represented by TimelineSource and will not control MovieClip playback — call explainSpritesheetTimelineSource(animation), or use playSpritesheetAnimation with a SpritesheetPlayer when those semantics must be preserved.")}, {flight::String("repeatCount"), flight::row_get<flight::RowKey<"repeatCount">>(animation)}, {flight::String("unsupportedFields"), flight::row_get<flight::RowKey<"unsupportedFields">>(explanation)}};
+  flight::log::log_once(flight::String("movieclip:spritesheet-timeline-source:") + flight::to_string(flight::row_get<flight::RowKey<"unsupportedFields">>(explanation).join(flight::String(","))) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{std::in_place_type<flight::Record<flight::String, flight::Any>>, details}, std::optional<flight::String>{flight::String("movieclip")});
 }
 
 inline bool movie_clip_guards_enabled = false;
