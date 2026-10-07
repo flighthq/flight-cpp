@@ -46,6 +46,20 @@ inline std::optional<flight::Ref<CommandBinding>> get_command_binding(
       entry.value());
 }
 
+inline std::optional<flight::Ref<CommandBinding>> get_command_binding(
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CommandHistory>>>> history,
+    flight::Ref<Kind> kind) {
+  const auto entry = flight::row_get<flight::RowKey<"bindings">>(history)->entries.get(kind);
+  if (!entry.has_value()) return std::nullopt;
+  return std::visit(
+      [](const auto& selected) -> std::optional<flight::Ref<CommandBinding>> {
+        if (selected->state != flight::types::registry_entry_state->bound) return std::nullopt;
+        if constexpr (requires { selected->value; }) return selected->value;
+        return std::nullopt;
+      },
+      entry.value());
+}
+
 inline bool has_command_binding(flight::Ref<CommandHistory> history, flight::Ref<Kind> kind) {
   return get_command_binding(history, kind).has_value();
 }

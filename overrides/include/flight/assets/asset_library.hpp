@@ -253,6 +253,12 @@ inline void set_asset_acquire_guard(flight::Ref<AssetLibrary> library, std::opti
   (library->runtime->acquire_guard = guard);
 }
 
+inline void set_asset_acquire_guard(
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AssetLibrary>>>> library,
+    std::optional<flight::Ref<AssetAcquireGuard>> guard) {
+  flight::row_get<flight::RowKey<"runtime">>(library)->acquire_guard = std::move(guard);
+}
+
 
 // NOT GENERATED: function disposeAssetEntry -- source line 289
 // refusal: cpp-contextual-union-inequivalent [source-portability]

@@ -4,6 +4,22 @@
   "note": "Patches applied to a pinned sibling checkout before generation, so a module the compiler refuses to lower today can still ship. A patch here may only rewrite an expression into an equivalent the compiler does lower. It may NEVER change observable behavior -- absence, reference identity, equality, ordering, exception shape, task settlement -- because the generated header is then tested against the patched source, so a behavioral patch is a lie our own tests would certify. Each patch states the equivalence that makes it safe and the refusal it answers. The patch is applied after the pin integrity check and reverted when generation ends, so the checkout is only ever dirty inside one run. `baseCommit` pins the patch to the revision it was written against: a pin move that breaks the patch fails loudly instead of silently applying to different code.",
   "patches": [
     {
+      "id": "animation-layer-stack-channel-projection",
+      "dependency": "flight",
+      "patch": "animation-layer-stack-channel-projection.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/animation/src/animationLayerStack.ts",
+      "package": "@flighthq/animation",
+      "answers": "diagnostic",
+      "refusal": "the nullish choice between blend-tree and state-machine channel arrays fixes its C++ lambda return to the first distinct structural wrapper type, so the other declared wrapper array cannot convert even though both expose the same AnimationChannel field",
+      "rewrite": "Projects each private source wrapper array to its AnimationChannel references before returning it, consumes the returned channel directly, and gives each newly created source array its already-declared AnimationLayerStackChannelSource element type.",
+      "equivalence": "The helper is private and its returned wrapper and array identities are never observed. Each map visits the selected source array once in order and returns the exact same channel object references. The typed local allocates the same one-element array with the same source object and passes that array immediately into the same stack-channel object; its annotation is erased. Channel selection, target matching, sample width, and stored source indices are unchanged.",
+      "whyNotUpstreamFirst": "The target-neutral projection states the only data the caller consumes and retains one declared element owner across both branches while the emitter cannot contextually join the distinct wrapper arrays.",
+      "unblocks": "animation_layer_stack.hpp and its package barrels compile when blend-tree and state-machine channels coexist, without inferring structural wrappers for the concrete sources member.",
+      "expires": "when contextual nullish array joins project structurally compatible wrapper elements to their declared common return type, or Flight adopts the explicit channel projection.",
+      "appliedOn": "2026-10-07"
+    },
+    {
       "id": "text-markup-handler-map-type",
       "dependency": "flight",
       "patch": "text-markup-handler-map-type.patch",

@@ -25,6 +25,7 @@ const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration',
   'project-array-at-row-write',
   'project-symbol-keyed-member',
   'flatten-nested-optional-array-read',
+  'declare-refused-effect-padding-resolvers',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -68,6 +69,7 @@ const REQUIRED_FIELDS = {
   'project-array-at-row-write': [...SHARED_FIELDS, 'keys', 'element', 'identityArgument', 'sourceDeclaration'],
   'project-symbol-keyed-member': [...SHARED_FIELDS, 'symbol', 'member', 'sourceDeclaration'],
   'flatten-nested-optional-array-read': [...SHARED_FIELDS, 'sourceDeclaration'],
+  'declare-refused-effect-padding-resolvers': [...SHARED_FIELDS, 'sourceDeclaration'],
 };
 
 export function loadEmissionRepairs(root) {
@@ -200,7 +202,37 @@ const HANDLERS = {
   'project-array-at-row-write': projectArrayAtRowWrite,
   'project-symbol-keyed-member': projectSymbolKeyedMember,
   'flatten-nested-optional-array-read': flattenNestedOptionalArrayRead,
+  'declare-refused-effect-padding-resolvers': declareRefusedEffectPaddingResolvers,
 };
+
+// A family of effect modules registers a private padding resolver after the emitter has refused that
+// resolver's body at the same structural downcast. The retained registration is valid partial output,
+// but it still needs the refused boundary declared. Discovering the exact snake-case symbol from the
+// retained call keeps one systemic repair honest across the family without wildcarding unrelated names.
+function declareRefusedEffectPaddingResolvers(contents) {
+  if (!/\/\/ NOT GENERATED: function resolve[A-Za-z0-9]+EffectPadding\b/u.test(contents)) return undefined;
+  const names = [
+    ...new Set([...contents.matchAll(/\b(resolve_[a-z0-9_]+_effect_padding)\b/gu)].map((match) => match[1])),
+  ];
+  if (names.length === 0) return undefined;
+  const declarations = names
+    .map(
+      (name) =>
+        `flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffectPadding>>>> ${name}(` +
+        'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffect>>>> effect);',
+    )
+    .join('\n');
+  if (contents.includes(declarations)) return undefined;
+  const anchor = /^static_assert\(flight::runtime_contract\.cpp_abi == \d+,[^\n]*\n/mu.exec(contents);
+  if (anchor === null) return undefined;
+  const at = anchor.index + anchor[0].length;
+  return (
+    contents.slice(0, at) +
+    '\nnamespace flight::types { struct RenderEffect; struct RenderEffectPadding; }\n' +
+    `namespace flight::effects {\n${declarations}\n}\n` +
+    contents.slice(at)
+  );
+}
 
 // An Array<optional<T>>::get(index) distinguishes an out-of-range read (outer nullopt) from an
 // in-range empty element (inner nullopt), while TypeScript's indexed read exposes both as the same

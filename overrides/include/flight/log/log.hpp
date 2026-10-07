@@ -539,6 +539,15 @@ inline void log_debug(std::variant<flight::Ref<LogDataProvider>, flight::Ref<Log
   emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = flight::types::LogLevel::Debug, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
 }
 
+inline void log_debug(flight::Record<flight::String, flight::Any> data,
+                      std::optional<std::optional<flight::String>> channel = std::nullopt) {
+  using Input = std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>>;
+  log_debug(
+      Input{std::in_place_index<1>,
+            flight::types::LogData{std::in_place_index<0>, std::move(data)}},
+      channel);
+}
+
 
 // NOT GENERATED: function logDebugWith -- source line 441
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
@@ -624,6 +633,17 @@ inline bool log_once(flight::String key, flight::types::LogLevel level_2, std::v
   once_keys.add(key);
   log(level_2, data, channel.value());
   return true;
+}
+
+inline bool log_once(flight::String key, flight::types::LogLevel level,
+                     flight::Record<flight::String, flight::Any> data,
+                     std::optional<std::optional<flight::String>> channel = std::nullopt) {
+  using Input = std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>>;
+  return log_once(
+      std::move(key), level,
+      Input{std::in_place_index<1>,
+            flight::types::LogData{std::in_place_index<0>, std::move(data)}},
+      channel);
 }
 
 inline void log_verbose(std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
@@ -796,6 +816,16 @@ struct indent_groups_level_prefix_timestamp_85ef46f909e535f5 : public flight::Re
 //   // recently entered) wins on field key collision. Pair every enterLogSpan with exitLogSpan.
 // cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
 // expression type evidence
+
+inline double end_log_timer(flight::Ref<LogTimer> timer) {
+  const double elapsed = timestamp() - timer->started_at;
+  flight::Record<flight::String, flight::Any> fields{
+      {flight::String("label"), flight::Any(timer->label)},
+      {flight::String("elapsedMs"), flight::Any(elapsed)},
+  };
+  log_debug(std::move(fields), std::optional<std::optional<flight::String>>{timer->channel});
+  return elapsed;
+}
 
 inline flight::Ref<LogTimer> start_log_timer(flight::String label, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);

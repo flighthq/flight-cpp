@@ -1,0 +1,32 @@
+diff --git a/packages/animation/src/animationLayerStack.ts b/packages/animation/src/animationLayerStack.ts
+--- a/packages/animation/src/animationLayerStack.ts
++++ b/packages/animation/src/animationLayerStack.ts
+@@ -69,12 +69,13 @@ export function initializeAnimationLayerStack(
+     const sourceChannels = getAnimationLayerChannels(layer);
+     const channelIndices = layer.channelIndices ?? sourceChannels.map((_, index) => index);
+     for (const channelIndex of channelIndices) {
+-      const channel = sourceChannels[channelIndex].channel;
++      const channel = sourceChannels[channelIndex];
+       sampleWidth = Math.max(sampleWidth, channel.track.components);
+       const existingIndex = channelByTarget.get(channel.targetRef);
+       if (existingIndex === undefined) {
+         channelByTarget.set(channel.targetRef, channels.length);
+-        channels.push({ channel, sources: [{ channelIndex, layerIndex }] });
++        const sources: AnimationLayerStackChannelSource[] = [{ channelIndex, layerIndex }];
++        channels.push({ channel, sources });
+         continue;
+       }
+       const existing = channels[existingIndex];
+@@ -192,8 +192,10 @@ function copyAnimationLayerChannelIndices(
+ 
+ function getAnimationLayerChannels(
+   layer: Readonly<AnimationLayer>,
+-): readonly Readonly<{ channel: Readonly<AnimationChannel> }>[] {
+-  return layer.blendTree?.channels ?? layer.stateMachine!.channels;
++): readonly Readonly<AnimationChannel>[] {
++  if (layer.blendTree !== null)
++    return layer.blendTree.channels.map((entry): Readonly<AnimationChannel> => entry.channel);
++  return layer.stateMachine!.channels.map((entry): Readonly<AnimationChannel> => entry.channel);
+ }
+ 
+ function sampleAnimationLayer(
