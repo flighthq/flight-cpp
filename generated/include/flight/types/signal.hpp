@@ -25,7 +25,7 @@ namespace flight::types {
 
 template <typename T>
 struct SignalData : public flight::ReferenceEnabled {
-  flight::Array<std::optional<std::function<void(flight::Array<flight::Any>)>>> slots;
+  flight::Array<std::optional<T>> slots;
   flight::Array<double> priorities;
   flight::Array<bool> repeat;
   bool cancelled;

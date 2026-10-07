@@ -3778,9 +3778,154 @@
         "flight/debug/debug.hpp"
       ],
       "id": "debug-enable-debug-forward-declaration"
+    },
+    {
+      "files": [
+        "flight/types/signal.hpp"
+      ],
+      "id": "signals-generic-slot-storage"
+    },
+    {
+      "files": [
+        "flight/bitmapfont_formats/bitmap_font_json.hpp"
+      ],
+      "id": "bitmapfont-formats-json-encoding-qualification"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-update-bounds-helper-forward-declaration"
+    },
+    {
+      "files": [
+        "flight/bitmapfont_formats/bitmap_font_json.hpp"
+      ],
+      "id": "bitmapfont-formats-json-record-parser-forward-declaration"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-update-atlas-reference-access"
+    },
+    {
+      "files": [
+        "flight/animation/animation_layer_stack.hpp"
+      ],
+      "id": "animation-layer-stack-source-array-projection"
+    },
+    {
+      "files": [
+        "flight/animation/animation_layer_stack.hpp"
+      ],
+      "id": "animation-layer-stack-mutable-source-array-cast"
+    },
+    {
+      "files": [
+        "flight/animation/animation_layer_stack.hpp"
+      ],
+      "id": "animation-layer-stack-additive-sequence-view"
+    },
+    {
+      "files": [
+        "flight/animation/animation_layer_stack.hpp"
+      ],
+      "id": "animation-layer-stack-blend-sequence-view"
+    },
+    {
+      "files": [
+        "flight/animation/animation_layer_stack.hpp"
+      ],
+      "id": "animation-layer-stack-channel-array-row-write"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-update-metrics-row-view"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-update-wrap-width-narrowing"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-update-exact-runtime-invalidation"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-update-layout-lines-forward-declaration"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-update-page-helper-forward-declaration"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-update-stale-query-forward-declaration"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-update-entrypoint-forward-declaration"
+    },
+    {
+      "files": [
+        "flight/bitmaptext/update_bitmap_text.hpp"
+      ],
+      "id": "bitmaptext-update-private-stride-name"
+    },
+    {
+      "files": [
+        "flight/effects/bevel_effect.hpp",
+        "flight/effects/bitmap_displacement_effect.hpp",
+        "flight/effects/bloom_effect.hpp",
+        "flight/effects/blur_effect.hpp",
+        "flight/effects/bokeh_depth_of_field_effect.hpp",
+        "flight/effects/contact_shadows_effect.hpp",
+        "flight/effects/convolution_effect.hpp",
+        "flight/effects/directional_blur_effect.hpp",
+        "flight/effects/displacement_effect.hpp",
+        "flight/effects/drop_shadow_effect.hpp",
+        "flight/effects/glitch_effect.hpp",
+        "flight/effects/gradient_bevel_effect.hpp",
+        "flight/effects/gradient_glow_effect.hpp",
+        "flight/effects/inner_glow_effect.hpp",
+        "flight/effects/inner_shadow_effect.hpp",
+        "flight/effects/median_effect.hpp",
+        "flight/effects/outer_glow_effect.hpp",
+        "flight/effects/outline_effect.hpp",
+        "flight/effects/tilt_shift_effect.hpp"
+      ],
+      "id": "effects-refused-padding-resolver-declarations"
+    },
+    {
+      "files": [
+        "flight/types/assets.hpp"
+      ],
+      "id": "assets-acquire-guard-callable-identity"
     }
   ],
   "sourcePatches": [
+    {
+      "dependency": "flight",
+      "digest": "a41cf11101da247b54e35eafe1b0854c43e59713a6cf79acea9e8ea4f2446fe5",
+      "id": "animation-layer-stack-channel-projection",
+      "module": "packages/animation/src/animationLayerStack.ts",
+      "package": "@flighthq/animation"
+    },
     {
       "dependency": "flight",
       "digest": "9763557fa54ca3a7656befe1ec1e5a8534e79810f4a7aa7bc7a43feff7be0bb0",

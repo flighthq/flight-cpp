@@ -21,6 +21,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BitmapText; } namespace flight::bitmaptext { inline void update_bitmap_text(flight::Ref<flight::types::BitmapText> bitmap_text); }
+
+namespace flight::types { struct BitmapText; } namespace flight::bitmaptext { inline bool is_bitmap_text_glyph_layout_stale(flight::Ref<flight::types::BitmapText> source); }
+
+namespace flight::types { struct BitmapTextRuntime; struct GlyphSource; } namespace flight::bitmaptext { struct BitmapTextPageContext; inline std::optional<flight::Ref<BitmapTextPageContext>> ensure_bitmap_text_page(flight::Ref<flight::types::BitmapTextRuntime> runtime, flight::Ref<flight::types::GlyphSource> glyph_source, flight::Map<double, flight::Ref<BitmapTextPageContext>> pages, double page); }
+
+namespace flight::types { struct BitmapTextData; struct GlyphSource; } namespace flight::bitmaptext { struct BitmapTextLayoutResult; inline flight::Ref<BitmapTextLayoutResult> layout_bitmap_text_lines(flight::Ref<flight::types::GlyphSource> glyph_source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapTextData>>>> data); }
+
+namespace flight::types { struct BitmapTextRuntime; struct Rectangle; } namespace flight::bitmaptext { inline flight::Ref<flight::types::Rectangle> ensure_bounds_rectangle(flight::Ref<flight::types::BitmapTextRuntime> runtime); }
+
 #include <flight/textureatlas/texture_atlas_region.hpp>
 
 #include <flight/node/revision.hpp>
@@ -171,18 +181,18 @@ struct BitmapTextToken : public flight::ReferenceEnabled {
 
 inline const double bitmap_text_layout_attempts = 3.0;
 
-inline const double bitmap_text_transform_stride = 2.0;
+inline const double update_bitmap_text_transform_stride = 2.0;
 
 inline void append_bitmap_text_page_quad(flight::Ref<BitmapTextPage> page, double id, double x, double y) {
   const double index = page->instance_count;
-  const double capacity = flight::minimum(static_cast<double>(page->ids.size()), flight::bitwise_or((static_cast<double>(page->transforms.size()) / bitmap_text_transform_stride), 0.0));
+  const double capacity = flight::minimum(static_cast<double>(page->ids.size()), flight::bitwise_or((static_cast<double>(page->transforms.size()) / update_bitmap_text_transform_stride), 0.0));
   if ((index >= capacity)) {
     const double next = flight::maximum((index + 1.0), (capacity * 2.0), 8.0);
     (page->ids = reserve_uint16_array(page->ids, next));
-    (page->transforms = reserve_float32_array(page->transforms, (next * bitmap_text_transform_stride)));
+    (page->transforms = reserve_float32_array(page->transforms, (next * update_bitmap_text_transform_stride)));
   }
   ([&]() { auto&& typed_array = page->ids; const auto typed_index = index; const auto typed_value = id; return typed_array.set_index(typed_index, typed_value); }());
-  const double o = (index * bitmap_text_transform_stride);
+  const double o = (index * update_bitmap_text_transform_stride);
   ([&]() { auto&& typed_array_2 = page->transforms; const auto typed_index_2 = o; const auto typed_value_2 = x; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
   ([&]() { auto&& typed_array_3 = page->transforms; const auto typed_index_3 = (o + 1.0); const auto typed_value_3 = y; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
   (page->instance_count = (index + 1.0));
@@ -364,17 +374,17 @@ inline void layout_bitmap_text_pages(flight::Ref<BitmapText> bitmap_text, flight
   flight::Ref<Rectangle> bounds = ensure_bounds_rectangle(runtime);
   for (auto page : runtime->pages) {
     (page->instance_count = 0.0);
-    ([&]() { auto&& assignment_receiver = page->atlas.regions; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
+    ([&]() { auto&& assignment_receiver = page->atlas->regions; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   }
   std::optional<flight::Ref<GlyphSource>> glyph_source = data->glyph_source;
   if ((!glyph_source.has_value() || (static_cast<double>(data->text.length()) == 0.0))) {
     set_empty_rectangle(bounds);
     (runtime->line_count = 0.0);
     (runtime->truncated = false);
-    invalidate_node_local_bounds(bitmap_text);
+    runtime->local_bounds_id = flight::unsigned_right_shift(runtime->local_bounds_id + 1.0, 0.0);
     return;
   }
-  flight::Ref<GlyphMetrics> metrics = glyph_source.value()->get_glyph_metrics();
+  auto metrics = glyph_source.value()->get_glyph_metrics();
   const double line_advance = (((metrics->ascent + metrics->descent) + metrics->line_gap) * data->line_height);
   auto result = layout_bitmap_text_lines(glyph_source.value(), data);
   flight::Array<flight::Ref<BitmapTextLine>> lines = result->lines;
@@ -403,7 +413,7 @@ inline void layout_bitmap_text_pages(flight::Ref<BitmapText> bitmap_text, flight
           }
           else {
             if (((((data->align == flight::String("justify")) && data->wrap_width.has_value()) && !line->paragraph_end) && (static_cast<double>(line->gaps.size()) > 0.0))) {
-              (gap_extra = ((data->wrap_width - line->width) / static_cast<double>(line->gaps.size())));
+              (gap_extra = ((data->wrap_width.value() - line->width) / static_cast<double>(line->gaps.size())));
             }
           }
         }
@@ -427,7 +437,7 @@ inline void layout_bitmap_text_pages(flight::Ref<BitmapText> bitmap_text, flight
                 std::optional<double> region_id = context.value()->region_by_codepoint.get(glyph->codepoint);
                 if (!region_id.has_value()) {
                   add_texture_atlas_region(context.value()->page->atlas, entry->x, entry->y, entry->width, entry->height, std::nullopt, std::nullopt, std::nullopt);
-                  (region_id = std::optional<double>{(static_cast<double>(context.value()->page->atlas.regions.size()) - 1.0)});
+                  (region_id = std::optional<double>{(static_cast<double>(context.value()->page->atlas->regions.size()) - 1.0)});
                   context.value()->region_by_codepoint.set(glyph->codepoint, region_id.value());
                 }
                 append_bitmap_text_page_quad(context.value()->page, region_id.value(), quad_x, quad_y);
@@ -462,7 +472,7 @@ inline void layout_bitmap_text_pages(flight::Ref<BitmapText> bitmap_text, flight
     (bounds->width = (max_x - min_x));
     (bounds->height = (max_y - min_y));
   }
-  invalidate_node_local_bounds(bitmap_text);
+  runtime->local_bounds_id = flight::unsigned_right_shift(runtime->local_bounds_id + 1.0, 0.0);
 }
 
 

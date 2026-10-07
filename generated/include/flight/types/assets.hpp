@@ -25,7 +25,7 @@ struct AssetLoadProgress;
 struct AssetGroupLoadOptions;
 using AssetType = flight::String;
 using AssetManifest = flight::Array<flight::Ref<AssetDescriptor>>;
-using AssetAcquireGuard = std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AssetLibrary>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AssetLoadExplanation>>>>)>;
+using AssetAcquireGuard = flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AssetLibrary>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AssetLoadExplanation>>>>)>;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
@@ -71,7 +71,7 @@ struct AssetGroupLoadOptions : public flight::ReferenceEnabled {
 };
 
 struct AssetLibraryRuntime : public flight::ReferenceEnabled {
-  std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AssetLibrary>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AssetLoadExplanation>>>>)>> acquire_guard;
+  std::optional<flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AssetLibrary>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AssetLoadExplanation>>>>)>> acquire_guard;
   flight::Map<AssetType, flight::Ref<AssetLoaderAdapter<>>> adapters;
   flight::Map<flight::String, flight::Ref<AssetDescriptor>> descriptors;
   flight::Map<flight::String, flight::Ref<AssetEntry>> entries;

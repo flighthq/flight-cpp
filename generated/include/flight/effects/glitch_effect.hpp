@@ -14,6 +14,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct RenderEffect; struct RenderEffectPadding; }
+namespace flight::effects {
+flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffectPadding>>>> resolve_glitch_effect_padding(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffect>>>> effect);
+}
+
 #include <flight/types/render_state.hpp>
 
 #include <flight/types/render_effect_padding.hpp>

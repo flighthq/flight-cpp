@@ -20,6 +20,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct AnimationBlendTree; }
 namespace flight::types { struct AnimationBlendTreeChannel; }
+namespace flight::types { struct AnimationBlendTreeChannelSource; }
 namespace flight::types { struct AnimationBlendTreeInput; }
 namespace flight::types { struct AnimationChannel; }
 namespace flight::types { struct AnimationLayer; }
@@ -134,15 +135,11 @@ inline flight::Ref<flight::types::AnimationLayer> create_animation_state_machine
   return create_animation_layer(static_cast<double>(state_machine->channels.size()), std::nullopt, std::optional<flight::Ref<flight::types::AnimationStateMachine>>{state_machine}, options);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ANIMATION_CHANNEL_D28CBE6F2A6D6E1B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ANIMATION_CHANNEL_D28CBE6F2A6D6E1B
-struct channel_d28cbe6f2a6d6e1b : public flight::ReferenceEnabled {
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>> channel;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ANIMATION_CHANNEL_D28CBE6F2A6D6E1B
-
-inline flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<channel_d28cbe6f2a6d6e1b>>>>> get_animation_layer_channels(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationLayer>>>> layer) {
-  return ([&]() -> flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationBlendTreeChannel>>>>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationBlendTreeChannel>>>>>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"blendTree">>(layer); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->channels; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::row_get<flight::RowKey<"stateMachine">>(layer).value()->channels; }());
+inline flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>> get_animation_layer_channels(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationLayer>>>> layer) {
+  if (flight::row_get<flight::RowKey<"blendTree">>(layer).has_value()) {
+    return flight::row_get<flight::RowKey<"blendTree">>(layer).value()->channels.map([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationBlendTreeChannel>>>> entry) { return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>>(flight::row_get<flight::RowKey<"channel">>(entry)); });
+  }
+  return flight::row_get<flight::RowKey<"stateMachine">>(layer).value()->channels.map([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationStateMachineChannel>>>> entry) { return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>>(flight::row_get<flight::RowKey<"channel">>(entry)); });
 }
 
 inline void initialize_animation_layer_stack(flight::types::EntityConstruction<flight::Ref<flight::types::AnimationLayerStack>> out, flight::Array<flight::Ref<flight::types::AnimationLayer>> layers) {
@@ -167,20 +164,21 @@ inline void initialize_animation_layer_stack(flight::types::EntityConstruction<f
             state_machines.push(layer->state_machine.value());
           }
         }
-        flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<channel_d28cbe6f2a6d6e1b>>>>> source_channels = get_animation_layer_channels(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationLayer>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AnimationLayer>>>>(layer)));
-        flight::Array<double> channel_indices = ([&]() -> flight::Array<double> { auto nullish_coalesce_left = layer->channel_indices; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return source_channels.map([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<channel_d28cbe6f2a6d6e1b>>>> value, double index) { return index; }); }());
+        flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>> source_channels = get_animation_layer_channels(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationLayer>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AnimationLayer>>>>(layer)));
+        flight::Array<double> channel_indices = ([&]() -> flight::Array<double> { auto nullish_coalesce_left = layer->channel_indices; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return source_channels.map([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>> value, double index) { return index; }); }());
         for (auto channel_index : channel_indices) {
-          flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>> channel = flight::row_get<flight::RowKey<"channel">>(source_channels.element(channel_index));
+          flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>> channel = source_channels.element(channel_index);
           (sample_width = flight::maximum(sample_width, flight::row_get<flight::RowKey<"track">>(channel)->components));
           const std::optional<double> existing_index = channel_by_target.get(flight::row_get<flight::RowKey<"targetRef">>(channel));
           if (!existing_index.has_value()) {
             channel_by_target.set(flight::row_get<flight::RowKey<"targetRef">>(channel), static_cast<double>(channels.size()));
-            channels.push(flight::make_ref<flight::types::AnimationLayerStackChannel>(flight::types::AnimationLayerStackChannel{.channel = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>>(channel), .sources = flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationLayerStackChannelSource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationLayerStackChannelSource>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationLayerStackChannelSource>>>>(flight::row_field<flight::RowKey<"channelIndex">>(channel_index), flight::row_field<flight::RowKey<"layerIndex">>(layer_index)))}}));
+            flight::Array<flight::Ref<flight::types::AnimationLayerStackChannelSource>> sources = flight::Array<flight::Ref<flight::types::AnimationLayerStackChannelSource>>{flight::make_ref<flight::types::AnimationLayerStackChannelSource>(flight::types::AnimationLayerStackChannelSource{.channel_index = channel_index, .layer_index = layer_index})};
+            channels.push(flight::make_ref<flight::types::AnimationLayerStackChannel>(flight::types::AnimationLayerStackChannel{.channel = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>>(channel), .sources = flight::array_of<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationLayerStackChannelSource>>>>>(sources)}));
             continue;
           }
           auto existing = channels.element(existing_index.value());
           assert_compatible_animation_layer_channels(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>>(existing->channel), channel);
-          static_cast<flight::Array<flight::Ref<flight::types::AnimationLayerStackChannelSource>>>(existing->sources).push(flight::make_ref<flight::types::AnimationLayerStackChannelSource>(flight::types::AnimationLayerStackChannelSource{.channel_index = channel_index, .layer_index = layer_index}));
+          existing->sources.push(flight::make_ref<flight::types::AnimationLayerStackChannelSource>(flight::types::AnimationLayerStackChannelSource{.channel_index = channel_index, .layer_index = layer_index}));
         }
       }
       (layer_index += 1.0);
@@ -188,7 +186,7 @@ inline void initialize_animation_layer_stack(flight::types::EntityConstruction<f
   }
   flight::row_set<flight::RowKey<"advanceScratch">>(out, flight::Array<flight::Ref<flight::types::AnimationPlayer>>{});
   flight::row_set<flight::RowKey<"blendTrees">>(out, blend_trees);
-  flight::row_set<flight::RowKey<"channels">>(out, channels);
+  flight::row_set<flight::RowKey<"channels">>(out, flight::array_of<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationLayerStackChannel>>>>>(channels));
   flight::row_set<flight::RowKey<"layers">>(out, copied_layers);
   flight::row_set<flight::RowKey<"sampleScratch">>(out, flight::Float32Array(sample_width));
   flight::row_set<flight::RowKey<"stateMachines">>(out, state_machines);
@@ -237,11 +235,11 @@ inline bool sample_animation_layer_stack_channel(std::variant<flight::Array<doub
         write_animation_layer_identity(out, flight::row_get<flight::RowKey<"track">>(entry.value()->channel)->components, flight::row_get<flight::RowKey<"track">>(entry.value()->channel)->quaternion);
         (has_pose = true);
       }
-      flight::animation::add_animation_sample(out, out, flight::row_get<flight::RowKey<"sampleScratch">>(stack), layer->weight, flight::row_get<flight::RowKey<"track">>(entry.value()->channel)->quaternion);
+      flight::animation::add_animation_sample(out, std::visit([](const auto& value) -> flight::SequenceView<double> { return flight::SequenceView<double>(value); }, out), flight::row_get<flight::RowKey<"sampleScratch">>(stack), layer->weight, flight::row_get<flight::RowKey<"track">>(entry.value()->channel)->quaternion);
     }
     else {
       if (has_pose) {
-        flight::animation::blend_animation_samples(out, out, flight::row_get<flight::RowKey<"sampleScratch">>(stack), layer->weight, flight::row_get<flight::RowKey<"track">>(entry.value()->channel)->quaternion);
+        flight::animation::blend_animation_samples(out, std::visit([](const auto& value) -> flight::SequenceView<double> { return flight::SequenceView<double>(value); }, out), flight::row_get<flight::RowKey<"sampleScratch">>(stack), layer->weight, flight::row_get<flight::RowKey<"track">>(entry.value()->channel)->quaternion);
       }
       else {
         copy_animation_layer_sample(out, flight::row_get<flight::RowKey<"sampleScratch">>(stack), flight::row_get<flight::RowKey<"track">>(entry.value()->channel)->components);
