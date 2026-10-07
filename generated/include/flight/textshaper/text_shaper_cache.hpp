@@ -27,7 +27,7 @@ using flight::types::ShapedRun;
 struct TextShaperCacheRuntime;
 } // namespace flight::textshaper
 
-#include "text_shaper_run.hpp"
+#include <flight/textshaper/text_shaper_run.hpp>
 
 namespace flight::textshaper {
 

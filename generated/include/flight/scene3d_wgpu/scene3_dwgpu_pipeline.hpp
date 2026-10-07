@@ -5,23 +5,23 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include "blinn_phong_wgpu_mesh_material_renderer.hpp"
-#include "custom_shader_wgpu_mesh_material_renderer.hpp"
-#include "depth_wgpu_mesh_material_renderer.hpp"
-#include "emissive_wgpu_mesh_material_renderer.hpp"
-#include "lambert_wgpu_mesh_material_renderer.hpp"
-#include "matcap_wgpu_mesh_material_renderer.hpp"
-#include "normal_wgpu_mesh_material_renderer.hpp"
-#include "phong_wgpu_mesh_material_renderer.hpp"
-#include "shaded_wgpu_mesh_material_renderer.hpp"
-#include "specular_glossiness_pbr_wgpu_mesh_material_renderer.hpp"
-#include "standard_pbr_wgpu_mesh_material_renderer.hpp"
-#include "toon_wgpu_mesh_material_renderer.hpp"
-#include "unlit_wgpu_mesh_material_renderer.hpp"
-#include "vertex_color_wgpu_mesh_material_renderer.hpp"
-#include "wgpu_shaded_prelude.hpp"
-#include "wgpu_skin_palette.hpp"
-#include "wireframe_wgpu_mesh_material_renderer.hpp"
+#include <flight/scene3d_wgpu/blinn_phong_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/custom_shader_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/depth_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/emissive_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/lambert_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/matcap_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/normal_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/phong_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/shaded_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/specular_glossiness_pbr_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/standard_pbr_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/toon_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/unlit_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/vertex_color_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/wgpu_shaded_prelude.hpp>
+#include <flight/scene3d_wgpu/wgpu_skin_palette.hpp>
+#include <flight/scene3d_wgpu/wireframe_wgpu_mesh_material_renderer.hpp>
 
 namespace flight::scene3d_wgpu {
 

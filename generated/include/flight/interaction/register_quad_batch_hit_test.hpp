@@ -22,7 +22,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/matrix.hpp>
 
-#include "hit_tests.hpp"
+#include <flight/interaction/hit_tests.hpp>
 
 namespace flight::interaction {
 

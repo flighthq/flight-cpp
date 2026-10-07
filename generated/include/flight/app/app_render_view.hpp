@@ -31,7 +31,7 @@ template <typename State = flight::Ref<RenderState>, typename Target = flight::R
 struct AppRenderViewRuntime;
 } // namespace flight::app
 
-#include "app_window.hpp"
+#include <flight/app/app_window.hpp>
 
 namespace flight::app {
 

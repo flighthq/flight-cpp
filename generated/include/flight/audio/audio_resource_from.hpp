@@ -25,10 +25,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/audio_resource.hpp>
 
-#include "audio_decoder_registry.hpp"
-#include "audio_format.hpp"
-#include "audio_resource.hpp"
-#include "decode_audio_resource_bytes.hpp"
+#include <flight/audio/audio_decoder_registry.hpp>
+#include <flight/audio/audio_format.hpp>
+#include <flight/audio/audio_resource.hpp>
+#include <flight/audio/decode_audio_resource_bytes.hpp>
 
 namespace flight::audio {
 

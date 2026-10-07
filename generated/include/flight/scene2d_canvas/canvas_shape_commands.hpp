@@ -41,8 +41,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/canvas_shape_draw_state.hpp>
 
-#include "canvas_fill_pattern.hpp"
-#include "canvas_texture_window_source.hpp"
+#include <flight/scene2d_canvas/canvas_fill_pattern.hpp>
+#include <flight/scene2d_canvas/canvas_texture_window_source.hpp>
 
 namespace flight::scene2d_canvas {
 

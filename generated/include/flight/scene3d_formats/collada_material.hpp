@@ -42,7 +42,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/image_resource_reference.hpp>
 
-#include "shared.hpp"
+#include <flight/scene3d_formats/shared.hpp>
 
 namespace flight::scene3d_formats {
 

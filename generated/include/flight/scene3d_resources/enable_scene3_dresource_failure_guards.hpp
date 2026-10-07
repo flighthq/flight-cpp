@@ -30,7 +30,7 @@ using flight::types::Scene3DResourceSignals;
 struct Scene3DResourceFailureGuard;
 } // namespace flight::scene3d_resources
 
-#include "scene_resource_signals.hpp"
+#include <flight/scene3d_resources/scene_resource_signals.hpp>
 
 namespace flight::scene3d_resources {
 

@@ -19,7 +19,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/audio_resource.hpp>
 
-#include "scene2_dresource_diagnostics.hpp"
+#include <flight/scene2d_resources/scene2_dresource_diagnostics.hpp>
 
 namespace flight::scene2d_resources {
 

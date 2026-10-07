@@ -8,11 +8,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_target.hpp>
+
 #include <flight/types/contract.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 #include <flight/render_wgpu/wgpu_screen_render_target.hpp>
 
 namespace flight::render_wgpu {
+
+using flight::types::WgpuRenderTarget;
 
 inline bool declare_wgpu_render_target_color_space(flight::Ref<flight::types::WgpuRenderState> state, flight::types::RenderTargetColorSpace color_space) {
   auto target = flight::render_wgpu::get_wgpu_render_state_runtime(state)->current_render_target;

@@ -29,6 +29,7 @@ namespace flight::render_wgpu {
 
 using flight::types::WgpuRenderState;
 using flight::types::WgpuScreenRenderTarget;
+using flight::types::WgpuRenderTarget;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;

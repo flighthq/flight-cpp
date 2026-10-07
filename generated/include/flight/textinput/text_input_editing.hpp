@@ -49,7 +49,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/node/revision.hpp>
 
-#include "text_input.hpp"
+#include <flight/textinput/text_input.hpp>
 
 namespace flight::textinput {
 

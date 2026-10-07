@@ -14,7 +14,7 @@ namespace flight::texture_formats {
 struct ParseFailure;
 } // namespace flight::texture_formats
 
-#include "byte_reader.hpp"
+#include <flight/texture_formats/byte_reader.hpp>
 
 namespace flight::texture_formats {
 

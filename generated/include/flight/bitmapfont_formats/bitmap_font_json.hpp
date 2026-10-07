@@ -17,9 +17,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include "bitmap_font_record.hpp"
+#include <flight/types/bitmap_font.hpp>
+
+#include <flight/bitmapfont_formats/bitmap_font_record.hpp>
 
 namespace flight::bitmapfont_formats {
+
+using flight::types::BitmapFontParseOptions;
 
 inline bool is_object(flight::Any value) {
   return (((value.type_of() == flight::String("object")) && ([&]() { const auto& presence_operand = value; return !presence_operand.is_null(); }())) && !flight::is_array(value));

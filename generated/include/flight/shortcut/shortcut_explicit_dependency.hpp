@@ -61,7 +61,7 @@ using flight::entity::finish_entity;
 struct GlobalShortcutAttachment;
 } // namespace flight::shortcut
 
-#include "shortcut.hpp"
+#include <flight/shortcut/shortcut.hpp>
 
 namespace flight::shortcut {
 

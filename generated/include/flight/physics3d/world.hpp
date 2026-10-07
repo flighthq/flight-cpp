@@ -65,14 +65,14 @@ struct SerializedPhysics3DContact;
 struct SerializedPhysics3DSolverConfig;
 } // namespace flight::physics3d
 
-#include "broadphase.hpp"
-#include "collider_transform.hpp"
-#include "integrate.hpp"
-#include "joint_collision_suppression.hpp"
-#include "mass_properties.hpp"
-#include "ownership.hpp"
-#include "physics3_dbroadphase_publication.hpp"
-#include "symmetric_tensor.hpp"
+#include <flight/physics3d/broadphase.hpp>
+#include <flight/physics3d/collider_transform.hpp>
+#include <flight/physics3d/integrate.hpp>
+#include <flight/physics3d/joint_collision_suppression.hpp>
+#include <flight/physics3d/mass_properties.hpp>
+#include <flight/physics3d/ownership.hpp>
+#include <flight/physics3d/physics3_dbroadphase_publication.hpp>
+#include <flight/physics3d/symmetric_tensor.hpp>
 
 namespace flight::physics3d {
 

@@ -24,9 +24,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/bone2_d.hpp>
 
-#include "skeleton2d.hpp"
-#include "skeleton2d_constants.hpp"
-#include "skeleton2d_constraint.hpp"
+#include <flight/skeleton2d/skeleton2d.hpp>
+#include <flight/skeleton2d/skeleton2d_constants.hpp>
+#include <flight/skeleton2d/skeleton2d_constraint.hpp>
 
 namespace flight::skeleton2d {
 

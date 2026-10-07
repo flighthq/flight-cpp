@@ -12,7 +12,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/particle_emitter2_d.hpp>
 
-#include "update_particle_emitter3_d.hpp"
+#include <flight/particleemitter/update_particle_emitter3_d.hpp>
 
 namespace flight::particleemitter {
 

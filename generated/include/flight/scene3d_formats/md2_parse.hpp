@@ -58,8 +58,8 @@ using flight::types::import_diagnostic_severity;
 struct Md2Frame;
 } // namespace flight::scene3d_formats
 
-#include "md2_schema.hpp"
-#include "shared.hpp"
+#include <flight/scene3d_formats/md2_schema.hpp>
+#include <flight/scene3d_formats/shared.hpp>
 
 namespace flight::scene3d_formats {
 

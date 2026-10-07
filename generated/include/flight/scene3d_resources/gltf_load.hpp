@@ -28,7 +28,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/gltf_extension.hpp>
 
-#include "scene_document_source.hpp"
+#include <flight/scene3d_resources/scene_document_source.hpp>
 
 namespace flight::scene3d_resources {
 

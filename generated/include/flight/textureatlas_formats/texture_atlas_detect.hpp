@@ -26,10 +26,10 @@ struct FormatEntry;
 struct RegisteredFormatEntry;
 } // namespace flight::textureatlas_formats
 
-#include "texture_atlas_aseprite_parse.hpp"
-#include "texture_atlas_libgdx_parse.hpp"
-#include "texture_atlas_starling_parse.hpp"
-#include "texture_packer_atlas_parse.hpp"
+#include <flight/textureatlas_formats/texture_atlas_aseprite_parse.hpp>
+#include <flight/textureatlas_formats/texture_atlas_libgdx_parse.hpp>
+#include <flight/textureatlas_formats/texture_atlas_starling_parse.hpp>
+#include <flight/textureatlas_formats/texture_packer_atlas_parse.hpp>
 
 namespace flight::textureatlas_formats {
 

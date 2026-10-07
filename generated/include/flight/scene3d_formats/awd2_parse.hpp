@@ -172,8 +172,8 @@ struct ParsedSkeletonPose;
 struct AwdLightDropTally;
 } // namespace flight::scene3d_formats
 
-#include "awd2_schema.hpp"
-#include "shared.hpp"
+#include <flight/scene3d_formats/awd2_schema.hpp>
+#include <flight/scene3d_formats/shared.hpp>
 
 namespace flight::scene3d_formats {
 

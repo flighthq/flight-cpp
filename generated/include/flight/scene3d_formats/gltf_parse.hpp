@@ -138,11 +138,11 @@ using flight::types::import_diagnostic_severity;
 struct GltfDropTally;
 } // namespace flight::scene3d_formats
 
-#include "register_gltf_animation_handlers.hpp"
-#include "register_gltf_camera_handlers.hpp"
-#include "register_gltf_skin_handlers.hpp"
-#include "gltf_draco.hpp"
-#include "shared.hpp"
+#include <flight/scene3d_formats/register_gltf_animation_handlers.hpp>
+#include <flight/scene3d_formats/register_gltf_camera_handlers.hpp>
+#include <flight/scene3d_formats/register_gltf_skin_handlers.hpp>
+#include <flight/scene3d_formats/gltf_draco.hpp>
+#include <flight/scene3d_formats/shared.hpp>
 
 namespace flight::scene3d_formats {
 

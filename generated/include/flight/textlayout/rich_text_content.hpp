@@ -23,8 +23,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
-#include "text_format.hpp"
-#include "text_format_range.hpp"
+#include <flight/textlayout/text_format.hpp>
+#include <flight/textlayout/text_format_range.hpp>
 
 namespace flight::textlayout {
 

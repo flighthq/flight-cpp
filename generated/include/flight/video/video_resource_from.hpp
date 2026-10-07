@@ -18,8 +18,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/host_video.hpp>
 
-#include "video_format.hpp"
-#include "video_resource.hpp"
+#include <flight/video/video_format.hpp>
+#include <flight/video/video_resource.hpp>
 
 namespace flight::video {
 

@@ -69,9 +69,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
-#include "spine_binary_reader.hpp"
-#include "spine_binary_registry.hpp"
-#include "spine_draw_order.hpp"
+#include <flight/skeleton2d_formats/spine_binary_reader.hpp>
+#include <flight/skeleton2d_formats/spine_binary_registry.hpp>
+#include <flight/skeleton2d_formats/spine_draw_order.hpp>
 
 namespace flight::skeleton2d_formats {
 

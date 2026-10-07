@@ -34,7 +34,7 @@ using flight::types::WgpuRenderState;
 struct WgpuCompressedFormatInfo;
 } // namespace flight::render_wgpu
 
-#include "wgpu_render_state.hpp"
+#include <flight/render_wgpu/wgpu_render_state.hpp>
 
 namespace flight::render_wgpu {
 

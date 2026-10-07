@@ -69,11 +69,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/runtime.hpp>
 
-#include "flight_document_text.hpp"
-#include "scene_document_interactive_state_bindings.hpp"
-#include "scene_document_layout_bindings.hpp"
-#include "scene_document_materialization_selection.hpp"
-#include "scene_document_refusal.hpp"
+#include <flight/scene_document/flight_document_text.hpp>
+#include <flight/scene_document/scene_document_interactive_state_bindings.hpp>
+#include <flight/scene_document/scene_document_layout_bindings.hpp>
+#include <flight/scene_document/scene_document_materialization_selection.hpp>
+#include <flight/scene_document/scene_document_refusal.hpp>
 
 namespace flight::scene_document {
 

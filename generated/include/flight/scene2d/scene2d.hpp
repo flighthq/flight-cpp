@@ -27,7 +27,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
-#include "display_object.hpp"
+#include <flight/scene2d/display_object.hpp>
 
 namespace flight::scene2d {
 

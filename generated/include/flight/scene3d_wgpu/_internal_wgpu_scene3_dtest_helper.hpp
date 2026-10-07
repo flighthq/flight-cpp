@@ -38,8 +38,8 @@ using flight::types::WgpuSkinningAdapter;
 struct FakeWgpu;
 } // namespace flight::scene3d_wgpu
 
-#include "wgpu_scene3_druntime.hpp"
-#include "wgpu_skin_palette.hpp"
+#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_skin_palette.hpp>
 
 namespace flight::scene3d_wgpu {
 

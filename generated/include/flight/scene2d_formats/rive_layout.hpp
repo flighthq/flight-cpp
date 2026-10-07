@@ -66,8 +66,8 @@ struct RiveLayoutContext;
 struct RiveSizingValues;
 } // namespace flight::scene2d_formats
 
-#include "rive_core_types.hpp"
-#include "rive_import_registry.hpp"
+#include <flight/scene2d_formats/rive_core_types.hpp>
+#include <flight/scene2d_formats/rive_import_registry.hpp>
 
 namespace flight::scene2d_formats {
 

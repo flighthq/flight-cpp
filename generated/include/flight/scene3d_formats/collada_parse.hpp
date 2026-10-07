@@ -142,8 +142,8 @@ struct ColladaDeferredCameraBinding;
 struct ColladaDeferredLightBinding;
 } // namespace flight::scene3d_formats
 
-#include "collada_material.hpp"
-#include "shared.hpp"
+#include <flight/scene3d_formats/collada_material.hpp>
+#include <flight/scene3d_formats/shared.hpp>
 
 namespace flight::scene3d_formats {
 

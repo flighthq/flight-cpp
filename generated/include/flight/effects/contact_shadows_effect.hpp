@@ -23,8 +23,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
-#include "render_effect.hpp"
-#include "render_effect_padding.hpp"
+#include <flight/effects/render_effect.hpp>
+#include <flight/effects/render_effect_padding.hpp>
 
 namespace flight::effects {
 

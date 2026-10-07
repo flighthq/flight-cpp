@@ -28,22 +28,12 @@ inline flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Map<
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_ENTITY_RUNTIME_KEY_PIPELINE_BLEND_MODE_COMPILE_FOR_FORMAT_VARIANTS_183787019555C435
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_ENTITY_RUNTIME_KEY_PIPELINE_BLEND_MODE_COMPILE_FOR_FORMAT_VARIANTS_183787019555C435
-struct entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_183787019555c435 : public flight::types::Entity {
-  flight::host_sdl::WgpuRenderPipeline pipeline;
-  flight::types::WgpuEffectBlendMode blend_mode;
-  std::optional<std::function<flight::host_sdl::WgpuRenderPipeline(flight::String)>> compile_for_format;
-  std::optional<flight::Map<flight::String, flight::host_sdl::WgpuRenderPipeline>> variants;
-};
+using entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_183787019555c435 = flight::types::WgpuEffectPipeline;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_ENTITY_RUNTIME_KEY_PIPELINE_BLEND_MODE_COMPILE_FOR_FORMAT_VARIANTS_183787019555C435
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_ENTITY_RUNTIME_KEY_PIPELINE_BLEND_MODE_COMPILE_FOR_FORMAT_VARIANTS_9408B42A0BFDDBBE
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_ENTITY_RUNTIME_KEY_PIPELINE_BLEND_MODE_COMPILE_FOR_FORMAT_VARIANTS_9408B42A0BFDDBBE
-struct entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_9408b42a0bfddbbe : public flight::types::Entity {
-  flight::Any pipeline;
-  flight::types::WgpuEffectBlendMode blend_mode;
-  std::optional<std::function<flight::Any(flight::Any)>> compile_for_format;
-  std::optional<flight::Map<flight::Any, flight::Any>> variants;
-};
+using entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_9408b42a0bfddbbe = flight::types::WgpuEffectPipeline;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_ENTITY_RUNTIME_KEY_PIPELINE_BLEND_MODE_COMPILE_FOR_FORMAT_VARIANTS_9408B42A0BFDDBBE
 
 inline flight::Ref<flight::types::WgpuEffectPipeline> get_wgpu_effect_pipeline(flight::Ref<flight::types::WgpuRenderState> state, flight::String key, flight::String fragment_wgsl, std::optional<flight::String> blend = std::nullopt) {

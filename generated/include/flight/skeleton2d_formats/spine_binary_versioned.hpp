@@ -16,7 +16,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/import_diagnostic.hpp>
 
-#include "spine_binary_version.hpp"
+#include <flight/skeleton2d_formats/spine_binary_version.hpp>
 
 namespace flight::skeleton2d_formats {
 

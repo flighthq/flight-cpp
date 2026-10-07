@@ -113,9 +113,9 @@ struct Md5WeightInfluence;
 struct Md5DropTally;
 } // namespace flight::scene3d_formats
 
-#include "md5_anim_parse.hpp"
-#include "scene_skeleton.hpp"
-#include "shared.hpp"
+#include <flight/scene3d_formats/md5_anim_parse.hpp>
+#include <flight/scene3d_formats/scene_skeleton.hpp>
+#include <flight/scene3d_formats/shared.hpp>
 
 namespace flight::scene3d_formats {
 

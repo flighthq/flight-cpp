@@ -26,6 +26,8 @@ namespace flight::types { struct XmlElement; }
 
 namespace flight::bitmapfont_formats {
 
+using flight::types::BitmapFontParseOptions;
+
 inline std::optional<flight::Ref<flight::types::BitmapFontCharRecord>> read_xml_char(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element) {
   const std::optional<double> id = flight::xml::get_xml_element_attribute_number(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::String("id"));
   const std::optional<double> x = flight::xml::get_xml_element_attribute_number(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::String("x"));

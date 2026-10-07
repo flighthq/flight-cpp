@@ -47,8 +47,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/markup_tag_handler.hpp>
 
-#include "markup_tag_registry.hpp"
-#include "text_markup_guards.hpp"
+#include <flight/text_markup/markup_tag_registry.hpp>
+#include <flight/text_markup/text_markup_guards.hpp>
 
 namespace flight::text_markup {
 

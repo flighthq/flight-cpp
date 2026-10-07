@@ -25,7 +25,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/canvas_render_state.hpp>
 
-#include "canvas_render_state.hpp"
+#include <flight/scene2d_canvas/canvas_render_state.hpp>
 
 namespace flight::scene2d_canvas {
 

@@ -19,12 +19,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::bitmapfont_formats { struct ProbeResult; inline std::optional<flight::Ref<ProbeResult>> probe_json(flight::String text); }
+
+#include <flight/types/texture_atlas.hpp>
+
 #include <flight/types/bitmap_font_parse_explanation.hpp>
+
+#include <flight/types/bitmap_font.hpp>
 
 namespace flight::bitmapfont_formats {
 
 using flight::types::BitmapFontParseExplanation;
 using flight::types::BitmapFontParseExplanationFormat;
+using flight::types::BitmapFontParseExplanationReason;
+using flight::types::BitmapFontParseOptions;
+using flight::types::TextureAtlas;
 
 struct ProbeResult;
 

@@ -46,10 +46,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
-#include "wgpu_device_loss.hpp"
-#include "wgpu_draw.hpp"
-#include "wgpu_pipeline.hpp"
-#include "wgpu_shader.hpp"
+#include <flight/render_wgpu/wgpu_device_loss.hpp>
+#include <flight/render_wgpu/wgpu_draw.hpp>
+#include <flight/render_wgpu/wgpu_pipeline.hpp>
+#include <flight/render_wgpu/wgpu_shader.hpp>
 
 namespace flight::render_wgpu {
 

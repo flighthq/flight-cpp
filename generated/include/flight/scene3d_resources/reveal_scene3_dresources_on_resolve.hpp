@@ -44,9 +44,9 @@ using flight::types::Texture;
 struct Scene3DResourceRevealOwner;
 } // namespace flight::scene3d_resources
 
-#include "get_scene3_dresource_textures.hpp"
-#include "scene_material_texture_registry.hpp"
-#include "scene_resource_signals.hpp"
+#include <flight/scene3d_resources/get_scene3_dresource_textures.hpp>
+#include <flight/scene3d_resources/scene_material_texture_registry.hpp>
+#include <flight/scene3d_resources/scene_resource_signals.hpp>
 
 namespace flight::scene3d_resources {
 

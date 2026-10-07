@@ -13,7 +13,9 @@ The current compiler emitted 2178 of 2709 source modules from
 This is a bring-up inventory. It is intentionally committed before it forms a completely compilable SDK closure.
 CMake exposes the full inventory as `Flight::SdkPreview`, and Bazel exposes `//:sdk_preview`; the preview name
 keeps the remaining native compile failures visible. The package graph applies the public C++ `flight` namespaces
-and installed include prefixes. `initialization.json` records the compiler's dependency and module-evaluation plan.
+and installed include prefixes. Package-local imports are written with their canonical installed paths so nested
+includes honor the override directory's precedence. `initialization.json` records the compiler's dependency and
+module-evaluation plan.
 
 Regenerate and verify the tree from the repository root:
 

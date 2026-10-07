@@ -21,7 +21,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/image_resource_reference.hpp>
 
-#include "resolve_scene3_dresources.hpp"
+#include <flight/scene3d_resources/resolve_scene3_dresources.hpp>
 
 namespace flight::scene3d_resources {
 

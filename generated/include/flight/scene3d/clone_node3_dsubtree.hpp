@@ -17,8 +17,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/material.hpp>
 
-#include "mesh.hpp"
-#include "scene_node.hpp"
+#include <flight/scene3d/mesh.hpp>
+#include <flight/scene3d/scene_node.hpp>
 
 namespace flight::scene3d {
 

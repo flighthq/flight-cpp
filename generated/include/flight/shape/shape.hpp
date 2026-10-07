@@ -31,8 +31,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/morph_shape.hpp>
 
-#include "shape_bounds.hpp"
-#include "shape_bounds_registry.hpp"
+#include <flight/shape/shape_bounds.hpp>
+#include <flight/shape/shape_bounds_registry.hpp>
 
 namespace flight::shape {
 

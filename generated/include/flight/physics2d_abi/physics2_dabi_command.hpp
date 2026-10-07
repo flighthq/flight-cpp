@@ -39,7 +39,7 @@ using flight::types::RigidBody2D;
 struct PendingCommand;
 } // namespace flight::physics2d_abi
 
-#include "physics2_dabi_layout.hpp"
+#include <flight/physics2d_abi/physics2_dabi_layout.hpp>
 
 namespace flight::physics2d_abi {
 

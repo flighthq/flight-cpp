@@ -34,7 +34,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
-#include "canvas_render_surface.hpp"
+#include <flight/scene2d_canvas/canvas_render_surface.hpp>
 
 namespace flight::scene2d_canvas {
 

@@ -24,7 +24,7 @@ using flight::types::Node2D;
 struct TooltipControllerFields;
 } // namespace flight::gui
 
-#include "gui_controller.hpp"
+#include <flight/gui/gui_controller.hpp>
 
 namespace flight::gui {
 

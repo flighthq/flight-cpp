@@ -24,8 +24,8 @@ using flight::types::VertexAttributeLayout;
 struct AttributeMapping;
 } // namespace flight::mesh
 
-#include "mesh_geometry.hpp"
-#include "vertex_format.hpp"
+#include <flight/mesh/mesh_geometry.hpp>
+#include <flight/mesh/vertex_format.hpp>
 
 namespace flight::mesh {
 

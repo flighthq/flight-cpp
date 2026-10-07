@@ -26,9 +26,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/physics2_d.hpp>
 
-#include "joint_rows.hpp"
-#include "solver.hpp"
-#include "world.hpp"
+#include <flight/physics2d/joint_rows.hpp>
+#include <flight/physics2d/solver.hpp>
+#include <flight/physics2d/world.hpp>
 
 namespace flight::physics2d {
 

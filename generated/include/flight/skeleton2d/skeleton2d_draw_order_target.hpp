@@ -31,8 +31,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
-#include "skeleton2d_animation_target.hpp"
-#include "skeleton2d_guards.hpp"
+#include <flight/skeleton2d/skeleton2d_animation_target.hpp>
+#include <flight/skeleton2d/skeleton2d_guards.hpp>
 
 namespace flight::skeleton2d {
 

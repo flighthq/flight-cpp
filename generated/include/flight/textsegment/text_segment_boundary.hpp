@@ -13,8 +13,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/text_segment.hpp>
 
-#include "text_segmenter_backend.hpp"
-#include "text_segment_guards.hpp"
+#include <flight/textsegment/text_segmenter_backend.hpp>
+#include <flight/textsegment/text_segment_guards.hpp>
 
 namespace flight::textsegment {
 

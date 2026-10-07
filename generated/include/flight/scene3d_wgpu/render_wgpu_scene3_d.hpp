@@ -31,10 +31,10 @@ using flight::types::WgpuSkinningAdapter;
 struct DrawEntry;
 } // namespace flight::scene3d_wgpu
 
-#include "wgpu_mesh_material_registry.hpp"
-#include "wgpu_mesh_pipeline.hpp"
-#include "wgpu_particle_emitter3_d.hpp"
-#include "wgpu_scene3_druntime.hpp"
+#include <flight/scene3d_wgpu/wgpu_mesh_material_registry.hpp>
+#include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
+#include <flight/scene3d_wgpu/wgpu_particle_emitter3_d.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
 
 namespace flight::scene3d_wgpu {
 

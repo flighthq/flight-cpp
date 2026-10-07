@@ -23,8 +23,8 @@ using flight::types::WgpuRenderState;
 struct WgpuSkybox;
 } // namespace flight::scene3d_wgpu
 
-#include "wgpu_environment_cube.hpp"
-#include "wgpu_scene3_druntime.hpp"
+#include <flight/scene3d_wgpu/wgpu_environment_cube.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
 
 namespace flight::scene3d_wgpu {
 

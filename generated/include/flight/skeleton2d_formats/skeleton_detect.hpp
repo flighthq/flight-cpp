@@ -37,8 +37,8 @@ struct SkeletonFormatEntry;
 struct RegisteredSkeletonFormat;
 } // namespace flight::skeleton2d_formats
 
-#include "dragon_bones_parse.hpp"
-#include "spine_parse.hpp"
+#include <flight/skeleton2d_formats/dragon_bones_parse.hpp>
+#include <flight/skeleton2d_formats/spine_parse.hpp>
 
 namespace flight::skeleton2d_formats {
 

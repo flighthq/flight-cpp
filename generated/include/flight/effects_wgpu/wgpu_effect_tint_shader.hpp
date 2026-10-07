@@ -35,12 +35,7 @@ inline flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Ref<
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_ENTITY_RUNTIME_KEY_PIPELINE_BLEND_MODE_COMPILE_FOR_FORMAT_VARIANTS_183787019555C435
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_ENTITY_RUNTIME_KEY_PIPELINE_BLEND_MODE_COMPILE_FOR_FORMAT_VARIANTS_183787019555C435
-struct entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_183787019555c435 : public flight::types::Entity {
-  flight::host_sdl::WgpuRenderPipeline pipeline;
-  flight::types::WgpuEffectBlendMode blend_mode;
-  std::optional<std::function<flight::host_sdl::WgpuRenderPipeline(flight::String)>> compile_for_format;
-  std::optional<flight::Map<flight::String, flight::host_sdl::WgpuRenderPipeline>> variants;
-};
+using entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_183787019555c435 = flight::types::WgpuEffectPipeline;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_ENTITY_RUNTIME_KEY_PIPELINE_BLEND_MODE_COMPILE_FOR_FORMAT_VARIANTS_183787019555C435
 
 inline flight::Ref<flight::types::WgpuEffectPipeline> get_wgpu_tint_shader(flight::Ref<flight::types::WgpuRenderState> state) {

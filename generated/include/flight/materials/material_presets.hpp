@@ -23,9 +23,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/extended_pbr_material.hpp>
 
-#include "extended_pbr_material.hpp"
-#include "pbr_materials.hpp"
-#include "transmission_volume_pbr_extension.hpp"
+#include <flight/materials/extended_pbr_material.hpp>
+#include <flight/materials/pbr_materials.hpp>
+#include <flight/materials/transmission_volume_pbr_extension.hpp>
 
 namespace flight::materials {
 

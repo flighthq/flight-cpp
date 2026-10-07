@@ -41,7 +41,7 @@ struct Md5AnimBaseframePose;
 struct Md5AnimDropTally;
 } // namespace flight::scene3d_formats
 
-#include "shared.hpp"
+#include <flight/scene3d_formats/shared.hpp>
 
 namespace flight::scene3d_formats {
 

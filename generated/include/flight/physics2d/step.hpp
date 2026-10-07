@@ -68,17 +68,17 @@ using flight::collision::sweep_collision_shape2_d; // repair: defining include p
 struct Physics2DStepScratch;
 } // namespace flight::physics2d
 
-#include "broadphase.hpp"
-#include "collider_transform.hpp"
-#include "islands.hpp"
-#include "joint_collision_suppression.hpp"
-#include "joint_reactions.hpp"
-#include "joint_registry.hpp"
-#include "material.hpp"
-#include "ownership.hpp"
-#include "solver.hpp"
-#include "step_validation.hpp"
-#include "world.hpp"
+#include <flight/physics2d/broadphase.hpp>
+#include <flight/physics2d/collider_transform.hpp>
+#include <flight/physics2d/islands.hpp>
+#include <flight/physics2d/joint_collision_suppression.hpp>
+#include <flight/physics2d/joint_reactions.hpp>
+#include <flight/physics2d/joint_registry.hpp>
+#include <flight/physics2d/material.hpp>
+#include <flight/physics2d/ownership.hpp>
+#include <flight/physics2d/solver.hpp>
+#include <flight/physics2d/step_validation.hpp>
+#include <flight/physics2d/world.hpp>
 
 namespace flight::physics2d {
 

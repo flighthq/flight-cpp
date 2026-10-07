@@ -24,8 +24,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/interaction_manager.hpp>
 
-#include "hit_tests.hpp"
-#include "node_interaction_state.hpp"
+#include <flight/interaction/hit_tests.hpp>
+#include <flight/interaction/node_interaction_state.hpp>
 
 namespace flight::interaction {
 

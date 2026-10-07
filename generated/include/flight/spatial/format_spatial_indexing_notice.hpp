@@ -7,7 +7,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/spatial_indexing.hpp>
 
-#include "uniform_grid.hpp"
+#include <flight/spatial/uniform_grid.hpp>
 
 namespace flight::spatial {
 

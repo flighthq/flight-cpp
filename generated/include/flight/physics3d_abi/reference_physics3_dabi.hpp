@@ -119,7 +119,7 @@ struct ReferencePhysics3DAbiWorld;
 struct CommandRecord;
 } // namespace flight::physics3d_abi
 
-#include "physics3_dabi_layout.hpp"
+#include <flight/physics3d_abi/physics3_dabi_layout.hpp>
 
 namespace flight::physics3d_abi {
 

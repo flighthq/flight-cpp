@@ -19,8 +19,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include "swf_reader.hpp"
-#include "swf_shape.hpp"
+#include <flight/swf/swf_reader.hpp>
+#include <flight/swf/swf_shape.hpp>
 
 namespace flight::swf {
 

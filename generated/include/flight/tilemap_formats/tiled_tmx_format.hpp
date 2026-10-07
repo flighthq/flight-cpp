@@ -28,7 +28,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/tiled_object.hpp>
 
-#include "tiled_color.hpp"
+#include <flight/tilemap_formats/tiled_color.hpp>
 
 namespace flight::tilemap_formats {
 

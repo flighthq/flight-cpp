@@ -43,10 +43,10 @@ struct CollisionBounds3D;
 struct CollisionTriangleContactCandidate3D;
 } // namespace flight::collision
 
-#include "collide_contact_manifold3_d.hpp"
-#include "collision_support3_d.hpp"
-#include "contact_manifold3_d.hpp"
-#include "sweep_collision_shape3_d.hpp"
+#include <flight/collision/collide_contact_manifold3_d.hpp>
+#include <flight/collision/collision_support3_d.hpp>
+#include <flight/collision/contact_manifold3_d.hpp>
+#include <flight/collision/sweep_collision_shape3_d.hpp>
 
 namespace flight::collision {
 

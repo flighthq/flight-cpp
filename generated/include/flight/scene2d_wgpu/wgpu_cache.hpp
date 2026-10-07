@@ -15,8 +15,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/wgpu_render_state.hpp>
 
-#include "wgpu_node2_d.hpp"
-#include "wgpu_quad_batch_writer.hpp"
+#include <flight/scene2d_wgpu/wgpu_node2_d.hpp>
+#include <flight/scene2d_wgpu/wgpu_quad_batch_writer.hpp>
 
 namespace flight::scene2d_wgpu {
 

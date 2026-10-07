@@ -38,10 +38,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/entity.hpp>
 
-#include "render_appearance.hpp"
-#include "render_material.hpp"
-#include "render_state.hpp"
-#include "render_transform2d.hpp"
+#include <flight/render/render_appearance.hpp>
+#include <flight/render/render_material.hpp>
+#include <flight/render/render_state.hpp>
+#include <flight/render/render_transform2d.hpp>
 
 namespace flight::render {
 

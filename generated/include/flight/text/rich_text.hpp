@@ -74,8 +74,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/entity.hpp>
 
-#include "text_label.hpp"
-#include "text_label_layout.hpp"
+#include <flight/text/text_label.hpp>
+#include <flight/text/text_label_layout.hpp>
 
 namespace flight::text {
 

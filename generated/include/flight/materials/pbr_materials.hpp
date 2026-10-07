@@ -19,8 +19,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/material_conversion_explanation.hpp>
 
-#include "explain_material_conversion.hpp"
-#include "surface_material.hpp"
+#include <flight/materials/explain_material_conversion.hpp>
+#include <flight/materials/surface_material.hpp>
 
 namespace flight::materials {
 

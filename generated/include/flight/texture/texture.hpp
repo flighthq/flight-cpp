@@ -77,7 +77,7 @@ struct CreateTexture3DOptions;
 struct CreateTextureCubeOptions;
 } // namespace flight::texture
 
-#include "sampler.hpp"
+#include <flight/texture/sampler.hpp>
 
 namespace flight::texture {
 

@@ -50,7 +50,7 @@ using flight::types::RigidBody3D;
 struct PendingCommand;
 } // namespace flight::physics3d_abi
 
-#include "physics3_dabi_layout.hpp"
+#include <flight/physics3d_abi/physics3_dabi_layout.hpp>
 
 namespace flight::physics3d_abi {
 

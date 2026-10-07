@@ -21,7 +21,7 @@ using flight::types::TilemapData;
 struct TilesetGroup;
 } // namespace flight::tilemap_formats
 
-#include "tiled_gid.hpp"
+#include <flight/tilemap_formats/tiled_gid.hpp>
 
 namespace flight::tilemap_formats {
 

@@ -48,7 +48,7 @@ using flight::types::VideoPlayOptions;
 struct VideoChannelRuntime;
 } // namespace flight::media
 
-#include "media_channel_signals.hpp"
+#include <flight/media/media_channel_signals.hpp>
 
 namespace flight::media {
 

@@ -56,7 +56,7 @@ struct ShapeBoundsTangent;
 struct ShapeCommandArgumentCursorInternal;
 } // namespace flight::shape
 
-#include "shape_bounds_registry.hpp"
+#include <flight/shape/shape_bounds_registry.hpp>
 
 namespace flight::shape {
 

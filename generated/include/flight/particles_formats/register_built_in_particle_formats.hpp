@@ -20,18 +20,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/particle_format_codec.hpp>
 
-#include "format_registry.hpp"
-#include "libgdx_parse.hpp"
-#include "libgdx_serialize.hpp"
-#include "particle_designer_parse.hpp"
-#include "particle_designer_serialize.hpp"
-#include "pixi_parse.hpp"
-#include "spine_parse.hpp"
-#include "spine_serialize.hpp"
-#include "starling_pex_parse.hpp"
-#include "starling_pex_serialize.hpp"
-#include "unity_parse.hpp"
-#include "unity_serialize.hpp"
+#include <flight/particles_formats/format_registry.hpp>
+#include <flight/particles_formats/libgdx_parse.hpp>
+#include <flight/particles_formats/libgdx_serialize.hpp>
+#include <flight/particles_formats/particle_designer_parse.hpp>
+#include <flight/particles_formats/particle_designer_serialize.hpp>
+#include <flight/particles_formats/pixi_parse.hpp>
+#include <flight/particles_formats/spine_parse.hpp>
+#include <flight/particles_formats/spine_serialize.hpp>
+#include <flight/particles_formats/starling_pex_parse.hpp>
+#include <flight/particles_formats/starling_pex_serialize.hpp>
+#include <flight/particles_formats/unity_parse.hpp>
+#include <flight/particles_formats/unity_serialize.hpp>
 
 namespace flight::particles_formats {
 

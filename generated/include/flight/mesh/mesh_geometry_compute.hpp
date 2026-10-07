@@ -26,7 +26,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/aabb.hpp>
 
-#include "mesh_geometry_operations.hpp"
+#include <flight/mesh/mesh_geometry_operations.hpp>
 
 namespace flight::mesh {
 

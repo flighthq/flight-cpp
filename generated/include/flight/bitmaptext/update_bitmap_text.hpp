@@ -58,7 +58,7 @@ struct BitmapTextToken;
 struct BitmapTextWord;
 } // namespace flight::bitmaptext
 
-#include "bitmap_text.hpp"
+#include <flight/bitmaptext/bitmap_text.hpp>
 
 namespace flight::bitmaptext {
 

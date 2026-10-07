@@ -58,9 +58,9 @@ using flight::types::SpatialAabb3D;
 struct Physics3DQueryScratch;
 } // namespace flight::physics3d
 
-#include "broadphase.hpp"
-#include "collider_collision.hpp"
-#include "collider_transform.hpp"
+#include <flight/physics3d/broadphase.hpp>
+#include <flight/physics3d/collider_collision.hpp>
+#include <flight/physics3d/collider_transform.hpp>
 
 namespace flight::physics3d {
 

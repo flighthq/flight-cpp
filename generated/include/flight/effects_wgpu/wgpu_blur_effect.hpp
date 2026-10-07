@@ -20,10 +20,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/wgpu_render_state.hpp>
 
-#include "wgpu_effect_pass.hpp"
-#include "wgpu_effect_program_cache.hpp"
-#include "wgpu_effect_texel_scale.hpp"
-#include "wgpu_render_effect_registry.hpp"
+#include <flight/effects_wgpu/wgpu_effect_pass.hpp>
+#include <flight/effects_wgpu/wgpu_effect_program_cache.hpp>
+#include <flight/effects_wgpu/wgpu_effect_texel_scale.hpp>
+#include <flight/effects_wgpu/wgpu_render_effect_registry.hpp>
 
 namespace flight::effects_wgpu {
 

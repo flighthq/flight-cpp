@@ -50,7 +50,7 @@ using flight::entity::finish_entity;
 struct AudioMixerRuntime;
 } // namespace flight::media
 
-#include "audio_channel.hpp"
+#include <flight/media/audio_channel.hpp>
 
 namespace flight::media {
 

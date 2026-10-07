@@ -21,10 +21,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/physics3_d.hpp>
 
-#include "joint_math.hpp"
-#include "joint_reaction.hpp"
-#include "joint_rows.hpp"
-#include "world.hpp"
+#include <flight/physics3d/joint_math.hpp>
+#include <flight/physics3d/joint_reaction.hpp>
+#include <flight/physics3d/joint_rows.hpp>
+#include <flight/physics3d/world.hpp>
 
 namespace flight::physics3d {
 

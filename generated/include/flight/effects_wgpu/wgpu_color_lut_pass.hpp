@@ -19,8 +19,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/wgpu_render_state.hpp>
 
-#include "wgpu_bitmap_displacement_effect.hpp"
-#include "wgpu_effect_pass.hpp"
+#include <flight/effects_wgpu/wgpu_bitmap_displacement_effect.hpp>
+#include <flight/effects_wgpu/wgpu_effect_pass.hpp>
 
 namespace flight::effects_wgpu {
 

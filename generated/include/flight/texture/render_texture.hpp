@@ -21,8 +21,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/create_render_texture_options.hpp>
 
-#include "sampler.hpp"
-#include "texture.hpp"
+#include <flight/texture/sampler.hpp>
+#include <flight/texture/texture.hpp>
 
 namespace flight::texture {
 

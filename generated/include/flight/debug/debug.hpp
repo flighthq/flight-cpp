@@ -16,15 +16,37 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct DebugOptions; } namespace flight::debug { inline void enable_debug(std::optional<flight::Ref<flight::types::DebugOptions>> options); }
+
+namespace flight::types { struct RenderState; } namespace flight::render { inline void enable_color_adjustment_guards(flight::Ref<flight::types::RenderState> state); }
+
+#include <flight/render/render_registry_guards.hpp>
+
+#include <flight/render/enable_color_adjustment_guards.hpp>
+
+#include <flight/log/log.hpp>
+
+#include <flight/types/render_state.hpp>
+
 #include <flight/types/log.hpp>
 
 #include <flight/types/debug.hpp>
 
 namespace flight::debug {
 
+using flight::render::enable_color_adjustment_guards;
+using flight::render::enable_render_registries_guards;
+
+using flight::log::add_log_sink;
+using flight::log::clear_log_channel_level;
+using flight::log::remove_log_sink;
+using flight::log::set_log_channel_level;
+using flight::log::set_log_level;
+
 using flight::types::DebugSubsystemHooks;
 using flight::types::DebugSubsystemName;
 using flight::types::LogSink;
+using flight::types::RenderState;
 
 inline flight::Map<flight::String, flight::Ref<DebugSubsystemHooks>> subsystems = flight::Map<flight::String, flight::Ref<DebugSubsystemHooks>>();
 
@@ -46,11 +68,11 @@ inline bool is_debug_enabled() {
 
 inline std::optional<flight::Ref<LogSink>> installed_sink = std::nullopt;
 
-inline flight::Ref<log_level> saved_global_level = log_level.verbose;
+inline flight::types::LogLevel saved_global_level = flight::types::LogLevel::Verbose;
 
-inline flight::Map<flight::String, std::optional<flight::Ref<log_level>>> saved_channel_levels = flight::Map<flight::String, std::optional<flight::Ref<log_level>>>();
+inline flight::Map<flight::String, std::optional<flight::types::LogLevel>> saved_channel_levels = flight::Map<flight::String, std::optional<flight::types::LogLevel>>();
 
-inline void apply_debug_levels(flight::Ref<log_level> level, flight::Array<flight::String> channels) {
+inline void apply_debug_levels(flight::types::LogLevel level, flight::Array<flight::String> channels) {
   set_log_level(level);
   for (auto channel : channels) {
     set_log_channel_level(channel, level);
@@ -171,7 +193,7 @@ inline void restore_debug_levels() {
   set_log_level(saved_global_level);
   for (auto array_pattern_value : saved_channel_levels) {
     const flight::String channel = std::get<0>(array_pattern_value);
-    std::optional<flight::Ref<log_level>> saved_level = std::get<1>(array_pattern_value);
+    std::optional<flight::types::LogLevel> saved_level = std::get<1>(array_pattern_value);
     if (!saved_level.has_value()) {
       clear_log_channel_level(channel);
     }
@@ -179,7 +201,7 @@ inline void restore_debug_levels() {
       set_log_channel_level(channel, saved_level.value());
     }
   }
-  (saved_channel_levels = flight::Map<flight::String, std::optional<flight::Ref<log_level>>>());
+  (saved_channel_levels = flight::Map<flight::String, std::optional<flight::types::LogLevel>>());
 }
 
 inline void disable_debug() {

@@ -25,9 +25,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/display_object.hpp>
 
-#include "rive_import_registry.hpp"
-#include "rive_shape_paint.hpp"
-#include "rive_shape_path.hpp"
+#include <flight/scene2d_formats/rive_import_registry.hpp>
+#include <flight/scene2d_formats/rive_shape_paint.hpp>
+#include <flight/scene2d_formats/rive_shape_path.hpp>
 
 namespace flight::scene2d_formats {
 

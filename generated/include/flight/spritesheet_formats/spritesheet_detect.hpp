@@ -39,11 +39,11 @@ struct FormatEntry;
 struct RegisteredFormatEntry;
 } // namespace flight::spritesheet_formats
 
-#include "aseprite_parse.hpp"
-#include "cocos_plist_parse.hpp"
-#include "libgdx_atlas_parse.hpp"
-#include "starling_parse.hpp"
-#include "texture_packer_parse.hpp"
+#include <flight/spritesheet_formats/aseprite_parse.hpp>
+#include <flight/spritesheet_formats/cocos_plist_parse.hpp>
+#include <flight/spritesheet_formats/libgdx_atlas_parse.hpp>
+#include <flight/spritesheet_formats/starling_parse.hpp>
+#include <flight/spritesheet_formats/texture_packer_parse.hpp>
 
 namespace flight::spritesheet_formats {
 

@@ -26,6 +26,8 @@ namespace flight::types { struct ImportDiagnostic; }
 
 namespace flight::bitmapfont_formats {
 
+using flight::types::BitmapFontParseOptions;
+
 inline std::optional<flight::Ref<flight::types::BitmapFontCharRecord>> read_binary_char(flight::DataView view, double offset) {
   const double id = view.get_uint32(offset, true);
   const double x = view.get_uint16((offset + 4.0), true);

@@ -17,8 +17,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/dom_render_state.hpp>
 
-#include "dom_style.hpp"
-#include "dom_transform.hpp"
+#include <flight/scene2d_dom/dom_style.hpp>
+#include <flight/scene2d_dom/dom_transform.hpp>
 
 namespace flight::scene2d_dom {
 

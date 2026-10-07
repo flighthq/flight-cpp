@@ -45,12 +45,12 @@ struct CachedShadedPlan;
 struct ShadedBinding;
 } // namespace flight::scene3d_wgpu
 
-#include "shaded_wgpu_mesh_material_renderer.hpp"
-#include "wgpu_classic_prelude.hpp"
-#include "wgpu_mesh_pipeline.hpp"
-#include "wgpu_scene3_druntime.hpp"
-#include "wgpu_scene3_dtime.hpp"
-#include "wgpu_shaded_modifier_snippet.hpp"
+#include <flight/scene3d_wgpu/shaded_wgpu_mesh_material_renderer.hpp>
+#include <flight/scene3d_wgpu/wgpu_classic_prelude.hpp>
+#include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene3_dtime.hpp>
+#include <flight/scene3d_wgpu/wgpu_shaded_modifier_snippet.hpp>
 
 namespace flight::scene3d_wgpu {
 

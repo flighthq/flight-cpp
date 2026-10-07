@@ -60,7 +60,7 @@ using flight::entity::finish_entity;
 struct MidiSubscriptionRuntime;
 } // namespace flight::midi
 
-#include "midi_resource.hpp"
+#include <flight/midi/midi_resource.hpp>
 
 namespace flight::midi {
 

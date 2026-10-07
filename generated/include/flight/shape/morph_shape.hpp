@@ -29,9 +29,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/node/revision.hpp>
 
-#include "morph_shape_paint.hpp"
-#include "shape.hpp"
-#include "shape_commands.hpp"
+#include <flight/shape/morph_shape_paint.hpp>
+#include <flight/shape/shape.hpp>
+#include <flight/shape/shape_commands.hpp>
 
 namespace flight::shape {
 

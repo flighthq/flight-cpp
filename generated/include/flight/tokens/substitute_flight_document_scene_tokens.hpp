@@ -27,7 +27,7 @@ struct SceneSubstitutionResult;
 struct SceneSubstitutionState;
 } // namespace flight::tokens
 
-#include "flight_document_token_reference.hpp"
+#include <flight/tokens/flight_document_token_reference.hpp>
 
 namespace flight::tokens {
 

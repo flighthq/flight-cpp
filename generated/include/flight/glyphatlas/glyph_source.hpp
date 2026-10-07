@@ -15,9 +15,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
-#include "glyph_atlas.hpp"
-#include "glyph_atlas_entry.hpp"
-#include "glyph_atlas_metrics.hpp"
+#include <flight/glyphatlas/glyph_atlas.hpp>
+#include <flight/glyphatlas/glyph_atlas_entry.hpp>
+#include <flight/glyphatlas/glyph_atlas_metrics.hpp>
 
 namespace flight::glyphatlas {
 

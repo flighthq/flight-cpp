@@ -17,7 +17,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/signal.hpp>
 
-#include "slot.hpp"
+#include <flight/signals/slot.hpp>
 
 namespace flight::signals {
 

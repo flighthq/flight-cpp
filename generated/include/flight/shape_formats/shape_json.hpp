@@ -26,7 +26,7 @@ namespace flight::shape_formats {
 struct SerializedShapeCommand;
 } // namespace flight::shape_formats
 
-#include "shape_command_schemas.hpp"
+#include <flight/shape_formats/shape_command_schemas.hpp>
 
 namespace flight::shape_formats {
 

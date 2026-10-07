@@ -12,7 +12,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include "texture_atlas_page_meta.hpp"
+#include <flight/textureatlas_formats/texture_atlas_page_meta.hpp>
 
 namespace flight::textureatlas_formats {
 

@@ -12,9 +12,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include "get_mesh_skin_bounds.hpp"
-#include "skeleton3d.hpp"
-#include "skin_mesh_geometry.hpp"
+#include <flight/skeleton3d/get_mesh_skin_bounds.hpp>
+#include <flight/skeleton3d/skeleton3d.hpp>
+#include <flight/skeleton3d/skin_mesh_geometry.hpp>
 
 namespace flight::skeleton3d {
 

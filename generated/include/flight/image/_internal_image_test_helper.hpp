@@ -14,7 +14,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/host_image_dimensions.hpp>
 
-#include "image_source_dimensions.hpp"
+#include <flight/image/image_source_dimensions.hpp>
 
 namespace flight::image {
 

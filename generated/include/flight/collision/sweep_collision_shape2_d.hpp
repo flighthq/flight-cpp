@@ -33,11 +33,11 @@ struct CollisionSweepScratch;
 struct CollisionSweepPiece;
 } // namespace flight::collision
 
-#include "collide_contact_manifold2_d.hpp"
-#include "collision_shape_validation2_d.hpp"
-#include "contact_manifold2_d.hpp"
-#include "convex_vertices2_d.hpp"
-#include "raycast_collision_shape2_d.hpp"
+#include <flight/collision/collide_contact_manifold2_d.hpp>
+#include <flight/collision/collision_shape_validation2_d.hpp>
+#include <flight/collision/contact_manifold2_d.hpp>
+#include <flight/collision/convex_vertices2_d.hpp>
+#include <flight/collision/raycast_collision_shape2_d.hpp>
 
 namespace flight::collision {
 

@@ -23,9 +23,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/wgpu_render_state.hpp>
 
-#include "wgpu_mesh_fragment_tail.hpp"
-#include "wgpu_mesh_pipeline.hpp"
-#include "wgpu_scene3_druntime.hpp"
+#include <flight/scene3d_wgpu/wgpu_mesh_fragment_tail.hpp>
+#include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
 
 namespace flight::scene3d_wgpu {
 

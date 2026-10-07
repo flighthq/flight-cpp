@@ -27,11 +27,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/canvas_render_state.hpp>
 
-#include "canvas_node2_d.hpp"
-#include "canvas_render_state.hpp"
-#include "canvas_scale9_sprite_slices.hpp"
-#include "canvas_texture_window_source.hpp"
-#include "canvas_transform.hpp"
+#include <flight/scene2d_canvas/canvas_node2_d.hpp>
+#include <flight/scene2d_canvas/canvas_render_state.hpp>
+#include <flight/scene2d_canvas/canvas_scale9_sprite_slices.hpp>
+#include <flight/scene2d_canvas/canvas_texture_window_source.hpp>
+#include <flight/scene2d_canvas/canvas_transform.hpp>
 
 namespace flight::scene2d_canvas {
 

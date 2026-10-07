@@ -18,13 +18,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/physics3_d.hpp>
 
-#include "contact_intake.hpp"
-#include "explain_physics3_dcollision.hpp"
-#include "explain_physics3_djoints.hpp"
-#include "explain_physics3_dstep.hpp"
-#include "islands.hpp"
-#include "physics3_dspatial_indexing_guards.hpp"
-#include "step.hpp"
+#include <flight/physics3d/contact_intake.hpp>
+#include <flight/physics3d/explain_physics3_dcollision.hpp>
+#include <flight/physics3d/explain_physics3_djoints.hpp>
+#include <flight/physics3d/explain_physics3_dstep.hpp>
+#include <flight/physics3d/islands.hpp>
+#include <flight/physics3d/physics3_dspatial_indexing_guards.hpp>
+#include <flight/physics3d/step.hpp>
 
 namespace flight::physics3d {
 

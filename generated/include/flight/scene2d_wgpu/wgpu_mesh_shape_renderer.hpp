@@ -16,8 +16,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/wgpu_render_state.hpp>
 
-#include "wgpu_shape_data.hpp"
-#include "wgpu_shape_mesh.hpp"
+#include <flight/scene2d_wgpu/wgpu_shape_data.hpp>
+#include <flight/scene2d_wgpu/wgpu_shape_mesh.hpp>
 
 namespace flight::scene2d_wgpu {
 

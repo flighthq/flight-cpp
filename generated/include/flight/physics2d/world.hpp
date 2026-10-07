@@ -33,11 +33,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
-#include "broadphase.hpp"
-#include "collider_transform.hpp"
-#include "joint_collision_suppression.hpp"
-#include "mass_properties.hpp"
-#include "ownership.hpp"
+#include <flight/physics2d/broadphase.hpp>
+#include <flight/physics2d/collider_transform.hpp>
+#include <flight/physics2d/joint_collision_suppression.hpp>
+#include <flight/physics2d/mass_properties.hpp>
+#include <flight/physics2d/ownership.hpp>
 
 namespace flight::physics2d {
 

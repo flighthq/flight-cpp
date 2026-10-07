@@ -19,8 +19,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/wgpu_render_state.hpp>
 
-#include "wgpu_render_state.hpp"
-#include "wgpu_texture_resolver.hpp"
+#include <flight/render_wgpu/wgpu_render_state.hpp>
+#include <flight/render_wgpu/wgpu_texture_resolver.hpp>
 
 namespace flight::render_wgpu {
 

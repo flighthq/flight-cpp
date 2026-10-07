@@ -31,10 +31,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/entity/entity.hpp>
 
-#include "deform_path_attachment2_d.hpp"
-#include "skeleton2d.hpp"
-#include "skeleton2d_constants.hpp"
-#include "skeleton2d_constraint.hpp"
+#include <flight/skeleton2d/deform_path_attachment2_d.hpp>
+#include <flight/skeleton2d/skeleton2d.hpp>
+#include <flight/skeleton2d/skeleton2d_constants.hpp>
+#include <flight/skeleton2d/skeleton2d_constraint.hpp>
 
 namespace flight::skeleton2d {
 

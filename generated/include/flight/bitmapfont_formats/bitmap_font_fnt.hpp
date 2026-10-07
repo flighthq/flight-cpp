@@ -48,6 +48,9 @@ namespace flight::types { struct Vector2; }
 
 namespace flight::bitmapfont_formats {
 
+using flight::types::BitmapFontParseOptions;
+using flight::types::TextureAtlas;
+
 inline flight::Record<flight::String, flight::String> parse_fnt_fields_flight_value_function_parse_u000046_nt_u000046_ields_flight_private_a4db94316ec88cbd(flight::String rest) {
   flight::Record<flight::String, flight::String> fields = flight::Record<flight::String, flight::String>{};
   flight::RegExp re = flight::RegExp(flight::String("([A-Za-z_]\\w*)\\s*=\\s*(?:\"([^\"]*)\"|(\\S+))"), flight::String("g"));

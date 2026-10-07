@@ -41,7 +41,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/flight_document.hpp>
 
-#include "scene_document_refusal.hpp"
+#include <flight/scene_document/scene_document_refusal.hpp>
 
 namespace flight::scene_document {
 
