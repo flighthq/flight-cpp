@@ -84,7 +84,7 @@ int main() {
     add_node_child(root, shape);
 
     auto label = flight::text::create_text_label();
-    label->data.text = flight::String(btn.label);
+    label->data->text = flight::String(btn.label);
     label->x = btn.x + 10.0;
     label->y = btn.y + 20.0;
     invalidate_node_local_transform(label);

@@ -37,7 +37,7 @@ int main() {
   append_shape_end_fill(bootBg);
 
   auto bootLabel = flight::text::create_text_label();
-  bootLabel->data.text = flight::String("FLIGHT FLOW STATES");
+  bootLabel->data->text = flight::String("FLIGHT FLOW STATES");
   bootLabel->x = WIDTH / 2.0 - 100.0;
   bootLabel->y = HEIGHT / 2.0 - 20.0;
   invalidate_node_local_transform(bootLabel);
@@ -53,7 +53,7 @@ int main() {
   append_shape_end_fill(menuBg);
 
   auto menuTitle = flight::text::create_text_label();
-  menuTitle->data.text = flight::String("MAIN MENU");
+  menuTitle->data->text = flight::String("MAIN MENU");
   menuTitle->x = WIDTH / 2.0 - 60.0;
   menuTitle->y = 60.0;
   invalidate_node_local_transform(menuTitle);
@@ -75,7 +75,7 @@ int main() {
   append_shape_end_fill(playBg);
 
   auto scoreLabel = flight::text::create_text_label();
-  scoreLabel->data.text = flight::String("Score: 0");
+  scoreLabel->data->text = flight::String("Score: 0");
   scoreLabel->x = 20.0;
   scoreLabel->y = 20.0;
   invalidate_node_local_transform(scoreLabel);
@@ -91,7 +91,7 @@ int main() {
   append_shape_end_fill(pauseBg);
 
   auto pauseLabel = flight::text::create_text_label();
-  pauseLabel->data.text = flight::String("PAUSED");
+  pauseLabel->data->text = flight::String("PAUSED");
   pauseLabel->x = WIDTH / 2.0 - 40.0;
   pauseLabel->y = HEIGHT / 2.0 - 15.0;
   invalidate_node_local_transform(pauseLabel);

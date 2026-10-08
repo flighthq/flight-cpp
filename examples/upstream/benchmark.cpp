@@ -45,11 +45,11 @@ int main() {
   add_texture_atlas_region(atlas, 0, 0, SHAPE_SIZE, SHAPE_SIZE);
 
   auto quadBatch = create_quad_batch();
-  quadBatch->data.atlas = atlas;
+  quadBatch->data->atlas = atlas;
   add_node_child(root, quadBatch);
 
   auto countLabel = flight::text::create_text_label();
-  countLabel->data.text = flight::String("0 shapes");
+  countLabel->data->text = flight::String("0 shapes");
   countLabel->x = 10.0;
   countLabel->y = HEIGHT - 24.0;
   invalidate_node_local_transform(countLabel);

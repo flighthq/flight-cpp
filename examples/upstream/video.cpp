@@ -45,15 +45,15 @@ int main() {
 
   // Create video textures to display on sprites.
   auto videoTexture = flight::video::create_video_texture();
-  videoNode->data.texture = videoTexture;
+  videoNode->data->texture = videoTexture;
   invalidate_node_appearance(videoNode);
 
   auto secondTexture = flight::video::create_video_texture();
-  secondVideoNode->data.texture = secondTexture;
+  secondVideoNode->data->texture = secondTexture;
   invalidate_node_appearance(secondVideoNode);
 
   auto thirdTexture = flight::video::create_video_texture();
-  thirdVideoNode->data.texture = thirdTexture;
+  thirdVideoNode->data->texture = thirdTexture;
   invalidate_node_appearance(thirdVideoNode);
 
   // Play and configure video channels.

@@ -34,7 +34,7 @@ int main() {
   add_texture_atlas_region(atlas, 0, 0, QUAD_SIZE, QUAD_SIZE);
 
   auto batch = flight::quadbatch::create_quad_batch();
-  batch->data.atlas = atlas;
+  batch->data->atlas = atlas;
   for (int i = 0; i < INSTANCE_COUNT; ++i) {
     flight::quadbatch::append_quad_batch_instance(batch, i % 3, 0.0, 0.0);
   }
@@ -52,21 +52,21 @@ int main() {
 
   // Labels
   auto titleLabel = flight::text::create_text_label();
-  titleLabel->data.text = flight::String("ONE GL QUADBATCH PRODUCER, TWO EMBEDS");
+  titleLabel->data->text = flight::String("ONE GL QUADBATCH PRODUCER, TWO EMBEDS");
   titleLabel->x = 24.0;
   titleLabel->y = 18.0;
   invalidate_node_local_transform(titleLabel);
   add_node_child(root, titleLabel);
 
   auto portableLabel = flight::text::create_text_label();
-  portableLabel->data.text = flight::String("PORTABLE - Sprite + ImageResource");
+  portableLabel->data->text = flight::String("PORTABLE - Sprite + ImageResource");
   portableLabel->x = 24.0;
   portableLabel->y = 62.0;
   invalidate_node_local_transform(portableLabel);
   add_node_child(root, portableLabel);
 
   auto descLabel = flight::text::create_text_label();
-  descLabel->data.text = flight::String("Producer owns pixels + cadence. Consumer owns placement.");
+  descLabel->data->text = flight::String("Producer owns pixels + cadence. Consumer owns placement.");
   descLabel->x = 24.0;
   descLabel->y = 336.0;
   invalidate_node_local_transform(descLabel);

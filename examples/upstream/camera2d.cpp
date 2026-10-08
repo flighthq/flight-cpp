@@ -119,7 +119,7 @@ int main() {
   add_node_child(worldContainer, playerShape);
 
   auto zoomLabel = flight::text::create_text_label();
-  zoomLabel->data.text = flight::String("Zoom: 1.00x");
+  zoomLabel->data->text = flight::String("Zoom: 1.00x");
   zoomLabel->x = 10.0;
   zoomLabel->y = 10.0;
   invalidate_node_local_transform(zoomLabel);

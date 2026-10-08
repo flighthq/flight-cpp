@@ -81,7 +81,7 @@ int main() {
 
   // Title
   auto title = flight::text::create_text_label();
-  title->data.text = flight::String("Particle Editor");
+  title->data->text = flight::String("Particle Editor");
   title->x = 24.0;
   title->y = 18.0;
   invalidate_node_local_transform(title);

@@ -1962,6 +1962,34 @@
       "unblocks": "Shape construction and drawing-command use across the upstream Scene2D examples.",
       "expires": "when flattened Node2D creation retains exact owners and Ref/token accesses emit with their declared C++ carriers.",
       "authoredOn": "2026-10-08"
+    },
+    {
+      "id": "text-label-node2d-construction",
+      "path": "flight/text/text_label.hpp",
+      "package": "@flighthq/text",
+      "status": "complete",
+      "derivedFrom": "16fdda10c303a942a5c3ac39d64fe565ff914c490305e9c052bfb8fd191dc538",
+      "reason": "The emitter refuses TextLabel data, runtime, and node construction across Partial and flattened Node2D boundaries even though the generated concrete data and node owners are complete.",
+      "change": "Constructs exact TextLabelData and TextLabel owners with source defaults and an initialized Node2D runtime, and restores the public text-format, sizing, alignment, and string accessors with revision invalidation.",
+      "equivalence": "Every data and transform default matches the source; mutations are no-ops for equal values and otherwise invalidate local content and bounds once while retaining the exact provided format or string owner.",
+      "whyNotAPatchOrRepair": "The target failure is owner construction and recovery for a flattened intersection. A declaration repair cannot provide behavior, and changing the portable source interface to manufacture target inheritance would alter its model.",
+      "unblocks": "TextLabel creation and mutation throughout the upstream Scene2D example ports.",
+      "expires": "when Partial data initialization and flattened Node2D construction emit for TextLabel.",
+      "authoredOn": "2026-10-08"
+    },
+    {
+      "id": "rich-text-node2d-construction",
+      "path": "flight/text/rich_text.hpp",
+      "package": "@flighthq/text",
+      "status": "complete",
+      "derivedFrom": "904ecb30e7bf895a37bb21507938dd89b0e170dadf89104b3677d50f1f9d4c82",
+      "reason": "The generated module refuses RichText data, node, runtime, signal, and helper declarations and its retained body repeatedly accesses Ref-owned data as a value, so merely inserting the omitted declarations still leaves the header uncompilable.",
+      "change": "Constructs exact RichText data and node owners, retains the independent exact RichTextRuntime in an identity-keyed weak registry, exposes it through readonly structural views, and restores core content, string, append, and scroll operations.",
+      "equivalence": "RichText defaults match the source, each node has one lifetime-bound exact runtime, content updates preserve text and range owners, string replacement clears stale ranges, append retains existing ranges, and invalidation follows auto-size bounds semantics.",
+      "whyNotAPatchOrRepair": "Ref member access can be repaired textually, but exact runtime recovery still has no emitted heritage and many required behavioral declarations remain absent. The identity registry preserves the source owner without unsafe casts.",
+      "unblocks": "RichText construction plus core content and text-input runtime access for upstream examples.",
+      "expires": "when flattened RichText runtime heritage, Partial construction, and Ref member access emit directly.",
+      "authoredOn": "2026-10-08"
     }
   ]
 }

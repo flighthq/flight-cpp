@@ -116,7 +116,7 @@ int main() {
 
   // State label.
   auto stateLabel = flight::text::create_text_label();
-  stateLabel->data.text = flight::String("State: idle");
+  stateLabel->data->text = flight::String("State: idle");
   stateLabel->x = 20.0;
   stateLabel->y = 20.0;
   invalidate_node_local_transform(stateLabel);

@@ -88,28 +88,28 @@ int main() {
 
   // Labels
   auto title = flight::text::create_text_label();
-  title->data.text = flight::String("Standard Format Loading");
+  title->data->text = flight::String("Standard Format Loading");
   title->x = 24.0;
   title->y = 20.0;
   invalidate_node_local_transform(title);
   add_node_child(root, title);
 
   auto gltfLabel = flight::text::create_text_label();
-  gltfLabel->data.text = flight::String("glTF 2.0");
+  gltfLabel->data->text = flight::String("glTF 2.0");
   gltfLabel->x = 42.0;
   gltfLabel->y = 118.0;
   invalidate_node_local_transform(gltfLabel);
   add_node_child(root, gltfLabel);
 
   auto tpLabel = flight::text::create_text_label();
-  tpLabel->data.text = flight::String("TexturePacker");
+  tpLabel->data->text = flight::String("TexturePacker");
   tpLabel->x = 302.0;
   tpLabel->y = 118.0;
   invalidate_node_local_transform(tpLabel);
   add_node_child(root, tpLabel);
 
   auto tiledLabel = flight::text::create_text_label();
-  tiledLabel->data.text = flight::String("Tiled TMJ");
+  tiledLabel->data->text = flight::String("Tiled TMJ");
   tiledLabel->x = 562.0;
   tiledLabel->y = 118.0;
   invalidate_node_local_transform(tiledLabel);

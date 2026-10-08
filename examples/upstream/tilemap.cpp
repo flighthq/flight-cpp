@@ -74,7 +74,7 @@ int main() {
   tilemap->columns = MAP_COLUMNS;
   tilemap->tile_width = TILE_SIZE;
   tilemap->tile_height = TILE_SIZE;
-  tilemap->data.tiles = tileArray;
+  tilemap->data->tiles = tileArray;
   add_node_child(world, tilemap);
 
   // Create camera.

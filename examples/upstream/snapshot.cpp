@@ -126,7 +126,7 @@ int main() {
 
   // Score display.
   auto scoreLabel = flight::text::create_text_label();
-  scoreLabel->data.text = flight::String("Score: 0");
+  scoreLabel->data->text = flight::String("Score: 0");
   scoreLabel->x = 20.0;
   scoreLabel->y = 20.0;
   invalidate_node_local_transform(scoreLabel);

@@ -82,7 +82,7 @@ int main() {
     double cellY = row * CELL_HEIGHT;
 
     auto label = flight::text::create_text_label();
-    label->data.text = flight::String(easings[i].name);
+    label->data->text = flight::String(easings[i].name);
     label->x = cellX + 10.0;
     label->y = cellY + 8.0;
     invalidate_node_local_transform(label);

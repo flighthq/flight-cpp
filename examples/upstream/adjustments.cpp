@@ -52,14 +52,14 @@ int main() {
   fused = fuse_color_matrices(fused, saturationMatrix);
 
   auto heading = flight::text::create_text_label();
-  heading->data.text = flight::String("COLOR ADJUSTMENTS");
+  heading->data->text = flight::String("COLOR ADJUSTMENTS");
   heading->x = 40.0;
   heading->y = 20.0;
   invalidate_node_local_transform(heading);
   add_node_child(root, heading);
 
   auto beforeLabel = flight::text::create_text_label();
-  beforeLabel->data.text = flight::String("Before matrix:");
+  beforeLabel->data->text = flight::String("Before matrix:");
   beforeLabel->x = SWATCHES_X;
   beforeLabel->y = SWATCHES_BEFORE_Y - 20.0;
   invalidate_node_local_transform(beforeLabel);
@@ -83,7 +83,7 @@ int main() {
   }
 
   auto afterLabel = flight::text::create_text_label();
-  afterLabel->data.text = flight::String("After matrix:");
+  afterLabel->data->text = flight::String("After matrix:");
   afterLabel->x = SWATCHES_X;
   afterLabel->y = SWATCHES_AFTER_Y - 20.0;
   invalidate_node_local_transform(afterLabel);

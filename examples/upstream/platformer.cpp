@@ -93,7 +93,7 @@ int main() {
   auto flowStack = flight::flowstates::create_flow_stack();
 
   auto scoreLabel = flight::text::create_text_label();
-  scoreLabel->data.text = flight::String("Score: 0");
+  scoreLabel->data->text = flight::String("Score: 0");
   scoreLabel->x = 10.0;
   scoreLabel->y = 10.0;
   invalidate_node_local_transform(scoreLabel);

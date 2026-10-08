@@ -105,7 +105,7 @@ int main() {
 
   // HUD label.
   auto label = flight::text::create_text_label();
-  label->data.text = flight::String("PARTICLE EMITTER");
+  label->data->text = flight::String("PARTICLE EMITTER");
   label->x = 20.0;
   label->y = 20.0;
   invalidate_node_local_transform(label);

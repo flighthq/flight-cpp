@@ -79,7 +79,7 @@ int main() {
     add_node_child(root, hand);
 
     auto label = flight::text::create_text_label();
-    label->data.text = flight::String(cd.label);
+    label->data->text = flight::String(cd.label);
     label->x = cd.cx - 40.0;
     label->y = cd.cy + cd.radius + 15.0;
     invalidate_node_local_transform(label);

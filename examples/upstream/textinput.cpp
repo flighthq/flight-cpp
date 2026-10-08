@@ -37,36 +37,36 @@ int main() {
   auto normalField = flight::text::create_rich_text();
   normalField->x = FIELD_X;
   normalField->y = START_Y + 22.0;
-  normalField->data.width = FIELD_WIDTH;
-  normalField->data.height = FIELD_HEIGHT;
-  normalField->data.multiline = false;
-  normalField->data.selectable = true;
-  normalField->data.background = true;
-  normalField->data.backgroundColor = 0xffffffff;
-  normalField->data.border = true;
-  normalField->data.borderColor = 0x999999ff;
+  normalField->data->width = FIELD_WIDTH;
+  normalField->data->height = FIELD_HEIGHT;
+  normalField->data->multiline = false;
+  normalField->data->selectable = true;
+  normalField->data->background = true;
+  normalField->data->background_color = 0xffffffff;
+  normalField->data->border = true;
+  normalField->data->border_color = 0x999999ff;
   invalidate_node_local_transform(normalField);
 
   auto numericField = flight::text::create_rich_text();
   numericField->x = FIELD_X;
   numericField->y = START_Y + FIELD_GAP + 22.0;
-  numericField->data.width = FIELD_WIDTH;
-  numericField->data.height = FIELD_HEIGHT;
-  numericField->data.multiline = false;
-  numericField->data.selectable = true;
-  numericField->data.background = true;
-  numericField->data.backgroundColor = 0xffffffff;
+  numericField->data->width = FIELD_WIDTH;
+  numericField->data->height = FIELD_HEIGHT;
+  numericField->data->multiline = false;
+  numericField->data->selectable = true;
+  numericField->data->background = true;
+  numericField->data->background_color = 0xffffffff;
   invalidate_node_local_transform(numericField);
 
   auto passwordField = flight::text::create_rich_text();
   passwordField->x = FIELD_X;
   passwordField->y = START_Y + FIELD_GAP * 2.0 + 22.0;
-  passwordField->data.width = FIELD_WIDTH;
-  passwordField->data.height = FIELD_HEIGHT;
-  passwordField->data.multiline = false;
-  passwordField->data.selectable = true;
-  passwordField->data.background = true;
-  passwordField->data.backgroundColor = 0xffffffff;
+  passwordField->data->width = FIELD_WIDTH;
+  passwordField->data->height = FIELD_HEIGHT;
+  passwordField->data->multiline = false;
+  passwordField->data->selectable = true;
+  passwordField->data->background = true;
+  passwordField->data->background_color = 0xffffffff;
   invalidate_node_local_transform(passwordField);
 
   // Enable text input with appropriate options.
@@ -82,19 +82,19 @@ int main() {
 
   // Labels above each field.
   auto normalLabel = flight::text::create_text_label();
-  normalLabel->data.text = flight::String("Normal Text Field");
+  normalLabel->data->text = flight::String("Normal Text Field");
   normalLabel->x = LABEL_X;
   normalLabel->y = START_Y;
   invalidate_node_local_transform(normalLabel);
 
   auto numericLabel = flight::text::create_text_label();
-  numericLabel->data.text = flight::String("Numeric Only (digits 0-9)");
+  numericLabel->data->text = flight::String("Numeric Only (digits 0-9)");
   numericLabel->x = LABEL_X;
   numericLabel->y = START_Y + FIELD_GAP;
   invalidate_node_local_transform(numericLabel);
 
   auto passwordLabel = flight::text::create_text_label();
-  passwordLabel->data.text = flight::String("Password Field");
+  passwordLabel->data->text = flight::String("Password Field");
   passwordLabel->x = LABEL_X;
   passwordLabel->y = START_Y + FIELD_GAP * 2.0;
   invalidate_node_local_transform(passwordLabel);
@@ -110,7 +110,7 @@ int main() {
 
   // Instructions label.
   auto instructionsText = flight::text::create_text_label();
-  instructionsText->data.text = flight::String(
+  instructionsText->data->text = flight::String(
     "Click a field to focus. Type to enter text.\n"
     "Arrow keys: move caret | Shift+Arrow: select\n"
     "Ctrl+A: select all | Ctrl+Z: undo | Ctrl+Y: redo\n"

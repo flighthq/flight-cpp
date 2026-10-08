@@ -85,7 +85,7 @@ int main() {
 
   // Status label.
   auto statusLabel = flight::text::create_text_label();
-  statusLabel->data.text = flight::String("Hover/click/drag the shapes");
+  statusLabel->data->text = flight::String("Hover/click/drag the shapes");
   statusLabel->x = 20.0;
   statusLabel->y = 20.0;
   invalidate_node_local_transform(statusLabel);
@@ -93,7 +93,7 @@ int main() {
 
   // Event log.
   auto logLabel = flight::text::create_text_label();
-  logLabel->data.text = flight::String("Events:");
+  logLabel->data->text = flight::String("Events:");
   logLabel->x = 20.0;
   logLabel->y = 540.0;
   invalidate_node_local_transform(logLabel);
