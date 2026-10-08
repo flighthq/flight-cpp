@@ -57,9 +57,14 @@ set(UPSTREAM_EXAMPLES_BLOCKED_OTHER
 
 if(TARGET Flight::HostSdl)
   add_library(flight_cpp_upstream_sdl_host STATIC sdl_host.cpp)
-  target_link_libraries(flight_cpp_upstream_sdl_host PUBLIC Flight::HostSdl)
+  target_link_libraries(flight_cpp_upstream_sdl_host PUBLIC Flight::HostSdl Flight::SdkPreview)
   target_include_directories(flight_cpp_upstream_sdl_host PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
   flight_cpp_set_project_warnings(flight_cpp_upstream_sdl_host)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(flight_cpp_upstream_sdl_host PRIVATE
+      -Wno-error=missing-field-initializers
+    )
+  endif()
 
   set(flight_cpp_upstream_targets)
   foreach(example IN LISTS UPSTREAM_EXAMPLES)

@@ -3,13 +3,26 @@
 #include <SDL3/SDL_error.h>
 #include <SDL3/SDL_keyboard.h>
 
+#include <flight/font/glyph_outline_source.hpp>
+#include <flight/font_formats/open_type_cmap.hpp>
+#include <flight/font_formats/open_type_glyf.hpp>
+#include <flight/font_formats/open_type_metrics.hpp>
+#include <flight/font_formats/sfnt_table_directory.hpp>
+#include <flight/types/glyph_outline_source.hpp>
+#include <flight/types/glyph_source.hpp>
+
 #include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
+#include <fstream>
+#include <iterator>
 #include <numbers>
+#include <optional>
 #include <stdexcept>
 #include <thread>
+#include <unordered_map>
+#include <utility>
 
 namespace flight::examples {
 namespace {
@@ -22,7 +35,271 @@ namespace {
   return static_cast<std::uint8_t>(std::clamp(std::lround(value), 0L, 255L));
 }
 
+template <typename Value>
+[[nodiscard]] auto readonly_row(const std::shared_ptr<Value>& value) {
+  return flight::structural_ref_cast<
+      flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Value>>>>>(
+      flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Value>>>>(value));
+}
+
+struct LoadedFont final {
+  flight::Ref<flight::types::GlyphOutlineSource> source;
+  flight::Ref<flight::types::GlyphOutlineMetrics> metrics;
+};
+
+[[nodiscard]] std::optional<flight::Uint32Array> read_glyph_ranges(
+    const flight::Uint8Array& bytes,
+    const flight::Ref<flight::types::SfntTableDirectory>& directory,
+    double glyph_count,
+    double loca_format) {
+  const auto loca = directory->tables.get(flight::String("loca"));
+  if (!loca.has_value()) return std::nullopt;
+  const double entry_count = glyph_count + 1.0;
+  const double entry_bytes = loca_format == 0.0 ? 2.0 : 4.0;
+  const double length = flight::row_get<flight::RowKey<"length">>(loca.value());
+  const double offset = flight::row_get<flight::RowKey<"offset">>(loca.value());
+  if (entry_count * entry_bytes > length) return std::nullopt;
+  flight::DataView view(
+      bytes.buffer,
+      static_cast<double>(bytes.byte_offset),
+      static_cast<double>(bytes.byte_length));
+  flight::Uint32Array ranges(entry_count);
+  for (double index = 0.0; index < entry_count; index += 1.0) {
+    const double value = loca_format == 0.0
+                             ? view.get_uint16(offset + index * 2.0) * 2.0
+                             : view.get_uint32(offset + index * 4.0);
+    ranges.set_index(index, value);
+  }
+  return ranges;
+}
+
+[[nodiscard]] std::optional<LoadedFont> load_true_type_font(std::string_view path) {
+  std::ifstream stream(std::string(path), std::ios::binary | std::ios::ate);
+  if (!stream) return std::nullopt;
+  const auto end = stream.tellg();
+  if (end <= 0) return std::nullopt;
+  std::vector<std::uint8_t> storage(static_cast<std::size_t>(end));
+  stream.seekg(0);
+  if (!stream.read(reinterpret_cast<char*>(storage.data()), end)) return std::nullopt;
+
+  const flight::Uint8Array bytes(storage);
+  const auto directory = flight::font_formats::read_sfnt_table_directory(bytes);
+  if (!directory.has_value()) return std::nullopt;
+  const auto directory_row = readonly_row(directory.value());
+  const double glyph_count = flight::font_formats::read_open_type_glyph_count(
+      bytes, directory_row);
+  const double loca_format = flight::font_formats::read_open_type_loca_format(
+      bytes, directory_row);
+  const auto metrics = flight::font_formats::read_open_type_metrics(bytes, directory_row);
+  const auto advances = flight::font_formats::read_open_type_advances(
+      bytes, directory_row, glyph_count);
+  const auto codepoints = flight::font_formats::read_open_type_codepoint_map(
+      bytes, directory_row);
+  const auto ranges = read_glyph_ranges(
+      bytes, directory.value(), glyph_count, loca_format);
+  if (glyph_count <= 0.0 || loca_format < 0.0 || !metrics.has_value() ||
+      !advances.has_value() || !codepoints.has_value() || !ranges.has_value()) {
+    return std::nullopt;
+  }
+
+  auto source = flight::make_ref<flight::types::GlyphOutlineSource>(
+      flight::types::GlyphOutlineSource{});
+  source->get_glyph_outline =
+      [bytes, directory = directory.value(), ranges = ranges.value(), glyph_count](
+          flight::Ref<flight::types::Path> path_out,
+          double glyph_index) {
+        if (glyph_index < 0.0 || glyph_index >= glyph_count) return false;
+        return flight::font_formats::read_open_type_glyph_outline(
+            path_out, bytes, readonly_row(directory), ranges, glyph_index);
+      };
+  source->get_glyph_outline_advance =
+      [advances = advances.value(), glyph_count](double glyph_index) {
+        return glyph_index < 0.0 || glyph_index >= glyph_count
+                   ? 0.0
+                   : advances.get_index(glyph_index);
+      };
+  source->get_glyph_outline_index_for_code_point =
+      [codepoints = codepoints.value()](double codepoint) {
+        return codepoints.get(codepoint).value_or(-1.0);
+      };
+  source->get_glyph_outline_metrics = [metrics = metrics.value()] {
+    return readonly_row(metrics);
+  };
+  return LoadedFont{.source = std::move(source), .metrics = metrics.value()};
+}
+
+[[nodiscard]] std::optional<LoadedFont> load_example_font() {
+  std::vector<std::string> candidates;
+  if (const char* configured = std::getenv("FLIGHT_CPP_EXAMPLE_FONT")) {
+    candidates.emplace_back(configured);
+  }
+  candidates.emplace_back("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf");
+  candidates.emplace_back("/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf");
+  candidates.emplace_back("/usr/share/fonts/truetype/freefont/FreeSans.ttf");
+  candidates.emplace_back("/System/Library/Fonts/Supplemental/Arial.ttf");
+  if (const char* windows = std::getenv("WINDIR")) {
+    candidates.emplace_back(std::string(windows) + "/Fonts/arial.ttf");
+  }
+  for (const auto& candidate : candidates) {
+    try {
+      if (auto font = load_true_type_font(candidate)) return font;
+    } catch (const std::exception&) {
+      // A malformed or unsupported candidate must not prevent later system fallbacks.
+    }
+  }
+  return std::nullopt;
+}
+
+[[nodiscard]] std::uint32_t next_codepoint(
+    std::string_view text,
+    std::size_t& offset) {
+  const auto first = static_cast<std::uint8_t>(text[offset++]);
+  if (first < 0x80U) return first;
+  const int continuation_count =
+      (first & 0xe0U) == 0xc0U ? 1 : (first & 0xf0U) == 0xe0U ? 2 :
+      (first & 0xf8U) == 0xf0U ? 3 : 0;
+  if (continuation_count == 0 || offset + static_cast<std::size_t>(continuation_count) > text.size()) {
+    return 0xfffdU;
+  }
+  std::uint32_t output = first & (0x7fU >> continuation_count);
+  for (int index = 0; index < continuation_count; ++index) {
+    const auto byte = static_cast<std::uint8_t>(text[offset++]);
+    if ((byte & 0xc0U) != 0x80U) return 0xfffdU;
+    output = (output << 6U) | (byte & 0x3fU);
+  }
+  return output;
+}
+
 } // namespace
+
+class Canvas::TextRenderer final {
+ public:
+  explicit TextRenderer(SDL_Renderer* renderer)
+      : renderer_(renderer), font_(load_example_font()) {}
+
+  ~TextRenderer() noexcept {
+    for (auto& [key, glyph] : glyphs_) {
+      static_cast<void>(key);
+      if (glyph.texture != nullptr) SDL_DestroyTexture(glyph.texture);
+    }
+  }
+
+  [[nodiscard]] bool available() const noexcept { return font_.has_value(); }
+
+  void draw(
+      std::string_view value,
+      double x,
+      double y,
+      std::uint32_t color,
+      double size,
+      double alpha) {
+    if (!font_) return;
+    const int pixel_size = std::max(1, static_cast<int>(std::lround(size)));
+    const double scale = static_cast<double>(pixel_size) / font_->metrics->units_per_em;
+    const double baseline = y + font_->metrics->ascent * scale;
+    double pen = x;
+    std::size_t offset = 0;
+    const auto rgba = unpack_color(color, alpha);
+    while (offset < value.size()) {
+      const std::uint32_t codepoint = next_codepoint(value, offset);
+      const Glyph& glyph = get_glyph(codepoint, pixel_size);
+      if (glyph.texture != nullptr) {
+        if (!SDL_SetTextureColorMod(
+                glyph.texture,
+                channel(static_cast<double>(rgba[0]) * 255.0),
+                channel(static_cast<double>(rgba[1]) * 255.0),
+                channel(static_cast<double>(rgba[2]) * 255.0)) ||
+            !SDL_SetTextureAlphaMod(
+                glyph.texture,
+                channel(static_cast<double>(rgba[3]) * 255.0))) {
+          throw sdl_error("SDL could not tint example text");
+        }
+        const SDL_FRect destination{
+            static_cast<float>(pen + glyph.bearing_x),
+            static_cast<float>(baseline - glyph.bearing_y),
+            static_cast<float>(glyph.width),
+            static_cast<float>(glyph.height),
+        };
+        if (!SDL_RenderTexture(renderer_, glyph.texture, nullptr, &destination)) {
+          throw sdl_error("SDL could not draw example text");
+        }
+      }
+      pen += glyph.advance;
+    }
+  }
+
+  [[nodiscard]] double width(std::string_view value, double size) {
+    if (!font_) return 0.0;
+    const int pixel_size = std::max(1, static_cast<int>(std::lround(size)));
+    double output = 0.0;
+    std::size_t offset = 0;
+    while (offset < value.size()) {
+      output += get_glyph(next_codepoint(value, offset), pixel_size).advance;
+    }
+    return output;
+  }
+
+ private:
+  struct Glyph final {
+    SDL_Texture* texture{};
+    double advance{};
+    double bearing_x{};
+    double bearing_y{};
+    double width{};
+    double height{};
+  };
+
+  [[nodiscard]] const Glyph& get_glyph(std::uint32_t codepoint, int size) {
+    const std::uint64_t key = (static_cast<std::uint64_t>(size) << 32U) | codepoint;
+    if (const auto found = glyphs_.find(key); found != glyphs_.end()) return found->second;
+
+    Glyph glyph{.advance = static_cast<double>(size) * 0.5};
+    auto options = flight::make_ref<flight::types::GlyphRasterizeOptions>(
+        flight::types::GlyphRasterizeOptions{
+            .font_family = flight::String("sans-serif"),
+            .font_size = static_cast<double>(size),
+            .font_style = std::nullopt,
+            .font_weight = std::nullopt,
+        });
+    auto bitmap = flight::font::rasterize_glyph_outline_source(
+        font_->source, static_cast<double>(codepoint), readonly_row(options));
+    if (!bitmap.has_value() && codepoint != static_cast<std::uint32_t>('?')) {
+      bitmap = flight::font::rasterize_glyph_outline_source(
+          font_->source, static_cast<double>('?'), readonly_row(options));
+    }
+    if (bitmap.has_value()) {
+      glyph.advance = bitmap.value()->advance;
+      glyph.bearing_x = bitmap.value()->bearing_x;
+      glyph.bearing_y = bitmap.value()->bearing_y;
+      glyph.width = bitmap.value()->width;
+      glyph.height = bitmap.value()->height;
+      if (glyph.width > 0.0 && glyph.height > 0.0) {
+        glyph.texture = SDL_CreateTexture(
+            renderer_,
+            SDL_PIXELFORMAT_RGBA32,
+            SDL_TEXTUREACCESS_STATIC,
+            static_cast<int>(glyph.width),
+            static_cast<int>(glyph.height));
+        if (glyph.texture == nullptr ||
+            !SDL_UpdateTexture(
+                glyph.texture,
+                nullptr,
+                bitmap.value()->pixels.span().data(),
+                static_cast<int>(glyph.width) * 4) ||
+            !SDL_SetTextureBlendMode(glyph.texture, SDL_BLENDMODE_BLEND) ||
+            !SDL_SetTextureScaleMode(glyph.texture, SDL_SCALEMODE_LINEAR)) {
+          if (glyph.texture != nullptr) SDL_DestroyTexture(glyph.texture);
+          throw sdl_error("SDL could not create an example glyph texture");
+        }
+      }
+    }
+    return glyphs_.emplace(key, std::move(glyph)).first->second;
+  }
+
+  SDL_Renderer* renderer_{};
+  std::optional<LoadedFont> font_;
+  std::unordered_map<std::uint64_t, Glyph> glyphs_;
+};
 
 bool Input::key_down(SDL_Keycode key) const { return held_keys.contains(key); }
 
@@ -54,9 +331,11 @@ Canvas::Canvas(std::string_view title, bool hidden)
   if (!SDL_SetRenderDrawBlendMode(renderer_, SDL_BLENDMODE_BLEND)) {
     throw sdl_error("SDL could not enable alpha blending");
   }
+  text_renderer_ = std::make_unique<TextRenderer>(renderer_);
 }
 
 Canvas::~Canvas() noexcept {
+  text_renderer_.reset();
   if (renderer_ != nullptr) SDL_DestroyRenderer(renderer_);
 }
 
@@ -363,6 +642,10 @@ void Canvas::text(
     std::uint32_t color,
     double size,
     double alpha) {
+  if (text_renderer_->available()) {
+    text_renderer_->draw(value, x, y, color, size, alpha);
+    return;
+  }
   set_color(color, alpha);
   const float scale = static_cast<float>(std::max(0.5, size / 8.0));
   if (!SDL_SetRenderScale(renderer_, scale, scale)) {
@@ -376,6 +659,11 @@ void Canvas::text(
       terminated.c_str());
   static_cast<void>(SDL_SetRenderScale(renderer_, 1.0F, 1.0F));
   if (!rendered) throw sdl_error("SDL could not draw example text");
+}
+
+double Canvas::text_width(std::string_view value, double size) {
+  if (text_renderer_->available()) return text_renderer_->width(value, size);
+  return static_cast<double>(value.size()) * 8.0 * std::max(0.5, size / 8.0);
 }
 
 void Canvas::start_text_input() { window_.start_text_input(); }

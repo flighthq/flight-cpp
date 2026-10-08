@@ -216,16 +216,17 @@ class TextInputExample final {
       canvas.fill_rectangle(field_x, field.y, field_width, field_height, 0xffffffffU);
       canvas.stroke_rectangle(field_x, field.y, field_width, field_height, 0x999999ffU);
       const std::string displayed = field.password ? std::string(field.value.size(), '*') : field.value;
-      const double glyph_width = 16.0;
       if (focus_ == index) {
         std::size_t begin{};
         std::size_t end{};
         normalized_selection(field, begin, end);
+        const double selection_x = canvas.text_width(displayed.substr(0, begin), 16.0);
+        const double selection_width = canvas.text_width(displayed.substr(begin, end - begin), 16.0);
         if (begin != end) {
-          canvas.fill_rectangle(field_x + 5.0 + static_cast<double>(begin) * glyph_width, field.y + 3.0, static_cast<double>(end - begin) * glyph_width, 22.0, 0x3399ffffU, 0.35);
+          canvas.fill_rectangle(field_x + 5.0 + selection_x, field.y + 3.0, selection_width, 22.0, 0x3399ffffU, 0.35);
         }
         if (begin == end && std::fmod(time, 1.0) < 0.55) {
-          canvas.line(field_x + 5.0 + static_cast<double>(end) * glyph_width, field.y + 4.0, field_x + 5.0 + static_cast<double>(end) * glyph_width, field.y + 24.0, 0x222222ffU);
+          canvas.line(field_x + 5.0 + selection_x, field.y + 4.0, field_x + 5.0 + selection_x, field.y + 24.0, 0x222222ffU);
         }
       }
       canvas.text(displayed, field_x + 5.0, field.y + 6.0, 0x222222ffU, 16.0);

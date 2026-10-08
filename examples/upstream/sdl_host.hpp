@@ -10,6 +10,7 @@
 #include <array>
 #include <cstdint>
 #include <functional>
+#include <memory>
 #include <span>
 #include <string>
 #include <string_view>
@@ -150,6 +151,7 @@ class Canvas final {
       std::uint32_t color = 0xffffffff,
       double size = 12.0,
       double alpha = 1.0);
+  [[nodiscard]] double text_width(std::string_view value, double size = 12.0);
 
   void start_text_input();
   void stop_text_input();
@@ -158,10 +160,13 @@ class Canvas final {
   [[nodiscard]] SDL_Renderer* native_renderer() const noexcept;
 
  private:
+  class TextRenderer;
+
   void set_color(std::uint32_t color, double alpha);
 
   flight::host_sdl::Window window_;
   SDL_Renderer* renderer_{};
+  std::unique_ptr<TextRenderer> text_renderer_;
 };
 
 struct Frame final {
