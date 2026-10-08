@@ -1,0 +1,41 @@
+diff --git a/packages/mesh/src/meshGeometryBuilders.ts b/packages/mesh/src/meshGeometryBuilders.ts
+index 57cb4a7..4c4a8c2 100644
+--- a/packages/mesh/src/meshGeometryBuilders.ts
++++ b/packages/mesh/src/meshGeometryBuilders.ts
+@@ -263,22 +263,20 @@ export function createIcosphereMeshGeometry(radius: number = 0.5, subdivisions:
+   // Icosahedron base vertices (unit sphere).
+   const phi = (1 + Math.sqrt(5)) * 0.5;
+   const scale = 1 / Math.sqrt(1 + phi * phi);
+-  const baseVerts = (
+-    [
+-      [-1, phi, 0],
+-      [1, phi, 0],
+-      [-1, -phi, 0],
+-      [1, -phi, 0],
+-      [0, -1, phi],
+-      [0, 1, phi],
+-      [0, -1, -phi],
+-      [0, 1, -phi],
+-      [phi, 0, -1],
+-      [phi, 0, 1],
+-      [-phi, 0, -1],
+-      [-phi, 0, 1],
+-    ] as ReadonlyArray<readonly [number, number, number]>
+-  ).map(([x, y, z]) => [x * scale, y * scale, z * scale] as [number, number, number]);
++  const baseVerts: Array<[number, number, number]> = [
++    [-scale, phi * scale, 0],
++    [scale, phi * scale, 0],
++    [-scale, -phi * scale, 0],
++    [scale, -phi * scale, 0],
++    [0, -scale, phi * scale],
++    [0, scale, phi * scale],
++    [0, -scale, -phi * scale],
++    [0, scale, -phi * scale],
++    [phi * scale, 0, -scale],
++    [phi * scale, 0, scale],
++    [-phi * scale, 0, -scale],
++    [-phi * scale, 0, scale],
++  ];
+ 
+   const verts = baseVerts.map((v) => [...v] as [number, number, number]);
+   let faces: Array<[number, number, number]> = [

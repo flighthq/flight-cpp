@@ -791,6 +791,38 @@
       "unblocks": "Allows the concrete material constructor modules to retain BlinnPhongMaterial, LambertMaterial, PhongMaterial, StandardPbrMaterial, SpecularGlossinessPbrMaterial, ExtendedPbrMaterial, CustomShaderMaterial, and all built-in unlit/debug material owners through initialization.",
       "expires": "when interface-heritage references retain an owner-preserving C++ carrier across base factory results, or Flight adopts exact generic allocation.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "geometry-matrix-independent-storage",
+      "dependency": "flight",
+      "patch": "geometry-matrix-independent-storage.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/geometry/src/matrix3.ts and packages/geometry/src/matrix4.ts",
+      "package": "@flighthq/geometry",
+      "answers": "diagnostic",
+      "refusal": "the typed-array copy constructor lowers as a C++ wrapper copy, so every createMatrix3 and createMatrix4 result aliases its module identity buffer and later matrix writes corrupt every transform, camera, and normal matrix",
+      "rewrite": "Uses the standard typed-array slice operation to copy all nine or sixteen identity elements into independent storage.",
+      "equivalence": "Float32Array.prototype.slice() with no arguments and new Float32Array(existingFloat32Array) both allocate a same-length Float32Array, copy the source elements in order with identical float conversion, and expose no shared backing buffer. The same optional matrix entries are then written in the same order.",
+      "whyNotUpstreamFirst": "The target-neutral slice spelling states the required independent storage directly while the emitter currently selects its reference-sharing C++ wrapper copy constructor for the typed-array constructor form.",
+      "unblocks": "Independent local, world, view, projection, inverse, and scratch matrices for the upstream Transform3D and camera APIs used by real Scene3D examples.",
+      "expires": "when construction of a typed array from another typed array emits a JavaScript-compatible independent storage copy, or Flight adopts the slice spelling.",
+      "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "mesh-icosphere-explicit-base-vertices",
+      "dependency": "flight",
+      "patch": "mesh-icosphere-explicit-base-vertices.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/mesh/src/meshGeometryBuilders.ts",
+      "package": "@flighthq/mesh",
+      "answers": "diagnostic",
+      "refusal": "destructuring map over a readonly tuple array emits the input as Array<tuple> but then attempts an impossible whole-array cast to Array<Array<number>>",
+      "rewrite": "Materializes the twelve already-scaled base vertices directly in their declared mutable tuple array.",
+      "equivalence": "The constants and scale have no side effects. Each coordinate is the same IEEE-754 multiplication as the map result, including the same signs and zeros, in the same vertex order. The following map still makes the same independent mutable vertex tuples consumed by subdivision.",
+      "whyNotUpstreamFirst": "The explicit constants are target-neutral and make the intended tuple owner available without teaching the emitter an unchecked conversion between tuple arrays and number-array arrays.",
+      "unblocks": "Independent compilation and real use of createIcosphereMeshGeometry through the upstream primitive-builder API.",
+      "expires": "when destructuring callbacks over readonly tuple arrays retain their tuple element carrier, or Flight adopts the explicit base vertices.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }

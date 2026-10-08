@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <limits>
 #include <optional>
+#include <stdexcept>
 #include <type_traits>
 #include <unordered_map>
 #include <variant>
@@ -491,6 +492,19 @@ inline void compute_mesh_geometry_tangents(
     }
   }
   out->version += 1.0;
+}
+
+template <typename Schema>
+inline void compute_mesh_geometry_tangents(
+    flight::Ref<MeshGeometry> out,
+    const flight::StructuralRef<Schema>& geometry,
+    std::optional<std::optional<flight::Uint32Array>> position_groups =
+        std::nullopt) {
+  const auto owner = geometry.shared_object();
+  if (!owner) {
+    throw std::logic_error("MeshGeometry structural view has no owner");
+  }
+  compute_mesh_geometry_tangents(out, owner, position_groups);
 }
 
 inline void refresh_mesh_geometry_bounds(flight::Ref<MeshGeometry> geometry) {

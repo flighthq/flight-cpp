@@ -1,0 +1,26 @@
+diff --git a/packages/geometry/src/matrix3.ts b/packages/geometry/src/matrix3.ts
+index caa6b64..628d48f 100644
+--- a/packages/geometry/src/matrix3.ts
++++ b/packages/geometry/src/matrix3.ts
+@@ -117,7 +117,7 @@ export function createMatrix3(
+   m21?: number,
+   m22?: number,
+ ): Matrix3 {
+-  const m = new Float32Array(__identity);
++  const m = __identity.slice();
+   if (m00 !== undefined) m[0] = m00;
+   if (m01 !== undefined) m[3] = m01;
+   if (m02 !== undefined) m[6] = m02;
+diff --git a/packages/geometry/src/matrix4.ts b/packages/geometry/src/matrix4.ts
+index 12195a2..52b5cad 100644
+--- a/packages/geometry/src/matrix4.ts
++++ b/packages/geometry/src/matrix4.ts
+@@ -357,7 +357,7 @@ export function createMatrix4(
+   m32?: number,
+   m33?: number,
+ ): Matrix4 {
+-  const m = new Float32Array(__identity);
++  const m = __identity.slice();
+   if (m00 !== undefined) m[0] = m00;
+   if (m01 !== undefined) m[1] = m01;
+   if (m02 !== undefined) m[2] = m02;
