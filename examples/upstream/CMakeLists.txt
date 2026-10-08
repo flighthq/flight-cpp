@@ -1,6 +1,7 @@
-# Naive C++ ports of upstream Flight TypeScript examples. Only examples that
-# pass an independent syntax check belong in UPSTREAM_EXAMPLES; see README.md
-# for the current blocker inventory and promotion procedure.
+# Windowed SDL ports of the upstream Flight TypeScript examples. A port only
+# belongs in UPSTREAM_EXAMPLES once it preserves the original scene, animation,
+# and controls. The SDL host is optional, so these examples are simply omitted
+# from configurations that do not enable FLIGHT_CPP_BUILD_HOST_SDL.
 
 set(UPSTREAM_EXAMPLES
   adjustments
@@ -54,21 +55,31 @@ set(UPSTREAM_EXAMPLES_BLOCKED_MESH_LAYOUT
 set(UPSTREAM_EXAMPLES_BLOCKED_OTHER
 )
 
-foreach(example IN LISTS UPSTREAM_EXAMPLES)
-  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${example}.cpp")
-    add_executable(flight_cpp_upstream_${example} ${example}.cpp)
-    target_link_libraries(flight_cpp_upstream_${example} PRIVATE Flight::SdkPreview)
-    flight_cpp_set_project_warnings(flight_cpp_upstream_${example})
-    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-      # Generated SDK dependencies still contain intentional no-op parameters, ignored
-      # WeakMap erase results, and JavaScript-number indices converted to C++ index types.
-      # Keep all other project warnings fatal for the ports.
-      target_compile_options(flight_cpp_upstream_${example} PRIVATE
-        -Wno-error=conversion
-        -Wno-error=float-conversion
-        -Wno-error=unused-parameter
-        -Wno-error=unused-result
+if(TARGET Flight::HostSdl)
+  add_library(flight_cpp_upstream_sdl_host STATIC sdl_host.cpp)
+  target_link_libraries(flight_cpp_upstream_sdl_host PUBLIC Flight::HostSdl)
+  target_include_directories(flight_cpp_upstream_sdl_host PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+  flight_cpp_set_project_warnings(flight_cpp_upstream_sdl_host)
+
+  foreach(example IN LISTS UPSTREAM_EXAMPLES)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${example}.cpp")
+      add_executable(flight_cpp_upstream_${example} ${example}.cpp)
+      target_link_libraries(flight_cpp_upstream_${example} PRIVATE
+        flight_cpp_upstream_sdl_host
+        Flight::SdkPreview
       )
+      flight_cpp_set_project_warnings(flight_cpp_upstream_${example})
+      if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        # Generated SDK dependencies still contain intentional no-op parameters, ignored
+        # WeakMap erase results, and JavaScript-number indices converted to C++ index types.
+        # Keep all other project warnings fatal for the ports.
+        target_compile_options(flight_cpp_upstream_${example} PRIVATE
+          -Wno-error=conversion
+          -Wno-error=float-conversion
+          -Wno-error=unused-parameter
+          -Wno-error=unused-result
+        )
+      endif()
     endif()
-  endif()
-endforeach()
+  endforeach()
+endif()
