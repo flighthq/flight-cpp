@@ -5,6 +5,7 @@
 
 set(UPSTREAM_EXAMPLES
   adjustments
+  awd2loading
   benchmark
   bitmapfont_generate
   camera2d
@@ -14,7 +15,9 @@ set(UPSTREAM_EXAMPLES
   crossfade
   flowstates
   formatloading
+  instanced_mesh
   interaction
+  materialshowcase
   motionpath
   movieclip
   particleeditor
@@ -22,6 +25,9 @@ set(UPSTREAM_EXAMPLES
   pathboolean
   platformer
   shapes
+  scene_fire
+  scene_picking
+  scene3d
   snapshot
   sound
   spatial
@@ -34,31 +40,11 @@ set(UPSTREAM_EXAMPLES
   video
 )
 
-# Blocked by generated scene2d/display_object.hpp before the example body is
-# checked. That partial header also omits createNode2D/createDisplayObject.
-set(UPSTREAM_EXAMPLES_BLOCKED_SCENE2D
-)
-
-# Blocked by generated mesh/mesh_geometry_layout.hpp before the example body
-# is checked (source->layout.stride is emitted for a Ref-owned layout).
-set(UPSTREAM_EXAMPLES_BLOCKED_MESH_LAYOUT
-  awd2loading
-  instanced_mesh
-  materialshowcase
-  scene_fire
-  scene_picking
-  scene3d
-)
-
-# These fail earlier in another generated SDK header. They also depend on the
-# blocked Scene2D stack after that first failure is repaired.
-set(UPSTREAM_EXAMPLES_BLOCKED_OTHER
-)
-
 if(TARGET Flight::HostSdl)
   add_library(flight_cpp_upstream_sdl_host STATIC
     sdl_host.cpp
     ported_examples_2d.cpp
+    ported_examples_3d.cpp
   )
   target_link_libraries(flight_cpp_upstream_sdl_host PUBLIC Flight::HostSdl Flight::SdkPreview)
   target_include_directories(flight_cpp_upstream_sdl_host PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
