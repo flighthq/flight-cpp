@@ -54,6 +54,14 @@ using flight::types::entity_runtime_key;
 
 inline flight::WeakMap<flight::Ref<MeshGeometry>, flight::Ref<MeshGeometryRuntime>> mesh_geometry_runtimes;
 
+inline flight::Ref<MeshGeometry> create_mesh_geometry_from_fields(
+    std::variant<flight::Uint16Array, flight::Uint32Array, flight::Null,
+                 flight::Undefined> indices,
+    flight::Ref<VertexAttributeLayout> layout,
+    std::optional<flight::Array<flight::Ref<MeshSubset>>> subsets,
+    std::optional<flight::types::PrimitiveTopology> topology,
+    flight::Float32Array vertices);
+
 inline std::optional<flight::Ref<MeshGeometryRuntime>> get_mesh_geometry_runtime_if_present(
     const flight::Ref<MeshGeometry>& geometry) {
   auto runtime = mesh_geometry_runtimes.get(geometry);
@@ -81,6 +89,34 @@ inline double get_mesh_geometry_index_count(flight::Ref<MeshGeometry> geometry) 
                    [](const auto& value) { return value.size(); },
                    geometry->indices.value()))
              : 0.0;
+}
+
+inline std::optional<flight::Ref<MeshMorphBindPose>> get_mesh_geometry_morph_bind_pose(
+    const flight::Ref<MeshGeometry>& geometry) {
+  const auto runtime = get_mesh_geometry_runtime_if_present(geometry);
+  return runtime.has_value() ? runtime.value()->morph_bind_pose : std::nullopt;
+}
+
+inline std::optional<flight::Ref<MeshSkinBindPose>> get_mesh_geometry_skin_bind_pose(
+    const flight::Ref<MeshGeometry>& geometry) {
+  const auto runtime = get_mesh_geometry_runtime_if_present(geometry);
+  return runtime.has_value() ? runtime.value()->skin_bind_pose : std::nullopt;
+}
+
+template <typename Schema>
+inline std::optional<flight::Ref<MeshMorphBindPose>> get_mesh_geometry_morph_bind_pose(
+    const flight::StructuralRef<Schema>& geometry) {
+  const auto owner = geometry.shared_object();
+  if (!owner) throw flight::Error(flight::String("mesh: geometry row has no exact owner"));
+  return get_mesh_geometry_morph_bind_pose(owner);
+}
+
+template <typename Schema>
+inline std::optional<flight::Ref<MeshSkinBindPose>> get_mesh_geometry_skin_bind_pose(
+    const flight::StructuralRef<Schema>& geometry) {
+  const auto owner = geometry.shared_object();
+  if (!owner) throw flight::Error(flight::String("mesh: geometry row has no exact owner"));
+  return get_mesh_geometry_skin_bind_pose(owner);
 }
 
 
@@ -236,8 +272,39 @@ inline void set_mesh_geometry_skin_bind_pose(flight::Ref<MeshGeometry> geometry,
 // and tested the same way
 
 inline flight::Ref<MeshGeometry> clone_mesh_geometry_metadata(flight::Ref<MeshGeometry> source) {
-  (void)source;
-  throw flight::Error(flight::String("mesh: runtime-backed geometry construction is unavailable in this profile"));
+  flight::Array<flight::Ref<MeshSubset>> subsets;
+  for (const auto& subset : source->subsets) {
+    subsets.push(flight::make_ref<MeshSubset>(MeshSubset{
+        .index_count = subset->index_count,
+        .index_offset = subset->index_offset,
+    }));
+  }
+  auto clone = create_mesh_geometry_from_fields(
+      source->indices.has_value()
+          ? std::visit(
+                [](const auto& indices)
+                    -> std::variant<flight::Uint16Array, flight::Uint32Array,
+                                    flight::Null, flight::Undefined> {
+                  using Value = std::remove_cvref_t<decltype(indices)>;
+                  return std::variant<flight::Uint16Array,
+                                      flight::Uint32Array, flight::Null,
+                                      flight::Undefined>{
+                      std::in_place_type<Value>, indices};
+                },
+                source->indices.value())
+          : std::variant<flight::Uint16Array, flight::Uint32Array,
+                         flight::Null, flight::Undefined>{
+                std::in_place_type<flight::Null>, flight::null},
+      source->layout, std::optional{subsets}, source->topology,
+      flight::Float32Array(0.0));
+  if (source->bounds.has_value()) {
+    const auto& bounds = source->bounds.value();
+    clone->bounds = create_aabb(
+        bounds->min->x, bounds->min->y, bounds->min->z,
+        bounds->max->x, bounds->max->y, bounds->max->z);
+    mesh_geometry_runtimes.get(clone).value()->bounds_version = clone->version;
+  }
+  return clone;
 }
 
 inline double get_vertex_count_from_layout(flight::Float32Array vertices, flight::Ref<VertexAttributeLayout> layout) {
@@ -343,6 +410,50 @@ inline flight::Ref<MeshGeometry> create_mesh_geometry(
       flight::row_get<flight::RowKey<"indices">>(options),
       flight::row_get<flight::RowKey<"layout">>(options), subsets, topology,
       flight::row_get<flight::RowKey<"vertices">>(options));
+}
+
+inline flight::Ref<MeshGeometry> clone_mesh_geometry(flight::Ref<MeshGeometry> source) {
+  flight::Float32Array vertices(static_cast<double>(source->vertices.size()));
+  vertices.set(source->vertices);
+  auto indices = std::variant<flight::Uint16Array, flight::Uint32Array,
+                              flight::Null, flight::Undefined>{
+      std::in_place_type<flight::Null>, flight::null};
+  if (source->indices.has_value()) {
+    std::visit(
+        [&](const auto& values) {
+          using Value = std::remove_cvref_t<decltype(values)>;
+          Value copy(static_cast<double>(values.size()));
+          copy.set(values);
+          indices = decltype(indices){std::in_place_type<Value>, std::move(copy)};
+        },
+        source->indices.value());
+  }
+  flight::Array<flight::Ref<MeshSubset>> subsets;
+  for (const auto& subset : source->subsets) {
+    subsets.push(flight::make_ref<MeshSubset>(MeshSubset{
+        .index_count = subset->index_count,
+        .index_offset = subset->index_offset,
+    }));
+  }
+  auto clone = create_mesh_geometry_from_fields(
+      std::move(indices), source->layout, std::optional{subsets},
+      source->topology, std::move(vertices));
+  if (source->bounds.has_value()) {
+    const auto& bounds = source->bounds.value();
+    clone->bounds = create_aabb(
+        bounds->min->x, bounds->min->y, bounds->min->z,
+        bounds->max->x, bounds->max->y, bounds->max->z);
+    mesh_geometry_runtimes.get(clone).value()->bounds_version = clone->version;
+  }
+  return clone;
+}
+
+template <typename Schema>
+inline flight::Ref<MeshGeometry> clone_mesh_geometry(
+    const flight::StructuralRef<Schema>& source) {
+  const auto owner = source.shared_object();
+  if (!owner) throw flight::Error(flight::String("mesh: geometry row has no exact owner"));
+  return clone_mesh_geometry(owner);
 }
 
 

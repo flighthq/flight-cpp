@@ -1,5 +1,8 @@
 #include <flight/scene3d/scene_node.hpp>
+#include <flight/mesh/mesh_geometry_operations.hpp>
+#include <flight/scene3d/mesh.hpp>
 
+#include <cmath>
 #include <iostream>
 
 namespace {
@@ -77,6 +80,85 @@ int main() {
                 std::optional<flight::Ref<types::NodeSignals>>{signals} &&
             scene3d::enable_node3_dsignals(configured) == signals,
         "Node3D signals are allocated lazily and retain identity");
+
+  auto geometry_options =
+      flight::make_ref<types::MeshGeometryFromAttributesOptions>();
+  geometry_options->positions =
+      flight::Array<double>{0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
+                            0.0, 1.0, 0.0};
+  geometry_options->uvs = flight::Array<double>{0.0, 0.0, 1.0, 0.0,
+                                                 0.0, 1.0};
+  geometry_options->indices = flight::Array<double>{0.0, 1.0, 2.0};
+  const auto geometry =
+      flight::mesh::create_mesh_geometry_from_attributes(geometry_options);
+  check(flight::mesh::validate_mesh_geometry(geometry) &&
+            flight::mesh::get_mesh_geometry_triangle_count(geometry) == 1.0,
+        "attribute construction creates valid indexed triangle geometry");
+  auto triangle = flight::make_ref<types::MeshTriangleVertexIndices>();
+  check(flight::mesh::get_mesh_geometry_triangle_vertex_indices(
+            triangle, geometry, 0.0) &&
+            triangle->i0 == 0.0 && triangle->i1 == 1.0 &&
+            triangle->i2 == 2.0,
+        "triangle decoding retains the authored winding");
+  check(std::abs(geometry->vertices.get_index(5.0) - 1.0) < 1e-6 &&
+            std::abs(geometry->vertices.get_index(6.0) - 1.0) < 1e-6 &&
+            std::abs(geometry->vertices.get_index(9.0) - 1.0) < 1e-6,
+        "missing normals and tangents are derived from geometry and UVs");
+  check(geometry->bounds.has_value() &&
+            geometry->bounds.value()->min->x == 0.0 &&
+            geometry->bounds.value()->min->y == 0.0 &&
+            geometry->bounds.value()->max->x == 1.0 &&
+            geometry->bounds.value()->max->y == 1.0,
+        "attribute construction computes local bounds");
+
+  flight::Array<std::optional<flight::Ref<types::Material>>> materials{
+      std::nullopt};
+  const auto mesh = scene3d::create_mesh(geometry, materials);
+  check(mesh->geometry == geometry &&
+            mesh->materials.identity() == materials.identity() &&
+            mesh->kind == types::mesh_kind && mesh->enabled && mesh->visible &&
+            mesh->alpha == 1.0,
+        "Mesh construction stores geometry and materials by reference with Node3D defaults");
+  const auto mesh_runtime = scene3d::get_mesh_runtime(mesh);
+  check(mesh_runtime->traits ==
+            std::optional<flight::Symbol>{types::node3_dtraits_key} &&
+            std::holds_alternative<flight::Undefined>(
+                mesh_runtime->deformed_local_bounds),
+        "Mesh owns its concrete runtime while retaining the Node3D trait contract");
+  const auto mesh_signals = scene3d::enable_mesh_signals(mesh);
+  check(mesh_signals == scene3d::enable_mesh_signals(mesh) &&
+            scene3d::get_mesh_signals(mesh) ==
+                std::optional<flight::Ref<types::NodeSignals>>{mesh_signals},
+        "Mesh signals are lazily allocated on the concrete runtime");
+
+  mesh->position->x = 4.0;
+  const auto rigid_clone = scene3d::clone_mesh(mesh);
+  check(rigid_clone != mesh && rigid_clone->geometry == geometry &&
+            rigid_clone->materials.identity() != mesh->materials.identity() &&
+            rigid_clone->position != mesh->position &&
+            rigid_clone->position->x == 4.0,
+        "rigid Mesh cloning copies node state and material slots while sharing geometry");
+
+  flight::Float32Array weights(1.0);
+  weights.set_index(0.0, 0.25);
+  const flight::Array<flight::Ref<types::MorphTarget>> targets;
+  mesh->morph = flight::make_ref<types::MeshMorph>(
+      types::MeshMorph{.targets = targets, .weights = weights});
+  const auto deforming_clone = scene3d::clone_mesh(mesh);
+  const auto source_morph = std::get<flight::Ref<types::MeshMorph>>(mesh->morph);
+  const auto cloned_morph =
+      std::get<flight::Ref<types::MeshMorph>>(deforming_clone->morph);
+  cloned_morph->weights.set_index(0.0, 0.75);
+  check(deforming_clone->geometry != mesh->geometry &&
+            cloned_morph != source_morph &&
+            cloned_morph->targets.identity() == source_morph->targets.identity() &&
+            source_morph->weights.get_index(0.0) == 0.25 &&
+            scene3d::get_mesh_deformer(deforming_clone) ==
+                types::mesh_deformer_morph,
+        "deforming Mesh cloning isolates mutable geometry and weights but shares immutable targets");
+  check(scene3d::is_mesh(mesh) &&
+            scene3d::is_mesh(flight::Any::object(mesh)),
+        "Mesh discrimination accepts concrete and erased references");
 
   return failures == 0 ? 0 : 1;
 }

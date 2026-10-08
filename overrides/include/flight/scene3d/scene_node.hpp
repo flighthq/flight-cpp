@@ -122,8 +122,8 @@ template <typename Schema>
 
 } // namespace detail
 
-inline flight::Ref<flight::types::Node3DRuntime> create_node3_druntime() {
-  auto runtime = flight::make_ref<flight::types::Node3DRuntime>();
+template <typename Runtime>
+inline void initialize_node3_druntime(const flight::Ref<Runtime>& runtime) {
   runtime->binding = std::nullopt;
   runtime->uid = std::nullopt;
   runtime->color_adjustments = std::nullopt;
@@ -159,6 +159,11 @@ inline flight::Ref<flight::types::Node3DRuntime> create_node3_druntime() {
   runtime->local_matrix4 = std::nullopt;
   runtime->local_matrix4_detached = false;
   runtime->world_matrix4 = std::nullopt;
+}
+
+inline flight::Ref<flight::types::Node3DRuntime> create_node3_druntime() {
+  auto runtime = flight::make_ref<flight::types::Node3DRuntime>();
+  initialize_node3_druntime<flight::types::Node3DRuntime>(runtime);
   return runtime;
 }
 
