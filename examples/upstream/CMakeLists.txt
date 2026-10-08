@@ -3,6 +3,12 @@
 # for the current blocker inventory and promotion procedure.
 
 set(UPSTREAM_EXAMPLES
+  camera2d
+  movieclip
+  shapes
+  sound
+  text
+  textinput
 )
 
 # Blocked by generated scene2d/display_object.hpp before the example body is
@@ -11,7 +17,6 @@ set(UPSTREAM_EXAMPLES_BLOCKED_SCENE2D
   adjustments
   benchmark
   bitmapfont_generate
-  camera2d
   clock
   collision
   cross_backend_embed
@@ -23,13 +28,10 @@ set(UPSTREAM_EXAMPLES_BLOCKED_SCENE2D
   particles
   pathboolean
   platformer
-  shapes
   snapshot
   spatial
   spring
   spritesheet
-  text
-  textinput
   tilemap
   tween
   video
@@ -50,8 +52,6 @@ set(UPSTREAM_EXAMPLES_BLOCKED_MESH_LAYOUT
 # blocked Scene2D stack after that first failure is repaired.
 set(UPSTREAM_EXAMPLES_BLOCKED_OTHER
   interaction  # interaction/hit_tests.hpp calls omitted get_node_parent
-  movieclip    # movieclip/movie_clip.hpp calls omitted add_timeline_frame_script
-  sound        # media/audio_mixer.hpp calls omitted update_bus_gain_node
 )
 
 foreach(example IN LISTS UPSTREAM_EXAMPLES)
@@ -59,5 +59,13 @@ foreach(example IN LISTS UPSTREAM_EXAMPLES)
     add_executable(flight_cpp_upstream_${example} ${example}.cpp)
     target_link_libraries(flight_cpp_upstream_${example} PRIVATE Flight::SdkPreview)
     flight_cpp_set_project_warnings(flight_cpp_upstream_${example})
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+      # Generated SDK dependencies still contain a few intentional no-op parameters and
+      # ignored WeakMap erase results. Keep all other project warnings fatal for the ports.
+      target_compile_options(flight_cpp_upstream_${example} PRIVATE
+        -Wno-error=unused-parameter
+        -Wno-error=unused-result
+      )
+    endif()
   endif()
 endforeach()

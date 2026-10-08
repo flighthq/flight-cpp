@@ -170,9 +170,9 @@ inline void set_app_loop_main_window(flight::Ref<AppLoop> app, flight::Ref<AppWi
 }
 
 inline void unregister_app_loop_window(flight::Ref<AppLoop> app, flight::Ref<AppWindow> win) {
-  const double idx = app->windows.index_of(win);
-  if ((idx != -1.0)) {
-    app->windows.splice(idx, 1.0);
+  const std::ptrdiff_t idx = app->windows.index_of(win);
+  if (idx != -1) {
+    app->windows.splice(idx, 1);
   }
   if ((main_windows.get(app) == win)) {
     main_windows.erase(app);

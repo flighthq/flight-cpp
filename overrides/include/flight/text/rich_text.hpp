@@ -154,7 +154,7 @@ inline void set_rich_text_string(flight::Ref<flight::types::RichText> source,
 
 inline void append_rich_text_string(flight::Ref<flight::types::RichText> source,
                                     flight::String value) {
-  if (value.length() == 0.0) return;
+  if (value.length() == 0) return;
   source->data->text += value;
   invalidate_rich_text_content(source);
 }

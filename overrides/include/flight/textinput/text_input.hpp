@@ -95,7 +95,9 @@ inline void insert_text_input(const flight::Ref<flight::types::RichText>& source
   const double begin = get_text_input_selection_begin_index(source);
   const double end = get_text_input_selection_end_index(source);
   const auto current = source->data->text;
-  source->data->text = current.slice(0.0, begin) + value + current.slice(end);
+  source->data->text =
+      current.slice(0, static_cast<std::ptrdiff_t>(begin)) + value +
+      current.slice(static_cast<std::ptrdiff_t>(end));
   state->caret_index = begin + static_cast<double>(value.length());
   state->selection_index = state->caret_index;
   flight::text::invalidate_rich_text_content(source);
