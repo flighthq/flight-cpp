@@ -7,6 +7,7 @@ set(UPSTREAM_EXAMPLES
   camera2d
   clock
   collision
+  crossfade
   flowstates
   interaction
   motionpath
@@ -24,7 +25,6 @@ set(UPSTREAM_EXAMPLES_BLOCKED_SCENE2D
   benchmark
   bitmapfont_generate
   cross_backend_embed
-  crossfade
   formatloading
   particleeditor
   particles

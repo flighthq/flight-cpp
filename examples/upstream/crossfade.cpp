@@ -2,11 +2,9 @@
 // Ported from .dependencies/flight/examples/packages/crossfade/src/app.ts
 
 #include <flight/animation/animation_clip.hpp>
-#include <flight/animation/animation_layer_stack.hpp>
+#include <flight/animation/animation_crossfade.hpp>
 #include <flight/animation/animation_player.hpp>
-#include <flight/animation/animation_state_machine.hpp>
 #include <flight/animation/animation_track.hpp>
-#include <flight/animation/animation_blend_tree.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
 #include <flight/scene2d/display_object.hpp>
@@ -14,23 +12,32 @@
 #include <flight/shape/shape_commands.hpp>
 #include <flight/text/text_label.hpp>
 
-#include <array>
-#include <cmath>
 #include <iostream>
-#include <vector>
 
 namespace {
 
-std::vector<double> quaternion_values(const std::vector<double>& angles) {
-  std::vector<double> values;
-  for (double angle : angles) {
-    double halfAngle = (angle * M_PI) / 360.0;
-    values.push_back(0.0);
-    values.push_back(0.0);
-    values.push_back(std::sin(halfAngle));
-    values.push_back(std::cos(halfAngle));
-  }
-  return values;
+flight::Ref<flight::types::AnimationTrack> scalar_track(
+    flight::Array<double> times,
+    flight::Array<double> values) {
+  using Options = flight::animation::
+      times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042;
+  return flight::animation::create_animation_track(flight::make_ref<Options>(Options{
+      .times = flight::SequenceView<double>(std::move(times)),
+      .values = flight::SequenceView<double>(std::move(values)),
+      .components = 1.0,
+      .interpolation = std::nullopt,
+      .quaternion = false,
+  }));
+}
+
+flight::Ref<flight::types::AnimationClip> body_clip(
+    flight::Array<double> values) {
+  auto track = scalar_track(
+      flight::Array<double>{0.0, 0.5, 1.0, 1.5, 2.0}, std::move(values));
+  auto channel = flight::animation::create_animation_channel(
+      track, flight::Any(flight::String("body.y")));
+  return flight::animation::create_animation_clip(
+      flight::Array<flight::Ref<flight::types::AnimationChannel>>{channel}, 2.0);
 }
 
 } // namespace
@@ -41,50 +48,15 @@ int main() {
   using namespace flight::scene2d;
   using namespace flight::animation;
 
-  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
-  // Animation times.
-  flight::Array<double> times(5);
-  times.set(0, 0.0); times.set(1, 0.5); times.set(2, 1.0); times.set(3, 1.5); times.set(4, 2.0);
-
-  // Idle clip: gentle body bob, subtle leg sway.
-  auto idleBodyValues = std::vector<double>{0.0, -1.0, 0.0, -1.0, 0.0};
-  flight::Array<double> idleBodyArr(idleBodyValues.size());
-  for (std::size_t i = 0; i < idleBodyValues.size(); ++i)
-    idleBodyArr.set(i, idleBodyValues[i]);
-
-  auto idleBodyTrack = create_animation_track({
-    .components = 1, .times = times, .values = idleBodyArr,
-  });
-
-  auto idleLeftAngles = quaternion_values({-3, 3, -3, 3, -3});
-  auto idleRightAngles = quaternion_values({3, -3, 3, -3, 3});
-
-  auto idleClip = create_animation_clip();
-  auto walkClip = create_animation_clip();
-  auto runClip = create_animation_clip();
+  auto idleClip = body_clip(flight::Array<double>{0.0, -1.0, 0.0, -1.0, 0.0});
+  auto walkClip = body_clip(flight::Array<double>{0.0, -4.0, 0.0, -4.0, 0.0});
+  auto runClip = body_clip(flight::Array<double>{0.0, -8.0, 0.0, -8.0, 0.0});
 
   auto idlePlayer = create_animation_player(idleClip);
   auto walkPlayer = create_animation_player(walkClip);
   auto runPlayer = create_animation_player(runClip);
-
-  // State machine for crossfade transitions.
-  auto stateMachine = create_animation_state_machine();
-
-  auto idleState = create_animation_state_machine_state(stateMachine, flight::String("idle"));
-  auto walkState = create_animation_state_machine_state(stateMachine, flight::String("walk"));
-  auto runState = create_animation_state_machine_state(stateMachine, flight::String("run"));
-
-  // Layer stack for animation sampling.
-  auto layerStack = create_animation_layer_stack();
-  auto smLayer = create_animation_state_machine_layer(stateMachine);
-
-  // Blend tree for walk-to-run blending.
-  auto blendTree = create_animation_blend_tree();
-  auto walkInput = create_animation_blend_tree_input(blendTree, walkPlayer);
-  auto runInput = create_animation_blend_tree_input(blendTree, runPlayer);
-  auto blendLayer = create_animation_blend_tree_layer(blendTree);
 
   // Character visual: simple stick figure.
   auto body = create_shape(std::nullopt);
@@ -122,31 +94,21 @@ int main() {
   invalidate_node_local_transform(stateLabel);
   add_node_child(root, stateLabel);
 
-  // Simulate animation transitions.
+  auto idleToWalk = create_animation_crossfade(idlePlayer, walkPlayer, 0.3);
   for (int frame = 0; frame < 60; ++frame) {
-    advance_animation_layer_stack(layerStack, 1.0 / 60.0);
-    sample_animation_layer_stack(layerStack);
+    advance_animation_crossfade(idleToWalk, 1.0 / 60.0);
   }
 
-  // Transition to walk.
-  transition_animation_state_machine(stateMachine, walkState, 0.3);
+  auto walkToRun = create_animation_crossfade(walkPlayer, runPlayer, 0.3);
   for (int frame = 0; frame < 60; ++frame) {
-    advance_animation_layer_stack(layerStack, 1.0 / 60.0);
-    sample_animation_layer_stack(layerStack);
+    advance_animation_crossfade(walkToRun, 1.0 / 60.0);
   }
 
-  // Transition to run.
-  transition_animation_state_machine(stateMachine, runState, 0.3);
-  for (int frame = 0; frame < 60; ++frame) {
-    advance_animation_layer_stack(layerStack, 1.0 / 60.0);
-    sample_animation_layer_stack(layerStack);
-  }
-
-  auto currentState = get_animation_state_machine_current_state(stateMachine);
-  bool transitioning = is_animation_state_machine_transitioning(stateMachine);
+  const bool completed = is_animation_crossfade_complete(walkToRun);
 
   std::cout << "Flight crossfade example (naive C++ port): "
-            << "3 animation states (idle/walk/run), "
-            << "transitioning=" << (transitioning ? "true" : "false") << "\n";
+            << "idle/walk/run body tracks, "
+            << "completed=" << (completed ? "true" : "false")
+            << ", final weight=" << walkToRun->weight << "\n";
   return 0;
 }
