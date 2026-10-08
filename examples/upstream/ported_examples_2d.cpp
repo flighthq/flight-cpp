@@ -425,6 +425,21 @@ class ParticleEditorScene final {
       target_x_ = frame.input.pointer_x;
       target_y_ = frame.input.pointer_y;
     }
+    if (frame.input.pointer_down && frame.input.pointer_x >= 544.0 && frame.input.pointer_x <= 770.0) {
+      auto list = controls();
+      for (std::size_t index = 0; index < list.size(); ++index) {
+        const double slider_y = 92.0 + static_cast<double>(index) * 52.0;
+        if (std::abs(frame.input.pointer_y - slider_y) <= 12.0) {
+          selected_ = index;
+          const double amount = clamp01((frame.input.pointer_x - 544.0) / 226.0);
+          *list[index].value = std::lerp(list[index].minimum, list[index].maximum, amount);
+          break;
+        }
+      }
+    }
+    if (frame.input.pointer_pressed && contains(544.0, 482.0, 180.0, 34.0, frame.input.pointer_x, frame.input.pointer_y)) {
+      additive_ = !additive_;
+    }
     if (frame.input.key_pressed(SDLK_TAB)) selected_ = (selected_ + 1) % controls().size();
     if (frame.input.key_pressed(SDLK_B)) additive_ = !additive_;
     auto list = controls();
@@ -796,19 +811,20 @@ class SnapshotScene final {
 class SpringScene final {
  public:
   void frame(const Frame& frame) {
-    if (frame.input.pointer_pressed && frame.input.pointer_x < 600.0 && frame.input.pointer_y < 400.0) {
-      target_x_ = frame.input.pointer_x;
-      target_y_ = frame.input.pointer_y;
-      tween_from_x_ = tween_x_;
-      tween_from_y_ = tween_y_;
-      tween_time_ = 0.0;
+    if (frame.input.pointer_pressed) {
+      if (frame.input.pointer_x < 600.0 && frame.input.pointer_y < 400.0) {
+        target_x_ = frame.input.pointer_x;
+        target_y_ = frame.input.pointer_y;
+        tween_from_x_ = tween_x_;
+        tween_from_y_ = tween_y_;
+        tween_time_ = 0.0;
+      } else if (frame.input.pointer_x >= 610.0 && frame.input.pointer_x <= 788.0) {
+        const int preset = static_cast<int>((frame.input.pointer_y - 52.0) / 29.0);
+        apply_preset(preset);
+      }
     }
     constexpr std::array<SDL_Keycode, 5> keys{SDLK_1, SDLK_2, SDLK_3, SDLK_4, SDLK_5};
-    constexpr std::array<std::pair<double, double>, 5> presets{{{3.0, 0.3}, {3.0, 1.0}, {3.0, 3.0}, {5.0, 0.15}, {8.0, 0.6}}};
-    for (std::size_t index = 0; index < keys.size(); ++index) if (frame.input.key_pressed(keys[index])) {
-      frequency_ = presets[index].first;
-      damping_ = presets[index].second;
-    }
+    for (std::size_t index = 0; index < keys.size(); ++index) if (frame.input.key_pressed(keys[index])) apply_preset(static_cast<int>(index));
     update_spring(frame.delta_time);
     tween_time_ += frame.delta_time;
     const double amount = ease_in_out_cubic(clamp01(tween_time_ / 0.9));
@@ -818,6 +834,13 @@ class SpringScene final {
   }
 
  private:
+  void apply_preset(int index) {
+    constexpr std::array<std::pair<double, double>, 5> presets{{{3.0, 0.3}, {3.0, 1.0}, {3.0, 3.0}, {5.0, 0.15}, {8.0, 0.6}}};
+    if (index < 0 || index >= static_cast<int>(presets.size())) return;
+    frequency_ = presets[static_cast<std::size_t>(index)].first;
+    damping_ = presets[static_cast<std::size_t>(index)].second;
+  }
+
   void update_spring(double dt) {
     const double omega = 2.0 * pi * frequency_;
     const auto axis = [dt, omega, this](double target, double& value, double& velocity) {

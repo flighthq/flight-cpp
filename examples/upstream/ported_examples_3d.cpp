@@ -348,16 +348,29 @@ class SceneFireScene final {
 
 class MaterialShowcaseScene final {
  public:
+  MaterialShowcaseScene() {
+    for (std::size_t material = 0; material < values_.size(); ++material) {
+      values_[material] = {{
+          std::fmod(0.24 + static_cast<double>(material) * 0.11, 1.0),
+          std::fmod(0.12 + static_cast<double>(material) * 0.17, 1.0),
+          std::fmod(0.68 + static_cast<double>(material) * 0.07, 1.0),
+          std::fmod(0.35 + static_cast<double>(material) * 0.13, 1.0),
+          std::fmod(0.52 + static_cast<double>(material) * 0.09, 1.0),
+      }};
+    }
+  }
+
   void frame(const Frame& frame) {
     orbit_.update(frame);
     if (frame.input.key_pressed(SDLK_LEFT)) selected_ = (selected_ + names_.size() - 1) % names_.size();
     if (frame.input.key_pressed(SDLK_RIGHT)) selected_ = (selected_ + 1) % names_.size();
+    update_panel(frame);
     pick(frame);
     draw_ground(frame.canvas, orbit_, 5.8, -3.1, 0x33415affU);
     for (std::size_t index = 0; index < names_.size(); ++index) {
       const Vec3 center{(static_cast<double>(index % 5) - 2.0) * 1.75 - 0.7, (1.5 - static_cast<double>(index / 5)) * 1.65, 0.0};
       const bool selected = index == selected_;
-      const auto color = selected ? 0x7ef7c8ffU : colors_[index];
+      const auto color = lerp_color(colors_[index], 0xffffffffU, values_[index][2] * 0.22);
       if (index == names_.size() - 1) {
         const auto point = orbit_.project(center);
         if (point.visible) {
@@ -372,6 +385,17 @@ class MaterialShowcaseScene final {
   }
 
  private:
+  void update_panel(const Frame& frame) {
+    if (!frame.input.pointer_down || frame.input.pointer_x < 612.0 || frame.input.pointer_x > 776.0) return;
+    for (std::size_t index = 0; index < 5; ++index) {
+      const double slider_y = 251.0 + static_cast<double>(index) * 55.0;
+      if (std::abs(frame.input.pointer_y - slider_y) <= 12.0) {
+        values_[selected_][index] = std::clamp((frame.input.pointer_x - 612.0) / 164.0, 0.0, 1.0);
+        break;
+      }
+    }
+  }
+
   void pick(const Frame& frame) {
     if (!frame.input.pointer_pressed || frame.input.pointer_x > 600.0) return;
     double nearest = 1e9;
@@ -400,7 +424,7 @@ class MaterialShowcaseScene final {
     canvas.text("Live controls", 612.0, 194.0, 0xe2e9f5ffU, 13.0);
     for (int index = 0; index < 5; ++index) {
       const double y = 230.0 + static_cast<double>(index) * 55.0;
-      const double amount = std::fmod(static_cast<double>(selected_) * 0.19 + static_cast<double>(index) * 0.17, 1.0);
+      const double amount = values_[selected_][static_cast<std::size_t>(index)];
       canvas.text(index == 0 ? "roughness" : index == 1 ? "metallic" : index == 2 ? "intensity" : index == 3 ? "extension" : "strength", 612.0, y, 0xa8b5caffU, 11.0);
       canvas.fill_rectangle(612.0, y + 21.0, 164.0, 4.0, 0x29344affU);
       canvas.fill_rectangle(612.0, y + 21.0, 164.0 * amount, 4.0, 0x7ef7c8ffU);
@@ -419,6 +443,7 @@ class MaterialShowcaseScene final {
       0x77bb66ffU, 0x5d88d8ffU, 0x7d66ffffU, 0xff794dffU, 0x35d7ffffU,
       0xd8b8ffffU, 0x7da7ffffU, 0x777777ffU, 0x65e6aaffU, 0xf0f5ffffU};
   Orbit orbit_{0.0, 0.15, 11.8};
+  std::array<std::array<double, 5>, 20> values_{};
   std::size_t selected_{};
 };
 
