@@ -69,13 +69,15 @@ inline bool equals_material(flight::Ref<Material> a, flight::Ref<Material> b) {
 // C++ type computation lowering: 'kind' is not a member of every inhabited constraint branch of T, whose
 // constraint is Material
 
-inline void initialize_material(flight::Ref<EntityConstruction<flight::Ref<Material>>> material, Kind kind) {
+template <typename T>
+inline void initialize_material(EntityConstruction<T> material, Kind kind) {
   (material->kind = kind);
   (material->name = nullptr);
 }
 
-inline flight::Ref<Material> create_material(Kind kind) {
-  flight::Ref<EntityConstruction<flight::Ref<Material>>> material = allocate_entity<flight::Ref<Material>>();
+template <typename T = flight::Ref<Material>>
+inline T create_material(Kind kind) {
+  EntityConstruction<T> material = allocate_entity<T>();
   initialize_material(material, kind);
   return finish_entity(material);
 }
@@ -124,7 +126,7 @@ template <typename Destination>
 }
 
 inline flight::Ref<Material> clone_material(flight::Ref<Material> source) {
-  flight::Ref<EntityConstruction<flight::Ref<Material>>> clone = allocate_entity<flight::Ref<Material>>();
+  EntityConstruction<flight::Ref<Material>> clone = allocate_entity<flight::Ref<Material>>();
   (clone->kind = source->kind);
   copy_material_fields(clone, source, source->kind);
   return finish_entity(clone);

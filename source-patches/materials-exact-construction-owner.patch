@@ -1,0 +1,180 @@
+diff --git a/packages/materials/src/classicMaterials.ts b/packages/materials/src/classicMaterials.ts
+--- a/packages/materials/src/classicMaterials.ts
++++ b/packages/materials/src/classicMaterials.ts
+@@ -6,7 +6,7 @@ import { createSurfaceMaterial } from './surfaceMaterial';
+ // Classic Blinn-Phong material: diffuse plus a half-vector specular lobe. `diffuse`/`specular`
+ // default to white, `shininess` to 32, `normalScale` to 1, all maps to null.
+ export function createBlinnPhongMaterial(opts?: Readonly<Partial<BlinnPhongMaterial>>): BlinnPhongMaterial {
+-  const material = createSurfaceMaterial(BlinnPhongMaterialKind, opts) as BlinnPhongMaterial;
++  const material = createSurfaceMaterial<BlinnPhongMaterial>(BlinnPhongMaterialKind, opts);
+   material.alphaMap = opts?.alphaMap ?? null;
+   material.diffuse = opts?.diffuse ?? 0xffffffff;
+   material.diffuseMap = opts?.diffuseMap ?? null;
+@@ -21,7 +21,7 @@ export function createBlinnPhongMaterial(opts?: Readonly<Partial<BlinnPhongMater
+ // Classic diffuse-only Lambertian material. `diffuse` defaults to white, `emissive` to opaque
+ // black (no self-illumination), both maps to null.
+ export function createLambertMaterial(opts?: Readonly<Partial<LambertMaterial>>): LambertMaterial {
+-  const material = createSurfaceMaterial(LambertMaterialKind, opts) as LambertMaterial;
++  const material = createSurfaceMaterial<LambertMaterial>(LambertMaterialKind, opts);
+   material.diffuse = opts?.diffuse ?? 0xffffffff;
+   material.diffuseMap = opts?.diffuseMap ?? null;
+   material.emissive = opts?.emissive ?? 0x000000ff;
+@@ -32,7 +32,7 @@ export function createLambertMaterial(opts?: Readonly<Partial<LambertMaterial>>)
+ // Classic Phong material: diffuse plus a reflection-vector specular lobe. `diffuse`/`specular`
+ // default to white, `shininess` to 32, `normalScale` to 1, all maps to null.
+ export function createPhongMaterial(opts?: Readonly<Partial<PhongMaterial>>): PhongMaterial {
+-  const material = createSurfaceMaterial(PhongMaterialKind, opts) as PhongMaterial;
++  const material = createSurfaceMaterial<PhongMaterial>(PhongMaterialKind, opts);
+   material.diffuse = opts?.diffuse ?? 0xffffffff;
+   material.diffuseMap = opts?.diffuseMap ?? null;
+   material.normalMap = opts?.normalMap ?? null;
+diff --git a/packages/materials/src/customShaderMaterial.ts b/packages/materials/src/customShaderMaterial.ts
+--- a/packages/materials/src/customShaderMaterial.ts
++++ b/packages/materials/src/customShaderMaterial.ts
+@@ -8,7 +8,7 @@ import { createSurfaceMaterial } from './surfaceMaterial';
+ // carries flat scalar/vector values and `textures` carries named bindings. All default to their
+ // sentinel (empty key, null bags) so a bare material remains structurally valid before registration.
+ export function createCustomShaderMaterial(opts?: Readonly<Partial<CustomShaderMaterial>>): CustomShaderMaterial {
+-  const material = createSurfaceMaterial(CustomShaderMaterialKind, opts) as CustomShaderMaterial;
++  const material = createSurfaceMaterial<CustomShaderMaterial>(CustomShaderMaterialKind, opts);
+   material.shaderKey = opts?.shaderKey ?? '';
+   material.textures = opts?.textures ?? null;
+   material.uniforms = opts?.uniforms ?? null;
+diff --git a/packages/materials/src/extendedPbrMaterial.ts b/packages/materials/src/extendedPbrMaterial.ts
+--- a/packages/materials/src/extendedPbrMaterial.ts
++++ b/packages/materials/src/extendedPbrMaterial.ts
+@@ -7,7 +7,7 @@ import { createSurfaceMaterial } from './surfaceMaterial';
+ // Builds the composable PBR material lane. The ordered extension list is retained by reference so its
+ // identity and ordering remain an explicit batching/program-selection fact.
+ export function createExtendedPbrMaterial(opts?: Readonly<Partial<ExtendedPbrMaterial>>): ExtendedPbrMaterial {
+-  const material = createSurfaceMaterial(ExtendedPbrMaterialKind, opts) as ExtendedPbrMaterial;
++  const material = createSurfaceMaterial<ExtendedPbrMaterial>(ExtendedPbrMaterialKind, opts);
+   material.extensions = opts?.extensions ?? [];
+   material.standard = opts?.standard ?? createStandardPbrMaterialProperties();
+   return material;
+diff --git a/packages/materials/src/material.ts b/packages/materials/src/material.ts
+--- a/packages/materials/src/material.ts
++++ b/packages/materials/src/material.ts
+@@ -17,8 +17,8 @@ export function copyMaterial(out: Material, source: Readonly<Material>): void {
+   copyMaterialFields(out, source, source.kind);
+ }
+ 
+-export function createMaterial(kind: Kind): Material {
+-  const material = allocateEntity<Material>();
++export function createMaterial<T extends Material = Material>(kind: Kind): T {
++  const material = allocateEntity<T>();
+   initializeMaterial(material, kind);
+   return finishEntity(material);
+ }
+diff --git a/packages/materials/src/pbrMaterials.ts b/packages/materials/src/pbrMaterials.ts
+--- a/packages/materials/src/pbrMaterials.ts
++++ b/packages/materials/src/pbrMaterials.ts
+@@ -95,7 +95,7 @@ export function convertSpecularGlossinessToStandardPbr(
+ export function createSpecularGlossinessPbrMaterial(
+   opts?: Readonly<Partial<SpecularGlossinessPbrMaterial>>,
+ ): SpecularGlossinessPbrMaterial {
+-  const material = createSurfaceMaterial(SpecularGlossinessPbrMaterialKind, opts) as SpecularGlossinessPbrMaterial;
++  const material = createSurfaceMaterial<SpecularGlossinessPbrMaterial>(SpecularGlossinessPbrMaterialKind, opts);
+   material.diffuse = opts?.diffuse ?? 0xffffffff;
+   material.diffuseMap = opts?.diffuseMap ?? null;
+   material.emissive = opts?.emissive ?? 0x000000ff;
+@@ -115,7 +115,7 @@ export function createSpecularGlossinessPbrMaterial(
+ // (`metallic` 0) and fully rough (`roughness` 1), opaque-black `emissive` at unit strength,
+ // unit `normalScale`/`occlusionStrength`, all maps null.
+ export function createStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
+-  const material = createSurfaceMaterial(StandardPbrMaterialKind, opts) as StandardPbrMaterial;
++  const material = createSurfaceMaterial<StandardPbrMaterial>(StandardPbrMaterialKind, opts);
+   assignStandardPbrMaterialProperties(material, opts);
+   return material;
+ }
+diff --git a/packages/materials/src/surfaceMaterial.ts b/packages/materials/src/surfaceMaterial.ts
+--- a/packages/materials/src/surfaceMaterial.ts
++++ b/packages/materials/src/surfaceMaterial.ts
+@@ -9,8 +9,11 @@ import { createMaterial } from './material';
+ // forwarding `opts` here is what lets any constructor set `alphaMode`/`alphaCutoff`/`doubleSided`/
+ // `blendMode` (e.g. `alphaMode: 'mask'` for an alpha-mapped cutout). The result is a
+ // plain entity; callers mutate the returned object to set their own fields before returning it.
+-export function createSurfaceMaterial(kind: Kind, opts?: Readonly<SurfaceMaterialOptions>): SurfaceMaterial {
+-  const material = createMaterial(kind) as SurfaceMaterial;
++export function createSurfaceMaterial<T extends SurfaceMaterial = SurfaceMaterial>(
++  kind: Kind,
++  opts?: Readonly<SurfaceMaterialOptions>,
++): T {
++  const material = createMaterial<T>(kind);
+   material.alphaCutoff = opts?.alphaCutoff ?? DEFAULT_ALPHA_CUTOFF;
+   material.alphaMode = opts?.alphaMode ?? DEFAULT_ALPHA_MODE;
+   material.blendMode = opts?.blendMode ?? BlendMode.Normal;
+diff --git a/packages/materials/src/unlitMaterials.ts b/packages/materials/src/unlitMaterials.ts
+--- a/packages/materials/src/unlitMaterials.ts
++++ b/packages/materials/src/unlitMaterials.ts
+@@ -24,7 +24,7 @@ import { createSurfaceMaterial } from './surfaceMaterial';
+ // Depth-output pass material. `near`/`far` default to a unit range; the depth pass overrides
+ // them with the camera's range when used as pass infrastructure.
+ export function createDepthMaterial(opts?: Readonly<Partial<DepthMaterial>>): DepthMaterial {
+-  const material = createSurfaceMaterial(DepthMaterialKind, opts) as DepthMaterial;
++  const material = createSurfaceMaterial<DepthMaterial>(DepthMaterialKind, opts);
+   material.far = opts?.far ?? 1;
+   material.near = opts?.near ?? 0;
+   return material;
+@@ -33,7 +33,7 @@ export function createDepthMaterial(opts?: Readonly<Partial<DepthMaterial>>): De
+ // Self-illuminating, lighting-independent material. `emissive` defaults to white,
+ // `emissiveStrength` to 1 (> 1 drives bloom on GPU backends), the map to null.
+ export function createEmissiveMaterial(opts?: Readonly<Partial<EmissiveMaterial>>): EmissiveMaterial {
+-  const material = createSurfaceMaterial(EmissiveMaterialKind, opts) as EmissiveMaterial;
++  const material = createSurfaceMaterial<EmissiveMaterial>(EmissiveMaterialKind, opts);
+   material.emissive = opts?.emissive ?? 0xffffffff;
+   material.emissiveMap = opts?.emissiveMap ?? null;
+   material.emissiveStrength = opts?.emissiveStrength ?? 1;
+@@ -43,7 +43,7 @@ export function createEmissiveMaterial(opts?: Readonly<Partial<EmissiveMaterial>
+ // Material-capture (matcap) material: a prebaked lit sphere sampled by the view-space normal.
+ // `matcap` defaults to null, `tint` to white. Lighting-independent.
+ export function createMatcapMaterial(opts?: Readonly<Partial<MatcapMaterial>>): MatcapMaterial {
+-  const material = createSurfaceMaterial(MatcapMaterialKind, opts) as MatcapMaterial;
++  const material = createSurfaceMaterial<MatcapMaterial>(MatcapMaterialKind, opts);
+   material.matcap = opts?.matcap ?? null;
+   material.tint = opts?.tint ?? 0xffffffff;
+   return material;
+@@ -51,7 +51,7 @@ export function createMatcapMaterial(opts?: Readonly<Partial<MatcapMaterial>>):
+ 
+ // Normal-output pass material. `normalMap` defaults to null, `normalScale` to 1.
+ export function createNormalMaterial(opts?: Readonly<Partial<NormalMaterial>>): NormalMaterial {
+-  const material = createSurfaceMaterial(NormalMaterialKind, opts) as NormalMaterial;
++  const material = createSurfaceMaterial<NormalMaterial>(NormalMaterialKind, opts);
+   material.normalMap = opts?.normalMap ?? null;
+   material.normalScale = opts?.normalScale ?? 1;
+   return material;
+@@ -60,7 +60,7 @@ export function createNormalMaterial(opts?: Readonly<Partial<NormalMaterial>>):
+ // Cel-shaded material: diffuse N·L quantized through a 1D ramp into stepped bands. `baseColor`
+ // defaults to white, maps to null, `steps` to 3 (the band count used when no ramp is bound).
+ export function createToonMaterial(opts?: Readonly<Partial<ToonMaterial>>): ToonMaterial {
+-  const material = createSurfaceMaterial(ToonMaterialKind, opts) as ToonMaterial;
++  const material = createSurfaceMaterial<ToonMaterial>(ToonMaterialKind, opts);
+   material.baseColor = opts?.baseColor ?? 0xffffffff;
+   material.baseColorMap = opts?.baseColorMap ?? null;
+   material.ramp = opts?.ramp ?? null;
+@@ -71,7 +71,7 @@ export function createToonMaterial(opts?: Readonly<Partial<ToonMaterial>>): Toon
+ // Lighting-independent flat-color material. `baseColor` defaults to white and the universal sampled
+ // map (still, video, or produced target) defaults to null.
+ export function createUnlitMaterial(opts?: Readonly<Partial<UnlitMaterial>>): UnlitMaterial {
+-  const material = createSurfaceMaterial(UnlitMaterialKind, opts) as UnlitMaterial;
++  const material = createSurfaceMaterial<UnlitMaterial>(UnlitMaterialKind, opts);
+   material.baseColor = opts?.baseColor ?? 0xffffffff;
+   material.baseColorMap = opts?.baseColorMap ?? null;
+   return material;
+@@ -79,14 +79,14 @@ export function createUnlitMaterial(opts?: Readonly<Partial<UnlitMaterial>>): Un
+ 
+ // Uses the mesh's `color0` vertex attribute as unlit surface color. `tint` defaults to white.
+ export function createVertexColorMaterial(opts?: Readonly<Partial<VertexColorMaterial>>): VertexColorMaterial {
+-  const material = createSurfaceMaterial(VertexColorMaterialKind, opts) as VertexColorMaterial;
++  const material = createSurfaceMaterial<VertexColorMaterial>(VertexColorMaterialKind, opts);
+   material.tint = opts?.tint ?? 0xffffffff;
+   return material;
+ }
+ 
+ // Edge-only debug material. `color` defaults to white, `thickness` to 1 pixel. No maps.
+ export function createWireframeMaterial(opts?: Readonly<Partial<WireframeMaterial>>): WireframeMaterial {
+-  const material = createSurfaceMaterial(WireframeMaterialKind, opts) as WireframeMaterial;
++  const material = createSurfaceMaterial<WireframeMaterial>(WireframeMaterialKind, opts);
+   material.color = opts?.color ?? 0xffffffff;
+   material.thickness = opts?.thickness ?? 1;
+   return material;

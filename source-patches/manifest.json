@@ -759,6 +759,22 @@
       "unblocks": "Scoped regeneration moves @flighthq/clip from 3/4 to 4/4 emitted modules, restores all twelve absent functions, and makes clip_region.hpp compile independently with zero diagnostics. In the existing external angle consumer rive_clipping.hpp, all thirteen clip-origin diagnostics disappear; the header remains blocked by unrelated Rive/schema findings. Regenerating the 29-package scene2d-formats closure installs the three clip using declarations in svg_document.hpp, and focused compilation reports zero missing clip declarations at its real call sites.",
       "expires": "when imported nullable property reads and contextual writes retain their declared union evidence and length-bounded dense array reads retain presence, or Flight adopts these explicit forms.",
       "appliedOn": "2026-10-05"
+    },
+    {
+      "id": "materials-exact-construction-owner",
+      "dependency": "flight",
+      "patch": "materials-exact-construction-owner.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/materials/src/material.ts, surfaceMaterial.ts, and the six concrete constructor modules",
+      "package": "@flighthq/materials",
+      "answers": "refusal",
+      "refusal": "createMaterial and createSurfaceMaterial allocate the base Material owners and each concrete constructor then asserts that reference to an unrelated flattened C++ interface owner, so Blinn-Phong, Phong, Lambert, PBR, unlit, and the other real material constructors are refused",
+      "rewrite": "Makes the two allocation helpers generic in the exact Material and SurfaceMaterial owner with their old return types as defaults, and supplies each concrete constructor's already-declared result type as the generic argument instead of asserting the base factory result afterward.",
+      "equivalence": "TypeScript erases generic arguments. Every call still invokes allocateEntity once, initializes kind, name, and the same shared surface fields in the same order, mutates the same newly allocated plain object with the same concrete defaults, and returns that object with identical identity. The default type parameters preserve callers that intentionally request the base Material or SurfaceMaterial contract.",
+      "whyNotUpstreamFirst": "The compiler diagnostic explicitly requests exact generic allocation because flattened C++ interface owners have no inheritance cast. This is ordinary target-neutral TypeScript that states the concrete owner each public constructor already promises without a copied C++ material implementation.",
+      "unblocks": "Allows the concrete material constructor modules to retain BlinnPhongMaterial, LambertMaterial, PhongMaterial, StandardPbrMaterial, SpecularGlossinessPbrMaterial, ExtendedPbrMaterial, CustomShaderMaterial, and all built-in unlit/debug material owners through initialization.",
+      "expires": "when interface-heritage references retain an owner-preserving C++ carrier across base factory results, or Flight adopts exact generic allocation.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
