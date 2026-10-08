@@ -30,7 +30,6 @@ namespace flight::types { struct PathMesh; }
 namespace flight::types { struct RenderEffectPadding; }
 namespace flight::types { struct RenderProxy2D; }
 namespace flight::types { struct RenderProxy; }
-namespace flight::types { struct RenderProxyAdapter; }
 namespace flight::types { struct RenderRegistrySignals; }
 namespace flight::types { struct Renderer; }
 namespace flight::types { struct RendererData; }
@@ -49,6 +48,7 @@ using StrokeTessellator = std::function<std::optional<flight::Ref<flight::types:
 using ColorAdjustmentUnsupportedGuard = std::function<void(flight::Ref<RenderState>, std::variant<flight::Ref<flight::types::RenderCache>, std::shared_ptr<Node<flight::Any>>>)>;
 using RenderRootGuard = std::function<void(flight::Ref<RenderState>, std::variant<flight::Ref<flight::types::RenderCache>, std::shared_ptr<Node<flight::Any>>>)>;
 } // namespace flight::types
+
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/canvas_shape_registry.hpp>
 #include <flight/types/entity.hpp>
@@ -59,7 +59,12 @@ using RenderRootGuard = std::function<void(flight::Ref<RenderState>, std::varian
 #include <flight/types/registry_table.hpp>
 #include <flight/types/renderable.hpp>
 #include <flight/types/render_effect_padding.hpp>
+#include <flight/types/renderer.hpp>
+#include <flight/types/render_proxy.hpp>
+#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_adapter.hpp>
 #include <flight/types/render_registry_signals.hpp>
+#include <flight/types/scene2_drenderer.hpp>
 #include <flight/types/stroke_style.hpp>
 #include <flight/types/color_scale_bias.hpp>
 #include <flight/types/material.hpp>
@@ -141,7 +146,8 @@ inline flight::Ref<RenderStateRuntime> read_render_state_runtime_owner(flight::R
   return owner->entity_runtime_key.value();
 }
 
-inline void write_render_state_runtime_owner(flight::types::EntityConstruction<flight::Ref<RenderState>> owner, flight::Ref<RenderStateRuntime> runtime) {
+template <typename State, typename Runtime>
+inline void write_render_state_runtime_owner(flight::types::EntityConstruction<State> owner, Runtime runtime) {
   flight::row_set(owner, flight::types::entity_runtime_key, std::optional<flight::Ref<RenderStateRuntime>>{runtime});
 }
 

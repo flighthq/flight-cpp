@@ -421,7 +421,7 @@
       "path": "flight/types/render_state.hpp",
       "package": "@flighthq/types",
       "status": "complete",
-      "derivedFrom": "cb257e238f61bafc1f60b8b0bd0359d588eb69ddc6230159ef6e620e778da145",
+      "derivedFrom": "33ddc0f7d874a7e24f9cc91d313db61785988059893e0cb6029467b539626b66",
       "reason": "The generated Renderer, RenderProxy, and RenderState headers form a mutual include cycle. RenderState defines invoke_render_proxy_destroy_data inline and immediately dereferences RenderProxy and its Renderer before whichever type began the cycle is complete. Including render_state.hpp directly happens to compile, but entering through renderer.hpp fails at Renderer and entering through render_proxy.hpp fails at both types; include ordering merely chooses which incomplete type breaks.",
       "change": "Only invoke_render_proxy_destroy_data becomes a constrained function template. Its two emitted public parameters remain exact. A defaulted DeferredProxy parameter is constrained to RenderProxy, and the body copies the input into optional<Ref<DeferredProxy>> so both proxy and renderer member accesses are dependent and are checked when the existing call site instantiates the function after the cycle has completed. The adjacent runtime-owner read and write helpers remain ordinary functions because they touch only structs already complete in this header.",
       "equivalence": "The template constraint admits exactly RenderProxy, callers supply no template argument, and the copied optional retains the same shared owner and null state. The optional-chain body and destroy callback invocation are otherwise byte-for-byte emitted code. Focused runtime coverage proves that state and renderer data are forwarded exactly once when present and that an absent proxy, renderer data, or destroy hook remains a no-op. Renderer-first, RenderProxy-first, direct RenderState, canvas, and render-module include orders compile under strict C++20 with pedantic errors enabled.",
@@ -430,6 +430,21 @@
       "remaining": "Thirty-three of the focused 101 headers retain independent failures: fifteen applicable failures in render and eighteen environment-deferred canvas failures. The two advanced canvas headers now stop at an unrelated missing CanvasRenderState qualification. WGPU effect headers likewise advance past this site but retain host/profile declaration gaps.",
       "expires": "when the emitter places the synthesized destroy-data helper after complete RenderProxy and Renderer definitions, factors the cyclic declarations from the inline implementation, or emits a standards-conforming dependent body itself.",
       "authoredOn": "2026-10-05"
+    },
+    {
+      "id": "render-gl-state-deferred-heritage-teardown",
+      "path": "flight/render_gl/gl_render_state.hpp",
+      "package": "@flighthq/render-gl",
+      "status": "incomplete",
+      "derivedFrom": "153e173fa7a506bd0219f94004731b20f238bd8d3e3e1abb85a9c1a20777f253",
+      "reason": "TypeScript declares GlRenderState extends RenderState, but the emitter flattens the two interfaces into unrelated C++ owners. The otherwise complete generated destroyGlRenderState body therefore cannot pass Ref<GlRenderState> to destroyRenderState's Ref<RenderState> parameter.",
+      "change": "Makes only destroy_gl_render_state a constrained function template and copies its input into the constrained dependent owner before the generated base teardown call. All construction, runtime attachment, registry setup, GL initialization, cache invalidation, and resource-release statements remain byte-for-byte generated.",
+      "equivalence": "No successfully representable source behavior changes: the template admits exactly GlRenderState, callers keep the same parameter and infer the default, and the dependent reference retains the same shared owner. The body is deliberately checked only on use, so state construction and rendering compile while teardown remains an explicit unsupported heritage operation rather than being replaced with an invented conversion.",
+      "whyNotAPatchOrRepair": "The TypeScript heritage is already exact and changing it would corrupt the public API. An insertion repair cannot make one existing expression dependent or teach the C++ representation that two flattened owners are the same object. This narrow derived copy exposes all usable generated behavior without hand-writing the renderer.",
+      "unblocks": "Together with the RenderState cycle override, generated gl_render_state.hpp moves from an incomplete-type and derived-owner compile failure to a successful C++20 syntax check. createGlContextState, createGlRenderState, runtime access, cache invalidation, teardown registration, feature lookup, and the emitted GL initialization path are available.",
+      "remaining": "Instantiating destroy_gl_render_state still fails at the honest GlRenderState-to-RenderState heritage gap. This override does not claim teardown completion, and broader render-gl modules retain independent WeakMap, structural-row, union, and assertion refusals.",
+      "expires": "when emitted interface heritage preserves identity across GlRenderState and RenderState, or destroyRenderState accepts an exact structural owner without losing runtime identity.",
+      "authoredOn": "2026-10-08"
     },
     {
       "id": "log-module-qualification-and-operators",

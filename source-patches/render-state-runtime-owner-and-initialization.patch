@@ -1,8 +1,187 @@
+diff --git a/packages/render-gl/src/glRenderState.ts b/packages/render-gl/src/glRenderState.ts
+index 5daafaf..b2e98e4 100644
+--- a/packages/render-gl/src/glRenderState.ts
++++ b/packages/render-gl/src/glRenderState.ts
+@@ -1,10 +1,11 @@
+ import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+ import { createMatrix } from '@flighthq/geometry/contract';
+ import {
+-  createRenderState as _createRenderState,
+-  createRenderStateRuntime,
++  createDerivedRenderStateConstruction,
+   destroyRenderState,
++  initializeRenderStateRuntime,
+ } from '@flighthq/render/contract';
++import { getRegistryTableEntry } from '@flighthq/registry/contract';
+ import type {
+   GlColorAdjustmentMaterialFeature,
+   GlColorAdjustmentMaterialFeatureGuard,
+@@ -16,14 +17,20 @@ import type {
+   GlRenderState,
+   GlRenderStateRuntime,
+   EntityConstruction,
++  TextureSource,
++} from '@flighthq/types/contract';
++import {
++  readGlContextRuntimeOwner,
++  readGlRenderStateRuntimeOwner,
++  writeGlContextRuntimeOwner,
++  writeGlRenderStateRuntimeOwner,
+ } from '@flighthq/types/contract';
+-import { EntityRuntimeKey, RegistryEntryState } from '@flighthq/types/contract';
+
+ export function createGlContextState(gl: GlContext): GlContextState {
+   const state = allocateEntity<GlContextState>();
+   initializeGlContextState(state, gl);
+   const result = finishEntity(state);
+-  _contextStateByGl.set(gl, result);
++  _contextStateByGl.set(gl as WebGL2RenderingContext, result);
+   return result;
+ }
+
+@@ -32,10 +38,10 @@ export function createGlRenderState(
+   registries: Readonly<GlRenderRegistries>,
+   options: GlRenderOptions = {},
+ ): GlRenderState {
+-  let contextState = _contextStateByGl.get(gl);
++  let contextState = _contextStateByGl.get(gl as WebGL2RenderingContext);
+   if (contextState === undefined) {
+     contextState = createGlContextState(gl);
+-    _contextStateByGl.set(gl, contextState);
++    _contextStateByGl.set(gl as WebGL2RenderingContext, contextState);
+   }
+   return _createGlRenderStateFromContext(contextState, registries, options);
+ }
+@@ -44,12 +50,15 @@ export function createGlRenderStateRuntime(
+   contextState: Readonly<GlContextState>,
+   registries: Readonly<GlRenderRegistries>,
+ ): GlRenderStateRuntime {
+-  const runtime = createRenderStateRuntime() as GlRenderStateRuntime;
+-  runtime.context = contextState[EntityRuntimeKey] as GlContextRuntime;
++  const runtimeRegistries: GlRenderRegistries = { ...registries };
++  const runtime = initializeRenderStateRuntime<GlRenderStateRuntime, GlRenderRegistries>(
++    {} as GlRenderStateRuntime,
++    runtimeRegistries,
++  );
++  runtime.context = readGlContextRuntimeOwner(contextState);
+   runtime.context.references++;
+   runtime.currentPass = null;
+   runtime.currentRenderTarget = null;
+-  runtime.registries = { ...registries };
+   runtime.bindingCacheGuard = null;
+   runtime.teardowns = [];
+   return runtime;
+@@ -117,25 +126,31 @@ export function destroyGlRenderState(state: GlRenderState): void {
+ export function getGlColorAdjustmentMaterialFeature(
+   state: GlRenderState,
+ ): Readonly<GlColorAdjustmentMaterialFeature> | null {
+-  const entry = getGlRenderStateRuntime(state).registries.colorAdjustmentFeature?.entry;
+-  return entry?.state === RegistryEntryState.Bound ? entry.value : null;
++  const table = getGlRenderStateRuntime(state).registries.colorAdjustmentFeature;
++  if (table === undefined) return null;
++  const feature: GlColorAdjustmentMaterialFeature | null =
++    getRegistryTableEntry<GlColorAdjustmentMaterialFeature>(table, table.registry);
++  return feature;
+ }
+
+ export function getGlColorAdjustmentMaterialFeatureGuard(
+   state: GlRenderState,
+ ): GlColorAdjustmentMaterialFeatureGuard | null {
+-  const entry = getGlRenderStateRuntime(state).registries.colorAdjustmentFeatureGuard?.entry;
+-  return entry?.state === RegistryEntryState.Bound ? entry.value : null;
++  const table = getGlRenderStateRuntime(state).registries.colorAdjustmentFeatureGuard;
++  if (table === undefined) return null;
++  const guard: GlColorAdjustmentMaterialFeatureGuard | null =
++    getRegistryTableEntry<GlColorAdjustmentMaterialFeatureGuard>(table, table.registry);
++  return guard;
+ }
+
+ export function getGlContextRuntime(contextState: Readonly<GlContextState>): GlContextRuntime {
+-  return contextState[EntityRuntimeKey] as GlContextRuntime;
++  return readGlContextRuntimeOwner(contextState);
+ }
+
+ // Resolves the package-private GPU runtime attached to a GlRenderState. Mutable by design: the
+ // render path writes its fields every frame.
+ export function getGlRenderStateRuntime(state: GlRenderState): GlRenderStateRuntime {
+-  return state[EntityRuntimeKey] as GlRenderStateRuntime;
++  return readGlRenderStateRuntimeOwner(state);
+ }
+
+ export function initializeGlContextState(state: EntityConstruction<GlContextState>, gl: GlContext): void {
+@@ -159,14 +174,26 @@ export function initializeGlContextState(state: EntityConstruction<GlContextStat
+     references: 0,
+     shapeMeshResources: null,
+     teardowns: [],
+-    textureCache: new WeakMap(),
+-    textureSourcePremultipliedSrgbTextureCache: new WeakMap(),
+-    textureSourcePremultipliedTextureCache: new WeakMap(),
+-    textureSourceStraightSrgbTextureCache: new WeakMap(),
+-    textureSourceStraightTextureCache: new WeakMap(),
++    textureCache: new WeakMap<CanvasImageSource, WebGLTexture>(),
++    textureSourcePremultipliedSrgbTextureCache: new WeakMap<
++      TextureSource,
++      { texture: WebGLTexture; version: number }
++    >(),
++    textureSourcePremultipliedTextureCache: new WeakMap<
++      TextureSource,
++      { texture: WebGLTexture; version: number }
++    >(),
++    textureSourceStraightSrgbTextureCache: new WeakMap<
++      TextureSource,
++      { texture: WebGLTexture; version: number }
++    >(),
++    textureSourceStraightTextureCache: new WeakMap<
++      TextureSource,
++      { texture: WebGLTexture; version: number }
++    >(),
+   };
+   state.gl = gl;
+-  state[EntityRuntimeKey] = contextRuntime;
++  writeGlContextRuntimeOwner(state, contextRuntime);
+ }
+
+ // Discards render-gl's cached GL binding state (bound program, texture, framebuffer, blend mode,
+@@ -210,20 +237,22 @@ function _createGlRenderStateFromContext(
+ ): GlRenderState {
+   const gl = contextState.gl;
+
+-  const state = _createRenderState({
++  const runtime = createGlRenderStateRuntime(contextState, registries);
++  const state = createDerivedRenderStateConstruction<GlRenderState>({
+     allowSmoothing: options.imageSmoothingEnabled ?? options.allowSmoothing ?? true,
+     pixelRatio: options.pixelRatio ?? 1,
+     imageSurfaceProvider: options.imageSurfaceProvider ?? null,
+     renderTransform2D: createMatrix(),
+     roundPixels: options.roundPixels ?? false,
+     sceneGraphSyncPolicy: options.sceneGraphSyncPolicy,
+-  }) as GlRenderState;
++  });
++  writeGlRenderStateRuntimeOwner(state, runtime);
+
+   state.applyBlendMode = null;
+-  Object.assign(state, { contextState, gl, registries });
++  state.contextState = contextState;
++  state.gl = gl;
++  state.registries = registries;
+
+-  const runtime = createGlRenderStateRuntime(contextState, registries);
+-  state[EntityRuntimeKey] = runtime;
+   runtime.currentFramebuffer = null;
+   runtime.currentMaskDepth = 0;
+   runtime.currentScissorRect = null;
+@@ -253,5 +281,5 @@ function _createGlRenderStateFromContext(
+   return finishEntity(state);
+ }
+
+-const _contextStateByGl = new WeakMap<GlContext, GlContextState>();
++const _contextStateByGl = new WeakMap<WebGL2RenderingContext, GlContextState>();
+ const _destroyedStates = new WeakSet<GlRenderState>();
 diff --git a/packages/render/src/renderState.ts b/packages/render/src/renderState.ts
-index 2b34bc6..7202793 100644
+index 2b34bc6..a1a2335 100644
 --- a/packages/render/src/renderState.ts
 +++ b/packages/render/src/renderState.ts
-@@ -1,15 +1,39 @@
+@@ -1,40 +1,81 @@
 -import { allocateEntity, createEntityRuntime, finishEntity } from '@flighthq/entity/contract';
 -import { createKeyedTable } from '@flighthq/registry/contract';
 +import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
@@ -11,6 +190,7 @@ index 2b34bc6..7202793 100644
    ColorAdjustmentUnsupportedGuard,
 +  ImageSurfaceCreator,
 +  Matrix,
++  RenderRegistries,
    RenderState,
    RenderStateRuntime,
    Renderable,
@@ -27,7 +207,7 @@ index 2b34bc6..7202793 100644
 +  writeRenderStateRuntimeOwner,
 +} from '@flighthq/types/contract';
 +
-+interface RenderStateInitialization {
++export interface RenderStateInitialization {
 +  allowSmoothing?: boolean;
 +  currentClipDepth?: number;
 +  displayObjectClipHooks?: Scene2DClipHooks | null;
@@ -39,14 +219,26 @@ index 2b34bc6..7202793 100644
 +  sceneGraphSyncPolicy?: 'refreshDerivedState' | 'requiresInvalidation';
 +  roundPixels?: boolean;
 +}
- 
+
 -export function createRenderState(obj?: Partial<RenderState>): RenderState {
 +export function createRenderState(obj?: Partial<RenderState>): RenderState;
 +export function createRenderState(obj?: RenderStateInitialization): RenderState {
    const state = allocateEntity<RenderState>();
    initializeRenderState(state, obj);
    return finishEntity(state);
-@@ -21,67 +45,111 @@ export function createRenderState(obj?: Partial<RenderState>): RenderState {
+ }
+
++export function createDerivedRenderStateConstruction<
++  State extends RenderState,
++>(obj: RenderStateInitialization | undefined): EntityConstruction<State> {
++  const state = allocateEntity<State>();
++  initializeRenderStateFields(state, obj);
++  return state;
++}
++
+ // Allocates the package-private machinery runtime for a RenderState: the frame counter, proxy maps,
+ // and renderer registry shared across every backend. createRenderState attaches one under
+ // EntityRuntimeKey; getRenderStateRuntime reads it back. Backend factories build their fuller runtime
  // on top of this. The render path writes the returned object every frame, so the return is
  // intentionally mutable (not Readonly).
  export function createRenderStateRuntime(): RenderStateRuntime {
@@ -58,35 +250,35 @@ index 2b34bc6..7202793 100644
 -  runtime.renderProxySources = new Set();
 -  runtime.registryMiss = null;
 -  runtime.registries = {
--    renderers: createKeyedTable('NodeRenderer', 'Unregistered'),
++  const registries: RenderRegistries = {
+     renderers: createKeyedTable('NodeRenderer', 'Unregistered'),
 -    // Written as null rather than left off: the field's presence is what keeps every registries object
 -    // one hidden class, so the per-shape reads on the draw path stay monomorphic. The opt-in registrar
 -    // fills the slot; nothing allocates a table for a state that never opts in.
--    strokeTessellator: null,
-+  return {
-+    binding: null,
-+    currentFrameId: 0,
-+    renderAdaptHook: null,
-+    renderProxyAdapterMap: createRenderProxyAdapterWeakMap(),
-+    renderProxyMap: createRenderProxyWeakMap(),
-+    renderProxySources: new Set<Renderable>(),
-+    registryMiss: null,
-+    registries: {
-+      renderers: createKeyedTable('NodeRenderer', 'Unregistered'),
-+      // Written as null rather than left off: the field's presence is what keeps every registries object
-+      // one hidden class, so the per-shape reads on the draw path stay monomorphic. The opt-in registrar
-+      // fills the slot; nothing allocates a table for a state that never opts in.
-+      strokeTessellator: null,
-+    },
-+    rendererMapId: 0,
-+    tempStack: [],
+     strokeTessellator: null,
    };
--  runtime.rendererMapId = 0;
--  runtime.tempStack = [];
--  return runtime;
- }
- 
- // Runs every live proxy's renderer teardown hook and clears the state-owned traversal bookkeeping.
++  return initializeRenderStateRuntime<RenderStateRuntime, RenderRegistries>(
++    {} as RenderStateRuntime,
++    registries,
++  );
++}
++
++export function initializeRenderStateRuntime<
++  Runtime extends RenderStateRuntime,
++  Registries extends RenderRegistries,
++>(runtime: Runtime, registries: Registries): Runtime {
++  runtime.binding = null;
++  runtime.currentFrameId = 0;
++  runtime.renderAdaptHook = null;
++  runtime.renderProxyAdapterMap = createRenderProxyAdapterWeakMap();
++  runtime.renderProxyMap = createRenderProxyWeakMap();
++  runtime.renderProxySources = new Set<Renderable>();
++  runtime.registryMiss = null;
++  runtime.registries = registries;
+   runtime.rendererMapId = 0;
+   runtime.tempStack = [];
+   return runtime;
+@@ -44,44 +87,94 @@ export function createRenderStateRuntime(): RenderStateRuntime {
  // Backend destroy* functions call this before releasing their own state/context tiers.
  export function destroyRenderState(state: RenderState): void {
    const runtime = getRenderStateRuntime(state);
@@ -101,7 +293,7 @@ index 2b34bc6..7202793 100644
 +  registries.effectPaddingResolvers = undefined;
    runtime.tempStack.length = 0;
  }
- 
+
  export function getColorAdjustmentUnsupportedGuard(state: RenderState): ColorAdjustmentUnsupportedGuard | null {
 -  const entry = getRenderStateRuntime(state).registries.colorAdjustmentUnsupportedGuard?.entry;
 -  return entry?.state === RegistryEntryState.Bound ? entry.value : null;
@@ -109,14 +301,14 @@ index 2b34bc6..7202793 100644
 +  if (table === undefined) return null;
 +  return getRegistryTableEntry<ColorAdjustmentUnsupportedGuard>(table, table.registry);
  }
- 
+
  // Resolves the package-private machinery runtime attached to a RenderState. Mutable by design: the
  // render path writes its fields every frame.
  export function getRenderStateRuntime(state: RenderState): RenderStateRuntime {
 -  return state[EntityRuntimeKey] as RenderStateRuntime;
 +  return readRenderStateRuntimeOwner(state);
  }
- 
+
 -export function initializeRenderState(state: EntityConstruction<RenderState>, obj?: Partial<RenderState>): void {
 -  state.allowSmoothing = obj?.allowSmoothing ?? true;
 -  state.currentClipDepth = obj?.currentClipDepth ?? 0;
@@ -132,6 +324,14 @@ index 2b34bc6..7202793 100644
 +export function initializeRenderState(state: EntityConstruction<RenderState>, obj?: Partial<RenderState>): void;
 +export function initializeRenderState(
 +  state: EntityConstruction<RenderState>,
++  obj?: RenderStateInitialization,
++): void {
++  initializeRenderStateFields(state, obj);
++  writeRenderStateRuntimeOwner(state, createRenderStateRuntime());
++}
++
++function initializeRenderStateFields<State extends RenderState>(
++  state: EntityConstruction<State>,
 +  obj?: RenderStateInitialization,
 +): void {
 +  if (obj == null) {
@@ -181,9 +381,8 @@ index 2b34bc6..7202793 100644
 +    if (sceneGraphSyncPolicy == null) state.sceneGraphSyncPolicy = 'refreshDerivedState';
 +    else state.sceneGraphSyncPolicy = sceneGraphSyncPolicy;
 +  }
-+  writeRenderStateRuntimeOwner(state, createRenderStateRuntime());
  }
- 
+
  function disposeRenderProxyForShutdown(state: RenderState, source: Renderable): void {
    const runtime = getRenderStateRuntime(state);
    const proxy = runtime.renderProxyMap.get(source);
@@ -194,8 +393,72 @@ index 2b34bc6..7202793 100644
    runtime.renderProxyMap.delete(source);
    runtime.renderProxySources.delete(source);
  }
+diff --git a/packages/types/src/GlContextState.ts b/packages/types/src/GlContextState.ts
+index 8bf387c..ca7731a 100644
+--- a/packages/types/src/GlContextState.ts
++++ b/packages/types/src/GlContextState.ts
+@@ -1,6 +1,20 @@
+-import type { Entity } from './Entity';
++import type { Entity, EntityConstruction } from './Entity';
++import { EntityRuntimeKey } from './Entity';
+ import type { GlContext } from './GlContext';
++import type { GlContextRuntime } from './GlContextRuntime';
+
+ export interface GlContextState extends Entity {
++  [EntityRuntimeKey]: GlContextRuntime | undefined;
+   readonly gl: GlContext;
+ }
++
++export function readGlContextRuntimeOwner(owner: Readonly<GlContextState>): GlContextRuntime {
++  return owner[EntityRuntimeKey]!;
++}
++
++export function writeGlContextRuntimeOwner(
++  owner: EntityConstruction<GlContextState>,
++  runtime: GlContextRuntime,
++): void {
++  owner[EntityRuntimeKey] = runtime;
++}
+diff --git a/packages/types/src/GlRenderState.ts b/packages/types/src/GlRenderState.ts
+index 1b6c7ec..cb5b7b9 100644
+--- a/packages/types/src/GlRenderState.ts
++++ b/packages/types/src/GlRenderState.ts
+@@ -1,6 +1,7 @@
+ import type { BlendMode } from './BlendMode';
+ import type { ColorScaleBias } from './ColorScaleBias';
+-import type { Kind } from './Entity';
++import type { EntityConstruction, Kind } from './Entity';
++import { EntityRuntimeKey } from './Entity';
+ import type { GlCompressedTextureDecoder } from './GlCompressedTextureDecoder';
+ import type { GlCompressedTextureUploader } from './GlCompressedTextureUploader';
+ import type { GlContext } from './GlContext';
+@@ -29,12 +30,24 @@ import type { ShapeRasterizer } from './ShapeRasterizer';
+ import type { TintMaterialData } from './TintMaterialData';
+
+ export interface GlRenderState extends RenderState {
++  [EntityRuntimeKey]: GlRenderStateRuntime | undefined;
+   applyBlendMode: ((state: GlRenderState, blendMode: BlendMode | null) => void) | null;
+   readonly contextState: GlContextState;
+   readonly gl: GlContext;
+   readonly registries: Readonly<GlRenderRegistries>;
+ }
+
++export function readGlRenderStateRuntimeOwner(owner: Readonly<GlRenderState>): GlRenderStateRuntime {
++  return owner[EntityRuntimeKey]!;
++}
++
++export function writeGlRenderStateRuntimeOwner(
++  owner: EntityConstruction<GlRenderState>,
++  runtime: GlRenderStateRuntime,
++): void {
++  owner[EntityRuntimeKey] = runtime;
++}
++
+ // Pure registration policy owned by one WebGL render pipeline. Tables are persistent: a derived
+ // pipeline may initially share them, while either aggregate can later replace a member independently.
+ export interface GlRenderRegistries extends RenderRegistries {
 diff --git a/packages/types/src/RenderState.ts b/packages/types/src/RenderState.ts
-index bf653ce..940e9b0 100644
+index bf653ce..9a2bb9d 100644
 --- a/packages/types/src/RenderState.ts
 +++ b/packages/types/src/RenderState.ts
 @@ -1,6 +1,7 @@
@@ -209,13 +472,13 @@ index bf653ce..940e9b0 100644
  import type { Path } from './Path';
 @@ -26,6 +27,7 @@ import type { StrokeStyle } from './StrokeStyle';
  export type Scene3DGraphSyncPolicy = 'refreshDerivedState' | 'requiresInvalidation';
- 
+
  export interface RenderState extends Entity {
 +  [EntityRuntimeKey]: RenderStateRuntime | undefined;
    allowSmoothing: boolean;
    // Active clip nesting depth (rect + path). Masks were retired into clips, so the mask pass / renderer
    // map / currentMaskDepth are gone. Backends additionally keep their own per-form unwind stack.
-@@ -117,3 +119,28 @@ export interface RenderStateRuntime extends EntityRuntime {
+@@ -117,3 +119,31 @@ export interface RenderStateRuntime extends EntityRuntime {
    rendererMapId: number;
    tempStack: Renderable[];
  }
@@ -238,9 +501,12 @@ index bf653ce..940e9b0 100644
 +  return owner[EntityRuntimeKey]!;
 +}
 +
-+export function writeRenderStateRuntimeOwner(
-+  owner: EntityConstruction<RenderState>,
-+  runtime: RenderStateRuntime,
++export function writeRenderStateRuntimeOwner<
++  State extends RenderState,
++  Runtime extends RenderStateRuntime,
++>(
++  owner: EntityConstruction<State>,
++  runtime: Runtime,
 +): void {
 +  owner[EntityRuntimeKey] = runtime;
 +}
