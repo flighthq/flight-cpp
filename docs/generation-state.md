@@ -5937,3 +5937,34 @@ structural fix reopens them.
 And the counting rule that follows from both this and the `Ref<variant>` negative result: **count headers that
 reach zero, never errors removed, and never first-diagnostic counts.** Errors removed and masks lifted are both
 compatible with +0.
+
+## CORRECTED: render-gl terminates; scene3d-gl is slow emission, not a lowering loop
+
+The historical sections above classify `@flighthq/render-gl` as a synchronous compiler hang and defer
+it plus every package whose closure reaches it. That conclusion no longer holds at the pinned revisions.
+The generator now exposes the compiler's bounded synchronous progress observer through `--progress`, so
+a timed run records its last completed phase and module instead of treating elapsed wall time as a stack
+profile.
+
+Measured on 2026-10-08 with the standard SDL profile and all 47 declared source patches:
+
+| target | graph | observed result |
+|---|---:|---|
+| `@flighthq/render-gl` | 1,273 modules / 18 packages | **completed** in under 600 seconds; 1,203 emitted, 70 refused |
+| `@flighthq/scene3d-gl` | 1,597 modules | lowering completed; a 900-second guard interrupted advancing emission after 394 completed modules |
+
+The second row is not evidence of nontermination. Its trace entered the emission session, completed each
+reported module in order, and was processing `@flighthq/scene2d-gl/packages/scene2d-gl/src/glSprite.ts`
+when the guard fired. The old run had no phase or module telemetry and incorrectly promoted a timeout to
+a recursive-lowering diagnosis.
+
+Consequences:
+
+1. `deferred-packages.json` no longer excludes `render-gl`, `effects-gl`, `scene2d-gl`, `scene3d-gl`,
+   `tool-capture`, `host-web`, or the SDK barrel. Host-inapplicable packages are still classified from
+   their own `flight.environment`; that is independent of generation.
+2. The six upstream Scene3D examples remain blocked, but on concrete compiler/refusal and native compile
+   work in material construction, GL render state, shaders, and the scene renderer. They are no longer
+   described as missing because generation cannot reach them.
+3. Long runs should use `--progress`. A timeout without a final phase/module event is no longer accepted
+   as evidence of a compiler loop.

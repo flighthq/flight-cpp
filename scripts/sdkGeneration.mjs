@@ -40,6 +40,10 @@ import {
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const options = process.argv.slice(2);
 const check = options.includes('--check');
+// Opt-in because a complete SDK run emits thousands of events. The trace is deliberately written
+// before each synchronous compiler phase begins, so if lowering stops making progress its final line
+// names the exact upstream module still in flight.
+const traceProgress = options.includes('--progress');
 // Best-effort generation asks the compiler to emit everything it can, writing a replaceable stub where a
 // module is refused for its OWN reasons and real output where a module was only held back by an inherited
 // refusal. The compiler's report then names, per module, whether the file on disk is output or a
@@ -73,6 +77,7 @@ const unknown = options.filter(
     // line recorded in docs/generation-state.md for no gain.
     option !== '--best-effort' &&
     option !== '--no-best-effort' &&
+    option !== '--progress' &&
     !option.startsWith('--package=') &&
     !option.startsWith('--binding-profile=') &&
     !option.startsWith('--output='),
@@ -314,6 +319,17 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       schema: 'flight-compiler-package-graph/1',
     },
     moduleResolution: createCompilerModuleResolutionPlan(inventory),
+    ...(traceProgress
+      ? {
+          observeProgress(progress) {
+            const module =
+              'module' in progress
+                ? ` ${progress.module.packageName}/${progress.module.source} (${String(progress.completedModules)}/${String(progress.moduleCount)})`
+                : ` (${String(progress.moduleCount)} modules)`;
+            process.stdout.write(`[sdk-generation] ${progress.phase} ${progress.state}${module}\n`);
+          },
+        }
+      : {}),
     sources,
   });
   // Repairs run between emission and writing, so the committed inventory is what actually compiles
@@ -755,6 +771,9 @@ Generate a profile-specific inventory outside the committed portable tree with:
 \`\`\`sh
 node scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --binding-profile=bindings/headless.json --output=out/sdk-headless
 \`\`\`
+
+Add \`--progress\` to print the compiler phase and module before every synchronous lowering or
+emission step. If an interrupted run stops advancing, its final line identifies the work in flight.
 `;
 }
 

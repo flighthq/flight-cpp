@@ -53,13 +53,14 @@ smoke test is not enough if the example bypasses the Flight API it is meant to e
 port belongs in `UPSTREAM_EXAMPLES` only when its state and algorithms come from the same generated
 Flight APIs as the pinned TypeScript source.
 
-The six packages in `UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL` are a separate renderer-generation
-blocker. Their TypeScript sources select `@flighthq/render-gl` and `@flighthq/scene3d-gl`; the
-corresponding C++ headers are absent because generation over `@flighthq/render-gl` currently does not
-terminate, as recorded in `deferred-packages.json`. This is not a DOM dependency. The 3D scene, mesh,
-camera, lighting, and material data types exist in C++, but the GL scene renderer does not. These
-examples must use that renderer once it is generated; a custom 2D projection or hand-painted
-material is not an acceptable substitute.
+The six packages in `UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL` are a separate renderer blocker. Their
+TypeScript sources select `@flighthq/render-gl` and `@flighthq/scene3d-gl`. The old generation
+nontermination diagnosis has been removed: the pinned compiler now completes the 1,273-module
+`render-gl` closure, and a traced `scene3d-gl` run completes lowering all 1,597 modules and advances
+through emission. Critical render-state, material, shader, and scene-renderer modules are still
+refused or fail the native compile gate, so the GL scene renderer is not usable yet. This is not a
+DOM dependency. These examples must use that renderer once those modules compile; a custom 2D
+projection or hand-painted material is not an acceptable substitute.
 
 The upstream 2D examples normally select `scene2d-canvas`. Many headers for that package exist, but
 critical render-state and shape/text renderer modules are recorded as refused in

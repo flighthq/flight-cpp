@@ -42,11 +42,11 @@ set(UPSTREAM_EXAMPLES_AWAITING_FAITHFUL_SDL_PORT
   video
 )
 
-# These TypeScript examples select the WebGL renderer. @flighthq/render-gl and
-# its @flighthq/scene3d-gl dependent have no generated C++ headers because
-# generation currently does not terminate in @flighthq/render-gl (see
-# deferred-packages.json). Their real materials, lighting, and picking cannot
-# be represented by a custom SDL painter.
+# These TypeScript examples select the WebGL renderer. Generation now reaches
+# both @flighthq/render-gl and @flighthq/scene3d-gl, but critical render-state,
+# material, shader, and scene-renderer modules are still refused or fail the
+# native compile gate. Their real materials, lighting, and picking cannot be
+# represented by a custom SDL painter.
 set(UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL
   awd2loading
   instanced_mesh
