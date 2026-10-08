@@ -47,6 +47,16 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_canvas_texture_resolver_test",
+    srcs = ["generated_canvas_texture_resolver_test.cpp"],
+    size = "small",
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
+)
+
+cc_test(
     name = "c_api_test",
     srcs = ["c_api_test.c"],
     size = "small",

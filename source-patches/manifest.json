@@ -596,6 +596,22 @@
       "appliedOn": "2026-10-08"
     },
     {
+      "id": "canvas-render-state-runtime-owner-and-initialization",
+      "dependency": "flight",
+      "patch": "canvas-render-state-runtime-owner-and-initialization.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene2d-canvas/src/canvasRenderState.ts",
+      "package": "@flighthq/scene2d-canvas",
+      "answers": "refusal",
+      "refusal": "CanvasRenderState construction and runtime recovery assert flattened derived interfaces to RenderState and RenderStateRuntime owners with no emitted C++ heritage",
+      "rewrite": "Declares CanvasRenderState's exact runtime-symbol owner beside the type, constructs base state fields through the shared derived-state initializer, attaches the exact Canvas runtime through its owner accessor, initializes the derived runtime with an exact CanvasRenderRegistries object, preserves the public Partial<CanvasRenderOptions> signature over a closed implementation shape, binds the Matrix coalesce to its declared result, and gives the registry-miss closure an explicit void contract.",
+      "equivalence": "State and runtime each retain one allocation, the same field values and initialization order, and the same EntityRuntimeKey attachment. Base fields are initialized before Canvas fields as before. Registry spreading still produces one shallow derived registry object, and the state still retains the original readonly registry aggregate. The public overload accepts the same options, the closed implementation shape lists exactly their six fields, the Matrix local evaluates the same coalesce once, and the block-bodied callback invokes the same optional emitter once while discarding its void result. The owner helpers read and write the same symbol property without copying or side storage; only erased TypeScript evidence is made explicit.",
+      "whyNotUpstreamFirst": "The rewrite is target-neutral TypeScript and makes the already-intended derived owners explicit. It depends on the temporary generic render initializer only because the emitter flattens interface heritage; no public factory signature changes.",
+      "unblocks": "In the 27-package @flighthq/scene2d-canvas closure, the final callback refinement moves the inventory from 1309/1404 modules with 95 refusals to 1310/1404 with 94. The exact runtime accessors, runtime factory, and complete createCanvasRenderState body emit. The module now remains dependency-refused only because canvasTextureResolver is independently refused, which is addressed separately.",
+      "expires": "when the emitter preserves CanvasRenderState and CanvasRenderStateRuntime heritage and computed-symbol ownership across their RenderState bases, or Flight adopts these exact-owner helpers.",
+      "appliedOn": "2026-10-08"
+    },
+    {
       "id": "registry-bound-discriminant-literal",
       "dependency": "flight",
       "patch": "registry-bound-discriminant-literal.patch",

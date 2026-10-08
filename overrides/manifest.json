@@ -1999,6 +1999,37 @@
       "authoredOn": "2026-10-07"
     },
     {
+      "id": "scene2d-canvas-texture-resolver-complete-module",
+      "path": "flight/scene2d_canvas/canvas_texture_resolver.hpp",
+      "package": "@flighthq/scene2d-canvas",
+      "status": "complete",
+      "supplies": "packages/scene2d-canvas/src/canvasTextureResolver.ts",
+      "derivedFrom": "a9c74957307ed71d4ce4deb7842448d5702c39f5dc3b623e30661e76ba8a685c",
+      "reason": "The emitter cannot discriminate the four-owner Texture variant for the module's 2D-only resolver, omits owned-surface teardown because an optional Map clear lacks callable-result evidence, and emits the registry-miss bridge and entity initializer with invalid optional<void>, alias-as-Ref, and nested EntityConstruction representations.",
+      "change": "Supplies the complete module over the generated types: persistent source-kind registration, exact 2D Texture alternative visitation, nullable miss forwarding, owned-surface acquisition and teardown, and EntityConstruction materialization with the declared runtime marker and null registry state.",
+      "equivalence": "Only the Texture2D alternative proceeds; a null source or every non-2D alternative returns null. Resolution reads the source kind, invokes the same registered callback with the original resolver set and Texture owner, or emits the same TextureResolver miss and returns null. Map copies preserve shared JavaScript identity. Creation attaches one Entity runtime, starts both nullable fields at null, and installs one empty owned-surface set. Destruction removes that set first, destroys each retained surface once, clears the registry, and resets both nullable fields.",
+      "whyNotAPatchOrRepair": "Target-neutral annotations were measured: they moved the first diagnostic without emitting any missing declaration or improving the 1310/1404 inventory, so they were removed. The remaining operation is identity-preserving std::variant dispatch plus correction of invalid generated type representations; an insertion repair cannot replace those bodies.",
+      "unblocks": "The override header compiles against both the committed SDL SDK and the regenerated 27-package Canvas closure. Focused native coverage passes registration, same-owner dispatch, miss reporting, entity initialization, and teardown. It answers canvasTextureResolver so canvasRenderState and its material/render-pass dependents can advance to their own independent refusals.",
+      "remaining": "The selected SDL profile's CanvasRenderSurface override still has no Canvas2D rasterizer and therefore returns the source API's nullable acquisition failure; this resolver does not fabricate a drawable surface.",
+      "expires": "when Texture discriminant narrowing emits a std::variant visit, optional Map/callback operations preserve void and presence evidence, aliases are not wrapped in Ref, and EntityConstruction retains its structural owner.",
+      "authoredOn": "2026-10-08"
+    },
+    {
+      "id": "scene2d-canvas-state-deferred-heritage-teardown",
+      "path": "flight/scene2d_canvas/canvas_render_state.hpp",
+      "package": "@flighthq/scene2d-canvas",
+      "status": "incomplete",
+      "derivedFrom": "94626856f63cab13969e350887fd1196bf4d7757056fb4c817defb60e101f1a6",
+      "reason": "The exact-owner source patch emits the complete Canvas render-state runtime, construction, mutation, and teardown bodies, but a generated self-using declaration appears before the accessor exists and the flattened CanvasRenderState owner cannot convert to RenderState for the final base teardown call.",
+      "change": "Removes only the invalid self-using declaration and makes the final heritage-dependent teardown call a constrained dependent expression. Every emitted construction, runtime, registration, smoothing, alpha, and Canvas texture-resolver operation is retained unchanged.",
+      "equivalence": "Header consumers can construct and operate on the exact CanvasRenderState owner with its exact CanvasRenderStateRuntime. The dependent destroy body remains source-identical when instantiated; no base state or destruction result is fabricated.",
+      "whyNotAPatchOrRepair": "The self-using declaration is generated target syntax, and a declaration repair cannot create safe nominal heritage between two independently flattened owners. Deferring only the ill-formed call keeps the usable API honest while exposing the remaining compiler gap at the call site.",
+      "unblocks": "canvas_render_state.hpp compiles with the complete factory and runtime API, allowing Canvas material and render-pass dependents to be evaluated against their own code rather than a refused state dependency.",
+      "remaining": "Instantiating destroy_canvas_render_state still fails until generated CanvasRenderState-to-RenderState heritage or an owner-preserving base projection exists.",
+      "expires": "when using declarations are ordered after declarations and flattened derived render states retain a checked RenderState projection.",
+      "authoredOn": "2026-10-08"
+    },
+    {
       "id": "render-wgpu-render-pass-profile-boundary",
       "path": "flight/render_wgpu/wgpu_render_pass.hpp",
       "package": "@flighthq/render-wgpu",
