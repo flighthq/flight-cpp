@@ -25,7 +25,6 @@ int main() {
   using namespace flight::scene2d;
   using namespace flight::movieclip;
 
-  // NOT AVAILABLE: generated MovieClip timeline and Scene2D construction are partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   // Create a MovieClip with labeled sections.
@@ -36,16 +35,16 @@ int main() {
   add_node_child(root, clip);
 
   // Create a timeline source for frame-based animation.
-  auto source = flight::movieclip::create_timeline_source();
+  auto source = flight::movieclip::create_timeline_source(TOTAL_FRAMES, FRAME_RATE);
 
   // Set up the movie clip with its source.
   set_movie_clip_source(clip, source);
 
   // Add frame scripts at specific frames.
-  add_movie_clip_frame_script(clip, 0, [&]() {
+  add_movie_clip_frame_script(clip, 0.0, [&](auto, double) {
     // Frame 0: draw initial state.
   });
-  add_movie_clip_frame_script(clip, 12, [&]() {
+  add_movie_clip_frame_script(clip, 12.0, [&](auto, double) {
     // Frame 12: midpoint action.
   });
 
@@ -75,7 +74,7 @@ int main() {
 
   // Playback controls.
   play_movie_clip(clip);
-  goto_and_play_movie_clip(clip, 0);
+  goto_and_play_movie_clip(clip, 0.0);
 
   // Simulate playback for a few seconds.
   for (int i = 0; i < 120; ++i) {
@@ -90,7 +89,7 @@ int main() {
   stop_movie_clip(clip);
   next_frame_movie_clip(clip);
   prev_frame_movie_clip(clip);
-  goto_and_stop_movie_clip(clip, 5);
+  goto_and_stop_movie_clip(clip, 5.0);
 
   // HUD label.
   auto label = flight::text::create_text_label();

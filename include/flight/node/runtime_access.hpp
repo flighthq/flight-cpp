@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <any>
 #include <mutex>
 #include <optional>
@@ -152,3 +153,19 @@ inline std::optional<Source> get_node_parent(const Source& source) {
 }
 
 } // namespace flight::node
+
+namespace flight::media {
+
+// The portable runtime has no host audio graph. Bus values remain authoritative CPU state; these
+// hooks deliberately do nothing until a host capability supplies graph-node handles.
+template <typename Host, typename Bus>
+inline void update_bus_gain_node(const Host&, const Bus&) {}
+
+template <typename Host, typename Bus>
+inline void update_bus_panner_node(const Host&, const Bus&) {}
+
+inline double clamp(double value, double low, double high) {
+  return std::clamp(value, low, high);
+}
+
+} // namespace flight::media
