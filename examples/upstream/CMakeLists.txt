@@ -3,6 +3,7 @@
 # for the current blocker inventory and promotion procedure.
 
 set(UPSTREAM_EXAMPLES
+  adjustments
   camera2d
   clock
   collision
@@ -20,7 +21,6 @@ set(UPSTREAM_EXAMPLES
 # Blocked by generated scene2d/display_object.hpp before the example body is
 # checked. That partial header also omits createNode2D/createDisplayObject.
 set(UPSTREAM_EXAMPLES_BLOCKED_SCENE2D
-  adjustments
   benchmark
   bitmapfont_generate
   cross_backend_embed

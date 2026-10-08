@@ -34,7 +34,6 @@ int main() {
   using namespace flight::scene2d;
   using namespace flight::adjustments;
 
-  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   double brightness = 0.1;
@@ -47,9 +46,8 @@ int main() {
   auto hueRotateMatrix = create_hue_rotate_color_matrix(hueRotation);
   auto saturationMatrix = create_saturation_color_matrix(saturation);
 
-  auto fused = fuse_color_matrices(brightnessMatrix, contrastMatrix);
-  fused = fuse_color_matrices(fused, hueRotateMatrix);
-  fused = fuse_color_matrices(fused, saturationMatrix);
+  auto fused = fuse_color_matrices(flight::Array<flight::Array<double>>{
+      brightnessMatrix, contrastMatrix, hueRotateMatrix, saturationMatrix});
 
   auto heading = flight::text::create_text_label();
   heading->data->text = flight::String("COLOR ADJUSTMENTS");
@@ -90,10 +88,11 @@ int main() {
   add_node_child(root, afterLabel);
 
   auto tintDemo = create_shape(std::nullopt);
-  append_shape_begin_fill(tintDemo, 0xffffffff);
+  auto tintMatrix = create_color_matrix_from_tint(0xff6600ff, 1.0);
+  append_shape_begin_fill(
+      tintDemo, apply_color_matrix_to_color(tintMatrix, 0xffffffff));
   append_shape_rectangle(tintDemo, SWATCHES_X, 510.0, 200.0, 40.0);
   append_shape_end_fill(tintDemo);
-  set_node_color_adjustments_tint(tintDemo, 0xff6600ff);
   add_node_child(root, tintDemo);
 
   std::cout << "Flight adjustments example (naive C++ port): "
