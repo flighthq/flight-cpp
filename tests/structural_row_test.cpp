@@ -109,6 +109,12 @@ using WritableDerivedTargetRow = flight::StructuralRef<flight::RowWritable<fligh
 using UnrelatedTargetRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestUnrelatedTarget>>>>;
 using RetypedTargetRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestRetypedTarget>>>>;
 
+// A nullable structural member uses the optional itself as its null channel. Unlike a shared pointer,
+// StructuralRef has no inner null value, so an emitted `nullptr` write has to disengage the optional.
+struct TestNullableRowBearing final : public flight::ReferenceEnabled {
+  std::optional<BaseTargetRow> subscribe;
+};
+
 // Derived to base, and nothing else. The trait the runtime declares answers no by default and the
 // generated table specializes it to yes only where the proof holds, so each of these is a statement
 // about which half answered.
@@ -903,6 +909,25 @@ int main() {
           "absent and null are not the same state");
     check(static_cast<bool>(*nulled_read) != static_cast<bool>(*valued_read),
           "null and a value are not the same state");
+  }
+
+  // Null for a structural value cannot live inside the optional: StructuralRef is a value handle, not
+  // a nullable pointer. The optional is therefore the null representation used by emitted SDK fields.
+  // Keep the pointer-valued three-state behavior above as the contrast; it must not be collapsed.
+  {
+    using NullableRow = flight::StructuralRef<
+        flight::RowWritable<flight::RowOf<flight::Ref<TestNullableRowBearing>>>>;
+    auto target = flight::make_ref<TestNullableRowBearing>();
+    auto base = flight::make_ref<TestBaseTarget>();
+    base->width = 320.0;
+    target->subscribe = BaseTargetRow(base);
+    const NullableRow row(target);
+
+    flight::row_set<flight::RowKey<"subscribe">>(row, nullptr);
+    check(!target->subscribe.has_value(),
+          "nullptr disengages a nullable structural member whose value type has no inner null");
+    check(!flight::row_get<flight::RowKey<"subscribe">>(row).has_value(),
+          "the nullable structural member reads back as absent/null");
   }
 
   // LIFETIME: a structurally widened row DOES keep its subject alive.

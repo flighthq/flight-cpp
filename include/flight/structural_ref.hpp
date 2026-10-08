@@ -1166,8 +1166,12 @@ template <typename Key, typename Schema, typename Value>
 void row_set(const StructuralRef<Schema>& target, Value&& value) {
   static_assert(!detail::schema_readonly<Schema>, "a readonly structural row cannot be written");
   using Expected = detail::schema_member_t<Key, Schema>;
+  constexpr bool writes_unrepresentable_null_as_absence =
+      std::same_as<std::remove_cvref_t<Value>, std::nullptr_t> &&
+      detail::optional_traits<Expected>::optional && !std::constructible_from<Expected, Value&&>;
   static_assert(!std::is_void_v<Expected>, "structural row schema does not contain the requested property");
-  static_assert(std::constructible_from<Expected, Value&&>, "structural row write has an incompatible value type");
+  static_assert(writes_unrepresentable_null_as_absence || std::constructible_from<Expected, Value&&>,
+                "structural row write has an incompatible value type");
   if (!target.shared_owner()) throw std::bad_weak_ptr();
   target.shared_owner()->before_named_write(Key::name.view());
   if constexpr (detail::schema_required<Schema>) {
@@ -1179,7 +1183,15 @@ void row_set(const StructuralRef<Schema>& target, Value&& value) {
       return;
     }
   }
-  target.shared_owner()->set_named_value(Key::name.view(), Expected(std::forward<Value>(value)));
+  if constexpr (writes_unrepresentable_null_as_absence) {
+    // A nullable structural value has no pointer-shaped inner value with which to encode an explicit
+    // null. Its optional is the null channel, so the emitter's `nullptr` writes the disengaged state.
+    // Pointer-valued optionals deliberately stay on the ordinary construction path above: for them an
+    // engaged null pointer remains distinct from an absent property.
+    target.shared_owner()->set_named_value(Key::name.view(), Expected{});
+  } else {
+    target.shared_owner()->set_named_value(Key::name.view(), Expected(std::forward<Value>(value)));
+  }
 }
 
 // Computed-symbol read. The owner's computed cell is consulted FIRST, because it is the only one of
