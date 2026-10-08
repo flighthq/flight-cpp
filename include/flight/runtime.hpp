@@ -57,6 +57,7 @@
 #include <flight/weak_set.hpp>
 #include <flight/web_types.hpp>
 #include <flight/node/runtime_access.hpp>
+#include <flight/node/bounds_rectangle_access.hpp>
 
 template <typename Value>
 using FlightTask = flight::Task<Value>;

@@ -1,9 +1,8 @@
 // Naive C++ port of @flighthq/example-interaction
 // Ported from .dependencies/flight/examples/packages/interaction/src/app.ts
 
-#include <flight/interaction/interaction_manager.hpp>
 #include <flight/interaction/hit_tests.hpp>
-#include <flight/input/input_manager.hpp>
+#include <flight/interaction/node_interaction_state.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
 #include <flight/scene2d/display_object.hpp>
@@ -19,19 +18,7 @@ int main() {
   using namespace flight::scene2d;
   using namespace flight::interaction;
 
-  // NOT AVAILABLE: generated interaction hierarchy and Scene2D construction are partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
-
-  // Register hit test handlers.
-  register_default_hit_tests();
-  register_shape_hit_test();
-
-  // Create interaction manager.
-  auto manager = create_interaction_manager(root);
-
-  // Create input manager and wire up pointer input.
-  auto inputManager = create_input_manager();
-  connect_input_to_interaction(inputManager, manager);
 
   // Interactive shapes: draggable circle, clickable rectangle, hoverable polygon.
   auto dragCircle = create_shape(std::nullopt);
@@ -57,32 +44,6 @@ int main() {
   set_node_hit_test_enabled(hoverCircle, true);
   add_node_child(root, hoverCircle);
 
-  // Connect interaction signals.
-  connect_interaction_signal(manager, dragCircle, flight::String("pointerDown"),
-    [&](auto& event) {
-      capture_interaction_pointer(manager, dragCircle, event);
-    });
-
-  connect_interaction_signal(manager, dragCircle, flight::String("pointerUp"),
-    [&](auto& event) {
-      release_interaction_pointer(manager, dragCircle, event);
-    });
-
-  connect_interaction_signal(manager, clickRect, flight::String("pointerTap"),
-    [&](auto& event) {
-      // Toggle color on click.
-    });
-
-  connect_interaction_signal(manager, hoverCircle, flight::String("pointerOver"),
-    [&](auto& event) {
-      // Highlight on hover.
-    });
-
-  connect_interaction_signal(manager, hoverCircle, flight::String("pointerOut"),
-    [&](auto& event) {
-      // Remove highlight.
-    });
-
   // Status label.
   auto statusLabel = flight::text::create_text_label();
   statusLabel->data->text = flight::String("Hover/click/drag the shapes");
@@ -99,7 +60,10 @@ int main() {
   invalidate_node_local_transform(logLabel);
   add_node_child(root, logLabel);
 
+  const int enabledCount = static_cast<int>(is_node_hit_test_enabled(dragCircle)) +
+                           static_cast<int>(is_node_hit_test_enabled(clickRect)) +
+                           static_cast<int>(is_node_hit_test_enabled(hoverCircle));
   std::cout << "Flight interaction example (naive C++ port): "
-            << "3 interactive shapes, interaction manager configured.\n";
+            << enabledCount << " interactive shapes configured.\n";
   return 0;
 }

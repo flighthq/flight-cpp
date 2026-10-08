@@ -46,6 +46,16 @@ inline std::optional<flight::Ref<NodeInteractionState>> get_node_interaction_sta
   return get_node2_dinteraction_runtime(source)->interaction_state;
 }
 
+template <typename Source>
+  requires requires(const Source& source) {
+    source->entity_runtime_key.value()->interaction_state;
+  }
+inline std::optional<flight::Ref<NodeInteractionState>> get_node_interaction_state(
+    const Source& source) {
+  if (!source || !source->entity_runtime_key.has_value()) return std::nullopt;
+  return source->entity_runtime_key.value()->interaction_state;
+}
+
 inline bool are_node_children_hit_test_enabled(NodeAny source) {
   const auto state = get_node_interaction_state(source);
   return !state.has_value() || state.value()->children_hit_test_enabled;
@@ -104,6 +114,21 @@ inline flight::Ref<NodeInteractionState> enable_node_interaction_state(Node2D so
   return runtime->interaction_state.value();
 }
 
+template <typename Source>
+  requires requires(const Source& source) {
+    source->entity_runtime_key.value()->interaction_state;
+  }
+inline flight::Ref<NodeInteractionState> enable_node_interaction_state(const Source& source) {
+  if (!source || !source->entity_runtime_key.has_value()) {
+    throw flight::Error(flight::String("Node interaction runtime is unavailable"));
+  }
+  auto runtime = source->entity_runtime_key.value();
+  if (!runtime->interaction_state.has_value()) {
+    runtime->interaction_state = create_node_interaction_state();
+  }
+  return runtime->interaction_state.value();
+}
+
 inline bool is_node_focusable(NodeAny source) {
   const auto state = get_node_interaction_state(source);
   return state.has_value() && state.value()->focusable;
@@ -119,6 +144,15 @@ inline bool is_node_hit_test_enabled(Node2D source) {
   return state.has_value() && state.value()->hit_test_enabled;
 }
 
+template <typename Source>
+  requires requires(const Source& source) {
+    source->entity_runtime_key.value()->interaction_state;
+  }
+inline bool is_node_hit_test_enabled(const Source& source) {
+  const auto state = get_node_interaction_state(source);
+  return state.has_value() && state.value()->hit_test_enabled;
+}
+
 inline bool is_node_pointer_double_click_enabled(NodeAny source) {
   const auto state = get_node_interaction_state(source);
   return state.has_value() && state.value()->pointer_double_click_enabled;
@@ -129,6 +163,14 @@ inline void set_node_children_hit_test_enabled(NodeAny source, bool enabled) {
 }
 
 inline void set_node_cursor(NodeAny source, std::optional<Cursor> cursor) {
+  enable_node_interaction_state(source)->cursor = std::move(cursor);
+}
+
+template <typename Source>
+  requires requires(const Source& source) {
+    source->entity_runtime_key.value()->interaction_state;
+  }
+inline void set_node_cursor(const Source& source, std::optional<Cursor> cursor) {
   enable_node_interaction_state(source)->cursor = std::move(cursor);
 }
 
@@ -149,6 +191,14 @@ inline void set_node_hit_test_enabled(NodeAny source, bool enabled) {
 }
 
 inline void set_node_hit_test_enabled(Node2D source, bool enabled) {
+  enable_node_interaction_state(source)->hit_test_enabled = enabled;
+}
+
+template <typename Source>
+  requires requires(const Source& source) {
+    source->entity_runtime_key.value()->interaction_state;
+  }
+inline void set_node_hit_test_enabled(const Source& source, bool enabled) {
   enable_node_interaction_state(source)->hit_test_enabled = enabled;
 }
 

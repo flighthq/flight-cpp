@@ -7,6 +7,7 @@ set(UPSTREAM_EXAMPLES
   clock
   collision
   flowstates
+  interaction
   motionpath
   movieclip
   shapes
@@ -51,7 +52,6 @@ set(UPSTREAM_EXAMPLES_BLOCKED_MESH_LAYOUT
 # These fail earlier in another generated SDK header. They also depend on the
 # blocked Scene2D stack after that first failure is repaired.
 set(UPSTREAM_EXAMPLES_BLOCKED_OTHER
-  interaction  # interaction/hit_tests.hpp calls omitted get_node_parent
 )
 
 foreach(example IN LISTS UPSTREAM_EXAMPLES)

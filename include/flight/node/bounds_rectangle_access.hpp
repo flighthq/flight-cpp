@@ -36,3 +36,19 @@ get_node_world_bounds_rectangle(flight::StructuralRef<Schema> target) {
 }
 
 } // namespace flight::node
+
+namespace flight::interaction {
+
+// Some retained interaction modules emit these imported node helpers unqualified. Keep the
+// forwarding boundary in their lookup namespace while the underlying runtime remains in node.
+template <typename Source>
+inline auto get_node_parent(const Source& source) {
+  return flight::node::get_node_parent(source);
+}
+
+inline auto get_node_world_bounds_rectangle(
+    const flight::Ref<flight::types::Node2D>& target) {
+  return flight::node::get_node_world_bounds_rectangle(target);
+}
+
+} // namespace flight::interaction
