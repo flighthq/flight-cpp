@@ -143,6 +143,7 @@ class CameraExample final {
   void frame(const Frame& frame) {
     update_player(frame);
     update_zoom(frame);
+    if (frame.smoke && frame.index == 0) zoom_ = 0.25;
     update_camera(frame.delta_time);
     draw_parallax(frame.canvas);
     draw_world(frame.canvas);
@@ -197,8 +198,13 @@ class CameraExample final {
     camera_.y += (target.y - camera_.y) * smoothing;
     const double half_width = 400.0 / zoom_;
     const double half_height = 300.0 / zoom_;
-    camera_.x = std::clamp(camera_.x, half_width, world_width - half_width);
-    camera_.y = std::clamp(camera_.y, half_height, world_height - half_height);
+    camera_.x = constrain_axis(camera_.x, half_width, world_width);
+    camera_.y = constrain_axis(camera_.y, half_height, world_height);
+  }
+
+  [[nodiscard]] static double constrain_axis(double value, double half_view, double world_extent) {
+    if (half_view * 2.0 >= world_extent) return world_extent * 0.5;
+    return std::clamp(value, half_view, world_extent - half_view);
   }
 
   static double wrapped(double value, double extent) {
