@@ -524,6 +524,21 @@ void bind_generated_symbol_members(RowOwner& owner, const std::shared_ptr<Object
   GeneratedSymbolBindings<Object>::bind(owner, object);
 }
 
+// The SDK table normally supplies named members, but its input is the RowKey vocabulary of
+// successfully emitted declarations. A refused constructor can therefore be the only declaration
+// that would have named its own discriminant or owned sampler, leaving an override unable to
+// materialize the same construction bag. Bind the two construction-critical fields from the native
+// owner as a bootstrap; bind_named is idempotent when a regenerated table already contains them.
+template <typename Object>
+void bind_construction_bootstrap_members(RowOwner& owner, const std::shared_ptr<Object>& object) {
+  if constexpr (requires { object->dimension; }) {
+    owner.bind_named("dimension", [object]() -> decltype(auto) { return (object->dimension); });
+  }
+  if constexpr (requires { object->sampler; }) {
+    owner.bind_named("sampler", [object]() -> decltype(auto) { return (object->sampler); });
+  }
+}
+
 template <typename Object>
 [[nodiscard]] std::shared_ptr<RowOwner> owner_for(const std::shared_ptr<Object>& object) {
   auto& registry = owner_registry();
@@ -537,6 +552,7 @@ template <typename Object>
   auto owner = std::make_shared<NativeRowOwner<Object>>(object);
   owner->adopt_attachment(attachment_for(std::static_pointer_cast<void>(object)));
   bind_generated_row_members(*owner, object);
+  bind_construction_bootstrap_members(*owner, object);
   bind_generated_symbol_members(*owner, object);
   registry.entries.emplace(key, OwnerRegistryEntry{std::static_pointer_cast<void>(object), owner});
   return owner;

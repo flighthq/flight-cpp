@@ -384,6 +384,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("dialog") && requires { object.dialog; }) return (object.dialog);
   else if constexpr (Key::name.view() == std::string_view("diffuse") && requires { object.diffuse; }) return (object.diffuse);
   else if constexpr (Key::name.view() == std::string_view("diffuseMap") && requires { object.diffuse_map; }) return (object.diffuse_map);
+  else if constexpr (Key::name.view() == std::string_view("dimension") && requires { object.dimension; }) return (object.dimension);
   else if constexpr (Key::name.view() == std::string_view("direction") && requires { object.direction; }) return (object.direction);
   else if constexpr (Key::name.view() == std::string_view("directionX") && requires { object.direction_x; }) return (object.direction_x);
   else if constexpr (Key::name.view() == std::string_view("directionY") && requires { object.direction_y; }) return (object.direction_y);
@@ -1377,6 +1378,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("runtime") && requires { object.runtime; }) return (object.runtime);
   else if constexpr (Key::name.view() == std::string_view("sampleCount") && requires { object.sample_count; }) return (object.sample_count);
   else if constexpr (Key::name.view() == std::string_view("sampleScratch") && requires { object.sample_scratch; }) return (object.sample_scratch);
+  else if constexpr (Key::name.view() == std::string_view("sampler") && requires { object.sampler; }) return (object.sampler);
   else if constexpr (Key::name.view() == std::string_view("samples") && requires { object.samples; }) return (object.samples);
   else if constexpr (Key::name.view() == std::string_view("saturation") && requires { object.saturation; }) return (object.saturation);
   else if constexpr (Key::name.view() == std::string_view("saved") && requires { object.saved; }) return (object.saved);
@@ -2224,6 +2226,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("dialog") && requires(Object& object) { object.dialog; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dialog)>>{};
   else if constexpr (Key::name.view() == std::string_view("diffuse") && requires(Object& object) { object.diffuse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().diffuse)>>{};
   else if constexpr (Key::name.view() == std::string_view("diffuseMap") && requires(Object& object) { object.diffuse_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().diffuse_map)>>{};
+  else if constexpr (Key::name.view() == std::string_view("dimension") && requires(Object& object) { object.dimension; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dimension)>>{};
   else if constexpr (Key::name.view() == std::string_view("direction") && requires(Object& object) { object.direction; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().direction)>>{};
   else if constexpr (Key::name.view() == std::string_view("directionX") && requires(Object& object) { object.direction_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().direction_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("directionY") && requires(Object& object) { object.direction_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().direction_y)>>{};
@@ -3217,6 +3220,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("runtime") && requires(Object& object) { object.runtime; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().runtime)>>{};
   else if constexpr (Key::name.view() == std::string_view("sampleCount") && requires(Object& object) { object.sample_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sample_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("sampleScratch") && requires(Object& object) { object.sample_scratch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sample_scratch)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sampler") && requires(Object& object) { object.sampler; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sampler)>>{};
   else if constexpr (Key::name.view() == std::string_view("samples") && requires(Object& object) { object.samples; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().samples)>>{};
   else if constexpr (Key::name.view() == std::string_view("saturation") && requires(Object& object) { object.saturation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().saturation)>>{};
   else if constexpr (Key::name.view() == std::string_view("saved") && requires(Object& object) { object.saved; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().saved)>>{};
@@ -4067,6 +4071,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->dialog; }) owner.bind_named("dialog", [object]() -> decltype(auto) { return (object->dialog); });
   if constexpr (requires { object->diffuse; }) owner.bind_named("diffuse", [object]() -> decltype(auto) { return (object->diffuse); });
   if constexpr (requires { object->diffuse_map; }) owner.bind_named("diffuseMap", [object]() -> decltype(auto) { return (object->diffuse_map); });
+  if constexpr (requires { object->dimension; }) owner.bind_named("dimension", [object]() -> decltype(auto) { return (object->dimension); });
   if constexpr (requires { object->direction; }) owner.bind_named("direction", [object]() -> decltype(auto) { return (object->direction); });
   if constexpr (requires { object->direction_x; }) owner.bind_named("directionX", [object]() -> decltype(auto) { return (object->direction_x); });
   if constexpr (requires { object->direction_y; }) owner.bind_named("directionY", [object]() -> decltype(auto) { return (object->direction_y); });
@@ -5060,6 +5065,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->runtime; }) owner.bind_named("runtime", [object]() -> decltype(auto) { return (object->runtime); });
   if constexpr (requires { object->sample_count; }) owner.bind_named("sampleCount", [object]() -> decltype(auto) { return (object->sample_count); });
   if constexpr (requires { object->sample_scratch; }) owner.bind_named("sampleScratch", [object]() -> decltype(auto) { return (object->sample_scratch); });
+  if constexpr (requires { object->sampler; }) owner.bind_named("sampler", [object]() -> decltype(auto) { return (object->sampler); });
   if constexpr (requires { object->samples; }) owner.bind_named("samples", [object]() -> decltype(auto) { return (object->samples); });
   if constexpr (requires { object->saturation; }) owner.bind_named("saturation", [object]() -> decltype(auto) { return (object->saturation); });
   if constexpr (requires { object->saved; }) owner.bind_named("saved", [object]() -> decltype(auto) { return (object->saved); });
@@ -5943,6 +5949,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(dialog)
   FLIGHT_SDK_ROW_WIDENS(diffuse)
   FLIGHT_SDK_ROW_WIDENS(diffuse_map)
+  FLIGHT_SDK_ROW_WIDENS(dimension)
   FLIGHT_SDK_ROW_WIDENS(direction)
   FLIGHT_SDK_ROW_WIDENS(direction_x)
   FLIGHT_SDK_ROW_WIDENS(direction_y)
@@ -6936,6 +6943,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(runtime)
   FLIGHT_SDK_ROW_WIDENS(sample_count)
   FLIGHT_SDK_ROW_WIDENS(sample_scratch)
+  FLIGHT_SDK_ROW_WIDENS(sampler)
   FLIGHT_SDK_ROW_WIDENS(samples)
   FLIGHT_SDK_ROW_WIDENS(saturation)
   FLIGHT_SDK_ROW_WIDENS(saved)

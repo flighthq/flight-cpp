@@ -1124,15 +1124,16 @@
       "id": "texture-variant-member-access",
       "path": "flight/texture/texture.hpp",
       "package": "@flighthq/texture",
-      "status": "complete",
+      "status": "incomplete",
       "derivedFrom": "6055b8d2df0774128e90a5e72a878251540634dd02b9b5a3364d31eef18a7efc",
-      "reason": "Fixes -> on Ref<TextureLike> (variant, not pointer) via std::visit throughout ~20 functions, .x/.y -> ->x/->y on Ref<Vector2> (shared_ptr), stubs get_first_texture_source and equals_texture_content, fixes variant member access in attach_texture_to_resource and create_common_texture_fields.",
-      "expires": "when the emitter handles variant-wrapped Ref types and generates the refused functions.",
-      "change": "Wrapped Ref<TextureLike> (variant) member access in std::visit throughout ~20 functions. Fixed .x/.y to ->x/->y on Ref<Vector2>. Stubbed get_first_texture_source and equals_texture_content. Fixed variant member access in attach_texture_to_resource and create_common_texture_fields.",
-      "equivalence": "std::visit reaches the same member on each variant alternative. Arrow access dereferences the shared_ptr to the same fields. The stubs have no behavioral effect.",
-      "whyNotAPatchOrRepair": "Variant member access rewrites and function stubs cannot be expressed as repairs.",
-      "unblocks": "texture.hpp and its downstream includers (enable_bitmap_text_guards.hpp, update_bitmap_text.hpp).",
-      "authoredOn": "2026-10-06"
+      "reason": "The emitter treats TextureLike and CreateTextureOptions as variants but emits direct member access, leaves Extract unresolved, and refuses getFirstTextureSource, cloneTexture, equalsTextureContent, initializeTexture2D, createTexture2D, and createTexture. The structural member inventory also omitted sampler and dimension because their only RowKey-producing initializer was itself refused.",
+      "expires": "when variant member access, distributive Extract/Omit owners, dual-sentinel source options, and construction-time structural keys emit directly.",
+      "change": "Uses discriminated visits for retained TextureLike operations; supplies exact 2D, 2D-array, 3D, and cube constructors, initialization, deep sampling-view clone, source lookup, equality, and resource attachment; and preserves exact option-owner overloads where the emitted all-options variant erased TypeScript overload results.",
+      "equivalence": "Every constructor applies the source defaults, deep-clones sampler and UV-vector state, retains source identity, allocates the correct dimension owner, initializes cube faces, and attaches exactly once to a resource. Clone allocates independent sampler/UV owners and source-list storage while sharing source identities. Source lookup and equality dispatch by the same dimension discriminant.",
+      "whyNotAPatchOrRepair": "Six behavioral functions are absent and the retained operations require replacement visits. A declaration repair cannot construct the four concrete union owners or restore deep-clone and resource-attachment behavior.",
+      "unblocks": "Default and exact-owner construction for all four texture dimensions, 2D initialization, resource attachment, and all-dimension clone now build and pass focused native behavior coverage; texture.hpp remains a usable dependency for Canvas image resolution and material creation.",
+      "remaining": "The compiler emits Texture and distributive TextureLike as different four-owner variants even though EntityWithoutRuntime is a type-only source view. A constructed Texture still cannot be passed directly to every public function taking TextureLike without an explicit projection; this entry is intentionally no longer labeled complete.",
+      "authoredOn": "2026-10-08"
     },
     {
       "id": "effects-render-effect-padding-variant-cast",
@@ -2012,6 +2013,22 @@
       "unblocks": "The override header compiles against both the committed SDL SDK and the regenerated 27-package Canvas closure. Focused native coverage passes registration, same-owner dispatch, miss reporting, entity initialization, and teardown. It answers canvasTextureResolver so canvasRenderState and its material/render-pass dependents can advance to their own independent refusals.",
       "remaining": "The selected SDL profile's CanvasRenderSurface override still has no Canvas2D rasterizer and therefore returns the source API's nullable acquisition failure; this resolver does not fabricate a drawable surface.",
       "expires": "when Texture discriminant narrowing emits a std::variant visit, optional Map/callback operations preserve void and presence evidence, aliases are not wrapped in Ref, and EntityConstruction retains its structural owner.",
+      "authoredOn": "2026-10-08"
+    },
+    {
+      "id": "scene2d-canvas-image-texture-resolver",
+      "path": "flight/scene2d_canvas/canvas_image_texture_resolver.hpp",
+      "package": "@flighthq/scene2d-canvas",
+      "status": "complete",
+      "supplies": "packages/scene2d-canvas/src/canvasImageTextureResolver.ts",
+      "derivedFrom": "981c1decad632ce58eef7f80d9c315c6dcc072214f289751861262dfbd2fa085",
+      "reason": "The emitter cannot prove the source assertion from flattened TextureSource to ImageResource, then cannot convert the generated Ref<HostImageSource> spelling to the SDL profile's value ImageSource carrier, so it omits the only image resolver and leaves its registrar uncompilable.",
+      "change": "Discriminates the exact Texture2D and image source-kind arms, recovers the aliasing owner that was originally allocated as ImageResource, returns its retained SDL ImageSource value, and registers that callback through the complete Canvas resolver module.",
+      "equivalence": "Absent, non-2D, non-image, or empty host sources return null. A valid ImageResource returns the same host image identity held by its source field, and registration uses the upstream image TextureSource kind.",
+      "whyNotAPatchOrRepair": "The source assertion is valid interface narrowing, but flattened C++ interface owners have no nominal relationship and the host mapping changes Ref spelling to a value carrier. A declaration repair cannot implement the checked owner recovery or returned conversion.",
+      "unblocks": "canvas_image_texture_resolver.hpp compiles, and focused native coverage resolves a Texture2D through the registered callback to the exact original decoded host-image identity.",
+      "remaining": "Only sources carrying the image discriminant are recovered; no ImageResource or pixel storage is fabricated for other TextureSource kinds.",
+      "expires": "when flattened interface extensions retain an owner-preserving checked projection and external value-type mappings remove redundant Ref spelling.",
       "authoredOn": "2026-10-08"
     },
     {

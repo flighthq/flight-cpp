@@ -543,7 +543,11 @@ function writeSdkBuildMetadata(outputRoot, files) {
 }
 
 function writeStructuralMemberTable(outputRoot, files) {
-  const names = new Set();
+  // These construction-time discriminant/owner fields can be absent from every retained RowKey
+  // precisely when the declaration that initializes them was refused. Keep them in the table so
+  // an override can materialize the refused construction without a circular dependency on that
+  // declaration having emitted successfully first.
+  const names = new Set(['dimension', 'sampler']);
   const rowKey = /flight::RowKey<"(?<name>(?:[^"\\]|\\.)*)">/gu;
   for (const file of files) {
     for (const match of file.contents.matchAll(rowKey)) {

@@ -88,6 +88,17 @@ add_test(
   COMMAND flight_cpp_generated_canvas_texture_resolver_tests
 )
 
+add_executable(flight_cpp_generated_texture_tests generated_texture_test.cpp)
+target_include_directories(
+  flight_cpp_generated_texture_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_texture_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(NAME flight_cpp.generated_texture COMMAND flight_cpp_generated_texture_tests)
+
 add_executable(flight_cpp_generated_interaction_tests generated_interaction_test.cpp)
 target_include_directories(
   flight_cpp_generated_interaction_tests

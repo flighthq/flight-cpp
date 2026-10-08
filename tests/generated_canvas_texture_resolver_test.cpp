@@ -1,4 +1,4 @@
-#include <flight/scene2d_canvas/canvas_texture_resolver.hpp>
+#include <flight/scene2d_canvas/canvas_image_texture_resolver.hpp>
 
 #include <iostream>
 #include <variant>
@@ -48,6 +48,21 @@ int main() {
       resolvers, flight::String("image"), std::optional<types::CanvasTextureResolver>{resolver});
   (void)canvas::resolve_canvas_texture(resolvers, texture);
   check(resolved, "the registered source-kind resolver receives the same Texture2D owner");
+
+  flight::Uint8ClampedArray pixels(4);
+  pixels.set_index(0.0, 12);
+  pixels.set_index(1.0, 34);
+  pixels.set_index(2.0, 56);
+  pixels.set_index(3.0, 255);
+  const auto image_source = flight::host_sdl::ImageSource::rgba8(1, 1, pixels);
+  const auto image_resource = flight::make_ref<types::ImageResource>();
+  image_resource->kind = types::image_texture_source_kind;
+  image_resource->source = flight::make_ref<types::HostImageSource>(image_source);
+  texture_2d->source = std::reinterpret_pointer_cast<types::TextureSource>(image_resource);
+  canvas::register_canvas_image_texture_resolver(resolvers);
+  const auto resolved_image = canvas::resolve_canvas_texture(resolvers, texture);
+  check(resolved_image.has_value() && resolved_image->identity() == image_source.identity(),
+        "the image resolver recovers the original host image owner");
 
   bool missed = false;
   resolvers->registry_miss = decltype(types::CanvasTextureResolvers::registry_miss){

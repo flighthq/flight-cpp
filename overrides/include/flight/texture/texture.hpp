@@ -1,28 +1,18 @@
-// Override of generated/include/flight/texture/texture.hpp
-// Fixes:
-//   1. Ref<TextureLike> is variant<Ref<A>,...> -- generated code uses -> on the variant; fixed with std::visit
-//   2. Ref<Vector2> members accessed with .x/.y instead of ->x/->y
-//   3. Stub for get_first_texture_source (refused: cpp-contextual-union-missing-expression-type)
-//   4. Stub for equals_texture_content (refused: cpp-union-member-access-unguarded)
-//   5. Ref<CreateTextureOptions> is also a variant needing the same visit treatment
+// Native lowering of texture.ts at the pinned Flight revision.
 #pragma once
 
-// PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
-// omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function getFirstTextureSource -- source line 23
-//   missing: function equalsTextureContent -- source line 378
-//   missing: function cloneTexture -- source line 36
-//   missing: function initializeTexture2D -- source line 337
-//   missing: function createTexture2D -- source line 174
-//   missing: function createTexture -- source line 126
+// The generated module refused its source/clone/construction declarations. This override retains
+// the emitted operations and supplies those declarations below.
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <random>
+#include <type_traits>
 #include <variant>
 #include <flight/runtime.hpp>
+#include <flight/entity/entity.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
@@ -90,9 +80,7 @@ namespace flight::texture {
 inline const double half_pi = (flight::pi / 2.0);
 
 
-// Stub for getFirstTextureSource (refused: cpp-contextual-union-missing-expression-type).
-// Visits the TextureLike variant to extract the first non-null TextureSource.
-// For 3d textures (VoxelGrid source), returns nullopt since VoxelGrid is not TextureSource.
+// Visits the TextureLike union to implement the source discriminant switch.
 inline std::optional<flight::Ref<TextureSource>> get_first_texture_source(flight::Ref<TextureLike> texture) {
   return std::visit([](const auto& alt) -> std::optional<flight::Ref<TextureSource>> {
     using AltType = std::decay_t<decltype(*alt)>;
@@ -396,10 +384,8 @@ struct source_version_dimension_color_space_sampler_flip_x_flip_y_uv_offset_uv_r
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_SOURCE_VERSION_DIMENSION_COLOR_SPACE_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_E508C6FCD62F56E0
 
 
-// NOT GENERATED: function equalsTextureContent -- source line 378
-// refusal: cpp-union-member-access-unguarded [compiler-restriction]
-//
-// Stub: compares dimension-specific source identity by visiting both operands.
+// Source function refused as cpp-union-member-access-unguarded; the visit preserves its switch.
+// Compares dimension-specific source identity by visiting both operands.
 inline bool equals_texture_content(flight::Ref<TextureLike> a, flight::Ref<TextureLike> b) {
   auto get_dim = [](const auto& var) -> flight::String {
     return std::visit([](const auto& alt) -> flight::String { return alt->dimension; }, var);
@@ -538,15 +524,8 @@ struct color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_COLOR_SPACE_FLIP_X_FLIP_Y_SAMPLER_UV_OFFSET_UV_ROTATION_UV_SCALE_VERSION_C3F2E20189CB6FA5
 
 
-// NOT GENERATED: function cloneTexture -- source line 36
-// refusal: cpp-typescript-utility-unexpanded:Extract [compiler-restriction]
-//
-// The source it stood for:
-//   export function cloneTexture(source: Readonly<TextureLike>): Texture {
-//     ...
-//   }
-// cpp emission failed for @flighthq/texture/packages/texture/src/texture.ts: Extract was not resolved before
-// emission and has no C++ lowering
+// cloneTexture was refused because Extract remained unexpanded; its owner-preserving lowering is
+// supplied after the concrete texture aliases below.
 
 inline flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea> create_common_texture_fields(std::optional<flight::Ref<CreateTextureOptions>> opts = std::nullopt) {
   // CreateTextureOptions is also a variant; visit it for member access
@@ -616,9 +595,8 @@ inline flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_sc
 }
 
 
-// NOT GENERATED: function initializeTexture2D -- source line 337
-// refusal: cpp-dual-sentinel-coalesce-projection-unproven [compiler-restriction]
-// cpp emission failed for @flighthq/texture/packages/texture/src/texture.ts: dual-sentinel nullish coalescing
+// initializeTexture2D and both constructors were refused at dual-sentinel and Extract boundaries;
+// their concrete-owner lowerings follow this retained resource attachment helper.
 
 inline void attach_texture_to_resource(flight::Ref<Texture> texture, std::variant<flight::Ref<ImageResourceReference>, flight::Null, flight::Undefined> resource) {
   if (!((std::holds_alternative<flight::Null>(resource) || std::holds_alternative<flight::Undefined>(resource)))) {
@@ -632,15 +610,244 @@ inline void attach_texture_to_resource(flight::Ref<Texture> texture, std::varian
   }
 }
 
+using Texture2DArray = typename std::variant_alternative_t<0, Texture>::element_type;
+using Texture3D = typename std::variant_alternative_t<1, Texture>::element_type;
+using TextureCube = typename std::variant_alternative_t<2, Texture>::element_type;
 
-// NOT GENERATED: function createTexture2D -- source line 174
-// cpp emission failed for @flighthq/texture/packages/texture/src/texture.ts: dual-sentinel optional property
-// result requires one represented member value domain
+using CreateTexture2DVariantOptions =
+    flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa;
+using CreateTexture3DVariantOptions =
+    flight::types::source_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_bb75d9be0fe634b2;
+using CreateTexture2DArrayVariantOptions =
+    flight::types::sources_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_92a3fc8b0ad18cdf;
+using CreateTextureCubeVariantOptions =
+    flight::types::sources_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_b243142728373263;
 
+template <typename Options>
+inline flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea>
+create_common_texture_fields_from(const std::optional<std::shared_ptr<Options>>& opts) {
+  const auto color_space = opts && (*opts)->color_space ? *(*opts)->color_space : flight::String("srgb");
+  const auto flip_x = opts && (*opts)->flip_x ? *(*opts)->flip_x : false;
+  const auto flip_y = opts && (*opts)->flip_y ? *(*opts)->flip_y : false;
+  const auto sampler = opts && (*opts)->sampler ? clone_sampler(*(*opts)->sampler) : create_sampler(std::nullopt);
+  const auto uv_offset = opts && (*opts)->uv_offset ? clone_vector2(*(*opts)->uv_offset) : create_vector2(0.0, 0.0);
+  const auto uv_rotation = opts && (*opts)->uv_rotation ? *(*opts)->uv_rotation : 0.0;
+  const auto uv_scale = opts && (*opts)->uv_scale ? clone_vector2(*(*opts)->uv_scale) : create_vector2(1.0, 1.0);
+  const auto version = flight::unsigned_right_shift(
+      opts && (*opts)->version ? *(*opts)->version : 0.0, 0.0);
+  return flight::make_ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea>(
+      color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea{
+          .color_space = color_space,
+          .flip_x = flip_x,
+          .flip_y = flip_y,
+          .sampler = sampler,
+          .uv_offset = uv_offset,
+          .uv_rotation = uv_rotation,
+          .uv_scale = uv_scale,
+          .version = version});
+}
 
-// NOT GENERATED: function createTexture -- source line 126
-// refusal: cpp-typescript-utility-unexpanded:Extract [compiler-restriction]
-// cpp emission failed for @flighthq/texture/packages/texture/src/texture.ts: Extract was not resolved before
-// emission and has no C++ lowering
+template <typename Owner>
+inline void apply_common_texture_fields_to_owner(
+    std::shared_ptr<Owner> out,
+    flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea> fields) {
+  out->color_space = fields->color_space;
+  out->flip_x = fields->flip_x;
+  out->flip_y = fields->flip_y;
+  out->sampler = fields->sampler;
+  out->uv_offset = fields->uv_offset;
+  out->uv_rotation = fields->uv_rotation;
+  out->uv_scale = fields->uv_scale;
+  out->version = fields->version;
+}
+
+template <typename Options>
+inline std::optional<flight::Ref<TextureSource>> texture_source_option(
+    const std::shared_ptr<Options>& opts) {
+  if (const auto* source = std::get_if<flight::Ref<TextureSource>>(&opts->source)) return *source;
+  return std::nullopt;
+}
+
+template <typename Options>
+inline std::optional<flight::Ref<VoxelGrid>> voxel_source_option(
+    const std::shared_ptr<Options>& opts) {
+  if (const auto* source = std::get_if<flight::Ref<VoxelGrid>>(&opts->source)) return *source;
+  return std::nullopt;
+}
+
+template <typename Resource>
+inline void attach_texture_to_flat_resource(const Texture& texture, const Resource& resource) {
+  if (const auto* embedded = std::get_if<flight::Ref<EmbeddedImageResourceReference>>(&resource)) {
+    std::variant<flight::Ref<ImageResourceReference>, flight::Null, flight::Undefined> normalized{
+        std::in_place_type<flight::Ref<ImageResourceReference>>,
+        ImageResourceReference{std::in_place_type<flight::Ref<EmbeddedImageResourceReference>>,
+                               *embedded}};
+    attach_texture_to_resource(texture, std::move(normalized));
+  } else if (const auto* external =
+                 std::get_if<flight::Ref<ExternalImageResourceReference>>(&resource)) {
+    std::variant<flight::Ref<ImageResourceReference>, flight::Null, flight::Undefined> normalized{
+        std::in_place_type<flight::Ref<ImageResourceReference>>,
+        ImageResourceReference{std::in_place_type<flight::Ref<ExternalImageResourceReference>>,
+                               *external}};
+    attach_texture_to_resource(texture, std::move(normalized));
+  }
+}
+
+template <typename Options>
+inline flight::Ref<Texture2D> create_texture2_d_from_options(
+    std::optional<std::shared_ptr<Options>> opts) {
+  const auto common = create_common_texture_fields_from(opts);
+  auto out = flight::make_ref<Texture2D>();
+  out->entity_runtime_key = std::nullopt;
+  apply_common_texture_fields_to_owner(out, common);
+  out->dimension = flight::String("2d");
+  out->source = opts ? texture_source_option(*opts) : std::nullopt;
+  Texture texture{std::in_place_type<flight::Ref<Texture2D>>, out};
+  if (opts) attach_texture_to_flat_resource(texture, (*opts)->resource);
+  return out;
+}
+
+inline void initialize_texture2_d(
+    flight::types::EntityConstruction<flight::Ref<Texture2D>> out,
+    std::optional<flight::Ref<flight::types::CreateTexture2DOptions>> opts = std::nullopt) {
+  const auto common = create_common_texture_fields_from(opts);
+  const auto owner = out.shared_owner();
+  owner->set_named_value("colorSpace", common->color_space);
+  owner->set_named_value("flipX", common->flip_x);
+  owner->set_named_value("flipY", common->flip_y);
+  owner->set_named_value("sampler", common->sampler);
+  owner->set_named_value("uvOffset", common->uv_offset);
+  owner->set_named_value("uvRotation", common->uv_rotation);
+  owner->set_named_value("uvScale", common->uv_scale);
+  owner->set_named_value("version", common->version);
+  owner->set_named_value("dimension", flight::String("2d"));
+  owner->set_named_value(
+      "source", opts ? texture_source_option(*opts) : std::optional<flight::Ref<TextureSource>>{});
+}
+
+inline flight::Ref<Texture2D> create_texture2_d(
+    std::optional<flight::Ref<flight::types::CreateTexture2DOptions>> opts = std::nullopt) {
+  auto construction = flight::entity::allocate_entity<flight::Ref<Texture2D>>();
+  initialize_texture2_d(construction, opts);
+  auto texture = flight::entity::finish_entity<flight::Ref<Texture2D>>(construction);
+  if (opts) {
+    Texture wrapped{std::in_place_type<flight::Ref<Texture2D>>, texture};
+    attach_texture_to_flat_resource(wrapped, (*opts)->resource);
+  }
+  return texture;
+}
+
+inline flight::Ref<Texture2D> create_texture(
+    std::optional<flight::Ref<flight::types::CreateTexture2DOptions>> opts = std::nullopt) {
+  return create_texture2_d(std::move(opts));
+}
+
+inline flight::Ref<Texture2D> create_texture(flight::Ref<CreateTexture2DVariantOptions> opts) {
+  return create_texture2_d_from_options(
+      std::optional<flight::Ref<CreateTexture2DVariantOptions>>{std::move(opts)});
+}
+
+inline flight::Ref<Texture2DArray> create_texture(
+    flight::Ref<CreateTexture2DArrayVariantOptions> opts) {
+  const auto common = create_common_texture_fields_from(
+      std::optional<flight::Ref<CreateTexture2DArrayVariantOptions>>{opts});
+  auto out = flight::make_ref<Texture2DArray>();
+  out->entity_runtime_key = std::nullopt;
+  apply_common_texture_fields_to_owner(out, common);
+  out->dimension = flight::String("2d-array");
+  out->sources = opts->sources ? opts->sources->slice()
+                              : flight::Array<std::optional<flight::Ref<TextureSource>>>{};
+  Texture texture{std::in_place_type<flight::Ref<Texture2DArray>>, out};
+  attach_texture_to_flat_resource(texture, opts->resource);
+  return out;
+}
+
+inline flight::Ref<Texture3D> create_texture(flight::Ref<CreateTexture3DVariantOptions> opts) {
+  const auto common = create_common_texture_fields_from(
+      std::optional<flight::Ref<CreateTexture3DVariantOptions>>{opts});
+  auto out = flight::make_ref<Texture3D>();
+  out->entity_runtime_key = std::nullopt;
+  apply_common_texture_fields_to_owner(out, common);
+  out->dimension = flight::String("3d");
+  out->source = voxel_source_option(opts);
+  Texture texture{std::in_place_type<flight::Ref<Texture3D>>, out};
+  attach_texture_to_flat_resource(texture, opts->resource);
+  return out;
+}
+
+inline flight::Ref<TextureCube> create_texture(flight::Ref<CreateTextureCubeVariantOptions> opts) {
+  const auto common = create_common_texture_fields_from(
+      std::optional<flight::Ref<CreateTextureCubeVariantOptions>>{opts});
+  auto out = flight::make_ref<TextureCube>();
+  out->entity_runtime_key = std::nullopt;
+  apply_common_texture_fields_to_owner(out, common);
+  out->dimension = flight::String("cube");
+  if (opts->sources) {
+    out->sources = opts->sources->slice();
+  } else {
+    out->sources = flight::Array<std::optional<flight::Ref<TextureSource>>>{
+        std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt};
+  }
+  Texture texture{std::in_place_type<flight::Ref<TextureCube>>, out};
+  attach_texture_to_flat_resource(texture, opts->resource);
+  return out;
+}
+
+// Compatibility boundary for generated overload calls whose distinct TypeScript option types were
+// already erased to one C++ variant. Only the 2D arm has the 2D return type selected by those calls;
+// callers of the other arms use the exact-owner overloads above.
+inline flight::Ref<Texture2D> create_texture(CreateTextureOptions opts) {
+  if (auto* options = std::get_if<flight::Ref<CreateTexture2DVariantOptions>>(&opts)) {
+    return create_texture(*options);
+  }
+  throw flight::Error(
+      flight::String("createTexture overload result was erased; pass the exact non-2D options owner"));
+}
+
+inline Texture clone_texture(flight::Ref<TextureLike> source) {
+  return std::visit(
+      [](const auto& input) -> Texture {
+        const auto sampler = clone_sampler(input->sampler);
+        const auto uv_offset = clone_vector2(input->uv_offset);
+        const auto uv_scale = clone_vector2(input->uv_scale);
+        const auto copy_common = [&](const auto& out) {
+          out->entity_runtime_key = std::nullopt;
+          out->color_space = input->color_space;
+          out->flip_x = input->flip_x;
+          out->flip_y = input->flip_y;
+          out->sampler = sampler;
+          out->uv_offset = uv_offset;
+          out->uv_rotation = input->uv_rotation;
+          out->uv_scale = uv_scale;
+          out->version = flight::unsigned_right_shift(input->version, 0.0);
+          out->dimension = input->dimension;
+        };
+        if constexpr (requires { input->sources; }) {
+          if (input->dimension == flight::String("cube")) {
+            auto out = flight::make_ref<TextureCube>();
+            copy_common(out);
+            out->sources = input->sources.slice();
+            return Texture{std::in_place_type<flight::Ref<TextureCube>>, out};
+          }
+          auto out = flight::make_ref<Texture2DArray>();
+          copy_common(out);
+          out->sources = input->sources.slice();
+          return Texture{std::in_place_type<flight::Ref<Texture2DArray>>, out};
+        } else if constexpr (std::same_as<
+                                 std::remove_cvref_t<decltype(input->source)>,
+                                 std::optional<flight::Ref<TextureSource>>>) {
+          auto out = flight::make_ref<Texture2D>();
+          copy_common(out);
+          out->source = input->source;
+          return Texture{std::in_place_type<flight::Ref<Texture2D>>, out};
+        } else {
+          auto out = flight::make_ref<Texture3D>();
+          copy_common(out);
+          out->source = input->source;
+          return Texture{std::in_place_type<flight::Ref<Texture3D>>, out};
+        }
+      },
+      source);
+}
 
 } // namespace flight::texture
