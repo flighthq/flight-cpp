@@ -2,8 +2,8 @@
 // Ported from .dependencies/flight/examples/packages/interaction/src/app.ts
 
 #include <flight/interaction/interaction_manager.hpp>
-#include <flight/interaction/hit_test.hpp>
-#include <flight/interaction/input_manager.hpp>
+#include <flight/interaction/hit_tests.hpp>
+#include <flight/input/input_manager.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
 #include <flight/scene2d/display_object.hpp>

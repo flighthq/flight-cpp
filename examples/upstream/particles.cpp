@@ -3,14 +3,14 @@
 
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
-#include <flight/particles/particle_emitter2d.hpp>
-#include <flight/particles/particle_config.hpp>
-#include <flight/particles/particle_curve.hpp>
-#include <flight/particles/particle_forces.hpp>
+#include <flight/types/particle_emitter2_d.hpp>
+#include <flight/particles/particle_emitter_config.hpp>
+#include <flight/particles/curve.hpp>
+#include <flight/particles/apply_particle_forces.hpp>
 #include <flight/scene2d/display_object.hpp>
 #include <flight/text/text_label.hpp>
 #include <flight/texture/texture.hpp>
-#include <flight/texture/texture_atlas.hpp>
+#include <flight/textureatlas/texture_atlas.hpp>
 
 #include <cmath>
 #include <iostream>

@@ -2,14 +2,14 @@
 // Ported from .dependencies/flight/examples/packages/tilemap/src/app.ts
 
 #include <flight/camera/camera2d.hpp>
-#include <flight/math/matrix.hpp>
-#include <flight/math/vector2.hpp>
+#include <flight/geometry/matrix.hpp>
+#include <flight/geometry/vector2.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
 #include <flight/scene2d/display_object.hpp>
 #include <flight/scene2d/sprite.hpp>
 #include <flight/texture/texture.hpp>
-#include <flight/texture/texture_atlas.hpp>
+#include <flight/textureatlas/texture_atlas.hpp>
 #include <flight/tilemap/tilemap.hpp>
 
 #include <array>
@@ -71,8 +71,8 @@ int main() {
 
   auto tilemap = flight::tilemap::create_tilemap();
   tilemap->columns = MAP_COLUMNS;
-  tilemap->tileWidth = TILE_SIZE;
-  tilemap->tileHeight = TILE_SIZE;
+  tilemap->tile_width = TILE_SIZE;
+  tilemap->tile_height = TILE_SIZE;
   tilemap->data.tiles = tileArray;
   add_node_child(world, tilemap);
 
@@ -94,8 +94,8 @@ int main() {
                          std::min(MAP_WIDTH - CANVAS_WIDTH / (camera->zoom * 2.0), camera->x));
 
     flight::camera::get_camera_2_d_view_matrix(camera, viewMatrix);
-    world->scaleX = viewMatrix->a;
-    world->scaleY = viewMatrix->d;
+    world->scale_x = viewMatrix->a;
+    world->scale_y = viewMatrix->d;
     world->x = viewMatrix->tx;
     world->y = viewMatrix->ty;
     invalidate_node_local_transform(world);

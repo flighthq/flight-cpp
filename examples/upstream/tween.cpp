@@ -12,7 +12,7 @@
 #include <flight/scene2d/display_object.hpp>
 #include <flight/shape/shape.hpp>
 #include <flight/shape/shape_commands.hpp>
-#include <flight/signals/connect.hpp>
+#include <flight/signals/slot.hpp>
 #include <flight/text/text_label.hpp>
 #include <flight/tween/tween.hpp>
 #include <flight/tween/tween_manager.hpp>

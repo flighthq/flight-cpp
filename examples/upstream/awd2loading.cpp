@@ -1,20 +1,20 @@
 // Naive C++ port of @flighthq/example-awd2loading
 // Ported from .dependencies/flight/examples/packages/awd2loading/src/app.ts
 
-#include <flight/camera/camera3d.hpp>
-#include <flight/camera/perspective_projection.hpp>
+#include <flight/camera/camera.hpp>
+#include <flight/camera/projection.hpp>
 #include <flight/camera_controls/orbit_camera_controller.hpp>
 #include <flight/lighting/ambient_light.hpp>
 #include <flight/lighting/directional_light.hpp>
 #include <flight/lighting/point_light.hpp>
-#include <flight/material/rim_modifier.hpp>
-#include <flight/math/vector3.hpp>
-#include <flight/mesh/mesh.hpp>
+#include <flight/shading/create_rim_modifier.hpp>
+#include <flight/geometry/vector3.hpp>
+#include <flight/scene3d/mesh.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
-#include <flight/scene3d/scene3d.hpp>
-#include <flight/scene3d/scene3d_document.hpp>
-#include <flight/scene3d_formats/awd2.hpp>
+#include <flight/scene3d/scene.hpp>
+#include <flight/scene3d/scene_document.hpp>
+#include <flight/scene3d_formats/awd2_parse.hpp>
 
 #include <cmath>
 #include <iostream>

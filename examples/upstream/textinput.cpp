@@ -9,7 +9,7 @@
 #include <flight/text/text_label.hpp>
 #include <flight/text/rich_text.hpp>
 #include <flight/textinput/text_input.hpp>
-#include <flight/signals/connect.hpp>
+#include <flight/signals/slot.hpp>
 #include <flight/app/app_loop.hpp>
 
 #include <iostream>

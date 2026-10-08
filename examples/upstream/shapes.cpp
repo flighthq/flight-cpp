@@ -12,8 +12,8 @@
 
 int main() {
   auto root = flight::scene2d::create_display_object(std::nullopt);
-  root->scaleX = 1.0;
-  root->scaleY = 1.0;
+  root->scale_x = 1.0;
+  root->scale_y = 1.0;
 
   // Rectangle
   auto rect = flight::shape::create_shape(std::nullopt);

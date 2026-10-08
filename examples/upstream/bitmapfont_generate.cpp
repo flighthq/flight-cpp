@@ -9,7 +9,7 @@
 #include <flight/texture/texture.hpp>
 #include <flight/bitmaptext/bitmap_text.hpp>
 #include <flight/glyphatlas/glyph_atlas.hpp>
-#include <flight/node/node_color_adjustments.hpp>
+#include <flight/node/node_color_adjustment.hpp>
 
 #include <iostream>
 

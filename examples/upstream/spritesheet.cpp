@@ -9,7 +9,7 @@
 #include <flight/spritesheet/spritesheet_animation.hpp>
 #include <flight/spritesheet/spritesheet_player.hpp>
 #include <flight/texture/texture.hpp>
-#include <flight/texture/texture_atlas.hpp>
+#include <flight/textureatlas/texture_atlas.hpp>
 
 #include <iostream>
 
@@ -62,8 +62,8 @@ int main() {
   auto bitmap1 = flight::scene2d::create_sprite();
   bitmap1->x = 79.0;
   bitmap1->y = 246.0;
-  bitmap1->scaleX = DISPLAY_SCALE;
-  bitmap1->scaleY = DISPLAY_SCALE;
+  bitmap1->scale_x = DISPLAY_SCALE;
+  bitmap1->scale_y = DISPLAY_SCALE;
   invalidate_node_local_transform(bitmap1);
   add_node_child(root, bitmap1);
 
@@ -74,8 +74,8 @@ int main() {
   auto bitmap2 = flight::scene2d::create_sprite();
   bitmap2->x = 316.0;
   bitmap2->y = 246.0;
-  bitmap2->scaleX = DISPLAY_SCALE;
-  bitmap2->scaleY = DISPLAY_SCALE;
+  bitmap2->scale_x = DISPLAY_SCALE;
+  bitmap2->scale_y = DISPLAY_SCALE;
   invalidate_node_local_transform(bitmap2);
   add_node_child(root, bitmap2);
 
@@ -87,8 +87,8 @@ int main() {
   auto bitmap3 = flight::scene2d::create_sprite();
   bitmap3->x = 553.0;
   bitmap3->y = 246.0;
-  bitmap3->scaleX = DISPLAY_SCALE;
-  bitmap3->scaleY = DISPLAY_SCALE;
+  bitmap3->scale_x = DISPLAY_SCALE;
+  bitmap3->scale_y = DISPLAY_SCALE;
   invalidate_node_local_transform(bitmap3);
   add_node_child(root, bitmap3);
 

@@ -2,7 +2,6 @@
 // Ported from .dependencies/flight/examples/packages/crossfade/src/app.ts
 
 #include <flight/animation/animation_clip.hpp>
-#include <flight/animation/animation_channel.hpp>
 #include <flight/animation/animation_layer_stack.hpp>
 #include <flight/animation/animation_player.hpp>
 #include <flight/animation/animation_state_machine.hpp>

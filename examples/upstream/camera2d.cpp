@@ -1,10 +1,14 @@
 // Naive C++ port of @flighthq/example-camera2d
 // Ported from .dependencies/flight/examples/packages/camera2d/src/app.ts
 
-#include <flight/camera/camera2_d.hpp>
-#include <flight/camera/camera_controls.hpp>
-#include <flight/math/rectangle.hpp>
-#include <flight/math/vector2.hpp>
+#include <flight/camera/camera2d.hpp>
+#include <flight/camera/view_matrix.hpp>
+#include <flight/camera/visible_bounds.hpp>
+#include <flight/camera/zoom.hpp>
+#include <flight/camera_controls/follow.hpp>
+#include <flight/geometry/matrix.hpp>
+#include <flight/geometry/rectangle.hpp>
+#include <flight/geometry/vector2.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
 #include <flight/scene2d/display_object.hpp>
@@ -46,13 +50,12 @@ int main() {
   using namespace flight::shape;
   using namespace flight::scene2d;
 
-  auto worldBounds = flight::math::create_rectangle(0.0, 0.0, WORLD_WIDTH, WORLD_HEIGHT);
+  auto worldBounds = flight::geometry::create_rectangle(0.0, 0.0, WORLD_WIDTH, WORLD_HEIGHT);
 
-  auto camera = flight::camera::create_camera_2_d(CANVAS_WIDTH, CANVAS_HEIGHT, {
-    .x = WORLD_WIDTH * 0.5,
-    .y = WORLD_HEIGHT * 0.5,
-    .zoom = 1.0,
-  });
+  auto camera = flight::camera::create_camera2_d(CANVAS_WIDTH, CANVAS_HEIGHT);
+  camera->x = WORLD_WIDTH * 0.5;
+  camera->y = WORLD_HEIGHT * 0.5;
+  camera->zoom = 1.0;
 
   double playerX = WORLD_WIDTH * 0.5;
   double playerY = WORLD_HEIGHT * 0.5;
@@ -121,16 +124,20 @@ int main() {
   invalidate_node_local_transform(zoomLabel);
   add_node_child(hudContainer, zoomLabel);
 
-  auto viewMatrix = flight::camera::get_camera_2_d_view_matrix(camera);
-  auto visibleBounds = flight::camera::get_camera_2_d_visible_bounds(camera);
+  auto readonlyCamera = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(
+    flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(camera));
+  auto viewMatrix = flight::geometry::create_matrix();
+  flight::camera::get_camera2_dview_matrix(readonlyCamera, viewMatrix);
+  auto visibleBounds = flight::geometry::create_rectangle();
+  flight::camera::get_camera2_dvisible_bounds(readonlyCamera, visibleBounds);
 
-  flight::camera::zoom_camera_2_d_at_screen_point(camera, 0.1, CANVAS_WIDTH * 0.5, CANVAS_HEIGHT * 0.5);
+  flight::camera::zoom_camera2_dat_screen_point(camera, CANVAS_WIDTH * 0.5, CANVAS_HEIGHT * 0.5, 1.1);
 
   constexpr double dt = 1.0 / 60.0;
   for (int frame = 0; frame < 120; ++frame) {
     playerX += PLAYER_SPEED * dt * 0.5;
     playerY += PLAYER_SPEED * dt * 0.3;
-    flight::camera::update_camera_2_d_follow(camera, playerX, playerY, dt);
+    flight::camera_controls::update_camera2_dfollow(camera, playerX, playerY, dt);
   }
 
   std::cout << "Flight camera2d example (naive C++ port): "

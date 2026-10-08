@@ -1,10 +1,10 @@
 // Naive C++ port of @flighthq/example-sound
 // Ported from .dependencies/flight/examples/packages/sound/src/app.ts
 
-#include <flight/audio/audio_bus.hpp>
-#include <flight/audio/audio_mixer.hpp>
+#include <flight/media/audio_mixer.hpp>
 #include <flight/audio/audio_resource.hpp>
-#include <flight/audio/audio_playback.hpp>
+#include <flight/audio/audio_resource_from.hpp>
+#include <flight/media/audio_channel.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
 #include <flight/scene2d/display_object.hpp>

@@ -4,19 +4,16 @@
 #include <flight/lighting/ambient_light.hpp>
 #include <flight/lighting/directional_light.hpp>
 #include <flight/lighting/point_light.hpp>
-#include <flight/math/vector3.hpp>
-#include <flight/mesh/box_mesh_geometry.hpp>
-#include <flight/mesh/cone_mesh_geometry.hpp>
-#include <flight/mesh/mesh.hpp>
-#include <flight/mesh/plane_mesh_geometry.hpp>
-#include <flight/mesh/sphere_mesh_geometry.hpp>
+#include <flight/geometry/vector3.hpp>
+#include <flight/mesh/mesh_geometry_builders.hpp>
+#include <flight/scene3d/mesh.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
-#include <flight/scene3d/scene3d.hpp>
-#include <flight/scene3d/camera3_d.hpp>
-#include <flight/scene3d/orbit_camera_controller.hpp>
-#include <flight/scene3d/projection.hpp>
-#include <flight/scene3d/standard_pbr_material.hpp>
+#include <flight/scene3d/scene.hpp>
+#include <flight/camera/camera.hpp>
+#include <flight/camera_controls/orbit_camera_controller.hpp>
+#include <flight/camera/projection.hpp>
+#include <flight/materials/pbr_materials.hpp>
 
 #include <cmath>
 #include <iostream>

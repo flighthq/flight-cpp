@@ -1,12 +1,12 @@
 // Naive C++ port of @flighthq/example-platformer
 // Ported from .dependencies/flight/examples/packages/platformer/src/app.ts
 
-#include <flight/camera/camera2_d.hpp>
+#include <flight/camera/camera2d.hpp>
 #include <flight/collision/collide_contact_manifold2_d.hpp>
-#include <flight/flowstates/flow_stack.hpp>
+#include <flight/flow/flow.hpp>
 #include <flight/input/input_manager.hpp>
-#include <flight/input/input_state.hpp>
-#include <flight/math/matrix.hpp>
+#include <flight/types/input_state.hpp>
+#include <flight/geometry/matrix.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
 #include <flight/scene2d/display_object.hpp>

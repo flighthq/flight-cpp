@@ -1,8 +1,7 @@
 // Naive C++ port of @flighthq/example-flowstates
 // Ported from .dependencies/flight/examples/packages/flowstates/src/app.ts
 
-#include <flight/flow/flow_stack.hpp>
-#include <flight/flow/flow_state.hpp>
+#include <flight/flow/flow.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
 #include <flight/scene2d/display_object.hpp>

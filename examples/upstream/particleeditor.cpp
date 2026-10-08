@@ -6,13 +6,12 @@
 #include <flight/scene2d/display_object.hpp>
 #include <flight/text/text_label.hpp>
 #include <flight/texture/texture.hpp>
-#include <flight/texture/texture_atlas.hpp>
-#include <flight/particles/particle_emitter_2d.hpp>
+#include <flight/textureatlas/texture_atlas.hpp>
+#include <flight/types/particle_emitter2_d.hpp>
 #include <flight/particles/particle_emitter_config.hpp>
 #include <flight/particles/particle_emitter_state.hpp>
-#include <flight/particles/particle_forces.hpp>
-#include <flight/particles/particle_curve.hpp>
-#include <flight/particles/particle_color_curve.hpp>
+#include <flight/particles/apply_particle_forces.hpp>
+#include <flight/particles/curve.hpp>
 #include <flight/spring/spring.hpp>
 #include <flight/spring/spring_config.hpp>
 

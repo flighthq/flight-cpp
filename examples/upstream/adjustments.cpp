@@ -1,7 +1,7 @@
 // Naive C++ port of @flighthq/example-adjustments
 // Ported from .dependencies/flight/examples/packages/adjustments/src/app.ts
 
-#include <flight/adjustments/color_matrix.hpp>
+#include <flight/adjustments/color_matrix_math.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
 #include <flight/scene2d/display_object.hpp>

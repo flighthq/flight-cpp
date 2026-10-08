@@ -4,7 +4,7 @@
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
 #include <flight/path/path.hpp>
-#include <flight/path_boolean/path_boolean.hpp>
+#include <flight/path_boolean/boolean_paths.hpp>
 #include <flight/scene2d/display_object.hpp>
 #include <flight/shape/shape.hpp>
 #include <flight/shape/shape_commands.hpp>

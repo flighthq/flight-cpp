@@ -8,9 +8,9 @@
 #include <flight/shape/shape_commands.hpp>
 #include <flight/text/text_label.hpp>
 #include <flight/mesh/mesh_geometry.hpp>
-#include <flight/scene3d_formats/gltf.hpp>
-#include <flight/spritesheet_formats/texture_packer.hpp>
-#include <flight/tilemap_formats/tiled_tmj.hpp>
+#include <flight/scene3d_formats/gltf_parse.hpp>
+#include <flight/spritesheet_formats/texture_packer_parse.hpp>
+#include <flight/tilemap_formats/tiled_json_parse.hpp>
 
 #include <iostream>
 #include <string>

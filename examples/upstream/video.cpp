@@ -6,8 +6,8 @@
 #include <flight/scene2d/display_object.hpp>
 #include <flight/scene2d/sprite.hpp>
 #include <flight/video/video_resource.hpp>
-#include <flight/video/video_texture.hpp>
-#include <flight/video/video_playback.hpp>
+#include <flight/texture/video_texture.hpp>
+#include <flight/media/video_channel.hpp>
 
 #include <iostream>
 
@@ -26,8 +26,8 @@ int main() {
   auto secondVideoNode = create_sprite();
   secondVideoNode->x = 400.0;
   secondVideoNode->y = 40.0;
-  secondVideoNode->scaleX = 1.5;
-  secondVideoNode->scaleY = 1.5;
+  secondVideoNode->scale_x = 1.5;
+  secondVideoNode->scale_y = 1.5;
   secondVideoNode->alpha = 0.8;
   invalidate_node_local_transform(secondVideoNode);
   add_node_child(root, secondVideoNode);

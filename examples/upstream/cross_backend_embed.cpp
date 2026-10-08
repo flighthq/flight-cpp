@@ -10,7 +10,7 @@
 #include <flight/shape/shape_commands.hpp>
 #include <flight/text/text_label.hpp>
 #include <flight/texture/texture.hpp>
-#include <flight/texture/texture_atlas.hpp>
+#include <flight/textureatlas/texture_atlas.hpp>
 #include <flight/quadbatch/quad_batch.hpp>
 
 #include <iostream>

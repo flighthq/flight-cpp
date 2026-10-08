@@ -6,7 +6,10 @@
 #include <flight/scene2d/display_object.hpp>
 #include <flight/shape/shape.hpp>
 #include <flight/shape/shape_commands.hpp>
-#include <flight/snapshot/snapshot.hpp>
+#include <flight/snapshot/capture_snapshot.hpp>
+#include <flight/snapshot/equals_snapshot.hpp>
+#include <flight/snapshot/interpolate_snapshots.hpp>
+#include <flight/snapshot/restore_snapshot.hpp>
 #include <flight/text/text_label.hpp>
 
 #include <array>
