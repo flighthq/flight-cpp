@@ -415,6 +415,13 @@ int SdlExample::run(
 
     SDL_Event event{};
     while (host.poll_event(event)) {
+      if (event.type == SDL_EVENT_MOUSE_MOTION ||
+          event.type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
+          event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+        if (!SDL_ConvertEventToRenderCoordinates(canvas.native_renderer(), &event)) {
+          throw sdl_error("SDL could not map pointer coordinates into the example canvas");
+        }
+      }
       switch (event.type) {
         case SDL_EVENT_QUIT:
         case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
@@ -429,10 +436,12 @@ int SdlExample::run(
           input.held_keys.erase(event.key.key);
           break;
         case SDL_EVENT_MOUSE_MOTION:
+          input.pointer_inside = true;
           input.pointer_x = event.motion.x;
           input.pointer_y = event.motion.y;
           break;
         case SDL_EVENT_MOUSE_BUTTON_DOWN:
+          input.pointer_inside = true;
           input.pointer_x = event.button.x;
           input.pointer_y = event.button.y;
           if (event.button.button == SDL_BUTTON_LEFT) {
@@ -441,12 +450,19 @@ int SdlExample::run(
           }
           break;
         case SDL_EVENT_MOUSE_BUTTON_UP:
+          input.pointer_inside = true;
           input.pointer_x = event.button.x;
           input.pointer_y = event.button.y;
           if (event.button.button == SDL_BUTTON_LEFT) {
             input.pointer_down = false;
             input.pointer_released = true;
           }
+          break;
+        case SDL_EVENT_WINDOW_MOUSE_ENTER:
+          input.pointer_inside = true;
+          break;
+        case SDL_EVENT_WINDOW_MOUSE_LEAVE:
+          input.pointer_inside = false;
           break;
         case SDL_EVENT_MOUSE_WHEEL:
           input.wheel_x += static_cast<double>(event.wheel.x);

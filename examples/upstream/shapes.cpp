@@ -87,7 +87,7 @@ class ShapesExample final {
     constexpr double size = 80.0;
     constexpr double star_x = column_start + 650.0;
     constexpr double star_y = row_y(3) + 15.0;
-    const bool hovered = flight::examples::contains(
+    const bool hovered = frame.input.pointer_inside && flight::examples::contains(
         star_x,
         star_y,
         size,

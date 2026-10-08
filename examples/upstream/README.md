@@ -36,8 +36,8 @@ cmake -S . -B build \
   -DBUILD_TESTING=ON \
   -DFLIGHT_CPP_BUILD_EXAMPLES=ON \
   -DFLIGHT_CPP_BUILD_HOST_SDL=ON
-cmake --build build
-ctest --test-dir build --output-on-failure
+cmake --build build --target flight_cpp_upstream_examples
+ctest --test-dir build --output-on-failure -R '^flight_cpp_upstream_.*_smoke$'
 ```
 
 Run an interactive example without `--smoke`, for example:

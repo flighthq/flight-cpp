@@ -98,7 +98,11 @@ class SoundExample final {
     static_cast<void>(adapter_.pump());
     collect_finished();
     handle_pointer(frame);
-    draw(frame.canvas, frame.input.pointer_x, frame.input.pointer_y);
+    draw(
+        frame.canvas,
+        frame.input.pointer_x,
+        frame.input.pointer_y,
+        frame.input.pointer_inside);
   }
 
   void shutdown() {
@@ -240,11 +244,18 @@ class SoundExample final {
     canvas.fill_rectangle(std::min(center, position), y, std::max(1.0, std::abs(position - center)), slider_height, fill, 0.8);
   }
 
-  void draw(Canvas& canvas, double pointer_x, double pointer_y) const {
+  void draw(Canvas& canvas, double pointer_x, double pointer_y, bool pointer_inside) const {
     canvas.text("Sound Example - Procedural Audio & Mixer", 60.0, 30.0, 0xccccccffU, 18.0);
     canvas.text("Click the buttons to play procedurally generated tones.", 60.0, 65.0, 0x888888ffU, 13.0);
     for (const auto& button : buttons_) {
-      const bool hovered = flight::examples::contains(button.x, 120.0, 180.0, 80.0, pointer_x, pointer_y);
+      const bool hovered = pointer_inside &&
+                           flight::examples::contains(
+                               button.x,
+                               120.0,
+                               180.0,
+                               80.0,
+                               pointer_x,
+                               pointer_y);
       canvas.fill_rectangle(button.x, 120.0, 180.0, 80.0, hovered ? button.hover_color : button.color, 0.9);
       canvas.text(button.label, button.x + 12.0, 152.0, 0xffffffffU, 12.0);
     }

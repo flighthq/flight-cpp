@@ -72,7 +72,7 @@ class InteractionExample final {
     hovered_ = shapes_.size();
     for (std::size_t offset = 0; offset < shapes_.size(); ++offset) {
       const std::size_t index = shapes_.size() - 1 - offset;
-      if (contains(shapes_[index], pointer)) {
+      if (frame.input.pointer_inside && contains(shapes_[index], pointer)) {
         hovered_ = index;
         break;
       }

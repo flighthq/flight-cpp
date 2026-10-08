@@ -61,9 +61,11 @@ if(TARGET Flight::HostSdl)
   target_include_directories(flight_cpp_upstream_sdl_host PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
   flight_cpp_set_project_warnings(flight_cpp_upstream_sdl_host)
 
+  set(flight_cpp_upstream_targets)
   foreach(example IN LISTS UPSTREAM_EXAMPLES)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${example}.cpp")
       add_executable(flight_cpp_upstream_${example} ${example}.cpp)
+      list(APPEND flight_cpp_upstream_targets flight_cpp_upstream_${example})
       target_link_libraries(flight_cpp_upstream_${example} PRIVATE
         flight_cpp_upstream_sdl_host
         Flight::SdkPreview
@@ -95,4 +97,5 @@ if(TARGET Flight::HostSdl)
       endif()
     endif()
   endforeach()
+  add_custom_target(flight_cpp_upstream_examples DEPENDS ${flight_cpp_upstream_targets})
 endif()

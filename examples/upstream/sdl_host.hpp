@@ -34,6 +34,7 @@ struct Input final {
   bool pointer_down{};
   bool pointer_pressed{};
   bool pointer_released{};
+  bool pointer_inside{};
   bool shift{};
   bool control{};
   bool alt{};
