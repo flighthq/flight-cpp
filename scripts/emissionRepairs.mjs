@@ -149,6 +149,14 @@ export function loadEmissionRepairs(root) {
       }
     }
     if (
+      repair.includes !== undefined &&
+      (!Array.isArray(repair.includes) ||
+        repair.includes.length === 0 ||
+        repair.includes.some((entry) => typeof entry !== 'string' || entry.length === 0))
+    ) {
+      throw new Error(`Emission repair ${repair.id} has invalid optional includes`);
+    }
+    if (
       repair.kind === 'alias-anonymous-struct-to-named' &&
       repair.replacementNamespace !== undefined &&
       (typeof repair.replacementNamespace !== 'string' || repair.replacementNamespace.length === 0)
@@ -1040,16 +1048,31 @@ function insertUsingDeclaration(contents, repair) {
   // defines it -- flight/log/log.hpp names four flight::types aliases and includes none of them, so a
   // bare using-declaration fails with "'flight::types' has not been declared". A repair that introduces
   // a name has to bring its definition with it.
-  const withInclude =
-    repair.include === undefined || includePrecedesFirstPackageNamespace(contents, repair.include)
-      ? contents
-      : hoistInclude(contents, repair.include);
+  const withInclude = hoistRepairIncludes(contents, repair);
   if (withInclude === undefined) return undefined;
   // Inside the package namespace, which is where the unqualified name is looked up.
   const anchor = /^namespace flight::[a-z0-9_]+ \{\n/mu.exec(withInclude);
   if (anchor === null) return undefined;
   const at = anchor.index + anchor[0].length;
   return `${withInclude.slice(0, at)}\n${repair.declaration}\n${withInclude.slice(at)}`;
+}
+
+// A declaration can depend on an emitted alias (rather than a forward-declarable struct), and one
+// declaration can name more than one such alias. Hoist every explicitly declared dependency before
+// the first package namespace. The singular `include` remains the compact form used by the existing
+// one-name repairs; `includes` is for exact declarations such as render-proxy visitors whose
+// Renderable and callback aliases both have to exist at their declaration point.
+function hoistRepairIncludes(contents, repair) {
+  const headers = [repair.include, ...(repair.includes ?? [])].filter(
+    (header, index, all) => header !== undefined && all.indexOf(header) === index,
+  );
+  let out = contents;
+  for (const header of headers) {
+    if (includePrecedesFirstPackageNamespace(out, header)) continue;
+    out = hoistInclude(out, header);
+    if (out === undefined) return undefined;
+  }
+  return out;
 }
 
 // A generated header can already include the defining header after its forward-declaration namespace.
@@ -1090,12 +1113,17 @@ function insertForwardDeclaration(contents, repair) {
   const declares = new RegExp(`\\bstruct ${symbol}\\s*[;:{]`).test(contents);
   if (declares) return undefined;
   if (contents.includes(repair.declaration)) return undefined;
-  // The ABI assertion block is the emitter's own boundary between the include prologue and the
-  // declarations, which is exactly where its forward declarations already go.
-  const anchor = /^static_assert\(flight::runtime_contract\.cpp_abi == \d+,[^\n]*\n/m.exec(contents);
+  const withIncludes = hoistRepairIncludes(contents, repair);
+  if (withIncludes === undefined) return undefined;
+  // Put the declaration after the generated include/forward-declaration prologue. This matters for
+  // aliases such as Renderable and EntityConstruction: unlike a struct, they cannot be named by a
+  // declaration inserted immediately after the ABI assertions unless their defining header was
+  // duplicated ahead of the generated prologue. The first real package namespace is the emitter's
+  // stable boundary between that prologue and function bodies.
+  const anchor = /^namespace flight::[a-z0-9_]+ \{\n/mu.exec(withIncludes);
   if (anchor === null) return undefined;
-  const at = anchor.index + anchor[0].length;
-  return `${contents.slice(0, at)}\n${repair.declaration}\n${contents.slice(at)}`;
+  const at = anchor.index;
+  return `${withIncludes.slice(0, at)}\n${repair.declaration}\n${withIncludes.slice(at)}`;
 }
 
 // The expiry check. A repair that matched nothing is either fixed upstream or no longer reachable;
