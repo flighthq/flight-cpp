@@ -5,38 +5,38 @@
 
 set(UPSTREAM_EXAMPLES
   adjustments
+  benchmark
+  bitmapfont_generate
   camera2d
   clock
   collision
+  cross_backend_embed
   crossfade
   flowstates
+  formatloading
   interaction
   motionpath
   movieclip
+  particleeditor
+  particles
+  pathboolean
+  platformer
   shapes
+  snapshot
   sound
   spatial
+  spring
+  spritesheet
   text
   textinput
+  tilemap
+  tween
+  video
 )
 
 # Blocked by generated scene2d/display_object.hpp before the example body is
 # checked. That partial header also omits createNode2D/createDisplayObject.
 set(UPSTREAM_EXAMPLES_BLOCKED_SCENE2D
-  benchmark
-  bitmapfont_generate
-  cross_backend_embed
-  formatloading
-  particleeditor
-  particles
-  pathboolean
-  platformer
-  snapshot
-  spring
-  spritesheet
-  tilemap
-  tween
-  video
 )
 
 # Blocked by generated mesh/mesh_geometry_layout.hpp before the example body
@@ -56,7 +56,10 @@ set(UPSTREAM_EXAMPLES_BLOCKED_OTHER
 )
 
 if(TARGET Flight::HostSdl)
-  add_library(flight_cpp_upstream_sdl_host STATIC sdl_host.cpp)
+  add_library(flight_cpp_upstream_sdl_host STATIC
+    sdl_host.cpp
+    ported_examples_2d.cpp
+  )
   target_link_libraries(flight_cpp_upstream_sdl_host PUBLIC Flight::HostSdl Flight::SdkPreview)
   target_include_directories(flight_cpp_upstream_sdl_host PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
   flight_cpp_set_project_warnings(flight_cpp_upstream_sdl_host)
