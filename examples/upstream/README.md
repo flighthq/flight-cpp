@@ -1,39 +1,54 @@
 # Upstream Flight example ports
 
-This directory contains 34 direct C++ ports of the upstream TypeScript examples. The sources retain
-their SDK calls so they can act as integration probes. `CMakeLists.txt` adds a target only after its
-translation unit compiles against the pinned SDK; blocked ports remain visible here without breaking
-the repository build.
+The targets in this directory are native SDL ports of the pinned Flight TypeScript examples under
+`.dependencies/flight/examples/packages`. They open an 800 by 600 resizable window, render
+continuously, and retain the original scene, animation, and controls. The source comment at the top
+of each port names the TypeScript file used as its authority.
 
-## Current status
+These targets require both `FLIGHT_CPP_BUILD_EXAMPLES=ON` and
+`FLIGHT_CPP_BUILD_HOST_SDL=ON`. A build without the optional SDL host does not advertise headless
+substitutes as examples.
 
-No port is promotable at the current pin. Every source was compiled independently after correcting
-stale include paths, package names, emitted snake-case fields, and the Camera2D call signatures.
-The failures occur inside generated SDK headers before the compiler can validate the rest of each
-example body.
+## Runnable ports
 
-| Blocker | Examples | First generated-header failure |
-| --- | ---: | --- |
-| Scene2D node ownership | 25 | `scene2d/display_object.hpp` passes a nominal `Ref<NodeAny>` to the structural `get_node_runtime` API; the same partial stack omits the node/display-object constructors and hierarchy operations used by the ports. |
-| Mesh layout ownership | 6 | `mesh/mesh_geometry_layout.hpp` emits `source->layout.stride` even though `layout` is `Ref<VertexAttributeLayout>`. The affected 3D ports also need constructors currently marked `NOT GENERATED`. |
-| Interaction hierarchy | 1 | `interaction/hit_tests.hpp` calls the omitted `get_node_parent` hierarchy function. |
-| MovieClip timeline | 1 | `movieclip/movie_clip.hpp` calls the omitted `add_timeline_frame_script` function. |
-| Audio mixer | 1 | `media/audio_mixer.hpp` calls the omitted `update_bus_gain_node` function. |
+| Target suffix | Behavior preserved from the TypeScript example |
+| --- | --- |
+| `adjustments` | Interactive brightness, contrast, hue, and saturation sliders; fused matrix and swatches |
+| `camera2d` | Follow camera, bounded world, parallax layers, keyboard movement, pointer-centered wheel zoom |
+| `clock` | Parent/child clock hierarchy, effective pause and scale controls, animated shapes and diagnostics |
+| `collision` | Draggable circle/AABB/polygon colliders, pair testing, overlap color, and MTV arrows |
+| `crossfade` | Click-driven idle/locomotion crossfade, blended walk/run pose, additive body motion, progress bar |
+| `flowstates` | Boot/menu/play/pause/game-over stack with the original keyboard transitions and overlay behavior |
+| `interaction` | Precise hover, topmost picking, captured dragging, live overlap reporting, and event HUD |
+| `motionpath` | Two-segment cubic path, moving oriented arrow, speed and clamp/loop/ping-pong controls |
+| `movieclip` | 24-frame labeled timeline, frame scripts, play/stop, stepping, and label navigation |
+| `shapes` | All five drawing rows, gradients, stroke variants, and the live interactive star |
+| `sound` | Procedural tones through the SDL audio backend plus button, master, bus-gain, and pan controls |
+| `spatial` | Moving indexed boxes, visible grid cells, pair/point/ray/region queries, and hit counts |
+| `text` | The complete text-label, alignment, wrapping, style, background, border, and code gallery |
+| `textinput` | Normal, restricted numeric, and password fields with focus, selection, editing, undo, and redo |
 
-The exact membership of each group is kept next to the build list in `CMakeLists.txt`. These are SDK
-emission/runtime gaps rather than missing local headers, so the ports are excluded instead of replacing
-their Flight calls with unrelated stand-ins.
-
-## Rechecking a port
-
-From the repository root, syntax-check a source with the same include precedence as `Flight::SdkPreview`:
+Every executable accepts `--smoke`. Smoke mode creates a hidden SDL window, renders three fixed-step
+frames, and exits; CTest runs this path with SDL's dummy video driver.
 
 ```sh
-c++ -std=c++20 -fmax-errors=1 \
-  -Ioverrides/include -Igenerated/include -Iinclude \
-  -fsyntax-only examples/upstream/shapes.cpp
+cmake -S . -B build \
+  -DBUILD_TESTING=ON \
+  -DFLIGHT_CPP_BUILD_EXAMPLES=ON \
+  -DFLIGHT_CPP_BUILD_HOST_SDL=ON
+cmake --build build
+ctest --test-dir build --output-on-failure
 ```
 
-After the relevant SDK blocker is repaired, fix any newly exposed port-level diagnostics and move the
-example name into `UPSTREAM_EXAMPLES`. Then verify the complete project with the standard configure,
-build, and CTest commands from the repository `AGENTS.md`.
+Run an interactive example without `--smoke`, for example:
+
+```sh
+./build/examples/upstream/flight_cpp_upstream_camera2d
+```
+
+## Deferred compile probes
+
+The source names in the three `UPSTREAM_EXAMPLES_BLOCKED_*` lists are not example targets. They are
+earlier compile probes retained to expose independent generated-SDK gaps in the Scene2D and mesh
+stacks. They must not be promoted merely because a translation unit compiles: promotion requires a
+windowed port with the same visible behavior and controls as its TypeScript source.

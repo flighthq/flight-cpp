@@ -1,129 +1,158 @@
-// Naive C++ port of @flighthq/example-flowstates
-// Ported from .dependencies/flight/examples/packages/flowstates/src/app.ts
+// Native SDL port of @flighthq/example-flowstates.
+// Source: .dependencies/flight/examples/packages/flowstates/src/app.ts
 
-#include <flight/flow/flow.hpp>
-#include <flight/node/hierarchy.hpp>
-#include <flight/node/node_transform2d.hpp>
-#include <flight/scene2d/display_object.hpp>
-#include <flight/shape/shape.hpp>
-#include <flight/shape/shape_commands.hpp>
-#include <flight/text/text_label.hpp>
+#include "sdl_host.hpp"
 
+#include <array>
+#include <cstdlib>
+#include <exception>
 #include <iostream>
+#include <string>
+#include <string_view>
+#include <vector>
 
 namespace {
 
-constexpr double WIDTH = 600.0;
-constexpr double HEIGHT = 400.0;
+using flight::examples::Canvas;
+using flight::examples::Frame;
+
+enum class State { boot, menu, play, pause, game_over };
+
+[[nodiscard]] std::string_view name(State state) {
+  switch (state) {
+    case State::boot: return "Boot";
+    case State::menu: return "Menu";
+    case State::play: return "Play";
+    case State::pause: return "Pause";
+    case State::game_over: return "GameOver";
+  }
+  return "?";
+}
+
+class FlowStatesExample final {
+ public:
+  void frame(const Frame& frame) {
+    handle_keys(frame);
+    if (!stack_.empty() && stack_.back() == State::boot) {
+      boot_timer_ += frame.delta_time * 1000.0;
+      if (boot_timer_ >= 1500.0) stack_.back() = State::menu;
+    }
+    if (!stack_.empty() && stack_.back() == State::play) play_time_ += frame.delta_time;
+
+    if (!stack_.empty()) {
+      if (stack_.back() == State::pause && stack_.size() >= 2) draw_state(frame.canvas, stack_[stack_.size() - 2]);
+      draw_state(frame.canvas, stack_.back());
+    }
+    draw_hud(frame.canvas);
+  }
+
+ private:
+  void handle_keys(const Frame& frame) {
+    if (stack_.empty()) return;
+    const State active = stack_.back();
+    if (active == State::menu && frame.input.key_pressed(SDLK_RETURN)) {
+      score_ = 0;
+      play_time_ = 0.0;
+      stack_.push_back(State::play);
+      return;
+    }
+    if (active == State::play && frame.input.key_pressed(SDLK_SPACE)) {
+      score_ += 10;
+      return;
+    }
+    if (active == State::play && frame.input.key_pressed(SDLK_ESCAPE)) {
+      stack_.push_back(State::pause);
+      return;
+    }
+    if (active == State::pause && frame.input.key_pressed(SDLK_ESCAPE)) {
+      stack_.pop_back();
+      return;
+    }
+    if (active == State::play && frame.input.key_pressed(SDLK_G)) {
+      stack_.back() = State::game_over;
+      return;
+    }
+    if (active == State::game_over && frame.input.key_pressed(SDLK_R)) {
+      score_ = 0;
+      play_time_ = 0.0;
+      stack_.back() = State::play;
+      return;
+    }
+    if (active == State::game_over && frame.input.key_pressed(SDLK_M)) {
+      stack_ = {State::menu};
+      return;
+    }
+    if (active == State::menu && frame.input.key_pressed(SDLK_Q)) stack_ = {State::menu};
+  }
+
+  void draw_state(Canvas& canvas, State state) const {
+    switch (state) {
+      case State::boot:
+        canvas.fill_rectangle(0.0, 0.0, 600.0, 400.0, 0x111111ffU);
+        canvas.text("FLIGHT SDK", 200.0, 140.0, 0xffffffffU, 32.0);
+        canvas.text("Loading...", 240.0, 190.0, 0x888888ffU, 18.0);
+        break;
+      case State::menu:
+        canvas.fill_rectangle(0.0, 0.0, 600.0, 400.0, 0x1a3a5cffU);
+        canvas.text("FLOW STATES", 170.0, 80.0, 0xffffffffU, 36.0);
+        canvas.text("A @flighthq/flow demo", 190.0, 130.0, 0xaaaaaaffU, 16.0);
+        canvas.text("Press ENTER to play", 195.0, 220.0, 0x44cc88ffU, 20.0);
+        canvas.text("Press Q to clear stack", 195.0, 260.0, 0x888888ffU, 16.0);
+        break;
+      case State::play:
+        canvas.fill_rectangle(0.0, 0.0, 600.0, 400.0, 0x2d5016ffU);
+        canvas.text("PLAYING", 230.0, 30.0, 0xffffffffU, 28.0);
+        canvas.text("Score: " + std::to_string(score_), 30.0, 100.0, 0xeedd44ffU, 22.0);
+        canvas.text("Time: " + std::to_string(static_cast<int>(play_time_)) + "s", 30.0, 140.0, 0xccccccffU, 16.0);
+        canvas.text("SPACE - score points", 30.0, 220.0, 0x88bb88ffU, 16.0);
+        canvas.text("ESCAPE - pause", 30.0, 250.0, 0x88bb88ffU, 16.0);
+        canvas.text("G - game over", 30.0, 280.0, 0x88bb88ffU, 16.0);
+        break;
+      case State::pause:
+        canvas.fill_rectangle(0.0, 0.0, 600.0, 400.0, 0x000000ffU, 0.6);
+        canvas.text("PAUSED", 225.0, 150.0, 0xffffffffU, 40.0);
+        canvas.text("Press ESCAPE to resume", 185.0, 210.0, 0xccccccffU, 18.0);
+        break;
+      case State::game_over:
+        canvas.fill_rectangle(0.0, 0.0, 600.0, 400.0, 0x5c1a1affU);
+        canvas.text("GAME OVER", 185.0, 100.0, 0xff4444ffU, 36.0);
+        canvas.text("Final Score: " + std::to_string(score_), 200.0, 160.0, 0xffffffffU, 24.0);
+        canvas.text("Press R to restart", 205.0, 240.0, 0xccccccffU, 18.0);
+        canvas.text("Press M for menu", 215.0, 275.0, 0x888888ffU, 18.0);
+        break;
+    }
+  }
+
+  void draw_hud(Canvas& canvas) const {
+    const std::string active = stack_.empty() ? "none" : std::string(name(stack_.back()));
+    std::string names;
+    for (std::size_t index = 0; index < stack_.size(); ++index) {
+      if (index != 0) names += " > ";
+      names += name(stack_[index]);
+    }
+    canvas.text("Depth: " + std::to_string(stack_.size()), 400.0, 10.0, 0xffff88ffU, 14.0);
+    canvas.text("Active: " + active, 400.0, 30.0, 0xffff88ffU, 14.0);
+    canvas.text("Stack: " + names, 400.0, 50.0, 0xffff88ffU, 11.0);
+  }
+
+  std::vector<State> stack_{State::boot};
+  int score_{};
+  double boot_timer_{};
+  double play_time_{};
+};
 
 } // namespace
 
-int main() {
-  using namespace flight::node;
-  using namespace flight::shape;
-  using namespace flight::scene2d;
-  using namespace flight::flow;
-
-  auto root = create_display_object(std::nullopt);
-
-  auto stack = create_flow_stack();
-
-  // Boot state: splash screen.
-  auto bootBg = create_shape(std::nullopt);
-  append_shape_begin_fill(bootBg, 0x1a1a2eff);
-  append_shape_rectangle(bootBg, 0.0, 0.0, WIDTH, HEIGHT);
-  append_shape_end_fill(bootBg);
-
-  auto bootLabel = flight::text::create_text_label();
-  bootLabel->data->text = flight::String("FLIGHT FLOW STATES");
-  bootLabel->x = WIDTH / 2.0 - 100.0;
-  bootLabel->y = HEIGHT / 2.0 - 20.0;
-  invalidate_node_local_transform(bootLabel);
-
-  auto bootContainer = create_display_object(std::nullopt);
-  add_node_child(bootContainer, bootBg);
-  add_node_child(bootContainer, bootLabel);
-
-  // Menu state.
-  auto menuBg = create_shape(std::nullopt);
-  append_shape_begin_fill(menuBg, 0x222244ff);
-  append_shape_rectangle(menuBg, 0.0, 0.0, WIDTH, HEIGHT);
-  append_shape_end_fill(menuBg);
-
-  auto menuTitle = flight::text::create_text_label();
-  menuTitle->data->text = flight::String("MAIN MENU");
-  menuTitle->x = WIDTH / 2.0 - 60.0;
-  menuTitle->y = 60.0;
-  invalidate_node_local_transform(menuTitle);
-
-  auto playButton = create_shape(std::nullopt);
-  append_shape_begin_fill(playButton, 0x4488eeff);
-  append_shape_rectangle(playButton, WIDTH / 2.0 - 80.0, 160.0, 160.0, 50.0);
-  append_shape_end_fill(playButton);
-
-  auto menuContainer = create_display_object(std::nullopt);
-  add_node_child(menuContainer, menuBg);
-  add_node_child(menuContainer, menuTitle);
-  add_node_child(menuContainer, playButton);
-
-  // Play state.
-  auto playBg = create_shape(std::nullopt);
-  append_shape_begin_fill(playBg, 0x1a3322ff);
-  append_shape_rectangle(playBg, 0.0, 0.0, WIDTH, HEIGHT);
-  append_shape_end_fill(playBg);
-
-  auto scoreLabel = flight::text::create_text_label();
-  scoreLabel->data->text = flight::String("Score: 0");
-  scoreLabel->x = 20.0;
-  scoreLabel->y = 20.0;
-  invalidate_node_local_transform(scoreLabel);
-
-  auto playContainer = create_display_object(std::nullopt);
-  add_node_child(playContainer, playBg);
-  add_node_child(playContainer, scoreLabel);
-
-  // Pause state (overlay).
-  auto pauseBg = create_shape(std::nullopt);
-  append_shape_begin_fill(pauseBg, 0x00000088);
-  append_shape_rectangle(pauseBg, 0.0, 0.0, WIDTH, HEIGHT);
-  append_shape_end_fill(pauseBg);
-
-  auto pauseLabel = flight::text::create_text_label();
-  pauseLabel->data->text = flight::String("PAUSED");
-  pauseLabel->x = WIDTH / 2.0 - 40.0;
-  pauseLabel->y = HEIGHT / 2.0 - 15.0;
-  invalidate_node_local_transform(pauseLabel);
-
-  auto pauseContainer = create_display_object(std::nullopt);
-  add_node_child(pauseContainer, pauseBg);
-  add_node_child(pauseContainer, pauseLabel);
-
-  // Push states onto the flow stack.
-  auto bootState = flight::make_ref<flight::types::FlowState>();
-  auto menuState = flight::make_ref<flight::types::FlowState>();
-  auto playState = flight::make_ref<flight::types::FlowState>();
-  auto pauseState = flight::make_ref<flight::types::FlowState>();
-
-  push_flow_state(stack, bootState);
-
-  // Simulate state transitions.
-  update_flow_stack(stack, 1000.0);
-  replace_flow_state(stack, menuState);
-  update_flow_stack(stack, 500.0);
-  push_flow_state(stack, playState);
-  update_flow_stack(stack, 2000.0);
-  push_flow_state(stack, pauseState);
-  update_flow_stack(stack, 500.0);
-  pop_flow_state(stack);
-  update_flow_stack(stack, 1000.0);
-
-  auto active = get_active_flow_state(stack);
-  auto depth = get_flow_stack_depth(stack);
-
-  add_node_child(root, bootContainer);
-
-  std::cout << "Flight flowstates example (naive C++ port): "
-            << "4 states defined, "
-            << "stack depth = " << depth << "\n";
-  return 0;
+int main(int argc, char** argv) {
+  try {
+    FlowStatesExample example;
+    return flight::examples::SdlExample::run(
+        argc,
+        argv,
+        "Flight flow states - SDL",
+        [&](const Frame& frame) { example.frame(frame); });
+  } catch (const std::exception& error) {
+    std::cerr << "flowstates example failed: " << error.what() << '\n';
+    return EXIT_FAILURE;
+  }
 }

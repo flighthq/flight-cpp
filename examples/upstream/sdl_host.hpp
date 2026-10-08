@@ -34,6 +34,9 @@ struct Input final {
   bool pointer_down{};
   bool pointer_pressed{};
   bool pointer_released{};
+  bool shift{};
+  bool control{};
+  bool alt{};
   std::vector<SDL_Keycode> keys_pressed;
   std::vector<SDL_Keycode> keys_released;
   std::string text;
@@ -172,13 +175,15 @@ struct Frame final {
 class SdlExample final {
  public:
   using FrameCallback = std::function<void(const Frame&)>;
+  using ExitCallback = std::function<void()>;
 
   static int run(
       int argc,
       char** argv,
       std::string_view title,
       FrameCallback callback,
-      std::uint32_t background = 0x1a1a2eff);
+      std::uint32_t background = 0x1a1a2eff,
+      ExitCallback on_exit = {});
 };
 
 [[nodiscard]] std::array<float, 4> unpack_color(

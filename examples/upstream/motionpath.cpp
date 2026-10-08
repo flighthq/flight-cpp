@@ -1,101 +1,141 @@
-// Naive C++ port of @flighthq/example-motionpath
-// Ported from .dependencies/flight/examples/packages/motionpath/src/app.ts
+// Native SDL port of @flighthq/example-motionpath.
+// Source: .dependencies/flight/examples/packages/motionpath/src/app.ts
 
-#include <flight/math/constants.hpp>
+#include "sdl_host.hpp"
+
+#include <flight/geometry/vector2.hpp>
 #include <flight/motionpath/motion_path.hpp>
-#include <flight/node/hierarchy.hpp>
-#include <flight/node/node_transform2d.hpp>
 #include <flight/path/path.hpp>
-#include <flight/scene2d/display_object.hpp>
-#include <flight/shape/shape.hpp>
-#include <flight/shape/shape_commands.hpp>
-#include <flight/text/text_label.hpp>
 
+#include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstdlib>
+#include <exception>
 #include <iostream>
+#include <numbers>
+#include <string>
 
-int main() {
-  using namespace flight::node;
-  using namespace flight::shape;
-  using namespace flight::scene2d;
-  using namespace flight::motionpath;
+namespace {
 
-  auto root = create_display_object(std::nullopt);
+using flight::examples::Frame;
+using flight::examples::Point;
 
-  // Build a bezier path: S-curve across the canvas.
-  auto path = flight::path::create_path();
-  flight::path::append_path_move_to(path, 100.0, 400.0);
-  flight::path::append_path_cubic_curve_to(path, 250.0, 100.0, 350.0, 100.0, 400.0, 250.0);
-  flight::path::append_path_cubic_curve_to(path, 450.0, 400.0, 550.0, 400.0, 700.0, 100.0);
-
-  // Create motion path driver.
-  double speed = 150.0;
-  auto mp = create_motion_path(path, speed, flight::String("loop"));
-
-  // Draw visible track as a shape.
-  auto track = create_shape(std::nullopt);
-  append_shape_line_style(track, 2.0, 0x4488aaff);
-  append_shape_move_to(track, 100.0, 400.0);
-  append_shape_cubic_curve_to(track, 250.0, 100.0, 350.0, 100.0, 400.0, 250.0);
-  append_shape_cubic_curve_to(track, 450.0, 400.0, 550.0, 400.0, 700.0, 100.0);
-  add_node_child(root, track);
-
-  // Control point markers.
-  constexpr std::array<std::array<double, 2>, 8> controlPoints = {{
-    {100.0, 400.0}, {250.0, 100.0}, {350.0, 100.0}, {400.0, 250.0},
-    {450.0, 400.0}, {550.0, 400.0}, {700.0, 100.0},
-  }};
-
-  for (auto& cp : controlPoints) {
-    auto dot = create_shape(std::nullopt);
-    append_shape_begin_fill(dot, 0x666666ff);
-    append_shape_circle(dot, cp[0], cp[1], 4.0);
-    append_shape_end_fill(dot);
-    add_node_child(root, dot);
+class MotionPathExample final {
+ public:
+  MotionPathExample()
+      : path_(flight::path::create_path()),
+        point_(flight::geometry::create_vector2()),
+        tangent_(flight::geometry::create_vector2()) {
+    flight::path::append_path_move_to(path_, 100.0, 400.0);
+    flight::path::append_path_cubic_curve_to(path_, 250.0, 100.0, 350.0, 100.0, 400.0, 250.0);
+    flight::path::append_path_cubic_curve_to(path_, 450.0, 400.0, 550.0, 400.0, 700.0, 100.0);
+    motion_path_ = flight::motionpath::create_motion_path(path_, speed_, mode_);
   }
 
-  // Moving object (triangle arrow).
-  auto arrow = create_shape(std::nullopt);
-  append_shape_begin_fill(arrow, 0xff6644ff);
-  append_shape_move_to(arrow, 12.0, 0.0);
-  append_shape_line_to(arrow, -8.0, -7.0);
-  append_shape_line_to(arrow, -8.0, 7.0);
-  append_shape_line_to(arrow, 12.0, 0.0);
-  append_shape_end_fill(arrow);
-  add_node_child(root, arrow);
+  void frame(const Frame& frame) {
+    handle_keys(frame);
+    flight::motionpath::update_motion_path(motion_path_, frame.delta_time);
+    const bool sampled = flight::motionpath::get_motion_path_position(motion_path_, point_, tangent_);
 
-  // HUD label.
-  auto label = flight::text::create_text_label();
-  label->data->text = flight::String("MOTION PATH");
-  label->x = 20.0;
-  label->y = 20.0;
-  invalidate_node_local_transform(label);
-  add_node_child(root, label);
+    frame.canvas.cubic_curve(
+        {100.0, 400.0},
+        {250.0, 100.0},
+        {350.0, 100.0},
+        {400.0, 250.0},
+        0x4488aaffU,
+        2.0);
+    frame.canvas.cubic_curve(
+        {400.0, 250.0},
+        {450.0, 400.0},
+        {550.0, 400.0},
+        {700.0, 100.0},
+        0x4488aaffU,
+        2.0);
+    constexpr std::array<Point, 7> controls{{
+        {100.0, 400.0},
+        {250.0, 100.0},
+        {350.0, 100.0},
+        {400.0, 250.0},
+        {450.0, 400.0},
+        {550.0, 400.0},
+        {700.0, 100.0},
+    }};
+    for (const auto& control : controls) {
+      constexpr std::array<Point, 4> diamond{{{0.0, -4.0}, {4.0, 0.0}, {0.0, 4.0}, {-4.0, 0.0}}};
+      std::array<Point, 4> translated{};
+      for (std::size_t index = 0; index < diamond.size(); ++index) {
+        translated[index] = {control.x + diamond[index].x, control.y + diamond[index].y};
+      }
+      frame.canvas.fill_polygon(translated, 0x335566ffU);
+    }
+    if (sampled) draw_arrow(frame);
 
-  // Simulate motion along the path.
-  auto position = flight::geometry::create_vector2();
-  auto tangent = flight::geometry::create_vector2();
-  for (int frame = 0; frame < 180; ++frame) {
-    double dt = 1.0 / 60.0;
-    update_motion_path(mp, dt);
-
-    get_motion_path_position(mp, position, tangent);
-    auto heading = get_motion_path_heading(mp);
-    auto progress = get_motion_path_progress(mp);
-    (void)progress;
-
-    arrow->x = position->x;
-    arrow->y = position->y;
-    arrow->rotation = heading * (180.0 / flight::pi);
-    invalidate_node_local_transform(arrow);
+    const int progress = static_cast<int>(flight::motionpath::get_motion_path_progress(motion_path_) * 100.0);
+    frame.canvas.text("Motion Path", 20.0, 10.0, 0xffffffffU, 24.0);
+    frame.canvas.text("Speed: " + std::to_string(static_cast<int>(speed_)), 20.0, 445.0, 0xccccccffU, 16.0);
+    frame.canvas.text("Mode: " + mode_.to_utf8() + " (1/2/3)", 20.0, 465.0, 0xccccccffU, 16.0);
+    frame.canvas.text("Progress: " + std::to_string(progress) + "%", 250.0, 445.0, 0xccccccffU, 16.0);
+    frame.canvas.text("+/- speed    1 clamp  2 loop  3 pingpong", 250.0, 465.0, 0x888888ffU, 14.0);
   }
 
-  auto finalProgress = get_motion_path_progress(mp);
-  get_motion_path_position(mp, position, tangent);
+ private:
+  void handle_keys(const Frame& frame) {
+    if (frame.input.key_pressed(SDLK_PLUS) || frame.input.key_pressed(SDLK_EQUALS)) {
+      speed_ = std::min(speed_ + 25.0, 500.0);
+      motion_path_->speed = speed_;
+    }
+    if (frame.input.key_pressed(SDLK_MINUS)) {
+      speed_ = std::max(speed_ - 25.0, 25.0);
+      motion_path_->speed = speed_;
+    }
+    if (frame.input.key_pressed(SDLK_1)) set_mode("clamp");
+    if (frame.input.key_pressed(SDLK_2)) set_mode("loop");
+    if (frame.input.key_pressed(SDLK_3)) set_mode("pingpong");
+  }
 
-  std::cout << "Flight motionpath example (naive C++ port): "
-            << "progress=" << finalProgress << ", "
-            << "position=(" << position->x << ", " << position->y << ")\n";
-  return 0;
+  void set_mode(std::string_view mode) {
+    mode_ = flight::String(mode);
+    motion_path_->loop_mode = mode_;
+  }
+
+  void draw_arrow(const Frame& frame) const {
+    constexpr double length = 20.0;
+    constexpr double half_width = 8.0;
+    const double heading = flight::motionpath::get_motion_path_heading(motion_path_);
+    const double cosine = std::cos(heading);
+    const double sine = std::sin(heading);
+    constexpr std::array<Point, 3> local{{{length, 0.0}, {-length / 2.0, -half_width}, {-length / 2.0, half_width}}};
+    std::array<Point, 3> world{};
+    for (std::size_t index = 0; index < local.size(); ++index) {
+      world[index] = {
+          point_->x + local[index].x * cosine - local[index].y * sine,
+          point_->y + local[index].x * sine + local[index].y * cosine,
+      };
+    }
+    frame.canvas.fill_polygon(world, 0xff6644ffU);
+  }
+
+  flight::Ref<flight::types::Path> path_;
+  double speed_{150.0};
+  flight::types::MotionPathLoopMode mode_{"loop"};
+  flight::Ref<flight::types::MotionPath> motion_path_;
+  flight::Ref<flight::types::Vector2> point_;
+  flight::Ref<flight::types::Vector2> tangent_;
+};
+
+} // namespace
+
+int main(int argc, char** argv) {
+  try {
+    MotionPathExample example;
+    return flight::examples::SdlExample::run(
+        argc,
+        argv,
+        "Flight motion path - SDL",
+        [&](const Frame& frame) { example.frame(frame); });
+  } catch (const std::exception& error) {
+    std::cerr << "motionpath example failed: " << error.what() << '\n';
+    return EXIT_FAILURE;
+  }
 }

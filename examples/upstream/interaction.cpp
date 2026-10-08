@@ -1,69 +1,174 @@
-// Naive C++ port of @flighthq/example-interaction
-// Ported from .dependencies/flight/examples/packages/interaction/src/app.ts
+// Native SDL port of @flighthq/example-interaction.
+// Source: .dependencies/flight/examples/packages/interaction/src/app.ts
 
-#include <flight/interaction/hit_tests.hpp>
-#include <flight/interaction/node_interaction_state.hpp>
-#include <flight/node/hierarchy.hpp>
-#include <flight/node/node_transform2d.hpp>
-#include <flight/scene2d/display_object.hpp>
-#include <flight/shape/shape.hpp>
-#include <flight/shape/shape_commands.hpp>
-#include <flight/text/text_label.hpp>
+#include "sdl_host.hpp"
 
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <cstdlib>
+#include <exception>
 #include <iostream>
+#include <string>
 
-int main() {
-  using namespace flight::node;
-  using namespace flight::shape;
-  using namespace flight::scene2d;
-  using namespace flight::interaction;
+namespace {
 
-  auto root = create_display_object(std::nullopt);
+using flight::examples::Canvas;
+using flight::examples::Frame;
+using flight::examples::Point;
 
-  // Interactive shapes: draggable circle, clickable rectangle, hoverable polygon.
-  auto dragCircle = create_shape(std::nullopt);
-  append_shape_begin_fill(dragCircle, 0x2196f3ff);
-  append_shape_circle(dragCircle, 200.0, 200.0, 50.0);
-  append_shape_end_fill(dragCircle);
-  set_node_hit_test_enabled(dragCircle, true);
-  set_node_cursor(dragCircle, flight::String("grab"));
-  add_node_child(root, dragCircle);
+enum class Kind { rectangle, circle };
 
-  auto clickRect = create_shape(std::nullopt);
-  append_shape_begin_fill(clickRect, 0x4caf50ff);
-  append_shape_rectangle(clickRect, 400.0, 150.0, 150.0, 100.0);
-  append_shape_end_fill(clickRect);
-  set_node_hit_test_enabled(clickRect, true);
-  set_node_cursor(clickRect, flight::String("pointer"));
-  add_node_child(root, clickRect);
+struct Draggable final {
+  std::string name;
+  std::uint32_t base_color{};
+  std::uint32_t hover_color{};
+  Kind kind{};
+  double x{};
+  double y{};
+  double width{};
+  double height{};
+};
 
-  auto hoverCircle = create_shape(std::nullopt);
-  append_shape_begin_fill(hoverCircle, 0xff9800ff);
-  append_shape_circle(hoverCircle, 350.0, 400.0, 40.0);
-  append_shape_end_fill(hoverCircle);
-  set_node_hit_test_enabled(hoverCircle, true);
-  add_node_child(root, hoverCircle);
+[[nodiscard]] bool contains(const Draggable& shape, Point point) {
+  if (shape.kind == Kind::circle) {
+    return std::hypot(point.x - shape.x, point.y - shape.y) <= shape.width;
+  }
+  return flight::examples::contains(
+      shape.x - shape.width / 2.0,
+      shape.y - shape.height / 2.0,
+      shape.width,
+      shape.height,
+      point.x,
+      point.y);
+}
 
-  // Status label.
-  auto statusLabel = flight::text::create_text_label();
-  statusLabel->data->text = flight::String("Hover/click/drag the shapes");
-  statusLabel->x = 20.0;
-  statusLabel->y = 20.0;
-  invalidate_node_local_transform(statusLabel);
-  add_node_child(root, statusLabel);
+[[nodiscard]] bool overlap(const Draggable& a, const Draggable& b) {
+  if (a.kind == Kind::circle && b.kind == Kind::circle) {
+    return std::hypot(a.x - b.x, a.y - b.y) <= a.width + b.width;
+  }
+  if (a.kind == Kind::rectangle && b.kind == Kind::rectangle) {
+    return std::abs(a.x - b.x) * 2.0 <= a.width + b.width &&
+           std::abs(a.y - b.y) * 2.0 <= a.height + b.height;
+  }
+  const Draggable& circle = a.kind == Kind::circle ? a : b;
+  const Draggable& rectangle = a.kind == Kind::rectangle ? a : b;
+  const double closest_x = std::clamp(
+      circle.x,
+      rectangle.x - rectangle.width / 2.0,
+      rectangle.x + rectangle.width / 2.0);
+  const double closest_y = std::clamp(
+      circle.y,
+      rectangle.y - rectangle.height / 2.0,
+      rectangle.y + rectangle.height / 2.0);
+  return std::hypot(circle.x - closest_x, circle.y - closest_y) <= circle.width;
+}
 
-  // Event log.
-  auto logLabel = flight::text::create_text_label();
-  logLabel->data->text = flight::String("Events:");
-  logLabel->x = 20.0;
-  logLabel->y = 540.0;
-  invalidate_node_local_transform(logLabel);
-  add_node_child(root, logLabel);
+class InteractionExample final {
+ public:
+  void frame(const Frame& frame) {
+    const Point pointer{frame.input.pointer_x, frame.input.pointer_y};
+    const std::size_t previous_hovered = hovered_;
+    hovered_ = shapes_.size();
+    for (std::size_t offset = 0; offset < shapes_.size(); ++offset) {
+      const std::size_t index = shapes_.size() - 1 - offset;
+      if (contains(shapes_[index], pointer)) {
+        hovered_ = index;
+        break;
+      }
+    }
+    if (hovered_ != previous_hovered) {
+      last_event_ = hovered_ < shapes_.size() ? "pointerOver" : "pointerOut";
+    }
 
-  const int enabledCount = static_cast<int>(is_node_hit_test_enabled(dragCircle)) +
-                           static_cast<int>(is_node_hit_test_enabled(clickRect)) +
-                           static_cast<int>(is_node_hit_test_enabled(hoverCircle));
-  std::cout << "Flight interaction example (naive C++ port): "
-            << enabledCount << " interactive shapes configured.\n";
-  return 0;
+    if (frame.input.pointer_pressed && hovered_ < shapes_.size()) {
+      dragged_ = hovered_;
+      drag_offset_ = {pointer.x - shapes_[dragged_].x, pointer.y - shapes_[dragged_].y};
+      last_event_ = "pointerDown";
+    }
+    const bool moved = pointer.x != last_pointer_.x || pointer.y != last_pointer_.y;
+    if (dragged_ < shapes_.size() && frame.input.pointer_down && moved) {
+      shapes_[dragged_].x = pointer.x - drag_offset_.x;
+      shapes_[dragged_].y = pointer.y - drag_offset_.y;
+      last_event_ = "pointerMove";
+    }
+    if (frame.input.pointer_released && dragged_ < shapes_.size()) {
+      dragged_ = shapes_.size();
+      last_event_ = "pointerUp";
+    }
+    last_pointer_ = pointer;
+    draw(frame.canvas);
+  }
+
+ private:
+  void draw(Canvas& canvas) const {
+    canvas.text(
+        "Drag shapes. Hover for precise hit + grab cursor. Overlaps update live.",
+        10.0,
+        10.0,
+        0x999999ffU,
+        16.0);
+    for (std::size_t index = 0; index < shapes_.size(); ++index) {
+      const auto& shape = shapes_[index];
+      const std::uint32_t color = index == hovered_ ? shape.hover_color : shape.base_color;
+      if (shape.kind == Kind::circle) {
+        canvas.fill_circle(shape.x, shape.y, shape.width, color, 0.85);
+      } else {
+        canvas.fill_rectangle(
+            shape.x - shape.width / 2.0,
+            shape.y - shape.height / 2.0,
+            shape.width,
+            shape.height,
+            color,
+            0.85);
+      }
+    }
+
+    std::string overlaps;
+    for (std::size_t first = 0; first < shapes_.size(); ++first) {
+      for (std::size_t second = first + 1; second < shapes_.size(); ++second) {
+        if (overlap(shapes_[first], shapes_[second])) {
+          if (!overlaps.empty()) overlaps += ", ";
+          overlaps += shapes_[first].name + " + " + shapes_[second].name;
+        }
+      }
+    }
+    if (overlaps.empty()) overlaps = "none";
+    const std::string hovered = hovered_ < shapes_.size() ? shapes_[hovered_].name : "none";
+    const std::string drag = dragged_ < shapes_.size() ? "dragging " + shapes_[dragged_].name : "idle";
+    canvas.text("Overlaps: " + overlaps, 10.0, 498.0, 0xddddddffU, 11.0);
+    canvas.text("Event: " + last_event_, 10.0, 520.0, 0xddddddffU, 14.0);
+    canvas.text("Hovered: " + hovered, 10.0, 542.0, 0xddddddffU, 14.0);
+    canvas.text("Drag: " + drag, 10.0, 564.0, 0xddddddffU, 14.0);
+  }
+
+  std::array<Draggable, 6> shapes_{{
+      {"Red Rect", 0xcc4444ffU, 0xff6666ffU, Kind::rectangle, 100.0, 100.0, 100.0, 80.0},
+      {"Green Circle", 0x44cc44ffU, 0x66ff66ffU, Kind::circle, 300.0, 150.0, 60.0, 60.0},
+      {"Blue Rect", 0x4444ccffU, 0x6666ffffU, Kind::rectangle, 500.0, 100.0, 120.0, 90.0},
+      {"Yellow Circle", 0xcccc44ffU, 0xffff66ffU, Kind::circle, 200.0, 350.0, 50.0, 50.0},
+      {"Cyan Rect", 0x44ccccffU, 0x66ffffffU, Kind::rectangle, 450.0, 300.0, 90.0, 70.0},
+      {"Magenta Circle", 0xcc44ccffU, 0xff66ffffU, Kind::circle, 475.0, 300.0, 55.0, 55.0},
+  }};
+  std::size_t hovered_{shapes_.size()};
+  std::size_t dragged_{shapes_.size()};
+  Point drag_offset_{};
+  Point last_pointer_{};
+  std::string last_event_{"none"};
+};
+
+} // namespace
+
+int main(int argc, char** argv) {
+  try {
+    InteractionExample example;
+    return flight::examples::SdlExample::run(
+        argc,
+        argv,
+        "Flight interaction - SDL",
+        [&](const Frame& frame) { example.frame(frame); });
+  } catch (const std::exception& error) {
+    std::cerr << "interaction example failed: " << error.what() << '\n';
+    return EXIT_FAILURE;
+  }
 }

@@ -68,6 +68,9 @@ if(TARGET Flight::HostSdl)
         flight_cpp_upstream_sdl_host
         Flight::SdkPreview
       )
+      if(example STREQUAL "sound")
+        target_link_libraries(flight_cpp_upstream_${example} PRIVATE Flight::HostSdlSdkAudio)
+      endif()
       flight_cpp_set_project_warnings(flight_cpp_upstream_${example})
       if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         # Generated SDK dependencies still contain intentional no-op parameters, ignored
@@ -78,6 +81,16 @@ if(TARGET Flight::HostSdl)
           -Wno-error=float-conversion
           -Wno-error=unused-parameter
           -Wno-error=unused-result
+        )
+      endif()
+      if(BUILD_TESTING)
+        add_test(
+          NAME flight_cpp_upstream_${example}_smoke
+          COMMAND flight_cpp_upstream_${example} --smoke
+        )
+        set_tests_properties(
+          flight_cpp_upstream_${example}_smoke
+          PROPERTIES ENVIRONMENT "SDL_VIDEODRIVER=dummy"
         )
       endif()
     endif()

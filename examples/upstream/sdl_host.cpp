@@ -1,6 +1,7 @@
 #include "sdl_host.hpp"
 
 #include <SDL3/SDL_error.h>
+#include <SDL3/SDL_keyboard.h>
 
 #include <algorithm>
 #include <chrono>
@@ -390,7 +391,8 @@ int SdlExample::run(
     char** argv,
     std::string_view title,
     FrameCallback callback,
-    std::uint32_t background) {
+    std::uint32_t background,
+    ExitCallback on_exit) {
   if (argc > 2 || (argc == 2 && std::string_view(argv[1]) != "--smoke")) {
     throw std::invalid_argument("the only supported option is --smoke");
   }
@@ -421,7 +423,6 @@ int SdlExample::run(
         case SDL_EVENT_KEY_DOWN:
           if (!event.key.repeat) input.keys_pressed.push_back(event.key.key);
           input.held_keys.insert(event.key.key);
-          if (event.key.key == SDLK_ESCAPE) running = false;
           break;
         case SDL_EVENT_KEY_UP:
           input.keys_released.push_back(event.key.key);
@@ -458,6 +459,10 @@ int SdlExample::run(
           break;
       }
     }
+    const SDL_Keymod modifiers = SDL_GetModState();
+    input.shift = (modifiers & SDL_KMOD_SHIFT) != 0;
+    input.control = (modifiers & SDL_KMOD_CTRL) != 0;
+    input.alt = (modifiers & SDL_KMOD_ALT) != 0;
 
     const auto now = std::chrono::steady_clock::now();
     const double time = std::chrono::duration<double>(now - started).count();
@@ -479,6 +484,7 @@ int SdlExample::run(
     if (smoke && index >= 3) running = false;
     if (!smoke) std::this_thread::sleep_for(std::chrono::milliseconds(8));
   }
+  if (on_exit) on_exit();
   return EXIT_SUCCESS;
 }
 

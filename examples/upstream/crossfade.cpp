@@ -1,114 +1,132 @@
-// Naive C++ port of @flighthq/example-crossfade
-// Ported from .dependencies/flight/examples/packages/crossfade/src/app.ts
+// Native SDL port of @flighthq/example-crossfade.
+// Source: .dependencies/flight/examples/packages/crossfade/src/app.ts
 
-#include <flight/animation/animation_clip.hpp>
-#include <flight/animation/animation_crossfade.hpp>
-#include <flight/animation/animation_player.hpp>
-#include <flight/animation/animation_track.hpp>
-#include <flight/node/hierarchy.hpp>
-#include <flight/node/node_transform2d.hpp>
-#include <flight/scene2d/display_object.hpp>
-#include <flight/shape/shape.hpp>
-#include <flight/shape/shape_commands.hpp>
-#include <flight/text/text_label.hpp>
+#include "sdl_host.hpp"
 
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <exception>
 #include <iostream>
+#include <numbers>
+#include <string>
 
 namespace {
 
-flight::Ref<flight::types::AnimationTrack> scalar_track(
-    flight::Array<double> times,
-    flight::Array<double> values) {
-  using Options = flight::animation::
-      times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042;
-  return flight::animation::create_animation_track(flight::make_ref<Options>(Options{
-      .times = flight::SequenceView<double>(std::move(times)),
-      .values = flight::SequenceView<double>(std::move(values)),
-      .components = 1.0,
-      .interpolation = std::nullopt,
-      .quaternion = false,
-  }));
+using flight::examples::Canvas;
+using flight::examples::Frame;
+using flight::examples::Point;
+
+[[nodiscard]] Point leg_point(double x, double y, double length, double angle) {
+  const double radians = (90.0 + angle) * std::numbers::pi / 180.0;
+  return {x + std::cos(radians) * length, y + std::sin(radians) * length};
 }
 
-flight::Ref<flight::types::AnimationClip> body_clip(
-    flight::Array<double> values) {
-  auto track = scalar_track(
-      flight::Array<double>{0.0, 0.5, 1.0, 1.5, 2.0}, std::move(values));
-  auto channel = flight::animation::create_animation_channel(
-      track, flight::Any(flight::String("body.y")));
-  return flight::animation::create_animation_clip(
-      flight::Array<flight::Ref<flight::types::AnimationChannel>>{channel}, 2.0);
+void draw_character(
+    Canvas& canvas,
+    double x,
+    double y,
+    double left_angle,
+    double right_angle,
+    std::uint32_t color) {
+  canvas.fill_circle(x, y - 70.0, 18.0, color);
+  canvas.line(x, y - 50.0, x, y + 12.0, color, 8.0);
+  canvas.line(x, y - 32.0, x - 26.0, y - 4.0, color, 8.0);
+  canvas.line(x, y - 32.0, x + 26.0, y - 4.0, color, 8.0);
+  const Point left_knee = leg_point(x - 4.0, y + 10.0, 43.0, left_angle);
+  const Point right_knee = leg_point(x + 4.0, y + 10.0, 43.0, right_angle);
+  canvas.line(x - 4.0, y + 10.0, left_knee.x, left_knee.y, color, 8.0);
+  canvas.line(left_knee.x, left_knee.y, left_knee.x - 12.0, left_knee.y + 38.0, color, 8.0);
+  canvas.line(x + 4.0, y + 10.0, right_knee.x, right_knee.y, color, 8.0);
+  canvas.line(right_knee.x, right_knee.y, right_knee.x + 12.0, right_knee.y + 38.0, color, 8.0);
 }
+
+[[nodiscard]] double smooth(double value) { return value * value * (3.0 - 2.0 * value); }
+
+class CrossfadeExample final {
+ public:
+  void frame(const Frame& frame) {
+    if (frame.input.pointer_pressed && !transitioning_) {
+      destination_locomotion_ = !locomotion_;
+      transition_from_ = locomotion_weight_;
+      transition_to_ = destination_locomotion_ ? 1.0 : 0.0;
+      transition_time_ = 0.0;
+      transitioning_ = true;
+    }
+    phase_ = std::fmod(phase_ + frame.delta_time, 2.0);
+    if (transitioning_) {
+      transition_time_ += frame.delta_time;
+      const double amount = std::clamp(transition_time_ / 1.2, 0.0, 1.0);
+      locomotion_weight_ = transition_from_ + (transition_to_ - transition_from_) * smooth(amount);
+      if (amount >= 1.0) {
+        transitioning_ = false;
+        locomotion_ = destination_locomotion_;
+      }
+    }
+    draw(frame);
+  }
+
+ private:
+  void draw(const Frame& frame) const {
+    auto& canvas = frame.canvas;
+    canvas.text("Animation State Machine", 24.0, 18.0, 0xffffffffU, 26.0);
+    canvas.text("Idle -> N-way locomotion | masked additive body layer", 24.0, 54.0, 0x9aa9c7ffU, 14.0);
+    canvas.line(30.0, 366.0, 770.0, 366.0, 0x34405affU, 2.0);
+    draw_character(canvas, 115.0, 265.0, -3.0, 3.0, 0x7086adffU);
+    draw_character(canvas, 685.0, 259.0, -28.0, 28.0, 0xf0a85bffU);
+
+    const double wave = std::sin(phase_ * std::numbers::pi);
+    const double idle_body = -std::abs(wave);
+    const double idle_left = -3.0 * wave;
+    const double idle_right = 3.0 * wave;
+    const double walk_body = -12.0 * std::abs(wave);
+    const double run_body = -18.0 * std::abs(wave);
+    const double walk_left = -28.0 * wave;
+    const double walk_right = 28.0 * wave;
+    const double run_left = -45.0 * wave;
+    const double run_right = 45.0 * wave;
+    const double locomotion_body = walk_body * 0.7 + run_body * 0.3 - 3.0 * std::abs(wave);
+    const double locomotion_left = walk_left * 0.7 + run_left * 0.3;
+    const double locomotion_right = walk_right * 0.7 + run_right * 0.3;
+    const double body = idle_body + (locomotion_body - idle_body) * locomotion_weight_;
+    const double left = idle_left + (locomotion_left - idle_left) * locomotion_weight_;
+    const double right = idle_right + (locomotion_right - idle_right) * locomotion_weight_;
+    draw_character(canvas, 400.0, 265.0 + body, left, right, 0x63e6beffU);
+
+    canvas.text("IDLE", 86.0, 390.0, 0x7086adffU, 14.0);
+    canvas.text("BLENDED POSE", 330.0, 390.0, 0x63e6beffU, 14.0);
+    canvas.text("WALK/RUN", 644.0, 390.0, 0xf0a85bffU, 14.0);
+    canvas.fill_rectangle(240.0, 414.0, 320.0, 12.0, 0x2c3850ffU);
+    canvas.fill_rectangle(240.0, 414.0, std::max(0.32, 320.0 * locomotion_weight_), 12.0, 0x63e6beffU);
+    const std::string status = transitioning_
+                                   ? "Idle -> locomotion  " + std::to_string(static_cast<int>(locomotion_weight_ * 100.0)) + "%"
+                                   : locomotion_ ? "Locomotion | walk/run + masked body accent" : "Idle";
+    canvas.text(status, 250.0, 438.0, 0xffffffffU, 15.0);
+    canvas.text("CLICK THE SCENE TO CROSSFADE", 283.0, 470.0, 0x8294b7ffU, 13.0);
+  }
+
+  double phase_{};
+  double locomotion_weight_{};
+  double transition_from_{};
+  double transition_to_{};
+  double transition_time_{};
+  bool locomotion_{};
+  bool destination_locomotion_{};
+  bool transitioning_{};
+};
 
 } // namespace
 
-int main() {
-  using namespace flight::node;
-  using namespace flight::shape;
-  using namespace flight::scene2d;
-  using namespace flight::animation;
-
-  auto root = create_display_object(std::nullopt);
-
-  auto idleClip = body_clip(flight::Array<double>{0.0, -1.0, 0.0, -1.0, 0.0});
-  auto walkClip = body_clip(flight::Array<double>{0.0, -4.0, 0.0, -4.0, 0.0});
-  auto runClip = body_clip(flight::Array<double>{0.0, -8.0, 0.0, -8.0, 0.0});
-
-  auto idlePlayer = create_animation_player(idleClip);
-  auto walkPlayer = create_animation_player(walkClip);
-  auto runPlayer = create_animation_player(runClip);
-
-  // Character visual: simple stick figure.
-  auto body = create_shape(std::nullopt);
-  append_shape_begin_fill(body, 0x4488eeff);
-  append_shape_rectangle(body, -15.0, -40.0, 30.0, 50.0);
-  append_shape_end_fill(body);
-  body->x = 400.0;
-  body->y = 250.0;
-  invalidate_node_local_transform(body);
-  add_node_child(root, body);
-
-  auto leftLeg = create_shape(std::nullopt);
-  append_shape_line_style(leftLeg, 4.0, 0x4488eeff);
-  append_shape_move_to(leftLeg, -8.0, 10.0);
-  append_shape_line_to(leftLeg, -8.0, 50.0);
-  leftLeg->x = 400.0;
-  leftLeg->y = 250.0;
-  invalidate_node_local_transform(leftLeg);
-  add_node_child(root, leftLeg);
-
-  auto rightLeg = create_shape(std::nullopt);
-  append_shape_line_style(rightLeg, 4.0, 0x4488eeff);
-  append_shape_move_to(rightLeg, 8.0, 10.0);
-  append_shape_line_to(rightLeg, 8.0, 50.0);
-  rightLeg->x = 400.0;
-  rightLeg->y = 250.0;
-  invalidate_node_local_transform(rightLeg);
-  add_node_child(root, rightLeg);
-
-  // State label.
-  auto stateLabel = flight::text::create_text_label();
-  stateLabel->data->text = flight::String("State: idle");
-  stateLabel->x = 20.0;
-  stateLabel->y = 20.0;
-  invalidate_node_local_transform(stateLabel);
-  add_node_child(root, stateLabel);
-
-  auto idleToWalk = create_animation_crossfade(idlePlayer, walkPlayer, 0.3);
-  for (int frame = 0; frame < 60; ++frame) {
-    advance_animation_crossfade(idleToWalk, 1.0 / 60.0);
+int main(int argc, char** argv) {
+  try {
+    CrossfadeExample example;
+    return flight::examples::SdlExample::run(
+        argc,
+        argv,
+        "Flight animation crossfade - SDL",
+        [&](const Frame& frame) { example.frame(frame); });
+  } catch (const std::exception& error) {
+    std::cerr << "crossfade example failed: " << error.what() << '\n';
+    return EXIT_FAILURE;
   }
-
-  auto walkToRun = create_animation_crossfade(walkPlayer, runPlayer, 0.3);
-  for (int frame = 0; frame < 60; ++frame) {
-    advance_animation_crossfade(walkToRun, 1.0 / 60.0);
-  }
-
-  const bool completed = is_animation_crossfade_complete(walkToRun);
-
-  std::cout << "Flight crossfade example (naive C++ port): "
-            << "idle/walk/run body tracks, "
-            << "completed=" << (completed ? "true" : "false")
-            << ", final weight=" << walkToRun->weight << "\n";
-  return 0;
 }
