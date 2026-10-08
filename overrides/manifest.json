@@ -1934,6 +1934,34 @@
       "unblocks": "wgpu_render_pass.hpp and the WGPU effect/render-state consumers compile through an explicit profile boundary.",
       "expires": "when the SDL WGPU profile exposes the encoder and render-pass operation ABI used by this module.",
       "authoredOn": "2026-10-07"
+    },
+    {
+      "id": "scene2d-display-object-runtime-owner",
+      "path": "flight/scene2d/display_object.hpp",
+      "package": "@flighthq/scene2d",
+      "status": "complete",
+      "derivedFrom": "2567e19cd63584d211d2c1fc893eb9eae3853b6c9ca7ef4def9804b40ccbbaa2",
+      "reason": "The emitter refuses Node2D creation because its source intersection has no nominal C++ owner and refuses runtime recovery because the flattened runtime interfaces have no emitted heritage; two retained functions also use nominal pointer operations on structural rows.",
+      "change": "Constructs the schema-only DisplayObject row with its exact generated fields, attaches an initialized NodeRuntime<Node2DTraits> through EntityRuntimeKey, and exposes creation, checked runtime access, kind testing, and clip mutation over that retained owner.",
+      "equivalence": "Every default Node2D field matches the source defaults, the entity runtime is unique per node and carries the Node2D trait symbol, revision counters and hierarchy slots start at their source values, and clip mutation increments only appearance revision.",
+      "whyNotAPatchOrRepair": "The TypeScript intersection is the correct public model and a declaration repair cannot construct or recover the missing runtime owner. The runtime's structural row is the target representation, so the override completes the boundary without inventing C++ inheritance or changing source types.",
+      "unblocks": "DisplayObject construction and the common Scene2D root used by the upstream C++ example ports.",
+      "expires": "when intersection construction and exact runtime-owner recovery emit for Node2D and DisplayObject.",
+      "authoredOn": "2026-10-08"
+    },
+    {
+      "id": "shape-node2d-construction",
+      "path": "flight/shape/shape.hpp",
+      "package": "@flighthq/shape",
+      "status": "complete",
+      "derivedFrom": "fda53f62f4fc2022fa0148e4c1fb44ab1fb144d6c80d4091c3dad07d34b70b7f",
+      "reason": "The emitter refuses Shape construction at the flattened Node2D intersection and runtime assertions, while its retained command queries dereference Ref-owned data as values and model command tokens as references.",
+      "change": "Creates exact Shape and ShapeData owners with initialized Node2D runtime state, implements command clear/copy/count/empty operations over the generated token carrier, and accepts the generated partial-node construction boundary.",
+      "equivalence": "New shapes have the source kind, visibility, transforms, empty command stream, and isolated runtime revisions. Command mutations preserve token values and invalidate local content and bounds exactly once per public operation.",
+      "whyNotAPatchOrRepair": "Source spelling cannot make the independent flattened C++ owners inherit from Node2D, and declaration insertion cannot provide the constructors or correct the retained Ref and token access behavior.",
+      "unblocks": "Shape construction and drawing-command use across the upstream Scene2D examples.",
+      "expires": "when flattened Node2D creation retains exact owners and Ref/token accesses emit with their declared C++ carriers.",
+      "authoredOn": "2026-10-08"
     }
   ]
 }

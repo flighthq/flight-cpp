@@ -95,10 +95,10 @@ int main() {
                          std::min(MAP_WIDTH - CANVAS_WIDTH / (camera->zoom * 2.0), camera->x));
 
     flight::camera::get_camera_2_d_view_matrix(camera, viewMatrix);
-    world->scale_x = viewMatrix->a;
-    world->scale_y = viewMatrix->d;
-    world->x = viewMatrix->tx;
-    world->y = viewMatrix->ty;
+    flight::row_set<flight::RowKey<"scaleX">>(world, viewMatrix->a);
+    flight::row_set<flight::RowKey<"scaleY">>(world, viewMatrix->d);
+    flight::row_set<flight::RowKey<"x">>(world, viewMatrix->tx);
+    flight::row_set<flight::RowKey<"y">>(world, viewMatrix->ty);
     invalidate_node_local_transform(world);
 
     // Pick tile at screen center.
