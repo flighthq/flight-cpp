@@ -842,6 +842,23 @@
       "appliedOn": "2026-10-08"
     },
     {
+      "id": "compiler-concrete-owner-union-row-assertions",
+      "dependency": "flight-compiler",
+      "patch": "compiler-concrete-owner-union-row-assertions.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "the asserted row from flight::Ref<flight::types::PbrExtension>",
+      "rewrite": "Routes a structural assertion over a represented union through the compiler's checked union-member assertion lane, recognizes the unique union slot whose native reference is the asserted row's exact owner, and selects that slot instead of diagnosing an unrelated wider base arm.",
+      "equivalence": "The emitted C++ performs std::get for the exact concrete reference alternative already retained by the source union, so a wrong active arm fails rather than being reinterpreted. The resulting StructuralRef is constructed over that same shared owner; no object, cells, identity, or side storage are added. Assertions without one exact owner slot retain their existing refusal, including anonymous structural facets and base owners lacking target members.",
+      "verification": "A focused backend regression models an open Extension arm beside redundant Anisotropy and Clearcoat concrete arms, asserts the callback value to Readonly<Anisotropy>, verifies selection of Ref<Anisotropy>, and passes the native C++ syntax gate.",
+      "whyNotUpstreamFirst": "The pinned compiler otherwise emits structural_ref_cast directly over std::variant, which has no such runtime overload, or refuses against the open base arm despite the exact owner being retained as another alternative. The narrow emitter repair uses the existing checked variant contract and is versioned against the pinned compiler.",
+      "unblocks": "Allows built-in PBR GL registration callbacks to recover the exact extension owner that PbrExtensionValue deliberately retained while keeping vendor extensions in the open base arm.",
+      "expires": "when flight-compiler selects exact retained native owners for structural assertions over represented unions, or the pinned compiler contains the regression and repair upstream.",
+      "appliedOn": "2026-10-08"
+    },
+    {
       "id": "renderable-concrete-node-arms",
       "dependency": "flight",
       "patch": "renderable-concrete-node-arms.patch",
@@ -855,6 +872,22 @@
       "whyNotUpstreamFirst": "This is an erased, target-neutral type expansion of two already-included subtypes. It preserves the open NodeAny contract while exposing concrete carrier evidence the current emitter loses when it lowers TypeScript any as one C++ template argument.",
       "unblocks": "Allows exact Node2D and Node3D owners to flow through Renderable, its WeakMap and Set storage, and shared render-proxy APIs without casts, materialization, or side storage.",
       "expires": "when emitted generic specializations preserve TypeScript assignability into Node<any>, or Flight keeps the redundant concrete arms upstream.",
+      "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "pbr-extension-concrete-value-arms",
+      "dependency": "flight",
+      "patch": "pbr-extension-concrete-value-arms.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types/src/PbrExtension.ts, ExtendedPbrMaterial.ts, GlPbrExtensionRegistration.ts, GlScene3DRuntime.ts plus packages/scene3d-gl/src/glPbrExtensionRegistry.ts and enableGlPbrExtensionGuards.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "the asserted row from flight::Ref<flight::types::PbrExtension>",
+      "rewrite": "Names the seven built-in PBR extension interfaces as redundant arms beside the open PbrExtension arm, then carries that semantically identical value union through ExtendedPbrMaterial storage, GL registrations, runtime guards, and extension dispatch.",
+      "equivalence": "Every named built-in interface already extends PbrExtension, so PbrExtensionValue accepts exactly the same TypeScript values as PbrExtension, including arbitrary vendor extensions through the original open arm. Type aliases and redundant union arms erase from JavaScript; extension objects, arrays, registration callbacks, ordering, duplicate detection, shader composition, binding, and identity are unchanged.",
+      "whyNotUpstreamFirst": "The source API deliberately remains vendor-extensible, while the pinned C++ emitter flattens an object first retained through the open base arm and cannot recover its built-in fields later. Redundant exact arms are a target-neutral statement of owners already in the value domain and preserve the open public contract.",
+      "unblocks": "Retains Anisotropy, Clearcoat, Iridescence, Sheen, Specular, TransmissionVolume, and WrappedDiffuse extension owners through real ExtendedPbrMaterial arrays and the GL registry callbacks so their existing upstream shader and texture-binding implementations can emit.",
+      "expires": "when heterogeneous structural storage preserves checked concrete owner identity through open base-interface arms, or Flight adopts the explicit value union upstream.",
       "appliedOn": "2026-10-08"
     }
   ]

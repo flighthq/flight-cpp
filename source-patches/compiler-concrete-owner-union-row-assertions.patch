@@ -1,0 +1,99 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index d30c0ce..55f06ec 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -26631,6 +26631,31 @@ int main() {
+     );
+   });
+ 
++  it('selects a redundant concrete reference arm beside an open base arm', () => {
++    const result = lower(
++      'open-reference-union-cast.ts',
++      `interface Extension { readonly kind: string; }
++       interface Anisotropy extends Extension { readonly kind: 'anisotropy'; strength: number; }
++       interface Clearcoat extends Extension { readonly kind: 'clearcoat'; factor: number; }
++       type ExtensionValue = Extension | Anisotropy | Clearcoat;
++       interface Registration { bind(value: Readonly<ExtensionValue>): number; }
++       export const registration: Registration = {
++         bind(value): number {
++           const extension = value as Readonly<Anisotropy>;
++           return extension.strength;
++         },
++       };`,
++    );
++    const emitted = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' });
++
++    expect(emitted.contents).toContain('std::get<flight::Ref<Anisotropy>>');
++    if (cppSyntaxGate.available) {
++      const syntax = cppSyntaxGate.checkCppSourceSyntax(emitted.contents, 'open-reference-union-cast');
++      expect(syntax.diagnostic).toBe('');
++      expect(syntax.ok).toBe(true);
++    }
++  });
++
+   it('emits tuple types and tuple access with std::get', () => {
+     const result = lower('tuple.ts', 'export function first(pair: [number, string]): number { return pair[0]; }');
+     const emitted = emitIrModuleCpp(result.module);
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index fae6209..1208e01 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -4401,6 +4401,12 @@ function emitExpression(
+         if (expression.expression.kind === 'object') {
+           return emitExpression(expression.expression, context, expression.type);
+         }
++        const unionStructuralAssertion = emitUnionMemberAssertionCpp(
++          structuralSourceExpression,
++          expression.type,
++          context,
++        );
++        if (unionStructuralAssertion) return unionStructuralAssertion;
+         if (!structuralSource && isCppErasedDynamicValueTypeCpp(structuralSourceType)) {
+           if (representedErasedStructuralSource && representedErasedStructuralProjection) {
+             const sourceName = describeDeclaredIrTypeForDiagnosticCpp(representedErasedStructuralSource.type);
+@@ -14420,6 +14426,21 @@ function emitUnionMemberAssertionCpp(
+   // refuses rather than emitting something that cannot compile.
+   const assertedUnion = getIrUnionTypeCpp(assertedType, context, new Set());
+   const assertedPlan = assertedUnion ? getCppUnionRepresentationPlan(assertedUnion, context) : undefined;
++  const assertedStructuralRow = context.referenceRepresentationPlanner.resolveStructuralRow(
++    assertedType,
++    context.module,
++  );
++  const assertedStructuralOwner = assertedStructuralRow
++    ? getCppStructuralRowObjectTypeCpp(assertedStructuralRow)
++    : undefined;
++  const assertedStructuralOwnerTarget = assertedStructuralOwner
++    ? emitType(assertedStructuralOwner, assertionContext)
++    : undefined;
++  const exactStructuralOwnerSlots = assertedStructuralOwnerTarget
++    ? plan.valueSlots.filter((slot) => slot.targetType === assertedStructuralOwnerTarget)
++    : [];
++  const exactStructuralOwnerSlot =
++    exactStructuralOwnerSlots.length === 1 ? exactStructuralOwnerSlots[0] : undefined;
+   const structuralAlternative = getCppStructuralUnionAssertionAlternativeCpp(plan, assertedPlan, assertedType, context);
+   if (structuralAlternative) {
+     emissionError(
+@@ -14464,6 +14485,7 @@ function emitUnionMemberAssertionCpp(
+       narrowing !== undefined ||
+       structuralNarrowing ||
+       partialStructuralNarrowing !== undefined ||
++      slot === exactStructuralOwnerSlot ||
+       slot.targetType === assertedTarget ||
+       slot.sourceAlternatives.some((member) => isDeepStrictEqual(member, assertedType)) ||
+       isCppNominalHeritageUnionSlotCpp(slot, assertedType, context),
+@@ -14583,12 +14605,9 @@ function emitUnionMemberAssertionCpp(
+     // lowered yet when what actually blocks it is identity the carrier never held.
+     const projectedImplementor =
+       !namesSourceUnion && isCppProjectedInterfaceImplementorAssertionCpp(assertedType, assertedPlan, plan, context);
+-    const missingStructuralOwner = getCppStructuralAssertionMissingOwnerPairCpp(
+-      plan,
+-      assertedPlan,
+-      assertedType,
+-      context,
+-    );
++    const missingStructuralOwner = exactStructuralOwnerSlot
++      ? undefined
++      : getCppStructuralAssertionMissingOwnerPairCpp(plan, assertedPlan, assertedType, context);
+     if (missingStructuralOwner) {
+       refuseCppStructuralAssertionOwnerUnprovenCpp(
+         context,
