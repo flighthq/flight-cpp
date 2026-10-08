@@ -549,7 +549,18 @@ function writeStructuralMemberTable(outputRoot, files) {
   // declaration having emitted successfully first.
   const names = new Set(['dimension', 'sampler']);
   const rowKey = /flight::RowKey<"(?<name>(?:[^"\\]|\\.)*)">/gu;
-  for (const file of files) {
+  // Overrides are part of the installed SDK surface and can contain the only retained use of a
+  // RowKey when the generated declaration that used it was refused wholesale. Omitting those keys
+  // makes an otherwise complete override fail at row_get even though its native owner declares the
+  // member. Include their vocabulary in the same deterministic table; requires-expressions keep a
+  // key inert for every owner that does not declare the corresponding member.
+  const overrideDirectory = path.join(root, 'overrides', 'include');
+  const overrideFiles = existsSync(overrideDirectory)
+    ? filesUnder(overrideDirectory)
+        .filter((filename) => filename.endsWith('.hpp'))
+        .map((sourcePath) => ({ contents: readFileSync(sourcePath, 'utf8'), sourcePath }))
+    : [];
+  for (const file of [...files, ...overrideFiles]) {
     for (const match of file.contents.matchAll(rowKey)) {
       if (match.groups?.name !== undefined) names.add(JSON.parse(`"${match.groups.name}"`));
     }

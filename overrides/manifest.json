@@ -1294,6 +1294,22 @@
       "authoredOn": "2026-10-06"
     },
     {
+      "id": "materials-surface-exact-owner-construction",
+      "path": "flight/materials/surface_material.hpp",
+      "package": "@flighthq/materials",
+      "status": "complete",
+      "supplies": "packages/materials/src/surfaceMaterial.ts",
+      "derivedFrom": "4e7f886fbc470a204019415bd7c1d6dc673d7659f95c2ab8e774ae7bbfacd745",
+      "reason": "The emitter refuses createSurfaceMaterial because its generated createMaterial call appears to allocate a base Material owner and the target owner has no nominal C++ heritage to cast along, even though the source factory is generic in the exact owner it allocates.",
+      "change": "Retains the generic exact-owner material factory through the shared surface initializer and applies the four upstream option fields through their generated structural row, falling back to the same constants when absent.",
+      "equivalence": "Each call allocates and returns the requested concrete owner once, preserves kind and identity, and initializes alpha cutoff, alpha mode, blend mode, and double-sided state in source order from the same option values and defaults. No owner cast or replacement object is introduced.",
+      "whyNotAPatchOrRepair": "A declaration repair cannot supply the refused constructor body. The upstream source already expresses the required generic exact-owner allocation; rewriting it to mention C++ allocation or nominal owner layout would be target-specific.",
+      "unblocks": "Every emitted classic, PBR, unlit, and custom-shader constructor can initialize its real concrete material owner through the shared surface layer.",
+      "remaining": "None in this module.",
+      "expires": "when generic exact-owner createMaterial calls retain their target owner through createSurfaceMaterial emission.",
+      "authoredOn": "2026-10-08"
+    },
+    {
       "id": "materials-classic-optional-texture-variants",
       "path": "flight/materials/classic_materials.hpp",
       "package": "@flighthq/materials",
