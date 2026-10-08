@@ -3,14 +3,15 @@
 
 #include "sdl_host.hpp"
 
+#include <flight/collision/manifold2_d.hpp>
+#include <flight/collision/shape_collision2_d.hpp>
+
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <exception>
 #include <iostream>
-#include <limits>
 #include <numbers>
-#include <utility>
 #include <vector>
 
 namespace {
@@ -23,18 +24,13 @@ constexpr std::uint32_t color_idle = 0x4488ccffU;
 constexpr std::uint32_t color_colliding = 0xcc4444ffU;
 constexpr std::uint32_t color_mtv = 0x44cc44ffU;
 
-enum class Kind { circle, polygon };
+enum class Kind { circle, aabb, polygon };
 
 struct Collider final {
   Kind kind{};
   Point center{};
   double radius{};
   std::vector<Point> points;
-};
-
-struct Manifold final {
-  Point normal{};
-  double depth{};
 };
 
 [[nodiscard]] std::vector<Point> regular_polygon(Point center, double radius, int sides) {
@@ -51,7 +47,7 @@ struct Manifold final {
 
 [[nodiscard]] Collider rectangle(Point center, double half_width, double half_height) {
   return {
-      .kind = Kind::polygon,
+      .kind = Kind::aabb,
       .center = center,
       .radius = 0.0,
       .points = {
@@ -63,84 +59,87 @@ struct Manifold final {
   };
 }
 
-[[nodiscard]] Point normalized(Point point) {
-  const double length = std::hypot(point.x, point.y);
-  return length == 0.0 ? Point{1.0, 0.0} : Point{point.x / length, point.y / length};
+[[nodiscard]] flight::Ref<flight::types::CollisionCircle2D> as_circle(const Collider& collider) {
+  return flight::make_ref<flight::types::CollisionCircle2D>(flight::types::CollisionCircle2D{
+      .x = collider.center.x,
+      .y = collider.center.y,
+      .radius = collider.radius,
+  });
 }
 
-[[nodiscard]] std::pair<double, double> project(const Collider& collider, Point axis) {
-  if (collider.kind == Kind::circle) {
-    const double center = collider.center.x * axis.x + collider.center.y * axis.y;
-    return {center - collider.radius, center + collider.radius};
-  }
-  double minimum = std::numeric_limits<double>::infinity();
-  double maximum = -std::numeric_limits<double>::infinity();
-  for (const auto& point : collider.points) {
-    const double value = point.x * axis.x + point.y * axis.y;
-    minimum = std::min(minimum, value);
-    maximum = std::max(maximum, value);
-  }
-  return {minimum, maximum};
+[[nodiscard]] flight::Ref<flight::types::CollisionAabb2D> as_aabb(const Collider& collider) {
+  return flight::make_ref<flight::types::CollisionAabb2D>(flight::types::CollisionAabb2D{
+      .min_x = collider.points[0].x,
+      .min_y = collider.points[0].y,
+      .max_x = collider.points[2].x,
+      .max_y = collider.points[2].y,
+  });
 }
 
-void append_axes(const Collider& collider, std::vector<Point>& axes) {
-  if (collider.kind == Kind::circle) return;
-  for (std::size_t index = 0; index < collider.points.size(); ++index) {
-    const Point from = collider.points[index];
-    const Point to = collider.points[(index + 1) % collider.points.size()];
-    axes.push_back(normalized({-(to.y - from.y), to.x - from.x}));
-  }
+[[nodiscard]] flight::Ref<flight::types::CollisionPolygon2D> as_polygon(const Collider& collider) {
+  flight::Array<double> points;
+  for (const auto& point : collider.points) points.push(point.x, point.y);
+  return flight::make_ref<flight::types::CollisionPolygon2D>(
+      flight::types::CollisionPolygon2D{.points = std::move(points)});
 }
 
-[[nodiscard]] bool collide(const Collider& a, const Collider& b, Manifold& manifold) {
+[[nodiscard]] bool test_pair_collision(
+    const Collider& a,
+    const Collider& b,
+    const flight::Ref<flight::types::CollisionManifold2D>& out) {
+  using namespace flight::collision;
   if (a.kind == Kind::circle && b.kind == Kind::circle) {
-    const Point delta{b.center.x - a.center.x, b.center.y - a.center.y};
-    const double distance = std::hypot(delta.x, delta.y);
-    const double depth = a.radius + b.radius - distance;
-    if (depth <= 0.0) return false;
-    manifold = {.normal = normalized(delta), .depth = depth};
-    return true;
+    return test_circle_circle_collision2_d(as_circle(a), as_circle(b), out);
   }
-
-  std::vector<Point> axes;
-  append_axes(a, axes);
-  append_axes(b, axes);
-  const Collider* circle = a.kind == Kind::circle ? &a : b.kind == Kind::circle ? &b : nullptr;
-  const Collider* polygon = a.kind == Kind::polygon ? &a : &b;
-  if (circle != nullptr) {
-    const auto closest = std::ranges::min_element(
-        polygon->points,
-        {},
-        [&](Point point) {
-          return std::hypot(point.x - circle->center.x, point.y - circle->center.y);
-        });
-    axes.push_back(normalized({closest->x - circle->center.x, closest->y - circle->center.y}));
+  if (a.kind == Kind::circle && b.kind == Kind::aabb) {
+    return test_circle_aabb_collision2_d(as_circle(a), as_aabb(b), out);
   }
-
-  double minimum_overlap = std::numeric_limits<double>::infinity();
-  Point minimum_axis{};
-  for (Point axis : axes) {
-    const auto [a_minimum, a_maximum] = project(a, axis);
-    const auto [b_minimum, b_maximum] = project(b, axis);
-    const double overlap = std::min(a_maximum, b_maximum) - std::max(a_minimum, b_minimum);
-    if (overlap <= 0.0) return false;
-    if (overlap < minimum_overlap) {
-      minimum_overlap = overlap;
-      minimum_axis = axis;
+  if (a.kind == Kind::aabb && b.kind == Kind::circle) {
+    const bool result = test_circle_aabb_collision2_d(as_circle(b), as_aabb(a), out);
+    if (result) {
+      out->normal_x = -out->normal_x;
+      out->normal_y = -out->normal_y;
     }
+    return result;
   }
-  const Point direction{b.center.x - a.center.x, b.center.y - a.center.y};
-  if (direction.x * minimum_axis.x + direction.y * minimum_axis.y < 0.0) {
-    minimum_axis.x = -minimum_axis.x;
-    minimum_axis.y = -minimum_axis.y;
+  if (a.kind == Kind::aabb && b.kind == Kind::aabb) {
+    return test_aabb_aabb_collision2_d(as_aabb(a), as_aabb(b), out);
   }
-  manifold = {.normal = minimum_axis, .depth = minimum_overlap};
-  return true;
+  if (a.kind == Kind::circle && b.kind == Kind::polygon) {
+    return test_circle_polygon_collision2_d(as_circle(a), as_polygon(b), out);
+  }
+  if (a.kind == Kind::polygon && b.kind == Kind::circle) {
+    const bool result = test_circle_polygon_collision2_d(as_circle(b), as_polygon(a), out);
+    if (result) {
+      out->normal_x = -out->normal_x;
+      out->normal_y = -out->normal_y;
+    }
+    return result;
+  }
+  if (a.kind == Kind::polygon && b.kind == Kind::polygon) {
+    return test_polygon_polygon_collision2_d(as_polygon(a), as_polygon(b), out);
+  }
+  if (a.kind == Kind::aabb && b.kind == Kind::polygon) {
+    return test_aabb_polygon_collision2_d(as_aabb(a), as_polygon(b), out);
+  }
+  if (a.kind == Kind::polygon && b.kind == Kind::aabb) {
+    const bool result = test_aabb_polygon_collision2_d(as_aabb(b), as_polygon(a), out);
+    if (result) {
+      out->normal_x = -out->normal_x;
+      out->normal_y = -out->normal_y;
+    }
+    return result;
+  }
+  return false;
 }
 
 [[nodiscard]] bool contains(const Collider& collider, Point point) {
   if (collider.kind == Kind::circle) {
     return std::hypot(point.x - collider.center.x, point.y - collider.center.y) <= collider.radius;
+  }
+  if (collider.kind == Kind::aabb) {
+    return point.x >= collider.points[0].x && point.x <= collider.points[2].x &&
+           point.y >= collider.points[0].y && point.y <= collider.points[2].y;
   }
   bool inside = false;
   for (std::size_t index = 0, previous = collider.points.size() - 1;
@@ -173,7 +172,8 @@ class CollisionExample final {
             Collider{.kind = Kind::circle, .center = {285.0, 190.0}, .radius = 46.0, .points = {}},
             rectangle({500.0, 310.0}, 70.0, 55.0),
             Collider{.kind = Kind::polygon, .center = {545.0, 325.0}, .radius = 0.0, .points = regular_polygon({545.0, 325.0}, 60.0, 5)},
-        } {}
+        },
+        manifold_(flight::collision::create_collision_manifold2_d()) {}
 
   void frame(const Frame& frame) {
     handle_drag(frame);
@@ -186,11 +186,14 @@ class CollisionExample final {
     std::vector<Arrow> arrows;
     for (std::size_t first = 0; first < colliders_.size(); ++first) {
       for (std::size_t second = first + 1; second < colliders_.size(); ++second) {
-        Manifold manifold;
-        if (collide(colliders_[first], colliders_[second], manifold)) {
+        if (test_pair_collision(colliders_[first], colliders_[second], manifold_)) {
           colliding[first] = true;
           colliding[second] = true;
-          arrows.push_back({colliders_[first].center, manifold.normal, manifold.depth * 2.0});
+          arrows.push_back({
+              colliders_[first].center,
+              {manifold_->normal_x, manifold_->normal_y},
+              manifold_->depth * 2.0,
+          });
         }
       }
     }
@@ -258,6 +261,7 @@ class CollisionExample final {
   }
 
   std::vector<Collider> colliders_;
+  flight::Ref<flight::types::CollisionManifold2D> manifold_;
   std::size_t dragged_{colliders_.size()};
   Point drag_offset_{};
 };

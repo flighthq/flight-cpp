@@ -3,14 +3,15 @@
 
 #include "sdl_host.hpp"
 
-#include <algorithm>
-#include <array>
+#include <flight/spatial/spatial_index.hpp>
+#include <flight/spatial/uniform_grid.hpp>
+#include <flight/types/spatial.hpp>
+
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
 #include <exception>
 #include <iostream>
-#include <limits>
 #include <string>
 #include <vector>
 
@@ -28,10 +29,8 @@ constexpr std::uint32_t color_ray = 0xcccc44ffU;
 constexpr std::uint32_t color_region = 0x44ccccffU;
 
 struct Object final {
-  double x{};
-  double y{};
-  double width{};
-  double height{};
+  double id{};
+  flight::Ref<flight::types::SpatialAabb2D> bounds;
   double velocity_x{};
   double velocity_y{};
 };
@@ -48,34 +47,6 @@ class Random final {
   std::uint32_t state_{0x05a171a1U};
 };
 
-[[nodiscard]] bool overlaps(const Object& a, const Object& b) {
-  return a.x <= b.x + b.width && a.x + a.width >= b.x &&
-         a.y <= b.y + b.height && a.y + a.height >= b.y;
-}
-
-[[nodiscard]] bool contains(const Object& object, double x, double y) {
-  return x >= object.x && x <= object.x + object.width &&
-         y >= object.y && y <= object.y + object.height;
-}
-
-[[nodiscard]] bool ray_hits(const Object& object, double direction_x, double direction_y) {
-  constexpr double origin_x = 0.0;
-  constexpr double origin_y = height / 2.0;
-  double minimum = 0.0;
-  double maximum = std::numeric_limits<double>::infinity();
-  const auto axis = [&](double origin, double direction, double low, double high) {
-    if (std::abs(direction) < 1e-9) return origin >= low && origin <= high;
-    double first = (low - origin) / direction;
-    double second = (high - origin) / direction;
-    if (first > second) std::swap(first, second);
-    minimum = std::max(minimum, first);
-    maximum = std::min(maximum, second);
-    return minimum <= maximum;
-  };
-  return axis(origin_x, direction_x, object.x, object.x + object.width) &&
-         axis(origin_y, direction_y, object.y, object.y + object.height) && maximum >= 0.0;
-}
-
 enum class Mode { pairs, point, ray, region };
 
 [[nodiscard]] std::string_view mode_name(Mode mode) {
@@ -90,7 +61,9 @@ enum class Mode { pairs, point, ray, region };
 
 class SpatialExample final {
  public:
-  SpatialExample() {
+  SpatialExample()
+      : index_(flight::spatial::create_spatial_index2_d(
+            flight::spatial::create_uniform_grid_spatial_backend2_d(100.0))) {
     Random random;
     for (int index = 0; index < 20; ++index) {
       const double object_width = random.range(30.0, 80.0);
@@ -98,14 +71,20 @@ class SpatialExample final {
       const double x = random.range(10.0, width - object_width - 10.0);
       const double y = random.range(40.0, height - object_height - 50.0);
       const bool moving = index < 5;
-      objects_.push_back({
-          x,
-          y,
-          object_width,
-          object_height,
-          moving ? random.range(-30.0, 30.0) : 0.0,
-          moving ? random.range(-30.0, 30.0) : 0.0,
+      auto bounds = flight::make_ref<flight::types::SpatialAabb2D>(
+          flight::types::SpatialAabb2D{
+              .min_x = x,
+              .min_y = y,
+              .max_x = x + object_width,
+              .max_y = y + object_height,
+          });
+      objects_.push_back(Object{
+          .id = static_cast<double>(index),
+          .bounds = bounds,
+          .velocity_x = moving ? random.range(-30.0, 30.0) : 0.0,
+          .velocity_y = moving ? random.range(-30.0, 30.0) : 0.0,
       });
+      flight::spatial::insert_spatial_object2_d(index_, static_cast<double>(index), bounds);
     }
   }
 
@@ -120,25 +99,31 @@ class SpatialExample final {
     std::vector<bool> highlighted(objects_.size());
     int results{};
     if (mode == Mode::pairs) {
-      for (std::size_t first = 0; first < objects_.size(); ++first) {
-        for (std::size_t second = first + 1; second < objects_.size(); ++second) {
-          if (overlaps(objects_[first], objects_[second])) {
-            highlighted[first] = true;
-            highlighted[second] = true;
-            ++results;
-          }
-        }
+      flight::spatial::query_spatial_pairs2_d(index_, pairs_out_);
+      results = static_cast<int>(pairs_out_.size());
+      for (const auto& pair : pairs_out_) {
+        highlight(pair->a, highlighted);
+        highlight(pair->b, highlighted);
       }
     } else {
-      const Object region{mouse_x - 50.0, mouse_y - 50.0, 100.0, 100.0, 0.0, 0.0};
-      for (std::size_t index = 0; index < objects_.size(); ++index) {
-        const bool hit = mode == Mode::point ? contains(objects_[index], mouse_x, mouse_y)
-                       : mode == Mode::region ? overlaps(objects_[index], region)
-                       : ray_hits(objects_[index], mouse_x, mouse_y - height / 2.0);
-        if (hit) {
-          highlighted[index] = true;
-          ++results;
-        }
+      if (mode == Mode::point) {
+        flight::spatial::query_spatial_point2_d(index_, mouse_x, mouse_y, ids_out_);
+      } else if (mode == Mode::ray) {
+        flight::spatial::query_spatial_ray2_d(
+            index_, 0.0, height / 2.0, mouse_x, mouse_y - height / 2.0, ids_out_);
+      } else {
+        const auto region = flight::make_ref<flight::types::SpatialAabb2D>(
+            flight::types::SpatialAabb2D{
+                .min_x = mouse_x - 50.0,
+                .min_y = mouse_y - 50.0,
+                .max_x = mouse_x + 50.0,
+                .max_y = mouse_y + 50.0,
+            });
+        flight::spatial::query_spatial_region2_d(index_, region, ids_out_);
+      }
+      results = static_cast<int>(ids_out_.size());
+      for (const double id : ids_out_) {
+        highlight(id, highlighted);
       }
     }
     draw(frame.canvas, mode, highlighted, results, mouse_x, mouse_y);
@@ -148,25 +133,40 @@ class SpatialExample final {
   void update(double delta_time) {
     for (std::size_t index = 0; index < 5; ++index) {
       auto& object = objects_[index];
-      object.x += object.velocity_x * delta_time;
-      object.y += object.velocity_y * delta_time;
-      if (object.x < 0.0) {
-        object.x = 0.0;
+      auto& bounds = *object.bounds;
+      const double object_width = bounds.max_x - bounds.min_x;
+      const double object_height = bounds.max_y - bounds.min_y;
+      bounds.min_x += object.velocity_x * delta_time;
+      bounds.min_y += object.velocity_y * delta_time;
+      bounds.max_x = bounds.min_x + object_width;
+      bounds.max_y = bounds.min_y + object_height;
+      if (bounds.min_x < 0.0) {
+        bounds.min_x = 0.0;
+        bounds.max_x = object_width;
         object.velocity_x = std::abs(object.velocity_x);
       }
-      if (object.x + object.width > width) {
-        object.x = width - object.width;
+      if (bounds.max_x > width) {
+        bounds.max_x = width;
+        bounds.min_x = width - object_width;
         object.velocity_x = -std::abs(object.velocity_x);
       }
-      if (object.y < 0.0) {
-        object.y = 0.0;
+      if (bounds.min_y < 0.0) {
+        bounds.min_y = 0.0;
+        bounds.max_y = object_height;
         object.velocity_y = std::abs(object.velocity_y);
       }
-      if (object.y + object.height > height) {
-        object.y = height - object.height;
+      if (bounds.max_y > height) {
+        bounds.max_y = height;
+        bounds.min_y = height - object_height;
         object.velocity_y = -std::abs(object.velocity_y);
       }
+      flight::spatial::update_spatial_object2_d(index_, object.id, object.bounds);
     }
+  }
+
+  void highlight(double id, std::vector<bool>& highlighted) const {
+    const auto index = static_cast<std::size_t>(id);
+    if (index < highlighted.size()) highlighted[index] = true;
   }
 
   void draw(
@@ -184,9 +184,21 @@ class SpatialExample final {
                                                            : color_overlap;
     for (std::size_t index = 0; index < objects_.size(); ++index) {
       const auto& object = objects_[index];
+      const auto& bounds = *object.bounds;
       const std::uint32_t color = highlighted[index] ? hit_color : color_idle;
-      canvas.fill_rectangle(object.x, object.y, object.width, object.height, color, 0.5);
-      canvas.stroke_rectangle(object.x, object.y, object.width, object.height, 0x335577ffU);
+      canvas.fill_rectangle(
+          bounds.min_x,
+          bounds.min_y,
+          bounds.max_x - bounds.min_x,
+          bounds.max_y - bounds.min_y,
+          color,
+          0.5);
+      canvas.stroke_rectangle(
+          bounds.min_x,
+          bounds.min_y,
+          bounds.max_x - bounds.min_x,
+          bounds.max_y - bounds.min_y,
+          0x335577ffU);
     }
     if (mode == Mode::point) {
       canvas.line(mouse_x - 8.0, mouse_y, mouse_x + 8.0, mouse_y, color_point, 2.0);
@@ -215,6 +227,9 @@ class SpatialExample final {
   }
 
   std::vector<Object> objects_;
+  flight::Ref<flight::types::SpatialIndex2D> index_;
+  flight::Array<flight::Ref<flight::types::SpatialPair>> pairs_out_;
+  flight::Array<double> ids_out_;
 };
 
 } // namespace

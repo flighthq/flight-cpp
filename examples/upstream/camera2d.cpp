@@ -3,6 +3,16 @@
 
 #include "sdl_host.hpp"
 
+#include <flight/camera/camera2d.hpp>
+#include <flight/camera/parallax.hpp>
+#include <flight/camera/view_matrix.hpp>
+#include <flight/camera/visible_bounds.hpp>
+#include <flight/camera/zoom.hpp>
+#include <flight/camera_controls/follow.hpp>
+#include <flight/geometry/matrix.hpp>
+#include <flight/geometry/rectangle.hpp>
+#include <flight/geometry/vector2.hpp>
+
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -104,7 +114,24 @@ struct Mountain final {
 
 class CameraExample final {
  public:
-  CameraExample() {
+  CameraExample()
+      : camera_(flight::camera::create_camera2_d(800.0, 600.0)),
+        world_bounds_(flight::geometry::create_rectangle(0.0, 0.0, world_width, world_height)),
+        follow_options_(flight::make_ref<flight::types::Camera2DFollowOptions>(
+            flight::types::Camera2DFollowOptions{
+                .deadzone_half_height = 40.0,
+                .deadzone_half_width = 60.0,
+                .smooth_time = 0.15,
+                .world_bounds = world_bounds_,
+            })),
+        view_matrix_(flight::geometry::create_matrix()),
+        visible_bounds_(flight::geometry::create_rectangle()),
+        stars_offset_(flight::geometry::create_vector2()),
+        mountains_offset_(flight::geometry::create_vector2()),
+        clouds_offset_(flight::geometry::create_vector2()) {
+    camera_->x = world_width * 0.5;
+    camera_->y = world_height * 0.5;
+    camera_->zoom = 1.0;
     Random random;
     for (int index = 0; index < 60; ++index) {
       const bool circle = random.next() <= 0.5;
@@ -143,7 +170,7 @@ class CameraExample final {
   void frame(const Frame& frame) {
     update_player(frame);
     update_zoom(frame);
-    if (frame.smoke && frame.index == 0) zoom_ = 0.25;
+    if (frame.smoke && frame.index == 0) camera_->zoom = 0.25;
     update_camera(frame.delta_time);
     draw_parallax(frame.canvas);
     draw_world(frame.canvas);
@@ -153,8 +180,8 @@ class CameraExample final {
  private:
   [[nodiscard]] Point screen(Point world) const {
     return {
-        (world.x - camera_.x) * zoom_ + 400.0,
-        (world.y - camera_.y) * zoom_ + 300.0,
+        view_matrix_->a * world.x + view_matrix_->c * world.y + view_matrix_->tx,
+        view_matrix_->b * world.x + view_matrix_->d * world.y + view_matrix_->ty,
     };
   }
 
@@ -176,64 +203,47 @@ class CameraExample final {
 
   void update_zoom(const Frame& frame) {
     if (frame.input.wheel_y == 0.0) return;
-    const Point before{
-        camera_.x + (frame.input.pointer_x - 400.0) / zoom_,
-        camera_.y + (frame.input.pointer_y - 300.0) / zoom_,
-    };
     const double direction = frame.input.wheel_y > 0.0 ? 1.0 : -1.0;
-    const double next = std::clamp(zoom_ + direction * 0.1 * zoom_, 0.25, 4.0);
-    camera_.x = before.x - (frame.input.pointer_x - 400.0) / next;
-    camera_.y = before.y - (frame.input.pointer_y - 300.0) / next;
-    zoom_ = next;
+    const double next = std::clamp(
+        camera_->zoom + direction * 0.1 * camera_->zoom,
+        0.25,
+        4.0);
+    flight::camera::zoom_camera2_dat_screen_point(
+        camera_, frame.input.pointer_x, frame.input.pointer_y, next);
   }
 
   void update_camera(double delta_time) {
-    Point target = camera_;
-    if (player_.x < camera_.x - 60.0) target.x = player_.x + 60.0;
-    if (player_.x > camera_.x + 60.0) target.x = player_.x - 60.0;
-    if (player_.y < camera_.y - 40.0) target.y = player_.y + 40.0;
-    if (player_.y > camera_.y + 40.0) target.y = player_.y - 40.0;
-    const double smoothing = 1.0 - std::exp(-delta_time / 0.15);
-    camera_.x += (target.x - camera_.x) * smoothing;
-    camera_.y += (target.y - camera_.y) * smoothing;
-    const double half_width = 400.0 / zoom_;
-    const double half_height = 300.0 / zoom_;
-    camera_.x = constrain_axis(camera_.x, half_width, world_width);
-    camera_.y = constrain_axis(camera_.y, half_height, world_height);
-  }
-
-  [[nodiscard]] static double constrain_axis(double value, double half_view, double world_extent) {
-    if (half_view * 2.0 >= world_extent) return world_extent * 0.5;
-    return std::clamp(value, half_view, world_extent - half_view);
-  }
-
-  static double wrapped(double value, double extent) {
-    value = std::fmod(value, extent);
-    return value < 0.0 ? value + extent : value;
+    flight::camera_controls::update_camera2_dfollow(
+        camera_, player_.x, player_.y, delta_time, follow_options_);
+    flight::camera::get_camera2_dview_matrix(camera_, view_matrix_);
+    flight::camera::get_camera2_dvisible_bounds(camera_, visible_bounds_);
+    flight::camera::get_camera2_dparallax_point(camera_, 0.1, stars_offset_);
+    flight::camera::get_camera2_dparallax_point(camera_, 0.4, mountains_offset_);
+    flight::camera::get_camera2_dparallax_point(camera_, 0.6, clouds_offset_);
   }
 
   void draw_parallax(Canvas& canvas) const {
     for (const auto& star : stars_) {
       canvas.fill_circle(
-          wrapped(star.position.x - camera_.x * 0.1, 800.0),
-          wrapped(star.position.y - camera_.y * 0.1, 600.0),
+          star.position.x + stars_offset_->x,
+          star.position.y + stars_offset_->y,
           star.radius,
           0xffffd0ffU,
           star.brightness);
     }
     for (const auto& mountain : mountains_) {
-      const double x = wrapped(mountain.x - camera_.x * 0.4, 950.0) - 75.0;
+      const double x = mountain.x + mountains_offset_->x;
       const std::array<Point, 3> points{{
-          {x - mountain.width / 2.0, 600.0},
-          {x, 600.0 - mountain.peak_height},
-          {x + mountain.width / 2.0, 600.0},
+          {x - mountain.width / 2.0, 600.0 + mountains_offset_->y},
+          {x, 600.0 - mountain.peak_height + mountains_offset_->y},
+          {x + mountain.width / 2.0, 600.0 + mountains_offset_->y},
       }};
       canvas.fill_polygon(points, 0x3c5064ffU, 0.6);
     }
     for (const auto& cloud : clouds_) {
       canvas.fill_ellipse(
-          wrapped(cloud.position.x - camera_.x * 0.6, 950.0) - 75.0,
-          cloud.position.y,
+          cloud.position.x + clouds_offset_->x,
+          cloud.position.y + clouds_offset_->y,
           cloud.width / 2.0,
           cloud.height / 2.0,
           0xc8d2e6ffU,
@@ -243,10 +253,10 @@ class CameraExample final {
 
   void draw_world(Canvas& canvas) const {
     constexpr double grid = 100.0;
-    const double left = camera_.x - 400.0 / zoom_;
-    const double right = camera_.x + 400.0 / zoom_;
-    const double top = camera_.y - 300.0 / zoom_;
-    const double bottom = camera_.y + 300.0 / zoom_;
+    const double left = visible_bounds_->x;
+    const double right = visible_bounds_->x + visible_bounds_->width;
+    const double top = visible_bounds_->y;
+    const double bottom = visible_bounds_->y + visible_bounds_->height;
     for (double x = std::floor(left / grid) * grid; x <= right; x += grid) {
       const Point from = screen({x, std::max(0.0, top)});
       const Point to = screen({x, std::min(world_height, bottom)});
@@ -258,12 +268,19 @@ class CameraExample final {
       canvas.line(from.x, from.y, to.x, to.y, 0x64788cffU, 1.0, 0.15);
     }
     const Point origin = screen({0.0, 0.0});
-    canvas.stroke_rectangle(origin.x, origin.y, world_width * zoom_, world_height * zoom_, 0xc85050ffU, 3.0, 0.5);
+    canvas.stroke_rectangle(
+        origin.x,
+        origin.y,
+        world_width * view_matrix_->a,
+        world_height * view_matrix_->d,
+        0xc85050ffU,
+        3.0,
+        0.5);
 
     for (const auto& landmark : landmarks_) {
       const Point position = screen(landmark.position);
-      const double width = landmark.width * zoom_;
-      const double height = landmark.height * zoom_;
+      const double width = landmark.width * view_matrix_->a;
+      const double height = landmark.height * view_matrix_->d;
       if (position.x + width < 0.0 || position.x - width > 800.0 || position.y + height < 0.0 || position.y - height > 600.0) continue;
       if (landmark.circle) {
         canvas.fill_circle(position.x, position.y, width / 2.0, landmark.color, 0.7);
@@ -273,7 +290,7 @@ class CameraExample final {
     }
 
     const Point player = screen(player_);
-    const double size = player_size * zoom_;
+    const double size = player_size * view_matrix_->a;
     const std::array<Point, 3> triangle{{
         {player.x, player.y - size},
         {player.x + size * 0.8, player.y + size * 0.6},
@@ -287,7 +304,7 @@ class CameraExample final {
   void draw_hud(Canvas& canvas) const {
     canvas.fill_rectangle(8.0, 8.0, 260.0, 80.0, 0x000000ffU, 0.5);
     canvas.text(
-        "Camera2D: (" + fixed(camera_.x, 0) + ", " + fixed(camera_.y, 0) + ")  Zoom: " + fixed(zoom_, 2),
+        "Camera2D: (" + fixed(camera_->x, 0) + ", " + fixed(camera_->y, 0) + ")  Zoom: " + fixed(camera_->zoom, 2),
         16.0,
         16.0,
         0xffffffffU,
@@ -302,8 +319,14 @@ class CameraExample final {
   std::vector<Cloud> clouds_;
   std::vector<Mountain> mountains_;
   Point player_{world_width * 0.5, world_height * 0.5};
-  Point camera_{world_width * 0.5, world_height * 0.5};
-  double zoom_{1.0};
+  flight::Ref<flight::types::Camera2D> camera_;
+  flight::Ref<flight::types::Rectangle> world_bounds_;
+  flight::Ref<flight::types::Camera2DFollowOptions> follow_options_;
+  flight::Ref<flight::types::Matrix> view_matrix_;
+  flight::Ref<flight::types::Rectangle> visible_bounds_;
+  flight::Ref<flight::types::Vector2> stars_offset_;
+  flight::Ref<flight::types::Vector2> mountains_offset_;
+  flight::Ref<flight::types::Vector2> clouds_offset_;
 };
 
 } // namespace
