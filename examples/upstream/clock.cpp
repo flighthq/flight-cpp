@@ -27,13 +27,14 @@ int main() {
   using namespace flight::shape;
   using namespace flight::scene2d;
 
-  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   auto parentClock = create_clock();
-  auto childClock1 = create_child_clock(parentClock, 0.5);
-  auto childClock2 = create_child_clock(parentClock, 2.0);
-  auto pausedClock = create_child_clock(parentClock, 1.0);
+  auto childClock1 = create_child_clock(parentClock);
+  auto childClock2 = create_child_clock(parentClock);
+  auto pausedClock = create_child_clock(parentClock);
+  set_clock_scale(childClock1, 0.5);
+  set_clock_scale(childClock2, 2.0);
   pause_clock(pausedClock);
 
   struct ClockDisplay {

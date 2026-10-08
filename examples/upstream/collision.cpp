@@ -66,13 +66,13 @@ int main() {
   using namespace flight::shape;
   using namespace flight::scene2d;
 
-  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   std::vector<Collider> colliders;
   colliders.push_back(CircleCollider{{210.0, 190.0, 58.0}});
   colliders.push_back(CircleCollider{{285.0, 190.0, 46.0}});
-  colliders.push_back(AabbCollider{{{500.0 - 70.0, 310.0 - 55.0, 500.0 + 70.0, 310.0 + 55.0}}});
+  colliders.push_back(AabbCollider{{500.0 - 70.0, 310.0 - 55.0,
+                                    500.0 + 70.0, 310.0 + 55.0}});
   colliders.push_back(PolygonCollider{
     {make_regular_polygon_points(545.0, 325.0, 60.0, 5)},
     545.0, 325.0
@@ -98,7 +98,7 @@ int main() {
         append_shape_begin_fill(shape, COLOR_IDLE);
         flight::Array<double> pts(col.collider.points.size());
         for (std::size_t i = 0; i < col.collider.points.size(); ++i) {
-          pts.set(i, col.collider.points[i]);
+          pts.element(i) = col.collider.points[i];
         }
         append_shape_polygon(shape, pts);
         append_shape_end_fill(shape);
@@ -108,19 +108,17 @@ int main() {
     add_node_child(root, shape);
   }
 
-  auto manifold = flight::collision::create_collision_manifold_2_d();
-
-  flight::collision::test_circle_circle_collision_2_d(
-    manifold,
-    std::get<CircleCollider>(colliders[0]).collider.x,
-    std::get<CircleCollider>(colliders[0]).collider.y,
-    std::get<CircleCollider>(colliders[0]).collider.radius,
-    std::get<CircleCollider>(colliders[1]).collider.x,
-    std::get<CircleCollider>(colliders[1]).collider.y,
-    std::get<CircleCollider>(colliders[1]).collider.radius
-  );
-
-  bool colliding = manifold->hasCollision;
+  auto manifold = flight::collision::create_collision_manifold2_d();
+  const auto& first = std::get<CircleCollider>(colliders[0]).collider;
+  const auto& second = std::get<CircleCollider>(colliders[1]).collider;
+  auto firstCircle = flight::make_ref<flight::types::CollisionCircle2D>(
+      flight::types::CollisionCircle2D{
+          .x = first.x, .y = first.y, .radius = first.radius});
+  auto secondCircle = flight::make_ref<flight::types::CollisionCircle2D>(
+      flight::types::CollisionCircle2D{
+          .x = second.x, .y = second.y, .radius = second.radius});
+  bool colliding = flight::collision::test_circle_circle_collision2_d(
+      firstCircle, secondCircle, manifold);
   std::cout << "Flight collision example (naive C++ port): "
             << colliders.size() << " colliders, "
             << "circle-circle collision = " << (colliding ? "true" : "false") << "\n";

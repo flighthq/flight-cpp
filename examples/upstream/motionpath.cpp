@@ -21,7 +21,6 @@ int main() {
   using namespace flight::scene2d;
   using namespace flight::motionpath;
 
-  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   // Build a bezier path: S-curve across the canvas.
@@ -75,25 +74,28 @@ int main() {
   add_node_child(root, label);
 
   // Simulate motion along the path.
+  auto position = flight::geometry::create_vector2();
+  auto tangent = flight::geometry::create_vector2();
   for (int frame = 0; frame < 180; ++frame) {
     double dt = 1.0 / 60.0;
     update_motion_path(mp, dt);
 
-    auto pos = get_motion_path_position(mp);
+    get_motion_path_position(mp, position, tangent);
     auto heading = get_motion_path_heading(mp);
     auto progress = get_motion_path_progress(mp);
+    (void)progress;
 
-    arrow->x = pos->x;
-    arrow->y = pos->y;
-    arrow->rotation = heading * flight::math::RAD_TO_DEG;
+    arrow->x = position->x;
+    arrow->y = position->y;
+    arrow->rotation = heading * (180.0 / flight::pi);
     invalidate_node_local_transform(arrow);
   }
 
   auto finalProgress = get_motion_path_progress(mp);
-  auto finalPos = get_motion_path_position(mp);
+  get_motion_path_position(mp, position, tangent);
 
   std::cout << "Flight motionpath example (naive C++ port): "
             << "progress=" << finalProgress << ", "
-            << "position=(" << finalPos->x << ", " << finalPos->y << ")\n";
+            << "position=(" << position->x << ", " << position->y << ")\n";
   return 0;
 }

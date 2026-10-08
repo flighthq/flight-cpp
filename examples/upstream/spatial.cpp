@@ -41,11 +41,15 @@ int main() {
   using namespace flight::shape;
   using namespace flight::scene2d;
 
-  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
-  auto backend = flight::spatial::create_uniform_grid_spatial_backend_2_d(100.0);
-  auto index = flight::spatial::create_spatial_index_2_d(backend);
+  auto backend = flight::spatial::create_uniform_grid_spatial_backend2_d(100.0);
+  auto index = flight::spatial::create_spatial_index2_d(backend);
+  const auto makeBounds = [](double minX, double minY, double maxX, double maxY) {
+    return flight::make_ref<flight::types::SpatialAabb2D>(
+        flight::types::SpatialAabb2D{
+            .min_x = minX, .min_y = minY, .max_x = maxX, .max_y = maxY});
+  };
 
   int seed = 0x5a171a1;
   std::vector<SpatialObject> objects;
@@ -58,7 +62,7 @@ int main() {
     double vy = (i < MOVING_COUNT) ? (seeded_random(seed) * 100.0 - 50.0) : 0.0;
     objects.push_back({x, y, w, h, vx, vy});
 
-    flight::spatial::insert_spatial_object_2_d(index, i, x, y, x + w, y + h);
+    flight::spatial::insert_spatial_object2_d(index, i, makeBounds(x, y, x + w, y + h));
 
     auto shape = create_shape(std::nullopt);
     append_shape_begin_fill(shape, COLOR_IDLE);
@@ -67,11 +71,14 @@ int main() {
     add_node_child(root, shape);
   }
 
-  auto pairs = flight::spatial::query_spatial_pairs_2_d(index);
-  auto pointHits = flight::spatial::query_spatial_point_2_d(index,
-    CANVAS_WIDTH * 0.5, CANVAS_HEIGHT * 0.5);
-  auto regionHits = flight::spatial::query_spatial_region_2_d(index,
-    100.0, 100.0, 300.0, 300.0);
+  flight::Array<flight::Ref<flight::types::SpatialPair>> pairs;
+  flight::spatial::query_spatial_pairs2_d(index, pairs);
+  flight::Array<double> pointHits;
+  flight::spatial::query_spatial_point2_d(
+      index, CANVAS_WIDTH * 0.5, CANVAS_HEIGHT * 0.5, pointHits);
+  flight::Array<double> regionHits;
+  flight::spatial::query_spatial_region2_d(
+      index, makeBounds(100.0, 100.0, 300.0, 300.0), regionHits);
 
   constexpr double dt = 1.0 / 60.0;
   for (int frame = 0; frame < 60; ++frame) {
@@ -81,8 +88,8 @@ int main() {
       obj.y += obj.vy * dt;
       if (obj.x < 0.0 || obj.x + obj.w > CANVAS_WIDTH) obj.vx = -obj.vx;
       if (obj.y < 0.0 || obj.y + obj.h > CANVAS_HEIGHT) obj.vy = -obj.vy;
-      flight::spatial::update_spatial_object_2_d(index, i,
-        obj.x, obj.y, obj.x + obj.w, obj.y + obj.h);
+      flight::spatial::update_spatial_object2_d(
+          index, i, makeBounds(obj.x, obj.y, obj.x + obj.w, obj.y + obj.h));
     }
   }
 

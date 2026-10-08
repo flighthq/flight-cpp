@@ -4,9 +4,14 @@
 
 set(UPSTREAM_EXAMPLES
   camera2d
+  clock
+  collision
+  flowstates
+  motionpath
   movieclip
   shapes
   sound
+  spatial
   text
   textinput
 )
@@ -17,19 +22,14 @@ set(UPSTREAM_EXAMPLES_BLOCKED_SCENE2D
   adjustments
   benchmark
   bitmapfont_generate
-  clock
-  collision
   cross_backend_embed
   crossfade
-  flowstates
   formatloading
-  motionpath
   particleeditor
   particles
   pathboolean
   platformer
   snapshot
-  spatial
   spring
   spritesheet
   tilemap
@@ -60,9 +60,12 @@ foreach(example IN LISTS UPSTREAM_EXAMPLES)
     target_link_libraries(flight_cpp_upstream_${example} PRIVATE Flight::SdkPreview)
     flight_cpp_set_project_warnings(flight_cpp_upstream_${example})
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-      # Generated SDK dependencies still contain a few intentional no-op parameters and
-      # ignored WeakMap erase results. Keep all other project warnings fatal for the ports.
+      # Generated SDK dependencies still contain intentional no-op parameters, ignored
+      # WeakMap erase results, and JavaScript-number indices converted to C++ index types.
+      # Keep all other project warnings fatal for the ports.
       target_compile_options(flight_cpp_upstream_${example} PRIVATE
+        -Wno-error=conversion
+        -Wno-error=float-conversion
         -Wno-error=unused-parameter
         -Wno-error=unused-result
       )

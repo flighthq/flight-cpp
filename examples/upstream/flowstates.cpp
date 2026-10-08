@@ -24,11 +24,9 @@ int main() {
   using namespace flight::scene2d;
   using namespace flight::flow;
 
-  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   auto stack = create_flow_stack();
-  int score = 0;
 
   // Boot state: splash screen.
   auto bootBg = create_shape(std::nullopt);
@@ -101,10 +99,10 @@ int main() {
   add_node_child(pauseContainer, pauseLabel);
 
   // Push states onto the flow stack.
-  auto bootState = create_flow_state();
-  auto menuState = create_flow_state();
-  auto playState = create_flow_state();
-  auto pauseState = create_flow_state();
+  auto bootState = flight::make_ref<flight::types::FlowState>();
+  auto menuState = flight::make_ref<flight::types::FlowState>();
+  auto playState = flight::make_ref<flight::types::FlowState>();
+  auto pauseState = flight::make_ref<flight::types::FlowState>();
 
   push_flow_state(stack, bootState);
 
