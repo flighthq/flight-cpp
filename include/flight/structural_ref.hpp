@@ -156,19 +156,23 @@ class OwnedRowCell final : public TypedRowCell<Value> {
 template <typename Value, typename Getter>
 class NativeRowCell final : public TypedRowCell<Value> {
  public:
-  explicit NativeRowCell(Getter getter)
-      : getter_(std::move(getter)), address_(std::addressof(std::invoke(getter_))) {}
+  explicit NativeRowCell(Getter getter) : address_(std::addressof(std::invoke(getter))) {}
 
-  [[nodiscard]] Value& get() override { return std::invoke(getter_); }
-  void set(Value value) override { std::invoke(getter_) = std::move(value); }
+  [[nodiscard]] Value& get() override { return *address_; }
+  void set(Value value) override { *address_ = std::move(value); }
 
-  // The member's own address, taken once when the cell is bound. The object is heap-allocated and
-  // owned by a shared pointer, so it does not move for as long as any cell over it is alive.
+  // The member's own address, taken once while the native object is being bound. Do not retain the
+  // accessor: generated accessors capture the object's shared_ptr, and an owner registry entry
+  // retains this cell. Keeping the accessor would therefore turn the intended weak registry edge
+  // into owner -> cell -> object and prevent both the object and its owner from ever expiring.
+  //
+  // Every public view that can reach a native cell (StructuralRef, NamedProperties and
+  // AttachedProperties) retains the native object itself. The address is consequently valid for
+  // every supported read or write, while the registry alone cannot keep the object alive.
   [[nodiscard]] const void* storage_address() const noexcept override { return address_; }
 
  private:
-  Getter getter_;
-  const void* address_;
+  Value* address_;
 };
 
 class RowOwner {
@@ -268,10 +272,23 @@ class RowOwner {
     static_assert(std::is_lvalue_reference_v<Reference>);
     using Value = std::remove_reference_t<Reference>;
     if (symbol_cells_.contains(key.identity())) return;
+    auto cell = std::make_shared<NativeRowCell<Value, Getter>>(std::move(getter));
+    // Generated presence callbacks capture the same shared object as their accessors. Presence is
+    // not independent state: for every emitted computed cell it is engagement for an optional and
+    // true for every other declared value. Derive it from the cell so the callback retains only the
+    // cell already owned here, rather than recreating the owner -> object lifetime cycle.
+    (void)present;
     symbol_cells_.insert_or_assign(
         key.identity(),
-        SymbolCell{std::make_shared<NativeRowCell<Value, Getter>>(std::move(getter)),
-                     std::function<bool()>(std::move(present))});
+        SymbolCell{cell,
+                   [cell]() -> bool {
+                     auto& value = cell->get();
+                     if constexpr (requires { value.has_value(); }) {
+                       return value.has_value();
+                     } else {
+                       return true;
+                     }
+                   }});
   }
 
   [[nodiscard]] virtual std::shared_ptr<RowCell> symbol_cell(const Symbol& key) const {
@@ -1008,6 +1025,7 @@ class StructuralRef {
  public:
   using object_type = detail::schema_object_t<Schema>;
   using schema_type = Schema;
+  using weak_type = std::weak_ptr<RowOwner>;
 
   StructuralRef() = default;
 
@@ -1084,9 +1102,29 @@ class StructuralRef {
 
   [[nodiscard]] static StructuralRef from_owner(std::shared_ptr<RowOwner> owner) {
     StructuralRef result;
+    // A NativeRowOwner deliberately keeps only a weak reference to its object so the attachment
+    // registry cannot extend object lifetime. A StructuralRef is different: like a shared_ptr view,
+    // it owns the object it names. Recover that strong reference when a projection is rebuilt from
+    // the common row owner, otherwise the projected view becomes dangling as soon as the source view
+    // is destroyed.
+    result.object_ = owner ? owner->native_object() : nullptr;
     result.owner_ = std::move(owner);
     return result;
   }
+
+  [[nodiscard]] weak_type weaken() const noexcept { return owner_; }
+
+  [[nodiscard]] static std::optional<StructuralRef> lock_weak(const weak_type& weak) {
+    auto owner = weak.lock();
+    if (!owner) return std::nullopt;
+    // An owner for a native object can outlive that object briefly in the attachment registry. Do
+    // not resurrect an empty view during that interval. Schema-only rows have no native type and
+    // their owner itself is their complete identity, so locking the owner is sufficient for them.
+    if (owner->native_type() != typeid(void) && !owner->native_object()) return std::nullopt;
+    return StructuralRef::from_owner(std::move(owner));
+  }
+
+  [[nodiscard]] const void* identity() const noexcept { return owner_.get(); }
 
   [[nodiscard]] explicit operator bool() const noexcept { return static_cast<bool>(owner_); }
 
@@ -1451,7 +1489,8 @@ class NamedProperties final {
  public:
   NamedProperties() = default;
 
-  explicit NamedProperties(std::shared_ptr<RowOwner> owner) : owner_(std::move(owner)) {}
+  explicit NamedProperties(std::shared_ptr<RowOwner> owner)
+      : object_(owner ? owner->native_object() : nullptr), owner_(std::move(owner)) {}
 
   [[nodiscard]] explicit operator bool() const noexcept { return owner_ != nullptr; }
 
@@ -1537,6 +1576,10 @@ class NamedProperties final {
   [[nodiscard]] const std::shared_ptr<RowOwner>& shared_owner() const noexcept { return owner_; }
 
  private:
+  // NativeRowCell deliberately retains only a member address. Like StructuralRef and
+  // AttachedProperties, this public view therefore owns the native object whose cells it reads.
+  // A schema-only row has no native object and is kept alive completely by owner_.
+  std::shared_ptr<void> object_;
   std::shared_ptr<RowOwner> owner_;
 };
 

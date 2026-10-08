@@ -500,6 +500,74 @@ int main() {
           "and the subject is still readable through it");
   }
 
+  // An explicit structural assertion is rebuilt from the shared row owner. The resulting view is
+  // still an owning reference, not a borrowed façade whose native object disappears with the source
+  // spelling used to create it.
+  auto asserted_subject = flight::make_ref<TestDerivedTarget>();
+  asserted_subject->width = 73.0;
+  using AssertedWritable =
+      flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestDerivedTarget>>>>;
+  std::optional<AssertedWritable> asserted_source{AssertedWritable(asserted_subject)};
+  const DerivedTargetRow asserted_view =
+      flight::structural_ref_cast<DerivedTargetRow>(*asserted_source);
+  std::weak_ptr<TestDerivedTarget> asserted_observer = asserted_subject;
+  asserted_subject.reset();
+  asserted_source.reset();
+  check(!asserted_observer.expired() &&
+            flight::row_get<flight::RowKey<"width">>(asserted_view) == 73.0,
+        "a view rebuilt from its row owner keeps the native object alive");
+
+  // Structural views are object identities too. WeakMap must key them by their common owner, keep
+  // no strong reference of its own, and compose with nominal references inside an emitted union.
+  flight::WeakMap<DerivedTargetRow, int> structural_weak_map;
+  structural_weak_map.set(asserted_view, 17);
+  const DerivedTargetRow asserted_alias(asserted_view.shared_object());
+  check(structural_weak_map.get(asserted_alias).value_or(0) == 17,
+        "a WeakMap lookup through another structural view reaches the same owner identity");
+
+  using MixedWeakKey = std::variant<flight::Ref<TestUnrelatedTarget>, DerivedTargetRow>;
+  flight::WeakMap<MixedWeakKey, int> mixed_weak_map;
+  const MixedWeakKey mixed_key(std::in_place_index<1>, asserted_view);
+  mixed_weak_map.set(mixed_key, 29);
+  const MixedWeakKey mixed_alias(std::in_place_index<1>, asserted_alias);
+  check(mixed_weak_map.get(mixed_alias).value_or(0) == 29,
+        "a WeakMap union preserves and resolves its structural-reference alternative");
+
+  DerivedTargetRow::weak_type expired_structural_key;
+  {
+    auto temporary_subject = flight::make_ref<TestDerivedTarget>();
+    const DerivedTargetRow temporary_view(temporary_subject);
+    expired_structural_key = temporary_view.weaken();
+    check(DerivedTargetRow::lock_weak(expired_structural_key).has_value(),
+          "a live structural reference can be locked from its weak identity");
+  }
+  check(!DerivedTargetRow::lock_weak(expired_structural_key).has_value(),
+        "a structural weak identity does not resurrect an expired native object");
+
+  // A computed-symbol subject used to stay alive through TWO generated captures: the native cell
+  // accessor and its presence callback. Both must be non-owning once binding is complete.
+  std::weak_ptr<TestCellBearing> computed_cell_observer;
+  {
+    auto computed_cell_subject = flight::make_ref<TestCellBearing>();
+    computed_cell_observer = computed_cell_subject;
+    const CellRow<TestCellBearing> computed_cell_view(computed_cell_subject);
+    check(computed_cell_view.shared_object() == computed_cell_subject,
+          "a computed-cell row owns its subject while the view is live");
+  }
+  check(computed_cell_observer.expired(),
+        "computed-cell binding does not retain its native subject after the last view");
+
+  // Native cells retain their member address rather than their object-capturing accessor, so the
+  // dynamic property view must be one of the public views that owns the object it can read.
+  auto named_subject = flight::make_ref<TestDerivedTarget>();
+  named_subject->width = 81.0;
+  const auto retained_named_view = flight::named_properties(named_subject);
+  std::weak_ptr<TestDerivedTarget> named_observer = named_subject;
+  named_subject.reset();
+  check(!named_observer.expired() &&
+            retained_named_view.get(flight::String("width")).as_number() == 81.0,
+        "a named-property view keeps its native member storage alive");
+
   // Probing an unrelated subject through a readonly partial row answers absence, not an exception.
   const UnrelatedTargetRow unrelated_row(flight::make_ref<TestUnrelatedTarget>());
   const ReadonlyPartialTargetRow probed = unrelated_row;

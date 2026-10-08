@@ -86,43 +86,6 @@ struct DefaultWeakKeyPolicy<std::shared_ptr<Type>> {
   [[nodiscard]] static bool equal(identity_type left, identity_type right) noexcept { return left == right; }
 };
 
-template <typename... Types>
-struct DefaultWeakKeyPolicy<std::variant<std::shared_ptr<Types>...>> {
-  using key_type = std::variant<std::shared_ptr<Types>...>;
-  using weak_type = std::variant<std::weak_ptr<Types>...>;
-  struct identity_type {
-    std::size_t alternative{};
-    const void* address{};
-  };
-
-  [[nodiscard]] static weak_type weaken(const key_type& key) {
-    return std::visit([](const auto& value) -> weak_type { return value; }, key);
-  }
-
-  [[nodiscard]] static std::optional<key_type> lock(const weak_type& key) {
-    return std::visit(
-        [](const auto& value) -> std::optional<key_type> {
-          auto locked = value.lock();
-          return locked ? std::optional<key_type>(key_type{std::move(locked)}) : std::nullopt;
-        },
-        key);
-  }
-
-  [[nodiscard]] static identity_type identity(const key_type& key) noexcept {
-    return std::visit(
-        [&](const auto& value) { return identity_type{key.index(), value.get()}; },
-        key);
-  }
-
-  [[nodiscard]] static std::size_t hash(const identity_type& identity) noexcept {
-    return std::hash<const void*>{}(identity.address) ^ (identity.alternative + 0x9e3779b9U);
-  }
-
-  [[nodiscard]] static bool equal(const identity_type& left, const identity_type& right) noexcept {
-    return left.alternative == right.alternative && left.address == right.address;
-  }
-};
-
 template <typename Key>
 using default_weak_key_policy_t = DefaultWeakKeyPolicy<Key>;
 
@@ -137,6 +100,80 @@ concept WeakKeyPolicyFor = requires(
   { Policy::identity(key) } -> std::same_as<typename Policy::identity_type>;
   { Policy::hash(identity) } -> std::convertible_to<std::size_t>;
   { Policy::equal(identity, identity) } -> std::convertible_to<bool>;
+};
+
+// A TypeScript union can mix nominal references with structural reference views. Its WeakMap key is
+// still the identity of the ACTIVE alternative, and each alternative already knows how to weaken,
+// lock, and identify itself. Preserve the variant index beside that identity: two union alternatives
+// may view the same native object, but JavaScript's declared union carrier must round-trip through the
+// same arm rather than silently changing its static representation.
+template <typename... Types>
+  requires((WeakKeyPolicyFor<default_weak_key_policy_t<Types>, Types> && ...) &&
+           (std::convertible_to<typename default_weak_key_policy_t<Types>::identity_type,
+                                const void*> && ...))
+struct DefaultWeakKeyPolicy<std::variant<Types...>> {
+  using key_type = std::variant<Types...>;
+  using weak_type = std::variant<typename default_weak_key_policy_t<Types>::weak_type...>;
+  struct identity_type {
+    std::size_t alternative{};
+    const void* address{};
+  };
+
+  [[nodiscard]] static weak_type weaken(const key_type& key) {
+    return weaken_at(key);
+  }
+
+  [[nodiscard]] static std::optional<key_type> lock(const weak_type& key) {
+    return lock_at(key);
+  }
+
+  [[nodiscard]] static identity_type identity(const key_type& key) noexcept {
+    return identity_at(key);
+  }
+
+  [[nodiscard]] static std::size_t hash(const identity_type& identity) noexcept {
+    return std::hash<const void*>{}(identity.address) ^ (identity.alternative + 0x9e3779b9U);
+  }
+
+  [[nodiscard]] static bool equal(const identity_type& left, const identity_type& right) noexcept {
+    return left.alternative == right.alternative && left.address == right.address;
+  }
+
+ private:
+  template <std::size_t Index = 0>
+  [[nodiscard]] static weak_type weaken_at(const key_type& key) {
+    if (key.index() == Index) {
+      using Alternative = std::variant_alternative_t<Index, key_type>;
+      using Policy = default_weak_key_policy_t<Alternative>;
+      return weak_type(std::in_place_index<Index>, Policy::weaken(std::get<Index>(key)));
+    }
+    if constexpr (Index + 1 < sizeof...(Types)) return weaken_at<Index + 1>(key);
+    throw std::bad_variant_access();
+  }
+
+  template <std::size_t Index = 0>
+  [[nodiscard]] static std::optional<key_type> lock_at(const weak_type& key) {
+    if (key.index() == Index) {
+      using Alternative = std::variant_alternative_t<Index, key_type>;
+      using Policy = default_weak_key_policy_t<Alternative>;
+      auto locked = Policy::lock(std::get<Index>(key));
+      if (!locked) return std::nullopt;
+      return key_type(std::in_place_index<Index>, std::move(*locked));
+    }
+    if constexpr (Index + 1 < sizeof...(Types)) return lock_at<Index + 1>(key);
+    throw std::bad_variant_access();
+  }
+
+  template <std::size_t Index = 0>
+  [[nodiscard]] static identity_type identity_at(const key_type& key) noexcept {
+    if (key.index() == Index) {
+      using Alternative = std::variant_alternative_t<Index, key_type>;
+      using Policy = default_weak_key_policy_t<Alternative>;
+      return identity_type{Index, static_cast<const void*>(Policy::identity(std::get<Index>(key)))};
+    }
+    if constexpr (Index + 1 < sizeof...(Types)) return identity_at<Index + 1>(key);
+    std::terminate();
+  }
 };
 
 template <typename Key, typename Value, typename Policy = default_weak_key_policy_t<Key>>
