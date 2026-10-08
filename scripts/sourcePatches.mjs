@@ -160,10 +160,8 @@ function ownerIsAlive(pid) {
 // Recovers a checkout left patched by a run that could not clean up after itself.
 //
 // `revertSourcePatches` runs in a `finally` and from a SIGINT/SIGTERM/SIGHUP handler, which covers every
-// ending the process gets a say in. SIGKILL is not one of them, and the generation hang has to be killed
-// that way -- it ignores SIGTERM, which is what proves it is a synchronous spin. So a killed run leaves
-// all three patches applied, and the NEXT run refuses with "flight has uncommitted changes" and no hint
-// about why. That is a confusing failure and it cost a measurement here.
+// ending the process gets a say in. SIGKILL is not one of them, so a killed run can leave patches applied,
+// and the NEXT run would otherwise refuse with "dependency has uncommitted changes" and no hint why.
 //
 // The hazard in fixing it is the opposite mistake. A reverting recovery that only asks "is this dirt
 // shaped like our patches?" cannot tell a DEAD run's leftovers from a LIVE run's working state, and would
@@ -178,9 +176,10 @@ function ownerIsAlive(pid) {
 //      integrity check's refusal stands; a live pid means another run owns it and is reported as such.
 //   2. Every modified path in the checkout is a path some declared patch touches, so a file nobody
 //      declared a patch against is never discarded.
-//   3. Every patch whose paths are dirty reverse-applies CLEANLY. `git apply --reverse --check` succeeds
-//      only if the patch's exact added lines are present, which is a byte-level identification rather
-//      than a guess from filenames.
+//   3. The marker names every patch this run applied. They are unwound in REVERSE application order,
+//      because a later patch may intentionally overlap an earlier one's context. Each reverse is checked
+//      before mutation; an already-unwound patch must instead forward-check cleanly. If neither proof
+//      holds, every reversal made during this recovery is reapplied and the checkout is left untouched.
 //
 // Returns `{ recovered, heldBy }`: the ids reverted, or the live pid that owns the checkout.
 export function recoverStalePatches(patches, dependency) {
@@ -200,18 +199,37 @@ export function recoverStalePatches(patches, dependency) {
     rmSync(ownershipMarker(dependency), { force: true });
     return { recovered: [] };
   }
-  const declared = new Set(mine.flatMap((patch) => patchedPaths(patch)));
+  const ownedIds = new Set(Array.isArray(owner.patches) ? owner.patches : mine.map((patch) => patch.id));
+  const owned = mine.filter((patch) => ownedIds.has(patch.id));
+  const declared = new Set(owned.flatMap((patch) => patchedPaths(patch)));
   if (dirty.some((filename) => !declared.has(filename))) return { recovered: [] };
-  const dirtySet = new Set(dirty);
-  const applied = mine.filter((patch) => patchedPaths(patch).some((filename) => dirtySet.has(filename)));
-  for (const patch of applied) {
-    if (git(dependency.directory, ['apply', '--reverse', '--check', patch.file]).status !== 0) {
-      return { recovered: [] };
+  const reverted = [];
+  for (const patch of [...owned].reverse()) {
+    if (git(dependency.directory, ['apply', '--reverse', '--check', patch.file]).status === 0) {
+      if (git(dependency.directory, ['apply', '--reverse', '--quiet', patch.file]).status !== 0) {
+        restoreRevertedPatches(dependency, reverted);
+        return { recovered: [] };
+      }
+      reverted.push(patch);
+      continue;
     }
+    // A normal cleanup may have unwound some patches before being interrupted. A clean forward check is
+    // byte-level evidence that this patch is absent at precisely this point in the reverse-order stack.
+    if (git(dependency.directory, ['apply', '--check', patch.file]).status === 0) continue;
+    restoreRevertedPatches(dependency, reverted);
+    return { recovered: [] };
   }
-  for (const patch of applied) git(dependency.directory, ['apply', '--reverse', '--quiet', patch.file]);
+  const after = git(dependency.directory, ['status', '--porcelain']);
+  if (after.status !== 0 || after.stdout.length > 0) {
+    restoreRevertedPatches(dependency, reverted);
+    return { recovered: [] };
+  }
   rmSync(ownershipMarker(dependency), { force: true });
-  return { recovered: applied.map((patch) => patch.id) };
+  return { recovered: reverted.map((patch) => patch.id).reverse() };
+}
+
+function restoreRevertedPatches(dependency, reverted) {
+  for (const patch of [...reverted].reverse()) git(dependency.directory, ['apply', '--quiet', patch.file]);
 }
 
 // The repository-relative paths a patch file touches, read from its own `+++ b/...` headers.
@@ -221,15 +239,22 @@ function patchedPaths(patch) {
 }
 
 export function revertSourcePatches(patches, dependency) {
-  let reverted = false;
-  for (const patch of patches) {
-    if (patch.dependency !== dependency.name) continue;
-    git(dependency.directory, ['apply', '--reverse', '--quiet', patch.file]);
-    reverted = true;
+  const mine = patches.filter((patch) => patch.dependency === dependency.name);
+  let clean = true;
+  for (const patch of [...mine].reverse()) {
+    if (git(dependency.directory, ['apply', '--reverse', '--check', patch.file]).status === 0) {
+      if (git(dependency.directory, ['apply', '--reverse', '--quiet', patch.file]).status !== 0) clean = false;
+      continue;
+    }
+    // Safe when cleanup is called before this dependency was patched or after a partial unwind.
+    if (git(dependency.directory, ['apply', '--check', patch.file]).status !== 0) clean = false;
   }
   // Releases ownership. Removed after the reverts so a process killed mid-revert still leaves a marker
   // naming it, which is what lets the next run recover rather than refuse.
-  if (reverted) rmSync(ownershipMarker(dependency), { force: true });
+  const status = git(dependency.directory, ['status', '--porcelain']);
+  if (mine.length > 0 && clean && status.status === 0 && status.stdout.length === 0) {
+    rmSync(ownershipMarker(dependency), { force: true });
+  }
 }
 
 // A patch earns its place by removing a refusal. When the refusal it names is still there, the patch is
