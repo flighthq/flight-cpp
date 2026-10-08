@@ -110,6 +110,17 @@ target_link_libraries(
 )
 add_test(NAME flight_cpp.generated_materials COMMAND flight_cpp_generated_materials_tests)
 
+add_executable(flight_cpp_generated_scene3d_tests generated_scene3d_test.cpp)
+target_include_directories(
+  flight_cpp_generated_scene3d_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_scene3d_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(NAME flight_cpp.generated_scene3d COMMAND flight_cpp_generated_scene3d_tests)
+
 add_executable(flight_cpp_generated_interaction_tests generated_interaction_test.cpp)
 target_include_directories(
   flight_cpp_generated_interaction_tests

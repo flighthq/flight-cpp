@@ -2219,6 +2219,22 @@
       "remaining": "The six upstream 3D ports expose independent failures in mesh operations, compute/builders, Node3D/camera construction, and structural option calls after this blocker is removed.",
       "expires": "when Ref layout access, optional union widening, and MeshGeometry construction emit with their declared C++ carriers.",
       "authoredOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-node-exact-runtime-owner",
+      "path": "flight/scene3d/scene_node.hpp",
+      "package": "@flighthq/scene3d",
+      "status": "complete",
+      "supplies": "packages/scene3d/src/sceneNode.ts",
+      "derivedFrom": "49c4b322bd899e048954920055264c378fe7de9f09b03363dfd0c5c07ed58076",
+      "reason": "The emitter refuses Node3D construction because its public intersection has no nominal C++ owner and refuses the concrete runtime assertion because NodeRuntime<Node3DTraits> and the flattened Node3DRuntime have no emitted heritage.",
+      "change": "Constructs the schema-only Node3D row with all upstream defaults and options, retains one concrete Node3DRuntime allocation through the generated base runtime slot, and restores runtime plus lazy signal recovery from that same owner.",
+      "equivalence": "Every node owns independent identity transform values, preserves kind/name/enabled/appearance options, initializes all base and 3D cache sentinels exactly as the source, carries Node3DTraitsKey, and allocates signals lazily with stable identity.",
+      "whyNotAPatchOrRepair": "The TypeScript intersection and runtime extension are the intended public model. Declaration insertion cannot construct the missing owner, while target-specific source inheritance would change the portable API. The base and concrete flattened runtime layouts have the same declared prefix, so the base slot retains the concrete allocation and its shared control block rather than materializing a replacement.",
+      "unblocks": "The real upstream Scene3D roots and the common node constructor used by every blocked GL example.",
+      "remaining": "Concrete Mesh construction, hierarchy traversal, 3D transform cache operations, mesh builders, and Scene3D render modules remain independent downstream blockers.",
+      "expires": "when intersection construction and exact derived-runtime recovery emit for Node3D.",
+      "authoredOn": "2026-10-08"
     }
   ]
 }
