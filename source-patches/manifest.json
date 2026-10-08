@@ -823,6 +823,39 @@
       "unblocks": "Independent compilation and real use of createIcosphereMeshGeometry through the upstream primitive-builder API.",
       "expires": "when destructuring callbacks over readonly tuple arrays retain their tuple element carrier, or Flight adopts the explicit base vertices.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "compiler-structural-row-weak-keys",
+      "dependency": "flight-compiler",
+      "patch": "compiler-structural-row-weak-keys.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/types",
+      "answers": "refusal",
+      "refusal": "flight-cpp WeakMap key requires a proven Flight reference or external weak-key policy",
+      "rewrite": "Recognizes the compiler's proven structuralRow reference category as a native weak-key carrier, and extends the existing Renderable WeakMap regression with concrete Node2D and Node3D structural-row union arms.",
+      "equivalence": "This changes no TypeScript or JavaScript behavior. The C++ runtime's DefaultWeakKeyPolicy<StructuralRef<Row>> weakens the row's retained native object and restores it with the same identity, exactly as the compiler already assumes for flightReference keys. Other runtimeReference categories such as arrays, maps, tasks, and external handles remain rejected because the proof admits only structuralRow.",
+      "verification": "The focused compiler-backend-cpp regression and package typecheck pass with the patched compiler, proving a Renderable union containing NodeAny, Node2D, Node3D, and RenderCache emits as a WeakMap key while the primitive-key refusal remains intact. Scoped @flighthq/render generation improves from 1138/1208 modules with 70 refused modules to 1143/1208 with 65: nine WeakMap-key refusal records and 43 inherited dependency records disappear, exposing eleven true next-boundary records. The generated carrier is exercised separately by the runtime structural-reference WeakMap tests.",
+      "whyNotUpstreamFirst": "The pinned compiler predates the runtime's structural-row weak-key policy. Applying the narrowly versioned compiler patch before its ordinary build lets generated output remain compiler-owned and provenance-tracked while the change is prepared for upstream adoption.",
+      "unblocks": "Allows RenderState's real WeakMap<Renderable, ...> members to retain concrete Node2D and Node3D keys, clearing the root refusal inherited by renderProxy and the Scene2D/Scene3D render traversals.",
+      "expires": "when flight-compiler recognizes structuralRow keys backed by the Flight runtime weak-key policy, or the pinned compiler includes the regression and implementation upstream.",
+      "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "renderable-concrete-node-arms",
+      "dependency": "flight",
+      "patch": "renderable-concrete-node-arms.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types/src/Renderable.ts",
+      "package": "@flighthq/types",
+      "answers": "diagnostic",
+      "refusal": "Node<any> lowers to the single invariant C++ specialization Node<flight::Any>, so the existing Node2D and Node3D subtypes cannot enter Renderable, serve as its WeakMap keys, or reach the shared render traversal APIs with their real owners",
+      "rewrite": "Names Node2D and Node3D as explicit Renderable union arms beside the existing open NodeAny arm and RenderCache arm.",
+      "equivalence": "Node2D and Node3D are already structurally assignable to NodeAny, so adding them to a union does not add a value, remove a value, change narrowing, or alter runtime JavaScript. The union remains open to every custom Node<any>; the redundant named arms only retain the two existing SDK node carriers for targets whose generic specializations are invariant.",
+      "whyNotUpstreamFirst": "This is an erased, target-neutral type expansion of two already-included subtypes. It preserves the open NodeAny contract while exposing concrete carrier evidence the current emitter loses when it lowers TypeScript any as one C++ template argument.",
+      "unblocks": "Allows exact Node2D and Node3D owners to flow through Renderable, its WeakMap and Set storage, and shared render-proxy APIs without casts, materialization, or side storage.",
+      "expires": "when emitted generic specializations preserve TypeScript assignability into Node<any>, or Flight keeps the redundant concrete arms upstream.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }

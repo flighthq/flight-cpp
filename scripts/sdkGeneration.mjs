@@ -58,10 +58,9 @@ const traceProgress = options.includes('--progress');
 const bestEffort = !options.includes('--no-best-effort');
 // Generate a subset of the SDK instead of the whole dependency closure. `analyzeFlightWorkspace`
 // resolves each named package's own closure, so naming one package still compiles what it needs. This
-// exists for two reasons that happen to coincide: the eventual shape of this repository is per-package
-// delivery, and bisecting the generation hang needed exactly this. That bisection is done -- the trigger
-// is @flighthq/render-gl's own source, and the default target set now excludes it -- so naming a package
-// is how you reproduce the hang deliberately, which is the only way to tell whether it is fixed.
+// exists both for per-package delivery and for isolating compiler performance or lowering regressions.
+// It was also the instrument that disproved the old render-gl nontermination diagnosis: traced render-gl
+// and scene3d-gl closures now complete, so the default inventory excludes nothing on their account.
 const requestedPackages = options
   .filter((option) => option.startsWith('--package='))
   .map((option) => option.slice('--package='.length))
@@ -133,18 +132,21 @@ const bindingProfiles = loadBindingProfiles(
 // into an immediate error instead of a wasted half hour.
 const declaredRepairs = loadEmissionRepairs(root);
 const deferredPackages = loadDeferredPackages(root);
-const recovery = recoverStalePatches(loadSourcePatches(root), flight);
-if (recovery.recovered.length > 0) {
-  process.stdout.write(
-    `Recovered ${String(recovery.recovered.length)} source patch(es) left applied by an interrupted run: ${recovery.recovered.join(', ')}\n`,
-  );
-}
-if (recovery.heldBy !== undefined) {
-  process.stderr.write(
-    `Another generation run (pid ${String(recovery.heldBy)}) holds the pinned Flight checkout patched. ` +
-      'Wait for it to finish rather than running two generations against one checkout.\n',
-  );
-  process.exit(1);
+const sourcePatches = loadSourcePatches(root);
+for (const dependency of [compiler, flight]) {
+  const recovery = recoverStalePatches(sourcePatches, dependency);
+  if (recovery.recovered.length > 0) {
+    process.stdout.write(
+      `Recovered ${String(recovery.recovered.length)} source patch(es) left applied to ${dependency.name} by an interrupted run: ${recovery.recovered.join(', ')}\n`,
+    );
+  }
+  if (recovery.heldBy !== undefined) {
+    process.stderr.write(
+      `Another generation run (pid ${String(recovery.heldBy)}) holds the pinned ${dependency.name} checkout patched. ` +
+        'Wait for it to finish rather than running two generations against one checkout.\n',
+    );
+    process.exit(1);
+  }
 }
 const inputFailure = validateInput(flight, compiler);
 if (inputFailure !== undefined) {
@@ -157,7 +159,6 @@ if (inputFailure !== undefined) {
   process.exit(1);
 }
 
-runCompilerBuild(compiler.directory);
 const compilerEntry = path.join(
   compiler.directory,
   'packages',
@@ -168,18 +169,14 @@ const compilerEntry = path.join(
   'src',
   'index.js',
 );
-if (!existsSync(compilerEntry)) {
-  process.stderr.write(`Pinned compiler build did not produce ${compilerEntry}\n`);
-  process.exit(1);
-}
 
 const temporaryRoot = mkdtempSync(path.join(tmpdir(), 'flight-cpp-sdk-generation-'));
 const candidateRoot = path.join(temporaryRoot, 'generated');
 
 // Patches are applied only after validateInput has confirmed both checkouts are clean and at their
-// pinned revisions, and reverted in the `finally` below, so a pinned checkout is rewritten for the
-// length of one run and never longer.
-const sourcePatches = loadSourcePatches(root);
+// pinned revisions, and reverted in the `finally` below, so each pinned checkout is rewritten for the
+// length of one run and never longer. Compiler patches must precede its build; Flight patches precede
+// source analysis. Both remain ordinary, pinned, provenance-recorded source patches.
 // A `finally` does not run when the process is signalled, and a long generation run gets interrupted:
 // the first SIGTERM'd run left all three patches applied in the pinned checkout, and the next run
 // refused with "flight has uncommitted changes". Reverting on the way out of a signal keeps the
@@ -187,11 +184,17 @@ const sourcePatches = loadSourcePatches(root);
 for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
   process.on(signal, () => {
     revertSourcePatches(sourcePatches, flight);
+    revertSourcePatches(sourcePatches, compiler);
     process.exit(signal === 'SIGINT' ? 130 : 143);
   });
 }
 try {
-  const appliedPatches = applySourcePatches(sourcePatches, flight);
+  const compilerPatches = applySourcePatches(sourcePatches, compiler);
+  runCompilerBuild(compiler.directory);
+  if (!existsSync(compilerEntry)) {
+    throw new Error(`Pinned compiler build did not produce ${compilerEntry}`);
+  }
+  const appliedPatches = [...compilerPatches, ...applySourcePatches(sourcePatches, flight)];
   const result = await generateSdk(candidateRoot, flight, compiler, compilerEntry, bindingProfiles, appliedPatches);
   if (check) {
     const drift = compareTrees(candidateRoot, generatedRoot);
@@ -215,6 +218,7 @@ try {
   }
 } finally {
   revertSourcePatches(sourcePatches, flight);
+  revertSourcePatches(sourcePatches, compiler);
   rmSync(temporaryRoot, { force: true, recursive: true });
 }
 
@@ -242,13 +246,12 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   // target list literally and resolves no closure of its own, so naming @flighthq/math alone compiles
   // math against nothing and turns four modules into placeholders purely because @flighthq/types was
   // absent. A subset that omits a dependency does not measure the subset, it measures the omission.
-  // The default target set is every SDK package EXCEPT those generation cannot finish, and every package
-  // whose closure reaches one. The exclusion is computed rather than read from the declaration list, so a
-  // package that newly starts depending on @flighthq/render-gl is excluded without anyone remembering to
-  // add it -- the list declares the triggers, not their consequences.
+  // The default target set is every SDK package EXCEPT any explicitly declared non-terminating package and
+  // every package whose closure reaches one. The current declaration is empty: render-gl and scene3d-gl
+  // both finish. The closure rule remains so a future measured regression can be isolated by naming only
+  // its trigger rather than manually maintaining every dependent package.
   //
-  // A named --package set is honoured as given; naming an excluded package is how you reproduce the hang
-  // deliberately, which is the only way to tell whether it is fixed.
+  // A named --package set is honoured as given, including a deliberately isolated regression target.
   const nonTerminating = new Set(nonTerminatingPackages(deferredPackages));
   const reaches = (name) =>
     transitivePackageClosure([name], flightDependency.directory, sdkPackageNames).some((dependency) =>
@@ -884,8 +887,7 @@ function runCompilerBuild(directory) {
   if (result.status !== 0) {
     process.stderr.write(result.stdout ?? '');
     process.stderr.write(result.stderr ?? '');
-    process.stderr.write('Pinned flight-compiler build failed.\n');
-    process.exit(1);
+    throw new Error('Pinned flight-compiler build failed.');
   }
 }
 

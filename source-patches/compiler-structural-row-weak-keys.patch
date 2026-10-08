@@ -1,0 +1,69 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index d30c0ce..dd22fe4 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -24655,6 +24655,26 @@ int main() {
+         ),
+         upstreamDirectory: '/flight',
+       },
++      {
++        packageName: '@flighthq/types',
++        sourceFile: ts.createSourceFile(
++          '/flight/packages/types/src/Node2D.ts',
++          "import type { Node } from './Node'; export type Node2D = Node<{ x: number }> & { x: number };",
++          ts.ScriptTarget.Latest,
++          true,
++        ),
++        upstreamDirectory: '/flight',
++      },
++      {
++        packageName: '@flighthq/types',
++        sourceFile: ts.createSourceFile(
++          '/flight/packages/types/src/Node3D.ts',
++          "import type { Node } from './Node'; export type Node3D = Node<{ z: number }> & { z: number };",
++          ts.ScriptTarget.Latest,
++          true,
++        ),
++        upstreamDirectory: '/flight',
++      },
+       {
+         packageName: '@flighthq/types',
+         sourceFile: ts.createSourceFile(
+@@ -24669,7 +24689,7 @@ int main() {
+         packageName: '@flighthq/types',
+         sourceFile: ts.createSourceFile(
+           '/flight/packages/types/src/Renderable.ts',
+-          "import type { NodeAny } from './Node'; import type { RenderCache } from './RenderCache'; export type Renderable = NodeAny | RenderCache;",
++          "import type { NodeAny } from './Node'; import type { Node2D } from './Node2D'; import type { Node3D } from './Node3D'; import type { RenderCache } from './RenderCache'; export type Renderable = NodeAny | Node2D | Node3D | RenderCache;",
+           ts.ScriptTarget.Latest,
+           true,
+         ),
+@@ -24702,8 +24722,8 @@ int main() {
+       modules,
+       options: { runtimeProfile: 'flight-cpp' },
+     });
+-    const renderState = session.emitModule(modules[3]!)[0]!.contents;
+-    const velocity = session.emitModule(modules[4]!)[0]!.contents;
++    const renderState = session.emitModule(modules[5]!)[0]!.contents;
++    const velocity = session.emitModule(modules[6]!)[0]!.contents;
+ 
+     expect(renderState).toContain(
+       'flight::WeakMap<flighthq_types::Renderable, flight::Ref<flighthq_types::RenderCache>> render_proxy_map;',
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index fae6209..e56b253 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -11494,7 +11494,12 @@ function getWeakMapKeyRepresentationCpp(
+     if (weakKeyPolicyTargetName) return { weakKeyPolicyTargetName };
+   }
+   const plan = context.referenceRepresentationPlanner.plan(type, context.module);
+-  if (plan.kind === 'represented' && plan.valueRepresentation === 'flightReference') return {};
++  if (
++    plan.kind === 'represented' &&
++    (plan.valueRepresentation === 'flightReference' || plan.category === 'structuralRow')
++  ) {
++    return {};
++  }
+   if (type.kind !== 'named' || type.reference.kind !== 'binding') return undefined;
+   const key = `${type.reference.binding.id}\0${JSON.stringify(type.typeArguments)}`;
+   if (resolvingAliases.has(key)) return undefined;

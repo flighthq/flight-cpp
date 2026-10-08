@@ -1,0 +1,12 @@
+diff --git a/packages/types/src/Renderable.ts b/packages/types/src/Renderable.ts
+index f698ce7..ec85492 100644
+--- a/packages/types/src/Renderable.ts
++++ b/packages/types/src/Renderable.ts
+@@ -1,4 +1,6 @@
+ import type { NodeAny } from './Node';
++import type { Node2D } from './Node2D';
++import type { Node3D } from './Node3D';
+ import type { RenderCache } from './RenderCache';
+ 
+-export type Renderable = NodeAny | RenderCache;
++export type Renderable = NodeAny | Node2D | Node3D | RenderCache;

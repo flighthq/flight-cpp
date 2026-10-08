@@ -16,7 +16,12 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolveDependency } from './dependencyLock.mjs';
-import { applySourcePatches, loadSourcePatches, revertSourcePatches } from './sourcePatches.mjs';
+import {
+  applySourcePatches,
+  loadSourcePatches,
+  recoverStalePatches,
+  revertSourcePatches,
+} from './sourcePatches.mjs';
 
 // Examples import the Web host through the upstream workspace rather than through their own
 // manifests; this is the one package name the example graph adds explicitly.
@@ -48,6 +53,22 @@ const bindingProfileFiles = [
   'bindings/sdl-app.json',
 ];
 const bindingProfiles = loadBindingProfiles(bindingProfileFiles);
+const sourcePatches = loadSourcePatches(root);
+for (const dependency of [compiler, flight]) {
+  const recovery = recoverStalePatches(sourcePatches, dependency);
+  if (recovery.recovered.length > 0) {
+    process.stdout.write(
+      `Recovered ${String(recovery.recovered.length)} source patch(es) left applied to ${dependency.name} by an interrupted run: ${recovery.recovered.join(', ')}\n`,
+    );
+  }
+  if (recovery.heldBy !== undefined) {
+    process.stderr.write(
+      `Another generation run (pid ${String(recovery.heldBy)}) holds the pinned ${dependency.name} checkout patched. ` +
+        'Wait for it to finish rather than running two generations against one checkout.\n',
+    );
+    process.exit(1);
+  }
+}
 const inputFailure = validateInput(flight, compiler);
 if (inputFailure !== undefined) {
   const message = `${inputFailure} Run \`npm run rehydrate\` and \`npm ci --prefix .dependencies/flight-compiler\`.\n`;
@@ -59,7 +80,6 @@ if (inputFailure !== undefined) {
   process.exit(1);
 }
 
-runCompilerBuild(compiler.directory);
 const compilerEntry = path.join(
   compiler.directory,
   'packages',
@@ -70,19 +90,26 @@ const compilerEntry = path.join(
   'src',
   'index.js',
 );
-if (!existsSync(compilerEntry)) {
-  process.stderr.write(`Pinned compiler build did not produce ${compilerEntry}\n`);
-  process.exit(1);
-}
 
 const temporaryRoot = mkdtempSync(path.join(tmpdir(), 'flight-cpp-upstream-examples-'));
 const candidateRoot = path.join(temporaryRoot, 'generated');
 
-// The examples read the same pinned Flight checkout as the SDK inventory, so they must see the same
-// patched source or the two trees would disagree about what Flight is. Applied after the pin integrity
-// check above, reverted in the `finally` below.
-const sourcePatches = loadSourcePatches(root);
+// The examples read the same pinned compiler and Flight checkout as the SDK inventory, so they must see
+// the same patched sources or the two trees would disagree about what Flight is. Compiler patches precede
+// its build; Flight patches precede source analysis. Both are reverted below.
+for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
+  process.on(signal, () => {
+    revertSourcePatches(sourcePatches, flight);
+    revertSourcePatches(sourcePatches, compiler);
+    process.exit(signal === 'SIGINT' ? 130 : 143);
+  });
+}
 try {
+  applySourcePatches(sourcePatches, compiler);
+  runCompilerBuild(compiler.directory);
+  if (!existsSync(compilerEntry)) {
+    throw new Error(`Pinned compiler build did not produce ${compilerEntry}`);
+  }
   applySourcePatches(sourcePatches, flight);
   const result = await generateExamples(candidateRoot, flight, compiler, compilerEntry, bindingProfiles);
   if (check) {
@@ -103,6 +130,7 @@ try {
   }
 } finally {
   revertSourcePatches(sourcePatches, flight);
+  revertSourcePatches(sourcePatches, compiler);
   rmSync(temporaryRoot, { force: true, recursive: true });
 }
 
@@ -545,8 +573,7 @@ function runCompilerBuild(directory) {
   if (result.status !== 0) {
     process.stderr.write(result.stdout ?? '');
     process.stderr.write(result.stderr ?? '');
-    process.stderr.write('Pinned flight-compiler build failed.\n');
-    process.exit(1);
+    throw new Error('Pinned flight-compiler build failed.');
   }
 }
 
