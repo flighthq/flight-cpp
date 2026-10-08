@@ -1236,14 +1236,16 @@
       "path": "flight/mesh/mesh_geometry.hpp",
       "package": "@flighthq/mesh",
       "status": "complete",
+      "supplies": "packages/mesh/src/meshGeometry.ts",
       "derivedFrom": "085e9bbfa8fb0834bccacc9dba77e09ea1024596c1b891d90e3cd589715d9c32",
-      "reason": "The emitter converts optional<Ref<EntityRuntime>> directly to optional<Ref<MeshGeometryRuntime>>, although the flattened generated owners have no C++ heritage. Additional retained expressions visit optional storage, dereference Ref values with '.', and copy a typed-array variant without selecting its active alternative.",
-      "change": "Uses identity-keyed exact MeshGeometryRuntime side storage, fails loudly when only the unrecoverable base carrier is present, corrects optional visitation and Ref access, and copies index variants element-by-element into the selected output width.",
-      "equivalence": "Missing runtime storage remains absent; an exact side-stored runtime preserves reference identity and mutation visibility. A base owner that cannot be safely recovered is reported instead of cast with undefined behavior. Index promotion preserves order and numeric values, and initialization reads the same referenced field object.",
+      "reason": "The emitter refuses MeshGeometry construction because an optional index union lacks contextual arm evidence, converts optional<Ref<EntityRuntime>> directly to optional<Ref<MeshGeometryRuntime>> despite absent C++ heritage, and retains invalid optional visitation, Ref access, and typed-array variant copies.",
+      "change": "Constructs the exact MeshGeometry owner from nominal or structural options, normalizes and promotes represented index arms, initializes source defaults plus an identity-keyed exact MeshGeometryRuntime, corrects optional visitation and Ref access, and copies index variants element-by-element into the selected output width.",
+      "equivalence": "Construction preserves vertex/layout/subset/topology inputs, derives the same default subset and vertex count, and retains one exact runtime per geometry identity. Missing runtime storage remains absent, unsafe base-owner recovery fails loudly, and index promotion preserves order and numeric values.",
       "whyNotAPatchOrRepair": "The source assertion depends on interface heritage erased by the emitter. A target-neutral annotation cannot restore that C++ owner relationship, and declaration insertion cannot supply checked recovery or replace the invalid expressions.",
-      "unblocks": "mesh_geometry.hpp compiles independently and exposes the runtime-backed mutation boundary without unsafe pointer casting.",
-      "expires": "when runtime extensions retain their exact owner through EntityRuntimeKey or the runtime exposes a checked owner-recovery contract.",
-      "authoredOn": "2026-10-06"
+      "unblocks": "mesh_geometry.hpp compiles independently, supplies create_mesh_geometry to layout conversion, and exposes the runtime-backed mutation boundary without unsafe pointer casting.",
+      "remaining": "Mesh operations, compute, and builder modules have separate optional, Ref-access, omitted-helper, and tuple-array emission defects.",
+      "expires": "when optional union construction and runtime extensions retain exact owners through EntityRuntimeKey or a checked owner-recovery contract.",
+      "authoredOn": "2026-10-08"
     },
     {
       "id": "mesh-geometry-attribute-reference-access",
@@ -2029,6 +2031,22 @@
       "unblocks": "The upstream textinput example and core text_input.hpp consumers compile.",
       "remaining": "Manager, editing-history, keyboard, clipboard, and host composition helpers remain in their separate modules.",
       "expires": "when RichText runtime recovery, Partial TextInputState construction, and Ref data access emit directly.",
+      "authoredOn": "2026-10-08"
+    },
+    {
+      "id": "mesh-geometry-layout-reference-and-index-conversion",
+      "path": "flight/mesh/mesh_geometry_layout.hpp",
+      "package": "@flighthq/mesh",
+      "status": "complete",
+      "supplies": "packages/mesh/src/meshGeometryLayout.ts",
+      "derivedFrom": "df9e5c8ecea892af8fe9f09b7dd58f9c98aa9a6d8a4d3179a849087963b598ef",
+      "reason": "The emitter reads the Ref-owned source layout through value member access, passes an optional two-arm index variant where the constructor requires an explicit four-arm nullish variant, and calls the compiler-refused create_mesh_geometry boundary.",
+      "change": "Dereferences both source and target layouts, copies compatible vertex attributes byte-for-byte or component-wise, explicitly selects represented index or Null arms, and delegates exact owner construction to the mesh-geometry override.",
+      "equivalence": "Vertex count and byte offsets use the same strides, matching formats preserve all source bytes, conversions read and write the declared component counts, absent indices remain nullish, present typed-array identity is forwarded, and subsets plus topology are retained.",
+      "whyNotAPatchOrRepair": "A source patch cannot express target-specific Ref dereference or variant-arm selection, and a declaration repair cannot replace invalid operations or supply the refused constructor behavior.",
+      "unblocks": "mesh_geometry_layout.hpp compiles independently and restores canonical layout conversion for downstream mesh consumers.",
+      "remaining": "The six upstream 3D ports expose independent failures in mesh operations, compute/builders, Node3D/camera construction, and structural option calls after this blocker is removed.",
+      "expires": "when Ref layout access, optional union widening, and MeshGeometry construction emit with their declared C++ carriers.",
       "authoredOn": "2026-10-08"
     }
   ]

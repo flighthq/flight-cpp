@@ -76,7 +76,11 @@ inline void destroy_mesh_geometry_wgpu_data(flight::Ref<MeshGeometry> geometry) 
 }
 
 inline double get_mesh_geometry_index_count(flight::Ref<MeshGeometry> geometry) {
-  return (flight::to_boolean(geometry->indices) ? std::visit([](const auto& value) { return value.size(); }, geometry->indices.value()) : 0.0);
+  return flight::to_boolean(geometry->indices)
+             ? static_cast<double>(std::visit(
+                   [](const auto& value) { return value.size(); },
+                   geometry->indices.value()))
+             : 0.0;
 }
 
 
@@ -232,6 +236,7 @@ inline void set_mesh_geometry_skin_bind_pose(flight::Ref<MeshGeometry> geometry,
 // and tested the same way
 
 inline flight::Ref<MeshGeometry> clone_mesh_geometry_metadata(flight::Ref<MeshGeometry> source) {
+  (void)source;
   throw flight::Error(flight::String("mesh: runtime-backed geometry construction is unavailable in this profile"));
 }
 
@@ -263,6 +268,81 @@ inline std::variant<flight::Uint16Array, flight::Uint32Array> promote_indices(st
     for (std::size_t i = 0; i < value.size(); ++i) out.set_index(static_cast<double>(i), value.get_index(static_cast<double>(i)));
   }, source);
   return std::variant<flight::Uint16Array, flight::Uint32Array>{std::in_place_type<flight::Uint16Array>, out};
+}
+
+inline flight::Ref<MeshGeometry> create_mesh_geometry_from_fields(
+    std::variant<flight::Uint16Array, flight::Uint32Array, flight::Null, flight::Undefined> indices,
+    flight::Ref<VertexAttributeLayout> layout,
+    std::optional<flight::Array<flight::Ref<MeshSubset>>> subsets,
+    std::optional<flight::types::PrimitiveTopology> topology,
+    flight::Float32Array vertices) {
+  const double vertex_count = get_vertex_count_from_layout(vertices, layout);
+  std::optional<std::variant<flight::Uint16Array, flight::Uint32Array>> promoted;
+  std::visit(
+      [&](const auto& value) {
+        using Value = std::remove_cvref_t<decltype(value)>;
+        if constexpr (std::same_as<Value, flight::Uint16Array> ||
+                      std::same_as<Value, flight::Uint32Array>) {
+          promoted = promote_indices(
+              std::variant<flight::Uint16Array, flight::Uint32Array>{
+                  std::in_place_type<Value>, value},
+              vertex_count);
+        }
+      },
+      indices);
+
+  if (!subsets.has_value()) {
+    const double count = promoted.has_value()
+                             ? static_cast<double>(std::visit(
+                                   [](const auto& value) { return value.size(); }, promoted.value()))
+                             : vertex_count;
+    subsets = flight::Array<flight::Ref<MeshSubset>>{
+        flight::make_ref<MeshSubset>(MeshSubset{.index_count = count, .index_offset = 0.0})};
+  }
+
+  auto geometry = flight::make_ref<MeshGeometry>(MeshGeometry{
+      .entity_runtime_key = flight::make_ref<flight::types::EntityRuntime>(
+          flight::types::EntityRuntime{.binding = std::nullopt, .uid = std::nullopt}),
+      .bounds = std::nullopt,
+      .indices = std::move(promoted),
+      .layout = std::move(layout),
+      .subsets = std::move(subsets).value(),
+      .topology = topology.value_or(flight::String("triangle-list")),
+      .version = 0.0,
+      .vertices = std::move(vertices),
+  });
+  auto runtime = flight::make_ref<MeshGeometryRuntime>();
+  runtime->attribute_data_view = std::nullopt;
+  runtime->binding = std::nullopt;
+  runtime->bounds_version = -1.0;
+  runtime->morph_bind_pose = std::nullopt;
+  runtime->morph_blended_weights = std::nullopt;
+  runtime->skin_bind_pose = std::nullopt;
+  runtime->uid = std::nullopt;
+  runtime->webgl_data = std::nullopt;
+  runtime->webgpu_data = std::nullopt;
+  mesh_geometry_runtimes.set(geometry, runtime);
+  return geometry;
+}
+
+inline flight::Ref<MeshGeometry> create_mesh_geometry(flight::Ref<MeshGeometryOptions> options) {
+  return create_mesh_geometry_from_fields(options->indices, options->layout, options->subsets,
+                                          options->topology, options->vertices);
+}
+
+template <typename Schema>
+inline flight::Ref<MeshGeometry> create_mesh_geometry(
+    flight::StructuralRef<Schema> options) {
+  const auto subsets = flight::row_has<flight::RowKey<"subsets">>(options)
+                           ? flight::row_get<flight::RowKey<"subsets">>(options)
+                           : std::optional<flight::Array<flight::Ref<MeshSubset>>>{};
+  const auto topology = flight::row_has<flight::RowKey<"topology">>(options)
+                            ? flight::row_get<flight::RowKey<"topology">>(options)
+                            : std::optional<flight::types::PrimitiveTopology>{};
+  return create_mesh_geometry_from_fields(
+      flight::row_get<flight::RowKey<"indices">>(options),
+      flight::row_get<flight::RowKey<"layout">>(options), subsets, topology,
+      flight::row_get<flight::RowKey<"vertices">>(options));
 }
 
 
