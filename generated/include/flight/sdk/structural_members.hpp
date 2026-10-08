@@ -477,6 +477,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("exposure") && requires { object.exposure; }) return (object.exposure);
   else if constexpr (Key::name.view() == std::string_view("exposureCompensation") && requires { object.exposure_compensation; }) return (object.exposure_compensation);
   else if constexpr (Key::name.view() == std::string_view("extendMeshPrelude") && requires { object.extend_mesh_prelude; }) return (object.extend_mesh_prelude);
+  else if constexpr (Key::name.view() == std::string_view("extensions") && requires { object.extensions; }) return (object.extensions);
   else if constexpr (Key::name.view() == std::string_view("extraBindGroupLayout") && requires { object.extra_bind_group_layout; }) return (object.extra_bind_group_layout);
   else if constexpr (Key::name.view() == std::string_view("face") && requires { object.face; }) return (object.face);
   else if constexpr (Key::name.view() == std::string_view("facet") && requires { object.facet; }) return (object.facet);
@@ -1565,6 +1566,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("spread") && requires { object.spread; }) return (object.spread);
   else if constexpr (Key::name.view() == std::string_view("square") && requires { object.square; }) return (object.square);
   else if constexpr (Key::name.view() == std::string_view("stack") && requires { object.stack; }) return (object.stack);
+  else if constexpr (Key::name.view() == std::string_view("standard") && requires { object.standard; }) return (object.standard);
   else if constexpr (Key::name.view() == std::string_view("start") && requires { object.start; }) return (object.start);
   else if constexpr (Key::name.view() == std::string_view("startCap") && requires { object.start_cap; }) return (object.start_cap);
   else if constexpr (Key::name.view() == std::string_view("startColor") && requires { object.start_color; }) return (object.start_color);
@@ -2328,6 +2330,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("exposure") && requires(Object& object) { object.exposure; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().exposure)>>{};
   else if constexpr (Key::name.view() == std::string_view("exposureCompensation") && requires(Object& object) { object.exposure_compensation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().exposure_compensation)>>{};
   else if constexpr (Key::name.view() == std::string_view("extendMeshPrelude") && requires(Object& object) { object.extend_mesh_prelude; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().extend_mesh_prelude)>>{};
+  else if constexpr (Key::name.view() == std::string_view("extensions") && requires(Object& object) { object.extensions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().extensions)>>{};
   else if constexpr (Key::name.view() == std::string_view("extraBindGroupLayout") && requires(Object& object) { object.extra_bind_group_layout; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().extra_bind_group_layout)>>{};
   else if constexpr (Key::name.view() == std::string_view("face") && requires(Object& object) { object.face; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().face)>>{};
   else if constexpr (Key::name.view() == std::string_view("facet") && requires(Object& object) { object.facet; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().facet)>>{};
@@ -3416,6 +3419,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("spread") && requires(Object& object) { object.spread; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().spread)>>{};
   else if constexpr (Key::name.view() == std::string_view("square") && requires(Object& object) { object.square; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().square)>>{};
   else if constexpr (Key::name.view() == std::string_view("stack") && requires(Object& object) { object.stack; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stack)>>{};
+  else if constexpr (Key::name.view() == std::string_view("standard") && requires(Object& object) { object.standard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().standard)>>{};
   else if constexpr (Key::name.view() == std::string_view("start") && requires(Object& object) { object.start; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start)>>{};
   else if constexpr (Key::name.view() == std::string_view("startCap") && requires(Object& object) { object.start_cap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_cap)>>{};
   else if constexpr (Key::name.view() == std::string_view("startColor") && requires(Object& object) { object.start_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_color)>>{};
@@ -4182,6 +4186,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->exposure; }) owner.bind_named("exposure", [object]() -> decltype(auto) { return (object->exposure); });
   if constexpr (requires { object->exposure_compensation; }) owner.bind_named("exposureCompensation", [object]() -> decltype(auto) { return (object->exposure_compensation); });
   if constexpr (requires { object->extend_mesh_prelude; }) owner.bind_named("extendMeshPrelude", [object]() -> decltype(auto) { return (object->extend_mesh_prelude); });
+  if constexpr (requires { object->extensions; }) owner.bind_named("extensions", [object]() -> decltype(auto) { return (object->extensions); });
   if constexpr (requires { object->extra_bind_group_layout; }) owner.bind_named("extraBindGroupLayout", [object]() -> decltype(auto) { return (object->extra_bind_group_layout); });
   if constexpr (requires { object->face; }) owner.bind_named("face", [object]() -> decltype(auto) { return (object->face); });
   if constexpr (requires { object->facet; }) owner.bind_named("facet", [object]() -> decltype(auto) { return (object->facet); });
@@ -5270,6 +5275,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->spread; }) owner.bind_named("spread", [object]() -> decltype(auto) { return (object->spread); });
   if constexpr (requires { object->square; }) owner.bind_named("square", [object]() -> decltype(auto) { return (object->square); });
   if constexpr (requires { object->stack; }) owner.bind_named("stack", [object]() -> decltype(auto) { return (object->stack); });
+  if constexpr (requires { object->standard; }) owner.bind_named("standard", [object]() -> decltype(auto) { return (object->standard); });
   if constexpr (requires { object->start; }) owner.bind_named("start", [object]() -> decltype(auto) { return (object->start); });
   if constexpr (requires { object->start_cap; }) owner.bind_named("startCap", [object]() -> decltype(auto) { return (object->start_cap); });
   if constexpr (requires { object->start_color; }) owner.bind_named("startColor", [object]() -> decltype(auto) { return (object->start_color); });
@@ -6069,6 +6075,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(exposure)
   FLIGHT_SDK_ROW_WIDENS(exposure_compensation)
   FLIGHT_SDK_ROW_WIDENS(extend_mesh_prelude)
+  FLIGHT_SDK_ROW_WIDENS(extensions)
   FLIGHT_SDK_ROW_WIDENS(extra_bind_group_layout)
   FLIGHT_SDK_ROW_WIDENS(face)
   FLIGHT_SDK_ROW_WIDENS(facet)
@@ -7157,6 +7164,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(spread)
   FLIGHT_SDK_ROW_WIDENS(square)
   FLIGHT_SDK_ROW_WIDENS(stack)
+  FLIGHT_SDK_ROW_WIDENS(standard)
   FLIGHT_SDK_ROW_WIDENS(start)
   FLIGHT_SDK_ROW_WIDENS(start_cap)
   FLIGHT_SDK_ROW_WIDENS(start_color)

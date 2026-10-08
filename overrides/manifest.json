@@ -1310,6 +1310,38 @@
       "authoredOn": "2026-10-08"
     },
     {
+      "id": "materials-extended-pbr-exact-owner-construction",
+      "path": "flight/materials/extended_pbr_material.hpp",
+      "package": "@flighthq/materials",
+      "status": "complete",
+      "supplies": "packages/materials/src/extendedPbrMaterial.ts",
+      "derivedFrom": "a08266d6a60000bdbd3e9937c96465cdff8f1f5e9c391aef4f2a71cb75db9afc",
+      "reason": "The emitter refuses the named Partial<ExtendedPbrMaterial> option shape and therefore omits the constructor even after exact-owner surface allocation is available.",
+      "change": "Supplies the exact ExtendedPbrMaterial partial-row signature, delegates the surface trailer to the shared exact-owner constructor, and preserves the supplied extension array and standard property block or creates the same defaults.",
+      "equivalence": "The concrete material is allocated once with the upstream kind; surface options, ordered extension array identity, extension reference identities, and the standard block identity are preserved. Missing extensions produce an empty array and a missing standard block creates the same default property object.",
+      "whyNotAPatchOrRepair": "A declaration repair cannot supply the omitted body. The source Partial over a named interface is valid target-neutral TypeScript and replacing it with an emitter-specific expanded row would leak the C++ representation upstream.",
+      "unblocks": "Extended PBR materials and material presets can construct their actual composable material owner.",
+      "remaining": "None in this module.",
+      "expires": "when named Partial object shapes lower to structural rows and exact-owner construction emits directly.",
+      "authoredOn": "2026-10-08"
+    },
+    {
+      "id": "materials-upstream-preset-assemblies",
+      "path": "flight/materials/material_presets.hpp",
+      "package": "@flighthq/materials",
+      "status": "complete",
+      "supplies": "packages/materials/src/materialPresets.ts",
+      "derivedFrom": "95948c5e4876d214cbb52e5992b087aae396b731d3fa76949c650a46c2c394d5",
+      "reason": "The emitter refuses ten preset functions at named Partial shapes and emits the retained glass preset with designated initializers for non-aggregate structural option carriers plus a call to the omitted extended-PBR constructor.",
+      "change": "Implements every upstream preset as a thin assembly over the real material/property/extension constructors, applying each preset field only when the caller's partial row does not contain that field.",
+      "equivalence": "All eleven packed colors and metallic/roughness defaults match the source and caller fields retain spread-last precedence. Glass creates a fresh standard block and transmission descriptor, preserves nested overrides and surface options, keeps extension order, and aliases the same concrete extension allocation through its flattened PbrExtension prefix without copying identity.",
+      "whyNotAPatchOrRepair": "Insertion cannot replace invalid expressions or supply ten omitted bodies. Expanding named Partial shapes and encoding the flattened C++ extension owner alias in portable TypeScript would be target-specific.",
+      "unblocks": "The complete preset module compiles and exposes real standard and extended PBR materials instead of invented example-only substitutes.",
+      "remaining": "Concrete PBR extension owners remain flattened siblings of PbrExtension in generated types; the glass array uses an identity-preserving shared-owner alias over their identical declared prefix.",
+      "expires": "when named Partial/spread lowering and source interface heritage preserve concrete extension owners through the PbrExtension view.",
+      "authoredOn": "2026-10-08"
+    },
+    {
       "id": "materials-classic-optional-texture-variants",
       "path": "flight/materials/classic_materials.hpp",
       "package": "@flighthq/materials",
