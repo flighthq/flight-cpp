@@ -48,6 +48,7 @@ class ClockExample final {
   }
 
   void frame(const Frame& frame) {
+    if (frame.smoke && frame.index == 0) flight::clock::pause_clock(child_b_);
     handle_keys(frame);
     flight::clock::advance_clock(root_, frame.delta_time * 1000.0);
     frame.canvas.text("Hierarchical Clocks", 20.0, 10.0, 0xffffffffU, 24.0);

@@ -34,6 +34,9 @@ class MotionPathExample final {
   }
 
   void frame(const Frame& frame) {
+    if (frame.smoke && frame.index == 0) {
+      flight::motionpath::set_motion_path_progress(motion_path_, 0.42);
+    }
     handle_keys(frame);
     flight::motionpath::update_motion_path(motion_path_, frame.delta_time);
     const bool sampled = flight::motionpath::get_motion_path_position(motion_path_, point_, tangent_);

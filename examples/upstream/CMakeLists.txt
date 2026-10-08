@@ -4,44 +4,49 @@
 # from configurations that do not enable FLIGHT_CPP_BUILD_HOST_SDL.
 
 set(UPSTREAM_EXAMPLES
-  adjustments
   camera2d
   clock
   collision
-  crossfade
-  flowstates
-  interaction
   motionpath
-  movieclip
-  shapes
-  sound
   spatial
-  text
-  textinput
 )
 
-# These packages are not executable ports. Their TypeScript examples require
-# @flighthq/render-gl and @flighthq/scene2d-gl or @flighthq/scene3d-gl. Those
-# packages have no generated C++ headers because generation currently does not
-# terminate in @flighthq/render-gl (see deferred-packages.json). Keep them out
-# of UPSTREAM_EXAMPLES: a hand-painted lookalike is not the upstream example.
-set(UPSTREAM_EXAMPLES_BLOCKED_SCENE2D_GL
+# These packages do not yet have faithful SDL ports. Most core APIs are present,
+# but a port must keep the upstream Flight subsystem as the source of truth and
+# use SDL only for host input and presentation. Keep them out of
+# UPSTREAM_EXAMPLES until that is true; a local simulation of the subsystem is
+# not the upstream example.
+set(UPSTREAM_EXAMPLES_AWAITING_FAITHFUL_SDL_PORT
+  adjustments
   benchmark
   bitmapfont_generate
+  crossfade
   cross_backend_embed
+  flowstates
   formatloading
+  interaction
+  movieclip
   particleeditor
   particles
   pathboolean
   platformer
+  shapes
   snapshot
+  sound
   spring
   spritesheet
+  text
+  textinput
   tilemap
   tween
   video
 )
 
+# These TypeScript examples select the WebGL renderer. @flighthq/render-gl and
+# its @flighthq/scene3d-gl dependent have no generated C++ headers because
+# generation currently does not terminate in @flighthq/render-gl (see
+# deferred-packages.json). Their real materials, lighting, and picking cannot
+# be represented by a custom SDL painter.
 set(UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL
   awd2loading
   instanced_mesh
@@ -50,6 +55,20 @@ set(UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL
   scene_picking
   scene3d
 )
+
+set(_flight_cpp_upstream_inventory
+  ${UPSTREAM_EXAMPLES}
+  ${UPSTREAM_EXAMPLES_AWAITING_FAITHFUL_SDL_PORT}
+  ${UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL}
+)
+list(LENGTH _flight_cpp_upstream_inventory _flight_cpp_upstream_inventory_count)
+set(_flight_cpp_upstream_unique_inventory ${_flight_cpp_upstream_inventory})
+list(REMOVE_DUPLICATES _flight_cpp_upstream_unique_inventory)
+list(LENGTH _flight_cpp_upstream_unique_inventory _flight_cpp_upstream_unique_inventory_count)
+if(NOT _flight_cpp_upstream_inventory_count EQUAL 34 OR
+   NOT _flight_cpp_upstream_unique_inventory_count EQUAL 34)
+  message(FATAL_ERROR "Every one of the 34 pinned upstream examples must have exactly one status")
+endif()
 
 if(TARGET Flight::HostSdl)
   add_library(flight_cpp_upstream_sdl_host STATIC
@@ -66,38 +85,36 @@ if(TARGET Flight::HostSdl)
 
   set(flight_cpp_upstream_targets)
   foreach(example IN LISTS UPSTREAM_EXAMPLES)
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${example}.cpp")
-      add_executable(flight_cpp_upstream_${example} ${example}.cpp)
-      list(APPEND flight_cpp_upstream_targets flight_cpp_upstream_${example})
-      target_link_libraries(flight_cpp_upstream_${example} PRIVATE
-        flight_cpp_upstream_sdl_host
-        Flight::SdkPreview
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${example}.cpp")
+      message(FATAL_ERROR "Audited upstream example ${example} has no source file")
+    endif()
+    add_executable(flight_cpp_upstream_${example} ${example}.cpp)
+    list(APPEND flight_cpp_upstream_targets flight_cpp_upstream_${example})
+    target_link_libraries(flight_cpp_upstream_${example} PRIVATE
+      flight_cpp_upstream_sdl_host
+      Flight::SdkPreview
+    )
+    flight_cpp_set_project_warnings(flight_cpp_upstream_${example})
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+      # Generated SDK dependencies still contain intentional no-op parameters, ignored
+      # WeakMap erase results, and JavaScript-number indices converted to C++ index types.
+      # Keep all other project warnings fatal for the ports.
+      target_compile_options(flight_cpp_upstream_${example} PRIVATE
+        -Wno-error=conversion
+        -Wno-error=float-conversion
+        -Wno-error=unused-parameter
+        -Wno-error=unused-result
       )
-      if(example STREQUAL "sound")
-        target_link_libraries(flight_cpp_upstream_${example} PRIVATE Flight::HostSdlSdkAudio)
-      endif()
-      flight_cpp_set_project_warnings(flight_cpp_upstream_${example})
-      if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-        # Generated SDK dependencies still contain intentional no-op parameters, ignored
-        # WeakMap erase results, and JavaScript-number indices converted to C++ index types.
-        # Keep all other project warnings fatal for the ports.
-        target_compile_options(flight_cpp_upstream_${example} PRIVATE
-          -Wno-error=conversion
-          -Wno-error=float-conversion
-          -Wno-error=unused-parameter
-          -Wno-error=unused-result
-        )
-      endif()
-      if(BUILD_TESTING)
-        add_test(
-          NAME flight_cpp_upstream_${example}_smoke
-          COMMAND flight_cpp_upstream_${example} --smoke
-        )
-        set_tests_properties(
-          flight_cpp_upstream_${example}_smoke
-          PROPERTIES ENVIRONMENT "SDL_VIDEODRIVER=dummy"
-        )
-      endif()
+    endif()
+    if(BUILD_TESTING)
+      add_test(
+        NAME flight_cpp_upstream_${example}_smoke
+        COMMAND flight_cpp_upstream_${example} --smoke
+      )
+      set_tests_properties(
+        flight_cpp_upstream_${example}_smoke
+        PROPERTIES ENVIRONMENT "SDL_VIDEODRIVER=dummy"
+      )
     endif()
   endforeach()
   add_custom_target(flight_cpp_upstream_examples DEPENDS ${flight_cpp_upstream_targets})

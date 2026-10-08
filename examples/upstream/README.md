@@ -1,9 +1,11 @@
 # Upstream Flight example ports
 
-The targets in this directory are native SDL ports of the pinned Flight TypeScript examples under
-`.dependencies/flight/examples/packages`. They open an 800 by 600 resizable window, render
-continuously, and retain the original scene, animation, and controls. The source comment at the top
-of each port names the TypeScript file used as its authority.
+The targets in this directory are audited native SDL ports of the pinned Flight TypeScript examples
+under `.dependencies/flight/examples/packages`. They open an 800 by 600 resizable window and render
+continuously. SDL replaces the browser host and presentation surface; the example's camera,
+collision, clock, motion-path, or spatial behavior still comes from the same
+generated Flight APIs used by the TypeScript source. The source comment at the top of each port names
+the TypeScript file used as its authority.
 
 These targets require both `FLIGHT_CPP_BUILD_EXAMPLES=ON` and
 `FLIGHT_CPP_BUILD_HOST_SDL=ON`. A build without the optional SDL host does not advertise headless
@@ -11,22 +13,13 @@ substitutes as examples.
 
 ## Runnable ports
 
-| Target suffix | Behavior preserved from the TypeScript example |
-| --- | --- |
-| `adjustments` | Interactive brightness, contrast, hue, and saturation sliders; fused matrix and swatches |
-| `camera2d` | Follow camera, bounded world, parallax layers, keyboard movement, pointer-centered wheel zoom |
-| `clock` | Parent/child clock hierarchy, effective pause and scale controls, animated shapes and diagnostics |
-| `collision` | Draggable circle/AABB/polygon colliders, pair testing, overlap color, and MTV arrows |
-| `crossfade` | Click-driven idle/locomotion crossfade, blended walk/run pose, additive body motion, progress bar |
-| `flowstates` | Boot/menu/play/pause/game-over stack with the original keyboard transitions and overlay behavior |
-| `interaction` | Precise hover, topmost picking, captured dragging, live overlap reporting, and event HUD |
-| `motionpath` | Two-segment cubic path, moving oriented arrow, speed and clamp/loop/ping-pong controls |
-| `movieclip` | 24-frame labeled timeline, frame scripts, play/stop, stepping, and label navigation |
-| `shapes` | All five drawing rows, gradients, stroke variants, and the live interactive star |
-| `sound` | Procedural tones through the SDL audio backend plus button, master, bus-gain, and pan controls |
-| `spatial` | Moving indexed boxes, visible grid cells, pair/point/ray/region queries, and hit counts |
-| `text` | The complete text-label, alignment, wrapping, style, background, border, and code gallery |
-| `textinput` | Normal, restricted numeric, and password fields with focus, selection, editing, undo, and redo |
+| Target suffix | Flight subsystem used for behavior | Behavior preserved from the TypeScript example |
+| --- | --- | --- |
+| `camera2d` | `flight::camera`, `flight::camera_controls` | Follow camera, bounded world, parallax layers, keyboard movement, pointer-centered wheel zoom |
+| `clock` | `flight::clock` | Parent/child clock hierarchy, effective pause and scale controls, animated shapes and diagnostics |
+| `collision` | `flight::collision` | Draggable circle/AABB/polygon colliders, pair testing, overlap color, and MTV arrows |
+| `motionpath` | `flight::path`, `flight::motionpath` | Two-segment cubic path, moving oriented arrow, speed and clamp/loop/ping-pong controls |
+| `spatial` | `flight::spatial` | Moving indexed boxes, visible grid cells, pair/point/ray/region queries, and hit counts |
 
 Every executable accepts `--smoke`. Smoke mode creates a hidden SDL window, renders three fixed-step
 frames, and exits; CTest runs this path with SDL's dummy video driver.
@@ -46,19 +39,30 @@ Run an interactive example without `--smoke`, for example:
 ./build/examples/upstream/flight_cpp_upstream_camera2d
 ```
 
-The aggregate target builds every runnable port listed above. It deliberately does not claim to
-build every package in the upstream tree.
+The aggregate target builds every audited runnable port listed above. It deliberately does not claim
+to build all 34 packages in the upstream tree. CMake does, however, require all 34 pinned packages to
+appear exactly once in the runnable, awaiting-port, or renderer-blocked inventory, and it fails
+configuration if a runnable source is missing.
 
-## Blocked upstream examples
+## Non-runnable upstream examples
 
-The remaining upstream packages are listed in `UPSTREAM_EXAMPLES_BLOCKED_SCENE2D_GL` and
-`UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL` in `CMakeLists.txt`; they are not executable targets. Their
-TypeScript render adapters use `@flighthq/render-gl` plus `@flighthq/scene2d-gl` or
-`@flighthq/scene3d-gl`. The corresponding C++ headers are absent because generation over
-`@flighthq/render-gl` currently does not terminate, as recorded in the repository's
-`deferred-packages.json`.
+`UPSTREAM_EXAMPLES_AWAITING_FAITHFUL_SDL_PORT` in `CMakeLists.txt` names the 23 packages that do not
+yet have an audited native port. Some of their prior C++ files locally recreated animation, flow,
+interaction, movie-clip, shape, mixer, or text-input behavior. Those files were removed: passing a
+smoke test is not enough if the example bypasses the Flight API it is meant to exercise. A future
+port belongs in `UPSTREAM_EXAMPLES` only when its state and algorithms come from the same generated
+Flight APIs as the pinned TypeScript source.
 
-This is a compiler/runtime integration gap, not a DOM dependency. In particular, the 3D core scene,
-mesh, camera, lighting, and material data types exist in C++, but the GL scene renderer does not.
-These examples must be ported through that renderer once it is generated; a custom 2D projection or
-hand-painted material is not an acceptable substitute.
+The six packages in `UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL` are a separate renderer-generation
+blocker. Their TypeScript sources select `@flighthq/render-gl` and `@flighthq/scene3d-gl`; the
+corresponding C++ headers are absent because generation over `@flighthq/render-gl` currently does not
+terminate, as recorded in `deferred-packages.json`. This is not a DOM dependency. The 3D scene, mesh,
+camera, lighting, and material data types exist in C++, but the GL scene renderer does not. These
+examples must use that renderer once it is generated; a custom 2D projection or hand-painted
+material is not an acceptable substitute.
+
+The upstream 2D examples normally select `scene2d-canvas`. Many headers for that package exist, but
+critical render-state and shape/text renderer modules are recorded as refused in
+`generated/refusals.json`. The audited ports therefore use a small SDL presentation adapter while
+retaining the upstream Flight subsystem calls. That adapter is not permission to replace a Flight
+algorithm with a lookalike implementation.

@@ -92,7 +92,8 @@ class SpatialExample final {
     update(frame.delta_time);
     const double mouse_x = frame.input.pointer_x;
     const double mouse_y = frame.input.pointer_y;
-    const Mode mode = frame.input.pointer_down ? Mode::point
+    const Mode mode = frame.smoke ? Mode::region
+                      : frame.input.pointer_down ? Mode::point
                       : frame.input.key_down(SDLK_R) ? Mode::ray
                       : frame.input.key_down(SDLK_Q) ? Mode::region
                                                     : Mode::pairs;
