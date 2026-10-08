@@ -5,46 +5,55 @@
 
 set(UPSTREAM_EXAMPLES
   adjustments
-  awd2loading
-  benchmark
-  bitmapfont_generate
   camera2d
   clock
   collision
-  cross_backend_embed
   crossfade
   flowstates
-  formatloading
-  instanced_mesh
   interaction
-  materialshowcase
   motionpath
   movieclip
+  shapes
+  sound
+  spatial
+  text
+  textinput
+)
+
+# These packages are not executable ports. Their TypeScript examples require
+# @flighthq/render-gl and @flighthq/scene2d-gl or @flighthq/scene3d-gl. Those
+# packages have no generated C++ headers because generation currently does not
+# terminate in @flighthq/render-gl (see deferred-packages.json). Keep them out
+# of UPSTREAM_EXAMPLES: a hand-painted lookalike is not the upstream example.
+set(UPSTREAM_EXAMPLES_BLOCKED_SCENE2D_GL
+  benchmark
+  bitmapfont_generate
+  cross_backend_embed
+  formatloading
   particleeditor
   particles
   pathboolean
   platformer
-  shapes
-  scene_fire
-  scene_picking
-  scene3d
   snapshot
-  sound
-  spatial
   spring
   spritesheet
-  text
-  textinput
   tilemap
   tween
   video
 )
 
+set(UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL
+  awd2loading
+  instanced_mesh
+  materialshowcase
+  scene_fire
+  scene_picking
+  scene3d
+)
+
 if(TARGET Flight::HostSdl)
   add_library(flight_cpp_upstream_sdl_host STATIC
     sdl_host.cpp
-    ported_examples_2d.cpp
-    ported_examples_3d.cpp
   )
   target_link_libraries(flight_cpp_upstream_sdl_host PUBLIC Flight::HostSdl Flight::SdkPreview)
   target_include_directories(flight_cpp_upstream_sdl_host PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
