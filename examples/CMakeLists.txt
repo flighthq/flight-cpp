@@ -18,6 +18,8 @@ if(TARGET Flight::HostSdlSdkAudio)
   flight_cpp_set_project_warnings(flight_cpp_sound_sdl_example)
 endif()
 
+add_subdirectory(upstream)
+
 if(BUILD_TESTING)
   add_test(NAME flight_cpp.example.tween COMMAND flight_cpp_tween_example)
   add_test(NAME flight_cpp.example.sdk_math COMMAND flight_cpp_sdk_math_example)
