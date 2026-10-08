@@ -35,6 +35,7 @@ int main() {
   using namespace flight::path;
   using namespace flight::path_boolean;
 
+  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   auto pathA = create_path();

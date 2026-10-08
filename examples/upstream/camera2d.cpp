@@ -60,6 +60,7 @@ int main() {
   double playerX = WORLD_WIDTH * 0.5;
   double playerY = WORLD_HEIGHT * 0.5;
 
+  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   auto worldContainer = create_display_object(std::nullopt);

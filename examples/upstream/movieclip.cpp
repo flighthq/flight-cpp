@@ -25,6 +25,7 @@ int main() {
   using namespace flight::scene2d;
   using namespace flight::movieclip;
 
+  // NOT AVAILABLE: generated MovieClip timeline and Scene2D construction are partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   // Create a MovieClip with labeled sections.

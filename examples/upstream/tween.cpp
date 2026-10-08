@@ -72,6 +72,7 @@ int main() {
   }};
 
   auto manager = create_tween_manager();
+  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   for (int i = 0; i < static_cast<int>(easings.size()); ++i) {

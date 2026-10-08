@@ -24,6 +24,7 @@ int main() {
   using namespace flight::mesh;
   using namespace flight::lighting;
 
+  // NOT AVAILABLE: generated mesh layout and required 3D constructors do not compile at this SDK pin.
   auto scene = flight::scene3d::create_node_3_d(flight::scene3d::Node3DKind);
 
   auto ground = create_mesh(

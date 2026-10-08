@@ -19,6 +19,7 @@ int main() {
   using namespace flight::bitmaptext;
   using namespace flight::glyphatlas;
 
+  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   auto atlas = create_glyph_atlas({

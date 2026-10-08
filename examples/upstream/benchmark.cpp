@@ -38,6 +38,7 @@ int main() {
   using namespace flight::quadbatch;
   using namespace flight::texture;
 
+  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   auto atlas = create_texture_atlas({});

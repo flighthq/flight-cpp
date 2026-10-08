@@ -25,6 +25,7 @@ int main() {
   constexpr int QUAD_SIZE = 24;
   constexpr int INSTANCE_COUNT = 24;
 
+  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   // Producer scene (quad batch)

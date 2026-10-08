@@ -31,6 +31,7 @@ int main() {
   using namespace flight::spring;
   using namespace flight::tween;
 
+  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   auto springConfig = create_spring_config(3.0, 0.3);

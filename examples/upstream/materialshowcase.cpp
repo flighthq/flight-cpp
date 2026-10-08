@@ -95,6 +95,7 @@ int main() {
     {"Wireframe", 0xf0f5ffff},
   };
 
+  // NOT AVAILABLE: generated mesh layout and required 3D constructors do not compile at this SDK pin.
   auto scene = create_node_3_d(flight::types::Node3DKind);
 
   for (int i = 0; i < static_cast<int>(entries.size()); ++i) {

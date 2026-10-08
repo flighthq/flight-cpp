@@ -31,6 +31,7 @@ int main() {
   using namespace flight::lighting;
   using namespace flight::particles;
 
+  // NOT AVAILABLE: generated mesh layout and required 3D constructors do not compile at this SDK pin.
   auto scene = flight::scene3d::create_node_3_d(flight::scene3d::Node3DKind);
 
   auto floorGeom = create_plane_mesh_geometry(8.0, 8.0);

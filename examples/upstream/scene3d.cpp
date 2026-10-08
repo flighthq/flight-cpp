@@ -23,6 +23,7 @@ int main() {
   using namespace flight::mesh;
   using namespace flight::lighting;
 
+  // NOT AVAILABLE: generated mesh layout and required 3D constructors do not compile at this SDK pin.
   auto boxGeometry = create_box_mesh_geometry(1.0, 1.0, 1.0);
   auto sphereGeometry = create_sphere_mesh_geometry(0.5, 48, 32);
   auto coneGeometry = create_cone_mesh_geometry(0.5, 1.0, 32);

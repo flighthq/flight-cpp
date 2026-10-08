@@ -39,6 +39,7 @@ int main() {
   // auto documentScene = create_scene_3_d_from_document(awdDocument);
   // auto importedLights = create_scene_3_d_lights_from_document(awdDocument);
 
+  // NOT AVAILABLE: generated mesh layout and required 3D constructors do not compile at this SDK pin.
   auto camera = create_camera_3_d({
     .far = 40.0,
     .near = 0.1,

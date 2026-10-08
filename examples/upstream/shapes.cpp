@@ -11,6 +11,7 @@
 #include <vector>
 
 int main() {
+  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = flight::scene2d::create_display_object(std::nullopt);
   root->scale_x = 1.0;
   root->scale_y = 1.0;

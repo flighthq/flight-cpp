@@ -19,6 +19,7 @@ int main() {
   using namespace flight::scene2d;
   using namespace flight::interaction;
 
+  // NOT AVAILABLE: generated interaction hierarchy and Scene2D construction are partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   // Register hit test handlers.

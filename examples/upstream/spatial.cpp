@@ -41,6 +41,7 @@ int main() {
   using namespace flight::shape;
   using namespace flight::scene2d;
 
+  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   auto backend = flight::spatial::create_uniform_grid_spatial_backend_2_d(100.0);

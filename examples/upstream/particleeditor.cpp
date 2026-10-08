@@ -28,6 +28,7 @@ int main() {
   constexpr double WIDTH = 800.0;
   constexpr double HEIGHT = 600.0;
 
+  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   auto atlas = create_texture_atlas({});

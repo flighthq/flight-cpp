@@ -62,6 +62,7 @@ int main() {
   using namespace flight::shape;
   using namespace flight::scene2d;
 
+  // NOT AVAILABLE: generated Scene2D construction/hierarchy is partial at this SDK pin.
   auto root = create_display_object(std::nullopt);
 
   auto gameState = create_initial_state();
