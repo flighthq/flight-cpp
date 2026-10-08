@@ -2228,11 +2228,11 @@
       "supplies": "packages/scene3d/src/sceneNode.ts",
       "derivedFrom": "49c4b322bd899e048954920055264c378fe7de9f09b03363dfd0c5c07ed58076",
       "reason": "The emitter refuses Node3D construction because its public intersection has no nominal C++ owner and refuses the concrete runtime assertion because NodeRuntime<Node3DTraits> and the flattened Node3DRuntime have no emitted heritage.",
-      "change": "Constructs the schema-only Node3D row with all upstream defaults and options, retains one concrete Node3DRuntime allocation through the generated base runtime slot, and restores runtime plus lazy signal recovery from that same owner.",
-      "equivalence": "Every node owns independent identity transform values, preserves kind/name/enabled/appearance options, initializes all base and 3D cache sentinels exactly as the source, carries Node3DTraitsKey, and allocates signals lazily with stable identity.",
+      "change": "Constructs the schema-only Node3D row with all upstream defaults and options, retains one concrete Node3DRuntime allocation through the generated base runtime slot, restores runtime plus lazy signal recovery, and supplies the exact-owner bridge used by the upstream hierarchy operations.",
+      "equivalence": "Every node owns independent identity transform values, preserves kind/name/enabled/appearance options, initializes all base and 3D cache sentinels exactly as the source, carries Node3DTraitsKey, and allocates signals lazily with stable identity. Parent and ordered child references, revisions, and parent/children change signals are retained in that same runtime owner for schema Node3D and concrete Mesh nodes.",
       "whyNotAPatchOrRepair": "The TypeScript intersection and runtime extension are the intended public model. Declaration insertion cannot construct the missing owner, while target-specific source inheritance would change the portable API. The base and concrete flattened runtime layouts have the same declared prefix, so the base slot retains the concrete allocation and its shared control block rather than materializing a replacement.",
-      "unblocks": "The real upstream Scene3D roots and the common node constructor used by every blocked GL example.",
-      "remaining": "Hierarchy traversal, 3D transform cache operations, mesh builders, and Scene3D render modules remain independent downstream blockers.",
+      "unblocks": "The real upstream Scene3D roots, mixed concrete-node hierarchy, and common node constructor used by every blocked GL example.",
+      "remaining": "Primitive builders and Scene3D render modules remain independent downstream blockers.",
       "expires": "when intersection construction and exact derived-runtime recovery emit for Node3D.",
       "authoredOn": "2026-10-08"
     },
@@ -2298,6 +2298,22 @@
       "unblocks": "A real Scene3D drawable Mesh with upstream geometry, material, deformation, and Node3D runtime semantics.",
       "remaining": "Hierarchy traversal, transform cache completion, primitive builders, and GL scene rendering remain downstream blockers.",
       "expires": "when Node3D-to-Mesh intersection construction and exact flattened runtime extension recovery emit directly.",
+      "authoredOn": "2026-10-08"
+    },
+    {
+      "id": "node-transform3d-flattened-runtime-cache",
+      "path": "flight/node/node_transform3d.hpp",
+      "package": "@flighthq/node",
+      "status": "complete",
+      "supplies": "packages/node/src/nodeTransform3d.ts",
+      "derivedFrom": "26c19f2d3fc5b53eaf1a8eeded3d049cead5b59dd75ce92090a4bafa7756183c",
+      "reason": "The emitter refuses all Transform3D operations because their public Node3D intersection has no nominal C++ owner and the flattened Node3DRuntime cannot be recovered through emitted inheritance.",
+      "change": "Recovers the retained concrete runtime owner and supplies transform copying, local and world matrix caching, detached-matrix state, matrix-to-transform synchronization, and local/global point conversion over the generated owners.",
+      "equivalence": "Local matrices compose the exact position, rotation, and scale values and cache against the same local revision. World matrices recursively compose parent world and local transforms and cache against both revisions. Direct matrix assignment owns an independent copy, marks detachment, and synchronization decomposes that matrix back into the same transform fields before invalidating descendants through revisions.",
+      "whyNotAPatchOrRepair": "The TypeScript Node3D intersection and runtime extension are the portable API. Declaration insertion cannot implement the refused functions, while target-specific inheritance in source would change that model. The override accesses the one concrete runtime allocation already retained by the exact Node3D and Mesh constructors.",
+      "unblocks": "Real upstream object transforms, parent-relative world placement, camera attachment, and world/local coordinate helpers for Scene3D examples.",
+      "remaining": "Camera matrix storage also depends on the companion target-neutral matrix4 independent-storage source patch; rendering remains a separate downstream package.",
+      "expires": "when Node3D structural intersections and flattened Node3DRuntime recovery emit for the transform cache module.",
       "authoredOn": "2026-10-08"
     }
   ]

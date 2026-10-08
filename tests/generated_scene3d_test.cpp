@@ -1,5 +1,6 @@
 #include <flight/scene3d/scene_node.hpp>
 #include <flight/mesh/mesh_geometry_operations.hpp>
+#include <flight/node/node_transform3d.hpp>
 #include <flight/scene3d/mesh.hpp>
 
 #include <cmath>
@@ -159,6 +160,42 @@ int main() {
   check(scene3d::is_mesh(mesh) &&
             scene3d::is_mesh(flight::Any::object(mesh)),
         "Mesh discrimination accepts concrete and erased references");
+
+  flight::row_get<flight::RowKey<"position">>(first)->x = 2.0;
+  scene3d::get_node3_druntime(first)->local_transform_id += 1.0;
+  mesh->position->x = 4.0;
+  flight::node::invalidate_node_local_transform(mesh);
+  flight::node::add_node_child(first, mesh);
+  check(scene3d::get_node3_dchild_count(first) == 1.0 &&
+            scene3d::get_node3_dparent(scene3d::node3_dview(mesh)) ==
+                std::optional<types::Node3D>{first},
+        "Node3D hierarchy retains concrete Mesh children and parent identity");
+  const auto local_matrix = flight::node::get_node_local_matrix4(mesh);
+  const auto world_matrix = flight::node::get_node_world_matrix4(mesh);
+  check(std::abs(local_matrix->m.get_index(12.0) - 4.0) < 1e-6 &&
+            std::abs(world_matrix->m.get_index(12.0) - 6.0) < 1e-6,
+        "3D transform caches compose a concrete child with its Node3D parent");
+
+  auto detached = flight::geometry::create_matrix4(
+      std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt,
+      std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt,
+      std::nullopt, std::nullopt, 9.0, 3.0, 1.0, std::nullopt);
+  flight::node::set_node_local_matrix4(mesh, detached);
+  check(flight::node::is_node_local_matrix4_detached(mesh) &&
+            flight::node::get_node_local_matrix4(mesh) != detached &&
+            flight::node::get_node_local_matrix4(mesh)->m.get_index(12.0) ==
+                9.0,
+        "direct local matrices are copied, retained, and marked detached");
+  flight::node::sync_node_transform3_dfrom_matrix4(mesh);
+  check(!flight::node::is_node_local_matrix4_detached(mesh) &&
+            std::abs(mesh->position->x - 9.0) < 1e-6 &&
+            std::abs(mesh->position->y - 3.0) < 1e-6,
+        "detached matrices synchronize back into authored TRS fields");
+
+  flight::node::remove_node_child(first, mesh);
+  check(scene3d::get_node3_dchild_count(first) == 0.0 &&
+            !scene3d::get_node3_dparent(scene3d::node3_dview(mesh)).has_value(),
+        "Node3D removal clears both sides of the hierarchy");
 
   return failures == 0 ? 0 : 1;
 }
