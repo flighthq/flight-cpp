@@ -1,0 +1,55 @@
+diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/glMeshProgram.ts
+--- a/packages/scene3d-gl/src/glMeshProgram.ts
++++ b/packages/scene3d-gl/src/glMeshProgram.ts
+@@ -280,12 +280,10 @@ export function ensureGlScene3DProgram<T extends GlMeshProgram>(
+   compile: (gl: GlContext) => T,
+ ): T {
+   const runtime = getGlScene3DRuntime(state);
+-  let program = runtime.programCache.get(key);
+-  if (program === undefined) {
+-    program = compile(state.gl);
+-    runtime.programCache.set(key, program);
+-  }
+-  return program as T;
++  if (runtime.programCache.has(key)) return runtime.programCache.get(key) as T;
++  const program = compile(state.gl);
++  runtime.programCache.set(key, program);
++  return program;
+ }
+ 
+ // The HAS_UV_TRANSFORM define-key predicate every map-sampling family shares: true only when the
+diff --git a/packages/scene3d-gl/src/glScene3DRuntime.ts b/packages/scene3d-gl/src/glScene3DRuntime.ts
+--- a/packages/scene3d-gl/src/glScene3DRuntime.ts
++++ b/packages/scene3d-gl/src/glScene3DRuntime.ts
+@@ -6,6 +6,7 @@ import {
+ } from '@flighthq/render-gl/contract';
+ import type {
++  GlMeshProgram,
+   GlScene3DRuntime,
+   GlRenderState,
+   GlRenderStateRuntime,
+   GlSkinPaletteTexture,
+@@ -28,7 +29,10 @@ export function destroyGlScene3DRuntime(state: GlRenderState): void {
+   if (scene === undefined) return;
+   const gl = state.gl;
+ 
+-  for (const program of scene.programCache.values()) gl.deleteProgram(program.program);
++  for (const value of scene.programCache.values()) {
++    const program = value as GlMeshProgram;
++    gl.deleteProgram(program.program);
++  }
+   scene.programCache.clear();
+   scene.activeMeshProgram = null;
+ 
+diff --git a/packages/types/src/GlScene3DRuntime.ts b/packages/types/src/GlScene3DRuntime.ts
+--- a/packages/types/src/GlScene3DRuntime.ts
++++ b/packages/types/src/GlScene3DRuntime.ts
+@@ -127,7 +127,7 @@ export interface GlScene3DRuntime {
+   opaquePool: GlScene3DDrawEntry[];
+   pbrExtensionGuard?: ((extensions: readonly PbrExtensionValue[]) => void) | null;
+   pbrTransmissionSceneColor: GlPbrTransmissionSceneColor | null;
+-  programCache: Map<string, GlMeshProgram>;
++  programCache: Map<string, object>;
+   shadow: GlScene3DShadow | null;
+   shadowTarget: GlTextureRenderTarget | null;
+   // The per-state GPU skin bone-palette data texture (RGBA32F), created lazily by ensureGlSkinPalette on

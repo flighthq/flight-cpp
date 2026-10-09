@@ -876,6 +876,23 @@
       "appliedOn": "2026-10-08"
     },
     {
+      "id": "compiler-generic-erased-map-reference-recovery",
+      "dependency": "flight-compiler",
+      "patch": "compiler-generic-erased-map-reference-recovery.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "type assertion target must identify exactly one C++ variant alternative: target T against [flight::Ref<flight::types::GlMeshProgram>]",
+      "rewrite": "Preserves the declared object | undefined result of Map<string, object>.get, routes erased-reference recovery before the generic dynamic-cast lane, and emits checked recovery for both concrete and constrained generic reference targets.",
+      "equivalence": "Map storage remains one type-tagged ErasedRef value per JavaScript object reference. Recovery asks that retained tag for the exact concrete owner (or the generic reference element type) and returns the same shared owner; a mismatched tag yields no reference instead of reinterpreting memory. Non-object unknown results and non-reference targets retain their existing paths.",
+      "verification": "A focused compiler regression models the shared program cache, emits erased_ref_as for both its generic lookup and concrete destruction loop, and passes the native C++ syntax gate and compiler package typecheck.",
+      "whyNotUpstreamFirst": "The pinned compiler already contains tagged Map object storage and its checked recovery helper, but loses bare-object Map.get evidence and lets the earlier generic dynamic conversion preempt that helper. This narrowly completes those existing contracts against the pinned revision.",
+      "unblocks": "Allows the real Scene3D GL shared Map<string, object> program cache to retain heterogeneous concrete program records while returning their exact compiled owners to each material family.",
+      "expires": "when flight-compiler preserves bare-object Map.get evidence and performs checked concrete and generic ErasedRef recovery in its pinned release.",
+      "appliedOn": "2026-10-08"
+    },
+    {
       "id": "renderable-concrete-node-arms",
       "dependency": "flight",
       "patch": "renderable-concrete-node-arms.patch",
@@ -971,6 +988,23 @@
       "whyNotUpstreamFirst": "The context tier intentionally exposes one renderer-neutral object cache, while the pinned native target needs its type erasure stated at that storage boundary and its exact view stated at the consumer. The rewrite is target-neutral and changes only static annotations.",
       "unblocks": "Clears glScene3DRuntime's root refusal and the dependency chain needed by material registration, lit programs, PBR extensions, scene time, and the final Scene3D draw traversal.",
       "expires": "when WeakMap generic assignability preserves checked typed views across object-erased fields automatically, or Flight adopts the same boundary and local-view annotations upstream.",
+      "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-gl-erased-program-cache",
+      "dependency": "flight",
+      "patch": "scene3d-gl-erased-program-cache.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types/src/GlScene3DRuntime.ts plus packages/scene3d-gl/src/glMeshProgram.ts and glScene3DRuntime.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "type assertion target must identify exactly one C++ variant alternative: target T against [flight::Ref<flight::types::GlMeshProgram>]",
+      "rewrite": "Types the heterogeneous shared program cache as Map<string, object>, returns a checked generic view on a cache hit, and recovers the concrete GlMeshProgram owner while destroying cached programs.",
+      "equivalence": "Generic arguments and assertions erase in JavaScript. The same cache object, string key, compiled program object, and compile-once policy remain; has followed synchronously by get cannot observe an intervening mutation. Destruction still visits every cached value once, deletes the same underlying WebGLProgram, clears the same map, and retains no replacement objects or side storage.",
+      "verification": "The matching compiler regression emits checked generic and concrete ErasedRef recovery and passes the native syntax gate. Patch-stack composition is verified against the pinned Flight and compiler revisions before generation.",
+      "whyNotUpstreamFirst": "The shared cache intentionally stores several extended program record shapes under family-namespaced keys. The target-neutral object boundary accurately states that heterogeneity while the checked consumer assertions preserve each exact owner for native emission.",
+      "unblocks": "Clears glMeshProgram's generic cache refusal so unlit, shaded, classic, toon, PBR, custom-shader, shadow, matcap, debug, and wireframe programs can share the real upstream state cache.",
+      "expires": "when heterogeneous Map storage preserves constrained generic owners automatically, or Flight adopts this explicit erased cache boundary upstream.",
       "appliedOn": "2026-10-08"
     }
   ]
