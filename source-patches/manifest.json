@@ -1210,6 +1210,23 @@
       "unblocks": "Allows billboard detection and the real camera-facing traversal to probe drawable billboard capabilities without claiming mutation over a readonly scene node.",
       "expires": "when Flight uses the readonly partial probe upstream, or the compiler can infer the read-only capability view from this predicate without an assertion.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-exact-runtime-owner",
+      "dependency": "flight",
+      "patch": "scene3d-exact-runtime-owner.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types/src/Node3D.ts and packages/scene3d/src/sceneNode.ts",
+      "package": "@flighthq/scene3d",
+      "answers": "refusal",
+      "refusal": "a reference assertion from NodeRuntime<Node3DTraits> to the intersection Node3DRuntime has no emitted C++ heritage path",
+      "rewrite": "Declares the Node3D entity runtime slot as its exact Node3DRuntime owner, constructs that owner as one fresh typed object from the base runtime fields plus the 3D appearance and transform fields, and reads the exact slot directly.",
+      "equivalence": "The spread copies a newly allocated, unobserved base runtime into the one object returned to the node; every base field retains the same value and reference, and the existing trait initializers write the same 3D defaults before return. Node3D already guarantees this runtime shape, so narrowing its symbol slot and reading it directly changes no JavaScript property, identity visible to callers, initialization order after publication, or mutation path.",
+      "verification": "The patch composes after the complete Flight source-patch stack. Full Scene3D regeneration verifies both runtime construction and access emit without a flattened-owner assertion, followed by generated-header compilation.",
+      "whyNotUpstreamFirst": "The public Node3D contract already promises Node3DRuntime through getNode3DRuntime, but its inherited entity slot was declared only as the base NodeRuntime. Naming the actual slot and constructing its complete owner is a target-neutral correction of that contract.",
+      "unblocks": "Allows createNode3D, every mesh constructor, and all real Scene3D transform and appearance consumers to share the same exact runtime owner without casting between unrelated flattened C++ records.",
+      "expires": "when Flight declares the exact Node3D runtime slot and constructs that owner upstream, or native interface intersections preserve their runtime owner identity through the base Node slot automatically.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
