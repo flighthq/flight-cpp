@@ -2018,13 +2018,13 @@
       "module": "packages/types/src/CreateTextureOptions.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
-      "refusal": "CreateTextureOptions distributes one mapped conditional over TextureLike and intersects resource afterward, leaving discriminant branches as anonymous structural alternatives with no declared dimension option owner",
-      "rewrite": "Names one option alias per named runtime-free texture dimension, includes the same resource field in each alias, defines CreateTextureOptions as their union, and uses the corresponding named live texture types in constructors and overloads.",
-      "equivalence": "Each named alias applies the identical Partial/Omit and dimension rule to the same TextureLike arm, then intersects the identical optional resource field. Distribution of the former outer resource intersection yields the same accepted TypeScript objects. Constructor defaults, field writes, returned live types, and runtime behavior are unchanged.",
-      "verification": "The complete Flight patch stack must apply and reverse cleanly, the Flight TypeScript build must accept all public overloads, and focused native texture.ts regeneration must select each declared option and live texture arm without Extract or anonymous-owner refusals.",
+      "refusal": "CreateTextureOptions distributes one generic mapped conditional over TextureLike and intersects resource afterward; even after callers name discriminant branches, emitting the private generic wrappers themselves requires a concrete object shape that no open Type parameter owns",
+      "rewrite": "Names one option alias per concrete runtime-free texture dimension, spells the same Partial/Omit and dimension rule directly on that dimension, intersects the shared resource shape into each alias, defines CreateTextureOptions as their union, and uses the corresponding named live texture types in constructors and overloads.",
+      "equivalence": "Each concrete alias applies the identical Partial/Omit transformation and dimension optionality that the distributive conditional selected for that TextureLike arm, then intersects the identical optional resource field. The resulting four-arm union accepts and exposes the same TypeScript objects. Constructor defaults, field writes, returned live types, and runtime behavior are unchanged.",
+      "verification": "The complete Flight patch stack must apply and reverse cleanly, the Flight TypeScript build must accept all public overloads, focused CreateTextureOptions.ts generation must emit with zero refusals, and focused texture.ts generation must select each declared option and live texture arm without Extract or anonymous-owner refusals.",
       "whyNotUpstreamFirst": "The named aliases are target-neutral and improve the public API, but they are pinned here because the native backend requires a declared owner for each discriminated structural alternative.",
       "unblocks": "Gives 2D, array, 3D, and cube texture construction stable owners used by real GL material and texture realization paths.",
-      "expires": "when Flight names all four create-option and live texture dimensions upstream, or flight-compiler retains exact owners through this distributed mapped intersection.",
+      "expires": "when Flight names all four create-option and live texture dimensions without open generic wrappers upstream, or flight-compiler can emit generic conditional intersections without requiring one concrete object shape.",
       "appliedOn": "2026-10-09"
     },
     {

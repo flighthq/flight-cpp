@@ -1,7 +1,7 @@
 diff --git a/packages/types/src/CreateTextureOptions.ts b/packages/types/src/CreateTextureOptions.ts
 --- a/packages/types/src/CreateTextureOptions.ts
 +++ b/packages/types/src/CreateTextureOptions.ts
-@@ -1,5 +1,11 @@
+@@ -1,17 +1,32 @@
  import type { ImageResourceReference } from './ImageResourceReference';
 -import type { TextureLike } from './Texture';
 +import type {
@@ -9,31 +9,38 @@ diff --git a/packages/types/src/CreateTextureOptions.ts b/packages/types/src/Cre
 +  Texture2DLike,
 +  Texture3DLike,
 +  TextureCubeLike,
-+  TextureLike,
 +} from './Texture';
  
- type CreateTextureVariantOptions<Type extends TextureLike> = Type extends TextureLike
-   ? Omit<Partial<Type>, 'dimension'> &
-@@ -6,12 +12,19 @@ type CreateTextureVariantOptions<Type extends TextureLike> = Type extends Textur
-       (Type['dimension'] extends '2d' ? { readonly dimension?: '2d' } : { readonly dimension: Type['dimension'] })
-   : never;
- 
+-type CreateTextureVariantOptions<Type extends TextureLike> = Type extends TextureLike
+-  ? Omit<Partial<Type>, 'dimension'> &
+-      (Type['dimension'] extends '2d' ? { readonly dimension?: '2d' } : { readonly dimension: Type['dimension'] })
+-  : never;
+-
 -export type CreateTextureOptions = CreateTextureVariantOptions<TextureLike> & {
-+type CreateTextureOptionsFor<Type extends TextureLike> = CreateTextureVariantOptions<Type> & {
++interface TextureResourceOptions {
    readonly resource?: ImageResourceReference | null;
- };
+-};
++}
  
 -// The two-dimensional variant on its own, so a caller that knows the dimension can name the options it
 -// is actually passing rather than the union of all four. Kept as a projection of CreateTextureOptions
 -// rather than a hand-written twin: a field added to the union appears here without a second edit, and
 -// the two cannot drift.
 -export type CreateTexture2DOptions = Extract<CreateTextureOptions, { dimension?: '2d' }>;
-+// Each dimension keeps the same distributive Partial/Omit construction while naming the exact option
-+// owner that overloads, constructors, and discriminant branches exchange.
-+export type CreateTexture2DOptions = CreateTextureOptionsFor<Texture2DLike>;
-+export type CreateTexture2DArrayOptions = CreateTextureOptionsFor<Texture2DArrayLike>;
-+export type CreateTexture3DOptions = CreateTextureOptionsFor<Texture3DLike>;
-+export type CreateTextureCubeOptions = CreateTextureOptionsFor<TextureCubeLike>;
++// Each dimension names its exact mapped option owner so overloads, constructors, and discriminant
++// branches do not have to recover a concrete shape from a generic conditional intersection.
++export type CreateTexture2DOptions = Omit<Partial<Texture2DLike>, 'dimension'> &
++  { readonly dimension?: '2d' } &
++  TextureResourceOptions;
++export type CreateTexture2DArrayOptions = Omit<Partial<Texture2DArrayLike>, 'dimension'> &
++  { readonly dimension: '2d-array' } &
++  TextureResourceOptions;
++export type CreateTexture3DOptions = Omit<Partial<Texture3DLike>, 'dimension'> &
++  { readonly dimension: '3d' } &
++  TextureResourceOptions;
++export type CreateTextureCubeOptions = Omit<Partial<TextureCubeLike>, 'dimension'> &
++  { readonly dimension: 'cube' } &
++  TextureResourceOptions;
 +
 +export type CreateTextureOptions =
 +  | CreateTexture2DOptions
