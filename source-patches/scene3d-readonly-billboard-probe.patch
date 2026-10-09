@@ -1,0 +1,12 @@
+diff --git a/packages/scene3d/src/billboard.ts b/packages/scene3d/src/billboard.ts
+index 9daa9d9..41692a7 100644
+--- a/packages/scene3d/src/billboard.ts
++++ b/packages/scene3d/src/billboard.ts
+@@ -58,6 +58,6 @@ export function getBillboardSignals(source: Billboard): NodeSignals | null {
+ // drawable leaf) and a facing `mode`. Structural, so it holds for Billboards created with a custom
+ // kind, not just BillboardKind, and distinguishes a Billboard from a plain Mesh (geometry, no mode).
+ export function isBillboard(source: Readonly<Node3D>): source is Billboard {
+-  const candidate = source as Partial<Billboard>;
++  const candidate = source as Readonly<Partial<Billboard>>;
+   return candidate.geometry != null && candidate.mode != null;
+ }

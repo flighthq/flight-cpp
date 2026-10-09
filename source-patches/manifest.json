@@ -1193,6 +1193,23 @@
       "unblocks": "Allows billboard orientation and other Scene3D transform consumers to use the real runtime Matrix4 cache without losing its entity owner through Matrix4Like.",
       "expires": "when Flight exposes the exact Matrix4 cache owner from these accessors upstream, or checked structural views can recover the retained owner without an assertion.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-readonly-billboard-probe",
+      "dependency": "flight",
+      "patch": "scene3d-readonly-billboard-probe.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d/src/billboard.ts",
+      "package": "@flighthq/scene3d",
+      "answers": "refusal",
+      "refusal": "the billboard predicate asserts a readonly Node3D into writable Partial<Billboard> even though it only probes geometry and mode",
+      "rewrite": "Uses Readonly<Partial<Billboard>> for the two-field capability probe while preserving the existing Billboard type predicate.",
+      "equivalence": "The assertion erases in JavaScript and the same source object receives the same two nullish property reads in the same order. The predicate result and every caller's control flow are unchanged; only mutation authority that the implementation never uses is removed.",
+      "verification": "The patch composes after the complete Flight source-patch stack. Full Scene3D regeneration verifies the billboard constructor/predicate module emits and the existing predicate and camera-facing tests retain behavior.",
+      "whyNotUpstreamFirst": "This is a target-neutral const-correctness fix: a read-only predicate should not manufacture a writable partial view of its input.",
+      "unblocks": "Allows billboard detection and the real camera-facing traversal to probe drawable billboard capabilities without claiming mutation over a readonly scene node.",
+      "expires": "when Flight uses the readonly partial probe upstream, or the compiler can infer the read-only capability view from this predicate without an assertion.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
