@@ -1,0 +1,112 @@
+diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransform3d.ts
+--- a/packages/node/src/nodeTransform3d.ts
++++ b/packages/node/src/nodeTransform3d.ts
+@@ -48,14 +48,14 @@ export function convertNodeVector3LocalToGlobal<Traits extends object>(
+ // Ensures the cached local matrix is current. Recomposes it from translation/rotation/scale when the
+ // local transform is dirty — unless it was set directly (setNodeLocalMatrix4 pre-satisfies the dirty
+ // check so the detached matrix survives).
+-export function ensureNodeLocalMatrix4<Traits extends object>(target: Transform3DNode<Traits>): void {
++export function ensureNodeLocalMatrix4<Traits extends object>(target: Readonly<Transform3DNode<Traits>>): void {
+   const runtime = getTransform3DRuntime(target);
+   if (runtime.localMatrix4 === null || runtime.localTransformUsingLocalTransformId !== runtime.localTransformId) {
+     recomputeLocalTransform3D(target, runtime);
+   }
+ }
+ 
+-export function ensureNodeWorldMatrix4<Traits extends object>(target: Transform3DNode<Traits>): void {
++export function ensureNodeWorldMatrix4<Traits extends object>(target: Readonly<Transform3DNode<Traits>>): void {
+   const runtime = getTransform3DRuntime(target);
+   const parent: Node<Traits> | null = runtime.parent;
+ 
+@@ -78,7 +78,9 @@ export function ensureNodeWorldMatrix4<Traits extends object>(target: Transform3
+   }
+ }
+ 
+-export function getNodeLocalMatrix4<Traits extends object>(target: Transform3DNode<Traits>): Readonly<Matrix4> {
++export function getNodeLocalMatrix4<Traits extends object>(
++  target: Readonly<Transform3DNode<Traits>>,
++): Readonly<Matrix4> {
+   ensureNodeLocalMatrix4(target);
+   return getTransform3DRuntime(target).localMatrix4!;
+ }
+@@ -92,7 +94,9 @@ export function getNodeTransform3D<Traits extends object>(out: Transform3DLike,
+   copyVector3(out.scale, source.scale);
+ }
+ 
+-export function getNodeWorldMatrix4<Traits extends object>(target: Transform3DNode<Traits>): Readonly<Matrix4> {
++export function getNodeWorldMatrix4<Traits extends object>(
++  target: Readonly<Transform3DNode<Traits>>,
++): Readonly<Matrix4> {
+   ensureNodeWorldMatrix4(target);
+   return getTransform3DRuntime(target).worldMatrix4!;
+ }
+@@ -145,7 +149,7 @@ export function syncNodeTransform3DFromMatrix4<Traits extends object>(target: Tr
+ }
+ 
+ function recomputeLocalTransform3D<Traits extends object>(
+-  target: Transform3DNode<Traits>,
++  target: Readonly<Transform3DNode<Traits>>,
+   runtime: NodeRuntime<Traits> & HasTransform3DRuntime,
+ ): void {
+   if (runtime.localMatrix4 === null) runtime.localMatrix4 = createMatrix4();
+@@ -156,7 +160,7 @@ function recomputeLocalTransform3D<Traits extends object>(
+ }
+ 
+ function recomputeWorldTransform3D<Traits extends object>(
+-  target: Transform3DNode<Traits>,
++  target: Readonly<Transform3DNode<Traits>>,
+   runtime: NodeRuntime<Traits> & HasTransform3DRuntime,
+   parentRuntime?: Readonly<NodeRuntime<Traits> & HasTransform3DRuntime>,
+ ): void {
+@@ -179,7 +183,7 @@ interface Transform3DRuntimeOwner<Traits extends object> {
+ }
+ 
+ function getTransform3DRuntime<Traits extends object>(
+-  target: Transform3DRuntimeOwner<Traits>,
++  target: Readonly<Transform3DRuntimeOwner<Traits>>,
+ ): NodeRuntime<Traits> & HasTransform3DRuntime {
+   return target[EntityRuntimeKey]!;
+ }
+diff --git a/packages/scene3d-gl/src/glParticleEmitter3D.ts b/packages/scene3d-gl/src/glParticleEmitter3D.ts
+--- a/packages/scene3d-gl/src/glParticleEmitter3D.ts
++++ b/packages/scene3d-gl/src/glParticleEmitter3D.ts
+@@ -11,13 +11,12 @@ import type {
+   GlContext,
+   Camera3D,
+   GlRenderState,
+-  Matrix4,
+   NodeAny,
+   ParticleBlendMode,
+   ParticleEmitter3D,
+   ParticleEmitterData,
+   Scene3DLightsLike,
+   Node3D,
+ } from '@flighthq/types/contract';
+ import { BlendMode, ParticleEmitter3DKind, TextureAtlasRotation } from '@flighthq/types/contract';
+ 
+@@ -172,11 +171,11 @@ function compileParticle3DShader(gl: GlContext): GlParticle3DShader {
+ }
+ 
+ function ensureParticle3DShader(state: GlRenderState): GlParticle3DShader {
+-  let shader = shaderCache.get(state);
+-  if (shader !== undefined) return shader;
+-  shader = compileParticle3DShader(state.gl);
+-  shaderCache.set(state, shader);
+-  return shader;
++  const cached: GlParticle3DShader | undefined = shaderCache.get(state);
++  if (cached !== undefined) return cached;
++  const compiled: GlParticle3DShader = compileParticle3DShader(state.gl);
++  shaderCache.set(state, compiled);
++  return compiled;
+ }
+ 
+ function ensureInstanceCapacity(shader: GlParticle3DShader, gl: GlContext, count: number): void {
+@@ -248,7 +247,7 @@ function drawParticleEmitter3DNode(
+   const iw = hasAtlas ? 1 / Math.max(1, getTextureWidth(atlasTexture!)) : 0;
+   const ih = hasAtlas ? 1 / Math.max(1, getTextureHeight(atlasTexture!)) : 0;
+ 
+-  const worldMatrix = getNodeWorldMatrix4(emitter as unknown as Node3D) as Matrix4;
++  const worldMatrix = getNodeWorldMatrix4(emitter);
+   const wm = worldMatrix.m;
+   // World-space particles are already baked into world coordinates at spawn (see updateParticleEmitter3D),
+   // so they must NOT be re-transformed by the emitter's world matrix here.

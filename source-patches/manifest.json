@@ -1533,6 +1533,23 @@
       "unblocks": "Restores the shared mesh bind/draw implementation beneath classic, debug, shaded, toon, unlit, wireframe, and PBR material families, including instancing, GPU skinning, UV transforms, color adjustments, and object opacity.",
       "expires": "when flight-compiler retains exact dual-sentinel property state through inferred locals and presence branches automatically, or Flight adopts explicit lazy-location resolvers upstream.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-readonly-transform-query-boundaries",
+      "dependency": "flight",
+      "patch": "scene3d-readonly-transform-query-boundaries.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/node/src/nodeTransform3d.ts and packages/scene3d-gl/src/glParticleEmitter3D.ts",
+      "package": "@flighthq/node and @flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "the readonly ParticleEmitter3D draw owner is asserted through unknown to a writable Node3D solely to query its lazily maintained world matrix, and the inferred mutable shader-cache local loses the WeakMap's declared GlParticle3DShader owner when rebound after a miss",
+      "rewrite": "Declares the local/world matrix ensure and query chain as accepting readonly transform-node owners while retaining mutable access to the exact hidden runtime cache, passes the readonly particle emitter directly to getNodeWorldMatrix4, and separates the declared cached shader lookup from the declared compiled shader miss result.",
+      "equivalence": "The matrix query follows the same parent chain, reads the same transform fields and revision ids, allocates the same matrix caches when absent, writes the same hidden runtime slots, and returns the identical world Matrix4 object. Readonly applies only to the public node carrier; cache mutation remains explicit through its exact runtime owner. A cache hit returns the same shader immediately; a miss compiles exactly once, stores that identical shader under the same state key, and returns it. Particle coordinates, world-space handling, traversal, draw order, and GL calls are unchanged.",
+      "verification": "The complete patch stack must compose, focused glParticleEmitter3D regeneration must emit the module with zero omissions/refusals, and focused renderGlScene3D regeneration must retain the real particle draw dependency path.",
+      "whyNotUpstreamFirst": "World-matrix ensure/get operations are logical queries whose only writes are internal derived-state caches. Expressing their input as readonly is a target-neutral const-correctness repair, and naming the hit and miss values independently preserves the cache's already-declared owner without a target-specific conversion.",
+      "unblocks": "Allows the real Scene3D GL particle traversal and instanced billboard draw to retain its shader owner and resolve current hierarchical transforms without a readonly-to-writable structural assertion.",
+      "expires": "when Flight declares its transform cache queries readonly and retains declared cache owners upstream, or flight-compiler can distinguish hidden cache mutation from public node write authority and preserve the WeakMap value owner through a rebound local automatically.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }
