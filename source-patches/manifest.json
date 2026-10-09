@@ -1159,6 +1159,23 @@
       "unblocks": "Allows scene-wide material discovery to retain real PBR, shaded, unlit, and other built-in owners instead of refusing at the first output-array push.",
       "expires": "when heterogeneous collection insertion preserves concrete owners through an open base-interface element automatically, or Flight carries MaterialValue through these APIs upstream.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-document-light-values",
+      "dependency": "flight",
+      "patch": "scene3d-document-light-values.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types/src/LightValue.ts and Scene3DDocument.ts",
+      "package": "@flighthq/scene3d",
+      "answers": "refusal",
+      "refusal": "document light dispatch cannot recover AmbientLight, DirectionalLight, HemisphereLight, PointLight, or SpotLight after the descriptor is retained only as the open Light owner",
+      "rewrite": "Adds an open LightValue union with redundant built-in descriptor arms and carries it in Scene3DDocumentLight.descriptor.",
+      "equivalence": "Every named arm already extends Light and the open Light arm remains, so documents accept exactly the same TypeScript descriptor values and vendor kinds. The annotation erases in JavaScript; document layout, descriptor identities, kind checks, clone order, placement transforms, and renderer-ready light output remain unchanged.",
+      "verification": "The patch composes after the complete Flight source-patch stack. The checked exact-owner union regression covers concrete recovery beside the open base arm; full Scene3D regeneration verifies createScene3DLightsFromDocument dispatches each real built-in descriptor.",
+      "whyNotUpstreamFirst": "The document light family deliberately remains open, while flattened native interface owners cannot recover a built-in descriptor after base storage. The redundant arms are a target-neutral description of already-accepted values.",
+      "unblocks": "Allows imported ambient, directional, hemisphere, point, and spot descriptors to reach their upstream clone and world-placement logic before the real GL light block is packed.",
+      "expires": "when heterogeneous structural storage preserves checked concrete light owners through an open base-interface arm, or Flight adopts the explicit LightValue document field upstream.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }

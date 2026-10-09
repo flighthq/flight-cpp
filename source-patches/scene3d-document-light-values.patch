@@ -1,0 +1,72 @@
+diff --git a/packages/types/src/LightValue.ts b/packages/types/src/LightValue.ts
+new file mode 100644
+index 0000000..ca1823e
+--- /dev/null
++++ b/packages/types/src/LightValue.ts
+@@ -0,0 +1,20 @@
++import type { AmbientLight } from './AmbientLight';
++import type { AreaLight } from './AreaLight';
++import type { DirectionalLight } from './DirectionalLight';
++import type { Environment } from './Environment';
++import type { HemisphereLight } from './HemisphereLight';
++import type { Light } from './Light';
++import type { PointLight } from './PointLight';
++import type { SpotLight } from './SpotLight';
++
++// The open Light arm keeps vendor descriptors accepted, while the redundant built-in arms retain
++// their concrete owners across heterogeneous document storage on invariant native targets.
++export type LightValue =
++  | Light
++  | AmbientLight
++  | AreaLight
++  | DirectionalLight
++  | Environment
++  | HemisphereLight
++  | PointLight
++  | SpotLight;
+diff --git a/packages/types/src/Scene3DDocument.ts b/packages/types/src/Scene3DDocument.ts
+index 46c9d03..7d4930b 100644
+--- a/packages/types/src/Scene3DDocument.ts
++++ b/packages/types/src/Scene3DDocument.ts
+@@ -2,7 +2,7 @@ import type { AnimationTrack } from './AnimationTrack';
+ import type { Projection } from './Camera3D';
+ import type { Kind } from './Entity';
+ import type { ImageResourceReference } from './ImageResourceReference';
+-import type { Light } from './Light';
++import type { LightValue } from './LightValue';
+ import type { MaterialLike } from './Material';
+ import type { Matrix4Like } from './Matrix4';
+ import type { MeshGeometry } from './MeshGeometry';
+@@ -100,7 +100,7 @@ export interface Scene3DDocumentCamera {
+ // of this table composes `transform` into the descriptor first (rotate the local axis by
+ // `transform.rotation`; offset the local position by `transform.position`).
+ export interface Scene3DDocumentLight {
+-  descriptor: Light;
++  descriptor: LightValue;
+   name?: string;
+   node?: number;
+   transform: Transform3D;
+diff --git a/packages/types/src/contract.ts b/packages/types/src/contract.ts
+index 1e10b11..7c66c15 100644
+--- a/packages/types/src/contract.ts
++++ b/packages/types/src/contract.ts
+@@ -422,6 +422,7 @@ export * from './LassoSelection';
+ export * from './LassoSelectionRuntime';
+ export * from './Lifecycle';
+ export * from './Light';
++export * from './LightValue';
+ export * from './LightLayerMask';
+ export * from './LightProbe';
+ export * from './LightUnit';
+diff --git a/packages/types/src/index.ts b/packages/types/src/index.ts
+index 01a3a80..5e1e1d0 100644
+--- a/packages/types/src/index.ts
++++ b/packages/types/src/index.ts
+@@ -411,6 +411,7 @@ export * from './Layout';
+ export * from './LassoSelection';
+ export * from './Lifecycle';
+ export * from './Light';
++export * from './LightValue';
+ export * from './LightLayerMask';
+ export * from './LightProbe';
+ export * from './LightUnit';
