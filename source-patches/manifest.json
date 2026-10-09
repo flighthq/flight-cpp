@@ -1161,6 +1161,23 @@
       "appliedOn": "2026-10-08"
     },
     {
+      "id": "scene3d-gl-modifier-snippet-table-owner",
+      "dependency": "flight",
+      "patch": "scene3d-gl-modifier-snippet-table-owner.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d-gl/src/glShadedPrelude.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "contextual union value type flight::Ref<flight::types::KeyedTable<flight::Ref<flight::types::GlModifierSnippet>>> is not a represented runtime domain",
+      "rewrite": "Retains the exact KeyedTable<GlModifierSnippet> owner in place of its top-level Readonly mapped view while preserving the legacy readonly ModifierRegistry alternative accepted by the shaded compiler helpers.",
+      "equivalence": "KeyedTable and Readonly<KeyedTable> are mutually assignable here because Readonly changes only the write authority of the table's top-level properties, not their types or the runtime value domain. The private alias still accepts the same registry objects and erases from JavaScript; the same entries Map, revision, snippets, cache key, shader source, lookup order, and callbacks are used without a cast, copy, row materialization, or side storage.",
+      "verification": "Scoped Scene3D-GL generation emits glShadedPrelude with the real render-state registry and modifier stack; generated-header compilation validates the retained table owner at all shaded compiler helpers.",
+      "whyNotUpstreamFirst": "The render-state contract already stores the concrete KeyedTable owner, while the helper's top-level readonly mapped view makes the pinned native emitter discard that owner before a later union boundary. Retaining the exact owner states the same TypeScript value domain without changing the runtime path.",
+      "unblocks": "Allows the real ShadedMaterial program cache, modifier define-key computation, fragment and vertex snippet assembly, and uniform binding path to consume the render state's registered GL modifier snippets.",
+      "expires": "when contextual unions preserve an exact owner through a top-level readonly mapped view, or Flight retains the exact table owner in this helper upstream.",
+      "appliedOn": "2026-10-08"
+    },
+    {
       "id": "render-scene3d-projection-api",
       "dependency": "flight",
       "patch": "render-scene3d-projection-api.patch",

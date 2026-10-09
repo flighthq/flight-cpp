@@ -1,0 +1,13 @@
+diff --git a/packages/scene3d-gl/src/glShadedPrelude.ts b/packages/scene3d-gl/src/glShadedPrelude.ts
+index faa6211..5b18a54 100644
+--- a/packages/scene3d-gl/src/glShadedPrelude.ts
++++ b/packages/scene3d-gl/src/glShadedPrelude.ts
+@@ -25,7 +25,7 @@ import {
+ } from './glMeshProgram';
+ import { getGlScene3DRuntime } from './glScene3DRuntime';
+ 
+-type GlModifierSnippetSource = Readonly<ModifierRegistry> | Readonly<KeyedTable<GlModifierSnippet>>;
++type GlModifierSnippetSource = Readonly<ModifierRegistry> | KeyedTable<GlModifierSnippet>;
+ // The stable program-cache key for a ShadedMaterial variant: the base feature flags joined with the
+ // modifier stack's define-key. Two materials sharing both the same base flags AND the same modifier
+ // feature-set produce the same key and share one compiled program (and batch together); a different
