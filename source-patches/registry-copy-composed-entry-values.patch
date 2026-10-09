@@ -1,23 +1,32 @@
 diff --git a/packages/registry/src/registryTable.ts b/packages/registry/src/registryTable.ts
 --- a/packages/registry/src/registryTable.ts
 +++ b/packages/registry/src/registryTable.ts
-@@ -54,7 +54,14 @@ export function concatRegistryTable<T>(
+@@ -54,7 +54,23 @@ export function concatRegistryTable<T>(
      const overlaySlot = overlay as Readonly<SlotTable<T>>;
      // `null` on the overlay is "no opinion" — inherit. A tombstone is "explicitly omitted" and wins.
      const out = allocateEntity<SlotTableEntity<T>>();
 -    out.entry = overlaySlot.entry ?? base.entry;
-+    const entry = overlaySlot.entry ?? base.entry;
-+    if (entry === null) {
-+      out.entry = null;
-+    } else if (entry.state === RegistryEntryState.Bound) {
-+      out.entry = { state: RegistryEntryState.Bound, value: entry.value };
++    const overlayEntry = overlaySlot.entry;
++    if (overlayEntry !== null) {
++      if (overlayEntry.state === RegistryEntryState.Bound) {
++        out.entry = { state: RegistryEntryState.Bound, value: overlayEntry.value };
++      } else {
++        out.entry = { state: RegistryEntryState.Tombstoned };
++      }
 +    } else {
-+      out.entry = { state: RegistryEntryState.Tombstoned };
++      const baseEntry = base.entry;
++      if (baseEntry === null) {
++        out.entry = null;
++      } else if (baseEntry.state === RegistryEntryState.Bound) {
++        out.entry = { state: RegistryEntryState.Bound, value: baseEntry.value };
++      } else {
++        out.entry = { state: RegistryEntryState.Tombstoned };
++      }
 +    }
      out.onMiss = base.onMiss;
      out.registry = base.registry;
      out.shape = 'slot';
-@@ -70,10 +77,10 @@ export function concatRegistryTable<T>(
+@@ -70,10 +86,10 @@ export function concatRegistryTable<T>(
      // because resolving it here would resurrect the entry the overlay meant to omit.
      switch (entry.state) {
        case RegistryEntryState.Bound:
