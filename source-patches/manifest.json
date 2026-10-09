@@ -1006,6 +1006,23 @@
       "unblocks": "Clears glMeshProgram's generic cache refusal so unlit, shaded, classic, toon, PBR, custom-shader, shadow, matcap, debug, and wireframe programs can share the real upstream state cache.",
       "expires": "when heterogeneous Map storage preserves constrained generic owners automatically, or Flight adopts this explicit erased cache boundary upstream.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-gl-present-index-storage",
+      "dependency": "flight",
+      "patch": "scene3d-gl-present-index-storage.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d-gl/src/glMeshUpload.ts and glWireframeUpload.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "member length on optional C++ storage requires one present payload domain",
+      "rewrite": "Binds the readonly geometry index array once before its null guard and expresses indexed versus sequential wireframe construction as explicit guarded branches.",
+      "equivalence": "MeshGeometry indices are a readonly record field. The same index array, element order, buffer upload, index-width choice, index count, and six line endpoints per triangle are used. The non-indexed branch still derives the same sequential triangle vertices; no GL call, cache write, allocation size, or returned upload changes.",
+      "verification": "The patch composes after the material, upload-cache, and program-cache rewrites; the compiler's existing guarded optional-sequence regression proves a bound nullable sequence is unwrapped only inside its present branch. Full Scene3D GL regeneration provides the module-level refusal check.",
+      "whyNotUpstreamFirst": "The source already proves presence, but the pinned emitter does not carry that proof across repeated readonly structural-property reads or conditional expressions. Explicit immutable storage and branches are target-neutral and make the existing proof lexical.",
+      "unblocks": "Allows the real indexed and non-indexed mesh upload paths, including derived wireframe buffers, to emit without calling length or element access on optional native storage.",
+      "expires": "when flight-compiler preserves readonly structural-property presence across repeated reads and conditional element access, or Flight adopts the explicit guarded form upstream.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
