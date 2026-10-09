@@ -1,0 +1,693 @@
+diff --git a/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts b/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
+index 97fdca9..2c4df54 100644
+--- a/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
++++ b/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
+@@ -18,7 +18,7 @@ import type {
+   EnvReflectModifier,
+   FogModifier,
+   GlRenderState,
+-  Modifier,
++  ModifierValue,
+   RimModifier,
+   Texture,
+   ToonModifier,
+@@ -44,7 +44,7 @@ import { registerGlModifierSnippet } from './glShadedModifierSnippet';
+ // no GLSL), `1` single-layer, `2` dual-layer.
+ export const animatedNormalGlModifierSnippet: GlModifierSnippet = {
+   ...animatedNormalModifierDefinition,
+-  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
+     const animated = modifier as Readonly<AnimatedNormalModifier>;
+     if (animated.map === null) return;
+     const gl = context.state.gl;
+@@ -59,7 +59,7 @@ export const animatedNormalGlModifierSnippet: GlModifierSnippet = {
+       gl.uniform2f(gl.getUniformLocation(context.program, `u_animNormalScroll2${suffix}`), secondary.x, secondary.y);
+     }
+   },
+-  contribution(modifier: Readonly<Modifier>, index: number): string {
++  contribution(modifier: Readonly<ModifierValue>, index: number): string {
+     const animated = modifier as Readonly<AnimatedNormalModifier>;
+     if (animated.map === null) return '';
+     const suffix = `_${index}`;
+@@ -76,7 +76,7 @@ export const animatedNormalGlModifierSnippet: GlModifierSnippet = {
+       `}`
+     );
+   },
+-  declarations(modifier: Readonly<Modifier>, index: number): string {
++  declarations(modifier: Readonly<ModifierValue>, index: number): string {
+     const animated = modifier as Readonly<AnimatedNormalModifier>;
+     if (animated.map === null) return '';
+     const suffix = `_${index}`;
+@@ -96,7 +96,7 @@ export const animatedNormalGlModifierSnippet: GlModifierSnippet = {
+ // gate), combined `mg`.
+ export const emissiveGlModifierSnippet: GlModifierSnippet = {
+   ...emissiveModifierDefinition,
+-  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
+     const emissive = modifier as Readonly<EmissiveModifier>;
+     const gl = context.state.gl;
+     const suffix = `_${context.index}`;
+@@ -118,7 +118,7 @@ export const emissiveGlModifierSnippet: GlModifierSnippet = {
+       );
+     }
+   },
+-  contribution(modifier: Readonly<Modifier>, index: number): string {
++  contribution(modifier: Readonly<ModifierValue>, index: number): string {
+     const emissive = modifier as Readonly<EmissiveModifier>;
+     const suffix = `_${index}`;
+     let body = `{\n` + `  vec3 emissiveTerm = u_emissiveColor${suffix} * u_emissiveStrength${suffix};\n`;
+@@ -133,7 +133,7 @@ export const emissiveGlModifierSnippet: GlModifierSnippet = {
+     body += `  emissive += emissiveTerm;\n}`;
+     return body;
+   },
+-  declarations(modifier: Readonly<Modifier>, index: number): string {
++  declarations(modifier: Readonly<ModifierValue>, index: number): string {
+     const emissive = modifier as Readonly<EmissiveModifier>;
+     const suffix = `_${index}`;
+     let source = `uniform vec3 u_emissiveColor${suffix};\nuniform float u_emissiveStrength${suffix};\n`;
+@@ -149,7 +149,7 @@ export const emissiveGlModifierSnippet: GlModifierSnippet = {
+ // signature — power/intensity/bias are uniforms).
+ export const rimGlModifierSnippet: GlModifierSnippet = {
+   ...rimModifierDefinition,
+-  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
+     const rim = modifier as Readonly<RimModifier>;
+     const gl = context.state.gl;
+     const suffix = `_${context.index}`;
+@@ -164,7 +164,7 @@ export const rimGlModifierSnippet: GlModifierSnippet = {
+     gl.uniform1f(gl.getUniformLocation(context.program, `u_rimIntensity${suffix}`), rim.intensity ?? 1);
+     gl.uniform1f(gl.getUniformLocation(context.program, `u_rimBias${suffix}`), rim.bias ?? 0);
+   },
+-  contribution(_modifier: Readonly<Modifier>, index: number): string {
++  contribution(_modifier: Readonly<ModifierValue>, index: number): string {
+     const suffix = `_${index}`;
+     return (
+       `{\n` +
+@@ -173,7 +173,7 @@ export const rimGlModifierSnippet: GlModifierSnippet = {
+       `}`
+     );
+   },
+-  declarations(_modifier: Readonly<Modifier>, index: number): string {
++  declarations(_modifier: Readonly<ModifierValue>, index: number): string {
+     const suffix = `_${index}`;
+     return (
+       `uniform vec3 u_rimColor${suffix};\n` +
+@@ -188,7 +188,7 @@ export const rimGlModifierSnippet: GlModifierSnippet = {
+ // the burn edge. Signature `` (procedural value noise over v_uv0) or `m` (sampled from a noise map).
+ export const dissolveGlModifierSnippet: GlModifierSnippet = {
+   ...dissolveModifierDefinition,
+-  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
+     const dissolve = modifier as Readonly<DissolveModifier>;
+     const gl = context.state.gl;
+     const suffix = `_${context.index}`;
+@@ -204,7 +204,7 @@ export const dissolveGlModifierSnippet: GlModifierSnippet = {
+     if (dissolve.map !== undefined) bindGlModifierTexture(context, dissolve.map, `u_dissolveMap${suffix}`);
+     else gl.uniform1f(gl.getUniformLocation(context.program, `u_dissolveScale${suffix}`), dissolve.scale ?? 8);
+   },
+-  contribution(modifier: Readonly<Modifier>, index: number): string {
++  contribution(modifier: Readonly<ModifierValue>, index: number): string {
+     const dissolve = modifier as Readonly<DissolveModifier>;
+     const suffix = `_${index}`;
+     const noise =
+@@ -220,7 +220,7 @@ export const dissolveGlModifierSnippet: GlModifierSnippet = {
+       `}`
+     );
+   },
+-  declarations(modifier: Readonly<Modifier>, index: number): string {
++  declarations(modifier: Readonly<ModifierValue>, index: number): string {
+     const dissolve = modifier as Readonly<DissolveModifier>;
+     const suffix = `_${index}`;
+     let source =
+@@ -242,7 +242,7 @@ export const dissolveGlModifierSnippet: GlModifierSnippet = {
+ // falls back to the reflection tint.
+ export const envReflectGlModifierSnippet: GlModifierSnippet = {
+   ...envReflectModifierDefinition,
+-  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
+     const reflect = modifier as Readonly<EnvReflectModifier>;
+     const gl = context.state.gl;
+     const suffix = `_${context.index}`;
+@@ -257,7 +257,7 @@ export const envReflectGlModifierSnippet: GlModifierSnippet = {
+     gl.uniform1f(gl.getUniformLocation(context.program, `u_envReflectFresnel${suffix}`), reflect.fresnelBias ?? 0.04);
+     gl.uniform1f(gl.getUniformLocation(context.program, `u_envReflectRoughness${suffix}`), reflect.roughness ?? 0);
+   },
+-  contribution(_modifier: Readonly<Modifier>, index: number): string {
++  contribution(_modifier: Readonly<ModifierValue>, index: number): string {
+     const suffix = `_${index}`;
+     return (
+       `{\n` +
+@@ -269,7 +269,7 @@ export const envReflectGlModifierSnippet: GlModifierSnippet = {
+       `}`
+     );
+   },
+-  declarations(_modifier: Readonly<Modifier>, index: number): string {
++  declarations(_modifier: Readonly<ModifierValue>, index: number): string {
+     const suffix = `_${index}`;
+     return (
+       `uniform samplerCube u_iblPrefiltered;\n` +
+@@ -287,7 +287,7 @@ export const envReflectGlModifierSnippet: GlModifierSnippet = {
+ // near/far ramp), `e` (exponential), `x` (exponential-squared) — each emits a different factor.
+ export const fogGlModifierSnippet: GlModifierSnippet = {
+   ...fogModifierDefinition,
+-  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
+     const fog = modifier as Readonly<FogModifier>;
+     const gl = context.state.gl;
+     const suffix = `_${context.index}`;
+@@ -305,7 +305,7 @@ export const fogGlModifierSnippet: GlModifierSnippet = {
+       gl.uniform1f(gl.getUniformLocation(context.program, `u_fogDensity${suffix}`), fog.density ?? 1);
+     }
+   },
+-  contribution(modifier: Readonly<Modifier>, index: number): string {
++  contribution(modifier: Readonly<ModifierValue>, index: number): string {
+     const fog = modifier as Readonly<FogModifier>;
+     const suffix = `_${index}`;
+     let factor: string;
+@@ -324,7 +324,7 @@ export const fogGlModifierSnippet: GlModifierSnippet = {
+       `}`
+     );
+   },
+-  declarations(modifier: Readonly<Modifier>, index: number): string {
++  declarations(modifier: Readonly<ModifierValue>, index: number): string {
+     const fog = modifier as Readonly<FogModifier>;
+     const suffix = `_${index}`;
+     let source = `uniform vec3 u_fogColor${suffix};\n`;
+@@ -340,14 +340,14 @@ export const fogGlModifierSnippet: GlModifierSnippet = {
+ // uniforms).
+ export const toonGlModifierSnippet: GlModifierSnippet = {
+   ...toonModifierDefinition,
+-  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
+     const toon = modifier as Readonly<ToonModifier>;
+     const gl = context.state.gl;
+     const suffix = `_${context.index}`;
+     gl.uniform1f(gl.getUniformLocation(context.program, `u_toonSteps${suffix}`), Math.max(toon.steps, 2));
+     gl.uniform1f(gl.getUniformLocation(context.program, `u_toonSmoothness${suffix}`), toon.smoothness ?? 0);
+   },
+-  contribution(_modifier: Readonly<Modifier>, index: number): string {
++  contribution(_modifier: Readonly<ModifierValue>, index: number): string {
+     const suffix = `_${index}`;
+     return (
+       `{\n` +
+@@ -362,7 +362,7 @@ export const toonGlModifierSnippet: GlModifierSnippet = {
+       `}`
+     );
+   },
+-  declarations(_modifier: Readonly<Modifier>, index: number): string {
++  declarations(_modifier: Readonly<ModifierValue>, index: number): string {
+     const suffix = `_${index}`;
+     return `uniform float u_toonSteps${suffix};\nuniform float u_toonSmoothness${suffix};\n`;
+   },
+@@ -373,7 +373,7 @@ export const toonGlModifierSnippet: GlModifierSnippet = {
+ // channel), optionally `+a` when a fixed push axis replaces the surface normal.
+ export const vertexDisplaceGlModifierSnippet: GlModifierSnippet = {
+   ...vertexDisplaceModifierDefinition,
+-  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
+     const displace = modifier as Readonly<VertexDisplaceModifier>;
+     const gl = context.state.gl;
+     const suffix = `_${context.index}`;
+@@ -395,7 +395,7 @@ export const vertexDisplaceGlModifierSnippet: GlModifierSnippet = {
+       gl.uniform3f(gl.getUniformLocation(context.program, `u_vDisplaceDir${suffix}`), dir.x, dir.y, dir.z);
+     }
+   },
+-  contribution(modifier: Readonly<Modifier>, index: number): string {
++  contribution(modifier: Readonly<ModifierValue>, index: number): string {
+     const displace = modifier as Readonly<VertexDisplaceModifier>;
+     const suffix = `_${index}`;
+     const axis =
+@@ -408,7 +408,7 @@ export const vertexDisplaceGlModifierSnippet: GlModifierSnippet = {
+         : `  float vDisplacePhase = dot(localPosition.xyz, normalize(u_vDisplaceDir${suffix})) * u_vDisplaceFrequency${suffix} + u_time * u_vDisplaceSpeed${suffix};\n  float vDisplaceAmount = sin(vDisplacePhase) * u_vDisplaceAmplitude${suffix};\n`;
+     return `{\n` + axis + amount + `  localPosition.xyz += vDisplaceAxis * vDisplaceAmount;\n` + `}`;
+   },
+-  declarations(modifier: Readonly<Modifier>, index: number): string {
++  declarations(modifier: Readonly<ModifierValue>, index: number): string {
+     const displace = modifier as Readonly<VertexDisplaceModifier>;
+     const suffix = `_${index}`;
+     let source = `uniform float u_vDisplaceAmplitude${suffix};\n`;
+diff --git a/packages/scene3d-gl/src/glShadedPrelude.ts b/packages/scene3d-gl/src/glShadedPrelude.ts
+index faa6211..61c81a1 100644
+--- a/packages/scene3d-gl/src/glShadedPrelude.ts
++++ b/packages/scene3d-gl/src/glShadedPrelude.ts
+@@ -8,7 +8,7 @@ import type {
+   GlShadedDefineKey,
+   GlShadedProgram,
+   KeyedTable,
+-  Modifier,
++  ModifierValue,
+   ModifierKind,
+   ModifierRegistry,
+ } from '@flighthq/types/contract';
+@@ -48,7 +48,7 @@ export function buildGlShadedCacheKey(key: Readonly<GlShadedDefineKey>, modifier
+ export function compileGlShadedProgram(
+   gl: GlContext,
+   key: Readonly<GlShadedDefineKey>,
+-  orderedModifiers: readonly Modifier[],
++  orderedModifiers: readonly ModifierValue[],
+   registry: GlModifierSnippetSource,
+   colorAdjustmentFeature: Readonly<GlColorAdjustmentMaterialFeature> | null = null,
+ ): GlShadedProgram {
+@@ -102,7 +102,7 @@ export function compileGlShadedProgram(
+ export function ensureGlShadedProgram(
+   state: GlRenderState,
+   key: Readonly<GlShadedDefineKey>,
+-  modifiers: readonly Modifier[],
++  modifiers: readonly ModifierValue[],
+ ): GlShadedProgram {
+   const registries = getGlRenderStateRuntime(state).registries;
+   const registry = registries.modifierSnippets;
+@@ -132,7 +132,7 @@ export function ensureGlShadedProgram(
+ // kind has no registered GL snippet contributes nothing. An empty stack leaves every hook empty,
+ // yielding the lean plain-ShadedMaterial variant that pays nothing for modifiers it does not carry.
+ function assembleGlShadedFragmentBody(
+-  orderedModifiers: readonly Modifier[],
++  orderedModifiers: readonly ModifierValue[],
+   registry: GlModifierSnippetSource,
+ ): string {
+   let declarations = '';
+@@ -167,7 +167,10 @@ function assembleGlShadedFragmentBody(
+ // localNormal are computed (post-skin) but before the model transform, so displacement composes with
+ // skinning. Non-vertex slots are skipped (they inject into the fragment body). An empty vertex set
+ // leaves both hooks empty, yielding the plain vertex program.
+-function assembleGlShadedVertexBody(orderedModifiers: readonly Modifier[], registry: GlModifierSnippetSource): string {
++function assembleGlShadedVertexBody(
++  orderedModifiers: readonly ModifierValue[],
++  registry: GlModifierSnippetSource,
++): string {
+   let declarations = '';
+   let vertex = '';
+   for (let index = 0; index < orderedModifiers.length; index++) {
+@@ -486,7 +489,7 @@ ${GL_MESH_FRAGMENT_TAIL}
+ }
+ `;
+ 
+-function getGlModifierDefineKey(stack: readonly Modifier[], registry: GlModifierSnippetSource): string {
++function getGlModifierDefineKey(stack: readonly ModifierValue[], registry: GlModifierSnippetSource): string {
+   if (!isGlModifierSnippetTable(registry)) return getModifierDefineKey(stack, registry);
+   const ordered = orderModifierStack(stack);
+   let key = '';
+diff --git a/packages/scene3d-gl/src/shadedGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/shadedGlMeshMaterialRenderer.ts
+index a5847ea..400e265 100644
+--- a/packages/scene3d-gl/src/shadedGlMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/shadedGlMeshMaterialRenderer.ts
+@@ -11,7 +11,7 @@ import type {
+   LinearColor,
+   MaterialValue,
+   MeshGeometry,
+-  Modifier,
++  ModifierValue,
+   Scene3DLightBlock,
+   Scene3DRenderProxy,
+   ShadedMaterial,
+@@ -84,7 +84,7 @@ export function registerGlShadedMaterial(state: GlRenderState): void {
+ function bindGlShadedModifiers(
+   state: GlRenderState,
+   program: Readonly<GlShadedProgram>,
+-  modifiers: readonly Modifier[],
++  modifiers: readonly ModifierValue[],
+ ): void {
+   const entries = getGlRenderStateRuntime(state).registries.modifierSnippets.entries;
+   const ordered = orderModifierStack(modifiers);
+@@ -173,5 +173,5 @@ function defineKeyForMaterial(state: GlRenderState, material: Readonly<ShadedMat
+ // five modifier-sampler slots; a stack asking for more gets -1 (dropped) rather than unit 8+.
+ const MODIFIER_TEXTURE_UNIT_BASE = 3;
+ const MODIFIER_TEXTURE_UNIT_LIMIT = 8;
+-const EMPTY_MODIFIERS: readonly Modifier[] = [];
++const EMPTY_MODIFIERS: readonly ModifierValue[] = [];
+ const scratchRgba: LinearColor = [0, 0, 0, 0];
+diff --git a/packages/shading/src/getModifierDefineKey.ts b/packages/shading/src/getModifierDefineKey.ts
+index 55fe2c4..aed5e78 100644
+--- a/packages/shading/src/getModifierDefineKey.ts
++++ b/packages/shading/src/getModifierDefineKey.ts
+@@ -1,4 +1,4 @@
+-import type { Modifier } from '@flighthq/types/contract';
++import type { ModifierValue } from '@flighthq/types/contract';
+ import type { ModifierRegistry } from '@flighthq/types/contract';
+ 
+ import { resolveModifier } from './modifierRegistry';
+@@ -19,7 +19,7 @@ import { orderModifierStack } from './orderModifierStack';
+ // An empty stack yields `''` (the bare base program). Without a `registry`, or for a kind with no
+ // registered signature, the token is the bare `<kind>` (a coarser key that still distinguishes
+ // feature sets by kind, but not by per-kind compile-time variant — pass the registry for precision).
+-export function getModifierDefineKey(stack: readonly Modifier[], registry?: Readonly<ModifierRegistry>): string {
++export function getModifierDefineKey(stack: readonly ModifierValue[], registry?: Readonly<ModifierRegistry>): string {
+   const ordered = orderModifierStack(stack);
+   let key = '';
+   for (const modifier of ordered) {
+@@ -30,7 +30,7 @@ export function getModifierDefineKey(stack: readonly Modifier[], registry?: Read
+   return key;
+ }
+ 
+-function getDefineSignature(modifier: Readonly<Modifier>, registry?: Readonly<ModifierRegistry>): string {
++function getDefineSignature(modifier: Readonly<ModifierValue>, registry?: Readonly<ModifierRegistry>): string {
+   if (registry === undefined) return '';
+   const selected: Readonly<ModifierRegistry> = registry;
+   const definition = resolveModifier(selected, modifier.kind);
+diff --git a/packages/shading/src/getUnregisteredModifierKinds.ts b/packages/shading/src/getUnregisteredModifierKinds.ts
+index d48913b..c0df814 100644
+--- a/packages/shading/src/getUnregisteredModifierKinds.ts
++++ b/packages/shading/src/getUnregisteredModifierKinds.ts
+@@ -1,4 +1,4 @@
+-import type { Modifier, ModifierKind } from '@flighthq/types/contract';
++import type { ModifierKind, ModifierValue } from '@flighthq/types/contract';
+ import type { ModifierRegistry } from '@flighthq/types/contract';
+ 
+ import { resolveModifier } from './modifierRegistry';
+@@ -9,7 +9,7 @@ import { resolveModifier } from './modifierRegistry';
+ // exactly which vendor kind is missing its `registerModifier` call.
+ export function getUnregisteredModifierKinds(
+   registry: Readonly<ModifierRegistry>,
+-  stack: readonly Modifier[],
++  stack: readonly ModifierValue[],
+ ): readonly ModifierKind[] {
+   const unregistered: ModifierKind[] = [];
+   for (const modifier of stack) {
+diff --git a/packages/shading/src/isModifierStackValid.ts b/packages/shading/src/isModifierStackValid.ts
+index 1c4c607..7ecb344 100644
+--- a/packages/shading/src/isModifierStackValid.ts
++++ b/packages/shading/src/isModifierStackValid.ts
+@@ -1,4 +1,4 @@
+-import type { Modifier } from '@flighthq/types/contract';
++import type { ModifierValue } from '@flighthq/types/contract';
+ import type { ModifierRegistry } from '@flighthq/types/contract';
+ 
+ import { getUnregisteredModifierKinds } from './getUnregisteredModifierKinds';
+@@ -6,6 +6,6 @@ import { getUnregisteredModifierKinds } from './getUnregisteredModifierKinds';
+ // Returns true when every modifier in `stack` has a definition in `registry` — the boolean the
+ // compile path checks before assembling a program. An empty stack is valid (it compiles to the bare
+ // base). The plain-data companion is `getUnregisteredModifierKinds`, which names which kinds fail.
+-export function isModifierStackValid(registry: Readonly<ModifierRegistry>, stack: readonly Modifier[]): boolean {
++export function isModifierStackValid(registry: Readonly<ModifierRegistry>, stack: readonly ModifierValue[]): boolean {
+   return getUnregisteredModifierKinds(registry, stack).length === 0;
+ }
+diff --git a/packages/shading/src/modifierRegistry.ts b/packages/shading/src/modifierRegistry.ts
+index 1c1d749..ec2c042 100644
+--- a/packages/shading/src/modifierRegistry.ts
++++ b/packages/shading/src/modifierRegistry.ts
+@@ -1,5 +1,10 @@
+ import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+-import type { EntityConstruction, ModifierDefinition, ModifierKind, ModifierRegistry } from '@flighthq/types/contract';
++import type {
++  EntityConstruction,
++  ModifierDefinitionValue,
++  ModifierKind,
++  ModifierRegistry,
++} from '@flighthq/types/contract';
+ 
+ // The substrate-agnostic registration record for one modifier kind: where it injects (`slot`) and
+ // how its descriptor's compile-time structure contributes to the define-key (`getDefineSignature`).
+@@ -35,12 +40,18 @@ export function initializeModifierRegistry(out: EntityConstruction<ModifierRegis
+ // registration of the same kind overrides the earlier one, so a user can shadow a built-in with a
+ // vendor-prefixed override. Kind collisions are avoided by the vendor-prefix convention (bare names
+ // reserved for built-ins), not by a guard here.
+-export function registerModifier(registry: Readonly<ModifierRegistry>, definition: Readonly<ModifierDefinition>): void {
++export function registerModifier(
++  registry: Readonly<ModifierRegistry>,
++  definition: Readonly<ModifierDefinitionValue>,
++): void {
+   registry.definitions.set(definition.kind, definition);
+ }
+ 
+ // Returns the registered definition for `kind`, or `null` when no definition is registered — the
+ // expected-miss sentinel a caller checks before composing an unknown kind.
+-export function resolveModifier(registry: Readonly<ModifierRegistry>, kind: ModifierKind): ModifierDefinition | null {
++export function resolveModifier(
++  registry: Readonly<ModifierRegistry>,
++  kind: ModifierKind,
++): ModifierDefinitionValue | null {
+   return registry.definitions.get(kind) ?? null;
+ }
+diff --git a/packages/shading/src/orderModifierStack.ts b/packages/shading/src/orderModifierStack.ts
+index 8dc4fbc..9558b59 100644
+--- a/packages/shading/src/orderModifierStack.ts
++++ b/packages/shading/src/orderModifierStack.ts
+@@ -1,4 +1,4 @@
+-import type { Modifier } from '@flighthq/types/contract';
++import type { ModifierValue } from '@flighthq/types/contract';
+ import { ModifierSlot } from '@flighthq/types/contract';
+ 
+ // Orders a modifier stack into the deterministic feature-set the compile path assembles: modifiers
+@@ -13,7 +13,7 @@ import { ModifierSlot } from '@flighthq/types/contract';
+ //
+ // Allocates a new array (a compile-time composition step, not a hot-loop write); the input stack is
+ // not mutated.
+-export function orderModifierStack(stack: readonly Modifier[]): readonly Modifier[] {
++export function orderModifierStack(stack: readonly ModifierValue[]): readonly ModifierValue[] {
+   const indexed = stack.map((modifier, index) => ({ index, modifier }));
+   indexed.sort((a, b) => {
+     const rankDelta = getModifierSlotRank(a.modifier.slot) - getModifierSlotRank(b.modifier.slot);
+diff --git a/packages/shading/src/registerBuiltInModifiers.ts b/packages/shading/src/registerBuiltInModifiers.ts
+index 984e483..e48eb5b 100644
+--- a/packages/shading/src/registerBuiltInModifiers.ts
++++ b/packages/shading/src/registerBuiltInModifiers.ts
+@@ -2,7 +2,7 @@ import type {
+   AnimatedNormalModifier,
+   EmissiveModifier,
+   FogModifier,
+-  Modifier,
++  ModifierValue,
+   VertexDisplaceModifier,
+ } from '@flighthq/types/contract';
+ import {
+@@ -31,7 +31,7 @@ import { registerModifier } from './modifierRegistry';
+ export const animatedNormalModifierDefinition: ModifierDefinition = {
+   kind: AnimatedNormalModifierKind,
+   slot: ModifierSlot.Normal,
+-  getDefineSignature(modifier: Readonly<Modifier>): string {
++  getDefineSignature(modifier: Readonly<ModifierValue>): string {
+     const animated = modifier as Readonly<AnimatedNormalModifier>;
+     if (animated.map === null) return '0';
+     return animated.secondaryMap !== undefined ? '2' : '1';
+@@ -44,7 +44,7 @@ export const animatedNormalModifierDefinition: ModifierDefinition = {
+ export const dissolveModifierDefinition: ModifierDefinition = {
+   kind: DissolveModifierKind,
+   slot: ModifierSlot.Effect,
+-  getDefineSignature(modifier: Readonly<Modifier>): string {
++  getDefineSignature(modifier: Readonly<ModifierValue>): string {
+     return (modifier as { map?: unknown }).map !== undefined ? 'm' : '';
+   },
+ };
+@@ -56,7 +56,7 @@ export const dissolveModifierDefinition: ModifierDefinition = {
+ export const emissiveModifierDefinition: ModifierDefinition = {
+   kind: EmissiveModifierKind,
+   slot: ModifierSlot.Emissive,
+-  getDefineSignature(modifier: Readonly<Modifier>): string {
++  getDefineSignature(modifier: Readonly<ModifierValue>): string {
+     const emissive = modifier as Readonly<EmissiveModifier>;
+     let signature = '';
+     if (emissive.mask !== undefined) signature += 'm';
+@@ -79,7 +79,7 @@ export const envReflectModifierDefinition: ModifierDefinition = {
+ export const fogModifierDefinition: ModifierDefinition = {
+   kind: FogModifierKind,
+   slot: ModifierSlot.Effect,
+-  getDefineSignature(modifier: Readonly<Modifier>): string {
++  getDefineSignature(modifier: Readonly<ModifierValue>): string {
+     const fog = modifier as Readonly<FogModifier>;
+     if (fog.mode === FogModifierMode.Exponential) return 'e';
+     if (fog.mode === FogModifierMode.Exponential2) return 'x';
+@@ -123,7 +123,7 @@ export const toonModifierDefinition: ModifierDefinition = {
+ export const vertexDisplaceModifierDefinition: ModifierDefinition = {
+   kind: VertexDisplaceModifierKind,
+   slot: ModifierSlot.Vertex,
+-  getDefineSignature(modifier: Readonly<Modifier>): string {
++  getDefineSignature(modifier: Readonly<ModifierValue>): string {
+     const displace = modifier as Readonly<VertexDisplaceModifier>;
+     let signature = displace.source === VertexDisplaceModifierSource.HeightMap ? 'h' : 's';
+     if (displace.axis !== undefined) signature += 'a';
+diff --git a/packages/types/src/GlModifierSnippet.ts b/packages/types/src/GlModifierSnippet.ts
+index 7a21fec..cafae2a 100644
+--- a/packages/types/src/GlModifierSnippet.ts
++++ b/packages/types/src/GlModifierSnippet.ts
+@@ -1,6 +1,6 @@
+ import type { GlRenderState } from './GlRenderState';
+-import type { Modifier } from './Modifier';
+ import type { ModifierDefinition } from './ModifierDefinition';
++import type { ModifierValue } from './ModifierValue';
+ 
+ // The per-modifier binding context the ShadedMaterial renderer hands each snippet's `bind`. It
+ // carries the live GL state, the linked ShadedMaterial `program` (for uniform-location lookups by
+@@ -31,7 +31,7 @@ export interface GlModifierBindContext {
+ // sound. `bind` uploads the modifier's uniforms for one draw; omit it for a modifier with no
+ // uniforms.
+ export interface GlModifierSnippet extends ModifierDefinition {
+-  bind?(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void;
+-  contribution(modifier: Readonly<Modifier>, index: number): string;
+-  declarations?(modifier: Readonly<Modifier>, index: number): string;
++  bind?(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void;
++  contribution(modifier: Readonly<ModifierValue>, index: number): string;
++  declarations?(modifier: Readonly<ModifierValue>, index: number): string;
+ }
+diff --git a/packages/types/src/ModifierDefinition.ts b/packages/types/src/ModifierDefinition.ts
+index 4cde65f..ddae27a 100644
+--- a/packages/types/src/ModifierDefinition.ts
++++ b/packages/types/src/ModifierDefinition.ts
+@@ -1,4 +1,4 @@
+-import type { Modifier } from './Modifier';
++import type { ModifierValue } from './ModifierValue';
+ import type { ModifierKind } from './ModifierKind';
+ import type { ModifierSlot } from './ModifierSlot';
+ 
+@@ -16,5 +16,5 @@ import type { ModifierSlot } from './ModifierSlot';
+ export interface ModifierDefinition {
+   kind: ModifierKind;
+   slot: ModifierSlot;
+-  getDefineSignature?: (modifier: Readonly<Modifier>) => string;
++  getDefineSignature?: (modifier: Readonly<ModifierValue>) => string;
+ }
+diff --git a/packages/types/src/ModifierDefinitionValue.ts b/packages/types/src/ModifierDefinitionValue.ts
+new file mode 100644
+index 0000000..655a854
+--- /dev/null
++++ b/packages/types/src/ModifierDefinitionValue.ts
+@@ -0,0 +1,7 @@
++import type { GlModifierSnippet } from './GlModifierSnippet';
++import type { ModifierDefinition } from './ModifierDefinition';
++import type { WgpuModifierSnippet } from './WgpuModifierSnippet';
++
++// ModifierDefinition remains the open substrate contract. The redundant backend arms preserve the
++// exact snippet owner when a backend definition passes through the shared heterogeneous registry.
++export type ModifierDefinitionValue = ModifierDefinition | GlModifierSnippet | WgpuModifierSnippet;
+diff --git a/packages/types/src/ModifierRegistry.ts b/packages/types/src/ModifierRegistry.ts
+index fcab0c8..2c6f32d 100644
+--- a/packages/types/src/ModifierRegistry.ts
++++ b/packages/types/src/ModifierRegistry.ts
+@@ -1,5 +1,5 @@
+ import type { Entity } from './Entity';
+-import type { ModifierDefinition } from './ModifierDefinition';
++import type { ModifierDefinitionValue } from './ModifierDefinitionValue';
+ import type { ModifierKind } from './ModifierKind';
+ 
+ // An open, last-write-wins registry mapping a `ModifierKind` to its substrate-agnostic definition.
+@@ -8,5 +8,5 @@ import type { ModifierKind } from './ModifierKind';
+ // it to the composition contract. Unused modifier kinds — and this whole registry — tree-shake out
+ // for anyone who does not import them, so an assembled variant never costs more than its parts.
+ export interface ModifierRegistry extends Entity {
+-  definitions: Map<ModifierKind, ModifierDefinition>;
++  definitions: Map<ModifierKind, ModifierDefinitionValue>;
+ }
+diff --git a/packages/types/src/ModifierValue.ts b/packages/types/src/ModifierValue.ts
+new file mode 100644
+index 0000000..2967b08
+--- /dev/null
++++ b/packages/types/src/ModifierValue.ts
+@@ -0,0 +1,23 @@
++import type { AnimatedNormalModifier } from './AnimatedNormalModifier';
++import type { DissolveModifier } from './DissolveModifier';
++import type { EmissiveModifier } from './EmissiveModifier';
++import type { EnvReflectModifier } from './EnvReflectModifier';
++import type { FogModifier } from './FogModifier';
++import type { Modifier } from './Modifier';
++import type { RimModifier } from './RimModifier';
++import type { ToonModifier } from './ToonModifier';
++import type { VertexDisplaceModifier } from './VertexDisplaceModifier';
++
++// The open Modifier arm keeps vendor kinds accepted, while the redundant built-in arms retain their
++// concrete owners across heterogeneous material stacks on invariant native targets. Every named arm
++// already extends Modifier, so this union changes neither the TypeScript value domain nor JavaScript.
++export type ModifierValue =
++  | Modifier
++  | AnimatedNormalModifier
++  | DissolveModifier
++  | EmissiveModifier
++  | EnvReflectModifier
++  | FogModifier
++  | RimModifier
++  | ToonModifier
++  | VertexDisplaceModifier;
+diff --git a/packages/types/src/ShadedMaterial.ts b/packages/types/src/ShadedMaterial.ts
+index c9796f1..998e8b0 100644
+--- a/packages/types/src/ShadedMaterial.ts
++++ b/packages/types/src/ShadedMaterial.ts
+@@ -1,4 +1,4 @@
+-import type { Modifier } from './Modifier';
++import type { ModifierValue } from './ModifierValue';
+ import type { SurfaceMaterial } from './SurfaceMaterial';
+ import type { Texture } from './Texture';
+ 
+@@ -24,7 +24,7 @@ export interface ShadedMaterial extends SurfaceMaterial {
+   readonly kind: typeof ShadedMaterialKind;
+   diffuse: number;
+   diffuseMap: Texture | null;
+-  modifiers: readonly Modifier[];
++  modifiers: readonly ModifierValue[];
+   normalMap: Texture | null;
+   normalScale: number;
+   shininess: number;
+diff --git a/packages/types/src/ShadedMaterialOptions.ts b/packages/types/src/ShadedMaterialOptions.ts
+index 7b24914..1398bf8 100644
+--- a/packages/types/src/ShadedMaterialOptions.ts
++++ b/packages/types/src/ShadedMaterialOptions.ts
+@@ -1,4 +1,4 @@
+-import type { Modifier } from './Modifier';
++import type { ModifierValue } from './ModifierValue';
+ import type { ShadedMaterial } from './ShadedMaterial';
+ import type { SurfaceMaterialOptions } from './SurfaceMaterialOptions';
+ 
+@@ -8,7 +8,7 @@ import type { SurfaceMaterialOptions } from './SurfaceMaterialOptions';
+ export interface ShadedMaterialOptions extends SurfaceMaterialOptions {
+   diffuse?: number;
+   diffuseMap?: ShadedMaterial['diffuseMap'];
+-  modifiers?: readonly Modifier[];
++  modifiers?: readonly ModifierValue[];
+   normalMap?: ShadedMaterial['normalMap'];
+   normalScale?: number;
+   shininess?: number;
+diff --git a/packages/types/src/WgpuModifierSnippet.ts b/packages/types/src/WgpuModifierSnippet.ts
+index d1e5b87..4b3e3b1 100644
+--- a/packages/types/src/WgpuModifierSnippet.ts
++++ b/packages/types/src/WgpuModifierSnippet.ts
+@@ -1,5 +1,5 @@
+-import type { Modifier } from './Modifier';
+ import type { ModifierDefinition } from './ModifierDefinition';
++import type { ModifierValue } from './ModifierValue';
+ import type { Texture } from './Texture';
+ 
+ export interface WgpuModifierCompileContext {
+@@ -16,13 +16,13 @@ export interface WgpuModifierContribution {
+ // substrate-neutral ModifierDefinition; contribution emits WGSL for that slot and bind writes the
+ // descriptor's scalar data into its reserved three-vec4 uniform record.
+ export interface WgpuModifierSnippet extends ModifierDefinition {
+-  bind?(modifier: Readonly<Modifier>, out: Float32Array, offset: number): void;
++  bind?(modifier: Readonly<ModifierValue>, out: Float32Array, offset: number): void;
+   contribution(
+-    modifier: Readonly<Modifier>,
++    modifier: Readonly<ModifierValue>,
+     index: number,
+     context: Readonly<WgpuModifierCompileContext>,
+   ): WgpuModifierContribution;
+   // Writes the modifier's current texture references in the same order contribution acquired them.
+   // Called on each bind into backend-owned scratch; return the next free offset.
+-  textures?(modifier: Readonly<Modifier>, out: (Readonly<Texture> | null)[], offset: number): number;
++  textures?(modifier: Readonly<ModifierValue>, out: (Readonly<Texture> | null)[], offset: number): number;
+ }
+diff --git a/packages/types/src/contract.ts b/packages/types/src/contract.ts
+index 60a5290..1e10b11 100644
+--- a/packages/types/src/contract.ts
++++ b/packages/types/src/contract.ts
+@@ -469,8 +469,10 @@ export * from './MeshMorphBindPose';
+ export * from './MeshSkinBindPose';
+ export * from './MethodsOf';
+ export * from './Modifier';
++export * from './ModifierDefinitionValue';
+ export * from './ModifierKind';
+ export * from './ModifierSlot';
++export * from './ModifierValue';
+ export * from './MorphTarget';
+ export * from './MorphShape';
+ export * from './MorphShapeAnimationTarget';
+diff --git a/packages/types/src/index.ts b/packages/types/src/index.ts
+index 72c111e..01a3a80 100644
+--- a/packages/types/src/index.ts
++++ b/packages/types/src/index.ts
+@@ -457,8 +457,10 @@ export * from './MeshMorphBindPose';
+ export * from './MeshSkinBindPose';
+ export * from './MethodsOf';
+ export * from './Modifier';
++export * from './ModifierDefinitionValue';
+ export * from './ModifierKind';
+ export * from './ModifierSlot';
++export * from './ModifierValue';
+ export * from './MorphTarget';
+ export * from './MorphShape';
+ export * from './MorphShapeAnimationTarget';

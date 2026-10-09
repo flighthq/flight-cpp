@@ -1108,6 +1108,23 @@
       "unblocks": "Allows the opt-in production deform guard to inspect the real MeshRuntime without erasing the mesh owner or bypassing runtime identity.",
       "expires": "when Flight uses getMeshRuntime at this call site upstream, or flattened interface heritage can preserve the exact runtime owner without an assertion.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "modifier-concrete-value-path",
+      "dependency": "flight",
+      "patch": "modifier-concrete-value-path.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types modifier value and definition contracts; packages/shading modifier registry and stack helpers; packages/scene3d-gl shaded modifier compilation and binding",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "built-in modifier and backend snippet owners are erased to Modifier and ModifierDefinition before their concrete fields and GL callbacks are read",
+      "rewrite": "Introduces open ModifierValue and ModifierDefinitionValue unions with redundant built-in and backend arms, then carries those declared unions through ShadedMaterial storage, stack helpers, the shared registry, and GL compile/bind callbacks.",
+      "equivalence": "The open Modifier and ModifierDefinition arms remain, so the TypeScript value domains still accept every vendor kind and definition. All new unions and annotations erase in JavaScript: the same modifier objects, arrays, registry Map, definitions, callback functions, ordering, cache keys, shader source, uniform uploads, and replacement semantics remain, with no copy, cast, materialized row, or side storage.",
+      "verification": "The patch composes after the complete Flight source-patch stack. The compiler's checked exact-owner union regression covers concrete and nullable recovery beside an open base arm; full Scene3D GL regeneration verifies the shaded built-in modifier and prelude roots before generated-header compilation.",
+      "whyNotUpstreamFirst": "The public modifier and definition families intentionally remain open, while flattened native interface owners cannot recover a built-in descriptor or backend snippet after it first enters the base carrier. Redundant exact arms are a target-neutral description of values already accepted by those APIs.",
+      "unblocks": "Carries AnimatedNormal, Dissolve, Emissive, EnvReflect, Fog, Rim, Toon, and VertexDisplace owners into their real upstream GL binders, and retains GlModifierSnippet owners through the shared registry for shaded program assembly.",
+      "expires": "when heterogeneous structural storage preserves checked concrete modifier and backend-definition owners through open base-interface arms, or Flight adopts the explicit value unions upstream.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
