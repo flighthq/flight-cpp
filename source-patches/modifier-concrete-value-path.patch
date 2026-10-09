@@ -2,12 +2,13 @@ diff --git a/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts b/packages/scen
 index 97fdca9..2c4df54 100644
 --- a/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
 +++ b/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
-@@ -18,7 +18,7 @@ import type {
+@@ -18,7 +18,8 @@ import type {
    EnvReflectModifier,
    FogModifier,
    GlRenderState,
 -  Modifier,
 +  ModifierValue,
++  ReadonlyModifierValue,
    RimModifier,
    Texture,
    ToonModifier,
@@ -16,7 +17,7 @@ index 97fdca9..2c4df54 100644
  export const animatedNormalGlModifierSnippet: GlModifierSnippet = {
    ...animatedNormalModifierDefinition,
 -  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
-+  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: ReadonlyModifierValue, context: Readonly<GlModifierBindContext>): void {
      const animated = modifier as Readonly<AnimatedNormalModifier>;
      if (animated.map === null) return;
      const gl = context.state.gl;
@@ -25,7 +26,7 @@ index 97fdca9..2c4df54 100644
      }
    },
 -  contribution(modifier: Readonly<Modifier>, index: number): string {
-+  contribution(modifier: Readonly<ModifierValue>, index: number): string {
++  contribution(modifier: ReadonlyModifierValue, index: number): string {
      const animated = modifier as Readonly<AnimatedNormalModifier>;
      if (animated.map === null) return '';
      const suffix = `_${index}`;
@@ -34,7 +35,7 @@ index 97fdca9..2c4df54 100644
      );
    },
 -  declarations(modifier: Readonly<Modifier>, index: number): string {
-+  declarations(modifier: Readonly<ModifierValue>, index: number): string {
++  declarations(modifier: ReadonlyModifierValue, index: number): string {
      const animated = modifier as Readonly<AnimatedNormalModifier>;
      if (animated.map === null) return '';
      const suffix = `_${index}`;
@@ -43,7 +44,7 @@ index 97fdca9..2c4df54 100644
  export const emissiveGlModifierSnippet: GlModifierSnippet = {
    ...emissiveModifierDefinition,
 -  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
-+  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: ReadonlyModifierValue, context: Readonly<GlModifierBindContext>): void {
      const emissive = modifier as Readonly<EmissiveModifier>;
      const gl = context.state.gl;
      const suffix = `_${context.index}`;
@@ -52,7 +53,7 @@ index 97fdca9..2c4df54 100644
      }
    },
 -  contribution(modifier: Readonly<Modifier>, index: number): string {
-+  contribution(modifier: Readonly<ModifierValue>, index: number): string {
++  contribution(modifier: ReadonlyModifierValue, index: number): string {
      const emissive = modifier as Readonly<EmissiveModifier>;
      const suffix = `_${index}`;
      let body = `{\n` + `  vec3 emissiveTerm = u_emissiveColor${suffix} * u_emissiveStrength${suffix};\n`;
@@ -61,7 +62,7 @@ index 97fdca9..2c4df54 100644
      return body;
    },
 -  declarations(modifier: Readonly<Modifier>, index: number): string {
-+  declarations(modifier: Readonly<ModifierValue>, index: number): string {
++  declarations(modifier: ReadonlyModifierValue, index: number): string {
      const emissive = modifier as Readonly<EmissiveModifier>;
      const suffix = `_${index}`;
      let source = `uniform vec3 u_emissiveColor${suffix};\nuniform float u_emissiveStrength${suffix};\n`;
@@ -70,7 +71,7 @@ index 97fdca9..2c4df54 100644
  export const rimGlModifierSnippet: GlModifierSnippet = {
    ...rimModifierDefinition,
 -  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
-+  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: ReadonlyModifierValue, context: Readonly<GlModifierBindContext>): void {
      const rim = modifier as Readonly<RimModifier>;
      const gl = context.state.gl;
      const suffix = `_${context.index}`;
@@ -79,7 +80,7 @@ index 97fdca9..2c4df54 100644
      gl.uniform1f(gl.getUniformLocation(context.program, `u_rimBias${suffix}`), rim.bias ?? 0);
    },
 -  contribution(_modifier: Readonly<Modifier>, index: number): string {
-+  contribution(_modifier: Readonly<ModifierValue>, index: number): string {
++  contribution(_modifier: ReadonlyModifierValue, index: number): string {
      const suffix = `_${index}`;
      return (
        `{\n` +
@@ -88,7 +89,7 @@ index 97fdca9..2c4df54 100644
      );
    },
 -  declarations(_modifier: Readonly<Modifier>, index: number): string {
-+  declarations(_modifier: Readonly<ModifierValue>, index: number): string {
++  declarations(_modifier: ReadonlyModifierValue, index: number): string {
      const suffix = `_${index}`;
      return (
        `uniform vec3 u_rimColor${suffix};\n` +
@@ -97,7 +98,7 @@ index 97fdca9..2c4df54 100644
  export const dissolveGlModifierSnippet: GlModifierSnippet = {
    ...dissolveModifierDefinition,
 -  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
-+  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: ReadonlyModifierValue, context: Readonly<GlModifierBindContext>): void {
      const dissolve = modifier as Readonly<DissolveModifier>;
      const gl = context.state.gl;
      const suffix = `_${context.index}`;
@@ -106,7 +107,7 @@ index 97fdca9..2c4df54 100644
      else gl.uniform1f(gl.getUniformLocation(context.program, `u_dissolveScale${suffix}`), dissolve.scale ?? 8);
    },
 -  contribution(modifier: Readonly<Modifier>, index: number): string {
-+  contribution(modifier: Readonly<ModifierValue>, index: number): string {
++  contribution(modifier: ReadonlyModifierValue, index: number): string {
      const dissolve = modifier as Readonly<DissolveModifier>;
      const suffix = `_${index}`;
      const noise =
@@ -115,7 +116,7 @@ index 97fdca9..2c4df54 100644
      );
    },
 -  declarations(modifier: Readonly<Modifier>, index: number): string {
-+  declarations(modifier: Readonly<ModifierValue>, index: number): string {
++  declarations(modifier: ReadonlyModifierValue, index: number): string {
      const dissolve = modifier as Readonly<DissolveModifier>;
      const suffix = `_${index}`;
      let source =
@@ -124,7 +125,7 @@ index 97fdca9..2c4df54 100644
  export const envReflectGlModifierSnippet: GlModifierSnippet = {
    ...envReflectModifierDefinition,
 -  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
-+  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: ReadonlyModifierValue, context: Readonly<GlModifierBindContext>): void {
      const reflect = modifier as Readonly<EnvReflectModifier>;
      const gl = context.state.gl;
      const suffix = `_${context.index}`;
@@ -133,7 +134,7 @@ index 97fdca9..2c4df54 100644
      gl.uniform1f(gl.getUniformLocation(context.program, `u_envReflectRoughness${suffix}`), reflect.roughness ?? 0);
    },
 -  contribution(_modifier: Readonly<Modifier>, index: number): string {
-+  contribution(_modifier: Readonly<ModifierValue>, index: number): string {
++  contribution(_modifier: ReadonlyModifierValue, index: number): string {
      const suffix = `_${index}`;
      return (
        `{\n` +
@@ -142,7 +143,7 @@ index 97fdca9..2c4df54 100644
      );
    },
 -  declarations(_modifier: Readonly<Modifier>, index: number): string {
-+  declarations(_modifier: Readonly<ModifierValue>, index: number): string {
++  declarations(_modifier: ReadonlyModifierValue, index: number): string {
      const suffix = `_${index}`;
      return (
        `uniform samplerCube u_iblPrefiltered;\n` +
@@ -151,7 +152,7 @@ index 97fdca9..2c4df54 100644
  export const fogGlModifierSnippet: GlModifierSnippet = {
    ...fogModifierDefinition,
 -  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
-+  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: ReadonlyModifierValue, context: Readonly<GlModifierBindContext>): void {
      const fog = modifier as Readonly<FogModifier>;
      const gl = context.state.gl;
      const suffix = `_${context.index}`;
@@ -160,7 +161,7 @@ index 97fdca9..2c4df54 100644
      }
    },
 -  contribution(modifier: Readonly<Modifier>, index: number): string {
-+  contribution(modifier: Readonly<ModifierValue>, index: number): string {
++  contribution(modifier: ReadonlyModifierValue, index: number): string {
      const fog = modifier as Readonly<FogModifier>;
      const suffix = `_${index}`;
      let factor: string;
@@ -169,7 +170,7 @@ index 97fdca9..2c4df54 100644
      );
    },
 -  declarations(modifier: Readonly<Modifier>, index: number): string {
-+  declarations(modifier: Readonly<ModifierValue>, index: number): string {
++  declarations(modifier: ReadonlyModifierValue, index: number): string {
      const fog = modifier as Readonly<FogModifier>;
      const suffix = `_${index}`;
      let source = `uniform vec3 u_fogColor${suffix};\n`;
@@ -178,7 +179,7 @@ index 97fdca9..2c4df54 100644
  export const toonGlModifierSnippet: GlModifierSnippet = {
    ...toonModifierDefinition,
 -  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
-+  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: ReadonlyModifierValue, context: Readonly<GlModifierBindContext>): void {
      const toon = modifier as Readonly<ToonModifier>;
      const gl = context.state.gl;
      const suffix = `_${context.index}`;
@@ -186,7 +187,7 @@ index 97fdca9..2c4df54 100644
      gl.uniform1f(gl.getUniformLocation(context.program, `u_toonSmoothness${suffix}`), toon.smoothness ?? 0);
    },
 -  contribution(_modifier: Readonly<Modifier>, index: number): string {
-+  contribution(_modifier: Readonly<ModifierValue>, index: number): string {
++  contribution(_modifier: ReadonlyModifierValue, index: number): string {
      const suffix = `_${index}`;
      return (
        `{\n` +
@@ -195,7 +196,7 @@ index 97fdca9..2c4df54 100644
      );
    },
 -  declarations(_modifier: Readonly<Modifier>, index: number): string {
-+  declarations(_modifier: Readonly<ModifierValue>, index: number): string {
++  declarations(_modifier: ReadonlyModifierValue, index: number): string {
      const suffix = `_${index}`;
      return `uniform float u_toonSteps${suffix};\nuniform float u_toonSmoothness${suffix};\n`;
    },
@@ -204,25 +205,37 @@ index 97fdca9..2c4df54 100644
  export const vertexDisplaceGlModifierSnippet: GlModifierSnippet = {
    ...vertexDisplaceModifierDefinition,
 -  bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
-+  bind(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void {
++  bind(modifier: ReadonlyModifierValue, context: Readonly<GlModifierBindContext>): void {
      const displace = modifier as Readonly<VertexDisplaceModifier>;
      const gl = context.state.gl;
      const suffix = `_${context.index}`;
-@@ -395,7 +395,7 @@ export const vertexDisplaceGlModifierSnippet: GlModifierSnippet = {
-       gl.uniform3f(gl.getUniformLocation(context.program, `u_vDisplaceDir${suffix}`), dir.x, dir.y, dir.z);
+@@ -389,12 +389,17 @@ export const vertexDisplaceGlModifierSnippet: GlModifierSnippet = {
+       if (displace.map !== undefined) bindGlModifierTexture(context, displace.map, `u_vDisplaceMap${suffix}`);
+     } else {
+       gl.uniform1f(gl.getUniformLocation(context.program, `u_vDisplaceFrequency${suffix}`), displace.frequency ?? 1);
+       gl.uniform1f(gl.getUniformLocation(context.program, `u_vDisplaceSpeed${suffix}`), displace.speed ?? 1);
+-      const dir = displace.direction ?? { x: 1, y: 0, z: 0 };
+-      gl.uniform3f(gl.getUniformLocation(context.program, `u_vDisplaceDir${suffix}`), dir.x, dir.y, dir.z);
++      const direction = displace.direction;
++      const location = gl.getUniformLocation(context.program, `u_vDisplaceDir${suffix}`);
++      if (direction === undefined) {
++        gl.uniform3f(location, 1, 0, 0);
++      } else {
++        gl.uniform3f(location, direction.x, direction.y, direction.z);
++      }
      }
    },
 -  contribution(modifier: Readonly<Modifier>, index: number): string {
-+  contribution(modifier: Readonly<ModifierValue>, index: number): string {
++  contribution(modifier: ReadonlyModifierValue, index: number): string {
      const displace = modifier as Readonly<VertexDisplaceModifier>;
      const suffix = `_${index}`;
      const axis =
-@@ -408,7 +408,7 @@ export const vertexDisplaceGlModifierSnippet: GlModifierSnippet = {
+@@ -408,7 +413,7 @@ export const vertexDisplaceGlModifierSnippet: GlModifierSnippet = {
          : `  float vDisplacePhase = dot(localPosition.xyz, normalize(u_vDisplaceDir${suffix})) * u_vDisplaceFrequency${suffix} + u_time * u_vDisplaceSpeed${suffix};\n  float vDisplaceAmount = sin(vDisplacePhase) * u_vDisplaceAmplitude${suffix};\n`;
      return `{\n` + axis + amount + `  localPosition.xyz += vDisplaceAxis * vDisplaceAmount;\n` + `}`;
    },
 -  declarations(modifier: Readonly<Modifier>, index: number): string {
-+  declarations(modifier: Readonly<ModifierValue>, index: number): string {
++  declarations(modifier: ReadonlyModifierValue, index: number): string {
      const displace = modifier as Readonly<VertexDisplaceModifier>;
      const suffix = `_${index}`;
      let source = `uniform float u_vDisplaceAmplitude${suffix};\n`;
@@ -503,7 +516,7 @@ index 7a21fec..cafae2a 100644
  import type { GlRenderState } from './GlRenderState';
 -import type { Modifier } from './Modifier';
  import type { ModifierDefinition } from './ModifierDefinition';
-+import type { ModifierValue } from './ModifierValue';
++import type { ReadonlyModifierValue } from './ModifierValue';
  
  // The per-modifier binding context the ShadedMaterial renderer hands each snippet's `bind`. It
  // carries the live GL state, the linked ShadedMaterial `program` (for uniform-location lookups by
@@ -514,9 +527,9 @@ index 7a21fec..cafae2a 100644
 -  bind?(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void;
 -  contribution(modifier: Readonly<Modifier>, index: number): string;
 -  declarations?(modifier: Readonly<Modifier>, index: number): string;
-+  bind?(modifier: Readonly<ModifierValue>, context: Readonly<GlModifierBindContext>): void;
-+  contribution(modifier: Readonly<ModifierValue>, index: number): string;
-+  declarations?(modifier: Readonly<ModifierValue>, index: number): string;
++  bind?(modifier: ReadonlyModifierValue, context: Readonly<GlModifierBindContext>): void;
++  contribution(modifier: ReadonlyModifierValue, index: number): string;
++  declarations?(modifier: ReadonlyModifierValue, index: number): string;
  }
 diff --git a/packages/types/src/ModifierDefinition.ts b/packages/types/src/ModifierDefinition.ts
 index 4cde65f..ddae27a 100644
@@ -571,7 +584,7 @@ new file mode 100644
 index 0000000..2967b08
 --- /dev/null
 +++ b/packages/types/src/ModifierValue.ts
-@@ -0,0 +1,23 @@
+@@ -0,0 +1,36 @@
 +import type { AnimatedNormalModifier } from './AnimatedNormalModifier';
 +import type { DissolveModifier } from './DissolveModifier';
 +import type { EmissiveModifier } from './EmissiveModifier';
@@ -595,6 +608,19 @@ index 0000000..2967b08
 +  | RimModifier
 +  | ToonModifier
 +  | VertexDisplaceModifier;
++
++// Keep readonly callback views distributed across the same open and built-in value arms.
++// This is the homomorphic Readonly<ModifierValue> result written explicitly.
++export type ReadonlyModifierValue =
++  | Readonly<Modifier>
++  | Readonly<AnimatedNormalModifier>
++  | Readonly<DissolveModifier>
++  | Readonly<EmissiveModifier>
++  | Readonly<EnvReflectModifier>
++  | Readonly<FogModifier>
++  | Readonly<RimModifier>
++  | Readonly<ToonModifier>
++  | Readonly<VertexDisplaceModifier>;
 diff --git a/packages/types/src/ShadedMaterial.ts b/packages/types/src/ShadedMaterial.ts
 index c9796f1..998e8b0 100644
 --- a/packages/types/src/ShadedMaterial.ts

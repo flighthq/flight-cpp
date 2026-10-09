@@ -2,7 +2,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/pack
 index d30c0ce..7fa140c 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
-@@ -26631,6 +26631,39 @@ int main() {
+@@ -26651,6 +26651,79 @@ int main() {
      );
    });
 -
@@ -13,12 +13,48 @@ index d30c0ce..7fa140c 100644
 +      `interface Extension { readonly kind: string; }
 +       interface Anisotropy extends Extension { readonly kind: 'anisotropy'; strength: number; }
 +       interface Clearcoat extends Extension { readonly kind: 'clearcoat'; factor: number; }
-+       type ExtensionValue = Extension | Anisotropy | Clearcoat;
-+       interface Registration {
-+         bind(value: Readonly<ExtensionValue>): number;
-+         bindNullable(value: Readonly<ExtensionValue> | null): number;
++       interface Dissolve extends Extension { readonly kind: 'dissolve'; threshold: number; }
++       interface Emissive extends Extension { readonly kind: 'emissive'; intensity: number; }
++       interface Fog extends Extension { readonly kind: 'fog'; density: number; }
++       interface Rim extends Extension { readonly kind: 'rim'; power: number; }
++       interface Toon extends Extension { readonly kind: 'toon'; steps: number; }
++       interface VertexDisplace extends Extension { readonly kind: 'vertexDisplace'; amplitude: number; }
++       type ExtensionValue =
++         | Extension
++         | Anisotropy
++         | Clearcoat
++         | Dissolve
++         | Emissive
++         | Fog
++         | Rim
++         | Toon
++         | VertexDisplace;
++       type ReadonlyExtensionValue =
++         | Readonly<Extension>
++         | Readonly<Anisotropy>
++         | Readonly<Clearcoat>
++         | Readonly<Dissolve>
++         | Readonly<Emissive>
++         | Readonly<Fog>
++         | Readonly<Rim>
++         | Readonly<Toon>
++         | Readonly<VertexDisplace>;
++       interface Definition {
++         kind: string;
++         getDefineSignature(value: ReadonlyExtensionValue): string;
 +       }
++       interface Registration extends Definition {
++         bind(value: ReadonlyExtensionValue): number;
++         bindNullable(value: ReadonlyExtensionValue | null): number;
++       }
++       const definition: Definition = {
++         kind: 'anisotropy',
++         getDefineSignature(value): string {
++           return (value as Readonly<Anisotropy>).kind;
++         },
++       };
 +       export const registration: Registration = {
++         ...definition,
 +         bind(value): number {
 +           const extension = value as Readonly<Anisotropy>;
 +           return extension.strength;
@@ -32,7 +68,11 @@ index d30c0ce..7fa140c 100644
 +    );
 +    const emitted = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' });
 +
-+    expect(emitted.contents.match(/std::get<flight::Ref<Anisotropy>>/gu)).toHaveLength(2);
++    expect(
++      emitted.contents.match(
++        /std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Anisotropy>>>>>\(/gu,
++      ),
++    ).toHaveLength(3);
 +    if (cppSyntaxGate.available) {
 +      const syntax = cppSyntaxGate.checkCppSourceSyntax(emitted.contents, 'open-reference-union-cast');
 +      expect(syntax.diagnostic).toBe('');
@@ -60,7 +100,19 @@ index fae6209..aa2adc0 100644
          if (!structuralSource && isCppErasedDynamicValueTypeCpp(structuralSourceType)) {
            if (representedErasedStructuralSource && representedErasedStructuralProjection) {
              const sourceName = describeDeclaredIrTypeForDiagnosticCpp(representedErasedStructuralSource.type);
-@@ -14420,6 +14426,29 @@ function emitUnionMemberAssertionCpp(
+@@ -14407,7 +14413,10 @@ function emitUnionMemberAssertionCpp(
+       : getIrExpressionTypeEvidenceCpp(expression, context);
+   const union = sourceType ? getIrUnionTypeCpp(sourceType, context, new Set()) : undefined;
+   if (!union) return undefined;
+-  const plan = getCppUnionRepresentationPlan(union, context);
++  const unionOwner = sourceType ? getCppUnionAliasDeclarationOwnerCpp(sourceType, context) : undefined;
++  const unionContext =
++    unionOwner && unionOwner !== 'ambiguous' ? { ...context, module: unionOwner } : context;
++  const plan = getCppUnionRepresentationPlan(union, unionContext);
+   // The comparison below is between VALUE representations, and a TypeScript alias does not introduce
+   // one: `type Slot = string | Runtime` and `type First = Second = Runtime` name the same alternative
+   // the union already stores, so an assertion spelled through either has to match the slot it names.
+@@ -14425,6 +14434,43 @@ function emitUnionMemberAssertionCpp(
    // refuses rather than emitting something that cannot compile.
    const assertedUnion = getIrUnionTypeCpp(assertedType, context, new Set());
    const assertedPlan = assertedUnion ? getCppUnionRepresentationPlan(assertedUnion, context) : undefined;
@@ -83,14 +135,28 @@ index fae6209..aa2adc0 100644
 +    ? emitType(assertedStructuralOwner, assertionContext)
 +    : undefined;
 +  const exactStructuralOwnerSlots = assertedStructuralOwnerTarget
-+    ? plan.valueSlots.filter((slot) => slot.targetType === assertedStructuralOwnerTarget)
++    ? plan.valueSlots.filter((slot) => {
++        if (slot.targetType === assertedStructuralOwnerTarget) return true;
++        // A union written as Readonly<A> | Readonly<B> stores structural views rather than the
++        // nominal references themselves. The view still records its exact underlying owner.
++        const slotStructuralRow = context.referenceRepresentationPlanner.resolveStructuralRow(
++          slot.runtimeType,
++          unionContext.module,
++        );
++        const slotStructuralOwner = slotStructuralRow
++          ? getCppStructuralRowObjectTypeCpp(slotStructuralRow)
++          : undefined;
++        return slotStructuralOwner
++          ? emitType(slotStructuralOwner, assertionContext) === assertedStructuralOwnerTarget
++          : false;
++      })
 +    : [];
 +  const exactStructuralOwnerSlot =
 +    exactStructuralOwnerSlots.length === 1 ? exactStructuralOwnerSlots[0] : undefined;
    const structuralAlternative = getCppStructuralUnionAssertionAlternativeCpp(plan, assertedPlan, assertedType, context);
    if (structuralAlternative) {
      emissionError(
-@@ -14464,6 +14493,7 @@ function emitUnionMemberAssertionCpp(
+@@ -14469,6 +14498,7 @@ function emitUnionMemberAssertionCpp(
        narrowing !== undefined ||
        structuralNarrowing ||
        partialStructuralNarrowing !== undefined ||
@@ -98,7 +164,7 @@ index fae6209..aa2adc0 100644
        slot.targetType === assertedTarget ||
        slot.sourceAlternatives.some((member) => isDeepStrictEqual(member, assertedType)) ||
        isCppNominalHeritageUnionSlotCpp(slot, assertedType, context),
-@@ -14583,12 +14613,9 @@ function emitUnionMemberAssertionCpp(
+@@ -14588,12 +14618,9 @@ function emitUnionMemberAssertionCpp(
      // lowered yet when what actually blocks it is identity the carrier never held.
      const projectedImplementor =
        !namesSourceUnion && isCppProjectedInterfaceImplementorAssertionCpp(assertedType, assertedPlan, plan, context);
@@ -114,7 +180,7 @@ index fae6209..aa2adc0 100644
      if (missingStructuralOwner) {
        refuseCppStructuralAssertionOwnerUnprovenCpp(
          context,
-@@ -14647,6 +14674,18 @@ function emitUnionMemberAssertionCpp(
+@@ -14652,6 +14679,18 @@ function emitUnionMemberAssertionCpp(
        const target = getCppSingleStructuralAliasUnionTargetTypeCpp(assertedPlan!, context);
        return `flight::structural_ref_cast<${target ?? assertedPlan!.valueSlots[0]!.targetType}>(${inner})`;
      }
@@ -133,7 +199,7 @@ index fae6209..aa2adc0 100644
      if (cast === undefined) return inner;
      context.includes.add('memory');
      return `std::static_pointer_cast<${cast}>(${inner})`;
-@@ -14656,6 +14695,20 @@ function emitUnionMemberAssertionCpp(
+@@ -14661,6 +14700,20 @@ function emitUnionMemberAssertionCpp(
      context.includes.add('optional');
      return `([&]() -> ${emitType(assertedType, context)} { auto ${source} = ${value}; if (!${source}.has_value()) return std::nullopt; return ${narrowed(`${source}.value()`)}; }())`;
    }

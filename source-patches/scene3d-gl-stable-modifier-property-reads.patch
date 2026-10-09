@@ -1,0 +1,83 @@
+diff --git a/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts b/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
+index 0bd2ef8..943d0ad 100644
+--- a/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
++++ b/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
+@@ -48,14 +48,16 @@ export const animatedNormalGlModifierSnippet: GlModifierSnippet = {
+   bind(modifier: ReadonlyModifierValue, context: Readonly<GlModifierBindContext>): void {
+     const animated = modifier as Readonly<AnimatedNormalModifier>;
+     if (animated.map === null) return;
++    const map = animated.map;
+     const gl = context.state.gl;
+     const suffix = `_${context.index}`;
+-    bindGlModifierTexture(context, animated.map, `u_animNormalMap${suffix}`);
++    bindGlModifierTexture(context, map, `u_animNormalMap${suffix}`);
+     const scroll = animated.scroll;
+     gl.uniform2f(gl.getUniformLocation(context.program, `u_animNormalScroll${suffix}`), scroll.x, scroll.y);
+     gl.uniform1f(gl.getUniformLocation(context.program, `u_animNormalStrength${suffix}`), animated.strength ?? 1);
+     if (animated.secondaryMap !== undefined) {
+-      bindGlModifierTexture(context, animated.secondaryMap, `u_animNormalMap2${suffix}`);
++      const secondaryMap = animated.secondaryMap;
++      bindGlModifierTexture(context, secondaryMap, `u_animNormalMap2${suffix}`);
+       const secondary = animated.secondaryScroll ?? scroll;
+       gl.uniform2f(gl.getUniformLocation(context.program, `u_animNormalScroll2${suffix}`), secondary.x, secondary.y);
+     }
+@@ -109,9 +111,13 @@ export const emissiveGlModifierSnippet: GlModifierSnippet = {
+       scratchRgba[2],
+     );
+     gl.uniform1f(gl.getUniformLocation(context.program, `u_emissiveStrength${suffix}`), emissive.strength);
+-    if (emissive.mask !== undefined) bindGlModifierTexture(context, emissive.mask, `u_emissiveMask${suffix}`);
++    if (emissive.mask !== undefined) {
++      const mask = emissive.mask;
++      bindGlModifierTexture(context, mask, `u_emissiveMask${suffix}`);
++    }
+     if (isEmissiveGated(emissive)) {
+-      const sign = emissive.facing === EmissiveModifierFacing.AwayFromLight ? -1 : 1;
++      const facing = emissive.facing;
++      const sign = facing === EmissiveModifierFacing.AwayFromLight ? -1 : 1;
+       gl.uniform1f(gl.getUniformLocation(context.program, `u_emissiveFacingSign${suffix}`), sign);
+       gl.uniform1f(
+         gl.getUniformLocation(context.program, `u_emissiveFacingSoftness${suffix}`),
+@@ -202,8 +208,10 @@ export const dissolveGlModifierSnippet: GlModifierSnippet = {
+       scratchRgba[1],
+       scratchRgba[2],
+     );
+-    if (dissolve.map !== undefined) bindGlModifierTexture(context, dissolve.map, `u_dissolveMap${suffix}`);
+-    else gl.uniform1f(gl.getUniformLocation(context.program, `u_dissolveScale${suffix}`), dissolve.scale ?? 8);
++    if (dissolve.map !== undefined) {
++      const map = dissolve.map;
++      bindGlModifierTexture(context, map, `u_dissolveMap${suffix}`);
++    } else gl.uniform1f(gl.getUniformLocation(context.program, `u_dissolveScale${suffix}`), dissolve.scale ?? 8);
+   },
+   contribution(modifier: ReadonlyModifierValue, index: number): string {
+     const dissolve = modifier as Readonly<DissolveModifier>;
+@@ -380,15 +388,19 @@ export const vertexDisplaceGlModifierSnippet: GlModifierSnippet = {
+     const suffix = `_${context.index}`;
+     gl.uniform1f(gl.getUniformLocation(context.program, `u_vDisplaceAmplitude${suffix}`), displace.amplitude);
+     if (displace.axis !== undefined) {
++      const axis = displace.axis;
+       gl.uniform3f(
+         gl.getUniformLocation(context.program, `u_vDisplaceAxis${suffix}`),
+-        displace.axis.x,
+-        displace.axis.y,
+-        displace.axis.z,
++        axis.x,
++        axis.y,
++        axis.z,
+       );
+     }
+     if (displace.source === VertexDisplaceModifierSource.HeightMap) {
+-      if (displace.map !== undefined) bindGlModifierTexture(context, displace.map, `u_vDisplaceMap${suffix}`);
++      if (displace.map !== undefined) {
++        const map = displace.map;
++        bindGlModifierTexture(context, map, `u_vDisplaceMap${suffix}`);
++      }
+     } else {
+       gl.uniform1f(gl.getUniformLocation(context.program, `u_vDisplaceFrequency${suffix}`), displace.frequency ?? 1);
+       gl.uniform1f(gl.getUniformLocation(context.program, `u_vDisplaceSpeed${suffix}`), displace.speed ?? 1);
+@@ -466,3 +478,5 @@ function bindGlModifierTexture(
+ function isEmissiveGated(modifier: Readonly<EmissiveModifier>): boolean {
+-  return modifier.facing !== undefined && modifier.facing !== EmissiveModifierFacing.Ignore;
++  if (modifier.facing === undefined) return false;
++  const facing = modifier.facing;
++  return facing !== EmissiveModifierFacing.Ignore;
+ }

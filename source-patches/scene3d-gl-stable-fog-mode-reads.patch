@@ -1,0 +1,38 @@
+diff --git a/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts b/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
+index 943d0ad..3a58d1e 100644
+--- a/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
++++ b/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
+@@ -307,7 +307,8 @@ export const fogGlModifierSnippet: GlModifierSnippet = {
+       scratchRgba[1],
+       scratchRgba[2],
+     );
+-    if (fog.mode === undefined || fog.mode === FogModifierMode.Linear) {
++    const mode = fog.mode ?? FogModifierMode.Linear;
++    if (mode === FogModifierMode.Linear) {
+       gl.uniform1f(gl.getUniformLocation(context.program, `u_fogNear${suffix}`), fog.near ?? 0);
+       gl.uniform1f(gl.getUniformLocation(context.program, `u_fogFar${suffix}`), fog.far ?? 1);
+     } else {
+@@ -317,9 +318,10 @@ export const fogGlModifierSnippet: GlModifierSnippet = {
+     const fog = modifier as Readonly<FogModifier>;
+     const suffix = `_${index}`;
+     let factor: string;
+-    if (fog.mode === FogModifierMode.Exponential) {
++    const mode = fog.mode ?? FogModifierMode.Linear;
++    if (mode === FogModifierMode.Exponential) {
+       factor = `  float fogFactor = 1.0 - exp(-u_fogDensity${suffix} * fogDist);\n`;
+-    } else if (fog.mode === FogModifierMode.Exponential2) {
++    } else if (mode === FogModifierMode.Exponential2) {
+       factor = `  float fogTerm = u_fogDensity${suffix} * fogDist;\n  float fogFactor = 1.0 - exp(-fogTerm * fogTerm);\n`;
+     } else {
+       factor = `  float fogFactor = clamp((fogDist - u_fogNear${suffix}) / max(u_fogFar${suffix} - u_fogNear${suffix}, 1e-4), 0.0, 1.0);\n`;
+@@ -337,8 +339,9 @@ export const fogGlModifierSnippet: GlModifierSnippet = {
+     const fog = modifier as Readonly<FogModifier>;
+     const suffix = `_${index}`;
+     let source = `uniform vec3 u_fogColor${suffix};\n`;
++    const mode = fog.mode ?? FogModifierMode.Linear;
+     source +=
+-      fog.mode === undefined || fog.mode === FogModifierMode.Linear
++      mode === FogModifierMode.Linear
+         ? `uniform float u_fogNear${suffix};\nuniform float u_fogFar${suffix};\n`
+         : `uniform float u_fogDensity${suffix};\n`;
+     return source;
