@@ -1,6 +1,38 @@
 diff --git a/packages/lighting/src/sceneForwardLights.ts b/packages/lighting/src/sceneForwardLights.ts
 --- a/packages/lighting/src/sceneForwardLights.ts
 +++ b/packages/lighting/src/sceneForwardLights.ts
+@@ -26,6 +26,6 @@ export function selectScene3DForwardLights(
+   const points = lights.point;
+   const spots = lights.spot;
+-  const pointCount = selectStrongestLights(
++  const pointCount = selectStrongestLights<PointLight>(
+     points,
+     bounds,
+     receiverLayerMask,
+@@ -34,7 +34,7 @@ export function selectScene3DForwardLights(
+     scratchSelectedPointScores,
+     scratchSelectedPointPriorities,
+   );
+-  const spotCount = selectStrongestLights(
++  const spotCount = selectStrongestLights<SpotLight>(
+     spots,
+     bounds,
+     receiverLayerMask,
+@@ -52,12 +52,12 @@ export function selectScene3DForwardLights(
+   outSpots.length = 0;
+   for (let i = 0; i < pointCount; i++) {
+     outIndices.push(scratchSelectedPointIndices[i]);
+-    outPoints.push(scratchSelectedPointLights[i] as Readonly<PointLight>);
++    outPoints.push(scratchSelectedPointLights[i]);
+   }
+   for (let i = 0; i < spotCount; i++) {
+     // Bitwise complement makes every spot key negative and every point key non-negative, so two
+     // selections with the same family-local index cannot collide during block deduplication.
+     outIndices.push(~scratchSelectedSpotIndices[i]);
+-    outSpots.push(scratchSelectedSpotLights[i] as Readonly<SpotLight>);
++    outSpots.push(scratchSelectedSpotLights[i]);
+   }
+ }
 @@ -65,8 +65,8 @@
 -function selectStrongestLights(
 -  lights: readonly Readonly<PointLight | SpotLight>[] | undefined,
