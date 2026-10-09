@@ -1,0 +1,137 @@
+diff --git a/packages/registry/src/registryTable.ts b/packages/registry/src/registryTable.ts
+--- a/packages/registry/src/registryTable.ts
++++ b/packages/registry/src/registryTable.ts
+@@ -13,6 +13,10 @@ import type {
+ } from '@flighthq/types/contract';
+ import { RegistryEntryState } from '@flighthq/types/contract';
+ 
++interface KeyedTableEntity<T> extends KeyedTable<T>, Entity {}
++interface OrdinalTableEntity<T> extends OrdinalTable<T>, Entity {}
++interface SlotTableEntity<T> extends SlotTable<T>, Entity {}
++
+ // Registry tables are PERSISTENT: every operation that changes one returns a REPLACEMENT and mutates
+ // nothing, and the owner assigns the result. That is why the mutating verbs are named `with*` rather
+ // than `set*` — this repo reserves `set*` for in-place mutation, and a `set*` that does not set
+@@ -35,7 +39,7 @@ import { RegistryEntryState } from '@flighthq/types/contract';
+ export function concatRegistryTable<T>(
+   base: Readonly<KeyedTable<T>> | Readonly<SlotTable<T>>,
+   overlay: Readonly<KeyedTable<T>> | Readonly<SlotTable<T>>,
+-): (KeyedTable<T> & Entity) | (SlotTable<T> & Entity) {
++): KeyedTableEntity<T> | SlotTableEntity<T> {
+   if (base.shape !== overlay.shape) {
+     throw new Error(`concatRegistryTable: cannot compose a '${base.shape}' table with a '${overlay.shape}' table`);
+   }
+@@ -53,7 +57,7 @@ export function concatRegistryTable<T>(
+   if (base.shape === 'slot') {
+     const overlaySlot = overlay as Readonly<SlotTable<T>>;
+     // `null` on the overlay is "no opinion" — inherit. A tombstone is "explicitly omitted" and wins.
+-    const out = allocateEntity<SlotTable<T> & Entity>();
++    const out = allocateEntity<SlotTableEntity<T>>();
+     out.entry = overlaySlot.entry ?? base.entry;
+     out.onMiss = base.onMiss;
+     out.registry = base.registry;
+@@ -81,7 +85,7 @@ export function concatRegistryTable<T>(
+       }
+     }
+   }
+-  const out = allocateEntity<KeyedTable<T> & Entity>();
++  const out = allocateEntity<KeyedTableEntity<T>>();
+   out.entries = entries;
+   out.onMiss = baseKeyed.onMiss;
+   out.registry = baseKeyed.registry;
+@@ -89,8 +93,8 @@ export function concatRegistryTable<T>(
+   return finishEntity(out);
+ }
+ 
+-export function createKeyedTable<T>(registry: RegistryId, onMiss: RegistryMissPolicy): KeyedTable<T> & Entity {
+-  const out = allocateEntity<KeyedTable<T> & Entity>();
++export function createKeyedTable<T>(registry: RegistryId, onMiss: RegistryMissPolicy): KeyedTableEntity<T> {
++  const out = allocateEntity<KeyedTableEntity<T>>();
+   initializeKeyedTable(out, registry, onMiss);
+   return finishEntity(out);
+ }
+@@ -99,14 +103,14 @@ export function createOrdinalTable<T>(
+   registry: RegistryId,
+   onMiss: RegistryMissPolicy,
+   vocabulary: readonly Kind[],
+-): OrdinalTable<T> & Entity {
+-  const out = allocateEntity<OrdinalTable<T> & Entity>();
++): OrdinalTableEntity<T> {
++  const out = allocateEntity<OrdinalTableEntity<T>>();
+   initializeOrdinalTable(out, registry, onMiss, vocabulary);
+   return finishEntity(out);
+ }
+ 
+-export function createSlotTable<T>(registry: RegistryId, onMiss: RegistryMissPolicy): SlotTable<T> & Entity {
+-  const out = allocateEntity<SlotTable<T> & Entity>();
++export function createSlotTable<T>(registry: RegistryId, onMiss: RegistryMissPolicy): SlotTableEntity<T> {
++  const out = allocateEntity<SlotTableEntity<T>>();
+   initializeSlotTable(out, registry, onMiss);
+   return finishEntity(out);
+ }
+@@ -158,7 +162,7 @@ export function hasRegistryTableEntry(table: Readonly<RegistryTable<unknown>>, k
+ 
+ /** An empty keyed table for `registry`, carrying the miss policy every replacement of it preserves. */
+ export function initializeKeyedTable<T>(
+-  out: EntityConstruction<KeyedTable<T> & Entity>,
++  out: EntityConstruction<KeyedTableEntity<T>>,
+   registry: RegistryId,
+   onMiss: RegistryMissPolicy,
+ ): void {
+@@ -170,7 +174,7 @@ export function initializeKeyedTable<T>(
+ 
+ /** An ordinal table over `vocabulary`, every ordinal unbound. */
+ export function initializeOrdinalTable<T>(
+-  out: EntityConstruction<OrdinalTable<T> & Entity>,
++  out: EntityConstruction<OrdinalTableEntity<T>>,
+   registry: RegistryId,
+   onMiss: RegistryMissPolicy,
+   vocabulary: readonly Kind[],
+@@ -184,7 +188,7 @@ export function initializeOrdinalTable<T>(
+ 
+ /** An empty slot table for `registry`. Its key is its own `RegistryId`. */
+ export function initializeSlotTable<T>(
+-  out: EntityConstruction<SlotTable<T> & Entity>,
++  out: EntityConstruction<SlotTableEntity<T>>,
+   registry: RegistryId,
+   onMiss: RegistryMissPolicy,
+ ): void {
+@@ -200,10 +204,10 @@ export function initializeSlotTable<T>(
+ // declines to override at all. There is no third union variant for this and there should not be — "no
+ // opinion" IS the key being absent from the map, so there is nothing to store and therefore nothing to
+ // type. Typing it would be the tombstone.
+-export function withoutRegistryTableEntry<T>(table: Readonly<KeyedTable<T>>, key: Kind): KeyedTable<T> & Entity {
++export function withoutRegistryTableEntry<T>(table: Readonly<KeyedTable<T>>, key: Kind): KeyedTableEntity<T> {
+   const entries = new Map(table.entries);
+   entries.delete(key);
+-  const out = allocateEntity<KeyedTable<T> & Entity>();
++  const out = allocateEntity<KeyedTableEntity<T>>();
+   out.entries = entries;
+   out.onMiss = table.onMiss;
+   out.registry = table.registry;
+@@ -214,10 +218,10 @@ export function withoutRegistryTableEntry<T>(table: Readonly<KeyedTable<T>>, key
+ // Binds `key` to `value`, returning a REPLACEMENT table. Not `setRegistryTableEntry`: this mutates
+ // nothing, and `set*` is reserved for in-place mutation. The owner assigns the result:
+ //   registries.textureResolvers = withRegistryTableEntry(registries.textureResolvers, kind, resolver);
+-export function withRegistryTableEntry<T>(table: Readonly<KeyedTable<T>>, key: Kind, value: T): KeyedTable<T> & Entity {
++export function withRegistryTableEntry<T>(table: Readonly<KeyedTable<T>>, key: Kind, value: T): KeyedTableEntity<T> {
+   const entries = new Map(table.entries);
+   entries.set(key, { state: RegistryEntryState.Bound, value });
+-  const out = allocateEntity<KeyedTable<T> & Entity>();
++  const out = allocateEntity<KeyedTableEntity<T>>();
+   out.entries = entries;
+   out.onMiss = table.onMiss;
+   out.registry = table.registry;
+@@ -232,10 +236,10 @@ export function withRegistryTableEntry<T>(table: Readonly<KeyedTable<T>>, key: K
+ // other way. Both leave `getRegistryTableEntry` answering `null` on a table with no base, so the
+ // difference is invisible until the table is composed. Choose by what you MEAN — override-with-nothing,
+ // or decline-to-override — never by which looks right at the call site.
+-export function withRegistryTableTombstone<T>(table: Readonly<KeyedTable<T>>, key: Kind): KeyedTable<T> & Entity {
++export function withRegistryTableTombstone<T>(table: Readonly<KeyedTable<T>>, key: Kind): KeyedTableEntity<T> {
+   const entries = new Map(table.entries);
+   entries.set(key, { state: RegistryEntryState.Tombstoned });
+-  const out = allocateEntity<KeyedTable<T> & Entity>();
++  const out = allocateEntity<KeyedTableEntity<T>>();
+   out.entries = entries;
+   out.onMiss = table.onMiss;
+   out.registry = table.registry;

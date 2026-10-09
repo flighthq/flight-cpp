@@ -1669,6 +1669,23 @@
       "unblocks": "Restores the real forward point/spot light selection routine used to populate Scene3D material light blocks without inventing a native-only substitute, while retaining exact PointLight and SpotLight owners across its scratch boundary.",
       "expires": "when Flight initializes these private scratch arrays densely upstream, or the runtime intentionally gains hole-preserving array storage.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "registry-named-entity-carriers",
+      "dependency": "flight",
+      "patch": "registry-named-entity-carriers.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/registry/src/registryTable.ts",
+      "package": "@flighthq/registry",
+      "answers": "refusal",
+      "refusal": "generic KeyedTable, OrdinalTable, and SlotTable intersections with Entity have no single C++ object shape at construction and result boundaries",
+      "rewrite": "Names private KeyedTableEntity, OrdinalTableEntity, and SlotTableEntity interfaces extending the same generic table and Entity contracts, then uses those exact carriers for allocation, initialization, replacement, composition, and return values.",
+      "equivalence": "Each interface denotes the same structural intersection previously written inline. Table fields, Entity runtime slot, map and array identities, persistent replacement behavior, registry and miss-policy checks, tombstone semantics, entry ordering, generic value types, and public assignability to the original table interfaces are unchanged. Plain structural table inputs remain accepted; only entity-backed products receive stable internal names.",
+      "verification": "The complete Flight patch stack must apply and reverse cleanly, and focused native regeneration must remove the repeated intersection-member-shapeless omissions from registryTable before any remaining independent union-dispatch refusal is addressed.",
+      "whyNotUpstreamFirst": "Naming an existing intersection is target-neutral and mirrors the established CommandBindingTable pattern, but it is pinned here because the native compiler currently needs a terminating declared owner for generic entity construction.",
+      "unblocks": "Gives the real persistent registry constructors and replacement operations stable entity owners used by GL material, texture, blend, modifier, and PBR-extension registries.",
+      "expires": "when Flight names its entity-backed registry table products upstream, or flight-compiler can lower these generic object intersections without a named carrier.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }
