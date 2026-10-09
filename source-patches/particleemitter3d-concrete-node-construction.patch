@@ -1,0 +1,48 @@
+diff --git a/packages/particleemitter/src/particleEmitter3D.ts b/packages/particleemitter/src/particleEmitter3D.ts
+index 2c6efeb..3c68a50 100644
+--- a/packages/particleemitter/src/particleEmitter3D.ts
++++ b/packages/particleemitter/src/particleEmitter3D.ts
+@@ -1,5 +1,6 @@
++import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+ import { reserveFloat32Array, reserveUint16Array } from '@flighthq/geometry/contract';
+-import { createNode3D, getNode3DRuntime } from '@flighthq/scene3d/contract';
++import { createNode3DRuntime, initializeNode3D } from '@flighthq/scene3d/contract';
+ import type {
+   AabbLike,
+   Matrix4Like,
+@@ -7,10 +8,9 @@ import type {
+   ParticleEmitter3DRuntime,
+   ParticleEmitterData,
+   PartialNode,
+-  Node3D,
+   Vector3Like,
+ } from '@flighthq/types/contract';
+-import { ParticleEmitter3DKind } from '@flighthq/types/contract';
++import { EntityRuntimeKey, ParticleEmitter3DKind } from '@flighthq/types/contract';
+ 
+ import { createParticleEmitterData } from './particleEmitter';
+ 
+@@ -153,10 +153,11 @@ export function computeParticleEmitter3DLocalBoundsAabb(out: AabbLike, source: R
+ }
+ 
+ export function createParticleEmitter3D(obj?: Readonly<PartialNode<ParticleEmitter3D>>): ParticleEmitter3D {
+-  const node = createNode3D(ParticleEmitter3DKind, obj) as unknown as ParticleEmitter3D;
++  const node = allocateEntity<ParticleEmitter3D>();
++  initializeNode3D(node, ParticleEmitter3DKind, obj, createNode3DRuntime);
+   node.data = createParticleEmitterData(obj?.data as Readonly<Partial<ParticleEmitterData>> | undefined);
+   node.blendMode = obj?.blendMode ?? 'normal';
+-  return node;
++  return finishEntity(node);
+ }
+ 
+ export function getParticleEmitter3DCapacity(source: Readonly<ParticleEmitter3D>): number {
+@@ -198,7 +199,7 @@ export function getParticleEmitter3DParticleVelocity(
+ }
+ 
+ export function getParticleEmitter3DRuntime(source: Readonly<ParticleEmitter3D>): Readonly<ParticleEmitter3DRuntime> {
+-  return getNode3DRuntime(source as unknown as Node3D) as ParticleEmitter3DRuntime;
++  return source[EntityRuntimeKey]!;
+ }
+ 
+ export function isParticleEmitter3D(node: Readonly<{ kind: string }>): node is ParticleEmitter3D {
+

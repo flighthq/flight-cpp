@@ -1,0 +1,246 @@
+diff --git a/packages/scene3d/src/billboard.ts b/packages/scene3d/src/billboard.ts
+index 41692a7..8056f4b 100644
+--- a/packages/scene3d/src/billboard.ts
++++ b/packages/scene3d/src/billboard.ts
+@@ -1,3 +1,4 @@
++import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+ import { enableNodeSignals, getNodeSignals } from '@flighthq/node/contract';
+ import type {
+   Billboard,
+@@ -11,7 +12,7 @@ import type {
+ } from '@flighthq/types/contract';
+ import { BillboardKind } from '@flighthq/types/contract';
+ 
+-import { createNode3D, getNode3DRuntime } from './sceneNode';
++import { createNode3DRuntime, getNode3DRuntime, initializeNode3D } from './sceneNode';
+ 
+ export { BillboardKind } from '@flighthq/types/contract';
+ 
+@@ -35,11 +36,12 @@ export function createBillboard(
+   kind: Kind = BillboardKind,
+   obj?: Readonly<Partial<Pick<Billboard, 'enabled' | 'name'>>>,
+ ): Billboard {
+-  const billboard = createNode3D(kind, obj) as Billboard;
++  const billboard = allocateEntity<Billboard>();
++  initializeNode3D(billboard, kind, obj, createNode3DRuntime);
+   billboard.geometry = geometry;
+   billboard.materials = materials;
+   billboard.mode = mode;
+-  return billboard;
++  return finishEntity(billboard);
+ }
+ 
+ export function enableBillboardSignals(source: Billboard): NodeSignals {
+diff --git a/packages/scene3d/src/instancedMesh.ts b/packages/scene3d/src/instancedMesh.ts
+index d7ee457..bc564bc 100644
+--- a/packages/scene3d/src/instancedMesh.ts
++++ b/packages/scene3d/src/instancedMesh.ts
+@@ -1,7 +1,6 @@
+ import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+ import { copyMatrix4, createAabb, createMatrix4, transformAabbByMatrix4, unionAabb } from '@flighthq/geometry/contract';
+ import { ensureMeshGeometryBounds } from '@flighthq/mesh/contract';
+-import { getNodeRuntime } from '@flighthq/node/contract';
+ import { createSignal } from '@flighthq/signals/contract';
+ import type {
+   Aabb,
+@@ -14,11 +13,11 @@ import type {
+   Matrix4,
+   MeshGeometry,
+ } from '@flighthq/types/contract';
+-import { InstancedMeshKind } from '@flighthq/types/contract';
++import { EntityRuntimeKey, InstancedMeshKind } from '@flighthq/types/contract';
+ 
+ export { InstancedMeshKind };
+ 
+-import { createNode3D } from './sceneNode';
++import { createNode3DRuntime, initializeNode3D } from './sceneNode';
+ 
+ /**
+  * Appends one instance at the end of `target`, growing `instanceCount` (and capacity, via
+@@ -113,14 +112,20 @@ export function createInstancedMesh(
+   const cap = capacity ?? DEFAULT_CAPACITY;
+   const matrices: Matrix4[] = new Array(cap);
+   for (let i = 0; i < cap; i++) matrices[i] = createMatrix4();
+-  const node = createNode3D(kind) as InstancedMesh;
++  const node = allocateEntity<InstancedMesh>();
++  initializeNode3D(node, kind, undefined, createInstancedMeshRuntime);
+   node.geometry = geometry;
+   node.instanceColors = null;
+   node.instanceCount = 0;
+   node.instanceMatrices = matrices;
+   node.materials = materials;
+   node.version = 0;
+-  return node;
++  return finishEntity(node);
++}
++
++export function createInstancedMeshRuntime(): InstancedMeshRuntime {
++  const out: InstancedMeshRuntime = { ...createNode3DRuntime() };
++  return out;
+ }
+ 
+ export function createInstancedMeshSignals(): InstancedMeshSignals {
+@@ -135,7 +140,7 @@ export function createInstancedMeshSignals(): InstancedMeshSignals {
+  * Use `getInstancedMeshSignals` to read without creating.
+  */
+ export function enableInstancedMeshSignals(target: InstancedMesh): InstancedMeshSignals {
+-  const runtime = getNodeRuntime(target) as InstancedMeshRuntime;
++  const runtime = target[EntityRuntimeKey]!;
+   return (runtime.instancedMeshSignals ??= createInstancedMeshSignals());
+ }
+ 
+@@ -170,7 +175,7 @@ export function getInstancedMeshInstanceMatrix(out: Matrix4, source: Readonly<In
+ 
+ /** Returns the {@link InstancedMeshSignals} attached to `source`, or `null` if not yet enabled. */
+ export function getInstancedMeshSignals(source: Readonly<InstancedMesh>): InstancedMeshSignals | null {
+-  return (getNodeRuntime(source) as InstancedMeshRuntime).instancedMeshSignals ?? null;
++  return source[EntityRuntimeKey]!.instancedMeshSignals ?? null;
+ }
+ 
+ export function initializeInstancedMeshSignals(out: EntityConstruction<InstancedMeshSignals>): void {
+diff --git a/packages/scene3d/src/mesh.ts b/packages/scene3d/src/mesh.ts
+index 08058d1..0afe552 100644
+--- a/packages/scene3d/src/mesh.ts
++++ b/packages/scene3d/src/mesh.ts
+@@ -1,3 +1,4 @@
++import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+ import { cloneMeshGeometryForDeformation } from '@flighthq/mesh/contract';
+ import {
+   enableNodeSignals,
+@@ -16,9 +17,15 @@ import type {
+   MeshRuntime,
+   NodeSignals,
+ } from '@flighthq/types/contract';
+-import { MeshDeformerMorph, MeshDeformerNone, MeshDeformerSkeletal, MeshKind } from '@flighthq/types/contract';
++import {
++  EntityRuntimeKey,
++  MeshDeformerMorph,
++  MeshDeformerNone,
++  MeshDeformerSkeletal,
++  MeshKind,
++} from '@flighthq/types/contract';
+ 
+-import { createNode3D, getNode3DRuntime } from './sceneNode';
++import { createNode3DRuntime, initializeNode3D } from './sceneNode';
+ 
+ export { MeshKind } from '@flighthq/types/contract';
+ 
+@@ -61,10 +68,16 @@ export function createMesh(
+   kind: Kind = MeshKind,
+   obj?: Readonly<Partial<Pick<Mesh, 'enabled' | 'name'>>>,
+ ): Mesh {
+-  const mesh = createNode3D(kind, obj) as Mesh;
++  const mesh = allocateEntity<Mesh>();
++  initializeNode3D(mesh, kind, obj, createMeshRuntime);
+   mesh.geometry = geometry;
+   mesh.materials = materials;
+-  return mesh;
++  return finishEntity(mesh);
++}
++
++export function createMeshRuntime(): MeshRuntime {
++  const out: MeshRuntime = { ...createNode3DRuntime() };
++  return out;
+ }
+ 
+ export function enableMeshSignals(source: Mesh): NodeSignals {
+@@ -84,7 +97,7 @@ export function getMeshDeformer(source: Readonly<Mesh>): MeshDeformer {
+ }
+ 
+ export function getMeshRuntime(source: Readonly<Mesh>): MeshRuntime {
+-  return getNode3DRuntime(source);
++  return source[EntityRuntimeKey]!;
+ }
+ 
+ export function getMeshSignals(source: Mesh): NodeSignals | null {
+diff --git a/packages/scene3d/src/sceneNode.ts b/packages/scene3d/src/sceneNode.ts
+index 8e7c883..eb99a8e 100644
+--- a/packages/scene3d/src/sceneNode.ts
++++ b/packages/scene3d/src/sceneNode.ts
+@@ -5,11 +5,18 @@ import {
+   getNodeSignals,
+   initAppearanceRuntimeTrait,
+   initAppearanceTrait,
+-  initializeNode,
+   initTransform3DRuntimeTrait,
+   initTransform3DTrait,
+ } from '@flighthq/node/contract';
+-import type { Kind, NodeSignals, Node3D, Node3DRuntime, Node3DTraits } from '@flighthq/types/contract';
++import type {
++  EntityConstruction,
++  Kind,
++  NodeRuntimeFactory,
++  NodeSignals,
++  Node3D,
++  Node3DRuntime,
++  Node3DTraits,
++} from '@flighthq/types/contract';
+ import { EntityRuntimeKey, Node3DKind, Node3DTraitsKey } from '@flighthq/types/contract';
+ 
+ export { Node3DKind } from '@flighthq/types/contract';
+@@ -19,12 +26,26 @@ export function createNode3D(
+   obj?: Readonly<Partial<Pick<Node3D, 'alpha' | 'enabled' | 'name' | 'visible'>>>,
+ ): Node3D {
+   const out = allocateEntity<Node3D>();
+-  initializeNode(out, kind, obj, undefined, createNode3DRuntime);
+-  initAppearanceTrait(out, obj);
+-  initTransform3DTrait(out);
++  initializeNode3D(out, kind, obj, createNode3DRuntime);
+   return finishEntity(out);
+ }
+ 
++export function initializeNode3D<Runtime extends Node3DRuntime>(
++  out: EntityConstruction<Node3D> & { [EntityRuntimeKey]: Runtime | undefined },
++  kind: Kind,
++  obj: Readonly<Partial<Pick<Node3D, 'alpha' | 'enabled' | 'name' | 'visible'>>> | undefined,
++  createRuntime: NodeRuntimeFactory<Runtime>,
++): void {
++  const source = obj ?? {};
++  out[EntityRuntimeKey] = createRuntime();
++  out.data = null;
++  out.enabled = source.enabled ?? true;
++  out.kind = kind;
++  out.name = source.name ?? null;
++  initAppearanceTrait(out, source);
++  initTransform3DTrait(out);
++}
++
+ export function createNode3DRuntime(): Node3DRuntime {
+   const out: Node3DRuntime = {
+     ...createNodeRuntime<Node3DTraits>(),
+diff --git a/packages/types/src/InstancedMesh.ts b/packages/types/src/InstancedMesh.ts
+index afd4a8c..56c6e25 100644
+--- a/packages/types/src/InstancedMesh.ts
++++ b/packages/types/src/InstancedMesh.ts
+@@ -1,10 +1,12 @@
+ import type { Aabb } from './Aabb';
++import type { EntityRuntimeKey } from './Entity';
+ import type { InstancedMeshSignals } from './InstancedMeshSignals';
+ import type { MaterialValue } from './MaterialValue';
+ import type { Matrix4 } from './Matrix4';
+ import type { MeshGeometry } from './MeshGeometry';
+ import type { Node3D, Node3DRuntime } from './Node3D';
+ export interface InstancedMesh extends Node3D {
++  [EntityRuntimeKey]: InstancedMeshRuntime | undefined;
+   geometry: MeshGeometry;
+   instanceColors: Uint32Array<ArrayBuffer> | null;
+   instanceCount: number;
+diff --git a/packages/types/src/Mesh.ts b/packages/types/src/Mesh.ts
+index e2c8979..6f6d9e2 100644
+--- a/packages/types/src/Mesh.ts
++++ b/packages/types/src/Mesh.ts
+@@ -1,4 +1,5 @@
+ import type { Aabb } from './Aabb';
++import type { EntityRuntimeKey } from './Entity';
+ import type { MaterialValue } from './MaterialValue';
+ import type { MeshGeometry } from './MeshGeometry';
+ import type { MeshMorph } from './MorphTarget';
+@@ -24,6 +25,7 @@ import type { Skin } from './Skin';
+ // each frame; a `Weights` animation channel drives the weights. Like skin it is a field, not a node
+ // kind, and the two compose (corrective morph over skinning) — see MeshDeformer.
+ export interface Mesh extends Node3D {
++  [EntityRuntimeKey]: MeshRuntime | undefined;
+   geometry: MeshGeometry;
+   materials: (MaterialValue | null)[];
+   morph?: MeshMorph | null;
+

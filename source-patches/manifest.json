@@ -1261,6 +1261,40 @@
       "unblocks": "Allows the real SDL WebGL particle traversal and instanced quad draw path to retain readonly emitter ownership without a native cast.",
       "expires": "when Flight adopts the capability predicate upstream, or the native compiler retains checked concrete node owners through heterogeneous traversal automatically.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-concrete-node-construction",
+      "dependency": "flight",
+      "patch": "scene3d-concrete-node-construction.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types Mesh and InstancedMesh runtime slots; packages/scene3d node, mesh, instanced-mesh, and billboard construction",
+      "package": "@flighthq/scene3d",
+      "answers": "refusal",
+      "refusal": "a structural assertion from the readonly row Readonly<NodeRuntime<Node3DTraits>> to the writable row InstancedMeshRuntime claims mutation the source refused",
+      "rewrite": "Adds one exact-runtime initializeNode3D construction seam, allocates each concrete drawable as its declared entity owner, constructs MeshRuntime and InstancedMeshRuntime owners from the fresh Node3D runtime, declares their exact symbol slots, and reads those slots without base-runtime assertions.",
+      "equivalence": "initializeNode3D performs the same runtime-factory call and writes the same data, enabled, kind, name, appearance, and transform defaults as initializeNode plus the existing trait initializers. Mesh, Billboard, and InstancedMesh are allocated once and published only after their same fields are assigned; their runtime objects preserve the same base field values and referenced objects. Optional concrete runtime cells remain absent in JavaScript until used, exactly as before. No public node, geometry, material, matrix, signal, or runtime identity escapes before finishEntity.",
+      "verification": "The complete patch stack composes cleanly and a focused strict TypeScript program reports no errors in the changed type or Scene3D modules; unavailable ambient WebGPU declarations are the only package-wide typecheck blocker. Regeneration validates the exact native owners and generated-header compilation validates their use sites.",
+      "whyNotUpstreamFirst": "Flight's concrete constructors allocated Node3D and asserted it to wider drawable records, while their runtime accessors later asserted the inherited base slot back to concrete runtimes. Allocating and initializing the types the functions promise is a target-neutral correction of those construction contracts.",
+      "unblocks": "Gives real Mesh, Billboard, and InstancedMesh objects and their runtime caches exact native owners, including the instanced signal and culling slots used by Scene3D preparation and GL instanced drawing.",
+      "expires": "when Flight allocates concrete Scene3D node and runtime owners upstream, or the native compiler preserves derived structural owner identity through Node3D construction and runtime storage automatically.",
+      "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "particleemitter3d-concrete-node-construction",
+      "dependency": "flight",
+      "patch": "particleemitter3d-concrete-node-construction.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/particleemitter/src/particleEmitter3D.ts",
+      "package": "@flighthq/particleemitter",
+      "answers": "refusal",
+      "refusal": "ParticleEmitter3D construction and runtime access erase the concrete node owner through Node3D assertions",
+      "rewrite": "Allocates ParticleEmitter3D directly, initializes its Node3D envelope through the exact-runtime seam, assigns the same particle data and blend mode, and reads its inherited exact runtime symbol slot directly.",
+      "equivalence": "The prior createNode3D result was unobserved before the particle data and blend mode fields were appended. Direct allocation receives the same Node3D runtime, defaults, kind, transform, and appearance, then the same createParticleEmitterData result and blend-mode fallback before publication. The runtime accessor returns the identical symbol-slot object without either of its erased assertions.",
+      "verification": "The complete patch stack composes cleanly and a focused strict TypeScript program reports no particleEmitter3D error; full regeneration and generated-header compilation validate the native constructor and accessor.",
+      "whyNotUpstreamFirst": "The factory promises a ParticleEmitter3D but previously constructed a base Node3D and asserted the wider record after allocation. Direct construction is a target-neutral correction matching the established allocate/initialize/finish pattern.",
+      "unblocks": "Retains concrete particle emitter identity from creation through scene traversal, update, bounds calculation, and the real GL particle renderer.",
+      "expires": "when Flight allocates ParticleEmitter3D directly upstream, or the native compiler retains concrete structural identity through createNode3D assertions automatically.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
