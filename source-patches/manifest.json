@@ -1703,6 +1703,40 @@
       "unblocks": "Allows slot and keyed registry composition to preserve real renderer, resolver, modifier, blend, and PBR-extension payloads and tombstones in the generated native registry implementation.",
       "expires": "when Flight copies composed entries explicitly upstream, or flight-compiler retains the declared RegistryTableEntry arm owner through readonly iteration and assignment.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "registry-export-named-entry-arms",
+      "dependency": "flight",
+      "patch": "registry-export-named-entry-arms.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types/src/RegistryTable.ts",
+      "package": "@flighthq/types and @flighthq/registry",
+      "answers": "refusal",
+      "refusal": "fresh RegistryTableEntry object literals in the registry package cannot name the imported generic union's anonymous C++ arm owners",
+      "rewrite": "Names and exports the existing bound and tombstoned RegistryTableEntry interfaces, then defines the same exported union from those exact arms so constructors can request their declared owners.",
+      "equivalence": "RegistryTableEntry retains the same two closed object shapes, readonly properties, bound payload, tombstone absence, literal discriminants, generic parameter behavior, JavaScript representation, and union assignability. The two exported interface names are additive type-only API and introduce no runtime value or behavior.",
+      "verification": "The complete Flight patch stack must apply and reverse cleanly, and the registry package must use the named arms at every entry construction boundary before focused native regeneration.",
+      "whyNotUpstreamFirst": "Naming existing union arms is target-neutral and useful to downstream typed constructors, but it is pinned here because the native backend currently cannot recover an imported anonymous generic arm owner from a contextual object literal.",
+      "unblocks": "Provides stable entry-arm owners for persistent registry constructors, composition, tombstones, and ordinal lookup results.",
+      "expires": "when Flight exports equivalent named entry arms upstream, or flight-compiler constructs imported anonymous generic-union arms with their declaration-owned carriers.",
+      "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "registry-exact-entry-factories",
+      "dependency": "flight",
+      "patch": "registry-exact-entry-factories.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/registry/src/registryTable.ts",
+      "package": "@flighthq/registry",
+      "answers": "refusal",
+      "refusal": "contextual RegistryTableEntry object literals are minted as local sibling owners instead of the imported union's declared bound and tombstoned carriers",
+      "rewrite": "Adds private bound and tombstoned entry factories returning the exact exported arm interfaces and routes every entry construction in composition, replacement, tombstoning, and ordinal lookup through them.",
+      "equivalence": "Each factory returns the identical plain object literal previously created at its call site, with the same state string and same payload value or reference. Calls add no branching or state; key order, persistent table identity, wrapper allocation count, entry wrapper identity rules, tombstone semantics, and all public function results remain unchanged.",
+      "verification": "The complete Flight patch stack must apply and reverse cleanly, and focused native registryTable regeneration must emit the module with zero omissions or refusals.",
+      "whyNotUpstreamFirst": "Exact typed factories are target-neutral and centralize an existing repeated construction, but they are pinned here because the native compiler needs their declared return owner to construct an imported generic union arm.",
+      "unblocks": "Completes the real registry implementation used to assemble GL material renderers, texture resolvers, modifier snippets, blend realizations, and PBR extensions.",
+      "expires": "when Flight adopts exact entry factories upstream, or flight-compiler contextualizes these object literals directly into the imported union arm owners.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }
