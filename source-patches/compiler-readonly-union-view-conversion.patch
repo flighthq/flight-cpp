@@ -1,0 +1,114 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -52057,3 +52057,23 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+     expect(contents).not.toContain('flight::Any');
+   });
++
++  it('converts every nominal union arm to its exact readonly structural view', () => {
++    const result = lower(
++      'readonly-union-views.ts',
++      `interface Base { kind: string }
++       interface First extends Base { first: number }
++       interface Second extends Base { second: number }
++       type Value = Base | First | Second;
++       type ReadonlyValue = Readonly<Base> | Readonly<First> | Readonly<Second>;
++       function read(value: ReadonlyValue): string { return value.kind; }
++       export function readMutable(value: Value): string { return read(value); }`,
++    );
++    const emitted = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++
++    expect(result.diagnostics).toEqual([]);
++    expect(emitted).toContain('std::visit');
++    expect(emitted).toContain('std::is_same_v<contextual_union_value_type, flight::Ref<Base>>');
++    expect(emitted).toContain('std::is_same_v<contextual_union_value_type, flight::Ref<First>>');
++    expect(emitted).toContain('flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Second>>>>');
++  });
+ });
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -17224,6 +17224,15 @@ function emitContextualUnionExpressionInContextCpp(
+       context,
+     );
+     if (widenedOptional) return widenedOptional;
++    const structuralVariant = emitCppStructuralReferenceMultiVariantConversionCpp(
++      expression,
++      expressionType,
++      expressionPlan,
++      union,
++      plan,
++      context,
++    );
++    if (structuralVariant) return structuralVariant;
+     // `std::optional` erases which single sentinel caused absence, while the source plan retains it.
+     // When widening into a dual-sentinel variant, branch before extracting the value and reconstruct
+     // that exact sentinel. An explicit assertion may change the present structural view, but its
+@@ -18112,6 +18121,67 @@ function emitCppOptionalStructuralReferenceWideningCpp(
+   return `${target}(${emitExpression(expression, context, expressionType, false)})`;
+ }
+ 
++// Converts a nominal-reference union to the corresponding readonly structural-view union without
++// erasing which declared owner each arm carries. Each source slot must name exactly the object stored
++// beneath one destination row, and the ordinary structural-reference converter must accept that pair.
++// The visit keeps the source owner alive and constructs the destination variant around a view of that
++// same object; no row or object is copied.
++function emitCppStructuralReferenceMultiVariantConversionCpp(
++  expression: Readonly<IrExpression>,
++  expressionType: Readonly<IrType>,
++  sourcePlan: ReturnType<typeof getCppUnionRepresentationPlan>,
++  targetUnion: Readonly<Extract<IrType, { kind: 'union' }>>,
++  targetPlan: ReturnType<typeof getCppUnionRepresentationPlan>,
++  context: EmitContext,
++): string | undefined {
++  if (sourcePlan.kind !== 'multiVariant' || targetPlan.kind !== 'multiVariant') return undefined;
++  const mappings = sourcePlan.valueSlots.map((sourceSlot) => {
++    const targets = targetPlan.valueSlots.flatMap((targetSlot) => {
++      const targetRow = context.referenceRepresentationPlanner.resolveStructuralRow(
++        targetSlot.runtimeType,
++        context.module,
++      );
++      const targetObject = targetRow ? getCppStructuralRowObjectTypeCpp(targetRow) : undefined;
++      if (!targetObject) return [];
++      const isolatedContext = { ...context, anonymousStructs: new Map(), includes: new Set<string>() };
++      if (sourceSlot.targetType !== emitType(targetObject, isolatedContext)) return [];
++      return emitCppStructuralReferenceValueConversionCpp(
++        'source',
++        sourceSlot.runtimeType,
++        targetSlot.runtimeType,
++        isolatedContext,
++      )
++        ? [{ source: sourceSlot, target: targetSlot }]
++        : [];
++    });
++    return targets.length === 1 ? targets[0] : undefined;
++  });
++  if (mappings.some((mapping) => mapping === undefined)) return undefined;
++  const resolved = mappings.filter((mapping) => mapping !== undefined);
++  if (new Set(resolved.map((mapping) => mapping.target.targetType)).size !== resolved.length) return undefined;
++
++  const resultType = qualifyCppDeclaringModuleTypeCpp(emitUnionTypeCpp(targetUnion, context), context);
++  const value = getGeneratedTargetName('contextualUnionValue', context);
++  const valueType = getGeneratedTargetName('contextualUnionValueType', context);
++  const branches = resolved.map((mapping, index) => {
++    const converted = emitCppStructuralReferenceValueConversionCpp(
++      value,
++      mapping.source.runtimeType,
++      mapping.target.runtimeType,
++      context,
++    );
++    if (!converted) return undefined;
++    const targetType = qualifyCppDeclaringModuleTypeCpp(mapping.target.targetType, context);
++    const result = `${resultType}{std::in_place_type<${targetType}>, ${converted}}`;
++    if (index === resolved.length - 1) return `else return ${result};`;
++    return `${index === 0 ? 'if' : 'else if'} constexpr (std::is_same_v<${valueType}, ${mapping.source.targetType}>) return ${result};`;
++  });
++  if (branches.some((branch) => branch === undefined)) return undefined;
++  context.includes.add('type_traits');
++  context.includes.add('variant');
++  return `std::visit([&](const auto& ${value}) -> ${resultType} { using ${valueType} = std::decay_t<decltype(${value})>; ${branches.join(' ')} }, ${emitExpression(expression, context, expressionType, false)})`;
++}
++
+ // Widen a represented source union into a nullable destination only when every present source slot
+ // selects exactly one destination slot. An optional source must also encode a sentinel the destination
+ // represents: passing optional<T> directly to optional<variant<T, U>> has no converting constructor,

@@ -1635,6 +1635,23 @@
       "unblocks": "Removes the shared inherited-runtime-property refusal from Billboard, Group, InstancedMesh, LodMesh, Mesh, and ParticleEmitter3D so real Scene3D nodes and materials can remain in the generated closure.",
       "expires": "when Flight names these runtime intersections upstream, or flight-compiler can prove the same compatible runtime refinements through intersection aliases.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "compiler-readonly-union-view-conversion",
+      "dependency": "flight-compiler",
+      "patch": "compiler-readonly-union-view-conversion.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "contextual C++ union conversion requires equivalent source union evidence",
+      "rewrite": "Adds an exact multi-variant conversion for a nominal reference union passed to the corresponding readonly structural-view union. It pairs each source arm only with the destination row whose underlying declared object has the same C++ owner, proves the ordinary structural-reference conversion for that pair, and emits an exhaustive std::visit that constructs the selected destination arm.",
+      "equivalence": "Each branch retains the same reference-counted source object and constructs only a readonly structural view over that object's existing row. No source object, row, field, union discriminator, or callback value is copied or replaced. The conversion is accepted only when every source carrier has one unique exact-owner destination and every destination is used at most once; ambiguous base-row widenings keep the prior refusal.",
+      "verification": "The pinned compiler-backend-cpp package typecheck passes, and the new regression emits an exhaustive nominal-union to readonly-view-union std::visit while 1,732 unrelated tests remain excluded by the focused filter. The complete 9-patch compiler stack applies and reverses cleanly. Focused native Scene3D-GL regeneration lowers all 1,602 modules, emits glShadedPrelude and shadedGlMeshMaterialRenderer (2/2), records zero refusals, and accepts the source-patch effectiveness check.",
+      "whyNotUpstreamFirst": "Mutable values are valid inputs to readonly TypeScript parameters, including when both sides are distributed unions. This patch teaches the native backend that missing source-language conversion rather than changing Flight's public modifier mutability or callback contracts.",
+      "unblocks": "Allows the real upstream ShadedMaterial GL compiler and binder to pass each mutable ModifierValue arm to the exact ReadonlyModifierValue callback arm used by modifier definitions and GL snippets.",
+      "expires": "when the pinned compiler natively lowers exact nominal-union to readonly-structural-union conversions with the same owner-preserving proof.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }
