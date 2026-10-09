@@ -1662,11 +1662,11 @@
       "package": "@flighthq/lighting",
       "answers": "refusal",
       "refusal": "Array length construction is outside the dense flight-cpp array profile because its runtime contract cannot represent holes",
-      "rewrite": "Initializes the two private point/spot light scratch arrays as empty dense arrays instead of allocating MAX_FORWARD_LIGHTS holes; the existing bounded insertion loop grows each array's live prefix on demand.",
-      "equivalence": "The arrays are module-private and the selector reads only indices below selectedCount, each of which the same insertion loop has written. The same light references, stable ranking, family-local indices, MAX_FORWARD_LIGHTS bound, output ordering, and reusable storage are retained; only never-read holes beyond the live prefix are omitted.",
+      "rewrite": "Initializes the two private point/spot light scratch arrays as empty dense arrays instead of allocating MAX_FORWARD_LIGHTS holes, types each with its exact family owner, and makes the shared bounded insertion helper generic so each call retains that owner while growing its live prefix on demand.",
+      "equivalence": "The arrays are module-private and the selector reads only indices below selectedCount, each of which the same insertion loop has written. Generic T is inferred as PointLight for the point call and SpotLight for the spot call, so it only removes the former union widening and cannot change runtime code or values. The same light references, stable ranking, family-local indices, MAX_FORWARD_LIGHTS bound, output ordering, and reusable storage are retained; only never-read holes beyond the live prefix are omitted.",
       "verification": "The complete Flight source-patch stack must apply and reverse cleanly, and focused native regeneration must emit sceneForwardLights with zero omissions or refusals.",
       "whyNotUpstreamFirst": "Dense scratch storage is target-neutral and matches the algorithm's actual invariant, but it is pinned here while Flight still uses a JavaScript-only holey preallocation that the native array contract deliberately does not model.",
-      "unblocks": "Restores the real forward point/spot light selection routine used to populate Scene3D material light blocks without inventing a native-only substitute.",
+      "unblocks": "Restores the real forward point/spot light selection routine used to populate Scene3D material light blocks without inventing a native-only substitute, while retaining exact PointLight and SpotLight owners across its scratch boundary.",
       "expires": "when Flight initializes these private scratch arrays densely upstream, or the runtime intentionally gains hole-preserving array storage.",
       "appliedOn": "2026-10-09"
     }

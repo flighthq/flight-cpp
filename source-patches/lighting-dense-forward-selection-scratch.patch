@@ -1,16 +1,28 @@
 diff --git a/packages/lighting/src/sceneForwardLights.ts b/packages/lighting/src/sceneForwardLights.ts
 --- a/packages/lighting/src/sceneForwardLights.ts
 +++ b/packages/lighting/src/sceneForwardLights.ts
+@@ -65,8 +65,8 @@
+-function selectStrongestLights(
+-  lights: readonly Readonly<PointLight | SpotLight>[] | undefined,
++function selectStrongestLights<T extends PointLight | SpotLight>(
++  lights: readonly Readonly<T>[] | undefined,
+   bounds: Readonly<BoundingSphereLike>,
+   receiverLayerMask: number,
+-  selectedLights: Readonly<PointLight | SpotLight>[],
++  selectedLights: Readonly<T>[],
+   selectedIndices: Int32Array,
+   selectedScores: Float64Array,
+   selectedPriorities: Float64Array,
 @@ -115,10 +115,10 @@ function selectStrongestLights(
  }
  
  const scratchSelectedPointIndices = new Int32Array(MAX_FORWARD_LIGHTS);
 -const scratchSelectedPointLights: Readonly<PointLight | SpotLight>[] = new Array(MAX_FORWARD_LIGHTS);
-+const scratchSelectedPointLights: Readonly<PointLight | SpotLight>[] = [];
++const scratchSelectedPointLights: Readonly<PointLight>[] = [];
  const scratchSelectedPointScores = new Float64Array(MAX_FORWARD_LIGHTS);
  const scratchSelectedPointPriorities = new Float64Array(MAX_FORWARD_LIGHTS);
  const scratchSelectedSpotIndices = new Int32Array(MAX_FORWARD_LIGHTS);
 -const scratchSelectedSpotLights: Readonly<PointLight | SpotLight>[] = new Array(MAX_FORWARD_LIGHTS);
-+const scratchSelectedSpotLights: Readonly<PointLight | SpotLight>[] = [];
++const scratchSelectedSpotLights: Readonly<SpotLight>[] = [];
  const scratchSelectedSpotScores = new Float64Array(MAX_FORWARD_LIGHTS);
  const scratchSelectedSpotPriorities = new Float64Array(MAX_FORWARD_LIGHTS);
