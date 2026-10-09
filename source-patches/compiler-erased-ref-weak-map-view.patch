@@ -1,0 +1,44 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -25442,23 +25442,24 @@
+-  it('plans an ErasedRef WeakMap view with get, set, has, and delete up to its exact runtime overload', () => {
++  it('acquires an ErasedRef WeakMap view with get, set, has, and delete', () => {
+     const result = lower(
+       'erased-ref-weak-map-view.ts',
+       `interface Key { id: number }
+        interface Value { version: number }
+        export function exercise(values: WeakMap<object, object>, key: Key, value: Value): Value | undefined {
+          const typed = values as WeakMap<Key, Value>;
+          typed.set(key, value);
+          typed.has(key);
+          typed.delete(key);
+          return typed.get(key);
+        }`,
+     );
+-    const failure = captureBackendEmissionFailure(() =>
+-      emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }),
+-    );
+-
++    const emitted = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++
+     expect(result.diagnostics).toEqual([]);
+-    expect(failure.message).toContain(
+-      'flight::checked_weak_map_view<Key, Value>(flight::WeakMap<flight::Ref<void>, flight::ErasedRef>&)',
++    expect(emitted).toContain(
++      'auto typed = flight::checked_weak_map_view<flight::Ref<Key>, flight::Ref<Value>>(values);',
+     );
+-    expect(failure.rule).toBe('cpp-weak-map-erased-ref-view-unsupported');
++    expect(emitted).toContain('typed.set(key, value);');
++    expect(emitted).toContain('typed.has(key);');
++    expect(emitted).toContain('typed.erase(key);');
++    expect(emitted).toContain('return typed.get(key);');
+   });
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -11469,4 +11469,3 @@ function emitCppErasedWeakMapViewAcquisition(
+ ): string {
+-  if (plan.erasedValue === 'reference') refuseCppErasedRefWeakMapView(context);
+   context.includes.add('flight/weak_map.hpp');
+   return `flight::checked_weak_map_view<${emitType(plan.key, context)}, ${emitType(plan.value, context)}>(${emitExpression(expression.expression, context)})`;

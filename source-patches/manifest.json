@@ -859,6 +859,23 @@
       "appliedOn": "2026-10-08"
     },
     {
+      "id": "compiler-erased-ref-weak-map-view",
+      "dependency": "flight-compiler",
+      "patch": "compiler-erased-ref-weak-map-view.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "flight-cpp WeakMap<object, object> typed views require the runtime overload flight::checked_weak_map_view<Key, Value>(flight::WeakMap<flight::Ref<void>, flight::ErasedRef>&)",
+      "rewrite": "Emits the already planned checked_weak_map_view acquisition for an immutable local typed view after the existing planner has proved both the key and value are exact Flight reference carriers.",
+      "equivalence": "The source assertion remains a view over the same WeakMap referent. Keys keep weak reference identity, set stores the same reference owner in ErasedRef, has and delete operate only on the shared key identity, and get asks the runtime overload to validate the exact recorded value owner before returning it. No native cast, copied object, replacement map, or side table is introduced.",
+      "verification": "The focused compiler regression emits get, set, has, and delete through checked_weak_map_view; runtime tests exercise shared storage, exact-owner recovery, mismatch rejection, const-view mutation, and deletion.",
+      "whyNotUpstreamFirst": "The pinned compiler deliberately stopped at the named missing runtime overload. Once that overload exists, removing the single terminal refusal completes its already constrained immutable-local view path without widening the accepted key or value domains.",
+      "unblocks": "Allows Scene3D GL's context-owned mesh upload cache to remain WeakMap<object, object> at the shared runtime boundary and recover MeshGeometry to GlMeshUpload only at its typed consumer.",
+      "expires": "when flight-compiler emits checked ErasedRef-backed WeakMap views with the runtime overload in its pinned release, or the shared upload-cache boundary no longer needs object erasure.",
+      "appliedOn": "2026-10-08"
+    },
+    {
       "id": "renderable-concrete-node-arms",
       "dependency": "flight",
       "patch": "renderable-concrete-node-arms.patch",
@@ -907,6 +924,23 @@
       "appliedOn": "2026-10-08"
     },
     {
+      "id": "scene3d-gl-uniform-location-locals",
+      "dependency": "flight",
+      "patch": "scene3d-gl-uniform-location-locals.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d-gl/src/glClassicPrelude.ts, glDebugPrelude.ts, glMatcapPrelude.ts, glPbrProgramCache.ts, glShadowMap.ts, glToonPrelude.ts, glUnlitPrelude.ts, and glWireframePrelude.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "external call result type std::optional<flight::host_sdl::WebGlUniformLocation> is not one represented contextual runtime domain",
+      "rewrite": "Binds each getUniformLocation result to an immutable local before constructing the program record, and binds shared lit locations before the same ordered uniform queries in the three lit program builders.",
+      "equivalence": "Every getUniformLocation call still runs exactly once, with the same program, uniform name, and relative call order. Object shorthand stores those same returned values under the same fields. The shared lit-location resolver still runs before the builder-specific queries, and no returned handle, null result, program, cache key, or object identity is replaced.",
+      "verification": "All eight rewrites pass git diff whitespace validation; the Scene3D GL closure generation and focused header compile gate verify the immutable optional host handles after this patch is applied.",
+      "whyNotUpstreamFirst": "The direct object-literal form is valid portable TypeScript, but the pinned emitter does not yet retain an external call's optional host-handle domain while contextually constructing a record field. Immutable locals expose the existing represented carrier without changing the public API or runtime behavior.",
+      "unblocks": "Emits the classic, debug, matcap, PBR, shadow, toon, unlit, and wireframe program builders that real upstream Scene3D material renderers require.",
+      "expires": "when flight-compiler contextually stores represented optional external call results directly in object fields, or Flight adopts the equivalent immutable-local form upstream.",
+      "appliedOn": "2026-10-08"
+    },
+    {
       "id": "pbr-extension-concrete-value-arms",
       "dependency": "flight",
       "patch": "pbr-extension-concrete-value-arms.patch",
@@ -920,6 +954,23 @@
       "whyNotUpstreamFirst": "The source API deliberately remains vendor-extensible, while the pinned C++ emitter flattens an object first retained through the open base arm and cannot recover its built-in fields later. Redundant exact arms are a target-neutral statement of owners already in the value domain and preserve the open public contract.",
       "unblocks": "Retains Anisotropy, Clearcoat, Iridescence, Sheen, Specular, TransmissionVolume, and WrappedDiffuse extension owners through real ExtendedPbrMaterial arrays and the GL registry callbacks so their existing upstream shader and texture-binding implementations can emit.",
       "expires": "when heterogeneous structural storage preserves checked concrete owner identity through open base-interface arms, or Flight adopts the explicit value union upstream.",
+      "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-gl-erased-upload-cache",
+      "dependency": "flight",
+      "patch": "scene3d-gl-erased-upload-cache.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types/src/GlScene3DRuntime.ts plus packages/scene3d-gl/src/glScene3DRuntime.ts and glMeshUpload.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "flight-cpp WeakMap<object, object> typed views require the runtime overload flight::checked_weak_map_view<Key, Value>(flight::WeakMap<flight::Ref<void>, flight::ErasedRef>&)",
+      "rewrite": "Keeps GlScene3DRuntime.uploadCache in the context slot's existing WeakMap<object, object> type, initializes that backing map directly, and acquires the WeakMap<MeshGeometry, GlMeshUpload> view as one immutable local at the upload consumer.",
+      "equivalence": "Type assertions and generic arguments erase in JavaScript. The same one WeakMap is still created lazily, stored in the same context slot, retained in the same scene runtime, and queried or updated with the same geometry and upload objects. Derived render states still share the primary context map; no cache key, value, lifetime, call order, or identity changes.",
+      "verification": "The source patch reverse-applies exactly to the prepared Flight tree; compiler and runtime regressions verify that the consumer becomes a checked typed view over the same erased backing map.",
+      "whyNotUpstreamFirst": "The context tier intentionally exposes one renderer-neutral object cache, while the pinned native target needs its type erasure stated at that storage boundary and its exact view stated at the consumer. The rewrite is target-neutral and changes only static annotations.",
+      "unblocks": "Clears glScene3DRuntime's root refusal and the dependency chain needed by material registration, lit programs, PBR extensions, scene time, and the final Scene3D draw traversal.",
+      "expires": "when WeakMap generic assignability preserves checked typed views across object-erased fields automatically, or Flight adopts the same boundary and local-view annotations upstream.",
       "appliedOn": "2026-10-08"
     }
   ]

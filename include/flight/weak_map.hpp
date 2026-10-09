@@ -13,6 +13,7 @@
 #include <variant>
 #include <vector>
 
+#include <flight/erased_ref.hpp>
 #include <flight/reference.hpp>
 
 namespace flight {
@@ -277,6 +278,43 @@ class WeakMapView {
 template <typename Key, typename Value>
 [[nodiscard]] WeakMapView<Key, Value> checked_weak_map_view(WeakMap<Ref<void>, ErasedValue>& source) {
   return WeakMapView<Key, Value>(source);
+}
+
+// A checked typed view over WeakMap<object, object>. The backing map retains weak object keys and
+// ErasedRef values, so every typed view shares the same JavaScript map identity while recovery verifies
+// the exact reference type recorded at insertion. A mismatched view can still observe key presence, as
+// JavaScript can, but reading the value fails instead of reinterpreting another native owner.
+template <typename Key, typename Value>
+class WeakRefMapView {
+ public:
+  explicit WeakRefMapView(WeakMap<Ref<void>, ErasedRef>& source) : source_(&source) {}
+
+  [[nodiscard]] std::optional<Value> get(const Key& key) const {
+    const auto value = source_->get(std::static_pointer_cast<void>(key));
+    if (!value) return std::nullopt;
+    auto recovered = value->template as<typename Value::element_type>();
+    if (!recovered) throw BadErasedValueCast();
+    return std::optional<Value>(std::move(recovered));
+  }
+
+  [[nodiscard]] bool has(const Key& key) const { return source_->has(std::static_pointer_cast<void>(key)); }
+
+  WeakRefMapView& set(const Key& key, Value value) const {
+    source_->set(std::static_pointer_cast<void>(key), ErasedRef(std::move(value)));
+    return const_cast<WeakRefMapView&>(*this);
+  }
+
+  [[nodiscard]] bool erase(const Key& key) const {
+    return source_->erase(std::static_pointer_cast<void>(key));
+  }
+
+ private:
+  WeakMap<Ref<void>, ErasedRef>* source_;
+};
+
+template <typename Key, typename Value>
+[[nodiscard]] WeakRefMapView<Key, Value> checked_weak_map_view(WeakMap<Ref<void>, ErasedRef>& source) {
+  return WeakRefMapView<Key, Value>(source);
 }
 
 } // namespace flight

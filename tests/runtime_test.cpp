@@ -2543,6 +2543,39 @@ void test_new_runtime_services() {
   check(string_view.get(erased_key) == std::optional<flight::String>("captured"),
         "const WeakMap view handles retain mutable JavaScript referent semantics");
 
+  flight::WeakMap<flight::Ref<void>, flight::ErasedRef> erased_ref_map;
+  auto reference_view =
+      flight::checked_weak_map_view<flight::Ref<TestReference>, flight::Ref<TestReference>>(
+          erased_ref_map);
+  auto reference_alias =
+      flight::checked_weak_map_view<flight::Ref<TestReference>, flight::Ref<TestReference>>(
+          erased_ref_map);
+  auto wrong_reference_view =
+      flight::checked_weak_map_view<flight::Ref<TestReference>, flight::Ref<TestEntity>>(
+          erased_ref_map);
+  auto reference_value = flight::make_ref<TestReference>(TestReference{.value = 7});
+  reference_view.set(erased_key, reference_value);
+  check(reference_alias.get(erased_key) ==
+                std::optional<flight::Ref<TestReference>>(reference_value) &&
+            wrong_reference_view.has(erased_key),
+        "checked reference WeakMap views share backing storage and key presence");
+  bool wrong_erased_reference_failed = false;
+  try {
+    static_cast<void>(wrong_reference_view.get(erased_key));
+  } catch (const flight::BadErasedValueCast&) {
+    wrong_erased_reference_failed = true;
+  }
+  check(wrong_erased_reference_failed,
+        "checked reference WeakMap reads reject a different erased owner type");
+  const auto captured_reference_view = reference_view;
+  auto replacement_reference = flight::make_ref<TestReference>(TestReference{.value = 8});
+  captured_reference_view.set(erased_key, replacement_reference);
+  check(reference_view.get(erased_key) ==
+            std::optional<flight::Ref<TestReference>>(replacement_reference),
+        "const reference WeakMap views retain shared mutable map identity");
+  check(reference_alias.erase(erased_key) && !reference_view.has(erased_key),
+        "checked reference WeakMap deletion remains shared across typed views");
+
   auto set_key = flight::make_ref<TestReference>(TestReference{.value = 6});
   std::weak_ptr<TestReference> weak_set_key = set_key;
   flight::WeakSet<flight::Ref<TestReference>> weak_set;
