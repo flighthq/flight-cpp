@@ -1,0 +1,415 @@
+diff --git a/packages/render-gl/src/glTextureResolver.ts b/packages/render-gl/src/glTextureResolver.ts
+index 9704dfd..03e3e14 100644
+--- a/packages/render-gl/src/glTextureResolver.ts
++++ b/packages/render-gl/src/glTextureResolver.ts
+@@ -1,24 +1,32 @@
+-import { createKeyedTable, withoutRegistryTableEntry, withRegistryTableEntry } from '@flighthq/registry/contract';
+-import { getTextureSampleColorSpace, getTextureSource, getTextureSourceKind } from '@flighthq/texture/contract';
++import {
++  createKeyedTable,
++  getRegistryTableEntry,
++  withoutRegistryTableEntry,
++  withRegistryTableEntry,
++} from '@flighthq/registry/contract';
++import { getTextureSampleColorSpace } from '@flighthq/texture/contract';
+ import type {
+   RenderTargetColorSpace,
+   Bitmap,
+   CompressedImageResource,
++  ExternalTexture,
+   GlRenderState,
+   GlTextureRealization,
+   GlTextureResolver,
++  GlTextureValue,
+   ImageResource,
++  RenderTarget,
+   RenderTexture,
+   TextureColorSpace,
++  TextureSource,
+   TextureSourceKind,
+-  TextureLike,
++  VoxelGrid,
+ } from '@flighthq/types/contract';
+ import {
+   BitmapTextureSourceKind,
+   CompressedImageTextureSourceKind,
+   ImageTextureSourceKind,
+   RenderRegistryTable,
+-  RegistryEntryState,
+   RenderTargetTextureSourceKind,
+ } from '@flighthq/types/contract';
+ 
+@@ -32,20 +40,20 @@ import { getGlRenderStateRuntime } from './glRenderState';
+ import { bindGlRenderTexture } from './glRenderTexture';
+ 
+ export function registerGlBitmapTextureResolver(state: GlRenderState): void {
+-  registerGlTextureResolver(state, BitmapTextureSourceKind, resolveGlBitmapTexture);
++  registerBoundGlTextureResolver(state, BitmapTextureSourceKind, resolveGlBitmapTexture);
+ }
+ 
+ export function registerGlCompressedImageTextureResolver(state: GlRenderState): void {
+-  registerGlTextureResolver(state, CompressedImageTextureSourceKind, resolveGlCompressedImageTexture);
++  registerBoundGlTextureResolver(state, CompressedImageTextureSourceKind, resolveGlCompressedImageTexture);
+ }
+ 
+ export function registerGlImageTextureResolver(state: GlRenderState): void {
+-  registerGlTextureResolver(state, ImageTextureSourceKind, resolveGlImageTexture);
++  registerBoundGlTextureResolver(state, ImageTextureSourceKind, resolveGlImageTexture);
+ }
+ 
+ // Installs the render-target realization.
+ export function registerGlRenderTextureResolver(state: GlRenderState): void {
+-  registerGlTextureResolver(state, RenderTargetTextureSourceKind, resolveGlRenderTexture);
++  registerBoundGlTextureResolver(state, RenderTargetTextureSourceKind, resolveGlRenderTexture);
+ }
+ 
+ // Registers or replaces one declared source-kind resolver on this render state. The persistent table
+@@ -58,10 +66,58 @@ export function registerGlTextureResolver(
+ ): void {
+   const runtime = getGlRenderStateRuntime(state);
+   const table = runtime.registries.textureResolvers;
+-  runtime.registries.textureResolvers =
+-    resolver === null
+-      ? withoutRegistryTableEntry(table, sourceKind)
+-      : withRegistryTableEntry(table, sourceKind, resolver);
++  if (resolver === null) {
++    runtime.registries.textureResolvers = withoutRegistryTableEntry<GlTextureResolver>(table, sourceKind);
++    return;
++  }
++  runtime.registries.textureResolvers = withRegistryTableEntry(table, sourceKind, resolver);
++}
++
++function registerBoundGlTextureResolver(
++  state: GlRenderState,
++  sourceKind: TextureSourceKind,
++  resolver: GlTextureResolver,
++): void {
++  const runtime = getGlRenderStateRuntime(state);
++  runtime.registries.textureResolvers = withRegistryTableEntry(
++    runtime.registries.textureResolvers,
++    sourceKind,
++    resolver,
++  );
++}
++
++function createGlTextureRealization(texture: WebGLTexture, straightAlpha: boolean): GlTextureRealization {
++  return { straightAlpha, texture };
++}
++
++type GlTextureSourceValue =
++  | TextureSource
++  | Bitmap
++  | CompressedImageResource
++  | ExternalTexture
++  | ImageResource
++  | RenderTarget
++  | VoxelGrid;
++
++function getGlTextureValueSource(texture: GlTextureValue): GlTextureSourceValue | null {
++  switch (texture.dimension) {
++    case '2d': {
++      const source: GlTextureSourceValue | null = texture.source;
++      return source;
++    }
++    case '3d': {
++      const source: GlTextureSourceValue | null = texture.source;
++      return source;
++    }
++    case '2d-array': {
++      const source: GlTextureSourceValue | null = texture.sources.find((value) => value !== null) ?? null;
++      return source;
++    }
++    case 'cube': {
++      const source: GlTextureSourceValue | null = texture.sources.find((value) => value !== null) ?? null;
++      return source;
++    }
++  }
+ }
+ 
+ export function registerStandardGlTextureResolvers(state: GlRenderState): void {
+@@ -81,19 +137,20 @@ export function registerStandardGlTextureResolvers(state: GlRenderState): void {
+ // every texture it draws. 3D composites linear; 2D composites in the encoded domain and passes 'srgb'.
+ export function resolveGlTexture(
+   state: GlRenderState,
+-  texture: Readonly<TextureLike>,
++  texture: GlTextureValue,
+   premultiply = false,
+   workingColorSpace: RenderTargetColorSpace = 'linear',
+ ): WebGLTexture | null {
+-  const sourceKind = getTextureSourceKind(texture);
+-  if (sourceKind === null) return null;
++  const source = getGlTextureValueSource(texture);
++  if (source === null) return null;
++  const sourceKind = source.kind;
+   const runtime = getGlRenderStateRuntime(state);
+-  const entry = runtime.registries.textureResolvers.entries.get(sourceKind);
+-  if (entry?.state !== RegistryEntryState.Bound) {
++  const resolver = getRegistryTableEntry(runtime.registries.textureResolvers, sourceKind);
++  if (resolver === null) {
+     runtime.registryMiss?.(RenderRegistryTable.TextureResolver, sourceKind);
+     return null;
+   }
+-  const realization = entry.value(
++  const realization = resolver(
+     state,
+     texture,
+     premultiply,
+@@ -104,54 +161,59 @@ export function resolveGlTexture(
+ 
+ function resolveGlBitmapTexture(
+   state: GlRenderState,
+-  texture: Readonly<TextureLike>,
++  texture: GlTextureValue,
+   premultiply: boolean,
+   colorSpace: TextureColorSpace,
+ ): GlTextureRealization | null {
+-  const bitmap = getTextureSource(texture) as Readonly<Bitmap> | null;
+-  if (bitmap === null) return null;
+-  return {
+-    straightAlpha: false,
+-    texture: bindGlBitmapTexture(state, bitmap, texture.sampler, null, premultiply, colorSpace),
+-  };
++  const source = getGlTextureValueSource(texture);
++  if (source === null) return null;
++  const bitmap = source as Readonly<Bitmap>;
++  return createGlTextureRealization(
++    bindGlBitmapTexture(state, bitmap, texture.sampler, null, premultiply, colorSpace),
++    false,
++  );
+ }
+ 
+ function resolveGlCompressedImageTexture(
+   state: GlRenderState,
+-  texture: Readonly<TextureLike>,
++  texture: GlTextureValue,
+   _premultiply: boolean,
+   colorSpace: TextureColorSpace,
+ ): GlTextureRealization | null {
+-  const image = getTextureSource(texture) as Readonly<CompressedImageResource> | null;
+-  if (image === null) return null;
+-  return {
+-    straightAlpha: true,
+-    texture: bindGlCompressedImageTexture(state, image, texture.sampler, null, colorSpace),
+-  };
++  const source = getGlTextureValueSource(texture);
++  if (source === null) return null;
++  const image = source as Readonly<CompressedImageResource>;
++  return createGlTextureRealization(
++    bindGlCompressedImageTexture(state, image, texture.sampler, null, colorSpace),
++    true,
++  );
+ }
+ 
+ function resolveGlImageTexture(
+   state: GlRenderState,
+-  texture: Readonly<TextureLike>,
++  texture: GlTextureValue,
+   premultiply: boolean,
+   colorSpace: TextureColorSpace,
+ ): GlTextureRealization | null {
+-  const image = getTextureSource(texture) as Readonly<ImageResource> | null;
+-  if (image === null) return null;
+-  return {
+-    straightAlpha: false,
+-    texture: bindGlImageResourceTexture(state, image, texture.sampler, null, premultiply, colorSpace),
+-  };
++  const source = getGlTextureValueSource(texture);
++  if (source === null) return null;
++  const image = source as Readonly<ImageResource>;
++  return createGlTextureRealization(
++    bindGlImageResourceTexture(state, image, texture.sampler, null, premultiply, colorSpace),
++    false,
++  );
+ }
+ 
+-function resolveGlRenderTexture(state: GlRenderState, texture: Readonly<TextureLike>): GlTextureRealization | null {
+-  const handle = bindGlRenderTexture(state, texture as Readonly<RenderTexture>);
+-  return handle === null ? null : { straightAlpha: false, texture: handle };
++function resolveGlRenderTexture(state: GlRenderState, texture: GlTextureValue): GlTextureRealization | null {
++  const renderTexture = texture as Readonly<RenderTexture>;
++  const handle = bindGlRenderTexture(state, renderTexture);
++  if (handle === null) return null;
++  return createGlTextureRealization(handle, false);
+ }
+ 
+-const _standardGlTextureResolvers = withRegistryTableEntry(
+-  withRegistryTableEntry(
+-    withRegistryTableEntry(
++const _standardGlTextureResolvers = withRegistryTableEntry<GlTextureResolver>(
++  withRegistryTableEntry<GlTextureResolver>(
++    withRegistryTableEntry<GlTextureResolver>(
+       createKeyedTable<GlTextureResolver>('GlTextureResolver', 'Unregistered'),
+       BitmapTextureSourceKind,
+       resolveGlBitmapTexture,
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+index bfc1934..2c379b7 100644
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -21,7 +21,6 @@ import type {
+   TextureCube,
+   TextureCubeLike,
+   TextureLike,
+-  TextureSource,
+   TextureSourceCubeFaces,
+   TextureSourceValue,
+   TextureSourceKind,
+@@ -34,7 +33,7 @@ import { cloneSampler, copySampler, createSampler, equalsSampler } from './sampl
+ 
+ const HALF_PI = Math.PI / 2;
+ 
+-function getFirstTexture2DSource(texture: Readonly<Texture2D>): TextureSource | null {
++function getFirstTexture2DSource(texture: Readonly<Texture2D>): TextureSourceValue | null {
+   return texture.source;
+ }
+ 
+@@ -42,7 +41,7 @@ function getFirstTexture3DSource(texture: Readonly<Texture3D>): VoxelGrid | null
+   return texture.source;
+ }
+ 
+-function getFirstTexture2DArraySource(texture: Readonly<Texture2DArray>): TextureSource | null {
++function getFirstTexture2DArraySource(texture: Readonly<Texture2DArray>): TextureSourceValue | null {
+   return texture.sources.find((source) => source !== null) ?? null;
+ }
+ 
+@@ -190,7 +189,7 @@ interface CreateTexture2DOptionsView {
+   flipY?: boolean;
+   readonly resource?: ImageResourceReference | null;
+   sampler?: Sampler;
+-  source?: TextureSource | null;
++  source?: TextureSourceValue | null;
+   uvOffset?: Vector2;
+   uvRotation?: number;
+   uvScale?: Vector2;
+@@ -204,7 +203,7 @@ interface CreateTexture2DArrayOptionsView {
+   flipY?: boolean;
+   readonly resource?: ImageResourceReference | null;
+   sampler?: Sampler;
+-  sources?: readonly (TextureSource | null)[];
++  sources?: readonly (TextureSourceValue | null)[];
+   uvOffset?: Vector2;
+   uvRotation?: number;
+   uvScale?: Vector2;
+@@ -264,7 +263,7 @@ export function createTexture(opts?: Readonly<CreateTextureOptionsView>): Textur
+       const out = allocateEntity<Texture2DArray>();
+       applyCommonTextureFields(out, common);
+       out.dimension = '2d-array';
+-      const sources: readonly (TextureSource | null)[] = opts.sources?.slice() ?? [];
++      const sources: readonly (TextureSourceValue | null)[] = opts.sources?.slice() ?? [];
+       out.sources = sources;
+       const texture: Texture2DArray = finishEntity(out) as Texture2DArray;
+       attachTextureToResource(texture, getTextureResource(opts));
+@@ -476,7 +475,7 @@ export function hasTextureUvTransform(texture: Readonly<TextureUvTransform>): bo
+   );
+ }
+ 
+-function getTexture2DOptionSource(opts: Readonly<Texture2DSourceOptions>): TextureSource | null | undefined {
++function getTexture2DOptionSource(opts: Readonly<Texture2DSourceOptions>): TextureSourceValue | null | undefined {
+   return opts.source;
+ }
+ 
+@@ -487,7 +486,7 @@ export function initializeTexture2D(out: EntityConstruction<Texture2D>, opts?: R
+     out.source = null;
+     return;
+   }
+-  const source: TextureSource | null | undefined = getTexture2DOptionSource(opts);
++  const source: TextureSourceValue | null | undefined = getTexture2DOptionSource(opts);
+   if (source == null) {
+     out.source = null;
+     return;
+@@ -523,7 +522,7 @@ export function setTextureFlip(texture: TextureLike, flipX: boolean, flipY: bool
+ 
+ // Binds (or clears, with null) the texture's source in place and advances the u32 dirty-bit.
+ // Does not touch sampling state or the uv-transform.
+-export function setTextureSource(texture: TextureLike, source: TextureSource | null): void {
++export function setTextureSource(texture: TextureLike, source: TextureSourceValue | null): void {
+   if (texture.dimension !== '2d') throw new Error('setTextureSource requires a Texture2D');
+   if (texture.source === source) return;
+   texture.source = source;
+diff --git a/packages/types/src/GlTextureResolver.ts b/packages/types/src/GlTextureResolver.ts
+index 4ba9328..8a0373f 100644
+--- a/packages/types/src/GlTextureResolver.ts
++++ b/packages/types/src/GlTextureResolver.ts
+@@ -1,5 +1,6 @@
+ import type { GlRenderState } from './GlRenderState';
+-import type { TextureColorSpace, TextureLike } from './Texture';
++import type { GlTextureValue } from './GlTextureValue';
++import type { TextureColorSpace } from './Texture';
+ 
+ // The backend handle and the sample interpretation that must travel with it. Keeping both facts in
+ // one value prevents a newly bound handle from inheriting the previous texture's alpha treatment.
+@@ -13,7 +14,7 @@ export interface GlTextureRealization {
+ // the final bind and atomically publishes the returned realization to the context binding shadow.
+ export type GlTextureResolver = (
+   state: GlRenderState,
+-  texture: Readonly<TextureLike>,
++  texture: GlTextureValue,
+   premultiply: boolean,
+   colorSpace: TextureColorSpace,
+ ) => GlTextureRealization | null;
+diff --git a/packages/types/src/GlTextureValue.ts b/packages/types/src/GlTextureValue.ts
+new file mode 100644
+index 0000000..41c56b1
+--- /dev/null
++++ b/packages/types/src/GlTextureValue.ts
+@@ -0,0 +1,11 @@
++import type { RenderTexture } from './RenderTexture';
++import type { Texture2DArrayLike, Texture2DLike, Texture3DLike, TextureCubeLike } from './Texture';
++
++// TextureLike remains the open sampling-view contract. The redundant render-texture arm retains
++// the exact render-target owner through native resolver dispatch while accepting the same values.
++export type GlTextureValue =
++  | Readonly<Texture2DLike>
++  | Readonly<Texture2DArrayLike>
++  | Readonly<Texture3DLike>
++  | Readonly<TextureCubeLike>
++  | Readonly<RenderTexture>;
+diff --git a/packages/types/src/Texture.ts b/packages/types/src/Texture.ts
+index c67bceb..b638cb2 100644
+--- a/packages/types/src/Texture.ts
++++ b/packages/types/src/Texture.ts
+@@ -1,6 +1,5 @@
+ import type { Entity, EntityWithoutRuntime } from './Entity';
+ import type { Sampler } from './Sampler';
+-import type { TextureSource } from './TextureSource';
+ import type { TextureSourceValue } from './TextureSourceValue';
+ import type { TextureUvTransform } from './TextureUvTransform';
+ import type { VoxelGrid } from './VoxelGrid';
+@@ -34,12 +33,12 @@ interface TextureCommon extends Entity, TextureUvTransform {
+ 
+ export interface Texture2D extends TextureCommon {
+   readonly dimension: '2d';
+-  source: TextureSource | null;
++  source: TextureSourceValue | null;
+ }
+ 
+ export interface Texture2DArray extends TextureCommon {
+   readonly dimension: '2d-array';
+-  sources: readonly (TextureSource | null)[];
++  sources: readonly (TextureSourceValue | null)[];
+ }
+ 
+ export interface Texture3D extends TextureCommon {
+diff --git a/packages/types/src/contract.ts b/packages/types/src/contract.ts
+index b7d9726..4e73741 100644
+--- a/packages/types/src/contract.ts
++++ b/packages/types/src/contract.ts
+@@ -318,6 +318,7 @@ export * from './GlSkinPaletteTexture';
+ export * from './GlTextureDescriptor';
+ export * from './GlTextureFilterKind';
+ export * from './GlTextureResolver';
++export * from './GlTextureValue';
+ export * from './GlTextureWrapKind';
+ export * from './GlToonProgram';
+ export * from './GlUnlitProgram';
+diff --git a/packages/types/src/index.ts b/packages/types/src/index.ts
+index a8726a2..f927d15 100644
+--- a/packages/types/src/index.ts
++++ b/packages/types/src/index.ts
+@@ -308,6 +308,7 @@ export * from './GlSkinPaletteTexture';
+ export * from './GlTextureDescriptor';
+ export * from './GlTextureFilterKind';
+ export * from './GlTextureResolver';
++export * from './GlTextureValue';
+ export * from './GlTextureWrapKind';
+ export * from './GlToonProgram';
+ export * from './GlUnlitProgram';

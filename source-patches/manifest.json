@@ -2060,6 +2060,40 @@
       "unblocks": "Emits the real dimension-dispatched texture constructors and resource attachment used by 2D, array, 3D, cube, and material paths.",
       "expires": "when Flight exposes concrete create-options shapes upstream, or flight-compiler materializes the generic mapped-intersection union and its optional members directly.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "render-gl-texture-resolver-explicit-boundaries",
+      "dependency": "flight",
+      "patch": "render-gl-texture-resolver-explicit-boundaries.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/render-gl/src/glTextureResolver.ts, packages/texture/src/texture.ts, and GL/texture value declarations in packages/types",
+      "package": "@flighthq/render-gl",
+      "answers": "refusal",
+      "refusal": "glTextureResolver combines nullable callback registration, optional registry lookup, nullable concrete-source assertions, fresh realization objects, and a base TextureLike callback carrier that erases the exact RenderTexture owner required by render-target binding",
+      "rewrite": "Carries redundant concrete TextureSourceValue arms through 2D and 2D-array storage and creation, declares the GL resolver value domain in its own exported module with readonly applied to every concrete texture arm and a redundant RenderTexture arm, declares the same concrete source owners locally at the resolver boundary, retains source-union evidence in explicit dimension branches, resolves keyed entries through getRegistryTableEntry, uses exact non-null helpers for built-in registration and realization construction, and supplies GlTextureResolver explicitly to registry-table generic calls.",
+      "equivalence": "TextureSourceValue retains the original open TextureSource arm and only adds built-in interfaces that already extend it. Applying Readonly to every GlTextureValue arm distributes the same property qualifier that the former outer Readonly<GlTextureValue> supplied. The local source union is private, repeats the same open TextureSource plus built-in source domain, and is only read before keyed dispatch; omitting readonly from that private carrier changes neither accepted public values nor JavaScript output. The explicit dimension switch selects the same source, first non-null layer, or first non-null face as getTextureSource. getRegistryTableEntry collapses absent and tombstoned entries to the same null path the prior checks used, while explicit generic arguments only preserve the already-declared resolver carrier. Registration, miss callbacks, handles, alpha flags, ordering, identity, and allocations are unchanged.",
+      "verification": "The complete Flight patch stack must apply and reverse cleanly; focused glTextureResolver.ts generation must record zero refusals, emit all registration, source selection, lookup, bitmap/image/compressed, and render-target resolver functions with no NOT GENERATED markers, and contain no unresolved generic carrier such as KeyedTable<T>.",
+      "whyNotUpstreamFirst": "The redundant type arms and explicit branches are target-neutral, but they are pinned here because the native backend needs exact owners retained through invariant storage and resolver variants and needs absence separated from owner selection.",
+      "unblocks": "Enables the complete standard GL texture resolver path, including real bitmap/image uploads and identity-preserving render-target sampling used by GL materials.",
+      "expires": "when Flight adopts the exact GL texture value domain and explicit resolver boundaries upstream, or flight-compiler automatically retains redundant concrete owners through these nullable resolver paths.",
+      "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "compiler-exact-variant-owner-priority",
+      "dependency": "flight-compiler",
+      "patch": "compiler-exact-variant-owner-priority.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "variant narrowing treated exact owner identity, a shared literal discriminant, and merely equivalent object layout as equal evidence, so a RenderTexture assertion or a 3D discriminant could also match a different texture owner; common-property projection refused a closed heterogeneous result even when every projected owner mapped exactly into the result union; and a present nominal variant could not enter the corresponding nullable readonly-view variant even though every view conversion was already checked",
+      "rewrite": "Ranks variant evidence by exact member or target carrier first, matching literal discriminant second, and structural representation only as a fallback; applies that selection consistently to tests, narrowed values, nested optionals, common-property projections, and present reads; admits heterogeneous common-property results only when every visitor branch has an exact checked widening into the closed result union; and permits that same exact per-arm structural-view visitor to construct an optional variant when the source value is already proven present.",
+      "equivalence": "The selection order uses evidence already accepted by the backend but prevents weaker shape similarity from competing with a stronger exact owner or discriminant. Every successful selection still identifies exactly one existing variant alternative. Heterogeneous property projection and nominal-to-readonly-view conversion visit the active owner once and construct the same declared union alternative from an identity-preserving structural view; adding the destination's absence carrier does not add absence to a value already proven present. No path casts, copies, or materializes an object.",
+      "verification": "Compiler regressions must prove that a 3D test selects only the exact T3 slot despite a layout-equivalent T2 slot, that a T2/RenderTexture common source read widens each exact owner into the declared nullable source union, and that a present nominal variant widens into its nullable readonly-view variant; both generated headers must pass the target C++ syntax gate. Focused glTextureResolver.ts generation must emit every resolver function with no refusal.",
+      "whyNotUpstreamFirst": "This is compiler backend correctness required before the unchanged source-level discriminants and redundant exact-owner unions can retain their meaning in C++.",
+      "unblocks": "Preserves RenderTexture and concrete texture-source identity through the real GL resolver without allowing conflicting texture dimensions to alias by layout.",
+      "expires": "when the upstream compiler ranks exact/discriminant variant evidence ahead of structural fallback and supports exact closed-union common-property widening.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }
