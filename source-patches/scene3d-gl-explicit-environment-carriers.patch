@@ -59,7 +59,7 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
    if (texture === null) return false;
    const gl = state.gl;
    gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-@@ -110,9 +118,13 @@ export function updateGlEnvironmentCubeFace(
+@@ -110,9 +118,14 @@ export function updateGlEnvironmentCubeFace(
      runtime.environmentSourceCubeColorSpace === 'srgb' ? gl.SRGB8_ALPHA8 : gl.RGBA,
    );
    gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
@@ -68,14 +68,15 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
    const faceVersions = runtime.environmentSourceCubeFaceVersions.slice();
 -  faceVersions[face] = trackedCube?.dimension === 'cube' && trackedCube.sources[face] === image ? image.version : -1;
 +  let faceVersion = -1;
-+  if (trackedCube !== null && trackedCube.dimension === 'cube' && trackedCube.sources[face] === image) {
-+    faceVersion = image.version;
++  if (trackedCube !== null && trackedCube.dimension === 'cube') {
++    const cube = trackedCube as CubeTexture;
++    if (cube.sources[face] === image) faceVersion = image.version;
 +  }
 +  faceVersions[face] = faceVersion;
    runtime.environmentSourceCubeFaceVersions = faceVersions;
    runtime.environmentSourceRevision = (runtime.environmentSourceRevision + 1) >>> 0;
    return true;
-@@ -123,3 +135,5 @@ export function updateGlEnvironmentCubeFace(
+@@ -123,3 +136,5 @@ export function updateGlEnvironmentCubeFace(
 -function getGlEnvironmentSourceCubeFaceVersions(cube: Readonly<CubeTexture>): readonly number[] {
 +function getGlEnvironmentSourceCubeFaceVersions(cube: CubeTexture): readonly number[] {
 -  return cube.sources.map((source) => source?.version ?? -1);
@@ -83,7 +84,7 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
 +  for (const source of cube.sources) versions.push(source === null ? -1 : source.version);
 +  return versions;
  }
-@@ -127,7 +141,6 @@ function getGlEnvironmentSourceCubeFaceVersions(cube: Readonly<CubeTexture>): re
+@@ -127,7 +142,6 @@ function getGlEnvironmentSourceCubeFaceVersions(cube: Readonly<CubeTexture>): re
 -function hasGlCubeFacePixels(cube: Readonly<CubeTexture>): boolean {
 -  for (let face = 0; face < 6; face++) {
 -    const image = cube.sources[face];
@@ -93,7 +94,7 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
        return false;
      }
    }
-@@ -137,7 +150,10 @@ function hasGlCubeFacePixels(cube: Readonly<CubeTexture>): boolean {
+@@ -137,7 +151,10 @@ function hasGlCubeFacePixels(cube: Readonly<CubeTexture>): boolean {
 -function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, cube: Readonly<CubeTexture>): boolean {
 +function isGlEnvironmentSourceCubeCurrent(runtime: GlScene3DRuntime, cube: CubeTexture): boolean {
 +  const texture: WebGLTexture | null = runtime.environmentSourceCube;
@@ -109,7 +110,7 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
 +    trackedCube === null ||
 +    trackedCube.dimension !== 'cube'
    ) {
-@@ -144,7 +160,17 @@ function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, c
+@@ -144,7 +161,17 @@ function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, c
      return false;
    }
 +  const currentCube = trackedCube as CubeTexture;
@@ -129,7 +130,7 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
    }
    return true;
  }
-@@ -152,7 +178,7 @@ function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, c
+@@ -152,7 +179,7 @@ function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, c
  function uploadGlEnvironmentImage(
    gl: GlContext,
    target: number,
