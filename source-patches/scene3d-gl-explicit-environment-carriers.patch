@@ -87,7 +87,7 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
        return false;
      }
    }
-@@ -137,7 +145,13 @@ function hasGlCubeFacePixels(cube: Readonly<CubeTexture>): boolean {
+@@ -137,7 +145,10 @@ function hasGlCubeFacePixels(cube: Readonly<CubeTexture>): boolean {
 -function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, cube: Readonly<CubeTexture>): boolean {
 +function isGlEnvironmentSourceCubeCurrent(runtime: GlScene3DRuntime, cube: CubeTexture): boolean {
 +  const texture: WebGLTexture | null = runtime.environmentSourceCube;
@@ -101,14 +101,19 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
 -    runtime.environmentSourceCubeFaceVersions.length !== 6
 +    texture === null ||
 +    trackedCube === null ||
-+    trackedCube.dimension !== 'cube' ||
-+    trackedCube !== cube ||
-+    trackedVersion !== cube.version ||
-+    faceVersions.length !== 6
++    trackedCube.dimension !== 'cube'
    ) {
-@@ -144,7 +158,8 @@ function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, c
+@@ -144,7 +155,16 @@ function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, c
      return false;
    }
++  const currentCube = trackedCube as CubeTexture;
++  if (
++    currentCube !== cube ||
++    trackedVersion !== cube.version ||
++    faceVersions.length !== 6
++  ) {
++    return false;
++  }
    for (let face = 0; face < 6; face++) {
 -    if (runtime.environmentSourceCubeFaceVersions[face] !== cube.sources[face]?.version) return false;
 +    const source = cube.sources[face];
@@ -116,7 +121,7 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
    }
    return true;
  }
-@@ -152,7 +167,7 @@ function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, c
+@@ -152,7 +172,7 @@ function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, c
  function uploadGlEnvironmentImage(
    gl: GlContext,
    target: number,
