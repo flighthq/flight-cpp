@@ -1618,6 +1618,23 @@
       "unblocks": "Allows the real Scene3D GL particle traversal and instanced billboard draw to retain its shader owner and resolve current hierarchical transforms without a readonly-to-writable structural assertion.",
       "expires": "when Flight declares its transform cache queries readonly and retains declared cache owners upstream, or flight-compiler can distinguish hidden cache mutation from public node write authority and preserve the WeakMap value owner through a rebound local automatically.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "node3d-named-runtime-carriers",
+      "dependency": "flight",
+      "patch": "node3d-named-runtime-carriers.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "Node3D, Mesh, and InstancedMesh runtime carriers",
+      "package": "@flighthq/types",
+      "answers": "refusal",
+      "refusal": "inherits incompatible property EntityRuntimeKey",
+      "rewrite": "Names Node3DRuntime, MeshRuntime, and InstancedMeshRuntime as interfaces extending the same component runtime interfaces, and names Node3D as an interface with its existing exact hidden runtime property instead of an intersection alias.",
+      "equivalence": "The public node object, unique-symbol runtime slot, runtime allocation, object identity, trait fields, initialization order, structural members, and all stored values are unchanged. Each named interface denotes the same structural intersection as its former type alias. Node3D keeps the same Node and Node3DTraits bases and the same exact Node3DRuntime slot; the representation only gives the compiler one terminating declaration path for each compatible runtime refinement.",
+      "verification": "The complete 91-patch Flight stack applies and reverses cleanly. Focused native Scene3D-GL closure regeneration lowers all 1,602 modules, emits Node3D plus Billboard, Group, InstancedMesh, LodMesh, Mesh, and ParticleEmitter3D (7/7), and records zero refusals; the source-patch effectiveness check also accepts the rewrite.",
+      "whyNotUpstreamFirst": "The rewrite is target-neutral naming of existing structural intersections, but it is pinned here because the native compiler currently needs terminating interface declarations to prove these compatible hidden-runtime refinements before Flight has adopted the named form upstream.",
+      "unblocks": "Removes the shared inherited-runtime-property refusal from Billboard, Group, InstancedMesh, LodMesh, Mesh, and ParticleEmitter3D so real Scene3D nodes and materials can remain in the generated closure.",
+      "expires": "when Flight names these runtime intersections upstream, or flight-compiler can prove the same compatible runtime refinements through intersection aliases.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }

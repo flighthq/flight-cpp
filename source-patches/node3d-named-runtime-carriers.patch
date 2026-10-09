@@ -1,0 +1,37 @@
+diff --git a/packages/types/src/Node3D.ts b/packages/types/src/Node3D.ts
+--- a/packages/types/src/Node3D.ts
++++ b/packages/types/src/Node3D.ts
+@@ -4,8 +4,7 @@ import type { Node, NodeRuntime } from './Node';
+ export const Node3DKind = 'Node3D';
+ export interface Node3DTraits extends HasAppearance, HasTransform3D {}
+-export type Node3DRuntime = NodeRuntime<Node3DTraits> & HasAppearanceRuntime & HasTransform3DRuntime;
+-export type Node3D = Node<Node3DTraits> &
+-  Node3DTraits & {
+-    [EntityRuntimeKey]: Node3DRuntime | undefined;
+-  };
++export interface Node3DRuntime extends NodeRuntime<Node3DTraits>, HasAppearanceRuntime, HasTransform3DRuntime {}
++export interface Node3D extends Node<Node3DTraits>, Node3DTraits {
++  [EntityRuntimeKey]: Node3DRuntime | undefined;
++}
+ export const Node3DTraitsKey = Symbol('Node3DTraits');
+diff --git a/packages/types/src/Mesh.ts b/packages/types/src/Mesh.ts
+--- a/packages/types/src/Mesh.ts
++++ b/packages/types/src/Mesh.ts
+@@ -51,6 +51,6 @@ export interface MeshDeformRuntime {
+   deformedLocalBounds?: Aabb | null;
+ }
+ 
+-export type MeshRuntime = Node3DRuntime & MeshDeformRuntime;
++export interface MeshRuntime extends Node3DRuntime, MeshDeformRuntime {}
+ 
+ export const MeshKind = 'Mesh';
+diff --git a/packages/types/src/InstancedMesh.ts b/packages/types/src/InstancedMesh.ts
+--- a/packages/types/src/InstancedMesh.ts
++++ b/packages/types/src/InstancedMesh.ts
+@@ -39,5 +39,5 @@ export interface InstancedMeshSignalsRuntime {
+   instancedMeshSignals?: InstancedMeshSignals | null;
+ }
+ 
+-export type InstancedMeshRuntime = Node3DRuntime & InstancedMeshCullRuntime & InstancedMeshSignalsRuntime;
++export interface InstancedMeshRuntime extends Node3DRuntime, InstancedMeshCullRuntime, InstancedMeshSignalsRuntime {}
+ export const InstancedMeshKind = 'InstancedMesh';
