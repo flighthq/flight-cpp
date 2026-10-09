@@ -1737,6 +1737,23 @@
       "unblocks": "Completes the real registry implementation used to assemble GL material renderers, texture resolvers, modifier snippets, blend realizations, and PBR extensions.",
       "expires": "when Flight adopts exact entry factories upstream, or flight-compiler contextualizes these object literals directly into the imported union arm owners.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "registry-invalid-entry-state-throw",
+      "dependency": "flight",
+      "patch": "registry-invalid-entry-state-throw.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/registry/src/registryTable.ts",
+      "package": "@flighthq/registry",
+      "answers": "refusal",
+      "refusal": "the exhaustiveness-only never binding lowers as void and is returned from a function whose result is a keyed-or-slot table union",
+      "rewrite": "Replaces the impossible default branch's never return with an explicit invalid-entry-state programmer-error throw.",
+      "equivalence": "For every value allowed by RegistryTableEntry, the bound and tombstoned cases still execute identically and the default remains unreachable. An untyped or corrupted third state now fails explicitly instead of returning an object outside the declared table result, consistent with concatRegistryTable's existing shape, registry, and miss-policy programmer-error checks.",
+      "verification": "The complete Flight patch stack must apply and reverse cleanly, and focused native registryTable regeneration must emit the module with zero omissions or refusals.",
+      "whyNotUpstreamFirst": "An explicit impossible-state throw is target-neutral and strengthens runtime diagnostics, but it is pinned here because the native backend cannot use a never-valued return solely as a TypeScript exhaustiveness witness.",
+      "unblocks": "Removes the final void-to-table-union result from registry composition after all real entry arms have been handled.",
+      "expires": "when Flight adopts the explicit throw upstream, or flight-compiler treats a never return as unreachable control flow without emitting a value conversion.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }

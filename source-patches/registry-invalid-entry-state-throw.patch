@@ -1,0 +1,16 @@
+diff --git a/packages/registry/src/registryTable.ts b/packages/registry/src/registryTable.ts
+--- a/packages/registry/src/registryTable.ts
++++ b/packages/registry/src/registryTable.ts
+@@ -107,10 +107,8 @@ export function concatRegistryTable<T>(
+       case RegistryEntryState.Tombstoned:
+         entries.set(key, createTombstonedRegistryTableEntry());
+         break;
+-      default: {
+-        const unreachable: never = entry;
+-        return unreachable;
+-      }
++      default:
++        throw new Error('concatRegistryTable: overlay contains an invalid entry state');
+     }
+   }
+   const out = allocateEntity<KeyedTableEntity<T>>();
