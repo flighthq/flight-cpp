@@ -1312,6 +1312,23 @@
       "unblocks": "Allows the upstream scene3d example's real directional shadow pass to traverse rigid, skinned, and instanced casters without invented native casts.",
       "expires": "when Flight adopts checked mesh and instanced-mesh shadow predicates upstream, or native heterogeneous node traversal retains concrete owners automatically.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene-nodeof-traversal-capabilities",
+      "dependency": "flight",
+      "patch": "scene-nodeof-traversal-capabilities.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/node traversal and visitor contracts; Scene2D kind usage; Scene3D cloning, kind/material enumeration, bounds, and culling",
+      "package": "@flighthq/node, @flighthq/scene2d, @flighthq/scene3d",
+      "answers": "refusal",
+      "refusal": "descendant traversal erases NodeOf<Traits> children to Node<Traits>, forcing downstream Scene3D readers to assert the 3D trait row back or pass structural rows through unknown predicates",
+      "rewrite": "Carries the existing NodeOf<Traits> child owner through find and descendant visitor callbacks, then uses typed readonly geometry and modifier capability guards in Scene3D consumers and removes the now-unnecessary Scene2D and Scene3D traversal assertions.",
+      "equivalence": "NodeRuntime.children already stores NodeOf<Traits> values, so the callback annotations describe the exact objects already delivered. All traversal order, early-return behavior, identities, callbacks, material overrides, modifier discovery, transforms, bounds, frustum tests, and output arrays remain unchanged. The local guards test the same geometry and modifier properties the old unknown predicates and partial assertions read, without copying or recovering mutable owners.",
+      "verification": "The patch composes after the complete Flight source stack. Focused strict TypeScript programs for Scene3D and for node plus Scene2D report no relevant errors; only the checkout's unavailable ambient WebGPU declarations remain. Regeneration validates the exact native callback and capability carriers before generated-header compilation.",
+      "whyNotUpstreamFirst": "The generic traversal contract was weaker than its own NodeRuntime.children storage and return APIs. Preserving its declared trait intersection is a target-neutral type correction, while typed readonly capability checks accurately express the structural Scene3D operations without native assertions.",
+      "unblocks": "Keeps 2D/3D scene traits intact through the real graph walk and removes structural-row erasure from Scene3D subtree cloning, material/kind discovery, world bounds, and frustum culling used by the upstream renderer.",
+      "expires": "when Flight preserves NodeOf<Traits> through traversal callbacks upstream and uses typed readonly capability guards at these Scene3D consumers, or the native compiler can recover the same checked owners from the weaker callback types.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
