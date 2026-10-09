@@ -1142,6 +1142,23 @@
       "unblocks": "Allows the backend-neutral prepareScene3DRender path to build its real draw-time projection for perspective, orthographic, and raw cameras before GL material rendering.",
       "expires": "when Flight delegates this render helper to setProjectionMatrix4 upstream, or the duplicate branch gains equivalent proven union narrowing in the pinned compiler.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-material-value-enumeration",
+      "dependency": "flight",
+      "patch": "scene3d-material-value-enumeration.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d/src/sceneMaterial.ts",
+      "package": "@flighthq/scene3d",
+      "answers": "refusal",
+      "refusal": "collection push cannot place the represented MaterialValue present carriers into a Material element carrier without erasing their concrete owners",
+      "rewrite": "Carries the existing open MaterialValue union through scene material lookup, enumeration output, and the private per-node collection helpers.",
+      "equivalence": "MaterialValue retains Material as its open arm, so lookup and enumeration accept and return the same TypeScript objects and vendor kinds. Annotations erase in JavaScript; traversal order, null filtering, reference-identity duplicate suppression, names, output mutation, and material identities are unchanged.",
+      "verification": "The patch composes after the complete Flight source-patch stack. Full Scene3D regeneration verifies the material enumeration root and its consumers preserve the same exact built-in owners used by the GL renderer registry.",
+      "whyNotUpstreamFirst": "The live Mesh storage already uses MaterialValue to retain concrete owners. Propagating that declared value family through its lookup and enumeration APIs is a target-neutral consistency fix.",
+      "unblocks": "Allows scene-wide material discovery to retain real PBR, shaded, unlit, and other built-in owners instead of refusing at the first output-array push.",
+      "expires": "when heterogeneous collection insertion preserves concrete owners through an open base-interface element automatically, or Flight carries MaterialValue through these APIs upstream.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
