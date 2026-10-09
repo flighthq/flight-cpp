@@ -1,0 +1,155 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index d30c0ce..ddcb200 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -20875,14 +20875,15 @@ export function preferred(): number { return NativeSurface.preferredFormat; }`,
+   it('recovers an imported host Pick before resolving its member-result conversion', () => {
+     const types = ts.createSourceFile(
+       '/flight/packages/types/src/GlContext.ts',
+-      `type GlContextMember = 'getExtension';
+-       export interface GlContext extends Pick<WebGL2RenderingContext, GlContextMember> {}`,
++      `type GlContextMember = 'getExtension' | 'getUniformLocation';
++       export interface GlContext extends Pick<WebGL2RenderingContext, GlContextMember> {}
++       export interface ProgramLocations { locColor?: WebGLUniformLocation | null }`,
+       ts.ScriptTarget.Latest,
+       true,
+     );
+     const render = ts.createSourceFile(
+       '/flight/packages/render-gl/src/compressed.ts',
+-      `import type { GlContext } from '@flighthq/types/contract';
++      `import type { GlContext, ProgramLocations } from '@flighthq/types/contract';
+        export function compressed(gl: GlContext): Record<string, number> | null {
+          return gl.getExtension('WEBGL_compressed_texture_s3tc') as Record<string, number> | null;
+        }
+@@ -20892,6 +20893,10 @@ export function preferred(): number { return NativeSurface.preferredFormat; }`,
+        export function availableLocal(gl: GlContext): boolean {
+          const extension = gl.getExtension('EXT_texture_filter_anisotropic');
+          return extension !== null;
++       }
++       export function locations(gl: GlContext, program: WebGLProgram): ProgramLocations {
++         const locColor = gl.getUniformLocation(program, 'u_color');
++         return { locColor };
+        }`,
+       ts.ScriptTarget.Latest,
+       true,
+@@ -20936,6 +20941,12 @@ export function preferred(): number { return NativeSurface.preferredFormat; }`,
+                   sourceMember: 'getExtension',
+                   targetName: 'get_extension',
+                 },
++                {
++                  callResultAbsence: 'null',
++                  callResultType: 'std::optional<flight::host_sdl::WebGlUniformLocation>',
++                  sourceMember: 'getUniformLocation',
++                  targetName: 'get_uniform_location',
++                },
+               ],
+               nullability: 'non-null',
+               ownership: 'shared',
+@@ -20960,6 +20971,22 @@ export function preferred(): number { return NativeSurface.preferredFormat; }`,
+               space: 'type',
+               targetName: 'flight::host_sdl::GlAnisotropyExtension',
+             },
++            {
++              headers: ['flight/host_sdl/webgl.hpp'],
++              nullability: 'non-null',
++              ownership: 'shared',
++              sourceName: 'WebGLProgram',
++              space: 'type',
++              targetName: 'flight::host_sdl::WebGlProgram',
++            },
++            {
++              headers: ['flight/host_sdl/webgl.hpp'],
++              nullability: 'nullable',
++              ownership: 'shared',
++              sourceName: 'WebGLUniformLocation',
++              space: 'type',
++              targetName: 'flight::host_sdl::WebGlUniformLocation',
++            },
+           ],
+           schema: 'flight-cpp-external-bindings/1',
+         },
+@@ -20983,6 +21010,16 @@ export function preferred(): number { return NativeSurface.preferredFormat; }`,
+     expect(emittedRender).toContain('return gl.get_extension(flight::String("EXT_color_buffer_float")).has_value();');
+     expect(emittedRender).toContain('std::optional<flight::host_sdl::GlExtension> extension = gl.get_extension(');
+     expect(emittedRender).toContain('return extension.has_value();');
++    expect(emittedRender).toContain(
++      'std::optional<flight::host_sdl::WebGlUniformLocation> loc_color = gl.get_uniform_location',
++    );
++    expect(emittedRender).toContain(
++      'if (!contextual_union_source.has_value()) return std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}',
++    );
++    expect(emittedRender).toContain(
++      'std::in_place_type<flight::host_sdl::WebGlUniformLocation>, contextual_union_source.value()',
++    );
++    expect(emittedRender).not.toContain('std::in_place_type<flight::Undefined>, flight::undefined');
+   });
+ 
+   it.skipIf(!canCompileCpp)('runs present external result locals without rebuilding their shared owner', () => {
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index fae6209..71c0e07 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -16949,24 +16949,48 @@ function emitContextualUnionExpressionInContextCpp(
+       // rather than reconstructed source spelling -- is the authority for this call.
+       return emitExpression(expression, context, undefined, false);
+     }
+-    const targetSlots = plan.valueSlots.filter((slot) => slot.targetType === externalValueTarget);
+-    const unresolvedTargetSlot =
+-      targetSlots.length === 0 &&
+-      plan.valueSlots.length === 1 &&
+-      plan.valueSlots[0]!.sourceAlternatives.every((alternative) => alternative.kind === 'unknown');
+-    if (targetSlots.length !== 1 && !unresolvedTargetSlot) {
+-      emissionError(
++    const externalExpressionType = getIrExpressionTypeEvidenceCpp(expression, context);
++    const externalExpressionUnion = externalExpressionType
++      ? getIrUnionTypeCpp(externalExpressionType, context, new Set())
++      : undefined;
++    const externalExpressionPlan = externalExpressionUnion
++      ? getCppUnionRepresentationPlan(externalExpressionUnion, context)
++      : undefined;
++    const externalExpressionCarrier = externalExpressionUnion
++      ? qualifyCppDeclaringModuleTypeCpp(emitUnionTypeCpp(externalExpressionUnion, context), context)
++      : undefined;
++    // A manifest result carrier can itself be a represented SOURCE union. When a wider destination adds a
++    // second sentinel (the current GL shape is a nullable call result stored in an optional property), the
++    // generic union conversion below must unpack that source carrier and reconstruct each sentinel. Treating
++    // the complete optional<T> result as though it were one present destination slot instead either wraps the
++    // optional as a value or rejects it because the destination's value slot is T. Defer only with exact
++    // evidence: immutable provenance, the same complete C++ carrier, and the sentinel the manifest declares.
++    const representedExternalSource = Boolean(
++      externalPresence?.immutable &&
++        externalExpressionPlan &&
++        externalExpressionCarrier === externalValueTarget &&
++        externalExpressionPlan.sentinels[externalPresence.absence] === 'optionalAbsence',
++    );
++    if (!representedExternalSource) {
++      const targetSlots = plan.valueSlots.filter((slot) => slot.targetType === externalValueTarget);
++      const unresolvedTargetSlot =
++        targetSlots.length === 0 &&
++        plan.valueSlots.length === 1 &&
++        plan.valueSlots[0]!.sourceAlternatives.every((alternative) => alternative.kind === 'unknown');
++      if (targetSlots.length !== 1 && !unresolvedTargetSlot) {
++        emissionError(
++          context,
++          `external call result type ${externalValueTarget} is not one represented contextual runtime domain`,
++        );
++      }
++      return emitCppUnionValueConstruction(
++        emitExpression(expression, context, undefined, false),
++        externalValueTarget,
++        union,
++        plan.kind,
+         context,
+-        `external call result type ${externalValueTarget} is not one represented contextual runtime domain`,
+       );
+     }
+-    return emitCppUnionValueConstruction(
+-      emitExpression(expression, context, undefined, false),
+-      externalValueTarget,
+-      union,
+-      plan.kind,
+-      context,
+-    );
+   }
+   const inferredExpressionType = getIrExpressionTypeForUnionConstructionCpp(expression, plan.valueSlots, context);
+   const expressionType = inferredExpressionType

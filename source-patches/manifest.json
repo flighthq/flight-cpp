@@ -927,6 +927,23 @@
       "appliedOn": "2026-10-08"
     },
     {
+      "id": "compiler-external-optional-result-widening",
+      "dependency": "flight-compiler",
+      "patch": "compiler-external-optional-result-widening.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "external call result type std::optional<flight::host_sdl::WebGlUniformLocation> is not one represented contextual runtime domain",
+      "rewrite": "When immutable manifest provenance and source type evidence name the same complete absence-carrying C++ result, defers a wider destination to the existing represented-union conversion instead of treating the complete optional carrier as one present value slot.",
+      "equivalence": "The manifest-declared null sentinel remains null, a present host handle remains the same handle value, and an optional destination property's distinct undefined state remains reserved for omission. The conversion evaluates the host call once and introduces no cast, copy of an owning object, materialization, or side storage.",
+      "verification": "A focused compiler regression recovers getUniformLocation through the imported Flight GlContext Pick, stores its immutable local into a nullable optional program field, and asserts that absence reconstructs Null rather than Undefined while presence retains WebGlUniformLocation. Scoped Scene3D-GL generation verifies the affected program preludes.",
+      "whyNotUpstreamFirst": "The pinned compiler already implements both the exact external optional carrier and the optional-single to dual-sentinel widening, but its external-result fast path refuses before those proven operations can compose. This narrowly changes that dispatch only when both provenance and the complete carrier match exactly.",
+      "unblocks": "Allows the upstream Scene3D-GL wireframe, PBR, toon, classic, matcap, shaded, debug, unlit, and shadow program builders to store real WebGL uniform locations in their optional program fields without inventing a different rendering path.",
+      "expires": "when flight-compiler composes exact manifest external-result carriers with wider represented contextual unions upstream.",
+      "appliedOn": "2026-10-08"
+    },
+    {
       "id": "renderable-concrete-node-arms",
       "dependency": "flight",
       "patch": "renderable-concrete-node-arms.patch",
