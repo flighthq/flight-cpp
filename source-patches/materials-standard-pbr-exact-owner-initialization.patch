@@ -1,0 +1,24 @@
+diff --git a/packages/materials/src/pbrMaterials.ts b/packages/materials/src/pbrMaterials.ts
+--- a/packages/materials/src/pbrMaterials.ts
++++ b/packages/materials/src/pbrMaterials.ts
+@@ -115,7 +115,19 @@ export function createSpecularGlossinessPbrMaterial(
+ // unit `normalScale`/`occlusionStrength`, all maps null.
+ export function createStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
+   const material = createSurfaceMaterial<StandardPbrMaterial>(StandardPbrMaterialKind, opts);
+-  assignStandardPbrMaterialProperties(material, opts);
++  material.alphaMap = opts?.alphaMap ?? null;
++  material.baseColor = opts?.baseColor ?? 0xffffffff;
++  material.baseColorMap = opts?.baseColorMap ?? null;
++  material.emissive = opts?.emissive ?? 0x000000ff;
++  material.emissiveMap = opts?.emissiveMap ?? null;
++  material.emissiveStrength = opts?.emissiveStrength ?? 1;
++  material.metallic = opts?.metallic ?? 0;
++  material.metallicRoughnessMap = opts?.metallicRoughnessMap ?? null;
++  material.normalMap = opts?.normalMap ?? null;
++  material.normalScale = opts?.normalScale ?? 1;
++  material.occlusionMap = opts?.occlusionMap ?? null;
++  material.occlusionStrength = opts?.occlusionStrength ?? 1;
++  material.roughness = opts?.roughness ?? 1;
+   return material;
+ }
+ 

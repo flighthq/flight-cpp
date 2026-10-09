@@ -2315,6 +2315,23 @@
       "unblocks": "Allows real classic, specular-glossiness, standard, and extended PBR constructors to initialize Texture union maps through their upstream Partial option paths without replacing materials or textures with invented host types.",
       "expires": "when flight-compiler derives contextual nullish conversion plans from the optional-chain emitter's concrete carrier upstream.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "materials-standard-pbr-exact-owner-initialization",
+      "dependency": "flight",
+      "patch": "materials-standard-pbr-exact-owner-initialization.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/materials/src/pbrMaterials.ts",
+      "package": "@flighthq/materials",
+      "answers": "diagnostic",
+      "refusal": "assignStandardPbrMaterialProperties accepts the flattened StandardPbrMaterialProperties owner, but createStandardPbrMaterial passes the distinct StandardPbrMaterial owner that TypeScript accepts through interface extension and C++ shared_ptr cannot convert",
+      "rewrite": "Inlines the private helper's unchanged thirteen assignments at the StandardPbrMaterial call site, while retaining the helper for the standalone StandardPbrMaterialProperties constructor whose owner already matches it.",
+      "equivalence": "The helper is private and the replaced call is synchronous. Its exact thirteen statements are inserted at the call site in the same order, reading the same opts reference and writing the same newly allocated material object with the same nullish defaults. No object, field, value, or reference is copied, materialized, or replaced, and the public constructor signatures are unchanged.",
+      "verification": "Focused pbrMaterials.ts generation must emit without refusals, and cohesive pbr_materials.hpp plus material_presets.hpp must compile past the StandardPbrMaterial-to-StandardPbrMaterialProperties shared_ptr conversion without changing their public signatures.",
+      "whyNotUpstreamFirst": "This ordinary target-neutral inlining states each existing write against the concrete owner already promised by the public constructor and is needed by the pinned compiler for native material construction.",
+      "unblocks": "Allows the real StandardPbrMaterial constructor and every preset layered on it to initialize the shared metallic-roughness block on the material's own owner.",
+      "expires": "when Flight initializes the concrete owner directly upstream or flight-compiler represents interface heritage with an identity-preserving compatible owner carrier.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }
