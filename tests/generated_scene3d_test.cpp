@@ -1,4 +1,5 @@
 #include <flight/scene3d/scene_node.hpp>
+#include <flight/materials/pbr_materials.hpp>
 #include <flight/mesh/mesh_geometry_operations.hpp>
 #include <flight/node/node_transform3d.hpp>
 #include <flight/scene3d/mesh.hpp>
@@ -112,11 +113,19 @@ int main() {
             geometry->bounds.value()->max->y == 1.0,
         "attribute construction computes local bounds");
 
-  flight::Array<std::optional<flight::Ref<types::Material>>> materials{
-      std::nullopt};
+  const auto pbr_material = flight::materials::create_standard_pbr_material();
+  flight::Array<std::optional<types::MaterialValue>> materials{
+      std::optional<types::MaterialValue>{types::MaterialValue{
+          std::in_place_type<flight::Ref<types::StandardPbrMaterial>>,
+          pbr_material}}};
   const auto mesh = scene3d::create_mesh(geometry, materials);
   check(mesh->geometry == geometry &&
             mesh->materials.identity() == materials.identity() &&
+            mesh->materials[0].has_value() &&
+            std::holds_alternative<flight::Ref<types::StandardPbrMaterial>>(
+                mesh->materials[0].value()) &&
+            std::get<flight::Ref<types::StandardPbrMaterial>>(
+                mesh->materials[0].value()) == pbr_material &&
             mesh->kind == types::mesh_kind && mesh->enabled && mesh->visible &&
             mesh->alpha == 1.0,
         "Mesh construction stores geometry and materials by reference with Node3D defaults");

@@ -1,0 +1,12 @@
+diff --git a/packages/types/src/Texture.ts b/packages/types/src/Texture.ts
+--- a/packages/types/src/Texture.ts
++++ b/packages/types/src/Texture.ts
+@@ -54,3 +54,6 @@
+ type TextureLikeFrom<Type extends Texture> = Type extends Texture ? EntityWithoutRuntime<Type> : never;
+-
+-export type TextureLike = TextureLikeFrom<Texture>;
++
++// Retain the concrete runtime Texture alternatives beside their serializable structural views. Every
++// Texture already satisfies its corresponding TextureLike arm, so this redundant union changes no
++// TypeScript value or JavaScript representation; it preserves the exact owner on invariant targets.
++export type TextureLike = Texture | TextureLikeFrom<Texture>;

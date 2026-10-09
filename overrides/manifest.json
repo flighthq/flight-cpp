@@ -2290,7 +2290,7 @@
       "package": "@flighthq/scene3d",
       "status": "complete",
       "supplies": "packages/scene3d/src/mesh.ts",
-      "derivedFrom": "0377c835962df3c28b587e604833bd41fa7eacad2f2dc64cc08d46234d009c88",
+      "derivedFrom": "074f457ad1e87b61151ba464fb22b197929adbc8f0f4616d4974b4c86680e99f",
       "reason": "The emitter attempts to cast a schema-only Node3D row into a nominal Mesh owner, refers to the value constant MeshKind as a type member, and cannot recover the flattened MeshRuntime extension or lower clone transform and deformation union operations.",
       "change": "Constructs the exact generated Mesh owner and one concrete MeshRuntime carrying the Node3D runtime prefix, and restores cloning, signals, deformer selection, runtime access, and erased-value discrimination.",
       "equivalence": "Geometry and the input material array are stored by reference; all Node3D defaults are retained. Rigid clones share geometry, deforming clones own restored geometry, material slots and transform values are copied, detached matrices remain detached copies, skin remains shared, morph targets remain shared while live weights are copied, and signals keep stable lazy identity.",

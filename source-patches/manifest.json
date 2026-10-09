@@ -875,6 +875,38 @@
       "appliedOn": "2026-10-08"
     },
     {
+      "id": "material-concrete-value-path",
+      "dependency": "flight",
+      "patch": "material-concrete-value-path.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types/src/MaterialValue.ts, Mesh.ts, InstancedMesh.ts, Billboard.ts, GlMeshMaterialRenderer.ts, Scene3DRenderProxy.ts, and GlScene3DRuntime.ts; packages/scene3d constructors; packages/scene3d-gl material dispatch and built-in renderers",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "against [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>]",
+      "rewrite": "Introduces an open MaterialValue union with redundant exact arms for every built-in material, retains it through mesh and billboard storage, GL renderer callbacks, render proxies, draw-entry pools, material resolution, bind dispatch, and sort keys, constructs the two existing fallback objects as StandardMaterial owners, and spells the two duck-typed SurfaceMaterial reads as readonly partial capability views.",
+      "equivalence": "Every built-in arm already extends Material and the original Material arm remains, so MaterialValue accepts exactly the same TypeScript values, including vendor kinds. All changed storage, callback, pool, proxy, map-generic, and fallback annotations erase from JavaScript; the same arrays, objects, entries, renderer functions, and two distinct fallback objects retain their original identities and evaluation order. Readonly<Partial<SurfaceMaterial>> changes only static authority: both assertions erase and the same alphaMode and blendMode property reads occur with the same absence behavior.",
+      "whyNotUpstreamFirst": "The public material family deliberately stays open, while flattened native interface owners cannot recover a built-in material after it first enters the base Material carrier. Redundant exact arms and capability views are target-neutral descriptions of the existing value domain and duck-typed reads, avoiding an unchecked native cast or replacement material.",
+      "unblocks": "Carries real CustomShader, Depth, ExtendedPbr, Matcap, Normal, SpecularGlossinessPbr, StandardPbr, VertexColor, Wireframe, and texture-bearing material owners from createMesh through the GL registry to their upstream binder implementations, while removing object erasure in the pooled draw path.",
+      "expires": "when heterogeneous structural storage preserves checked concrete owner identity through open base-interface arms and readonly partial capability views across those arms emit directly, or Flight adopts the explicit value union.",
+      "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "texture-like-concrete-value-arms",
+      "dependency": "flight",
+      "patch": "texture-like-concrete-value-arms.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types/src/Texture.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "target optionalSingle carriers [flight::types::TextureLike] from property source optionalVariant carriers",
+      "rewrite": "Retains Texture's four concrete runtime alternatives beside the existing distributive EntityWithoutRuntime structural alternatives in TextureLike.",
+      "equivalence": "Every Texture already satisfies its corresponding TextureLike structural arm, so the redundant union accepts exactly the same TypeScript values and changes no JavaScript representation, sampling data, reference identity, or nullability. It only preserves an exact existing owner on invariant native targets.",
+      "whyNotUpstreamFirst": "The public TextureLike contract intentionally accepts both live Texture entities and serializable structural inputs, while the pinned emitter collapses that target to one structural carrier and then cannot accept Texture's represented alternatives. The redundant source arms state the existing assignability explicitly without a cast or copied texture.",
+      "unblocks": "Allows classic, unlit, shaded, toon, and PBR GL material binders to pass their real Texture variants through the shared TextureLike sampling helpers.",
+      "expires": "when contextual union conversion retains exact source alternatives through distributive EntityWithoutRuntime aliases, or Flight adopts the explicit live Texture arms.",
+      "appliedOn": "2026-10-08"
+    },
+    {
       "id": "pbr-extension-concrete-value-arms",
       "dependency": "flight",
       "patch": "pbr-extension-concrete-value-arms.patch",
