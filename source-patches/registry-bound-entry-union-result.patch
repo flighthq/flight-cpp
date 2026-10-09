@@ -1,0 +1,23 @@
+diff --git a/packages/registry/src/registryTable.ts b/packages/registry/src/registryTable.ts
+--- a/packages/registry/src/registryTable.ts
++++ b/packages/registry/src/registryTable.ts
+@@ -26,6 +26,10 @@ function createTombstonedRegistryTableEntry(): TombstonedRegistryTableEntry {
+   return { state: RegistryEntryState.Tombstoned };
+ }
+ 
++function createBoundRegistryTableEntryResult<T>(value: T): RegistryTableEntry<T> {
++  return createBoundRegistryTableEntry<T>(value);
++}
++
+ // Registry tables are PERSISTENT: every operation that changes one returns a REPLACEMENT and mutates
+ // nothing, and the owner assigns the result. That is why the mutating verbs are named `with*` rather
+ // than `set*` — this repo reserves `set*` for in-place mutation, and a `set*` that does not set
+@@ -311,7 +315,7 @@ function getOrdinalRegistryTableEntryState<T>(table: Readonly<OrdinalTable<T>>, k
+     throw new Error('getRegistryTableEntry: ordinal table entry is missing for its vocabulary key');
+   }
+   if (value === null) return null;
+-  return createBoundRegistryTableEntry<T>(value);
++  return createBoundRegistryTableEntryResult<T>(value);
+ }
+ 
+ function getRegistryTableEntryState<T>(table: Readonly<RegistryTable<T>>, key: Kind): RegistryTableEntry<T> | null {

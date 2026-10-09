@@ -1,0 +1,16 @@
+diff --git a/packages/registry/src/registryTable.ts b/packages/registry/src/registryTable.ts
+--- a/packages/registry/src/registryTable.ts
++++ b/packages/registry/src/registryTable.ts
+@@ -219,7 +219,11 @@ export function initializeOrdinalTable<T>(
+   onMiss: RegistryMissPolicy,
+   vocabulary: readonly Kind[],
+ ): void {
+-  out.entries = vocabulary.map(() => null);
++  const entries: (T | null)[] = [];
++  for (let ordinal = 0; ordinal < vocabulary.length; ordinal++) {
++    entries.push(null);
++  }
++  out.entries = entries;
+   out.onMiss = onMiss;
+   out.registry = registry;
+   out.shape = 'ordinal';
