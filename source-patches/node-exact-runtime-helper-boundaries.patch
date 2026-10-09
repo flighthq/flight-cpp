@@ -1,0 +1,296 @@
+diff --git a/packages/node/src/boundsRectangle.ts b/packages/node/src/boundsRectangle.ts
+--- a/packages/node/src/boundsRectangle.ts
++++ b/packages/node/src/boundsRectangle.ts
+@@ -78,14 +78,14 @@
+ }
+ 
+ export function ensureNodeLocalBoundsRectangle<Traits extends object>(target: BoundsNode<Traits>): void {
+-  const runtime = target[EntityRuntimeKey]!;
++  const runtime = getBoundsRuntime(target);
+   if (!isNodeLocalBoundsRectangleValid(target, runtime)) {
+     recomputeLocalBoundsRectangle(target, runtime);
+   }
+ }
+ 
+ export function ensureNodeParentBoundsRectangle<Traits extends object>(target: Spatial2DNode<Traits>): void {
+-  const runtime = target[EntityRuntimeKey]!;
++  const runtime = getSpatial2DRuntime(target);
+   if (
+     !isNodeLocalBoundsRectangleValid(target, runtime) ||
+     runtime.boundsUsingLocalBoundsId !== runtime.localBoundsId ||
+@@ -96,7 +96,7 @@
+ }
+ 
+ export function ensureNodeWorldBoundsRectangle<Traits extends object>(target: Spatial2DNode<Traits>): void {
+-  const runtime = target[EntityRuntimeKey]!;
++  const runtime = getSpatial2DRuntime(target);
+   const localBoundsInvalid =
+     !isNodeLocalBoundsRectangleValid(target, runtime) ||
+     runtime.worldBoundsUsingLocalBoundsId !== runtime.localBoundsId;
+@@ -132,7 +132,7 @@
+  */
+ export function getNodeLocalBoundsRectangle<Traits extends object>(target: BoundsNode<Traits>): Readonly<Rectangle> {
+   ensureNodeLocalBoundsRectangle(target);
+-  return target[EntityRuntimeKey]!.localBoundsRectangle!;
++  return getBoundsRuntime(target).localBoundsRectangle!;
+ }
+ 
+ /**
+@@ -142,7 +142,7 @@
+   target: Spatial2DNode<Traits>,
+ ): Readonly<Rectangle> {
+   ensureNodeParentBoundsRectangle(target);
+-  return target[EntityRuntimeKey]!.boundsRectangle!;
++  return getSpatial2DRuntime(target).boundsRectangle!;
+ }
+ 
+ export function getNodeWidth<Traits extends object>(source: Spatial2DNode<Traits>): number {
+@@ -159,7 +159,7 @@
+  */
+ export function getNodeWorldBoundsRectangle<Traits extends object>(target: Spatial2DNode<Traits>): Readonly<Rectangle> {
+   ensureNodeWorldBoundsRectangle(target);
+-  return target[EntityRuntimeKey]!.worldBoundsRectangle!;
++  return getSpatial2DRuntime(target).worldBoundsRectangle!;
+ }
+ 
+ export function setNodeHeight<Traits extends object>(target: Spatial2DNode<Traits>, value: number): void {
+@@ -221,7 +221,7 @@
+   for (const child of children) {
+     if (!child.enabled) continue;
+     const childNode = child as Spatial2DNode<Traits>;
+-    const runtime = childNode[EntityRuntimeKey]!;
++    const runtime = getSpatial2DRuntime(childNode);
+     const previous = runtime.worldBoundsRectangle;
+     const previousX = previous?.x;
+     const previousY = previous?.y;
+@@ -322,6 +322,26 @@
+   return false;
+ }
+ 
++interface BoundsRuntimeOwner<Traits extends object> {
++  [EntityRuntimeKey]: (NodeRuntime<Traits> & HasBoundsRectangleRuntime) | undefined;
++}
++
++interface Spatial2DRuntimeOwner<Traits extends object> {
++  [EntityRuntimeKey]: (NodeRuntime<Traits> & HasBoundsRectangleRuntime & HasTransform2DRuntime) | undefined;
++}
++
++function getBoundsRuntime<Traits extends object>(
++  target: BoundsRuntimeOwner<Traits>,
++): NodeRuntime<Traits> & HasBoundsRectangleRuntime {
++  return target[EntityRuntimeKey]!;
++}
++
++function getSpatial2DRuntime<Traits extends object>(
++  target: Spatial2DRuntimeOwner<Traits>,
++): NodeRuntime<Traits> & HasBoundsRectangleRuntime & HasTransform2DRuntime {
++  return target[EntityRuntimeKey]!;
++}
++
+ const _tempBoundsRectangle = createRectangle();
+ const _rootLocalNodeBounds = createRectangle();
+ const SINGULAR_AXIS_EPSILON = 1e-12;
+diff --git a/packages/node/src/nodeTransform2d.ts b/packages/node/src/nodeTransform2d.ts
+--- a/packages/node/src/nodeTransform2d.ts
++++ b/packages/node/src/nodeTransform2d.ts
+@@ -8,9 +8,10 @@
+ } from '@flighthq/geometry/contract';
+ import { DEG_TO_RAD } from '@flighthq/math/contract';
+ import type {
+   HasTransform2DRuntime,
+   Matrix,
+   MatrixLike,
++  Node,
+   NodeRuntime,
+   Transform2DLike,
+   Transform2DNode,
+@@ -46,22 +47,24 @@
+ }
+ 
+ export function ensureNodeLocalMatrix<Traits extends object>(target: Transform2DNode<Traits>): void {
+-  const runtime = target[EntityRuntimeKey]!;
++  const runtime = getTransform2DRuntime(target);
+   if (runtime.localTransformUsingLocalTransformId !== runtime.localTransformId) {
+     recomputeLocalTransform2D(target, runtime);
+   }
+ }
+ 
+ export function ensureNodeWorldMatrix<Traits extends object>(target: Transform2DNode<Traits>): void {
+-  const runtime = target[EntityRuntimeKey]!;
+-  const parent = runtime.parent as Transform2DNode<Traits> | null;
++  const runtime = getTransform2DRuntime(target);
++  const parent: Node<Traits> | null = runtime.parent;
+ 
+   let parentRuntime: (NodeRuntime<Traits> & HasTransform2DRuntime) | undefined;
+   let parentWorldTransformId = 0;
+ 
+-  if (parent !== null) {
+-    ensureNodeWorldMatrix(parent);
+-    parentRuntime = parent[EntityRuntimeKey]!;
+-    parentWorldTransformId = parentRuntime.worldTransformId;
++  if (parent !== null) {
++    if (isTransform2DNode(parent)) {
++      ensureNodeWorldMatrix(parent);
++      parentRuntime = getTransform2DRuntime(parent);
++      parentWorldTransformId = parentRuntime.worldTransformId;
++    }
+   }
+ 
+@@ -75,7 +78,7 @@
+ 
+ export function getNodeLocalMatrix<Traits extends object>(target: Transform2DNode<Traits>): Readonly<Matrix> {
+   ensureNodeLocalMatrix(target);
+-  return target[EntityRuntimeKey]!.localMatrix!;
++  return getTransform2DRuntime(target).localMatrix!;
+ }
+ 
+ // Reads the node's decomposed local transform fields into `out`.
+@@ -93,7 +96,7 @@
+ 
+ export function getNodeWorldMatrix<Traits extends object>(target: Transform2DNode<Traits>): Readonly<Matrix> {
+   ensureNodeWorldMatrix(target);
+-  return target[EntityRuntimeKey]!.worldMatrix!;
++  return getTransform2DRuntime(target).worldMatrix!;
+ }
+ 
+ // Sets the node's local transform directly from a matrix, decomposing it into the transform fields.
+@@ -178,3 +181,23 @@
+   }
+   computeNodeWorldTransformRevision(runtime, parentRuntime);
+ }
++
++interface Transform2DRuntimeOwner<Traits extends object> {
++  [EntityRuntimeKey]: (NodeRuntime<Traits> & HasTransform2DRuntime) | undefined;
++}
++
++function getTransform2DRuntime<Traits extends object>(
++  target: Transform2DRuntimeOwner<Traits>,
++): NodeRuntime<Traits> & HasTransform2DRuntime {
++  return target[EntityRuntimeKey]!;
++}
++
++interface Transform2DProbe {
++  readonly enabled: boolean;
++  readonly x?: number;
++}
++
++function isTransform2DNode<Traits extends object>(node: Node<Traits>): node is Transform2DNode<Traits> {
++  const candidate: Transform2DProbe = node;
++  return candidate.x !== undefined;
++}
+diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransform3d.ts
+--- a/packages/node/src/nodeTransform3d.ts
++++ b/packages/node/src/nodeTransform3d.ts
+@@ -12,9 +12,10 @@
+   releaseMatrix4,
+ } from '@flighthq/geometry/contract';
+ import type {
+   HasTransform3DRuntime,
+   Matrix4,
+   Matrix4Like,
++  Node,
+   NodeRuntime,
+   Transform3DLike,
+   Transform3DNode,
+@@ -48,22 +49,24 @@
+ // local transform is dirty — unless it was set directly (setNodeLocalMatrix4 pre-satisfies the dirty
+ // check so the detached matrix survives).
+ export function ensureNodeLocalMatrix4<Traits extends object>(target: Transform3DNode<Traits>): void {
+-  const runtime = target[EntityRuntimeKey]!;
++  const runtime = getTransform3DRuntime(target);
+   if (runtime.localMatrix4 === null || runtime.localTransformUsingLocalTransformId !== runtime.localTransformId) {
+     recomputeLocalTransform3D(target, runtime);
+   }
+ }
+ 
+ export function ensureNodeWorldMatrix4<Traits extends object>(target: Transform3DNode<Traits>): void {
+-  const runtime = target[EntityRuntimeKey]!;
+-  const parent = runtime.parent as Transform3DNode<Traits> | null;
++  const runtime = getTransform3DRuntime(target);
++  const parent: Node<Traits> | null = runtime.parent;
+ 
+   let parentRuntime: (NodeRuntime<Traits> & HasTransform3DRuntime) | undefined;
+   let parentWorldTransformId = 0;
+ 
+-  if (parent !== null) {
+-    ensureNodeWorldMatrix4(parent);
+-    parentRuntime = parent[EntityRuntimeKey]!;
+-    parentWorldTransformId = parentRuntime.worldTransformId;
++  if (parent !== null) {
++    if (isTransform3DNode(parent)) {
++      ensureNodeWorldMatrix4(parent);
++      parentRuntime = getTransform3DRuntime(parent);
++      parentWorldTransformId = parentRuntime.worldTransformId;
++    }
+   }
+ 
+@@ -77,7 +80,7 @@
+ 
+ export function getNodeLocalMatrix4<Traits extends object>(target: Transform3DNode<Traits>): Readonly<Matrix4> {
+   ensureNodeLocalMatrix4(target);
+-  return target[EntityRuntimeKey]!.localMatrix4!;
++  return getTransform3DRuntime(target).localMatrix4!;
+ }
+ 
+ // Reads the node's decomposed local transform (translation/rotation/scale) into `out`. When the local
+@@ -91,7 +94,7 @@
+ 
+ export function getNodeWorldMatrix4<Traits extends object>(target: Transform3DNode<Traits>): Readonly<Matrix4> {
+   ensureNodeWorldMatrix4(target);
+-  return target[EntityRuntimeKey]!.worldMatrix4!;
++  return getTransform3DRuntime(target).worldMatrix4!;
+ }
+ 
+ // True when the local matrix was set directly (setNodeLocalMatrix4) and the translation/rotation/scale
+@@ -99,7 +102,7 @@
+ // Resolves the local matrix first so a pending TRS write reports as reattached rather than stale.
+ export function isNodeLocalMatrix4Detached<Traits extends object>(target: Transform3DNode<Traits>): boolean {
+   ensureNodeLocalMatrix4(target);
+-  return target[EntityRuntimeKey]!.localMatrix4Detached;
++  return getTransform3DRuntime(target).localMatrix4Detached;
+ }
+ 
+ // Sets the node's local matrix directly, bypassing translation/rotation/scale. The matrix is copied
+@@ -110,7 +113,7 @@
+   target: Transform3DNode<Traits>,
+   source: Readonly<Matrix4Like>,
+ ): void {
+-  const runtime = target[EntityRuntimeKey]!;
++  const runtime = getTransform3DRuntime(target);
+   if (runtime.localMatrix4 === null) runtime.localMatrix4 = createMatrix4();
+   copyMatrix4(runtime.localMatrix4, source);
+   invalidateNodeLocalTransform(target);
+@@ -134,7 +137,7 @@
+ // (best-effort: lossy on shear). Non-destructive — the matrix cache is unchanged and stays authoritative
+ // until a subsequent TRS write. Clears the detached state.
+ export function syncNodeTransform3DFromMatrix4<Traits extends object>(target: Transform3DNode<Traits>): void {
+-  const runtime = target[EntityRuntimeKey]!;
++  const runtime = getTransform3DRuntime(target);
+   ensureNodeLocalMatrix4(target);
+   decomposeMatrix4(target.position, target.rotation, target.scale, runtime.localMatrix4!);
+   runtime.localMatrix4Detached = false;
+@@ -168,3 +171,23 @@
+ 
+   computeNodeWorldTransformRevision(runtime, parentRuntime);
+ }
++
++interface Transform3DRuntimeOwner<Traits extends object> {
++  [EntityRuntimeKey]: (NodeRuntime<Traits> & HasTransform3DRuntime) | undefined;
++}
++
++function getTransform3DRuntime<Traits extends object>(
++  target: Transform3DRuntimeOwner<Traits>,
++): NodeRuntime<Traits> & HasTransform3DRuntime {
++  return target[EntityRuntimeKey]!;
++}
++
++interface Transform3DProbe {
++  readonly enabled: boolean;
++  readonly position?: Readonly<Vector3Like>;
++}
++
++function isTransform3DNode<Traits extends object>(node: Node<Traits>): node is Transform3DNode<Traits> {
++  const candidate: Transform3DProbe = node;
++  return candidate.position != null;
++}
+

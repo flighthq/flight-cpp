@@ -1,0 +1,142 @@
+diff --git a/packages/types/src/MeshGeometry.ts b/packages/types/src/MeshGeometry.ts
+--- a/packages/types/src/MeshGeometry.ts
++++ b/packages/types/src/MeshGeometry.ts
+@@ -1,5 +1,5 @@
+ import type { Aabb } from './Aabb';
+-import type { Entity, EntityRuntime } from './Entity';
++import type { Entity, EntityRuntime, EntityRuntimeKey } from './Entity';
+ import type { MeshMorphBindPose } from './MeshMorphBindPose';
+ import type { MeshSkinBindPose } from './MeshSkinBindPose';
+ 
+@@ -54,6 +54,7 @@
+ // destroyMeshGeometryGlData / destroyMeshGeometryWgpuData). GPU handles live on the paired runtime,
+ // never here.
+ export interface MeshGeometry extends Entity {
++  [EntityRuntimeKey]: MeshGeometryRuntime | undefined;
+   bounds: Aabb | null;
+   indices: Uint16Array<ArrayBuffer> | Uint32Array<ArrayBuffer> | null;
+   layout: VertexAttributeLayout;
+diff --git a/packages/mesh/src/meshGeometry.ts b/packages/mesh/src/meshGeometry.ts
+--- a/packages/mesh/src/meshGeometry.ts
++++ b/packages/mesh/src/meshGeometry.ts
+@@ -110,7 +110,7 @@
+ // this clears the named slot so the next draw re-uploads. Frees a non-GC GPU resource, hence
+ // destroy*, not dispose*.
+ export function destroyMeshGeometryGlData(geometry: Readonly<MeshGeometry>): void {
+-  const runtime = geometry[EntityRuntimeKey] as MeshGeometryRuntime | undefined;
++  const runtime = geometry[EntityRuntimeKey];
+   if (runtime) runtime.webglData = null;
+ }
+ 
+@@ -119,7 +119,7 @@
+ // clears the named slot so the next draw re-uploads. Frees a non-GC GPU resource, hence
+ // destroy*, not dispose*.
+ export function destroyMeshGeometryWgpuData(geometry: Readonly<MeshGeometry>): void {
+-  const runtime = geometry[EntityRuntimeKey] as MeshGeometryRuntime | undefined;
++  const runtime = geometry[EntityRuntimeKey];
+   if (runtime) runtime.webgpuData = null;
+ }
+ 
+@@ -132,7 +132,7 @@
+ // capture. The morph deform subsystem (mesh/scene) owns this slot; a non-morphed geometry never fills
+ // it, so plain meshes pay nothing. Sibling of getMeshGeometrySkinBindPose.
+ export function getMeshGeometryMorphBindPose(geometry: Readonly<MeshGeometry>): MeshMorphBindPose | null {
+-  const runtime = geometry[EntityRuntimeKey] as MeshGeometryRuntime | undefined;
++  const runtime = geometry[EntityRuntimeKey];
+   return runtime ? runtime.morphBindPose : null;
+ }
+ 
+@@ -140,7 +140,7 @@
+ // skin capture. The deform subsystem (skeleton3d/scene) owns this slot; a rigid geometry never
+ // fills it, so plain meshes pay nothing.
+ export function getMeshGeometrySkinBindPose(geometry: Readonly<MeshGeometry>): MeshSkinBindPose | null {
+-  const runtime = geometry[EntityRuntimeKey] as MeshGeometryRuntime | undefined;
++  const runtime = geometry[EntityRuntimeKey];
+   return runtime ? runtime.skinBindPose : null;
+ }
+ 
+@@ -190,7 +190,7 @@
+   geometry: Readonly<MeshGeometry>,
+   bindPose: MeshMorphBindPose | null,
+ ): void {
+-  const runtime = geometry[EntityRuntimeKey] as MeshGeometryRuntime | undefined;
++  const runtime = geometry[EntityRuntimeKey];
+   if (runtime) runtime.morphBindPose = bindPose;
+ }
+ 
+@@ -198,7 +198,7 @@
+ // by the deform glue when a skinned geometry is first captured; pass null to force a recapture
+ // (e.g. after the vertex layout or bind-pose data changes).
+ export function setMeshGeometrySkinBindPose(geometry: Readonly<MeshGeometry>, bindPose: MeshSkinBindPose | null): void {
+-  const runtime = geometry[EntityRuntimeKey] as MeshGeometryRuntime | undefined;
++  const runtime = geometry[EntityRuntimeKey];
+   if (runtime) runtime.skinBindPose = bindPose;
+ }
+ 
+diff --git a/packages/mesh/src/meshGeometryAttributes.ts b/packages/mesh/src/meshGeometryAttributes.ts
+--- a/packages/mesh/src/meshGeometryAttributes.ts
++++ b/packages/mesh/src/meshGeometryAttributes.ts
+@@ -1,4 +1,3 @@
+-import { getEntityRuntime } from '@flighthq/entity/contract';
+ import type {
+   MeshGeometry,
+   VertexAttribute,
+@@ -6,6 +5,7 @@
+   VertexSemantic,
+   MeshGeometryRuntime,
+ } from '@flighthq/types/contract';
++import { EntityRuntimeKey } from '@flighthq/types/contract';
+ 
+ import {
+   getVertexFormatByteLength,
+@@ -356,7 +356,7 @@
+ }
+ 
+ function getAttributeDataView(geometry: Readonly<MeshGeometry>): DataView {
+-  const runtime = getEntityRuntime(geometry) as MeshGeometryRuntime;
++  const runtime = geometry[EntityRuntimeKey]!;
+   const buffer = geometry.vertices.buffer;
+   const cached = runtime.attributeDataView;
+   const view =
+diff --git a/packages/mesh/src/meshGeometryCompute.ts b/packages/mesh/src/meshGeometryCompute.ts
+--- a/packages/mesh/src/meshGeometryCompute.ts
++++ b/packages/mesh/src/meshGeometryCompute.ts
+@@ -653,7 +653,7 @@
+ // treat "no bounds" uniformly (cull keeps it, world-bounds skips it) rather than intersect an inverted
+ // box.
+ export function ensureMeshGeometryBounds(geometry: MeshGeometry): Readonly<Aabb> | null {
+-  const runtime = geometry[EntityRuntimeKey] as MeshGeometryRuntime | undefined;
++  const runtime = geometry[EntityRuntimeKey];
+   let bounds = geometry.bounds;
+   if (bounds === null || runtime === undefined || runtime.boundsVersion !== geometry.version) {
+     refreshMeshGeometryBounds(geometry);
+@@ -674,7 +674,7 @@
+     geometry.bounds = bounds;
+   }
+   computeMeshGeometryBounds(bounds, geometry);
+-  const runtime = geometry[EntityRuntimeKey] as MeshGeometryRuntime | undefined;
++  const runtime = geometry[EntityRuntimeKey];
+   if (runtime !== undefined) runtime.boundsVersion = geometry.version;
+ }
+ 
+diff --git a/packages/mesh/src/updateMeshMorph.ts b/packages/mesh/src/updateMeshMorph.ts
+--- a/packages/mesh/src/updateMeshMorph.ts
++++ b/packages/mesh/src/updateMeshMorph.ts
+@@ -51,7 +51,7 @@
+ // True when `morph.weights` differs from the vector the geometry's current blend was produced for
+ // (including the first blend, and a target count that changed underneath). O(targets).
+ function hasMorphWeightsChanged(geometry: Readonly<MeshGeometry>, morph: Readonly<MeshMorph>): boolean {
+-  const runtime = geometry[EntityRuntimeKey] as MeshGeometryRuntime | undefined;
++  const runtime = geometry[EntityRuntimeKey];
+   const blended = runtime?.morphBlendedWeights;
+   if (blended == null) return true;
+ 
+@@ -66,7 +66,7 @@
+ // Snapshots the weights the blend just consumed, so the next frame can detect a settled morph.
+ // Reuses the stored vector unless the target count changed, so a steady morph allocates nothing.
+ function recordMorphBlendedWeights(geometry: Readonly<MeshGeometry>, morph: Readonly<MeshMorph>): void {
+-  const runtime = geometry[EntityRuntimeKey] as MeshGeometryRuntime | undefined;
++  const runtime = geometry[EntityRuntimeKey];
+   if (runtime === undefined) return;
+ 
+   const weights = morph.weights;
