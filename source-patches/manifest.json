@@ -1295,6 +1295,23 @@
       "unblocks": "Retains concrete particle emitter identity from creation through scene traversal, update, bounds calculation, and the real GL particle renderer.",
       "expires": "when Flight allocates ParticleEmitter3D directly upstream, or the native compiler retains concrete structural identity through createNode3D assertions automatically.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-gl-shadow-node-capabilities",
+      "dependency": "flight",
+      "patch": "scene3d-gl-shadow-node-capabilities.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d-gl/src/glShadowMap.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "shadow traversal asserts heterogeneous Node3D values to Mesh and InstancedMesh owners without a checked native projection",
+      "rewrite": "Uses readonly geometry and instanceMatrices capability predicates to narrow each shadow caster to Mesh and then InstancedMesh, and carries the checked instanced owner through count, palette, and draw selection.",
+      "equivalence": "The mesh guard is true exactly when the old geometry null check continued, and the instanced guard is the same instanceMatrices-in-object test the function already used. The same preorder nodes, zero-instance skip, skin decision, program variants, matrices, palettes, uploads, draw counts, and GL calls remain; only the unchecked writable owner assertions are removed.",
+      "verification": "The full patch stack composes and a focused strict TypeScript program reports no glShadowMap error; full Scene3D GL regeneration validates native capability recovery, followed by generated-header compilation.",
+      "whyNotUpstreamFirst": "Flight's backend-neutral Scene3D render walk already uses these structural capability guards, while the shadow twin still asserted concrete node owners. Applying the same checked pattern is a target-neutral consistency and const-correctness fix.",
+      "unblocks": "Allows the upstream scene3d example's real directional shadow pass to traverse rigid, skinned, and instanced casters without invented native casts.",
+      "expires": "when Flight adopts checked mesh and instanced-mesh shadow predicates upstream, or native heterogeneous node traversal retains concrete owners automatically.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }

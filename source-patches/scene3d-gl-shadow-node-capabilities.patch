@@ -1,0 +1,66 @@
+diff --git a/packages/scene3d-gl/src/glShadowMap.ts b/packages/scene3d-gl/src/glShadowMap.ts
+index 13b6dac..b2b333b 100644
+--- a/packages/scene3d-gl/src/glShadowMap.ts
++++ b/packages/scene3d-gl/src/glShadowMap.ts
+@@ -10,6 +10,7 @@ import type {
+   GlRenderState,
+   InstancedMesh,
+   Mesh,
++  Node,
+   Node3D,
+   Node3DTraits,
+   GlMeshProgram,
+@@ -93,8 +94,8 @@ export function drawGlScene3DShadowMap(
+   let boundProgram: GlMeshProgram | null = null;
+   forEachNodeDescendant<Node3DTraits>(scene, (node) => {
+     // A drawable node carries geometry (structural, like prepareScene3DRender's mesh test).
+-    const mesh = node as unknown as Mesh;
+-    if (mesh.geometry == null) return;
++    if (!isShadowMesh(node)) return;
++    const mesh = node;
+ 
+     // The caster is already at its CURRENT pose when this pass runs: the app drives prepareScene3DMorph +
+     // prepareScene3DSkinning before prepareScene3DRender, so morph is blended into geometry.vertices and the
+@@ -107,11 +108,11 @@ export function drawGlScene3DShadowMap(
+     // records ONE copy at the node origin — and because the per-instance matrix routinely carries the
+     // model's authoring scale, that copy can be orders of magnitude the wrong size and flood the map,
+     // shadowing the whole scene. A batch with no live instances casts nothing.
+-    const instanced = isShadowInstancedMesh(mesh);
+-    if (instanced && (mesh as unknown as InstancedMesh).instanceCount === 0) return;
++    const instancedMesh = isShadowInstancedMesh(mesh) ? mesh : null;
++    if (instancedMesh !== null && instancedMesh.instanceCount === 0) return;
+ 
+-    const skinned = !instanced && mesh.skin != null && hasMeshGeometrySkin(mesh.geometry);
+-    const program = instanced
++    const skinned = instancedMesh === null && mesh.skin != null && hasMeshGeometrySkin(mesh.geometry);
++    const program = instancedMesh !== null
+       ? (instancedProgram ??= ensureGlScene3DProgram(
+           state,
+           'shadow:depth:instanced',
+@@ -140,8 +141,7 @@ export function drawGlScene3DShadowMap(
+     // palette) and wires the joints0/weights0 attributes; a rigid draw uploads geometry.vertices as-is.
+     const upload = ensureGlMeshUpload(state, mesh.geometry, skinned);
+     gl.bindVertexArray(upload.vao);
+-    if (instanced) {
+-      const instancedMesh = mesh as unknown as InstancedMesh;
++    if (instancedMesh !== null) {
+       const count = instancedMesh.instanceCount;
+       bindGlInstancePalette(state, program, flattenShadowInstanceMatrices(instancedMesh), count);
+       if (upload.indexBuffer !== null) {
+@@ -229,10 +229,14 @@ function compileShadowDepthInstancedProgram(gl: GlContext): GlMeshProgram {
+ 
+ // Structural, matching prepareScene3DRender's own instanced test, so the depth pass and the forward pass
+ // agree on what an instanced caster is without importing a kind check.
+-function isShadowInstancedMesh(mesh: Readonly<Mesh>): boolean {
++function isShadowInstancedMesh(mesh: Readonly<Mesh>): mesh is Readonly<InstancedMesh> {
+   return 'instanceMatrices' in mesh;
+ }
+ 
++function isShadowMesh(node: Readonly<Node<Node3DTraits>>): node is Readonly<Mesh> {
++  return 'geometry' in node && node.geometry != null;
++}
++
+ // Packs the live instance matrices into the flat Float32Array bindGlInstancePalette uploads. The depth
+ // pass keeps its own scratch buffer rather than sharing the forward pass's: the two passes run at
+ // different points in a frame and a shared buffer would couple their growth.
+
