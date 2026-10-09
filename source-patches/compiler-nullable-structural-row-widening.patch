@@ -1,0 +1,107 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -25519,6 +25519,30 @@
+     }
+   });
+ 
++  it('widens a nullable readonly structural reference at a call boundary', () => {
++    const result = lower(
++      'nullable-readonly-row-widening.ts',
++      `interface Surface { alpha: number }
++       interface Extended extends Surface { extension: number }
++       function readSurface(surface: Readonly<Surface> | null): number {
++         return surface?.alpha ?? 0;
++       }
++       export function readExtended(extended: Readonly<Extended> | null): number {
++         return readSurface(extended);
++       }`,
++    );
++    const emitted = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' });
++
++    expect(result.diagnostics).toEqual([]);
++    expect(emitted.contents).toContain('std::optional<flight::StructuralRef<');
++    expect(emitted.contents).toContain('(extended)');
++    if (cppSyntaxGate.available) {
++      const syntax = cppSyntaxGate.checkCppSourceSyntax(emitted.contents, 'nullable-readonly-row-widening');
++      expect(syntax.diagnostic).toBe('');
++      expect(syntax.ok).toBe(true);
++    }
++  });
++
+   it('refuses invalid ErasedRef WeakMap view keys, values, and open generic values before runtime acquisition', () => {
+     const wrongKey = lower(
+       'erased-ref-weak-map-wrong-key.ts',
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -17114,6 +17114,15 @@ function emitContextualUnionExpressionInContextCpp(
+       context,
+     );
+     if (equivalentConversion) return equivalentConversion;
++    const optionalStructuralWidening = emitCppOptionalStructuralReferenceWideningCpp(
++      expression,
++      expressionType,
++      expressionPlan,
++      union,
++      plan,
++      context,
++    );
++    if (optionalStructuralWidening) return optionalStructuralWidening;
+     const callableObjectView = emitCppOptionalCallableObjectFunctionViewCpp(
+       expression,
+       expressionType,
+@@ -17987,6 +17996,53 @@ function getCppInterfaceHeritageUnionCarrierGapCpp(
+   return gaps[0];
+ }
+ 
++// Widens one nullable readonly structural view to a nullable view of a proven base shape. StructuralRef's
++// converting constructor keeps the same native object and row owner, while std::optional's converting
++// constructor carries absence unchanged. The compiler's generated-row proof is the same proof required by
++// the runtime constructor, so no unchecked cast, materialized row, or replacement owner is involved.
++function emitCppOptionalStructuralReferenceWideningCpp(
++  expression: Readonly<IrExpression>,
++  expressionType: Readonly<IrType>,
++  sourcePlan: ReturnType<typeof getCppUnionRepresentationPlan>,
++  targetUnion: Readonly<Extract<IrType, { kind: 'union' }>>,
++  targetPlan: ReturnType<typeof getCppUnionRepresentationPlan>,
++  context: EmitContext,
++): string | undefined {
++  if (
++    sourcePlan.kind !== 'optionalSingle' ||
++    targetPlan.kind !== 'optionalSingle' ||
++    sourcePlan.valueSlots.length !== 1 ||
++    targetPlan.valueSlots.length !== 1 ||
++    sourcePlan.sentinels.null !== targetPlan.sentinels.null ||
++    sourcePlan.sentinels.undefined !== targetPlan.sentinels.undefined
++  ) {
++    return undefined;
++  }
++  const sourceRow = context.referenceRepresentationPlanner.resolveStructuralRow(
++    sourcePlan.valueSlots[0]!.runtimeType,
++    context.module,
++  );
++  const targetRow = context.referenceRepresentationPlanner.resolveStructuralRow(
++    targetPlan.valueSlots[0]!.runtimeType,
++    context.module,
++  );
++  if (!sourceRow || !targetRow) return undefined;
++  if (isCppStructuralRowSchemaReadonlyCpp(sourceRow) && !isCppStructuralRowSchemaReadonlyCpp(targetRow)) {
++    return undefined;
++  }
++  const sourceObject = getCppStructuralRowObjectTypeCpp(sourceRow);
++  const targetObject = getCppStructuralRowObjectTypeCpp(targetRow);
++  if (
++    !sourceObject ||
++    !targetObject ||
++    getCppStructuralRowObjectWideningProofCpp(sourceObject, targetObject, context) !== 'proven'
++  ) {
++    return undefined;
++  }
++  const target = qualifyCppDeclaringModuleTypeCpp(emitUnionTypeCpp(targetUnion, context), context);
++  return `${target}(${emitExpression(expression, context, expressionType, false)})`;
++}
++
+ // Widen a represented source union into a nullable destination only when every present source slot
+ // selects exactly one destination slot. An optional source must also encode a sentinel the destination
+ // represents: passing optional<T> directly to optional<variant<T, U>> has no converting constructor,

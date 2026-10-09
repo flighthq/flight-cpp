@@ -893,6 +893,23 @@
       "appliedOn": "2026-10-08"
     },
     {
+      "id": "compiler-nullable-structural-row-widening",
+      "dependency": "flight-compiler",
+      "patch": "compiler-nullable-structural-row-widening.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "contextual union conversion cannot lower a nullable readonly structural reference to a nullable readonly view of its proven base row",
+      "rewrite": "Recognizes optional-single structural carriers with identical absence sentinels and emits their standard optional conversion only after the generated-row planner proves the source object widens to the target object; readonly authority may be preserved or strengthened but never weakened.",
+      "equivalence": "The C++ runtime StructuralRef converting constructor retains the same native object and RowOwner while selecting the proven base-row view, and std::optional preserves the source presence or absence. No cast, object copy, row materialization, replacement owner, or side storage is introduced.",
+      "verification": "A focused compiler regression widens Readonly<Extended> | null into Readonly<Surface> | null at a call boundary, reads a base member after optional access, and passes the native C++ syntax gate and compiler package typecheck; full Scene3D generation verifies the three PBR material renderer roots.",
+      "whyNotUpstreamFirst": "The pinned compiler and runtime already implement generated-row widening for non-null StructuralRef values, but the contextual union lane stops before composing it with std::optional. This narrowly joins those existing checked conversions against the pinned revision.",
+      "unblocks": "Allows StandardPbrMaterial, ExtendedPbrMaterial, and SpecularGlossinessPbrMaterial callbacks to pass their nullable concrete readonly owners through the upstream SurfaceMaterial binder contract without erasing their retained material identity.",
+      "expires": "when flight-compiler composes proven structural row widening with optional-single contextual conversion in its pinned release.",
+      "appliedOn": "2026-10-08"
+    },
+    {
       "id": "renderable-concrete-node-arms",
       "dependency": "flight",
       "patch": "renderable-concrete-node-arms.patch",
