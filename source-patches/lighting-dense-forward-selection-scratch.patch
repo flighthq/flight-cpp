@@ -1,24 +1,58 @@
 diff --git a/packages/lighting/src/sceneForwardLights.ts b/packages/lighting/src/sceneForwardLights.ts
 --- a/packages/lighting/src/sceneForwardLights.ts
 +++ b/packages/lighting/src/sceneForwardLights.ts
-@@ -26,6 +26,6 @@ export function selectScene3DForwardLights(
+@@ -26,52 +26,57 @@ export function selectScene3DForwardLights(
    const points = lights.point;
    const spots = lights.spot;
 -  const pointCount = selectStrongestLights(
-+  const pointCount = selectStrongestLights<PointLight>(
-     points,
-     bounds,
-     receiverLayerMask,
-@@ -34,7 +34,7 @@ export function selectScene3DForwardLights(
-     scratchSelectedPointScores,
-     scratchSelectedPointPriorities,
-   );
+-    points,
+-    bounds,
+-    receiverLayerMask,
+-    scratchSelectedPointLights,
+-    scratchSelectedPointIndices,
+-    scratchSelectedPointScores,
+-    scratchSelectedPointPriorities,
+-  );
 -  const spotCount = selectStrongestLights(
-+  const spotCount = selectStrongestLights<SpotLight>(
-     spots,
-     bounds,
-     receiverLayerMask,
-@@ -52,12 +52,12 @@ export function selectScene3DForwardLights(
+-    spots,
+-    bounds,
+-    receiverLayerMask,
+-    scratchSelectedSpotLights,
+-    scratchSelectedSpotIndices,
+-    scratchSelectedSpotScores,
+-    scratchSelectedSpotPriorities,
+-  );
++  let pointCount = 0;
++  if (points !== undefined) {
++    pointCount = selectStrongestLights<PointLight>(
++      points,
++      bounds,
++      receiverLayerMask,
++      scratchSelectedPointLights,
++      scratchSelectedPointIndices,
++      scratchSelectedPointScores,
++      scratchSelectedPointPriorities,
++    );
++  }
++  let spotCount = 0;
++  if (spots !== undefined) {
++    spotCount = selectStrongestLights<SpotLight>(
++      spots,
++      bounds,
++      receiverLayerMask,
++      scratchSelectedSpotLights,
++      scratchSelectedSpotIndices,
++      scratchSelectedSpotScores,
++      scratchSelectedSpotPriorities,
++    );
++  }
+-
++
+   const outPoints = out.point;
+   const outSpots = out.spot;
+   const outIndices = out.indices;
+   outIndices.length = 0;
+   outPoints.length = 0;
    outSpots.length = 0;
    for (let i = 0; i < pointCount; i++) {
      outIndices.push(scratchSelectedPointIndices[i]);
@@ -33,11 +67,12 @@ diff --git a/packages/lighting/src/sceneForwardLights.ts b/packages/lighting/src
 +    outSpots.push(scratchSelectedSpotLights[i]);
    }
  }
-@@ -65,8 +65,8 @@
+-
++
 -function selectStrongestLights(
 -  lights: readonly Readonly<PointLight | SpotLight>[] | undefined,
 +function selectStrongestLights<T extends PointLight | SpotLight>(
-+  lights: readonly Readonly<T>[] | undefined,
++  lights: readonly Readonly<T>[],
    bounds: Readonly<BoundingSphereLike>,
    receiverLayerMask: number,
 -  selectedLights: Readonly<PointLight | SpotLight>[],
@@ -45,7 +80,13 @@ diff --git a/packages/lighting/src/sceneForwardLights.ts b/packages/lighting/src
    selectedIndices: Int32Array,
    selectedScores: Float64Array,
    selectedPriorities: Float64Array,
-@@ -115,10 +115,10 @@ function selectStrongestLights(
+ ): number {
+   let selectedCount = 0;
+-  if (lights === undefined) return selectedCount;
+-
++
+   for (let inputIndex = 0; inputIndex < lights.length; inputIndex++) {
+@@ -115,10 +120,10 @@ function selectStrongestLights(
  }
  
  const scratchSelectedPointIndices = new Int32Array(MAX_FORWARD_LIGHTS);
