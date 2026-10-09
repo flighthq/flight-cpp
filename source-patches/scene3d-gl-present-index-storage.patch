@@ -15,14 +15,24 @@ diff --git a/packages/scene3d-gl/src/glMeshUpload.ts b/packages/scene3d-gl/src/g
 -    upload.indexCount = geometry.indices.length;
 +    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 +    upload.indexType = indices instanceof Uint32Array ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
-+    upload.indexCount = indices.length;
++    upload.indexCount = getGlMeshIndicesLength(indices);
    } else {
      if (upload.indexBuffer !== null) gl.deleteBuffer(upload.indexBuffer);
      upload.indexBuffer = null;
+@@ -223,3 +224,9 @@ function resolveGlVertexFormat(gl: GlContext, format: string): [number, number, boolean] {
+       return [3, gl.FLOAT, false];
+   }
+ }
++
++function getGlMeshIndicesLength(
++  indices: Uint16Array<ArrayBuffer> | Uint32Array<ArrayBuffer>,
++): number {
++  return indices.length;
++}
 diff --git a/packages/scene3d-gl/src/glWireframeUpload.ts b/packages/scene3d-gl/src/glWireframeUpload.ts
 --- a/packages/scene3d-gl/src/glWireframeUpload.ts
 +++ b/packages/scene3d-gl/src/glWireframeUpload.ts
-@@ -86,25 +86,40 @@ function buildLineIndices(geometry: Readonly<MeshGeometry>): Uint16Array<ArrayBuffer> | Uint32Array<ArrayBuffer> {
+@@ -80,25 +80,40 @@ function buildLineIndices(geometry: Readonly<MeshGeometry>): Uint16Array<ArrayBuffer> | Uint32Array<ArrayBuffer> {
    const triangleIndices = geometry.indices;
 -  const triangleCount =
 -    triangleIndices !== null
@@ -30,7 +40,7 @@ diff --git a/packages/scene3d-gl/src/glWireframeUpload.ts b/packages/scene3d-gl/
 -      : Math.floor((geometry.vertices.length * 4) / geometry.layout.stride / 3);
 +  let triangleCount: number;
 +  if (triangleIndices !== null) {
-+    triangleCount = Math.floor(triangleIndices.length / 3);
++    triangleCount = Math.floor(getGlMeshIndicesLength(triangleIndices) / 3);
 +  } else {
 +    triangleCount = Math.floor((geometry.vertices.length * 4) / geometry.layout.stride / 3);
 +  }
@@ -54,9 +64,9 @@ diff --git a/packages/scene3d-gl/src/glWireframeUpload.ts b/packages/scene3d-gl/
 +  if (triangleIndices !== null) {
 +    for (let t = 0; t < triangleCount; t++) {
 +      const base = t * 3;
-+      const i0 = triangleIndices[base];
-+      const i1 = triangleIndices[base + 1];
-+      const i2 = triangleIndices[base + 2];
++      const i0 = getGlMeshIndex(triangleIndices, base);
++      const i1 = getGlMeshIndex(triangleIndices, base + 1);
++      const i2 = getGlMeshIndex(triangleIndices, base + 2);
 +      const out = t * 6;
 +      lines[out] = i0;
 +      lines[out + 1] = i1;
@@ -79,3 +89,18 @@ diff --git a/packages/scene3d-gl/src/glWireframeUpload.ts b/packages/scene3d-gl/
    }
    return lines;
  }
+@@ -108,1 +123,14 @@ const wireframeUploads = new WeakMap<GlRenderState, WeakMap<MeshGeometry, GlWireframeUpload>>();
+ const wireframeUploads = new WeakMap<GlRenderState, WeakMap<MeshGeometry, GlWireframeUpload>>();
++
++function getGlMeshIndex(
++  indices: Uint16Array<ArrayBuffer> | Uint32Array<ArrayBuffer>,
++  index: number,
++): number {
++  return indices[index];
++}
++
++function getGlMeshIndicesLength(
++  indices: Uint16Array<ArrayBuffer> | Uint32Array<ArrayBuffer>,
++): number {
++  return indices.length;
++}
