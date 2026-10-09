@@ -21,7 +21,7 @@ index d30c0ce..ddcb200 100644
         export function compressed(gl: GlContext): Record<string, number> | null {
           return gl.getExtension('WEBGL_compressed_texture_s3tc') as Record<string, number> | null;
         }
-@@ -20892,6 +20893,10 @@ export function preferred(): number { return NativeSurface.preferredFormat; }`,
+@@ -20892,6 +20893,18 @@ export function preferred(): number { return NativeSurface.preferredFormat; }`,
         export function availableLocal(gl: GlContext): boolean {
           const extension = gl.getExtension('EXT_texture_filter_anisotropic');
           return extension !== null;
@@ -29,6 +29,14 @@ index d30c0ce..ddcb200 100644
 +       export function locations(gl: GlContext, program: WebGLProgram): ProgramLocations {
 +         const locColor = gl.getUniformLocation(program, 'u_color');
 +         return { locColor };
++       }
++       export function resolveLocation(
++         gl: GlContext, program: WebGLProgram, locations: ProgramLocations,
++       ): WebGLUniformLocation | null {
++         if (locations.locColor !== undefined) return locations.locColor;
++         const location: WebGLUniformLocation | null = gl.getUniformLocation(program, 'u_color');
++         locations.locColor = location;
++         return location;
         }`,
        ts.ScriptTarget.Latest,
        true,
@@ -68,7 +76,7 @@ index d30c0ce..ddcb200 100644
            ],
            schema: 'flight-cpp-external-bindings/1',
          },
-@@ -20983,6 +21010,16 @@ export function preferred(): number { return NativeSurface.preferredFormat; }`,
+@@ -20983,6 +21016,19 @@ export function preferred(): number { return NativeSurface.preferredFormat; }`,
      expect(emittedRender).toContain('return gl.get_extension(flight::String("EXT_color_buffer_float")).has_value();');
      expect(emittedRender).toContain('std::optional<flight::host_sdl::GlExtension> extension = gl.get_extension(');
      expect(emittedRender).toContain('return extension.has_value();');
@@ -82,6 +90,9 @@ index d30c0ce..ddcb200 100644
 +      'std::in_place_type<flight::host_sdl::WebGlUniformLocation>, contextual_union_source.value()',
 +    );
 +    expect(emittedRender).not.toContain('std::in_place_type<flight::Undefined>, flight::undefined');
++    expect(emittedRender).toContain(
++      'std::holds_alternative<flight::Undefined>(locations->loc_color)',
++    );
    });
  
    it.skipIf(!canCompileCpp)('runs present external result locals without rebuilding their shared owner', () => {
@@ -89,6 +100,20 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 index fae6209..71c0e07 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -10157,5 +10157,13 @@ function emitUnionMemberTestCpp(evidence: Readonly<IrUnionMemberTestEvidence>, c
+   }
+   if (plan.kind === 'dualSentinelVariant') {
++    if (evidence.member.kind === 'null' || evidence.member.kind === 'undefined') {
++      context.includes.add('variant');
++      const sentinels = getCppDualSentinelTargetTypes(context);
++      const selected = evidence.member.kind === 'null' ? sentinels.null : sentinels.undefined;
++      const binding = emitInitializedBindingValueCpp(evidence.binding, context);
++      const test = `std::holds_alternative<${selected}>(${binding})`;
++      return evidence.whenResult ? test : `!(${test})`;
++    }
+     const alternatives = plan.valueSlots.filter(
+       (slot) =>
+         slot.sourceAlternatives.some((member) => isDeepStrictEqual(member, evidence.member)) ||
 @@ -16949,24 +16949,48 @@ function emitContextualUnionExpressionInContextCpp(
        // rather than reconstructed source spelling -- is the authority for this call.
        return emitExpression(expression, context, undefined, false);

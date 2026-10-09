@@ -934,13 +934,13 @@
       "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
       "package": "@flighthq/scene3d-gl",
       "answers": "refusal",
-      "refusal": "external call result type std::optional<flight::host_sdl::WebGlUniformLocation> is not one represented contextual runtime domain",
-      "rewrite": "When immutable manifest provenance and source type evidence name the same complete absence-carrying C++ result, defers a wider destination to the existing represented-union conversion instead of treating the complete optional carrier as one present value slot.",
-      "equivalence": "The manifest-declared null sentinel remains null, a present host handle remains the same handle value, and an optional destination property's distinct undefined state remains reserved for omission. The conversion evaluates the host call once and introduces no cast, copy of an owning object, materialization, or side storage.",
-      "verification": "A focused compiler regression recovers getUniformLocation through the imported Flight GlContext Pick, stores its immutable local into a nullable optional program field, and asserts that absence reconstructs Null rather than Undefined while presence retains WebGlUniformLocation. Scoped Scene3D-GL generation verifies the affected program preludes.",
+      "refusal": "external nullable call results cannot widen into a dual-sentinel optional property, and a strict null/undefined test on that property cannot select its represented sentinel alternative",
+      "rewrite": "When immutable manifest provenance and source type evidence name the same complete absence-carrying C++ result, defers a wider destination to the existing represented-union conversion instead of treating the complete optional carrier as one present value slot; union-member evidence that names null or undefined selects that exact dual-sentinel variant alternative before value-slot matching.",
+      "equivalence": "The manifest-declared null sentinel remains null, a present host handle remains the same handle value, and an optional destination property's distinct undefined state remains reserved for omission. Strict equality and inequality inspect exactly the source sentinel they name. The conversion and test evaluate their operand once and introduce no cast, owning-object copy, materialization, or side storage.",
+      "verification": "A focused compiler regression recovers getUniformLocation through the imported Flight GlContext Pick, stores its result into a nullable optional program field, resolves that field through a strict undefined guard, and asserts that call absence reconstructs Null rather than Undefined while the guard selects Undefined exactly. Scoped Scene3D-GL generation verifies the affected program preludes and lazy bind paths.",
       "whyNotUpstreamFirst": "The pinned compiler already implements both the exact external optional carrier and the optional-single to dual-sentinel widening, but its external-result fast path refuses before those proven operations can compose. This narrowly changes that dispatch only when both provenance and the complete carrier match exactly.",
-      "unblocks": "Allows the upstream Scene3D-GL wireframe, PBR, toon, classic, matcap, shaded, debug, unlit, and shadow program builders to store real WebGL uniform locations in their optional program fields without inventing a different rendering path.",
-      "expires": "when flight-compiler composes exact manifest external-result carriers with wider represented contextual unions upstream.",
+      "unblocks": "Allows the upstream Scene3D-GL wireframe, PBR, toon, classic, matcap, shaded, debug, unlit, and shadow programs to store and lazily resolve real WebGL uniform locations without inventing a different rendering path.",
+      "expires": "when flight-compiler composes exact manifest external-result carriers with wider represented contextual unions and selects explicit dual sentinels during union-member tests upstream.",
       "appliedOn": "2026-10-08"
     },
     {
@@ -1515,6 +1515,23 @@
       "whyNotUpstreamFirst": "The helper only needs the closed MaterialAlphaMode scalar, while accepting the whole open SurfaceMaterial hierarchy forces native flattened owners through a fictitious base-row conversion. A scalar overload is a target-neutral internal API boundary and avoids casts or copied materials.",
       "unblocks": "Removes the repeated PBR-to-SurfaceMaterial owner widening from the real metallic-roughness, specular-glossiness, and extension-composed material bind paths.",
       "expires": "when Flight's native structural interface heritage preserves checked derived-to-base owner conversion, or Flight adopts the scalar alpha-mode helper upstream.",
+      "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-gl-lazy-uniform-location-boundaries",
+      "dependency": "flight",
+      "patch": "scene3d-gl-lazy-uniform-location-boundaries.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d-gl/src/glMeshProgram.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "lazy WebGL uniform-location fields carry three distinct source states -- undefined before lookup, null when the shader omits the uniform, and a present location -- while inferred mutable locals and nullable property tests lose the state evidence required by native optional storage",
+      "rewrite": "Moves every lazy lookup behind a field-specific resolver with an exact WebGLUniformLocation-or-null return, collapses non-lazy optional location and proxy-array reads through present-only helpers, and retains explicit nullable locals through skin, instance, color-adjustment, UV-transform, and per-draw-alpha binding.",
+      "equivalence": "Each resolver reads the same cache field, performs the same getUniformLocation call exactly once only when that field is undefined, stores the identical null or location result back on the same program object, and returns it to the same uniform call. Present-only helpers map undefined to null only where the original code used a loose null check and therefore treated them identically. The same palettes, transforms, alpha values, color adjustments, texture units, GL calls, cache objects, and draw ordering remain.",
+      "verification": "The complete patch stack must compose, focused glMeshProgram regeneration must emit the module with zero omissions/refusals, and full Scene3D-GL regeneration plus generated-header compilation verifies every material family that depends on it.",
+      "whyNotUpstreamFirst": "The undefined-versus-null lazy cache is a deliberate WebGL contract. Explicit resolver boundaries are target-neutral and preserve it without replacing the cache representation, repeating lookups, or teaching the emitter to conflate the states.",
+      "unblocks": "Restores the shared mesh bind/draw implementation beneath classic, debug, shaded, toon, unlit, wireframe, and PBR material families, including instancing, GPU skinning, UV transforms, color adjustments, and object opacity.",
+      "expires": "when flight-compiler retains exact dual-sentinel property state through inferred locals and presence branches automatically, or Flight adopts explicit lazy-location resolvers upstream.",
       "appliedOn": "2026-10-08"
     }
   ]
