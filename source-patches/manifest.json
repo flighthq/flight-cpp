@@ -1686,6 +1686,23 @@
       "unblocks": "Gives the real persistent registry constructors and replacement operations stable entity owners used by GL material, texture, blend, modifier, and PBR-extension registries.",
       "expires": "when Flight names its entity-backed registry table products upstream, or flight-compiler can lower these generic object intersections without a named carrier.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "registry-copy-composed-entry-values",
+      "dependency": "flight",
+      "patch": "registry-copy-composed-entry-values.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/registry/src/registryTable.ts",
+      "package": "@flighthq/registry",
+      "answers": "refusal",
+      "refusal": "readonly overlay entry arms acquire sibling anonymous owners when assigned into the replacement table's declared RegistryTableEntry union",
+      "rewrite": "Copies each selected slot or keyed entry into the corresponding declared bound or tombstoned value shape after discriminant narrowing, preserving the bound payload and tombstone state explicitly.",
+      "equivalence": "Registry entries are immutable value wrappers in the documented persistent-table contract. Composition already creates a replacement table and map; this rewrite preserves the exact key order, last-overlay-wins behavior, inherited-null behavior, bound payload value or reference identity, tombstone meaning, registry id, miss policy, and table identity rules. Only the unpromised identity of the readonly one- or two-field entry wrapper is refreshed while copying it into the replacement.",
+      "verification": "The complete Flight patch stack must apply and reverse cleanly; focused native registryTable regeneration must emit the module without the contextual-union owner refusal, and the upstream registry behavior test should pass when its pinned vitest dependency is available.",
+      "whyNotUpstreamFirst": "Explicit discriminated-union value copying is target-neutral and matches the table's persistent value semantics, but it is pinned here while the native compiler cannot retain anonymous generic arm ownership through readonly map iteration.",
+      "unblocks": "Allows slot and keyed registry composition to preserve real renderer, resolver, modifier, blend, and PBR-extension payloads and tombstones in the generated native registry implementation.",
+      "expires": "when Flight copies composed entries explicitly upstream, or flight-compiler retains the declared RegistryTableEntry arm owner through readonly iteration and assignment.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }
