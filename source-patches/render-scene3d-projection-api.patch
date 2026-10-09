@@ -1,0 +1,46 @@
+diff --git a/packages/render/src/sceneRender.ts b/packages/render/src/sceneRender.ts
+index 3331f4b..cc3f55e 100644
+--- a/packages/render/src/sceneRender.ts
++++ b/packages/render/src/sceneRender.ts
+@@ -1,16 +1,13 @@
+-import { applyObliqueNearClipPlane } from '@flighthq/camera/contract';
++import { applyObliqueNearClipPlane, setProjectionMatrix4 } from '@flighthq/camera/contract';
+ import { unpackColorToLinear } from '@flighthq/color/contract';
+ import {
+   copyAabb,
+-  copyMatrix4,
+   createAabb,
+   createFrustum,
+   createMatrix4,
+   isFrustumIntersectingAabb,
+   multiplyMatrix4,
+   setFrustumFromMatrix4,
+-  setOrthographicMatrix4,
+-  setPerspectiveMatrix4,
+   transformAabbByMatrix4,
+   unionAabb,
+ } from '@flighthq/geometry/contract';
+@@ -420,22 +417,7 @@ function packSpotLight(data: Float32Array, offset: number, spot: Readonly<SpotLi
+ // resolved draw-time `aspect` is authoritative; near/far come from the camera. Reads camera fields
+ // through a scratch projection before the multiply, so it is safe even if `out` aliases camera.view.
+ function setScene3DViewProjectionMatrix4(out: Matrix4, camera: Readonly<Camera3D>, aspect: number): void {
+-  const projection = camera.projection;
+-  if (projection.kind === 'perspective') {
+-    setPerspectiveMatrix4(scratchProjection, Math.tan(projection.fovY * 0.5), aspect, camera.near, camera.far);
+-  } else if (projection.kind === 'raw') {
+-    copyMatrix4(scratchProjection, projection.matrix);
+-  } else {
+-    setOrthographicMatrix4(
+-      scratchProjection,
+-      -projection.halfWidth,
+-      projection.halfWidth,
+-      -projection.halfHeight,
+-      projection.halfHeight,
+-      camera.near,
+-      camera.far,
+-    );
+-  }
++  setProjectionMatrix4(scratchProjection, camera.projection, aspect, camera.near, camera.far);
+   applyScene3DProjectionJitter(scratchProjection, camera.jitter.x, camera.jitter.y);
+   if (camera.nearClipPlane) applyObliqueNearClipPlane(scratchProjection, camera.nearClipPlane);
+   multiplyMatrix4(out, scratchProjection, camera.view);

@@ -1125,6 +1125,23 @@
       "unblocks": "Carries AnimatedNormal, Dissolve, Emissive, EnvReflect, Fog, Rim, Toon, and VertexDisplace owners into their real upstream GL binders, and retains GlModifierSnippet owners through the shared registry for shaded program assembly.",
       "expires": "when heterogeneous structural storage preserves checked concrete modifier and backend-definition owners through open base-interface arms, or Flight adopts the explicit value unions upstream.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "render-scene3d-projection-api",
+      "dependency": "flight",
+      "patch": "render-scene3d-projection-api.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/render/src/sceneRender.ts",
+      "package": "@flighthq/render",
+      "answers": "refusal",
+      "refusal": "property halfWidth on the Projection C++ variant requires proven union member access in the render package's duplicate projection branch",
+      "rewrite": "Delegates projection descriptor lowering to the existing camera setProjectionMatrix4 API, then retains the render pass's projection jitter, oblique near-plane adjustment, and view multiplication exactly where they were.",
+      "equivalence": "setProjectionMatrix4 implements the same perspective tangent, raw matrix copy, and orthographic half-extents branches with the same authored aspect and camera near/far values. The same scratch matrix receives the result before identical jitter, clip-plane, and multiplication calls; no camera or projection object is replaced or mutated.",
+      "verification": "The patch composes after the complete Flight source-patch stack. The camera projection module already emits in the Scene3D closure and its tests cover perspective, raw, and orthographic descriptors; full regeneration verifies sceneRender no longer duplicates the refused variant access.",
+      "whyNotUpstreamFirst": "Flight already owns this exact discriminated-union operation in @flighthq/camera. Reusing that public API removes duplicated renderer logic and is a target-neutral upstream cleanup, rather than weakening native union checks.",
+      "unblocks": "Allows the backend-neutral prepareScene3DRender path to build its real draw-time projection for perspective, orthographic, and raw cameras before GL material rendering.",
+      "expires": "when Flight delegates this render helper to setProjectionMatrix4 upstream, or the duplicate branch gains equivalent proven union narrowing in the pinned compiler.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
