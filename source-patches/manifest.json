@@ -2281,6 +2281,23 @@
       "unblocks": "Makes TextureSourceCubeFaces and downstream real PBR material headers compile without hand-editing generated headers or collapsing concrete texture-source identity.",
       "expires": "when flight-compiler computes early forward-declaration closure across nested imported aliases upstream.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "render-proxy-destroy-helper-owner",
+      "dependency": "flight",
+      "patch": "render-proxy-destroy-helper-owner.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/render/src/renderState.ts and packages/types/src/RenderState.ts",
+      "package": "@flighthq/render",
+      "answers": "diagnostic",
+      "refusal": "the proxy teardown helper is emitted inline in the RenderState type declaration header, where the RenderState-Renderer-RenderProxy include cycle leaves RenderProxy incomplete at the helper's member reads",
+      "rewrite": "Moves the unchanged proxy teardown body out of the shared type declaration module and back into its sole disposeRenderProxyForShutdown call site in the render implementation module, after that module's imported type headers are complete.",
+      "equivalence": "The sole call is replaced in place by the helper's exact body. It performs the same two nullish tests, reads the same renderer and rendererData members, invokes the same optional destroyData callback with the same state and data references, then continues with the same map and set deletions. Removing a now-unused exported helper with no top-level execution changes no runtime evaluation or ordering.",
+      "verification": "The complete source patch stack must apply and reverse cleanly, focused packages/render/src/renderState.ts generation must emit without refusals, and the cohesive generated gl_render_state.hpp must compile past incomplete RenderProxy member access.",
+      "whyNotUpstreamFirst": "This target-neutral ownership placement is needed now because the pinned C++ emitter emits type-module function bodies inline and cannot defer one until a cyclic nominal definition becomes complete.",
+      "unblocks": "Allows the common render-state header used by every real Scene3D GL pipeline to compile through proxy teardown without inventing an alternate renderer or proxy representation.",
+      "expires": "when Flight keeps the teardown body in its render implementation owner upstream or flight-compiler can schedule inline type-module bodies after cyclic nominal definitions become complete.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }

@@ -1,0 +1,37 @@
+diff --git a/packages/render/src/renderState.ts b/packages/render/src/renderState.ts
+--- a/packages/render/src/renderState.ts
++++ b/packages/render/src/renderState.ts
+@@ -18,7 +18,6 @@ import {
+   BlendMode,
+   createRenderProxyAdapterWeakMap,
+   createRenderProxyWeakMap,
+-  invokeRenderProxyDestroyData,
+   readRenderStateRuntimeOwner,
+   writeRenderStateRuntimeOwner,
+ } from '@flighthq/types/contract';
+@@ -139,6 +138,8 @@ function disposeRenderProxyForShutdown(state: RenderState, source: Renderable):
+   const runtime = getRenderStateRuntime(state);
+   const proxy = runtime.renderProxyMap.get(source);
+-  invokeRenderProxyDestroyData(proxy, state);
++  if (proxy?.rendererData !== null && proxy?.rendererData !== undefined) {
++    proxy.renderer?.destroyData?.(state, proxy.rendererData);
++  }
+   runtime.renderProxyMap.delete(source);
+   runtime.renderProxySources.delete(source);
+ }
+diff --git a/packages/types/src/RenderState.ts b/packages/types/src/RenderState.ts
+--- a/packages/types/src/RenderState.ts
++++ b/packages/types/src/RenderState.ts
+@@ -124,12 +124,6 @@ export function createRenderProxyWeakMap(): WeakMap<Renderable, RenderProxy> {
+   return new WeakMap();
+ }
+ 
+-export function invokeRenderProxyDestroyData(proxy: RenderProxy | undefined, state: RenderState): void {
+-  if (proxy?.rendererData !== null && proxy?.rendererData !== undefined) {
+-    proxy.renderer?.destroyData?.(state, proxy.rendererData);
+-  }
+-}
+-
+ export function readRenderStateRuntimeOwner(owner: RenderState): RenderStateRuntime {
+   return owner[EntityRuntimeKey]!;
+ }
