@@ -1499,6 +1499,23 @@
       "unblocks": "Targets the nine direct Scene3D package refusals remaining after Node and Mesh reach complete native closure, including the real mesh/material, billboard, animation, skin, morph, and instance paths needed by the upstream examples.",
       "expires": "when Flight preserves Node3D and Mesh owners through these construction/storage boundaries and uses representable structured diagnostic values upstream, or flight-compiler can retain the same checked owners and erased array value automatically.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-gl-pbr-alpha-mode-boundary",
+      "dependency": "flight",
+      "patch": "scene3d-gl-pbr-alpha-mode-boundary.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d-gl/src/glPbrStandardBlock.ts and the ExtendedPbr, SpecularGlossinessPbr, and StandardPbr GL material renderers",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "three concrete PBR owners cannot widen to a separate flattened Readonly<SurfaceMaterial> row only so the define-key builder can read alphaMode",
+      "rewrite": "Adds a scalar-alpha-mode entry point to the existing define-key builder and has each concrete renderer pass the alphaMode value it already owns; the original SurfaceMaterial entry point remains for existing callers and both paths share the same resolved implementation.",
+      "equivalence": "Each renderer reads the same alphaMode property at the same bind point, applies the same opaque fallback for null, and produces the identical define-key flags from the same standard block and texture readiness checks. The original helper keeps its signature and preserves its baseColorMap-before-alphaMode property-read order. No shader source, cache key, material identity, texture binding, uniform, extension contribution, draw call, or public contract changes.",
+      "verification": "The complete patch stack composes; focused native regeneration must emit the shared define-key builder and all three PBR renderers with zero direct refusals before full Scene3D-GL regeneration and generated-header compilation.",
+      "whyNotUpstreamFirst": "The helper only needs the closed MaterialAlphaMode scalar, while accepting the whole open SurfaceMaterial hierarchy forces native flattened owners through a fictitious base-row conversion. A scalar overload is a target-neutral internal API boundary and avoids casts or copied materials.",
+      "unblocks": "Removes the repeated PBR-to-SurfaceMaterial owner widening from the real metallic-roughness, specular-glossiness, and extension-composed material bind paths.",
+      "expires": "when Flight's native structural interface heritage preserves checked derived-to-base owner conversion, or Flight adopts the scalar alpha-mode helper upstream.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
