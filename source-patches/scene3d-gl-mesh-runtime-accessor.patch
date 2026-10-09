@@ -1,0 +1,22 @@
+diff --git a/packages/scene3d-gl/src/enableGlScene3DDeformGuards.ts b/packages/scene3d-gl/src/enableGlScene3DDeformGuards.ts
+--- a/packages/scene3d-gl/src/enableGlScene3DDeformGuards.ts
++++ b/packages/scene3d-gl/src/enableGlScene3DDeformGuards.ts
+@@ -1,7 +1,7 @@
+ import { logOnce } from '@flighthq/log/contract';
+ import { getMeshGeometryMorphBindPose, hasMeshGeometrySkin } from '@flighthq/mesh/contract';
+-import { getNodeRuntime } from '@flighthq/node/contract';
+-import type { GlRenderState, Mesh, MeshRuntime, NodeAny } from '@flighthq/types/contract';
++import { getMeshRuntime } from '@flighthq/scene3d/contract';
++import type { GlRenderState, Mesh } from '@flighthq/types/contract';
+ import { LogLevel } from '@flighthq/types/contract';
+ 
+ import { getGlScene3DRuntime } from './glScene3DRuntime';
+@@ -43,7 +43,7 @@ function warnGlScene3DMeshDrawnUndeformed(mesh: Mesh): void {
+   }
+ 
+   if (mesh.skin != null && hasMeshGeometrySkin(mesh.geometry)) {
+-    const runtime = getNodeRuntime(mesh as NodeAny) as MeshRuntime;
++    const runtime = getMeshRuntime(mesh);
+     if (runtime.deformedLocalBounds == null) {
+       logOnce(
+         'scene-gl:skin-drawn-without-prepare',

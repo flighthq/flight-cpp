@@ -1091,6 +1091,23 @@
       "unblocks": "Allows source environment cubemaps and the irradiance, prefilter, and BRDF IBL bake programs used by real PBR materials to reach generated C++.",
       "expires": "when flight-compiler preserves optional expression evidence in array map callbacks and declared Map owner types through empty construction, or Flight adopts the explicit forms upstream.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-gl-mesh-runtime-accessor",
+      "dependency": "flight",
+      "patch": "scene3d-gl-mesh-runtime-accessor.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d-gl/src/enableGlScene3DDeformGuards.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "a reference assertion from Mesh to NodeAny has no emitted C++ heritage path and cannot recover MeshRuntime from an erased node accessor",
+      "rewrite": "Uses the existing scene3d getMeshRuntime accessor, whose input and result retain the exact Mesh and MeshRuntime owners, instead of passing the mesh through NodeAny and asserting the runtime afterward.",
+      "equivalence": "getMeshRuntime reads the same node runtime slot as getNodeRuntime and returns that same object; the change removes only two erased TypeScript assertions. The same skin and geometry guards precede the read, and the same deformedLocalBounds value controls the same one-shot warning.",
+      "verification": "The patch composes after the complete Flight source-patch stack. Full Scene3D GL regeneration verifies the guard module emits, and its existing tests cover disabled, enabled, morphed, skinned, prepared, and repeated-warning behavior.",
+      "whyNotUpstreamFirst": "Flight already provides the exact typed accessor; this call site predates using it. Selecting that public API is a target-neutral correction and avoids teaching the native compiler to cast between flattened owners.",
+      "unblocks": "Allows the opt-in production deform guard to inspect the real MeshRuntime without erasing the mesh owner or bypassing runtime identity.",
+      "expires": "when Flight uses getMeshRuntime at this call site upstream, or flattened interface heritage can preserve the exact runtime owner without an assertion.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
