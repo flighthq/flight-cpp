@@ -1,0 +1,510 @@
+diff --git a/packages/node/src/node.ts b/packages/node/src/node.ts
+--- a/packages/node/src/node.ts
++++ b/packages/node/src/node.ts
+@@ -1,4 +1,4 @@
+-import { allocateEntity, createEntityRuntime, finishEntity, getEntityRuntime } from '@flighthq/entity/contract';
++import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+ import { clearSignal, createSignal } from '@flighthq/signals/contract';
+ import type {
+   EntityConstruction,
+@@ -36,33 +36,34 @@
+ export function createNodeRuntime<Traits extends object = NodeTraits>(
+   methods?: Readonly<Partial<MethodsOf<NodeRuntime<Traits>>>>,
+ ): NodeRuntime<Traits> {
+-  const out = createEntityRuntime() as NodeRuntime<Traits>;
+-  out.appearanceId = 0;
+-  out.boundsUsingLocalBoundsId = -1;
+-  out.boundsUsingLocalTransformId = -1;
+-  out.canAddChild = methods?.canAddChild ?? defaultNodeRuntimeCanAddChild;
+-  out.children = null;
+-  out.childrenId = 0;
+-  out.colorAdjustments = null;
+-  out.colorAdjustmentsUnsupported = false;
+-  out.nodeSignals = null;
+-  out.interactionSignals = null;
+-  out.interactionState = null;
+-  out.localBoundsId = 0;
+-  out.localBoundsUsingLocalBoundsId = -1;
+-  out.localContentId = 0;
+-  out.localTransformId = 0;
+-  out.localTransformUsingLocalTransformId = -1;
+-  out.parent = null;
+-  out.parentReferenceId = 0;
+-  out.resolvedColorMatrix = null;
+-  out.resolvedColorScaleBias = null;
+-  out.worldBoundsUsingLocalBoundsId = -1;
+-  out.worldBoundsUsingWorldTransformId = -1;
+-  out.worldTransformId = 0;
+-  out.worldTransformUsingLocalTransformId = -1;
+-  out.worldTransformUsingParentTransformId = -1;
+-  return out;
++  return {
++    binding: null,
++    appearanceId: 0,
++    boundsUsingLocalBoundsId: -1,
++    boundsUsingLocalTransformId: -1,
++    canAddChild: methods?.canAddChild ?? defaultNodeRuntimeCanAddChild,
++    children: null,
++    childrenId: 0,
++    colorAdjustments: null,
++    colorAdjustmentsUnsupported: false,
++    nodeSignals: null,
++    interactionSignals: null,
++    interactionState: null,
++    localBoundsId: 0,
++    localBoundsUsingLocalBoundsId: -1,
++    localContentId: 0,
++    localTransformId: 0,
++    localTransformUsingLocalTransformId: -1,
++    parent: null,
++    parentReferenceId: 0,
++    resolvedColorMatrix: null,
++    resolvedColorScaleBias: null,
++    worldBoundsUsingLocalBoundsId: -1,
++    worldBoundsUsingWorldTransformId: -1,
++    worldTransformId: 0,
++    worldTransformUsingLocalTransformId: -1,
++    worldTransformUsingParentTransformId: -1,
++  };
+ }
+ 
+ export function createNodeSignals(): NodeSignals {
+@@ -88,8 +89,8 @@
+  * resources (render proxies, GPU textures) should call `disposeNode` first and then release those
+  * resources themselves.
+  */
+-export function disposeNode<Traits extends object = NodeTraits>(target: Node<Traits>): void {
+-  const runtime = getEntityRuntime(target) as NodeRuntime<Traits>;
++export function disposeNode<Traits extends object = NodeTraits>(target: Node<Traits> & Traits): void {
++  const runtime = getMutableNodeRuntime(target);
+ 
+   // Detach from parent first so the parent's children list stays consistent.
+   const parent = runtime.parent;
+@@ -131,18 +132,22 @@
+ }
+ 
+ export function enableNodeSignals<Traits extends object = NodeTraits>(source: Node<Traits>): NodeSignals {
+-  const runtime = getEntityRuntime(source) as NodeRuntime<Traits>;
++  const runtime = getMutableNodeRuntime(source);
+   return (runtime.nodeSignals ??= createNodeSignals());
+ }
+ 
+ export function getNodeRuntime<Traits extends object = NodeTraits>(
+   source: Readonly<Node<Traits>>,
+ ): Readonly<NodeRuntime<Traits>> {
+-  return getEntityRuntime(source) as NodeRuntime<Traits>;
++  return source[EntityRuntimeKey]!;
++}
++
++export function getMutableNodeRuntime<Traits extends object = NodeTraits>(source: Node<Traits>): NodeRuntime<Traits> {
++  return source[EntityRuntimeKey]!;
+ }
+ 
+ export function getNodeSignals<Traits extends object = NodeTraits>(source: Node<Traits>): NodeSignals | null {
+-  return (getEntityRuntime(source) as NodeRuntime<Traits>).nodeSignals;
++  return source[EntityRuntimeKey]!.nodeSignals;
+ }
+ 
+ export function initializeNode<
+@@ -156,14 +161,13 @@
+   createData?: NodeDataFactory<Data>,
+   createNodeRuntimeFactory?: NodeRuntimeFactory<Runtime>,
+ ): void {
+-  const runtimeFactory = createNodeRuntimeFactory ?? (createNodeRuntime as unknown as NodeRuntimeFactory<Runtime>);
+-  const node = out as EntityConstruction<Node<Traits>>;
+-  (node as { [EntityRuntimeKey]?: unknown })[EntityRuntimeKey] = runtimeFactory();
+-  const source: Readonly<PartialNode<Node<Traits>>> = obj ?? {};
+-  node.data = createData !== undefined ? createData(source.data as Partial<Data>) : null;
+-  node.name = source.name ?? null;
++  const node: EntityConstruction<Node<Traits>> = out;
++  node[EntityRuntimeKey] =
++    createNodeRuntimeFactory !== undefined ? createNodeRuntimeFactory() : createNodeRuntime<Traits>();
++  node.data = createData !== undefined ? createData(obj?.data as Partial<Data>) : null;
++  node.name = obj?.name ?? null;
+   node.kind = nodeKind;
+-  node.enabled = source.enabled ?? true;
++  node.enabled = obj?.enabled ?? true;
+ }
+ 
+ export function initializeNodeSignals(out: EntityConstruction<NodeSignals>): void {
+diff --git a/packages/node/src/hierarchy.ts b/packages/node/src/hierarchy.ts
+--- a/packages/node/src/hierarchy.ts
++++ b/packages/node/src/hierarchy.ts
+@@ -9,7 +9,7 @@
+ import { emitSignal } from '@flighthq/signals/contract';
+ import type { Node, NodeOf, NodeRuntime, Transform2DNode } from '@flighthq/types/contract';
+ 
+-import { getNodeRuntime } from './node';
++import { getMutableNodeRuntime, getNodeRuntime } from './node';
+ import { ensureNodeWorldMatrix, getNodeWorldMatrix } from './nodeTransform2d';
+ import { invalidateNodeLocalTransform, invalidateNodeParentReference, invalidateNodeWorldBounds } from './revision';
+ 
+@@ -18,7 +18,7 @@
+  * instance. The child is added to the front (top) of all other children in
+  * this Node instance.
+  **/
+-export function addNodeChild<Traits extends object>(target: Node<Traits>, child: Node<Traits>): NodeOf<Traits> {
++export function addNodeChild<Traits extends object>(target: NodeOf<Traits>, child: NodeOf<Traits>): NodeOf<Traits> {
+   return addNodeChildAt(target, child, getNodeChildCount(target));
+ }
+ 
+@@ -29,13 +29,11 @@
+  * Node object.
+  **/
+ export function addNodeChildAt<Traits extends object>(
+-  target: Node<Traits>,
+-  child: Node<Traits>,
++  target: NodeOf<Traits>,
++  child: NodeOf<Traits>,
+   index: number,
+ ): NodeOf<Traits> {
+-  const targetRuntime = getNodeRuntime(target) as NodeRuntime<Traits>;
+-  const targetNode = target as NodeOf<Traits>;
+-  const childNode = child as NodeOf<Traits>;
++  const targetRuntime = getMutableNodeRuntime(target);
+   let children = targetRuntime.children;
+ 
+   if (!child) {
+@@ -56,16 +54,16 @@
+     children = targetRuntime.children = [];
+   }
+ 
+-  const childRuntime = getNodeRuntime(child) as NodeRuntime<Traits>;
++  const childRuntime = getMutableNodeRuntime(child);
+   const parent = childRuntime.parent;
+   let wasChild = false;
+ 
+   if (parent === target) {
+-    const i = children!.indexOf(childNode);
++    const i = children!.indexOf(child);
+     if (i !== -1) {
+       wasChild = true;
+       // `index === children.length` means append. An already-last child is therefore unchanged.
+-      if (i === Math.min(index, children.length - 1)) return childNode;
++      if (i === Math.min(index, children.length - 1)) return child;
+       children!.splice(i, 1);
+     }
+   } else {
+@@ -74,28 +72,28 @@
+     }
+   }
+ 
+-  children!.splice(index, 0, childNode);
++  children!.splice(index, 0, child);
+   invalidateNodeChildren(targetRuntime);
+   if (!wasChild) invalidateNodeWorldBounds(target);
+   const targetSignals = targetRuntime.nodeSignals;
+   if (targetSignals !== null) emitSignal(targetSignals.onChildrenChanged);
+ 
+   if (parent !== target) {
+-    childRuntime.parent = targetNode;
++    childRuntime.parent = target;
+     if (targetSignals !== null) emitSignal(targetSignals.onChildAdded, child);
+     const childSignals = childRuntime.nodeSignals;
+     if (childSignals !== null) emitSignal(childSignals.onParentChanged);
+     invalidateNodeParentReference(child);
+   }
+ 
+-  return childNode;
++  return child;
+ }
+ 
+ /**
+  * Adds multiple children to `target` in order, appending each after the last. Equivalent to
+  * calling `addNodeChild` for each child but signals are still emitted per child.
+  */
+-export function addNodeChildren<Traits extends object>(target: Node<Traits>, ...children: Node<Traits>[]): void {
++export function addNodeChildren<Traits extends object>(target: NodeOf<Traits>, ...children: NodeOf<Traits>[]): void {
+   for (let i = 0; i < children.length; i++) {
+     addNodeChild(target, children[i]);
+   }
+@@ -122,7 +120,7 @@
+  */
+ export function forEachNodeChild<Traits extends object>(
+   source: Readonly<Node<Traits>>,
+-  callback: (child: Node<Traits>, index: number) => boolean | void,
++  callback: (child: NodeOf<Traits>, index: number) => boolean | void,
+ ): void {
+   const children = getNodeRuntime(source).children;
+   if (children === null) return;
+@@ -137,7 +135,7 @@
+  */
+ export function getNodeAncestors<Traits extends object>(source: Readonly<Node<Traits>>): readonly NodeOf<Traits>[] {
+   const result: NodeOf<Traits>[] = [];
+-  let current = getNodeParent(source as Node<Traits>);
++  let current = getNodeParent(source);
+   while (current !== null) {
+     result.push(current);
+     current = getNodeParent(current);
+@@ -204,19 +202,18 @@
+  * If one node is an ancestor of the other, that ancestor is returned.
+  */
+ export function getNodeCommonAncestor<Traits extends object>(
+-  a: Readonly<Node<Traits>>,
+-  b: Readonly<Node<Traits>>,
++  a: NodeOf<Traits>,
++  b: NodeOf<Traits>,
+ ): NodeOf<Traits> | null {
+   // Build the ancestor set for `a`, then walk `b`'s chain to find the first match.
+   const aAncestors = new Set<NodeOf<Traits>>();
+-  const aNode = a as NodeOf<Traits>;
+-  aAncestors.add(aNode);
+-  let cur = getNodeParent(aNode);
++  aAncestors.add(a);
++  let cur = getNodeParent(a);
+   while (cur !== null) {
+     aAncestors.add(cur);
+     cur = getNodeParent(cur);
+   }
+-  let bCur: NodeOf<Traits> | null = b as NodeOf<Traits>;
++  let bCur: NodeOf<Traits> | null = b;
+   while (bCur !== null) {
+     if (aAncestors.has(bCur)) return bCur;
+     bCur = getNodeParent(bCur);
+@@ -232,8 +229,8 @@
+  * Returns the topmost ancestor of the node, or the node itself if it has no
+  * parent.
+  **/
+-export function getNodeRoot<Traits extends object>(source: Readonly<Node<Traits>>): NodeOf<Traits> {
+-  let current: NodeOf<Traits> = source as NodeOf<Traits>;
++export function getNodeRoot<Traits extends object>(source: NodeOf<Traits>): NodeOf<Traits> {
++  let current: NodeOf<Traits> = source;
+   let parent = getNodeParent(current);
+   while (parent !== null) {
+     current = parent;
+@@ -250,7 +247,7 @@
+   ancestor: Readonly<Node<Traits>>,
+   descendant: Readonly<Node<Traits>>,
+ ): boolean {
+-  let current: Node<Traits> | null = descendant as Node<Traits>;
++  let current: Readonly<Node<Traits>> | null = descendant;
+   while (current !== null) {
+     if (current === ancestor) return true;
+     current = getNodeParent(current);
+@@ -266,21 +263,20 @@
+  * positions of any scene nodes above the child in the
+  * Node are decreased by 1.
+  **/
+-export function removeNodeChild<Traits extends object>(target: Node<Traits>, child: Node<Traits>): NodeOf<Traits> {
+-  const childNode = child as NodeOf<Traits>;
+-  if (!child) return childNode;
+-  const targetRuntime = getNodeRuntime(target);
+-  const childRuntime = getNodeRuntime(child) as NodeRuntime<Traits>;
++export function removeNodeChild<Traits extends object>(target: NodeOf<Traits>, child: NodeOf<Traits>): NodeOf<Traits> {
++  if (!child) return child;
++  const targetRuntime = getMutableNodeRuntime(target);
++  const childRuntime = getMutableNodeRuntime(child);
+   const children = targetRuntime.children;
+   if (children !== null && childRuntime.parent === target) {
+     childRuntime.parent = null;
+     const childSignals = childRuntime.nodeSignals;
+     if (childSignals !== null) emitSignal(childSignals.onParentChanged);
+     invalidateNodeParentReference(child);
+-    const i = children.indexOf(childNode);
++    const i = children.indexOf(child);
+     if (i !== -1) {
+       children.splice(i, 1);
+-      invalidateNodeChildren(targetRuntime as NodeRuntime<Traits>);
++      invalidateNodeChildren(targetRuntime);
+       invalidateNodeWorldBounds(target);
+     }
+     const targetSignals = targetRuntime.nodeSignals;
+@@ -289,7 +285,7 @@
+       emitSignal(targetSignals.onChildrenChanged);
+     }
+   }
+-  return childNode;
++  return child;
+ }
+ 
+ /**
+@@ -300,7 +296,7 @@
+  * references to the child exist. The index positions of any scene nodes
+  * above the child in the Node are decreased by 1.
+  **/
+-export function removeNodeChildAt<Traits extends object>(target: Node<Traits>, index: number): NodeOf<Traits> | null {
++export function removeNodeChildAt<Traits extends object>(target: NodeOf<Traits>, index: number): NodeOf<Traits> | null {
+   const children = getNodeRuntime(target).children;
+   if (children !== null && index >= 0 && index < children.length) {
+     return removeNodeChild(target, children[index]);
+@@ -314,7 +310,7 @@
+  * garbage collected if no other references to the children exist.
+  **/
+ export function removeNodeChildren<Traits extends object>(
+-  target: Node<Traits>,
++  target: NodeOf<Traits>,
+   beginIndex: number = 0,
+   endIndex?: number,
+ ): void {
+@@ -395,9 +391,9 @@
+  * `target`, it is moved to `oldChild`'s index.
+  */
+ export function replaceNodeChild<Traits extends object>(
+-  target: Node<Traits>,
+-  oldChild: Node<Traits>,
+-  newChild: Node<Traits>,
++  target: NodeOf<Traits>,
++  oldChild: NodeOf<Traits>,
++  newChild: NodeOf<Traits>,
+ ): void {
+   const index = getNodeChildIndex(target, oldChild);
+   if (index === -1) return;
+@@ -410,21 +406,20 @@
+  * This affects the layering of child objects.
+  **/
+ export function setNodeChildIndex<Traits extends object>(
+-  target: Node<Traits>,
+-  child: Node<Traits>,
++  target: NodeOf<Traits>,
++  child: NodeOf<Traits>,
+   index: number,
+ ): void {
+-  const targetRuntime = getNodeRuntime(target);
+-  const childNode = child as NodeOf<Traits>;
++  const targetRuntime = getMutableNodeRuntime(target);
+   const children = targetRuntime.children;
+   if (children === null) return;
+   if (index >= 0 && index <= children.length && getNodeParent(child) === target) {
+-    const i = children.indexOf(childNode);
++    const i = children.indexOf(child);
+     const destination = Math.min(index, children.length - 1);
+     if (i !== -1 && i !== destination) {
+       children.splice(i, 1);
+-      children.splice(destination, 0, childNode);
+-      invalidateNodeChildren(targetRuntime as NodeRuntime<Traits>);
++      children.splice(destination, 0, child);
++      invalidateNodeChildren(targetRuntime);
+       const targetSignals = targetRuntime.nodeSignals;
+       if (targetSignals !== null) emitSignal(targetSignals.onChildrenOrderChanged);
+     }
+@@ -448,22 +443,20 @@
+  * the same index positions.
+  **/
+ export function swapNodeChildren<Traits extends object>(
+-  target: Node<Traits>,
+-  child1: Node<Traits>,
+-  child2: Node<Traits>,
++  target: NodeOf<Traits>,
++  child1: NodeOf<Traits>,
++  child2: NodeOf<Traits>,
+ ): void {
+-  const targetRuntime = getNodeRuntime(target);
+-  const firstChildNode = child1 as NodeOf<Traits>;
+-  const secondChildNode = child2 as NodeOf<Traits>;
++  const targetRuntime = getMutableNodeRuntime(target);
+   const children = targetRuntime.children;
+   if (children !== null && getNodeParent(child1) === target && getNodeParent(child2) === target) {
+-    const index1 = children.indexOf(firstChildNode);
+-    const index2 = children.indexOf(secondChildNode);
++    const index1 = children.indexOf(child1);
++    const index2 = children.indexOf(child2);
+     if (index1 === index2) return;
+-    children[index1] = secondChildNode;
+-    children[index2] = firstChildNode;
+-    invalidateNodeChildren(targetRuntime as NodeRuntime<Traits>);
+-    const targetSignals = (getNodeRuntime(target) as NodeRuntime<Traits>).nodeSignals;
++    children[index1] = child2;
++    children[index2] = child1;
++    invalidateNodeChildren(targetRuntime);
++    const targetSignals = targetRuntime.nodeSignals;
+     if (targetSignals !== null) emitSignal(targetSignals.onChildrenOrderChanged);
+   }
+ }
+@@ -473,8 +466,8 @@
+  * specified index positions in the child list. All other child objects in
+  * the scene node container remain in the same index positions.
+  **/
+-export function swapNodeChildrenAt<Traits extends object>(target: Node<Traits>, index1: number, index2: number): void {
+-  const targetRuntime = getNodeRuntime(target);
++export function swapNodeChildrenAt<Traits extends object>(target: NodeOf<Traits>, index1: number, index2: number): void {
++  const targetRuntime = getMutableNodeRuntime(target);
+   const children = targetRuntime.children;
+   if (children === null || index1 === index2) return;
+   const len = children.length;
+@@ -484,7 +477,7 @@
+   const swap = children[index1];
+   children[index1] = children[index2];
+   children[index2] = swap;
+-  invalidateNodeChildren(targetRuntime as NodeRuntime<Traits>);
++  invalidateNodeChildren(targetRuntime);
+   const targetSignals = targetRuntime.nodeSignals;
+   if (targetSignals !== null) emitSignal(targetSignals.onChildrenOrderChanged);
+ }
+diff --git a/packages/node/src/traversal.ts b/packages/node/src/traversal.ts
+--- a/packages/node/src/traversal.ts
++++ b/packages/node/src/traversal.ts
+@@ -51,7 +51,7 @@
+   source: Readonly<Node<Traits>>,
+   callback: (node: Node<Traits>) => boolean | void,
+ ): void {
+-  let current = getNodeParent(source as Node<Traits>);
++  let current = getNodeParent(source);
+   while (current !== null) {
+     if (callback(current) === false) return;
+     current = getNodeParent(current);
+@@ -83,7 +83,7 @@
+   source: Readonly<Node<Traits>>,
+ ): readonly NodeOf<Traits>[] {
+   const children = getNodeRuntime(source).children;
+-  if (children === null) return _emptyChildren as readonly NodeOf<Traits>[];
++  if (children === null) return _emptyChildren;
+   return children.slice();
+ }
+ 
+@@ -93,7 +93,7 @@
+  */
+ export function getNodeDepth<Traits extends object = NodeTraits>(source: Readonly<Node<Traits>>): number {
+   let depth = 0;
+-  let current = getNodeParent(source as Node<Traits>);
++  let current = getNodeParent(source);
+   while (current !== null) {
+     depth++;
+     current = getNodeParent(current);
+@@ -108,12 +108,17 @@
+ export function getNodeNextSibling<Traits extends object = NodeTraits>(
+   source: Readonly<Node<Traits>>,
+ ): NodeOf<Traits> | null {
+-  const sourceNode = source as NodeOf<Traits>;
+-  const parent = getNodeParent(sourceNode);
++  const parent = getNodeParent(source);
+   if (parent === null) return null;
+   const siblings = getNodeRuntime(parent).children;
+   if (siblings === null) return null;
+-  const idx = siblings.indexOf(sourceNode);
++  let idx = -1;
++  for (let i = 0; i < siblings.length; i++) {
++    if (siblings[i] === source) {
++      idx = i;
++      break;
++    }
++  }
+   if (idx === -1 || idx === siblings.length - 1) return null;
+   return siblings[idx + 1];
+ }
+@@ -125,12 +130,17 @@
+ export function getNodePreviousSibling<Traits extends object = NodeTraits>(
+   source: Readonly<Node<Traits>>,
+ ): NodeOf<Traits> | null {
+-  const sourceNode = source as NodeOf<Traits>;
+-  const parent = getNodeParent(sourceNode);
++  const parent = getNodeParent(source);
+   if (parent === null) return null;
+   const siblings = getNodeRuntime(parent).children;
+   if (siblings === null) return null;
+-  const idx = siblings.indexOf(sourceNode);
++  let idx = -1;
++  for (let i = 0; i < siblings.length; i++) {
++    if (siblings[i] === source) {
++      idx = i;
++      break;
++    }
++  }
+   if (idx <= 0) return null;
+   return siblings[idx - 1];
+ }
+@@ -155,4 +165,4 @@
+   return true;
+ }
+ 
+-const _emptyChildren: readonly NodeOf<NodeTraits>[] = [];
++const _emptyChildren: readonly never[] = [];

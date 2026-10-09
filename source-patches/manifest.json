@@ -1329,6 +1329,23 @@
       "unblocks": "Keeps 2D/3D scene traits intact through the real graph walk and removes structural-row erasure from Scene3D subtree cloning, material/kind discovery, world bounds, and frustum culling used by the upstream renderer.",
       "expires": "when Flight preserves NodeOf<Traits> through traversal callbacks upstream and uses typed readonly capability guards at these Scene3D consumers, or the native compiler can recover the same checked owners from the weaker callback types.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "node-exact-runtime-and-owner-paths",
+      "dependency": "flight",
+      "patch": "node-exact-runtime-and-owner-paths.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/node/src/node.ts, hierarchy.ts, and traversal.ts",
+      "package": "@flighthq/node",
+      "answers": "refusal",
+      "refusal": "createNodeRuntime allocates only an EntityRuntime owner and asserts it to NodeRuntime, while hierarchy and traversal recover writable NodeOf<Traits> owners from weaker or readonly Node<Traits> boundaries",
+      "rewrite": "Constructs the complete NodeRuntime<Traits> owner directly, reads the exact entity runtime slot without getEntityRuntime erasure, adds a mutable runtime accessor for mutation paths, requires NodeOf<Traits> at hierarchy APIs that return or mutate that exact owner, and removes readonly-to-writable assertions from traversal identity searches.",
+      "equivalence": "The runtime literal contains the same binding and node-runtime fields with the same values and property order as the prior fresh EntityRuntime followed by assignments. Initialization, hierarchy membership checks, parent updates, child ordering, signals, revision bumps, traversal order, sibling identity lookup, and returned object identities are unchanged. The signature refinements describe the trait-bearing node objects these APIs already store and return; no object is copied, cast at runtime, or replaced.",
+      "verification": "The patch applies after the complete Flight source stack. Focused strict TypeScript programs for @flighthq/node and Scene3D report zero relevant errors; only unavailable ambient WebGPU declarations remain outside these modules. Native regeneration verifies the exact runtime and owner carriers before generated-header compilation.",
+      "whyNotUpstreamFirst": "The Node entity slot already promises NodeRuntime<Traits> and NodeRuntime.children already stores NodeOf<Traits>. Constructing and accepting those exact promised owners is a target-neutral correction of the base graph contract rather than a native cast workaround.",
+      "unblocks": "Removes the base runtime-owner refusal that cascades through every Scene2D and Scene3D hierarchy consumer, while retaining concrete node traits across add/remove/reorder and sibling traversal paths.",
+      "expires": "when Flight constructs NodeRuntime directly and carries NodeOf<Traits> through its mutable hierarchy APIs upstream, or the native compiler can preserve those exact owners through the weaker factories and readonly assertions.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
