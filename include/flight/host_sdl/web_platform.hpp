@@ -280,6 +280,9 @@ class FLIGHT_HOST_SDL_GL_API CreatedElement final : public DomElement {
   [[nodiscard]] std::optional<WebGl2Context> get_context(
       const String& context_id,
       const WebGlContextAttributes& attributes) const;
+  [[nodiscard]] std::optional<CanvasRenderingContext2D> get_context(
+      const String& context_id,
+      const std::optional<CanvasRenderingContext2DSettings>& attributes) const;
   void set_pointer_capture(double pointer_id) const;
   void release_pointer_capture(double pointer_id) const;
 

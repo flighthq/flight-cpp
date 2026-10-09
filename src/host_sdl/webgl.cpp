@@ -1739,7 +1739,7 @@ WebGl2Context GlCanvas::get_context() const {
 }
 
 WebGl2Context GlCanvas::get_context(const String& context_id) const {
-  const auto context = get_context(context_id, {});
+  const auto context = get_context(context_id, WebGlContextAttributes{});
   if (!context) throw std::invalid_argument("Only a webgl2 context is available from an SDL GL canvas");
   return *context;
 }
@@ -1749,6 +1749,17 @@ std::optional<WebGl2Context> GlCanvas::get_context(
     const WebGlContextAttributes&) const {
   if (context_id != String("webgl2")) return std::nullopt;
   return get_context();
+}
+
+std::optional<CanvasRenderingContext2D> GlCanvas::get_context(
+    const String& context_id,
+    const std::optional<CanvasRenderingContext2DSettings>&) const {
+  static_cast<void>(require_state());
+  if (context_id != String("2d")) return std::nullopt;
+  // The overload is a truthful host capability boundary: the selected Web API result is nullable,
+  // and this GL-only surface has no Canvas2DRasterizer to attach yet. Returning absence keeps the
+  // generated upstream failure path intact instead of manufacturing an unusable context.
+  return std::nullopt;
 }
 
 ClientRect GlCanvas::get_bounding_client_rect() const {

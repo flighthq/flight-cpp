@@ -16,6 +16,7 @@
 
 #include <flight/array.hpp>
 #include <flight/array_buffer_view.hpp>
+#include <flight/canvas_2d.hpp>
 #include <flight/host_sdl/export.hpp>
 #include <flight/host_sdl/image.hpp>
 #include <flight/host_sdl/input.hpp>
@@ -841,6 +842,9 @@ class FLIGHT_HOST_SDL_GL_API GlCanvas final {
   [[nodiscard]] std::optional<WebGl2Context> get_context(
       const String& context_id,
       const WebGlContextAttributes& attributes) const;
+  [[nodiscard]] std::optional<CanvasRenderingContext2D> get_context(
+      const String& context_id,
+      const std::optional<CanvasRenderingContext2DSettings>& attributes) const;
   [[nodiscard]] ClientRect get_bounding_client_rect() const;
   void add_event_listener(
       const String& type,

@@ -134,6 +134,12 @@ std::optional<WebGl2Context> CreatedElement::get_context(
   return require_canvas().get_context(context_id, attributes);
 }
 
+std::optional<CanvasRenderingContext2D> CreatedElement::get_context(
+    const String& context_id,
+    const std::optional<CanvasRenderingContext2DSettings>& attributes) const {
+  return require_canvas().get_context(context_id, attributes);
+}
+
 void CreatedElement::set_pointer_capture(double pointer_id) const {
   require_canvas().set_pointer_capture(pointer_id);
 }

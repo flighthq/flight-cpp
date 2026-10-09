@@ -2196,6 +2196,23 @@
       "unblocks": "Allows the real Canvas texture resolver callback and cache result to carry one SDL ImageSource handle without fake DOM variants, casts, or replacement storage.",
       "expires": "when flight-compiler preserves imported alias ABI carriers inside outer unions and includes an equivalent regression upstream.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "compiler-canvas-context-overload-result",
+      "dependency": "flight-compiler",
+      "patch": "compiler-canvas-context-overload-result.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+      "package": "@flighthq/compiler-semantic",
+      "answers": "refusal",
+      "refusal": "the ambient HTMLCanvasElement getContext overload set was treated as one conflicting callable surface, so the literal-selected 2d overload lost its CanvasRenderingContext2D-or-null result even though the existing webgl2 path retained its selected result",
+      "rewrite": "Extends the existing HTMLCanvasElement literal-overload evidence rule from webgl2 to 2d, selecting CanvasRenderingContext2D for the 2d literal while leaving WebGL2RenderingContext selected for webgl2.",
+      "equivalence": "The TypeScript DOM declaration assigns exactly these nullable results to the two literal overloads. Selection is limited to a direct getContext call on an ambient HTMLCanvasElement with the exact 2d or webgl2 string literal; computed strings, other receivers, optional calls, and every other overload continue through the ordinary evidence rules.",
+      "verification": "A semantic regression must prove the 2d and webgl2 calls retain distinct nullable ambient context types, the compiler build must pass, and focused canvasRenderSurface.ts generation must advance past contextual optional construction without changing WebGL emission.",
+      "whyNotUpstreamFirst": "This is target-neutral semantic evidence already present for the sibling webgl2 overload and required before the C++ backend can represent the unchanged upstream Canvas surface call.",
+      "unblocks": "Preserves the real nullable CanvasRenderingContext2D result through finishCanvasRenderSurface without a profile-wide getContext guess.",
+      "expires": "when flight-compiler derives literal-selected HTMLCanvasElement getContext results generally or includes equivalent 2d overload evidence upstream.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }

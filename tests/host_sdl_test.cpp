@@ -52,6 +52,16 @@ static_assert(flight::WeakKeyPolicyFor<
 static_assert(flight::WeakKeyPolicyFor<
               flight::host_sdl::WebGlBufferWeakPolicy,
               flight::host_sdl::WebGlBuffer>);
+static_assert(std::same_as<
+              decltype(std::declval<const flight::host_sdl::GlCanvas&>().get_context(
+                  std::declval<const flight::String&>(),
+                  std::declval<const std::optional<flight::CanvasRenderingContext2DSettings>&>())),
+              std::optional<flight::CanvasRenderingContext2D>>);
+static_assert(std::same_as<
+              decltype(std::declval<const flight::host_sdl::CreatedElement&>().get_context(
+                  std::declval<const flight::String&>(),
+                  std::declval<const std::optional<flight::CanvasRenderingContext2DSettings>&>())),
+              std::optional<flight::CanvasRenderingContext2D>>);
 
 template <typename Type>
 concept EntityCapability =
