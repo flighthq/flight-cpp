@@ -1176,6 +1176,23 @@
       "unblocks": "Allows imported ambient, directional, hemisphere, point, and spot descriptors to reach their upstream clone and world-placement logic before the real GL light block is packed.",
       "expires": "when heterogeneous structural storage preserves checked concrete light owners through an open base-interface arm, or Flight adopts the explicit LightValue document field upstream.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "node-matrix-owner-accessors",
+      "dependency": "flight",
+      "patch": "node-matrix-owner-accessors.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/node/src/nodeTransform3d.ts and packages/scene3d/src/billboardCamera.ts",
+      "package": "@flighthq/scene3d",
+      "answers": "refusal",
+      "refusal": "billboard camera facing must assert Matrix4Like back to Matrix4 even though the node runtime cache is created, stored, and returned as a Matrix4 owner",
+      "rewrite": "Declares getNodeLocalMatrix4 and getNodeWorldMatrix4 with their exact existing readonly Matrix4 result and removes the two downstream billboard assertions.",
+      "equivalence": "Both accessors still ensure the same cache and return the same runtime-owned matrix object. Matrix4 structurally extends the accepted Matrix4Like view, so existing readers keep the same authority and values; no allocation, copy, mutation, call reordering, or API replacement occurs.",
+      "verification": "The patch composes after the complete Flight source-patch stack. Full Scene3D regeneration verifies the billboard facing module consumes the exact cached owner directly and generated transform consumers retain the same matrix identity.",
+      "whyNotUpstreamFirst": "The narrower return type documents the object the implementation has always returned and is source-compatible for callers. It is a target-neutral contract correction, not a native cast.",
+      "unblocks": "Allows billboard orientation and other Scene3D transform consumers to use the real runtime Matrix4 cache without losing its entity owner through Matrix4Like.",
+      "expires": "when Flight exposes the exact Matrix4 cache owner from these accessors upstream, or checked structural views can recover the retained owner without an assertion.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }

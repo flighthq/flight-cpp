@@ -1,0 +1,52 @@
+diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransform3d.ts
+index 445c300..15aa6e9 100644
+--- a/packages/node/src/nodeTransform3d.ts
++++ b/packages/node/src/nodeTransform3d.ts
+@@ -14,6 +14,7 @@ import {
+ } from '@flighthq/geometry/contract';
+ import type {
+   HasTransform3DRuntime,
++  Matrix4,
+   Matrix4Like,
+   NodeRuntime,
+   Transform3DLike,
+@@ -74,7 +75,7 @@ export function ensureNodeWorldMatrix4<Traits extends object>(target: Transform3
+   }
+ }
+ 
+-export function getNodeLocalMatrix4<Traits extends object>(target: Transform3DNode<Traits>): Readonly<Matrix4Like> {
++export function getNodeLocalMatrix4<Traits extends object>(target: Transform3DNode<Traits>): Readonly<Matrix4> {
+   ensureNodeLocalMatrix4(target);
+   return (getEntityRuntime(target) as NodeRuntime<Traits> & HasTransform3DRuntime).localMatrix4!;
+ }
+@@ -88,7 +89,7 @@ export function getNodeTransform3D<Traits extends object>(out: Transform3DLike,
+   copyVector3(out.scale, source.scale);
+ }
+ 
+-export function getNodeWorldMatrix4<Traits extends object>(target: Transform3DNode<Traits>): Readonly<Matrix4Like> {
++export function getNodeWorldMatrix4<Traits extends object>(target: Transform3DNode<Traits>): Readonly<Matrix4> {
+   ensureNodeWorldMatrix4(target);
+   return (getEntityRuntime(target) as NodeRuntime<Traits> & HasTransform3DRuntime).worldMatrix4!;
+ }
+diff --git a/packages/scene3d/src/billboardCamera.ts b/packages/scene3d/src/billboardCamera.ts
+index 86707b4..273d205 100644
+--- a/packages/scene3d/src/billboardCamera.ts
++++ b/packages/scene3d/src/billboardCamera.ts
+@@ -52,7 +52,7 @@ export function setBillboardCameraBasisGuard(guard: ((camera: Readonly<Camera3D>
+ // its world position and scale, builds the facing world matrix, then converts it back through the
+ // parent's inverse world transform into a local matrix (identity parent when the billboard is a root).
+ function applyBillboardFacing(billboard: Billboard): void {
+-  const world = getNodeWorldMatrix4(billboard) as Readonly<Matrix4>;
++  const world = getNodeWorldMatrix4(billboard);
+   decomposeMatrix4(_position, _rotationScratch, _scale, world);
+   writeBillboardFacingMatrix(_facingWorld, billboard.mode);
+ 
+@@ -60,7 +60,7 @@ function applyBillboardFacing(billboard: Billboard): void {
+   if (parent === null) {
+     copyMatrix4(_localScratch, _facingWorld);
+   } else {
+-    const parentWorld = getNodeWorldMatrix4(parent) as Readonly<Matrix4>;
++    const parentWorld = getNodeWorldMatrix4(parent);
+     if (inverseMatrix4(_inverseParentWorld, parentWorld)) {
+       multiplyMatrix4(_localScratch, _inverseParentWorld, _facingWorld);
+     } else {
