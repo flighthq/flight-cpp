@@ -6,18 +6,18 @@ diff --git a/packages/registry/src/registryTable.ts b/packages/registry/src/regi
    out.length = 0;
    if (table.shape === 'keyed') {
 -    for (const [key, entry] of table.entries) {
-+    const keyed = table as Readonly<KeyedTable<unknown>>;
++    const keyed = table as KeyedTable<unknown>;
 +    for (const [key, entry] of keyed.entries) {
        if (entry.state === RegistryEntryState.Bound) out.push(key);
      }
    } else if (table.shape === 'slot') {
 -    if (table.entry !== null && table.entry.state === RegistryEntryState.Bound) out.push(table.registry);
-+    const slot = table as Readonly<SlotTable<unknown>>;
++    const slot = table as SlotTable<unknown>;
 +    if (slot.entry !== null && slot.entry.state === RegistryEntryState.Bound) out.push(slot.registry);
    } else {
 -    for (let ordinal = 0; ordinal < table.entries.length; ordinal++) {
 -      if (table.entries[ordinal] !== null) out.push(table.vocabulary[ordinal]);
-+    const ordinalTable = table as Readonly<OrdinalTable<unknown>>;
++    const ordinalTable = table as OrdinalTable<unknown>;
 +    for (let ordinal = 0; ordinal < ordinalTable.entries.length; ordinal++) {
 +      if (ordinalTable.entries[ordinal] !== null) out.push(ordinalTable.vocabulary[ordinal]);
      }
@@ -30,14 +30,14 @@ diff --git a/packages/registry/src/registryTable.ts b/packages/registry/src/regi
 -  if (table.shape === 'slot') return key === table.registry ? table.entry : null;
 -  const ordinal = table.vocabulary.indexOf(key);
 +  if (table.shape === 'keyed') {
-+    const keyed = table as Readonly<KeyedTable<T>>;
++    const keyed = table as KeyedTable<T>;
 +    return keyed.entries.get(key) ?? null;
 +  }
 +  if (table.shape === 'slot') {
-+    const slot = table as Readonly<SlotTable<T>>;
++    const slot = table as SlotTable<T>;
 +    return key === slot.registry ? slot.entry : null;
 +  }
-+  const ordinalTable = table as Readonly<OrdinalTable<T>>;
++  const ordinalTable = table as OrdinalTable<T>;
 +  const ordinal = ordinalTable.vocabulary.indexOf(key);
    if (ordinal === -1) return null;
 -  const value = table.entries[ordinal];

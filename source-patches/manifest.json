@@ -1764,7 +1764,7 @@
       "package": "@flighthq/registry",
       "answers": "refusal",
       "refusal": "shape-narrowed RegistryTable branches retain a combined entries/member view, leaving keyed entry state on optional multi-domain storage",
-      "rewrite": "After each existing shape discriminant, binds the table to its exact readonly KeyedTable, SlotTable, or OrdinalTable arm before reading arm-specific members in key enumeration and entry lookup.",
+      "rewrite": "After each existing shape discriminant, binds the table to its exact KeyedTable, SlotTable, or OrdinalTable alternative before reading arm-specific members in key enumeration and entry lookup; all table fields remain declared readonly by those interfaces.",
       "equivalence": "Each assertion is dominated by the matching closed shape check and selects exactly the arm TypeScript already narrows there. The same map iteration, slot key comparison, ordinal scan, output order, sort, lookup result, payload identity, and null behavior remain; no runtime test, branch, allocation, or mutation is added.",
       "verification": "The complete Flight patch stack must apply and reverse cleanly, and focused native registryTable regeneration must emit both dispatch functions without optional multi-domain member access.",
       "whyNotUpstreamFirst": "Explicit discriminant-local aliases are target-neutral, but they are pinned here because the native backend currently loses the source checker’s arm evidence when multiple union arms expose an entries member of different container kinds.",
