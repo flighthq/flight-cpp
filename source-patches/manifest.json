@@ -2298,6 +2298,23 @@
       "unblocks": "Allows the common render-state header used by every real Scene3D GL pipeline to compile through proxy teardown without inventing an alternate renderer or proxy representation.",
       "expires": "when Flight keeps the teardown body in its render implementation owner upstream or flight-compiler can schedule inline type-module bodies after cyclic nominal definitions become complete.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "compiler-flattened-optional-chain-union-storage",
+      "dependency": "flight-compiler",
+      "patch": "compiler-flattened-optional-chain-union-storage.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "a nullable multi-arm union read through an optional chain is emitted as optional<variant<...>>, but contextual nullish-coalesce lowering applies std::get_if directly to that optional because it plans the source as a flat dual-sentinel variant",
+      "rewrite": "Records the optional-chain emitter's actual optional payload-variant carrier when a multi-arm nullable result is immediately coalesced, using the coalesced type evidence so an imported union alias reaches the same plan. The existing equivalent optional-union path then reuses the carrier instead of projecting variant alternatives from the optional wrapper.",
+      "equivalence": "The new plan is selected only for an optional property chain with at least two represented value arms, exactly the case emitOptionalPropertyExpressionCpp already lowers to optional of the non-nullable payload. A following ?? null or ?? undefined observes both source sentinels identically, so collapsing either to optional absence preserves the source result while every present variant alternative and reference identity remains unchanged. Single-arm chains retain their existing distinct-sentinel carrier.",
+      "verification": "A two-module backend regression must import a nullable two-arm Texture alias, lower Readonly<Partial<Material>> through opts?.map ?? null, reject std::get_if against the optional carrier, and pass the target C++ syntax gate. Existing single-arm nullable and dual-sentinel optional-chain regressions plus package typecheck must remain green; the cohesive generated pbr_materials.hpp must compile past the former get_if diagnostic.",
+      "whyNotUpstreamFirst": "This is a target backend carrier-planning defect needed by the pinned compiler before Flight's real PBR constructors can compile natively.",
+      "unblocks": "Allows real classic, specular-glossiness, standard, and extended PBR constructors to initialize Texture union maps through their upstream Partial option paths without replacing materials or textures with invented host types.",
+      "expires": "when flight-compiler derives contextual nullish conversion plans from the optional-chain emitter's concrete carrier upstream.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }

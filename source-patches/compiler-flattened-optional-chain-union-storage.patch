@@ -1,0 +1,133 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index d30c0ce..2698f9d 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -45381,6 +45381,76 @@ int main() {
+     expect(emitted.contents).not.toContain('value_or(std::nullopt)');
+   });
+ 
++  it('coalesces a multi-arm nullable Partial row through its emitted optional variant carrier', () => {
++    const moduleResolution: CompilerModuleResolutionPlan = {
++      edges: [
++        {
++          specifier: '@flighthq/types',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/materials.ts' },
++        },
++      ],
++      schema: 'flight-compiler-module-resolution/1',
++    };
++    const [types, materials] = lowerTypeScriptSources(
++      [
++        {
++          packageName: '@flighthq/types',
++          sourceFile: ts.createSourceFile(
++            '/flight/packages/types/src/materials.ts',
++            `export interface Texture2D { readonly width: number }
++             export interface TextureCube { readonly size: number }
++             export type Texture = Texture2D | TextureCube;
++             export interface Material { map: Texture | null }`,
++            ts.ScriptTarget.Latest,
++            true,
++          ),
++          upstreamDirectory: '/flight',
++        },
++        {
++          packageName: '@flighthq/materials',
++          sourceFile: ts.createSourceFile(
++            '/flight/packages/materials/src/apply.ts',
++            `import type { Material } from '@flighthq/types';
++             export function apply(target: Material, opts?: Readonly<Partial<Material>>): void {
++               target.map = opts?.map ?? null;
++             }`,
++            ts.ScriptTarget.Latest,
++            true,
++          ),
++          upstreamDirectory: '/flight',
++        },
++      ],
++      moduleResolution,
++    );
++    const session = createCppCompilerBackend().createEmissionSession!({
++      moduleResolution,
++      modules: [types!.module, materials!.module],
++      options: {
++        packageTargets: {
++          '@flighthq/materials': { includePrefix: 'flight/materials', namespace: 'flight::materials' },
++          '@flighthq/types': { includePrefix: 'flight/types', namespace: 'flight::types' },
++        },
++        runtimeProfile: 'flight-cpp',
++      },
++    });
++    const typesHeader = session.emitModule(types!.module)[0]!.contents;
++    const emitted = session.emitModule(materials!.module)[0]!.contents;
++
++    expect(types!.diagnostics).toEqual([]);
++    expect(materials!.diagnostics).toEqual([]);
++    expect(emitted).toContain('std::optional<flight::types::Texture>');
++    expect(emitted).toContain('flight::row_get<flight::RowKey<"map">>');
++    expect(emitted).not.toMatch(/std::get_if<[^>]+>\(&nullish_coalesce_left/u);
++    if (cppSyntaxGate.available) {
++      const syntax = cppSyntaxGate.checkCppSourceSyntax(
++        emitted.replace('#include <flight/types/materials.hpp>', typesHeader),
++        'optional-nullable-multi-arm-partial',
++      );
++      expect(syntax.diagnostic).toBe('');
++      expect(syntax.ok).toBe(true);
++    }
++  });
++
+   it('keeps a null member distinct from an absent one in an optional-chain result', () => {
+     // JavaScript asks four things of `receiver?.member` and they are not three: an absent receiver is
+     // `undefined`, an absent member is `undefined`, a null member is `null`, and a present member is itself.
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index fae6209..6353448 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -16856,10 +16856,15 @@ function emitContextualUnionExpressionInContextCpp(
+     const declaredLeftStoragePlan = leftStorageUnion
+       ? getCppUnionRepresentationPlan(leftStorageUnion, context)
+       : undefined;
++    const flattenedOptionalChainStoragePlan = leftType
++      ? getCppFlattenedOptionalChainStoragePlanCpp(expression.left, leftType, context)
++      : undefined;
+     const implicitLeftStoragePlan =
+-      leftStorageType && hasCppAbsenceStorageCpp(expression.left, context)
+-        ? getCppImplicitAbsenceStoragePlanCpp(leftStorageType, context)
+-        : undefined;
++      flattenedOptionalChainStoragePlan ??
++      (leftStorageType && hasCppAbsenceStorageCpp(expression.left, context)
++        ? (getCppImplicitAbsenceStoragePlanCpp(leftStorageType, context) ??
++          getCppFlattenedOptionalChainStoragePlanCpp(expression.left, leftStorageType, context))
++        : undefined);
+     const leftStoragePlan = implicitLeftStoragePlan ?? declaredLeftStoragePlan;
+     const leftPlan = leftUnion ? getCppUnionRepresentationPlan(leftUnion, context) : undefined;
+     const representedLeftPlan = implicitLeftStoragePlan ?? leftPlan;
+@@ -19665,6 +19670,28 @@ function getCppImplicitAbsenceStoragePlanCpp(
+   return getCppUnionRepresentationPlan({ kind: 'union', types: [valueType, { kind: 'undefined' }] }, context);
+ }
+ 
++// An optional chain over a nullable MULTI-ALTERNATIVE member is emitted as optional<payload-variant>:
++// the chain and the member both contribute absence, but a following nullish coalesce consumes either
++// sentinel and therefore needs only the present payload. The expression's source type still records
++// null and undefined separately as a dual-sentinel variant, which is not the carrier the optional-chain
++// emitter wrote. Describe the actual optional carrier here so a contextual `value ?? null` conversion
++// unwraps (or directly reuses) it instead of applying std::get_if to std::optional itself.
++//
++// The one-value case deliberately stays on the dual-sentinel path: optional-chain emission preserves its
++// null and undefined alternatives independently, as the dedicated optional-property tests require.
++function getCppFlattenedOptionalChainStoragePlanCpp(
++  expression: Readonly<IrExpression>,
++  valueType: Readonly<IrType>,
++  context: EmitContext,
++): ReturnType<typeof getCppUnionRepresentationPlan> | undefined {
++  if (expression.kind !== 'property' || !expression.optional || !expression.optionalChain) return undefined;
++  const union = getIrUnionTypeCpp(valueType, context, new Set());
++  const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
++  if (!plan || plan.valueSlots.length < 2) return undefined;
++  const payload = getCppNonNullableType(valueType, context, new Set());
++  return payload ? getCppImplicitAbsenceStoragePlanCpp(payload, context) : undefined;
++}
++
+ // `std::optional::value_or` is a function call, so its fallback argument is evaluated even when the
+ // optional is present. A source `??` must not do that. One optional payload domain is enough evidence
+ // to spell the lazy operation directly; wider optional variants remain on their existing conversion or
