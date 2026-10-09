@@ -859,6 +859,23 @@
       "appliedOn": "2026-10-08"
     },
     {
+      "id": "compiler-union-import-runtime-identity",
+      "dependency": "flight-compiler",
+      "patch": "compiler-union-import-runtime-identity.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts and cppCompilerBackend.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "one declared union owner reached through its defining module's imports and a consumer's direct or inferred contract imports is mistaken for distinct runtime domains even though every pair resolves to the same C++ reference carrier",
+      "rewrite": "Lets the representation planner accept a target-proven runtime identity key and canonicalizes imported named alternatives through their unique exported declaration owner while retaining the original runtime type for target spelling and construction.",
+      "equivalence": "Only import bindings that resolve uniquely to the same declaration receive the same planning key. The emitted slot still uses its original type and target carrier, and its source alternatives remain available for checked narrowing; ambiguous, unresolved, differently instantiated, structural, primitive, and genuinely distinct same-carrier domains retain their existing identities and refusals.",
+      "verification": "A planner regression proves a supplied declaration identity coalesces two source spellings without replacing the emitted runtime type. A multi-module backend regression imports the same concrete owners directly and through an open union alias, verifies one constructible carrier, and emits checked Bitmap and Image variant selection. Focused environment-cube generation must then advance beyond the duplicate-runtime-domain refusal.",
+      "whyNotUpstreamFirst": "The pinned compiler canonicalizes an import binding by its local binding id before asking which exported declaration it denotes. This narrowly versioned patch supplies the missing declaration identity at union planning time while preserving the planner's collision safety.",
+      "unblocks": "Allows TextureSourceValue stored in cube faces to retain concrete built-in owners while Scene3D GL also imports Bitmap and ImageResource for its real upload branches.",
+      "expires": "when flight-compiler canonicalizes imported union runtime domains by uniquely resolved declaration identity, or the pinned compiler contains the regression and repair upstream.",
+      "appliedOn": "2026-10-09"
+    },
+    {
       "id": "compiler-erased-ref-weak-map-view",
       "dependency": "flight-compiler",
       "patch": "compiler-erased-ref-weak-map-view.patch",

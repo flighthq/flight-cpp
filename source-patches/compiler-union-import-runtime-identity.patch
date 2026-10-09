@@ -1,0 +1,226 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index 890fec2..c417e36 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -26832,6 +26832,112 @@ int main() {
+     }
+   });
+ 
++  it('coalesces direct and re-exported imports of the same union runtime owner', () => {
++    const moduleResolution: CompilerModuleResolutionPlan = {
++      edges: [
++        {
++          specifier: './sources',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/sources.ts' },
++        },
++        {
++          specifier: './TextureSourceValue',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/TextureSourceValue.ts' },
++        },
++        {
++          specifier: './Texture',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/Texture.ts' },
++        },
++        {
++          importedNames: ['Bitmap', 'Image'],
++          specifier: '@flighthq/types/contract',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/sources.ts' },
++        },
++        {
++          importedNames: ['SourceValue'],
++          specifier: '@flighthq/types/contract',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/TextureSourceValue.ts' },
++        },
++        {
++          importedNames: ['Cube'],
++          specifier: '@flighthq/types/contract',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/Cube.ts' },
++        },
++      ],
++      schema: 'flight-compiler-module-resolution/1',
++    };
++    const source = (packageName: string, file: string, text: string) => ({
++      packageName,
++      sourceFile: ts.createSourceFile(
++        `/flight/packages/${packageName.slice(packageName.lastIndexOf('/') + 1)}/src/${file}`,
++        text,
++        ts.ScriptTarget.Latest,
++        true,
++      ),
++      upstreamDirectory: '/flight',
++    });
++    const results = lowerTypeScriptSources(
++      [
++        source(
++          '@flighthq/types',
++          'sources.ts',
++          `export interface Source { kind: string; version: number; }
++           export interface Bitmap extends Source { kind: 'bitmap'; data: Uint8Array; }
++           export interface Image extends Source { kind: 'image'; source: string; }`,
++        ),
++        source(
++          '@flighthq/types',
++          'TextureSourceValue.ts',
++          `import type { Source, Bitmap, Image } from './sources';
++           export type SourceValue = Source | Bitmap | Image;`,
++        ),
++        source(
++          '@flighthq/types',
++          'Texture.ts',
++          `import type { Source } from './sources';
++           import type { SourceValue } from './TextureSourceValue';
++           export type Faces = readonly [
++             SourceValue | null,
++             SourceValue | null,
++             SourceValue | null,
++             SourceValue | null,
++             SourceValue | null,
++             SourceValue | null
++           ];
++           interface Common { version: number; }
++           export type Texture =
++             | (Common & { readonly dimension: '2d'; source: Source | null })
++             | (Common & { readonly dimension: 'cube'; sources: Faces });`,
++        ),
++        source(
++          '@flighthq/types',
++          'Cube.ts',
++          `import type { Texture } from './Texture';
++           export type Cube = Extract<Texture, { dimension: 'cube' }>;`,
++        ),
++        source(
++          '@flighthq/scene3d-gl',
++          'consumer.ts',
++          `import type { Bitmap, Cube, Image, SourceValue } from '@flighthq/types/contract';
++           export function versions(cube: Cube): readonly number[] {
++             void cube;
++             return [];
++           }
++           export function payloadSize(source: SourceValue): number {
++             if (source.kind === 'bitmap') return (source as Bitmap).data.length;
++             if (source.kind === 'image') return (source as Image).source.length;
++             return 0;
++           }`,
++        ),
++      ],
++      moduleResolution,
++    );
++    const emitted = emitCppModuleCppSession(results, moduleResolution, 4);
++
++    expect(emitted).toContain('inline flight::Array<double> versions');
++    expect(emitted).toContain('std::get<flight::Ref<flighthq_types::Bitmap>>');
++    expect(emitted).toContain('std::get<flight::Ref<flighthq_types::Image>>');
++  });
++
+   it('emits tuple types and tuple access with std::get', () => {
+     const result = lower('tuple.ts', 'export function first(pair: [number, string]): number { return pair[0]; }');
+     const emitted = emitIrModuleCpp(result.module);
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 9b0881d..afa9388 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -16646,6 +16646,9 @@ function getCppUnionRepresentationPlan(
+     resolveAliasTarget(typeReference) {
+       return resolveCppTypeAliasTarget(typeReference, context);
+     },
++    resolveRuntimeIdentityKey(runtimeType) {
++      return getCppUnionRuntimeIdentityKeyCpp(runtimeType, context);
++    },
+     resolveRuntimeDomain(runtimeType) {
+       return getIrTypeRuntimeDomainCpp(runtimeType, context, new Set());
+     },
+@@ -16671,6 +16674,23 @@ function getCppUnionRepresentationPlan(
+   return plan;
+ }
+ 
++function getCppUnionRuntimeIdentityKeyCpp(type: Readonly<IrType>, context: EmitContext): string {
++  if (type.kind !== 'named' || type.reference.kind !== 'binding' || type.reference.binding.kind !== 'import') {
++    return normalizeCompilerStructuralValueCanonical(type);
++  }
++  const owner =
++    getCppReexportedImportedBindingDeclarationCpp(type, context) ??
++    getCppNamedTypeDeclarationOwnerCpp(type, context.module, context);
++  if (!owner || !('binding' in owner.declaration)) return normalizeCompilerStructuralValueCanonical(type);
++  return normalizeCompilerStructuralValueCanonical({
++    ...type,
++    reference: {
++      ...type.reference,
++      binding: owner.declaration.binding,
++    },
++  });
++}
++
+ // The module that declares the alias an expected union is reached through, when that module is not
+ // this one.
+ //
+diff --git a/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.test.ts b/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.test.ts
+index 617275a..9d7562d 100644
+--- a/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.test.ts
++++ b/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.test.ts
+@@ -167,6 +167,30 @@ describe('createCppUnionRepresentationPlan', () => {
+     expect(unproven).toMatchObject({ kind: 'refused', reason: 'distinctRuntimeDomainsShareTargetType' });
+   });
+ 
++  it('uses a resolved runtime identity without replacing the type emitted for that slot', () => {
++    const first = namedAmbient('FirstImport');
++    const second = namedAmbient('SecondImport');
++    const plan = createPlan(
++      union(first, second),
++      new Map(),
++      () => 'CanonicalOwner',
++      () => undefined,
++      () => 'declaration:CanonicalOwner',
++    );
++
++    expect(plan).toMatchObject({
++      kind: 'singleValue',
++      valueSlots: [
++        {
++          runtimeType: first,
++          sourceAlternatives: [first, second],
++          sourceRelationship: 'runtimeEquivalent',
++          targetType: 'CanonicalOwner',
++        },
++      ],
++    });
++  });
++
+   it('returns order-independent deeply immutable evidence without changing caller input', () => {
+     const firstInput = union(primitive('string'), { kind: 'undefined' }, primitive('number'));
+     const secondInput = union(primitive('number'), primitive('string'), { kind: 'undefined' });
+@@ -191,11 +215,13 @@ function createPlan(
+   aliases: ReadonlyMap<string, Readonly<IrType>> = new Map(),
+   resolveTargetType: (type: Readonly<IrType>) => string = getTargetType,
+   resolveRuntimeDomain: (type: Readonly<IrType>) => Readonly<IrType> | undefined = () => undefined,
++  resolveRuntimeIdentityKey?: (type: Readonly<IrType>) => string,
+ ) {
+   return createCppUnionRepresentationPlan(type, {
+     resolveAliasTarget(typeReference) {
+       return typeReference.reference.kind === 'binding' ? aliases.get(typeReference.reference.binding.id) : undefined;
+     },
++    ...(resolveRuntimeIdentityKey ? { resolveRuntimeIdentityKey } : {}),
+     resolveRuntimeDomain,
+     resolveTargetType,
+   });
+diff --git a/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts b/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts
+index c18e728..cbb14b0 100644
+--- a/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts
++++ b/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts
+@@ -26,6 +26,7 @@ type CppUnionRepresentationPlan =
+ 
+ interface CppUnionRepresentationPlanningCapabilities {
+   readonly resolveAliasTarget: (type: Readonly<IrTypeReference>) => Readonly<IrType> | undefined;
++  readonly resolveRuntimeIdentityKey?: (type: Readonly<IrType>) => string;
+   readonly resolveRuntimeDomain: (type: Readonly<IrType>) => Readonly<IrType> | undefined;
+   readonly resolveTargetType: (type: Readonly<IrType>) => string;
+ }
+@@ -194,7 +195,8 @@ function collectRuntimeAlternativeCpp(
+   }
+ 
+   const runtimeType = widenIrLiteralTypeCpp(type);
+-  const representationKey = normalizeCompilerStructuralValueCanonical(runtimeType);
++  const representationKey =
++    capabilities.resolveRuntimeIdentityKey?.(runtimeType) ?? normalizeCompilerStructuralValueCanonical(runtimeType);
+   const sourceKey = normalizeCompilerStructuralValueCanonical(sourceAlternative);
+   const existing = inventory.valueSlots.get(representationKey);
+   if (existing) {
