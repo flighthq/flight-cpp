@@ -1,7 +1,7 @@
 diff --git a/packages/registry/src/registryTable.ts b/packages/registry/src/registryTable.ts
 --- a/packages/registry/src/registryTable.ts
 +++ b/packages/registry/src/registryTable.ts
-@@ -165,16 +165,20 @@ export function getRegistryTableEntry<T>(table: Readonly<RegistryTable<T>>, key:
+@@ -165,14 +165,17 @@ export function getRegistryTableEntry<T>(table: Readonly<RegistryTable<T>>, key:
  export function getRegistryTableKeys(out: Kind[], table: Readonly<RegistryTable<unknown>>): void {
    out.length = 0;
    if (table.shape === 'keyed') {
@@ -23,7 +23,7 @@ diff --git a/packages/registry/src/registryTable.ts b/packages/registry/src/regi
      }
    }
    out.sort();
-@@ -291,9 +295,15 @@ export function withRegistryTableTombstone<T>(table: Readonly<KeyedTable<T>>, ke
+@@ -291,9 +294,16 @@ export function withRegistryTableTombstone<T>(table: Readonly<KeyedTable<T>>, ke
  // wanted a value is how a tombstone reaches somewhere that has never heard of one.
  function getRegistryTableEntryState<T>(table: Readonly<RegistryTable<T>>, key: Kind): RegistryTableEntry<T> | null {
 -  if (table.shape === 'keyed') return table.entries.get(key) ?? null;
