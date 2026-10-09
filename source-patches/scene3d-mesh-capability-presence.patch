@@ -59,17 +59,4 @@ diff --git a/packages/scene3d/src/sceneNodeCulling.ts b/packages/scene3d/src/sce
  }
  
  const _scratchLocalAabb = createAabb();
-diff --git a/packages/scene3d-gl/src/glShadowMap.ts b/packages/scene3d-gl/src/glShadowMap.ts
---- a/packages/scene3d-gl/src/glShadowMap.ts
-+++ b/packages/scene3d-gl/src/glShadowMap.ts
-@@ -234,7 +234,8 @@
- }
- 
- function isShadowMesh(node: Readonly<Node<Node3DTraits>>): node is Readonly<Mesh> {
--  return 'geometry' in node && node.geometry != null;
-+  const candidate: Readonly<Partial<Mesh>> = node;
-+  return candidate.geometry != null;
- }
- 
- // Packs the live instance matrices into the flat Float32Array bindGlInstancePalette uploads. The depth
 

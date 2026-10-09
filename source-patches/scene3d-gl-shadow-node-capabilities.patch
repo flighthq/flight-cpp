@@ -1,16 +1,28 @@
 diff --git a/packages/scene3d-gl/src/glShadowMap.ts b/packages/scene3d-gl/src/glShadowMap.ts
-index 13b6dac..b2b333b 100644
+index 13b6dac..e3c9ac4 100644
 --- a/packages/scene3d-gl/src/glShadowMap.ts
 +++ b/packages/scene3d-gl/src/glShadowMap.ts
-@@ -10,6 +10,7 @@ import type {
+@@ -9,9 +9,12 @@ import type {
+   DirectionalLight,
    GlRenderState,
    InstancedMesh,
++  Matrix4,
    Mesh,
-+  Node,
++  MeshGeometry,
    Node3D,
    Node3DTraits,
++  NodeOf,
    GlMeshProgram,
-@@ -93,8 +94,8 @@ export function drawGlScene3DShadowMap(
+ } from '@flighthq/types/contract';
+ import { DIRECTIONAL_SHADOW_MAP_SIZE, MAX_DIRECTIONAL_SHADOW_PCF_RADIUS } from '@flighthq/types/contract';
+@@ -62,5 +65,5 @@ export function drawGlScene3DShadowMap(
+   const normalBiasWorld =
+     directionalLight.normalBias *
+     getOrthographicProjectionTexelSize(shadowCamera.projection, target.width, target.height);
+-  const matrix = previousShadow?.matrix ?? createMatrix4();
++  const matrix: Matrix4 = previousShadow?.matrix ?? createMatrix4();
+   getCamera3DViewProjectionMatrix4(matrix, shadowCamera, 1);
+@@ -93,8 +96,8 @@ export function drawGlScene3DShadowMap(
    let boundProgram: GlMeshProgram | null = null;
    forEachNodeDescendant<Node3DTraits>(scene, (node) => {
      // A drawable node carries geometry (structural, like prepareScene3DRender's mesh test).
@@ -21,7 +33,7 @@ index 13b6dac..b2b333b 100644
  
      // The caster is already at its CURRENT pose when this pass runs: the app drives prepareScene3DMorph +
      // prepareScene3DSkinning before prepareScene3DRender, so morph is blended into geometry.vertices and the
-@@ -107,11 +108,11 @@ export function drawGlScene3DShadowMap(
+@@ -107,19 +110,28 @@ export function drawGlScene3DShadowMap(
      // records ONE copy at the node origin — and because the per-instance matrix routinely carries the
      // model's authoring scale, that copy can be orders of magnitude the wrong size and flood the map,
      // shadowing the whole scene. A batch with no live instances casts nothing.
@@ -32,12 +44,42 @@ index 13b6dac..b2b333b 100644
  
 -    const skinned = !instanced && mesh.skin != null && hasMeshGeometrySkin(mesh.geometry);
 -    const program = instanced
+-      ? (instancedProgram ??= ensureGlScene3DProgram(
 +    const skinned = instancedMesh === null && mesh.skin != null && hasMeshGeometrySkin(mesh.geometry);
-+    const program = instancedMesh !== null
-       ? (instancedProgram ??= ensureGlScene3DProgram(
++    let program: GlMeshProgram;
++    if (instancedMesh !== null) {
++      if (instancedProgram === null) {
++        instancedProgram = ensureGlScene3DProgram(
            state,
            'shadow:depth:instanced',
-@@ -140,8 +141,7 @@ export function drawGlScene3DShadowMap(
+           compileShadowDepthInstancedProgram,
+-        ))
+-      : skinned
+-        ? (skinnedProgram ??= ensureGlScene3DProgram(state, 'shadow:depth:skin', compileShadowDepthSkinnedProgram))
+-        : rigidProgram;
++        );
++      }
++      program = instancedProgram;
++    } else if (skinned) {
++      if (skinnedProgram === null) {
++        skinnedProgram = ensureGlScene3DProgram(state, 'shadow:depth:skin', compileShadowDepthSkinnedProgram);
++      }
++      program = skinnedProgram;
++    } else {
++      program = rigidProgram;
++    }
+     if (program !== boundProgram) {
+       gl.useProgram(program.program);
+       gl.uniformMatrix4fv(program.locViewProjection, false, matrix.m);
+@@ -133,5 +145,6 @@ export function drawGlScene3DShadowMap(
+       const jointMatrices = mesh.skin!.skeleton.jointMatrices;
+       gl.activeTexture(gl.TEXTURE0 + SKIN_PALETTE_TEXTURE_UNIT);
+       uploadGlSkinPaletteTexture(gl, ensureGlSkinPalette(state), jointMatrices, (jointMatrices.length / 16) | 0);
+-      gl.uniform1i(program.locJointTexture ?? null, SKIN_PALETTE_TEXTURE_UNIT);
++      const locJointTexture: WebGLUniformLocation | null = program.locJointTexture ?? null;
++      gl.uniform1i(locJointTexture, SKIN_PALETTE_TEXTURE_UNIT);
+     }
+@@ -140,8 +153,7 @@ export function drawGlScene3DShadowMap(
      // palette) and wires the joints0/weights0 attributes; a rigid draw uploads geometry.vertices as-is.
      const upload = ensureGlMeshUpload(state, mesh.geometry, skinned);
      gl.bindVertexArray(upload.vao);
@@ -47,7 +89,7 @@ index 13b6dac..b2b333b 100644
        const count = instancedMesh.instanceCount;
        bindGlInstancePalette(state, program, flattenShadowInstanceMatrices(instancedMesh), count);
        if (upload.indexBuffer !== null) {
-@@ -229,10 +229,14 @@ function compileShadowDepthInstancedProgram(gl: GlContext): GlMeshProgram {
+@@ -229,10 +241,15 @@ function compileShadowDepthInstancedProgram(gl: GlContext): GlMeshProgram {
  
  // Structural, matching prepareScene3DRender's own instanced test, so the depth pass and the forward pass
  // agree on what an instanced caster is without importing a kind check.
@@ -56,11 +98,11 @@ index 13b6dac..b2b333b 100644
    return 'instanceMatrices' in mesh;
  }
  
-+function isShadowMesh(node: Readonly<Node<Node3DTraits>>): node is Readonly<Mesh> {
-+  return 'geometry' in node && node.geometry != null;
++function isShadowMesh(node: NodeOf<Node3DTraits>): node is Mesh {
++  const candidate: { readonly geometry?: MeshGeometry | null } = node;
++  return candidate.geometry != null;
 +}
 +
  // Packs the live instance matrices into the flat Float32Array bindGlInstancePalette uploads. The depth
  // pass keeps its own scratch buffer rather than sharing the forward pass's: the two passes run at
  // different points in a frame and a shared buffer would couple their growth.
-
