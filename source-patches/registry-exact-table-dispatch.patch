@@ -1,0 +1,46 @@
+diff --git a/packages/registry/src/registryTable.ts b/packages/registry/src/registryTable.ts
+--- a/packages/registry/src/registryTable.ts
++++ b/packages/registry/src/registryTable.ts
+@@ -165,16 +165,20 @@ export function getRegistryTableEntry<T>(table: Readonly<RegistryTable<T>>, key:
+ export function getRegistryTableKeys(out: Kind[], table: Readonly<RegistryTable<unknown>>): void {
+   out.length = 0;
+   if (table.shape === 'keyed') {
+-    for (const [key, entry] of table.entries) {
++    const keyed = table as Readonly<KeyedTable<unknown>>;
++    for (const [key, entry] of keyed.entries) {
+       if (entry.state === RegistryEntryState.Bound) out.push(key);
+     }
+   } else if (table.shape === 'slot') {
+-    if (table.entry !== null && table.entry.state === RegistryEntryState.Bound) out.push(table.registry);
++    const slot = table as Readonly<SlotTable<unknown>>;
++    if (slot.entry !== null && slot.entry.state === RegistryEntryState.Bound) out.push(slot.registry);
+   } else {
+-    for (let ordinal = 0; ordinal < table.entries.length; ordinal++) {
+-      if (table.entries[ordinal] !== null) out.push(table.vocabulary[ordinal]);
++    const ordinalTable = table as Readonly<OrdinalTable<unknown>>;
++    for (let ordinal = 0; ordinal < ordinalTable.entries.length; ordinal++) {
++      if (ordinalTable.entries[ordinal] !== null) out.push(ordinalTable.vocabulary[ordinal]);
+     }
+   }
+   out.sort();
+@@ -291,9 +295,15 @@ export function withRegistryTableTombstone<T>(table: Readonly<KeyedTable<T>>, ke
+ // wanted a value is how a tombstone reaches somewhere that has never heard of one.
+ function getRegistryTableEntryState<T>(table: Readonly<RegistryTable<T>>, key: Kind): RegistryTableEntry<T> | null {
+-  if (table.shape === 'keyed') return table.entries.get(key) ?? null;
+-  if (table.shape === 'slot') return key === table.registry ? table.entry : null;
+-  const ordinal = table.vocabulary.indexOf(key);
++  if (table.shape === 'keyed') {
++    const keyed = table as Readonly<KeyedTable<T>>;
++    return keyed.entries.get(key) ?? null;
++  }
++  if (table.shape === 'slot') {
++    const slot = table as Readonly<SlotTable<T>>;
++    return key === slot.registry ? slot.entry : null;
++  }
++  const ordinalTable = table as Readonly<OrdinalTable<T>>;
++  const ordinal = ordinalTable.vocabulary.indexOf(key);
+   if (ordinal === -1) return null;
+-  const value = table.entries[ordinal];
++  const value = ordinalTable.entries[ordinal];
+   return value === null ? null : createBoundRegistryTableEntry(value);
+ }
